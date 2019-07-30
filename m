@@ -2,159 +2,102 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B2AC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9A3C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163A22089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BCA2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:06:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSQ0xvaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732375AbfG3KFx (ORCPT
+        id S1732408AbfG3KGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 06:05:53 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63029 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfG3KFO (ORCPT
+        Tue, 30 Jul 2019 06:06:04 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51921 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728590AbfG3KGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:05:14 -0400
-Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id efe23e57fc714eb3; Tue, 30 Jul 2019 12:05:11 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 7/8] ACPI: EC: PM: Consolidate some code depending on PM_SLEEP
-Date:   Tue, 30 Jul 2019 12:03:26 +0200
-Message-ID: <2742454.g7L1spr0te@kreacher>
-In-Reply-To: <7528887.mqcfy9PZua@kreacher>
-References: <7528887.mqcfy9PZua@kreacher>
+        Tue, 30 Jul 2019 06:06:02 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so56566092wma.1;
+        Tue, 30 Jul 2019 03:06:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wS23UgUWtMqTEm4ppjXxe346NE9v8nvUKbESMI16TNk=;
+        b=nSQ0xvaP0FGfQnjKGz88xBBJXa3H5RzuCLzxPN7AUzaB5lYzmRIxell19V2NdTSXhl
+         HMvazpwfufPYpatU3SUY/K7nE8THXWda4qYb29lsQjJevxtc+iQkK8gHaMnXoCKXMeHf
+         KZzzAGCApsCPLJAinrNJUaS3X2+6WtpVPcrtJHOIyqGPWenNUyIXrOiusjV6bn5hs+nM
+         eCUQ7Hj7kwPbw7Zd9TaLb5v0UfuJxRsgpCI0y2tpAw+gZaKQJYqr8y++SDckntYsLVWI
+         /wC3lwU/foO2qSgA/Pn6JJa44v9VwcA5/Pjd09KmZpSmaOQW7pdc/HmkUSyKNpCzvcln
+         1bOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wS23UgUWtMqTEm4ppjXxe346NE9v8nvUKbESMI16TNk=;
+        b=p9bcdsMcnU7gIZc0dHpXkFzPWn4QQ4c0rsYNZv2D+mAuxzx1ygFGSJJIHTVqlRBdh8
+         u9sjVD1fphf/NIcuHFSYPI6OXl6rzDbURpuhUU/jpOxB7pTARQ+MHTllPHojzkzQHnIU
+         kLvftUtyU/p2t01RjLwHlEKuMjTBJQ9BHhpRHsXlUvty1uB1egOqCHST+YtH+q3DnlIX
+         +G6i0Yx5ar0x4i6FOPzDIIZJVjMiBH0Dq546lzgY3NJE85Y0tF7VHqrSi1PBWrg62FYp
+         twA8AuHxkE09vrCHS/zy6MHwrTy9xrtS6J7qP8ga5QF4lwc6xrDaf6hIWFIUdb4lbNAn
+         34FQ==
+X-Gm-Message-State: APjAAAX9S1pTZ3jtzMwQpMVnfURicnsfd65TBIbBPyGSP6vN3VAtyNxM
+        KavS7r2QkOp/DYSSNvZGWw2/PgxivkE=
+X-Google-Smtp-Source: APXvYqxbOTJYXHoAh0h6T17RYGUC3JRYokkh1Lp8qo3vAfFEPnEq9NOncTdCoECxeFcuztQ8MWbupw==
+X-Received: by 2002:a1c:2d58:: with SMTP id t85mr96828939wmt.61.1564481160088;
+        Tue, 30 Jul 2019 03:06:00 -0700 (PDT)
+Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
+        by smtp.gmail.com with ESMTPSA id n9sm108236322wrp.54.2019.07.30.03.05.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 03:05:59 -0700 (PDT)
+From:   Hubert Feurstein <h.feurstein@gmail.com>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: [PATCH 2/4] dt-bindings: net: dsa: marvell: add 6220 model to the 6250 family
+Date:   Tue, 30 Jul 2019 12:04:27 +0200
+Message-Id: <20190730100429.32479-3-h.feurstein@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190730100429.32479-1-h.feurstein@gmail.com>
+References: <20190730100429.32479-1-h.feurstein@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The MV88E6220 is part of the MV88E6250 family.
 
-Move some routines, including acpi_ec_dispatch_gpe(), that are only
-used if CONFIG_PM_SLEEP is set to the #ifdef block containing the EC
-suspend and resume callbacks, to make the "full EC PM picture" easier
-to follow.
-
-While at it, move the header of acpi_ec_dispatch_gpe() in the
-header file to a CONFIG_PM_SLEEP #ifdef block.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
 ---
+ Documentation/devicetree/bindings/net/dsa/marvell.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-New in v2.
-
----
- drivers/acpi/ec.c       |   54 +++++++++++++++++++++++-------------------------
- drivers/acpi/internal.h |    2 -
- 2 files changed, 27 insertions(+), 29 deletions(-)
-
-Index: linux-pm/drivers/acpi/internal.h
-===================================================================
---- linux-pm.orig/drivers/acpi/internal.h
-+++ linux-pm/drivers/acpi/internal.h
-@@ -194,7 +194,6 @@ void acpi_ec_ecdt_probe(void);
- void acpi_ec_dsdt_probe(void);
- void acpi_ec_block_transactions(void);
- void acpi_ec_unblock_transactions(void);
--bool acpi_ec_dispatch_gpe(void);
- int acpi_ec_add_query_handler(struct acpi_ec *ec, u8 query_bit,
- 			      acpi_handle handle, acpi_ec_query_func func,
- 			      void *data);
-@@ -202,6 +201,7 @@ void acpi_ec_remove_query_handler(struct
+diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+index 6f9538974bb9..30c11fea491b 100644
+--- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
++++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+@@ -22,7 +22,7 @@ which is at a different MDIO base address in different switch families.
+ - "marvell,mv88e6190"	: Switch has base address 0x00. Use with models:
+ 			  6190, 6190X, 6191, 6290, 6390, 6390X
+ - "marvell,mv88e6250"	: Switch has base address 0x08 or 0x18. Use with model:
+-			  6250
++			  6220, 6250
  
- #ifdef CONFIG_PM_SLEEP
- void acpi_ec_flush_work(void);
-+bool acpi_ec_dispatch_gpe(void);
- #endif
- 
- 
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -1049,33 +1049,6 @@ void acpi_ec_unblock_transactions(void)
- 		acpi_ec_start(first_ec, true);
- }
- 
--#ifdef CONFIG_PM_SLEEP
--void acpi_ec_mark_gpe_for_wake(void)
--{
--	if (first_ec && !ec_no_wakeup)
--		acpi_mark_gpe_for_wake(NULL, first_ec->gpe);
--}
--EXPORT_SYMBOL_GPL(acpi_ec_mark_gpe_for_wake);
--
--void acpi_ec_set_gpe_wake_mask(u8 action)
--{
--	if (pm_suspend_no_platform() && first_ec && !ec_no_wakeup)
--		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
--}
--EXPORT_SYMBOL_GPL(acpi_ec_set_gpe_wake_mask);
--#endif
--
--bool acpi_ec_dispatch_gpe(void)
--{
--	u32 ret;
--
--	if (!first_ec)
--		return false;
--
--	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
--	return ret == ACPI_INTERRUPT_HANDLED;
--}
--
- /* --------------------------------------------------------------------------
-                                 Event Management
-    -------------------------------------------------------------------------- */
-@@ -1984,7 +1957,32 @@ static int acpi_ec_resume(struct device
- 	acpi_ec_enable_event(ec);
- 	return 0;
- }
--#endif
-+
-+void acpi_ec_mark_gpe_for_wake(void)
-+{
-+	if (first_ec && !ec_no_wakeup)
-+		acpi_mark_gpe_for_wake(NULL, first_ec->gpe);
-+}
-+EXPORT_SYMBOL_GPL(acpi_ec_mark_gpe_for_wake);
-+
-+void acpi_ec_set_gpe_wake_mask(u8 action)
-+{
-+	if (pm_suspend_no_platform() && first_ec && !ec_no_wakeup)
-+		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
-+}
-+EXPORT_SYMBOL_GPL(acpi_ec_set_gpe_wake_mask);
-+
-+bool acpi_ec_dispatch_gpe(void)
-+{
-+	u32 ret;
-+
-+	if (!first_ec)
-+		return false;
-+
-+	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
-+	return ret == ACPI_INTERRUPT_HANDLED;
-+}
-+#endif /* CONFIG_PM_SLEEP */
- 
- static const struct dev_pm_ops acpi_ec_pm = {
- 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(acpi_ec_suspend_noirq, acpi_ec_resume_noirq)
-
-
+ Required properties:
+ - compatible		: Should be one of "marvell,mv88e6085",
+-- 
+2.22.0
 
