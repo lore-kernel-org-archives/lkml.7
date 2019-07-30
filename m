@@ -2,192 +2,215 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9837CC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FD1C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB3520679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A875D2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 00:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pYyEwi+P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7Px++Gy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbfG3ARW (ORCPT
+        id S1729991AbfG3AXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 20:17:22 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.35]:43186 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728195AbfG3ARV (ORCPT
+        Mon, 29 Jul 2019 20:23:33 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45794 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727723AbfG3AXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 20:17:21 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 5DF3947094
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 19:17:20 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id sFpQhlGCs3Qi0sFpQhW0kN; Mon, 29 Jul 2019 19:17:20 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=D7kzJNqVG7VZ9ECv09vvZ/hGrMRr3ZR7WMVFb+PMcAU=; b=pYyEwi+P+3UMsPlfgyR2FChKCk
-        gourTHd7j8AhnZdrB+GACI8F3KTDJKSQIYqWejMjRn8Qdzpv6wzBf3CPHS65GwDGILgxKy7QPcoeQ
-        Ff+A9NFoCbVGOOmizE/NTE07bYGLi5vylDAvpbIY1KaGstNlqc1qNnLi4A4nZ5a2hBMYWWCo01NO+
-        /+E9z/aB50rkfga7R2ilkVZoTKP6NZ3TPRomQIo5nVY2l+V6hDGe9K74lWp9zAFNKFjwHrqfP+Hxw
-        0IjY+Rfs1QUN98+jsKgRJhOkXg0Bc08Rm/3wF/OQfu+tm3FnGbhf975nFO+rXy6Mze8tkS4E5L3t8
-        dG5+EAkw==;
-Received: from [187.192.11.120] (port=35326 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hsFpP-002utY-40; Mon, 29 Jul 2019 19:17:19 -0500
-Date:   Mon, 29 Jul 2019 19:17:15 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] s390/net: Mark expected switch fall-throughs
-Message-ID: <20190730001715.GA20706@embeddedor>
+        Mon, 29 Jul 2019 20:23:33 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so29057375pgp.12;
+        Mon, 29 Jul 2019 17:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SDS/oRbp3ndQD48erCJR8LYHts1U4WFu/TkobcIYFLU=;
+        b=K7Px++GyUB3IKchznHVKlpORjcHhnjcdO6Lw067w6ofIzdRXflKRgfr3ZFCzzGfrLp
+         xXxVa9do5SNUJCaGd5yUkgiUOXV45J8S6jDKMNVw8AXl0TMfRzsgP5+eEKITgCezoBKn
+         DGrDJETdxGJEUcMwZL4HgYXgSX9/zspKvJ66ODuUYM5SCxwKhfPMQXupCrw9CKehZdWI
+         uxlY9PrDQR9tc5cb63vDo23DQ+1Cf0KseuXbMjfHC5VomKrUXiJglEzfZ6sBGDNLc5Gg
+         8f2lFSMjnks1nFi4Y2rmokYXB9qpyPPgEDKaI0VSN2BESinSKo8N0Jv3z1TfkGjz/k80
+         PiFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SDS/oRbp3ndQD48erCJR8LYHts1U4WFu/TkobcIYFLU=;
+        b=uhix5wd26pemwhdrlBMQihdLBpwuIvt04TlaStN9seftHbP2S4vHR03RjqJaWzOnN9
+         OXQRpXU9DMmxyEgcNk3HwC+mjP5LLxzzwH+uiwIziesQzbTmn8eLKOsWR9EzuLZmgeRf
+         mfU2uQ81EXTu4cN4nD/yLsDMfbL/sGXEuCGMBWMx5Fz3v3YAoYxhSPdLkT6/62/L08pr
+         aug4kZMp780VUr2qANx3SgL0vb5oTdK4sntmw0i5yFPb2NjXnTvZ3BwGQTdfCIpkDPhf
+         lwn+e4Rqg/TWQloFyHPwBomRuPe+zyS/e7PqKY6Vn0TNRzWtToGNtBv7dAx/o2Yg9bGC
+         z/pQ==
+X-Gm-Message-State: APjAAAWJz03/0ybQM9Gyaub4BMV9XYni4lRTv4v8TOAr1Kg3cYifS3pP
+        O1ULw4mABEIfCDZLtTKuVJhULKvO
+X-Google-Smtp-Source: APXvYqwAc8rdlD+UPsbJp6Atian7nae1A5y24Hm5XKecZwzNVtco3YvJ9gjxt47hwdUsAQQOgRZSow==
+X-Received: by 2002:a17:90a:36a7:: with SMTP id t36mr112276735pjb.34.1564446211820;
+        Mon, 29 Jul 2019 17:23:31 -0700 (PDT)
+Received: from [172.27.227.219] ([216.129.126.118])
+        by smtp.googlemail.com with ESMTPSA id v126sm251489pgb.23.2019.07.29.17.23.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 17:23:30 -0700 (PDT)
+Subject: Re: [PATCH net] net: ipv6: Fix a bug in ndisc_send_ns when netdev
+ only has a global address
+To:     Su Yanjun <suyj.fnst@cn.fujitsu.com>, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1564368591-42301-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <4889aab0-5d79-bbba-1286-91d89c55fc1e@gmail.com>
+Date:   Mon, 29 Jul 2019 18:23:28 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <1564368591-42301-1-git-send-email-suyj.fnst@cn.fujitsu.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hsFpP-002utY-40
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:35326
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+On 7/28/19 8:49 PM, Su Yanjun wrote:
+> When we send mpls packets and the interface only has a
+> manual global ipv6 address, then the two hosts cant communicate.
+> I find that in ndisc_send_ns it only tries to get a ll address.
+> In my case, the executive path is as below.
+> ip6_output
+>  ->ip6_finish_output
+>   ->lwtunnel_xmit
+>    ->mpls_xmit
+>     ->neigh_resolve_output
+>      ->neigh_probe
+>       ->ndisc_solicit
+>        ->ndisc_send_ns
 
-This patch fixes the following warnings (Building: s390):
+for the archives, this is not an MPLS problem but a general IPv6
+forwarding problem when the egress interface does not have a link local
+address.
 
-drivers/s390/net/ctcm_fsms.c: In function ‘ctcmpc_chx_attnbusy’:
-drivers/s390/net/ctcm_fsms.c:1703:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (grp->changed_side == 1) {
-      ^
-drivers/s390/net/ctcm_fsms.c:1707:2: note: here
-  case MPCG_STATE_XID0IOWAIX:
-  ^~~~
+> 
+> In RFC4861, 7.2.2 says
+> "If the source address of the packet prompting the solicitation is the
+> same as one of the addresses assigned to the outgoing interface, that
+> address SHOULD be placed in the IP Source Address of the outgoing
+> solicitation.  Otherwise, any one of the addresses assigned to the
+> interface should be used."
+> 
+> In this patch we try get a global address if we get ll address failed.
+> 
+> Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+> ---
+>  include/net/addrconf.h |  4 ++++
+>  net/ipv6/addrconf.c    | 34 ++++++++++++++++++++++++++++++++++
+>  net/ipv6/ndisc.c       |  8 ++++++--
+>  3 files changed, 44 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/net/addrconf.h b/include/net/addrconf.h
+> index becdad5..006db8e 100644
+> --- a/include/net/addrconf.h
+> +++ b/include/net/addrconf.h
+> @@ -107,6 +107,10 @@ int __ipv6_get_lladdr(struct inet6_dev *idev, struct in6_addr *addr,
+>  		      u32 banned_flags);
+>  int ipv6_get_lladdr(struct net_device *dev, struct in6_addr *addr,
+>  		    u32 banned_flags);
+> +int __ipv6_get_addr(struct inet6_dev *idev, struct in6_addr *addr,
+> +		      u32 banned_flags);
 
-drivers/s390/net/ctcm_mpc.c: In function ‘ctc_mpc_alloc_channel’:
-drivers/s390/net/ctcm_mpc.c:358:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (callback)
-      ^
-drivers/s390/net/ctcm_mpc.c:360:2: note: here
-  case MPCG_STATE_XID0IOWAIT:
-  ^~~~
+no reason to export __ipv6_get_addr. I suspect you copied
+__ipv6_get_lladdr but it has an external (to addrconf.c) user. In this
+case only ipv6_get_addr needs to be exported.
 
-drivers/s390/net/ctcm_mpc.c: In function ‘mpc_action_timeout’:
-drivers/s390/net/ctcm_mpc.c:1469:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if ((fsm_getstate(rch->fsm) == CH_XID0_PENDING) &&
-      ^
-drivers/s390/net/ctcm_mpc.c:1472:2: note: here
-  default:
-  ^~~~~~~
-drivers/s390/net/ctcm_mpc.c: In function ‘mpc_send_qllc_discontact’:
-drivers/s390/net/ctcm_mpc.c:2087:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (grp->estconnfunc) {
-      ^
-drivers/s390/net/ctcm_mpc.c:2092:2: note: here
-  case MPCG_STATE_FLOWC:
-  ^~~~
 
-drivers/s390/net/qeth_l2_main.c: In function ‘qeth_l2_process_inbound_buffer’:
-drivers/s390/net/qeth_l2_main.c:328:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-    if (IS_OSN(card)) {
-       ^
-drivers/s390/net/qeth_l2_main.c:337:3: note: here
-   default:
-   ^~~~~~~
+> +int ipv6_get_addr(struct net_device *dev, struct in6_addr *addr,
+> +		    u32 banned_flags);
+>  bool inet_rcv_saddr_equal(const struct sock *sk, const struct sock *sk2,
+>  			  bool match_wildcard);
+>  bool inet_rcv_saddr_any(const struct sock *sk);
+> diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+> index 521e320..4c0a43f 100644
+> --- a/net/ipv6/addrconf.c
+> +++ b/net/ipv6/addrconf.c
+> @@ -1870,6 +1870,40 @@ int ipv6_get_lladdr(struct net_device *dev, struct in6_addr *addr,
+>  	return err;
+>  }
+>  
+> +int __ipv6_get_addr(struct inet6_dev *idev, struct in6_addr *addr,
+> +		    u32 banned_flags)
+> +{
+> +	struct inet6_ifaddr *ifp;
+> +	int err = -EADDRNOTAVAIL;
+> +
+> +	list_for_each_entry_reverse(ifp, &idev->addr_list, if_list) {
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/s390/net/ctcm_fsms.c    | 1 +
- drivers/s390/net/ctcm_mpc.c     | 3 +++
- drivers/s390/net/qeth_l2_main.c | 2 +-
- 3 files changed, 5 insertions(+), 1 deletion(-)
+Addresses are ordered by scope. __ipv6_get_lladdr uses
+list_for_each_entry_reverse because the LLA's are after the globals.
+Since this is falling back to 'give an address' from this interface, I
+think you can just use list_for_each_entry.
 
-diff --git a/drivers/s390/net/ctcm_fsms.c b/drivers/s390/net/ctcm_fsms.c
-index 1b4ee570b712..4a8a5373cb35 100644
---- a/drivers/s390/net/ctcm_fsms.c
-+++ b/drivers/s390/net/ctcm_fsms.c
-@@ -1704,6 +1704,7 @@ static void ctcmpc_chx_attnbusy(fsm_instance *fsm, int event, void *arg)
- 			grp->changed_side = 2;
- 			break;
- 		}
-+		/* Else, fall through */
- 	case MPCG_STATE_XID0IOWAIX:
- 	case MPCG_STATE_XID7INITW:
- 	case MPCG_STATE_XID7INITX:
-diff --git a/drivers/s390/net/ctcm_mpc.c b/drivers/s390/net/ctcm_mpc.c
-index e02f295d38a9..1534420a0243 100644
---- a/drivers/s390/net/ctcm_mpc.c
-+++ b/drivers/s390/net/ctcm_mpc.c
-@@ -357,6 +357,7 @@ int ctc_mpc_alloc_channel(int port_num, void (*callback)(int, int))
- 		/*fsm_newstate(grp->fsm, MPCG_STATE_XID2INITW);*/
- 		if (callback)
- 			grp->send_qllc_disc = 1;
-+		/* Else, fall through */
- 	case MPCG_STATE_XID0IOWAIT:
- 		fsm_deltimer(&grp->timer);
- 		grp->outstanding_xid2 = 0;
-@@ -1469,6 +1470,7 @@ static void mpc_action_timeout(fsm_instance *fi, int event, void *arg)
- 		if ((fsm_getstate(rch->fsm) == CH_XID0_PENDING) &&
- 		   (fsm_getstate(wch->fsm) == CH_XID0_PENDING))
- 			break;
-+		/* Else, fall through */
- 	default:
- 		fsm_event(grp->fsm, MPCG_EVENT_INOP, dev);
- 	}
-@@ -2089,6 +2091,7 @@ static int mpc_send_qllc_discontact(struct net_device *dev)
- 			grp->estconnfunc = NULL;
- 			break;
- 		}
-+		/* Else, fall through */
- 	case MPCG_STATE_FLOWC:
- 	case MPCG_STATE_READY:
- 		grp->send_qllc_disc = 2;
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index fd64bc3f4062..cbead3d1b2fd 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -333,7 +333,7 @@ static int qeth_l2_process_inbound_buffer(struct qeth_card *card,
- 				card->osn_info.data_cb(skb);
- 				break;
- 			}
--			/* else unknown */
-+			/* Else, fall through */
- 		default:
- 			dev_kfree_skb_any(skb);
- 			QETH_CARD_TEXT(card, 3, "inbunkno");
--- 
-2.22.0
+
+> +		if (ifp->scope == 0 &&
+> +		    !(ifp->flags & banned_flags)) {
+> +			*addr = ifp->addr;
+> +			err = 0;
+> +			break;
+> +		}
+> +	}
+> +	return err;
+> +}
+> +
+> +int ipv6_get_addr(struct net_device *dev, struct in6_addr *addr,
+> +		  u32 banned_flags)
+> +{
+> +	struct inet6_dev *idev;
+> +	int err = -EADDRNOTAVAIL;
+> +
+> +	rcu_read_lock();
+> +	idev = __in6_dev_get(dev);
+> +	if (idev) {
+> +		read_lock_bh(&idev->lock);
+> +		err = __ipv6_get_addr(idev, addr, banned_flags);
+> +		read_unlock_bh(&idev->lock);
+> +	}
+> +	rcu_read_unlock();
+> +	return err;
+> +}
+> +
+>  static int ipv6_count_addresses(const struct inet6_dev *idev)
+>  {
+>  	const struct inet6_ifaddr *ifp;
+> diff --git a/net/ipv6/ndisc.c b/net/ipv6/ndisc.c
+> index 083cc1c..18ac2fb 100644
+> --- a/net/ipv6/ndisc.c
+> +++ b/net/ipv6/ndisc.c
+> @@ -606,8 +606,12 @@ void ndisc_send_ns(struct net_device *dev, const struct in6_addr *solicit,
+>  
+>  	if (!saddr) {
+
+And since you are going to do a v2, another nit - define a local banned
+flags and use it for both lookups just to make it clear.
+
+		u32 banned_flags = IFA_F_TENTATIVE | IFA_F_OPTIMISTIC;
+
+>  		if (ipv6_get_lladdr(dev, &addr_buf,
+> -				   (IFA_F_TENTATIVE|IFA_F_OPTIMISTIC)))
+> -			return;
+> +				   (IFA_F_TENTATIVE | IFA_F_OPTIMISTIC))) {
+> +			/* try global address */
+> +			if (ipv6_get_addr(dev, &addr_buf,
+> +					  (IFA_F_TENTATIVE | IFA_F_OPTIMISTIC)))
+> +				return;
+> +		}
+>  		saddr = &addr_buf;
+>  	}
+>  
+> 
 
