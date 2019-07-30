@@ -2,173 +2,147 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382EAC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356E3C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE3F206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0491A206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:29:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="WW27iPvG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbfG3M2I (ORCPT
+        id S1729419AbfG3M3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:28:08 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:37867 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbfG3M2H (ORCPT
+        Tue, 30 Jul 2019 08:29:35 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:49830 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728186AbfG3M3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 08:28:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id v3so71274423ios.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 05:28:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=hZMo4mC2RIyBYAfOxySX5UABZRRMH2Q/dZ4zcgNImT8=;
-        b=TM7kMBsa2Al+Iabfpy4yMNq0Om099ldQuHM8ubSLBUFPyLlFVd+R+WvnvWo36BDbfh
-         T26o5J22dCMR2J6AIr/WCQeL/dzyJCw52fzka7GMa1W6r0yKWp/mj6GJmrOs3x9cQ7hf
-         HZtcg2QmqzabcXFplCP2uNq/nkyGW53C6VqndzxZx9k5K8L9ukCQp6/uFoavOvH8aiuS
-         WNdcLcQhOF4Vmz1ZxTsmtpz9PalwVjkDbbKu+qxL53Epjz1hc1jrdfALoFXnYxKjUugS
-         q2Qp+J1+U8dbW5WbOvQqeHdFrVqG6unnDxuri6kJVJ7m0tRirRReytMzLMcCklAIQDFK
-         LfSA==
-X-Gm-Message-State: APjAAAUhkcHXHBsD2bnU1fE3m3Fwy4G2wKOpfl2yf5Mw93waJugeB/YS
-        V15FS2GTMYKjnslPAv/3A8EJOZ4Iubld/VDcVRN2KibJcOZ+
-X-Google-Smtp-Source: APXvYqz9DN92bNusuAriRi22SyjDQxEx6rnZguhdzOOVXYpum2QebL80O/zC1jM1YPGv5w4HsMU3xQqZxOd+TwmYrgIkwg9N2DQI
+        Tue, 30 Jul 2019 08:29:35 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x6UCPbL5001281;
+        Tue, 30 Jul 2019 07:27:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=pY3zCtDyo2UN0OhyrBjrLt7xNrI8TidRHw7Z/SoxObk=;
+ b=WW27iPvGmca6/6RHRPK/lJRXcfi9WBFDVrdgvCdTiffzT8wuSG8QbF93YWX6sM7gm1aq
+ rvpkB0RxNVL+b7GpnujcaK32Kteg6fClR0Ik/f9eCLdM8kPxXgw2hzyVcC1jKb1QAPSw
+ kN8JUdfsG8nvjCfb0x1JXjoCzLx1NfLRD2zNacySmbjzuri1mf5R38vl3D567POpqX1K
+ 899bLpgZsM+k90VVHSeCO1ciXdm7oeeLyYkW7sgkDMVV3Ei3hd86ZgJpokbq2UhkLfVH
+ gOfzSnkdTom8LBMlCkgYRTj/WkgS9dCubfnBs+MRjQwSPumnfduWbI6PvbtymZzPFSZy ag== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2u0k1qvkeb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 30 Jul 2019 07:27:50 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 30 Jul
+ 2019 13:27:48 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 30 Jul 2019 13:27:48 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id B7C512A1;
+        Tue, 30 Jul 2019 13:27:48 +0100 (BST)
+Date:   Tue, 30 Jul 2019 13:27:48 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Thomas Preston <thomas.preston@codethink.co.uk>
+CC:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Kirill Marinushkin <kmarinushkin@birdec.tech>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Annaliese McDermond <nh6z@nh6z.net>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Patrick Glaser <pglaser@tesla.com>,
+        Rob Duncan <rduncan@tesla.com>, Nate Case <ncase@tesla.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: ASoC: Add TDA7802 amplifier
+Message-ID: <20190730122748.GF54126@ediswmail.ad.cirrus.com>
+References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
+ <20190730120937.16271-2-thomas.preston@codethink.co.uk>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:114:: with SMTP id s20mr62738414iot.122.1564489686756;
- Tue, 30 Jul 2019 05:28:06 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 05:28:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000008b8c6058ee52407@google.com>
-Subject: KASAN: slab-out-of-bounds Read in hidraw_ioctl
-From:   syzbot <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190730120937.16271-2-thomas.preston@codethink.co.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1011 phishscore=0 adultscore=0 mlxscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
+ definitions=main-1907300130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Jul 30, 2019 at 01:09:35PM +0100, Thomas Preston wrote:
+> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+> Cc: Patrick Glaser <pglaser@tesla.com>
+> Cc: Rob Duncan <rduncan@tesla.com>
+> Cc: Nate Case <ncase@tesla.com>
+> ---
+>  .../devicetree/bindings/sound/tda7802.txt     | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/tda7802.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/tda7802.txt b/Documentation/devicetree/bindings/sound/tda7802.txt
+> new file mode 100644
+> index 000000000000..f80aaf4f1ba0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/tda7802.txt
+> @@ -0,0 +1,26 @@
+> +ST TDA7802 audio processor
+> +
+> +This device supports I2C only.
+> +
+> +Required properties:
+> +
+> +- compatible : "st,tda7802"
+> +- reg : the I2C address of the device
+> +- enable-supply : a regulator spec for the PLLen pin
+> +
+> +Optional properties:
+> +
+> +- st,gain-ch13 : gain for channels 1 and 3 (range: 1-4)
+> +- st,gain-ch24 : gain for channels 2 and 3 (range: 1-4)
 
-syzbot found the following crash on:
+I wouldn't have expected the gains to be available as a device
+tree setting.
 
-HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=15e293c8600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-dashboard link: https://syzkaller.appspot.com/bug?extid=5a6c4ec678a0c6ee84ba
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> +- st,diagnostic-mode-ch13 : diagnotic mode for channels 1 and 3
+> +                            values: "Speaker" (default), "Booster"
+> +- st,diagnostic-mode-ch24 : diagnotic mode for channels 2 and 4
+> +                            values: "Speaker" (default), "Booster"
+> +
+> +Example:
+> +
+> +amp: tda7802@6c {
+> +	compatible = "st,tda7802";
+> +	reg = <0x6c>;
+> +	enable-supply = <&amp_enable_reg>;
+> +};
+> -- 
+> 2.21.0
+> 
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in strlen+0x79/0x90 lib/string.c:525
-Read of size 1 at addr ffff8881ca981f10 by task syz-executor.4/7644
-
-CPU: 1 PID: 7644 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #23
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:612
-  strlen+0x79/0x90 lib/string.c:525
-  strlen include/linux/string.h:281 [inline]
-  hidraw_ioctl+0x245/0xae0 drivers/hid/hidraw.c:446
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fed5bb22c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 0000000020000180 RSI: 0000000080404805 RDI: 0000000000000003
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fed5bb236d4
-R13: 00000000004c21c6 R14: 00000000004d5528 R15: 00000000ffffffff
-
-Allocated by task 1607:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
-  kmalloc include/linux/slab.h:552 [inline]
-  syslog_print kernel/printk/printk.c:1346 [inline]
-  do_syslog kernel/printk/printk.c:1519 [inline]
-  do_syslog+0x540/0x1380 kernel/printk/printk.c:1493
-  kmsg_read+0x8a/0xb0 fs/proc/kmsg.c:40
-  proc_reg_read+0x1c1/0x280 fs/proc/inode.c:223
-  __vfs_read+0x76/0x100 fs/read_write.c:425
-  vfs_read+0x1ea/0x430 fs/read_write.c:461
-  ksys_read+0x127/0x250 fs/read_write.c:587
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 1607:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1470 [inline]
-  slab_free mm/slub.c:3012 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3953
-  syslog_print kernel/printk/printk.c:1405 [inline]
-  do_syslog kernel/printk/printk.c:1519 [inline]
-  do_syslog+0x1098/0x1380 kernel/printk/printk.c:1493
-  kmsg_read+0x8a/0xb0 fs/proc/kmsg.c:40
-  proc_reg_read+0x1c1/0x280 fs/proc/inode.c:223
-  __vfs_read+0x76/0x100 fs/read_write.c:425
-  vfs_read+0x1ea/0x430 fs/read_write.c:461
-  ksys_read+0x127/0x250 fs/read_write.c:587
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881ca981b00
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 16 bytes to the right of
-  1024-byte region [ffff8881ca981b00, ffff8881ca981f00)
-The buggy address belongs to the page:
-page:ffffea00072a6000 refcount:1 mapcount:0 mapping:ffff8881da002280  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da002280
-raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881ca981e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881ca981e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8881ca981f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                          ^
-  ffff8881ca981f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881ca982000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Thanks,
+Charles
