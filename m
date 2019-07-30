@@ -2,95 +2,103 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF907C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36CFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53AC20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QiFE7pzY"
+	by mail.kernel.org (Postfix) with ESMTP id C98EF20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfG3XDE (ORCPT
+        id S1727089AbfG3XDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 19:03:04 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44631 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfG3XDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 19:03:04 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 44so33640283qtg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 16:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UJ2PVNUeTBMo5qGrNZTfNGo0I1Iz/H1TS9U/04RyUOo=;
-        b=QiFE7pzYIPmIMYdHVkTLTz3L99E0Vk6JqllvHpCBW/IuiONOCl2h83cSdW95qLmzM2
-         3ojX3QU9j3FHrIVxvFHeMUrgoaQhjnnpzV6s9Z0kLaZM8FPZ3tpFOUv4FcP2VehlHR/S
-         k0I1X+eNSzNQdvFxxsQBIdqHAtU/OzhK7HZeo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UJ2PVNUeTBMo5qGrNZTfNGo0I1Iz/H1TS9U/04RyUOo=;
-        b=pSq8ppli5OuMNLfBCG6fD0zDCMD4zhIyTKBmHI7lqwGlGdjAz7ZZm0mInSDFI/vQLx
-         cHheUNiyDcHS4xQl3YRzOhA1ETUNSZWeH0Wx6bMriviowe13hIP2KUwKwofmtogG9Qbk
-         yCiQpXC0B7t45UO5KeON03g1DyapcRzv13krqvIYH/saR6dKQAAtzMKgePtFJTHmL0JI
-         vvYUL3lNh+pnTw7skjYODEs7Eii17L9tfQcl++0mgAbGSI7Dm7VMqbWxFTP1TKNWBxFd
-         zVs5l4F4Rj2qIo92Qc02Aa2O+uRZMK4uqPPZz1IiC/jV/dwUT9a69iD3YNB6cwsOGc2D
-         oaag==
-X-Gm-Message-State: APjAAAXIrYQyr9dvEJbzmuchZXouIkpedQ4QtpeUW3VDg8h7IMV6UKrf
-        5IOepM+0BSxSs2ULKkG3kzFrG+WNSi2/zTkkAMswJQ==
-X-Google-Smtp-Source: APXvYqxd+3eU2l5vWwKKjq9J+zWW5+JbEvVg8eHb01WvIQAnz57XvLTIqK3oZkd1HuMThvfmnWJk15pchm1r5bCDlTA=
-X-Received: by 2002:aed:3fb0:: with SMTP id s45mr84676402qth.136.1564527783234;
- Tue, 30 Jul 2019 16:03:03 -0700 (PDT)
+        Tue, 30 Jul 2019 19:03:40 -0400
+Received: from fieldses.org ([173.255.197.46]:41902 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbfG3XDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 19:03:40 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id DADB82010; Tue, 30 Jul 2019 19:03:39 -0400 (EDT)
+Date:   Tue, 30 Jul 2019 19:03:39 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: nfsd: Fix three possible null-pointer dereferences
+Message-ID: <20190730230339.GD3544@fieldses.org>
+References: <20190724082803.1077-1-baijiaju1990@gmail.com>
 MIME-Version: 1.0
-References: <20190717222340.137578-1-saravanak@google.com> <20190717222340.137578-4-saravanak@google.com>
-In-Reply-To: <20190717222340.137578-4-saravanak@google.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Tue, 30 Jul 2019 16:02:37 -0700
-Message-ID: <CAJMQK-jQA6aeSMmrRKDeJz+mGDsu09=ywPv+kfuo26GhQJD4Ug@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] OPP: Improve require-opps linking
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>, kernel-team@android.com,
-        linux-pm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724082803.1077-1-baijiaju1990@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 10:23 PM Saravana Kannan <saravanak@google.com> wrote:
+On Wed, Jul 24, 2019 at 04:28:03PM +0800, Jia-Ju Bai wrote:
+> In nfs4_xdr_dec_cb_recall(), nfs4_xdr_dec_cb_layout() and
+> nfs4_xdr_dec_cb_notify_lock(), there is an if statement to check whether
+> cb is NULL.
+> 
+> When cb is NULL, the three functions all call:
+>     decode_cb_op_status(..., &cb->cb_status);
+> 
+> Thus, possible null-pointer dereferences may occur.
+> 
+> To fix these possible bugs, -EINVAL is returned when cb is NULL.
+> 
+> These bugs are found by a static analysis tool STCheck written by us.
 
-> -free_required_tables:
-> -       _opp_table_free_required_tables(opp_table);
-> -put_np:
-> -       of_node_put(np);
-> +       for (i = 0; i < src->required_opp_count; i++) {
-> +               if (src->required_opp_tables[i])
-> +                       continue;
-> +
-> +               req_np = of_parse_required_opp(src_opp->np, i);
-> +               if (!req_np)
-> +                       continue;
-> +
-> +               req_table = _find_table_of_opp_np(req_np);
-Not yet tested in v4, but in v3:
-In _find_table_of_opp_np(), there's a lockdep check:
-lockdep_assert_held(&opp_table_lock);
-which would lead to lockdep warnings.
+Thanks!  But I think actually the correct fix is just to remove the NULL
+checks entirely.
 
-Call trace:
-_find_table_of_opp_np
-_of_lazy_link_required_tables
-dev_pm_opp_xlate_opp
+--b.
+
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> ---
+>  fs/nfsd/nfs4callback.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> index 397eb7820929..55949a158b6b 100644
+> --- a/fs/nfsd/nfs4callback.c
+> +++ b/fs/nfsd/nfs4callback.c
+> @@ -516,7 +516,8 @@ static int nfs4_xdr_dec_cb_recall(struct rpc_rqst *rqstp,
+>  		status = decode_cb_sequence4res(xdr, cb);
+>  		if (unlikely(status || cb->cb_seq_status))
+>  			return status;
+> -	}
+> +	} else
+> +		return -EINVAL;
+>  
+>  	return decode_cb_op_status(xdr, OP_CB_RECALL, &cb->cb_status);
+>  }
+> @@ -608,7 +609,9 @@ static int nfs4_xdr_dec_cb_layout(struct rpc_rqst *rqstp,
+>  		status = decode_cb_sequence4res(xdr, cb);
+>  		if (unlikely(status || cb->cb_seq_status))
+>  			return status;
+> -	}
+> +	} else
+> +		return -EINVAL;
+> +
+>  	return decode_cb_op_status(xdr, OP_CB_LAYOUTRECALL, &cb->cb_status);
+>  }
+>  #endif /* CONFIG_NFSD_PNFS */
+> @@ -667,7 +670,9 @@ static int nfs4_xdr_dec_cb_notify_lock(struct rpc_rqst *rqstp,
+>  		status = decode_cb_sequence4res(xdr, cb);
+>  		if (unlikely(status || cb->cb_seq_status))
+>  			return status;
+> -	}
+> +	} else
+> +		return -EINVAL;
+> +	
+>  	return decode_cb_op_status(xdr, OP_CB_NOTIFY_LOCK, &cb->cb_status);
+>  }
+>  
+> -- 
+> 2.17.0
