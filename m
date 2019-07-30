@@ -2,84 +2,80 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E99C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEAEC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E540220693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:40:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="N1oKq68H"
+	by mail.kernel.org (Postfix) with ESMTP id C664C20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:43:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564504989;
+	bh=Bhgt8Kdpcka64EAoLz5x80I0JjzdBQzRn8FJLr0MPG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rVL7d6HlB2VPpDJUtNTfvsCgPpo0u4O5ueYcSHq6k5+u2sybfKkhkpdXadycX5pFm
+	 c9ABTKLjpF9tE7whX40IJfqwZVwIyoMxBLMArZSjuNJqqkElbljlSvWHSO6vvKQgd4
+	 hsMXgcYTYNgVuFyJgb5pSKNgGyZLTdBuY9uKNtmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfG3Qkr (ORCPT
+        id S1727246AbfG3QnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:40:47 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:46189 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfG3Qkr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:40:47 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x6UGeiKe027856;
-        Wed, 31 Jul 2019 01:40:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x6UGeiKe027856
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564504845;
-        bh=5pyHzdfmyGH/cRqaNQinrJDuh/jCPE5pxhd6kJmjsHs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=N1oKq68H6wAu0Q0UpUYSAM/8g6YZutLs3kM86O/nPJL0MLWAEtAzuNSw9Zqz8sYUa
-         twMMgGdm/oAuuPT4R6hHjtgzBYdkSPQTtwwn+a/yE5tV2cA7ht8WYJrrTk9at2krbl
-         HRR2wmxRNPtKmR2ggYH93rH7d/01eqmfSaOt+y0u0AFkUkcQViDv+UoP8bJPfdvIxM
-         0XevXgx48+8hbZoNht4p4Rq0BmdJrzvQP5MQJ8zGLcVflntCloYeRo7L3n23mqaUH+
-         LTuPzfn8boEN48Ibg67Mp+reBgiolQSdrxV5YXFbgGFiCQUOj2nC4lsXZLQxTVzlYK
-         WfMqpdHuoiRHg==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] lib/raid6: fix unnecessary rebuild of vpermxor*.c
-Date:   Wed, 31 Jul 2019 01:40:42 +0900
-Message-Id: <20190730164042.2631-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 30 Jul 2019 12:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbfG3QnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 12:43:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 988B320693;
+        Tue, 30 Jul 2019 16:43:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564504987;
+        bh=Bhgt8Kdpcka64EAoLz5x80I0JjzdBQzRn8FJLr0MPG8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ODMySGlBeblAC/zzdqMy/4bUZq7KbqAx+8YEvJadvyWGDlQUpK1s5vNsUPK0RHnu6
+         /rahrjWk6TXDW5lyChNSyx/lbp6uVUVvEsuXph0L6yFsqQVX5lpeM7d3EV9KgRqdI8
+         rzrmcpjwISfQIXqwXs+Z8uF6B3yn8+BS90v89xCE=
+Date:   Tue, 30 Jul 2019 18:43:04 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     devel@driverdev.osuosl.org, kjlu@umn.edu,
+        linux-kernel@vger.kernel.org,
+        John Whitmore <johnfwhitmore@gmail.com>, emamd001@umn.edu,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>, smccaman@umn.edu,
+        Colin Ian King <colin.king@canonical.com>
+Subject: Re: [PATCH v2] rtl8192_init_priv_variable: null check is missing for
+ kzalloc
+Message-ID: <20190730164304.GA10640@kroah.com>
+References: <20190725124528.GA21757@kroah.com>
+ <20190730143102.6662-1-navid.emamdoost@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730143102.6662-1-navid.emamdoost@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following four files are every time rebuilt:
+On Tue, Jul 30, 2019 at 09:30:58AM -0500, Navid Emamdoost wrote:
+> Allocation for priv->pFirmware may fail, so a null check is necessary.
+> priv->pFirmware is accessed later in rtl8192_adapter_start. I added the
+>  check and made appropriate changes to propagate the errno to the caller.
+> 
+> Update: fixed style errors
 
-  UNROLL  lib/raid6/vpermxor1.c
-  UNROLL  lib/raid6/vpermxor2.c
-  UNROLL  lib/raid6/vpermxor4.c
-  UNROLL  lib/raid6/vpermxor8.c
+The "changelog" goes below the --- line, as is described in the kernel
+documentation.
 
-I made a mistake in the Makefile refactoring.
+Also, please look at other patches for this driver, use the same prefix
+for the subject line as those did.
 
-Fixes: 72ad21075df8 ("lib/raid6: refactor unroll rules with pattern rules")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+v3 please?
 
- lib/raid6/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
-index 42695bc8d451..0083b5cc646c 100644
---- a/lib/raid6/Makefile
-+++ b/lib/raid6/Makefile
-@@ -66,7 +66,7 @@ CFLAGS_vpermxor1.o += $(altivec_flags)
- CFLAGS_vpermxor2.o += $(altivec_flags)
- CFLAGS_vpermxor4.o += $(altivec_flags)
- CFLAGS_vpermxor8.o += $(altivec_flags)
--targets += vpermxor1.o vpermxor2.o vpermxor4.o vpermxor8.o
-+targets += vpermxor1.c vpermxor2.c vpermxor4.c vpermxor8.c
- $(obj)/vpermxor%.c: $(src)/vpermxor.uc $(src)/unroll.awk FORCE
- 	$(call if_changed,unroll)
- 
--- 
-2.17.1
-
+greg k-h
