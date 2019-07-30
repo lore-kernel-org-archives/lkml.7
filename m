@@ -7,61 +7,60 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA84C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93A6C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1212F20C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C97E208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:23:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IeeNQ5l5"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="H0kjpOu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfG3SXX (ORCPT
+        id S1729151AbfG3SX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:23:23 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:37335 "EHLO
+        Tue, 30 Jul 2019 14:23:26 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57409 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727481AbfG3SXX (ORCPT
+        with ESMTP id S1727481AbfG3SXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:23:23 -0400
+        Tue, 30 Jul 2019 14:23:25 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UINACF3327617
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIKwYS3327188
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:23:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UINACF3327617
+        Tue, 30 Jul 2019 11:20:59 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIKwYS3327188
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564510991;
-        bh=rQ1lPdnAFGVYbXuHqMCEqZMhm2INZaWN6kHVP6ThGLE=;
+        s=2019071901; t=1564510859;
+        bh=0UHbQ3Dv7VuytIFJ8MFmmsKhFhGVf2nPILJTWeXLYMA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=IeeNQ5l5+YlqLI0JP43eDBFZf8izhMnHoDhJpI52ou7NjhmmE6C0HcHL7a+KKfHqx
-         T3VHeWDVevjtLXqofS3DXUyyJV89YSyRl0CCK1fWhIMDrZxPapzLlgkwJ7abeX0rGX
-         EB9PMIMmTFz3KLXJ1HcNXY9I34sGT2RVE1cL9OIRrtLHj5UYRH5Kdt0tUXrOzejtu7
-         hel2PJsfdKaZY1vgcqud259JvbGkWEHfMpodkJNtTnfp2ViZiVisip7lwqYOF78UXC
-         U11cBnmZ8Vvu/8dd3PMXpF9Achob/zzzNMJn0pWpyqXMMdYoYU+VvlkVbRJsQSfXmA
-         AoCXFRQO1rWvQ==
+        b=H0kjpOu/RbFCAygu/NeRZz/Dg0EUGA+7M1K0vtzFPax8e8pUrZiiy7O71WCMzB+My
+         xngL1CCe+2CTtPqQmNcf1BqK2u78DgrbsdP3s7G54hlIMmcHaSxCMQg/gnF8ukFeMV
+         30g6dS1we82RMnReJrj0P8U7TA3a4GnEG05QS1TZ3QYC6R+Y+FXUgxucGBRRBTYzxq
+         NQRjBIIKpUFkNkXpU5qWf2aIW9TQQnc55BE1zmCrt7fHDk05XtK6/aupVP3nHa1cW8
+         rvh7ocM9XAdlQHLEM6MbdeORMq8LwEb3C3rSAwRRXEuA+46kvUrQ2jjse59RMmtS/h
+         E7mjSUKkWaPRw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UINAbB3327614;
-        Tue, 30 Jul 2019 11:23:10 -0700
-Date:   Tue, 30 Jul 2019 11:23:10 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIKwkU3327184;
+        Tue, 30 Jul 2019 11:20:58 -0700
+Date:   Tue, 30 Jul 2019 11:20:58 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-e74676debaae7dcce20a34817ef145478887ba95@git.kernel.org>
-Cc:     alexander.shishkin@linux.intel.com, mpetlan@redhat.com,
-        namhyung@kernel.org, alexey.budankov@linux.intel.com,
-        acme@redhat.com, jolsa@kernel.org, ak@linux.intel.com,
-        linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, hpa@zytor.com, tglx@linutronix.de
-Reply-To: alexander.shishkin@linux.intel.com,
-          alexey.budankov@linux.intel.com, acme@redhat.com,
-          mingo@kernel.org, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, mpetlan@redhat.com, jolsa@kernel.org,
-          ak@linux.intel.com, namhyung@kernel.org, hpa@zytor.com,
-          tglx@linutronix.de
-In-Reply-To: <20190721112506.12306-23-jolsa@kernel.org>
-References: <20190721112506.12306-23-jolsa@kernel.org>
+Message-ID: <tip-474ddc4c46025a615d0ea791d37ce9038fa20229@git.kernel.org>
+Cc:     peterz@infradead.org, namhyung@kernel.org, mingo@kernel.org,
+        hpa@zytor.com, acme@redhat.com, tglx@linutronix.de,
+        jolsa@kernel.org, alexey.budankov@linux.intel.com,
+        ak@linux.intel.com, alexander.shishkin@linux.intel.com,
+        linux-kernel@vger.kernel.org, mpetlan@redhat.com
+Reply-To: acme@redhat.com, hpa@zytor.com, jolsa@kernel.org,
+          tglx@linutronix.de, mingo@kernel.org, namhyung@kernel.org,
+          peterz@infradead.org, mpetlan@redhat.com,
+          alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+          alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20190721112506.12306-20-jolsa@kernel.org>
+References: <20190721112506.12306-20-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evlist: Rename perf_evlist__disable() to
- evlist__disable()
-Git-Commit-ID: e74676debaae7dcce20a34817ef145478887ba95
+Subject: [tip:perf/core] perf evlist: Rename perf_evlist__open() to
+ evlist__open()
+Git-Commit-ID: 474ddc4c46025a615d0ea791d37ce9038fa20229
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -75,17 +74,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e74676debaae7dcce20a34817ef145478887ba95
-Gitweb:     https://git.kernel.org/tip/e74676debaae7dcce20a34817ef145478887ba95
+Commit-ID:  474ddc4c46025a615d0ea791d37ce9038fa20229
+Gitweb:     https://git.kernel.org/tip/474ddc4c46025a615d0ea791d37ce9038fa20229
 Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:24:09 +0200
+AuthorDate: Sun, 21 Jul 2019 13:24:06 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 29 Jul 2019 18:34:43 -0300
 
-perf evlist: Rename perf_evlist__disable() to evlist__disable()
+perf evlist: Rename perf_evlist__open() to evlist__open()
 
-Rename perf_evlist__disable() to evlist__disable(), so we don't have a
-name clash when we add perf_evlist__disable() in libperf.
+Rename perf_evlist__open() to evlist__open(), so we don't have a name
+clash when we add perf_evlist__open() in libperf.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -94,235 +93,232 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-23-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-20-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
  tools/perf/arch/x86/tests/perf-time-to-tsc.c | 2 +-
  tools/perf/builtin-kvm.c                     | 2 +-
- tools/perf/builtin-record.c                  | 2 +-
- tools/perf/builtin-stat.c                    | 2 +-
- tools/perf/builtin-trace.c                   | 4 ++--
+ tools/perf/builtin-trace.c                   | 2 +-
  tools/perf/tests/backward-ring-buffer.c      | 2 +-
  tools/perf/tests/bpf.c                       | 2 +-
  tools/perf/tests/code-reading.c              | 2 +-
- tools/perf/tests/keep-tracking.c             | 6 +++---
+ tools/perf/tests/event-times.c               | 2 +-
+ tools/perf/tests/keep-tracking.c             | 2 +-
+ tools/perf/tests/openat-syscall-tp-fields.c  | 2 +-
+ tools/perf/tests/perf-record.c               | 2 +-
  tools/perf/tests/sw-clock.c                  | 2 +-
- tools/perf/tests/switch-tracking.c           | 4 ++--
- tools/perf/util/evlist.c                     | 4 ++--
+ tools/perf/tests/switch-tracking.c           | 2 +-
+ tools/perf/tests/task-exit.c                 | 2 +-
+ tools/perf/util/evlist.c                     | 2 +-
  tools/perf/util/evlist.h                     | 2 +-
- 13 files changed, 18 insertions(+), 18 deletions(-)
+ tools/perf/util/python.c                     | 2 +-
+ 16 files changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/tools/perf/arch/x86/tests/perf-time-to-tsc.c b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-index aa5a5c972ce5..8b70e9ee341a 100644
+index 09b6cef76f5b..ea4cf1d367a6 100644
 --- a/tools/perf/arch/x86/tests/perf-time-to-tsc.c
 +++ b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-@@ -107,7 +107,7 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
- 	comm2 = "Test COMM 2";
- 	CHECK__(prctl(PR_SET_NAME, (unsigned long)comm2, 0, 0, 0));
+@@ -83,7 +83,7 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
+ 	evsel->attr.disabled = 1;
+ 	evsel->attr.enable_on_exec = 0;
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+-	CHECK__(perf_evlist__open(evlist));
++	CHECK__(evlist__open(evlist));
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
- 		md = &evlist->mmap[i];
+ 	CHECK__(perf_evlist__mmap(evlist, UINT_MAX));
+ 
 diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 9207bd49583e..3370eba0d3f3 100644
+index 8f54bdfb5743..85604d117558 100644
 --- a/tools/perf/builtin-kvm.c
 +++ b/tools/perf/builtin-kvm.c
-@@ -993,7 +993,7 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
- 			err = fdarray__poll(fda, 100);
+@@ -1048,7 +1048,7 @@ static int kvm_live_open_events(struct perf_kvm_stat *kvm)
+ 		attr->disabled = 1;
  	}
  
--	perf_evlist__disable(kvm->evlist);
-+	evlist__disable(kvm->evlist);
- 
- 	if (err == 0) {
- 		sort_result(kvm);
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 8e20ead0ddbe..c0962ddfad04 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1605,7 +1605,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		 */
- 		if (done && !disabled && !target__none(&opts->target)) {
- 			trigger_off(&auxtrace_snapshot_trigger);
--			perf_evlist__disable(rec->evlist);
-+			evlist__disable(rec->evlist);
- 			disabled = true;
- 		}
- 	}
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index c0e9d94b6dd5..36e66a4f3c57 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -373,7 +373,7 @@ static void disable_counters(void)
- 	 * from counting before reading their constituent counters.
- 	 */
- 	if (!target__none(&target))
--		perf_evlist__disable(evsel_list);
-+		evlist__disable(evsel_list);
- }
- 
- static volatile int workload_exec_errno;
+-	err = perf_evlist__open(evlist);
++	err = evlist__open(evlist);
+ 	if (err < 0) {
+ 		printf("Couldn't create the events: %s\n",
+ 		       str_error_r(errno, sbuf, sizeof(sbuf)));
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 46fab1ff92dc..51d142594a12 100644
+index 95ecefa9ff7e..e508fdb77099 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -3451,7 +3451,7 @@ again:
- 				goto out_disable;
- 
- 			if (done && !draining) {
--				perf_evlist__disable(evlist);
-+				evlist__disable(evlist);
- 				draining = true;
- 			}
+@@ -3342,7 +3342,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
  		}
-@@ -3477,7 +3477,7 @@ again:
- out_disable:
- 	thread__zput(trace->current);
+ 	}
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+-	err = perf_evlist__open(evlist);
++	err = evlist__open(evlist);
+ 	if (err < 0)
+ 		goto out_error_open;
  
- 	if (trace->sort_events)
- 		ordered_events__flush(&trace->oe.data, OE_FLUSH__FINAL);
 diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
-index f4b45702821d..9bdf66139099 100644
+index ef3c6db2fae4..8de2d6ad93ce 100644
 --- a/tools/perf/tests/backward-ring-buffer.c
 +++ b/tools/perf/tests/backward-ring-buffer.c
-@@ -70,7 +70,7 @@ static int do_test(struct evlist *evlist, int mmap_pages,
+@@ -125,7 +125,7 @@ int test__backward_ring_buffer(struct test *test __maybe_unused, int subtest __m
  
- 	evlist__enable(evlist);
- 	testcase();
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+ 	perf_evlist__config(evlist, &opts, NULL);
  
- 	err = count_samples(evlist, sample_count, comm_count);
- 	perf_evlist__munmap(evlist);
+-	err = perf_evlist__open(evlist);
++	err = evlist__open(evlist);
+ 	if (err < 0) {
+ 		pr_debug("perf_evlist__open: %s\n",
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
 diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-index 92fed94f4b6c..e16f927f38b6 100644
+index 313ff1aadd9c..b41c41482283 100644
 --- a/tools/perf/tests/bpf.c
 +++ b/tools/perf/tests/bpf.c
-@@ -173,7 +173,7 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
+@@ -157,7 +157,7 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
  
- 	evlist__enable(evlist);
- 	(*func)();
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+ 	perf_evlist__config(evlist, &opts, NULL);
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
- 		union perf_event *event;
+-	err = perf_evlist__open(evlist);
++	err = evlist__open(evlist);
+ 	if (err < 0) {
+ 		pr_debug("perf_evlist__open: %s\n",
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
 diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 8d38e001160d..ec4b0bf28270 100644
+index 1c7f092a7388..23abc775a69c 100644
 --- a/tools/perf/tests/code-reading.c
 +++ b/tools/perf/tests/code-reading.c
-@@ -684,7 +684,7 @@ static int do_test_code_reading(bool try_kcore)
+@@ -646,7 +646,7 @@ static int do_test_code_reading(bool try_kcore)
+ 		evsel->attr.disabled = 1;
+ 		evsel->attr.enable_on_exec = 0;
  
- 	do_something();
+-		ret = perf_evlist__open(evlist);
++		ret = evlist__open(evlist);
+ 		if (ret < 0) {
+ 			if (!excl_kernel) {
+ 				excl_kernel = true;
+diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
+index 6f9995df2c27..bf00d3d792fb 100644
+--- a/tools/perf/tests/event-times.c
++++ b/tools/perf/tests/event-times.c
+@@ -38,7 +38,7 @@ static int attach__enable_on_exec(struct evlist *evlist)
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+ 	evsel->attr.enable_on_exec = 1;
  
- 	ret = process_events(machine, evlist, &state);
- 	if (ret < 0)
+-	err = perf_evlist__open(evlist);
++	err = evlist__open(evlist);
+ 	if (err < 0) {
+ 		pr_debug("perf_evlist__open: %s\n",
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
 diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
-index c333b9c765e8..7bfc859971e5 100644
+index 1976ccb3c812..c55bc062e200 100644
 --- a/tools/perf/tests/keep-tracking.c
 +++ b/tools/perf/tests/keep-tracking.c
-@@ -112,7 +112,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
- 	comm = "Test COMM 1";
- 	CHECK__(prctl(PR_SET_NAME, (unsigned long)comm, 0, 0, 0));
+@@ -94,7 +94,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
+ 	evsel->attr.disabled = 1;
+ 	evsel->attr.enable_on_exec = 0;
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+-	if (perf_evlist__open(evlist) < 0) {
++	if (evlist__open(evlist) < 0) {
+ 		pr_debug("Unable to open dummy and cycles event\n");
+ 		err = TEST_SKIP;
+ 		goto out_err;
+diff --git a/tools/perf/tests/openat-syscall-tp-fields.c b/tools/perf/tests/openat-syscall-tp-fields.c
+index f822c3c181f3..233447af9d03 100644
+--- a/tools/perf/tests/openat-syscall-tp-fields.c
++++ b/tools/perf/tests/openat-syscall-tp-fields.c
+@@ -60,7 +60,7 @@ int test__syscall_openat_tp_fields(struct test *test __maybe_unused, int subtest
  
- 	found = find_comm(evlist, comm);
- 	if (found != 1) {
-@@ -134,7 +134,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
- 	comm = "Test COMM 2";
- 	CHECK__(prctl(PR_SET_NAME, (unsigned long)comm, 0, 0, 0));
+ 	thread_map__set_pid(evlist->threads, 0, getpid());
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
- 
- 	found = find_comm(evlist, comm);
- 	if (found != 1) {
-@@ -146,7 +146,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
- 
- out_err:
- 	if (evlist) {
--		perf_evlist__disable(evlist);
-+		evlist__disable(evlist);
- 		evlist__delete(evlist);
- 	} else {
- 		cpu_map__put(cpus);
+-	err = perf_evlist__open(evlist);
++	err = evlist__open(evlist);
+ 	if (err < 0) {
+ 		pr_debug("perf_evlist__open: %s\n",
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
+diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
+index 779d5996428b..f5d1e7f1b58b 100644
+--- a/tools/perf/tests/perf-record.c
++++ b/tools/perf/tests/perf-record.c
+@@ -130,7 +130,7 @@ int test__PERF_RECORD(struct test *test __maybe_unused, int subtest __maybe_unus
+ 	 * Call sys_perf_event_open on all the fds on all the evsels,
+ 	 * grouping them if asked to.
+ 	 */
+-	err = perf_evlist__open(evlist);
++	err = evlist__open(evlist);
+ 	if (err < 0) {
+ 		pr_debug("perf_evlist__open: %s\n",
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
 diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
-index 4ab316c04ce7..ba033a6e6c0f 100644
+index 3ab11291174c..528a2dff06e0 100644
 --- a/tools/perf/tests/sw-clock.c
 +++ b/tools/perf/tests/sw-clock.c
-@@ -92,7 +92,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
- 	for (i = 0; i < NR_LOOPS; i++)
- 		tmp++;
+@@ -69,7 +69,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
+ 	cpus	= NULL;
+ 	threads = NULL;
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+-	if (perf_evlist__open(evlist)) {
++	if (evlist__open(evlist)) {
+ 		const char *knob = "/proc/sys/kernel/perf_event_max_sample_rate";
  
- 	md = &evlist->mmap[0];
- 	if (perf_mmap__read_init(md) < 0)
+ 		err = -errno;
 diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index ea214313f22b..d5537edb47db 100644
+index 5662dc1c6bd3..47f9895ba807 100644
 --- a/tools/perf/tests/switch-tracking.c
 +++ b/tools/perf/tests/switch-tracking.c
-@@ -528,7 +528,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
- 		goto out_err;
+@@ -450,7 +450,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
+ 		}
  	}
  
--	perf_evlist__disable(evlist);
-+	evlist__disable(evlist);
+-	if (perf_evlist__open(evlist) < 0) {
++	if (evlist__open(evlist) < 0) {
+ 		pr_debug("Not supported\n");
+ 		err = 0;
+ 		goto out;
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index 698ee5369c02..d17effdd55c8 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -95,7 +95,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 	evsel->attr.wakeup_events = 1;
+ 	evsel->attr.exclude_kernel = 1;
  
- 	switch_tracking.switch_evsel = switch_evsel;
- 	switch_tracking.cycles_evsel = cycles_evsel;
-@@ -566,7 +566,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
- 	}
- out:
- 	if (evlist) {
--		perf_evlist__disable(evlist);
-+		evlist__disable(evlist);
- 		evlist__delete(evlist);
- 	} else {
- 		cpu_map__put(cpus);
+-	err = perf_evlist__open(evlist);
++	err = evlist__open(evlist);
+ 	if (err < 0) {
+ 		pr_debug("Couldn't open the evlist: %s\n",
+ 			 str_error_r(-err, sbuf, sizeof(sbuf)));
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 94825c37a35f..1bedec28e58f 100644
+index e71c3cc93924..7d44e05dfaa4 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -343,7 +343,7 @@ static int perf_evlist__nr_threads(struct evlist *evlist,
- 		return thread_map__nr(evlist->threads);
+@@ -1387,7 +1387,7 @@ out_put:
+ 	goto out;
  }
  
--void perf_evlist__disable(struct evlist *evlist)
-+void evlist__disable(struct evlist *evlist)
+-int perf_evlist__open(struct evlist *evlist)
++int evlist__open(struct evlist *evlist)
  {
- 	struct evsel *pos;
- 
-@@ -371,7 +371,7 @@ void evlist__enable(struct evlist *evlist)
- 
- void perf_evlist__toggle_enable(struct evlist *evlist)
- {
--	(evlist->enabled ? perf_evlist__disable : evlist__enable)(evlist);
-+	(evlist->enabled ? evlist__disable : evlist__enable)(evlist);
- }
- 
- static int perf_evlist__enable_event_cpu(struct evlist *evlist,
+ 	struct evsel *evsel;
+ 	int err;
 diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index ab48bbfbca41..99621c056d09 100644
+index b3a44e2eed08..f4b3152c879e 100644
 --- a/tools/perf/util/evlist.h
 +++ b/tools/perf/util/evlist.h
-@@ -184,7 +184,7 @@ void perf_evlist__munmap(struct evlist *evlist);
+@@ -146,7 +146,7 @@ void perf_evlist__toggle_bkw_mmap(struct evlist *evlist, enum bkw_mmap_state sta
  
- size_t perf_evlist__mmap_size(unsigned long pages);
+ void perf_evlist__mmap_consume(struct evlist *evlist, int idx);
  
--void perf_evlist__disable(struct evlist *evlist);
-+void evlist__disable(struct evlist *evlist);
- void evlist__enable(struct evlist *evlist);
- void perf_evlist__toggle_enable(struct evlist *evlist);
+-int perf_evlist__open(struct evlist *evlist);
++int evlist__open(struct evlist *evlist);
+ void perf_evlist__close(struct evlist *evlist);
  
+ struct callchain_param;
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 3eb7348d29f8..cc4af99ab190 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -1059,7 +1059,7 @@ static PyObject *pyrf_evlist__open(struct pyrf_evlist *pevlist,
+ 	if (group)
+ 		perf_evlist__set_leader(evlist);
+ 
+-	if (perf_evlist__open(evlist) < 0) {
++	if (evlist__open(evlist) < 0) {
+ 		PyErr_SetFromErrno(PyExc_OSError);
+ 		return NULL;
+ 	}
