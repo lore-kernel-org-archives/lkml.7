@@ -2,111 +2,119 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA82BC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6D8C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B61A206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2316206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 08:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4M+viem"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXtXAVMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730756AbfG3IBo (ORCPT
+        id S1730773AbfG3IDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 04:01:44 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36955 "EHLO
+        Tue, 30 Jul 2019 04:03:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35658 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728242AbfG3IBn (ORCPT
+        with ESMTP id S1729810AbfG3IDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:01:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i70so18890503pgd.4;
-        Tue, 30 Jul 2019 01:01:43 -0700 (PDT)
+        Tue, 30 Jul 2019 04:03:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s1so23331058pgr.2;
+        Tue, 30 Jul 2019 01:03:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qb+k+IflEc/XKNcEL8wcO85r4kdnoHed1qavVtD26A4=;
-        b=T4M+viemc2mgjfoNgtBEbNrHi4++XWQ1uuVWtDnxMAEaopanQDFqANVTDntykuRyXa
-         9pZUS5u1W7nk6GgXn3SPzeeZFaWUO85khfULWHtP3yWfiLB8wybXW+0u4iiLBaJMoIMM
-         SOfbUcjwoVIhXdd0okwNsq9zD6/9P5P5di1gGcRXBpKCWvIq43/WcA8idHuP5g0x2CxI
-         e7Hc/Nyfg4nexZ1FF3Y+ojiLY2luk9hegwrPLtoRUuWqyc++n8JjWycagPdu1B4qxXVW
-         6K4zagiDF/4BJ9ldNK1SXzKBB5df8FyWejHkCAsxEJhfuKT4y7iRzHF7EWTs8AyEoVW+
-         OOwA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=VChiJaSG46ybZALSFOV8/YPDL/6pdPPKzTJ+KlFjbec=;
+        b=JXtXAVMkkw5n/mrWdLnavDkNKc9V87C4Koawc720nJ2ynLsSg+yvLSEpfiVYghyOzj
+         s2y64EygboGQCSPzeB7ai/5a1Vcc0xsMuuGZka9xo3fIEvYDsvLpBPj3G3WdNK91oDYP
+         Iw7MPSnE46V7MKFt5ziBNtVOXoONAHNK6S4YC0WEmzqbKM2PZLfezS0v2nYg6BHjYQ3R
+         hatIE3AU+bAR25ExlwAYeHX5/y5HriF19R3sIwwbb9dxZMsCnfszGPq1Ch4M1EgsbnDm
+         MuCXtcyxbkN87YKJrAjUoXfYzbGUYq8wVHqzNPcPkvvVPaTz7q5IZfABOq3tT+rOu3bb
+         OfzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qb+k+IflEc/XKNcEL8wcO85r4kdnoHed1qavVtD26A4=;
-        b=aCejX5ZmQyf2re7pOzURneEAqCE28UGxYhW7YQR0gOA7dPPsze5hsxHKIohEDch56j
-         ElUSbus/GN0OGTm6DrEEf/XRESZETdv51gmdIA7t9n+lrU1chlhxsWUE0zKWeymnZ0Pl
-         texdFAoVt9lRUser14vpiJUDeJtMU4lbMv9RZrwFbL4kf+kM8DTPRXlalfEbYiN7Itj4
-         CDulklwkxgJtXemS2+RmU31mroH8tasj/zQ6WZjedMnfEsITkCQ5NK+f3if1F/5t49lq
-         iqHV9Ukz0No2xQEhh3BJaqUYGyuGPP9Raf0FZmD6cz/moBYpH6Udh4OJGMYgF6ulpn4f
-         TkMg==
-X-Gm-Message-State: APjAAAW0mQURZZFBfKewXpU0dDxvG4Xkc4ibNCnjrBk9hrwitfGQ1tFq
-        VUmN7stagEc2A0iGYOxQSRs=
-X-Google-Smtp-Source: APXvYqzaK5prno8UGLcxc2Eoqgvtduo5CAG6Z3vyHnKkjPt+3dikjtKC/5TlXGUB1Mx5Ga6cXlzL5A==
-X-Received: by 2002:a17:90a:c68c:: with SMTP id n12mr117813485pjt.29.1564473703136;
-        Tue, 30 Jul 2019 01:01:43 -0700 (PDT)
-Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
-        by smtp.gmail.com with ESMTPSA id u7sm56293369pfm.96.2019.07.30.01.01.42
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=VChiJaSG46ybZALSFOV8/YPDL/6pdPPKzTJ+KlFjbec=;
+        b=MqvMnb/3Dae2yrBG+Hz7/lLGOVxtv+86ApgvdPzvQ9o+Uduelg5VPGwxEa++Sh36xP
+         PY0zz39cf8VMJIVqbhXXXZDAZhFN3284PP/b/R3i9OkLCnLeHAzy6sGTTs3Y9ZY8+9P9
+         MSzO3hyHhj2JkGudj96vCVzIZIImO6iDXSjsEj34uUBEDnzB+23P9aORnbBAiyFW8wx3
+         ZDAFqJxKO6A8VsfQYjoc7Qd3lCgVf4261uv5ItlbC/GYeXVDhn8kmWGIq7/AKkJ6z/d1
+         DZB72ld5oi6om0d8VXmQzXbEs7Bt/Wqi8PB0Zwrn6QR5du5LFDyGGC0Hhh5xpnHV33p3
+         i5yQ==
+X-Gm-Message-State: APjAAAVdjNRGAxjhz5udOqj/MMfh7QkmnxWjqz5gIS6jdESD7rIYDD3T
+        MQxV7YtV3cuSDRknQAGS8AoRX7PpBqM=
+X-Google-Smtp-Source: APXvYqzPNNwXVdfbBcDk92EEN5saUEUUJ8JLGm3xhnsvnw+wFq2WeTaR3y51UIFLTSSPf8PjTGxU2A==
+X-Received: by 2002:a65:4948:: with SMTP id q8mr49355881pgs.214.1564473780195;
+        Tue, 30 Jul 2019 01:03:00 -0700 (PDT)
+Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
+        by smtp.gmail.com with ESMTPSA id v184sm59805009pgd.34.2019.07.30.01.02.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 01:01:42 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 01:01:36 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     broonie@kernel.org, l.stach@pengutronix.de, mihai.serban@gmail.com,
-        alsa-devel@alsa-project.org, viorel.suman@nxp.com,
-        timur@kernel.org, shengjiu.wang@nxp.com, angus@akkea.ca,
-        tiwai@suse.com, linux-imx@nxp.com, kernel@pengutronix.de,
-        festevam@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org
-Subject: Re: [PATCH v2 7/7] ASoC: dt-bindings: Introduce compatible strings
- for 7ULP and 8MQ
-Message-ID: <20190730080135.GB5892@Asurada>
-References: <20190728192429.1514-1-daniel.baluta@nxp.com>
- <20190728192429.1514-8-daniel.baluta@nxp.com>
+        Tue, 30 Jul 2019 01:02:59 -0700 (PDT)
+Subject: Re: [PATCH] net: phy: phy_led_triggers: Fix a possible null-pointer
+ dereference in phy_led_trigger_change_speed()
+To:     David Miller <davem@davemloft.net>, andrew@lunn.ch
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190729134553.GC4110@lunn.ch>
+ <f603f3c3-f7c9-8dff-5f30-74174282819c@gmail.com>
+ <20190730033229.GA20628@lunn.ch>
+ <20190729.204113.316505378355498068.davem@davemloft.net>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <c41475ec-b418-7874-9150-3a6eef125365@gmail.com>
+Date:   Tue, 30 Jul 2019 16:03:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190728192429.1514-8-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+In-Reply-To: <20190729.204113.316505378355498068.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 10:24:29PM +0300, Daniel Baluta wrote:
-> For i.MX7ULP and i.MX8MQ register map is changed. Add two new compatbile
-> strings to differentiate this.
-> 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  Documentation/devicetree/bindings/sound/fsl-sai.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> index 2b38036a4883..b008e9cfedc1 100644
-> --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> @@ -8,7 +8,8 @@ codec/DSP interfaces.
->  Required properties:
->  
->    - compatible		: Compatible list, contains "fsl,vf610-sai",
-> -			  "fsl,imx6sx-sai" or "fsl,imx6ul-sai"
-> +			  "fsl,imx6sx-sai", "fsl,imx6ul-sai",
-> +			  "fsl,imx7ulp-sai", "fsl,imx8mq-sai".
 
-A nit, could have that 'or' :)
 
->  
->    - reg			: Offset and length of the register set for the device.
->  
-> -- 
-> 2.17.1
-> 
+On 2019/7/30 11:41, David Miller wrote:
+> From: Andrew Lunn <andrew@lunn.ch>
+> Date: Tue, 30 Jul 2019 05:32:29 +0200
+>
+>> On Tue, Jul 30, 2019 at 10:25:36AM +0800, Jia-Ju Bai wrote:
+>>>
+>>> On 2019/7/29 21:45, Andrew Lunn wrote:
+>>>> On Mon, Jul 29, 2019 at 05:24:24PM +0800, Jia-Ju Bai wrote:
+>>>>> In phy_led_trigger_change_speed(), there is an if statement on line 48
+>>>>> to check whether phy->last_triggered is NULL:
+>>>>>      if (!phy->last_triggered)
+>>>>>
+>>>>> When phy->last_triggered is NULL, it is used on line 52:
+>>>>>      led_trigger_event(&phy->last_triggered->trigger, LED_OFF);
+>>>>>
+>>>>> Thus, a possible null-pointer dereference may occur.
+>>>>>
+>>>>> To fix this bug, led_trigger_event(&phy->last_triggered->trigger,
+>>>>> LED_OFF) is called when phy->last_triggered is not NULL.
+>>>>>
+>>>>> This bug is found by a static analysis tool STCheck written by us.
+>>>> Who is 'us'?
+>>> Me and my colleague...
+>> Well, we can leave it very vague, giving no idea who 'us' is. But
+>> often you want to name the company behind it, or the university, or
+>> the sponsor, etc.
+> I agree, if you are going to mention that there is a tool you should be
+> clear exactly who and what organization are behind it
+
+Thanks for the advice.
+I will add my organization in the patch.
+
+
+Best wishes,
+Jia-Ju Bai
