@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E646C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308C9C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E822208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E9C20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 07:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbfG3HQA (ORCPT
+        id S1729833AbfG3HO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 03:16:00 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3208 "EHLO huawei.com"
+        Tue, 30 Jul 2019 03:14:58 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34060 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729835AbfG3HPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 03:15:04 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C6ADD66B4BC8675C9153;
-        Tue, 30 Jul 2019 15:15:01 +0800 (CST)
+        id S1729792AbfG3HOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 03:14:54 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A2A456D21F418E7ED982;
+        Tue, 30 Jul 2019 15:14:51 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 30 Jul
- 2019 15:14:55 +0800
+ 2019 15:14:45 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -45,9 +45,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v5 17/24] erofs: introduce per-CPU buffers implementation
-Date:   Tue, 30 Jul 2019 15:14:06 +0800
-Message-ID: <20190730071413.11871-18-gaoxiang25@huawei.com>
+Subject: [PATCH v5 10/24] erofs: update Kconfig and Makefile
+Date:   Tue, 30 Jul 2019 15:13:59 +0800
+Message-ID: <20190730071413.11871-11-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190730071413.11871-1-gaoxiang25@huawei.com>
 References: <20190730071413.11871-1-gaoxiang25@huawei.com>
@@ -60,107 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces per-CPU buffers in order for
-the upcoming generic decompression framework to use.
-
-Note that I tried to use in-kernel per-CPU buffer or
-per-CPU page approaches to clean up further, however
-noticeable performanace regression (about 2% for
-sequential read) was observed.
-
-Let's leave it as-is for now.
+This commit adds Makefile and Kconfig for erofs, and
+updates Makefile and Kconfig files in the fs directory.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/Kconfig    | 14 ++++++++++++++
- fs/erofs/internal.h | 21 +++++++++++++++++++++
- fs/erofs/utils.c    | 12 ++++++++++++
- 3 files changed, 47 insertions(+)
+ fs/Kconfig        |  1 +
+ fs/Makefile       |  1 +
+ fs/erofs/Kconfig  | 36 ++++++++++++++++++++++++++++++++++++
+ fs/erofs/Makefile |  9 +++++++++
+ 4 files changed, 47 insertions(+)
+ create mode 100644 fs/erofs/Kconfig
+ create mode 100644 fs/erofs/Makefile
 
+diff --git a/fs/Kconfig b/fs/Kconfig
+index bfb1c6095c7a..669d46550e6d 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -261,6 +261,7 @@ source "fs/romfs/Kconfig"
+ source "fs/pstore/Kconfig"
+ source "fs/sysv/Kconfig"
+ source "fs/ufs/Kconfig"
++source "fs/erofs/Kconfig"
+ 
+ endif # MISC_FILESYSTEMS
+ 
+diff --git a/fs/Makefile b/fs/Makefile
+index d60089fd689b..b2e4973a0bea 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -130,3 +130,4 @@ obj-$(CONFIG_F2FS_FS)		+= f2fs/
+ obj-$(CONFIG_CEPH_FS)		+= ceph/
+ obj-$(CONFIG_PSTORE)		+= pstore/
+ obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
++obj-$(CONFIG_EROFS_FS)		+= erofs/
 diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index a475fbebb831..5f8787c0cf89 100644
---- a/fs/erofs/Kconfig
+new file mode 100644
+index 000000000000..98f05043448a
+--- /dev/null
 +++ b/fs/erofs/Kconfig
-@@ -81,3 +81,17 @@ config EROFS_FS_ZIP
- 
- 	  If you don't want to enable compression feature, say N.
- 
-+config EROFS_FS_CLUSTER_PAGE_LIMIT
-+	int "EROFS Cluster Pages Hard Limit"
-+	depends on EROFS_FS_ZIP
-+	range 1 256
-+	default "1"
+@@ -0,0 +1,36 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++config EROFS_FS
++	tristate "EROFS filesystem support"
++	depends on BLOCK
 +	help
-+	  Indicates maximum # of pages of a compressed
-+	  physical cluster.
++	  EROFS (Enhanced Read-Only File System) is a lightweight
++	  read-only file system with modern designs (eg. page-sized
++	  blocks, inline xattrs/data, etc.) for scenarios which need
++	  high-performance read-only requirements, e.g. Android OS
++	  for mobile phones and LIVECDs.
 +
-+	  For example, if files in a image were compressed
-+	  into 8k-unit, hard limit should not be configured
-+	  less than 2. Otherwise, the image will be refused
-+	  to mount on this kernel.
++	  It also provides fixed-sized output compression support,
++	  which improves storage density, keeps relatively higher
++	  compression ratios, which is more useful to achieve high
++	  performance for embedded devices with limited memory.
 +
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 6df6cddb51ff..49ac3ce4f8a4 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -223,6 +223,12 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
- 	return v;
- }
- #endif	/* !CONFIG_SMP */
++	  If unsure, say N.
 +
-+/* hard limit of pages per compressed cluster */
-+#define Z_EROFS_CLUSTER_MAX_PAGES       (CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT)
-+#define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_CLUSTER_MAX_PAGES
-+#else
-+#define EROFS_PCPUBUF_NR_PAGES          0
- #endif	/* !CONFIG_EROFS_FS_ZIP */
- 
- /* we strictly follow PAGE_SIZE and no buffer head yet */
-@@ -481,6 +487,21 @@ int erofs_namei(struct inode *dir, struct qstr *name,
- extern const struct file_operations erofs_dir_fops;
- 
- /* utils.c */
-+#if (EROFS_PCPUBUF_NR_PAGES > 0)
-+void *erofs_get_pcpubuf(unsigned int pagenr);
-+#define erofs_put_pcpubuf(buf) do { \
-+	(void)&(buf);	\
-+	preempt_enable();	\
-+} while (0)
-+#else
-+static inline void *erofs_get_pcpubuf(unsigned int pagenr)
-+{
-+	return ERR_PTR(-ENOTSUPP);
-+}
++config EROFS_FS_DEBUG
++	bool "EROFS debugging feature"
++	depends on EROFS_FS
++	help
++	  Print debugging messages and enable more BUG_ONs which check
++	  filesystem consistency and find potential issues aggressively,
++	  which can be used for Android eng build, for example.
 +
-+#define erofs_put_pcpubuf(buf) do {} while (0)
-+#endif
++	  For daily use, say N.
 +
- #ifdef CONFIG_EROFS_FS_ZIP
- int erofs_workgroup_put(struct erofs_workgroup *grp);
- struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index 628178261056..f3eed9af24d6 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -9,6 +9,18 @@
- #include "internal.h"
- #include <linux/pagevec.h>
- 
-+#if (EROFS_PCPUBUF_NR_PAGES > 0)
-+static struct {
-+	u8 data[PAGE_SIZE * EROFS_PCPUBUF_NR_PAGES];
-+} ____cacheline_aligned_in_smp erofs_pcpubuf[NR_CPUS];
++config EROFS_FAULT_INJECTION
++	bool "EROFS fault injection facility"
++	depends on EROFS_FS
++	help
++	  Test EROFS to inject faults such as ENOMEM, EIO, and so on.
++	  If unsure, say N.
 +
-+void *erofs_get_pcpubuf(unsigned int pagenr)
-+{
-+	preempt_disable();
-+	return &erofs_pcpubuf[smp_processor_id()].data[pagenr * PAGE_SIZE];
-+}
-+#endif
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+new file mode 100644
+index 000000000000..c3f4e549ef90
+--- /dev/null
++++ b/fs/erofs/Makefile
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0-only
 +
- #ifdef CONFIG_EROFS_FS_ZIP
- /* global shrink count (for all mounted EROFS instances) */
- static atomic_long_t erofs_global_shrink_cnt;
++EROFS_VERSION = "1.0"
++
++ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
++
++obj-$(CONFIG_EROFS_FS) += erofs.o
++erofs-objs := super.o inode.o data.o namei.o dir.o
++
 -- 
 2.17.1
 
