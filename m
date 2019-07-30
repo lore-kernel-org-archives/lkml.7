@@ -2,207 +2,76 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEF9C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8A5C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B146E208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564467816;
-	bh=7FZ/pMFNKuOnp9FdOoTgWqecv4FgzB0iI31KCf5u0D4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gpXsPEA2S7oF2MLzLVr+gCJ+LBMJa1Z2X3KraXZrCAmk3mmFwcSOlVb5VY85B6bO/
-	 b1++eNwuSkkm0bCdCCOdMiZgVIc3gb21TI63DPDyj99/CQpW91cUMjWOrEt/s3JjcR
-	 GQjZwFfDT0mx3ieX3GBRYys1yftwjFpMi59hkMU0=
+	by mail.kernel.org (Postfix) with ESMTP id A20522064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 06:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbfG3GXf (ORCPT
+        id S1728977AbfG3G05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 02:23:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47882 "EHLO mail.kernel.org"
+        Tue, 30 Jul 2019 02:26:57 -0400
+Received: from verein.lst.de ([213.95.11.211]:48085 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728771AbfG3GXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 02:23:35 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 451CB2064A;
-        Tue, 30 Jul 2019 06:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564467814;
-        bh=7FZ/pMFNKuOnp9FdOoTgWqecv4FgzB0iI31KCf5u0D4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DzqGr9iuNAMqsQsSNIHluH01aaxMXfk6LxptUsvAp6pcjYJwQ3a8L1waNXBjlcpdW
-         moZGSQyrdJK3ywdUukDcHM2iMjcogKqZNJGoUkDM6FWXOkDzbGfchvfP4zo8NLd8a0
-         /Z21bWe/CksTRxxDZtgBcPERcyDuNhtV92AMVepA=
-Date:   Tue, 30 Jul 2019 15:23:31 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2 00/12] tracing/probe: Add multi-probes per event
- support
-Message-Id: <20190730152331.2e5867bf8ec7e57bd8dc64d5@kernel.org>
-In-Reply-To: <20190704072833.4bc17d3c@gandalf.local.home>
-References: <156095682948.28024.14190188071338900568.stgit@devnote2>
-        <20190704153958.16a97c881aebbc5898b1264e@kernel.org>
-        <20190704072833.4bc17d3c@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726128AbfG3G05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 02:26:57 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 221D568AEF; Tue, 30 Jul 2019 08:26:52 +0200 (CEST)
+Date:   Tue, 30 Jul 2019 08:26:51 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] dma-mapping: provide a better default
+ ->get_required_mask
+Message-ID: <20190730062651.GA29518@lst.de>
+References: <20190725063401.29904-1-hch@lst.de> <20190725063401.29904-5-hch@lst.de> <CAMuHMdUBPj8AVSuDwaBB_4gRD6k7vzo0WAFJEkTUbxSw31bzUg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUBPj8AVSuDwaBB_4gRD6k7vzo0WAFJEkTUbxSw31bzUg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+On Mon, Jul 29, 2019 at 11:57:19AM +0200, Geert Uytterhoeven wrote:
+> Hi Christoph,
+> 
+> On Thu, Jul 25, 2019 at 8:35 AM Christoph Hellwig <hch@lst.de> wrote:
+> > Most dma_map_ops instances are IOMMUs that work perfectly fine in 32-bits
+> > of IOVA space, and the generic direct mapping code already provides its
+> > own routines that is intelligent based on the amount of memory actually
+> > present.  Wire up the dma-direct routine for the ARM direct mapping code
+> > as well, and otherwise default to the constant 32-bit mask.  This way
+> > we only need to override it for the occasional odd IOMMU that requires
+> > 64-bit IOVA support, or IOMMU drivers that are more efficient if they
+> > can fall back to the direct mapping.
+> 
+> As I know you like diving into cans of worms ;-)
+> 
+> Does 64-bit IOVA support actually work in general? Or only on 64-bit
+> platforms, due to dma_addr_t to unsigned long truncation on 32-bit?
 
-Have you already picked this series?
-If not yet, should I update and resend this series?
-
-Thank you,
-
-On Thu, 4 Jul 2019 07:28:33 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Thu, 4 Jul 2019 15:39:58 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > Hi Steve,
-> > 
-> > Would you have any comment on this?
-> > 
-> 
-> Hi Masami,
-> 
-> It's on my todo list. As today is a US holiday, I'll look at this on
-> Monday.
-> 
-> Thanks for the reminder!
-> 
-> -- Steve
-> 
-> 
-> > Thank you,
-> > 
-> > On Thu, 20 Jun 2019 00:07:09 +0900
-> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > 
-> > > Hello,
-> > > 
-> > > This is the 2nd version of multi-probes per event support on ftrace
-> > > and perf-tools.
-> > > 
-> > > Previous version is here;
-> > > https://lkml.org/lkml/2019/5/31/573
-> > >   
-> > > >From this version, I omitted first 9 patches which has been picked  
-> > > to Steve's tree.
-> > > In this version, I've fixed some bugs and hardened some unexpected
-> > > error cases according to Steve's comment.
-> > > Here are changes in this version:
-> > > 
-> > >  - [1/12] This have below changes. 
-> > >     - Warn if the primary trace_probe does not exist.
-> > >     - Fix enable_trace_kprobe() to not return error if the any probes
-> > >       are "gone" state. If all probes have gone or any other error
-> > >       reason, the event can not be enabled and return error.
-> > >     - Fix trace_probe_enable() to roll back all enabled uprobe if
-> > >       any one of uprobe is failed to enable.
-> > >  - [7/12] Swap the checking order of filename for avoiding unexpected
-> > >      memory access.
-> > > 
-> > > 
-> > > ====
-> > > For trace-event, we can insert same trace-event on several places
-> > > on the code, and those can record similar information as a same event
-> > > with same format.
-> > > 
-> > > This series implements similar feature on probe-event. Since the probe
-> > > event is based on the compiled binary, sometimes we find that the target
-> > > source line is complied into several different addresses, e.g. inlined
-> > > function, unrolled loop, etc. In those cases, it is useful to put a
-> > > same probe-event on different addresses.
-> > > 
-> > > With this series, we can append multi probes on one event as below
-> > > 
-> > >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
-> > >   # echo p:testevent fork_idle r1=%ax r2=%cx >> kprobe_events
-> > >   # kprobe_events
-> > >   p:kprobes/testevent _do_fork r1=%ax r2=%dx
-> > >   p:kprobes/testevent fork_idle r1=%ax r2=%cx
-> > > 
-> > > This means testevent is hit on both of _do_fork and fork_idle.
-> > > As you can see, the appended event must have same number of arguments
-> > > and those must have same 'type' and 'name' as original one. This is like
-> > > a function signature, it checks whether the appending event has the same
-> > > type and name of event arguments and same probe type, but doesn't care
-> > > about the assignment.
-> > > 
-> > > So, below appending commands will be rejected.
-> > > 
-> > >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
-> > >   # echo p:testevent fork_idle r1=%ax >> kprobe_events
-> > >   (No 2nd argument)
-> > >   # echo p:testevent fork_idle r1=%ax r2=%ax:x8 >> kprobe_events
-> > >   (The type of 2nd argument is different)
-> > > 
-> > > If one inlined code has an argument on a register, but another
-> > > inlined code has fixed value (as a result of optimization),
-> > > you can also specify the fixed immediate value, e.g.
-> > > 
-> > >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
-> > >   # echo p:testevent fork_idle r1=%ax r2=\1 >> kprobe_events
-> > > 
-> > > 
-> > > Thank you,
-> > > 
-> > > ---
-> > > 
-> > > Masami Hiramatsu (12):
-> > >       tracing/probe: Split trace_event related data from trace_probe
-> > >       tracing/dynevent: Delete all matched events
-> > >       tracing/dynevent: Pass extra arguments to match operation
-> > >       tracing/kprobe: Add multi-probe per event support
-> > >       tracing/uprobe: Add multi-probe per uprobe event support
-> > >       tracing/kprobe: Add per-probe delete from event
-> > >       tracing/uprobe: Add per-probe delete from event
-> > >       tracing/probe: Add immediate parameter support
-> > >       tracing/probe: Add immediate string parameter support
-> > >       selftests/ftrace: Add a testcase for kprobe multiprobe event
-> > >       selftests/ftrace: Add syntax error test for immediates
-> > >       selftests/ftrace: Add syntax error test for multiprobe
-> > > 
-> > > 
-> > >  Documentation/trace/kprobetrace.rst                |    1 
-> > >  Documentation/trace/uprobetracer.rst               |    1 
-> > >  kernel/trace/trace.c                               |    8 -
-> > >  kernel/trace/trace_dynevent.c                      |   10 +
-> > >  kernel/trace/trace_dynevent.h                      |    7 -
-> > >  kernel/trace/trace_events_hist.c                   |    4 
-> > >  kernel/trace/trace_kprobe.c                        |  241 ++++++++++++++----
-> > >  kernel/trace/trace_probe.c                         |  176 +++++++++++--
-> > >  kernel/trace/trace_probe.h                         |   67 ++++-
-> > >  kernel/trace/trace_uprobe.c                        |  263 +++++++++++++++-----
-> > >  tools/testing/selftests/ftrace/test.d/functions    |    2 
-> > >  .../ftrace/test.d/kprobe/kprobe_multiprobe.tc      |   35 +++
-> > >  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   15 +
-> > >  13 files changed, 665 insertions(+), 165 deletions(-)
-> > >  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc
-> > > 
-> > > --
-> > > Masami Hiramatsu (Linaro) <mhiramat@kernel.org>  
-> > 
-> > 
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Most IOMMUs use 32-bit IOVAs, and thus we default to the 32-bit mask
+because it is common and failsafe vs the normal linux assumptions.
+However the ia64 SGI SN2 platform, and the powerpc IBM ebus
+implementations seem to require a 64-bit mask already, so we keep that
+behavior as is.
