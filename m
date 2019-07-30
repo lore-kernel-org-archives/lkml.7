@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E5FC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4E0C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F894217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2368A217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 03:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564455604;
-	bh=uowl3c9T6zPHJLyVQyRvPg7u53pyWjvKnbKapnx+a7c=;
+	s=default; t=1564455608;
+	bh=BVEOybWi9R8A9A4YxYWVFI7PG/vLvggJZXLMVuFYNj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YkVSdxknuD4meWlj0bwIIPOhX442BhduNxxWAMtrEMbJl3Rf0TCV66xnsDVuxZvmt
-	 sxo+hSNORAkekt/iKyrZQQPsUcvsJ8c9YRgogYRUXYf6B+wZMX9MKvUptmkF0LmE3W
-	 xDYIqKP1f5sqFME5lMU5SCPKbvsrwtq020Loi3sg=
+	b=PRDiijChZ4MEHoR001Q0OMNSlXIu46i4jAhGykfBSkEGDuonR8m0oL3LpVIJ6eQnt
+	 j0eY93g5y7H8mB9qepVIOPvDfzXgSDPXTeAok/LHwUS0E+rgxsw7kIm0b5PC+IhQ41
+	 P2drtEjwVIefjuVqlVPMjJwOfBXn/armlT/Zvhng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732332AbfG3DAD (ORCPT
+        id S1732344AbfG3DAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 23:00:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49280 "EHLO mail.kernel.org"
+        Mon, 29 Jul 2019 23:00:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732287AbfG3C76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 22:59:58 -0400
+        id S1732317AbfG3DAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 23:00:01 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA00D2171F;
-        Tue, 30 Jul 2019 02:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58E0921773;
+        Tue, 30 Jul 2019 02:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564455596;
-        bh=uowl3c9T6zPHJLyVQyRvPg7u53pyWjvKnbKapnx+a7c=;
+        s=default; t=1564455600;
+        bh=BVEOybWi9R8A9A4YxYWVFI7PG/vLvggJZXLMVuFYNj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eG0eOastd5OstH77nd6fLXsQ0vQRCgaEJOsV0CZrcaGy3Wb+XXcqz/BD2/mE9ZPLf
-         ZW3jGbSprML/+F2g5pzsaDlajkN74ceSWsRZ42WY2Mcg/00OtvQgZVkTYTty+kYJqS
-         KZBXmnKUHnbxImk0Y9Or6+DmHu2LYeKG/LEIoC5g=
+        b=oEXwqCixNNsM+Nm0jKccpjrUV2nrbWilWqlTBn7vUcdyn7zwXWV5L1m66bD87mXIS
+         E42CeNqstZmESlgmhj/xtH6Idupkt+8NJuyZP7rL9fEUNJG+qkdDGSDoKhVy44RwTR
+         Ak6+rxzuIcmOT1JGf9ClddDGlfVg1mDXVc/pIlHY=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 065/107] libperf: Add perf_evlist__init() function
-Date:   Mon, 29 Jul 2019 23:55:28 -0300
-Message-Id: <20190730025610.22603-66-acme@kernel.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 066/107] libperf: Add perf_evlist__add() function
+Date:   Mon, 29 Jul 2019 23:55:29 -0300
+Message-Id: <20190730025610.22603-67-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
@@ -66,113 +66,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add the perf_evlist__init() function to initialize a perf_evlist struct.
-
-Committer testing:
-
-Fix a change in init ordering that was causing this backtrace:
-
-  (gdb) run stat sleep 1
-  Starting program: /root/bin/perf stat sleep 1
-  Program received signal SIGSEGV, Segmentation fault.
-  0x00000000004f6b55 in __perf_evlist__propagate_maps (evlist=0xbb34c0, evsel=0x0) at util/evlist.c:161
-  161		if (!evsel->own_cpus || evlist->has_user_cpus) {
-  Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.6-29.fc30.x86_64 elfutils-libelf-0.176-3.fc30.x86_64 elfutils-libs-0.176-3.fc30.x86_64 glib2-2.60.4-1.fc30.x86_64 libbabeltrace-1.5.6-2.fc30.x86_64 libgcc-9.1.1-1.fc30.x86_64 libunwind-1.3.1-2.fc30.x86_64 libuuid-2.33.2-1.fc30.x86_64 libxcrypt-4.4.6-2.fc30.x86_64 libzstd-1.4.0-1.fc30.x86_64 numactl-libs-2.0.12-2.fc30.x86_64 pcre-8.43-2.fc30.x86_64 perl-libs-5.28.2-436.fc30.x86_64 popt-1.16-17.fc30.x86_64 python2-libs-2.7.16-2.fc30.x86_64 slang-2.3.2-5.fc30.x86_64 xz-libs-5.2.4-5.fc30.x86_64 zlib-1.2.11-15.fc30.x86_64
-  (gdb) bt
-  #0  0x00000000004f6b55 in __perf_evlist__propagate_maps (evlist=0xbb34c0, evsel=0x0) at util/evlist.c:161
-  #1  0x00000000004f6c7a in perf_evlist__propagate_maps (evlist=0xbb34c0) at util/evlist.c:178
-  #2  0x00000000004f955e in perf_evlist__set_maps (evlist=0xbb34c0, cpus=0x0, threads=0x0) at util/evlist.c:1128
-  #3  0x00000000004f66f8 in evlist__init (evlist=0xbb34c0, cpus=0x0, threads=0x0) at util/evlist.c:52
-  #4  0x00000000004f6790 in evlist__new () at util/evlist.c:64
-  #5  0x0000000000456071 in cmd_stat (argc=3, argv=0x7fffffffd670) at builtin-stat.c:1705
-  #6  0x00000000004dd0fa in run_builtin (p=0xa21e00 <commands+288>, argc=3, argv=0x7fffffffd670) at perf.c:304
-  #7  0x00000000004dd367 in handle_internal_command (argc=3, argv=0x7fffffffd670) at perf.c:356
-  #8  0x00000000004dd4ae in run_argv (argcp=0x7fffffffd4cc, argv=0x7fffffffd4c0) at perf.c:400
-  #9  0x00000000004dd81a in main (argc=3, argv=0x7fffffffd670) at perf.c:522
-  (gdb) bt
-
-So move the initialization of the core evlist (calling
-perf_evlist__init()) to before perf_evlist__set_maps() in
-evlist__init().
+Add the perf_evlist__add() function to add a perf_evsel in a perf_evlist
+struct.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-39-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-40-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c              | 5 +++++
- tools/perf/lib/include/perf/evlist.h | 4 ++++
+ tools/perf/lib/evlist.c              | 7 +++++++
+ tools/perf/lib/include/perf/evlist.h | 3 +++
  tools/perf/lib/libperf.map           | 1 +
- tools/perf/util/evlist.c             | 3 ++-
+ tools/perf/util/evlist.c             | 2 +-
  4 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 646bdd518793..fdc8c1894b37 100644
+index fdc8c1894b37..e5f187fa4e57 100644
 --- a/tools/perf/lib/evlist.c
 +++ b/tools/perf/lib/evlist.c
-@@ -2,3 +2,8 @@
+@@ -2,8 +2,15 @@
  #include <perf/evlist.h>
  #include <linux/list.h>
  #include <internal/evlist.h>
++#include <internal/evsel.h>
+ 
+ void perf_evlist__init(struct perf_evlist *evlist)
+ {
+ 	INIT_LIST_HEAD(&evlist->entries);
+ }
 +
-+void perf_evlist__init(struct perf_evlist *evlist)
++void perf_evlist__add(struct perf_evlist *evlist,
++		      struct perf_evsel *evsel)
 +{
-+	INIT_LIST_HEAD(&evlist->entries);
++	list_add_tail(&evsel->node, &evlist->entries);
 +}
 diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
-index 92b0eb39caec..1ddfcca0bd01 100644
+index 1ddfcca0bd01..6992568b14a0 100644
 --- a/tools/perf/lib/include/perf/evlist.h
 +++ b/tools/perf/lib/include/perf/evlist.h
-@@ -2,6 +2,10 @@
- #ifndef __LIBPERF_EVLIST_H
- #define __LIBPERF_EVLIST_H
+@@ -5,7 +5,10 @@
+ #include <perf/core.h>
  
-+#include <perf/core.h>
-+
  struct perf_evlist;
++struct perf_evsel;
  
-+LIBPERF_API void perf_evlist__init(struct perf_evlist *evlist);
-+
+ LIBPERF_API void perf_evlist__init(struct perf_evlist *evlist);
++LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
++				  struct perf_evsel *evsel);
+ 
  #endif /* __LIBPERF_EVLIST_H */
 diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index 54f8503c6d82..5ca6ff6fcdfa 100644
+index 5ca6ff6fcdfa..06ccf31eb24d 100644
 --- a/tools/perf/lib/libperf.map
 +++ b/tools/perf/lib/libperf.map
-@@ -10,6 +10,7 @@ LIBPERF_0.0.1 {
- 		perf_thread_map__get;
+@@ -11,6 +11,7 @@ LIBPERF_0.0.1 {
  		perf_thread_map__put;
  		perf_evsel__init;
-+		perf_evlist__init;
+ 		perf_evlist__init;
++		perf_evlist__add;
  	local:
  		*;
  };
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index faf3ffd81d4c..f4aa6cf80559 100644
+index f4aa6cf80559..f2b86f49ab8d 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -33,6 +33,7 @@
- #include <linux/log2.h>
- #include <linux/err.h>
- #include <linux/zalloc.h>
-+#include <perf/evlist.h>
+@@ -180,8 +180,8 @@ static void perf_evlist__propagate_maps(struct evlist *evlist)
  
- #ifdef LACKS_SIGQUEUE_PROTOTYPE
- int sigqueue(pid_t pid, int sig, const union sigval value);
-@@ -48,7 +49,7 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+ void evlist__add(struct evlist *evlist, struct evsel *entry)
+ {
++	perf_evlist__add(&evlist->core, &entry->core);
+ 	entry->evlist = evlist;
+-	list_add_tail(&entry->core.node, &evlist->core.entries);
+ 	entry->idx = evlist->nr_entries;
+ 	entry->tracking = !entry->idx;
  
- 	for (i = 0; i < PERF_EVLIST__HLIST_SIZE; ++i)
- 		INIT_HLIST_HEAD(&evlist->heads[i]);
--	INIT_LIST_HEAD(&evlist->core.entries);
-+	perf_evlist__init(&evlist->core);
- 	perf_evlist__set_maps(evlist, cpus, threads);
- 	fdarray__init(&evlist->pollfd, 64);
- 	evlist->workload.pid = -1;
 -- 
 2.21.0
 
