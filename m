@@ -2,147 +2,103 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D45C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BB1C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D3720693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DA820693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:48:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WTWAeZb9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TJAq4qg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388392AbfG3SsK (ORCPT
+        id S2388438AbfG3SsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:48:10 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51325 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388028AbfG3SsJ (ORCPT
+        Tue, 30 Jul 2019 14:48:12 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34991 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388405AbfG3SsL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:48:09 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIkufc3334995
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:46:56 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIkufc3334995
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564512417;
-        bh=bCdFtbl9rLVZRmw/ALUKM6Lv8KXBqJ0jF+YzBICirOE=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=WTWAeZb9TLRl1NtOW2h/MMv9fcApizsDe7yem6VdvKRzxi+6Uf/gkUVTyFoZhvbuI
-         mgoD4Qt73j8OmE8vt0zWPCQwIFsOq8ibeTXaK1RRXLghdjbOoFt8xkJAfutkQgG9jv
-         kem5Cqn637URLsfKGr/zBdZ5Hhjsdj/H7MLSqtYBUpGEZ2te+UGdNw2AWcv9MMH3Oc
-         jAH2KpvKvJRuKBIsiECxtuTcptXx2WMeAz8YZrjeoYh/6J7MxP18o7y0bPiqfQyexx
-         4RUIIGI/VEvFdQSLPL4Hl7iBfq2VNlj8evJpnXAb4dWa0m/5oZXTvqYco6P61ev0Uw
-         NwwkI/wf3mk6A==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIkuAP3334992;
-        Tue, 30 Jul 2019 11:46:56 -0700
-Date:   Tue, 30 Jul 2019 11:46:56 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-ec903f264f0184a0aba62b42d7717c61f1893450@git.kernel.org>
-Cc:     jolsa@kernel.org, hpa@zytor.com, mpetlan@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, alexey.budankov@linux.intel.com,
-        peterz@infradead.org, alexander.shishkin@linux.intel.com,
-        tglx@linutronix.de, ak@linux.intel.com, acme@redhat.com
-Reply-To: alexey.budankov@linux.intel.com,
-          alexander.shishkin@linux.intel.com, peterz@infradead.org,
-          ak@linux.intel.com, acme@redhat.com, tglx@linutronix.de,
-          mingo@kernel.org, linux-kernel@vger.kernel.org,
-          mpetlan@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
-          hpa@zytor.com
-In-Reply-To: <20190721112506.12306-54-jolsa@kernel.org>
-References: <20190721112506.12306-54-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] libperf: Add has_user_cpus to struct perf_evlist
-Git-Commit-ID: ec903f264f0184a0aba62b42d7717c61f1893450
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 14:48:11 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u14so30324700pfn.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:48:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:from:to:subject:user-agent:date;
+        bh=z+31YRcGYKxlw4zSSmAToPPt3gVT1HPAnO6GnYlbMZo=;
+        b=TJAq4qg2C4MBQbkD/CTjGokwpAKEzdcOAFM3jCYS+mlBvSYxgOUsD6++v8VwgpaaYf
+         SnCgoasoMjxoVS0Oq099Bjly5HzPXJFsePK4WjeTg3GfZPjMPTBd6HL1yDn6dDWty9zB
+         TYGgUam3ePk5GjM3kr1xPw56i9qyvhK8YjlW0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
+         :user-agent:date;
+        bh=z+31YRcGYKxlw4zSSmAToPPt3gVT1HPAnO6GnYlbMZo=;
+        b=APs9sb5b56ex9y/bl96xdkuyMXZE/kotlvuItOB+EPDgZS8FILQYzwsekLQwOsLjDb
+         gOjOXLVar0XDJrX4QdmxNRxk0Khp+3cGXLJPUZ1AewS4ih5OiXLTnccN4nO5fR2vqL4g
+         bAmdBJk0jbnv4xgxRzj1pXjRr19OumZrJ1+w7VjtGLeA2gPpNgp56dzrHGr577Kov1H5
+         BCqvD9T3qhrDExhnSpYYdPHFfBdLniyIbV+38N5OAuu1hEe204evnOjiHKwJ6QaUsubY
+         c1QHDLa9A/Ul08zetHhHq6iYqxpKndMR5vXUlJ0BxjGYD8qsuBxxY6wvBwyiWFYFDh5n
+         G0Rg==
+X-Gm-Message-State: APjAAAUYYsE7DSXpkywDuzHFb/ahzKjKbYHlVa1pvPLTmxZTxBz+8MxD
+        XOG7drcTFLZL5WV5vPHRZtTjJg==
+X-Google-Smtp-Source: APXvYqxAVgwtF+7Gc1/v2YuISir9lkLsH3N699o/8YpjsdFSEKU1zdqtP5clNwyMIyol+CT08586/g==
+X-Received: by 2002:a62:3445:: with SMTP id b66mr43403564pfa.246.1564512490944;
+        Tue, 30 Jul 2019 11:48:10 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id n140sm68012721pfd.132.2019.07.30.11.48.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 11:48:10 -0700 (PDT)
+Message-ID: <5d4090ea.1c69fb81.d5cab.4dcd@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CANA+-vBKg_W88Oy_wJs1NNYaZ2ciJKO=Mrs47etYTDNXUKW9Uw@mail.gmail.com>
+References: <20190730024309.233728-1-trong@android.com> <CAJZ5v0jJn=vHdYExbzwRAMsk=Ad5bhvOAvHEXe-FHOj2R4Gwig@mail.gmail.com> <CANA+-vBKg_W88Oy_wJs1NNYaZ2ciJKO=Mrs47etYTDNXUKW9Uw@mail.gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        kbuild test robot <lkp@intel.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>, Tri Vo <trong@android.com>
+Subject: Re: [PATCH v5] PM / wakeup: show wakeup sources stats in sysfs
+User-Agent: alot/0.8.1
+Date:   Tue, 30 Jul 2019 11:48:09 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ec903f264f0184a0aba62b42d7717c61f1893450
-Gitweb:     https://git.kernel.org/tip/ec903f264f0184a0aba62b42d7717c61f1893450
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:24:40 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:45 -0300
+Quoting Tri Vo (2019-07-30 11:39:34)
+> On Mon, Jul 29, 2019 at 10:46 PM Rafael J. Wysocki <rafael@kernel.org> wr=
+ote:
+> >
+> > On Tue, Jul 30, 2019 at 4:45 AM Tri Vo <trong@android.com> wrote:
+> > > - Device registering the wakeup source is now the parent of the wakeu=
+p source.
+> > >   Updated wakeup_source_register()'s signature and its callers accord=
+ingly.
+> >
+> > And I really don't like these changes.  Especially having "wakeup"
+> > twice in the path.
+>=20
+> I can trim it down to /sys/class/wakeup/<ID>/. Does that sound good?
 
-libperf: Add has_user_cpus to struct perf_evlist
+Using the same prefix for the class and the device name is quite common.
+For example, see the input, regulator, tty, tpm, remoteproc, hwmon,
+extcon classes. I'd prefer it was left as /sys/class/wakeup/wakeupN. The
+class name could be changed to wakeup_source perhaps (i.e.
+/sys/class/wakeup_source/wakeupN)?
 
-Move has_user_cpus from tools/perf's evlist to libbperf's perf_evlist struct.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-54-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/lib/include/internal/evlist.h | 1 +
- tools/perf/util/evlist.c                 | 4 ++--
- tools/perf/util/evlist.h                 | 1 -
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index a12c712a9197..9964e4a9456e 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -5,6 +5,7 @@
- struct perf_evlist {
- 	struct list_head	entries;
- 	int			nr_entries;
-+	bool			has_user_cpus;
- };
- 
- #endif /* __LIBPERF_INTERNAL_EVLIST_H */
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 5ce8fc730453..23a8ead4512f 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -159,7 +159,7 @@ static void __perf_evlist__propagate_maps(struct evlist *evlist,
- 	 * We already have cpus for evsel (via PMU sysfs) so
- 	 * keep it, if there's no target cpu list defined.
- 	 */
--	if (!evsel->core.own_cpus || evlist->has_user_cpus) {
-+	if (!evsel->core.own_cpus || evlist->core.has_user_cpus) {
- 		perf_cpu_map__put(evsel->core.cpus);
- 		evsel->core.cpus = perf_cpu_map__get(evlist->cpus);
- 	} else if (evsel->core.cpus != evsel->core.own_cpus) {
-@@ -1095,7 +1095,7 @@ int perf_evlist__create_maps(struct evlist *evlist, struct target *target)
- 	if (!cpus)
- 		goto out_delete_threads;
- 
--	evlist->has_user_cpus = !!target->cpu_list;
-+	evlist->core.has_user_cpus = !!target->cpu_list;
- 
- 	perf_evlist__set_maps(evlist, cpus, threads);
- 
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 17dd83021a79..35cca0242631 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -31,7 +31,6 @@ struct evlist {
- 	int		 nr_groups;
- 	int		 nr_mmaps;
- 	bool		 enabled;
--	bool		 has_user_cpus;
- 	size_t		 mmap_len;
- 	int		 id_pos;
- 	int		 is_pos;
