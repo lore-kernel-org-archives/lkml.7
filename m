@@ -2,227 +2,214 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A188C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AAAC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C6520693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:01:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="G4cx8p8e"
+	by mail.kernel.org (Postfix) with ESMTP id 468DF20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730209AbfG3QBb (ORCPT
+        id S1732792AbfG3QCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:01:31 -0400
-Received: from usfb19pa15.eemsg.mail.mil ([214.24.26.86]:5291 "EHLO
-        usfb19pa15.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbfG3QBa (ORCPT
+        Tue, 30 Jul 2019 12:02:16 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39902 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730661AbfG3QCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:01:30 -0400
-X-EEMSG-check-017: 243885150|USFB19PA15_EEMSG_MP11.csd.disa.mil
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by usfb19pa15.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 30 Jul 2019 15:55:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1564502106; x=1596038106;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=/9O7vf+1jngEFyaSkYlMr13z5HQv3xT4qJnmyI9c4m0=;
-  b=G4cx8p8ezBVS9S+1K3TMvXpRgq8hCZ0ULFcO73Ut2PMwYtF7abaIupXd
-   CXUXG9t4jmA9gQpC+UuScQRGhLi517i3eRfwGQeUons1YmTmtN+W69fPm
-   YEIhOO+gY9xmv0ND1Xj3hZP1xtDJ096o2XUOvh8CN4po6jHxbbhB6vTWU
-   cK0wa4v9RHx2JJ0C/qj6c7cMEI6cL7Td3jndE2YLUa12ytD6vDMoFHBBV
-   qjbKrchJaGmMR4yhjPJQ0K1BkD47TmQgLJKZGLO5lOW69F5eukIe9UGFo
-   o/BK6erfWe7Z2nB0AxRmL8/3qyNtEMtx99uUaM9Rvjz7Zb/NUKUBsqhEv
-   A==;
-X-IronPort-AV: E=Sophos;i="5.64,327,1559520000"; 
-   d="scan'208";a="26241276"
-IronPort-PHdr: =?us-ascii?q?9a23=3AVZpdlhaiqmA1MCEa7V7k+cj/LSx+4OfEezUN45?=
- =?us-ascii?q?9isYplN5qZpsi7bR7h7PlgxGXEQZ/co6odzbaP6eaxAidRuN6oizMrSNR0TR?=
- =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
- =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vMhm6twHcu8cZjYZmN6o61w?=
- =?us-ascii?q?fErGZPd+lK321jOEidnwz75se+/Z5j9zpftvc8/MNeUqv0Yro1Q6VAADspL2?=
- =?us-ascii?q?466svrtQLeTQSU/XsTTn8WkhtTDAfb6hzxQ4r8vTH7tup53ymaINH2QLUpUj?=
- =?us-ascii?q?ms86tnVBnlgzocOjUn7G/YlNB/jKNDoBKguRN/xZLUYJqIP/Z6Z6/RYM8WSX?=
- =?us-ascii?q?ZEUstXWSNBGIe8ZJYRAeQHM+hTso3xq0IAoBa6AAWhAv7kxD1ViX/sxaA0zv?=
- =?us-ascii?q?ovEQ/G0gIjEdwBvnvbo9fpO6kdSu210KvFwC/fY/9K1zrw6o7FeQ0hr/GWWr?=
- =?us-ascii?q?JwdNLcx1QzFwzbllWQqZLqPzWI3eoQtmiU9e5gVeaxhG8ntgp8pSOvydo3io?=
- =?us-ascii?q?TSmoIUykzL9SV+wIovI924U1R0bcSrEJtXqSGXLo17Sd4hTWFwoCs217ILtJ?=
- =?us-ascii?q?GhcCUK1Zgr3QDTZvOZf4SS/x7uUvuaLy1ii3J/Yr2/gg6/8U2nyuLhSMa5yE?=
- =?us-ascii?q?1Kri9ZktnUsXANygDT5tCHSvRj+keh3i6C1xzJ5eFeIEA0iLHbJ4Q9wr8wip?=
- =?us-ascii?q?UTsUPDEjXwmErql6+Zal8o+u2p6+Tjernmp5mcOJFoigzmL6gjlcOyDf44Pw?=
- =?us-ascii?q?QTRWSX5+ux2KP58UHkWLlKi+c5kqjdsJDUP8Qboau5DhdO0ok+8BayFCum0d?=
- =?us-ascii?q?QEknkHK1JJYhSHj5PzNF3UL/D4Cum/j0y2kDh33/DGIqHhApLVI3jYirjheb?=
- =?us-ascii?q?Z86k9cyQo11t1Q/ZRUBawbIPL0W0/+qcbUAQM+Mwyx2+znEsly1psCWWKTBa?=
- =?us-ascii?q?+UKLndsVqJ5uI1IeSBao4VuDLmJvgq4v7hl345mVsHcaa12psXbWiyHu56LE?=
- =?us-ascii?q?WBfXrsntABHH8Ovgo/SuzqlVKDXSdQZ3msRaI84C80CIa9AIfdSYCinqaB0D?=
- =?us-ascii?q?24HpJIfGBGDE6DEXPye4WDQfcMZzqYItV9nTwcSbihV4gh2AmttADk0bpnKP?=
- =?us-ascii?q?Tb+ikBuZL/ytd6/ejTmAoo+jxyEsudyWaNT2BpkW8SWzA226V/q1Rnylifya?=
- =?us-ascii?q?h4n+BYFdtL6vNMUwc6Nprcz+thC93pQQLAf8mGSEy4Tdq7ADE9VNIxw8IWaU?=
- =?us-ascii?q?ZnB9qilgzD3zatA7INi7OLA4Y0/bnC0HjtPMt9z3jH1K87g1kgXMRPKXWshr?=
- =?us-ascii?q?Rj+AjLG47Jj0KZmr60daQT2y7M9H2MzW6VsUFCTgF/TKXFUmoDZkfMsdv54U?=
- =?us-ascii?q?bCRae0Cbs7KgtB1dKCKqxSZ9L3llpGRensN8nAbGKrnme9HhmJxraNbIrxYG?=
- =?us-ascii?q?Ud3SLdCE4enw8P+naGMBA0Bj29rGLGEDxuCVXvblv28eZjtXO7SEs0wBuSb0?=
- =?us-ascii?q?B61rq1/BAVheaGRPwOwL0Lojoupy9zHFan0NLcE8CAqBZ5fKVAfdM9509K1W?=
- =?us-ascii?q?bYtwx7I5yhILluhkMYcwR2uEPu0Rt3Cp5bnMg0o3Ml0hByJbib0FxfbTOY24?=
- =?us-ascii?q?7/OrnNJmn15hCvZLbc2kvC39aO5qcP9PM4pk3nvAGoEEoi7npm38BI3Hub+p?=
- =?us-ascii?q?rHFxQSUZ3vXUYt7RR6pK/VYjM754zK0X1gK660siXN24FhOOxw7x+6fJ9kOa?=
- =?us-ascii?q?eVBh70W5kBDsy/Ov0ss1GvYggDPewU/6kxaYfuXv6HwuaEO+Jshy6rjGIPtI?=
- =?us-ascii?q?l401jTrCt4YuHN1pcBhfqf213UeS37iQKars3vmY1CLQoXF267xDmsUJVdfY?=
- =?us-ascii?q?VubI0LDiGoOMTxydJg0c2+E0VE/UKuUgtVkPSifgCfOhmkhlxd?=
-X-IPAS-Result: =?us-ascii?q?A2CmCgA0Z0Bd/wHyM5BlHQEBBQEHBQGBZ4FtKoE+ATIqh?=
- =?us-ascii?q?B6RG04FBoEJCCWJYpEbCQEBAQEBAQEBATQBAgEBhEACgkEjOBMBAwEBAQQBA?=
- =?us-ascii?q?QEBBQEBbIUqgjopAYJnAQUjFTwFEAsYAgImAgJXBgEMBgIBAReCSD+BdxSsW?=
- =?us-ascii?q?IEyhUiDMYFIgQwoh2+DcRd4gQeBOAyBYUk1PoQdgzKCWASMASGCJ4YwlgQJg?=
- =?us-ascii?q?hyCH5FxBhuCLocljj4tjRCBMZg4IYFYKwgCGAghD4Mngk4Xjj0jAzCBBgEBi?=
- =?us-ascii?q?x+CUgEB?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 30 Jul 2019 15:55:03 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x6UFt0t0028645;
-        Tue, 30 Jul 2019 11:55:00 -0400
-Subject: Re: [PATCH v10 3/5] overlayfs: add __get xattr method
-To:     Mark Salyzyn <salyzyn@android.com>,
-        Amir Goldstein <amir73il@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com, Miklos Szeredi <miklos@szeredi.hu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-doc@vger.kernel.org
-References: <20190724195719.218307-1-salyzyn@android.com>
- <20190724195719.218307-4-salyzyn@android.com>
- <CAOQ4uxjizC1RhmLe3qmfASk2M-Y+QEiyLL1yJXa4zXAEby7Tig@mail.gmail.com>
- <af254162-10bf-1fc5-2286-8d002a287400@android.com>
- <CAOQ4uxi5S9HTx+wR1U_8vQ-6nyCozykWBZbZwiHhnXBGhXRz8Q@mail.gmail.com>
- <35b70147-25ad-4c29-3972-418ebee5e7b8@android.com>
- <CAOQ4uxg8k=4D5_VEBy61PwBo+2pCCakUPw3uCar2oQpi3yaLmA@mail.gmail.com>
- <f56cd45d-2926-094e-7f02-e2ca972214ba@android.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <e83ceef6-70ae-fd9e-2087-50baf2fbd402@tycho.nsa.gov>
-Date:   Tue, 30 Jul 2019 11:55:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 30 Jul 2019 12:02:15 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x4so13213542wrt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 09:02:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V6Pf8h9wHTibuyyCP6HPV1Sh16lg6oXtd3546eqyiTY=;
+        b=mtqsb+V3qz3ocHnYOcD6SikdhdwikV8gMzps2j1BV5MlAe2+dG6oPuf6/dh2WsJs+D
+         19JlMXKgUWC6MvwLyo5mAf3QHxTv2X2yMYQW3R4Vmb1xsUxk7nUwNHmglzYec3D9nqpg
+         H8DVWiWZO7BygEVWEd293p+R00LhrBwPz5vdZoi+mw5uyVk+9tA+tPo/pZbX5yBOom3u
+         cMV0pUn14eJOcbKh3X1+PqcfkbrWiz6ICdrqIFiajtNEPOY8YWyb7efvlDhYFgiMLZSa
+         A3I5wlyL6S5+i+X1AEVzCMH7vnn9nUcWvsJdKtjcTPZGEmc+kVXDa1c07+dq7gnqjrox
+         RS9A==
+X-Gm-Message-State: APjAAAVjuAXlqW/8F/YWih3PaxJlHPWWo8+TlS0HquAUu3qi8lrHDgrp
+        i4M1Pch6Wrz0Gh1zfY5wN2eVug==
+X-Google-Smtp-Source: APXvYqx5xyKhNualkS1CVTfw1inkEk+M052ZGUWr39WSwunkma9AVrnPdyiLmtq9+gvnaBNOXudMMQ==
+X-Received: by 2002:adf:e947:: with SMTP id m7mr67344862wrn.123.1564502533191;
+        Tue, 30 Jul 2019 09:02:13 -0700 (PDT)
+Received: from steredhat (host122-201-dynamic.13-79-r.retail.telecomitalia.it. [79.13.201.122])
+        by smtp.gmail.com with ESMTPSA id n14sm124735032wra.75.2019.07.30.09.02.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 09:02:12 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 18:02:09 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        kvm@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: Re: [PATCH net-next v5 0/5] vsock/virtio: optimizations to increase
+ the throughput
+Message-ID: <20190730160209.hu7kzdzrd22mklow@steredhat>
+References: <20190730154334.237789-1-sgarzare@redhat.com>
+ <20190730115339-mutt-send-email-mst@kernel.org>
+ <20190730115503-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <f56cd45d-2926-094e-7f02-e2ca972214ba@android.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730115503-mutt-send-email-mst@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/26/19 2:30 PM, Mark Salyzyn wrote:
-> On 7/25/19 10:04 PM, Amir Goldstein wrote:
->> On Thu, Jul 25, 2019 at 7:22 PM Mark Salyzyn <salyzyn@android.com> wrote:
->>> On 7/25/19 8:43 AM, Amir Goldstein wrote:
->>>> On Thu, Jul 25, 2019 at 6:03 PM Mark Salyzyn <salyzyn@android.com> 
->>>> wrote:
->>>>> On 7/24/19 10:48 PM, Amir Goldstein wrote:
->>>>>> On Wed, Jul 24, 2019 at 10:57 PM Mark Salyzyn 
->>>>>> <salyzyn@android.com> wrote:
->>>>>>> Because of the overlayfs getxattr recursion, the incoming inode 
->>>>>>> fails
->>>>>>> to update the selinux sid resulting in avc denials being reported
->>>>>>> against a target context of u:object_r:unlabeled:s0.
->>>>>> This description is too brief for me to understand the root problem.
->>>>>> What's wring with the overlayfs getxattr recursion w.r.t the selinux
->>>>>> security model?
->>>>> __vfs_getxattr (the way the security layer acquires the target sid
->>>>> without recursing back to security to check the access permissions)
->>>>> calls get xattr method, which in overlayfs calls vfs_getxattr on the
->>>>> lower layer (which then recurses back to security to check 
->>>>> permissions)
->>>>> and reports back -EACCES if there was a denial (which is OK) and _no_
->>>>> sid copied to caller's inode security data, bubbles back to the 
->>>>> security
->>>>> layer caller, which reports an invalid avc: message for
->>>>> u:object_r:unlabeled:s0 (the uninitialized sid instead of the sid for
->>>>> the lower filesystem target). The blocked access is 100% valid, it is
->>>>> supposed to be blocked. This does however result in a cosmetic issue
->>>>> that makes it impossible to use audit2allow to construct a rule that
->>>>> would be usable to fix the access problem.
->>>>>
->>>> Ahhh you are talking about getting the security.selinux.* xattrs?
->>>> I was under the impression (Vivek please correct me if I wrong)
->>>> that overlayfs objects cannot have individual security labels and
->>> They can, and we _need_ them for Android's use cases, upper and lower
->>> filesystems.
->>>
->>> Some (most?) union filesystems (like Android's sdcardfs) set sepolicy
->>> from the mount options, we did not need this adjustment there of course.
->>>
->>>> the only way to label overlayfs objects is by mount options on the
->>>> entire mount? Or is this just for lower layer objects?
->>>>
->>>> Anyway, the API I would go for is adding a @flags argument to
->>>> get() which can take XATTR_NOSECURITY akin to
->>>> FMODE_NONOTIFY, GFP_NOFS, meant to avoid recursions.
->>> I do like it better (with the following 7 stages of grief below), best
->>> for the future.
->>>
->>> The change in this handler's API will affect all filesystem drivers
->>> (well, my change affects the ABI, so it is not as-if I saved the world
->>> from a module recompile) touching all filesystem sources with an even
->>> larger audience of stakeholders. Larger audience of stakeholders, the
->>> harder to get the change in ;-/. This is also concerning since I would
->>> like this change to go to stable 4.4, 4.9, 4.14 and 4.19 where this
->>> regression got introduced. I can either craft specific stable patches or
->>> just let it go and deal with them in the android-common distributions
->>> rather than seeking stable merged down. ABI/API breaks are a problem for
->>> stable anyway ...
->>>
->> Use the memalloc_nofs_save/restore design pattern will avoid all that
->> grief.
->> As a matter of fact, this issue could and should be handled inside 
->> security
->> subsystem without bothering any other subsystem.
->> LSM have per task context right? That context could carry the recursion
->> flags to know that the getxattr call is made by the security subsystem 
->> itself.
->> The problem is not limited to union filesystems.
->> In general its a stacking issue. ecryptfs is also a stacking fs, 
->> out-of-tree
->> shiftfs as well. But it doesn't end there.
->> A filesystem on top of a loop device inside another filesystem could
->> also maybe result in security hook recursion (not sure if in practice).
->>
->> Thanks,
->> Amir.
-> 
-> Good point, back to Stephen Smalley?
-> 
-> There are four __vfs_getxattr calls inside security, not sure I see any 
-> natural way to determine the recursion in security/selinux I can 
-> beg/borrow/steal from; but I get the strange feeling that it is better 
-> to detect recursion in __vfs_getxattr in this manner, and switch out 
-> checking in vfs_getxattr since it is localized to just fs/xattr.c. 
-> selinux might not be the only user of __vfs_getxattr nature ...
-> 
-> I have implemented and tested the solution where we add a flag to the 
-> .get method, it works. I would be tempted to submit that instead in case 
-> someone in the future can imagine using that flag argument to solve 
-> other problem(s) (if you build it, they will come).
-> 
-> <flips coin>
-> 
-> Will add a new per-process flag that __vfs_getxattr and vfs_getxattr 
-> plays with and see how it works and what it looks like.
+On Tue, Jul 30, 2019 at 11:55:09AM -0400, Michael S. Tsirkin wrote:
+> On Tue, Jul 30, 2019 at 11:54:53AM -0400, Michael S. Tsirkin wrote:
+> > On Tue, Jul 30, 2019 at 05:43:29PM +0200, Stefano Garzarella wrote:
+> > > This series tries to increase the throughput of virtio-vsock with slight
+> > > changes.
+> > > While I was testing the v2 of this series I discovered an huge use of memory,
+> > > so I added patch 1 to mitigate this issue. I put it in this series in order
+> > > to better track the performance trends.
+> > > 
+> > > v5:
+> > > - rebased all patches on net-next
+> > > - added Stefan's R-b and Michael's A-b
+> > 
+> > This doesn't solve all issues around allocation - as I mentioned I think
+> > we will need to improve accounting for that,
+> > and maybe add pre-allocation.
 
-As you say, SELinux is not the only user of __vfs_getxattr; in addition 
-to the other security modules, there is the integrity/evm subsystem and 
-ecryptfs.  Further, __vfs_getxattr does not merely skip 
-LSM/SELinux-related processing; it also skips xattr_permission().  As 
-such, I don't believe this is something that can be solved entirely 
-within the security subsystem.
+Yes, I'll work on it following your suggestions.
 
-Not excited about a process flag to implicitly disable LSM/SELinux and 
-other security-related processing on a code path; potential for abuse is 
-high.
+> > But it's a great series of steps in the right direction!
+> > 
+
+Thank you very much :)
+Stefano
+
+> 
+> 
+> So
+> 
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> 
+> > 
+> > > v4: https://patchwork.kernel.org/cover/11047717
+> > > v3: https://patchwork.kernel.org/cover/10970145
+> > > v2: https://patchwork.kernel.org/cover/10938743
+> > > v1: https://patchwork.kernel.org/cover/10885431
+> > > 
+> > > Below are the benchmarks step by step. I used iperf3 [1] modified with VSOCK
+> > > support. As Michael suggested in the v1, I booted host and guest with 'nosmap'.
+> > > 
+> > > A brief description of patches:
+> > > - Patches 1:   limit the memory usage with an extra copy for small packets
+> > > - Patches 2+3: reduce the number of credit update messages sent to the
+> > >                transmitter
+> > > - Patches 4+5: allow the host to split packets on multiple buffers and use
+> > >                VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max packet size allowed
+> > > 
+> > >                     host -> guest [Gbps]
+> > > pkt_size before opt   p 1     p 2+3    p 4+5
+> > > 
+> > > 32         0.032     0.030    0.048    0.051
+> > > 64         0.061     0.059    0.108    0.117
+> > > 128        0.122     0.112    0.227    0.234
+> > > 256        0.244     0.241    0.418    0.415
+> > > 512        0.459     0.466    0.847    0.865
+> > > 1K         0.927     0.919    1.657    1.641
+> > > 2K         1.884     1.813    3.262    3.269
+> > > 4K         3.378     3.326    6.044    6.195
+> > > 8K         5.637     5.676   10.141   11.287
+> > > 16K        8.250     8.402   15.976   16.736
+> > > 32K       13.327    13.204   19.013   20.515
+> > > 64K       21.241    21.341   20.973   21.879
+> > > 128K      21.851    22.354   21.816   23.203
+> > > 256K      21.408    21.693   21.846   24.088
+> > > 512K      21.600    21.899   21.921   24.106
+> > > 
+> > >                     guest -> host [Gbps]
+> > > pkt_size before opt   p 1     p 2+3    p 4+5
+> > > 
+> > > 32         0.045     0.046    0.057    0.057
+> > > 64         0.089     0.091    0.103    0.104
+> > > 128        0.170     0.179    0.192    0.200
+> > > 256        0.364     0.351    0.361    0.379
+> > > 512        0.709     0.699    0.731    0.790
+> > > 1K         1.399     1.407    1.395    1.427
+> > > 2K         2.670     2.684    2.745    2.835
+> > > 4K         5.171     5.199    5.305    5.451
+> > > 8K         8.442     8.500   10.083    9.941
+> > > 16K       12.305    12.259   13.519   15.385
+> > > 32K       11.418    11.150   11.988   24.680
+> > > 64K       10.778    10.659   11.589   35.273
+> > > 128K      10.421    10.339   10.939   40.338
+> > > 256K      10.300     9.719   10.508   36.562
+> > > 512K       9.833     9.808   10.612   35.979
+> > > 
+> > > As Stefan suggested in the v1, I measured also the efficiency in this way:
+> > >     efficiency = Mbps / (%CPU_Host + %CPU_Guest)
+> > > 
+> > > The '%CPU_Guest' is taken inside the VM. I know that it is not the best way,
+> > > but it's provided for free from iperf3 and could be an indication.
+> > > 
+> > >         host -> guest efficiency [Mbps / (%CPU_Host + %CPU_Guest)]
+> > > pkt_size before opt   p 1     p 2+3    p 4+5
+> > > 
+> > > 32         0.35      0.45     0.79     1.02
+> > > 64         0.56      0.80     1.41     1.54
+> > > 128        1.11      1.52     3.03     3.12
+> > > 256        2.20      2.16     5.44     5.58
+> > > 512        4.17      4.18    10.96    11.46
+> > > 1K         8.30      8.26    20.99    20.89
+> > > 2K        16.82     16.31    39.76    39.73
+> > > 4K        30.89     30.79    74.07    75.73
+> > > 8K        53.74     54.49   124.24   148.91
+> > > 16K       80.68     83.63   200.21   232.79
+> > > 32K      132.27    132.52   260.81   357.07
+> > > 64K      229.82    230.40   300.19   444.18
+> > > 128K     332.60    329.78   331.51   492.28
+> > > 256K     331.06    337.22   339.59   511.59
+> > > 512K     335.58    328.50   331.56   504.56
+> > > 
+> > >         guest -> host efficiency [Mbps / (%CPU_Host + %CPU_Guest)]
+> > > pkt_size before opt   p 1     p 2+3    p 4+5
+> > > 
+> > > 32         0.43      0.43     0.53     0.56
+> > > 64         0.85      0.86     1.04     1.10
+> > > 128        1.63      1.71     2.07     2.13
+> > > 256        3.48      3.35     4.02     4.22
+> > > 512        6.80      6.67     7.97     8.63
+> > > 1K        13.32     13.31    15.72    15.94
+> > > 2K        25.79     25.92    30.84    30.98
+> > > 4K        50.37     50.48    58.79    59.69
+> > > 8K        95.90     96.15   107.04   110.33
+> > > 16K      145.80    145.43   143.97   174.70
+> > > 32K      147.06    144.74   146.02   282.48
+> > > 64K      145.25    143.99   141.62   406.40
+> > > 128K     149.34    146.96   147.49   489.34
+> > > 256K     156.35    149.81   152.21   536.37
+> > > 512K     151.65    150.74   151.52   519.93
+> > > 
+> > > [1] https://github.com/stefano-garzarella/iperf/
+> > > 
+> > > Stefano Garzarella (5):
+> > >   vsock/virtio: limit the memory used per-socket
+> > >   vsock/virtio: reduce credit update messages
+> > >   vsock/virtio: fix locking in virtio_transport_inc_tx_pkt()
+> > >   vhost/vsock: split packets to send using multiple buffers
+> > >   vsock/virtio: change the maximum packet size allowed
+> > > 
+> > >  drivers/vhost/vsock.c                   | 68 ++++++++++++-----
+> > >  include/linux/virtio_vsock.h            |  4 +-
+> > >  net/vmw_vsock/virtio_transport.c        |  1 +
+> > >  net/vmw_vsock/virtio_transport_common.c | 99 ++++++++++++++++++++-----
+> > >  4 files changed, 134 insertions(+), 38 deletions(-)
+> > > 
+> > > -- 
+> > > 2.20.1
+
+-- 
