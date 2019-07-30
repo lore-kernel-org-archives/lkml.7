@@ -6,63 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701EEC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE360C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C95B20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889302087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564519228;
-	bh=ugWXpsFhigfjuYJ4dltnK0ERMdeDSNvAi6z+BURK244=;
+	s=default; t=1564519233;
+	bh=HSlx0d/cPvgoJG3la7Dojvd4y52cxHYRfIqdF7GDmqE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=l/z1klaxda4pHrMbLmQSNSVB4cOs33bSZhXoivTdIOlFlCKLAuI4UsCeFEb4cfI8s
-	 bi4rLIJgFcQAlbnkwrQMvmVSiabnmAJ9zej7kyC5OHrbQcUr+ckRW+f20YrekodzYi
-	 BDF4Xv1qwcNSvQdCFUkANMSNa5hboFjb7YZlvw5k=
+	b=db+Cm+S42kSXfMyqxlToPMsXBKYsKCPBzbcdh3BLrvgFuxGSV08EBdlbiyZQrfEm0
+	 tas4XWohZHBmwEdhTVxcrRqKgBkDp20mM1jjFQBUfSL0B+XHS2IoWXulqgN06wN2R6
+	 fGhRTDWd3ljhfWqymL8e0pSZcsitFknOhCAcS2KU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387495AbfG3Uk1 (ORCPT
+        id S2387509AbfG3Ukc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:40:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37134 "EHLO mail.kernel.org"
+        Tue, 30 Jul 2019 16:40:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387448AbfG3UkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:40:22 -0400
-Subject: Re: [GIT PULL] f2fs-for-5.4-rc3
+        id S2387404AbfG3UkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 16:40:21 -0400
+Subject: Re: [GIT PULL] Kselftest update for Linux 5.3-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564519221;
-        bh=ugWXpsFhigfjuYJ4dltnK0ERMdeDSNvAi6z+BURK244=;
+        s=default; t=1564519220;
+        bh=HSlx0d/cPvgoJG3la7Dojvd4y52cxHYRfIqdF7GDmqE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ZibkTTH+jISGoqZ2U9iBBmZy2zBTY3VYqfjjEQvkvTc+nWgPhdQSfhV5+hZqo4m+0
-         tddt/6HH5/HbJbMwAuSYCJT6CjdkdqWdSjMAeoOhDVo/yN0kmRc8bFQU8e73POhhV4
-         DNriAnArnvWrHxpo2PA2K4AlcYfViy9iC4ecOJtc=
+        b=k61qCgxYzWfHkQMVciipzygFz1bIoCF9Rqux7NLkt+I9JYEQ+eQ9TwvNm0tppJcUL
+         8b8dPhHxyj3l3X/MRW2AzM/UoGOY1spIulXlkJ63CGZLmIhSSkkU9eCU+vT8OcW/9o
+         legK71ZfAgc4mqKtVE0D/evZ4IYxxNltxnk0PCmw=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190730174653.GA76478@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190730174653.GA76478@jaegeuk-macbookpro.roam.corp.google.com>
+In-Reply-To: <9b7fa63d-7c3f-bb3a-663b-e5279a0a0086@linuxfoundation.org>
+References: <9b7fa63d-7c3f-bb3a-663b-e5279a0a0086@linuxfoundation.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190730174653.GA76478@jaegeuk-macbookpro.roam.corp.google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git
- tags/f2fs-for-5.4-rc3
-X-PR-Tracked-Commit-Id: 38fb6d0ea34299d97b031ed64fe994158b6f8eb3
+X-PR-Tracked-Message-Id: <9b7fa63d-7c3f-bb3a-663b-e5279a0a0086@linuxfoundation.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
+ tags/linux-kselftest-5.3-rc3
+X-PR-Tracked-Commit-Id: 527d37e9e575bc0e9024de9b499385e7bb31f1ad
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0572d7668a58794059030b88945f78dfb94e3325
-Message-Id: <156451922159.18459.4858636766003450241.pr-tracker-bot@kernel.org>
-Date:   Tue, 30 Jul 2019 20:40:21 +0000
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
+X-PR-Merge-Commit-Id: 2f6f0a996218cdd9d275aac41828f54367e6fa28
+Message-Id: <156451922037.18459.15117834535691114931.pr-tracker-bot@kernel.org>
+Date:   Tue, 30 Jul 2019 20:40:20 +0000
+To:     Shuah Khan <skhan@linuxfoundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux F2FS Dev Mailing List 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Shuah Khan <skhan@linuxfoundation.org>,
+        joe.lawrence@redhat.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 30 Jul 2019 10:46:53 -0700:
+The pull request you sent on Tue, 30 Jul 2019 10:33:47 -0600:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-5.4-rc3
+> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux-kselftest-5.3-rc3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0572d7668a58794059030b88945f78dfb94e3325
+https://git.kernel.org/torvalds/c/2f6f0a996218cdd9d275aac41828f54367e6fa28
 
 Thank you!
 
