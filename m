@@ -7,60 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962ACC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A877C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9952089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B96F2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y6IBXfaO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FXvvR/2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfG3SQD (ORCPT
+        id S1728788AbfG3SQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:16:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45317 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728581AbfG3SQB (ORCPT
+        Tue, 30 Jul 2019 14:16:05 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39976 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728743AbfG3SQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:16:01 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r1so30253088pfq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:01 -0700 (PDT)
+        Tue, 30 Jul 2019 14:16:04 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so30484025pgj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 11:16:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tblS6BVfocVa/rJGDu0MAsbUNCheBT9eaxwmPT42hss=;
-        b=Y6IBXfaOrrf4DvYbUVSN4l/eoXWSrdJZ+oKj9SEL5KymdE/wLLqwHq2yDUrJxQOmpH
-         03e0bQ3NmwQkX7PRSsbzb4l06yliLX508MuAb0Erk/73Q3CWM4vFIjzua0Z/YeZXt8yJ
-         m9XWFP4IAQUYfweqNfjEOG/zia5oYgx/ewr+g=
+        bh=fZ2yGRGixrVq89SE/3sUKGnRTFmWEruiAwAYLTHr6iY=;
+        b=FXvvR/2yf25eczobuvXsgNunlgZNY0w3KhFqp/peC1Vfp8XTZDqlFWrAX8IcwcOHaP
+         g/U3o0f467WY9KTNoTrBopxtNFpKP9Ppy1yxmOUhRURRAfQdzNJBbh13/H+MWokPkdY0
+         MsSaYfCKcwFJ5ppHmd2/BC6UTnye7AmtQfA7s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tblS6BVfocVa/rJGDu0MAsbUNCheBT9eaxwmPT42hss=;
-        b=LHM2iiUHEYU6hJsEyaxMermY7MFJiIywRXpQjpAqav1ag+LLjqmpTtb+M74YE81tcQ
-         8AcKrkpG4xRx3BmcWSK3bI7rs58k0nqiTzGGZmeKbzIs8iAtUwNijrohBpWm0XyOBqiR
-         WUDD+K30O7zLB1aLw+m+/TFoVgeVC7F9TbefOeLjMpgMN32eYVONpArmuyHw2KjAdi2r
-         mGCRWtyTyYrnLR8gst6X7ftij9iJjp0o5Wb547U8YcvvABWn6Mhfay3Yd0cC59PWFdzb
-         VXbGe+jFgIztcP7Ssqmu2ezKHBU60TsJ7qoYSz2URpRTxVTQpHeJ3kefU1wUizTNYSkQ
-         SL3Q==
-X-Gm-Message-State: APjAAAV0mfNFw99amnExZ3B1L56lPr5RMWhmyWmP8vUvH9gyugVBbdUL
-        zb0yzhnmiye+Vp0iINwe4ipW4W8uuyQ=
-X-Google-Smtp-Source: APXvYqynQRi9eEPfwOzKRakpOvoPSklMlI3EDqT/HFgfvEAhxEKIpDr63Ydcwmi7AVNwd29oCjUTOQ==
-X-Received: by 2002:aa7:989a:: with SMTP id r26mr30665218pfl.232.1564510560726;
-        Tue, 30 Jul 2019 11:16:00 -0700 (PDT)
+        bh=fZ2yGRGixrVq89SE/3sUKGnRTFmWEruiAwAYLTHr6iY=;
+        b=PbO5leTbEwdRFy3LPwG8UQwJTQFJDP3vFMaRwFBlfelYl81YHg61bfza4KWU92kguQ
+         Ift5wlyd05mc/lqnfuHK/6OQQxl3lUPWmonuNsPAaiA0UaqyM2Gol0D83XWXJaZaLE+L
+         JeahMo5HMPgHAcJ0IDRQN18VLkQWTOEAdrMcWCHLE9w+reMc9tsPSoFzjzrkabSJbPfX
+         Jm5Fl6X31vinaVthH5/0N0wC8lD9M7Q8NU636LgoNukHaGosUHbUW4bJElYQ6FRjkfsP
+         bnqtElcyvnuaT5LNo9X0PIiWsJ7fxaA86DV7L/im2bYhX5bSzNrZjB3YMnB1aJcrGUNM
+         FNBQ==
+X-Gm-Message-State: APjAAAU17eaepf5iTPXqa5Zy2Z25LE0lRQ3ImI+UHVIwYSOCBOcEmi0D
+        ckcWfnRvvSfJiwdSPBSkWMe0tRshtzw=
+X-Google-Smtp-Source: APXvYqyiiAzX8h4LCwCDfWYOHM9e437/81BC/cMc60TLDu9DxFcuvWiVPFE3ffhnCZnbhnBdgGJrvQ==
+X-Received: by 2002:aa7:8383:: with SMTP id u3mr43265233pfm.175.1564510563046;
+        Tue, 30 Jul 2019 11:16:03 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.00
+        by smtp.gmail.com with ESMTPSA id g1sm106744083pgg.27.2019.07.30.11.16.02
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 11:16:00 -0700 (PDT)
+        Tue, 30 Jul 2019 11:16:02 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v6 02/57] bus: sunxi-rsb: Remove dev_err() usage after platform_get_irq()
-Date:   Tue, 30 Jul 2019 11:15:02 -0700
-Message-Id: <20190730181557.90391-3-swboyd@chromium.org>
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH v6 05/57] crypto: Remove dev_err() usage after platform_get_irq()
+Date:   Tue, 30 Jul 2019 11:15:05 -0700
+Message-Id: <20190730181557.90391-6-swboyd@chromium.org>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 In-Reply-To: <20190730181557.90391-1-swboyd@chromium.org>
 References: <20190730181557.90391-1-swboyd@chromium.org>
@@ -107,32 +108,216 @@ While we're here, remove braces on if statements that only have one
 statement (manually).
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: <linux-crypto@vger.kernel.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
 Please apply directly to subsystem trees
 
- drivers/bus/sunxi-rsb.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/crypto/atmel-aes.c             | 1 -
+ drivers/crypto/atmel-sha.c             | 1 -
+ drivers/crypto/atmel-tdes.c            | 1 -
+ drivers/crypto/ccree/cc_driver.c       | 4 +---
+ drivers/crypto/img-hash.c              | 1 -
+ drivers/crypto/mediatek/mtk-platform.c | 4 +---
+ drivers/crypto/mxs-dcp.c               | 8 ++------
+ drivers/crypto/omap-aes.c              | 1 -
+ drivers/crypto/omap-des.c              | 1 -
+ drivers/crypto/omap-sham.c             | 1 -
+ drivers/crypto/sahara.c                | 4 +---
+ drivers/crypto/stm32/stm32-cryp.c      | 4 +---
+ drivers/crypto/stm32/stm32-hash.c      | 4 +---
+ 13 files changed, 7 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-index 1b76d9585902..be79d6c6a4e4 100644
---- a/drivers/bus/sunxi-rsb.c
-+++ b/drivers/bus/sunxi-rsb.c
-@@ -651,10 +651,8 @@ static int sunxi_rsb_probe(struct platform_device *pdev)
- 		return PTR_ERR(rsb->regs);
+diff --git a/drivers/crypto/atmel-aes.c b/drivers/crypto/atmel-aes.c
+index 2b7af44c7b85..026f193556f9 100644
+--- a/drivers/crypto/atmel-aes.c
++++ b/drivers/crypto/atmel-aes.c
+@@ -2673,7 +2673,6 @@ static int atmel_aes_probe(struct platform_device *pdev)
+ 	/* Get the IRQ */
+ 	aes_dd->irq = platform_get_irq(pdev,  0);
+ 	if (aes_dd->irq < 0) {
+-		dev_err(dev, "no IRQ resource info\n");
+ 		err = aes_dd->irq;
+ 		goto res_err;
+ 	}
+diff --git a/drivers/crypto/atmel-sha.c b/drivers/crypto/atmel-sha.c
+index ab0cfe748931..84cb8748a795 100644
+--- a/drivers/crypto/atmel-sha.c
++++ b/drivers/crypto/atmel-sha.c
+@@ -2779,7 +2779,6 @@ static int atmel_sha_probe(struct platform_device *pdev)
+ 	/* Get the IRQ */
+ 	sha_dd->irq = platform_get_irq(pdev,  0);
+ 	if (sha_dd->irq < 0) {
+-		dev_err(dev, "no IRQ resource info\n");
+ 		err = sha_dd->irq;
+ 		goto res_err;
+ 	}
+diff --git a/drivers/crypto/atmel-tdes.c b/drivers/crypto/atmel-tdes.c
+index fa76620281e8..6256883a89ed 100644
+--- a/drivers/crypto/atmel-tdes.c
++++ b/drivers/crypto/atmel-tdes.c
+@@ -1281,7 +1281,6 @@ static int atmel_tdes_probe(struct platform_device *pdev)
+ 	/* Get the IRQ */
+ 	tdes_dd->irq = platform_get_irq(pdev,  0);
+ 	if (tdes_dd->irq < 0) {
+-		dev_err(dev, "no IRQ resource info\n");
+ 		err = tdes_dd->irq;
+ 		goto res_err;
+ 	}
+diff --git a/drivers/crypto/ccree/cc_driver.c b/drivers/crypto/ccree/cc_driver.c
+index 980aa04b655b..d611cfe6e8e5 100644
+--- a/drivers/crypto/ccree/cc_driver.c
++++ b/drivers/crypto/ccree/cc_driver.c
+@@ -339,10 +339,8 @@ static int init_cc_resources(struct platform_device *plat_dev)
+ 
+ 	/* Then IRQ */
+ 	new_drvdata->irq = platform_get_irq(plat_dev, 0);
+-	if (new_drvdata->irq < 0) {
+-		dev_err(dev, "Failed getting IRQ resource\n");
++	if (new_drvdata->irq < 0)
+ 		return new_drvdata->irq;
+-	}
+ 
+ 	init_completion(&new_drvdata->hw_queue_avail);
+ 
+diff --git a/drivers/crypto/img-hash.c b/drivers/crypto/img-hash.c
+index d27c812c3d8d..6754eaafdc85 100644
+--- a/drivers/crypto/img-hash.c
++++ b/drivers/crypto/img-hash.c
+@@ -980,7 +980,6 @@ static int img_hash_probe(struct platform_device *pdev)
  
  	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+-		dev_err(dev, "no IRQ resource info\n");
+ 		err = irq;
+ 		goto res_err;
+ 	}
+diff --git a/drivers/crypto/mediatek/mtk-platform.c b/drivers/crypto/mediatek/mtk-platform.c
+index 125318a88cd4..4f43318ca14b 100644
+--- a/drivers/crypto/mediatek/mtk-platform.c
++++ b/drivers/crypto/mediatek/mtk-platform.c
+@@ -495,10 +495,8 @@ static int mtk_crypto_probe(struct platform_device *pdev)
+ 
+ 	for (i = 0; i < MTK_IRQ_NUM; i++) {
+ 		cryp->irq[i] = platform_get_irq(pdev, i);
+-		if (cryp->irq[i] < 0) {
+-			dev_err(cryp->dev, "no IRQ:%d resource info\n", i);
++		if (cryp->irq[i] < 0)
+ 			return cryp->irq[i];
+-		}
+ 	}
+ 
+ 	cryp->clk_cryp = devm_clk_get(&pdev->dev, "cryp");
+diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
+index f1fa637cb029..bf8d2197bc11 100644
+--- a/drivers/crypto/mxs-dcp.c
++++ b/drivers/crypto/mxs-dcp.c
+@@ -994,16 +994,12 @@ static int mxs_dcp_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	dcp_vmi_irq = platform_get_irq(pdev, 0);
+-	if (dcp_vmi_irq < 0) {
+-		dev_err(dev, "Failed to get IRQ: (%d)!\n", dcp_vmi_irq);
++	if (dcp_vmi_irq < 0)
+ 		return dcp_vmi_irq;
+-	}
+ 
+ 	dcp_irq = platform_get_irq(pdev, 1);
+-	if (dcp_irq < 0) {
+-		dev_err(dev, "Failed to get IRQ: (%d)!\n", dcp_irq);
++	if (dcp_irq < 0)
+ 		return dcp_irq;
+-	}
+ 
+ 	sdcp = devm_kzalloc(dev, sizeof(*sdcp), GFP_KERNEL);
+ 	if (!sdcp)
+diff --git a/drivers/crypto/omap-aes.c b/drivers/crypto/omap-aes.c
+index 45a4647f7030..2f53fbb74100 100644
+--- a/drivers/crypto/omap-aes.c
++++ b/drivers/crypto/omap-aes.c
+@@ -1180,7 +1180,6 @@ static int omap_aes_probe(struct platform_device *pdev)
+ 
+ 		irq = platform_get_irq(pdev, 0);
+ 		if (irq < 0) {
+-			dev_err(dev, "can't get IRQ resource\n");
+ 			err = irq;
+ 			goto err_irq;
+ 		}
+diff --git a/drivers/crypto/omap-des.c b/drivers/crypto/omap-des.c
+index 1ee69a979677..484a693122af 100644
+--- a/drivers/crypto/omap-des.c
++++ b/drivers/crypto/omap-des.c
+@@ -1049,7 +1049,6 @@ static int omap_des_probe(struct platform_device *pdev)
+ 
+ 		irq = platform_get_irq(pdev, 0);
+ 		if (irq < 0) {
+-			dev_err(dev, "can't get IRQ resource: %d\n", irq);
+ 			err = irq;
+ 			goto err_irq;
+ 		}
+diff --git a/drivers/crypto/omap-sham.c b/drivers/crypto/omap-sham.c
+index e8e2907bd9f4..ac80bc6af093 100644
+--- a/drivers/crypto/omap-sham.c
++++ b/drivers/crypto/omap-sham.c
+@@ -1989,7 +1989,6 @@ static int omap_sham_get_res_pdev(struct omap_sham_dev *dd,
+ 	/* Get the IRQ */
+ 	dd->irq = platform_get_irq(pdev, 0);
+ 	if (dd->irq < 0) {
+-		dev_err(dev, "no IRQ resource info\n");
+ 		err = dd->irq;
+ 		goto err;
+ 	}
+diff --git a/drivers/crypto/sahara.c b/drivers/crypto/sahara.c
+index b0b8e3d48aef..8ac8ec6decd5 100644
+--- a/drivers/crypto/sahara.c
++++ b/drivers/crypto/sahara.c
+@@ -1403,10 +1403,8 @@ static int sahara_probe(struct platform_device *pdev)
+ 
+ 	/* Get the IRQ */
+ 	irq = platform_get_irq(pdev,  0);
 -	if (irq < 0) {
--		dev_err(dev, "failed to retrieve irq: %d\n", irq);
+-		dev_err(&pdev->dev, "failed to get irq resource\n");
 +	if (irq < 0)
  		return irq;
 -	}
  
- 	rsb->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(rsb->clk)) {
+ 	err = devm_request_irq(&pdev->dev, irq, sahara_irq_handler,
+ 			       0, dev_name(&pdev->dev), dev);
+diff --git a/drivers/crypto/stm32/stm32-cryp.c b/drivers/crypto/stm32/stm32-cryp.c
+index 98ae02826e8f..72f86063b046 100644
+--- a/drivers/crypto/stm32/stm32-cryp.c
++++ b/drivers/crypto/stm32/stm32-cryp.c
+@@ -1975,10 +1975,8 @@ static int stm32_cryp_probe(struct platform_device *pdev)
+ 		return PTR_ERR(cryp->regs);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "Cannot get IRQ resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	ret = devm_request_threaded_irq(dev, irq, stm32_cryp_irq,
+ 					stm32_cryp_irq_thread, IRQF_ONESHOT,
+diff --git a/drivers/crypto/stm32/stm32-hash.c b/drivers/crypto/stm32/stm32-hash.c
+index 2b70d8796f25..cfc8e0e37bee 100644
+--- a/drivers/crypto/stm32/stm32-hash.c
++++ b/drivers/crypto/stm32/stm32-hash.c
+@@ -1450,10 +1450,8 @@ static int stm32_hash_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "Cannot get IRQ resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	ret = devm_request_threaded_irq(dev, irq, stm32_hash_irq_handler,
+ 					stm32_hash_irq_thread, IRQF_ONESHOT,
 -- 
 Sent by a computer through tubes
 
