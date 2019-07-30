@@ -2,121 +2,137 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E39C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC69C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2992087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:19:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="opaoi4LM"
+	by mail.kernel.org (Postfix) with ESMTP id E7D2F206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfG3MTm (ORCPT
+        id S1729239AbfG3MXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:19:42 -0400
-Received: from mail-eopbgr150087.outbound.protection.outlook.com ([40.107.15.87]:19725
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726167AbfG3MTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 08:19:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VpcNA2wzNBobxeciwNbTgqtqIGui0CaFdoStSSMrpJ/kjd7Jf0bdmoxuWYvAHUU+ShOg7R6Jx4/qAN3Y/0bdJAYBtqDWvhCF6vxs7EF0pFsMeX7A6c9w1XRuIp/zYNmduYm9kjBehlMX0pFd0EtyLEDiqzypGsFKJyh8uylXoDxvjExXY4hetav5zJHxpazgFCaYaRzAuhU5eCW3NAAVUANg31/zNmq5sM0+uRhz2l4ZeYBuNsdSxVBv044xAlfYtcFO102jv4Q+Cg/Ee8Wb1972czINjzyTooR78hCT0NlWkxfvMOHggW42tb1Ra27SnBdPIioOaf5IHsJgk1CzWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l7r28WI1zmhD86uBueMBy2Xz3kppo0N4zZqEukaszHk=;
- b=MuUVjwXqkOX0E1taGUdI5EbaYdsKYFe1lwSaZ0kGWy82EyoktFvlqPqx/UNKbxcQCiSzpa8OqL8cd6osmhdcKTv/S3Q0T4guCNQvZlCyieirS+mkDSusuicmVazwmsQUS0pN7JsWE6GLGX9nbIkJEgKygQzTLHXx2VOlGJ++E64zuPYj/tUMG3F24korD3i5ltMtfHz3+duwfPIxhXHomumEhK0R9H01fvmn9gEHT4Mom3gTwKKeiuYHbQSlaerl5GIs8fUT58q1zmCnAWysWybdJuZjwwUlSVSDjRIMAaSntH3KiNRzsEn9YrQCbUKVDreyGUTz/VbSS2b4OpEARg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l7r28WI1zmhD86uBueMBy2Xz3kppo0N4zZqEukaszHk=;
- b=opaoi4LM+GDxj7XudZ+CCFWSeFfnB8lIyVOeBba/ZrhwpCXeKbnfcFNB8MXziRDdlhVy3WvTW/dt/bRwe9vnPpp49iGx3XP/H+PGFjOgTBGHR1/PGRbOK1831FeT7ZJn4f1Yn26orhhBFvuP3ueQloTi0ScDaPwvlf87Wjd37mk=
-Received: from DB8PR05MB6044.eurprd05.prod.outlook.com (20.179.10.157) by
- DB8PR05MB6652.eurprd05.prod.outlook.com (10.141.188.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.14; Tue, 30 Jul 2019 12:19:38 +0000
-Received: from DB8PR05MB6044.eurprd05.prod.outlook.com
- ([fe80::1587:f8a7:2e31:c75e]) by DB8PR05MB6044.eurprd05.prod.outlook.com
- ([fe80::1587:f8a7:2e31:c75e%3]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
- 12:19:38 +0000
-From:   Petr Machata <petrm@mellanox.com>
-To:     Colin King <colin.king@canonical.com>
-CC:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Tue, 30 Jul 2019 08:23:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37224 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfG3MXB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 08:23:01 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hsR9f-0005Ax-Gu; Tue, 30 Jul 2019 12:22:59 +0000
 Subject: Re: [PATCH][net-next][V2] mlxsw: spectrum_ptp: fix duplicated check
  on orig_egr_types
-Thread-Topic: [PATCH][net-next][V2] mlxsw: spectrum_ptp: fix duplicated check
- on orig_egr_types
-Thread-Index: AQHVRsyfxFiButgxYE26V2z9IDLae6bjFIEA
-Date:   Tue, 30 Jul 2019 12:19:38 +0000
-Message-ID: <87h873zpd3.fsf@mellanox.com>
+From:   Colin Ian King <colin.king@canonical.com>
+To:     Petr Machata <petrm@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20190730114752.24133-1-colin.king@canonical.com>
-In-Reply-To: <20190730114752.24133-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR1PR01CA0028.eurprd01.prod.exchangelabs.com
- (2603:10a6:102::41) To DB8PR05MB6044.eurprd05.prod.outlook.com
- (2603:10a6:10:aa::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=petrm@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [78.45.160.211]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f8605605-f150-4440-122c-08d714e830e3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR05MB6652;
-x-ms-traffictypediagnostic: DB8PR05MB6652:
-x-microsoft-antispam-prvs: <DB8PR05MB66521DED1DEE429E136291EEDBDC0@DB8PR05MB6652.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 0114FF88F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(396003)(39860400002)(136003)(199004)(189003)(25786009)(3846002)(4326008)(76176011)(14454004)(86362001)(256004)(6116002)(305945005)(478600001)(81156014)(81166006)(66066001)(8676002)(2906002)(6512007)(11346002)(186003)(486006)(2616005)(446003)(476003)(8936002)(26005)(68736007)(71200400001)(66556008)(66476007)(316002)(64756008)(6506007)(53936002)(6486002)(102836004)(6436002)(4744005)(66946007)(386003)(52116002)(71190400001)(6916009)(5660300002)(7736002)(229853002)(6246003)(54906003)(99286004)(36756003)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR05MB6652;H:DB8PR05MB6044.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xBKSAfMkD23hxHVLmhupcrgsxjRvpX9IZcvGNY8PixMorgdFRAVG+1rOG46cnUeWrvtqC1i8QCDBV24yLNoBe8aa+Zp5iSkxMkZ6+aj766z8NE0W90iqdGdhLXeZqneMmhvIT+3MTkkG6MeUWNmtNyKRKPswxgNdka7DdwWScgWmb8JIg1jhn55U0pJE9a8C2cWKbkFT85/DjmwdWAf/cpkdr3wzctBWJ4wuiae1KLLLN20sI7A2Iwf9L7pa5A4MNkpFuORBX+w/QzRwKfakWWbXX17u+3KMwIRUDpaE6tTpywF5U7Yiu2sWe3xJfojipUGNSI3yJbNfYpnCiQYS9pTjoTYQj+R20NdYBK9u/rdhjjVxs+1/CXERYp4BUnyllpcGxF/bMG9yJYr0giXV835/XFCk/fPQOYmn6FrLsow=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <d1907bca-a6f7-deb0-cffe-ba2561cfe608@canonical.com>
+Date:   Tue, 30 Jul 2019 13:22:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8605605-f150-4440-122c-08d714e830e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 12:19:38.3898
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: petrm@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR05MB6652
+In-Reply-To: <20190730114752.24133-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As pointed out by Petr, this should be [net] and not [net-next]
 
-Colin King <colin.king@canonical.com> writes:
 
+On 30/07/2019 12:47, Colin King wrote:
 > From: Colin Ian King <colin.king@canonical.com>
->
+> 
 > Currently are duplicated checks on orig_egr_types which are
 > redundant, I believe this is a typo and should actually be
 > orig_ing_types || orig_egr_types instead of the expression
 > orig_egr_types || orig_egr_types.  Fix these.
->
+> 
 > Addresses-Coverity: ("Same on both sides")
-> Fixes: c6b36bdd04b5 ("mlxsw: spectrum_ptp: Increase parsing depth when PT=
-P is enabled")
+> Fixes: c6b36bdd04b5 ("mlxsw: spectrum_ptp: Increase parsing depth when PTP is enabled")
 > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c
+> index 98c5ba3200bc..63b07edd9d81 100644
+> --- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c
+> +++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c
+> @@ -999,14 +999,14 @@ static int mlxsw_sp1_ptp_mtpppc_update(struct mlxsw_sp_port *mlxsw_sp_port,
+>  		}
+>  	}
+>  
+> -	if ((ing_types || egr_types) && !(orig_egr_types || orig_egr_types)) {
+> +	if ((ing_types || egr_types) && !(orig_ing_types || orig_egr_types)) {
+>  		err = mlxsw_sp_nve_inc_parsing_depth_get(mlxsw_sp);
+>  		if (err) {
+>  			netdev_err(mlxsw_sp_port->dev, "Failed to increase parsing depth");
+>  			return err;
+>  		}
+>  	}
+> -	if (!(ing_types || egr_types) && (orig_egr_types || orig_egr_types))
+> +	if (!(ing_types || egr_types) && (orig_ing_types || orig_egr_types))
+>  		mlxsw_sp_nve_inc_parsing_depth_put(mlxsw_sp);
+>  
+>  	return mlxsw_sp1_ptp_mtpppc_set(mlxsw_sp_port->mlxsw_sp,
+> 
+> --
+> 
+> V2: fix both occurances of this typo. Thanks to Petr Machata for spotting
+>     the 2nd occurrance
+> 
 
-Thank you, it looks good. But can you please direct this to "net", not
-"net-next"?
