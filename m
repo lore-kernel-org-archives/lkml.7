@@ -2,72 +2,113 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F55C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C52C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03B620665
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E52D20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:30:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uljefasg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbfG3B2r (ORCPT
+        id S1730445AbfG3Bav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:28:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3236 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728352AbfG3B2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:28:47 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C2725EAC0D4F5177E9A9;
-        Tue, 30 Jul 2019 09:28:44 +0800 (CST)
-Received: from [127.0.0.1] (10.177.244.145) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 30 Jul 2019
- 09:28:35 +0800
-Subject: Re: [PATCH] aio: add timeout validity check for io_[p]getevents
-To:     Jeff Moyer <jmoyer@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>
-References: <1564039289-7672-1-git-send-email-yi.zhang@huawei.com>
- <x49imrqb2e5.fsf@segfault.boston.devel.redhat.com>
- <x49y30gnb16.fsf@segfault.boston.devel.redhat.com>
- <20190729154720.GS1131@ZenIV.linux.org.uk>
- <x49h874n86m.fsf@segfault.boston.devel.redhat.com>
-CC:     <linux-aio@kvack.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bcrl@kvack.org>,
-        <wangkefeng.wang@huawei.com>
-From:   "zhangyi (F)" <yi.zhang@huawei.com>
-Message-ID: <04c42460-972a-e2fa-767b-ea3eff07496f@huawei.com>
-Date:   Tue, 30 Jul 2019 09:28:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Mon, 29 Jul 2019 21:30:51 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42041 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729697AbfG3Bav (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 21:30:51 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t132so29134470pgb.9;
+        Mon, 29 Jul 2019 18:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XD0Nb5oFkRw26a4H71gOJRD/jBf5EBDXEDMPrEeZ2Yw=;
+        b=UljefasgRMtkpa6wnQBqBCt62+iTGdCNdau44Zeo7Ek+JSAnHD8bt0fo++4UkJWk1q
+         XzGRmgsNYdqQ1d2JEYogvhTJ3+GfusXDXR1LJlvEjXimU61Ur3WGpJmEXqFgKajqrGyE
+         lHTiy9yxD2QjCxKi73ydI9ekMDkCpPtRgxb2mu/KJsH9iOszfUkw0ipIdaJU1aMTAu1d
+         O7AXd32EUUnI4LxdW5PF737h6trH9jaw/9Q1jWwf8ie04iU8wEDIh10FTuyJgcPzFV2q
+         NvdnzRsrXmCBNHFQMV8dzqxTerkn/kaGMA3OEF3zXGbW0kff53KQJvZThTI6e+qLHgIb
+         w9AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XD0Nb5oFkRw26a4H71gOJRD/jBf5EBDXEDMPrEeZ2Yw=;
+        b=uPdVNVP5wSCdXar3CIP0QxRIWjD3xWAkz4jMyskP94VoM4nVcFVP/Fny3BkhQAVv7W
+         OQDI3vUtUpBNnYnivDMPVkMo08c8GfPuFN3M4eypStRQdbolb7vr1txrDq/oLu0Cp9Ri
+         vzur/CcaNLrp+1l1NFeoRj791fCnkVyK0Wlr9bdm1/uj0naxsNtfre4nrvj1bGHXMyvx
+         LVIgNvsZn+T53p1KNN2Bua7Nolrag164OuPxHdvWFpSMdfnq0YYYvhjmjRrOoWirUlsD
+         6haZ/umuXIem4SP56zd+1bbTo+lNBpn+pQYWy74YYA85BMvjjDjqv9SLODZSnE0hx5Bh
+         9pXQ==
+X-Gm-Message-State: APjAAAXiLeDhqbJvpMZ9ATqlll8LTt+sMB27W2fICEkBZX8wE40fHA2y
+        +V7eV3Zvg4GGGqpVX6LaNBR5PDiU
+X-Google-Smtp-Source: APXvYqxRx+E5380jw+KIEuBw+wATEsIziYP2tw7mQT1jTa2zlp56P7oEccO8DjL/y3x9J4wTum19bw==
+X-Received: by 2002:a63:10a:: with SMTP id 10mr22893573pgb.281.1564450250582;
+        Mon, 29 Jul 2019 18:30:50 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j15sm62681173pfr.146.2019.07.29.18.30.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jul 2019 18:30:49 -0700 (PDT)
+Subject: Re: [PATCH] watchdog device drivers:pc87413_wdt: Rewriting of
+ pc87413_wdt driver to utilize common watchdog interface (fwd)
+To:     Mark Balantzyan <mbalant3@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        wim@linux-watchdog.org
+References: <alpine.DEB.2.21.1907291614270.2893@mbalantz-desktop>
+ <8e159e06-023e-6e20-ced5-3a645c0a1242@roeck-us.net>
+ <alpine.DEB.2.21.1907291732130.20898@mbalantz-desktop>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <c28680b5-d262-97ae-5bdc-5cce9169e2da@roeck-us.net>
+Date:   Mon, 29 Jul 2019 18:30:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <x49h874n86m.fsf@segfault.boston.devel.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <alpine.DEB.2.21.1907291732130.20898@mbalantz-desktop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.244.145]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/29 23:59, Jeff Moyer Wrote:
-> Al Viro <viro@zeniv.linux.org.uk> writes:
-> 
->> On Mon, Jul 29, 2019 at 10:57:41AM -0400, Jeff Moyer wrote:
->>> Al, can you take this through your tree?
->>
->> Umm...  Can do, but I had an impression that Arnd and Deepa
->> had a tree for timespec-related work.  OTOH, it had been
->> relatively quiet last cycle, so...  If they have nothing
->> in the area, I can take it through vfs.git.
-> 
-> Hmm, okay.  Yi, can you repost the patch, adding my Reviewed-by tag, and
-> CC-ing Arnd and Deepa:
->
+Mark,
 
-Yes, will do.
+On 7/29/19 5:44 PM, Mark Balantzyan wrote:
+> Hello all, Guenter,
+> 
+> I am being evaluated as a student by my organization. I appreciate your patience with my emails and patches.
+> 
+> I would like to please propose that we divide and conquer: I write the code for converting the driver to common watchdog interface (and I thank you for your guidance on it in previous email) and you test the code on the actual hardware you may happen to have, as I do not have it. I accept the fact that it is indeed risky without the hardware to ensure the driver works correctly, but that will be where we work in tandem, software to hardware, yes, if that's alright?
+> 
+
+If I had the hardware, I would say so. Then we would have no problem,
+I would thank you for your work, and I would be more than happy to test
+your patch on that hardware.
+
+Unfortunately, I don't have the hardware, and I don't know anyone who (still)
+has. The most recent functional change to this driver was made back in 2011.
+
+If the task is to convert a watchdog driver, does it have to be _this_ driver ?
+One that comes into mind instead would be ib700, which looks to be quite similar
+and which _is_ supported by qemu. I have not tried if its qemu emulation
+actually works, but it would be worth a try.
+
+The only alternative I can see, if it has to be _this_ driver for some reason,
+is for us to go through with it and then let the patch hang around until we
+find someone to test it (which may be never). I am not really sure if that
+would be worth our time.
+
+> I think it's better if I use git send-email for the corresponding patch with the improvements you forecasted since it may format things better and may result in a non-corrupted patching.
+> 
+Most definitely, yes.
 
 Thanks,
-Yi.
-
+Guenter
