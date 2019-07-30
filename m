@@ -2,123 +2,184 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59A6C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A822C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A483C2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16C11206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:04:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="HTE7x31h"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="4Bp21u1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387777AbfG3SDy (ORCPT
+        id S2387784AbfG3SEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:03:54 -0400
-Received: from mail-eopbgr20069.outbound.protection.outlook.com ([40.107.2.69]:34085
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387685AbfG3SDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:03:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jk0bVpZiIeNPTu0EyrrhRFLJcNWf4YDhhNeZ8X3Jywa4yU8jafq35yLEduNuf/4OCnYN5RVZhn0zZatcJkRHE8CBGDtaiu5w6SzFpEMwq0Z9rzxMmfyz7bxvqNER7b1Y5uHBD5VWtBXaTUHYmp0fUZNjnaEnGiOjrIiGph+Wb+56//se4vkx2ZSX+nSH4JiCJp8Zu1YTCnsQXCS/9BRo6yH54JCkX49ILapy90zQyDuafmX3ypTeujx4D5WhF0sROgOZil7/S+dpfeOVhu9jHvYceTUwwsS+jhzYyecDMrbhrsjU5oEXtFGV4BWoW8dNoTG6rf0QGLyASVtPYJ/9/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xe6eJ2krxq6gY9cV8D0PGtTCTRLtX31xUVU26+G/yF0=;
- b=NnZ3enlQmLx3U2OqvG9MmdLXhElOTKS4YnIU9qVT/6+RrsyXSOQ2Sb8UnfQKDgYkbplDtcyQnKVejGdqRw9lZlj38j8NaTvvnyoyO23t77vehtrrQJVF3q/23IVZEPMBrM7pDXjH1JQ9I/w6j8EFeY0nLRc6QR6bLa76trwkkKGvpbnHdo+cj9V9Ju3SRapoGRlTDKUajPMtzAUN7C6DyIq/2a9AGELfhzkQrPPjUDXrct/n3P9GngJ9DKW4SVcXnZ1x7KR0o7P9tdxY6HseJJnf8xOO4iS3xbyy9uPD7Ssl7+KTNzhHVVbxAowF9EDpdH0CScURx/nHnRI987UH6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xe6eJ2krxq6gY9cV8D0PGtTCTRLtX31xUVU26+G/yF0=;
- b=HTE7x31h+0FTE57z7CvH0ButSvGq5gxxVbbgAz78qZGH7x4T281JeDV77tBrEnCRmG0GUy/Ng4EbWHXw/XF2AKtQEN4csbHGn4INBv5lJveUfVCKKSNt2MTWWB58T/ou8qZiRi7mGxkKUPOqpzbke66FLjvWeTIC6EuKJ9B85SI=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5728.eurprd05.prod.outlook.com (20.178.121.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.14; Tue, 30 Jul 2019 18:03:51 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
- 18:03:51 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 13/13] mm: allow HMM_MIRROR on all architectures with MMU
-Thread-Topic: [PATCH 13/13] mm: allow HMM_MIRROR on all architectures with MMU
-Thread-Index: AQHVRpsJa23GemswhU+gJVFr5hDTJqbjdQwA
-Date:   Tue, 30 Jul 2019 18:03:51 +0000
-Message-ID: <20190730180346.GR24038@mellanox.com>
-References: <20190730055203.28467-1-hch@lst.de>
- <20190730055203.28467-14-hch@lst.de>
-In-Reply-To: <20190730055203.28467-14-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQXPR01CA0085.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:41::14) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 085a24eb-2e30-4b11-f6ac-08d715184728
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5728;
-x-ms-traffictypediagnostic: VI1PR05MB5728:
-x-microsoft-antispam-prvs: <VI1PR05MB57281EA66ED36E4B6697FAFCCFDC0@VI1PR05MB5728.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0114FF88F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(376002)(346002)(396003)(199004)(189003)(6116002)(3846002)(68736007)(2616005)(71200400001)(71190400001)(2906002)(11346002)(14454004)(386003)(102836004)(26005)(446003)(486006)(256004)(305945005)(6506007)(5660300002)(476003)(52116002)(186003)(76176011)(7736002)(66066001)(86362001)(81156014)(6916009)(6486002)(6512007)(6436002)(25786009)(4326008)(36756003)(7416002)(4744005)(99286004)(66946007)(478600001)(1076003)(8676002)(81166006)(8936002)(316002)(54906003)(66476007)(33656002)(66446008)(66556008)(64756008)(6246003)(53936002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5728;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Dl5OFmKR4GZLV8C0uAvDZAoziNdxhHyg4xcY8lGvTPBO5va7Xl90/JyOsSjIJI7vtEbOsCDgApn1DvvYg+Q5MKW/vMCbjCLzwlO3946LGu2vIMB8gQuJdCTgK7pcsFv/MS8LEFyfzFC9prjhZFcLNoMbsJFc1eLpkh8/C2iRnzMeMwm3hr0Td5xd2Wue+j/UhROameb0ZI1eS65K/vBfopXojSIId5z8e9UDw8XLpgBtBrepcRGtFvUEXyuSa22NWEM3hK2iASodMMPNdBcqIAfPBcZSvan6MhiEhu4kUK6gjoGpS3RH71GeuK5U5XtXdaEGD1IhzAMlQ7zW2O5ERMSoXR0YeSGhsvJ2Zvka1GfbHOcxVuIhqKq6MEfbpXEHmQ9HKDLxhyi4Lc7RAovc3XbxuZcB75KR4wFiQEo6RQY=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <99F74B5B1EA70C41A24AB791174D4BBD@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Jul 2019 14:04:06 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51963 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728116AbfG3SEG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 14:04:06 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UI3wTw3322512
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 30 Jul 2019 11:03:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UI3wTw3322512
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564509839;
+        bh=Q8r8DuGQ1Jlpl52DzFaeQCJat4D9MW6m7X95NaG4ub4=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=4Bp21u1YWc23HglypOyFpCuCmhyPyQH2f7JM86j38xnTEbJBmmYyNyL4e/k6Df5tE
+         BxaTI9vBPwxtC9wPPuQIPDe1R69bfrmrbr8jAcs9xZ3LKQETYTCt7NLtVYO8IUenpR
+         cyPugqNfcRAoeaCJ+nnsInCZuMZTebHXEiUnJFMuVGh+ck9UKCEDtkeuJA6UZitQrT
+         5/ucvpr4pfbTuopEEE+8SsOCGGoBb8G7D8M3B5Q8KLd17BYoQRC5NRPOBbtIeN2Fu+
+         GfYvoxcRW6siEpWRGlj6IWi+FCDx4ugApHzYBnfazK7OD92MjtQLfJK2N3vlnSEkfq
+         st111Pke+DbgA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UI3wTB3322508;
+        Tue, 30 Jul 2019 11:03:58 -0700
+Date:   Tue, 30 Jul 2019 11:03:58 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-w3eluap63x9je0bb8o3t79tz@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
+        lclaudio@redhat.com, acme@redhat.com, tglx@linutronix.de,
+        namhyung@kernel.org, hpa@zytor.com, jolsa@kernel.org,
+        mingo@kernel.org
+Reply-To: jolsa@kernel.org, tglx@linutronix.de, hpa@zytor.com,
+          namhyung@kernel.org, acme@redhat.com, mingo@kernel.org,
+          lclaudio@redhat.com, adrian.hunter@intel.com,
+          linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf trace: Forward error codes when trying to read
+ syscall info
+Git-Commit-ID: 5d2bd88975117062766a48b5f36ce31d2c1a8269
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 085a24eb-2e30-4b11-f6ac-08d715184728
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 18:03:51.5098
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5728
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 08:52:03AM +0300, Christoph Hellwig wrote:
-> There isn't really any architecture specific code in this page table
-> walk implementation, so drop the dependencies.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
->  mm/Kconfig | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+Commit-ID:  5d2bd88975117062766a48b5f36ce31d2c1a8269
+Gitweb:     https://git.kernel.org/tip/5d2bd88975117062766a48b5f36ce31d2c1a8269
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Wed, 17 Jul 2019 19:53:51 -0300
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 29 Jul 2019 18:34:42 -0300
 
-Happy to see it, lets try to get this patch + the required parts of
-this series into linux-next to be really sure
+perf trace: Forward error codes when trying to read syscall info
 
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+We iterate thru the syscall table produced from the kernel syscall
+tables reading info, propagate the error and add to the debug message.
 
-Thanks,
-Jason
+This helps in fixing further bugs, such as failing to read the
+"sendfile" syscall info when it really should try the aliasm
+"sendfile64".
+
+  Problems reading syscall 40: 2 (No such file or directory)(sendfile) information
+
+  # grep sendfile /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c
+	[40] = "sendfile",
+  #
+
+I.e. in the tracefs format file for the syscall tracepoints we have it
+as sendfile64:
+
+  # find /sys -type f -name format | grep sendfile
+  /sys/kernel/debug/tracing/events/syscalls/sys_enter_sendfile64/format
+  /sys/kernel/debug/tracing/events/syscalls/sys_exit_sendfile64/format
+  #
+
+But as "sendfile" in the file used to build the syscall table used in
+perf:
+
+  $ grep sendfile arch/x86/entry/syscalls/syscall_64.tbl
+  40	common	sendfile		__x64_sys_sendfile64
+  $
+
+So we need to add, in followup patches, aliases in 'perf trace' syscall
+data structures to cope with thie.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-w3eluap63x9je0bb8o3t79tz@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-trace.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index d403b09812d1..5dae7b172291 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1492,13 +1492,13 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	const char *name = syscalltbl__name(trace->sctbl, id);
+ 
+ 	if (name == NULL)
+-		return -1;
++		return -EINVAL;
+ 
+ 	if (id > trace->syscalls.max) {
+ 		struct syscall *nsyscalls = realloc(trace->syscalls.table, (id + 1) * sizeof(*sc));
+ 
+ 		if (nsyscalls == NULL)
+-			return -1;
++			return -ENOMEM;
+ 
+ 		if (trace->syscalls.max != -1) {
+ 			memset(nsyscalls + trace->syscalls.max + 1, 0,
+@@ -1525,10 +1525,10 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	}
+ 
+ 	if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ? 6 : sc->tp_format->format.nr_fields))
+-		return -1;
++		return -ENOMEM;
+ 
+ 	if (IS_ERR(sc->tp_format))
+-		return -1;
++		return PTR_ERR(sc->tp_format);
+ 
+ 	sc->args = sc->tp_format->format.fields;
+ 	/*
+@@ -1789,6 +1789,7 @@ typedef int (*tracepoint_handler)(struct trace *trace, struct perf_evsel *evsel,
+ static struct syscall *trace__syscall_info(struct trace *trace,
+ 					   struct perf_evsel *evsel, int id)
+ {
++	int err = 0;
+ 
+ 	if (id < 0) {
+ 
+@@ -1811,9 +1812,10 @@ static struct syscall *trace__syscall_info(struct trace *trace,
+ 	}
+ 
+ 	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL) &&
+-	    trace__read_syscall_info(trace, id))
++	    (err = trace__read_syscall_info(trace, id)) != 0)
+ 		goto out_cant_read;
+ 
++	err = -EINVAL;
+ 	if ((id > trace->syscalls.max || trace->syscalls.table[id].name == NULL))
+ 		goto out_cant_read;
+ 
+@@ -1821,7 +1823,8 @@ static struct syscall *trace__syscall_info(struct trace *trace,
+ 
+ out_cant_read:
+ 	if (verbose > 0) {
+-		fprintf(trace->output, "Problems reading syscall %d", id);
++		char sbuf[STRERR_BUFSIZE];
++		fprintf(trace->output, "Problems reading syscall %d: %d (%s)", id, -err, str_error_r(-err, sbuf, sizeof(sbuf)));
+ 		if (id <= trace->syscalls.max && trace->syscalls.table[id].name != NULL)
+ 			fprintf(trace->output, "(%s)", trace->syscalls.table[id].name);
+ 		fputs(" information\n", trace->output);
