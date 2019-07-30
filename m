@@ -2,157 +2,134 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B76C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF86C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D0D2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D87216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbfG3Be0 (ORCPT
+        id S1730581AbfG3Bin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:34:26 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:25672 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729221AbfG3BeZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:34:25 -0400
-X-UUID: fa52ff4a3a274579b251fa276632f2cb-20190730
-X-UUID: fa52ff4a3a274579b251fa276632f2cb-20190730
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2079832734; Tue, 30 Jul 2019 09:34:16 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 30 Jul
- 2019 09:34:13 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 30 Jul 2019 09:34:13 +0800
-Message-ID: <1564450453.24702.14.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 1/2] dt-bindings: i3c: Document MediaTek I3C master
- bindings
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-CC:     Rob Herring <robh@kernel.org>, <bbrezillon@kernel.org>,
-        <matthias.bgg@gmail.com>, <mark.rutland@arm.com>,
-        <linux-i3c@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
-        <liguo.zhang@mediatek.com>, <xinping.qian@mediatek.com>
-Date:   Tue, 30 Jul 2019 09:34:13 +0800
-In-Reply-To: <20190727111859.315994c3@collabora.com>
-References: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
-         <1562677762-24067-2-git-send-email-qii.wang@mediatek.com>
-         <20190724202119.GA26566@bogus> <1564190613.24702.11.camel@mhfsdcap03>
-         <20190727111859.315994c3@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 29 Jul 2019 21:38:43 -0400
+Received: from mga12.intel.com ([192.55.52.136]:14714 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729221AbfG3Bin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jul 2019 21:38:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 18:38:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,324,1559545200"; 
+   d="scan'208";a="165675363"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by orsmga008.jf.intel.com with ESMTP; 29 Jul 2019 18:38:40 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, Rik van Riel <riel@redhat.com>,
+        <jhladky@redhat.com>, <lvenanci@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH RESEND] autonuma: Fix scan period updating
+References: <20190725080124.494-1-ying.huang@intel.com>
+        <20190725173516.GA16399@linux.vnet.ibm.com>
+        <87y30l5jdo.fsf@yhuang-dev.intel.com>
+        <20190726092021.GA5273@linux.vnet.ibm.com>
+        <87ef295yn9.fsf@yhuang-dev.intel.com>
+        <20190729072845.GC7168@linux.vnet.ibm.com>
+        <87wog145nn.fsf@yhuang-dev.intel.com> <20190729085646.GG2708@suse.de>
+Date:   Tue, 30 Jul 2019 09:38:39 +0800
+In-Reply-To: <20190729085646.GG2708@suse.de> (Mel Gorman's message of "Mon, 29
+        Jul 2019 09:56:46 +0100")
+Message-ID: <87ftmo47z4.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 91A1554D3BC24F029BD720EAFB2775A8A7F8762EFAD65B4F447638B10A285CF22000:8
-X-MTK:  N
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-07-27 at 11:18 +0200, Boris Brezillon wrote:
-> On Sat, 27 Jul 2019 09:23:33 +0800
-> Qii Wang <qii.wang@mediatek.com> wrote:
-> 
-> > On Wed, 2019-07-24 at 14:21 -0600, Rob Herring wrote:
-> > > On Tue, Jul 09, 2019 at 09:09:21PM +0800, Qii Wang wrote:  
-> > > > Document MediaTek I3C master DT bindings.
-> > > > 
-> > > > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-> > > > ---
-> > > >  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   48 ++++++++++++++++++++
-> > > >  1 file changed, 48 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-> > > > new file mode 100644
-> > > > index 0000000..d32eda6
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
-> > > > @@ -0,0 +1,48 @@
-> > > > +Bindings for MediaTek I3C master block
-> > > > +=====================================
-> > > > +
-> > > > +Required properties:
-> > > > +--------------------
-> > > > +- compatible: shall be "mediatek,i3c-master"  
-> > > 
-> > > Needs to be SoC specific.
-> > >   
-> > 
-> > We hope that the SOCs will use the same driver and try to avoid big
-> > changes. If there are inevitable changes in the future, then we will
-> > modify the compatible to be SoC specific. cdns,i3c-master.txt is not SoC
-> > specific either.
-> 
-> The cadence case is a bit different I think. When the driver was
-> developed there was no SoC integrating this IP. I guess Mediatek knows
-> already which SoC(s) will embed the I3C master block.
-> 
+Mel Gorman <mgorman@suse.de> writes:
 
-ok, I will modify it as "mediatek,mt8183-i3c".
+> On Mon, Jul 29, 2019 at 04:16:28PM +0800, Huang, Ying wrote:
+>> Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
+>> 
+>> >> >> 
+>> >> >> if (lr_ratio >= NUMA_PERIOD_THRESHOLD)
+>> >> >>     slow down scanning
+>> >> >> else if (sp_ratio >= NUMA_PERIOD_THRESHOLD) {
+>> >> >>     if (NUMA_PERIOD_SLOTS - lr_ratio >= NUMA_PERIOD_THRESHOLD)
+>> >> >>         speed up scanning
+>> >> 
+>> >> Thought about this again.  For example, a multi-threads workload runs on
+>> >> a 4-sockets machine, and most memory accesses are shared.  The optimal
+>> >> situation will be pseudo-interleaving, that is, spreading memory
+>> >> accesses evenly among 4 NUMA nodes.  Where "share" >> "private", and
+>> >> "remote" > "local".  And we should slow down scanning to reduce the
+>> >> overhead.
+>> >> 
+>> >> What do you think about this?
+>> >
+>> > If all 4 nodes have equal access, then all 4 nodes will be active nodes.
+>> >
+>> > From task_numa_fault()
+>> >
+>> > 	if (!priv && !local && ng && ng->active_nodes > 1 &&
+>> > 				numa_is_active_node(cpu_node, ng) &&
+>> > 				numa_is_active_node(mem_node, ng))
+>> > 		local = 1;
+>> >
+>> > Hence all accesses will be accounted as local. Hence scanning would slow
+>> > down.
+>> 
+>> Yes.  You are right!  Thanks a lot!
+>> 
+>> There may be another case.  For example, a workload with 9 threads runs
+>> on a 2-sockets machine, and most memory accesses are shared.  7 threads
+>> runs on the node 0 and 2 threads runs on the node 1 based on CPU load
+>> balancing.  Then the 2 threads on the node 1 will have "share" >>
+>> "private" and "remote" >> "local".  But it doesn't help to speed up
+>> scanning.
+>> 
+>
+> Ok, so the results from the patch are mostly neutral. There are some
+> small differences in scan rates depending on the workload but it's not
+> universal and the headline performance is sometimes worse. I couldn't
+> find something that would justify the change on its own.
 
-> > 
-> > > > +- reg: physical base address of the controller and apdma base, length of
-> > > > +  memory mapped region.
-> > > > +- reg-names: shall be "main" for master controller and "dma" for apdma.
-> > > > +- interrupts: the interrupt line connected to this I3C master.
-> > > > +- clocks: shall reference the i3c and apdma clocks.
-> > > > +- clock-names: shall include "main" and "dma".
-> > > > +
-> > > > +Mandatory properties defined by the generic binding (see
-> > > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-> > > > +
-> > > > +- #address-cells: shall be set to 3
-> > > > +- #size-cells: shall be set to 0
-> > > > +
-> > > > +Optional properties defined by the generic binding (see
-> > > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-> > > > +
-> > > > +- i2c-scl-hz
-> > > > +- i3c-scl-hz
-> > > > +
-> > > > +I3C device connected on the bus follow the generic description (see
-> > > > +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +	i3c0: i3c@1100d000 {
-> > > > +		compatible = "mediatek,i3c-master";
-> > > > +		reg = <0x1100d000 0x1000>,
-> > > > +		      <0x11000300 0x80>;
-> > > > +		reg-names = "main", "dma";
-> > > > +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
-> > > > +		clocks = <&infracfg CLK_INFRA_I3C0>,
-> > > > +			 <&infracfg CLK_INFRA_AP_DMA>;
-> > > > +		clock-names = "main", "dma";
-> > > > +		#address-cells = <3>;
-> > > > +		#size-cells = <0>;
-> > > > +		i2c-scl-hz = <100000>;
-> > > > +
-> > > > +		nunchuk: nunchuk@52 {
-> > > > +			compatible = "nintendo,nunchuk";
-> > > > +			reg = <0x52 0x0 0x10>;
-> > > > +		};
-> > > > +	};
-> > > > -- 
-> > > > 1.7.9.5
-> > > >   
-> > 
-> > 
-> 
+Thanks a lot for your help!
 
+> I think in the short term -- just fix the comments.
 
+Then we will change the comments to something like,
+
+"Slow down scanning if most memory accesses are private."
+
+It's hard to be understood.  Maybe we just keep the code and comments as
+it was until we have better understanding.
+
+> For the shared access consideration, the scan rate is important but so too
+> is the decision on when pseudo interleaving should be used. Both should
+> probably be taken into account when making changes in this area. The
+> current code may not be optimal but it also has not generated bug reports,
+> high CPU usage or obviously bad locality decision in the field.  Hence,
+> for this patch or a similar series, it is critical that some workloads are
+> selected that really care about the locality of shared access and evaluate
+> based on that. Initially it was done with a large battery of tests run
+> by different people but some of those people have changed role since and
+> would not be in a position to rerun the tests. There also was the issue
+> that when those were done, NUMA balancing was new so it's comparative
+> baseline was "do nothing at all".
+
+Yes.  I totally agree that we should change the behavior based on
+testing.
+
+Best Regards,
+Huang, Ying
