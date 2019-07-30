@@ -2,227 +2,111 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47052C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D624DC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150E720659
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9049220659
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:05:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="n9KfG1qG"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Jn2Ju1Oy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfG3TFC (ORCPT
+        id S1727425AbfG3TFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 15:05:02 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35699 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfG3TFC (ORCPT
+        Tue, 30 Jul 2019 15:05:21 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37398 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfG3TFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 15:05:02 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UJ4nil3339797
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 12:04:49 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UJ4nil3339797
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564513490;
-        bh=seLcXPfEsR+vXTuWWvwbh7YQgP0yONLgPSNXSUOpugk=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=n9KfG1qGc67dLQb03glfT6RP+NaqjCqHDwjW6YmtmeeylxeycCrBZ1bRnxS0UTMg0
-         WXM6VVWZ6UH63zoEA3zQsDjtcDbak7+KO+GrkRSBXGvtI03XfCuDt+Vq0TLpmMPdLZ
-         GLqNrBp+IkTUr4SI9G47hjFK7MwuVTqhfyExUAs0m/YmD4GdzNDufwZFeE4NmTtDWf
-         VD4uEyoB+1oUErKF16FT3gl1fRLDsPiX8QYeWeZnJ+qOGRI+M0+Ig+zKZMtPwdlrve
-         Rht2c7qmhEJBNQbGidoYcVcQDgZinaIvf2a2ZtJypErOCA2d/wbD3li5MtMdzcdF4U
-         7H8y9URmV9d/Q==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UJ4mGR3339793;
-        Tue, 30 Jul 2019 12:04:48 -0700
-Date:   Tue, 30 Jul 2019 12:04:48 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-bb5133ae4d404a8a08d8a94dfdea1c477c93e842@git.kernel.org>
-Cc:     alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, hpa@zytor.com, ak@linux.intel.com,
-        jolsa@kernel.org, mingo@kernel.org, peterz@infradead.org,
-        acme@redhat.com, namhyung@kernel.org,
-        alexander.shishkin@linux.intel.com, mpetlan@redhat.com
-Reply-To: mingo@kernel.org, jolsa@kernel.org, mpetlan@redhat.com,
-          alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-          ak@linux.intel.com, hpa@zytor.com,
-          alexey.budankov@linux.intel.com, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, namhyung@kernel.org,
-          acme@redhat.com
-In-Reply-To: <20190721112506.12306-77-jolsa@kernel.org>
-References: <20190721112506.12306-77-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] libperf: Add perf_evsel tests
-Git-Commit-ID: bb5133ae4d404a8a08d8a94dfdea1c477c93e842
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 15:05:20 -0400
+Received: by mail-io1-f67.google.com with SMTP id q22so10881965iog.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 12:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6xq/drbshr7a6ifjtYXwzYh1cR/KYTlMyeuT0GJwIMM=;
+        b=Jn2Ju1OyCU4v3AwDIMIhnSfQ48UQ0LS1KkC0gtnizRnNZWSeyV5s4Nf0Ky369vRpKX
+         GF6ocMu5DVvo0ekyNbjGN/SkGuRVSpQRPXvuZko0FjDkKAsBy+SuKIHfZ9ki+6ESh5nc
+         UXugwJst9bQu+sOjh7lH28F9oRuyLt4EAHA/13MdbbEklrMhImWQ9a/83H6GXT1fZLxS
+         wjU+0IOUEaj6SQYQ5nq8uSYZcOClAvj3w/CRLJx72gVDo+9P0506O/jP9IH+RIbV6Gq1
+         OctrFFIiSQOvnp//0PSJd+yAMhBzmTGOanKxRaN8VZsV+0MwBMPFLGx1Bs1NTkryameJ
+         Vt2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6xq/drbshr7a6ifjtYXwzYh1cR/KYTlMyeuT0GJwIMM=;
+        b=dv5lrKP55JZae3SNJSKE8ch9htN3sl49FVUJPDXtiLGfctr/niLtBsBLhT1uAYswvL
+         NtT5lNSzTEy2rtpr/QXi8DrLRRAPfQhmbk0z6rOzuesC1OHSrQILPv/8ZI7TzcBaoGQe
+         YlRzOkUEnJRbehTnISUQJG+rZRHhYVe7E4tliZ7fYKz7Wi7r7tJg2cOMQakF5SQu5SVH
+         HgxCCqamDn6TsSe64L1At+NQsZq1MH2rW6zx8CX9ALj9gmAbmhFY/d9viB+2IZGqLMHw
+         gv9BGyZxWI6gnDfbrYbYLv/8dWMHcvQGl2m7Y9fdNhgpnIufFIqxbfalP+2c4TN6ka3/
+         rZJg==
+X-Gm-Message-State: APjAAAW6Jx0LpLEjdLgmY1k5hA6bzopLuDHVoGFNKTB1Chn+YyRKll0l
+        bIvVKCc7buBdnTsOwAXe8kc=
+X-Google-Smtp-Source: APXvYqyvuWOyR2W7I2nrEK10CGI9a3aZxb8KfC+9CBldTIUE2Xzx0/dWC1/oy7Y0psalynn5RzfJ5g==
+X-Received: by 2002:a02:90c8:: with SMTP id c8mr26552924jag.22.1564513519975;
+        Tue, 30 Jul 2019 12:05:19 -0700 (PDT)
+Received: from localhost.localdomain ([162.223.5.124])
+        by smtp.gmail.com with ESMTPSA id a7sm52783730iok.19.2019.07.30.12.05.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 12:05:19 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, oleg@redhat.com,
+        joel@joelfernandes.org
+Subject: [GIT PULL] pidfd fixes
+Date:   Tue, 30 Jul 2019 21:04:37 +0200
+Message-Id: <20190730190437.19004-1-christian@brauner.io>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  bb5133ae4d404a8a08d8a94dfdea1c477c93e842
-Gitweb:     https://git.kernel.org/tip/bb5133ae4d404a8a08d8a94dfdea1c477c93e842
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:25:03 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:47 -0300
+Hi Linus,
 
-libperf: Add perf_evsel tests
+This makes setting the exit_state in exit_notify() consistent after fixing
+the pidfd polling race pre-rc1. Related to the race fix, this adds a
+WARN_ON() to do_notify_pidfd() to catch any future exit_state races.
+Last, this removes an obsolete comment from the pidfd tests.
 
-Add 2 simple perf_evsel tests to test counters reading interface through
-the struct evsel object.
+The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
 
-Committer testing:
+  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
 
-  # make -C tools/perf/lib tests
-  make: Entering directory '/home/acme/git/perf/tools/perf/lib'
-    LINK     test-cpumap-a
-    LINK     test-threadmap-a
-    LINK     test-evlist-a
-    LINK     test-evsel-a
-    LINK     test-cpumap-so
-    LINK     test-threadmap-so
-    LINK     test-evlist-so
-    LINK     test-evsel-so
-  running static:
-  - running test-cpumap.c...OK
-  - running test-threadmap.c...OK
-  - running test-evlist.c...OK
-  - running test-evsel.c...OK
-  running dynamic:
-  - running test-cpumap.c...OK
-  - running test-threadmap.c...OK
-  - running test-evlist.c...OK
-  - running test-evsel.c...OK
-  make: Leaving directory '/home/acme/git/perf/tools/perf/lib'
-  #
+are available in the Git repository at:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-77-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/lib/tests/Makefile     |  2 +-
- tools/perf/lib/tests/test-evsel.c | 82 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 83 insertions(+), 1 deletion(-)
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-20190730
 
-diff --git a/tools/perf/lib/tests/Makefile b/tools/perf/lib/tests/Makefile
-index e66ed090f08e..1ee4e9ba848b 100644
---- a/tools/perf/lib/tests/Makefile
-+++ b/tools/perf/lib/tests/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
- 
--TESTS = test-cpumap test-threadmap test-evlist
-+TESTS = test-cpumap test-threadmap test-evlist test-evsel
- 
- TESTS_SO := $(addsuffix -so,$(TESTS))
- TESTS_A  := $(addsuffix -a,$(TESTS))
-diff --git a/tools/perf/lib/tests/test-evsel.c b/tools/perf/lib/tests/test-evsel.c
-new file mode 100644
-index 000000000000..268712292f60
---- /dev/null
-+++ b/tools/perf/lib/tests/test-evsel.c
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/perf_event.h>
-+#include <perf/cpumap.h>
-+#include <perf/threadmap.h>
-+#include <perf/evsel.h>
-+#include <internal/tests.h>
-+
-+static int test_stat_cpu(void)
-+{
-+	struct perf_cpu_map *cpus;
-+	struct perf_evsel *evsel;
-+	struct perf_event_attr attr = {
-+		.type	= PERF_TYPE_SOFTWARE,
-+		.config	= PERF_COUNT_SW_CPU_CLOCK,
-+	};
-+	int err, cpu, tmp;
-+
-+	cpus = perf_cpu_map__new(NULL);
-+	__T("failed to create cpus", cpus);
-+
-+	evsel = perf_evsel__new(&attr);
-+	__T("failed to create evsel", evsel);
-+
-+	err = perf_evsel__open(evsel, cpus, NULL);
-+	__T("failed to open evsel", err == 0);
-+
-+	perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
-+		struct perf_counts_values counts = { .val = 0 };
-+
-+		perf_evsel__read(evsel, cpu, 0, &counts);
-+		__T("failed to read value for evsel", counts.val != 0);
-+	}
-+
-+	perf_evsel__close(evsel);
-+	perf_evsel__delete(evsel);
-+
-+	perf_cpu_map__put(cpus);
-+	return 0;
-+}
-+
-+static int test_stat_thread(void)
-+{
-+	struct perf_counts_values counts = { .val = 0 };
-+	struct perf_thread_map *threads;
-+	struct perf_evsel *evsel;
-+	struct perf_event_attr attr = {
-+		.type	= PERF_TYPE_SOFTWARE,
-+		.config	= PERF_COUNT_SW_TASK_CLOCK,
-+	};
-+	int err;
-+
-+	threads = perf_thread_map__new_dummy();
-+	__T("failed to create threads", threads);
-+
-+	perf_thread_map__set_pid(threads, 0, 0);
-+
-+	evsel = perf_evsel__new(&attr);
-+	__T("failed to create evsel", evsel);
-+
-+	err = perf_evsel__open(evsel, NULL, threads);
-+	__T("failed to open evsel", err == 0);
-+
-+	perf_evsel__read(evsel, 0, 0, &counts);
-+	__T("failed to read value for evsel", counts.val != 0);
-+
-+	perf_evsel__close(evsel);
-+	perf_evsel__delete(evsel);
-+
-+	perf_thread_map__put(threads);
-+	return 0;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	__T_START;
-+
-+	test_stat_cpu();
-+	test_stat_thread();
-+
-+	__T_OK;
-+	return 0;
-+}
+for you to fetch changes up to 30b692d3b390c6fe78a5064be0c4bbd44a41be59:
+
+  exit: make setting exit_state consistent (2019-07-30 19:57:14 +0200)
+
+Please consider pulling from the signed for-linus-20190730 tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+for-linus-20190730
+
+----------------------------------------------------------------
+Christian Brauner (2):
+      pidfd: remove obsolete comments from test
+      exit: make setting exit_state consistent
+
+Joel Fernandes (Google) (1):
+      pidfd: Add warning if exit_state is 0 during notification
+
+ kernel/exit.c                              | 5 +++--
+ kernel/signal.c                            | 1 +
+ tools/testing/selftests/pidfd/pidfd_test.c | 6 +-----
+ 3 files changed, 5 insertions(+), 7 deletions(-)
