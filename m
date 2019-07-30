@@ -2,76 +2,147 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D713C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE92C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1569B20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CED720693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 20:15:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Zwx0RQpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfG3UOO (ORCPT
+        id S1728010AbfG3UPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 16:14:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58460 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfG3UOO (ORCPT
+        Tue, 30 Jul 2019 16:15:06 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44942 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727962AbfG3UPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 16:14:14 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hsYVg-0000Tv-CI; Tue, 30 Jul 2019 22:14:12 +0200
-Date:   Tue, 30 Jul 2019 22:14:11 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Bolle <pebolle@tiscali.nl>, Will Deacon <will@kernel.org>
-Subject: Re: [patch V2 3/5] lib/vdso/32: Provide legacy syscall fallbacks
-In-Reply-To: <CALCETrXmu8BtZ47AE-qo2bax9n1PyOM90yLSjkzE6rekbxv9zQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907302212410.1786@nanos.tec.linutronix.de>
-References: <20190728131251.622415456@linutronix.de> <20190728131648.786513965@linutronix.de> <20190729144831.GA21120@linux.intel.com> <alpine.DEB.2.21.1907301134470.1738@nanos.tec.linutronix.de>
- <CALCETrXmu8BtZ47AE-qo2bax9n1PyOM90yLSjkzE6rekbxv9zQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 30 Jul 2019 16:15:05 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b7so17508431otl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 13:15:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5RzApq6XFoztBnIqNk8vSnTrtbUfODyGJJfunMohfoM=;
+        b=Zwx0RQpMg/Mqj/9z5S89A3ZEJVMpYC9h+xxOXAaZcuU5PCAM8m9Gqaz//RnKDBGDqW
+         9liyDLB1BwWzU+ZNcxIkUlAhEM4dwaxEWMetA5zngGXxvLUm9KzmX8yqMCHjIc+8qA1I
+         4Kz3jT1Z/FAcCfiuMTNuiLT9z2kiwc9S0x8YZz6OVlR8h69bqZIY4y5U2CziwyfAHt6S
+         8CcPZTmDK53Mwk0qwS3iX6X/MjsfAEfTAQNYo9qJOCNeLP9BFCn9fMgZ4bp/B5yi3zOB
+         uh6pK4X9QLjcA5W2PzdnflMG8qYA3C40MW87vpeyNAEv23qLtzsWi1Ofnp3dkIf+XH59
+         Buzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5RzApq6XFoztBnIqNk8vSnTrtbUfODyGJJfunMohfoM=;
+        b=XfFMKASWDwbS1tfH6/aGzAkgYma3mT7QzZ+k8Vk0HL6JvUrV2z2rirPYHwMGbDOliw
+         D6atRhiu1qGnIPYzOPhwM4Z8uf+ukrGbYmdO4gC57jVpdbZbt/n5Hpp0vxA7R88dFVbH
+         dqyA6WUgHhfY4mbaP7f57OvR0oTvGitZHAI2FjRo+IEPJUiKYq08Eg6Woz3SVdn6GWIg
+         hc0Ak1n1piL9Iz1aUy3uPkZvJA5ilTznm8lbLHleJ2TiWVuWMVhlc2+EPpJ2bB2JSE2r
+         dQM5MHOB71W0sYu92oWH6uh036M+jlSNANkvB8fqVx/4cIA3bnqpuKXZDhePDk+j8D01
+         6VSw==
+X-Gm-Message-State: APjAAAVJrIxnTQGesEfIUOqapeLOstGnSt3iWaJY0hf2ixBb8A5pqa3C
+        41RgyWDawwYO7OiavMDUax1zMXtMSQ6LTPWn69HJUQ==
+X-Google-Smtp-Source: APXvYqw9ObVuL9+XuGR4o0J2QBLrDkVcN3aYitNJvsGPbv5ZPcYvxRI6eCPCNx+pUD4yOvd0Fq+ICTQ9s+BKXhNpUpI=
+X-Received: by 2002:a9d:7248:: with SMTP id a8mr23671169otk.363.1564517704838;
+ Tue, 30 Jul 2019 13:15:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190730192552.4014288-1-arnd@arndb.de> <20190730195819.901457-1-arnd@arndb.de>
+In-Reply-To: <20190730195819.901457-1-arnd@arndb.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 30 Jul 2019 13:14:52 -0700
+Message-ID: <CAPcyv4i_nHzV155RcgnAQ189aq2Lfd2g8pA1D5NbZqo9E_u+Dw@mail.gmail.com>
+Subject: Re: [PATCH v5 13/29] compat_ioctl: move more drivers to compat_ptr_ioctl
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-iio@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        sparclinux@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>, qat-linux@intel.com,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        linux-input@vger.kernel.org, Darren Hart <dvhart@infradead.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        David Sterba <dsterba@suse.com>,
+        platform-driver-x86@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Wireless List <linux-wireless@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tee-dev@lists.linaro.org,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-btrfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019, Andy Lutomirski wrote:
+On Tue, Jul 30, 2019 at 12:59 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> The .ioctl and .compat_ioctl file operations have the same prototype so
+> they can both point to the same function, which works great almost all
+> the time when all the commands are compatible.
+>
+> One exception is the s390 architecture, where a compat pointer is only
+> 31 bit wide, and converting it into a 64-bit pointer requires calling
+> compat_ptr(). Most drivers here will never run in s390, but since we now
+> have a generic helper for it, it's easy enough to use it consistently.
+>
+> I double-checked all these drivers to ensure that all ioctl arguments
+> are used as pointers or are ignored, but are not interpreted as integer
+> values.
+>
+> Acked-by: Jason Gunthorpe <jgg@mellanox.com>
+> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Acked-by: David Sterba <dsterba@suse.com>
+> Acked-by: Darren Hart (VMware) <dvhart@infradead.org>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/nvdimm/bus.c                        | 4 ++--
+[..]
+> diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+> index 798c5c4aea9c..6ca142d833ab 100644
+> --- a/drivers/nvdimm/bus.c
+> +++ b/drivers/nvdimm/bus.c
+> @@ -1229,7 +1229,7 @@ static const struct file_operations nvdimm_bus_fops = {
+>         .owner = THIS_MODULE,
+>         .open = nd_open,
+>         .unlocked_ioctl = bus_ioctl,
+> -       .compat_ioctl = bus_ioctl,
+> +       .compat_ioctl = compat_ptr_ioctl,
+>         .llseek = noop_llseek,
+>  };
+>
+> @@ -1237,7 +1237,7 @@ static const struct file_operations nvdimm_fops = {
+>         .owner = THIS_MODULE,
+>         .open = nd_open,
+>         .unlocked_ioctl = dimm_ioctl,
+> -       .compat_ioctl = dimm_ioctl,
+> +       .compat_ioctl = compat_ptr_ioctl,
+>         .llseek = noop_llseek,
+>  };
 
-> On Tue, Jul 30, 2019 at 2:39 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > To address the regression which causes seccomp to deny applications the
-> > access to clock_gettime64() and clock_getres64() syscalls because they
-> > are not enabled in the existing filters.
-> >
-> > That trips over the fact that 32bit VDSOs use the new clock_gettime64() and
-> > clock_getres64() syscalls in the fallback path.
-> >
-> > Add a conditional to invoke the 32bit legacy fallback syscalls instead of
-> > the new 64bit variants. The conditional can go away once all architectures
-> > are converted.
-> >
-> 
-> I haven't surveyed all the architectures, but once everything is
-> converted, shouldn't we use the 32-bit fallback for exactly the same
-> set of architectures that want clock_gettime32 at all in the vdso?
-
-Yes. That's why I want to remove the conditional once all all converted
-over, that's x86/aaarg64 in mainline and a few in next.
-
-Thanks,
-
-	tglx
+Acked-by: Dan Williams <dan.j.williams@intel.com>
