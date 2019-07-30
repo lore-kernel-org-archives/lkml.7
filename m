@@ -2,205 +2,151 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85579C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F7BC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582F62087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C3220C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 13:06:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rlvbtrIt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbfG3NBC (ORCPT
+        id S1729464AbfG3NGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 09:01:02 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34355 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbfG3NBB (ORCPT
+        Tue, 30 Jul 2019 09:06:50 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38838 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728331AbfG3NGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 09:01:01 -0400
-Received: by mail-qk1-f194.google.com with SMTP id t8so46498054qkt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 06:01:00 -0700 (PDT)
+        Tue, 30 Jul 2019 09:06:49 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h28so44632098lfj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 06:06:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+w66kByWBg6FjYrxXcGd5uPmMwPtO1bhVxzbFathPzI=;
+        b=rlvbtrIt21GU4iIJZ5r9dzLKvzu4zMCj4l8RKBDeA0o2mYiR3UKN0mPszMjSSAhX6X
+         3OVtDWT+La05tWgdt87ZEAWGPkMfChkvs3/3jpFIqx88JiCdQhRyg5Hp1suRYIE7B9ff
+         MncOgoeiv7F+vEZfGTVRnoNhuPuHjjFqr7im4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FvIiTYmAfg/DHTIwmGRII9mYuGnoOkroa8gAl2zUp2E=;
-        b=fYnype6ggfP7EGCADQSd8RGjlVeZ13PEdwph6mNbCkLrbWuHoxJYt9hT0uymyxlXQx
-         1ZQYzjPGxdx9r0q7VhzL/E2U5eR5schErqmiEA/lZGlfEIaPJ3+PeN6Wjq6bTMlqGvAb
-         y9ihepbR3aOGN4cA1bHekc0iStL10U9XRc+4jpHGvyLxyjBIhorjtJzd1giXO3wTtQxn
-         xMolAvZoQ+VImWbDOA8NYEEw6zY8clJeo5uqGT/uDcfLxYkEx0pCw233lwd1e2LhNvEf
-         gb/0AtYExCW9whvSmnY4svVIaZMheSqiTTdL29gknAYdi9DyQqWsGup6SboD5KjlShQP
-         vwzA==
-X-Gm-Message-State: APjAAAV+UrllIrWOdS2FiO4W6poBmKVSRHzAIzxmek44aEUOnXvxgT2l
-        FJnJkoUyb0MgIHqLdqc77BzDR8F9I+yvfe0m5j0=
-X-Google-Smtp-Source: APXvYqzrlT3Ug5ATEIZ68uAupnmIb49p1sP9YCyeGn/RRLxjG48Th8Y3rQU5jW+lPwRc7Hi0ix6N35cN5y5YCSO5WL8=
-X-Received: by 2002:a37:5f45:: with SMTP id t66mr77440187qkb.286.1564491660273;
- Tue, 30 Jul 2019 06:01:00 -0700 (PDT)
+        bh=+w66kByWBg6FjYrxXcGd5uPmMwPtO1bhVxzbFathPzI=;
+        b=bAHlJH4+UNwQ/JJgcTFzydNb97RTSgdYkxnRgjLedPpjunhDpgXKNLe+QxTSfnA9uX
+         AkoWmrH50lxJNHJlXFg3Y2ugjCRspSOxJsDk2Tu2nCdOGoo5IWPzeeyW0WcngP1KVbTO
+         YoiupqoKbk20FIIZMePPCFDB5sIRmSCbxVSGmoQR3we+qXqznJ0BR+ICLZVwRkeSaDh8
+         0rTfP2Lohi61B9af0wEPUkQU3exJv/QR0vQTGyvMb2VnXbLeESTSlCVjsdNsyul7ZZaU
+         JwRRINSoZt2A0Tciouy4vC27I6aML0LOxBeSeiGrxwVeFA2LBk2he4MxCZqxKAxtK7De
+         CueQ==
+X-Gm-Message-State: APjAAAX99VPjuD7vasPTaLlGUnrqw4GwP3LWmqOY2dinv6sVIIeV8+Vr
+        9Vyl3cywTt2qMVIsSr+yYsDSyZDQzWT4qQ4YfE9QQg==
+X-Google-Smtp-Source: APXvYqxs+4zVTdk9wyREtf+ZtRrQRM3zR7YozzpsYYyXpsDMuwIYF8bDwOGtZvkDbZ5vHhbJCEniuM4mVcKBeMp71V4=
+X-Received: by 2002:ac2:53a7:: with SMTP id j7mr23078118lfh.112.1564492007737;
+ Tue, 30 Jul 2019 06:06:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAK8P3a3jjDh6aEVf0bBFYc=8GtB38kL6sWVZGJiUe427A7m2ng@mail.gmail.com>
- <CAK8P3a1ss9-G_mr48-UMOenrA0XDGWUFik4TC=m0WFfimoFdnQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1ss9-G_mr48-UMOenrA0XDGWUFik4TC=m0WFfimoFdnQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 30 Jul 2019 15:00:43 +0200
-Message-ID: <CAK8P3a3VsArSUgMwoPVxm8JcTPAQDoztg22MGqX4Vj5cjtADZg@mail.gmail.com>
-Subject: Re: RFC: remove Nuvoton w90x900/nuc900 platform?
-To:     "Wanzongshun (Vincent)" <wanzongshun@huawei.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+References: <20190726152319.134152-1-joel@joelfernandes.org>
+In-Reply-To: <20190726152319.134152-1-joel@joelfernandes.org>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Tue, 30 Jul 2019 09:06:36 -0400
+Message-ID: <CAEXW_YQN+htU-LpYQ_jxepVdRhO0byw1pWFrsbU2XsH=8FDKLA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] mm/page_idle: Add per-pid idle page tracking using
+ virtual indexing
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Christian Hansen <chansen3@cisco.com>,
+        Daniel Colascione <dancol@google.com>,
+        Florian Mayer <fmayer@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        kernel-team <kernel-team@android.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Namhyung Kim <namhyung@google.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Wei Wang <wvw@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That wasn't it either, sorry for spamming the rest. I found one more
-address for Zongshun at Huawei.
+On Fri, Jul 26, 2019 at 11:23 AM Joel Fernandes (Google)
+<joel@joelfernandes.org> wrote:
+>
+> The page_idle tracking feature currently requires looking up the pagemap
+> for a process followed by interacting with /sys/kernel/mm/page_idle.
+> Looking up PFN from pagemap in Android devices is not supported by
+> unprivileged process and requires SYS_ADMIN and gives 0 for the PFN.
+>
+> This patch adds support to directly interact with page_idle tracking at
+> the PID level by introducing a /proc/<pid>/page_idle file.  It follows
+> the exact same semantics as the global /sys/kernel/mm/page_idle, but now
+> looking up PFN through pagemap is not needed since the interface uses
+> virtual frame numbers, and at the same time also does not require
+> SYS_ADMIN.
+>
+> In Android, we are using this for the heap profiler (heapprofd) which
+> profiles and pin points code paths which allocates and leaves memory
+> idle for long periods of time. This method solves the security issue
+> with userspace learning the PFN, and while at it is also shown to yield
+> better results than the pagemap lookup, the theory being that the window
+> where the address space can change is reduced by eliminating the
+> intermediate pagemap look up stage. In virtual address indexing, the
+> process's mmap_sem is held for the duration of the access.
+>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>
+> ---
+> v2->v3:
+> Fixed a bug where I was doing a kfree that is not needed due to not
+> needing to do GFP_ATOMIC allocations.
+>
+> v1->v2:
+> Mark swap ptes as idle (Minchan)
+> Avoid need for GFP_ATOMIC (Andrew)
+> Get rid of idle_page_list lock by moving list to stack
 
-On Tue, Jul 30, 2019 at 2:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
+I believe all suggestions have been addressed.  Do these look good now?
+
+thanks,
+
+ - Joel
+
+
+
+> Internal review -> v1:
+> Fixes from Suren.
+> Corrections to change log, docs (Florian, Sandeep)
 >
-> Trying Wan Zongshun <Vincent.Wan@amd.com> instead of
-> the bouncing Wan ZongShun <mcuos.com@gmail.com>.
-> (I assume you are the same person, sorry if not).
+>  fs/proc/base.c            |   3 +
+>  fs/proc/internal.h        |   1 +
+>  fs/proc/task_mmu.c        |  57 +++++++
+>  include/linux/page_idle.h |   4 +
+>  mm/page_idle.c            | 340 +++++++++++++++++++++++++++++++++-----
+>  5 files changed, 360 insertions(+), 45 deletions(-)
 >
-> On Tue, Jul 30, 2019 at 2:09 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > As the mach-netx and mach-8695 platforms are being removed now,
-> > I wonder whether we should do the same with w90x00: Here is what
-> > I found after looking at the git history and external material for it.
-> >
-> >     - The supported chips (nuc910/950/960) are no longer marketed
-> >       by the manufacturer
-> >
-> >     - Newer chips from the same family (nuc97x, nuc980, n329x)
-> >       that are still marketed have Linux BSPs but those were never
-> >       submitted for upstream inclusion.
-> >
-> >     - Wan ZongShun is listed as maintainer, but the last patch he wrote
-> >       was in 2011.
-> >
-> >     - All patches to w90x900 platform specific files afterwards
-> >       are cleanups that were apparently done without access to
-> >       test hardware.
-> >
-> >     - The http://www.mcuos.com/ website listed in the MAINTAINERS
-> >        file is no longer reachable.
-> >
-> > We do support the newer NPCM platform from Nuvoton. I don't think
-> > there are any shared drivers between the two, but I've added its
-> > maintainers to Cc anyway, in case they still (plan to) use one of
-> > those drivers.
-> >
-> > If we decide that it's time to let go, I'll would the patches below.
-> >
-> >       watchdog: remove w90x900 driver
-> >       spi: remove w90x900 driver
-> >       ASoC: remove w90x900/nuc900 platform drivers
-> >       fbdev: remove w90x900/nuc900 platform drivers
-> >       Input: remove w90x900 keyboard driver
-> >       Input: remove w90x900 touchscreen driver
-> >       mtd: rawnand: remove w90x900 driver
-> >       net: remove w90p910-ether driver
-> >       rtc: remove w90x900/nuc900 driver
-> >       usb: remove ehci-w90x900 driver
-> >       ARM: remove w90x900 platform
-> >
-> >  Documentation/watchdog/watchdog-parameters.rst   |   10 -
-> >  MAINTAINERS                                      |   16 -
-> >  arch/arm/Kconfig                                 |   21 +-
-> >  arch/arm/Makefile                                |    1 -
-> >  arch/arm/configs/nuc910_defconfig                |   51 -
-> >  arch/arm/configs/nuc950_defconfig                |   67 --
-> >  arch/arm/configs/nuc960_defconfig                |   57 --
-> >  arch/arm/mach-w90x900/Kconfig                    |   54 --
-> >  arch/arm/mach-w90x900/Makefile                   |   20 -
-> >  arch/arm/mach-w90x900/Makefile.boot              |    4 -
-> >  arch/arm/mach-w90x900/clksel.c                   |   88 --
-> >  arch/arm/mach-w90x900/clock.c                    |  121 ---
-> >  arch/arm/mach-w90x900/clock.h                    |   40 -
-> >  arch/arm/mach-w90x900/cpu.c                      |  238 -----
-> >  arch/arm/mach-w90x900/cpu.h                      |   56 --
-> >  arch/arm/mach-w90x900/dev.c                      |  537 -----------
-> >  arch/arm/mach-w90x900/gpio.c                     |  150 ---
-> >  arch/arm/mach-w90x900/include/mach/entry-macro.S |   26 -
-> >  arch/arm/mach-w90x900/include/mach/hardware.h    |   19 -
-> >  arch/arm/mach-w90x900/include/mach/irqs.h        |   82 --
-> >  arch/arm/mach-w90x900/include/mach/map.h         |  153 ---
-> >  arch/arm/mach-w90x900/include/mach/mfp.h         |   21 -
-> >  arch/arm/mach-w90x900/include/mach/regs-clock.h  |   49 -
-> >  arch/arm/mach-w90x900/include/mach/regs-irq.h    |   46 -
-> >  arch/arm/mach-w90x900/include/mach/regs-ldm.h    |  248 -----
-> >  arch/arm/mach-w90x900/include/mach/regs-serial.h |   54 --
-> >  arch/arm/mach-w90x900/include/mach/uncompress.h  |   43 -
-> >  arch/arm/mach-w90x900/irq.c                      |  212 -----
-> >  arch/arm/mach-w90x900/mach-nuc910evb.c           |   38 -
-> >  arch/arm/mach-w90x900/mach-nuc950evb.c           |   42 -
-> >  arch/arm/mach-w90x900/mach-nuc960evb.c           |   38 -
-> >  arch/arm/mach-w90x900/mfp.c                      |  197 ----
-> >  arch/arm/mach-w90x900/nuc910.c                   |   58 --
-> >  arch/arm/mach-w90x900/nuc910.h                   |   17 -
-> >  arch/arm/mach-w90x900/nuc950.c                   |   52 --
-> >  arch/arm/mach-w90x900/nuc950.h                   |   17 -
-> >  arch/arm/mach-w90x900/nuc960.c                   |   50 -
-> >  arch/arm/mach-w90x900/nuc960.h                   |   17 -
-> >  arch/arm/mach-w90x900/nuc9xx.h                   |   22 -
-> >  arch/arm/mach-w90x900/regs-ebi.h                 |   29 -
-> >  arch/arm/mach-w90x900/regs-gcr.h                 |   34 -
-> >  arch/arm/mach-w90x900/regs-timer.h               |   37 -
-> >  arch/arm/mach-w90x900/regs-usb.h                 |   31 -
-> >  arch/arm/mach-w90x900/time.c                     |  168 ----
-> >  drivers/input/keyboard/Kconfig                   |   11 -
-> >  drivers/input/keyboard/Makefile                  |    1 -
-> >  drivers/input/keyboard/w90p910_keypad.c          |  264 ------
-> >  drivers/input/touchscreen/Kconfig                |    9 -
-> >  drivers/input/touchscreen/Makefile               |    1 -
-> >  drivers/input/touchscreen/w90p910_ts.c           |  331 -------
-> >  drivers/mtd/nand/raw/Kconfig                     |    8 -
-> >  drivers/mtd/nand/raw/Makefile                    |    1 -
-> >  drivers/mtd/nand/raw/nuc900_nand.c               |  304 ------
-> >  drivers/net/ethernet/Kconfig                     |    1 -
-> >  drivers/net/ethernet/Makefile                    |    1 -
-> >  drivers/net/ethernet/nuvoton/Kconfig             |   29 -
-> >  drivers/net/ethernet/nuvoton/Makefile            |    6 -
-> >  drivers/net/ethernet/nuvoton/w90p910_ether.c     | 1082 ----------------------
-> >  drivers/rtc/Kconfig                              |    7 -
-> >  drivers/rtc/Makefile                             |    1 -
-> >  drivers/rtc/rtc-nuc900.c                         |  271 ------
-> >  drivers/spi/Kconfig                              |    7 -
-> >  drivers/spi/Makefile                             |    1 -
-> >  drivers/spi/spi-nuc900.c                         |  429 ---------
-> >  drivers/usb/host/Kconfig                         |    6 -
-> >  drivers/usb/host/Makefile                        |    1 -
-> >  drivers/usb/host/ehci-w90x900.c                  |  130 ---
-> >  drivers/video/fbdev/Kconfig                      |   14 -
-> >  drivers/video/fbdev/Makefile                     |    1 -
-> >  drivers/video/fbdev/nuc900fb.c                   |  760 ---------------
-> >  drivers/video/fbdev/nuc900fb.h                   |   51 -
-> >  drivers/watchdog/Kconfig                         |    9 -
-> >  drivers/watchdog/Makefile                        |    1 -
-> >  drivers/watchdog/nuc900_wdt.c                    |  303 ------
-> >  include/Kbuild                                   |    2 -
-> >  include/linux/platform_data/keypad-w90p910.h     |   16 -
-> >  include/linux/platform_data/spi-nuc900.h         |   29 -
-> >  include/linux/platform_data/video-nuc900fb.h     |   79 --
-> >  sound/soc/Kconfig                                |    1 -
-> >  sound/soc/Makefile                               |    1 -
-> >  sound/soc/nuc900/Kconfig                         |   29 -
-> >  sound/soc/nuc900/Makefile                        |   12 -
-> >  sound/soc/nuc900/nuc900-ac97.c                   |  391 --------
-> >  sound/soc/nuc900/nuc900-audio.c                  |   73 --
-> >  sound/soc/nuc900/nuc900-audio.h                  |  108 ---
-> >  sound/soc/nuc900/nuc900-pcm.c                    |  321 -------
-> >  86 files changed, 1 insertion(+), 8433 deletions(-)
-> >
-> >           Arnd
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index 77eb628ecc7f..a58dd74606e9 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -3021,6 +3021,9 @@ static const struct pid_entry tgid_base_stuff[] = {
+>         REG("smaps",      S_IRUGO, proc_pid_smaps_operations),
+>         REG("smaps_rollup", S_IRUGO, proc_pid_smaps_rollup_operations),
