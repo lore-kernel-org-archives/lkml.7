@@ -2,84 +2,94 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FABEC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DA7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C4D2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1280206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 11:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbfG3LCR (ORCPT
+        id S1729915AbfG3LDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 07:02:17 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59552 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfG3LCP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 07:02:15 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 2F7D1802B5; Tue, 30 Jul 2019 13:02:01 +0200 (CEST)
-Date:   Tue, 30 Jul 2019 13:02:12 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     jacek.anaszewski@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, lee.jones@linaro.org,
-        daniel.thompson@linaro.org, jingoohan1@gmail.com, dmurphy@ti.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
-Subject: Re: [PATCH v4 1/4] leds: Add of_led_get() and led_put()
-Message-ID: <20190730110212.GA21815@amd>
-References: <20190717141514.21171-1-jjhiblot@ti.com>
- <20190717141514.21171-2-jjhiblot@ti.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
-Content-Disposition: inline
-In-Reply-To: <20190717141514.21171-2-jjhiblot@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Tue, 30 Jul 2019 07:03:07 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51554 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbfG3LDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 07:03:07 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 99F9E20065E;
+        Tue, 30 Jul 2019 13:03:05 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8DE20200186;
+        Tue, 30 Jul 2019 13:03:05 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E711204D6;
+        Tue, 30 Jul 2019 13:03:05 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH v3] crypto: gcm - restrict assoclen for rfc4543
+Date:   Tue, 30 Jul 2019 13:54:37 +0300
+Message-Id: <1564484077-27727-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Based on seqiv, IPsec ESP and rfc4543/rfc4106 the assoclen can be 16 or
+20 bytes.
 
---gKMricLos+KVdGMg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From esp4/esp6, assoclen is sizeof IP Header. This includes spi, seq_no
+and extended seq_no, that is 8 or 12 bytes.
+In seqiv, to asscolen is added the IV size (8 bytes).
+Therefore, the assoclen, for rfc4543, should be restricted to 16 or 20
+bytes, as for rfc4106.
 
-On Wed 2019-07-17 16:15:11, Jean-Jacques Hiblot wrote:
-> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
->=20
-> This patch adds basic support for a kernel driver to get a LED device.
-> This will be used by the led-backlight driver.
->=20
-> Only OF version is implemented for now, and the behavior is similar to
-> PWM's of_pwm_get() and pwm_put().
->=20
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+---
+Changes since v2:
+- use, newly renamed, helper functions added in crypto API, in series:
+https://patchwork.kernel.org/project/linux-crypto/list/?series=152649
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+ crypto/gcm.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+diff --git a/crypto/gcm.c b/crypto/gcm.c
+index 2f3b50f..7eb5ced 100644
+--- a/crypto/gcm.c
++++ b/crypto/gcm.c
+@@ -1034,11 +1034,23 @@ static int crypto_rfc4543_copy_src_to_dst(struct aead_request *req, bool enc)
+ 
+ static int crypto_rfc4543_encrypt(struct aead_request *req)
+ {
++	int err;
++
++	err = crypto_ipsec_check_assoclen(req->assoclen);
++	if (err)
++		return err;
++
+ 	return crypto_rfc4543_crypt(req, true);
+ }
+ 
+ static int crypto_rfc4543_decrypt(struct aead_request *req)
+ {
++	int err;
++
++	err = crypto_ipsec_check_assoclen(req->assoclen);
++	if (err)
++		return err;
++
+ 	return crypto_rfc4543_crypt(req, false);
+ }
+ 
+-- 
+2.1.0
 
---gKMricLos+KVdGMg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1AI7QACgkQMOfwapXb+vJsRwCglnluzpArltYwDkrYu3S0hfhd
-JoAAnRuijBB2KPUT8ekHNFYou2NxkDOY
-=GGAz
------END PGP SIGNATURE-----
-
---gKMricLos+KVdGMg--
