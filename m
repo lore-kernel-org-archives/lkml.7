@@ -2,115 +2,105 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27FFC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC40C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E16206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:32:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="U4ULND1I"
+	by mail.kernel.org (Postfix) with ESMTP id BF8F52089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 12:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564489960;
+	bh=fBUqCoenMUXj+UTof67hBbwUfxH9olno/QLTQe6JHw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=akyX2jDmhVLZdMYOzWRX7K5TFZh4/S6gAWSt/qqtj3KrEdVnPmbsmfczvDAmV/YDr
+	 nYgLnGo8q7l+/L6QokzlLPxijfaCNN+q45cA1y1sm3Q223DJFP7BK6AeE0BBy7iO4t
+	 HIaPsCd9qh3NLerpUspvvaGniZWYdbCNBnz4BVXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbfG3Mca (ORCPT
+        id S1729694AbfG3Mcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 08:32:30 -0400
-Received: from mail-eopbgr140059.outbound.protection.outlook.com ([40.107.14.59]:44651
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        Tue, 30 Jul 2019 08:32:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55110 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729182AbfG3Mc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 08:32:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lbmvjhBRzTFVkny1Frjd0si1jvRJYzXi3kkSt7QCGbiRqNy831pRHPEA4GZquR77JWJ7qaMgSqM5Yn00dT0OyG9XerTn1JAK8Rj1ub1M5uudsfrtmJQl3yDLqq/fMZajcSm6rqs/uEhSsKK5KD7St9K1RD7PazgUXYKal6SegKrZHHRTok+479FCSV02QYf6X+ptzhi0ydyIow2KRVthi7+pkBBinwXG7UezMuZOwF1nAbrOxmwosOy54fgTvwbyJDWy6C6hLO/czyelW0gjPfOecFot9NyNzo4Yr6gTjFtzeySFvQFg6wd5ojoViMhuMXwJdEEYsUvNGY8PDfsupQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UFQB2S6xecD2wMGU1nLejn6fYEEMo3CNtrkz2XQC/vU=;
- b=oCUkNidF8RodlBQy2tuty+1R0ZSRUI7w2F2qTn9p+rl497t/G6XbwlYq+5lgcQlwvmTiwbziXoZ00m5fU22Ildb9goPiD/VryI+ucDtUxMNbO0hLt6gLxbJEGco+srav2A71uMk0VvMem4Z7Y7JRuNhB8S7h6/EV9+Kq9bBMry2RAlqqqXl1Yl8u+CyZVSdjXbvupb9Y7Zo9R6tfl7hK2XaqeUcIrGHMRP4dyF+beBT6JKNs+Y8ss7NIs3mytmrsJheFfHFAdPLqkKVCDXnsPyoZB+cDTcOS9slj3tsXlpavNKku3SrTHwi806Y1uRsYo/Rz143NvrckUE3fU0FnQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UFQB2S6xecD2wMGU1nLejn6fYEEMo3CNtrkz2XQC/vU=;
- b=U4ULND1ISlyXvfnH6NSyG9KQxcq/imViTjbbwhAoeCxDdBpKTwt3p3jUXogNOeeq8nfsPzst00/yfbBhWgxWVKfgd1gksM+suP8ypPHilyo09S/Jmqoyd6Hl1GGEQV6COlChJP7h/k+T9CJ6asyavcPgWlPXlu/G294/TSKCzD8=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1SPR01MB0364.eurprd05.prod.outlook.com (20.178.120.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.14; Tue, 30 Jul 2019 12:32:25 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2115.005; Tue, 30 Jul 2019
- 12:32:24 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: turn the hmm migrate_vma upside down
-Thread-Topic: turn the hmm migrate_vma upside down
-Thread-Index: AQHVRhn28oqImcObYUq1zSBrPKZAdqbjGXIA
-Date:   Tue, 30 Jul 2019 12:32:24 +0000
-Message-ID: <20190730123218.GA24038@mellanox.com>
-References: <20190729142843.22320-1-hch@lst.de>
-In-Reply-To: <20190729142843.22320-1-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YT1PR01CA0033.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::46)
- To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c18f707b-6880-4b17-a36c-08d714e9f9bd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1SPR01MB0364;
-x-ms-traffictypediagnostic: VI1SPR01MB0364:
-x-microsoft-antispam-prvs: <VI1SPR01MB03645AFA980727C42C0389D2CFDC0@VI1SPR01MB0364.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0114FF88F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(376002)(346002)(136003)(189003)(199004)(7736002)(102836004)(3846002)(6116002)(305945005)(54906003)(4326008)(2906002)(6436002)(229853002)(26005)(71190400001)(316002)(256004)(6916009)(71200400001)(14454004)(6246003)(11346002)(386003)(25786009)(2616005)(446003)(76176011)(7416002)(36756003)(52116002)(6486002)(186003)(478600001)(53936002)(6512007)(66476007)(81166006)(81156014)(66946007)(8676002)(1076003)(8936002)(66556008)(66066001)(6506007)(476003)(486006)(5660300002)(4744005)(33656002)(66446008)(99286004)(64756008)(86362001)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1SPR01MB0364;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: msbywfwkvnpnsvMndsoiuFCLEUQHJ+XtoRCAMwEqU0NJ7StslpBWur8p/UBIozFDR4WcUXWot7YOtTKTQpPuFAHZ2MNsUPuBx1llsDUl+viBOY7+g8Z5jdno6/6uXm1l8Xyf84OfUq2UF4pXDIM5WI0GFGOk2SuJttUnGAAc8MiocpNl1tfAmkVapc9/RE3QULgIwpXlBo4PC/53akjoH7LmKvbPDXX0taZZrP7cN+PC2pf4htGu/Nit0Y5uVZbyvnbqd8Hk5SF3rk9SumSeybRmg7ok8NopimmSf+8TBfsRhZiJJUCZiemFD8FPw8Z4fVJJjCMa+fk7T08K/q5pKU/ko51lMNfi65+sxFYyC8jHl7nXpb1tuSAVBrWbcIBbAFmfrJ8T8MiH1qm7P09YNv6WhLEdGyQxZRhqRhrzK6M=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FE2AEDB2FC12424C805E7D754CCE4C1A@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726986AbfG3Mcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 08:32:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EDE1AAFD2;
+        Tue, 30 Jul 2019 12:32:37 +0000 (UTC)
+Date:   Tue, 30 Jul 2019 14:32:37 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Miguel de Dios <migueldedios@google.com>,
+        Wei Wang <wvw@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: Re: [PATCH] mm: release the spinlock on zap_pte_range
+Message-ID: <20190730123237.GR9330@dhcp22.suse.cz>
+References: <20190729071037.241581-1-minchan@kernel.org>
+ <20190729074523.GC9330@dhcp22.suse.cz>
+ <20190729082052.GA258885@google.com>
+ <20190729083515.GD9330@dhcp22.suse.cz>
+ <20190730121110.GA184615@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c18f707b-6880-4b17-a36c-08d714e9f9bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jul 2019 12:32:24.8223
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1SPR01MB0364
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730121110.GA184615@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCBKdWwgMjksIDIwMTkgYXQgMDU6Mjg6MzRQTSArMDMwMCwgQ2hyaXN0b3BoIEhlbGx3
-aWcgd3JvdGU6DQo+IEhpIErDqXLDtG1lLCBCZW4gYW5kIEphc29uLA0KPiANCj4gYmVsb3cgaXMg
-YSBzZXJpZXMgYWdhaW5zdCB0aGUgaG1tIHRyZWUgd2hpY2ggc3RhcnRzIHJldmFtcGluZyB0aGUN
-Cj4gbWlncmF0ZV92bWEgZnVuY3Rpb25hbGl0eS4gIFRoZSBwcmltZSBpZGVhIGlzIHRvIGV4cG9y
-dCB0aHJlZSBzbGlnaHRseQ0KPiBsb3dlciBsZXZlbCBmdW5jdGlvbnMgYW5kIHRodXMgYXZvaWQg
-dGhlIG5lZWQgZm9yIG1pZ3JhdGVfdm1hX29wcw0KPiBjYWxsYmFja3MuDQoNCkkgZG9uJ3QgZmVl
-bCBJIGNhbiBjb250cmlidXRlIGEgd29ydGh3aGlsZSByZXZpZXcgZm9yIHRoaXMgcGFydCBvZiB0
-aGUNCmNvZGUgcmlnaHQgbm93Lg0KDQpEb2VzIHRoaXMgb25seSBpbXBhY3QgaG1tIHVzZXJzLCBv
-ciBkb2VzIG1pZ3JhdGUuYyBoYXZlIGEgYnJvYWRlcg0KdXNhZ2U/DQoNCldobyBkbyB3ZSBuZWVk
-IG9uIHJldmlldyB0byBwcm9ncmVzcyBvbiB0aGlzPw0KDQpUaGFua3MsDQpKYXNvbg0K
+On Tue 30-07-19 21:11:10, Minchan Kim wrote:
+> On Mon, Jul 29, 2019 at 10:35:15AM +0200, Michal Hocko wrote:
+> > On Mon 29-07-19 17:20:52, Minchan Kim wrote:
+> > > On Mon, Jul 29, 2019 at 09:45:23AM +0200, Michal Hocko wrote:
+> > > > On Mon 29-07-19 16:10:37, Minchan Kim wrote:
+> > > > > In our testing(carmera recording), Miguel and Wei found unmap_page_range
+> > > > > takes above 6ms with preemption disabled easily. When I see that, the
+> > > > > reason is it holds page table spinlock during entire 512 page operation
+> > > > > in a PMD. 6.2ms is never trivial for user experince if RT task couldn't
+> > > > > run in the time because it could make frame drop or glitch audio problem.
+> > > > 
+> > > > Where is the time spent during the tear down? 512 pages doesn't sound
+> > > > like a lot to tear down. Is it the TLB flushing?
+> > > 
+> > > Miguel confirmed there is no such big latency without mark_page_accessed
+> > > in zap_pte_range so I guess it's the contention of LRU lock as well as
+> > > heavy activate_page overhead which is not trivial, either.
+> > 
+> > Please give us more details ideally with some numbers.
+> 
+> I had a time to benchmark it via adding some trace_printk hooks between
+> pte_offset_map_lock and pte_unmap_unlock in zap_pte_range. The testing
+> device is 2018 premium mobile device.
+> 
+> I can get 2ms delay rather easily to release 2M(ie, 512 pages) when the
+> task runs on little core even though it doesn't have any IPI and LRU
+> lock contention. It's already too heavy.
+> 
+> If I remove activate_page, 35-40% overhead of zap_pte_range is gone
+> so most of overhead(about 0.7ms) comes from activate_page via
+> mark_page_accessed. Thus, if there are LRU contention, that 0.7ms could
+> accumulate up to several ms.
+
+Thanks for this information. This is something that should be a part of
+the changelog. I am sorry to still poke into this because I still do not
+have a full understanding of what is going on and while I do not object
+to drop the spinlock I still suspect this is papering over a deeper
+problem.
+
+If mark_page_accessed is really expensive then why do we even bother to
+do it in the tear down path in the first place? Why don't we simply set
+a referenced bit on the page to reflect the young pte bit? I might be
+missing something here of course.
+
+-- 
+Michal Hocko
+SUSE Labs
