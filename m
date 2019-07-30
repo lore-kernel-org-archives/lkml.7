@@ -2,116 +2,128 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B72C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C31C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FBD2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:27:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XOIVFCgt"
+	by mail.kernel.org (Postfix) with ESMTP id 3DF432087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 04:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfG3E1r (ORCPT
+        id S1728381AbfG3E3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 00:27:47 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44143 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfG3E1r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 00:27:47 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t14so28328980plr.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jul 2019 21:27:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3JW7f9vGQQeIdCYi5oG1fvaE4YOboQo/NkTQ3HgRPbY=;
-        b=XOIVFCgtpJBWk7Tb9XaiqzDybNvI8C9NLyNpbCM+jYkR96724HsU8Oo89ShWGCm8xA
-         bSPbvGE1nQP/EvgbPCMX1zENsk1ZgrSU7/kbrSrYH5IHY+TO8Zk64vnW+/Brd3IXZ6lb
-         FNOlmHOsX3vUTVN3SprytpRzmhk3ZeMp6TT+U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3JW7f9vGQQeIdCYi5oG1fvaE4YOboQo/NkTQ3HgRPbY=;
-        b=kGKujs7/84rpl+jMjhMxelkoOjjKjNu9ppj03r9ugBeHBZDYjTSSyCL+4yYQD1QE7z
-         EhWZiwRlm+uzvMHAw12AkZ22Sk2WXzeAcs0CZNZgknJAT7o6bYiJEODgc71uje5GAI36
-         IseVIYomGRRrcCFjeEcNiaYBuEOQEe22M6yL+4Od4Xfj7rO1k0u9JO7PJ5aWQj9XNd/H
-         BPK9pZ/KQEQymU66fQlNDcVHps7hhOIoiuHeCi9d2C8aym8qVsqR8GHlyNKKG0zF7Dxj
-         1WO8L6sdRCBW9NK8gUsFB2U0Rejj0K6104pY0YpqO06LnYDRHrZdUz6YfP2+sjHVkTKP
-         1S2Q==
-X-Gm-Message-State: APjAAAUfULgFpu+y27zHxapVwGSqFcLlMfANXzJP0awFBe94LqFitBqZ
-        wlBoWV+tgROjqwBCbWNFdafnpA==
-X-Google-Smtp-Source: APXvYqwSDiGUbFNXmD4UUuzQTrgUfwOEdKhVFVoru/Sd62ifjM3SEdL2qQ3F01JDwTlKcwncB0bs3A==
-X-Received: by 2002:a17:902:2ac8:: with SMTP id j66mr108240204plb.273.1564460866293;
-        Mon, 29 Jul 2019 21:27:46 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j15sm93251303pfn.150.2019.07.29.21.27.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 21:27:45 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 21:27:44 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        tobin@kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v2] libata: zpodd: Fix small read overflow in
- zpodd_get_mech_type()
-Message-ID: <201907292127.8E1719BF5A@keescook>
-References: <201907291442.B9953EBED@keescook>
- <3e515b31-0779-4f65-debf-49e462f9cd25@kernel.dk>
- <CAKwvOdkRxJ6Vtm8CX1ZgDgzzAywSyx7Y-nNFn+tVPf35YQc2YQ@mail.gmail.com>
- <6c270cac-e946-bba8-03e7-633a7c9006e6@kernel.dk>
+        Tue, 30 Jul 2019 00:29:17 -0400
+Received: from mga03.intel.com ([134.134.136.65]:19912 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbfG3E3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 00:29:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jul 2019 21:29:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,325,1559545200"; 
+   d="scan'208";a="183002215"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 29 Jul 2019 21:29:15 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <jroedel@suse.de>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Ran Rozenstein <ranro@mellanox.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Failure to recreate virtual functions
+To:     Vlad Buslov <vladbu@mellanox.com>
+References: <vbf8sskwyiv.fsf@mellanox.com>
+ <d4166595-ec4a-fc4a-3b5f-463b79c42936@linux.intel.com>
+ <vbfzhkx9n32.fsf@mellanox.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <838a00c4-d5bd-08db-e39c-5f00686858b5@linux.intel.com>
+Date:   Tue, 30 Jul 2019 12:28:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c270cac-e946-bba8-03e7-633a7c9006e6@kernel.dk>
+In-Reply-To: <vbfzhkx9n32.fsf@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 04:00:08PM -0600, Jens Axboe wrote:
-> On 7/29/19 3:58 PM, Nick Desaulniers wrote:
-> > On Mon, Jul 29, 2019 at 2:55 PM Jens Axboe <axboe@kernel.dk> wrote:
-> >>
-> >> On 7/29/19 3:47 PM, Kees Cook wrote:
-> >>> Jeffrin reported a KASAN issue:
-> >>>
-> >>>     BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
-> >>>     Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
-> >>>     ...
-> >>>     The buggy address belongs to the variable:
-> >>>       cdb.48319+0x0/0x40
-> >>>
-> >>> Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
-> >>> eject_tray()"), this fixes a cdb[] buffer length, this time in
-> >>> zpodd_get_mech_type():
-> >>>
-> >>> We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
-> >>> ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
-> >>
-> >> Applied, thanks.
-> > 
-> > Dropped my reviewed by tag. :(
-> > https://lkml.org/lkml/2019/7/22/865
+Hi,
 
-Argh, sorry!
+On 7/29/19 6:05 PM, Vlad Buslov wrote:
+> On Sat 27 Jul 2019 at 05:15, Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+>> Hi Vilad,
+>>
+>> On 7/27/19 12:30 AM, Vlad Buslov wrote:
+>>> Hi Lu Baolu,
+>>>
+>>> Our mlx5 driver fails to recreate VFs when cmdline includes
+>>> "intel_iommu=on iommu=pt" after recent merge of patch set "iommu/vt-d:
+>>> Delegate DMA domain to generic iommu". I've bisected the failure to
+>>> patch b7297783c2bb ("iommu/vt-d: Remove duplicated code for device
+>>> hotplug"). Here is the dmesg log for following case: enable switchdev
+>>> mode, set number of VFs to 0, then set it back to any value
+>>>> 0.
+>>> [  223.525282] mlx5_core 0000:81:00.0: E-Switch: E-Switch enable SRIOV: nvfs(2) mode (1)
+>>> [  223.562027] mlx5_core 0000:81:00.0: E-Switch: SRIOV enabled: active vports(3)
+>>> [  223.663766] pci 0000:81:00.2: [15b3:101a] type 00 class 0x020000
+>>> [  223.663864] pci 0000:81:00.2: enabling Extended Tags
+>>> [  223.665143] pci 0000:81:00.2: Adding to iommu group 52
+>>> [  223.665215] pci 0000:81:00.2: Using iommu direct mapping
+>>> [  223.665771] mlx5_core 0000:81:00.2: enabling device (0000 -> 0002)
+>>> [  223.665890] mlx5_core 0000:81:00.2: firmware version: 16.26.148
+>>> [  223.889908] mlx5_core 0000:81:00.2: Rate limit: 127 rates are supported, range: 0Mbps to 97656Mbps
+>>> [  223.896438] mlx5_core 0000:81:00.2: MLX5E: StrdRq(1) RqSz(8) StrdSz(2048) RxCqeCmprss(0)
+>>> [  223.896636] mlx5_core 0000:81:00.2: Assigned random MAC address 56:1f:95:e0:51:d6
+>>> [  224.012905] mlx5_core 0000:81:00.2 ens1f0v0: renamed from eth0
+>>> [  224.041651] pci 0000:81:00.3: [15b3:101a] type 00 class 0x020000
+>>> [  224.041711] pci 0000:81:00.3: enabling Extended Tags
+>>> [  224.043660] pci 0000:81:00.3: Adding to iommu group 53
+>>> [  224.043738] pci 0000:81:00.3: Using iommu direct mapping
+>>> [  224.044196] mlx5_core 0000:81:00.3: enabling device (0000 -> 0002)
+>>> [  224.044298] mlx5_core 0000:81:00.3: firmware version: 16.26.148
+>>> [  224.268099] mlx5_core 0000:81:00.3: Rate limit: 127 rates are supported, range: 0Mbps to 97656Mbps
+>>> [  224.274983] mlx5_core 0000:81:00.3: MLX5E: StrdRq(1) RqSz(8) StrdSz(2048) RxCqeCmprss(0)
+>>> [  224.275195] mlx5_core 0000:81:00.3: Assigned random MAC address a6:1e:56:0a:d9:f2
+>>> [  224.388359] mlx5_core 0000:81:00.3 ens1f0v1: renamed from eth0
+>>> [  236.325027] mlx5_core 0000:81:00.0: E-Switch: disable SRIOV: active vports(3) mode(1)
+>>> [  236.362766] mlx5_core 0000:81:00.0: E-Switch: E-Switch enable SRIOV: nvfs(2) mode (2)
+>>> [  237.290066] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8) StrdSz(2048) RxCqeCmprss(0)
+>>> [  237.350215] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8) StrdSz(2048) RxCqeCmprss(0)
+>>> [  237.373052] mlx5_core 0000:81:00.0 ens1f0: renamed from eth0
+>>> [  237.390768] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8) StrdSz(2048) RxCqeCmprss(0)
+>>> [  237.447846] ens1f0_0: renamed from eth0
+>>> [  237.460399] mlx5_core 0000:81:00.0: E-Switch: SRIOV enabled: active vports(3)
+>>> [  237.526880] ens1f0_1: renamed from eth1
+>>> [  248.953873] pci 0000:81:00.2: Removing from iommu group 52
+>>> [  248.954114] pci 0000:81:00.3: Removing from iommu group 53
+>>> [  249.960570] mlx5_core 0000:81:00.0: E-Switch: disable SRIOV: active vports(3) mode(2)
+>>> [  250.319135] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8) StrdSz(2048) RxCqeCmprss(0)
+>>> [  250.559431] mlx5_core 0000:81:00.0 ens1f0: renamed from eth0
+>>> [  258.819162] mlx5_core 0000:81:00.0: E-Switch: E-Switch enable SRIOV: nvfs(2) mode (1)
+>>> [  258.831625] mlx5_core 0000:81:00.0: E-Switch: SRIOV enabled: active vports(3)
+>>> [  258.936160] pci 0000:81:00.2: [15b3:101a] type 00 class 0x020000
+>>> [  258.936258] pci 0000:81:00.2: enabling Extended Tags
+>>> [  258.937438] pci 0000:81:00.2: Failed to add to iommu group 52: -16
+>> It seems that an EBUSY error returned from iommu_group_add_device(). Can
+>> you please hack some debug messages in iommu_group_add_device() so that
+>> we can know where the EBUSY returns?
+>>
+>> Best regards,
+>> Baolu
+> The error code is returned by __iommu_attach_device().
+> 
 
-> I'll add it.
+Thanks!
 
-Thanks! :)
+It looks like the system has already a domain for specific pci bdf
+device. Does this VF share the bdf with other devices? Or has been
+previously created, and system failed to get chance to remove it?
 
--- 
-Kees Cook
+Best regards,
+Baolu
