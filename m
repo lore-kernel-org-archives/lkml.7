@@ -2,192 +2,161 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C26C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B87C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE8920693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F19120693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:15:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eZe6oH4M"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="wzOucalG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfG3SPO (ORCPT
+        id S1728469AbfG3SP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:15:14 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50599 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfG3SPO (ORCPT
+        Tue, 30 Jul 2019 14:15:27 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:47612 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725935AbfG3SP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:15:14 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIF2Dd3325987
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:15:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIF2Dd3325987
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564510503;
-        bh=RIDbHj4dcX0LAT0D1AlS8luBMzGaCde1C2650N2QVkU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=eZe6oH4MgXWYgCnMi0zP4eS8Kz4nxM9ltUuU0N7K3f5tsZ1bJUCUcsO1S3xq5TLsa
-         K0AxVcGmC5Dk/r3xKvwIFjGhiPIQV+0lwhO1OvjECmGoB/uArKJ2CzZ5MA7NP+EqD+
-         jIjZmmRBfhLAZ+Kj65gWI9lRY1LwWyHF7jD/7TF47WZgHN0x+vEp1Nvfpfpuz6QZh4
-         PJrHZzDD8F8Fc4NanlL7AvjN+xUsmKRaMuxvPfJBDG4HD183T82QBv+y1OFVlRpzj0
-         TAjpcDCJjLF+4Chts3UpL4eT0NBTAXdg0h+4+rJ8eFQenZ7MeklRBVg9UMUVo1e8Hp
-         eDxJCBvZykUow==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIF1sa3325926;
-        Tue, 30 Jul 2019 11:15:01 -0700
-Date:   Tue, 30 Jul 2019 11:15:01 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-365c3ae7452ca95e0a8f1e4716dd806550ade706@git.kernel.org>
-Cc:     alexey.budankov@linux.intel.com, ak@linux.intel.com,
-        alexander.shishkin@linux.intel.com, mpetlan@redhat.com,
-        acme@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, peterz@infradead.org, hpa@zytor.com,
-        jolsa@kernel.org, mingo@kernel.org
-Reply-To: hpa@zytor.com, peterz@infradead.org, mingo@kernel.org,
-          jolsa@kernel.org, mpetlan@redhat.com, acme@redhat.com,
-          ak@linux.intel.com, alexey.budankov@linux.intel.com,
-          alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de
-In-Reply-To: <20190721112506.12306-12-jolsa@kernel.org>
-References: <20190721112506.12306-12-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf evsel: Rename perf_evsel__new() to
- evsel__new()
-Git-Commit-ID: 365c3ae7452ca95e0a8f1e4716dd806550ade706
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 30 Jul 2019 14:15:26 -0400
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 71CAA2E14C1;
+        Tue, 30 Jul 2019 21:15:23 +0300 (MSK)
+Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
+        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id jJUKzscTox-FMeK8IK3;
+        Tue, 30 Jul 2019 21:15:23 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1564510523; bh=O1f0fqsMtDtcIdVNBgmb2PMxS7uPI7/I37S9Ymo3qec=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=wzOucalG3TJcf705DvhKCt/iJ+Gei4PRaz8KkgIcEn0/engALRpkk2bwtHmicH0wd
+         Wdq51G8qcAFjmZKdJ+gPff2LVcWzSXbg0fcQ5gV/JgIACYN9uxu3EU/N15XKLDfaEg
+         ey1FxR/2tsR0q+TK8PLmszVr4AqJxjARczpHJOi8=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:6454:ac35:2758:ad6a])
+        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id GB79wZpAye-FMaOPmnb;
+        Tue, 30 Jul 2019 21:15:22 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH 1/2] mm/filemap: don't initiate writeback if mapping has
+ no dirty pages
+To:     Jan Kara <jack@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel@vger.kernel.org
+References: <156378816804.1087.8607636317907921438.stgit@buzz>
+ <20190722175230.d357d52c3e86dc87efbd4243@linux-foundation.org>
+ <bdc6c53d-a7bb-dcc4-20ba-6c7fa5c57dbd@yandex-team.ru>
+ <20190730141457.GE28829@quack2.suse.cz>
+ <51ba7304-06bd-a50d-cb14-6dc41b92fab5@yandex-team.ru>
+ <20190730154854.GG28829@quack2.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <c28d4243-aeb9-901a-46e9-bfe2e704cd8f@yandex-team.ru>
+Date:   Tue, 30 Jul 2019 21:15:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <20190730154854.GG28829@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  365c3ae7452ca95e0a8f1e4716dd806550ade706
-Gitweb:     https://git.kernel.org/tip/365c3ae7452ca95e0a8f1e4716dd806550ade706
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:23:58 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:43 -0300
 
-perf evsel: Rename perf_evsel__new() to evsel__new()
 
-Rename perf_evsel__new() to evsel__new(), so we don't have a name clash
-when we add perf_evsel__new() in libperf.
+On 30.07.2019 18:48, Jan Kara wrote:
+> On Tue 30-07-19 17:57:18, Konstantin Khlebnikov wrote:
+>> On 30.07.2019 17:14, Jan Kara wrote:
+>>> On Tue 23-07-19 11:16:51, Konstantin Khlebnikov wrote:
+>>>> On 23.07.2019 3:52, Andrew Morton wrote:
+>>>>>
+>>>>> (cc linux-fsdevel and Jan)
+>>>
+>>> Thanks for CC Andrew.
+>>>
+>>>>> On Mon, 22 Jul 2019 12:36:08 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+>>>>>
+>>>>>> Functions like filemap_write_and_wait_range() should do nothing if inode
+>>>>>> has no dirty pages or pages currently under writeback. But they anyway
+>>>>>> construct struct writeback_control and this does some atomic operations
+>>>>>> if CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
+>>>>>> updates state of writeback ownership, on slow path might be more work.
+>>>>>> Current this path is safely avoided only when inode mapping has no pages.
+>>>>>>
+>>>>>> For example generic_file_read_iter() calls filemap_write_and_wait_range()
+>>>>>> at each O_DIRECT read - pretty hot path.
+>>>
+>>> Yes, but in common case mapping_needs_writeback() is false for files you do
+>>> direct IO to (exactly the case with no pages in the mapping). So you
+>>> shouldn't see the overhead at all. So which case you really care about?
+>>>
+>>>>>> This patch skips starting new writeback if mapping has no dirty tags set.
+>>>>>> If writeback is already in progress filemap_write_and_wait_range() will
+>>>>>> wait for it.
+>>>>>>
+>>>>>> ...
+>>>>>>
+>>>>>> --- a/mm/filemap.c
+>>>>>> +++ b/mm/filemap.c
+>>>>>> @@ -408,7 +408,8 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
+>>>>>>     		.range_end = end,
+>>>>>>     	};
+>>>>>> -	if (!mapping_cap_writeback_dirty(mapping))
+>>>>>> +	if (!mapping_cap_writeback_dirty(mapping) ||
+>>>>>> +	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
+>>>>>>     		return 0;
+>>>>>>     	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
+>>>>>
+>>>>> How does this play with tagged_writepages?  We assume that no tagging
+>>>>> has been performed by any __filemap_fdatawrite_range() caller?
+>>>>>
+>>>>
+>>>> Checking also PAGECACHE_TAG_TOWRITE is cheap but seems redundant.
+>>>>
+>>>> To-write tags are supposed to be a subset of dirty tags:
+>>>> to-write is set only when dirty is set and cleared after starting writeback.
+>>>>
+>>>> Special case set_page_writeback_keepwrite() which does not clear to-write
+>>>> should be for dirty page thus dirty tag is not going to be cleared either.
+>>>> Ext4 calls it after redirty_page_for_writepage()
+>>>> XFS even without clear_page_dirty_for_io()
+>>>>
+>>>> Anyway to-write tag without dirty tag or at clear page is confusing.
+>>>
+>>> Yeah, TOWRITE tag is intended to be internal to writepages logic so your
+>>> patch is fine in that regard. Overall the patch looks good to me so I'm
+>>> just wondering a bit about the motivation...
+>>
+>> In our case file mixes cached pages and O_DIRECT read. Kind of database
+>> were index header is memory mapped while the rest data read via O_DIRECT.
+>> I suppose for sharing index between multiple instances.
+> 
+> OK, that has always been a bit problematic but you're not the first one to
+> have such design ;). So feel free to add:
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> 
+> to your patch.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-12-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c     | 2 +-
- tools/perf/tests/sw-clock.c    | 2 +-
- tools/perf/util/evsel.c        | 2 +-
- tools/perf/util/evsel.h        | 2 +-
- tools/perf/util/header.c       | 4 ++--
- tools/perf/util/parse-events.c | 2 +-
- 6 files changed, 7 insertions(+), 7 deletions(-)
+Thanks.
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 0f7d1859a2d1..c5eb47f4e42e 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2657,7 +2657,7 @@ static struct evsel *perf_evsel__new_pgfault(u64 config)
- 
- 	event_attr_init(&attr);
- 
--	evsel = perf_evsel__new(&attr);
-+	evsel = evsel__new(&attr);
- 	if (evsel)
- 		evsel->handler = trace__pgfault;
- 
-diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
-index 1c7d8adb43d0..247d3734686e 100644
---- a/tools/perf/tests/sw-clock.c
-+++ b/tools/perf/tests/sw-clock.c
-@@ -49,7 +49,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
- 		return -1;
- 	}
- 
--	evsel = perf_evsel__new(&attr);
-+	evsel = evsel__new(&attr);
- 	if (evsel == NULL) {
- 		pr_debug("perf_evsel__new\n");
- 		goto out_delete_evlist;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index de379b63f1ce..c9723c2d57c9 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -301,7 +301,7 @@ struct evsel *perf_evsel__new_cycles(bool precise)
- 	 * to kick in when we return and before perf_evsel__open() is called.
- 	 */
- new_event:
--	evsel = perf_evsel__new(&attr);
-+	evsel = evsel__new(&attr);
- 	if (evsel == NULL)
- 		goto out;
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 20b4e31b63a9..ecea51a918e0 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -219,7 +219,7 @@ int perf_evsel__object_config(size_t object_size,
- 
- struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx);
- 
--static inline struct evsel *perf_evsel__new(struct perf_event_attr *attr)
-+static inline struct evsel *evsel__new(struct perf_event_attr *attr)
- {
- 	return perf_evsel__new_idx(attr, 0);
- }
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 29bbfd699226..7760ddc4bc18 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3583,7 +3583,7 @@ int perf_session__read_header(struct perf_session *session)
- 		}
- 
- 		tmp = lseek(fd, 0, SEEK_CUR);
--		evsel = perf_evsel__new(&f_attr.attr);
-+		evsel = evsel__new(&f_attr.attr);
- 
- 		if (evsel == NULL)
- 			goto out_delete_evlist;
-@@ -4021,7 +4021,7 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
- 			return -ENOMEM;
- 	}
- 
--	evsel = perf_evsel__new(&event->attr.attr);
-+	evsel = evsel__new(&event->attr.attr);
- 	if (evsel == NULL)
- 		return -ENOMEM;
- 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index cc63367f6e45..40087cf74dd1 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2318,7 +2318,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 	if (tmap == NULL)
- 		return false;
- 
--	evsel = perf_evsel__new(&attr);
-+	evsel = evsel__new(&attr);
- 	if (evsel) {
- 		open_return = perf_evsel__open(evsel, NULL, tmap);
- 		ret = open_return >= 0;
+O_DIRECT has long history of misunderstandings =)
+It looks some cases are still not documented.
+My favourite: O_DIRECT write into hole goes into cache, at least for ext4.
+
+> 
+>> On this path we also hit this bug:
+>> https://lore.kernel.org/lkml/156355839560.2063.5265687291430814589.stgit@buzz/
+>> so that's why I've started looking into this code.
+> 
+> I see. OK.
+> 
+> 								Honza
+> 
