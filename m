@@ -2,107 +2,112 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEF2C0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D991C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328CF206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:40:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564501241;
-	bh=Hzq0ia0CHKkeUj+wGU+RlxUjicn8yuNyVPFWEwlJse8=;
-	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
-	b=HvR3Hb+wrK75SFxpdKLC6mZlKcyZ24mmpJGxjOC/cUxGqeLRhYQNwsMQJdaqqu0h1
-	 Z1Og2NetKTAMHhExaS9dFwrw0oAYEUzkju4wYdx9wLQTd/lCX06qtMgKIWhdADBuhB
-	 HUspXkFEGnhICJ/89YEYCfQh5Bi/57JKxBAAZddc=
+	by mail.kernel.org (Postfix) with ESMTP id 42328206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:40:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D4M5SEhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731974AbfG3Pkk (ORCPT
+        id S1732374AbfG3Pkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730217AbfG3Pkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:40:39 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BF53206B8;
-        Tue, 30 Jul 2019 15:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564501238;
-        bh=Hzq0ia0CHKkeUj+wGU+RlxUjicn8yuNyVPFWEwlJse8=;
-        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
-        b=J+IemHzqC/q/0eG0EA+O0zIUFE1RGjuSlcqYUZ/KV4a7h0Bzke3gwq4H1PyH+5uEM
-         tV+g6r3oSYAM8Ehlj4tiSzY9JCl1O6MFVvXr4baS+V+HY6QKR9KD9qaCfws51eypmQ
-         4kKL6/O+NmS4yh3X1v2eZn4E4iUJOgRk3KMLE/y0=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 30 Jul 2019 11:40:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41787 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732016AbfG3Pkp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:40:45 -0400
+Received: by mail-pf1-f195.google.com with SMTP id m30so30051951pff.8
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+TsaPv7btxKYET4XEO4VsIG1TF0FubECBVi69Yua3t8=;
+        b=D4M5SEhWmgpdhlQENr0EWrj+Jd+ccJ6vkHVsl7sKWxgFLdT4SsinEcWlv3VCq/152U
+         ZBIoPET0gRdd8KVbsZzlMcOdJsp3pfx5xij9VPh+lBpnbf5ptgFryW/LfOsws3JHfBHZ
+         gWlcgg8LUglTD5JczuFzHHrhwaEKCdr9vXvmE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+TsaPv7btxKYET4XEO4VsIG1TF0FubECBVi69Yua3t8=;
+        b=Et88lRP8i0WTeSR2Obgd3c4kO5tZ6uXgjP72mCXHZJn/y4cl/wJNerqYs9roE8PFbn
+         hL8Y+uOlNOB34hqP4YjK58b7TjhfPQbb+0ew6g8Nv01vTKSZ6IHMbAYtLM1DiDnkWzER
+         LlL7p0qkhNWrSU2Pw3MrEp3P6IRwZLPPvmbZbvh9eThxONHwdXT0WQL35i6SvtWCtcbR
+         Zycn6GAwLsTSuSbSGAD8K2dYW8pOXpcNWfj74ecNJ5Gdt22OGj/vhRTQL8Zk0FPKT+vl
+         dusiIimHtPWKssEEH7Es2/uQlfAI8YwUvi8aC6ATYaJn4JX1GJjRATS6s2Og1IjSFIvj
+         xEqA==
+X-Gm-Message-State: APjAAAVjSuqP9mw6lwqByco7BcsI5JoaYK2hvskrUIiRCpnXvKO4riVl
+        rxn+5x2pvIRLPvAcc+iOVzR7wQ==
+X-Google-Smtp-Source: APXvYqx7seExCsc7ZPU8XmbNPmYq7yermARF2GGlNlxP6mJlo5st5LoyXJ+I4whknU/dqS7pRS2G5A==
+X-Received: by 2002:a63:4404:: with SMTP id r4mr107857554pga.245.1564501244406;
+        Tue, 30 Jul 2019 08:40:44 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id f197sm64641762pfa.161.2019.07.30.08.40.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 08:40:43 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: [PATCH] kmemleak: Increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K
+Date:   Tue, 30 Jul 2019 23:40:27 +0800
+Message-Id: <20190730154027.101525-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <63d15392-f296-cd13-7821-61d59d568347@codeaurora.org>
-References: <1557339895-21952-1-git-send-email-tdas@codeaurora.org> <1557339895-21952-4-git-send-email-tdas@codeaurora.org> <155742286525.14659.18081373668341127486@swboyd.mtv.corp.google.com> <07bcd2df-a786-ea52-8566-70f484248952@codeaurora.org> <155751085370.14659.7749105088997177801@swboyd.mtv.corp.google.com> <f65811f8-42ea-6365-7822-db662eaea228@codeaurora.org> <20190715224441.F12122080A@mail.kernel.org> <243de3a4-292b-77c0-6232-0b38d124d183@codeaurora.org> <20190716232228.2B84F2173E@mail.kernel.org> <63d15392-f296-cd13-7821-61d59d568347@codeaurora.org>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v1 3/3] clk: qcom: rcg: update the DFS macro for RCG
-User-Agent: alot/0.8.1
-Date:   Tue, 30 Jul 2019 08:40:37 -0700
-Message-Id: <20190730154038.8BF53206B8@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-07-30 03:51:07)
->=20
->=20
-> On 7/17/2019 4:52 AM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2019-07-15 21:22:02)
-> >> Hello Stephen,
-> >>
-> >> Thanks for the review.
-> >>
-> >> On 7/16/2019 4:14 AM, Stephen Boyd wrote:
-> >>> Quoting Taniya Das (2019-05-12 20:44:46)
-> >>>> On 5/10/2019 11:24 PM, Stephen Boyd wrote:
-> >>>>> Why is the clk name changing to not have a _src after the "root" of=
- the
-> >>>>> clk name? As long as I can remember, RCGs have a "_src" postfix.
-> >>>>>
-> >>>>
-> >>>> Yes, the RCGs would have _src, so we do want the init data also to be
-> >>>> generated with _src postfix. So that we do not have to manually clea=
-n up
-> >>>> the generated code.
-> >>>>
-> >>>
-> >>> Please manually cleanup the generated code, or fix the code
-> >>> generator to do what you want.
-> >>>
-> >>
-> >> Fixing the code manually is not what we intend to do and it is time
-> >> consuming with too many DFS controlled clocks. This really helps us
-> >> align to internal code.
-> >>
-> >=20
-> > And you can't fix the code generator to drop the _src part of whatever
-> > is spit out for the DFS lines?
-> >=20
->=20
-> Sure, will drop this.
->=20
+The current default value (400) is too low on many systems (e.g.
+some ARM64 platform takes up 1000+ entries).
 
-Actually, I'm OK with this patch, but I'd like to see it in a larger
-series that introduces another clk driver using this macro. The reason I
-like it is that I can search for the same string name and find the clk
-that has DFS enabled on it, instead of finding the branch which doesn't
-have DFS. Sorry for the back and forth, I got confused about what was
-going on.
+syzbot uses 16000 as default value, and has proved to be enough
+on beefy configurations, so let's pick that value.
+
+This consumes more RAM on boot (each entry is 160 bytes, so
+in total ~2.5MB of RAM), but the memory would later be freed
+(early_log is __initdata).
+
+Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+---
+ lib/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index f567875b87657de..b5a24045ab13310 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -596,7 +596,7 @@ config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
+ 	int "Maximum kmemleak early log entries"
+ 	depends on DEBUG_KMEMLEAK
+ 	range 200 40000
+-	default 400
++	default 16000
+ 	help
+ 	  Kmemleak must track all the memory allocations to avoid
+ 	  reporting false positives. Since memory may be allocated or
+-- 
+2.22.0.709.g102302147b-goog
 
