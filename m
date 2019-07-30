@@ -2,109 +2,180 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E531C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879D0C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E58420C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B4E206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 15:57:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lu+QHcKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbfG3P5V (ORCPT
+        id S1730279AbfG3P5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 11:57:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40090 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbfG3P5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 11:57:20 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AD19A300CB0C;
-        Tue, 30 Jul 2019 15:57:17 +0000 (UTC)
-Received: from redhat.com (ovpn-112-36.rdu2.redhat.com [10.10.112.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A63655D6A7;
-        Tue, 30 Jul 2019 15:57:05 +0000 (UTC)
-Date:   Tue, 30 Jul 2019 11:57:02 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Christoph Hellwig <hch@infradead.org>, john.hubbard@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>, ceph-devel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, samba-technical@lists.samba.org,
-        v9fs-developer@lists.sourceforge.net,
-        virtualization@lists.linux-foundation.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: Re: [PATCH 03/12] block: bio_release_pages: use flags arg instead of
- bool
-Message-ID: <20190730155702.GB10366@redhat.com>
-References: <20190724042518.14363-1-jhubbard@nvidia.com>
- <20190724042518.14363-4-jhubbard@nvidia.com>
- <20190724053053.GA18330@infradead.org>
- <20190729205721.GB3760@redhat.com>
- <20190730102557.GA1700@lst.de>
+        Tue, 30 Jul 2019 11:57:40 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44101 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728473AbfG3P5j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 11:57:39 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i18so30284773pgl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 08:57:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0NaHg6fB++B/oHrlKTF/AWvpclA/KtptWNPlOhBEu0o=;
+        b=Lu+QHcKvJFzvOTTexit555M/XSXUkUQWT4tD6loMbFW02HG3mm7Zs1//fQzFpVqBxB
+         TOvar4APtgDLa56xMWhJ7fpm55CeJvQJjnPYnCGx7yWRBukGV4kBaVFvXyz7DbfVVohu
+         Etqw72cR1ojoy/xR0jSeLs1blUsnbTzo2yArSTe5II8GX1E+fxQLAjhnmJHumrG0VeGk
+         x8ahn5IG13WFE2JVJjoeTdZ5h3haNI3AZYQMMTYfXwgdLZBsVn2YKJ3YWlcRt92WcJc0
+         lBrqce6vxVx4l4fRmJkdSY2/qyqswMaomb2QDo0zInJD43Xf3E7kr83k0HlcGbyHbzvC
+         yGzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0NaHg6fB++B/oHrlKTF/AWvpclA/KtptWNPlOhBEu0o=;
+        b=Ozhlja8k3NjcrAm3NLdFEUNp0qKjV+kpwa3t1mEuOfoEU24oB3M4n9ARSdMbhc8B7T
+         TaA7KJg64iDbg7LIrG35d1R2BhOMJsYDpOBaT1tThcfvx2hHsQYnQ0L7WXWpSirl+ZBX
+         F6eFz1mF27dn5KB+vja2uz5groCbSS+J42Ezuf+0yXMrff6BC/MR5GlSsnMU7BN9XN18
+         0PFRQlaj5QDa+6XbIT1h0UrCkSZGN5WhVVVlrqctF5gtsY9ELd10TZi1MustETpbNjm1
+         mYG613loi9yRJV6sZ1kEC/F0URG5bPMOYqD/1O8sPTp04oUy2uDk07UCunj2/9AUhlRH
+         B9Bg==
+X-Gm-Message-State: APjAAAX0RwnA9H+YSQ0uyg70MdQbdTQpDKHg0qc1poSgY8jRsVR1hUGo
+        k3BpO2Nm1C1BxIr5DcOsiPA=
+X-Google-Smtp-Source: APXvYqwlESv9JHKTlgYzRIqCFokW2Dyl8C4s4ykXe1hm7/Bz13AOFDGIyTvXlC4SDq2abAZNZ3Vscg==
+X-Received: by 2002:a63:c009:: with SMTP id h9mr82211318pgg.166.1564502259001;
+        Tue, 30 Jul 2019 08:57:39 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h1sm82959155pfg.55.2019.07.30.08.57.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 08:57:38 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 08:57:37 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-watchdog@cger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Marking legacy watchdog drivers as deprecated / obsolete
+Message-ID: <20190730155737.GA22593@roeck-us.net>
+References: <20190729220720.GB5712@roeck-us.net>
+ <CAK8P3a16dON3g-BzUOrdHu3ryCD+FyJn29EwcT_aQAdj-jvFnA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190730102557.GA1700@lst.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 30 Jul 2019 15:57:19 +0000 (UTC)
+In-Reply-To: <CAK8P3a16dON3g-BzUOrdHu3ryCD+FyJn29EwcT_aQAdj-jvFnA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 12:25:57PM +0200, Christoph Hellwig wrote:
-> On Mon, Jul 29, 2019 at 04:57:21PM -0400, Jerome Glisse wrote:
-> > > All pages releases by bio_release_pages should come from
-> > > get_get_user_pages, so I don't really see the point here.
-> > 
-> > No they do not all comes from GUP for see various callers
-> > of bio_check_pages_dirty() for instance iomap_dio_zero()
-> > 
-> > I have carefully tracked down all this and i did not do
-> > anyconvertion just for the fun of it :)
+On Tue, Jul 30, 2019 at 10:00:36AM +0200, Arnd Bergmann wrote:
+> On Tue, Jul 30, 2019 at 12:07 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> >
+> > Hi,
+> >
+> > we have recently seen a number of changes to legacy watchdog drivers,
+> > mostly surrounding the coding style used some 10+ years ago, but also
+> > fixing minor formatting or coding problems found by static analyzers.
+> > This slowly rises above the level of background noise.
+> >
+> > Would it be acceptable to mark all those drivers as deprecated/obsolete,
+> > warn users that the driver should be converted to use the watchdog
+> > subsystem, and that it will otherwise be removed in a later Linux kernel
+> > version ? This would give us an idea which drivers are still in use,
+> > and it would enable us to remove the remaining drivers maybe 5 or 6
+> > releases for now.
+> >
+> > Thoughts ?
 > 
-> Well, the point is _should_ not necessarily do.  iomap_dio_zero adds the
-> ZERO_PAGE, which we by definition don't need to refcount.  So we can
-> mark this bio BIO_NO_PAGE_REF safely after removing the get_page there.
+> I don't think an automated approach across 61 drivers is likely to work
+> well. About half of the drivers appear to be for specific SoCs, and
+> removing the watchdog driver while keeping the rest of the SoC support
+> would not be helpful, it  just means we break one of the drivers for the
+> last remaining users of an old SoC the next time they try to upgrade to
+> a new kernel.
 > 
-> Note that the equivalent in the old direct I/O code, dio_refill_pages,
-> will be a little more complicated as it can match user pages and the
-> ZERO_PAGE in a single bio, so a per-bio flag won't handle it easily.
-> Maybe we just need to use a separate bio there as well.
-> 
-> In general with series like this we should not encode the status quo an
-> pile new hacks upon the old one, but thing where we should be and fix
-> up the old warts while having to wade through all that code.
 
-Other user can also add page that are not coming from GUP but need to
-have a reference see __blkdev_direct_IO() saddly bio get fill from many
-different places and not always with GUP. So we can not say that all
-pages here are coming from bio. I had a different version of the patchset
-i think that was adding a new release dirty function for GUP versus non
-GUP bio. I posted it a while ago, i will try to dig it up once i am
-back.
+The primary goal would be to identify drivers still in use, and to trigger
+efforts to convert those drivers to the new infrastructure. Removal of
+obsolete / unused drivers would be a separate decision, to be made at some
+point in the future, and individually for each driver. I specifically wasn't
+trying to suggest auto-removal.
 
-Cheers,
-Jérôme
+Guenter
+
+> It would probably be helpful to go through the list and see if any of
+> the drivers
+> are for platforms that are already gone. FWIW, here is the list of drivers that
+> have their own .ioctl() method, taken from a patch I'm sending soon
+> to add a .compat_ioctl handler:
+> 
+> arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+> arch/um/drivers/harddog_kern.c
+> drivers/char/ipmi/ipmi_watchdog.c
+> drivers/hwmon/fschmd.c
+> drivers/rtc/rtc-ds1374.c
+> drivers/watchdog/acquirewdt.c
+> drivers/watchdog/advantechwdt.c
+> drivers/watchdog/alim1535_wdt.c
+> drivers/watchdog/alim7101_wdt.c
+> drivers/watchdog/ar7_wdt.c
+> drivers/watchdog/at91rm9200_wdt.c
+> drivers/watchdog/ath79_wdt.c
+> drivers/watchdog/bcm63xx_wdt.c
+> drivers/watchdog/cpu5wdt.c
+> drivers/watchdog/eurotechwdt.c
+> drivers/watchdog/f71808e_wdt.c
+> drivers/watchdog/gef_wdt.c
+> drivers/watchdog/geodewdt.c
+> drivers/watchdog/ib700wdt.c
+> drivers/watchdog/ibmasr.c
+> drivers/watchdog/indydog.c
+> drivers/watchdog/intel_scu_watchdog.c
+> drivers/watchdog/iop_wdt.c
+> drivers/watchdog/it8712f_wdt.c
+> drivers/watchdog/ixp4xx_wdt.c
+> drivers/watchdog/ks8695_wdt.c
+> drivers/watchdog/m54xx_wdt.c
+> drivers/watchdog/machzwd.c
+> drivers/watchdog/mixcomwd.c
+> drivers/watchdog/mtx-1_wdt.c
+> drivers/watchdog/mv64x60_wdt.c
+> drivers/watchdog/nuc900_wdt.c
+> drivers/watchdog/nv_tco.c
+> drivers/watchdog/pc87413_wdt.c
+> drivers/watchdog/pcwd.c
+> drivers/watchdog/pcwd_pci.c
+> drivers/watchdog/pcwd_usb.c
+> drivers/watchdog/pika_wdt.c
+> drivers/watchdog/pnx833x_wdt.c
+> drivers/watchdog/rc32434_wdt.c
+> drivers/watchdog/rdc321x_wdt.c
+> drivers/watchdog/riowd.c
+> drivers/watchdog/sa1100_wdt.c
+> drivers/watchdog/sb_wdog.c
+> drivers/watchdog/sbc60xxwdt.c
+> drivers/watchdog/sbc7240_wdt.c
+> drivers/watchdog/sbc_epx_c3.c
+> drivers/watchdog/sbc_fitpc2_wdt.c
+> drivers/watchdog/sc1200wdt.c
+> drivers/watchdog/sc520_wdt.c
+> drivers/watchdog/sch311x_wdt.c
+> drivers/watchdog/scx200_wdt.c
+> drivers/watchdog/smsc37b787_wdt.c
+> drivers/watchdog/w83877f_wdt.c
+> drivers/watchdog/w83977f_wdt.c
+> drivers/watchdog/wafer5823wdt.c
+> drivers/watchdog/wdrtas.c
+> drivers/watchdog/wdt.c
+> drivers/watchdog/wdt285.c
+> drivers/watchdog/wdt977.c
+> drivers/watchdog/wdt_pci.c
+> 
+>       Arnd
