@@ -7,60 +7,61 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B7CC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06741C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8328206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B721B20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AcIe9lsl"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BeIB81q9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388396AbfG3Sv4 (ORCPT
+        id S2388454AbfG3SwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:51:56 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55247 "EHLO
+        Tue, 30 Jul 2019 14:52:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59795 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388066AbfG3Sv4 (ORCPT
+        with ESMTP id S2388066AbfG3SwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:51:56 -0400
+        Tue, 30 Jul 2019 14:52:02 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIpbRC3336032
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIonfX3335707
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:51:38 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIpbRC3336032
+        Tue, 30 Jul 2019 11:50:50 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIonfX3335707
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564512699;
-        bh=PwaUG3Xas9fF2uO0USMoRNcCT2/MtsRQlARUlaycRyk=;
+        s=2019071901; t=1564512650;
+        bh=k7Sq4+EW5Y4vXc8rB45Ch/nurUvxc6mTv2n4IqE0nGQ=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=AcIe9lsllrh1egirQfRfHy6jhs4PH7P0wG0XVdjM2NQWHOMM+r1zG0C6FkULODtri
-         zS7LwqHDAUGalwa01cXw5/9dMae+amfAZjpOQ2cm8bt4yMCOSXERaJNd9CnWdhqhDq
-         z7TiA7EpB0rcNdAHXe7NxWV7zR9Euo3Yq6FyD+LdLaZunEx3qkBbo5U3jZGCeahBnF
-         CCReF/OpirKZUdWjANKvjAwIt+ozSkcY1/PTDtb/Siiqvpz56uOU+sVyC/YIx8eVM4
-         +e6139+h1VFcU1MDr8jyS6KdFlRrVpSpkAb9snaJ5DOptrZqg5BurNEXwP2BD3VVBb
-         Im/x3Q7oeMpFQ==
+        b=BeIB81q94D5g0X5mWfsvlsDLTqj7duXk47cIfnvsULvKhmFEyffLO3j5dnh1qUn+o
+         dfTtRNIEjFVOflJlOTuLJrRGNH/kk3DjTjkXFrckciAwS/XUv18bVHnNn7gxThbZb7
+         i3hZq8yo9PbRAU5lp1c1oQ0SHO7XA/bqmN5bpypupSl5HsqBLElYYO3nw21lDwdzRD
+         HCnWeY1bml2flHKiuD3+53pfaTLYb1MydXRbT0Y19mmrWuzaN21pJKhIShSOLwfdQy
+         gvO2k3GyR8DYAOfHaTj0dXhSR+sv4fRRWZKgU9kdbrRNy1KrFT4d3uvFKcMGz9KNHl
+         lNOxHmFUPQnXg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIpbun3336029;
-        Tue, 30 Jul 2019 11:51:37 -0700
-Date:   Tue, 30 Jul 2019 11:51:37 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIon9U3335704;
+        Tue, 30 Jul 2019 11:50:49 -0700
+Date:   Tue, 30 Jul 2019 11:50:49 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-5643b1a59e581ac3f66d36caba8124313cc446c0@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, acme@redhat.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        jolsa@kernel.org, tglx@linutronix.de, hpa@zytor.com,
-        ak@linux.intel.com, alexey.budankov@linux.intel.com,
-        mingo@kernel.org, peterz@infradead.org, mpetlan@redhat.com
-Reply-To: alexey.budankov@linux.intel.com, mingo@kernel.org,
-          peterz@infradead.org, mpetlan@redhat.com, ak@linux.intel.com,
-          tglx@linutronix.de, hpa@zytor.com, acme@redhat.com,
-          linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-          namhyung@kernel.org, jolsa@kernel.org
-In-Reply-To: <20190721112506.12306-60-jolsa@kernel.org>
-References: <20190721112506.12306-60-jolsa@kernel.org>
+Message-ID: <tip-9dfcb7599084382884fec6d0fd9ca33945fa7578@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, jolsa@kernel.org,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        acme@redhat.com, tglx@linutronix.de,
+        alexey.budankov@linux.intel.com, ak@linux.intel.com,
+        peterz@infradead.org, hpa@zytor.com, namhyung@kernel.org,
+        mpetlan@redhat.com
+Reply-To: ak@linux.intel.com, peterz@infradead.org, tglx@linutronix.de,
+          alexey.budankov@linux.intel.com, namhyung@kernel.org,
+          mpetlan@redhat.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
+          jolsa@kernel.org, mingo@kernel.org, acme@redhat.com,
+          alexander.shishkin@linux.intel.com
+In-Reply-To: <20190721112506.12306-59-jolsa@kernel.org>
+References: <20190721112506.12306-59-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] libperf: Move nr_members from perf's evsel to
- libperf's perf_evsel
-Git-Commit-ID: 5643b1a59e581ac3f66d36caba8124313cc446c0
+Subject: [tip:perf/core] libperf: Move fd array from perf's evsel to
+ lobperf's perf_evsel class
+Git-Commit-ID: 9dfcb7599084382884fec6d0fd9ca33945fa7578
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,16 +75,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5643b1a59e581ac3f66d36caba8124313cc446c0
-Gitweb:     https://git.kernel.org/tip/5643b1a59e581ac3f66d36caba8124313cc446c0
+Commit-ID:  9dfcb7599084382884fec6d0fd9ca33945fa7578
+Gitweb:     https://git.kernel.org/tip/9dfcb7599084382884fec6d0fd9ca33945fa7578
 Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:24:46 +0200
+AuthorDate: Sun, 21 Jul 2019 13:24:45 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 29 Jul 2019 18:34:46 -0300
 
-libperf: Move nr_members from perf's evsel to libperf's perf_evsel
+libperf: Move fd array from perf's evsel to lobperf's perf_evsel class
 
-Move the nr_members member from perf's evsel to libperf's perf_evsel.
+Move the fd array from perf's evsel to libperf's perf_evsel class.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -92,484 +93,204 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-60-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-59-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c             |  2 +-
- tools/perf/builtin-script.c             |  2 +-
- tools/perf/builtin-stat.c               |  2 +-
- tools/perf/lib/include/internal/evsel.h |  3 +++
- tools/perf/tests/parse-events.c         | 22 +++++++++++-----------
- tools/perf/ui/gtk/annotate.c            |  2 +-
- tools/perf/ui/gtk/hists.c               |  2 +-
- tools/perf/ui/hist.c                    |  6 +++---
- tools/perf/util/annotate.c              |  8 ++++----
- tools/perf/util/evlist.c                |  6 +++---
- tools/perf/util/evsel.c                 |  6 +++---
- tools/perf/util/evsel.h                 |  3 +--
- tools/perf/util/evsel_fprintf.c         |  4 ++--
- tools/perf/util/header.c                | 12 ++++++------
- tools/perf/util/hist.c                  |  2 +-
- tools/perf/util/parse-events.c          |  2 +-
- tools/perf/util/stat-display.c          |  2 +-
- tools/perf/util/stat.c                  |  2 +-
- 18 files changed, 45 insertions(+), 43 deletions(-)
+ tools/perf/lib/include/internal/evsel.h |  1 +
+ tools/perf/util/bpf-loader.c            |  2 +-
+ tools/perf/util/evlist.c                | 10 +++++-----
+ tools/perf/util/evsel.c                 | 30 +++++++++++++++---------------
+ tools/perf/util/evsel.h                 |  1 -
+ 5 files changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index e258e988c55b..d4288dcce156 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -436,7 +436,7 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
- 	ret = fprintf(fp, "# Samples: %lu%c", nr_samples, unit);
- 	if (evname != NULL) {
- 		ret += fprintf(fp, " of event%s '%s'",
--			       evsel->nr_members > 1 ? "s" : "", evname);
-+			       evsel->core.nr_members > 1 ? "s" : "", evname);
- 	}
- 
- 	if (rep->time_str)
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 46fadbbe1c3e..31a529ec139f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1734,7 +1734,7 @@ static void perf_sample__fprint_metric(struct perf_script *script,
- 				       sample->cpu,
- 				       &rt_stat);
- 	evsel_script(evsel)->val = val;
--	if (evsel_script(evsel->leader)->gnum == evsel->leader->nr_members) {
-+	if (evsel_script(evsel->leader)->gnum == evsel->leader->core.nr_members) {
- 		for_each_group_member (ev2, evsel->leader) {
- 			perf_stat__print_shadow_stats(&stat_config, ev2,
- 						      evsel_script(ev2)->val,
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 14e4c970d16a..b19df671111e 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -479,7 +479,7 @@ try_again:
- 				counter->supported = false;
- 
- 				if ((counter->leader != counter) ||
--				    !(counter->leader->nr_members > 1))
-+				    !(counter->leader->core.nr_members > 1))
- 					continue;
- 			} else if (perf_evsel__fallback(counter, errno, msg, sizeof(msg))) {
-                                 if (verbose > 0)
 diff --git a/tools/perf/lib/include/internal/evsel.h b/tools/perf/lib/include/internal/evsel.h
-index df4078194e9a..29eca9576546 100644
+index 8340fd883a3d..df4078194e9a 100644
 --- a/tools/perf/lib/include/internal/evsel.h
 +++ b/tools/perf/lib/include/internal/evsel.h
-@@ -15,6 +15,9 @@ struct perf_evsel {
+@@ -14,6 +14,7 @@ struct perf_evsel {
+ 	struct perf_cpu_map	*cpus;
  	struct perf_cpu_map	*own_cpus;
  	struct perf_thread_map	*threads;
- 	struct xyarray		*fd;
-+
-+	/* parse modifier helper */
-+	int			 nr_members;
++	struct xyarray		*fd;
  };
  
  #endif /* __LIBPERF_INTERNAL_EVSEL_H */
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 5b4a5a3dac50..49f52e4de41b 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -653,7 +653,7 @@ static int test__group1(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
-@@ -695,7 +695,7 @@ static int test__group2(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
-@@ -753,7 +753,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong group name",
- 		!strcmp(leader->group_name, "group1"));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
-@@ -788,7 +788,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
- 	TEST_ASSERT_VAL("wrong group name",
- 		!strcmp(leader->group_name, "group2"));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
-@@ -844,7 +844,7 @@ static int test__group4(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip == 1);
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
-@@ -887,7 +887,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
-@@ -919,7 +919,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
- 
-@@ -973,7 +973,7 @@ static int test__group_gh1(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 
- 	/* cache-misses:G + :H group modifier */
-@@ -1013,7 +1013,7 @@ static int test__group_gh2(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 
- 	/* cache-misses:H + :G group modifier */
-@@ -1053,7 +1053,7 @@ static int test__group_gh3(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 
- 	/* cache-misses:H + :u group modifier */
-@@ -1093,7 +1093,7 @@ static int test__group_gh4(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
- 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
- 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
--	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
-+	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
- 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
- 
- 	/* cache-misses:H + :uG group modifier */
-diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-index 40e263a730e4..d7f984436dec 100644
---- a/tools/perf/ui/gtk/annotate.c
-+++ b/tools/perf/ui/gtk/annotate.c
-@@ -129,7 +129,7 @@ static int perf_gtk__annotate_symbol(GtkWidget *window, struct symbol *sym,
- 		gtk_list_store_append(store, &iter);
- 
- 		if (perf_evsel__is_group_event(evsel)) {
--			for (i = 0; i < evsel->nr_members; i++) {
-+			for (i = 0; i < evsel->core.nr_members; i++) {
- 				ret += perf_gtk__get_percent(s + ret,
- 							     sizeof(s) - ret,
- 							     sym, pos,
-diff --git a/tools/perf/ui/gtk/hists.c b/tools/perf/ui/gtk/hists.c
-index 1b181d8ea953..0efdb226d1a7 100644
---- a/tools/perf/ui/gtk/hists.c
-+++ b/tools/perf/ui/gtk/hists.c
-@@ -645,7 +645,7 @@ int perf_evlist__gtk_browse_hists(struct evlist *evlist,
- 			if (!perf_evsel__is_group_leader(pos))
- 				continue;
- 
--			if (pos->nr_members > 1) {
-+			if (pos->core.nr_members > 1) {
- 				perf_evsel__group_desc(pos, buf, size);
- 				evname = buf;
- 			}
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index 8c7fb11edc60..e5fb64347b2c 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -43,7 +43,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
- 	if (perf_evsel__is_group_event(evsel)) {
- 		int prev_idx, idx_delta;
- 		struct hist_entry *pair;
--		int nr_members = evsel->nr_members;
-+		int nr_members = evsel->core.nr_members;
- 
- 		prev_idx = perf_evsel__group_idx(evsel);
- 
-@@ -165,7 +165,7 @@ static int __hpp__sort(struct hist_entry *a, struct hist_entry *b,
- 	if (!perf_evsel__is_group_event(evsel))
- 		return ret;
- 
--	nr_members = evsel->nr_members;
-+	nr_members = evsel->core.nr_members;
- 	fields_a = calloc(nr_members, sizeof(*fields_a));
- 	fields_b = calloc(nr_members, sizeof(*fields_b));
- 
-@@ -226,7 +226,7 @@ static int hpp__width_fn(struct perf_hpp_fmt *fmt,
- 	struct evsel *evsel = hists_to_evsel(hists);
- 
- 	if (symbol_conf.event_group)
--		len = max(len, evsel->nr_members * fmt->len);
-+		len = max(len, evsel->core.nr_members * fmt->len);
- 
- 	if (len < (int)strlen(fmt->name))
- 		len = strlen(fmt->name);
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index d46f2ae2c695..91d4fc3e78cf 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1170,7 +1170,7 @@ annotation_line__new(struct annotate_args *args, size_t privsize)
- 	int nr = 1;
- 
- 	if (perf_evsel__is_group_event(evsel))
--		nr = evsel->nr_members;
-+		nr = evsel->core.nr_members;
- 
- 	size += sizeof(al->data[0]) * nr;
- 
-@@ -1448,7 +1448,7 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
- 			return -1;
- 
- 		if (perf_evsel__is_group_event(evsel))
--			width *= evsel->nr_members;
-+			width *= evsel->core.nr_members;
- 
- 		if (!*al->line)
- 			printf(" %*s:\n", width, " ");
-@@ -2272,7 +2272,7 @@ int symbol__annotate_printf(struct symbol *sym, struct map *map,
- 	len = symbol__size(sym);
- 
- 	if (perf_evsel__is_group_event(evsel)) {
--		width *= evsel->nr_members;
-+		width *= evsel->core.nr_members;
- 		perf_evsel__group_desc(evsel, buf, sizeof(buf));
- 		evsel_name = buf;
- 	}
-@@ -2968,7 +2968,7 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct evsel *evsel,
- 		return -1;
- 
- 	if (perf_evsel__is_group_event(evsel))
--		nr_pcnt = evsel->nr_members;
-+		nr_pcnt = evsel->core.nr_members;
- 
- 	err = symbol__annotate(sym, map, evsel, 0, options, parch);
- 	if (err)
+diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+index 4df8bdea14ac..9c219d413e57 100644
+--- a/tools/perf/util/bpf-loader.c
++++ b/tools/perf/util/bpf-loader.c
+@@ -1403,7 +1403,7 @@ static int
+ apply_config_evsel_for_key(const char *name, int map_fd, void *pkey,
+ 			   struct evsel *evsel)
+ {
+-	struct xyarray *xy = evsel->fd;
++	struct xyarray *xy = evsel->core.fd;
+ 	struct perf_event_attr *attr;
+ 	unsigned int key, events;
+ 	bool check_pass = false;
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index e4b1a9914ea4..eac4d634b9c7 100644
+index 4433b656cfb7..e4b1a9914ea4 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -188,7 +188,7 @@ void __perf_evlist__set_leader(struct list_head *list)
- 	leader = list_entry(list->next, struct evsel, core.node);
- 	evsel = list_entry(list->prev, struct evsel, core.node);
+@@ -40,7 +40,7 @@
+ int sigqueue(pid_t pid, int sig, const union sigval value);
+ #endif
  
--	leader->nr_members = evsel->idx - leader->idx + 1;
-+	leader->core.nr_members = evsel->idx - leader->idx + 1;
+-#define FD(e, x, y) (*(int *)xyarray__entry(e->fd, x, y))
++#define FD(e, x, y) (*(int *)xyarray__entry(e->core.fd, x, y))
+ #define SID(e, x, y) xyarray__entry(e->sample_id, x, y)
  
- 	__evlist__for_each_entry(list, evsel) {
- 		evsel->leader = leader;
-@@ -1761,7 +1761,7 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
- 
- 	leader = evsel->leader;
- 	pr_debug("Weak group for %s/%d failed\n",
--			leader->name, leader->nr_members);
-+			leader->name, leader->core.nr_members);
- 
- 	/*
- 	 * for_each_group_member doesn't work here because it doesn't
-@@ -1774,7 +1774,7 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
- 			if (is_open)
- 				perf_evsel__close(c2);
- 			c2->leader = c2;
--			c2->nr_members = 0;
-+			c2->core.nr_members = 0;
- 		}
- 	}
- 	return leader;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 8d087d0e55f1..8b9a00598677 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -948,7 +948,7 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
- 		 * Apply group format only if we belong to group
- 		 * with more than one members.
- 		 */
--		if (leader->nr_members > 1) {
-+		if (leader->core.nr_members > 1) {
- 			attr->read_format |= PERF_FORMAT_GROUP;
- 			attr->inherit = 0;
- 		}
-@@ -1396,7 +1396,7 @@ static int perf_evsel__read_size(struct evsel *evsel)
- 		entry += sizeof(u64);
- 
- 	if (read_format & PERF_FORMAT_GROUP) {
--		nr = evsel->nr_members;
-+		nr = evsel->core.nr_members;
- 		size += sizeof(u64);
- 	}
- 
-@@ -1453,7 +1453,7 @@ perf_evsel__process_group_data(struct evsel *leader,
- 
- 	nr = *data++;
- 
--	if (nr != (u64) leader->nr_members)
-+	if (nr != (u64) leader->core.nr_members)
- 		return -EINVAL;
- 
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 6056ce64bfdf..afd3a5b7bcc3 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -142,7 +142,6 @@ struct evsel {
- 	bool			use_uncore_alias;
- 	/* parse modifier helper */
- 	int			exclude_GH;
--	int			nr_members;
- 	int			sample_read;
- 	unsigned long		*per_pkg_mask;
- 	struct evsel		*leader;
-@@ -414,7 +413,7 @@ static inline bool perf_evsel__is_group_event(struct evsel *evsel)
- 	if (!symbol_conf.event_group)
- 		return false;
- 
--	return perf_evsel__is_group_leader(evsel) && evsel->nr_members > 1;
-+	return perf_evsel__is_group_leader(evsel) && evsel->core.nr_members > 1;
- }
- 
- bool perf_evsel__is_function_event(struct evsel *evsel);
-diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-index 3466eca34a00..496fec01f5d1 100644
---- a/tools/perf/util/evsel_fprintf.c
-+++ b/tools/perf/util/evsel_fprintf.c
-@@ -45,14 +45,14 @@ int perf_evsel__fprintf(struct evsel *evsel,
- 		if (!perf_evsel__is_group_leader(evsel))
- 			return 0;
- 
--		if (evsel->nr_members > 1)
-+		if (evsel->core.nr_members > 1)
- 			printed += fprintf(fp, "%s{", evsel->group_name ?: "");
- 
- 		printed += fprintf(fp, "%s", perf_evsel__name(evsel));
- 		for_each_group_member(pos, evsel)
- 			printed += fprintf(fp, ",%s", perf_evsel__name(pos));
- 
--		if (evsel->nr_members > 1)
-+		if (evsel->core.nr_members > 1)
- 			printed += fprintf(fp, "}");
- 		goto out;
- 	}
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index f97df418d661..b04c2b6b28b3 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -772,10 +772,10 @@ static int write_group_desc(struct feat_fd *ff,
- 
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (perf_evsel__is_group_leader(evsel) &&
--		    evsel->nr_members > 1) {
-+		    evsel->core.nr_members > 1) {
- 			const char *name = evsel->group_name ?: "{anon_group}";
- 			u32 leader_idx = evsel->idx;
--			u32 nr_members = evsel->nr_members;
-+			u32 nr_members = evsel->core.nr_members;
- 
- 			ret = do_write_string(ff, name);
- 			if (ret < 0)
-@@ -1812,11 +1812,11 @@ static void print_group_desc(struct feat_fd *ff, FILE *fp)
- 
- 	evlist__for_each_entry(session->evlist, evsel) {
- 		if (perf_evsel__is_group_leader(evsel) &&
--		    evsel->nr_members > 1) {
-+		    evsel->core.nr_members > 1) {
- 			fprintf(fp, "# group: %s{%s", evsel->group_name ?: "",
- 				perf_evsel__name(evsel));
- 
--			nr = evsel->nr_members - 1;
-+			nr = evsel->core.nr_members - 1;
- 		} else if (nr) {
- 			fprintf(fp, ",%s", perf_evsel__name(evsel));
- 
-@@ -2463,7 +2463,7 @@ static int process_group_desc(struct feat_fd *ff, void *data __maybe_unused)
- 				evsel->group_name = desc[i].name;
- 				desc[i].name = NULL;
- 			}
--			evsel->nr_members = desc[i].nr_members;
-+			evsel->core.nr_members = desc[i].nr_members;
- 
- 			if (i >= nr_groups || nr > 0) {
- 				pr_debug("invalid group desc\n");
-@@ -2471,7 +2471,7 @@ static int process_group_desc(struct feat_fd *ff, void *data __maybe_unused)
- 			}
- 
- 			leader = evsel;
--			nr = evsel->nr_members - 1;
-+			nr = evsel->core.nr_members - 1;
- 			i++;
- 		} else if (nr) {
- 			/* This is a group member */
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 821e0fe6cf26..4297f56b1e05 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -2643,7 +2643,7 @@ int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool sh
- 	nr_samples = convert_unit(nr_samples, &unit);
- 	printed = scnprintf(bf, size,
- 			   "Samples: %lu%c of event%s '%s',%s%sEvent count (approx.): %" PRIu64,
--			   nr_samples, unit, evsel->nr_members > 1 ? "s" : "",
-+			   nr_samples, unit, evsel->core.nr_members > 1 ? "s" : "",
- 			   ev_name, sample_freq_str, enable_ref ? ref : " ", nr_events);
- 
- 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 8182b1e66ec6..2cfec3b7a982 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1528,7 +1528,7 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
- 	/* The number of members and group name are same for each group */
- 	for (i = 0; i < nr_pmu; i++) {
- 		evsel = (struct evsel *) leaders[i];
--		evsel->nr_members = total_members / nr_pmu;
-+		evsel->core.nr_members = total_members / nr_pmu;
- 		evsel->group_name = name ? strdup(name) : NULL;
- 	}
- 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 4a162858583f..f7b39f4bc51e 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -369,7 +369,7 @@ static bool is_mixed_hw_group(struct evsel *counter)
- 	u32 pmu_type = counter->core.attr.type;
+ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+@@ -321,7 +321,7 @@ void evlist__disable(struct evlist *evlist)
  	struct evsel *pos;
  
--	if (counter->nr_members < 2)
-+	if (counter->core.nr_members < 2)
- 		return false;
+ 	evlist__for_each_entry(evlist, pos) {
+-		if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->fd)
++		if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->core.fd)
+ 			continue;
+ 		evsel__disable(pos);
+ 	}
+@@ -334,7 +334,7 @@ void evlist__enable(struct evlist *evlist)
+ 	struct evsel *pos;
  
  	evlist__for_each_entry(evlist, pos) {
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 799f3c0a9050..e4e4e3bf8b2b 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -452,7 +452,7 @@ int create_perf_stat_counter(struct evsel *evsel,
- 	 * the group read (for leader) and ID retrieval for all
- 	 * members.
- 	 */
--	if (leader->nr_members > 1)
-+	if (leader->core.nr_members > 1)
- 		attr->read_format |= PERF_FORMAT_ID|PERF_FORMAT_GROUP;
+-		if (!perf_evsel__is_group_leader(pos) || !pos->fd)
++		if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
+ 			continue;
+ 		evsel__enable(pos);
+ 	}
+@@ -353,7 +353,7 @@ static int perf_evlist__enable_event_cpu(struct evlist *evlist,
+ 	int thread;
+ 	int nr_threads = perf_evlist__nr_threads(evlist, evsel);
  
- 	attr->inherit = !config->no_inherit;
+-	if (!evsel->fd)
++	if (!evsel->core.fd)
+ 		return -EINVAL;
+ 
+ 	for (thread = 0; thread < nr_threads; thread++) {
+@@ -371,7 +371,7 @@ static int perf_evlist__enable_event_thread(struct evlist *evlist,
+ 	int cpu;
+ 	int nr_cpus = cpu_map__nr(evlist->core.cpus);
+ 
+-	if (!evsel->fd)
++	if (!evsel->core.fd)
+ 		return -EINVAL;
+ 
+ 	for (cpu = 0; cpu < nr_cpus; cpu++) {
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index f7758ce0dd5c..8d087d0e55f1 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -90,7 +90,7 @@ set_methods:
+ 	return 0;
+ }
+ 
+-#define FD(e, x, y) (*(int *)xyarray__entry(e->fd, x, y))
++#define FD(e, x, y) (*(int *)xyarray__entry(e->core.fd, x, y))
+ 
+ int __perf_evsel__sample_size(u64 sample_type)
+ {
+@@ -1155,9 +1155,9 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 
+ static int perf_evsel__alloc_fd(struct evsel *evsel, int ncpus, int nthreads)
+ {
+-	evsel->fd = xyarray__new(ncpus, nthreads, sizeof(int));
++	evsel->core.fd = xyarray__new(ncpus, nthreads, sizeof(int));
+ 
+-	if (evsel->fd) {
++	if (evsel->core.fd) {
+ 		int cpu, thread;
+ 		for (cpu = 0; cpu < ncpus; cpu++) {
+ 			for (thread = 0; thread < nthreads; thread++) {
+@@ -1166,7 +1166,7 @@ static int perf_evsel__alloc_fd(struct evsel *evsel, int ncpus, int nthreads)
+ 		}
+ 	}
+ 
+-	return evsel->fd != NULL ? 0 : -ENOMEM;
++	return evsel->core.fd != NULL ? 0 : -ENOMEM;
+ }
+ 
+ static int perf_evsel__run_ioctl(struct evsel *evsel,
+@@ -1174,8 +1174,8 @@ static int perf_evsel__run_ioctl(struct evsel *evsel,
+ {
+ 	int cpu, thread;
+ 
+-	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
+-		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
++	for (cpu = 0; cpu < xyarray__max_x(evsel->core.fd); cpu++) {
++		for (thread = 0; thread < xyarray__max_y(evsel->core.fd); thread++) {
+ 			int fd = FD(evsel, cpu, thread),
+ 			    err = ioctl(fd, ioc, arg);
+ 
+@@ -1283,8 +1283,8 @@ int perf_evsel__alloc_id(struct evsel *evsel, int ncpus, int nthreads)
+ 
+ static void perf_evsel__free_fd(struct evsel *evsel)
+ {
+-	xyarray__delete(evsel->fd);
+-	evsel->fd = NULL;
++	xyarray__delete(evsel->core.fd);
++	evsel->core.fd = NULL;
+ }
+ 
+ static void perf_evsel__free_id(struct evsel *evsel)
+@@ -1309,8 +1309,8 @@ void perf_evsel__close_fd(struct evsel *evsel)
+ {
+ 	int cpu, thread;
+ 
+-	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++)
+-		for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
++	for (cpu = 0; cpu < xyarray__max_x(evsel->core.fd); cpu++)
++		for (thread = 0; thread < xyarray__max_y(evsel->core.fd); ++thread) {
+ 			close(FD(evsel, cpu, thread));
+ 			FD(evsel, cpu, thread) = -1;
+ 		}
+@@ -1555,7 +1555,7 @@ static int get_group_fd(struct evsel *evsel, int cpu, int thread)
+ 	 * Leader must be already processed/open,
+ 	 * if not it's a bug.
+ 	 */
+-	BUG_ON(!leader->fd);
++	BUG_ON(!leader->core.fd);
+ 
+ 	fd = FD(leader, cpu, thread);
+ 	BUG_ON(fd == -1);
+@@ -1865,7 +1865,7 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	else
+ 		nthreads = threads->nr;
+ 
+-	if (evsel->fd == NULL &&
++	if (evsel->core.fd == NULL &&
+ 	    perf_evsel__alloc_fd(evsel, cpus->nr, nthreads) < 0)
+ 		return -ENOMEM;
+ 
+@@ -2075,7 +2075,7 @@ out_close:
+ 
+ void perf_evsel__close(struct evsel *evsel)
+ {
+-	if (evsel->fd == NULL)
++	if (evsel->core.fd == NULL)
+ 		return;
+ 
+ 	perf_evsel__close_fd(evsel);
+@@ -3048,8 +3048,8 @@ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
+ {
+ 	int cpu, thread;
+ 
+-	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
+-		for (thread = 0; thread < xyarray__max_y(evsel->fd);
++	for (cpu = 0; cpu < xyarray__max_x(evsel->core.fd); cpu++) {
++		for (thread = 0; thread < xyarray__max_y(evsel->core.fd);
+ 		     thread++) {
+ 			int fd = FD(evsel, cpu, thread);
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 1f9f66fe43f4..6056ce64bfdf 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -104,7 +104,6 @@ struct evsel {
+ 	struct perf_evsel	core;
+ 	struct evlist	*evlist;
+ 	char			*filter;
+-	struct xyarray		*fd;
+ 	struct xyarray		*sample_id;
+ 	u64			*id;
+ 	struct perf_counts	*counts;
