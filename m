@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FD1C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FC4C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38DC206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC7120679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbfG3Jpb (ORCPT
+        id S1732002AbfG3Jpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:45:31 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34014 "EHLO inva020.nxp.com"
+        Tue, 30 Jul 2019 05:45:40 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:33950 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727582AbfG3Jp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:45:26 -0400
+        id S1729871AbfG3JpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:45:24 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 71A3B1A062D;
-        Tue, 30 Jul 2019 11:45:23 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 649D41A0616;
-        Tue, 30 Jul 2019 11:45:23 +0200 (CEST)
-Received: from fsr-ub1664-016.ea.freescale.net (fsr-ub1664-016.ea.freescale.net [10.171.71.216])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id F157E204D6;
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 777CA1A063C;
         Tue, 30 Jul 2019 11:45:22 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6A1261A063D;
+        Tue, 30 Jul 2019 11:45:22 +0200 (CEST)
+Received: from fsr-ub1664-016.ea.freescale.net (fsr-ub1664-016.ea.freescale.net [10.171.71.216])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id F0791204D6;
+        Tue, 30 Jul 2019 11:45:21 +0200 (CEST)
 From:   Claudiu Manoil <claudiu.manoil@nxp.com>
 To:     "David S . Miller" <davem@davemloft.net>
 Cc:     andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>,
         Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 4/4] arm64: dts: fsl: ls1028a: Enable eth port1 on the ls1028a QDS board
-Date:   Tue, 30 Jul 2019 12:45:19 +0300
-Message-Id: <1564479919-18835-5-git-send-email-claudiu.manoil@nxp.com>
+Subject: [PATCH net-next v4 2/4] enetc: Add mdio bus driver for the PCIe MDIO endpoint
+Date:   Tue, 30 Jul 2019 12:45:17 +0300
+Message-Id: <1564479919-18835-3-git-send-email-claudiu.manoil@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564479919-18835-1-git-send-email-claudiu.manoil@nxp.com>
 References: <1564479919-18835-1-git-send-email-claudiu.manoil@nxp.com>
@@ -46,105 +46,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LS1028a has one Ethernet management interface. On the QDS board, the
-MDIO signals are multiplexed to either on-board AR8035 PHY device or
-to 4 PCIe slots allowing for SGMII cards.
-To enable the Ethernet ENETC Port 1, which can only be connected to a
-RGMII PHY, the multiplexer needs to be configured to route the MDIO to
-the AR8035 PHY.  The MDIO/MDC routing is controlled by bits 7:4 of FPGA
-board config register 0x54, and value 0 selects the on-board RGMII PHY.
-The FPGA board config registers are accessible on the i2c bus, at address
-0x66.
+ENETC ports can manage the MDIO bus via local register
+interface.  However there's also a centralized way
+to manage the MDIO bus, via the MDIO PCIe endpoint
+device integrated by the same root complex that also
+integrates the ENETC ports (eth controllers).
 
-The PF3 MDIO PCIe integrated endpoint device allows for centralized access
-to the MDIO bus.  Add the corresponding devicetree node and set it to be
-the MDIO bus parent.
+Depending on board design and use case, centralized
+access to MDIO may be better than using local ENETC
+port registers.  For instance, on the LS1028A QDS board
+where MDIO muxing is required.  Also, the LS1028A on-chip
+switch doesn't have a local MDIO register interface.
 
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+The current patch registers the above PCIe endpoint as a
+separate MDIO bus and provides a driver for it by re-using
+the code used for local MDIO access.  It also allows the
+ENETC port PHYs to be managed by this driver if the local
+"mdio" node is missing from the ENETC port node.
+
 Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
-v1-v4 - none
+v1 - fixed mdio bus allocation
+   - requested only BAR0 region, as it's the only one used by the driver
+v2 - reworked accessors as per Andrew Lunn's request
+v3 - none
+v4 - err path check fix
 
- .../boot/dts/freescale/fsl-ls1028a-qds.dts    | 40 +++++++++++++++++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
- 2 files changed, 46 insertions(+)
+ .../net/ethernet/freescale/enetc/enetc_mdio.c | 98 +++++++++++++++++++
+ .../net/ethernet/freescale/enetc/enetc_pf.c   |  5 +-
+ 2 files changed, 102 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index de6ef39f3118..663c4b728c07 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -85,6 +85,26 @@
- 			system-clock-frequency = <25000000>;
- 		};
- 	};
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+index 05094601ece8..d2a0f910af9b 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+@@ -195,3 +195,101 @@ void enetc_mdio_remove(struct enetc_pf *pf)
+ 	if (pf->mdio)
+ 		mdiobus_unregister(pf->mdio);
+ }
 +
-+	mdio-mux {
-+		compatible = "mdio-mux-multiplexer";
-+		mux-controls = <&mux 0>;
-+		mdio-parent-bus = <&enetc_mdio_pf3>;
-+		#address-cells=<1>;
-+		#size-cells = <0>;
++#define ENETC_MDIO_DEV_ID	0xee01
++#define ENETC_MDIO_DEV_NAME	"FSL PCIe IE Central MDIO"
++#define ENETC_MDIO_BUS_NAME	ENETC_MDIO_DEV_NAME " Bus"
++#define ENETC_MDIO_DRV_NAME	ENETC_MDIO_DEV_NAME " driver"
++#define ENETC_MDIO_DRV_ID	"fsl_enetc_mdio"
 +
-+		/* on-board RGMII PHY */
-+		mdio@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
++static int enetc_pci_mdio_probe(struct pci_dev *pdev,
++				const struct pci_device_id *ent)
++{
++	struct enetc_mdio_priv *mdio_priv;
++	struct device *dev = &pdev->dev;
++	struct enetc_hw *hw;
++	struct mii_bus *bus;
++	int err;
 +
-+			qds_phy1: ethernet-phy@5 {
-+				/* Atheros 8035 */
-+				reg = <5>;
-+			};
-+		};
-+	};
- };
- 
- &duart0 {
-@@ -164,6 +184,26 @@
- 			};
- 		};
- 	};
++	hw = devm_kzalloc(dev, sizeof(*hw), GFP_KERNEL);
++	if (!hw)
++		return -ENOMEM;
 +
-+	fpga@66 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "fsl,ls1028aqds-fpga", "fsl,fpga-qixis-i2c",
-+			     "simple-mfd";
-+		reg = <0x66>;
++	bus = devm_mdiobus_alloc_size(dev, sizeof(*mdio_priv));
++	if (!bus)
++		return -ENOMEM;
 +
-+		mux: mux-controller {
-+			compatible = "reg-mux";
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
-+		};
-+	};
++	bus->name = ENETC_MDIO_BUS_NAME;
++	bus->read = enetc_mdio_read;
++	bus->write = enetc_mdio_write;
++	bus->parent = dev;
++	mdio_priv = bus->priv;
++	mdio_priv->hw = hw;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
 +
++	pcie_flr(pdev);
++	err = pci_enable_device_mem(pdev);
++	if (err) {
++		dev_err(dev, "device enable failed\n");
++		return err;
++	}
++
++	err = pci_request_region(pdev, 0, ENETC_MDIO_DRV_ID);
++	if (err) {
++		dev_err(dev, "pci_request_region failed\n");
++		goto err_pci_mem_reg;
++	}
++
++	hw->port = pci_iomap(pdev, 0, 0);
++	if (!hw->port) {
++		err = -ENXIO;
++		dev_err(dev, "iomap failed\n");
++		goto err_ioremap;
++	}
++
++	err = of_mdiobus_register(bus, dev->of_node);
++	if (err)
++		goto err_mdiobus_reg;
++
++	pci_set_drvdata(pdev, bus);
++
++	return 0;
++
++err_mdiobus_reg:
++	iounmap(mdio_priv->hw->port);
++err_ioremap:
++	pci_release_mem_regions(pdev);
++err_pci_mem_reg:
++	pci_disable_device(pdev);
++
++	return err;
++}
++
++static void enetc_pci_mdio_remove(struct pci_dev *pdev)
++{
++	struct mii_bus *bus = pci_get_drvdata(pdev);
++	struct enetc_mdio_priv *mdio_priv;
++
++	mdiobus_unregister(bus);
++	mdio_priv = bus->priv;
++	iounmap(mdio_priv->hw->port);
++	pci_release_mem_regions(pdev);
++	pci_disable_device(pdev);
++}
++
++static const struct pci_device_id enetc_pci_mdio_id_table[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, ENETC_MDIO_DEV_ID) },
++	{ 0, } /* End of table. */
 +};
++MODULE_DEVICE_TABLE(pci, enetc_mdio_id_table);
 +
-+&enetc_port1 {
-+	phy-handle = <&qds_phy1>;
-+	phy-connection-type = "rgmii-id";
- };
++static struct pci_driver enetc_pci_mdio_driver = {
++	.name = ENETC_MDIO_DRV_ID,
++	.id_table = enetc_pci_mdio_id_table,
++	.probe = enetc_pci_mdio_probe,
++	.remove = enetc_pci_mdio_remove,
++};
++module_pci_driver(enetc_pci_mdio_driver);
++
++MODULE_DESCRIPTION(ENETC_MDIO_DRV_NAME);
++MODULE_LICENSE("Dual BSD/GPL");
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+index 258b3cb38a6f..7d6513ff8507 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+@@ -750,6 +750,7 @@ static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
+ {
+ 	struct enetc_pf *pf = enetc_si_priv(priv->si);
+ 	struct device_node *np = priv->dev->of_node;
++	struct device_node *mdio_np;
+ 	int err;
  
- &sai1 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..de71153fda00 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -536,6 +536,12 @@
- 				compatible = "fsl,enetc";
- 				reg = <0x000100 0 0 0 0>;
- 			};
-+			enetc_mdio_pf3: mdio@0,3 {
-+				compatible = "fsl,enetc-mdio";
-+				reg = <0x000300 0 0 0 0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 			ethernet@0,4 {
- 				compatible = "fsl,enetc-ptp";
- 				reg = <0x000400 0 0 0 0>;
+ 	if (!np) {
+@@ -773,7 +774,9 @@ static int enetc_of_get_phy(struct enetc_ndev_priv *priv)
+ 		priv->phy_node = of_node_get(np);
+ 	}
+ 
+-	if (!of_phy_is_fixed_link(np)) {
++	mdio_np = of_get_child_by_name(np, "mdio");
++	if (mdio_np) {
++		of_node_put(mdio_np);
+ 		err = enetc_mdio_probe(pf);
+ 		if (err) {
+ 			of_node_put(priv->phy_node);
 -- 
 2.17.1
 
