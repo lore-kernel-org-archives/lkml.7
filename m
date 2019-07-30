@@ -7,59 +7,60 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06847C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B7CC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF6020693
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8328206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 18:51:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UucV2ws3"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AcIe9lsl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388268AbfG3SvZ (ORCPT
+        id S2388396AbfG3Sv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 14:51:25 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54341 "EHLO
+        Tue, 30 Jul 2019 14:51:56 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55247 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfG3SvY (ORCPT
+        with ESMTP id S2388066AbfG3Sv4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 14:51:24 -0400
+        Tue, 30 Jul 2019 14:51:56 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIn8rD3335444
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6UIpbRC3336032
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 30 Jul 2019 11:49:09 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIn8rD3335444
+        Tue, 30 Jul 2019 11:51:38 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6UIpbRC3336032
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564512549;
-        bh=CRvYVB6oDk2lTROTHw93L7kdfRSebrP4Z0ORdvA44EE=;
+        s=2019071901; t=1564512699;
+        bh=PwaUG3Xas9fF2uO0USMoRNcCT2/MtsRQlARUlaycRyk=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=UucV2ws3NnOoQSKVC7D7rwkwCEdQ8Whgq5Ml3GFzri5TLI/b7Uw/b+/NnOM6Cl4j4
-         cyeRnVhRvkluBvxyn02qAc1V4rq6ym4w9RmTlh07YAJczAi9XEs3UAdv32S799yc4u
-         vfriuOzhp2cLF/YQbRMRCYk60O+Ib1NMJ3s1ni3/5epGCC1bheIvm+42lnq9A7GORB
-         BqpCu7pwXYmgooANqeoIbP8cK8OOS+IHSK1bbWKFElL/tW3FsfiACok92VhSDZt1Ql
-         j3vDpLVFc7ZHFh01QSs3QjqcenRwiv8jXd/p6PyEMVOnw88KqGuFiug04c11ePtqsv
-         vBjz62eRW9ycQ==
+        b=AcIe9lsllrh1egirQfRfHy6jhs4PH7P0wG0XVdjM2NQWHOMM+r1zG0C6FkULODtri
+         zS7LwqHDAUGalwa01cXw5/9dMae+amfAZjpOQ2cm8bt4yMCOSXERaJNd9CnWdhqhDq
+         z7TiA7EpB0rcNdAHXe7NxWV7zR9Euo3Yq6FyD+LdLaZunEx3qkBbo5U3jZGCeahBnF
+         CCReF/OpirKZUdWjANKvjAwIt+ozSkcY1/PTDtb/Siiqvpz56uOU+sVyC/YIx8eVM4
+         +e6139+h1VFcU1MDr8jyS6KdFlRrVpSpkAb9snaJ5DOptrZqg5BurNEXwP2BD3VVBb
+         Im/x3Q7oeMpFQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIn8f93335441;
-        Tue, 30 Jul 2019 11:49:08 -0700
-Date:   Tue, 30 Jul 2019 11:49:08 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6UIpbun3336029;
+        Tue, 30 Jul 2019 11:51:37 -0700
+Date:   Tue, 30 Jul 2019 11:51:37 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-453fa03090a64c0e0a561f10dfd5e8747796949c@git.kernel.org>
-Cc:     hpa@zytor.com, acme@redhat.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, mpetlan@redhat.com, jolsa@kernel.org,
-        ak@linux.intel.com, namhyung@kernel.org, tglx@linutronix.de,
-        alexey.budankov@linux.intel.com, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com
-Reply-To: acme@redhat.com, mingo@kernel.org, mpetlan@redhat.com,
-          peterz@infradead.org, alexander.shishkin@linux.intel.com,
-          jolsa@kernel.org, namhyung@kernel.org, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, alexey.budankov@linux.intel.com,
-          ak@linux.intel.com, tglx@linutronix.de
-In-Reply-To: <20190721112506.12306-57-jolsa@kernel.org>
-References: <20190721112506.12306-57-jolsa@kernel.org>
+Message-ID: <tip-5643b1a59e581ac3f66d36caba8124313cc446c0@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, acme@redhat.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        jolsa@kernel.org, tglx@linutronix.de, hpa@zytor.com,
+        ak@linux.intel.com, alexey.budankov@linux.intel.com,
+        mingo@kernel.org, peterz@infradead.org, mpetlan@redhat.com
+Reply-To: alexey.budankov@linux.intel.com, mingo@kernel.org,
+          peterz@infradead.org, mpetlan@redhat.com, ak@linux.intel.com,
+          tglx@linutronix.de, hpa@zytor.com, acme@redhat.com,
+          linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+          namhyung@kernel.org, jolsa@kernel.org
+In-Reply-To: <20190721112506.12306-60-jolsa@kernel.org>
+References: <20190721112506.12306-60-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] libperf: Add perf_evlist__set_maps() function
-Git-Commit-ID: 453fa03090a64c0e0a561f10dfd5e8747796949c
+Subject: [tip:perf/core] libperf: Move nr_members from perf's evsel to
+ libperf's perf_evsel
+Git-Commit-ID: 5643b1a59e581ac3f66d36caba8124313cc446c0
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,20 +74,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  453fa03090a64c0e0a561f10dfd5e8747796949c
-Gitweb:     https://git.kernel.org/tip/453fa03090a64c0e0a561f10dfd5e8747796949c
+Commit-ID:  5643b1a59e581ac3f66d36caba8124313cc446c0
+Gitweb:     https://git.kernel.org/tip/5643b1a59e581ac3f66d36caba8124313cc446c0
 Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 21 Jul 2019 13:24:43 +0200
+AuthorDate: Sun, 21 Jul 2019 13:24:46 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 29 Jul 2019 18:34:45 -0300
+CommitDate: Mon, 29 Jul 2019 18:34:46 -0300
 
-libperf: Add perf_evlist__set_maps() function
+libperf: Move nr_members from perf's evsel to libperf's perf_evsel
 
-Move the evlist__set_maps() function from tools/perf to libperf.
-
-Committer notes:
-
-Fix up reject due to earlier inversion in calling perf_evlist__init().
+Move the nr_members member from perf's evsel to libperf's perf_evsel.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -95,452 +92,484 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-57-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-60-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/tests/perf-time-to-tsc.c |  3 +-
- tools/perf/builtin-script.c                  |  3 +-
- tools/perf/builtin-stat.c                    |  3 +-
- tools/perf/lib/evlist.c                      | 54 ++++++++++++++++++++++++++
- tools/perf/lib/include/perf/evlist.h         |  6 +++
- tools/perf/lib/libperf.map                   |  1 +
- tools/perf/tests/code-reading.c              |  5 ++-
- tools/perf/tests/keep-tracking.c             |  3 +-
- tools/perf/tests/mmap-basic.c                |  3 +-
- tools/perf/tests/sw-clock.c                  |  3 +-
- tools/perf/tests/switch-tracking.c           |  3 +-
- tools/perf/tests/task-exit.c                 |  3 +-
- tools/perf/util/evlist.c                     | 58 ++--------------------------
- tools/perf/util/evlist.h                     |  2 -
- 14 files changed, 83 insertions(+), 67 deletions(-)
+ tools/perf/builtin-report.c             |  2 +-
+ tools/perf/builtin-script.c             |  2 +-
+ tools/perf/builtin-stat.c               |  2 +-
+ tools/perf/lib/include/internal/evsel.h |  3 +++
+ tools/perf/tests/parse-events.c         | 22 +++++++++++-----------
+ tools/perf/ui/gtk/annotate.c            |  2 +-
+ tools/perf/ui/gtk/hists.c               |  2 +-
+ tools/perf/ui/hist.c                    |  6 +++---
+ tools/perf/util/annotate.c              |  8 ++++----
+ tools/perf/util/evlist.c                |  6 +++---
+ tools/perf/util/evsel.c                 |  6 +++---
+ tools/perf/util/evsel.h                 |  3 +--
+ tools/perf/util/evsel_fprintf.c         |  4 ++--
+ tools/perf/util/header.c                | 12 ++++++------
+ tools/perf/util/hist.c                  |  2 +-
+ tools/perf/util/parse-events.c          |  2 +-
+ tools/perf/util/stat-display.c          |  2 +-
+ tools/perf/util/stat.c                  |  2 +-
+ 18 files changed, 45 insertions(+), 43 deletions(-)
 
-diff --git a/tools/perf/arch/x86/tests/perf-time-to-tsc.c b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-index 261bdd680651..582182d98a7f 100644
---- a/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-+++ b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-@@ -6,6 +6,7 @@
- #include <linux/types.h>
- #include <sys/prctl.h>
- #include <perf/cpumap.h>
-+#include <perf/evlist.h>
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index e258e988c55b..d4288dcce156 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -436,7 +436,7 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
+ 	ret = fprintf(fp, "# Samples: %lu%c", nr_samples, unit);
+ 	if (evname != NULL) {
+ 		ret += fprintf(fp, " of event%s '%s'",
+-			       evsel->nr_members > 1 ? "s" : "", evname);
++			       evsel->core.nr_members > 1 ? "s" : "", evname);
+ 	}
  
- #include "parse-events.h"
- #include "evlist.h"
-@@ -72,7 +73,7 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
- 	evlist = evlist__new();
- 	CHECK_NOT_NULL__(evlist);
- 
--	perf_evlist__set_maps(evlist, cpus, threads);
-+	perf_evlist__set_maps(&evlist->core, cpus, threads);
- 
- 	CHECK__(parse_events(evlist, "cycles:u", NULL));
- 
+ 	if (rep->time_str)
 diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index a787c5cb1331..46fadbbe1c3e 100644
+index 46fadbbe1c3e..31a529ec139f 100644
 --- a/tools/perf/builtin-script.c
 +++ b/tools/perf/builtin-script.c
-@@ -48,6 +48,7 @@
- #include <fcntl.h>
- #include <unistd.h>
- #include <subcmd/pager.h>
-+#include <perf/evlist.h>
- 
- #include <linux/ctype.h>
- 
-@@ -3264,7 +3265,7 @@ static int set_maps(struct perf_script *script)
- 	if (WARN_ONCE(script->allocated, "stats double allocation\n"))
- 		return -EINVAL;
- 
--	perf_evlist__set_maps(evlist, script->cpus, script->threads);
-+	perf_evlist__set_maps(&evlist->core, script->cpus, script->threads);
- 
- 	if (perf_evlist__alloc_stats(evlist, true))
- 		return -ENOMEM;
+@@ -1734,7 +1734,7 @@ static void perf_sample__fprint_metric(struct perf_script *script,
+ 				       sample->cpu,
+ 				       &rt_stat);
+ 	evsel_script(evsel)->val = val;
+-	if (evsel_script(evsel->leader)->gnum == evsel->leader->nr_members) {
++	if (evsel_script(evsel->leader)->gnum == evsel->leader->core.nr_members) {
+ 		for_each_group_member (ev2, evsel->leader) {
+ 			perf_stat__print_shadow_stats(&stat_config, ev2,
+ 						      evsel_script(ev2)->val,
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 4a94ca131d56..14e4c970d16a 100644
+index 14e4c970d16a..b19df671111e 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -83,6 +83,7 @@
- #include <sys/resource.h>
+@@ -479,7 +479,7 @@ try_again:
+ 				counter->supported = false;
  
- #include <linux/ctype.h>
-+#include <perf/evlist.h>
- 
- #define DEFAULT_SEPARATOR	" "
- #define FREEZE_ON_SMI_PATH	"devices/cpu/freeze_on_smi"
-@@ -1517,7 +1518,7 @@ static int set_maps(struct perf_stat *st)
- 	if (WARN_ONCE(st->maps_allocated, "stats double allocation\n"))
- 		return -EINVAL;
- 
--	perf_evlist__set_maps(evsel_list, st->cpus, st->threads);
-+	perf_evlist__set_maps(&evsel_list->core, st->cpus, st->threads);
- 
- 	if (perf_evlist__alloc_stats(evsel_list, true))
- 		return -ENOMEM;
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 087ef76ea8fd..6a2308ef9868 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -5,6 +5,8 @@
- #include <internal/evsel.h>
- #include <linux/zalloc.h>
- #include <stdlib.h>
-+#include <perf/cpumap.h>
-+#include <perf/threadmap.h>
- 
- void perf_evlist__init(struct perf_evlist *evlist)
- {
-@@ -12,11 +14,39 @@ void perf_evlist__init(struct perf_evlist *evlist)
- 	evlist->nr_entries = 0;
- }
- 
-+static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
-+					  struct perf_evsel *evsel)
-+{
-+	/*
-+	 * We already have cpus for evsel (via PMU sysfs) so
-+	 * keep it, if there's no target cpu list defined.
-+	 */
-+	if (!evsel->own_cpus || evlist->has_user_cpus) {
-+		perf_cpu_map__put(evsel->cpus);
-+		evsel->cpus = perf_cpu_map__get(evlist->cpus);
-+	} else if (evsel->cpus != evsel->own_cpus) {
-+		perf_cpu_map__put(evsel->cpus);
-+		evsel->cpus = perf_cpu_map__get(evsel->own_cpus);
-+	}
+ 				if ((counter->leader != counter) ||
+-				    !(counter->leader->nr_members > 1))
++				    !(counter->leader->core.nr_members > 1))
+ 					continue;
+ 			} else if (perf_evsel__fallback(counter, errno, msg, sizeof(msg))) {
+                                 if (verbose > 0)
+diff --git a/tools/perf/lib/include/internal/evsel.h b/tools/perf/lib/include/internal/evsel.h
+index df4078194e9a..29eca9576546 100644
+--- a/tools/perf/lib/include/internal/evsel.h
++++ b/tools/perf/lib/include/internal/evsel.h
+@@ -15,6 +15,9 @@ struct perf_evsel {
+ 	struct perf_cpu_map	*own_cpus;
+ 	struct perf_thread_map	*threads;
+ 	struct xyarray		*fd;
 +
-+	perf_thread_map__put(evsel->threads);
-+	evsel->threads = perf_thread_map__get(evlist->threads);
-+}
-+
-+static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
-+{
-+	struct perf_evsel *evsel;
-+
-+	perf_evlist__for_each_evsel(evlist, evsel)
-+		__perf_evlist__propagate_maps(evlist, evsel);
-+}
-+
- void perf_evlist__add(struct perf_evlist *evlist,
- 		      struct perf_evsel *evsel)
- {
- 	list_add_tail(&evsel->node, &evlist->entries);
- 	evlist->nr_entries += 1;
-+	__perf_evlist__propagate_maps(evlist, evsel);
- }
- 
- void perf_evlist__remove(struct perf_evlist *evlist,
-@@ -60,3 +90,27 @@ void perf_evlist__delete(struct perf_evlist *evlist)
- {
- 	free(evlist);
- }
-+
-+void perf_evlist__set_maps(struct perf_evlist *evlist,
-+			   struct perf_cpu_map *cpus,
-+			   struct perf_thread_map *threads)
-+{
-+	/*
-+	 * Allow for the possibility that one or another of the maps isn't being
-+	 * changed i.e. don't put it.  Note we are assuming the maps that are
-+	 * being applied are brand new and evlist is taking ownership of the
-+	 * original reference count of 1.  If that is not the case it is up to
-+	 * the caller to increase the reference count.
-+	 */
-+	if (cpus != evlist->cpus) {
-+		perf_cpu_map__put(evlist->cpus);
-+		evlist->cpus = perf_cpu_map__get(cpus);
-+	}
-+
-+	if (threads != evlist->threads) {
-+		perf_thread_map__put(evlist->threads);
-+		evlist->threads = perf_thread_map__get(threads);
-+	}
-+
-+	perf_evlist__propagate_maps(evlist);
-+}
-diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
-index 9a126fd0773c..b1d8dee018d6 100644
---- a/tools/perf/lib/include/perf/evlist.h
-+++ b/tools/perf/lib/include/perf/evlist.h
-@@ -6,6 +6,8 @@
- 
- struct perf_evlist;
- struct perf_evsel;
-+struct perf_cpu_map;
-+struct perf_thread_map;
- 
- LIBPERF_API void perf_evlist__init(struct perf_evlist *evlist);
- LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
-@@ -22,4 +24,8 @@ LIBPERF_API struct perf_evsel* perf_evlist__next(struct perf_evlist *evlist,
- 	     (pos) != NULL;				\
- 	     (pos) = perf_evlist__next((evlist), (pos)))
- 
-+LIBPERF_API void perf_evlist__set_maps(struct perf_evlist *evlist,
-+				       struct perf_cpu_map *cpus,
-+				       struct perf_thread_map *threads);
-+
- #endif /* __LIBPERF_EVLIST_H */
-diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index 28ed04cbd223..9b6e8f165014 100644
---- a/tools/perf/lib/libperf.map
-+++ b/tools/perf/lib/libperf.map
-@@ -20,6 +20,7 @@ LIBPERF_0.0.1 {
- 		perf_evlist__add;
- 		perf_evlist__remove;
- 		perf_evlist__next;
-+		perf_evlist__set_maps;
- 	local:
- 		*;
++	/* parse modifier helper */
++	int			 nr_members;
  };
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index bfaf22c2023c..e45df0736261 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -9,6 +9,7 @@
- #include <string.h>
- #include <sys/param.h>
- #include <perf/cpumap.h>
-+#include <perf/evlist.h>
  
- #include "parse-events.h"
- #include "evlist.h"
-@@ -629,7 +630,7 @@ static int do_test_code_reading(bool try_kcore)
- 			goto out_put;
- 		}
+ #endif /* __LIBPERF_INTERNAL_EVSEL_H */
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 5b4a5a3dac50..49f52e4de41b 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -653,7 +653,7 @@ static int test__group1(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
  
--		perf_evlist__set_maps(evlist, cpus, threads);
-+		perf_evlist__set_maps(&evlist->core, cpus, threads);
+@@ -695,7 +695,7 @@ static int test__group2(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
  
- 		str = do_determine_event(excl_kernel);
- 		pr_debug("Parsing event '%s'\n", str);
-@@ -658,7 +659,7 @@ static int do_test_code_reading(bool try_kcore)
- 				 */
- 				perf_cpu_map__get(cpus);
- 				perf_thread_map__get(threads);
--				perf_evlist__set_maps(evlist, NULL, NULL);
-+				perf_evlist__set_maps(&evlist->core, NULL, NULL);
- 				evlist__delete(evlist);
- 				evlist = NULL;
+@@ -753,7 +753,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+ 	TEST_ASSERT_VAL("wrong group name",
+ 		!strcmp(leader->group_name, "group1"));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
+ 
+@@ -788,7 +788,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+ 	TEST_ASSERT_VAL("wrong group name",
+ 		!strcmp(leader->group_name, "group2"));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
+ 
+@@ -844,7 +844,7 @@ static int test__group4(struct evlist *evlist __maybe_unused)
+ 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip == 1);
+ 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
+ 
+@@ -887,7 +887,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
+ 
+@@ -919,7 +919,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 	TEST_ASSERT_VAL("wrong sample_read", !evsel->sample_read);
+ 
+@@ -973,7 +973,7 @@ static int test__group_gh1(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 
+ 	/* cache-misses:G + :H group modifier */
+@@ -1013,7 +1013,7 @@ static int test__group_gh2(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 
+ 	/* cache-misses:H + :G group modifier */
+@@ -1053,7 +1053,7 @@ static int test__group_gh3(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 
+ 	/* cache-misses:H + :u group modifier */
+@@ -1093,7 +1093,7 @@ static int test__group_gh4(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 	TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+ 	TEST_ASSERT_VAL("wrong leader", perf_evsel__is_group_leader(evsel));
+-	TEST_ASSERT_VAL("wrong nr_members", evsel->nr_members == 2);
++	TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
+ 	TEST_ASSERT_VAL("wrong group_idx", perf_evsel__group_idx(evsel) == 0);
+ 
+ 	/* cache-misses:H + :uG group modifier */
+diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
+index 40e263a730e4..d7f984436dec 100644
+--- a/tools/perf/ui/gtk/annotate.c
++++ b/tools/perf/ui/gtk/annotate.c
+@@ -129,7 +129,7 @@ static int perf_gtk__annotate_symbol(GtkWidget *window, struct symbol *sym,
+ 		gtk_list_store_append(store, &iter);
+ 
+ 		if (perf_evsel__is_group_event(evsel)) {
+-			for (i = 0; i < evsel->nr_members; i++) {
++			for (i = 0; i < evsel->core.nr_members; i++) {
+ 				ret += perf_gtk__get_percent(s + ret,
+ 							     sizeof(s) - ret,
+ 							     sym, pos,
+diff --git a/tools/perf/ui/gtk/hists.c b/tools/perf/ui/gtk/hists.c
+index 1b181d8ea953..0efdb226d1a7 100644
+--- a/tools/perf/ui/gtk/hists.c
++++ b/tools/perf/ui/gtk/hists.c
+@@ -645,7 +645,7 @@ int perf_evlist__gtk_browse_hists(struct evlist *evlist,
+ 			if (!perf_evsel__is_group_leader(pos))
  				continue;
-diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
-index 46478ba1ed16..0ce5ce33bac4 100644
---- a/tools/perf/tests/keep-tracking.c
-+++ b/tools/perf/tests/keep-tracking.c
-@@ -3,6 +3,7 @@
- #include <unistd.h>
- #include <sys/prctl.h>
- #include <perf/cpumap.h>
-+#include <perf/evlist.h>
  
- #include "parse-events.h"
- #include "evlist.h"
-@@ -82,7 +83,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
- 	evlist = evlist__new();
- 	CHECK_NOT_NULL__(evlist);
+-			if (pos->nr_members > 1) {
++			if (pos->core.nr_members > 1) {
+ 				perf_evsel__group_desc(pos, buf, size);
+ 				evname = buf;
+ 			}
+diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+index 8c7fb11edc60..e5fb64347b2c 100644
+--- a/tools/perf/ui/hist.c
++++ b/tools/perf/ui/hist.c
+@@ -43,7 +43,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 	if (perf_evsel__is_group_event(evsel)) {
+ 		int prev_idx, idx_delta;
+ 		struct hist_entry *pair;
+-		int nr_members = evsel->nr_members;
++		int nr_members = evsel->core.nr_members;
  
--	perf_evlist__set_maps(evlist, cpus, threads);
-+	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 		prev_idx = perf_evsel__group_idx(evsel);
  
- 	CHECK__(parse_events(evlist, "dummy:u", NULL));
- 	CHECK__(parse_events(evlist, "cycles:u", NULL));
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index aa792aebd7f0..7327694fbde0 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -12,6 +12,7 @@
- #include "tests.h"
- #include <linux/err.h>
- #include <linux/kernel.h>
-+#include <perf/evlist.h>
+@@ -165,7 +165,7 @@ static int __hpp__sort(struct hist_entry *a, struct hist_entry *b,
+ 	if (!perf_evsel__is_group_event(evsel))
+ 		return ret;
  
- /*
-  * This test will generate random numbers of calls to some getpid syscalls,
-@@ -68,7 +69,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
- 		goto out_free_cpus;
+-	nr_members = evsel->nr_members;
++	nr_members = evsel->core.nr_members;
+ 	fields_a = calloc(nr_members, sizeof(*fields_a));
+ 	fields_b = calloc(nr_members, sizeof(*fields_b));
+ 
+@@ -226,7 +226,7 @@ static int hpp__width_fn(struct perf_hpp_fmt *fmt,
+ 	struct evsel *evsel = hists_to_evsel(hists);
+ 
+ 	if (symbol_conf.event_group)
+-		len = max(len, evsel->nr_members * fmt->len);
++		len = max(len, evsel->core.nr_members * fmt->len);
+ 
+ 	if (len < (int)strlen(fmt->name))
+ 		len = strlen(fmt->name);
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index d46f2ae2c695..91d4fc3e78cf 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1170,7 +1170,7 @@ annotation_line__new(struct annotate_args *args, size_t privsize)
+ 	int nr = 1;
+ 
+ 	if (perf_evsel__is_group_event(evsel))
+-		nr = evsel->nr_members;
++		nr = evsel->core.nr_members;
+ 
+ 	size += sizeof(al->data[0]) * nr;
+ 
+@@ -1448,7 +1448,7 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
+ 			return -1;
+ 
+ 		if (perf_evsel__is_group_event(evsel))
+-			width *= evsel->nr_members;
++			width *= evsel->core.nr_members;
+ 
+ 		if (!*al->line)
+ 			printf(" %*s:\n", width, " ");
+@@ -2272,7 +2272,7 @@ int symbol__annotate_printf(struct symbol *sym, struct map *map,
+ 	len = symbol__size(sym);
+ 
+ 	if (perf_evsel__is_group_event(evsel)) {
+-		width *= evsel->nr_members;
++		width *= evsel->core.nr_members;
+ 		perf_evsel__group_desc(evsel, buf, sizeof(buf));
+ 		evsel_name = buf;
  	}
+@@ -2968,7 +2968,7 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct evsel *evsel,
+ 		return -1;
  
--	perf_evlist__set_maps(evlist, cpus, threads);
-+	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 	if (perf_evsel__is_group_event(evsel))
+-		nr_pcnt = evsel->nr_members;
++		nr_pcnt = evsel->core.nr_members;
  
- 	for (i = 0; i < nsyscalls; ++i) {
- 		char name[64];
-diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
-index 2decda2d4c17..c5f1a9f83380 100644
---- a/tools/perf/tests/sw-clock.c
-+++ b/tools/perf/tests/sw-clock.c
-@@ -11,6 +11,7 @@
- #include "util/evlist.h"
- #include "util/cpumap.h"
- #include "util/thread_map.h"
-+#include <perf/evlist.h>
- 
- #define NR_LOOPS  10000000
- 
-@@ -64,7 +65,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
- 		goto out_free_maps;
- 	}
- 
--	perf_evlist__set_maps(evlist, cpus, threads);
-+	perf_evlist__set_maps(&evlist->core, cpus, threads);
- 
- 	cpus	= NULL;
- 	threads = NULL;
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index 9e0bbea15005..e3cee69f6ea2 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -6,6 +6,7 @@
- #include <stdlib.h>
- #include <linux/zalloc.h>
- #include <perf/cpumap.h>
-+#include <perf/evlist.h>
- 
- #include "parse-events.h"
- #include "evlist.h"
-@@ -354,7 +355,7 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
- 		goto out_err;
- 	}
- 
--	perf_evlist__set_maps(evlist, cpus, threads);
-+	perf_evlist__set_maps(&evlist->core, cpus, threads);
- 
- 	/* First event */
- 	err = parse_events(evlist, "cpu-clock:u", NULL);
-diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
-index b0192ea636a7..4ca38fd0379a 100644
---- a/tools/perf/tests/task-exit.c
-+++ b/tools/perf/tests/task-exit.c
-@@ -7,6 +7,7 @@
- 
- #include <errno.h>
- #include <signal.h>
-+#include <perf/evlist.h>
- 
- static int exited;
- static int nr_exit;
-@@ -71,7 +72,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
- 		goto out_free_maps;
- 	}
- 
--	perf_evlist__set_maps(evlist, cpus, threads);
-+	perf_evlist__set_maps(&evlist->core, cpus, threads);
- 
- 	cpus	= NULL;
- 	threads = NULL;
+ 	err = symbol__annotate(sym, map, evsel, 0, options, parch);
+ 	if (err)
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 1a6f877ebb03..4433b656cfb7 100644
+index e4b1a9914ea4..eac4d634b9c7 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -51,7 +51,7 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- 	for (i = 0; i < PERF_EVLIST__HLIST_SIZE; ++i)
- 		INIT_HLIST_HEAD(&evlist->heads[i]);
- 	perf_evlist__init(&evlist->core);
--	perf_evlist__set_maps(evlist, cpus, threads);
-+	perf_evlist__set_maps(&evlist->core, cpus, threads);
- 	fdarray__init(&evlist->pollfd, 64);
- 	evlist->workload.pid = -1;
- 	evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
-@@ -152,33 +152,6 @@ void evlist__delete(struct evlist *evlist)
- 	free(evlist);
+@@ -188,7 +188,7 @@ void __perf_evlist__set_leader(struct list_head *list)
+ 	leader = list_entry(list->next, struct evsel, core.node);
+ 	evsel = list_entry(list->prev, struct evsel, core.node);
+ 
+-	leader->nr_members = evsel->idx - leader->idx + 1;
++	leader->core.nr_members = evsel->idx - leader->idx + 1;
+ 
+ 	__evlist__for_each_entry(list, evsel) {
+ 		evsel->leader = leader;
+@@ -1761,7 +1761,7 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
+ 
+ 	leader = evsel->leader;
+ 	pr_debug("Weak group for %s/%d failed\n",
+-			leader->name, leader->nr_members);
++			leader->name, leader->core.nr_members);
+ 
+ 	/*
+ 	 * for_each_group_member doesn't work here because it doesn't
+@@ -1774,7 +1774,7 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
+ 			if (is_open)
+ 				perf_evsel__close(c2);
+ 			c2->leader = c2;
+-			c2->nr_members = 0;
++			c2->core.nr_members = 0;
+ 		}
+ 	}
+ 	return leader;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 8d087d0e55f1..8b9a00598677 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -948,7 +948,7 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 		 * Apply group format only if we belong to group
+ 		 * with more than one members.
+ 		 */
+-		if (leader->nr_members > 1) {
++		if (leader->core.nr_members > 1) {
+ 			attr->read_format |= PERF_FORMAT_GROUP;
+ 			attr->inherit = 0;
+ 		}
+@@ -1396,7 +1396,7 @@ static int perf_evsel__read_size(struct evsel *evsel)
+ 		entry += sizeof(u64);
+ 
+ 	if (read_format & PERF_FORMAT_GROUP) {
+-		nr = evsel->nr_members;
++		nr = evsel->core.nr_members;
+ 		size += sizeof(u64);
+ 	}
+ 
+@@ -1453,7 +1453,7 @@ perf_evsel__process_group_data(struct evsel *leader,
+ 
+ 	nr = *data++;
+ 
+-	if (nr != (u64) leader->nr_members)
++	if (nr != (u64) leader->core.nr_members)
+ 		return -EINVAL;
+ 
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 6056ce64bfdf..afd3a5b7bcc3 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -142,7 +142,6 @@ struct evsel {
+ 	bool			use_uncore_alias;
+ 	/* parse modifier helper */
+ 	int			exclude_GH;
+-	int			nr_members;
+ 	int			sample_read;
+ 	unsigned long		*per_pkg_mask;
+ 	struct evsel		*leader;
+@@ -414,7 +413,7 @@ static inline bool perf_evsel__is_group_event(struct evsel *evsel)
+ 	if (!symbol_conf.event_group)
+ 		return false;
+ 
+-	return perf_evsel__is_group_leader(evsel) && evsel->nr_members > 1;
++	return perf_evsel__is_group_leader(evsel) && evsel->core.nr_members > 1;
  }
  
--static void __perf_evlist__propagate_maps(struct evlist *evlist,
--					  struct evsel *evsel)
--{
--	/*
--	 * We already have cpus for evsel (via PMU sysfs) so
--	 * keep it, if there's no target cpu list defined.
--	 */
--	if (!evsel->core.own_cpus || evlist->core.has_user_cpus) {
--		perf_cpu_map__put(evsel->core.cpus);
--		evsel->core.cpus = perf_cpu_map__get(evlist->core.cpus);
--	} else if (evsel->core.cpus != evsel->core.own_cpus) {
--		perf_cpu_map__put(evsel->core.cpus);
--		evsel->core.cpus = perf_cpu_map__get(evsel->core.own_cpus);
--	}
--
--	perf_thread_map__put(evsel->core.threads);
--	evsel->core.threads = perf_thread_map__get(evlist->core.threads);
--}
--
--static void perf_evlist__propagate_maps(struct evlist *evlist)
--{
--	struct evsel *evsel;
--
--	evlist__for_each_entry(evlist, evsel)
--		__perf_evlist__propagate_maps(evlist, evsel);
--}
--
- void evlist__add(struct evlist *evlist, struct evsel *entry)
- {
- 	entry->evlist = evlist;
-@@ -189,8 +162,6 @@ void evlist__add(struct evlist *evlist, struct evsel *entry)
+ bool perf_evsel__is_function_event(struct evsel *evsel);
+diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+index 3466eca34a00..496fec01f5d1 100644
+--- a/tools/perf/util/evsel_fprintf.c
++++ b/tools/perf/util/evsel_fprintf.c
+@@ -45,14 +45,14 @@ int perf_evsel__fprintf(struct evsel *evsel,
+ 		if (!perf_evsel__is_group_leader(evsel))
+ 			return 0;
  
- 	if (evlist->core.nr_entries == 1)
- 		perf_evlist__set_id_pos(evlist);
--
--	__perf_evlist__propagate_maps(evlist, entry);
- }
+-		if (evsel->nr_members > 1)
++		if (evsel->core.nr_members > 1)
+ 			printed += fprintf(fp, "%s{", evsel->group_name ?: "");
  
- void evlist__remove(struct evlist *evlist, struct evsel *evsel)
-@@ -1097,7 +1068,7 @@ int perf_evlist__create_maps(struct evlist *evlist, struct target *target)
+ 		printed += fprintf(fp, "%s", perf_evsel__name(evsel));
+ 		for_each_group_member(pos, evsel)
+ 			printed += fprintf(fp, ",%s", perf_evsel__name(pos));
  
- 	evlist->core.has_user_cpus = !!target->cpu_list;
+-		if (evsel->nr_members > 1)
++		if (evsel->core.nr_members > 1)
+ 			printed += fprintf(fp, "}");
+ 		goto out;
+ 	}
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index f97df418d661..b04c2b6b28b3 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -772,10 +772,10 @@ static int write_group_desc(struct feat_fd *ff,
  
--	perf_evlist__set_maps(evlist, cpus, threads);
-+	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		if (perf_evsel__is_group_leader(evsel) &&
+-		    evsel->nr_members > 1) {
++		    evsel->core.nr_members > 1) {
+ 			const char *name = evsel->group_name ?: "{anon_group}";
+ 			u32 leader_idx = evsel->idx;
+-			u32 nr_members = evsel->nr_members;
++			u32 nr_members = evsel->core.nr_members;
  
- 	return 0;
+ 			ret = do_write_string(ff, name);
+ 			if (ret < 0)
+@@ -1812,11 +1812,11 @@ static void print_group_desc(struct feat_fd *ff, FILE *fp)
  
-@@ -1106,29 +1077,6 @@ out_delete_threads:
- 	return -1;
- }
+ 	evlist__for_each_entry(session->evlist, evsel) {
+ 		if (perf_evsel__is_group_leader(evsel) &&
+-		    evsel->nr_members > 1) {
++		    evsel->core.nr_members > 1) {
+ 			fprintf(fp, "# group: %s{%s", evsel->group_name ?: "",
+ 				perf_evsel__name(evsel));
  
--void perf_evlist__set_maps(struct evlist *evlist, struct perf_cpu_map *cpus,
--			   struct perf_thread_map *threads)
--{
--	/*
--	 * Allow for the possibility that one or another of the maps isn't being
--	 * changed i.e. don't put it.  Note we are assuming the maps that are
--	 * being applied are brand new and evlist is taking ownership of the
--	 * original reference count of 1.  If that is not the case it is up to
--	 * the caller to increase the reference count.
--	 */
--	if (cpus != evlist->core.cpus) {
--		perf_cpu_map__put(evlist->core.cpus);
--		evlist->core.cpus = perf_cpu_map__get(cpus);
--	}
--
--	if (threads != evlist->core.threads) {
--		perf_thread_map__put(evlist->core.threads);
--		evlist->core.threads = perf_thread_map__get(threads);
--	}
--
--	perf_evlist__propagate_maps(evlist);
--}
--
- void __perf_evlist__set_sample_bit(struct evlist *evlist,
- 				   enum perf_event_sample_format bit)
- {
-@@ -1381,7 +1329,7 @@ static int perf_evlist__create_syswide_maps(struct evlist *evlist)
- 	if (!threads)
- 		goto out_put;
+-			nr = evsel->nr_members - 1;
++			nr = evsel->core.nr_members - 1;
+ 		} else if (nr) {
+ 			fprintf(fp, ",%s", perf_evsel__name(evsel));
  
--	perf_evlist__set_maps(evlist, cpus, threads);
-+	perf_evlist__set_maps(&evlist->core, cpus, threads);
- out:
- 	return err;
- out_put:
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index de2025d198d4..e31ddcc058f2 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -191,8 +191,6 @@ int perf_evlist__enable_event_idx(struct evlist *evlist,
- void perf_evlist__set_selected(struct evlist *evlist,
- 			       struct evsel *evsel);
+@@ -2463,7 +2463,7 @@ static int process_group_desc(struct feat_fd *ff, void *data __maybe_unused)
+ 				evsel->group_name = desc[i].name;
+ 				desc[i].name = NULL;
+ 			}
+-			evsel->nr_members = desc[i].nr_members;
++			evsel->core.nr_members = desc[i].nr_members;
  
--void perf_evlist__set_maps(struct evlist *evlist, struct perf_cpu_map *cpus,
--			   struct perf_thread_map *threads);
- int perf_evlist__create_maps(struct evlist *evlist, struct target *target);
- int perf_evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel);
+ 			if (i >= nr_groups || nr > 0) {
+ 				pr_debug("invalid group desc\n");
+@@ -2471,7 +2471,7 @@ static int process_group_desc(struct feat_fd *ff, void *data __maybe_unused)
+ 			}
  
+ 			leader = evsel;
+-			nr = evsel->nr_members - 1;
++			nr = evsel->core.nr_members - 1;
+ 			i++;
+ 		} else if (nr) {
+ 			/* This is a group member */
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 821e0fe6cf26..4297f56b1e05 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -2643,7 +2643,7 @@ int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool sh
+ 	nr_samples = convert_unit(nr_samples, &unit);
+ 	printed = scnprintf(bf, size,
+ 			   "Samples: %lu%c of event%s '%s',%s%sEvent count (approx.): %" PRIu64,
+-			   nr_samples, unit, evsel->nr_members > 1 ? "s" : "",
++			   nr_samples, unit, evsel->core.nr_members > 1 ? "s" : "",
+ 			   ev_name, sample_freq_str, enable_ref ? ref : " ", nr_events);
+ 
+ 
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 8182b1e66ec6..2cfec3b7a982 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1528,7 +1528,7 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
+ 	/* The number of members and group name are same for each group */
+ 	for (i = 0; i < nr_pmu; i++) {
+ 		evsel = (struct evsel *) leaders[i];
+-		evsel->nr_members = total_members / nr_pmu;
++		evsel->core.nr_members = total_members / nr_pmu;
+ 		evsel->group_name = name ? strdup(name) : NULL;
+ 	}
+ 
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 4a162858583f..f7b39f4bc51e 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -369,7 +369,7 @@ static bool is_mixed_hw_group(struct evsel *counter)
+ 	u32 pmu_type = counter->core.attr.type;
+ 	struct evsel *pos;
+ 
+-	if (counter->nr_members < 2)
++	if (counter->core.nr_members < 2)
+ 		return false;
+ 
+ 	evlist__for_each_entry(evlist, pos) {
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 799f3c0a9050..e4e4e3bf8b2b 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -452,7 +452,7 @@ int create_perf_stat_counter(struct evsel *evsel,
+ 	 * the group read (for leader) and ID retrieval for all
+ 	 * members.
+ 	 */
+-	if (leader->nr_members > 1)
++	if (leader->core.nr_members > 1)
+ 		attr->read_format |= PERF_FORMAT_ID|PERF_FORMAT_GROUP;
+ 
+ 	attr->inherit = !config->no_inherit;
