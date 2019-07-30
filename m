@@ -2,98 +2,170 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C964C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A931C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0A520651
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECCF120651
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="gVISzoKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732092AbfG3Jsp convert rfc822-to-8bit (ORCPT
+        id S1732107AbfG3JtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:48:45 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:26698 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727770AbfG3Jsp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:48:45 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-174-SV6Xl8A9OrKA0tVNQBwUCg-1; Tue, 30 Jul 2019 10:48:38 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
- 30 Jul 2019 10:48:38 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 30 Jul 2019 10:48:38 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Stanislaw Gruszka' <sgruszka@redhat.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-CC:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] rtw88: pci: Use general byte arrays as the elements of RX
- ring
-Thread-Topic: [PATCH] rtw88: pci: Use general byte arrays as the elements of
- RX ring
-Thread-Index: AQHVRro3Kaj7ufhACkSCuQV9Pmu/hqbi59sQ
-Date:   Tue, 30 Jul 2019 09:48:38 +0000
-Message-ID: <962a8a8e735946d6b3944b7d0e228309@AcuMS.aculab.com>
-References: <20190725080925.6575-1-jian-hong@endlessm.com>
- <20190730093533.GC3174@redhat.com>
-In-Reply-To: <20190730093533.GC3174@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 30 Jul 2019 05:49:03 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:48996 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbfG3JtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:49:02 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45yWwW1BVGz9vBLV;
+        Tue, 30 Jul 2019 11:48:59 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=gVISzoKt; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id mXrohcSYwk5G; Tue, 30 Jul 2019 11:48:59 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45yWwW05gcz9vBLN;
+        Tue, 30 Jul 2019 11:48:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1564480139; bh=tFSCyuXc6xQQsa1h4dVfNa0KvJuc0fYe9QTvxMXWUko=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gVISzoKtekQbUyLsLuz/fiSuqHr8hTH9GVy3MNjsYonNwQXwqaDGF4JIojVzSpw6s
+         o+RcDtYDrqB1/6D3ZbKWuMfgQUgniAlw62L9NVMrAD+m3eLUpqcx8k1kdHQ8c9lyTM
+         MXL5wJJnNCIb4BDP8JNrMMuS+OCntHIg0vEgGics=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 22B038B803;
+        Tue, 30 Jul 2019 11:49:00 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id eL2YwilihXe6; Tue, 30 Jul 2019 11:49:00 +0200 (CEST)
+Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D06DD8B801;
+        Tue, 30 Jul 2019 11:48:59 +0200 (CEST)
+Subject: Re: [PATCH v2 10/10] powerpc/fsl_booke/kaslr: dump out kernel offset
+ information on panic
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com
+Cc:     linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com,
+        yebin10@huawei.com, thunder.leizhen@huawei.com,
+        jingxiangfeng@huawei.com, fanchengyang@huawei.com,
+        zhaohongjiang@huawei.com
+References: <20190730074225.39544-1-yanaijie@huawei.com>
+ <20190730074225.39544-11-yanaijie@huawei.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <2a31b934-3658-c02e-4e86-c9ba03029bd6@c-s.fr>
+Date:   Tue, 30 Jul 2019 11:48:59 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MC-Unique: SV6Xl8A9OrKA0tVNQBwUCg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190730074225.39544-11-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislaw Gruszka
-> Sent: 30 July 2019 10:36
-...
-> > +		len = pkt_stat.pkt_len + pkt_offset;
-> > +		skb = dev_alloc_skb(len);
-> > +		if (WARN_ONCE(!skb, "rx routine starvation\n"))
-> >  			goto next_rp;
-> >
-> >  		/* put the DMA data including rx_desc from phy to new skb */
-> > -		skb_put_data(new, skb->data, new_len);
-> > +		skb_put_data(skb, rx_desc, len);
+
+
+Le 30/07/2019 à 09:42, Jason Yan a écrit :
+> When kaslr is enabled, the kernel offset is different for every boot.
+> This brings some difficult to debug the kernel. Dump out the kernel
+> offset when panic so that we can easily debug the kernel.
 > 
-> Coping big packets it quite inefficient. What drivers usually do is
-> copy only for small packets and for big ones allocate new rx buf
-> (drop packet alloc if fail) and pas old buf to network stack via
-> skb_add_rx_frag(). See iwlmvm as example.
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Cc: Diana Craciun <diana.craciun@nxp.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Kees Cook <keescook@chromium.org>
 
-If you have to do iommu setup/teardown then the breakeven point
-for (not) copying may be surprisingly large.
-You do need to do the measurements on a range of hardware.
-Coping is also likely to affect the L1 cache - unless you can
-copy quickly without polluting the cache.
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-It is all 'swings and roundabouts'.
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+> ---
+>   arch/powerpc/include/asm/page.h     |  5 +++++
+>   arch/powerpc/kernel/machine_kexec.c |  1 +
+>   arch/powerpc/kernel/setup-common.c  | 19 +++++++++++++++++++
+>   3 files changed, 25 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+> index 60a68d3a54b1..cd3ac530e58d 100644
+> --- a/arch/powerpc/include/asm/page.h
+> +++ b/arch/powerpc/include/asm/page.h
+> @@ -317,6 +317,11 @@ struct vm_area_struct;
+>   
+>   extern unsigned long kimage_vaddr;
+>   
+> +static inline unsigned long kaslr_offset(void)
+> +{
+> +	return kimage_vaddr - KERNELBASE;
+> +}
+> +
+>   #include <asm-generic/memory_model.h>
+>   #endif /* __ASSEMBLY__ */
+>   #include <asm/slice.h>
+> diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+> index c4ed328a7b96..078fe3d76feb 100644
+> --- a/arch/powerpc/kernel/machine_kexec.c
+> +++ b/arch/powerpc/kernel/machine_kexec.c
+> @@ -86,6 +86,7 @@ void arch_crash_save_vmcoreinfo(void)
+>   	VMCOREINFO_STRUCT_SIZE(mmu_psize_def);
+>   	VMCOREINFO_OFFSET(mmu_psize_def, shift);
+>   #endif
+> +	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+>   }
+>   
+>   /*
+> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+> index 1f8db666468d..064075f02837 100644
+> --- a/arch/powerpc/kernel/setup-common.c
+> +++ b/arch/powerpc/kernel/setup-common.c
+> @@ -715,12 +715,31 @@ static struct notifier_block ppc_panic_block = {
+>   	.priority = INT_MIN /* may not return; must be done last */
+>   };
+>   
+> +/*
+> + * Dump out kernel offset information on panic.
+> + */
+> +static int dump_kernel_offset(struct notifier_block *self, unsigned long v,
+> +			      void *p)
+> +{
+> +	pr_emerg("Kernel Offset: 0x%lx from 0x%lx\n",
+> +		 kaslr_offset(), KERNELBASE);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct notifier_block kernel_offset_notifier = {
+> +	.notifier_call = dump_kernel_offset
+> +};
+> +
+>   void __init setup_panic(void)
+>   {
+>   	/* PPC64 always does a hard irq disable in its panic handler */
+>   	if (!IS_ENABLED(CONFIG_PPC64) && !ppc_md.panic)
+>   		return;
+>   	atomic_notifier_chain_register(&panic_notifier_list, &ppc_panic_block);
+> +	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_offset() > 0)
+> +		atomic_notifier_chain_register(&panic_notifier_list,
+> +					       &kernel_offset_notifier);
+>   }
+>   
+>   #ifdef CONFIG_CHECK_CACHE_COHERENCY
+> 
