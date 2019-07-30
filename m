@@ -2,258 +2,212 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E8FC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01D7C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF052067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CC8206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 19:31:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="gUV4eGhv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbfG3TaY (ORCPT
+        id S2388390AbfG3TbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 15:30:24 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:42825 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728677AbfG3TaY (ORCPT
+        Tue, 30 Jul 2019 15:31:14 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:27672 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727776AbfG3TbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 15:30:24 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MWRmF-1hrFJ01JoR-00XqWy; Tue, 30 Jul 2019 21:30:13 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org
-Subject: [PATCH v5 11/29] compat_ioctl: move rtc handling into rtc-dev.c
-Date:   Tue, 30 Jul 2019 21:25:22 +0200
-Message-Id: <20190730192552.4014288-12-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190730192552.4014288-1-arnd@arndb.de>
-References: <20190730192552.4014288-1-arnd@arndb.de>
+        Tue, 30 Jul 2019 15:31:13 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6UJSxTK009398
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 12:31:12 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=i6y9YuM25PmZvfyze3uwWL3WudRVKnCnrUVAiWkqwhw=;
+ b=gUV4eGhvcLCGYPWZ3ZzQEw2juJ9XcR+14c8ClxZHxITn54FARz36fRhMmu8qPUKh8LfI
+ le0Orbrmm2kiSXF8cA4sjuDE5D1uEtbnVjp2tqP71/K8gYPEI3dG5bLDqLgR8hzp7ck7
+ lwHNWDf7ZfKVu65siTSskJX6Fvdz9YZSVW8= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2u2eqgtnu6-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 12:31:12 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Tue, 30 Jul 2019 12:31:09 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 2CA4F62E1D35; Tue, 30 Jul 2019 12:31:06 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <akpm@linux-foundation.org>
+CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
+        <oleg@redhat.com>, <kernel-team@fb.com>,
+        <william.kucharski@oracle.com>, <srikar@linux.vnet.ibm.com>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v11 2/4] uprobe: use original page when all uprobes are removed
+Date:   Tue, 30 Jul 2019 12:30:59 -0700
+Message-ID: <20190730193100.2295258-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:d77hhp7zdr4Mxs5LfGspS4fJC4TxkPxLEyr8Cil+VykRxcBWuTW
- TiEV+ZkGDDQjN0eoeWNQV26oetW73nZ4k3h3cVQzL/M/iXYnRSfMqp9psj6cxuymYTjhLLb
- 9YAY7/KCdTBbqfqq6Bx8KNShnXiAO7Gzq1WXYfL+hRnn9TRxBykqB/3+3PjtA00bEYtRLUB
- sgUfMymRqN8lscNz+nlFQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tSkF7sAe+LU=:vRuTXpfzW/j8Qg+dzfheV4
- bIlPu+VH0r8m6RUEVhfz/nXcQsVBAgm160eMMva+w7wVHDwPGF1JUKU5sBYr9alb0WxD0JUV8
- xqcuKCmDsv3aGA56XK3RfQhW0ejPHlXjM7TFGLPVr86x3hQzkU99RQHBUdYISiURQfX0UGi7V
- ySIMjKd+afIgYEKzr17aexN8R0tRin4H2p0kft5sY2fy6hWlJhLO3fC5XEbKyhBnfRE18UBRT
- iyvqtjOHerPeGgCgqYb4hTHhQ4V5VGoVCZUjsLAxEpFMkcYyWlo6YKtf8NzGg71cLn0oAGSYA
- YdSkhEAWljo1PZJwYf9/xVQOi9Ls6GdxjFP8bufYXpkxHgKw6fmMowoOE2HlbF+YDB8TZYfZ8
- AJCl7wn77OG4THdJFWXNWNvezvAge/svcj9eU7TJJXTYNX8HF8ntBptqxiryqcSgUWh6JtnBB
- OZx6WoQ63DnGCIYCqiicY+39IKarm3BlpBNet1hquGMPnUMPeqHy3sNiWzIqOHBBZio7jgAWE
- H5FCwa58jex9tcLZdZ8BgeZDwBIPF3gFUnUNbZ1rfRfB4grTL7L023KXkXR4iqU4KgkVZI1Wf
- B+Tu/lLe1XzTXpCIdQVughIr7S2ciDTYU0sZ0LaGPlyJHztUzW4wIj38QddKTZ/H7ZBrZQCHP
- scbeSalR/CZ9FxVE4WzxsjCeuHMaprxbgfG8l9k3NmjP8Oh312ztnOZBL+mfBIb2UCffYqfgh
- 6XflRZyIVeM6sM1TuS3O0mwnP3+/dllSZm89uw==
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-30_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=895 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907300197
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We no longer need the rtc compat handling to be in common code, now that
-all drivers are either moved to the rtc-class framework, or (rarely)
-exist in drivers/char for architectures without compat mode (m68k,
-alpha and ia64, respectively).
+Currently, uprobe swaps the target page with a anonymous page in both
+install_breakpoint() and remove_breakpoint(). When all uprobes on a page
+are removed, the given mm is still using an anonymous page (not the
+original page).
 
-I checked the list of ioctl commands in drivers, and the ones that are
-not already handled are all compatible, again with the one exception of
-m68k driver, which implements RTC_PLL_GET and RTC_PLL_SET, but has no
-compat mode.
+This patch allows uprobe to use original page when possible (all uprobes
+on the page are already removed, and the original page is in page cache
+and uptodate).
 
-Since the ioctl commands are either compatible or differ in both structure
-and command code between 32-bit and 64-bit, we can merge the compat
-handler into the native one and just implement the two common compat
-commands (RTC_IRQP_READ, RTC_IRQP_SET) there. The result is a slight
-change in behavior, as a native 64-bit process will now also handle the
-32-bit commands (RTC_IRQP_SET32/RTC_IRQP_SET).
+As suggested by Oleg, we unmap the old_page and let the original page
+fault in.
 
-The old conversion handler also deals with RTC_EPOCH_READ and
-RTC_EPOCH_SET, which are not handled in rtc-dev.c but only in a single
-device driver (rtc-vr41xx), so I'm adding the compat version in the same
-place. I don't expect other drivers to need those commands in the future.
-
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Suggested-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
-v2: merge compat handler into ioctl function to avoid the
-    compat_alloc_user_space() roundtrip, based on feedback
-    from Al Viro.
----
- drivers/rtc/dev.c        | 13 +++++++++-
- drivers/rtc/rtc-vr41xx.c | 10 ++++++++
- fs/compat_ioctl.c        | 53 ----------------------------------------
- 3 files changed, 22 insertions(+), 54 deletions(-)
+ kernel/events/uprobes.c | 66 +++++++++++++++++++++++++++++++----------
+ 1 file changed, 51 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/rtc/dev.c b/drivers/rtc/dev.c
-index 84feb2565abd..1dc5063f78c9 100644
---- a/drivers/rtc/dev.c
-+++ b/drivers/rtc/dev.c
-@@ -10,6 +10,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/compat.h>
- #include <linux/module.h>
- #include <linux/rtc.h>
- #include <linux/sched/signal.h>
-@@ -357,10 +358,19 @@ static long rtc_dev_ioctl(struct file *file,
- 		mutex_unlock(&rtc->ops_lock);
- 		return rtc_update_irq_enable(rtc, 0);
- 
-+#ifdef CONFIG_64BIT
-+#define RTC_IRQP_SET32		_IOW('p', 0x0c, __u32)
-+#define RTC_IRQP_READ32		_IOR('p', 0x0b, __u32)
-+	case RTC_IRQP_SET32:
-+		err = rtc_irq_set_freq(rtc, arg);
-+		break;
-+	case RTC_IRQP_READ32:
-+		err = put_user(rtc->irq_freq, (unsigned int __user *)uarg);
-+		break;
-+#endif
- 	case RTC_IRQP_SET:
- 		err = rtc_irq_set_freq(rtc, arg);
- 		break;
--
- 	case RTC_IRQP_READ:
- 		err = put_user(rtc->irq_freq, (unsigned long __user *)uarg);
- 		break;
-@@ -434,6 +444,7 @@ static const struct file_operations rtc_dev_fops = {
- 	.read		= rtc_dev_read,
- 	.poll		= rtc_dev_poll,
- 	.unlocked_ioctl	= rtc_dev_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
- 	.open		= rtc_dev_open,
- 	.release	= rtc_dev_release,
- 	.fasync		= rtc_dev_fasync,
-diff --git a/drivers/rtc/rtc-vr41xx.c b/drivers/rtc/rtc-vr41xx.c
-index c75230562c0d..79f27de545af 100644
---- a/drivers/rtc/rtc-vr41xx.c
-+++ b/drivers/rtc/rtc-vr41xx.c
-@@ -4,6 +4,7 @@
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 84fa00497c49..648f47553bff 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -143,10 +143,12 @@ static loff_t vaddr_to_offset(struct vm_area_struct *vma, unsigned long vaddr)
   *
-  *  Copyright (C) 2003-2008  Yoichi Yuasa <yuasa@linux-mips.org>
+  * @vma:      vma that holds the pte pointing to page
+  * @addr:     address the old @page is mapped at
+- * @page:     the cowed page we are replacing by kpage
+- * @kpage:    the modified page we replace page by
++ * @old_page: the page we are replacing by new_page
++ * @new_page: the modified page we replace page by
+  *
+- * Returns 0 on success, -EFAULT on failure.
++ * If @new_page is NULL, only unmap @old_page.
++ *
++ * Returns 0 on success, negative error code otherwise.
   */
-+#include <linux/compat.h>
- #include <linux/err.h>
- #include <linux/fs.h>
- #include <linux/init.h>
-@@ -66,6 +67,10 @@ static void __iomem *rtc2_base;
- #define rtc2_read(offset)		readw(rtc2_base + (offset))
- #define rtc2_write(offset, value)	writew((value), rtc2_base + (offset))
+ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
+ 				struct page *old_page, struct page *new_page)
+@@ -166,10 +168,12 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
  
-+/* 32-bit compat for ioctls that nobody else uses */
-+#define RTC_EPOCH_READ32	_IOR('p', 0x0d, __u32)
-+#define RTC_EPOCH_SET32		_IOW('p', 0x0e, __u32)
-+
- static unsigned long epoch = 1970;	/* Jan 1 1970 00:00:00 */
+ 	VM_BUG_ON_PAGE(PageTransHuge(old_page), old_page);
  
- static DEFINE_SPINLOCK(rtc_lock);
-@@ -179,6 +184,11 @@ static int vr41xx_rtc_ioctl(struct device *dev, unsigned int cmd, unsigned long
- 	switch (cmd) {
- 	case RTC_EPOCH_READ:
- 		return put_user(epoch, (unsigned long __user *)arg);
-+#ifdef CONFIG_64BIT
-+	case RTC_EPOCH_READ32:
-+		return put_user(epoch, (unsigned int __user *)arg);
-+	case RTC_EPOCH_SET32:
-+#endif
- 	case RTC_EPOCH_SET:
- 		/* Doesn't support before 1900 */
- 		if (arg < 1900)
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index cec3ec0a1727..47da220f95b1 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -32,7 +32,6 @@
- #include <linux/vt_kern.h>
- #include <linux/raw.h>
- #include <linux/blkdev.h>
--#include <linux/rtc.h>
- #include <linux/pci.h>
- #include <linux/serial.h>
- #include <linux/ctype.h>
-@@ -436,37 +435,6 @@ static int mt_ioctl_trans(struct file *file,
- #define HCIUARTSETFLAGS		_IOW('U', 203, int)
- #define HCIUARTGETFLAGS		_IOR('U', 204, int)
+-	err = mem_cgroup_try_charge(new_page, vma->vm_mm, GFP_KERNEL, &memcg,
+-			false);
+-	if (err)
+-		return err;
++	if (new_page) {
++		err = mem_cgroup_try_charge(new_page, vma->vm_mm, GFP_KERNEL,
++					    &memcg, false);
++		if (err)
++			return err;
++	}
  
--#define RTC_IRQP_READ32		_IOR('p', 0x0b, compat_ulong_t)
--#define RTC_IRQP_SET32		_IOW('p', 0x0c, compat_ulong_t)
--#define RTC_EPOCH_READ32	_IOR('p', 0x0d, compat_ulong_t)
--#define RTC_EPOCH_SET32		_IOW('p', 0x0e, compat_ulong_t)
--
--static int rtc_ioctl(struct file *file,
--		unsigned cmd, void __user *argp)
--{
--	unsigned long __user *valp = compat_alloc_user_space(sizeof(*valp));
--	int ret;
--
--	if (valp == NULL)
--		return -EFAULT;
--	switch (cmd) {
--	case RTC_IRQP_READ32:
--	case RTC_EPOCH_READ32:
--		ret = do_ioctl(file, (cmd == RTC_IRQP_READ32) ?
--					RTC_IRQP_READ : RTC_EPOCH_READ,
--					(unsigned long)valp);
--		if (ret)
--			return ret;
--		return convert_in_user(valp, (unsigned int __user *)argp);
--	case RTC_IRQP_SET32:
--		return do_ioctl(file, RTC_IRQP_SET, (unsigned long)argp);
--	case RTC_EPOCH_SET32:
--		return do_ioctl(file, RTC_EPOCH_SET, (unsigned long)argp);
--	}
--
--	return -ENOIOCTLCMD;
--}
--
- /*
-  * simple reversible transform to make our table more evenly
-  * distributed after sorting.
-@@ -503,21 +471,6 @@ COMPATIBLE_IOCTL(SCSI_IOCTL_GET_PCI)
- /* Big V (don't complain on serial console) */
- IGNORE_IOCTL(VT_OPENQRY)
- IGNORE_IOCTL(VT_GETMODE)
--/* Little p (/dev/rtc, /dev/envctrl, etc.) */
--COMPATIBLE_IOCTL(RTC_AIE_ON)
--COMPATIBLE_IOCTL(RTC_AIE_OFF)
--COMPATIBLE_IOCTL(RTC_UIE_ON)
--COMPATIBLE_IOCTL(RTC_UIE_OFF)
--COMPATIBLE_IOCTL(RTC_PIE_ON)
--COMPATIBLE_IOCTL(RTC_PIE_OFF)
--COMPATIBLE_IOCTL(RTC_WIE_ON)
--COMPATIBLE_IOCTL(RTC_WIE_OFF)
--COMPATIBLE_IOCTL(RTC_ALM_SET)
--COMPATIBLE_IOCTL(RTC_ALM_READ)
--COMPATIBLE_IOCTL(RTC_RD_TIME)
--COMPATIBLE_IOCTL(RTC_SET_TIME)
--COMPATIBLE_IOCTL(RTC_WKALM_SET)
--COMPATIBLE_IOCTL(RTC_WKALM_RD)
- /*
-  * These two are only for the sbus rtc driver, but
-  * hwclock tries them on every rtc device first when
-@@ -897,12 +850,6 @@ static long do_ioctl_trans(unsigned int cmd,
- 	case MTIOCPOS32:
- 		return mt_ioctl_trans(file, cmd, argp);
- #endif
--	/* Not implemented in the native kernel */
--	case RTC_IRQP_READ32:
--	case RTC_IRQP_SET32:
--	case RTC_EPOCH_READ32:
--	case RTC_EPOCH_SET32:
--		return rtc_ioctl(file, cmd, argp);
+ 	/* For try_to_free_swap() and munlock_vma_page() below */
+ 	lock_page(old_page);
+@@ -177,15 +181,20 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
+ 	mmu_notifier_invalidate_range_start(&range);
+ 	err = -EAGAIN;
+ 	if (!page_vma_mapped_walk(&pvmw)) {
+-		mem_cgroup_cancel_charge(new_page, memcg, false);
++		if (new_page)
++			mem_cgroup_cancel_charge(new_page, memcg, false);
+ 		goto unlock;
+ 	}
+ 	VM_BUG_ON_PAGE(addr != pvmw.address, old_page);
+ 
+-	get_page(new_page);
+-	page_add_new_anon_rmap(new_page, vma, addr, false);
+-	mem_cgroup_commit_charge(new_page, memcg, false, false);
+-	lru_cache_add_active_or_unevictable(new_page, vma);
++	if (new_page) {
++		get_page(new_page);
++		page_add_new_anon_rmap(new_page, vma, addr, false);
++		mem_cgroup_commit_charge(new_page, memcg, false, false);
++		lru_cache_add_active_or_unevictable(new_page, vma);
++	} else
++		/* no new page, just dec_mm_counter for old_page */
++		dec_mm_counter(mm, MM_ANONPAGES);
+ 
+ 	if (!PageAnon(old_page)) {
+ 		dec_mm_counter(mm, mm_counter_file(old_page));
+@@ -194,8 +203,9 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
+ 
+ 	flush_cache_page(vma, addr, pte_pfn(*pvmw.pte));
+ 	ptep_clear_flush_notify(vma, addr, pvmw.pte);
+-	set_pte_at_notify(mm, addr, pvmw.pte,
+-			mk_pte(new_page, vma->vm_page_prot));
++	if (new_page)
++		set_pte_at_notify(mm, addr, pvmw.pte,
++				  mk_pte(new_page, vma->vm_page_prot));
+ 
+ 	page_remove_rmap(old_page, false);
+ 	if (!page_mapped(old_page))
+@@ -488,6 +498,10 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 		ref_ctr_updated = 1;
  	}
  
- 	/*
++	ret = 0;
++	if (!is_register && !PageAnon(old_page))
++		goto put_old;
++
+ 	ret = anon_vma_prepare(vma);
+ 	if (ret)
+ 		goto put_old;
+@@ -501,8 +515,30 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	copy_highpage(new_page, old_page);
+ 	copy_to_page(new_page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
+ 
++	if (!is_register) {
++		struct page *orig_page;
++		pgoff_t index;
++
++		VM_BUG_ON_PAGE(!PageAnon(old_page), old_page);
++
++		index = vaddr_to_offset(vma, vaddr & PAGE_MASK) >> PAGE_SHIFT;
++		orig_page = find_get_page(vma->vm_file->f_inode->i_mapping,
++					  index);
++
++		if (orig_page) {
++			if (PageUptodate(orig_page) &&
++			    pages_identical(new_page, orig_page)) {
++				/* let go new_page */
++				put_page(new_page);
++				new_page = NULL;
++			}
++			put_page(orig_page);
++		}
++	}
++
+ 	ret = __replace_page(vma, vaddr, old_page, new_page);
+-	put_page(new_page);
++	if (new_page)
++		put_page(new_page);
+ put_old:
+ 	put_page(old_page);
+ 
 -- 
-2.20.0
+2.17.1
 
