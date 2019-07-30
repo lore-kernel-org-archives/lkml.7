@@ -2,77 +2,267 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF38C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C41C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6892089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9ED20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 10:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbfG3KbB (ORCPT
+        id S1729531AbfG3KcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 06:31:01 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:54989 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfG3KbB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 06:31:01 -0400
-Received: by mail-io1-f72.google.com with SMTP id n8so70871970ioo.21
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 03:31:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=/JDLLKCVTgj6P4LINzTI5WdAL0FV1RdWWRyqarm+YLc=;
-        b=dWqmQtUrbGVHzhu58gWlmpjkjI4PpNN6DpDSmTGot8mBe9fzcGws9eeK9pwyrxxY/3
-         /17PQdu+MjNXlY+9IB/MtR2K43NtudCOrPix53+cvxFqV3Cj8sEKuKC6zy5YXW9tjg8d
-         S8hMSlvc4yyX4KASivEXfEem2TCDSb3cE3ZyR2JObCMMYDoOPPQw2JIEQFADCbScVA0v
-         kd5uZd2g4W8wkqkUw9BjDDfBvZelpJOgu2dUPsGG2OxUUFMuG42hkVrANADiBjdWy3cS
-         knky5qtjhx0VJy8z9oVs8G1EoD73Rc3Wu9xvdMIQiTxNXnSRmbCznEmQpmtvaJ/SSTKS
-         dgMA==
-X-Gm-Message-State: APjAAAUO7bqR14LzmQyRh3y8MRo1oYs/Gz7ma7ssdIQJxXPWAhN5+Ya+
-        QfXNRI7zEhXGtk8aE8T0QQmW9gi5BTgeTMKgk0gAOH3f7NGt
-X-Google-Smtp-Source: APXvYqy+U2um5Uxv6X2VsWwU+YOv0Pyg13yIK5HP9nRe3nmtx/LGqGu7XiWw03MqvAEgiJRAiP/ZZUTmTDN9J4NtbQVrkYnpWnZS
+        Tue, 30 Jul 2019 06:32:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:59042 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbfG3KcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 06:32:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA340344;
+        Tue, 30 Jul 2019 03:32:16 -0700 (PDT)
+Received: from [10.1.194.48] (e123572-lin.cambridge.arm.com [10.1.194.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3ADB13F575;
+        Tue, 30 Jul 2019 03:32:15 -0700 (PDT)
+Subject: Re: [PATCH v6 1/2] arm64: Define
+ Documentation/arm64/tagged-address-abi.rst
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+References: <cover.1563904656.git.andreyknvl@google.com>
+ <20190725135044.24381-1-vincenzo.frascino@arm.com>
+ <20190725135044.24381-2-vincenzo.frascino@arm.com>
+From:   Kevin Brodsky <kevin.brodsky@arm.com>
+Message-ID: <52fa2cfc-f7a6-af6f-0dc2-f9ea0e41ac3c@arm.com>
+Date:   Tue, 30 Jul 2019 11:32:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Received: by 2002:a02:ca19:: with SMTP id i25mr122464740jak.6.1564482660587;
- Tue, 30 Jul 2019 03:31:00 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 03:31:00 -0700
-In-Reply-To: <1564481531.25582.22.camel@suse.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003de05e058ee38113@google.com>
-Subject: Re: WARNING in usbtouch_open
-From:   syzbot <syzbot+199ea16c7f26418b4365@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, andreyknvl@google.com,
-        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        kstewart@linuxfoundation.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        mpe@ellerman.id.au, oneukum@suse.com, rydberg@bitmath.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190725135044.24381-2-vincenzo.frascino@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Some more comments. Mostly minor wording issues, except the prctl() exclusion at the end.
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+On 25/07/2019 14:50, Vincenzo Frascino wrote:
+> On arm64 the TCR_EL1.TBI0 bit has been always enabled hence
+> the userspace (EL0) is allowed to set a non-zero value in the
+> top byte but the resulting pointers are not allowed at the
+> user-kernel syscall ABI boundary.
+>
+> With the relaxed ABI proposed through this document, it is now possible
+> to pass tagged pointers to the syscalls, when these pointers are in
+> memory ranges obtained by an anonymous (MAP_ANONYMOUS) mmap().
+>
+> This change in the ABI requires a mechanism to requires the userspace
+> to opt-in to such an option.
+>
+> Specify and document the way in which sysctl and prctl() can be used
+> in combination to allow the userspace to opt-in this feature.
+>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> CC: Andrey Konovalov <andreyknvl@google.com>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Acked-by: Szabolcs Nagy <szabolcs.nagy@arm.com>
+> ---
+>   Documentation/arm64/tagged-address-abi.rst | 148 +++++++++++++++++++++
+>   1 file changed, 148 insertions(+)
+>   create mode 100644 Documentation/arm64/tagged-address-abi.rst
+>
+> diff --git a/Documentation/arm64/tagged-address-abi.rst b/Documentation/arm64/tagged-address-abi.rst
+> new file mode 100644
+> index 000000000000..a8ecb991de82
+> --- /dev/null
+> +++ b/Documentation/arm64/tagged-address-abi.rst
+> @@ -0,0 +1,148 @@
+> +========================
+> +ARM64 TAGGED ADDRESS ABI
+> +========================
+> +
+> +Author: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> +
+> +Date: 25 July 2019
+> +
+> +This document describes the usage and semantics of the Tagged Address
+> +ABI on arm64.
+> +
+> +1. Introduction
+> +---------------
+> +
+> +On arm64 the TCR_EL1.TBI0 bit has always been enabled on the kernel, hence
+> +the userspace (EL0) is entitled to perform a user memory access through a
+> +64-bit pointer with a non-zero top byte but the resulting pointers are not
+> +allowed at the user-kernel syscall ABI boundary.
+> +
+> +This document describes a relaxation of the ABI that makes it possible to
+> +to pass tagged pointers to the syscalls, when these pointers are in memory
 
-Reported-and-tested-by:  
-syzbot+199ea16c7f26418b4365@syzkaller.appspotmail.com
+One too many "to" (at the end the previous line).
 
-Tested on:
+> +ranges obtained as described in section 2.
+> +
+> +Since it is not desirable to relax the ABI to allow tagged user addresses
+> +into the kernel indiscriminately, arm64 provides a new sysctl interface
+> +(/proc/sys/abi/tagged_addr) that is used to prevent the applications from
+> +enabling the relaxed ABI and a new prctl() interface that can be used to
+> +enable or disable the relaxed ABI.
+> +A detailed description of the newly introduced mechanisms will be provided
+> +in section 2.
+> +
+> +2. ARM64 Tagged Address ABI
+> +---------------------------
+> +
+> +From the kernel syscall interface perspective, we define, for the purposes
+> +of this document, a "valid tagged pointer" as a pointer that either has a
+> +zero value set in the top byte or has a non-zero value, is in memory ranges
+> +privately owned by a userspace process and is obtained in one of the
+> +following ways:
+> +- mmap() done by the process itself, where either:
+> +
+> +  - flags have **MAP_PRIVATE** and **MAP_ANONYMOUS**
+> +  - flags have **MAP_PRIVATE** and the file descriptor refers to a regular
+> +    file or **/dev/zero**
+> +
+> +- brk() system call done by the process itself (i.e. the heap area between
+> +  the initial location of the program break at process creation and its
+> +  current location).
+> +- any memory mapped by the kernel in the process's address space during
+> +  creation and with the same restrictions as for mmap() (e.g. data, bss,
+> +  stack).
+> +
+> +The ARM64 Tagged Address ABI is an opt-in feature, and an application can
+> +control it using the following:
+> +
+> +- **/proc/sys/abi/tagged_addr**: a new sysctl interface that can be used to
+> +  prevent the applications from enabling the access to the relaxed ABI.
+> +  The sysctl supports the following configuration options:
+> +
+> +  - **0**: Disable the access to the ARM64 Tagged Address ABI for all
+> +    the applications.
+> +  - **1** (Default): Enable the access to the ARM64 Tagged Address ABI for
+> +    all the applications.
+> +
+> +   If the access to the ARM64 Tagged Address ABI is disabled at a certain
+> +   point in time, all the applications that were using tagging before this
+> +   event occurs, will continue to use tagging.
 
-commit:         7f7867ff usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1347ab44600000
+"tagging" may be misinterpreted here. I would be more explicit by saying that the 
+tagged address ABI remains enabled in processes that opted in before the access got 
+disabled.
 
-Note: testing is done by a robot and is best-effort only.
+> +- **prctl()s**:
+> +
+> +  - **PR_SET_TAGGED_ADDR_CTRL**: Invoked by a process, can be used to enable or
+> +    disable its access to the ARM64 Tagged Address ABI.
+
+I still find the wording confusing, because "access to the ABI" is not used 
+consistently. The "tagged_addr" sysctl enables *access to the ABI*, that's fine. 
+However, PR_SET_TAGGED_ADDR_CTRL enables *the ABI itself* (which is only possible if 
+access to the ABI is enabled).
+
+> +
+> +    The (unsigned int) arg2 argument is a bit mask describing the control mode
+> +    used:
+> +
+> +    - **PR_TAGGED_ADDR_ENABLE**: Enable ARM64 Tagged Address ABI.
+> +
+> +    The prctl(PR_SET_TAGGED_ADDR_CTRL, ...) will return -EINVAL if the ARM64
+> +    Tagged Address ABI is not available.
+
+For clarity, it would be good to mention that one possible reason for the ABI not to 
+be available is tagged_addr == 0.
+
+> +
+> +    The arguments arg3, arg4, and arg5 are ignored.
+> +  - **PR_GET_TAGGED_ADDR_CTRL**: can be used to check the status of the Tagged
+> +    Address ABI.
+> +
+> +    The arguments arg2, arg3, arg4, and arg5 are ignored.
+> +
+> +The ABI properties set by the mechanisms described above are inherited by threads
+> +of the same application and fork()'ed children but cleared by execve().
+> +
+> +When a process has successfully opted into the new ABI by invoking
+> +PR_SET_TAGGED_ADDR_CTRL prctl(), this guarantees the following behaviours:
+> +
+> + - Every currently available syscall, except the cases mentioned in section 3, can
+> +   accept any valid tagged pointer. The same rule is applicable to any syscall
+> +   introduced in the future.
+
+I thought Catalin wanted to drop this guarantee?
+
+> + - If a non valid tagged pointer is passed to a syscall then the behaviour
+> +   is undefined.
+> + - Every valid tagged pointer is expected to work as an untagged one.
+> + - The kernel preserves any valid tagged pointer and returns it to the
+> +   userspace unchanged (i.e. on syscall return) in all the cases except the
+> +   ones documented in the "Preserving tags" section of tagged-pointers.txt.
+> +
+> +A definition of the meaning of tagged pointers on arm64 can be found in:
+> +Documentation/arm64/tagged-pointers.txt.
+> +
+> +3. ARM64 Tagged Address ABI Exceptions
+> +--------------------------------------
+> +
+> +The behaviours described in section 2, with particular reference to the
+> +acceptance by the syscalls of any valid tagged pointer are not applicable
+> +to the following cases:
+> +
+> + - mmap() addr parameter.
+> + - mremap() new_address parameter.
+> + - prctl(PR_SET_MM, PR_SET_MM_MAP, ...) struct prctl_mm_map fields.
+> + - prctl(PR_SET_MM, PR_SET_MM_MAP_SIZE, ...) struct prctl_mm_map fields.
+
+All the PR_SET_MM options that specify pointers (PR_SET_MM_START_CODE, 
+PR_SET_MM_END_CODE, ...) should be excluded as well. AFAICT (but don't take my word 
+for it), that's all of them except PR_SET_MM_EXE_FILE. Conversely, PR_SET_MM_MAP_SIZE 
+should not be excluded (it does not pass a prctl_mm_map struct, and the pointer to 
+unsigned int can be tagged).
+
+Kevin
+
+> +
+> +Any attempt to use non-zero tagged pointers will lead to undefined behaviour.
+> +
+> +4. Example of correct usage
+> +---------------------------
+> +.. code-block:: c
+> +
+> +   void main(void)
+> +   {
+> +           static int tbi_enabled = 0;
+> +           unsigned long tag = 0;
+> +
+> +           char *ptr = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE,
+> +                            MAP_ANONYMOUS, -1, 0);
+> +
+> +           if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE,
+> +                     0, 0, 0) == 0)
+> +                   tbi_enabled = 1;
+> +
+> +           if (ptr == (void *)-1) /* MAP_FAILED */
+> +                   return -1;
+> +
+> +           if (tbi_enabled)
+> +                   tag = rand() & 0xff;
+> +
+> +           ptr = (char *)((unsigned long)ptr | (tag << TAG_SHIFT));
+> +
+> +           *ptr = 'a';
+> +
+> +           ...
+> +   }
+> +
