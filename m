@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0807AC0650F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CD3C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DB1208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB35208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:35:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NoAL7B70"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jodB8nit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731490AbfG3Jfa (ORCPT
+        id S1731500AbfG3Jfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:35:30 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46890 "EHLO
+        Tue, 30 Jul 2019 05:35:33 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46846 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730372AbfG3Jf1 (ORCPT
+        with ESMTP id S1729152AbfG3JfM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:35:27 -0400
+        Tue, 30 Jul 2019 05:35:12 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6U9ZLVM100709;
-        Tue, 30 Jul 2019 04:35:21 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6U9Z4h2100620;
+        Tue, 30 Jul 2019 04:35:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564479321;
-        bh=eGNzgMdlWaqSP1xWGSDVyQpsKGVc/JfaJSZbr9EwxCo=;
+        s=ti-com-17Q1; t=1564479304;
+        bh=kaNJDk8EW5fKmIASzKP5pkmnP4IX1NtWg5lMQ5gsd1M=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NoAL7B70ICDEh4LhpegPFuJNz+TJUPPtfgo1ND6+3UdY+yvhS0fRr4XEaTzHbmyIH
-         /hnrAqtfzP8O6Pmf0D28aRumIBFs5odo/H7ZRMfjEiNqHBkfrTeaj0Rqs66i2hFPZW
-         KDHTp91lBze8W635LfbVOe4HVcPWVLBqyu5Wk5IU=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6U9ZLcP059374
+        b=jodB8nitXJ987kfPdiahHVlfUEsAobqZ8MKZpiD/wXPYpuXBAyT/CflkuB+T8JJYQ
+         Y1jx06bKWCi7YQdXJYkjEBqjGOZWl16CWdzKajPv+tOCHLCHXizy8whm7jMMcUIc8b
+         Ae8n8AeLo1O5B6NbnGpasYqHmthMl1zbZod5fKig=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6U9Z468058975
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Jul 2019 04:35:21 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 30 Jul 2019 04:35:04 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Jul 2019 04:35:21 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2019 04:35:04 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Jul 2019 04:35:21 -0500
+ Frontend Transport; Tue, 30 Jul 2019 04:35:04 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6U9YkU4027547;
-        Tue, 30 Jul 2019 04:35:17 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6U9YkU1027547;
+        Tue, 30 Jul 2019 04:35:01 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
         <ssantosh@kernel.org>
@@ -56,227 +56,303 @@ CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-Subject: [PATCH v2 07/14] dt-bindings: dma: ti: Add document for K3 UDMA
-Date:   Tue, 30 Jul 2019 12:34:43 +0300
-Message-ID: <20190730093450.12664-8-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 04/14] dmaengine: Add metadata_ops for dma_async_tx_descriptor
+Date:   Tue, 30 Jul 2019 12:34:40 +0300
+Message-ID: <20190730093450.12664-5-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190730093450.12664-1-peter.ujfalusi@ti.com>
 References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New binding document for
-Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
+The metadata is best described as side band data or parameters traveling
+alongside the data DMAd by the DMA engine. It is data
+which is understood by the peripheral and the peripheral driver only, the
+DMA engine see it only as data block and it is not interpreting it in any
+way.
 
-UDMA-P is introduced as part of the K3 architecture and can be found on
-AM654 and j721e.
+The metadata can be different per descriptor as it is a parameter for the
+data being transferred.
+
+If the DMA supports per descriptor metadata it can implement the attach,
+get_ptr/set_len callbacks.
+
+Client drivers must only use either attach or get_ptr/set_len to avoid
+misconfiguration.
+
+Client driver can check if a given metadata mode is supported by the
+channel during probe time with
+dmaengine_is_metadata_mode_supported(chan, DESC_METADATA_CLIENT);
+dmaengine_is_metadata_mode_supported(chan, DESC_METADATA_ENGINE);
+
+and based on this information can use either mode.
+
+Wrappers are also added for the metadata_ops.
+
+To be used in DESC_METADATA_CLIENT mode:
+dmaengine_desc_attach_metadata()
+
+To be used in DESC_METADATA_ENGINE mode:
+dmaengine_desc_get_metadata_ptr()
+dmaengine_desc_set_metadata_len()
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- .../devicetree/bindings/dma/ti/k3-udma.txt    | 170 ++++++++++++++++++
- include/dt-bindings/dma/k3-udma.h             |  10 ++
- 2 files changed, 180 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.txt
- create mode 100644 include/dt-bindings/dma/k3-udma.h
+ drivers/dma/dmaengine.c   |  73 ++++++++++++++++++++++++++
+ include/linux/dmaengine.h | 108 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 181 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.txt b/Documentation/devicetree/bindings/dma/ti/k3-udma.txt
-new file mode 100644
-index 000000000000..7f30fe583ade
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.txt
-@@ -0,0 +1,170 @@
-+* Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 03ac4b96117c..6baddf7dcbfd 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -1302,6 +1302,79 @@ void dma_async_tx_descriptor_init(struct dma_async_tx_descriptor *tx,
+ }
+ EXPORT_SYMBOL(dma_async_tx_descriptor_init);
+ 
++static inline int desc_check_and_set_metadata_mode(
++	struct dma_async_tx_descriptor *desc, enum dma_desc_metadata_mode mode)
++{
++	/* Make sure that the metadata mode is not mixed */
++	if (!desc->desc_metadata_mode) {
++		if (dmaengine_is_metadata_mode_supported(desc->chan, mode))
++			desc->desc_metadata_mode = mode;
++		else
++			return -ENOTSUPP;
++	} else if (desc->desc_metadata_mode != mode) {
++		return -EINVAL;
++	}
 +
-+The UDMA-P is intended to perform similar (but significantly upgraded) functions
-+as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
-+supports the transmission and reception of various packet types. The UDMA-P is
-+architected to facilitate the segmentation and reassembly of SoC DMA data
-+structure compliant packets to/from smaller data blocks that are natively
-+compatible with the specific requirements of each connected peripheral. Multiple
-+Tx and Rx channels are provided within the DMA which allow multiple segmentation
-+or reassembly operations to be ongoing. The DMA controller maintains state
-+information for each of the channels which allows packet segmentation and
-+reassembly operations to be time division multiplexed between channels in order
-+to share the underlying DMA hardware. An external DMA scheduler is used to
-+control the ordering and rate at which this multiplexing occurs for Transmit
-+operations. The ordering and rate of Receive operations is indirectly controlled
-+by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
++	return 0;
++}
 +
-+The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-+channels. Channels in the UDMA-P can be configured to be either Packet-Based or
-+Third-Party channels on a channel by channel basis.
++int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
++				   void *data, size_t len)
++{
++	int ret;
 +
-+Required properties:
-+--------------------
-+- compatible:		Should be
-+			"ti,am654-navss-main-udmap" for am654 main NAVSS UDMAP
-+			"ti,am654-navss-mcu-udmap" for am654 mcu NAVSS UDMAP
-+			"ti,j721e-navss-main-udmap" for j721e main NAVSS UDMAP
-+			"ti,j721e-navss-mcu-udmap" for j721e mcu NAVSS UDMAP
-+- #dma-cells:		Should be set to <3>.
-+			- The first parameter is a phandle to the remote PSI-L
-+			  endpoint
-+			- The second parameter is the thread offset within the
-+			  remote thread ID range
-+			- The third parameter is the channel direction.
-+- reg:			Memory map of UDMAP
-+- reg-names:		"gcfg", "rchanrt", "tchanrt"
-+- msi-parent:		phandle for "ti,sci-inta" interrupt controller
-+- ti,ringacc:		phandle for the ring accelerator node
-+- ti,psil-base:		PSI-L thread ID base of the UDMAP channels
-+- ti,sci:		phandle on TI-SCI compatible System controller node
-+- ti,sci-dev-id:	TI-SCI device id
-+- ti,sci-rm-range-tchan: UDMA tchan resource list in pairs of type and subtype
-+- ti,sci-rm-range-rchan: UDMA rchan resource list in pairs of type and subtype
-+- ti,sci-rm-range-rflow: UDMA rflow resource list in pairs of type and subtype
++	if (!desc)
++		return -EINVAL;
 +
-+For PSI-L thread management the parent NAVSS node must have:
-+- ti,sci:		phandle on TI-SCI compatible System controller node
-+- ti,sci-dev-id:	TI-SCI device id of the NAVSS instance
++	ret = desc_check_and_set_metadata_mode(desc, DESC_METADATA_CLIENT);
++	if (ret)
++		return ret;
 +
-+Remote PSI-L endpoint
++	if (!desc->metadata_ops || !desc->metadata_ops->attach)
++		return -ENOTSUPP;
 +
-+Required properties:
-+--------------------
-+- ti,psil-base:		PSI-L thread ID base of the endpoint
++	return desc->metadata_ops->attach(desc, data, len);
++}
++EXPORT_SYMBOL_GPL(dmaengine_desc_attach_metadata);
 +
-+Within the PSI-L endpoint node thread configuration subnodes must present with:
-+psil-configX naming convention, where X is the thread ID offset.
++void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
++				      size_t *payload_len, size_t *max_len)
++{
++	int ret;
 +
-+Configuration node Optional properties:
-+--------------------
-+- pdma,statictr-type:	In case the remote endpoint (PDMAs) requires StaticTR
-+			configuration:
-+			- PSIL_STATIC_TR_XY (1): XY type of StaticTR
-+			For endpoints without StaticTR the property is not
-+			needed or to be set PSIL_STATIC_TR_NONE (0).
-+- pdma,enable-acc32:	Force 32 bit access on peripheral port. Only valid for
-+			XY type StaticTR, not supported on am654.
-+			Must be enabled for threads servicing McASP with AFIFO
-+			bypass mode.
-+- pdma,enable-burst:	Enable burst access on peripheral port. Only valid for
-+			XY type StaticTR, not supported on am654.
-+- ti,channel-tpl:	Channel Throughput level:
-+			0 / or not present - normal channel
-+			1 - High Throughput channel
-+			2 - Ultra High Throughput channel (j721e only)
-+- ti,needs-epib:	If the endpoint require EPIB to be present in the
-+			descriptor.
-+- ti,psd-size:		Size of the Protocol Specific Data section of the
-+			descriptor.
++	if (!desc)
++		return ERR_PTR(-EINVAL);
 +
-+Example:
++	ret = desc_check_and_set_metadata_mode(desc, DESC_METADATA_ENGINE);
++	if (ret)
++		return ERR_PTR(ret);
 +
-+main_navss: main_navss {
-+	compatible = "simple-bus";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	dma-coherent;
-+	dma-ranges;
-+	ranges;
++	if (!desc->metadata_ops || !desc->metadata_ops->get_ptr)
++		return ERR_PTR(-ENOTSUPP);
 +
-+	ti,sci = <&dmsc>;
-+	ti,sci-dev-id = <118>;
++	return desc->metadata_ops->get_ptr(desc, payload_len, max_len);
++}
++EXPORT_SYMBOL_GPL(dmaengine_desc_get_metadata_ptr);
 +
-+	main_udmap: dma-controller@31150000 {
-+		compatible = "ti,am654-navss-main-udmap";
-+		reg =	<0x0 0x31150000 0x0 0x100>,
-+			<0x0 0x34000000 0x0 0x100000>,
-+			<0x0 0x35000000 0x0 0x100000>;
-+		reg-names = "gcfg", "rchanrt", "tchanrt";
-+		#dma-cells = <3>;
++int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
++				    size_t payload_len)
++{
++	int ret;
 +
-+		ti,ringacc = <&ringacc>;
-+		ti,psil-base = <0x1000>;
++	if (!desc)
++		return -EINVAL;
 +
-+		interrupt-parent = <&main_udmass_inta>;
++	ret = desc_check_and_set_metadata_mode(desc, DESC_METADATA_ENGINE);
++	if (ret)
++		return ret;
 +
-+		ti,sci = <&dmsc>;
-+		ti,sci-dev-id = <188>;
++	if (!desc->metadata_ops || !desc->metadata_ops->set_len)
++		return -ENOTSUPP;
 +
-+		ti,sci-rm-range-tchan = <0x6 0x1>, /* TX_HCHAN */
-+					<0x6 0x2>; /* TX_CHAN */
-+		ti,sci-rm-range-rchan = <0x6 0x4>, /* RX_HCHAN */
-+					<0x6 0x5>; /* RX_CHAN */
-+		ti,sci-rm-range-rflow = <0x6 0x6>; /* GP RFLOW */
-+	};
++	return desc->metadata_ops->set_len(desc, payload_len);
++}
++EXPORT_SYMBOL_GPL(dmaengine_desc_set_metadata_len);
++
+ /* dma_wait_for_async_tx - spin wait for a transaction to complete
+  * @tx: in-flight transaction to wait on
+  */
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 8fcdee1c0cf9..40d062c3b359 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -219,6 +219,58 @@ typedef struct { DECLARE_BITMAP(bits, DMA_TX_TYPE_END); } dma_cap_mask_t;
+  * @bytes_transferred: byte counter
+  */
+ 
++/**
++ * enum dma_desc_metadata_mode - per descriptor metadata mode types supported
++ * @DESC_METADATA_CLIENT - the metadata buffer is allocated/provided by the
++ *  client driver and it is attached (via the dmaengine_desc_attach_metadata()
++ *  helper) to the descriptor.
++ *
++ * Client drivers interested to use this mode can follow:
++ * - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++ *   1. prepare the descriptor (dmaengine_prep_*)
++ *	construct the metadata in the client's buffer
++ *   2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++ *	descriptor
++ *   3. submit the transfer
++ * - DMA_DEV_TO_MEM:
++ *   1. prepare the descriptor (dmaengine_prep_*)
++ *   2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++ *	descriptor
++ *   3. submit the transfer
++ *   4. when the transfer is completed, the metadata should be available in the
++ *	attached buffer
++ *
++ * @DESC_METADATA_ENGINE - the metadata buffer is allocated/managed by the DMA
++ *  driver. The client driver can ask for the pointer, maximum size and the
++ *  currently used size of the metadata and can directly update or read it.
++ *  dmaengine_desc_get_metadata_ptr() and dmaengine_desc_set_metadata_len() is
++ *  provided as helper functions.
++ *
++ * Client drivers interested to use this mode can follow:
++ * - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++ *   1. prepare the descriptor (dmaengine_prep_*)
++ *   2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the engine's
++ *	metadata area
++ *   3. update the metadata at the pointer
++ *   4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the amount
++ *	of data the client has placed into the metadata buffer
++ *   5. submit the transfer
++ * - DMA_DEV_TO_MEM:
++ *   1. prepare the descriptor (dmaengine_prep_*)
++ *   2. submit the transfer
++ *   3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
++ *	pointer to the engine's metadata are
++ *   4. Read out the metadate from the pointer
++ *
++ * Note: the two mode is not compatible and clients must use one mode for a
++ * descriptor.
++ */
++enum dma_desc_metadata_mode {
++	DESC_METADATA_NONE = 0,
++	DESC_METADATA_CLIENT = BIT(0),
++	DESC_METADATA_ENGINE = BIT(1),
 +};
 +
-+psilss@340c000 {
-+	/* PSILSS1 AASRC */
-+	compatible = "ti,j721e-psilss";
-+	reg = <0x0 0x0340c000 0x0 0x1000>;
-+	reg-names = "config";
+ struct dma_chan_percpu {
+ 	/* stats */
+ 	unsigned long memcpy_count;
+@@ -475,6 +527,18 @@ struct dmaengine_unmap_data {
+ 	dma_addr_t addr[0];
+ };
+ 
++struct dma_async_tx_descriptor;
 +
-+	pdma_main_mcasp_g0: pdma_main_mcasp_g0 {
-+		/* PDMA6 (PDMA_MCASP_G0) */
-+		ti,psil-base = <0x4400>;
++struct dma_descriptor_metadata_ops {
++	int (*attach)(struct dma_async_tx_descriptor *desc, void *data,
++		      size_t len);
 +
-+		/* psil-config0 */
-+		psil-config0 {
-+			pdma,statictr-type = <PSIL_STATIC_TR_XY>;
-+			pdma,enable-acc32;
-+			pdma,enable-burst;
-+		};
-+	};
++	void *(*get_ptr)(struct dma_async_tx_descriptor *desc,
++			 size_t *payload_len, size_t *max_len);
++	int (*set_len)(struct dma_async_tx_descriptor *desc,
++		       size_t payload_len);
 +};
 +
-+mcasp0: mcasp@02B00000 {
-+...
-+	/* tx: PDMA_MAIN_MCASP_G0-0, rx: PDMA_MAIN_MCASP_G0-0 */
-+	dmas = <&main_udmap &pdma_main_mcasp_g0 0 UDMA_DIR_TX>,
-+	       <&main_udmap &pdma_main_mcasp_g0 0 UDMA_DIR_RX>;
-+	dma-names = "tx", "rx";
-+...
-+};
+ /**
+  * struct dma_async_tx_descriptor - async transaction descriptor
+  * ---dma generic offload fields---
+@@ -488,6 +552,11 @@ struct dmaengine_unmap_data {
+  * descriptor pending. To be pushed on .issue_pending() call
+  * @callback: routine to call after this operation is complete
+  * @callback_param: general parameter to pass to the callback routine
++ * @desc_metadata_mode: core managed metadata mode to protect mixed use of
++ *	DESC_METADATA_CLIENT or DESC_METADATA_ENGINE. Otherwise
++ *	DESC_METADATA_NONE
++ * @metadata_ops: DMA driver provided metadata mode ops, need to be set by the
++ *	DMA driver if metadata mode is supported with the descriptor
+  * ---async_tx api specific fields---
+  * @next: at completion submit this descriptor
+  * @parent: pointer to the next level up in the dependency chain
+@@ -504,6 +573,8 @@ struct dma_async_tx_descriptor {
+ 	dma_async_tx_callback_result callback_result;
+ 	void *callback_param;
+ 	struct dmaengine_unmap_data *unmap;
++	enum dma_desc_metadata_mode desc_metadata_mode;
++	struct dma_descriptor_metadata_ops *metadata_ops;
+ #ifdef CONFIG_ASYNC_TX_ENABLE_CHANNEL_SWITCH
+ 	struct dma_async_tx_descriptor *next;
+ 	struct dma_async_tx_descriptor *parent;
+@@ -666,6 +737,7 @@ struct dma_filter {
+  * @global_node: list_head for global dma_device_list
+  * @filter: information for device/slave to filter function/param mapping
+  * @cap_mask: one or more dma_capability flags
++ * @desc_metadata_modes: supported metadata modes by the DMA device
+  * @max_xor: maximum number of xor sources, 0 if no capability
+  * @max_pq: maximum number of PQ sources and PQ-continue capability
+  * @copy_align: alignment shift for memcpy operations
+@@ -727,6 +799,7 @@ struct dma_device {
+ 	struct list_head global_node;
+ 	struct dma_filter filter;
+ 	dma_cap_mask_t  cap_mask;
++	enum dma_desc_metadata_mode desc_metadata_modes;
+ 	unsigned short max_xor;
+ 	unsigned short max_pq;
+ 	enum dmaengine_alignment copy_align;
+@@ -902,6 +975,41 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_memcpy(
+ 						    len, flags);
+ }
+ 
++static inline bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
++		enum dma_desc_metadata_mode mode)
++{
++	if (!chan)
++		return false;
 +
-+crypto: crypto@4E00000 {
-+	compatible = "ti,sa2ul-crypto";
-+...
++	return !!(chan->device->desc_metadata_modes & mode);
++}
 +
-+	/* tx: crypto_pnp-1, rx: crypto_pnp-1 */
-+	dmas = <&main_udmap &crypto 0 UDMA_DIR_TX>,
-+	       <&main_udmap &crypto 0 UDMA_DIR_RX>,
-+	       <&main_udmap &crypto 1 UDMA_DIR_RX>;
-+	dma-names = "tx", "rx1", "rx2";
-+...
-+	psil-config0 {
-+		ti,needs-epib;
-+		ti,psd-size = <64>;
-+	};
++#ifdef CONFIG_DMA_ENGINE
++int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
++				   void *data, size_t len);
++void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
++				      size_t *payload_len, size_t *max_len);
++int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
++				    size_t payload_len);
++#else /* CONFIG_DMA_ENGINE */
++static inline int dmaengine_desc_attach_metadata(
++		struct dma_async_tx_descriptor *desc, void *data, size_t len)
++{
++	return -EINVAL;
++}
++static inline void *dmaengine_desc_get_metadata_ptr(
++		struct dma_async_tx_descriptor *desc, size_t *payload_len,
++		size_t *max_len)
++{
++	return NULL;
++}
++static inline int dmaengine_desc_set_metadata_len(
++		struct dma_async_tx_descriptor *desc, size_t payload_len)
++{
++	return -EINVAL;
++}
++#endif /* CONFIG_DMA_ENGINE */
 +
-+	psil-config1 {
-+		ti,needs-epib;
-+		ti,psd-size = <64>;
-+	};
-+
-+	psil-config2 {
-+		ti,needs-epib;
-+		ti,psd-size = <64>;
-+	};
-+};
-diff --git a/include/dt-bindings/dma/k3-udma.h b/include/dt-bindings/dma/k3-udma.h
-new file mode 100644
-index 000000000000..f5c8f5d50491
---- /dev/null
-+++ b/include/dt-bindings/dma/k3-udma.h
-@@ -0,0 +1,10 @@
-+#ifndef __DT_TI_UDMA_H
-+#define __DT_TI_UDMA_H
-+
-+#define UDMA_DIR_TX		0
-+#define UDMA_DIR_RX		1
-+
-+#define PSIL_STATIC_TR_NONE	0
-+#define PSIL_STATIC_TR_XY	1
-+
-+#endif /* __DT_TI_UDMA_H */
+ /**
+  * dmaengine_terminate_all() - Terminate all active DMA transfers
+  * @chan: The channel for which to terminate the transfers
 -- 
 Peter
 
