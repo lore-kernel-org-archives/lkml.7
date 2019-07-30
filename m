@@ -2,139 +2,85 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F463C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B64FC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3099D20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:52:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FO4rYDDg"
+	by mail.kernel.org (Postfix) with ESMTP id 463AF20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 16:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfG3Qwj (ORCPT
+        id S1728758AbfG3Qxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 12:52:39 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:51079 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfG3Qwj (ORCPT
+        Tue, 30 Jul 2019 12:53:46 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:51842 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfG3Qxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 12:52:39 -0400
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x6UGqRjc009430;
-        Wed, 31 Jul 2019 01:52:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6UGqRjc009430
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564505548;
-        bh=PvSEBqZWfmwsN/sOjPp2xPA9GzkBwa9v1B0DUjIdaBk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FO4rYDDgNQdjdMPB1Kf1Co5ftlBbGAD7Q9jmf+xUEkyzn4kxR7HVkm8M/yXA1s9Nl
-         +HR+WrptzqSKwNIcYTxZBxu+4sqPP4lF1vMBwbrQKiWOj14iPih0YkkR7r1Zf8cpKG
-         rIncAbtkDs/bo/IVzJmKyyejNI/Wfs+HLhM5YEjkTDl2G7HgGvm8ZVVFcsV0WQJYyF
-         6vWxzAKIjDq4L9bq6UQ9syHugUypiMGFZ6Uj4VkOqL8ZEPubawgwB2xzqmqsjuC7Ap
-         cObi8YUSM4kcji0E0is94fmEwfzGBHI4XoHVlkChWXURb+Vw1dQGdAUbZYOvnXZAqC
-         ZYm+qP06FvwDg==
-X-Nifty-SrcIP: [209.85.221.178]
-Received: by mail-vk1-f178.google.com with SMTP id 130so12943280vkn.9;
-        Tue, 30 Jul 2019 09:52:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAWzc90YQDZLIllhv6VNlvNvpAktP93DeBNQIZ4jeih4fhs/icnF
-        xoz2+zuaKq+kFsGoPtgWqvQPj6VtbTgeYyY2Yec=
-X-Google-Smtp-Source: APXvYqxKXL4lCm34XwhoiOA9tEsr2PPz0ouAza32ECX9cNfNWdNzuam/981BnQOJQn2NH1Lu/g4xi+CSshl0S2bSAQo=
-X-Received: by 2002:a1f:728b:: with SMTP id n133mr45007335vkc.84.1564505546515;
- Tue, 30 Jul 2019 09:52:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190730164803.45080-1-swboyd@chromium.org> <20190730164959.GA129059@archlinux-threadripper>
-In-Reply-To: <20190730164959.GA129059@archlinux-threadripper>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 31 Jul 2019 01:51:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARvyxzJa9CG-4uSoE7asdHp=Cbeh71_13dmuP8zMJtqSA@mail.gmail.com>
-Message-ID: <CAK7LNARvyxzJa9CG-4uSoE7asdHp=Cbeh71_13dmuP8zMJtqSA@mail.gmail.com>
-Subject: Re: [PATCH v3] kbuild: Check for unknown options with cc-option usage
- in Kconfig and clang
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Douglas Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Jul 2019 12:53:46 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 700DE1264E7CA;
+        Tue, 30 Jul 2019 09:53:45 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 09:53:44 -0700 (PDT)
+Message-Id: <20190730.095344.401137621326119500.davem@davemloft.net>
+To:     claudiu.manoil@nxp.com
+Cc:     andrew@lunn.ch, robh+dt@kernel.org, leoyang.li@nxp.com,
+        alexandru.marginean@nxp.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v4 0/4] enetc: Add mdio bus driver for the
+ PCIe MDIO endpoint
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190730.094436.855806617449032791.davem@davemloft.net>
+References: <1564479919-18835-1-git-send-email-claudiu.manoil@nxp.com>
+        <20190730.094436.855806617449032791.davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Jul 2019 09:53:45 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 1:50 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Tue, Jul 30, 2019 at 09:48:03AM -0700, Stephen Boyd wrote:
-> > If the particular version of clang a user has doesn't enable
-> > -Werror=unknown-warning-option by default, even though it is the
-> > default[1], then make sure to pass the option to the Kconfig cc-option
-> > command so that testing options from Kconfig files works properly.
-> > Otherwise, depending on the default values setup in the clang toolchain
-> > we will silently assume options such as -Wmaybe-uninitialized are
-> > supported by clang, when they really aren't.
-> >
-> > A compilation issue only started happening for me once commit
-> > 589834b3a009 ("kbuild: Add -Werror=unknown-warning-option to
-> > CLANG_FLAGS") was applied on top of commit b303c6df80c9 ("kbuild:
-> > compute false-positive -Wmaybe-uninitialized cases in Kconfig"). This
-> > leads kbuild to try and test for the existence of the
-> > -Wmaybe-uninitialized flag with the cc-option command in
-> > scripts/Kconfig.include, and it doesn't see an error returned from the
-> > option test so it sets the config value to Y. Then the Makefile tries to
-> > pass the unknown option on the command line and
-> > -Werror=unknown-warning-option catches the invalid option and breaks the
-> > build. Before commit 589834b3a009 ("kbuild: Add
-> > -Werror=unknown-warning-option to CLANG_FLAGS") the build works fine,
-> > but any cc-option test of a warning option in Kconfig files silently
-> > evaluates to true, even if the warning option flag isn't supported on
-> > clang.
-> >
-> > Note: This doesn't change cc-option usages in Makefiles because those
-> > use a different rule that includes KBUILD_CFLAGS by default (see the
-> > __cc-option command in scripts/Kbuild.incluide). The KBUILD_CFLAGS
-> > variable already has the -Werror=unknown-warning-option flag set. Thanks
-> > to Doug for pointing out the different rule.
-> >
-> > [1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
-> > Cc: Peter Smith <peter.smith@linaro.org>
-> > Cc: Nathan Chancellor <natechancellor@gmail.com>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Cc: Douglas Anderson <dianders@chromium.org>
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
->
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
->
-> > ---
-> >  Makefile                | 1 +
-> >  scripts/Kconfig.include | 2 +-
-> >  2 files changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index 9be5834073f8..517d0a3f6539 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -536,6 +536,7 @@ KBUILD_AFLAGS     += $(CLANG_FLAGS)
-> >  export CLANG_FLAGS
-> >  endif
-> >
-> > +
->
-> Not sure it's worth sending a v4 for but I don't think this should be
-> there.
-
-
-I will remove it when I apply this.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogVHVlLCAzMCBK
+dWwgMjAxOSAwOTo0NDozNiAtMDcwMCAoUERUKQ0KDQo+IEZyb206IENsYXVkaXUgTWFub2lsIDxj
+bGF1ZGl1Lm1hbm9pbEBueHAuY29tPg0KPiBEYXRlOiBUdWUsIDMwIEp1bCAyMDE5IDEyOjQ1OjE1
+ICswMzAwDQo+IA0KPj4gRmlyc3QgcGF0Y2ggZml4ZXMgYSBzcGFyc2UgaXNzdWUgYW5kIGNsZWFu
+cyB1cCBhY2Nlc3NvcnMgdG8gYXZvaWQNCj4+IGNhc3RpbmcgdG8gX19pb21lbS4NCj4+IFNlY29u
+ZCBwYXRjaCBqdXN0IHJlZ2lzdGVycyB0aGUgUENJZSBlbmRwb2ludCBkZXZpY2UgY29udGFpbmlu
+Zw0KPj4gdGhlIE1ESU8gcmVnaXN0ZXJzIGFzIGEgc3RhbmRhbG9uZSBNRElPIGJ1cyBkcml2ZXIs
+IHRvIGFsbG93DQo+PiBhbiBhbHRlcm5hdGl2ZSB3YXkgdG8gY29udHJvbCB0aGUgTURJTyBidXMu
+ICBUaGUgc2FtZSBjb2RlIHVzZWQNCj4+IGJ5IHRoZSBFTkVUQyBwb3J0cyAoZXRoIGNvbnRyb2xs
+ZXJzKSB0byBtYW5hZ2UgTURJTyB2aWEgbG9jYWwNCj4+IHJlZ2lzdGVycyBhcHBsaWVzIGFuZCBp
+cyByZXVzZWQuDQo+PiANCj4+IEJpbmRpbmdzIGFyZSBwcm92aWRlZCBmb3IgdGhlIG5ldyBNRElP
+IG5vZGUsIHNpbWlsYXJseSB0byBFTkVUQw0KPj4gcG9ydCBub2RlcyBiaW5kaW5ncy4NCj4+IA0K
+Pj4gTGFzdCBwYXRjaCBlbmFibGVzIHRoZSBFTkVUQyBwb3J0IDEgYW5kIGl0cyBSR01JSSBQSFkg
+b24gdGhlDQo+PiBMUzEwMjhBIFFEUyBib2FyZCwgd2hlcmUgdGhlIE1ESU8gbXV4aW5nIGNvbmZp
+Z3VyYXRpb24gcmVsaWVzDQo+PiBvbiB0aGUgTURJTyBzdXBwb3J0IHByb3ZpZGVkIGluIHRoZSBm
+aXJzdCBwYXRjaC4NCj4gIC4uLg0KPiANCj4gU2VyaWVzIGFwcGxpZWQsIHRoYW5rIHlvdS4NCg0K
+QWN0dWFsbHkgdGhpcyBkb2Vzbid0IGNvbXBpbGUsIEkgaGFkIHRvIHJldmVydDoNCg0KSW4gZmls
+ZSBpbmNsdWRlZCBmcm9tIC4vaW5jbHVkZS9saW51eC9waHkuaDoyMCwNCiAgICAgICAgICAgICAg
+ICAgZnJvbSAuL2luY2x1ZGUvbGludXgvb2ZfbWRpby5oOjExLA0KICAgICAgICAgICAgICAgICBm
+cm9tIGRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19tZGlvLmM6NToN
+CmRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19tZGlvLmM6Mjg0OjI2
+OiBlcnJvcjogoWVuZXRjX21kaW9faWRfdGFibGWiIHVuZGVjbGFyZWQgaGVyZSAobm90IGluIGEg
+ZnVuY3Rpb24pOyBkaWQgeW91IG1lYW4goWVuZXRjX3BjaV9tZGlvX2lkX3RhYmxloj8NCiBNT0RV
+TEVfREVWSUNFX1RBQkxFKHBjaSwgZW5ldGNfbWRpb19pZF90YWJsZSk7DQogICAgICAgICAgICAg
+ICAgICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fn4NCi4vaW5jbHVkZS9saW51eC9tb2R1bGUu
+aDoyMzA6MTU6IG5vdGU6IGluIGRlZmluaXRpb24gb2YgbWFjcm8goU1PRFVMRV9ERVZJQ0VfVEFC
+TEWiDQogZXh0ZXJuIHR5cGVvZihuYW1lKSBfX21vZF8jI3R5cGUjI19fIyNuYW1lIyNfZGV2aWNl
+X3RhYmxlICBcDQogICAgICAgICAgICAgICBefn5+DQouL2luY2x1ZGUvbGludXgvbW9kdWxlLmg6
+MjMwOjIxOiBlcnJvcjogoV9fbW9kX3BjaV9fZW5ldGNfbWRpb19pZF90YWJsZV9kZXZpY2VfdGFi
+bGWiIGFsaWFzZWQgdG8gdW5kZWZpbmVkIHN5bWJvbCChZW5ldGNfbWRpb19pZF90YWJsZaINCiBl
+eHRlcm4gdHlwZW9mKG5hbWUpIF9fbW9kXyMjdHlwZSMjX18jI25hbWUjI19kZXZpY2VfdGFibGUg
+IFwNCiAgICAgICAgICAgICAgICAgICAgIF5+fn5+fg0KZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJl
+ZXNjYWxlL2VuZXRjL2VuZXRjX21kaW8uYzoyODQ6MTogbm90ZTogaW4gZXhwYW5zaW9uIG9mIG1h
+Y3JvIKFNT0RVTEVfREVWSUNFX1RBQkxFog0KIE1PRFVMRV9ERVZJQ0VfVEFCTEUocGNpLCBlbmV0
+Y19tZGlvX2lkX3RhYmxlKTsNCiBefn5+fn5+fn5+fn5+fn5+fn5+DQo=
