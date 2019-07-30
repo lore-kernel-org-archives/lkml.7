@@ -2,141 +2,160 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB12C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CB5C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A06D20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C1E20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:02:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZbeCYiF"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FoanKqKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbfG3XBJ (ORCPT
+        id S1726906AbfG3XCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 19:01:09 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35551 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfG3XBI (ORCPT
+        Tue, 30 Jul 2019 19:02:45 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33264 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfG3XCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 19:01:08 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s1so24511544pgr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 16:01:08 -0700 (PDT)
+        Tue, 30 Jul 2019 19:02:45 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c14so29404931plo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 16:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QkytYeH7M66nBAoxCQa0bNBGsymk7oY3s7W/ud/aulQ=;
-        b=lZbeCYiFHn/t0t6F+ChT5unZY+5uTZKrCGEloLfqvJgD+wwHI7PM6JvcurR3hXG0Yg
-         FMyzS5zW3wvGb777PQdA0k1hEHTHyqRgLpfFbmW4JVAnjrPaoPAEeXmDM58BkL8XK+hW
-         iCIuaoLH7nMJLLtfhpc0edA6bMMyhCI3DycK/lsZZMyh4E1cxu9gTvcEorjrYA4GRRrq
-         4DN1fYDeJ4v6M16KMwtAs4FJa9BE5ha1Qbku48nNtZiy7QxrvrFzs8ASeloSiz8j6jxq
-         9JU8uwsvKDTAXzHxc8WM3Y2jpnwxZoLmw5yzswesSEUt4z03NbPtksue8thNq0HpmxCN
-         4omw==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=l67md0ipmih3vEYzhRRc7F2bAQdJBdaBVciR4FmReuc=;
+        b=FoanKqKHePYQ/GrvPeWBEWvqtTZlkzE2ilWM53avnGJq/i7+zFPkZBhfZDKsatefR1
+         /vUJBumYNSjcpb1s85/pZN3MhOWcMdMsG8jYjn0KJMxNSBFQgQNdbKyH9f3/GciscsFS
+         YMsi0Q1Whsbp9UbLbS294SGQazWyStgu9hW84=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QkytYeH7M66nBAoxCQa0bNBGsymk7oY3s7W/ud/aulQ=;
-        b=ACTdwmVAXauDnjyGshZXvrPZ5v8SgMm8J1a5hZWC9TGVShGfxkeA67ZbOkAgUTSuCY
-         cskeP+pN/YHuS3hfJWLGdOuuh8fFZvsniYFAc+dlmw4iZR3EBOFySUn1cnlMz/LrLLG8
-         SxN4e5j3Fi5Bz995Kg5m3nID0ZwEJvYyxTQtLOILgSuubnspdgwvVM4K/SRZXWi8kO8I
-         DoGA+phUv6TBCKFRqNExuytTvyPF/5xtdB79pXhuE4gXeFqm4ksHxnFf3ZbWqok/gGWp
-         PsgWFguJoI5DWIzoAnub6a7pGaCatfV/28oZWoKP+MjbZmTN7zXqiP1r4v41uERYrWTo
-         13/g==
-X-Gm-Message-State: APjAAAXNEJUCNdZ8gATIdbh8r0LSYjQxhiPYJtoP/9g+O1ZxC55qsGuw
-        vrtfsHZ2B+F7IhUK4NJhRHc=
-X-Google-Smtp-Source: APXvYqxZB4H2ozpiUg+eNXM9lA/nk8Bx4kCAQNMkihvOXk6znIkuChUDwYlzk05yBdkdNw5K835/HQ==
-X-Received: by 2002:a62:87c8:: with SMTP id i191mr44314801pfe.133.1564527668085;
-        Tue, 30 Jul 2019 16:01:08 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id q22sm60432615pgh.49.2019.07.30.16.01.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 16:01:07 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: add cache support for arm64
-Date:   Tue, 30 Jul 2019 15:58:46 -0700
-Message-Id: <20190730225852.30319-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=l67md0ipmih3vEYzhRRc7F2bAQdJBdaBVciR4FmReuc=;
+        b=tajRk85gcVGWo5CcgtXxJCNo77LY/NWNQfYpYwB5obw26SVRhwweCJgW0ojwju9Lbc
+         mRrsBe8IysoPaCdzk7d7a6+REQ1q9MuJDD+D0Q8XsLaECiTtyw86UMfYhZZ2m/Qo6MC3
+         HBOWKUd5Z+1tHM1YWQwu5qCrN6dlTLS/X/sv+A890UH46WXsLl1LmxkSABXnJCvM68zG
+         8N5d5WlsCbO/YgV6uk8wiR7gLPVFkbZ4xjm2iTPDLZjbx7XnKptmkCYZbrWV8XU26sks
+         8iD8EF+F9pExTo+vKia7nyBpFaSuEtuchP6xMvditZxGImYo2EA99ZsmrGIUkepFOdJZ
+         zE7A==
+X-Gm-Message-State: APjAAAWwohFp7QiK3FggivW2/39clftKpfhUtfa3YG9kRU4WJeTYYtmh
+        SKD0B/8+Z2AH3gS81yVra0BxhQ==
+X-Google-Smtp-Source: APXvYqwUk27zn0JCuQwSvkSJo6y2lurAjkBcMNe5dHp0Tlc7AJtK0D/iS5BlcdMAfIqKU7IIdM1gwA==
+X-Received: by 2002:a17:902:da4:: with SMTP id 33mr107262813plv.209.1564527764489;
+        Tue, 30 Jul 2019 16:02:44 -0700 (PDT)
+Received: from [10.136.13.136] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id b26sm74753491pfo.129.2019.07.30.16.02.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 16:02:43 -0700 (PDT)
+Subject: Re: [PATCH 3/3] soc: qcom: mdt_loader: add offset to
+ request_firmware_into_buf
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>
+References: <20190523025113.4605-1-scott.branden@broadcom.com>
+ <20190523025113.4605-4-scott.branden@broadcom.com>
+ <20190523055212.GA22946@kroah.com>
+ <c12872f5-4dc3-9bc4-f89b-27037dc0b6ff@broadcom.com>
+ <20190523165605.GB21048@kroah.com> <20190527053607.GV31438@minitux>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <4aec9d4e-fd6c-afba-d051-6ab22bdfa17f@broadcom.com>
+Date:   Tue, 30 Jul 2019 16:02:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190527053607.GV31438@minitux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Hi Bjorn,
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
-Not sure about 32b arm, but at least for aarch64 this is relatively
-easy.  So lets at least enable for arm64.
+On 2019-05-26 10:36 p.m., Bjorn Andersson wrote:
+> On Thu 23 May 09:56 PDT 2019, Greg Kroah-Hartman wrote:
+>
+>> On Thu, May 23, 2019 at 09:41:49AM -0700, Scott Branden wrote:
+>>> Hi Greg,
+>>>
+>>> On 2019-05-22 10:52 p.m., Greg Kroah-Hartman wrote:
+>>>> On Wed, May 22, 2019 at 07:51:13PM -0700, Scott Branden wrote:
+>>>>> Adjust request_firmware_into_buf API to allow for portions
+>>>>> of firmware file to be read into a buffer.  mdt_loader still
+>>>>> retricts request fo whole file read into buffer.
+>>>>>
+>>>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>>>>> ---
+>>>>>    drivers/soc/qcom/mdt_loader.c | 7 +++++--
+>>>>>    1 file changed, 5 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
+>>>>> index 1c488024c698..ad20d159699c 100644
+>>>>> --- a/drivers/soc/qcom/mdt_loader.c
+>>>>> +++ b/drivers/soc/qcom/mdt_loader.c
+>>>>> @@ -172,8 +172,11 @@ static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
+>>>>>    		if (phdr->p_filesz) {
+>>>>>    			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
+>>>>> -			ret = request_firmware_into_buf(&seg_fw, fw_name, dev,
+>>>>> -							ptr, phdr->p_filesz);
+>>>>> +			ret = request_firmware_into_buf
+>>>>> +						(&seg_fw, fw_name, dev,
+>>>>> +						 ptr, phdr->p_filesz,
+>>>>> +						 0,
+>>>>> +						 KERNEL_PREAD_FLAG_WHOLE);
+>>>> So, all that work in the first 2 patches for no real change at all?  Why
+>>>> are these changes even needed?
+>>> The first two patches allow partial read of files into memory.
+>>>
+>>> Existing kernel drivers haven't need such functionality so, yes, there
+>>> should be no real change
+>>>
+>>> with first two patches other than adding such partial file read support.
+>>>
+>>> We have a new driver in development which needs partial read of files
+>>> supported in the kernel.
+>> As I said before, I can not take new apis without any in-kernel user.
+>> So let's wait for your new code that thinks it needs this, and then we
+>> will be glad to evaluate all of this at that point in time.
+>>
+> The .mdt files are ELF files split to avoid having to allocate large
+> (5-60MB) chunks of temporary firmware buffers while installing the
+> segments.
+>
+> But for multiple reasons it would be nice to be able to load the
+> non-split ELF files and the proposed interface would allow this.
+>
+> So I definitely like the gist of the series.
+>
+>> To do so otherwise is to have loads of unused "features" aquiring cruft
+>> in the kernel source, and you do not want that.
+>>
+> Agreed.
+>
+> I'll take the opportunity and see if I can implement this (support for
+> non-split Qualcomm firmware) based on the patches in this series.
 
- drivers/gpu/drm/drm_cache.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+I'm back from my leave now.
 
-diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
-index 3bd76e918b5d..90105c637797 100644
---- a/drivers/gpu/drm/drm_cache.c
-+++ b/drivers/gpu/drm/drm_cache.c
-@@ -69,6 +69,14 @@ static void drm_cache_flush_clflush(struct page *pages[],
- }
- #endif
- 
-+#if defined(__powerpc__)
-+static void __flush_dcache_area(void *addr, size_t len)
-+{
-+	flush_dcache_range((unsigned long)addr,
-+			   (unsigned long)addr + PAGE_SIZE);
-+}
-+#endif
-+
- /**
-  * drm_clflush_pages - Flush dcache lines of a set of pages.
-  * @pages: List of pages to be flushed.
-@@ -90,7 +98,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
- 	if (wbinvd_on_all_cpus())
- 		pr_err("Timed out waiting for cache flush\n");
- 
--#elif defined(__powerpc__)
-+#elif defined(__powerpc__) || defined(CONFIG_ARM64)
- 	unsigned long i;
- 	for (i = 0; i < num_pages; i++) {
- 		struct page *page = pages[i];
-@@ -100,8 +108,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
- 			continue;
- 
- 		page_virtual = kmap_atomic(page);
--		flush_dcache_range((unsigned long)page_virtual,
--				   (unsigned long)page_virtual + PAGE_SIZE);
-+		__flush_dcache_area(page_virtual, PAGE_SIZE);
- 		kunmap_atomic(page_virtual);
- 	}
- #else
-@@ -135,6 +142,13 @@ drm_clflush_sg(struct sg_table *st)
- 
- 	if (wbinvd_on_all_cpus())
- 		pr_err("Timed out waiting for cache flush\n");
-+#elif defined(CONFIG_ARM64)
-+	struct sg_page_iter sg_iter;
-+
-+	for_each_sg_page(st->sgl, &sg_iter, st->nents, 0) {
-+		struct page *p = sg_page_iter_page(&sg_iter);
-+		drm_clflush_pages(&p, 1);
-+	}
- #else
- 	pr_err("Architecture has no drm_cache.c support\n");
- 	WARN_ON_ONCE(1);
--- 
-2.21.0
+Have you managed to utilize my partial firmware read in your driver yet?
 
+>
+> Regards,
+> Bjorn
