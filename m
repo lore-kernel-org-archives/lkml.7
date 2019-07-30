@@ -2,192 +2,115 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A165CC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CABC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6DD2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928042070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 01:17:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="f9JjiX8o";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RSnK+zp5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lrd2ibiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbfG3BJg (ORCPT
+        id S1729172AbfG3BRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jul 2019 21:09:36 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:58955 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728351AbfG3BJf (ORCPT
+        Mon, 29 Jul 2019 21:17:23 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60318 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfG3BRX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jul 2019 21:09:35 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3E9B01BF6;
-        Mon, 29 Jul 2019 21:09:34 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Mon, 29 Jul 2019 21:09:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=eN6StjwqcbFvBGm255dFKEDbANWqniw
-        k/QHr4l2B8Yk=; b=f9JjiX8oQOMQXV/cuozHUCB4pzOqt3MgGW5j+ieLKBluIxW
-        9qTwq16SPmkbKZ2pU0uVnnexkGeGhPnlufG7wmA9iOB42se/Uf/FR/SHRk5vwHMb
-        rQ0Kj3wnv5HEKZnzXLIyQSCyTI2BpBfwflzcNYzctlZqmI+CiNJ4l4JgrgYy6r1m
-        NJ9miZpWKnckdH5OlyCDvoQhsp3Kvkw/0tg7IdjqtutG3J+VFry8r4NtTXuQMCpM
-        Y6Et7QDm66hADgvC81l39Y6KDmUmhQwayD2oFZUbxxLT5/9WVXrd39o8b0C+4VIy
-        iVWvG6oFint2AoFBApfI8FzvRiWseYT3VPb+7zg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=eN6Stj
-        wqcbFvBGm255dFKEDbANWqniwk/QHr4l2B8Yk=; b=RSnK+zp5XQ2Pj5z+B23X3U
-        FxtVThX/Pze3piInoA1RfkTO/LJ0EGEq98eNVSd1eayua0j3DZTD7yqo/zuzj9Hz
-        BJWf2XEEi2wSi2MjH8aXEb8hcpxabAx/M0QK+2q9n9lpZ9NWpF3alykQ+Bv6xtgx
-        /XWZAievp2xWgqhiB2Ym8D5RZ+YPNw4BrNm2whyqOcknssCzFWm/Z3P1yuBzQNoj
-        11ctvzcg61B2PnNNPi7X5dSMMmi9/DyZdlAGJb8biY1URabakNUt7sRc807uNwMX
-        itWgUD4bHFSaAjDddJCQ1vLncAc4VDDt0s59RTrrMKeF8c9RXtnLxt12QtMWj8fg
-        ==
-X-ME-Sender: <xms:ypg_XWD0fvgphH0bKAtdbmjhhV4XR9GAIDKsRB10kWINyjXLH4Wc0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrledvgdegvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:ypg_XaL_sEFBx_mHFMgwgdfWYKnqPOJC6LSyKiv9-P9kg1toiahNEg>
-    <xmx:ypg_XZlbMtW5I8SQZPxmkF3EJHXElDHsuPGNjGotVFbMyyLiQfev6w>
-    <xmx:ypg_XYF-Rlh1zv2TKQf5VjLD5Ztb6lISs-krArhgwH0JB916oBBO-A>
-    <xmx:zpg_XY3LE8XATRTj3ADjatzlERoBIPOZF0DQiunqP5xql6r5inXSmQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id C726FE00A2; Mon, 29 Jul 2019 21:09:30 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-736-gdfb8e44-fmstable-20190718v2
-Mime-Version: 1.0
-Message-Id: <fd8e57f0-aee2-403e-b6fb-76d0c18fe306@www.fastmail.com>
-In-Reply-To: <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
-References: <20190726053959.2003-1-andrew@aj.id.au>
- <CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com>
-Date:   Tue, 30 Jul 2019 10:39:50 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Rob Herring" <robh+dt@kernel.org>
-Cc:     linux-aspeed@lists.ozlabs.org,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Adriana Kobylak" <anoo@us.ibm.com>,
-        "Alexander A. Filippov" <a.filippov@yadro.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        =?UTF-8?Q?YangBrianC=2EW_=E6=A5=8A=E5=98=89=E5=81=89_TAO?= 
-        <yang.brianc.w@inventec.com>, "Corey Minyard" <minyard@acm.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
-        "John Wang" <wangzqbj@inspur.com>,
-        "Ken Chen" <chen.kenyy@inventec.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net,
-        "Patrick Venture" <venture@google.com>,
-        "Stefan M Schaeckeler" <sschaeck@cisco.com>,
-        "Tao Ren" <taoren@fb.com>, "Xo Wang" <xow@google.com>,
-        yao.yuan@linaro.org
-Subject: Re: [RFC-ish PATCH 00/17] Clean up ASPEED devicetree warnings
-Content-Type: text/plain
+        Mon, 29 Jul 2019 21:17:23 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6U190lm095809;
+        Tue, 30 Jul 2019 01:17:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=iumkHWQ2CU+6vEndFa9rALCBH5vcywCypV35JqjEYuM=;
+ b=Lrd2ibiPbasU4zU5rVXmZLNO4kuSScxGUrQRWivWkfvF3sorO//molh44zumvlGpCo4F
+ nm2wOrzsCOpZ/ypU+f4CRl2PcQdc2eUiTsC/1UbhOsDwT38wZdWgG9NULEyYoNNFs2ar
+ C/aAUdE7IJ+s8E/JWHGRpaoNmK3/0vZGGXRcU83Q6Ym7uJgkrJWhqFNjBhS4P2/grHwE
+ 1uQcUY4DkdRpZp4HmfxGuKj9E3JgR2n1eyXDqSWCh2Q6tcCelAD8mlQs0tYFhko2Wh3W
+ sgq34ry7wqTajgq+yMqITJRaAranwR6YqpYr6l3qsnuqDqEp0HAL02CrIMdkT6HR+DWJ Og== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2u0ejpb0bw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 01:17:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6U1D7uU074016;
+        Tue, 30 Jul 2019 01:17:07 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2u0bqtt78t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jul 2019 01:17:07 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6U1H5Tj010515;
+        Tue, 30 Jul 2019 01:17:06 GMT
+Received: from localhost (/10.159.132.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 29 Jul 2019 18:17:05 -0700
+Date:   Mon, 29 Jul 2019 18:17:05 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: lift the xfs writepage code into iomap v3
+Message-ID: <20190730011705.GO1561054@magnolia>
+References: <20190722095024.19075-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722095024.19075-1-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9333 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=809
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907300010
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9333 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=863 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907300010
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Tue, 30 Jul 2019, at 10:23, Rob Herring wrote:
-> On Thu, Jul 25, 2019 at 11:40 PM Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > Hello,
-> >
-> > The aim of this series is to minimise/eliminate all the warnings from the
-> > ASPEED devicetrees. It mostly achieves its goal, as outlined below.
-> >
-> > Using `aspeed_g5_defconfig` we started with the follow warning count:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     218
-> >
-> > and after the full series is applied we have:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     2
-> >
-> > for a 100x reduction.
-> >
-> > Getting there though isn't without some potential controversy, which I've saved
-> > for the last half of the series. The following patches I think are in pretty
-> > good shape:
-> >
-> >   ARM: dts: aspeed-g5: Move EDAC node to APB
-> >   ARM: dts: aspeed-g5: Use recommended generic node name for SDMC
-> >   ARM: dts: aspeed-g5: Fix aspeed,external-nodes description
-> >   ARM: dts: vesnin: Add unit address for memory node
-> >   ARM: dts: fp5280g2: Cleanup gpio-keys-polled properties
-> >   ARM: dts: swift: Cleanup gpio-keys-polled properties
-> >   ARM: dts: witherspoon: Cleanup gpio-keys-polled properties
-> >   ARM: dts: aspeed: Cleanup lpc-ctrl and snoop regs
-> >   ARM: dts: ibm-power9-dual: Add a unit address for OCC nodes
-> >
-> > With these patches applied we get to:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     144
-> >
-> > So they make a dent, but fail to clean up the bulk of the issues. From here
-> > I've mixed in some binding and driver changes with subsequent updates to the
-> > devicetrees:
-> >
-> >   dt-bindings: pinctrl: aspeed: Add reg property as a hint
-> >   dt-bindings: misc: Document reg for aspeed,p2a-ctrl nodes
-> >   ARM: dts: aspeed: Add reg hints to syscon children
-> >   dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS
-> >   ipmi: kcs: Finish configuring ASPEED KCS device before enable
-> >   ipmi: kcs: aspeed: Implement v2 bindings
-> >   ARM: dts: aspeed-g5: Change KCS nodes to v2 binding
-> >   ARM: dts: aspeed-g5: Sort LPC child nodes by unit address
-> >
-> > By `dt-bindings: ipmi: aspeed: Introduce a v2 binding for KCS` the warnings are
-> > reduced to:
-> >
-> >     $ make dtbs 2>&1 >/dev/null | wc -l
-> >     125
-> >
-> > The bang-for-buck is in fixing up the KCS bindings which removes all-but-two of
-> > the remaining warnings (which we can't feasibly remove), but doing so forces
-> > code changes (which I'd avoided up until this point).
-> >
-> > Reflecting broadly on the fixes, I think I've made a mistake way back by using
-> > syscon/simple-mfds to expose the innards of the SCU and LPC controllers in the
-> > devicetree. This series cleans up what's currently there, but I have half a
-> > mind to rev the SCU and LPC bindings to not use simple-mfd and instead have a
-> > driver implementation that uses `platform_device_register_full()` or similar to
-> > deal with the mess.
-> >
-> > Rob - I'm looking for your thoughts here and on the series, I've never felt
-> > entirely comfortable with what I cooked up. Your advice would be appreciated.
+On Mon, Jul 22, 2019 at 11:50:12AM +0200, Christoph Hellwig wrote:
+> Hi all,
 > 
-> The series generally looks fine to me from a quick scan. As far as
-> dropping 'simple-mfd', having less fine grained description in DT is
-> generally my preference. It comes down to whether what you have
-> defined is maintainable. As most of it is just additions, I think what
-> you have is fine. Maybe keep all this in mind for the next chip
-> depending how the SCU and LPC change.
+> this series cleans up the xfs writepage code and then lifts it to
+> fs/iomap.c so that it could be use by other file system.  I've been
+> wanting to this for a while so that I could eventually convert gfs2
+> over to it, but I never got to it.  Now Damien has a new zonefs
+> file system for semi-raw access to zoned block devices that would
+> like to use the iomap code instead of reinventing it, so I finally
+> had to do the work.
 
-Okay, I think the timing of that suggestion is good given where things are with
-the AST2600. I'll keep that in mind.
+I've posted a branch against -rc2 for us all to work from:
 
-Consensus so far seems to be that the series is fine. I'll split it up and send out
-the sub-series to the relevant lists with the acks accumulated here.
+https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git/log/?h=iomap-writeback
 
-Thanks all for taking a look.
+and will be emailing the patches shortly to the list for completeness.
 
-Andrew
+--D
+
+> 
+> 
+> Changes since v2:
+>  - rebased to v5.3-rc1
+>  - folded in a few changes from the gfs2 enablement series
+> 
+> Changes since v1:
+>  - rebased to the latest xfs for-next tree
+>  - keep the preallocated transactions for size updates
+>  - rename list_pop to list_pop_entry and related cleanups
+>  - better document the nofs context handling
+>  - document that the iomap tracepoints are not a stable API
