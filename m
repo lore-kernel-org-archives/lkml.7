@@ -2,141 +2,95 @@ Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8004EC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C585CC0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B60206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="L6DSmzQp"
+	by mail.kernel.org (Postfix) with ESMTP id 9722B206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 09:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564478858;
+	bh=SKrtRvl5PY+xSQMY/2ee+4a4/9Fd63llyHB3gzj8fMw=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=HU7ocgBANI75FX+LHc8kwBgyl2LZDb3WbeLmS6AfG9DxUcCWwoUuZwe0OPpti/Mqy
+	 EuniFD/Dh52Md0vGPUKmyg4iReAnTa7gYPKPwSKdVZBEvtuYnQ4Wt8k0LV+sm4iUwk
+	 qLv/q1o759XL/eKSgzFaTe4RNanJWTm2aqgmvLkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbfG3J04 (ORCPT
+        id S1731304AbfG3J1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 05:26:56 -0400
-Received: from sender-pp-o92.zoho.com ([135.84.80.237]:25442 "EHLO
-        sender-pp-o92.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729020AbfG3J04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 05:26:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1564478802; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=g4GBX0zjUqPghOUaZdN8hDcN6Ciq87XF2OS+vOd8iAhiE8amWj+4qhZEHSya4p+i72aUNvmfrwFz9DFn9beyaLtDS+Aqi0Dr9DKloY878leEaWKAlQFugZrJ/OfA4gO59pw13Bgvg8Dbvyrd6ypsIDezz0B+iOxcCaYsHLgUuJU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1564478802; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=ASKwkj0b5qg5Fwxkz3wYNADsEou8Um77UtYwS51eowk=; 
-        b=O07PNCCJFUFWjxb42LXn+Tuqh7eaSnrE7sE7+aZI/yWFApYTh0vYpQJBiH6J2j6iZC30tH0F/VEHeg3pHfeCxjA4gptPd7o+xqSIIc0Vi6rapBbUvk0AGEoqllYjPWlDxjwWOpDrKX3sLp51LMpwG4BJrkfyL59mh5/7n05eD/A=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=eNewHd+DC3QHjVzaOiZIxPefbajvaQt1P0vdVP23LE5U4ej0+H+OGWOrYRmDAqTZc7k24grXD5gN
-    V5SFgOHI4piSTWk2KGO82nZzDk+rcB16VHWFVomV87Zvuvf6WRte  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1564478802;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        l=2316; bh=ASKwkj0b5qg5Fwxkz3wYNADsEou8Um77UtYwS51eowk=;
-        b=L6DSmzQpRjEQFpemZIj+HFhAMTzWjDprAdGag2faKe7EPVVYFPp9oTAE8h+IcMuF
-        MAStIBT2fPWr1wkqAN8tLZPeZb3ZlrXxK7LacX5b0fIvdE3wscxORkLkfXAuXd2355a
-        M0wOTI76Au7un7kSfFxZspnWWkJ9Cd7cSpZbYXVc=
-Received: from [192.168.88.139] (171.221.113.137 [171.221.113.137]) by mx.zohomail.com
-        with SMTPS id 1564478800053174.88358763329188; Tue, 30 Jul 2019 02:26:40 -0700 (PDT)
-Subject: Re: [PATCH 4/4 v4] irqchip: Ingenic: Add support for new Ingenic
- Socs.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
- <1564335273-22931-1-git-send-email-zhouyanjie@zoho.com>
- <1564335273-22931-5-git-send-email-zhouyanjie@zoho.com>
- <1564421133.6633.1@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, tglx@linutronix.de, mark.rutland@arm.com,
-        jason@lakedaemon.net, marc.zyngier@arm.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5D3FE309.7020103@zoho.com>
-Date:   Tue, 30 Jul 2019 14:26:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Tue, 30 Jul 2019 05:27:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727247AbfG3J1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 05:27:37 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2096C20665;
+        Tue, 30 Jul 2019 09:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564478856;
+        bh=SKrtRvl5PY+xSQMY/2ee+4a4/9Fd63llyHB3gzj8fMw=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=ygueO2xHBORMlwOlZoAFuDF440R5FDSKuhZ6cPycOBVLY2icVq7RQyfm3gj9MSltQ
+         EHD+sP8Ok6RCtCfOCoL5CJl+xCOS2htNHA+QTX7X/jUH2Lk8lKAQqIijLVZ4zNz5SG
+         yPCiZ48mMqNN5WmPkqyAY/FcD3m9BDPNi0n9uRZI=
+Date:   Tue, 30 Jul 2019 10:27:31 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, arnd@arndb.de,
+        linux@dominikbrodowski.net, ebiederm@xmission.com,
+        akpm@linux-foundation.org, viro@zeniv.linux.org.uk,
+        oleg@redhat.com, steve.mcintyre@arm.com, dave.martin@arm.com
+Subject: Re: [PATCH 0/2] Don't use SIGMINSTKSZ when enforcing alternative
+ signal stack size for compat tasks
+Message-ID: <20190730092730.q6djqrv6ag7fcofs@willie-the-truck>
+References: <1532526312-26993-1-git-send-email-will.deacon@arm.com>
+ <20190729202302.GA3443@aurel32.net>
 MIME-Version: 1.0
-In-Reply-To: <1564421133.6633.1@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729202302.GA3443@aurel32.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-It seems very strange to appear another soc model in one soc's devicetree,
-and before submitting this patch I referred to some other irq drivers.=20
-Similar
-usage was found in irq-sunxi-nmi.c and irq-omap-intc.c, and the original
-irq-ingenic.c was declare jz4770, jz4775, jz4780 in the same way. So I=20
-followed
-the same method to add the declare of jz4760/x1000/x1500, this may be a=20
-little
-better.
+On Mon, Jul 29, 2019 at 10:23:02PM +0200, Aurelien Jarno wrote:
+> On 2018-07-25 14:45, Will Deacon wrote:
+> > Hi all,
+> > 
+> > The Debian folks have observed a failure in the 32-bit arm glibc testsuite
+> > when running under a 64-bit kernel. They tracked this down to sigaltstack(2)
+> > enforcing the alternative signal stack to be at least SIGMINSTKSZ bytes,
+> > which is higher for native arm64 tasks than compat 32-bit tasks.
+> > 
+> > These patches resolve the issue by allowing an architecture to define
+> > COMPAT_SIGMINSTKSZ for compat tasks, which is then used by the sigaltstack
+> > checking code.
+> > 
+> > Feedback welcome,
+> > 
+> > Will
+> > 
+> > --->8
+> > 
+> > Will Deacon (2):
+> >   signal: Introduce COMPAT_SIGMINSTKSZ for use in compat_sys_sigaltstack
+> >   arm64: compat: Provide definition for COMPAT_SIGMINSTKSZ
+> 
+> Only the first patch went to the stable kernels. The second one is
+> missing, so the bug is still not fixed in those kernels. Would it be
+> possible to also get it included?
 
-On 2019=E5=B9=B407=E6=9C=8830=E6=97=A5 01:25, Paul Cercueil wrote:
->
->
-> Le dim. 28 juil. 2019 =C3=A0 13:34, Zhou Yanjie <zhouyanjie@zoho.com> a=
-=20
-> =C3=A9crit :
->> Add support for probing the irq-ingenic driver on the JZ4760/JZ4760B
->> and the X1000/X1000E and the X1500 Socs from Ingenic.
->>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>  drivers/irqchip/irq-ingenic.c | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/irqchip/irq-ingenic.c=20
->> b/drivers/irqchip/irq-ingenic.c
->> index 8430f5a..b72430c 100644
->> --- a/drivers/irqchip/irq-ingenic.c
->> +++ b/drivers/irqchip/irq-ingenic.c
->> @@ -173,6 +173,11 @@ static int __init intc_2chip_of_init(struct=20
->> device_node *node,
->>  {
->>      return ingenic_intc_of_init(node, 2);
->>  }
->> +IRQCHIP_DECLARE(jz4760_intc, "ingenic,jz4760-intc",=20
->> intc_2chip_of_init);
->> +IRQCHIP_DECLARE(jz4760b_intc, "ingenic,jz4760b-intc",=20
->> intc_2chip_of_init);
->>  IRQCHIP_DECLARE(jz4770_intc, "ingenic,jz4770-intc",=20
->> intc_2chip_of_init);
->>  IRQCHIP_DECLARE(jz4775_intc, "ingenic,jz4775-intc",=20
->> intc_2chip_of_init);
->>  IRQCHIP_DECLARE(jz4780_intc, "ingenic,jz4780-intc",=20
->> intc_2chip_of_init);
->> +IRQCHIP_DECLARE(x1000_intc, "ingenic,x1000-intc", intc_2chip_of_init);
->> +IRQCHIP_DECLARE(x1000e_intc, "ingenic,x1000e-intc",=20
->> intc_2chip_of_init);
->> +IRQCHIP_DECLARE(x1500_intc, "ingenic,x1500-intc", intc_2chip_of_init);
->
-> All these compatible strings point to the exact same behaviour. It was
-> already a mistake to have the three "ingenic,jz47[70,75,80]-intc" here;
-> there should have been only one, e.g. "ingenic,jz4770-intc" and the other
-> two SoCs using it as a fallback compatible.
->
-> I think you don't need to add these, and in your devicetree just use
-> "ingenic,jz4780-intc" as a fallback compatible.
->
-> Cheers,
-> -Paul
->
->
+Damn, you're right. I think the autosel bot picked the first commit but not
+the second. In hindsight, we should've tagged them both, but oh well. I've
+posted the patch here for -stable, with you on cc:
 
+https://lore.kernel.org/lkml/20190730092547.1284-1-will@kernel.org/T/#u
 
-
+Will
