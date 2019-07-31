@@ -2,125 +2,112 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2938DC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA96C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08866206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA032089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:31:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qq+qornH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbfGaEaJ (ORCPT
+        id S1728738AbfGaEbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 00:30:09 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:53259 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726601AbfGaEaI (ORCPT
+        Wed, 31 Jul 2019 00:31:00 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42304 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfGaEbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 00:30:08 -0400
-Received: from [IPv6:2001:983:e9a7:1:a003:9a19:9f18:5372] ([IPv6:2001:983:e9a7:1:a003:9a19:9f18:5372])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id sgFTh2U6zur8TsgFUhB7Xs; Wed, 31 Jul 2019 06:30:06 +0200
-Subject: Re: [PATCH v8 00/14] Rockchip ISP1 Driver
-To:     Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, jeffy.chen@rock-chips.com,
-        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
-        kernel@collabora.com, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        zhengsq@rock-chips.com
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <dbdfed3e-7bb6-bf1f-64b9-ab7298193e2d@xs4all.nl>
- <41e7e574-2708-eb4c-ea30-e6a1ac9c073e@collabora.com>
- <8ce532de-6c26-f8db-8754-c8dd1eb0764b@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <74bb0ba1-2859-39ff-d946-129a440ba150@xs4all.nl>
-Date:   Wed, 31 Jul 2019 06:29:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 31 Jul 2019 00:31:00 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ay6so29919843plb.9;
+        Tue, 30 Jul 2019 21:30:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aWCo57+BoaXzwl2WEeJkLPW0p2pUCHqK296Egq73VYU=;
+        b=qq+qornHhhh0pApQAe9cYHwBq5LyJ0Ccjx7+I8odAR01HaM7EVQJoEAPCN3MI+78uL
+         pweEHxtyieA4zlJS8avkFxacc9PICcIK7Qxipm6vSeevCDodrpiI6tIZEx+SHDj1SmnA
+         PV5v0KC8rU1R59gpc03p0+aZE8UL7fNImxwxFvtTbVg9fRSL5rEoDG2uGEbxUClUIz34
+         cS4YX1hBH3+QP08ElUMl5d3lCMBu6IviuXtPdPSidpr75u4Wgu/WLErMXc0HAHzCl1kg
+         G4QGvNzXtuqgQrS6rWiKuIb7Tl1Yd+XPM+PW1hLKtR8Qdtb9yfTZEisCtDL1XDGJKIN3
+         dOfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aWCo57+BoaXzwl2WEeJkLPW0p2pUCHqK296Egq73VYU=;
+        b=lfECd4HfO6D25sJDqsljxkPpXOM5fPY5Ug92prDL1DQZ5MXu/rjhozmlcQwPvEDAal
+         4tlQQmbpwByjmSRRnUwJiEp3waDMOJ5qPLfYblGc7HaclWISe7hHJb0BbPs4Jo+th4eW
+         RSxIqicf+t6M4K3Zj9z2vjo7/HpX/sawBZQTlpXFAXbJzJIYx32GAQQstbJJ5V/8XhGf
+         8CSAOzl5mCFm75SIx+uXfw5tKI2kdk+Iz7i+3HkCwo+ZcRaYP4/+jxEi6h6wC2AHwxkm
+         9+8DQGKrqJUIsiGyyvy6q+Wvh6KdpteEQfdKTA1f3pyKTJ0ZjRKi5SixGZYbPspV8uR4
+         pDrw==
+X-Gm-Message-State: APjAAAX9w36YsPOXcOqVE4Vogn9CgCs0ILdbcKzeLzXc360fOt2wD62t
+        G+bMKaxMY77vhT+5XVJr/Qw=
+X-Google-Smtp-Source: APXvYqx0iYkTtR3C6HQ0OZ5glSnx1Nwsfo9AImrQoC8dMXuWWMuBfLojlmn6g31v1mOP2S6R8Oc82g==
+X-Received: by 2002:a17:902:7c90:: with SMTP id y16mr120348323pll.238.1564547459509;
+        Tue, 30 Jul 2019 21:30:59 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id h1sm84205792pfg.55.2019.07.30.21.30.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 21:30:58 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 21:30:56 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH 4/4] net: dsa: mv88e6xxx: add PTP support for MV88E6250
+ family
+Message-ID: <20190731043056.GA1482@localhost>
+References: <20190730100429.32479-1-h.feurstein@gmail.com>
+ <20190730100429.32479-5-h.feurstein@gmail.com>
+ <20190730160032.GA1251@localhost>
+ <CAFfN3gUCqGuC7WB_UjYYNt+VWGfEBsdfgvPBqxoJi_xitH=yog@mail.gmail.com>
+ <20190730171246.GB1251@localhost>
+ <CA+h21hqWO=qT6EuQOVgX=J1=m60AWT6EGvQgfzGS=BNNq1cyTg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8ce532de-6c26-f8db-8754-c8dd1eb0764b@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGzGe2A7zD3Qrqunsp8MLlEAQbAkyPphsu4wr29b/OTwg0ooPoJd7bndOwd3J9ejKOkxJ0cbjD/OJg+O16w41BuIWIlG3qWHhNj4eIzypt9VClWiUenQ
- 4x7WMzM3EDH3+8ogHw2UwVEBfa1MyMYbAnDNey6xByiD5Wv9r4W4gy7c0JqdRYslaPc5CXk8ImfWn1WmyK1UxzxdABmfyRE9wRSGN6LUnRMNLnz2h3Uu3Zmj
- GcuBNqz1HMIzXzU+K1FbkUOirZ8hl1gN5Ssxqc+CsDC7DV+GxuL4etCx//b1LD5Hlqetzi3oAgR3sb9xwyO5/2TmIw8FFif2dAanEKIld2rvhd8QMb1Ard9X
- PDWv82mvvKdmyhnVELfgFBaZRw3s2XdoSSbeQW8AkPIs1RaoLZXROpEzXjU9+o1F4A1nHRoTawPL2PCZdzCienvTs8zOw83mL8a44xdnTsavmL1afCD6f4o9
- sBvzFt3sWvguoyiCdxA0UqHmC4GqQt3xY34Xfk3dad0NU1wBTzlPGHEb8Wt6epA6/mthSbkYjmX9HKU1HgVA+0VqgcWfBXyk22gylbCvUdM3XAyeuw1gwNkY
- cJwgsZ2DQesP0gsq8wwmYH8LmF0MFVMfpyb02nlrYe/As0/mdsNQ80mV1DrsBW9dsmz3HyGuLRcfBcBGzjvEnfd2VyM90uoGX9xXzBnWiFVtMgDdtrxaqiY9
- UzEjBxyl9QMWoDHPyXkQ40ghRZD9rCmYenDzIA0wqYdwF9Se2KK6HdVv7nW98Dy9rMitePuYayEtMq0Lz2A7I1aT4D13sBVPeJfIkMiq0V3nUEvzq06roAep
- A9RYAfeRK/G6AAJlh5HBySCFH+2nIX3sqTXDEFlh61RvW+cgEfjWE9Y7PIfEbPh2tpvmAthNdusM/7GBkEA/nTyxHG+5jTfVc1ds3Cx/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hqWO=qT6EuQOVgX=J1=m60AWT6EGvQgfzGS=BNNq1cyTg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/19 2:08 AM, Helen Koike wrote:
-> 
-> 
-> On 7/30/19 5:50 PM, Helen Koike wrote:
->>
->>
->> On 7/30/19 5:15 PM, Hans Verkuil wrote:
->>> On 7/30/19 8:42 PM, Helen Koike wrote:
->>>> Hello,
->>>>
->>>> I'm re-sending a new version of ISP(Camera) v4l2 driver for rockchip
->>>> rk3399 SoC.
->>>>
->>>> I didn't change much from the last version, just applying the
->>>> suggestions made in the previous one.
->>>>
->>>> This patchset is also available at:
->>>> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v8
->>>>
->>>> Libcamera patched to work with this version:
->>>> https://gitlab.collabora.com/koike/libcamera
->>>> (also sent to the mailing list)
->>>>
->>>> I tested on the rockpi 4 with a rpi v1.3 sensor and also with the
->>>> Scarlet Chromebook.
->>>>
->>>> Known issues (same as in v7):
->>>> -------------
->>>> - Reloading the module doesn't work (there is some missing cleanup when
->>>> unloading)
->>>> - When capturing in bayer format, changing the size doesn't seem to
->>>> affect the image.
->>>> - crop needs more tests
->>>> - v4l2-compliance error:
->>>>         fail: v4l2-test-controls.cpp(824): subscribe event for control 'Image Processing Controls' failed
->>>> test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
->>>
->>> Can you mail me the full v4l2-compliance output?
->>
->> Sure, please check here: http://ix.io/1Q5u
->> I updated v4l-utils with the latest version and I re-ran bootstrap/configure/make,
->> but for some reason the hash from the link above is not the latest commit, probably some
->> old configuration somewhere. I'll resend this log as soon as I get v4l2-compliance
->> properly updated.
-> 
-> Please see the output of v4l2-compliance here with an updated v4l-utils: http://ix.io/1Q6A
+On Tue, Jul 30, 2019 at 11:46:51PM +0300, Vladimir Oltean wrote:
 
-So this FAIL is for /dev/v4l-subdev0 (rkisp1-isp-subdev).
+> Technically it is not "not true".
 
-What is weird that this subdev does not appear to have controls at all.
+[Sigh]  The statement was:
 
-What is the output of 'v4l2-ctl -d /dev/v4l-subdev0 -l'? And if it lists
-controls, then why?
+    The adjfine API clamps ppb between [-32,768,000, 32,768,000]
 
-If you run 'v4l2-compliance -u /dev/v4l-subdev0', do you get a fail as
-well?
+The adjfine API does NOT clamp to that range.  That statement is
+simply false.
 
-BTW, note that struct rkisp1_isp_subdev has a ctrl_handler field that
-isn't used at all.
+> And what is the reason for the neg_adj thing? Can you give an example
+> of when does the "normal way" of doing signed arithmetics not work?
 
-Regards,
+The detail from years ago escape me ATM, but I needed to use div_u64.
+Maybe div_s64 was broken.
 
-	Hans
+But that is not the point.  Changing the adjfine() logic for this
+driver is out of scope for this series.  If someone thinks the logic
+needs changing, then that must carefully explained and justified in
+the changelog of a patch implementing that _one_ change.
+
+Thanks,
+Richard
+
