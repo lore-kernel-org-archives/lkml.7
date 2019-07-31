@@ -2,133 +2,115 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3945C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E28BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF8D0206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFE3206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbfGaPx1 (ORCPT
+        id S1729406AbfGaPye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:53:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49614 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfGaPx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:53:27 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A41B63007C58;
-        Wed, 31 Jul 2019 15:53:26 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A0F845D9C9;
-        Wed, 31 Jul 2019 15:53:25 +0000 (UTC)
-Message-ID: <0a43aaa2bc1883f57ae1421b03cc3d5d23c2e425.camel@redhat.com>
-Subject: Re: [PATCH v6 20/57] infiniband: Remove dev_err() usage after
- platform_get_irq()
-From:   Doug Ledford <dledford@redhat.com>
-To:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Wed, 31 Jul 2019 11:53:23 -0400
-In-Reply-To: <20190730181557.90391-21-swboyd@chromium.org>
-References: <20190730181557.90391-1-swboyd@chromium.org>
-         <20190730181557.90391-21-swboyd@chromium.org>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-3uGQjmrAoGQofD5SJvvd"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 31 Jul 2019 11:54:34 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46810 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfGaPye (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:54:34 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hsqvw-0001PF-1D; Wed, 31 Jul 2019 15:54:32 +0000
+Subject: Re: [PATCH] cifs: remove redundant assignment to variable rc
+To:     =?UTF-8?Q?Aur=c3=a9lien_Aptel?= <aaptel@suse.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     samba-technical@lists.samba.org, Steve French <sfrench@samba.org>,
+        kernel-janitors@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190731090526.27245-1-colin.king@canonical.com>
+ <87r266seg4.fsf@suse.com> <20190731122841.GA1974@kadam>
+ <87lfwerze8.fsf@suse.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2f562159-8118-f4a5-9e00-c82cf0841fd5@canonical.com>
+Date:   Wed, 31 Jul 2019 16:54:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 31 Jul 2019 15:53:26 +0000 (UTC)
+In-Reply-To: <87lfwerze8.fsf@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 31/07/2019 16:34, Aurélien Aptel wrote:
+> "Dan Carpenter" <dan.carpenter@oracle.com> writes:
+>> You're just turning off GCC's static analysis (and introducing false
+>> positives) when you do that.  We have seen bugs caused by this and never
+>> seen any bugs prevented by this style.
+> 
+> You've never seen bugs prevented by initializing uninitialized
+> variables? Code can change overtime and I don't think coverity is
+> checked as often as it could be, meaning the var could end up being used
+> while uninitialized in the future.
 
---=-3uGQjmrAoGQofD5SJvvd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+gcc/clang should pick up uninitialized vars at compile time. also I run
+coverity daily on linux-next.
 
-On Tue, 2019-07-30 at 11:15 -0700, Stephen Boyd wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now
-> that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
->=20
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
->=20
-> ret =3D
-> (
-> platform_get_irq(E, ...)
-> platform_get_irq_byname(E, ...)
-> );
->=20
-> if ( \( ret < 0 \| ret <=3D 0 \) )
-> {
-> (
-> -if (ret !=3D -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
->=20
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
->=20
-> Cc: Doug Ledford <dledford@redhat.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: linux-rdma@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->=20
-> Please apply directly to subsystem trees
->=20
+Colin
 
-Thanks for being clear about where you wanted these applied.  This patch
-applied to rdma for-next, thanks.
-
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---=-3uGQjmrAoGQofD5SJvvd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1BuXMACgkQuCajMw5X
-L91QTBAAiui1A475ITd01T4j1gUB9/Sd6MwQ0xiBHbRxH8/WUDBBv/aLmriNCEbR
-Ty0LZ9tMPoySa6KgwjCwjXAcNPLiFqQSjS3FTaafesBdlvyQ78MKbEdnEtCJoX+0
-+JjyTu3XxMD5uJzE4LE6m0T7dIJJJWUdisJhcqFa0hxHFtGQ9sUat1ap0MWJYwIr
-1XDaNDH/ovGB0DfcTaa8pI1AZesabdhwYCB5tWj90ZWJmr8E+aUxTu1pTFHbP6Yj
-hyDCQpFSrNw7ZOUDFvdghB+HtywDNWpJPV7mZ4kq5cyAdoMdHmPR1zYUFOzUEH+d
-Rx0OixPW8LYQ25Hep74mhDAkxJBcEX/B0nqhvRJHLzppWiDAKT+KqznrBuczCysA
-MXUMGFvLseEi1+lO5JasVvNemYf4E6iXXcyo+CSJvToEyXruOaunonP7nlqPRrgL
-KhNNhpCV71p0rSLemlur46V9sDvHQc5csfGYxi4TEr++nddiWTHH5eIkKbR6MUYJ
-JPJCdVyJwqnV4im6TIVnU2is/x7qMex+0ufGAPn+XtRUOxqRSHXTAh5UkHanELA0
-UpgUKT+ipnI7S+JMYjWleclqg/ZvWWRvDVNsetP/VWxlWRpfcmUsAqa1DvlSINZG
-IB/o7oJ3gGVLJLilhiW4yJVDoh9RlNvgJpv1mHDVbc3jzcUQWSo=
-=n9Yh
------END PGP SIGNATURE-----
-
---=-3uGQjmrAoGQofD5SJvvd--
+> 
+> Anyway I won't die on this hill, merge this if you prefer.
+> 
+> Cheers,
+> 
 
