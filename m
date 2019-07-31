@@ -2,166 +2,151 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F4BC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2B4C32754
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C32206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C537206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j3PTc/Xc"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jFO4SD/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfGaIkW (ORCPT
+        id S1728218AbfGaIk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:40:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35098 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfGaIkV (ORCPT
+        Wed, 31 Jul 2019 04:40:27 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39154 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfGaIkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:40:21 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6V8eFfc078983;
-        Wed, 31 Jul 2019 03:40:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564562415;
-        bh=f8OILjK+4xrFtumGGFPWPDxRCqrguz9p6urLvVz00sU=;
-        h=From:To:CC:Subject:Date;
-        b=j3PTc/Xcx9hTMnjgCer63vG17POH5udTLqEDNcL7ONFZFvIXCJVJLP5kzIGg7FLEA
-         KndqyFc5myT8luPQYO/k/kOH7Ns6nR9mK5Lksp60mHMOnjL7uweKXLnrUSotuSJKLP
-         8Fe8+VB6nfgo2URujZLmogYjukgy+uNa9s64fEH0=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6V8eFnW016389
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 31 Jul 2019 03:40:15 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 31
- Jul 2019 03:40:14 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 31 Jul 2019 03:40:14 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6V8eCSn048437;
-        Wed, 31 Jul 2019 03:40:13 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <lee.jones@linaro.org>, <jingoohan1@gmail.com>,
-        <daniel.thompson@linaro.org>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v3] backlight: gpio-backlight: Correct initial power state handling
-Date:   Wed, 31 Jul 2019 11:40:18 +0300
-Message-ID: <20190731084018.5318-1-peter.ujfalusi@ti.com>
+        Wed, 31 Jul 2019 04:40:25 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x4so15530383wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 01:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ddHyvYdReNbGhKO21uVEIvjorbfyA05g6IvzqrFwjMw=;
+        b=jFO4SD/NApA8ipcldRSPtR96lDawCCqLtYXq++TEknbVxxDnZL3JrR85VsU33TrR0Q
+         sr6bkOPmj8k3cMMWIHyHo1kEl5r7ZFWAqMXMNfV/lDvgwulIf7nvctpQX9u+9Rb13PY0
+         RZPyJ+ytGSRsViVrMFJ0X3Vexgi+QVC/pfzBwlYbXCKrIyOyjqPZko61A3XLprZUWpZB
+         TM9sf75PWS3HJhkfPNNDCZP267DP7mKOF9E2vu09UiUP+zhYmUvhIGGDI7AM1bVuj7gk
+         PcoSHXA4zEhPTmpxcj/RDgR9Ax7fmDC+fYU93RMl+O+5kIFSyeSDweCKMigFWdo4k82w
+         yoHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ddHyvYdReNbGhKO21uVEIvjorbfyA05g6IvzqrFwjMw=;
+        b=Es8NtjxS3kmVaOz+ZnFFY1qpUHTjneCj5y8wt2YfH/6VqUvc5c/33DqxeTvKts0N0L
+         4GND3jNOzFudEQz/dUkHvRClB3xzTy8K6VIc1mv9pf8Xy4KXuFeRcfN/wRqr6Fy5JQaS
+         C8OkuBcsQ8Ct04MywK+QAgqEaF/rT1GQcUkffl/jdcY11koscrKuB3CXJsSbOfDxH/lx
+         P5p0I326Cbt971v4EFiB1f+FrTXpWZQ+fvbIFNlw/BTzG+VeZJnlI087xlZ9WAjrnRBb
+         KfNIRQ/SlAbW4maZWAEdCQnRuWvBvekazbhn8x5YtoPh7Xs3xj11v0qcgaZ1oy9kfhhA
+         0tFQ==
+X-Gm-Message-State: APjAAAXPPeED/+u62ZuykKd0/8RXX2+SAp+9krIC2fagL3yaw8/TmQn4
+        SVgr1UEj8AN77/tlbY5L3o/FFg==
+X-Google-Smtp-Source: APXvYqwHQz/DoxpqjB2gG7yElbPFxVQmLqhP/9pw+D/cpuZHA0yH1P4HyL+uxk4zqqNoXxyZE1dsUA==
+X-Received: by 2002:a5d:4d81:: with SMTP id b1mr52426973wru.27.1564562422857;
+        Wed, 31 Jul 2019 01:40:22 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id 18sm56049308wmg.43.2019.07.31.01.40.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 01:40:22 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     sboyd@kernel.org, jbrunet@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/4] clk: meson: g12a: add support for DVFS
+Date:   Wed, 31 Jul 2019 10:40:15 +0200
+Message-Id: <20190731084019.8451-1-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default-on property - or the def_value via legacy pdata) should be
-handled as:
-if it is 1, the backlight must be enabled (kept enabled)
-if it is 0, the backlight must be disabled (kept disabled)
+The G12A/G12B Socs embeds a specific clock tree for each CPU cluster :
+cpu_clk / cpub_clk
+|   \- cpu_clk_dyn
+|      |  \- cpu_clk_premux0
+|      |        |- cpu_clk_postmux0
+|      |        |    |- cpu_clk_dyn0_div
+|      |        |    \- xtal/fclk_div2/fclk_div3
+|      |        \- xtal/fclk_div2/fclk_div3
+|      \- cpu_clk_premux1
+|            |- cpu_clk_postmux1
+|            |    |- cpu_clk_dyn1_div
+|            |    \- xtal/fclk_div2/fclk_div3
+|            \- xtal/fclk_div2/fclk_div3
+\ sys_pll / sys1_pll
 
-This only works for the case when default-on is set. If it is not set then
-the brightness of the backlight is set to 0. Now if the backlight is
-enabled by external driver (graphics) the backlight will stay disabled since
-the brightness is configured as 0. The backlight will not turn on.
+This patchset adds notifiers on cpu_clk / cpub_clk, cpu_clk_dyn,
+cpu_clk_premux0 and sys_pll / sys1_pll to permit change frequency of
+the CPU clock in a safe way as recommended by the vendor Documentation
+and reference code.
 
-In order to minimize screen flickering during device boot:
+This patchset :
+- introduces needed core and meson clk changes
+- adds the clock notifiers
 
-The initial brightness should be set to 1.
+Dependencies:
+- None
 
-If booted in non DT mode or no phandle link to the backlight node:
-follow the def_value/default-on to select UNBLANK or POWERDOWN
+This patchset is split from the v3 RFC/RFC patchset at [3]
 
-If in DT boot we have phandle link then leave the GPIO in a state which the
-bootloader left it and let the user of the backlight to configure it
-further.
+Changes from v1 at [4]:
+- Removed export of regmap_div ops functions
+- Added standalone cpu dynamic divider driver
+- Uses cpu dynamic divider driver in g12a clkc driver
+- Added missing signed-off tags
+- Fixed missing removal of CLKID_CPUB_CLK from internal g12a.h
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
-Hi,
+Changes from RFT/RFC v3 at [3]:
+- Rebased on clk-meson v5.4/drivers tree with Alexandre's patches
+- Removed the eeclk setup() callback, moved to a toplevel g12a-data struct
 
-sorry for the delay, but got distracted a bit with the resend of this...
-Let's try again ;)
+Changes since RFT/RFC v2 at [2]:
+- Rebased on clk-meson v5.3/drivers trees
+- added Kevin's review tags
 
-Changes since v2 (https://lore.kernel.org/patchwork/patch/1002359/):
-- Rebased on drm-next
+Changes since RFT/RFC v1 at [1]:
+- Added EXPORT_SYMBOL_GPL() to clk_hw_set_parent
+- Added missing static to g12b_cpub_clk_mux0_div_ops and g12a_cpu_clk_mux_nb
+- Simplified g12a_cpu_clk_mux_notifier_cb() without switch/case
+- Fixed typo in "this the current path" in g12a.c
+- Fixed various checkpatch errors
 
-Changes since v1:
-- Implement similiar initial power state handling as pwm backlight have
+[1] https://patchwork.kernel.org/cover/11006929/
+[2] https://patchwork.kernel.org/cover/11017273/
+[3] https://patchwork.kernel.org/cover/11025309/
+[4] https://patchwork.kernel.org/cover/11063803/
 
-Regards,
-Peter
+Neil Armstrong (4):
+  clk: core: introduce clk_hw_set_parent()
+  clk: meson: add g12a cpu dynamic divider driver
+  clk: meson: g12a: add notifiers to handle cpu clock change
+  clk: meson: g12a: expose CPUB clock ID for G12B
 
- drivers/video/backlight/gpio_backlight.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ drivers/clk/clk.c                     |   6 +
+ drivers/clk/meson/Kconfig             |   5 +
+ drivers/clk/meson/Makefile            |   1 +
+ drivers/clk/meson/clk-cpu-dyndiv.c    |  73 ++++
+ drivers/clk/meson/clk-cpu-dyndiv.h    |  20 +
+ drivers/clk/meson/g12a.c              | 535 +++++++++++++++++++++++---
+ drivers/clk/meson/g12a.h              |   1 -
+ include/dt-bindings/clock/g12a-clkc.h |   1 +
+ include/linux/clk-provider.h          |   1 +
+ 9 files changed, 588 insertions(+), 55 deletions(-)
+ create mode 100644 drivers/clk/meson/clk-cpu-dyndiv.c
+ create mode 100644 drivers/clk/meson/clk-cpu-dyndiv.h
 
-diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-index e84f3087e29f..18e053e4716c 100644
---- a/drivers/video/backlight/gpio_backlight.c
-+++ b/drivers/video/backlight/gpio_backlight.c
-@@ -59,13 +59,11 @@ static int gpio_backlight_probe_dt(struct platform_device *pdev,
- 				   struct gpio_backlight *gbl)
- {
- 	struct device *dev = &pdev->dev;
--	enum gpiod_flags flags;
- 	int ret;
- 
- 	gbl->def_value = device_property_read_bool(dev, "default-on");
--	flags = gbl->def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
- 
--	gbl->gpiod = devm_gpiod_get(dev, NULL, flags);
-+	gbl->gpiod = devm_gpiod_get(dev, NULL, GPIOD_ASIS);
- 	if (IS_ERR(gbl->gpiod)) {
- 		ret = PTR_ERR(gbl->gpiod);
- 
-@@ -79,6 +77,22 @@ static int gpio_backlight_probe_dt(struct platform_device *pdev,
- 	return 0;
- }
- 
-+static int gpio_backlight_initial_power_state(struct gpio_backlight *gbl)
-+{
-+	struct device_node *node = gbl->dev->of_node;
-+
-+	/* Not booted with device tree or no phandle link to the node */
-+	if (!node || !node->phandle)
-+		return gbl->def_value ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
-+
-+	/* if the enable GPIO is disabled, do not enable the backlight */
-+	if (gpiod_get_value_cansleep(gbl->gpiod) == 0)
-+		return FB_BLANK_POWERDOWN;
-+
-+	return FB_BLANK_UNBLANK;
-+}
-+
-+
- static int gpio_backlight_probe(struct platform_device *pdev)
- {
- 	struct gpio_backlight_platform_data *pdata =
-@@ -136,7 +150,9 @@ static int gpio_backlight_probe(struct platform_device *pdev)
- 		return PTR_ERR(bl);
- 	}
- 
--	bl->props.brightness = gbl->def_value;
-+	bl->props.power = gpio_backlight_initial_power_state(gbl);
-+	bl->props.brightness = 1;
-+
- 	backlight_update_status(bl);
- 
- 	platform_set_drvdata(pdev, bl);
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.22.0
 
