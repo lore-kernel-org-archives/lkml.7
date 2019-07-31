@@ -2,261 +2,211 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A352C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68CCC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6DAA206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41EC206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:49:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pDn8WA3o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKz1ttiM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387799AbfGaKpO (ORCPT
+        id S2387818AbfGaKtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:45:14 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44928 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfGaKpO (ORCPT
+        Wed, 31 Jul 2019 06:49:11 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34316 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387805AbfGaKtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:45:14 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k18so65078683ljc.11;
-        Wed, 31 Jul 2019 03:45:11 -0700 (PDT)
+        Wed, 31 Jul 2019 06:49:10 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s49so30444752edb.1;
+        Wed, 31 Jul 2019 03:49:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RFMhUlRMgqDVGRXkrlMnGgEZx3giZeumZb15yW0U0/w=;
-        b=pDn8WA3oDxAcXv/PEaN53Fix6ETE/oZBGTCRKffJpvIjjLLquyImUl3e7qgFHIxGGi
-         IfukiTmB4SUwf5Hct/tA8Zd1XFLALKINq5cjniPyAO1xkou1G1wwWdFnug0IS43TFsQZ
-         rgWcHbiknLt/RZ43ecRD7Y1kuiBATQ7V/08wia3PRqcUdwfPsLzuTPUhPTLlj6ZTV+Et
-         IEvZLkXi5SqfBIJiX0ORLL4pgMbTgt3qBXd6uPVnBRdjvOWh1Jr+TAqKern0A1sCT8/2
-         b0E5+VzEojbXooJ66vLRGavmeXyYvnn4nlnsSzjEQGVNXCYY94d/fLdUnpydD7AWavvv
-         qr/w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tUnV833Lm6/1yn2OaK84vuhlz85401lYVu2Fonrmp+0=;
+        b=jKz1ttiMgDzl6FxSvVGtfIdxCCH2qspfRsJFlBX0ZZs3ckLFc+ieYLIWACoAM/8QxG
+         gwZfGVGlX9EA0zUf4olMgId3qXrFsvlrFxWXKHvTJ1HNwO2vOf/EkBdpNtICt4jxxKo8
+         0KLSTD4wjyLxj2dUQ2hSpRc3LRgLW9xeX9SOqSylyrs+F4vHzqLwSo6j4m8KoqiEYLn0
+         +HQQHjZ4bBPEbI9CKAVx9NIiwYznFlJHxkceJFt6iw9eSut65by5PYSbrQTXYpBKggoE
+         di8GWKUxnE41EgDnwPLA4bLqY4JXEFXOzIEnUd8shggT9IuORkT1TWl4bqkVnQ8Thqlm
+         cIOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RFMhUlRMgqDVGRXkrlMnGgEZx3giZeumZb15yW0U0/w=;
-        b=mTRcnGI0vYLbvbhrgh1L98rSKlN/BWX7GTIKVtcnoW+qzC3tY7m5lNktFewzvdnhW/
-         yhCOPmZoUyoVB7LdSbsy20F3Z+WfMe2kIacaWJnZeFzjGSz1MsJbyJgfiHbDfmPWMmwX
-         VQyKbWVPuif3BPVUaQK5NekYszBfiepBHklVf0EhlMxTIj97SkzOCkm5PK9AjKkklO9w
-         9/1FE9/TnQ3jKdDoA+rf24J6HLX+H8kNN0NsMvBVrbwAp1bSD3WADQ7XJ3344M92pjK6
-         Kf/3SqTC7+ep4ICs05qPMdGwNjFq0uRLy1uIOYMIpUCXT6sBUIfz6AGVXGnZVs1p4KXs
-         DOTQ==
-X-Gm-Message-State: APjAAAXSf1sTbNHBkHKiRBCb5io5L+meWepZ6CXwJvqjIDxoSY4QOKQt
-        stzwjbvcJEdBhYHePymeZCIPRjqP
-X-Google-Smtp-Source: APXvYqzJkRmWg1iafNslssUPxpmmnmMO/vkVa1xHw2no7+qHI7RvTgkqoWpp8XBVZoOTdV5Ih6WcFg==
-X-Received: by 2002:a2e:b003:: with SMTP id y3mr64824367ljk.72.1564569906457;
-        Wed, 31 Jul 2019 03:45:06 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id k23sm10001755ljg.90.2019.07.31.03.45.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 03:45:05 -0700 (PDT)
-Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
- support
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
- <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
-Message-ID: <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
-Date:   Wed, 31 Jul 2019 13:44:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tUnV833Lm6/1yn2OaK84vuhlz85401lYVu2Fonrmp+0=;
+        b=Hcfdw7bLyBEstMX4Cfm25KENBHkODnwom/cFlZZz05R/GyyUInTRN5jkWwKCtgGGTK
+         kwSQCtVMqM1pEe7VfT49KYkSzS7LGt9K3pWKdqyU6ffNc1wj18TjdAxVVoTgEdg4KTBB
+         zOlActy23B+eN450G3GogxPjaCe4gmmLj4wYq76SIyUthFCA6GYvPIenWxZD/pUv/FWc
+         hMLIv7gP1MYnaQGO6Zs7kdQ55p2ZUdoBsSQcm1Z8AU60i5/7/namGYaYKVwLntW+yOMG
+         OdPaTetx4nDI191r6L5ZaaKg7gJPtQy7iM0f7l0JVVsLC9IcXJMyDT24RHMLdjKsSvLd
+         27yQ==
+X-Gm-Message-State: APjAAAVRcejfo6UPMQgpM2prKTPQyORoomxYJUNHyAfgWb5Qd8DMYbqu
+        oTMgt/VVFNGTZPIkd0aWmaOygBtpE5pbzJ5efN0=
+X-Google-Smtp-Source: APXvYqwV4srv3tqBx2s+pM8zlAsAnc5Q8QO6pEIQqv+zVbNn0leIoEcrj303xJ9kGD4a1SZfWRYQotfHlUBpidhCy2c=
+X-Received: by 2002:a17:906:8317:: with SMTP id j23mr80702999ejx.51.1564570148094;
+ Wed, 31 Jul 2019 03:49:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190731030423.8116-1-hslester96@gmail.com> <20190731094016.GB19501@onstation.org>
+In-Reply-To: <20190731094016.GB19501@onstation.org>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Wed, 31 Jul 2019 18:48:57 +0800
+Message-ID: <CANhBUQ2OtXPnhG+b4JY+jAdMW4+yarNxm5hvhWF-Fk5kpR4rBA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] iio: tsl2772: Use regulator_bulk_() APIs
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.07.2019 12:50, Dmitry Osipenko пишет:
-> 31.07.2019 3:20, Sowjanya Komatineni пишет:
->> This patch implements save and restore context for peripheral fixed
->> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
->> peripheral clock ops.
->>
->> During system suspend, core power goes off and looses the settings
->> of the Tegra CAR controller registers.
->>
->> So during suspend entry clock and reset state of peripherals is saved
->> and on resume they are restored to have clocks back to same rate and
->> state as before suspend.
->>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/clk/tegra/clk-periph-fixed.c | 33 ++++++++++++++++++++++++++++++++
->>  drivers/clk/tegra/clk-periph-gate.c  | 34 +++++++++++++++++++++++++++++++++
->>  drivers/clk/tegra/clk-periph.c       | 37 ++++++++++++++++++++++++++++++++++++
->>  drivers/clk/tegra/clk-sdmmc-mux.c    | 28 +++++++++++++++++++++++++++
->>  drivers/clk/tegra/clk.h              |  6 ++++++
->>  5 files changed, 138 insertions(+)
->>
->> diff --git a/drivers/clk/tegra/clk-periph-fixed.c b/drivers/clk/tegra/clk-periph-fixed.c
->> index c088e7a280df..21b24530fa00 100644
->> --- a/drivers/clk/tegra/clk-periph-fixed.c
->> +++ b/drivers/clk/tegra/clk-periph-fixed.c
->> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct clk_hw *hw,
->>  	return (unsigned long)rate;
->>  }
->>  
->> +static int tegra_clk_periph_fixed_save_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_periph_fixed *fixed = to_tegra_clk_periph_fixed(hw);
->> +	u32 mask = 1 << (fixed->num % 32);
->> +
->> +	fixed->enb_ctx = readl_relaxed(fixed->base + fixed->regs->enb_reg) &
->> +			 mask;
->> +	fixed->rst_ctx = readl_relaxed(fixed->base + fixed->regs->rst_reg) &
->> +			 mask;
->> +
->> +	return 0;
->> +}
->> +
->> +static void tegra_clk_periph_fixed_restore_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_periph_fixed *fixed = to_tegra_clk_periph_fixed(hw);
->> +	u32 mask = 1 << (fixed->num % 32);
->> +
->> +	if (fixed->enb_ctx)
->> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_set_reg);
->> +	else
->> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_clr_reg);
->> +
->> +	udelay(2);
->> +
->> +	if (!fixed->rst_ctx) {
->> +		udelay(5); /* reset propogation delay */
->> +		writel_relaxed(mask, fixed->base + fixed->regs->rst_reg);
->> +	}
->> +}
->> +
->>  static const struct clk_ops tegra_clk_periph_fixed_ops = {
->>  	.is_enabled = tegra_clk_periph_fixed_is_enabled,
->>  	.enable = tegra_clk_periph_fixed_enable,
->>  	.disable = tegra_clk_periph_fixed_disable,
->>  	.recalc_rate = tegra_clk_periph_fixed_recalc_rate,
->> +	.save_context = tegra_clk_periph_fixed_save_context,
->> +	.restore_context = tegra_clk_periph_fixed_restore_context,
->>  };
->>  
->>  struct clk *tegra_clk_register_periph_fixed(const char *name,
->> diff --git a/drivers/clk/tegra/clk-periph-gate.c b/drivers/clk/tegra/clk-periph-gate.c
->> index 4b31beefc9fc..6ba5b08e0787 100644
->> --- a/drivers/clk/tegra/clk-periph-gate.c
->> +++ b/drivers/clk/tegra/clk-periph-gate.c
->> @@ -25,6 +25,8 @@ static DEFINE_SPINLOCK(periph_ref_lock);
->>  
->>  #define read_rst(gate) \
->>  	readl_relaxed(gate->clk_base + (gate->regs->rst_reg))
->> +#define write_rst_set(val, gate) \
->> +	writel_relaxed(val, gate->clk_base + (gate->regs->rst_set_reg))
->>  #define write_rst_clr(val, gate) \
->>  	writel_relaxed(val, gate->clk_base + (gate->regs->rst_clr_reg))
->>  
->> @@ -110,10 +112,42 @@ static void clk_periph_disable(struct clk_hw *hw)
->>  	spin_unlock_irqrestore(&periph_ref_lock, flags);
->>  }
->>  
->> +static int clk_periph_gate_save_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_periph_gate *gate = to_clk_periph_gate(hw);
->> +
->> +	gate->clk_state_ctx = read_enb(gate) & periph_clk_to_bit(gate);
->> +	gate->rst_state_ctx = read_rst(gate) & periph_clk_to_bit(gate);
->> +
->> +	return 0;
->> +}
->> +
->> +static void clk_periph_gate_restore_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_periph_gate *gate = to_clk_periph_gate(hw);
->> +
->> +	if (gate->clk_state_ctx)
->> +		write_enb_set(periph_clk_to_bit(gate), gate);
->> +	else
->> +		write_enb_clr(periph_clk_to_bit(gate), gate);
->> +
->> +	udelay(5);
->> +
->> +	if (!(gate->flags & TEGRA_PERIPH_NO_RESET) &&
->> +	    !(gate->flags & TEGRA_PERIPH_MANUAL_RESET)) {
->> +		if (gate->rst_state_ctx)
->> +			write_rst_set(periph_clk_to_bit(gate), gate);
->> +		else
->> +			write_rst_clr(periph_clk_to_bit(gate), gate);
->> +	}
->> +}
->> +
->>  const struct clk_ops tegra_clk_periph_gate_ops = {
->>  	.is_enabled = clk_periph_is_enabled,
->>  	.enable = clk_periph_enable,
->>  	.disable = clk_periph_disable,
->> +	.save_context = clk_periph_gate_save_context,
->> +	.restore_context = clk_periph_gate_restore_context,
->>  };
->>  
->>  struct clk *tegra_clk_register_periph_gate(const char *name,
->> diff --git a/drivers/clk/tegra/clk-periph.c b/drivers/clk/tegra/clk-periph.c
->> index 58437da25156..06fb62955768 100644
->> --- a/drivers/clk/tegra/clk-periph.c
->> +++ b/drivers/clk/tegra/clk-periph.c
->> @@ -99,6 +99,37 @@ static void clk_periph_disable(struct clk_hw *hw)
->>  	gate_ops->disable(gate_hw);
->>  }
->>  
->> +static int clk_periph_save_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_periph *periph = to_clk_periph(hw);
->> +	const struct clk_ops *gate_ops = periph->gate_ops;
->> +	struct clk_hw *gate_hw = &periph->gate.hw;
->> +
->> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_GATE))
->> +		gate_ops->save_context(gate_hw);
->> +
->> +	periph->parent_ctx = clk_periph_get_parent(hw);
->> +
->> +	return 0;
->> +}
->> +
->> +static void clk_periph_restore_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_periph *periph = to_clk_periph(hw);
->> +	const struct clk_ops *gate_ops = periph->gate_ops;
->> +	struct clk_hw *gate_hw = &periph->gate.hw;
->> +	const struct clk_ops *div_ops = periph->div_ops;
->> +	struct clk_hw *div_hw = &periph->divider.hw;
->> +
->> +	clk_periph_set_parent(hw, periph->parent_ctx);
->> +
->> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_DIV))
->> +		div_ops->restore_context(div_hw);
-> 
-> Could you please point to where the divider's save_context() happens?
-> Because I can't see it.
+Brian Masney <masneyb@onstation.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=8831=E6=
+=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=885:40=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi Chuhong,
+>
+> On Wed, Jul 31, 2019 at 11:04:23AM +0800, Chuhong Yuan wrote:
+> > Use regulator_bulk_() APIs to shrink driver size.
+> >
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+>
+> Just a few minor nitpicks below. Overall, this is looking nice.
+>
+> > ---
+> > Changes in v3:
+> >   - Split v2 into two patches.
+> >   - Add dev_err to log error messages.
+> >   - Add a check for EPROBE_DEFER.
+> >
+> >  drivers/iio/light/tsl2772.c | 82 +++++++++++--------------------------
+> >  1 file changed, 24 insertions(+), 58 deletions(-)
+> >
+> > diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
+> > index f1134f183be7..fd6d44297dba 100644
+> > --- a/drivers/iio/light/tsl2772.c
+> > +++ b/drivers/iio/light/tsl2772.c
+> > @@ -134,6 +134,12 @@ enum {
+> >       TSL2772_CHIP_SUSPENDED =3D 2
+> >  };
+> >
+> > +enum {
+> > +     TSL2772_SUPPLY_VDD =3D 0,
+> > +     TSL2772_SUPPLY_VDDIO =3D 1,
+> > +     TSL2772_NUM_SUPPLIES =3D 2
+> > +};
+> > +
+> >  /* Per-device data */
+> >  struct tsl2772_als_info {
+> >       u16 als_ch0;
+> > @@ -161,8 +167,7 @@ struct tsl2772_chip {
+> >       struct mutex prox_mutex;
+> >       struct mutex als_mutex;
+> >       struct i2c_client *client;
+> > -     struct regulator *vdd_supply;
+> > -     struct regulator *vddio_supply;
+> > +     struct regulator_bulk_data reg[TSL2772_NUM_SUPPLIES];
+>
+> I prefer that this was named something other than 'reg'. Maybe
+> 'supplies'? I know that there are a few other drivers in IIO that use
+> this name.
+>
 
-Ah, I now see that there is no need to save the dividers context because
-clk itself has enough info that is needed for the context's restoring
-(like I pointed in the review to v6).
+I have used grep "regulator_bulk_data" in drivers/iio but find no variable
+is named "supplies"...
 
-Looks like you could also implement a new clk_hw_get_parent_index()
-generic helper to get the index instead of storing it manually.
+> >       u16 prox_data;
+> >       struct tsl2772_als_info als_cur_info;
+> >       struct tsl2772_settings settings;
+> > @@ -697,46 +702,7 @@ static void tsl2772_disable_regulators_action(void=
+ *_data)
+> >  {
+> >       struct tsl2772_chip *chip =3D _data;
+> >
+> > -     regulator_disable(chip->vdd_supply);
+> > -     regulator_disable(chip->vddio_supply);
+> > -}
+> > -
+> > -static int tsl2772_enable_regulator(struct tsl2772_chip *chip,
+> > -                                 struct regulator *regulator)
+> > -{
+> > -     int ret;
+> > -
+> > -     ret =3D regulator_enable(regulator);
+> > -     if (ret < 0) {
+> > -             dev_err(&chip->client->dev, "Failed to enable regulator: =
+%d\n",
+> > -                     ret);
+> > -             return ret;
+> > -     }
+> > -
+> > -     return 0;
+> > -}
+> > -
+> > -static struct regulator *tsl2772_get_regulator(struct tsl2772_chip *ch=
+ip,
+> > -                                            char *name)
+> > -{
+> > -     struct regulator *regulator;
+> > -     int ret;
+> > -
+> > -     regulator =3D devm_regulator_get(&chip->client->dev, name);
+> > -     if (IS_ERR(regulator)) {
+> > -             if (PTR_ERR(regulator) !=3D -EPROBE_DEFER)
+> > -                     dev_err(&chip->client->dev,
+> > -                             "Failed to get %s regulator %d\n",
+> > -                             name, (int)PTR_ERR(regulator));
+> > -
+> > -             return regulator;
+> > -     }
+> > -
+> > -     ret =3D tsl2772_enable_regulator(chip, regulator);
+> > -     if (ret < 0)
+> > -             return ERR_PTR(ret);
+> > -
+> > -     return regulator;
+> > +     regulator_bulk_disable(ARRAY_SIZE(chip->reg), chip->reg);
+> >  }
+> >
+> >  static int tsl2772_chip_on(struct iio_dev *indio_dev)
+> > @@ -1804,14 +1770,21 @@ static int tsl2772_probe(struct i2c_client *cli=
+entp,
+> >       chip->client =3D clientp;
+> >       i2c_set_clientdata(clientp, indio_dev);
+> >
+> > -     chip->vddio_supply =3D tsl2772_get_regulator(chip, "vddio");
+> > -     if (IS_ERR(chip->vddio_supply))
+> > -             return PTR_ERR(chip->vddio_supply);
+> > +     chip->reg[TSL2772_SUPPLY_VDD].supply =3D "vdd";
+> > +     chip->reg[TSL2772_SUPPLY_VDDIO].supply =3D "vddio";
+> >
+> > -     chip->vdd_supply =3D tsl2772_get_regulator(chip, "vdd");
+> > -     if (IS_ERR(chip->vdd_supply)) {
+> > -             regulator_disable(chip->vddio_supply);
+> > -             return PTR_ERR(chip->vdd_supply);
+> > +     ret =3D devm_regulator_bulk_get(&clientp->dev, ARRAY_SIZE(chip->r=
+eg),
+> > +                                                             chip->reg=
+);
+>
+> This needs to be aligned with devm_regulator_bulk_get, not ARRAY_SIZE.
+>
+> > +     if (ret < 0) {
+> > +             if (ret !=3D -EPROBE_DEFER)
+> > +                     dev_err(&clientp->dev, "Failed to get regulators:=
+ %d\n", ret);
+>
+> Add newline.
+>
+> Brian
