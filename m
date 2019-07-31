@@ -2,103 +2,157 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFC2C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF38FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7116D206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F70206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:11:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="Vl4Zvjjq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkPjlIKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfGaHJL (ORCPT
+        id S1726679AbfGaHLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 03:09:11 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:55086 "EHLO uho.ysoft.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbfGaHJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 03:09:07 -0400
-Received: from [10.1.8.111] (unknown [10.1.8.111])
-        by uho.ysoft.cz (Postfix) with ESMTP id 0036FA0375;
-        Wed, 31 Jul 2019 09:09:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1564556946;
-        bh=4iPoQC2zVdqrc1YYIrTN5Z2OucTh3nHLWJP6OzMlpOE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Vl4Zvjjq6tAl+G4y63xuRdr3K/XyhXuB5s+ZWyEBG01eYPSI80tFB+rcvPjUVYiP/
-         cIE+ykvQU1lvgQ/j45CJdEfCF9TI/ri9CvBf5tyZTUF2R8rYkj80eh9S03jpl6CJpO
-         lhycBra2fA1+WFH1bAJyX1m6RXfZUp+oEV3zvhTw=
-Subject: Re: [PATCH 13/22] ARM: dts: colibri-imx6: Add missing pinmuxing to
- Toradex eval board
-To:     Philippe Schenker <dev@pschenker.ch>, marcel.ziswiler@toradex.com,
-        max.krummenacher@toradex.com, stefan@agner.ch,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-References: <20190730144649.19022-1-dev@pschenker.ch>
- <20190730144649.19022-14-dev@pschenker.ch>
-From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Message-ID: <ee2e4fec-21fe-709b-9c47-db7c24407c1c@ysoft.com>
-Date:   Wed, 31 Jul 2019 09:09:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 31 Jul 2019 03:11:49 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33147 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfGaHLt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 03:11:49 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h10so64557546ljg.0;
+        Wed, 31 Jul 2019 00:11:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kqr8tEl+A/BsI/SRcfQuAdRPZm/jRaraQ1jAsd1n/gs=;
+        b=XkPjlIKzJuoQMP5k1IsZh1gweTmAgYUgfi0sMTRiBPfg0kOUfGzkmc+xVQclJvr5nl
+         sNmFNLUDHd/0OqC8c34zy5HLWPTpy7twxxUxBs/BOoQTYEnUVvKKtNJFCT9+3pBGHtpm
+         wmj+cSHBY3A+8J6HQ++nKBN2YQZk5nG349PGsEeobfaj6kBDsgX2KYvHtDV53VBufFsP
+         UGcqfUdntPuUlbk3T+JWTbGWMrD3jMsriHJbxp8JEH/0uaRzBF74ZNkW9CAb26vC13J/
+         tHV+u9iDzM2uzApWhiA841UQA0+zmesrfzE4d6wIqQRVQHpwqWRNF8KBc5GekWu/QrCs
+         K4VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kqr8tEl+A/BsI/SRcfQuAdRPZm/jRaraQ1jAsd1n/gs=;
+        b=m1T8cdfl+byFsF/AuhlI+skpmS0tUwZmxs9ZTwKItQMZSJkMWyjOyOdPnIan2jOT9V
+         3EbHRvjE6OTU/AWDy43xFttsx/ZCbLEF0X7V9kudDku274zEdK5H/qyazQvB9zaaufJW
+         q81MvFTg9TanjZOAarbT7iypgj1nUi7iQF/baApaLRQ1uMBVjVch23gTjtqyIRk47v2e
+         /5EO6vyL+r1LyedStytm/HlptCmVHkYOMBUXFDXzs+djyS+rBAVZNDP/AM0bMwH2Ucvj
+         HspsVNlaq7nYGIbF1PR2p8RL5q0916ygM1gIXRlPhYnHOQQNqKsJrZRYOVvLbxVRTxyd
+         LWwg==
+X-Gm-Message-State: APjAAAUYH3Tf0Wsgs69jBIUS1OEiuT69B97cD1ipwxu+Bz0BSOJLKcGA
+        9Mo6D4085MnMqAHuVBdojbFJC4z4n2PkHS/EHWc=
+X-Google-Smtp-Source: APXvYqywjHZBwxsXA1068nZBZHE0Ulkn//um58llA3xod4Ipo+akfow/68WBjfdpXjVY2Sc+txo6D77ywYRO9CqXl7E=
+X-Received: by 2002:a2e:b1c1:: with SMTP id e1mr28147758lja.228.1564557106084;
+ Wed, 31 Jul 2019 00:11:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190730144649.19022-14-dev@pschenker.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
+From:   Janne Karhunen <janne.karhunen@gmail.com>
+Date:   Wed, 31 Jul 2019 10:11:34 +0300
+Message-ID: <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
+Subject: Re: [RFC v2 0/6] Introduce TEE based Trusted Keys support
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, jens.wiklander@linaro.org,
+        corbet@lwn.net, dhowells@redhat.com, jejb@linux.ibm.com,
+        jarkko.sakkinen@linux.intel.com, Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, tee-dev@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30. 07. 19 16:46, Philippe Schenker wrote:
-> From: Philippe Schenker <philippe.schenker@toradex.com>
-> 
-> This patch adds some missing pinmuxing that is in the colibri
-> standard to the dts.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> ---
+Hi,
 
-"ARM: dts: imx6-colibri: " in the subject for consistency.
+Interesting, I wrote something similar and posted it to the lists a while back:
+https://github.com/jkrh/linux/commit/d77ea03afedcb5fd42234cd834da8f8a0809f6a6
 
-Same for the Apalis, please.
+Since there are no generic 'TEEs' available, I implemented the same
+thing as a generic protocol translator. The shared memory binding for
+instance already assumes fair amount about the TEE and how that is
+physically present in the system. Besides, the help from usage of shm
+is pretty limited due to the size of the keydata.
 
-Michal
 
-> 
->   arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-> index 63d4f9ca9ad8..13800e60246c 100644
-> --- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-> +++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-> @@ -204,6 +204,14 @@
->   };
->   
->   &iomuxc {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <
-> +		&pinctrl_weim_gpio_1 &pinctrl_weim_gpio_2
-> +		&pinctrl_weim_gpio_3 &pinctrl_weim_gpio_4
-> +		&pinctrl_weim_gpio_5 &pinctrl_weim_gpio_6
-> +		&pinctrl_usbh_oc_1 &pinctrl_usbc_id_1
-> +	>;
-> +
->   	pinctrl_pcap_1: pcap-1 {
->   		fsl,pins = <
->   			MX6QDL_PAD_GPIO_9__GPIO1_IO09	0x1b0b0 /* SODIMM 28 */
-> 
+--
+Janne
 
+
+
+
+On Tue, Jul 30, 2019 at 3:26 PM Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> Add support for TEE based trusted keys where TEE provides the functionality
+> to seal and unseal trusted keys using hardware unique key. Also, this is
+> an alternative in case platform doesn't possess a TPM device.
+>
+> This series also adds some TEE features like:
+>
+> Patch #1, #2 enables support for registered kernel shared memory with TEE.
+>
+> Patch #3 enables support for private kernel login method required for
+> cases like trusted keys where we don't wan't user-space to directly access
+> TEE service to retrieve trusted key contents.
+>
+> Rest of the patches from #4 to #6 adds support for TEE based trusted keys.
+>
+> This patch-set has been tested with OP-TEE based pseudo TA which can be
+> found here [1].
+>
+> Also, this patch-set is dependent on generic Trusted Keys framework
+> patch-set [2].
+>
+> [1] https://github.com/OP-TEE/optee_os/pull/3082
+> [2] https://lkml.org/lkml/2019/7/18/284
+>
+> Changes in v2:
+> 1. Add reviewed-by tags for patch #1 and #2.
+> 2. Incorporate comments from Jens for patch #3.
+> 3. Switch to use generic trusted keys framework.
+>
+> Sumit Garg (6):
+>   tee: optee: allow kernel pages to register as shm
+>   tee: enable support to register kernel memory
+>   tee: add private login method for kernel clients
+>   KEYS: trusted: Introduce TEE based Trusted Keys
+>   doc: keys: Document usage of TEE based Trusted Keys
+>   MAINTAINERS: Add entry for TEE based Trusted Keys
+>
+>  Documentation/security/keys/index.rst       |   1 +
+>  Documentation/security/keys/tee-trusted.rst |  93 +++++++++
+>  MAINTAINERS                                 |   9 +
+>  drivers/tee/optee/call.c                    |   7 +
+>  drivers/tee/tee_core.c                      |   6 +
+>  drivers/tee/tee_shm.c                       |  16 +-
+>  include/keys/trusted-type.h                 |   3 +
+>  include/keys/trusted_tee.h                  |  66 +++++++
+>  include/linux/tee_drv.h                     |   1 +
+>  include/uapi/linux/tee.h                    |   8 +
+>  security/keys/Kconfig                       |   3 +
+>  security/keys/trusted-keys/Makefile         |   3 +-
+>  security/keys/trusted-keys/trusted-tee.c    | 282 ++++++++++++++++++++++++++++
+>  security/keys/trusted-keys/trusted.c        |   3 +
+>  14 files changed, 498 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/security/keys/tee-trusted.rst
+>  create mode 100644 include/keys/trusted_tee.h
+>  create mode 100644 security/keys/trusted-keys/trusted-tee.c
+>
+> --
+> 2.7.4
+>
