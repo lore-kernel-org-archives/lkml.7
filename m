@@ -2,93 +2,133 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9241BC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3945C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A318206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8D0206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbfGaPur (ORCPT
+        id S1728193AbfGaPx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:50:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:50476 "EHLO foss.arm.com"
+        Wed, 31 Jul 2019 11:53:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49614 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbfGaPur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:50:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCC8A1570;
-        Wed, 31 Jul 2019 08:50:46 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB15D3F694;
-        Wed, 31 Jul 2019 08:50:44 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 16:50:42 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
-        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com,
-        matthias.bgg@gmail.com, bhsharma@redhat.com
-Subject: Re: [RFC v2 8/8] arm64, kexec: enable MMU during kexec relocation
-Message-ID: <20190731155042.GF39768@lakrids.cambridge.arm.com>
-References: <20190731153857.4045-1-pasha.tatashin@soleen.com>
- <20190731153857.4045-9-pasha.tatashin@soleen.com>
+        id S1726115AbfGaPx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:53:27 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A41B63007C58;
+        Wed, 31 Jul 2019 15:53:26 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A0F845D9C9;
+        Wed, 31 Jul 2019 15:53:25 +0000 (UTC)
+Message-ID: <0a43aaa2bc1883f57ae1421b03cc3d5d23c2e425.camel@redhat.com>
+Subject: Re: [PATCH v6 20/57] infiniband: Remove dev_err() usage after
+ platform_get_irq()
+From:   Doug Ledford <dledford@redhat.com>
+To:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Wed, 31 Jul 2019 11:53:23 -0400
+In-Reply-To: <20190730181557.90391-21-swboyd@chromium.org>
+References: <20190730181557.90391-1-swboyd@chromium.org>
+         <20190730181557.90391-21-swboyd@chromium.org>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-3uGQjmrAoGQofD5SJvvd"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731153857.4045-9-pasha.tatashin@soleen.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 31 Jul 2019 15:53:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 11:38:57AM -0400, Pavel Tatashin wrote:
-> +/*
-> + * The following code is adoped from "Bare-metal Boot Code for ARMv8-A
-> + * Processors Version 1.0, 5.3.1 Cleaning and invalidating the caches".
-> + * http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dai0527a
-> + */
-> +.macro dcache_invalidate tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8
-> +	mov	\tmp0, #0x0			/* tmp0 = Cache level */
-> +	msr	CSSELR_EL1, \tmp0		/* 0x0 for L1, 0x2 for L2 */
-> +	mrs	\tmp4, CCSIDR_EL1		/* Read Cache Size ID */
-> +	and	\tmp1, \tmp4, #0x7
-> +	add	\tmp1, \tmp1, #0x4		/* tmp1 Cache Line Size */
-> +	ldr	\tmp3, =0x7fff
-> +	and	\tmp2, \tmp3, \tmp4, lsr #13	/* tmp2 Cache Set num - 1 */
-> +	ldr	\tmp3, =0x3ff
-> +	and	\tmp3, \tmp3, \tmp4, lsr #3	/* tmp3 Cache Assoc. num - 1 */
-> +	clz	\tmp4, \tmp3			/* tmp4 way pos. in the CISW */
-> +	mov	\tmp5, #0			/* tmp5 way counter way_loop */
-> +1: /* way_loop */
-> +	mov	\tmp6, #0			/* tmp6 set counter set_loop */
-> +2: /* set_loop */
-> +	lsl	\tmp7, \tmp5, \tmp4
-> +	orr	\tmp7, \tmp0, \tmp7		/* Set way */
-> +	lsl	\tmp8, \tmp6, \tmp1
-> +	orr	\tmp7, \tmp7, \tmp8		/* Set set */
-> +	dc	cisw, \tmp7			/* Clean & Inval. cache line */
-> +	add	\tmp6, \tmp6, #1		/* Increment set counter */
-> +	cmp	\tmp6, \tmp2			/* Last set reached yet? */
-> +	ble	2b				/* If not, iterate set_loop, */
-> +	add	\tmp5, \tmp5, #1		/* else, next way. */
-> +	cmp	\tmp5, \tmp3			/* Last way reached yet? */
-> +	ble	1b				/* If not, iterate way_loop. */
-> +.endm
-> +
 
-For various reasons, one cannot safely use Set/Way operations in
-portable code. They only make sense for low-level platform-specific
-firmware performing power management operations.
+--=-3uGQjmrAoGQofD5SJvvd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If you need to perform D-cache maintenance, you must use the VA
-operations to do so.
+On Tue, 2019-07-30 at 11:15 -0700, Stephen Boyd wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now
+> that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
+>=20
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
+>=20
+> ret =3D
+> (
+> platform_get_irq(E, ...)
+> platform_get_irq_byname(E, ...)
+> );
+>=20
+> if ( \( ret < 0 \| ret <=3D 0 \) )
+> {
+> (
+> -if (ret !=3D -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
+>=20
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
+>=20
+> Cc: Doug Ledford <dledford@redhat.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: linux-rdma@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>=20
+> Please apply directly to subsystem trees
+>=20
 
-Thanks,
-Mark.
+Thanks for being clear about where you wanted these applied.  This patch
+applied to rdma for-next, thanks.
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-3uGQjmrAoGQofD5SJvvd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1BuXMACgkQuCajMw5X
+L91QTBAAiui1A475ITd01T4j1gUB9/Sd6MwQ0xiBHbRxH8/WUDBBv/aLmriNCEbR
+Ty0LZ9tMPoySa6KgwjCwjXAcNPLiFqQSjS3FTaafesBdlvyQ78MKbEdnEtCJoX+0
++JjyTu3XxMD5uJzE4LE6m0T7dIJJJWUdisJhcqFa0hxHFtGQ9sUat1ap0MWJYwIr
+1XDaNDH/ovGB0DfcTaa8pI1AZesabdhwYCB5tWj90ZWJmr8E+aUxTu1pTFHbP6Yj
+hyDCQpFSrNw7ZOUDFvdghB+HtywDNWpJPV7mZ4kq5cyAdoMdHmPR1zYUFOzUEH+d
+Rx0OixPW8LYQ25Hep74mhDAkxJBcEX/B0nqhvRJHLzppWiDAKT+KqznrBuczCysA
+MXUMGFvLseEi1+lO5JasVvNemYf4E6iXXcyo+CSJvToEyXruOaunonP7nlqPRrgL
+KhNNhpCV71p0rSLemlur46V9sDvHQc5csfGYxi4TEr++nddiWTHH5eIkKbR6MUYJ
+JPJCdVyJwqnV4im6TIVnU2is/x7qMex+0ufGAPn+XtRUOxqRSHXTAh5UkHanELA0
+UpgUKT+ipnI7S+JMYjWleclqg/ZvWWRvDVNsetP/VWxlWRpfcmUsAqa1DvlSINZG
+IB/o7oJ3gGVLJLilhiW4yJVDoh9RlNvgJpv1mHDVbc3jzcUQWSo=
+=n9Yh
+-----END PGP SIGNATURE-----
+
+--=-3uGQjmrAoGQofD5SJvvd--
+
