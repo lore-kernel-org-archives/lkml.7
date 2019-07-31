@@ -2,115 +2,168 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AC3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D215AC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DAD72067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:58:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="b8PLAT0T"
+	by mail.kernel.org (Postfix) with ESMTP id ADF452067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564595970;
+	bh=NEcDRzJevd+KIyIuh3CpjR4gF6t3vEc53p0FcWTtLWI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zbrsbNwzNz8HtBSCOefyXTYTU80RvugzRc3uCPOIF36hWRCmXq7eBhFSB7t20DFtm
+	 X54QsGmmWXy0d723Zuef8bFE3Iwge163mhuG1bAkKU1YlN63kNV4/Vm+BwYVbrFAMN
+	 wm1MQBjVQ5ZHQlHnY/eA+lNXuAwIgBjKVHzEuIe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfGaR6y (ORCPT
+        id S1728254AbfGaR73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:58:54 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47713 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbfGaR6w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:58:52 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6VHwMvH3777797
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 31 Jul 2019 10:58:22 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6VHwMvH3777797
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564595903;
-        bh=pko6qkLq6LDAsDWmAq5Xc3a/oMcEzITv7Y7TuzlWrUk=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=b8PLAT0TscL+o9lyJ85NLYmoHHplO4spZBUG/XNt3zZ0G+DSA2KQZC9KudK5+E+Zu
-         NmWSAd5gPUb+gc6lv9uwBSzZAjqzZfQDq4FrkoVCWFaO9QULUmN5l58O5DB2U+uDXh
-         eBCe+QxNX/6biuRY1Vg7eUL+PSFOwhNV5I67ogNxM3k/ntV6jg5waqr/aqYYNLrj7F
-         q6l2+kPyKHtoo9cjShSmqE1RK6qNcdxixepzZCse9L2oQQU/TaEGxAyhjko8PtR+PB
-         zgNDfZxhdl65GAIAaM8UI90QW4lpMd1xtcWIoQEfnMB21kwxeoI09d/fJKiV6VE+vp
-         hpUqtdgIZ+/DA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6VHwMop3777794;
-        Wed, 31 Jul 2019 10:58:22 -0700
-Date:   Wed, 31 Jul 2019 10:58:22 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-92616606368ee01f1163fcfc986116c810cd48ba@git.kernel.org>
-Cc:     hpa@zytor.com, peterz@infradead.org, mhiramat@kernel.org,
-        pbonzini@redhat.com, tglx@linutronix.de,
-        torvalds@linux-foundation.org, paulmck@linux.ibm.com,
-        mingo@kernel.org, rostedt@goodmis.org, linux-kernel@vger.kernel.org
-Reply-To: torvalds@linux-foundation.org, paulmck@linux.ibm.com,
-          rostedt@goodmis.org, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, peterz@infradead.org,
-          mhiramat@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
-          tglx@linutronix.de
-In-Reply-To: <20190726212124.516286187@linutronix.de>
-References: <20190726212124.516286187@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/rt] kprobes: Use CONFIG_PREEMPTION
-Git-Commit-ID: 92616606368ee01f1163fcfc986116c810cd48ba
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 31 Jul 2019 13:59:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726079AbfGaR73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 13:59:29 -0400
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C2E52067D;
+        Wed, 31 Jul 2019 17:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564595968;
+        bh=NEcDRzJevd+KIyIuh3CpjR4gF6t3vEc53p0FcWTtLWI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=V+3Cky9w/gnN4kXEMxDWMD5MnHLewZ1pxiIZf6mlIMfgMmoZxtIdr1/REo0Vwtwhq
+         nvge4kVCvstMykA5EnaWeOTd3osufFD169n3Wqi/7ghc6YNIo5Su492hpn4AIxh4YE
+         eEN//AmMDGNkJW4kZ7qDqyKHbSuItzAfyyA+/hY4=
+Received: by mail-qk1-f174.google.com with SMTP id v22so49907124qkj.8;
+        Wed, 31 Jul 2019 10:59:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAU+1F3tSQgcC/1rnZLlnMqzI2mJQJ6Us4Ry9BBTE++api3A/vBs
+        B0xUwHlb37889MGoIxf1AKDU71zMVq3vQAH7IQ==
+X-Google-Smtp-Source: APXvYqxkCHy8Mu4YbKN2nkHxuSAOaPMHVupqx/C61IqD07sDT2Vj84zboBJUD7SDLxAR33ZQy+yLAkoAgVxagzL0504=
+X-Received: by 2002:a05:620a:1447:: with SMTP id i7mr83131890qkl.254.1564595967401;
+ Wed, 31 Jul 2019 10:59:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190731153529.30159-1-glaroque@baylibre.com> <20190731153529.30159-2-glaroque@baylibre.com>
+In-Reply-To: <20190731153529.30159-2-glaroque@baylibre.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 31 Jul 2019 11:59:14 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLyhiLkpje8a4Qh5K21s9xU6k1kkR0OtyGPss8=efR5Sg@mail.gmail.com>
+Message-ID: <CAL_JsqLyhiLkpje8a4Qh5K21s9xU6k1kkR0OtyGPss8=efR5Sg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: thermal: Add DT bindings
+ documentation for Amlogic Thermal
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  92616606368ee01f1163fcfc986116c810cd48ba
-Gitweb:     https://git.kernel.org/tip/92616606368ee01f1163fcfc986116c810cd48ba
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 23:19:41 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 31 Jul 2019 19:03:35 +0200
+On Wed, Jul 31, 2019 at 9:36 AM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
+>
+> Adding the devicetree binding documentation for the Amlogic temperature
+> sensor found in the Amlogic Meson G12 SoCs.
+> the G12A  and G12B SoCs are supported.
+>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+>  .../bindings/thermal/amlogic,thermal.yaml     | 58 +++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+> new file mode 100644
+> index 000000000000..f10537ab4c8b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/amlogic,thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic Thermal Driver
 
-kprobes: Use CONFIG_PREEMPTION
+This is not a driver.
 
-CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by
-CONFIG_PREEMPT_RT. Both PREEMPT and PREEMPT_RT require the same
-functionality which today depends on CONFIG_PREEMPT.
+> +
+> +maintainers:
+> +  - Guillaume La Roque <glaroque@baylibre.com>
+> +
+> +description: Amlogic Thermal driver
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
 
-Switch kprobes conditional over to CONFIG_PREEMPTION.
+oneOf is not necessary as there is only one of.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20190726212124.516286187@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/kprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +      - items:
+> +          - enum:
+> +              - amlogic,g12-cpu-thermal
+> +              - amlogic,g12-ddr-thermal
+> +          - const:
+> +              - amlogic,g12-thermal
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 9873fc627d61..8bc5f1ffd68e 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1906,7 +1906,7 @@ int register_kretprobe(struct kretprobe *rp)
- 
- 	/* Pre-allocate memory for max kretprobe instances */
- 	if (rp->maxactive <= 0) {
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 		rp->maxactive = max_t(unsigned int, 10, 2*num_possible_cpus());
- #else
- 		rp->maxactive = num_possible_cpus();
+Please run 'make dt_binding_check'. You'll find this is not valid json-schema.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  amlogic,ao-secure:
+> +    description: phandle to the ao-secure syscon
+> +    allOf:
+> +     - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - amlogic,ao-secure
+> +
+> +examples:
+> +  - |
+> +        cpu_temp: temperature-sensor@ff634800 {
+> +                compatible = "amlogic,g12-cpu-thermal",
+> +                             "amlogic,g12-thermal";
+> +                reg = <0x0 0xff634800 0x0 0x50>;
+
+Examples are built now and this will have an error. The default
+address and size cells are 1 for examples, so you either have to
+override them or adjust this.
+
+> +                interrupts = <0x0 0x24 0x0>;
+> +                clocks = <&clk 164>;
+> +                status = "okay";
+
+Don't show status in examples.
+
+> +                #thermal-sensor-cells = <0>;
+> +                amlogic,ao-secure = <&sec_AO>;
+> +        };
+> +...
+> \ No newline at end of file
+> --
+> 2.17.1
+>
