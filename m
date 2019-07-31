@@ -2,72 +2,87 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D81C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BA2C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132B220679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A07420679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbfGaO24 (ORCPT
+        id S1729250AbfGaOaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:28:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50186 "EHLO mx1.redhat.com"
+        Wed, 31 Jul 2019 10:30:13 -0400
+Received: from sauhun.de ([88.99.104.3]:42046 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfGaO24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:28:56 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 87BA4550CF;
-        Wed, 31 Jul 2019 14:28:56 +0000 (UTC)
-Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C8A860BEC;
-        Wed, 31 Jul 2019 14:28:55 +0000 (UTC)
-From:   Thomas Huth <thuth@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: selftests: Update gitignore file for latest changes
-Date:   Wed, 31 Jul 2019 16:28:51 +0200
-Message-Id: <20190731142851.9793-1-thuth@redhat.com>
+        id S1726079AbfGaOaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:30:13 -0400
+Received: from localhost (p54B33080.dip0.t-ipconnect.de [84.179.48.128])
+        by pokefinder.org (Postfix) with ESMTPSA id 96AAC2C270A;
+        Wed, 31 Jul 2019 16:30:11 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 16:30:11 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 18/57] i2c: Remove dev_err() usage after
+ platform_get_irq()
+Message-ID: <20190731143011.GB1680@kunai>
+References: <20190730181557.90391-1-swboyd@chromium.org>
+ <20190730181557.90391-19-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 31 Jul 2019 14:28:56 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cvVnyQ+4j833TQvp"
+Content-Disposition: inline
+In-Reply-To: <20190730181557.90391-19-swboyd@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kvm_create_max_vcpus test has been moved to the main directory,
-and sync_regs_test is now available on s390x, too.
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- tools/testing/selftests/kvm/.gitignore | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+--cvVnyQ+4j833TQvp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
-index 41266af0d3dc..b35da375530a 100644
---- a/tools/testing/selftests/kvm/.gitignore
-+++ b/tools/testing/selftests/kvm/.gitignore
-@@ -1,7 +1,7 @@
-+/s390x/sync_regs_test
- /x86_64/cr4_cpuid_sync_test
- /x86_64/evmcs_test
- /x86_64/hyperv_cpuid
--/x86_64/kvm_create_max_vcpus
- /x86_64/mmio_warning_test
- /x86_64/platform_info_test
- /x86_64/set_sregs_test
-@@ -13,3 +13,4 @@
- /x86_64/vmx_tsc_adjust_test
- /clear_dirty_log_test
- /dirty_log_test
-+/kvm_create_max_vcpus
--- 
-2.21.0
+> -dev_err(...);
 
+What about pr_err, ...?
+
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
+
+You can let cocci do this for you, too. From the top of my head:
+
+if (...)
+- {
+ S
+- }
+
+with S being a statement and this rule depending on the matching rule.
+
+
+--cvVnyQ+4j833TQvp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1BpfMACgkQFA3kzBSg
+KbYd2xAAq3Fa3pEk4zsTqHw98EaB/Ko5iBApFcFnoiPINoT9hj6CiXIaRsRygAKY
+tVMDFDymLmplNlXU+lrc0NVQQ6irFzHeTTYt/BSkFjh30rhJOW1JnfJrRmfqrCpt
+N/+2dH+5j3qGZW22NCQUOmEZTZuGKqSwqeyyqJMfcAUokzHCWuFibmN6yXm9QoJY
+veOJuSqabB2H9dLHLwYFQ3Yiy+6S3s/puMnvZd4qMqsmjxVgO1E0Xg6CeLsqTKyc
+mu/Lo0Qm9FSRLeO+2YgaYt8JGJBS9Vm2eXoNYXYorrIJXZ/yglKixt0DeJbvbyvw
+bga7P09n9H0bmk4kYJbIQpM30MHFrAa63y6vpsteyC/zeEVLyPDOaokx6QVZxOuJ
+gLHZK/oUnvBS97S2xxJjX0cuejLPjNt1zhx1AJvB29jaPl1J2RLkKyV1hLB/um3S
+R1SjHBsqVREHaLGAlgd4fGHF6IiEfOIJWBXB8FXhQ5WcAkF8Rj4Vg9KV/FrQYpE0
+OeW8VW43BhPSmjphOJNAc7pg5Jcl+z2JiX0ABjUtEon4HjscaRpDQ99oYDz9dZJ5
+0EB0Xcni9EO7gO0nH400BfGwpszheOVpQxfsQj1BQxFFr6nogjEQYI1k5MmM/REt
+y2Wo3RiI6i3yRtCaeFjtzVAOYGTrVexGjgNzuMKwa61m9Ox32TU=
+=LV2u
+-----END PGP SIGNATURE-----
+
+--cvVnyQ+4j833TQvp--
