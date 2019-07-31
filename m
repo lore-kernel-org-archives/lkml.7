@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B11FC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABC0C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85682064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6060217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="UeQPYBDU"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="BRLtr4tg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbfGaPJM (ORCPT
+        id S1729389AbfGaPJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:09:12 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44809 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388609AbfGaPIc (ORCPT
+        Wed, 31 Jul 2019 11:09:25 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33637 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388574AbfGaPIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:08:32 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k8so65978361edr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:30 -0700 (PDT)
+        Wed, 31 Jul 2019 11:08:30 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i11so2524898edq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=p3ZdWpQd4xgv1kA6jDtn8atrxpLedHc/tVwU2ev+R3g=;
-        b=UeQPYBDUV35JfXNrT+d/+kITJnfTYOBQ1jtvX2JvqFbwVh/IeIZ2iI0ZXO91FPn9Ce
-         GW/w3MO7sHLXXgtgE2TaPrzyGuhNw243bGm6o/iGuQwYW66FhRrCIaqTdHAHoNMlPwIJ
-         eWN5hgS1key/lsY2Gpyw1STp4427doI388pSYFCLVQEjOIiGXT+TkZloJYN6tjzrbOyJ
-         vcQMkjiEs7M6OXH8+Lpe0TAD2Ou/D+uu+KPrBcug6Q74tQXQEJs+TqHWk3omP9QV64d8
-         7zAhZGz4EvgStlF3Md21t/Dhxvi9IqnlZrJdrf/4i/NIcNvgXhFuAzIO3cs7qe9OAhQP
-         jyqw==
+        bh=2C449KSjT4bbSwYYn5oh0t+GvJgUUHqBrjpFSTJaVMM=;
+        b=BRLtr4tgYn50QM+JIDHN/iYJHDA/eYrOUmJYvQptXTzwrBNdmFzt8zjJULLektK/VA
+         AL/NZPGusMjazLlBev7xe67PdKIfQ1ifpZNsX3n6tVVOa4ud/9OwxtjEEiXleT0dww34
+         btnUPhOQ9ej+n+IZzfuH/c2u7wLSynBdGbkIYgwm/zx9aTR7AirSR8kauZtQI1eG36ut
+         GrY5WSOyefYNkH38KCUyy7rpU+qfA4Tow+UQHZI/00wFfW7zf53dLyFQhYvsbF2QDkKz
+         HwKhJkV1eHDK+DsnsDoJNeFWLsnZIxfo/PjZHwoQIcsO8/FwvmZXcMuwGCHQNeY7A0V3
+         GE2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=p3ZdWpQd4xgv1kA6jDtn8atrxpLedHc/tVwU2ev+R3g=;
-        b=EpIOZEvgsWBTSJCgTo8OTnAX7WaYrj0S6vXrhWPu+LgNw3hoEuJHk+iGsyTjCoL26e
-         xZggXYjQk24ZuvAj8QUA8YU4mCrJGhzyhjHw/yTsaFEOQWuBuOZfVUoIx1jMcPkChGxw
-         KL9MJqmxI5sqD7LpYTLNo4EcZlpj/3wyD8dSsMc1Iz/+LH4F8PDQiMztJmIHK+lrqGuY
-         Ig+0OdYKqH16d23bF+D4/FBQLKYrJ7DYPtb2/OtFIBtTBuZkjVDwOMdppq6Kupj7seam
-         QfLnqnbbpP52f9Ri4KkGpB5GC2ogQYLWFVMX1pW4/MAmGCjRNMPpboP0UodGpM0R9O9p
-         A6oQ==
-X-Gm-Message-State: APjAAAUgIwPTa2vfiunLuNAbHMhcAxy3vxWKuYYBsNRyacMmfH/pquvi
-        He5NhymbcMXXkA5jz825jKg=
-X-Google-Smtp-Source: APXvYqwkQSn37lZ2YK2K4kR+zMFHwX+ELvbrlQTI82djGKjlx/y1EvYEwBEFV4qd/VWbyn8Xl7msnw==
-X-Received: by 2002:a50:a943:: with SMTP id m3mr105292611edc.190.1564585709728;
+        bh=2C449KSjT4bbSwYYn5oh0t+GvJgUUHqBrjpFSTJaVMM=;
+        b=tb2C/XYurje6a0weaA4Ph8IXcuMhwQofr8oNtsTc4ZV+eL5N9QwjhDwmyOidMNaceX
+         hBVvl15bZkMqWdYuXFMS+01DPi3ehlBWVZD6JCJx/lUY9VxpZdEZ19Bxlm9N+cXTGou3
+         S2aMpx6sf5JmS/tUedJbqp3KEtmzVwGn5lrq78arQqqhIWBc+0nQnvgQ5A69xEG6OLCP
+         BHVUl+xjcRnMCT9tNOivZttLWTPZtOuGI/+K53nIvfFNSU47ksYgYNNeYRm7zOKEFZAr
+         1a/VeXVS0j6Z+s0mwj871MpGgcf7LGSk62ruaXDfOZcER9fsZDNOPYiP6cKgeBBK6jwW
+         PANQ==
+X-Gm-Message-State: APjAAAVmJTGsaprngpiXAQ200qGD56cApk814/4dni2P29pOPreYA/E4
+        ck1LdruIW1Pmy/2OzRgz+js=
+X-Google-Smtp-Source: APXvYqxMBwDpewyfIfpy++jLBpP8UloTaXPGrZ8I/eqCpEpkmrEfDx2SZR3u/YrZv24UsUCPRBrhkw==
+X-Received: by 2002:a05:6402:28e:: with SMTP id l14mr42072938edv.11.1564585709289;
         Wed, 31 Jul 2019 08:08:29 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id y11sm12444539ejb.54.2019.07.31.08.08.23
+        by smtp.gmail.com with ESMTPSA id jt17sm12600191ejb.90.2019.07.31.08.08.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Wed, 31 Jul 2019 08:08:28 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 9EFEC1030C0; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+        id 8E3561030BE; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,9 +75,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 25/59] keys/mktme: Preparse the MKTME key payload
-Date:   Wed, 31 Jul 2019 18:07:39 +0300
-Message-Id: <20190731150813.26289-26-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 23/59] x86/pconfig: Set an activated algorithm in all MKTME commands
+Date:   Wed, 31 Jul 2019 18:07:37 +0300
+Message-Id: <20190731150813.26289-24-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -90,215 +90,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-It is a requirement of the Kernel Keys subsystem to provide a
-preparse method that validates payloads before key instantiate
-methods are called.
+The Intel MKTME architecture specification requires an activated
+encryption algorithm for all command types.
 
-Verify that userspace provides valid MKTME options and prepare
-the payload for use at key instantiate time.
+For commands that actually perform encryption, SET_KEY_DIRECT and
+SET_KEY_RANDOM, the user specifies the algorithm when requesting the
+key through the MKTME Key Service.
 
-Create a method to free the preparsed payload. The Kernel Key
-subsystem will that to clean up after the key is instantiated.
+For CLEAR_KEY and NO_ENCRYPT commands, do not require the user to
+specify an algorithm. Define a default algorithm, that is 'any
+activated algorithm' to cover those two special cases.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- include/keys/mktme-type.h  |  31 +++++++++
- security/keys/mktme_keys.c | 134 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 165 insertions(+)
- create mode 100644 include/keys/mktme-type.h
+ arch/x86/include/asm/intel_pconfig.h | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/include/keys/mktme-type.h b/include/keys/mktme-type.h
-new file mode 100644
-index 000000000000..9dad92f17179
---- /dev/null
-+++ b/include/keys/mktme-type.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/* Key service for Multi-KEY Total Memory Encryption */
-+
-+#ifndef _KEYS_MKTME_TYPE_H
-+#define _KEYS_MKTME_TYPE_H
-+
-+#include <linux/key.h>
-+
-+enum mktme_alg {
-+	MKTME_ALG_AES_XTS_128,
-+};
-+
-+const char *const mktme_alg_names[] = {
-+	[MKTME_ALG_AES_XTS_128]	= "aes-xts-128",
-+};
-+
-+enum mktme_type {
-+	MKTME_TYPE_ERROR = -1,
-+	MKTME_TYPE_CPU,
-+	MKTME_TYPE_NO_ENCRYPT,
-+};
-+
-+const char *const mktme_type_names[] = {
-+	[MKTME_TYPE_CPU]	= "cpu",
-+	[MKTME_TYPE_NO_ENCRYPT]	= "no-encrypt",
-+};
-+
-+extern struct key_type key_type_mktme;
-+
-+#endif /* _KEYS_MKTME_TYPE_H */
-diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
-index d262e0f348e4..fe119a155235 100644
---- a/security/keys/mktme_keys.c
-+++ b/security/keys/mktme_keys.c
-@@ -6,6 +6,10 @@
- #include <linux/key.h>
- #include <linux/key-type.h>
- #include <linux/mm.h>
-+#include <linux/parser.h>
-+#include <linux/string.h>
-+#include <asm/intel_pconfig.h>
-+#include <keys/mktme-type.h>
- #include <keys/user-type.h>
+diff --git a/arch/x86/include/asm/intel_pconfig.h b/arch/x86/include/asm/intel_pconfig.h
+index 3cb002b1d0f9..4f27b0c532ee 100644
+--- a/arch/x86/include/asm/intel_pconfig.h
++++ b/arch/x86/include/asm/intel_pconfig.h
+@@ -21,14 +21,20 @@ enum pconfig_leaf {
  
- #include "internal.h"
-@@ -27,8 +31,138 @@ struct mktme_mapping {
+ /* Defines and structure for MKTME_KEY_PROGRAM of PCONFIG instruction */
  
- static struct mktme_mapping *mktme_map;
++/* mktme_key_program::keyid_ctrl ENC_ALG, bits [23:8] */
++#define MKTME_AES_XTS_128	(1 << 8)
++#define MKTME_ANY_ACTIVATED_ALG	(1 << __ffs(mktme_algs) << 8)
++
+ /* mktme_key_program::keyid_ctrl COMMAND, bits [7:0] */
+ #define MKTME_KEYID_SET_KEY_DIRECT	0
+ #define MKTME_KEYID_SET_KEY_RANDOM	1
+-#define MKTME_KEYID_CLEAR_KEY		2
+-#define MKTME_KEYID_NO_ENCRYPT		3
  
-+enum mktme_opt_id {
-+	OPT_ERROR,
-+	OPT_TYPE,
-+	OPT_ALGORITHM,
-+};
-+
-+static const match_table_t mktme_token = {
-+	{OPT_TYPE, "type=%s"},
-+	{OPT_ALGORITHM, "algorithm=%s"},
-+	{OPT_ERROR, NULL}
-+};
-+
-+/* Make sure arguments are correct for the TYPE of key requested */
-+static int mktme_check_options(u32 *payload, unsigned long token_mask,
-+			       enum mktme_type type, enum mktme_alg alg)
-+{
-+	if (!token_mask)
-+		return -EINVAL;
-+
-+	switch (type) {
-+	case MKTME_TYPE_CPU:
-+		if (test_bit(OPT_ALGORITHM, &token_mask))
-+			*payload |= (1 << alg) << 8;
-+		else
-+			return -EINVAL;
-+
-+		*payload |= MKTME_KEYID_SET_KEY_RANDOM;
-+		break;
-+
-+	case MKTME_TYPE_NO_ENCRYPT:
-+		*payload |= MKTME_KEYID_NO_ENCRYPT;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+/* Parse the options and store the key programming data in the payload. */
-+static int mktme_get_options(char *options, u32 *payload)
-+{
-+	enum mktme_alg alg = MKTME_ALG_AES_XTS_128;
-+	enum mktme_type type = MKTME_TYPE_ERROR;
-+	substring_t args[MAX_OPT_ARGS];
-+	unsigned long token_mask = 0;
-+	char *p = options;
-+	int token;
-+
-+	while ((p = strsep(&options, " \t"))) {
-+		if (*p == '\0' || *p == ' ' || *p == '\t')
-+			continue;
-+		token = match_token(p, mktme_token, args);
-+		if (token == OPT_ERROR)
-+			return -EINVAL;
-+		if (test_and_set_bit(token, &token_mask))
-+			return -EINVAL;
-+
-+		switch (token) {
-+		case OPT_TYPE:
-+			type = match_string(mktme_type_names,
-+					    ARRAY_SIZE(mktme_type_names),
-+					    args[0].from);
-+			if (type < 0)
-+				return -EINVAL;
-+			break;
-+
-+		case OPT_ALGORITHM:
-+			/* Algorithm must be generally supported */
-+			alg = match_string(mktme_alg_names,
-+					   ARRAY_SIZE(mktme_alg_names),
-+					   args[0].from);
-+			if (alg < 0)
-+				return -EINVAL;
-+
-+			/* Algorithm must be activated on this platform */
-+			if (!(mktme_algs & (1 << alg)))
-+				return -EINVAL;
-+			break;
-+
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+	return mktme_check_options(payload, token_mask, type, alg);
-+}
-+
-+void mktme_free_preparsed_payload(struct key_preparsed_payload *prep)
-+{
-+	kzfree(prep->payload.data[0]);
-+}
-+
+-/* mktme_key_program::keyid_ctrl ENC_ALG, bits [23:8] */
+-#define MKTME_AES_XTS_128	(1 << 8)
 +/*
-+ * Key Service Method to preparse a payload before a key is created.
-+ * Check permissions and the options. Load the proposed key field
-+ * data into the payload for use by the instantiate method.
++ * CLEAR_KEY and NO_ENCRYPT require the COMMAND in bits [7:0]
++ * and any activated encryption algorithm, ENC_ALG, in bits [23:8]
 + */
-+int mktme_preparse_payload(struct key_preparsed_payload *prep)
-+{
-+	size_t datalen = prep->datalen;
-+	u32 *mktme_payload;
-+	char *options;
-+	int ret;
-+
-+	if (datalen <= 0 || datalen > 1024 || !prep->data)
-+		return -EINVAL;
-+
-+	options = kmemdup_nul(prep->data, datalen, GFP_KERNEL);
-+	if (!options)
-+		return -ENOMEM;
-+
-+	mktme_payload = kzalloc(sizeof(*mktme_payload), GFP_KERNEL);
-+	if (!mktme_payload) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+	ret = mktme_get_options(options, mktme_payload);
-+	if (ret < 0) {
-+		kzfree(mktme_payload);
-+		goto out;
-+	}
-+	prep->quotalen = sizeof(mktme_payload);
-+	prep->payload.data[0] = mktme_payload;
-+out:
-+	kzfree(options);
-+	return ret;
-+}
-+
- struct key_type key_type_mktme = {
- 	.name		= "mktme",
-+	.preparse	= mktme_preparse_payload,
-+	.free_preparse	= mktme_free_preparsed_payload,
- 	.describe	= user_describe,
- };
++#define MKTME_KEYID_CLEAR_KEY  (2 | MKTME_ANY_ACTIVATED_ALG)
++#define MKTME_KEYID_NO_ENCRYPT (3 | MKTME_ANY_ACTIVATED_ALG)
  
+ /* Return codes from the PCONFIG MKTME_KEY_PROGRAM */
+ #define MKTME_PROG_SUCCESS	0
 -- 
 2.21.0
 
