@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5E7C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14024C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38702171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCF7E21726
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564577059;
-	bh=mYJJh27t+/bVqb2P718LNvvV/gjJuz87nyy7thlZJXE=;
+	s=default; t=1564577060;
+	bh=iNW8wNE5JHBZzgakkExMWkpVXk60TdQED+PTGb/g0pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UpaRfjnWrS0isprquieEwGs5ZMY7czwrWfCrHBf9+PlBIWftmGND3Y5a0+XpkMu/I
-	 R5ldoX1EDEXWblpK7qvUaxSTepxx+FQYp3p4mAXefHn3/+gDnNTwtwds0GkAWZbxP/
-	 Fe4tHwrLzpycjMRn5+/++RK6+7eEaJalFc7Wo0JA=
+	b=t9QGbFZjJjqwtEXgdX5RPSYpP02y6L2lmnLmfYSNvtY9+k2jRlmNWaHybdb9TcN8z
+	 OsHthYRT1HcBx/9E1xFFN8X0o1yDug22LKZ7UFI80aVM9y/7ZN0smOYwgGRsqoqX+W
+	 NDa7K2EcMK+Lr2PyUXZ9XekwnlyT5/7pNXFYTyVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388033AbfGaMoS (ORCPT
+        id S2388052AbfGaMoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:44:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36546 "EHLO mail.kernel.org"
+        Wed, 31 Jul 2019 08:44:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388013AbfGaMoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:44:14 -0400
+        id S1726556AbfGaMoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:44:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC5C82089E;
-        Wed, 31 Jul 2019 12:44:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B0692089E;
+        Wed, 31 Jul 2019 12:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564577053;
-        bh=mYJJh27t+/bVqb2P718LNvvV/gjJuz87nyy7thlZJXE=;
+        s=default; t=1564577055;
+        bh=iNW8wNE5JHBZzgakkExMWkpVXk60TdQED+PTGb/g0pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BCt5O2rqUxNFHOYho9ko4FSTDwEKfpYA21/ZZQ36r9aIv0cjPJUCnSxB6UhEsZUk5
-         18xUHVSQYnqCFpwDzlKbBMZ98TrhcDbnIqze71sULACdVKdWaQrv1aCSxMuPNl5irt
-         rpEL3LxDSu5v3OGKPR+i0EUbHbW3st2mipezsbxE=
+        b=XFEeDO7GXMu8iFGWL3oPbd2aUKaueXO6WY/Y974vTpcBTA24h+pXl5qA8wo3dT2vt
+         ctIKOx/+vIIwU8/IyHDhl43bxXiL8TCEJqKd+84WYwRVtH7kQsX97BB8ERfD8OuU8H
+         boNTRZI86fCLVV+vdc2rsW1XJdOJ8pcHjwYasdpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org,
         Richard Gong <richard.gong@linux.intel.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-input@vger.kernel.org
-Subject: [PATCH v2 04/10] input: axp20x-pek: convert platform driver to use dev_groups
-Date:   Wed, 31 Jul 2019 14:43:43 +0200
-Message-Id: <20190731124349.4474-5-gregkh@linuxfoundation.org>
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 05/10] firmware: arm_scpi: convert platform driver to use dev_groups
+Date:   Wed, 31 Jul 2019 14:43:44 +0200
+Message-Id: <20190731124349.4474-6-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190731124349.4474-1-gregkh@linuxfoundation.org>
 References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
@@ -64,59 +63,36 @@ Platform drivers now have the option to have the platform core create
 and remove any needed sysfs attribute files.  So take advantage of that
 and do not register "by hand" a sysfs group of attributes.
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-input@vger.kernel.org
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/input/misc/axp20x-pek.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+ drivers/firmware/arm_scpi.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
-index debeeaeb8812..235925b28772 100644
---- a/drivers/input/misc/axp20x-pek.c
-+++ b/drivers/input/misc/axp20x-pek.c
-@@ -195,15 +195,12 @@ DEVICE_ATTR(startup, 0644, axp20x_show_attr_startup, axp20x_store_attr_startup);
- DEVICE_ATTR(shutdown, 0644, axp20x_show_attr_shutdown,
- 	    axp20x_store_attr_shutdown);
+diff --git a/drivers/firmware/arm_scpi.c b/drivers/firmware/arm_scpi.c
+index 725164b83242..a80c331c3a6e 100644
+--- a/drivers/firmware/arm_scpi.c
++++ b/drivers/firmware/arm_scpi.c
+@@ -1011,10 +1011,6 @@ static int scpi_probe(struct platform_device *pdev)
+ 				   scpi_info->firmware_version));
+ 	scpi_info->scpi_ops = &scpi_ops;
  
--static struct attribute *axp20x_attributes[] = {
-+static struct attribute *axp20x_attrs[] = {
- 	&dev_attr_startup.attr,
- 	&dev_attr_shutdown.attr,
- 	NULL,
- };
+-	ret = devm_device_add_groups(dev, versions_groups);
+-	if (ret)
+-		dev_err(dev, "unable to create sysfs version group\n");
 -
--static const struct attribute_group axp20x_attribute_group = {
--	.attrs = axp20x_attributes,
--};
-+ATTRIBUTE_GROUPS(axp20x);
+ 	return devm_of_platform_populate(dev);
+ }
  
- static irqreturn_t axp20x_pek_irq(int irq, void *pwr)
- {
-@@ -356,13 +353,6 @@ static int axp20x_pek_probe(struct platform_device *pdev)
- 
- 	axp20x_pek->info = (struct axp20x_info *)match->driver_data;
- 
--	error = devm_device_add_group(&pdev->dev, &axp20x_attribute_group);
--	if (error) {
--		dev_err(&pdev->dev, "Failed to create sysfs attributes: %d\n",
--			error);
--		return error;
--	}
--
- 	platform_set_drvdata(pdev, axp20x_pek);
- 
- 	return 0;
-@@ -411,6 +401,7 @@ static struct platform_driver axp20x_pek_driver = {
- 	.driver		= {
- 		.name		= "axp20x-pek",
- 		.pm		= &axp20x_pek_pm_ops,
-+		.dev_groups	= axp20x_groups,
+@@ -1030,6 +1026,7 @@ static struct platform_driver scpi_driver = {
+ 	.driver = {
+ 		.name = "scpi_protocol",
+ 		.of_match_table = scpi_of_match,
++		.dev_groups = versions_groups,
  	},
- };
- module_platform_driver(axp20x_pek_driver);
+ 	.probe = scpi_probe,
+ 	.remove = scpi_remove,
 -- 
 2.22.0
 
