@@ -2,242 +2,151 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149E0C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6EFC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC384206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89241206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QYLt5oLx"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="IoyDJh6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387952AbfGaMjk (ORCPT
+        id S1728839AbfGaMjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:39:40 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42407 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727629AbfGaMji (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:39:38 -0400
-Received: by mail-qk1-f195.google.com with SMTP id 201so49033743qkm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ntHuD78E1C49ZvRvAJ6XgDuP1G4iMkkai3jqPaZStVQ=;
-        b=QYLt5oLxRfkO8iVQlcM8CFDLc+4aB1oq1G5gPzD6FWEByB19Sd3Eq075eKqH5NmW7r
-         yXUDMxL5fze2A5G71ENrhWbScZuetvwRZCvr7X56doCnXI9uRYUnRWTYeIM3gRLiUeyi
-         /eh7SRWLFZtd2zOIxcaSfePSYA3z8PqF8WyX2YtQr70udr1hR6V+9yQyJWWOm0FhCYn3
-         RrLimA3hfR0j6oFPuGpOrXLDhZfmxhVa2mCfh5ZGJrV7tIaubv2+pcRGOH8HyUhlMu/X
-         gRA+wBoXedUidty3leb/SYk1yPOT9L3tkNi4HVKQb4piuEQsqs8j7Li0axrda17mfn/2
-         BcXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ntHuD78E1C49ZvRvAJ6XgDuP1G4iMkkai3jqPaZStVQ=;
-        b=N3iZj/EAKYAt1Hawm/VyEMsQhMpT7x7zHtzI762sJK38+tJ7YRbKnX5cV5GH5RwEJh
-         /2ZHaM19b1SX63GUZrnnANW7UXM8xJEatISj+QLYHVMA6NEaRBO7oDvtroZLCH3fdys3
-         jykPxOgvZlaTuvAiWSL6+f/8r4+AwLGGIjq3ZJhbay0+iigsfNONyOFcXNsBDpuuoqyN
-         HPuq8yTuBFrV+FPrUQCUMUHjscYHTTLxavBSfv/sQ2wZZ3d3s5f4VimjZ/ACPzz0ljOp
-         v6keCh68y5XC6JaOr+r2m+baels5eElo5wKDPUq62HvMS8Xi/FQKTCXR1FgvEZR/UKyh
-         SXkQ==
-X-Gm-Message-State: APjAAAX9d4i832Ls3cDyS2iu6hoKaIhSfJntX6pwmzaNqvPb1VJGK2SR
-        5tcCFdmOJK8kHgqoAwy8rsPqBg==
-X-Google-Smtp-Source: APXvYqx/s09x34m2m60hGEG8oq9rNNiSt1/4j5qtIhV1B9Qgz5W3aPna7RR3oLU+V41Ml5DJ6UJ2Ng==
-X-Received: by 2002:a05:620a:1648:: with SMTP id c8mr79693913qko.106.1564576777216;
-        Wed, 31 Jul 2019 05:39:37 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id m12sm27127419qkk.123.2019.07.31.05.39.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 31 Jul 2019 05:39:36 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hsntH-0006OW-WA; Wed, 31 Jul 2019 09:39:36 -0300
-Date:   Wed, 31 Jul 2019 09:39:35 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
- with worker
-Message-ID: <20190731123935.GC3946@ziepe.ca>
-References: <20190731084655.7024-1-jasowang@redhat.com>
- <20190731084655.7024-8-jasowang@redhat.com>
+        Wed, 31 Jul 2019 08:39:43 -0400
+Received: from mail-eopbgr00121.outbound.protection.outlook.com ([40.107.0.121]:56484
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387663AbfGaMiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:38:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OmsgyayGIKutLZZOTdBeGaBixzL6YTI7rMowgzbyQ+5QeK/yEDPGqvI1ZYaTLxefAyp6YjwABrQ3FLBKsnKQ9kQ00CCCVLjdXGpgJo/hX102t1q3MPIk+7B35t8/M421y3wcaZ9amdZKHK/72IvbAss7k5Sslopx/EYIqqwaW61i3HwyfTGHSK38nOQN3yw1qQbzxBQxtKjhZL0HPN6+vgyp0NOku3TTfVGNf99VmgHPsdT0uBdCCqb0dm8DRzm6sdCBbUnuRPt1yC+SdpNkvhsiB0gJdlKoiP2+Ye3aQMjnBg/dhgwRM1XeYP1w5u3KGTKS40Qi+cjE/O3flD4hmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PB0vKYFbbdUeb19EeNeDiYIfwhKA7fkP3O+tYQyTnlU=;
+ b=OMxhSAG2tBndNN7S6pOzVqnDEOiBvo5mHEvWvG2a11pyI295ExU7MWGhkexw+9XxJYWKsf1UHTLNYeTqX2QvyE+0KfbEuGs7HMFMEs7QpjlucU3k5zLqmFq8uzh9uH+iWUydxCjb3kSDW0yyaMyxhNU3PCOuf99MGgNKXKzDNFNw2t8LdD2Hna7Zhp1IZntuz5Fy1denVPSHm7R+U4wLJLr5ouKycpXtiz1x5JBXURhBq67J4/Cs2pGnWgipGHoA1GH0c3VZcIpaP5NkvBJ+XWR3XaA/yuzKN/tDEufJ1tg7mKBvQIgOLSJ0bg8hdWiSBEh11atF4O0/9AnehO53Eg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=toradex.com;dmarc=pass action=none
+ header.from=toradex.com;dkim=pass header.d=toradex.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PB0vKYFbbdUeb19EeNeDiYIfwhKA7fkP3O+tYQyTnlU=;
+ b=IoyDJh6CB5ZGegdnbNxRXjHuCbxQg8RtxwnmXLHFGgVBYiMDtSkL635Lv1Yq76+XbPgWZwb6baZgOUx+pc95MQ7Sv73c6CtO2fP0P+wHh6IeraWuiLgH8UI0JAfeQ9qHe/eteTehAtH6v9mqSj4hnEcyd14rwK4dhxx2HaGEIeY=
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
+ VI1PR0502MB3615.eurprd05.prod.outlook.com (52.134.7.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.15; Wed, 31 Jul 2019 12:38:01 +0000
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::8405:5b51:b25d:39a2]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::8405:5b51:b25d:39a2%6]) with mapi id 15.20.2115.005; Wed, 31 Jul 2019
+ 12:38:01 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>,
+        Fabio Estevam <festevam@gmail.com>
+CC:     Philippe Schenker <philippe.schenker@toradex.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH v2 01/20] ARM: dts: imx7-colibri: make sure module supplies
+ are always on
+Thread-Topic: [PATCH v2 01/20] ARM: dts: imx7-colibri: make sure module
+ supplies are always on
+Thread-Index: AQHVR5zKtbFqHRg9tECU9zfITiqrSw==
+Date:   Wed, 31 Jul 2019 12:38:01 +0000
+Message-ID: <20190731123750.25670-2-philippe.schenker@toradex.com>
+References: <20190731123750.25670-1-philippe.schenker@toradex.com>
+In-Reply-To: <20190731123750.25670-1-philippe.schenker@toradex.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR02CA0012.eurprd02.prod.outlook.com
+ (2603:10a6:208:3e::25) To VI1PR0502MB3965.eurprd05.prod.outlook.com
+ (2603:10a6:803:23::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.22.0
+x-originating-ip: [46.140.72.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0ade3b61-8280-4817-1531-08d715b3ecde
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB3615;
+x-ms-traffictypediagnostic: VI1PR0502MB3615:
+x-microsoft-antispam-prvs: <VI1PR0502MB361586B912B38A5F875AD83CF4DF0@VI1PR0502MB3615.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1169;
+x-forefront-prvs: 011579F31F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(39850400004)(376002)(136003)(396003)(366004)(346002)(199004)(189003)(66946007)(52116002)(66446008)(64756008)(66556008)(66476007)(76176011)(4744005)(99286004)(53936002)(6512007)(6436002)(5660300002)(4326008)(7416002)(66066001)(6486002)(25786009)(478600001)(14454004)(7736002)(305945005)(71190400001)(71200400001)(3846002)(6116002)(36756003)(2501003)(68736007)(2906002)(2201001)(44832011)(486006)(476003)(86362001)(446003)(2616005)(11346002)(256004)(186003)(81166006)(81156014)(26005)(102836004)(50226002)(8936002)(8676002)(6506007)(386003)(316002)(54906003)(110136005)(1076003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3615;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GW5L58SC0Pk+UEbS/G14HjKLB2T1hfYgO3jVmz89Si7x5Qo2c3TmiHbkcSJybnpTchlGbi0LKSMqIlmPa5eGuxEtAVCfMCmJaTfPGoCRLZk6hHE1O0PtV9dewDWMfCrMD4AZyT2PPETBFlnKw1JIlj+KranOftAkifASU0nM2VY+nVPUrv8VJpNgua4o9sZ0He5895+NVLjCuvarGoFvuVaCCaf9lwIISrhAuVrl/k7dAGWuNcg3C4bbSGVVzU50Hho721LNMtKsopoYaUb0I2Iutbv1qpX/opBx2H8qm3YrZfGRzMPOy9mf596z1np5TYCmzBkD2J/FPdzsvydFhRlewsL3BoKTNXxy2Rfm37DZVoATdKgNsQE0AT8fVngq0C102GG9MWxP6qxo/Mdj2Ye2vp1Tu1Arwo7ZK97iqsc=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731084655.7024-8-jasowang@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ade3b61-8280-4817-1531-08d715b3ecde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 12:38:01.5480
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: philippe.schenker@toradex.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3615
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 04:46:53AM -0400, Jason Wang wrote:
-> We used to use RCU to synchronize MMU notifier with worker. This leads
-> calling synchronize_rcu() in invalidate_range_start(). But on a busy
-> system, there would be many factors that may slow down the
-> synchronize_rcu() which makes it unsuitable to be called in MMU
-> notifier.
-> 
-> A solution is SRCU but its overhead is obvious with the expensive full
-> memory barrier. Another choice is to use seqlock, but it doesn't
-> provide a synchronization method between readers and writers. The last
-> choice is to use vq mutex, but it need to deal with the worst case
-> that MMU notifier must be blocked and wait for the finish of swap in.
-> 
-> So this patch switches use a counter to track whether or not the map
-> was used. The counter was increased when vq try to start or finish
-> uses the map. This means, when it was even, we're sure there's no
-> readers and MMU notifier is synchronized. When it was odd, it means
-> there's a reader we need to wait it to be even again then we are
-> synchronized. 
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-You just described a seqlock.
+Prevent regulators from being switched off.
 
-We've been talking about providing this as some core service from mmu
-notifiers because nearly every use of this API needs it.
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
 
-IMHO this gets the whole thing backwards, the common pattern is to
-protect the 'shadow pte' data with a seqlock (usually open coded),
-such that the mmu notififer side has the write side of that lock and
-the read side is consumed by the thread accessing or updating the SPTE.
+Changes in v2: None
 
+ arch/arm/boot/dts/imx7-colibri.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Reported-by: Michael S. Tsirkin <mst@redhat.com>
-> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
->  drivers/vhost/vhost.c | 145 ++++++++++++++++++++++++++----------------
->  drivers/vhost/vhost.h |   7 +-
->  2 files changed, 94 insertions(+), 58 deletions(-)
-> 
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index cfc11f9ed9c9..db2c81cb1e90 100644
-> +++ b/drivers/vhost/vhost.c
-> @@ -324,17 +324,16 @@ static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
->  
->  	spin_lock(&vq->mmu_lock);
->  	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
-> -		map[i] = rcu_dereference_protected(vq->maps[i],
-> -				  lockdep_is_held(&vq->mmu_lock));
-> +		map[i] = vq->maps[i];
->  		if (map[i]) {
->  			vhost_set_map_dirty(vq, map[i], i);
-> -			rcu_assign_pointer(vq->maps[i], NULL);
-> +			vq->maps[i] = NULL;
->  		}
->  	}
->  	spin_unlock(&vq->mmu_lock);
->  
-> -	/* No need for synchronize_rcu() or kfree_rcu() since we are
-> -	 * serialized with memory accessors (e.g vq mutex held).
-> +	/* No need for synchronization since we are serialized with
-> +	 * memory accessors (e.g vq mutex held).
->  	 */
->  
->  	for (i = 0; i < VHOST_NUM_ADDRS; i++)
-> @@ -362,6 +361,44 @@ static bool vhost_map_range_overlap(struct vhost_uaddr *uaddr,
->  	return !(end < uaddr->uaddr || start > uaddr->uaddr - 1 + uaddr->size);
->  }
->  
-> +static void inline vhost_vq_access_map_begin(struct vhost_virtqueue *vq)
-> +{
-> +	int ref = READ_ONCE(vq->ref);
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index 895fbde4d433..f1c1971f2160 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -54,6 +54,7 @@
+ 		regulator-name =3D "+V3.3";
+ 		regulator-min-microvolt =3D <3300000>;
+ 		regulator-max-microvolt =3D <3300000>;
++		regulator-always-on;
+ 	};
+=20
+ 	reg_module_3v3_avdd: regulator-module-3v3-avdd {
+@@ -61,6 +62,7 @@
+ 		regulator-name =3D "+V3.3_AVDD_AUDIO";
+ 		regulator-min-microvolt =3D <3300000>;
+ 		regulator-max-microvolt =3D <3300000>;
++		regulator-always-on;
+ 	};
+=20
+ 	sound {
+--=20
+2.22.0
 
-Is a lock/single threaded supposed to be held for this?
-
-> +
-> +	smp_store_release(&vq->ref, ref + 1);
-> +	/* Make sure ref counter is visible before accessing the map */
-> +	smp_load_acquire(&vq->ref);
-
-release/acquire semantics are intended to protect blocks of related
-data, so reading something with acquire and throwing away the result
-is nonsense.
-
-> +}
-> +
-> +static void inline vhost_vq_access_map_end(struct vhost_virtqueue *vq)
-> +{
-> +	int ref = READ_ONCE(vq->ref);
-
-If the write to vq->ref is not locked this algorithm won't work, if it
-is locked the READ_ONCE is not needed.
-
-> +	/* Make sure vq access is done before increasing ref counter */
-> +	smp_store_release(&vq->ref, ref + 1);
-> +}
-> +
-> +static void inline vhost_vq_sync_access(struct vhost_virtqueue *vq)
-> +{
-> +	int ref;
-> +
-> +	/* Make sure map change was done before checking ref counter */
-> +	smp_mb();
-
-This is probably smp_rmb after reading ref, and if you are setting ref
-with smp_store_release then this should be smp_load_acquire() without
-an explicit mb.
-
-> +	ref = READ_ONCE(vq->ref);
-> +	if (ref & 0x1) {
-> +		/* When ref change, we are sure no reader can see
-> +		 * previous map */
-> +		while (READ_ONCE(vq->ref) == ref) {
-> +			set_current_state(TASK_RUNNING);
-> +			schedule();
-> +		}
-> +	}
-
-This is basically read_seqcount_begin()' with a schedule instead of
-cpu_relax
-
-
-> +	/* Make sure ref counter was checked before any other
-> +	 * operations that was dene on map. */
-> +	smp_mb();
-
-should be in a smp_load_acquire()
-
-> +}
-> +
->  static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
->  				      int index,
->  				      unsigned long start,
-> @@ -376,16 +413,15 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
->  	spin_lock(&vq->mmu_lock);
->  	++vq->invalidate_count;
->  
-> -	map = rcu_dereference_protected(vq->maps[index],
-> -					lockdep_is_held(&vq->mmu_lock));
-> +	map = vq->maps[index];
->  	if (map) {
->  		vhost_set_map_dirty(vq, map, index);
-> -		rcu_assign_pointer(vq->maps[index], NULL);
-> +		vq->maps[index] = NULL;
->  	}
->  	spin_unlock(&vq->mmu_lock);
->  
->  	if (map) {
-> -		synchronize_rcu();
-> +		vhost_vq_sync_access(vq);
-
-What prevents racing with vhost_vq_access_map_end here?
-
->  		vhost_map_unprefetch(map);
->  	}
->  }
-
-Overall I don't like it. 
-
-We are trying to get rid of these botique mmu notifier patterns in
-drivers. 
-
-Jason
