@@ -2,148 +2,332 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC926C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1651FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD3382064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5667216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:08:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="PQMMzYAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388259AbfGaPH2 (ORCPT
+        id S2388520AbfGaPIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:07:28 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:45634 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387662AbfGaPH2 (ORCPT
+        Wed, 31 Jul 2019 11:08:24 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37819 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388445AbfGaPIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:07:28 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1hsqCM-0001Qa-NS; Wed, 31 Jul 2019 11:07:26 -0400
-Message-ID: <76dbc397e21d64da75cd07d90b3ca15ca50d6fbb.camel@surriel.com>
-Subject: Re: [PATCH v3] sched/core: Don't use dying mm as active_mm of
- kthreads
-From:   Rik van Riel <riel@surriel.com>
-To:     Waiman Long <longman@redhat.com>,
+        Wed, 31 Jul 2019 11:08:21 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w13so66060650eds.4
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QvM6TLsHLaIUsQxiIrLtgZTAl4nwA/abKY84Ix9c1AI=;
+        b=PQMMzYAtdHNIXrG1QMzmJkDEaLAkNcffdKITKNKyMHWPazgNFp8a/KgMG6jpyOPy6L
+         z1/tpsyUip94xQ6akPtE8MoQmmIrADbPePw9ZUJIhjeGaokm0qqY+eEe5uAHTxdaDFOl
+         uTxZlQ2SlbbEr+TXSFQKh3v/lXXZgYGil15BJYjAEoy1ygXMXRc7taLkzxUFswX6evY7
+         kDJdbo1gZxmJV0MtpSm9FnWdgOp9x//J+1DDAJcBl4SLlPClFdePa4j2HyjR2ElgASHb
+         gjubDLRAPzaX0drp9tMCjDRDUkP7/F4q4ORRnXyI3hNiWitoyht+3ai6WwR4M8j+AqBZ
+         0UOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QvM6TLsHLaIUsQxiIrLtgZTAl4nwA/abKY84Ix9c1AI=;
+        b=fT7FFrsa/0MlaBdUJbstzwY4TrmfM9Wde+ANI4zrXVqiPCiqh6SWpbOuDpZREd9Cjo
+         8LBDfsD/NOWA11/5sGZt5tyueFJUavzCamVoHZi7pciBFHrEC15eXAhGwxAhB/FTwt/t
+         sOChE81kW6KmxXpZ0Em/U37VnMzVZ2m1OUSCv7tlSlaKPUukhDd71XJjdCagJv2XlhrS
+         y7BHC/30O9hzWUTA8NAgFU6AONaatY4OMUVkl/bcWw9n7kqJvm5+Kns+rP4UV6y+yJEt
+         hZdV27QbWt7YhnVG//nL/I3PicuaM981VcJ1GHrq9LxmApUPuMcrLHMzHBpWoFZzprAZ
+         n6+g==
+X-Gm-Message-State: APjAAAXydapWM786JlhKdRuSF5vXOGjvVmssX6ghyYLJ0bt3npmehh1p
+        n3jBotjnXRpOsEooWniJkfw=
+X-Google-Smtp-Source: APXvYqxfIQGkRhrMQl5o3NEbLiMVXnwZsc3hm4rHg9K6Idq9C1pqBjRFAwNsZKfTGo4tqfavOiaY7g==
+X-Received: by 2002:a50:9107:: with SMTP id e7mr108538225eda.280.1564585699281;
+        Wed, 31 Jul 2019 08:08:19 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id f21sm16902175edj.36.2019.07.31.08.08.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 08:08:15 -0700 (PDT)
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Received: by box.localdomain (Postfix, from userid 1000)
+        id EA80E101316; Wed, 31 Jul 2019 18:08:15 +0300 (+03)
+To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Phil Auld <pauld@redhat.com>, Michal Hocko <mhocko@kernel.org>
-Date:   Wed, 31 Jul 2019 11:07:26 -0400
-In-Reply-To: <01125822-c883-18ce-42e4-942a4f28c128@redhat.com>
-References: <20190729210728.21634-1-longman@redhat.com>
-         <ec9effc07a94b28ecf364de40dee183bcfb146fc.camel@surriel.com>
-         <3e2ff4c9-c51f-8512-5051-5841131f4acb@redhat.com>
-         <8021be4426fdafdce83517194112f43009fb9f6d.camel@surriel.com>
-         <b5a462b8-8ef6-6d2c-89aa-b5009c194000@redhat.com>
-         <c91e6104acaef118ae09e4b4b0c70232c4583293.camel@surriel.com>
-         <01125822-c883-18ce-42e4-942a4f28c128@redhat.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-LA3XQyUFN0DfKhuFWUzC"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 01/59] mm: Do no merge VMAs with different encryption KeyIDs
+Date:   Wed, 31 Jul 2019 18:07:15 +0300
+Message-Id: <20190731150813.26289-2-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
+References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+VMAs with different KeyID do not mix together. Only VMAs with the same
+KeyID are compatible.
 
---=-LA3XQyUFN0DfKhuFWUzC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ fs/userfaultfd.c   |  7 ++++---
+ include/linux/mm.h |  9 ++++++++-
+ mm/madvise.c       |  2 +-
+ mm/mempolicy.c     |  3 ++-
+ mm/mlock.c         |  2 +-
+ mm/mmap.c          | 31 +++++++++++++++++++------------
+ mm/mprotect.c      |  2 +-
+ 7 files changed, 36 insertions(+), 20 deletions(-)
 
-On Wed, 2019-07-31 at 10:15 -0400, Waiman Long wrote:
-> On 7/31/19 9:48 AM, Rik van Riel wrote:
-> > On Tue, 2019-07-30 at 17:01 -0400, Waiman Long wrote:
-> > > On 7/29/19 8:26 PM, Rik van Riel wrote:
-> > > > On Mon, 2019-07-29 at 17:42 -0400, Waiman Long wrote:
-> > > >=20
-> > > > > What I have found is that a long running process on a mostly
-> > > > > idle
-> > > > > system
-> > > > > with many CPUs is likely to cycle through a lot of the CPUs
-> > > > > during
-> > > > > its
-> > > > > lifetime and leave behind its mm in the active_mm of those
-> > > > > CPUs.  My
-> > > > > 2-socket test system have 96 logical CPUs. After running the
-> > > > > test
-> > > > > program for a minute or so, it leaves behind its mm in about
-> > > > > half
-> > > > > of
-> > > > > the
-> > > > > CPUs with a mm_count of 45 after exit. So the dying mm will
-> > > > > stay
-> > > > > until
-> > > > > all those 45 CPUs get new user tasks to run.
-> > > > OK. On what kernel are you seeing this?
-> > > >=20
-> > > > On current upstream, the code in native_flush_tlb_others()
-> > > > will send a TLB flush to every CPU in mm_cpumask() if page
-> > > > table pages have been freed.
-> > > >=20
-> > > > That should cause the lazy TLB CPUs to switch to init_mm
-> > > > when the exit->zap_page_range path gets to the point where
-> > > > it frees page tables.
-> > > >=20
-> > > I was using the latest upstream 5.3-rc2 kernel. It may be the
-> > > case
-> > > that
-> > > the mm has been switched, but the mm_count field of the active_mm
-> > > of
-> > > the
-> > > kthread is not being decremented until a user task runs on a CPU.
-> > Is that something we could fix from the TLB flushing
-> > code?
-> >=20
-> > When switching to init_mm, drop the refcount on the
-> > lazy mm?
-> >=20
-> > That way that overhead is not added to the context
-> > switching code.
->=20
-> I have thought about that. That will require changing the active_mm
-> of
-> the current task to point to init_mm, for example. Since TLB flush is
-> done in interrupt context, proper coordination between interrupt and
-> process context will require some atomic instruction which will
-> defect
-> the purpose.
-
-Would it be possible to work around that by scheduling
-a work item that drops the active_mm?
-
-After all, a work item runs in a kernel thread, so by
-the time the work item is run, either the kernel will
-still be running the mm you want to get rid of as
-active_mm, or it will have already gotten rid of it
-earlier.
-
---=20
-All Rights Reversed.
-
---=-LA3XQyUFN0DfKhuFWUzC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl1Brq4ACgkQznnekoTE
-3oO3eQf5AccmrRMXxWm78tqusxi+4qeoJTYk0e55qTe9ICxJJM1GjyKCEok1mcRz
-MKCKG1Gf6OMsZSp76dqQ3/WhbveHGMM7q+TBRqS3uKi2T+1kn3iPju0X66OYJ3jV
-GCxf3mhuBwgbMAlJ/orHvbX0TUwE7yHnVWQOLU0PdivEvfA9FBU7LsnnDHhm8EzL
-BSPJ1Qugfn7o9PrrFTGAARfEYQ2/ZHIhL3c1SZOfF6psCDIJaNJJbzCrUG12OVZU
-eWZgt8mtpmozWRxZ+7s1UkYSXfIDOJQkRtHNcRtikonqBO3Tt/e8RFJBP5Rp0ond
-HvpD66RQSO4zrn91S5EaUfnGmos7Zg==
-=yJHK
------END PGP SIGNATURE-----
-
---=-LA3XQyUFN0DfKhuFWUzC--
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index ccbdbd62f0d8..3b845a6a44d0 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -911,7 +911,7 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
+ 				 new_flags, vma->anon_vma,
+ 				 vma->vm_file, vma->vm_pgoff,
+ 				 vma_policy(vma),
+-				 NULL_VM_UFFD_CTX);
++				 NULL_VM_UFFD_CTX, vma_keyid(vma));
+ 		if (prev)
+ 			vma = prev;
+ 		else
+@@ -1461,7 +1461,8 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+ 		prev = vma_merge(mm, prev, start, vma_end, new_flags,
+ 				 vma->anon_vma, vma->vm_file, vma->vm_pgoff,
+ 				 vma_policy(vma),
+-				 ((struct vm_userfaultfd_ctx){ ctx }));
++				 ((struct vm_userfaultfd_ctx){ ctx }),
++				 vma_keyid(vma));
+ 		if (prev) {
+ 			vma = prev;
+ 			goto next;
+@@ -1623,7 +1624,7 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+ 		prev = vma_merge(mm, prev, start, vma_end, new_flags,
+ 				 vma->anon_vma, vma->vm_file, vma->vm_pgoff,
+ 				 vma_policy(vma),
+-				 NULL_VM_UFFD_CTX);
++				 NULL_VM_UFFD_CTX, vma_keyid(vma));
+ 		if (prev) {
+ 			vma = prev;
+ 			goto next;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 0334ca97c584..5bfd3dd121c1 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1637,6 +1637,13 @@ int clear_page_dirty_for_io(struct page *page);
+ 
+ int get_cmdline(struct task_struct *task, char *buffer, int buflen);
+ 
++#ifndef vma_keyid
++static inline int vma_keyid(struct vm_area_struct *vma)
++{
++	return 0;
++}
++#endif
++
+ extern unsigned long move_page_tables(struct vm_area_struct *vma,
+ 		unsigned long old_addr, struct vm_area_struct *new_vma,
+ 		unsigned long new_addr, unsigned long len,
+@@ -2301,7 +2308,7 @@ static inline int vma_adjust(struct vm_area_struct *vma, unsigned long start,
+ extern struct vm_area_struct *vma_merge(struct mm_struct *,
+ 	struct vm_area_struct *prev, unsigned long addr, unsigned long end,
+ 	unsigned long vm_flags, struct anon_vma *, struct file *, pgoff_t,
+-	struct mempolicy *, struct vm_userfaultfd_ctx);
++	struct mempolicy *, struct vm_userfaultfd_ctx, int keyid);
+ extern struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *);
+ extern int __split_vma(struct mm_struct *, struct vm_area_struct *,
+ 	unsigned long addr, int new_below);
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 968df3aa069f..00216780a630 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -138,7 +138,7 @@ static long madvise_behavior(struct vm_area_struct *vma,
+ 	pgoff = vma->vm_pgoff + ((start - vma->vm_start) >> PAGE_SHIFT);
+ 	*prev = vma_merge(mm, *prev, start, end, new_flags, vma->anon_vma,
+ 			  vma->vm_file, pgoff, vma_policy(vma),
+-			  vma->vm_userfaultfd_ctx);
++			  vma->vm_userfaultfd_ctx, vma_keyid(vma));
+ 	if (*prev) {
+ 		vma = *prev;
+ 		goto success;
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index f48693f75b37..14ee933b1ff7 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -731,7 +731,8 @@ static int mbind_range(struct mm_struct *mm, unsigned long start,
+ 			((vmstart - vma->vm_start) >> PAGE_SHIFT);
+ 		prev = vma_merge(mm, prev, vmstart, vmend, vma->vm_flags,
+ 				 vma->anon_vma, vma->vm_file, pgoff,
+-				 new_pol, vma->vm_userfaultfd_ctx);
++				 new_pol, vma->vm_userfaultfd_ctx,
++				 vma_keyid(vma));
+ 		if (prev) {
+ 			vma = prev;
+ 			next = vma->vm_next;
+diff --git a/mm/mlock.c b/mm/mlock.c
+index a90099da4fb4..3d0a31bf214c 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -535,7 +535,7 @@ static int mlock_fixup(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 	pgoff = vma->vm_pgoff + ((start - vma->vm_start) >> PAGE_SHIFT);
+ 	*prev = vma_merge(mm, *prev, start, end, newflags, vma->anon_vma,
+ 			  vma->vm_file, pgoff, vma_policy(vma),
+-			  vma->vm_userfaultfd_ctx);
++			  vma->vm_userfaultfd_ctx, vma_keyid(vma));
+ 	if (*prev) {
+ 		vma = *prev;
+ 		goto success;
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 7e8c3e8ae75f..715438a1fb93 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1008,7 +1008,8 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+  */
+ static inline int is_mergeable_vma(struct vm_area_struct *vma,
+ 				struct file *file, unsigned long vm_flags,
+-				struct vm_userfaultfd_ctx vm_userfaultfd_ctx)
++				struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
++				int keyid)
+ {
+ 	/*
+ 	 * VM_SOFTDIRTY should not prevent from VMA merging, if we
+@@ -1022,6 +1023,8 @@ static inline int is_mergeable_vma(struct vm_area_struct *vma,
+ 		return 0;
+ 	if (vma->vm_file != file)
+ 		return 0;
++	if (vma_keyid(vma) != keyid)
++		return 0;
+ 	if (vma->vm_ops && vma->vm_ops->close)
+ 		return 0;
+ 	if (!is_mergeable_vm_userfaultfd_ctx(vma, vm_userfaultfd_ctx))
+@@ -1058,9 +1061,10 @@ static int
+ can_vma_merge_before(struct vm_area_struct *vma, unsigned long vm_flags,
+ 		     struct anon_vma *anon_vma, struct file *file,
+ 		     pgoff_t vm_pgoff,
+-		     struct vm_userfaultfd_ctx vm_userfaultfd_ctx)
++		     struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
++		     int keyid)
+ {
+-	if (is_mergeable_vma(vma, file, vm_flags, vm_userfaultfd_ctx) &&
++	if (is_mergeable_vma(vma, file, vm_flags, vm_userfaultfd_ctx, keyid) &&
+ 	    is_mergeable_anon_vma(anon_vma, vma->anon_vma, vma)) {
+ 		if (vma->vm_pgoff == vm_pgoff)
+ 			return 1;
+@@ -1079,9 +1083,10 @@ static int
+ can_vma_merge_after(struct vm_area_struct *vma, unsigned long vm_flags,
+ 		    struct anon_vma *anon_vma, struct file *file,
+ 		    pgoff_t vm_pgoff,
+-		    struct vm_userfaultfd_ctx vm_userfaultfd_ctx)
++		    struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
++		    int keyid)
+ {
+-	if (is_mergeable_vma(vma, file, vm_flags, vm_userfaultfd_ctx) &&
++	if (is_mergeable_vma(vma, file, vm_flags, vm_userfaultfd_ctx, keyid) &&
+ 	    is_mergeable_anon_vma(anon_vma, vma->anon_vma, vma)) {
+ 		pgoff_t vm_pglen;
+ 		vm_pglen = vma_pages(vma);
+@@ -1136,7 +1141,8 @@ struct vm_area_struct *vma_merge(struct mm_struct *mm,
+ 			unsigned long end, unsigned long vm_flags,
+ 			struct anon_vma *anon_vma, struct file *file,
+ 			pgoff_t pgoff, struct mempolicy *policy,
+-			struct vm_userfaultfd_ctx vm_userfaultfd_ctx)
++			struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
++			int keyid)
+ {
+ 	pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
+ 	struct vm_area_struct *area, *next;
+@@ -1169,7 +1175,7 @@ struct vm_area_struct *vma_merge(struct mm_struct *mm,
+ 			mpol_equal(vma_policy(prev), policy) &&
+ 			can_vma_merge_after(prev, vm_flags,
+ 					    anon_vma, file, pgoff,
+-					    vm_userfaultfd_ctx)) {
++					    vm_userfaultfd_ctx, keyid)) {
+ 		/*
+ 		 * OK, it can.  Can we now merge in the successor as well?
+ 		 */
+@@ -1178,7 +1184,8 @@ struct vm_area_struct *vma_merge(struct mm_struct *mm,
+ 				can_vma_merge_before(next, vm_flags,
+ 						     anon_vma, file,
+ 						     pgoff+pglen,
+-						     vm_userfaultfd_ctx) &&
++						     vm_userfaultfd_ctx,
++						     keyid) &&
+ 				is_mergeable_anon_vma(prev->anon_vma,
+ 						      next->anon_vma, NULL)) {
+ 							/* cases 1, 6 */
+@@ -1201,7 +1208,7 @@ struct vm_area_struct *vma_merge(struct mm_struct *mm,
+ 			mpol_equal(policy, vma_policy(next)) &&
+ 			can_vma_merge_before(next, vm_flags,
+ 					     anon_vma, file, pgoff+pglen,
+-					     vm_userfaultfd_ctx)) {
++					     vm_userfaultfd_ctx, keyid)) {
+ 		if (prev && addr < prev->vm_end)	/* case 4 */
+ 			err = __vma_adjust(prev, prev->vm_start,
+ 					 addr, prev->vm_pgoff, NULL, next);
+@@ -1746,7 +1753,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 	 * Can we just expand an old mapping?
+ 	 */
+ 	vma = vma_merge(mm, prev, addr, addr + len, vm_flags,
+-			NULL, file, pgoff, NULL, NULL_VM_UFFD_CTX);
++			NULL, file, pgoff, NULL, NULL_VM_UFFD_CTX, 0);
+ 	if (vma)
+ 		goto out;
+ 
+@@ -3025,7 +3032,7 @@ static int do_brk_flags(unsigned long addr, unsigned long len, unsigned long fla
+ 
+ 	/* Can we just expand an old private anonymous mapping? */
+ 	vma = vma_merge(mm, prev, addr, addr + len, flags,
+-			NULL, NULL, pgoff, NULL, NULL_VM_UFFD_CTX);
++			NULL, NULL, pgoff, NULL, NULL_VM_UFFD_CTX, 0);
+ 	if (vma)
+ 		goto out;
+ 
+@@ -3223,7 +3230,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+ 		return NULL;	/* should never get here */
+ 	new_vma = vma_merge(mm, prev, addr, addr + len, vma->vm_flags,
+ 			    vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
+-			    vma->vm_userfaultfd_ctx);
++			    vma->vm_userfaultfd_ctx, vma_keyid(vma));
+ 	if (new_vma) {
+ 		/*
+ 		 * Source vma may have been merged into new_vma
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index bf38dfbbb4b4..82d7b194a918 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -400,7 +400,7 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
+ 	pgoff = vma->vm_pgoff + ((start - vma->vm_start) >> PAGE_SHIFT);
+ 	*pprev = vma_merge(mm, *pprev, start, end, newflags,
+ 			   vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
+-			   vma->vm_userfaultfd_ctx);
++			   vma->vm_userfaultfd_ctx, vma_keyid(vma));
+ 	if (*pprev) {
+ 		vma = *pprev;
+ 		VM_WARN_ON((vma->vm_flags ^ newflags) & ~VM_SOFTDIRTY);
+-- 
+2.21.0
 
