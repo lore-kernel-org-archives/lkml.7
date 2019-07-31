@@ -2,105 +2,364 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26302C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4848C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1AA52089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrX1QYVp"
+	by mail.kernel.org (Postfix) with ESMTP id 7D90A206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbfGaMBq (ORCPT
+        id S1728762AbfGaMCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:01:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43730 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfGaMBp (ORCPT
+        Wed, 31 Jul 2019 08:02:21 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:58815 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfGaMCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:01:45 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r22so4283818pgk.10;
-        Wed, 31 Jul 2019 05:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=mxMz9DTYTl5hcQl/IOSK5bxeHDD9Zpp9rkD02EBfWBw=;
-        b=GrX1QYVpWlLNEHLqvIochVMBQ25mLyaDxVFB38BIMIhEosrKIW5g62qKrFveRgl8BH
-         jIs7yhi3evsr98nbAh8KC/ZG8UJL2G2a07+jsWOdu5/9IZ4uuUJzMjESX4AhuoUnftCD
-         /EYxWQqZl/FYmqhSf4ZpOJX7eyqK9i7/tV+cub8fZ+3giqD+8ff216/MPh/qhxJGY5t1
-         QWTfvMgsOi0viMgbtiGivYUyhZnwaNV/SOXV9EZ1f3EZc94i44RNTPkSSLCJRwwjjgcp
-         PnwuI3kdNEm9TpqxG10rrJndTSF01wfA1IWwCLTeUxU2bo6Gd5hzZSys/Ww716Sn2hlk
-         deDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=mxMz9DTYTl5hcQl/IOSK5bxeHDD9Zpp9rkD02EBfWBw=;
-        b=bi/lo2NnIjgkAVmTjMK7ddGAKgmcWCIsItq3Pd5IreBkjkboLjH5VjgQk59+OFDtBY
-         L//AyTEcN3jHAf8h24fhIQDZbtgBx7dEoUkmYfYZcsxU1rQtRnjwTlyB5OjwLwp32mTk
-         Yrqu1ch1b5OEdNlY4Q/c6KMFleW4pp4FYR4Hcp1qrNUtfFjS+Y+qAGERx3Pm/QpmJFt0
-         c5ZpCdnHSAp8vIeKbZdWytFCauVlAOIQR0QZEdVPaqJMb6r/Pr6l7g+CITliwh1scMWx
-         EZz//MBvdITwEMr+b+eEbN6ZNYsdwulpdB8o/iTDWtTqIFoEyczcSwDxo2lLXY1Wq/8r
-         /qCw==
-X-Gm-Message-State: APjAAAU0sjrCcFutl6t9C9C2nJC4pZTN2C6HoatCEx6DmtfbkqOSWs7j
-        HpwcFchDtBfT6YgW/JU2wO54FM+0
-X-Google-Smtp-Source: APXvYqytpW1TS1jHUuiARJFaYVzq69ivzNY29VEf4QqVcLOZ95jTtJnNq60Jnoc04kQbt+HqLVO/Kw==
-X-Received: by 2002:a65:5082:: with SMTP id r2mr87193169pgp.170.1564574505034;
-        Wed, 31 Jul 2019 05:01:45 -0700 (PDT)
-Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
-        by smtp.gmail.com with ESMTPSA id c26sm72452537pfr.172.2019.07.31.05.01.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 05:01:44 -0700 (PDT)
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>
-References: <20190731161629.4a20a23d@canb.auug.org.au>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <a9c66184-15b9-cd11-60b7-5a644c0521b0@gmail.com>
-Date:   Wed, 31 Jul 2019 20:01:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 08:02:21 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: aOXXuc5p8mcm9W4svbErvAw8zDEnWX/xu0aNxswsJyJuhyMe99u47Jm1prVHQolWOyNCDfjIuz
+ 2KyP8Vie8Ke/iYGSsF9kTc/4qyYziM4P3uVCki6ZJ2Ec/JwzXlPUKsPcJW/zR8JoVLWIFTKGv3
+ SSFveGNhVDFv/PkILzMw7ZbwXVZwQBzAn9G7yEgxBnVmom/o6CWRWha/JTkYBQjgXwF7LiJq2l
+ PwF15dCwaJq6eekR8qgPW6a62S/Vq7HQUUQUHKOIh1ah/aubb5L2m2DbWcI2soprYL8bXzyJ09
+ 8ww=
+X-IronPort-AV: E=Sophos;i="5.64,330,1559545200"; 
+   d="scan'208";a="40418042"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Jul 2019 05:02:17 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 31 Jul 2019 05:02:17 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 31 Jul 2019 05:02:15 -0700
+Date:   Wed, 31 Jul 2019 14:01:21 +0200
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+CC:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "=?utf-8?Q?=C5=81ukasz?= Stelmach" <l.stelmach@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        "Krzysztof Kozlowski" <krzk@kernel.org>,
+        Deepak Saxena <dsaxena@plexity.net>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        <linux-crypto@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH] hwrng: Use device-managed registration API
+Message-ID: <20190731120121.yarswvuz3avyc6re@M43218.corp.atmel.com>
+Mail-Followup-To: Chuhong Yuan <hslester96@gmail.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Deepak Saxena <dsaxena@plexity.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20190725080155.19875-1-hslester96@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190731161629.4a20a23d@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190725080155.19875-1-hslester96@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 25, 2019 at 04:01:55PM +0800, Chuhong Yuan wrote:
+> External E-Mail
+> 
+> 
+> Use devm_hwrng_register to simplify the implementation.
+> Manual unregistration and some remove functions can be
+> removed now.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  drivers/char/hw_random/atmel-rng.c     |  3 +--
 
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-On 2019/7/31 14:16, Stephen Rothwell wrote:
-> Hi all,
->
-> After merging the akpm-current tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
->
-> fs/ocfs2/xattr.c:1493:13: warning: 'ocfs2_xa_add_entry' defined but not used [-Wunused-function]
->   static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
->               ^~~~~~~~~~~~~~~~~~
->
-> Introduced by commit
->
->    45d9aa3d263d ("fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()")
->
+Thanks
 
-I look at the code again.
-The function ocfs2_xa_add_entry() is never called when using this patch.
-Thus, I think the definition of ocfs2_xa_add_entry() could be removed.
-If it is okay, I can send a new patch (v3).
-
-
-Best wishes,
-Jia-Ju Bai
+>  drivers/char/hw_random/cavium-rng-vf.c | 11 +----------
+>  drivers/char/hw_random/exynos-trng.c   |  3 +--
+>  drivers/char/hw_random/n2-drv.c        |  4 +---
+>  drivers/char/hw_random/nomadik-rng.c   |  3 +--
+>  drivers/char/hw_random/omap-rng.c      |  3 +--
+>  drivers/char/hw_random/powernv-rng.c   | 10 +---------
+>  drivers/char/hw_random/st-rng.c        |  4 +---
+>  drivers/char/hw_random/xgene-rng.c     |  4 +---
+>  9 files changed, 9 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/char/hw_random/atmel-rng.c b/drivers/char/hw_random/atmel-rng.c
+> index 433426242b87..e55705745d5e 100644
+> --- a/drivers/char/hw_random/atmel-rng.c
+> +++ b/drivers/char/hw_random/atmel-rng.c
+> @@ -86,7 +86,7 @@ static int atmel_trng_probe(struct platform_device *pdev)
+>  	trng->rng.name = pdev->name;
+>  	trng->rng.read = atmel_trng_read;
+>  
+> -	ret = hwrng_register(&trng->rng);
+> +	ret = devm_hwrng_register(&pdev->dev, &trng->rng);
+>  	if (ret)
+>  		goto err_register;
+>  
+> @@ -103,7 +103,6 @@ static int atmel_trng_remove(struct platform_device *pdev)
+>  {
+>  	struct atmel_trng *trng = platform_get_drvdata(pdev);
+>  
+> -	hwrng_unregister(&trng->rng);
+>  
+>  	atmel_trng_disable(trng);
+>  	clk_disable_unprepare(trng->clk);
+> diff --git a/drivers/char/hw_random/cavium-rng-vf.c b/drivers/char/hw_random/cavium-rng-vf.c
+> index 2d1352b67168..3de4a6a443ef 100644
+> --- a/drivers/char/hw_random/cavium-rng-vf.c
+> +++ b/drivers/char/hw_random/cavium-rng-vf.c
+> @@ -67,7 +67,7 @@ static int cavium_rng_probe_vf(struct	pci_dev		*pdev,
+>  
+>  	pci_set_drvdata(pdev, rng);
+>  
+> -	ret = hwrng_register(&rng->ops);
+> +	ret = devm_hwrng_register(&pdev->dev, &rng->ops);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Error registering device as HWRNG.\n");
+>  		return ret;
+> @@ -76,14 +76,6 @@ static int cavium_rng_probe_vf(struct	pci_dev		*pdev,
+>  	return 0;
+>  }
+>  
+> -/* Remove the VF */
+> -static void  cavium_rng_remove_vf(struct pci_dev *pdev)
+> -{
+> -	struct cavium_rng *rng;
+> -
+> -	rng = pci_get_drvdata(pdev);
+> -	hwrng_unregister(&rng->ops);
+> -}
+>  
+>  static const struct pci_device_id cavium_rng_vf_id_table[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, 0xa033), 0, 0, 0},
+> @@ -95,7 +87,6 @@ static struct pci_driver cavium_rng_vf_driver = {
+>  	.name		= "cavium_rng_vf",
+>  	.id_table	= cavium_rng_vf_id_table,
+>  	.probe		= cavium_rng_probe_vf,
+> -	.remove		= cavium_rng_remove_vf,
+>  };
+>  module_pci_driver(cavium_rng_vf_driver);
+>  
+> diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_random/exynos-trng.c
+> index 94235761955c..b4b52ab23b6b 100644
+> --- a/drivers/char/hw_random/exynos-trng.c
+> +++ b/drivers/char/hw_random/exynos-trng.c
+> @@ -153,7 +153,7 @@ static int exynos_trng_probe(struct platform_device *pdev)
+>  		goto err_clock;
+>  	}
+>  
+> -	ret = hwrng_register(&trng->rng);
+> +	ret = devm_hwrng_register(&pdev->dev, &trng->rng);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Could not register hwrng device.\n");
+>  		goto err_register;
+> @@ -179,7 +179,6 @@ static int exynos_trng_remove(struct platform_device *pdev)
+>  {
+>  	struct exynos_trng_dev *trng =  platform_get_drvdata(pdev);
+>  
+> -	hwrng_unregister(&trng->rng);
+>  	clk_disable_unprepare(trng->clk);
+>  
+>  	pm_runtime_put_sync(&pdev->dev);
+> diff --git a/drivers/char/hw_random/n2-drv.c b/drivers/char/hw_random/n2-drv.c
+> index d4cab105796f..2d256b3470db 100644
+> --- a/drivers/char/hw_random/n2-drv.c
+> +++ b/drivers/char/hw_random/n2-drv.c
+> @@ -768,7 +768,7 @@ static int n2rng_probe(struct platform_device *op)
+>  	np->hwrng.data_read = n2rng_data_read;
+>  	np->hwrng.priv = (unsigned long) np;
+>  
+> -	err = hwrng_register(&np->hwrng);
+> +	err = devm_hwrng_register(&pdev->dev, &np->hwrng);
+>  	if (err)
+>  		goto out_hvapi_unregister;
+>  
+> @@ -793,8 +793,6 @@ static int n2rng_remove(struct platform_device *op)
+>  
+>  	cancel_delayed_work_sync(&np->work);
+>  
+> -	hwrng_unregister(&np->hwrng);
+> -
+>  	sun4v_hvapi_unregister(HV_GRP_RNG);
+>  
+>  	return 0;
+> diff --git a/drivers/char/hw_random/nomadik-rng.c b/drivers/char/hw_random/nomadik-rng.c
+> index fc0f6b0cb80d..74ed29f42e4f 100644
+> --- a/drivers/char/hw_random/nomadik-rng.c
+> +++ b/drivers/char/hw_random/nomadik-rng.c
+> @@ -57,7 +57,7 @@ static int nmk_rng_probe(struct amba_device *dev, const struct amba_id *id)
+>  	if (!base)
+>  		goto out_release;
+>  	nmk_rng.priv = (unsigned long)base;
+> -	ret = hwrng_register(&nmk_rng);
+> +	ret = devm_hwrng_register(&dev->dev, &nmk_rng);
+>  	if (ret)
+>  		goto out_release;
+>  	return 0;
+> @@ -71,7 +71,6 @@ static int nmk_rng_probe(struct amba_device *dev, const struct amba_id *id)
+>  
+>  static int nmk_rng_remove(struct amba_device *dev)
+>  {
+> -	hwrng_unregister(&nmk_rng);
+>  	amba_release_regions(dev);
+>  	clk_disable(rng_clk);
+>  	return 0;
+> diff --git a/drivers/char/hw_random/omap-rng.c b/drivers/char/hw_random/omap-rng.c
+> index e9b6ac61fb7f..b27f39688b5e 100644
+> --- a/drivers/char/hw_random/omap-rng.c
+> +++ b/drivers/char/hw_random/omap-rng.c
+> @@ -500,7 +500,7 @@ static int omap_rng_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_register;
+>  
+> -	ret = hwrng_register(&priv->rng);
+> +	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
+>  	if (ret)
+>  		goto err_register;
+>  
+> @@ -525,7 +525,6 @@ static int omap_rng_remove(struct platform_device *pdev)
+>  {
+>  	struct omap_rng_dev *priv = platform_get_drvdata(pdev);
+>  
+> -	hwrng_unregister(&priv->rng);
+>  
+>  	priv->pdata->cleanup(priv);
+>  
+> diff --git a/drivers/char/hw_random/powernv-rng.c b/drivers/char/hw_random/powernv-rng.c
+> index f2e8272e276a..8da1d7917bdc 100644
+> --- a/drivers/char/hw_random/powernv-rng.c
+> +++ b/drivers/char/hw_random/powernv-rng.c
+> @@ -33,18 +33,11 @@ static struct hwrng powernv_hwrng = {
+>  	.read = powernv_rng_read,
+>  };
+>  
+> -static int powernv_rng_remove(struct platform_device *pdev)
+> -{
+> -	hwrng_unregister(&powernv_hwrng);
+> -
+> -	return 0;
+> -}
+> -
+>  static int powernv_rng_probe(struct platform_device *pdev)
+>  {
+>  	int rc;
+>  
+> -	rc = hwrng_register(&powernv_hwrng);
+> +	rc = devm_hwrng_register(&pdev->dev, &powernv_hwrng);
+>  	if (rc) {
+>  		/* We only register one device, ignore any others */
+>  		if (rc == -EEXIST)
+> @@ -70,7 +63,6 @@ static struct platform_driver powernv_rng_driver = {
+>  		.of_match_table = powernv_rng_match,
+>  	},
+>  	.probe	= powernv_rng_probe,
+> -	.remove = powernv_rng_remove,
+>  };
+>  module_platform_driver(powernv_rng_driver);
+>  
+> diff --git a/drivers/char/hw_random/st-rng.c b/drivers/char/hw_random/st-rng.c
+> index bd6a98b3479b..863448360a7d 100644
+> --- a/drivers/char/hw_random/st-rng.c
+> +++ b/drivers/char/hw_random/st-rng.c
+> @@ -102,7 +102,7 @@ static int st_rng_probe(struct platform_device *pdev)
+>  
+>  	dev_set_drvdata(&pdev->dev, ddata);
+>  
+> -	ret = hwrng_register(&ddata->ops);
+> +	ret = devm_hwrng_register(&pdev->dev, &ddata->ops);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to register HW RNG\n");
+>  		clk_disable_unprepare(clk);
+> @@ -118,8 +118,6 @@ static int st_rng_remove(struct platform_device *pdev)
+>  {
+>  	struct st_rng_data *ddata = dev_get_drvdata(&pdev->dev);
+>  
+> -	hwrng_unregister(&ddata->ops);
+> -
+>  	clk_disable_unprepare(ddata->clk);
+>  
+>  	return 0;
+> diff --git a/drivers/char/hw_random/xgene-rng.c b/drivers/char/hw_random/xgene-rng.c
+> index 8c6f9f63da5e..7e568db87ae2 100644
+> --- a/drivers/char/hw_random/xgene-rng.c
+> +++ b/drivers/char/hw_random/xgene-rng.c
+> @@ -361,7 +361,7 @@ static int xgene_rng_probe(struct platform_device *pdev)
+>  
+>  	xgene_rng_func.priv = (unsigned long) ctx;
+>  
+> -	rc = hwrng_register(&xgene_rng_func);
+> +	rc = devm_hwrng_register(&pdev->dev, &xgene_rng_func);
+>  	if (rc) {
+>  		dev_err(&pdev->dev, "RNG registering failed error %d\n", rc);
+>  		if (!IS_ERR(ctx->clk))
+> @@ -375,7 +375,6 @@ static int xgene_rng_probe(struct platform_device *pdev)
+>  			rc);
+>  		if (!IS_ERR(ctx->clk))
+>  			clk_disable_unprepare(ctx->clk);
+> -		hwrng_unregister(&xgene_rng_func);
+>  		return rc;
+>  	}
+>  
+> @@ -392,7 +391,6 @@ static int xgene_rng_remove(struct platform_device *pdev)
+>  		dev_err(&pdev->dev, "RNG init wakeup failed error %d\n", rc);
+>  	if (!IS_ERR(ctx->clk))
+>  		clk_disable_unprepare(ctx->clk);
+> -	hwrng_unregister(&xgene_rng_func);
+>  
+>  	return rc;
+>  }
+> -- 
+> 2.20.1
+> 
+> 
