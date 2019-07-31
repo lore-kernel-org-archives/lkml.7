@@ -2,132 +2,195 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4ACC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F56AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCCC20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57BE020679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1XRmqP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbfGaRcc (ORCPT
+        id S1726846AbfGaRch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:32:32 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45086 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728943AbfGaRc2 (ORCPT
+        Wed, 31 Jul 2019 13:32:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44174 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbfGaRcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:32:28 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id BCF558031F; Wed, 31 Jul 2019 19:32:14 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 19:32:26 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Parth Shah <parth@linux.ibm.com>
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        patrick.bellasi@arm.com, dietmar.eggemann@arm.com,
-        daniel.lezcano@linaro.org, subhra.mazumdar@oracle.com
-Subject: Re: [RFC v4 0/8] TurboSched: A scheduler for sustaining Turbo
- Frequencies for longer durations
-Message-ID: <20190731173225.GB24222@amd>
-References: <20190725070857.6639-1-parth@linux.ibm.com>
- <20190728133102.GD8718@xo-6d-61-c0.localdomain>
- <4fcd3488-6ba0-bc22-a08d-ceebbce1c120@linux.ibm.com>
+        Wed, 31 Jul 2019 13:32:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i18so32384870pgl.11;
+        Wed, 31 Jul 2019 10:32:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lP+gb0a7nXAkde0kTkIdwLRyN5Uij5gCsaOagxWeRf8=;
+        b=a1XRmqP103eYkSMVwGRWnIy/45+s9a3RYL2IX+WIHXeGE3psrz/St/3Y0u0kGnsuBv
+         kWcH9Q/mCWsiEFCENPtNXMv/Ncer8C9HeACP05bjRE174FxBVZpCcCOoSkPxQLkihq2D
+         4itxekCgbqo/tPZEQGkUUfbHMCld2DUDlNagjbo/QybbOIR0RMuBlzloWKs1dBE+mesC
+         i5iSxycYmaQ3GXkCntFCQbk3uGtA63RV7N06Nk5pN0N+b/YhDy4PPXKUiNLWIpxGG3HD
+         uRIROehT0+0dQOmiyqGG7/Fp5NS9mVxrJuCQxe7DHTR8ttyHf2OOX0IYfLQ8saqy35XQ
+         5Oig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lP+gb0a7nXAkde0kTkIdwLRyN5Uij5gCsaOagxWeRf8=;
+        b=ZzyQ236pMZnG/uEppD72X+3rCO8/2c2mI/URLQV5XwRWVsVquJnLDmR4sE1TBCK+h+
+         zfxXPqdE9SBWkz4ugKfOOs+3J23zgMYewLb3rpBQrG8dXe8P5hcg16Zn0aEyCc9CjKLt
+         HCPnwlXCek9lwFR2TyxIVzM7VlVeYT+5XqQlWnkhvVkxWh7+PS8znVelEWa+iHo2wRZ1
+         B3+8oJKjaz0LmilAEDYNkzZYgKpDtMXyDfjg0aEG5i4a3dcJuki00B54xbRnrxVIoQoa
+         Z7b3ZIfn54PMwczjfBrLy6GpdU5L/gpMi6u27+njFamQq1/MIuHQRReu9ljNSYqF/Xme
+         zbqA==
+X-Gm-Message-State: APjAAAV898HdG6dYBBsCiwd4Rfh91OwnDfEzbuNiIlSGuwkdcDdqQ428
+        Ne31SnTmerO71L9dYzdmmu07TUCOrec=
+X-Google-Smtp-Source: APXvYqwddI2afXrM8alwQb7OlWZg6irEgRgnn7CUaubxvSyLNnvrA35PEo2toD16kQRvykdyRVVKaA==
+X-Received: by 2002:a63:c50f:: with SMTP id f15mr15220177pgd.372.1564594343651;
+        Wed, 31 Jul 2019 10:32:23 -0700 (PDT)
+Received: from localhost.localdomain ([2607:fb90:4ad:5a0b:2aff:6e0f:8973:5a26])
+        by smtp.gmail.com with ESMTPSA id bo20sm2089617pjb.23.2019.07.31.10.31.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 10:32:23 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-serial@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 21/23] tty: serial: fsl_lpuart: Introduce lpuart*_setup_watermark_enable()
+Date:   Wed, 31 Jul 2019 10:30:43 -0700
+Message-Id: <20190731173045.11718-22-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190731173045.11718-1-andrew.smirnov@gmail.com>
+References: <20190731173045.11718-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
-Content-Disposition: inline
-In-Reply-To: <4fcd3488-6ba0-bc22-a08d-ceebbce1c120@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Most users of lpuart*_setup_watermark() enable identical set of flags
+right after the call, so combine those two action into a subroutine
+and make use of it.
 
---IrhDeMKUP4DT/M7F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: linux-imx@nxp.com
+Cc: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/tty/serial/fsl_lpuart.c | 50 ++++++++++++++++++---------------
+ 1 file changed, 28 insertions(+), 22 deletions(-)
 
-Hi!
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 5a6516f4bc93..8ab5f9939597 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1403,6 +1403,17 @@ static void lpuart_setup_watermark(struct lpuart_port *sport)
+ 	writeb(cr2_saved, sport->port.membase + UARTCR2);
+ }
+ 
++static void lpuart_setup_watermark_enable(struct lpuart_port *sport)
++{
++	unsigned char cr2;
++
++	lpuart_setup_watermark(sport);
++
++	cr2 = readb(sport->port.membase + UARTCR2);
++	cr2 |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
++	writeb(cr2, sport->port.membase + UARTCR2);
++}
++
+ static void lpuart32_setup_watermark(struct lpuart_port *sport)
+ {
+ 	unsigned long val, ctrl;
+@@ -1428,6 +1439,17 @@ static void lpuart32_setup_watermark(struct lpuart_port *sport)
+ 	lpuart32_write(&sport->port, ctrl_saved, UARTCTRL);
+ }
+ 
++static void lpuart32_setup_watermark_enable(struct lpuart_port *sport)
++{
++	u32 temp;
++
++	lpuart32_setup_watermark(sport);
++
++	temp = lpuart32_read(&sport->port, UARTCTRL);
++	temp |= UARTCTRL_RE | UARTCTRL_TE | UARTCTRL_ILIE;
++	lpuart32_write(&sport->port, temp, UARTCTRL);
++}
++
+ static void rx_dma_timer_init(struct lpuart_port *sport)
+ {
+ 	timer_setup(&sport->lpuart_timer, lpuart_timer_func, 0);
+@@ -1488,11 +1510,7 @@ static int lpuart_startup(struct uart_port *port)
+ 
+ 	spin_lock_irqsave(&sport->port.lock, flags);
+ 
+-	lpuart_setup_watermark(sport);
+-
+-	temp = readb(sport->port.membase + UARTCR2);
+-	temp |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
+-	writeb(temp, sport->port.membase + UARTCR2);
++	lpuart_setup_watermark_enable(sport);
+ 
+ 	lpuart_rx_dma_startup(sport);
+ 	lpuart_tx_dma_startup(sport);
+@@ -1538,11 +1556,7 @@ static int lpuart32_startup(struct uart_port *port)
+ 
+ 	spin_lock_irqsave(&sport->port.lock, flags);
+ 
+-	lpuart32_setup_watermark(sport);
+-
+-	temp = lpuart32_read(&sport->port, UARTCTRL);
+-	temp |= UARTCTRL_RE | UARTCTRL_TE | UARTCTRL_ILIE;
+-	lpuart32_write(&sport->port, temp, UARTCTRL);
++	lpuart32_setup_watermark_enable(sport);
+ 
+ 
+ 	lpuart_rx_dma_startup(sport);
+@@ -2560,22 +2574,14 @@ static int lpuart_resume(struct device *dev)
+ {
+ 	struct lpuart_port *sport = dev_get_drvdata(dev);
+ 	bool irq_wake = irqd_is_wakeup_set(irq_get_irq_data(sport->port.irq));
+-	unsigned long temp;
+ 
+ 	if (sport->port.suspended && !irq_wake)
+ 		lpuart_enable_clks(sport);
+ 
+-	if (lpuart_is_32(sport)) {
+-		lpuart32_setup_watermark(sport);
+-		temp = lpuart32_read(&sport->port, UARTCTRL);
+-		temp |= UARTCTRL_RE | UARTCTRL_TE | UARTCTRL_ILIE;
+-		lpuart32_write(&sport->port, temp, UARTCTRL);
+-	} else {
+-		lpuart_setup_watermark(sport);
+-		temp = readb(sport->port.membase + UARTCR2);
+-		temp |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
+-		writeb(temp, sport->port.membase + UARTCR2);
+-	}
++	if (lpuart_is_32(sport))
++		lpuart32_setup_watermark_enable(sport);
++	else
++		lpuart_setup_watermark_enable(sport);
+ 
+ 	if (sport->lpuart_dma_rx_use) {
+ 		if (irq_wake) {
+-- 
+2.21.0
 
-> >> Abstract
-> >> =3D=3D=3D=3D=3D=3D=3D=3D
-> >>
-> >> The modern servers allows multiple cores to run at range of frequencies
-> >> higher than rated range of frequencies. But the power budget of the sy=
-stem
-> >> inhibits sustaining these higher frequencies for longer durations.
-> >=20
-> > Thermal budget?
->=20
-> Right, it is a good point, and there can be possibility of Thermal thrott=
-ling
-> which is not covered here.
-> But the thermal throttling is less often seen in the servers than the thr=
-ottling
-> due to the Power budget constraints. Also one can change the power cap wh=
-ich leads
-> to increase in the throttling and task packing can handle in such
-> cases.
-
-Ok. I thought you are doing this due to thermals. If I understand
-things correctly, you can go over thermal limits for a few seconds
-before the silicon heats up. What is the timescale for power budget?
-
-> BTW, Task packing allows few more cores to remain idle for longer time, so
-> shouldn't this decrease thermal throttles upto certain extent?
-
-I guess so, yes.
-
-> > >> These numbers are w.r.t. `turbo_bench.c` multi-threaded test benchma=
-rk
-> >> which can create two kinds of tasks: CPU bound (High Utilization) and
-> >> Jitters (Low Utilization). N in X-axis represents N-CPU bound and N-Ji=
-tter
-> >> tasks spawned.
-> >=20
-> > Ok, so you have description how it causes 13% improvements. Do you also=
- have metrics how
-> > it harms performance.. how much delay is added to unimportant tasks etc=
-=2E..?
-> >=20
->=20
-> Yes, if we try to pack the tasks despite of no frequency throttling, we s=
-ee a regression
-> around 5%. For instance, in the synthetic benchmark I used to show perfor=
-mance benefit,
-> for lower count of CPU intensive threads (N=3D2) there is -5% performance=
- drop.
->=20
-> Talking about the delay added to an unimportant tasks, the result can be =
-lower throughput
-> or higher latency for such tasks.
-
-Thanks. I believe it would be good to mention disadvantages in the
-documentation, too.
-
-Best regards,
-							Pavel
-						=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---IrhDeMKUP4DT/M7F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1B0KkACgkQMOfwapXb+vK/SQCdEakOOhPJoZSXw6d1ALOX3ZWx
-knYAn2U5kHCHmxOCvozd/2HU6N2RxX4Z
-=4uGg
------END PGP SIGNATURE-----
-
---IrhDeMKUP4DT/M7F--
