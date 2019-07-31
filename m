@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AC0C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8939C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C307208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC388206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564572651;
-	bh=XtkAVSy+1hBVs1BOvYjreYd3ilh5WNrIH83CyFH4zxk=;
+	s=default; t=1564572654;
+	bh=zUhMzGsusPQ8zsv0GT4AhSlIogfdK+5+JzOypFzWpEI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Shv31eIakZbBCwCgf8+I0F/DSQJjBIaI6XaYnURcmMqfPSSyyBw0cywPEzcT7W+EX
-	 d4ItQLSg7Rh43DnW8TaysTdeChMdKbtIpe7XczaIdI3+MzCt2Ss+F2izXcMcK51tH4
-	 hu99MThI5NygJ2AKQGkxZjKDpke1EoyqsrT3cxss=
+	b=FDMRcayukgirOFOhBMUI4UAjHOEZ/c4jjuCExLi7AoDj6Hb1HJUK/9ZHoBLw5ZpY4
+	 vRmjZnGMiOCQv4zrEomfdrZ5qTlhEloHmdVL5yQkX4PPK6iZgn2w5vMHNtsna+zpLD
+	 yXWpRiw5ZUZ64qQgzoUXiDrYGtBy5rj0ySuM4TGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfGaLap (ORCPT
+        id S1728833AbfGaLax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:30:45 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36178 "EHLO
+        Wed, 31 Jul 2019 07:30:53 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36928 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbfGaLa1 (ORCPT
+        with ESMTP id S1727664AbfGaLaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:30:27 -0400
+        Wed, 31 Jul 2019 07:30:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=xP0YbjquG/wyDKLE8f0+6+xGYy0k4+i8hQ5lHngegZA=; b=LDeCmOBfK7Y+
-        LxDS8iaHmW1dYC5GamLzEvgGu1A5ko5q3X3NioSsQJSqAVdgBEn0mbb7nClVsx3vexYZ00aLXw5sd
-        ilnqcsG3MmKIHbPpUjnnjtP14ksACUPBkV+eYwcaXzA/i0rmP5nigYxHmwwyDM+To9er8zDpQvASM
-        8R1VE=;
+        List-Archive; bh=OK1qfP6SGmbQHUIYgf6InFAdJuQ6Az7VgLYIKL/9SvY=; b=QXGtYpMyBZf9
+        Q0ld8V/rb/34AocCTqq9hFoFsKLewLCkhHu/6Y3KjnbvsjslY1m7w5JJ6UsPuRYrg9Gonqk0XL6OM
+        Ay0v4uHwPjyXIFZO9tmAjW50hhlDbO5zgmb6ZiXTRVk82//jxqL53JID/RUxasdKuWc9W+P1pujIB
+        Jff2c=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hsmnk-0001nD-1W; Wed, 31 Jul 2019 11:29:48 +0000
+        id 1hsmnn-0001pE-H6; Wed, 31 Jul 2019 11:29:51 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 849B72742CC3; Wed, 31 Jul 2019 12:29:47 +0100 (BST)
+        id AF2942742C99; Wed, 31 Jul 2019 12:29:50 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     YueHaibing <yuehaibing@huawei.com>
 Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
@@ -71,11 +71,11 @@ Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
         thierry.reding@gmail.com, timur@kernel.org, tiwai@suse.com,
         wahrenst@gmx.net, wens@csie.org, Xiubo.Lee@gmail.com,
         yamada.masahiro@socionext.com
-Subject: Applied "ASoC: mxs-saif: use devm_platform_ioremap_resource() to simplify code" to the asoc tree
-In-Reply-To: <20190727150738.54764-12-yuehaibing@huawei.com>
+Subject: Applied "ASoC: tegra: use devm_platform_ioremap_resource() to simplify code" to the asoc tree
+In-Reply-To: <20190727150738.54764-3-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190731112947.849B72742CC3@ypsilon.sirena.org.uk>
-Date:   Wed, 31 Jul 2019 12:29:47 +0100 (BST)
+Message-Id: <20190731112950.AF2942742C99@ypsilon.sirena.org.uk>
+Date:   Wed, 31 Jul 2019 12:29:50 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -83,7 +83,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: mxs-saif: use devm_platform_ioremap_resource() to simplify code
+   ASoC: tegra: use devm_platform_ioremap_resource() to simplify code
 
 has been applied to the asoc tree at
 
@@ -108,46 +108,45 @@ to this mail.
 Thanks,
 Mark
 
-From 1327bfe2887c0e29bcdc0c5c3e445da107ccb4e2 Mon Sep 17 00:00:00 2001
+From 7d22808641cdea50baeae636acf5d592a7aa1239 Mon Sep 17 00:00:00 2001
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Sat, 27 Jul 2019 23:07:15 +0800
-Subject: [PATCH] ASoC: mxs-saif: use devm_platform_ioremap_resource() to
- simplify code
+Date: Sat, 27 Jul 2019 23:07:06 +0800
+Subject: [PATCH] ASoC: tegra: use devm_platform_ioremap_resource() to simplify
+ code
 
 Use devm_platform_ioremap_resource() to simplify the code a bit.
 This is detected by coccinelle.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190727150738.54764-12-yuehaibing@huawei.com
+Link: https://lore.kernel.org/r/20190727150738.54764-3-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/mxs/mxs-saif.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ sound/soc/tegra/tegra30_i2s.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/mxs/mxs-saif.c b/sound/soc/mxs/mxs-saif.c
-index 269b6d6df250..a2c79426513b 100644
---- a/sound/soc/mxs/mxs-saif.c
-+++ b/sound/soc/mxs/mxs-saif.c
-@@ -732,7 +732,6 @@ static int mxs_saif_mclk_init(struct platform_device *pdev)
- static int mxs_saif_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
--	struct resource *iores;
- 	struct mxs_saif *saif;
- 	int irq, ret = 0;
- 	struct device_node *master;
-@@ -786,9 +785,7 @@ static int mxs_saif_probe(struct platform_device *pdev)
- 		return ret;
+diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
+index ac6983c6bd72..e6d548fa980b 100644
+--- a/sound/soc/tegra/tegra30_i2s.c
++++ b/sound/soc/tegra/tegra30_i2s.c
+@@ -368,7 +368,6 @@ static int tegra30_i2s_platform_probe(struct platform_device *pdev)
+ 	struct tegra30_i2s *i2s;
+ 	const struct of_device_id *match;
+ 	u32 cif_ids[2];
+-	struct resource *mem;
+ 	void __iomem *regs;
+ 	int ret;
+ 
+@@ -406,8 +405,7 @@ static int tegra30_i2s_platform_probe(struct platform_device *pdev)
+ 		goto err;
  	}
  
--	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--
--	saif->base = devm_ioremap_resource(&pdev->dev, iores);
-+	saif->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(saif->base))
- 		return PTR_ERR(saif->base);
- 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	regs = devm_ioremap_resource(&pdev->dev, mem);
++	regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(regs)) {
+ 		ret = PTR_ERR(regs);
+ 		goto err_clk_put;
 -- 
 2.20.1
 
