@@ -2,103 +2,154 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BD1C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463D0C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD912089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183D220659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZBhSKOv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rVzjxOKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfGaI0V (ORCPT
+        id S1727650AbfGaIZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:26:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42630 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbfGaIZr (ORCPT
+        Wed, 31 Jul 2019 04:25:41 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59498 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfGaIZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:25:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x1so18732415wrr.9;
-        Wed, 31 Jul 2019 01:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Nie3vRCAA3P2WBFQINaLTshvz2jl1k5/q8MQmGfrr+k=;
-        b=cZBhSKOvmACLS//fFwYciUrtPk5+8xzmapM5YG9MeLci6M/AbV5f5DPxmzorEqe8hO
-         C0bdCTbU8UeQa/LipkiA/f5IXh9ij8yMsQ1G4y9qZAbfoebax0+PhkCBAaEIAqA1oO9X
-         FKUJvBuK5bPkEzJy6t24Uw5DSnr2B3uMFMBkW3SilpuHkkaY8mNAWagnh3QsjqFuFLrT
-         Ektr9a/2S6JiZ5sxDHjB081Z9otgQPb3t3GZuf3NXc/kvxHEn8a9JBdanuSxXw5Tx/Dz
-         lHGBkxdDvY1p6cbiS9/2rs2JXwPgI4tuD9ikOR2/czZmd5IDe6egFW92/bofahc3TSfS
-         O7GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Nie3vRCAA3P2WBFQINaLTshvz2jl1k5/q8MQmGfrr+k=;
-        b=DcmndTg+1iPChF6Ycdi3WRGBKzHWuERzuCgLPm/7BNPWAgsThvNIZJCFqqZClIrcdU
-         yfBk/ScrE8OqsNQ4mTu2O9LtETVES0Q5/SnTJgyKJHELMw3jYiBfg3WUa7X4iiyp1b7N
-         3tuUzArVJbPQeRezHfSm8QOdmmJO5+iUoaiP7JE+Sm2eBQCjP0yrZ007IWm0pZe6z/cH
-         SMBlX1Cw9y45gtZYLoaMF7fYn8Rmk04TgoAIJTi4mr1y2U/EUaB+ZXTDk5qxzyk9L0uU
-         WfIuSaS2WkeiKK19wB+Rt5sQWeZBnketiPB+1wyccG+IoeplgpvkBGzYTbGvpSEpm5zt
-         ZB5g==
-X-Gm-Message-State: APjAAAW9vTDNgn2yZodNnj0XJKy59gWRjr5ZbHBsS/F9K6ttqmWS8RAO
-        ZrK8Uo/a4K7oem3ZVt8QPmgpZFWO+48=
-X-Google-Smtp-Source: APXvYqwV3U51huq3cZ+eVl5YsV2JSBa4m12WPYbJVaYkEDyRZp9cHR75ZSXonFtQZ9v2I9po/BkoZA==
-X-Received: by 2002:a5d:5647:: with SMTP id j7mr56381028wrw.191.1564561545735;
-        Wed, 31 Jul 2019 01:25:45 -0700 (PDT)
-Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
-        by smtp.gmail.com with ESMTPSA id c78sm93223959wmd.16.2019.07.31.01.25.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 01:25:45 -0700 (PDT)
-From:   Hubert Feurstein <h.feurstein@gmail.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH net-next v2 2/6] dt-bindings: net: dsa: marvell: add 6220 model to the 6250 family
-Date:   Wed, 31 Jul 2019 10:23:47 +0200
-Message-Id: <20190731082351.3157-3-h.feurstein@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190731082351.3157-1-h.feurstein@gmail.com>
-References: <20190731082351.3157-1-h.feurstein@gmail.com>
+        Wed, 31 Jul 2019 04:25:38 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6V8O2rn081021;
+        Wed, 31 Jul 2019 08:25:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2018-07-02; bh=VzY9DtvcuYA0baJP6t/Benjg0AjHRQ2iCGpw97K47d4=;
+ b=rVzjxOKLZYfncMJWM6YjSqp66vZz7Im9L9AWAq0M/1J1TSTOCQjdkPZzvqksQg3BDtbc
+ nJsPa1E/SBHFmxcYmm+DS/oSaFMoyfQkqq1klkdzSBL5QD1IVniDBMrK86fNeeXZo+I1
+ MitK1+U2rUnN19Eov28HOCs3UZlSsOhNkOqlY3KuHdLOTWWbkka9MGyly9Vq5PU9dtYQ
+ p26QpaXYxH5xVxroX5K584wyuVmBcUCjaRQNIgaiNxa98T+sflxQUcwIuMYOjE1cUvLQ
+ ZmWqK0OmFnRW9b+xFwvmN2euQ+jfySlnKzjDA5SjCE4REh0uQD83bVEuxTvwL4/w3UYt zw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2u0ejpkkuc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Jul 2019 08:25:23 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6V8Mu9M055712;
+        Wed, 31 Jul 2019 08:25:22 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2u2exbbmha-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Jul 2019 08:25:22 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6V8PJ4X004270;
+        Wed, 31 Jul 2019 08:25:19 GMT
+Received: from localhost.localdomain (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 31 Jul 2019 01:25:19 -0700
+From:   William Kucharski <william.kucharski@oracle.com>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Bob Kasten <robert.a.kasten@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Chad Mynhier <chad.mynhier@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Johannes Weiner <jweiner@fb.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v3 0/2] mm,thp: Add filemap_huge_fault() for THP
+Date:   Wed, 31 Jul 2019 02:25:11 -0600
+Message-Id: <20190731082513.16957-1-william.kucharski@oracle.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=820
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907310090
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=874 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907310090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MV88E6220 is part of the MV88E6250 family.
+This set of patches is the first step towards a mechanism for automatically
+mapping read-only text areas of appropriate size and alignment to THPs
+whenever possible.
 
-Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- Documentation/devicetree/bindings/net/dsa/marvell.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For now, the central routine, filemap_huge_fault(), amd various support
+routines are only included if the experimental kernel configuration option
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Documentation/devicetree/bindings/net/dsa/marvell.txt
-index 6f9538974bb9..30c11fea491b 100644
---- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
-@@ -22,7 +22,7 @@ which is at a different MDIO base address in different switch families.
- - "marvell,mv88e6190"	: Switch has base address 0x00. Use with models:
- 			  6190, 6190X, 6191, 6290, 6390, 6390X
- - "marvell,mv88e6250"	: Switch has base address 0x08 or 0x18. Use with model:
--			  6250
-+			  6220, 6250
- 
- Required properties:
- - compatible		: Should be one of "marvell,mv88e6085",
+	RO_EXEC_FILEMAP_HUGE_FAULT_THP
+
+is enabled.
+
+This is because filemap_huge_fault() is dependent upon the
+address_space_operations vector readpage() pointing to a routine that will
+read and fill an entire large page at a time without poulluting the page
+cache with PAGESIZE entries for the large page being mapped or performing
+readahead that would pollute the page cache entries for succeeding large
+pages. Unfortunately, there is no good way to determine how many bytes
+were read by readpage(). At present, if filemap_huge_fault() were to call
+a conventional readpage() routine, it would only fill the first PAGESIZE
+bytes of the large page, which is definitely NOT the desired behavior.
+
+However, by making the code available now it is hoped that filesystem
+maintainers who have pledged to provide such a mechanism will do so more
+rapidly.
+
+The first part of the patch adds an order field to __page_cache_alloc(),
+allowing callers to directly request page cache pages of various sizes.
+This code was provided by Matthew Wilcox.
+
+The second part of the patch implements the filemap_huge_fault() mechanism
+as described above.
+
+Changes since v2:
+1. FGP changes were pulled out to enable submission as an independent
+   patch
+2. Inadvertent tab spacing and comment changes were reverted
+
+Changes since v1:
+1. Fix improperly generated patch for v1 PATCH 1/2
+
+Matthew Wilcox (1):
+  mm: Allow the page cache to allocate large pages
+
+William Kucharski (1):
+  Add filemap_huge_fault() to attempt to satisfy page faults on
+    memory-mapped read-only text pages using THP when possible.
+
+ fs/afs/dir.c            |   2 +-
+ fs/btrfs/compression.c  |   2 +-
+ fs/cachefiles/rdwr.c    |   4 +-
+ fs/ceph/addr.c          |   2 +-
+ fs/ceph/file.c          |   2 +-
+ include/linux/huge_mm.h |  16 +-
+ include/linux/mm.h      |   6 +
+ include/linux/pagemap.h |  10 +-
+ mm/Kconfig              |  15 ++
+ mm/filemap.c            | 320 ++++++++++++++++++++++++++++++++++++++--
+ mm/huge_memory.c        |   3 +
+ mm/mmap.c               |  36 ++++-
+ mm/readahead.c          |   2 +-
+ mm/rmap.c               |   8 +
+ net/ceph/pagelist.c     |   4 +-
+ net/ceph/pagevec.c      |   2 +-
+ 16 files changed, 401 insertions(+), 33 deletions(-)
+
 -- 
-2.22.0
+2.21.0
 
