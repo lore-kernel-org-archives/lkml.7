@@ -2,59 +2,93 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6FAC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0B4C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F261420449
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD0120449
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730787AbfGaXdb (ORCPT
+        id S1730802AbfGaXfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:33:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33402 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfGaXdb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:33:31 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hsy62-00016P-8Q; Thu, 01 Aug 2019 01:33:26 +0200
-Date:   Thu, 1 Aug 2019 01:33:25 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-cc:     mingo@redhat.com, peterz@infradead.org, dvhart@infradead.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCH RFC 1/2] futex: Split key setup from key queue locking
- and read
-In-Reply-To: <20190730220602.28781-1-krisman@collabora.com>
-Message-ID: <alpine.DEB.2.21.1908010131200.1788@nanos.tec.linutronix.de>
-References: <20190730220602.28781-1-krisman@collabora.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 31 Jul 2019 19:35:41 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39844 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728171AbfGaXfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 19:35:41 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hsy8B-0003W5-Ki; Wed, 31 Jul 2019 17:35:40 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hsy89-0001Gw-Ok; Wed, 31 Jul 2019 17:35:37 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed, 31 Jul 2019 17:35:32 -0600
+Message-Id: <20190731233534.4841-3-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190731233534.4841-1-logang@deltatee.com>
+References: <20190731233534.4841-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me, chaitanya.kulkarni@wdc.com, maxg@mellanox.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v3 2/4] nvmet-loop: Flush nvme_delete_wq when removing the port
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019, Gabriel Krisman Bertazi wrote:
+After calling nvme_loop_delete_ctrl(), the controllers will not
+yet be deleted because nvme_delete_ctrl() only schedules work
+to do the delete.
 
-> split the futex key setup from the queue locking and key reading.  This
-> is useful to support the setup of multiple keys at the same time, like
-> what is done in futex_requeue() and what will be done for the
+This means a race can occur if a port is removed but there
+are still active controllers trying to access that memory.
 
-What has this to do with futex_requeue()? Absolutely nothing unleass you
-can reused that code there, which I doubt.
+To fix this, flush the nvme_delete_wq before returning from
+nvme_loop_remove_port() so that any controllers that might
+be in the process of being deleted won't access a freed port.
 
-Thanks,
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+---
+ drivers/nvme/target/loop.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-	tglx
+diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
+index b16dc3981c69..0940c5024a34 100644
+--- a/drivers/nvme/target/loop.c
++++ b/drivers/nvme/target/loop.c
+@@ -654,6 +654,14 @@ static void nvme_loop_remove_port(struct nvmet_port *port)
+ 	mutex_lock(&nvme_loop_ports_mutex);
+ 	list_del_init(&port->entry);
+ 	mutex_unlock(&nvme_loop_ports_mutex);
++
++	/*
++	 * Ensure any ctrls that are in the process of being
++	 * deleted are in fact deleted before we return
++	 * and free the port. This is to prevent active
++	 * ctrls from using a port after it's freed.
++	 */
++	flush_workqueue(nvme_delete_wq);
+ }
+ 
+ static const struct nvmet_fabrics_ops nvme_loop_ops = {
+-- 
+2.20.1
+
