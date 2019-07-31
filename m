@@ -2,208 +2,110 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000C7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F966C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7E7208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F6220C01
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:25:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n7XN7S3C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729989AbfGaSZJ (ORCPT
+        id S1729638AbfGaSZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:25:09 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:50223 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729686AbfGaSYl (ORCPT
+        Wed, 31 Jul 2019 14:25:35 -0400
+Received: from mail-pg1-f178.google.com ([209.85.215.178]:43362 "EHLO
+        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfGaSZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:24:41 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Wed, 31 Jul 2019 11:24:35 -0700
-Received: from rlwimi.localdomain (unknown [10.166.66.112])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 75EAAB284F;
-        Wed, 31 Jul 2019 14:24:39 -0400 (EDT)
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: [PATCH v4 7/8] recordmcount: Remove redundant cleanup() calls
-Date:   Wed, 31 Jul 2019 11:24:15 -0700
-Message-ID: <de197e17fc5426623a847ea7cf3a1560a7402a4b.1564596289.git.mhelsley@vmware.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1564596289.git.mhelsley@vmware.com>
-References: <cover.1564596289.git.mhelsley@vmware.com>
+        Wed, 31 Jul 2019 14:25:34 -0400
+Received: by mail-pg1-f178.google.com with SMTP id r22so4860503pgk.10
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:25:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=CGOO3Qz8vz6py6i7KKOWSpuubNGLxWkIe5GopgOPJrk=;
+        b=n7XN7S3C3zlpCNPVbparKSlbichuk0E/msHzh5M8NUL07f5YbqHff3uNg+enH1io7k
+         1O89MzhAK6aeTCRHGJggMnklSj+5zAcwxfXmW7QwhjwJulYO/eWXXy8ZZIK+g0FFHpgN
+         +U90F3xDD5RhXFdHIIDcBNqubWnCv68sEDNn1uMuZUhCg04LXXlAob5HP7rAKgH+Xu44
+         hj4svatEGedzU2EwEA4O6O/dnCf3lnhlKNdAwjRlyWznJNZAlgOt1cesVd7QXZzrc0DE
+         Klr3EMxJiTEPSwdgQBXtVMWjrH6arMNfD1B90CpHGwfIo0qnPOeaju8jteyx9C6DWOU3
+         piZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=CGOO3Qz8vz6py6i7KKOWSpuubNGLxWkIe5GopgOPJrk=;
+        b=Cpus7+MDSJ2nKqzDqWDPFbKThkemScd9d1JPFnCwYZ6e634CEHGRrVDdqkRzz2CaFJ
+         KySZtKAo3RqXkedwMTcKlVDbQoTWHah2pybjYHbY/Uhfclp6NyPpbXdwaINzIRDS7+XV
+         D6UD3EqjIWti1Ixt7uwIRZ2znbnSNv96MMbuhiNCsk7WZ2kkpb+o63XINSGfoDYaam8z
+         wuy0Mz1ggbfRyWFQbHOaURNuw4jKpt3REMCrIG6BCAcgzXLIS2Bi1SSeeUomPWmXxcKb
+         +EUMLr+i6e0cqyrR4Pf7uq615RJNDgCjSB2ySs1F6Xe5cY6eRwhL5oCe6pvRxk8ePn/5
+         b/+w==
+X-Gm-Message-State: APjAAAVy9WfJEgnspVlT+nDVHzfoLZ3qYMZGa8qeKSMMwjsJipVSwAIq
+        UN9k2gZxd47CQEMlbaEBdmg=
+X-Google-Smtp-Source: APXvYqxUVw30HBVQzTRT8MRsyminQ7KjQNSeSj/zgCjKh4Yg2ucaoFQS6N4VwBDXP2aJLZkEhIaLyg==
+X-Received: by 2002:a17:90a:d814:: with SMTP id a20mr4257773pjv.48.1564597533739;
+        Wed, 31 Jul 2019 11:25:33 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id g62sm2664106pje.11.2019.07.31.11.25.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 11:25:33 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 23:55:28 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Jeeeun Evans <jeeeunevans@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        hdegoede@redhat.com, Larry.Finger@lwfinger.net
+Subject: [Patch v2 10/10] staging: rtl8723bs: core: Remove Macro
+ "IS_MAC_ADDRESS_BROADCAST"
+Message-ID: <20190731182528.GA9874@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Redundant cleanup calls were introduced when transitioning from
-the old error/success handling via setjmp/longjmp -- the longjmp
-ensured the cleanup() call only happened once but replacing
-the success_file()/fail_file() calls with cleanup() meant that
-multiple cleanup() calls can happen as we return from function
-calls.
+Remove unused macro IS_MAC_ADDRESS_BROADCAST. In future if one wants use
+it ,use generic API "is_broadcast_ether_addr"
 
-In do_file(), looking just before and after the "goto out" jumps we
-can see that multiple cleanups() are being performed. We remove
-cleanup() calls from the nested functions because it makes the code
-easier to review -- the resources being cleaned up are generally
-allocated and initialized in the callers so freeing them there
-makes more sense.
-
-Other redundant cleanup() calls:
-
-mmap_file() is only called from do_file() and, if mmap_file() fails,
-then we goto out and do cleanup() there too.
-
-write_file() is only called from do_file() and do_file()
-calls cleanup() unconditionally after returning from write_file()
-therefore the cleanup() calls in write_file() are not necessary.
-
-find_secsym_ndx(), called from do_func()'s for-loop, when we are
-cleaning up here it's obvious that we break out of the loop and
-do another cleanup().
-
-__has_rel_mcount() is called from two parts of do_func()
-and calls cleanup(). In theory we move them into do_func(), however
-these in turn prove redundant so another simplification step
-removes them as well.
-
-Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- scripts/recordmcount.c | 13 -------------
- scripts/recordmcount.h |  2 --
- 2 files changed, 15 deletions(-)
+v2 - Add patch number
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 273ca8b42b20..5677fcc88a72 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -258,17 +258,14 @@ static void *mmap_file(char const *fname)
- 	fd_map = open(fname, O_RDONLY);
- 	if (fd_map < 0) {
- 		perror(fname);
--		cleanup();
- 		return NULL;
- 	}
- 	if (fstat(fd_map, &sb) < 0) {
- 		perror(fname);
--		cleanup();
- 		goto out;
- 	}
- 	if (!S_ISREG(sb.st_mode)) {
- 		fprintf(stderr, "not a regular file: %s\n", fname);
--		cleanup();
- 		goto out;
- 	}
- 	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
-@@ -314,13 +311,11 @@ static int write_file(const char *fname)
- 	fd_map = open(tmp_file, O_WRONLY | O_TRUNC | O_CREAT, sb.st_mode);
- 	if (fd_map < 0) {
- 		perror(fname);
--		cleanup();
- 		return -1;
- 	}
- 	n = write(fd_map, file_map, sb.st_size);
- 	if (n != sb.st_size) {
- 		perror("write");
--		cleanup();
- 		close(fd_map);
- 		return -1;
- 	}
-@@ -328,7 +323,6 @@ static int write_file(const char *fname)
- 		n = write(fd_map, file_append, file_append_size);
- 		if (n != file_append_size) {
- 			perror("write");
--			cleanup();
- 			close(fd_map);
- 			return -1;
- 		}
-@@ -336,7 +330,6 @@ static int write_file(const char *fname)
- 	close(fd_map);
- 	if (rename(tmp_file, fname) < 0) {
- 		perror(fname);
--		cleanup();
- 		return -1;
- 	}
- 	return 0;
-@@ -460,7 +453,6 @@ static int do_file(char const *const fname)
- 	default:
- 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
- 			ehdr->e_ident[EI_DATA], fname);
--		cleanup();
- 		goto out;
- 	case ELFDATA2LSB:
- 		if (*(unsigned char const *)&endian != 1) {
-@@ -493,7 +485,6 @@ static int do_file(char const *const fname)
- 	    w2(ehdr->e_type) != ET_REL ||
- 	    ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
- 		fprintf(stderr, "unrecognized ET_REL file %s\n", fname);
--		cleanup();
- 		goto out;
- 	}
+ drivers/staging/rtl8723bs/core/rtw_ioctl_set.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c b/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
+index 8eb0ff5..eb08569 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
+@@ -9,13 +9,6 @@
+ #include <drv_types.h>
+ #include <rtw_debug.h>
  
-@@ -502,7 +493,6 @@ static int do_file(char const *const fname)
- 	default:
- 		fprintf(stderr, "unrecognized e_machine %u %s\n",
- 			w2(ehdr->e_machine), fname);
--		cleanup();
- 		goto out;
- 	case EM_386:
- 		reltype = R_386_32;
-@@ -546,14 +536,12 @@ static int do_file(char const *const fname)
- 	default:
- 		fprintf(stderr, "unrecognized ELF class %d %s\n",
- 			ehdr->e_ident[EI_CLASS], fname);
--		cleanup();
- 		goto out;
- 	case ELFCLASS32:
- 		if (w2(ehdr->e_ehsize) != sizeof(Elf32_Ehdr)
- 		||  w2(ehdr->e_shentsize) != sizeof(Elf32_Shdr)) {
- 			fprintf(stderr,
- 				"unrecognized ET_REL file: %s\n", fname);
--			cleanup();
- 			goto out;
- 		}
- 		if (w2(ehdr->e_machine) == EM_MIPS) {
-@@ -569,7 +557,6 @@ static int do_file(char const *const fname)
- 		||  w2(ghdr->e_shentsize) != sizeof(Elf64_Shdr)) {
- 			fprintf(stderr,
- 				"unrecognized ET_REL file: %s\n", fname);
--			cleanup();
- 			goto out;
- 		}
- 		if (w2(ghdr->e_machine) == EM_S390) {
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index ca9aaac89bfb..8f0a278ce0af 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -463,7 +463,6 @@ static int find_secsym_ndx(unsigned const txtndx,
- 	}
- 	fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
- 		txtndx, txtname);
--	cleanup();
- 	return -1;
- }
- 
-@@ -480,7 +479,6 @@ static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
- 	if (strcmp("__mcount_loc", txtname) == 0) {
- 		fprintf(stderr, "warning: __mcount_loc already exists: %s\n",
- 			fname);
--		cleanup();
- 		return already_has_rel_mcount;
- 	}
- 	if (w(txthdr->sh_type) != SHT_PROGBITS ||
+-#define IS_MAC_ADDRESS_BROADCAST(addr) \
+-(\
+-	((addr[0] == 0xff) && (addr[1] == 0xff) && \
+-		(addr[2] == 0xff) && (addr[3] == 0xff) && \
+-		(addr[4] == 0xff) && (addr[5] == 0xff))  ? true : false \
+-)
+-
+ u8 rtw_validate_bssid(u8 *bssid)
+ {
+ 	u8 ret = true;
 -- 
-2.20.1
+2.7.4
 
