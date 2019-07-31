@@ -2,250 +2,537 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA110C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C10C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF0E20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF807208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:42:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHZUQYq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387502AbfGaOmi (ORCPT
+        id S2387587AbfGaOmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:42:38 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52830 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbfGaOmh (ORCPT
+        Wed, 31 Jul 2019 10:42:44 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44041 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbfGaOmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:42:37 -0400
-Received: from [IPv6:2804:431:c7f1:f24e:905d:745e:bb84:a9f9] (unknown [IPv6:2804:431:c7f1:f24e:905d:745e:bb84:a9f9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 953D828AE2B;
-        Wed, 31 Jul 2019 15:42:29 +0100 (BST)
-Subject: Re: [PATCH v8 00/14] Rockchip ISP1 Driver
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-rockchip@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, jeffy.chen@rock-chips.com,
-        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
-        kernel@collabora.com, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        zhengsq@rock-chips.com
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <dbdfed3e-7bb6-bf1f-64b9-ab7298193e2d@xs4all.nl>
- <41e7e574-2708-eb4c-ea30-e6a1ac9c073e@collabora.com>
- <8ce532de-6c26-f8db-8754-c8dd1eb0764b@collabora.com>
- <74bb0ba1-2859-39ff-d946-129a440ba150@xs4all.nl>
- <fb1327fb-0903-ce62-4eea-94b81f599b62@xs4all.nl>
- <13d89676-ae84-5904-7606-935501cb2d89@xs4all.nl>
-From:   Helen Koike <helen.koike@collabora.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- mQINBFmOMD4BEADb2nC8Oeyvklh+ataw2u/3mrl+hIHL4WSWtii4VxCapl9+zILuxFDrxw1p
- XgF3cfx7g9taWBrmLE9VEPwJA6MxaVnQuDL3GXxTxO/gqnOFgT3jT+skAt6qMvoWnhgurMGH
- wRaA3dO4cFrDlLsZIdDywTYcy7V2bou81ItR5Ed6c5UVX7uTTzeiD/tUi8oIf0XN4takyFuV
- Rf09nOhi24bn9fFN5xWHJooFaFf/k2Y+5UTkofANUp8nn4jhBUrIr6glOtmE0VT4pZMMLT63
- hyRB+/s7b1zkOofUGW5LxUg+wqJXZcOAvjocqSq3VVHcgyxdm+Nv0g9Hdqo8bQHC2KBK86VK
- vB+R7tfv7NxVhG1sTW3CQ4gZb0ZugIWS32Mnr+V+0pxci7QpV3jrtVp5W2GA5HlXkOyC6C7H
- Ao7YhogtvFehnlUdG8NrkC3HhCTF8+nb08yGMVI4mMZ9v/KoIXKC6vT0Ykz434ed9Oc9pDow
- VUqaKi3ey96QczfE4NI029bmtCY4b5fucaB/aVqWYRH98Jh8oIQVwbt+pY7cL5PxS7dQ/Zuz
- 6yheqDsUGLev1O3E4R8RZ8jPcfCermL0txvoXXIA56t4ZjuHVcWEe2ERhLHFGq5Zw7KC6u12
- kJoiZ6WDBYo4Dp+Gd7a81/WsA33Po0j3tk/8BWoiJCrjXzhtRwARAQABtCdIZWxlbiBLb2lr
- ZSA8aGVsZW4ua29pa2VAY29sbGFib3JhLmNvbT6JAlQEEwEKAD4CGwEFCwkIBwMFFQoJCAsF
- FgIDAQACHgECF4AWIQSofQA6zrItXEgHWTzAfqwo9yFiXQUCXEz3bwUJBKaPRQAKCRDAfqwo
- 9yFiXdUCD/4+WZr503hQ13KB4DijOW76ju8JDPp4p++qoPxtoAsld3yROoTI+VPWmt7ojHrr
- TZc7sTLxOFzaUC8HjGTb3r9ilIhIKf/M9KRLkpIJ+iLA+VoUbcSOMYWoVNfgLmbnqoezjPcy
- OHJwVw9dzEeYpvG6nkY6E4UktANySp27AniSXNuHOvYsOsXmUOqU1ScdsrQ9s732p/OGdTyw
- 1yd3gUMLZvCKFOBVHILH59HCRJgpwUPiws8G4dGMs4GTRvHT2s2mDQdQ0HEvcM9rvCRVixuC
- 5ZeOymZNi6lDIUIysgiZ+yzk6i5l/Ni6r7v20N3JppZvhPK6LqtaYceyAGyc3jjnOqoHT/qR
- kPjCwzmKiPtXjLw6HbRXtGgGtP5m3y8v6bfHH+66zd2vGCY0Z9EsqcnK4DCqRkLncFLPM2gn
- 9cZcCmO4ZqXUhTyn1nHM494kd5NX1Op4HO+t9ErnpufkVjoMUeBwESdQwwwHT3rjUueGmCrn
- VJK69/qhA4La72VTxHutl+3Z0Xy20HWsZS8Gsam39f95/LtPLzbBwnOOi5ZoXnm97tF8HrAZ
- 2h+kcRLMWw3BXy5q4gic+oFZMZP9oq1G9XTFld4FGgJ9ys8aGmhLM+uB1pFxb3XFtWQ2z4AJ
- iEp2VLl34quwfD6Gg4csiZe2KzvQHUe0w8SJ9LplrHPPprkCDQRZjjChARAAzISLQaHzaDOv
- ZxcoCNBk/hUGo2/gsmBW4KSj73pkStZ+pm3Yv2CRtOD4jBlycXjzhwBV7/70ZMH70/Y25dJa
- CnJKl/Y76dPPn2LDWrG/4EkqUzoJkhRIYFUTpkPdaVYznqLgsho19j7HpEbAum8r3jemYBE1
- AIuVGg4bqY3UkvuHWLVRMuaHZNy55aYwnUvd46E64JH7O990mr6t/nu2a1aJ0BDdi8HZ0RMo
- Eg76Avah+YR9fZrhDFmBQSL+mcCVWEbdiOzHmGYFoToqzM52wsNEpo2aStH9KLk8zrCXGx68
- ohJyQoALX4sS03RIWh1jFjnlw2FCbEdj/HDX0+U0i9COtanm54arYXiBTnAnx0F7LW7pv7sb
- 6tKMxsMLmprP/nWyV5AfFRi3jxs5tdwtDDk/ny8WH6KWeLR/zWDwpYgnXLBCdg8l97xUoPQO
- 0VkKSa4JEXUZWZx9q6kICzFGsuqApqf9gIFJZwUmirsxH80Fe04Tv+IqIAW7/djYpOqGjSyk
- oaEVNacwLLgZr+/j69/1ZwlbS8K+ChCtyBV4kEPzltSRZ4eU19v6sDND1JSTK9KSDtCcCcAt
- VGFlr4aE00AD/aOkHSylc93nPinBFO4AGhcs4WypZ3GGV6vGWCpJy9svfWsUDhSwI7GS/i/v
- UQ1+bswyYEY1Q3DjJqT7fXcAEQEAAYkEcgQYAQoAJgIbAhYhBKh9ADrOsi1cSAdZPMB+rCj3
- IWJdBQJcTPfVBQkEpo7hAkDBdCAEGQEKAB0WIQSomGMEg78Cd/pMshveCRfNeJ05lgUCWY4w
- oQAKCRDeCRfNeJ05lp0gD/49i95kPKjpgjUbYeidjaWuINXMCA171KyaBAp+Jp2Qrun4sIJB
- Z6srMj6O/gC34AhZln2sXeQdxe88sNbg6HjlN+4AkhTd6DttjOfUwnamLDA7uw+YIapGgsgN
- lznjLnqOaQ9mtEwRbZMUOdyRf9osSuL14vHl4ia3bYNJ52WYre6gLMu4K+Ghd02og+ILgIio
- Q827h0spqIJYHrR3Ynnhxdlv5GPCobh+AKsQMdTIuCzR6JSCBk6GHkg33SiWScKMUzT8B/cn
- ypLfGnfV/LDZ9wS2TMzIlK/uv0Vd4C0OGDd/GCi5Gwu/Ot0aY7fzZo2CiRV+/nJBWPRRBTji
- bE4FG2rt7WSRLO/QmH2meIW4f0USDiHeNwznHkPei59vRdlMyQdsxrmgSRDuX9Y3UkERxbgd
- uscqC8Cpcy5kpF11EW91J8aGpcxASc+5Pa66/+7CrpBC2DnfcfACdMAje7yeMn9XlHrqXNlQ
- GaglEcnGN2qVqRcKgcjJX+ur8l56BVpBPFYQYkYkIdQAuhlPylxOvsMcqI6VoEWNt0iFF3dA
- //0MNb8fEqw5TlxDPOt6BDhDKowkxOGIA9LOcF4PkaR9Qkvwo2P4vA/8fhCnMqlSPom4xYdk
- Ev8P554zDoL/XMHl+s7A0MjIJzT253ejZKlWeO68pAbNy/z7QRn2lFDnjwkQwH6sKPchYl2f
- 0g//Yu3vDkqk8+mi2letP3XBl2hjv2eCZjTh34VvtgY5oeL2ROSJWNd18+7O6q3hECZ727EW
- gIb3LK9g4mKF6+Rch6Gwz1Y4fmC5554fd2Y2XbVzzz6AGUC6Y+ohNg7lTAVO4wu43+IyTB8u
- ip5rX/JDGFv7Y1sl6tQJKAVIKAJE+Z3Ncqh3doQr9wWHl0UiQYKbSR9HpH1lmC1C3EEbTpwK
- fUIpZd1eQNyNJl1jHsZZIBYFsAfVNH/u6lB1TU+9bSOsV5SepdIb88d0fm3oZ4KzjhRHLFQF
- RwNUNn3ha6x4fbxYcwbvu5ZCiiX6yRTPoage/LUNkgQNX2PtPcur6CdxK6Pqm8EAI7PmYLfN
- NY3y01XhKNRvaVZoH2FugfUkhsBITglTIpI+n6YU06nDAcbeINFo67TSE0iL6Pek5a6gUQQC
- 6w+hJCaMr8KYud0q3ccHyU3TlAPDe10En3GsVz7Y5Sa3ODGdbmkfjK8Af3ogGNBVmpV16Xl8
- 4rETFv7POSUB2eMtbpmBopd+wKqHCwUEy3fx1zDbM9mp+pcDoL73rRZmlgmNfW/4o4qBzxRf
- FYTQLE69wAFU2IFce9PjtUAlBdC+6r3X24h3uD+EC37s/vWhxuKj2glaU9ONrVJ/SPvlqXOO
- WR1Zqw57vHMKimLdG3c24l8PkSw1usudgAA5OyO5Ag0EWY4wyQEQAMVp0U38Le7d80Mu6AT+
- 1dMes87iKn30TdMuLvSg2uYqJ1T2riRBF7zU6u74HF6zps0rPQviBXOgoSuKa1hnS6OwFb9x
- yQPlk76LY96SUB5jPWJ3fO78ZGSwkVbJFuG9gpD/41n8Unn1hXgDb2gUaxD0oXv/723EmTYC
- vSo3z6Y8A2aBQNr+PyhQAPDazvVQ+P7vnZYq1oK0w+D7aIix/Bp4mo4VbgAeAeMxXWSZs8N5
- NQtXeTBgB7DqrfJP5wWwgCsROfeds6EoddcYgqhG0zVU9E54C8JcPOA0wKVs+9+gt2eyRNtx
- 0UhFbah7qXuJGhWy/0CLXvVoCoS+7qpWz070TBAlPZrg9D0o2gOw01trQgoKAYBKKgJhxaX/
- 4gzi+5Ccm33LYH9lAVTdzdorejuV1xWdsnNyc8OAPeoXBf9RIIWfQVmbhVXBp2DAPjV6/kIJ
- Eml7MNJfEvqjV9zKsWF9AFlsqDWZDCyUdqR96ahTSD34pRwb6a9H99/GrjeowKaaL95DIVZT
- C6STvDNL6kpys4sOe2AMmQGv2MMcJB3aYLzH8f1sEQ9S0UMX7/6CifEG6JodG6Y/W/lLo1Vv
- DxeDA+u4Lgq6qxlksp8M78FjcmxFVlf4cpCi2ucbZxurhlBkjtZZ8MVAEde3hlqjcBl2Ah6Q
- D826FTxscOGlHEfNABEBAAGJAjwEGAEKACYCGwwWIQSofQA6zrItXEgHWTzAfqwo9yFiXQUC
- XEz31QUJBKaOuQAKCRDAfqwo9yFiXUvnEACBWe8wSnIvSX+9k4LxuLq6GQTOt+RNfliZQkCW
- 5lT3KL1IJyzzOm4x+/slHRBl8bF7KEZyOPinXQXyJ/vgIdgSYxDqoZ7YZn3SvuNe4aT6kGwL
- EYYEV8Ecj4ets15FR2jSUNnVv5YHWtZ7bP/oUzr2LT54fjRcstYxgwzoj8AREtHQ4EJWAWCO
- ZuEHTSm5clMFoi41CmG4DlJbzbo4YfilKYm69vwh50Y8WebcRN31jh0g8ufjOJnBldYYBLwN
- Obymhlfy/HKBDIbyCGBuwYoAkoJ6LR/cqzl/FuhwhuDocCGlXyYaJOwXgHaCvVXI3PLQPxWZ
- +vPsD+TSVHc9m/YWrOiYDnZn6aO0Uk1Zv/m9+BBkWAwsreLJ/evn3SsJV1omNBTITG+uxXcf
- JkgmmesIAw8mpI6EeLmReUJLasz8QkzhZIC7t5rGlQI94GQG3Jg2dC+kpaGWOaT5G4FVMcBj
- iR1nXfMxENVYnM5ag7mBZyD/kru5W1Uj34L6AFaDMXFPwedSCpzzqUiHb0f+nYkfOodf5xy0
- 46+3THy/NUS/ZZp/rI4F7Y77+MQPVg7vARfHHX1AxYUKfRVW5j88QUB70txn8Vgi1tDrOr4J
- eD+xr0CvIGa5lKqgQacQtGkpOpJ8zY4ObSvpNubey/qYUE3DCXD0n2Xxk4muTvqlkFpOYA==
-Message-ID: <77968a89-eec0-bc2f-f996-ef3e21e9efd8@collabora.com>
-Date:   Wed, 31 Jul 2019 11:42:26 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <13d89676-ae84-5904-7606-935501cb2d89@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 31 Jul 2019 10:42:44 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t14so30560902plr.11;
+        Wed, 31 Jul 2019 07:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=vdKYzLXInmLOsMwtBNA/RlmsTzz0KITDUJaIhFlfZw4=;
+        b=KHZUQYq81ee2SX6sFvFBWsz9xK9wcRsexP5C1nb12iuUnD3jvWbA7lKKMqaaTHgPa4
+         TvAtU35KerM1Lh1IyccdkIvHTaDkl3B6Zqkgo86ZHLsxCpB7oHRer0XUGLXq06h481M5
+         7jhgJAN+F+Mzfef4H7xVJBroQbDNkYAaykBCTsPcMxhlHUYVIcavR00mXMIkTGdmkEU7
+         Xd5LEuvxHynK7xIcPG8w0tT7IMd9Y3mUUq6tXwAE71NIlvRlbYFriFA65PNTbt2CV5v/
+         7im1c0cLAtmPsUfqR/AU1YntQyQo7drgWcFYtbl6qnCl9VVtRaKN0EI1KWoPJbqZT0T7
+         zKsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vdKYzLXInmLOsMwtBNA/RlmsTzz0KITDUJaIhFlfZw4=;
+        b=trwEKq0MF4+bQ4y9gjieX9AlaRVFXKE4xkPW4AxwT+H/l5fIsJp+lifdOq8T7vo2SJ
+         olzY2mt9xuRrgvcZh3/b96PK5UfkGRl0DUXX7rQXBMQFCr0ZllaK2AIhVvxFfL18Kd3r
+         Bu+RabpRqd1FkhPo5WEjRfD9jfFwVxsl7TmucXguPHmh2GUamzSetdisc3GVuBKGLCMV
+         Y1bnLFKSfyYSuNs4E1Nl7jDraGb1R7jAvL5nlQ7TPVBYzkXOzZry6fKlwPe95IRpK8os
+         OE7VFus7v//Q8Kl+JG7XbIBxHIxbLVpbRRbvkGR+qSzWgPkPM4z7yrK0dnp4Gfq4dx3t
+         WWAQ==
+X-Gm-Message-State: APjAAAVagAuL3KjNWoiq98Po8qByla+8c08HSaGdPa5IpWaB3bgi5p98
+        UH9mAX2ezhYL93YwpCx4/HE=
+X-Google-Smtp-Source: APXvYqy+VT5RJbcf0hmyS5hBK5+zqL2ib0bsUJGgvpsrVMnYgNnIElTPEGeVtghwDC3dJKcTUXPLUw==
+X-Received: by 2002:a17:902:e30b:: with SMTP id cg11mr20193372plb.335.1564584163199;
+        Wed, 31 Jul 2019 07:42:43 -0700 (PDT)
+Received: from localhost.localdomain (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id s185sm101949665pgs.67.2019.07.31.07.42.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 07:42:42 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+To:     linux@roeck-us.net
+Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, andrianov@ispras.ru,
+        Mark Balantzyan <mbalant3@gmail.com>
+Subject: [PATCH v3] watchdog: pc87413: Rewriting of pc87413_wdt driver to use watchdog subsystem
+Date:   Wed, 31 Jul 2019 07:42:35 -0700
+Message-Id: <20190731144235.8523-1-mbalant3@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch rewrites the pc87413_wdt driver to use the watchdog subsystem. In
+doing so, it also addresses a potential race condition owing from the
+swc_base_addr variable being used before being set.
 
+Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
 
-On 7/31/19 1:55 AM, Hans Verkuil wrote:
-> On 7/31/19 6:33 AM, Hans Verkuil wrote:
->> On 7/31/19 6:29 AM, Hans Verkuil wrote:
->>> On 7/31/19 2:08 AM, Helen Koike wrote:
->>>>
->>>>
->>>> On 7/30/19 5:50 PM, Helen Koike wrote:
->>>>>
->>>>>
->>>>> On 7/30/19 5:15 PM, Hans Verkuil wrote:
->>>>>> On 7/30/19 8:42 PM, Helen Koike wrote:
->>>>>>> Hello,
->>>>>>>
->>>>>>> I'm re-sending a new version of ISP(Camera) v4l2 driver for rockchip
->>>>>>> rk3399 SoC.
->>>>>>>
->>>>>>> I didn't change much from the last version, just applying the
->>>>>>> suggestions made in the previous one.
->>>>>>>
->>>>>>> This patchset is also available at:
->>>>>>> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v8
->>>>>>>
->>>>>>> Libcamera patched to work with this version:
->>>>>>> https://gitlab.collabora.com/koike/libcamera
->>>>>>> (also sent to the mailing list)
->>>>>>>
->>>>>>> I tested on the rockpi 4 with a rpi v1.3 sensor and also with the
->>>>>>> Scarlet Chromebook.
->>>>>>>
->>>>>>> Known issues (same as in v7):
->>>>>>> -------------
->>>>>>> - Reloading the module doesn't work (there is some missing cleanup when
->>>>>>> unloading)
->>>>>>> - When capturing in bayer format, changing the size doesn't seem to
->>>>>>> affect the image.
->>>>>>> - crop needs more tests
->>>>>>> - v4l2-compliance error:
->>>>>>>         fail: v4l2-test-controls.cpp(824): subscribe event for control 'Image Processing Controls' failed
->>>>>>> test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
->>>>>>
->>>>>> Can you mail me the full v4l2-compliance output?
->>>>>
->>>>> Sure, please check here: http://ix.io/1Q5u
->>>>> I updated v4l-utils with the latest version and I re-ran bootstrap/configure/make,
->>>>> but for some reason the hash from the link above is not the latest commit, probably some
->>>>> old configuration somewhere. I'll resend this log as soon as I get v4l2-compliance
->>>>> properly updated.
->>>>
->>>> Please see the output of v4l2-compliance here with an updated v4l-utils: http://ix.io/1Q6A
->>>
->>> So this FAIL is for /dev/v4l-subdev0 (rkisp1-isp-subdev).
->>>
->>> What is weird that this subdev does not appear to have controls at all.
->>>
->>> What is the output of 'v4l2-ctl -d /dev/v4l-subdev0 -l'? And if it lists
->>> controls, then why?
+---
+ drivers/watchdog/Kconfig       |   1 +
+ drivers/watchdog/pc87413_wdt.c | 333 +++++----------------------------
+ 2 files changed, 47 insertions(+), 287 deletions(-)
 
-root@rockpi:~# v4l2-ctl -d /dev/v4l-subdev0 -l
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 9af07fd9..84a7326d 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -1166,6 +1166,7 @@ config SCx200_WDT
+ 
+ config PC87413_WDT
+ 	tristate "NS PC87413 watchdog"
++	select WATCHDOG_CORE
+ 	depends on X86
+ 	---help---
+ 	  This is the driver for the hardware watchdog on the PC87413 chipset
+diff --git a/drivers/watchdog/pc87413_wdt.c b/drivers/watchdog/pc87413_wdt.c
+index 06a892e3..19d29cd8 100644
+--- a/drivers/watchdog/pc87413_wdt.c
++++ b/drivers/watchdog/pc87413_wdt.c
+@@ -22,15 +22,9 @@
+ 
+ #include <linux/module.h>
+ #include <linux/types.h>
+-#include <linux/miscdevice.h>
+ #include <linux/watchdog.h>
+ #include <linux/ioport.h>
+ #include <linux/delay.h>
+-#include <linux/notifier.h>
+-#include <linux/fs.h>
+-#include <linux/reboot.h>
+-#include <linux/init.h>
+-#include <linux/spinlock.h>
+ #include <linux/moduleparam.h>
+ #include <linux/io.h>
+ #include <linux/uaccess.h>
+@@ -60,13 +54,9 @@ static int swc_base_addr = -1;
+ 
+ static int timeout = DEFAULT_TIMEOUT;	/* timeout value */
+ static unsigned long timer_enabled;	/* is the timer enabled? */
+-
+-static char expect_close;		/* is the close expected? */
+-
+-static DEFINE_SPINLOCK(io_lock);	/* to guard us from io races */
+-
+ static bool nowayout = WATCHDOG_NOWAYOUT;
++
+ /* -- Low level function ----------------------------------------*/
+ /* Select pins for Watchdog output */
+@@ -151,13 +141,15 @@ static inline void pc87413_swc_bank3(void)
+ 
+ /* Set watchdog timeout to x minutes */
+ 
+-static inline void pc87413_programm_wdto(char pc87413_time)
++static int pc87413_set_timeout(struct watchdog_device *wdd, unsigned int t)
+ {
+-	/* Step 5: Programm WDTO, Twd. */
+-	outb_p(pc87413_time, swc_base_addr + WDTO);
+-#ifdef DEBUG
+-	pr_info(DPFX "Set WDTO to %d minutes\n", pc87413_time);
+-#endif
++	/* Step 5: Program watchdog timeout */
++
++	if (t < 1 || t > 60)    /* arbitrary upper limit */
++		return -EINVAL;
++
++	timeout = t;
++	return 0;
+ }
+ 
+ /* Enable WDEN */
+@@ -216,281 +208,61 @@ static inline void pc87413_disable_sw_wd_trg(void)
+ 
+ /* -- Higher level functions ------------------------------------*/
+ 
+-/* Enable the watchdog */
++/* Enable/start the watchdog */
+ 
+-static void pc87413_enable(void)
++static int pc87413_start(struct watchdog_device *wdd)
+ {
+-	spin_lock(&io_lock);
+-
+ 	pc87413_swc_bank3();
+-	pc87413_programm_wdto(timeout);
++	pc87413_set_timeout(wdd, timeout);
+ 	pc87413_enable_wden();
+ 	pc87413_enable_sw_wd_tren();
+ 	pc87413_enable_sw_wd_trg();
+-
+-	spin_unlock(&io_lock);
++	return 0;
+ }
+ 
+-/* Disable the watchdog */
++/* Disable/stop the watchdog */
+ 
+-static void pc87413_disable(void)
++static int pc87413_stop(struct watchdog_device *wdd)
+ {
+-	spin_lock(&io_lock);
+-
+ 	pc87413_swc_bank3();
+ 	pc87413_disable_sw_wd_tren();
+ 	pc87413_disable_sw_wd_trg();
+-	pc87413_programm_wdto(0);
+-
+-	spin_unlock(&io_lock);
++	pc87413_set_timeout(wdd, 0);
++	return 0;
+ }
+ 
+-/* Refresh the watchdog */
++/* Refresh/keepalive the watchdog */
+ 
+-static void pc87413_refresh(void)
++static int pc87413_keepalive(struct watchdog_device *wdd)
+ {
+-	spin_lock(&io_lock);
+-
+ 	pc87413_swc_bank3();
+ 	pc87413_disable_sw_wd_tren();
+ 	pc87413_disable_sw_wd_trg();
+-	pc87413_programm_wdto(timeout);
++	pc87413_set_timeout(wdd, timeout);
+ 	pc87413_enable_wden();
+ 	pc87413_enable_sw_wd_tren();
+ 	pc87413_enable_sw_wd_trg();
+-
+-	spin_unlock(&io_lock);
+-}
+-
+-/* -- File operations -------------------------------------------*/
+-
+-/**
+- *	pc87413_open:
+- *	@inode: inode of device
+- *	@file: file handle to device
+- *
+- */
+-
+-static int pc87413_open(struct inode *inode, struct file *file)
+-{
+-	/* /dev/watchdog can only be opened once */
+-
+-	if (test_and_set_bit(0, &timer_enabled))
+-		return -EBUSY;
+-
+-	if (nowayout)
+-		__module_get(THIS_MODULE);
+-
+-	/* Reload and activate timer */
+-	pc87413_refresh();
+-
+-	pr_info("Watchdog enabled. Timeout set to %d minute(s).\n", timeout);
+-
+-	return nonseekable_open(inode, file);
+-}
+-
+-/**
+- *	pc87413_release:
+- *	@inode: inode to board
+- *	@file: file handle to board
+- *
+- *	The watchdog has a configurable API. There is a religious dispute
+- *	between people who want their watchdog to be able to shut down and
+- *	those who want to be sure if the watchdog manager dies the machine
+- *	reboots. In the former case we disable the counters, in the latter
+- *	case you have to open it again very soon.
+- */
+-
+-static int pc87413_release(struct inode *inode, struct file *file)
+-{
+-	/* Shut off the timer. */
+-
+-	if (expect_close == 42) {
+-		pc87413_disable();
+-		pr_info("Watchdog disabled, sleeping again...\n");
+-	} else {
+-		pr_crit("Unexpected close, not stopping watchdog!\n");
+-		pc87413_refresh();
+-	}
+-	clear_bit(0, &timer_enabled);
+-	expect_close = 0;
+ 	return 0;
+ }
+ 
+-/**
+- *	pc87413_status:
+- *
+- *      return, if the watchdog is enabled (timeout is set...)
+- */
+-
+-
+-static int pc87413_status(void)
+-{
+-	  return 0; /* currently not supported */
+-}
+-
+-/**
+- *	pc87413_write:
+- *	@file: file handle to the watchdog
+- *	@data: data buffer to write
+- *	@len: length in bytes
+- *	@ppos: pointer to the position to write. No seeks allowed
+- *
+- *	A write to a watchdog device is defined as a keepalive signal. Any
+- *	write of data will do, as we we don't define content meaning.
+- */
+-
+-static ssize_t pc87413_write(struct file *file, const char __user *data,
+-			     size_t len, loff_t *ppos)
+-{
+-	/* See if we got the magic character 'V' and reload the timer */
+-	if (len) {
+-		if (!nowayout) {
+-			size_t i;
+-
+-			/* reset expect flag */
+-			expect_close = 0;
+-
+-			/* scan to see whether or not we got the
+-			   magic character */
+-			for (i = 0; i != len; i++) {
+-				char c;
+-				if (get_user(c, data + i))
+-					return -EFAULT;
+-				if (c == 'V')
+-					expect_close = 42;
+-			}
+-		}
+-
+-		/* someone wrote to us, we should reload the timer */
+-		pc87413_refresh();
+-	}
+-	return len;
+-}
+-
+-/**
+- *	pc87413_ioctl:
+- *	@file: file handle to the device
+- *	@cmd: watchdog command
+- *	@arg: argument pointer
+- *
+- *	The watchdog API defines a common set of functions for all watchdogs
+- *	according to their available features. We only actually usefully support
+- *	querying capabilities and current status.
+- */
+-
+-static long pc87413_ioctl(struct file *file, unsigned int cmd,
+-						unsigned long arg)
+-{
+-	int new_timeout;
+-
+-	union {
+-		struct watchdog_info __user *ident;
+-		int __user *i;
+-	} uarg;
+-
+-	static const struct watchdog_info ident = {
+-		.options          = WDIOF_KEEPALIVEPING |
+-				    WDIOF_SETTIMEOUT |
+-				    WDIOF_MAGICCLOSE,
+-		.firmware_version = 1,
+-		.identity         = "PC87413(HF/F) watchdog",
+-	};
+-
+-	uarg.i = (int __user *)arg;
+-
+-	switch (cmd) {
+-	case WDIOC_GETSUPPORT:
+-		return copy_to_user(uarg.ident, &ident,
+-					sizeof(ident)) ? -EFAULT : 0;
+-	case WDIOC_GETSTATUS:
+-		return put_user(pc87413_status(), uarg.i);
+-	case WDIOC_GETBOOTSTATUS:
+-		return put_user(0, uarg.i);
+-	case WDIOC_SETOPTIONS:
+-	{
+-		int options, retval = -EINVAL;
+-		if (get_user(options, uarg.i))
+-			return -EFAULT;
+-		if (options & WDIOS_DISABLECARD) {
+-			pc87413_disable();
+-			retval = 0;
+-		}
+-		if (options & WDIOS_ENABLECARD) {
+-			pc87413_enable();
+-			retval = 0;
+-		}
+-		return retval;
+-	}
+-	case WDIOC_KEEPALIVE:
+-		pc87413_refresh();
+-#ifdef DEBUG
+-		pr_info(DPFX "keepalive\n");
+-#endif
+-		return 0;
+-	case WDIOC_SETTIMEOUT:
+-		if (get_user(new_timeout, uarg.i))
+-			return -EFAULT;
+-		/* the API states this is given in secs */
+-		new_timeout /= 60;
+-		if (new_timeout < 0 || new_timeout > MAX_TIMEOUT)
+-			return -EINVAL;
+-		timeout = new_timeout;
+-		pc87413_refresh();
+-		/* fall through and return the new timeout... */
+-	case WDIOC_GETTIMEOUT:
+-		new_timeout = timeout * 60;
+-		return put_user(new_timeout, uarg.i);
+-	default:
+-		return -ENOTTY;
+-	}
+-}
+-
+-/* -- Notifier funtions -----------------------------------------*/
+-
+-/**
+- *	notify_sys:
+- *	@this: our notifier block
+- *	@code: the event being reported
+- *	@unused: unused
+- *
+- *	Our notifier is called on system shutdowns. We want to turn the card
+- *	off at reboot otherwise the machine will reboot again during memory
+- *	test or worse yet during the following fsck. This would suck, in fact
+- *	trust me - if it happens it does suck.
+- */
+-
+-static int pc87413_notify_sys(struct notifier_block *this,
+-			      unsigned long code,
+-			      void *unused)
+-{
+-	if (code == SYS_DOWN || code == SYS_HALT)
+-		/* Turn the card off */
+-		pc87413_disable();
+-	return NOTIFY_DONE;
+-}
+ 
+ /* -- Module's structures ---------------------------------------*/
+ 
+-static const struct file_operations pc87413_fops = {
+-	.owner		= THIS_MODULE,
+-	.llseek		= no_llseek,
+-	.write		= pc87413_write,
+-	.unlocked_ioctl	= pc87413_ioctl,
+-	.open		= pc87413_open,
+-	.release	= pc87413_release,
+-};
+ 
+-static struct notifier_block pc87413_notifier = {
+-	.notifier_call  = pc87413_notify_sys,
++static struct watchdog_ops pc87413wdt_ops = {
++	.owner = THIS_MODULE,
++	.start = pc87413_start,
++	.stop = pc87413_stop,
++	.ping = pc87413_keepalive,
++	.set_timeout = pc87413_set_timeout,
+ };
+ 
+-static struct miscdevice pc87413_miscdev = {
+-	.minor          = WATCHDOG_MINOR,
+-	.name           = "watchdog",
+-	.fops           = &pc87413_fops,
++static struct watchdog_device pc87413wdt_wdd = {
++	.ops = &pc87413wdt_ops,
++	.status = WATCHDOG_NOWAYOUT_INIT_STATUS,
+ };
++
+ /* -- Module init functions -------------------------------------*/
+ /**
+@@ -498,7 +270,6 @@ static struct miscdevice pc87413_miscdev = {
+  *
+  *	Set up the WDT watchdog board. All we have to do is grab the
+  *	resources we require and bitch if anyone beat us to them.
+- *	The open() function will actually kick the board off.
+  */
+ 
+ static int __init pc87413_init(void)
+@@ -510,40 +281,36 @@ static int __init pc87413_init(void)
+ 
+ 	if (!request_muxed_region(io, 2, MODNAME))
+ 		return -EBUSY;
++
++	if (!request_region(swc_base_addr, 0x20, MODNAME)) {
++		pr_err("cannot request SWC region at 0x%x\n", swc_base_addr);
++		ret = -EBUSY;
++		goto watchdog_unreg;
++	}
+ 
+-	ret = register_reboot_notifier(&pc87413_notifier);
+-	if (ret != 0)
+-		pr_err("cannot register reboot notifier (err=%d)\n", ret);
++	watchdog_stop_on_reboot(&pc87413wdt_wdd);
++
++	watchdog_set_nowayout(&pc87413wdt_wdd, nowayout);
++
++	ret = watchdog_register_device(&pc87413wdt_wdd);
+ 
+-	ret = misc_register(&pc87413_miscdev);
+ 	if (ret != 0) {
+-		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
+-		       WATCHDOG_MINOR, ret);
+ 		goto reboot_unreg;
+-	}
++	}
+ 	pr_info("initialized. timeout=%d min\n", timeout);
+ 
+ 	pc87413_select_wdt_out();
+ 	pc87413_enable_swc();
+ 	pc87413_get_swc_base_addr();
+ 
+-	if (!request_region(swc_base_addr, 0x20, MODNAME)) {
+-		pr_err("cannot request SWC region at 0x%x\n", swc_base_addr);
+-		ret = -EBUSY;
+-		goto misc_unreg;
+-	}
+-
+-	pc87413_enable();
+-
+ 	release_region(io, 2);
+ 	return 0;
+-
+-misc_unreg:
+-	misc_deregister(&pc87413_miscdev);
+ reboot_unreg:
+-	unregister_reboot_notifier(&pc87413_notifier);
+ 	release_region(io, 2);
+ 	return ret;
++watchdog_unreg:
++	watchdog_unregister_device(&pc87413wdt_wdd);
++	return ret;
+ }
+ 
+ /**
+@@ -558,14 +325,7 @@ reboot_unreg:
+ 
+ static void __exit pc87413_exit(void)
+ {
+-	/* Stop the timer before we leave */
+-	if (!nowayout) {
+-		pc87413_disable();
+-		pr_info("Watchdog disabled\n");
+-	}
+-
+-	misc_deregister(&pc87413_miscdev);
+-	unregister_reboot_notifier(&pc87413_notifier);
++	watchdog_unregister_device(&pc87413wdt_wdd);
+ 	release_region(swc_base_addr, 0x20);
+ 
+ 	pr_info("watchdog component driver removed\n");
+@@ -592,4 +352,3 @@ module_param(nowayout, bool, 0);
+ MODULE_PARM_DESC(nowayout,
+ 		"Watchdog cannot be stopped once started (default="
+ 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+-
+-- 
+2.17.1
 
-Image Processing Controls
-
-                     pixel_rate 0x009f0902 (int64)  : min=1 max=2147483647 step=1 default=1 value=1 flags=read-only
-
-root@rockpi:~# v4l2-ctl -d /dev/v4l-subdev1 -l
-
-Image Processing Controls
-
-                     pixel_rate 0x009f0902 (int64)  : min=1 max=2147483647 step=1 default=1 value=1 flags=read-only
-
-It seems that ISP heritage the control from the sensor driver. I believe it
-happens because isp_dev->ctrl_handler was assigned to the v4l2_dev object:
-
-dev.c:  v4l2_ctrl_handler_init(&isp_dev->ctrl_handler, 5);
-dev.c:  v4l2_dev->ctrl_handler = &isp_dev->ctrl_handler;
-
-
->>>
->>> If you run 'v4l2-compliance -u /dev/v4l-subdev0', do you get a fail as
->>> well?
-
-Yes, but if I remove the ctrl_handler field from the struct rkisp1_isp_subdev
-I don't get the error on /dev/v4l-subdev0 (ISP) anymore, I just get the error
-on /dev/v4l-subdev1 (the sensor).
-
-Here is the output of v4l2-compliance -m /dev/media0 without the
-ctrl_handler field: http://ix.io/1Q9N
-
->>
->> I see the same issue with v4l-subdev1, but I see no "Media Driver Info"
->> in the v4l2-compliance output for that subdev. That's strange. It would
->> be good to know why that's happening.
-> 
-> It looks to be some parenting issue: v4l2-compliance expects to find
-> a mediaX directory in /sys/dev/char/81\:Y/device/ where 81:Y is the major/minor
-> of /dev/v4l-subdev1.
-> 
-> Because is this mi_get_media_fd() cannot find the media device for the subdev
-> in v4l2-compliance.
-
-So from my understanding this seems to be an issue in the sensor driver that
-I'm using and not in the ISP (to be verified).
-I'll submit the next version without the ctrl_handler field in struct rkisp1_isp_subdev,
-is that ok?
-
-Thanks
-Helen
-
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
