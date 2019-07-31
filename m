@@ -2,114 +2,148 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB6EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED10C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4AB1206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1DC206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:54:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="dHTL7S/e"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jj/3Q/u2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388102AbfGaOxZ (ORCPT
+        id S2388140AbfGaOyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:53:25 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36080 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388075AbfGaOxZ (ORCPT
+        Wed, 31 Jul 2019 10:54:07 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35376 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388075AbfGaOyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:53:25 -0400
-Received: by mail-io1-f67.google.com with SMTP id o9so33283822iom.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:53:25 -0700 (PDT)
+        Wed, 31 Jul 2019 10:54:07 -0400
+Received: by mail-qk1-f193.google.com with SMTP id r21so49499553qke.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:54:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zlcAXkKW8QVqrB0POXO1HOMAe1Y+4ab/2cQba0Zxxzc=;
-        b=dHTL7S/edkTumLq61B3dgRSTYGv9sotAJDMUJepTiJ29to2FTPzeJyv09hKFMXSzVd
-         KVPKvqqxnR/Oh93EXD/+aFdn2oJMNE728ofoODS4waMtHAjizmUISSWpa+PZSNsMK6NQ
-         D4CDBalZTrgsHbDmKAYrktzLxkox+OFDWkabHXC0WMtzWNWuyZqFzjM9SZoMlUM6fHy3
-         9gbAeeSYDTQl6aace1YXOpFKb0gJ082cn/p7wayzz/OmrcxO69KKCcvN0V7GBreuTHvJ
-         Ds3VuIZk98nydQHyX418KEGGQp02TOtX8eDxYbChd7t564PMfRLKvw9ZmOo/KQMqaLLe
-         FQhw==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SBLkQ5l7iqgRc/LZwzrYfujT+xXRrB58EoMCQ+Ui3VI=;
+        b=jj/3Q/u2Xs29S6NlOoXNsCj1Bdc9Lbm5pq/+4qEzjuzz6zrOeGZvCnVobVV48T76Yt
+         lhP6QIqCfTSMgdyUuA8id7soMBu8FVTcgqq9tZkC8bybvzKhlT1/O1NoAvtkmqU+uHA/
+         lN1qKLKZH/ymKs8cGGKkcqZ3FoyRQ/dIjGPYuLoFcTfL5+v5B/AA0IQmqZYwaGdHN0ae
+         QltUoH5udPdvBV4l2P47Aa9/cHVXXNY3jkrKsbxvYm5v9s3yN8pZAKC4v+LvOm3Nksx3
+         DjtDb18xe32fUbpBwV9L8znF6djoInMDHvfKACmRHmqQuRp0qh6rvxjwq3ppdlNuSADi
+         NdzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zlcAXkKW8QVqrB0POXO1HOMAe1Y+4ab/2cQba0Zxxzc=;
-        b=XQvqY3yevhbrsDA8nVdNvJNa+vAQp1L3vsMc8XFBGBvIbBr/Cg7ZdKckyv4xBkwbPK
-         1QXU7ENXMWHWGmt26D9cyAabjTJhAqlAwywmkHriioqSDcgGBcr8kuagUJjoY5diUK/G
-         o6xdMepHtjtTriwmo3Vpj8k4rLVtou9oqDI1NOUmi+Ji8qtXd3LkXIvSj339zGTz7M9Q
-         GDy+O4sxLnn58bjFXi1GxeNYEZYm/AXGS+NR5lr1dDDoT7HtpIJw5zU5KIybputOvXCr
-         iS6aimzw0cTySBSom+Elvtwk7LkOpjwX/bnlTP53HFzrkbHM6XuxYoCzIcjZKzfkAjow
-         Fngg==
-X-Gm-Message-State: APjAAAU7IjNlkKyGtx0av3I3Nvw8GgQF9BTWoQqg35k3Fky8Ng9lxn9v
-        GpITXo2YdutxRK52xeS+fracMGttuNI=
-X-Google-Smtp-Source: APXvYqx+BXSVFPqAnw9J/ZjOuQ8bb3S7c7lnWx+PLlV1IxzY4n+cXUeefovmQctozHourMkeKSzzsA==
-X-Received: by 2002:a5e:9e0a:: with SMTP id i10mr2803063ioq.44.1564584804230;
-        Wed, 31 Jul 2019 07:53:24 -0700 (PDT)
-Received: from [192.168.1.57] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id y18sm65072836iob.64.2019.07.31.07.53.22
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SBLkQ5l7iqgRc/LZwzrYfujT+xXRrB58EoMCQ+Ui3VI=;
+        b=Gtiwm75oOarZfroUv9PGMMMW+uMJj52HvtFwr9Axp07ALfHAJqwOhUJp5UASY8sGRr
+         Ealg6g57BIT+Y9JqLGar9aRKNIOY4J/RrqilWIIkO21PBjxEi0EUSKTOrBzqtRcrP3Un
+         tKVP7wliHXeRNmX6OFnrkekFgVpEpe3eptw7EFInZOcVB0l15prdN63smRPAv5gIoeNB
+         TTygeq060drY6AwaYs6zv+0uHKGJyZ7Tt4b43N/g6KuCDexQYe9dM5GpWS8KE+aQZkMp
+         FFrLBDBkbYb28iRi/nAHnMgqnyOmQwkg7wGZfsuIqrUCGXC8F3HkqDbD4+1pr0gDgjVh
+         W1Ng==
+X-Gm-Message-State: APjAAAUyvBUusHqkJX08hd8439lPBgWJTzAUnmYPYTiY2BBeDzUETHja
+        m/q6amX87n2ZB/dXjQNMDyouEw==
+X-Google-Smtp-Source: APXvYqx+aQWLkT4Ece9S/qLSNvLPSnE6+9CTFSY4EuJdjy+FS1QE9EH891iVIapc59W/IB+tXlTypA==
+X-Received: by 2002:ae9:ebc3:: with SMTP id b186mr82269098qkg.222.1564584845939;
+        Wed, 31 Jul 2019 07:54:05 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id n27sm23088492qkk.35.2019.07.31.07.54.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 07:53:23 -0700 (PDT)
-Subject: Re: [PATCH] MAINTAINERS: floppy: take over maintainership
-To:     efremov@linux.com, Jiri Kosina <jikos@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Willy Tarreau <w@1wt.eu>, Will Deacon <will@kernel.org>,
-        Greg KH <greg@kroah.com>,
-        Alexander Popov <alex.popov@linux.com>, efremov@ispras.ru,
-        linux-block@vger.kernel.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-References: <20190712185523.7208-1-efremov@ispras.ru>
- <20190713080726.GA19611@1wt.eu>
- <ec0a6c5e-bdee-3c26-f5d2-31b883c0de5d@ispras.ru>
- <CAHk-=wi=fHuiQg1fMzqAP9cuykBQSN_feD=eALDwRPmw27UwEg@mail.gmail.com>
- <nycvar.YFH.7.76.1907172355020.5899@cbobk.fhfr.pm>
- <57af5f3e-9cfe-b6d8-314c-f59855408cd5@linux.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <431bd981-d81a-d4dd-75fe-96a29f8f1065@kernel.dk>
-Date:   Wed, 31 Jul 2019 08:53:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <57af5f3e-9cfe-b6d8-314c-f59855408cd5@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 31 Jul 2019 07:54:05 -0700 (PDT)
+Message-ID: <1564584843.11067.36.camel@lca.pw>
+Subject: Re: [PATCH v2] mm: kmemleak: Use mempool allocations for kmemleak
+ objects
+From:   Qian Cai <cai@lca.pw>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Date:   Wed, 31 Jul 2019 10:54:03 -0400
+In-Reply-To: <20190731144839.GA17773@arrakis.emea.arm.com>
+References: <20190727132334.9184-1-catalin.marinas@arm.com>
+         <20190730125743.113e59a9c449847d7f6ae7c3@linux-foundation.org>
+         <1564518157.11067.34.camel@lca.pw>
+         <20190731095355.GC63307@arrakis.emea.arm.com>
+         <C8EF1660-78FF-49E4-B5D7-6B27400F7306@lca.pw>
+         <20190731144839.GA17773@arrakis.emea.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/19 8:47 AM, Denis Efremov wrote:
-> Hi All,
+On Wed, 2019-07-31 at 15:48 +0100, Catalin Marinas wrote:
+> On Wed, Jul 31, 2019 at 08:02:30AM -0400, Qian Cai wrote:
+> > On Jul 31, 2019, at 5:53 AM, Catalin Marinas <catalin.marinas@arm.com>
+> > wrote:
+> > > On Tue, Jul 30, 2019 at 04:22:37PM -0400, Qian Cai wrote:
+> > > > On Tue, 2019-07-30 at 12:57 -0700, Andrew Morton wrote:
+> > > > > On Sat, 27 Jul 2019 14:23:33 +0100 Catalin Marinas <catalin.marinas@ar
+> > > > > m.com>
+> > > > > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > > > > @@ -2011,6 +2011,12 @@
+> > > > > >  			Built with
+> > > > > > CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF=y,
+> > > > > >  			the default is off.
+> > > > > >  
+> > > > > > +	kmemleak.mempool=
+> > > > > > +			[KNL] Boot-time tuning of the minimum
+> > > > > > kmemleak
+> > > > > > +			metadata pool size.
+> > > > > > +			Format: <int>
+> > > > > > +			Default: NR_CPUS * 4
+> > > > > > +
+> > > > 
+> > > > Catalin, BTW, it is right now unable to handle a large size. I tried to
+> > > > reserve
+> > > > 64M (kmemleak.mempool=67108864),
 > 
-> On 18.07.2019 01:03, Jiri Kosina wrote:
->> On Wed, 17 Jul 2019, Linus Torvalds wrote:
->>
->>> I don't think we really have a floppy maintainer any more,
->>
->> Yeah, I basically volunteered myself to maintain it quite some time
->> ago back when I fixed the concurrency issues which exhibited itself
->> only with VM-emulated devices, and at the same time I still had the
->> physical 3.5" reader.
->>
->> The hardware doesn't work any more though. So I guess I should just
->> remove myself as a maintainer to reflect the reality and mark floppy.c
->> as Orphaned.
+> [...]
+> > > It looks like the mempool cannot be created. 64M objects means a
+> > > kmalloc(512MB) for the pool array in mempool_init_node(), so that hits
+> > > the MAX_ORDER warning in __alloc_pages_nodemask().
+> > > 
+> > > Maybe the mempool tunable won't help much for your case if you need so
+> > > many objects. It's still worth having a mempool for kmemleak but we
+> > > could look into changing the refill logic while keeping the original
+> > > size constant (say 1024 objects).
+> > 
+> > Actually, kmemleak.mempool=524288 works quite well on systems I have here.
+> > This
+> > is more of making the code robust by error-handling a large value without
+> > the
+> > NULL-ptr-deref below. Maybe simply just validate the value by adding upper
+> > bound
+> > to not trigger that warning with MAX_ORDER.
 > 
-> Well, without jokes about Thunderdome, I've got time, hardware and
-> would like to maintain the floppy. Except the for recent fixes,
-> I described floppy ioctls in syzkaller. I've already spent quite
-> a lot of time with this code. Thus, if nobody minds
+> Would it work for you with a Kconfig option, similar to
+> DEBUG_KMEMLEAK_EARLY_LOG_SIZE?
 
-Great, can't see anyone objecting to doling out some floppy love.
-Applied, thanks.
+Yes, it should be fine.
 
--- 
-Jens Axboe
-
+> 
+> > > > [   16.192449][    T1] BUG: Unable to handle kernel data access at
+> > > > 0xffffffffffffb2aa
+> > > 
+> > > This doesn't seem kmemleak related from the trace.
+> > 
+> > This only happens when passing a large kmemleak.mempool, e.g., 64M
+> > 
+> > [   16.193126][    T1] NIP [c000000000b2a2fc] log_early+0x8/0x160
+> > [   16.193153][    T1] LR [c0000000003e6e48] kmem_cache_free+0x428/0x740
+> 
+> Ah, I missed the log_early() call here. It's a kmemleak bug where it
+> isn't disabled properly in case of an error and log_early() is still
+> called after the .text.init section was freed. I'll send a patch.
+> 
