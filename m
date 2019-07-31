@@ -2,101 +2,101 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959DCC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0674DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 677A9208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:56:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZTsUJ+D"
+	by mail.kernel.org (Postfix) with ESMTP id D7CA7208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbfGaX4B (ORCPT
+        id S1729527AbfGaX4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:56:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43517 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfGaX4A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:56:00 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y17so42875067ljk.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 16:55:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C5QOeLk7yQQUtN6RiDUd1CkiFI0D44hl2RjrJZE5DIs=;
-        b=XZTsUJ+D/jGUZ1cRRjm0rRM3/PwYaYhuJT5ThMenGwFPaUBiyxu/3O4MyCMZTok4gt
-         XyyFl8PuN3ykZhan4tXfp9xUs1CP95/tBPnqInO9RTBMJyUjORUWntlkt3Hy1TRBdG4f
-         EamlLG7kquBdyW4/URc31FNX+aodEJrRhTsiYSe0vJVjYUVeITOgeYVFA3neDUovNBj9
-         1NEmlwL9YGHCVFvC3/HhaQcOsWgHvjHQXOOiAjUksi3QOdY/RimFZcha/Ll0hLKF/KlT
-         pll0Kfdpy5qjxvOQF5ka+DB+vJhn/PdWznPjvOrRLY9i48rMRTYfPMAJ7IL+lVzoBWkY
-         pHrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C5QOeLk7yQQUtN6RiDUd1CkiFI0D44hl2RjrJZE5DIs=;
-        b=eQpCgoA6ZsBmFfE8zMe6nFrn65n824CbNAnq9b4fp+arjQwzk7i21VVDfz9p20mYw0
-         yjB3MEZQJ5V/JP35X70ML35cxSFC1NeLjZfS6S/OdDWojHJfh+foUHnr1fB8+Y7UQ4Bl
-         veks9+JhT1LJ2mQeYu528xKXETlKn9t3BAMx46Mrpr52Lw45Cd9wOCoK0g29c7EWIBgE
-         7I/6NjRfW9ybdTIaO1dK1KhJyyx2BrnRlDz0v5JceAgwJUld+j/6R4A33uFoJlKHKXLt
-         d9nkVG+BuGzjVQGqH+IWHO22cA1SiBhqv+/1x5KmuhqJAvFKPXKlfVov/g4Q871izQ8T
-         WueQ==
-X-Gm-Message-State: APjAAAXECvftHyRMXvwepV8YYGkmwoasrIp4VhrQhkhSIwuceilL4rd8
-        5ncuSbqK0qqNQ8w40HGmHinGElkC/XpjDoqQsXY=
-X-Google-Smtp-Source: APXvYqxUsnSF5n5IUFJrMAXD6SRIkdb4Z3PuQ+Z1JGT9J4eBL3pXc37pNGpxy/1SB5IkzPzu0kbg3DtC8cDwgL+qxPs=
-X-Received: by 2002:a2e:8741:: with SMTP id q1mr13422620ljj.144.1564617358799;
- Wed, 31 Jul 2019 16:55:58 -0700 (PDT)
+        Wed, 31 Jul 2019 19:56:39 -0400
+Received: from mga01.intel.com ([192.55.52.88]:41458 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbfGaX4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 19:56:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 16:56:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,332,1559545200"; 
+   d="scan'208";a="196581614"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga004.fm.intel.com with ESMTP; 31 Jul 2019 16:56:38 -0700
+Date:   Wed, 31 Jul 2019 16:56:37 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH RFC 3/5] x86: KVM: svm: clear interrupt shadow on all
+ paths in skip_emulated_instruction()
+Message-ID: <20190731235637.GB2845@linux.intel.com>
+References: <20190620110240.25799-1-vkuznets@redhat.com>
+ <20190620110240.25799-4-vkuznets@redhat.com>
+ <CALMp9eQ85h58NMDh-yOYvHN6_2f2T-wu63f+yLnNbwuG+p3Uvw@mail.gmail.com>
+ <87ftmm71p3.fsf@vitty.brq.redhat.com>
+ <36a9f411-f90c-3ffa-9ee3-6ebee13a763f@redhat.com>
+ <CALMp9eQLCEzfdNzdhPtCf3bD-5c6HrSvJqP7idyoo4Gf3i5O1w@mail.gmail.com>
+ <20190731233731.GA2845@linux.intel.com>
+ <CALMp9eRRqCLKAL4FoZVMk=fHfnrN7EnTVxR___soiHUdrHLAMQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
- <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
- <20190731171429.GA24222@amd> <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
- <765E740C-4259-4835-A58D-432006628BAC@zytor.com> <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
- <F1AB2846-CA91-41ED-B8E7-3799895DCF06@zytor.com>
-In-Reply-To: <F1AB2846-CA91-41ED-B8E7-3799895DCF06@zytor.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 1 Aug 2019 01:55:47 +0200
-Message-ID: <CANiq72=s1nu9=R9ypFwL+J4NGT_yUkwahpgOOOXzezvNfDrx5g@mail.gmail.com>
-Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
- keyword for switch/case use
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Joe Perches <joe@perches.com>, Pavel Machek <pavel@ucw.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eRRqCLKAL4FoZVMk=fHfnrN7EnTVxR___soiHUdrHLAMQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 11:01 PM <hpa@zytor.com> wrote:
->
-> The standard is moving toward adding this as an attribute with the [[fallthrough]] syntax; it is in C++17, not sure when it will be in C be if it isn't already.
+On Wed, Jul 31, 2019 at 04:45:21PM -0700, Jim Mattson wrote:
+> On Wed, Jul 31, 2019 at 4:37 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> 
+> > At a glance, the full emulator models behavior correctly, e.g. see
+> > toggle_interruptibility() and setters of ctxt->interruptibility.
+> >
+> > I'm pretty sure that leaves the EPT misconfig MMIO and APIC access EOI
+> > fast paths as the only (VMX) path that would incorrectly handle a
+> > MOV/POP SS.  Reading the guest's instruction stream to detect MOV/POP SS
+> > would defeat the whole "fast path" thing, not to mention both paths aren't
+> > exactly architecturally compliant in the first place.
+> 
+> The proposed patch clears the interrupt shadow in the VMCB on all
+> paths through svm's skip_emulated_instruction. If this happens at the
+> tail end of emulation, it doesn't matter if the full emulator does the
+> right thing.
 
-Not yet, but it seems to be coming:
+Unless I'm missing something, skip_emulated_instruction() isn't called in
+the emulation case, x86_emulate_instruction() updates %rip directly, e.g.:
 
-  http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2268.pdf
+	if (writeback) {
+		unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
+		toggle_interruptibility(vcpu, ctxt->interruptibility);
+		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
+		kvm_rip_write(vcpu, ctxt->eip);
+		if (r == EMULATE_DONE && ctxt->tf)
+			kvm_vcpu_do_singlestep(vcpu, &r);
+		if (!ctxt->have_exception ||
+		    exception_type(ctxt->exception.vector) == EXCPT_TRAP)
+			__kvm_set_rflags(vcpu, ctxt->eflags);
 
-However, even if C2x gets it, it will be quite a while until the GCC
-minimum version gets bumped up to that, so...
-
-Cheers,
-Miguel
+		/*
+		 * For STI, interrupts are shadowed; so KVM_REQ_EVENT will
+		 * do nothing, and it will be requested again as soon as
+		 * the shadow expires.  But we still need to check here,
+		 * because POPF has no interrupt shadow.
+		 */
+		if (unlikely((ctxt->eflags & ~rflags) & X86_EFLAGS_IF))
+			kvm_make_request(KVM_REQ_EVENT, vcpu);
+	}
