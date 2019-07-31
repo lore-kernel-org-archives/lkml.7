@@ -2,180 +2,128 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECFCC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F5DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B0720665
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7958120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:40:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="dUl9aY28"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="lLuKv1DG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfGaJkT (ORCPT
+        id S1728593AbfGaJkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:40:19 -0400
-Received: from onstation.org ([52.200.56.107]:45282 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbfGaJkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:40:19 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id D0C2C3E910;
-        Wed, 31 Jul 2019 09:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1564566017;
-        bh=I0papPTksij9ii1sn+NgdR9xpTJbqm6k5gNZvoHczdY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dUl9aY28ETvQkgZrciA7TcMsvicTu9VKRc6zFseB2fSDnV6+7goKfnZWASFQmzMJZ
-         HN2CnYMCnhsbvEZ6ONsTDqkwNx4/CzFNywIotkKdgpURJNYR0su/WIG/ZfaYBLhq7w
-         vFelqLPnDP8Nks6FRnaL0mrbe0vLotk35XR8/qcQ=
-Date:   Wed, 31 Jul 2019 05:40:16 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] iio: tsl2772: Use regulator_bulk_() APIs
-Message-ID: <20190731094016.GB19501@onstation.org>
-References: <20190731030423.8116-1-hslester96@gmail.com>
+        Wed, 31 Jul 2019 05:40:47 -0400
+Received: from mail-eopbgr810082.outbound.protection.outlook.com ([40.107.81.82]:3308
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726331AbfGaJkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:40:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U7EXvjpAJrl0xgWHUKcZG83N2DZ27DWOQdQupCuXagKj+MS41PYT8qy14YwPATn7E3kjATOAV2CJsP8lU0W8jieXCtbYP9F5M/qKsBUsR2GvOcsPqTnvNGEXq3GYRJNSKKCBocWwUTbu1uxe1/PGQ2wxXLH6titkEbqBbhsWuSSB+/bSBfygmMSXh/oa0zts0UgqnaM2JXbPsoERGrihgBIwQS17RWafbcADlksqVaKQ50A9AyBbLBP+6MHKmJCY3F/xiuJinD4bKEq9FAA1diPlDu7WWjRf+W2VBZ1ltFdixpGq3NRpWJd8A0XzdBkugoPsjpyblBIH4mGrT2jB1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TE9Fe7TyXqHDJDBmacXUDRxXvG9ES6SmcTNtaPcZSEA=;
+ b=czrddoCqbH7d6oMH0YUqCIYT76vb976jJraSDYmgH2dezpWgM/0pWYyRFfD0ffWeyuH9sn2KZwtK50uodgmxn8sM4+0cFZGP6P7s37gPZkTwU2g2u0iks393hPJVibVspDPqFlJGHBU23AIM//6knKSlEIddIKrCyeNQgBQgY5NU6piIj4KCvT1ixh8YZncGD4j8i4ojU48A9wY/onlTrWpsiXCSZXep6hbSUgHFH3ck8WoJXoS9xCrFseB/z6ZP5QfenZ7dvj+HnuNStxFGxGDc2W9t6J4EeJmm6VVu+yJ3lae1eOVFEHCBMnXJDASWwsRU5PtSs/OfpxpdDsaPwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=microchip.com
+ smtp.mailfrom=xilinx.com;dmarc=bestguesspass action=none
+ header.from=xilinx.com;dkim=none (message not signed);arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TE9Fe7TyXqHDJDBmacXUDRxXvG9ES6SmcTNtaPcZSEA=;
+ b=lLuKv1DG4GqZpTmBM8ANUeaLk8yApSDOIV8zAqUXe4jcy+KHc230QLTkufBehsXnquHTDS2pn8BDNMfaHZuWhTs7t1uuX3Sh+9VhvdlET32Qcjvn4IaEw7FknxD62Vg2tY1x2/GE4oADa7tSHKGe/EMterFTQq7t9XixPTjQz5s=
+Received: from SN4PR0201CA0042.namprd02.prod.outlook.com
+ (2603:10b6:803:2e::28) by SN6PR02MB4766.namprd02.prod.outlook.com
+ (2603:10b6:805:90::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2115.14; Wed, 31 Jul
+ 2019 09:40:44 +0000
+Received: from SN1NAM02FT061.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::201) by SN4PR0201CA0042.outlook.office365.com
+ (2603:10b6:803:2e::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.14 via Frontend
+ Transport; Wed, 31 Jul 2019 09:40:44 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; microchip.com; dkim=none (message not signed)
+ header.d=none;microchip.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT061.mail.protection.outlook.com (10.152.72.196) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2115.10
+ via Frontend Transport; Wed, 31 Jul 2019 09:40:44 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <harini.katakam@xilinx.com>)
+        id 1hsl6B-000748-Fo; Wed, 31 Jul 2019 02:40:43 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <harini.katakam@xilinx.com>)
+        id 1hsl66-0005wT-C3; Wed, 31 Jul 2019 02:40:38 -0700
+Received: from [10.140.6.13] (helo=xhdharinik40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <harini.katakam@xilinx.com>)
+        id 1hsl65-0005rH-3F; Wed, 31 Jul 2019 02:40:37 -0700
+From:   Harini Katakam <harini.katakam@xilinx.com>
+To:     nicolas.ferre@microchip.com, davem@davemloft.net,
+        claudiu.beznea@microchip.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, harinikatakamlinux@gmail.com,
+        harini.katakam@xilinx.com, devicetree@vger.kernel.org
+Subject: [RFC PATCH 0/2] Macb SGMII status poll thread
+Date:   Wed, 31 Jul 2019 15:10:31 +0530
+Message-Id: <1564566033-676-1-git-send-email-harini.katakam@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(979002)(4636009)(346002)(39860400002)(396003)(136003)(376002)(2980300002)(189003)(199004)(336012)(486006)(36386004)(426003)(6666004)(476003)(70586007)(7696005)(356004)(2906002)(126002)(51416003)(9786002)(70206006)(26005)(2616005)(316002)(63266004)(48376002)(4744005)(106002)(478600001)(44832011)(47776003)(8676002)(50466002)(36756003)(186003)(4326008)(16586007)(81156014)(50226002)(8936002)(305945005)(81166006)(5660300002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4766;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731030423.8116-1-hslester96@gmail.com>
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 45253633-10c3-4862-9bba-08d7159b28c9
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:SN6PR02MB4766;
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4766:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB476639C4BF5BD02374583F87C9DF0@SN6PR02MB4766.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:2043;
+X-Forefront-PRVS: 011579F31F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: OAwlRAcReRq1yuQYUBOfvvH9zanZWqnM3r9LSpnKot1y3qHirVzlWSlJbBi/fz7uHMA30SfLHGIbrxI6cLFSOaH965uTzl6dQY56qA7xl9vq9QiFo72E2H+DT0jixgFB9aiw+WAPm7mrsPgtp5b8jY/POHQRzcD5KUjhN8OYM3HTkhZqCymJEbQQSJWI3bshdAkbXvWi2ONp9zPQaz/6/WeONNXCq4jC7el6crHFaY3yMRenBCvDTSEK61jZRi6FdFzrCS2gvzp/sbi8RNuiB/476w/eerBD6FWprIDfdesUqaQ7ihZLxPfN9vI3Fr3k6th1gbQgUi79iYaJS92xV1xnzesRx9G4khNp6C4gp5XaBYjrBqny+YMQhFvpv2MhDBg4A6cuMylROcOQuztpC8nULUKRIKjd0TI5B3XCf0k=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2019 09:40:44.0666
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45253633-10c3-4862-9bba-08d7159b28c9
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4766
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chuhong,
+When PS GEM is used with SGMII mode without an external PHY
+on board, add a link status reporting mechanism.
 
-On Wed, Jul 31, 2019 at 11:04:23AM +0800, Chuhong Yuan wrote:
-> Use regulator_bulk_() APIs to shrink driver size.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Harini Katakam (2):
+  dt-bindings: net: macb: Add new property for PS SGMII only
+  net: macb: Add SGMII poll thread
 
-Just a few minor nitpicks below. Overall, this is looking nice.
+ Documentation/devicetree/bindings/net/macb.txt |  4 ++
+ drivers/net/ethernet/cadence/macb.h            |  8 ++++
+ drivers/net/ethernet/cadence/macb_main.c       | 65 ++++++++++++++++++++++++--
+ 3 files changed, 73 insertions(+), 4 deletions(-)
 
-> ---
-> Changes in v3:
->   - Split v2 into two patches.
->   - Add dev_err to log error messages.
->   - Add a check for EPROBE_DEFER.
-> 
->  drivers/iio/light/tsl2772.c | 82 +++++++++++--------------------------
->  1 file changed, 24 insertions(+), 58 deletions(-)
-> 
-> diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
-> index f1134f183be7..fd6d44297dba 100644
-> --- a/drivers/iio/light/tsl2772.c
-> +++ b/drivers/iio/light/tsl2772.c
-> @@ -134,6 +134,12 @@ enum {
->  	TSL2772_CHIP_SUSPENDED = 2
->  };
->  
-> +enum {
-> +	TSL2772_SUPPLY_VDD = 0,
-> +	TSL2772_SUPPLY_VDDIO = 1,
-> +	TSL2772_NUM_SUPPLIES = 2
-> +};
-> +
->  /* Per-device data */
->  struct tsl2772_als_info {
->  	u16 als_ch0;
-> @@ -161,8 +167,7 @@ struct tsl2772_chip {
->  	struct mutex prox_mutex;
->  	struct mutex als_mutex;
->  	struct i2c_client *client;
-> -	struct regulator *vdd_supply;
-> -	struct regulator *vddio_supply;
-> +	struct regulator_bulk_data reg[TSL2772_NUM_SUPPLIES];
+-- 
+2.7.4
 
-I prefer that this was named something other than 'reg'. Maybe
-'supplies'? I know that there are a few other drivers in IIO that use
-this name.
-
->  	u16 prox_data;
->  	struct tsl2772_als_info als_cur_info;
->  	struct tsl2772_settings settings;
-> @@ -697,46 +702,7 @@ static void tsl2772_disable_regulators_action(void *_data)
->  {
->  	struct tsl2772_chip *chip = _data;
->  
-> -	regulator_disable(chip->vdd_supply);
-> -	regulator_disable(chip->vddio_supply);
-> -}
-> -
-> -static int tsl2772_enable_regulator(struct tsl2772_chip *chip,
-> -				    struct regulator *regulator)
-> -{
-> -	int ret;
-> -
-> -	ret = regulator_enable(regulator);
-> -	if (ret < 0) {
-> -		dev_err(&chip->client->dev, "Failed to enable regulator: %d\n",
-> -			ret);
-> -		return ret;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
-> -static struct regulator *tsl2772_get_regulator(struct tsl2772_chip *chip,
-> -					       char *name)
-> -{
-> -	struct regulator *regulator;
-> -	int ret;
-> -
-> -	regulator = devm_regulator_get(&chip->client->dev, name);
-> -	if (IS_ERR(regulator)) {
-> -		if (PTR_ERR(regulator) != -EPROBE_DEFER)
-> -			dev_err(&chip->client->dev,
-> -				"Failed to get %s regulator %d\n",
-> -				name, (int)PTR_ERR(regulator));
-> -
-> -		return regulator;
-> -	}
-> -
-> -	ret = tsl2772_enable_regulator(chip, regulator);
-> -	if (ret < 0)
-> -		return ERR_PTR(ret);
-> -
-> -	return regulator;
-> +	regulator_bulk_disable(ARRAY_SIZE(chip->reg), chip->reg);
->  }
->  
->  static int tsl2772_chip_on(struct iio_dev *indio_dev)
-> @@ -1804,14 +1770,21 @@ static int tsl2772_probe(struct i2c_client *clientp,
->  	chip->client = clientp;
->  	i2c_set_clientdata(clientp, indio_dev);
->  
-> -	chip->vddio_supply = tsl2772_get_regulator(chip, "vddio");
-> -	if (IS_ERR(chip->vddio_supply))
-> -		return PTR_ERR(chip->vddio_supply);
-> +	chip->reg[TSL2772_SUPPLY_VDD].supply = "vdd";
-> +	chip->reg[TSL2772_SUPPLY_VDDIO].supply = "vddio";
->  
-> -	chip->vdd_supply = tsl2772_get_regulator(chip, "vdd");
-> -	if (IS_ERR(chip->vdd_supply)) {
-> -		regulator_disable(chip->vddio_supply);
-> -		return PTR_ERR(chip->vdd_supply);
-> +	ret = devm_regulator_bulk_get(&clientp->dev, ARRAY_SIZE(chip->reg),
-> +								chip->reg);
-
-This needs to be aligned with devm_regulator_bulk_get, not ARRAY_SIZE.
-
-> +	if (ret < 0) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&clientp->dev, "Failed to get regulators: %d\n", ret);
-
-Add newline.
-
-Brian
