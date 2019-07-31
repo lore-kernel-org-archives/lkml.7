@@ -2,100 +2,97 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9689C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C020BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3B9208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:50:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qYliFr2P"
+	by mail.kernel.org (Postfix) with ESMTP id 9260A208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564591852;
+	bh=CY/0MCpQ2R6VuyvKTw3bMUvovG1rnkErTplcdXO7cuc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NbPOLtcCOCv1N1HF91nzEtw0cK++Cb7Iq1bYT0kan27dEGN4lTc2az3kQfQgYGNkY
+	 DMFoUgBjUWCq9s5euNl3ynYDwFYPDHAnueKT9y4b7pqarzzLDEMK3IRsWnvzUIrCaY
+	 DRj5tJ03QjT0hk+bij2xOmrU63X9PB1YaKgUSqAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbfGaQuT (ORCPT
+        id S1730448AbfGaQuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:50:19 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43844 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfGaQuS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:50:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=M16IcJbVtcK6s+BiMRNJ1Hm7ZaYNlZKt9eZO5hx7aH0=; b=qYliFr2PO+2EqS/YmFoapRgRU
-        bfiGCCwTZTob1I1SBoNS3RTHiJoPE8PgwOm6qcjOhy+hR5h+C56s8A9mC/0HfcaKdQ80jiDBW90uc
-        HC+2IL7HPtCY2WQQT0uUvfVV2bVxKJ1lo+n/fBd8tIlAAMPseBDJXfuZEfGSF/Hq3ifjbbDOktTBL
-        Qstol6QixMVw27cHOtJhIIHutuPEX8RjqnLkhgATeV0uOJ1S2TWJ7fwa0Dy1DMI8FNnBwOPdh9IwV
-        al92sgMQdy6nP5TkaaN2MC+uhEFkLhzLoju9wYW9Q9mhFRCGInKSmjQNycuSqsGvCJl7MdbD8KpgE
-        seJPwYesw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsrns-0005TD-C5; Wed, 31 Jul 2019 16:50:16 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CEB982029F4C9; Wed, 31 Jul 2019 18:50:14 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 18:50:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        kan.liang@linux.intel.com
-Subject: Re: [PATCH v3 2/7] perf/x86/intel: Support PEBS output to PT
-Message-ID: <20190731165014.GY31381@hirez.programming.kicks-ass.net>
-References: <20190731143041.64678-1-alexander.shishkin@linux.intel.com>
- <20190731143041.64678-3-alexander.shishkin@linux.intel.com>
+        Wed, 31 Jul 2019 12:50:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726669AbfGaQuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:50:51 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA65A20C01;
+        Wed, 31 Jul 2019 16:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564591849;
+        bh=CY/0MCpQ2R6VuyvKTw3bMUvovG1rnkErTplcdXO7cuc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=c3f9ELYR6ER59TqzdR9TYoisIDsQpR4Xc0E3tHNoXP53E6cWFY9aAHutew8eyHyRl
+         VAET+Xtsd+yfgYlQnMLWjdEuLd3NYoqHOC/VWlvGKgmo7bL1p7XKrvWIuqGZ4i/xPI
+         1k/2X0OavLVwOZnPJAgJIaRTGrfrm32+Un1xY8Rc=
+Received: by mail-qk1-f181.google.com with SMTP id w190so49743169qkc.6;
+        Wed, 31 Jul 2019 09:50:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAUdBtEQmpSBU6mWQ5a2Rc3RJMT3OKaa0aF6+RUPwxmOmYIoj03b
+        ifvN0mHIK1Gxfh6ICwC7YOVY4t2wtbNJLBNXhA==
+X-Google-Smtp-Source: APXvYqxML07Ais4tasXDr2ACM8iA+v6upu/yHzTYw/7nGtC9vm0rJF8A+ki9evcCoW8/ZAGodwm9vkqsJhUU0IB1SJc=
+X-Received: by 2002:a37:a48e:: with SMTP id n136mr83750105qke.223.1564591848978;
+ Wed, 31 Jul 2019 09:50:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731143041.64678-3-alexander.shishkin@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190721175915.27192-1-martin@kaiser.cx> <20190731140706.2765-1-martin@kaiser.cx>
+ <20190731140706.2765-2-martin@kaiser.cx>
+In-Reply-To: <20190731140706.2765-2-martin@kaiser.cx>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 31 Jul 2019 10:50:36 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK9iuxQEh3s2_AgQhSa19Coq7kSFB497KUMQnjQNU+ELw@mail.gmail.com>
+Message-ID: <CAL_JsqK9iuxQEh3s2_AgQhSa19Coq7kSFB497KUMQnjQNU+ELw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: iio: potentiometer: add max5432.yaml binding
+To:     Martin Kaiser <martin@kaiser.cx>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 05:30:36PM +0300, Alexander Shishkin wrote:
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index cfe256ca76df..6cf2a7ba822a 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1006,6 +1006,28 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
->  	/* current number of events already accepted */
->  	n = cpuc->n_events;
->  
-> +	if (!cpuc->is_fake && leader->attr.precise_ip) {
-> +		if (!n)
-> +			cpuc->pebs_output = 0;
+On Wed, Jul 31, 2019 at 8:07 AM Martin Kaiser <martin@kaiser.cx> wrote:
+>
+> Add a binding for the Maxim Integrated MAX5432-MAX5435 family of digital
+> potentiometers.
+>
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> ---
+> changes in v4
+>  - fix the dt bindings
+>    - replace ic20 with i2c
+>    - document the reg property
+>    - add additionalProperties and required
+>
+> changes in v3
+>  - split dt bindings and driver code into separate patches
+>  - use yaml format for dt bindings
+>  - fix formatting of parameter lists
+>
+> changes in v2
+>  - use MAX5432_ prefix for all defines
+>  - fix indentation
+>  - convert void * to unsigned long, not to u32
+>    (warning from kbuild test robot)
+>
+>  .../bindings/iio/potentiometer/max5432.yaml        | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/max5432.yaml
 
-I think this can go wobbly if we add a !pebs event first.
-
-That is, in that case '!n && !precise_ip' and we'll not reset the output
-state.
-
-> +
-> +		/*
-> +		 * For PEBS->PT, if !aux_event, the group leader (PT) went
-> +		 * away, the group was broken down and this singleton event
-> +		 * can't schedule any more.
-> +		 */
-> +		if (WARN_ON_ONCE(is_pebs_pt(leader) && !leader->aux_event))
-> +			return -EINVAL;
-> +
-> +		/*
-> +		 * pebs_output: 0: no PEBS so far, 1: PT, 2: DS
-> +		 */
-> +		if (cpuc->pebs_output &&
-> +		    cpuc->pebs_output != is_pebs_pt(leader) + 1)
-> +			return -EINVAL;
-> +
-> +		cpuc->pebs_output = is_pebs_pt(leader) + 1;
-> +	}
-> +
->  	if (is_x86_event(leader)) {
->  		if (n >= max_count)
->  			return -EINVAL;
+Reviewed-by: Rob Herring <robh@kernel.org>
