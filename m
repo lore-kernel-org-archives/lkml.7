@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B911C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9927C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF04218BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD456206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564572606;
-	bh=QAX9f558ujnbm03RF+HaZQs+4IEmD7mmA/kX5muTztE=;
+	s=default; t=1564572611;
+	bh=pSfzN1x9ZDg+OdnL70kOof5qWXkYWBVD1RS97in1f6s=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=k5ffU9IuAE4bGo7e07Gf+5KyvREFWAm3o0kR44WraMz/0QsVshEqpS9gxJljg9Umu
-	 VQ54fbnrrAW6TJGjIxBC6QDcehG2inOnW07ZF1ArMEpwk3CLaniNSbjpqByBJJ0/DZ
-	 yXJnlIy5pwqiqX95dMSbLN1SHLC05QXXDWG5RldY=
+	b=Audhh/n4kU/A/J1jTY3LCsWe05WRLeWzHVnxUHeyRZbHKpl9z6KPc5MRpNNImCJcg
+	 ebPl9PvITawDgH03lar5BHPT2bNqMIEZJqX5zpBNGP8R+LM08XWIBQK8uajBOWQxEo
+	 miGgOCmz5cofUk7HEAqlpvx2jsmvtiCIxlVx0m78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387589AbfGaLaE (ORCPT
+        id S2387628AbfGaLaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:30:04 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34446 "EHLO
+        Wed, 31 Jul 2019 07:30:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34756 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfGaLaC (ORCPT
+        with ESMTP id S2387591AbfGaLaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:30:02 -0400
+        Wed, 31 Jul 2019 07:30:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=QcGmBVpDOdgqukjU+sGeVWU68WD55hAUZCPdArb9dVo=; b=it7QpXTqCKjT
-        EjZ4pPZAezG1Z4SYVc4k4tvPHDuAiPs5gTSOa9r3/JEL8KULqKbFMiXjHu/pQcMGivq9kOje2fdrw
-        JEDRLSsdNqcOWn2Td/uZT031g39gliOgRJv5TT3AH10z52mLuJiR9LQzg4r5yLkF4+xc0m9xDqy2u
-        5sdVQ=;
+        List-Archive; bh=EuMvAIGvSkhxULaHrIEoiNbtfGrsx8DySGa7iFH7bOg=; b=Sqo0C8Xc5ocS
+        /7GLENBLdPeEqcBb1A5xfC3JtU1fBoNS6/7W0x/uKp0VJdMkfS793SxyDH2W/yMko45ysDTpcQdy5
+        kjG2LaCfX4BreOLL9+/aX4h+qeIoCjoLxK8rKzYnPsKzq8KGYSFo6hzKlxPDImBcxQALDyJ1ycFq8
+        YFsbs=;
 Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hsmno-0001pQ-0o; Wed, 31 Jul 2019 11:29:52 +0000
+        id 1hsmnq-0001qM-2z; Wed, 31 Jul 2019 11:29:54 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 41B9A2742CC3; Wed, 31 Jul 2019 12:29:51 +0100 (BST)
+        id 7BAE72742D57; Wed, 31 Jul 2019 12:29:52 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: g12a-tohdmitx: override codec2codec params" to the asoc tree
-In-Reply-To: <20190729080139.32068-1-jbrunet@baylibre.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: codec2codec: fix missing return of error return code" to the asoc tree
+In-Reply-To: <20190726123327.10467-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190731112951.41B9A2742CC3@ypsilon.sirena.org.uk>
-Date:   Wed, 31 Jul 2019 12:29:51 +0100 (BST)
+Message-Id: <20190731112952.7BAE72742D57@ypsilon.sirena.org.uk>
+Date:   Wed, 31 Jul 2019 12:29:52 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: meson: g12a-tohdmitx: override codec2codec params
+   ASoC: codec2codec: fix missing return of error return code
 
 has been applied to the asoc tree at
 
@@ -89,95 +89,47 @@ to this mail.
 Thanks,
 Mark
 
-From 2c4956bc1e9062e5e3c5ea7612294f24e6d4fbdd Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Mon, 29 Jul 2019 10:01:39 +0200
-Subject: [PATCH] ASoC: meson: g12a-tohdmitx: override codec2codec params
+From c8415833ec242b9ddf73bf9e1057e12f9b0fcd16 Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Fri, 26 Jul 2019 13:33:27 +0100
+Subject: [PATCH] ASoC: codec2codec: fix missing return of error return code
 
-So far, forwarding the hw_params of the input to output relied on the
-.hw_params() callback of the cpu side of the codec2codec link to be called
-first. This is a bit weak.
+Currently in function snd_soc_dai_link_event_pre_pmu the error return
+code in variable err is being set but this is not actually being returned,
+the function just returns zero even when there are failures. Fix this by
+returning the error return code.
 
-Instead, override the stream params of the codec2codec to link to set it up
-correctly.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20190729080139.32068-1-jbrunet@baylibre.com
+Addresses-Coverity: ("Unused value")
+Fixes: 3dcfb397dad2 ("ASoC: codec2codec: deal with params when necessary")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190726123327.10467-1-colin.king@canonical.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/meson/g12a-tohdmitx.c | 34 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ sound/soc/soc-dapm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
-index 707ccb192e4c..9943c807ec5d 100644
---- a/sound/soc/meson/g12a-tohdmitx.c
-+++ b/sound/soc/meson/g12a-tohdmitx.c
-@@ -28,7 +28,7 @@
- #define  CTRL0_SPDIF_CLK_SEL		BIT(0)
- 
- struct g12a_tohdmitx_input {
--	struct snd_pcm_hw_params params;
-+	struct snd_soc_pcm_stream params;
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index be9bb05b0165..2d183e2d23de 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -3776,7 +3776,7 @@ snd_soc_dai_link_event_pre_pmu(struct snd_soc_dapm_widget *w,
+ 	struct snd_pcm_hw_params *params = NULL;
+ 	const struct snd_soc_pcm_stream *config = NULL;
  	unsigned int fmt;
- };
+-	int ret;
++	int ret = 0;
  
-@@ -225,26 +225,17 @@ static int g12a_tohdmitx_input_hw_params(struct snd_pcm_substream *substream,
- {
- 	struct g12a_tohdmitx_input *data = dai->playback_dma_data;
+ 	params = kzalloc(sizeof(*params), GFP_KERNEL);
+ 	if (!params)
+@@ -3865,7 +3865,7 @@ snd_soc_dai_link_event_pre_pmu(struct snd_soc_dapm_widget *w,
  
--	/* Save the stream params for the downstream link */
--	memcpy(&data->params, params, sizeof(*params));
-+	data->params.rates = snd_pcm_rate_to_rate_bit(params_rate(params));
-+	data->params.rate_min = params_rate(params);
-+	data->params.rate_max = params_rate(params);
-+	data->params.formats = 1 << params_format(params);
-+	data->params.channels_min = params_channels(params);
-+	data->params.channels_max = params_channels(params);
-+	data->params.sig_bits = dai->driver->playback.sig_bits;
- 
- 	return 0;
+ out:
+ 	kfree(params);
+-	return 0;
++	return ret;
  }
  
--static int g12a_tohdmitx_output_hw_params(struct snd_pcm_substream *substream,
--					  struct snd_pcm_hw_params *params,
--					  struct snd_soc_dai *dai)
--{
--	struct g12a_tohdmitx_input *in_data =
--		g12a_tohdmitx_get_input_data(dai->capture_widget);
--
--	if (!in_data)
--		return -ENODEV;
--
--	memcpy(params, &in_data->params, sizeof(*params));
--
--	return 0;
--}
- 
- static int g12a_tohdmitx_input_set_fmt(struct snd_soc_dai *dai,
- 				       unsigned int fmt)
-@@ -266,6 +257,14 @@ static int g12a_tohdmitx_output_startup(struct snd_pcm_substream *substream,
- 	if (!in_data)
- 		return -ENODEV;
- 
-+	if (WARN_ON(!rtd->dai_link->params)) {
-+		dev_warn(dai->dev, "codec2codec link expected\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Replace link params with the input params */
-+	rtd->dai_link->params = &in_data->params;
-+
- 	if (!in_data->fmt)
- 		return 0;
- 
-@@ -278,7 +277,6 @@ static const struct snd_soc_dai_ops g12a_tohdmitx_input_ops = {
- };
- 
- static const struct snd_soc_dai_ops g12a_tohdmitx_output_ops = {
--	.hw_params	= g12a_tohdmitx_output_hw_params,
- 	.startup	= g12a_tohdmitx_output_startup,
- };
- 
+ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
 -- 
 2.20.1
 
