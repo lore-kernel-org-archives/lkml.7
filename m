@@ -2,100 +2,98 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5D8C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F733C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAEE72067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAD82067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:43:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jf1DCaJW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbfGaRlk (ORCPT
+        id S1728914AbfGaRnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:41:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41882 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbfGaRlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:41:40 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C4B1EC049E32;
-        Wed, 31 Jul 2019 17:41:39 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (ovpn-204-92.brq.redhat.com [10.40.204.92])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4EB3660922;
-        Wed, 31 Jul 2019 17:41:37 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 31 Jul 2019 19:41:39 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 19:41:36 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v2 1/2] fork: extend clone3() to support CLONE_SET_TID
-Message-ID: <20190731174135.GA30225@redhat.com>
-References: <20190731161223.2928-1-areber@redhat.com>
+        Wed, 31 Jul 2019 13:43:00 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46589 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727571AbfGaRm7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 13:42:59 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k189so13356664pgk.13;
+        Wed, 31 Jul 2019 10:42:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cbyckh733zLn1k1KQNdqh7wE649sTzAEf7Zo27dCO9o=;
+        b=Jf1DCaJW8x+CqvK5dK/oe6T/tEBnNjjoHaS6Avg/5nrZ7lnqPw+SLoTaf+oV3NKePM
+         n/0ITNvE2NeMBsgUDLZ+V3WCNertUHwXh+F/wmGzsoBtnV4UOwyht+yCaNW3xTT7vPNL
+         nprz7JaRptMhEvs56d4Y0ktKlLBfB0Ikb56p/ucPFRYWddbWyYZqL7HkDfOWkU99ZTEu
+         TcwP8RNXr6VWDi11URP9yOBYxUIHxzaGvznHzUin9xkrUFnZtEM3NSjgLcFlKZk+EsE7
+         eX6d+NmjkJbZwDVvsNMPO8YdWCahYFIUXlhlggzX/1zZqj6hmFMu6+nhX2BU5iMQmhoC
+         Q3sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cbyckh733zLn1k1KQNdqh7wE649sTzAEf7Zo27dCO9o=;
+        b=fWIJgzjqED9zc4cJZ4nYCjhdyEmp/ifczzNjbudbrLXFYBO29wh/9D57tfC+8+8ui7
+         c0WT0QSEULnBiDlOLqCmJjhMpacnzqqSkX2HCuopJ20OtJE7qhyDSEEqKSveK4zDAm1h
+         b1kDiNqAlWVVqd0hc3b3JO5nEjjkRKCP+flhyCcaFxb2K7w6zIyiWNZ+tJWHBg1YdqOf
+         9KZIX3L7CCpsCTD8plMZAcLZSrRUh31F/DQPdlfnHIGTGxiVEKuJwsHIP5l6zNRX5IOO
+         fHNGcWXpFbHUrbADJ8nAc3UeEjzWi4L06lB5lVO7pLOuKaWu+n65WNiYGG6tt6hj4qWN
+         6ung==
+X-Gm-Message-State: APjAAAUOh9t92mnsQZRj5njK1Zf5ek8dj2ihjKrT/+eV4GO/b2diPRc/
+        79qFuo1KfuhSWg8voPhOEndK2BK8
+X-Google-Smtp-Source: APXvYqxdqHqvtynEU7yEnDIrijIctPi9FrUx6AMyMOZ85UVTMWrO/hZXpwZJYxX/Rd1+zUiH6EvUGg==
+X-Received: by 2002:aa7:91cc:: with SMTP id z12mr48569536pfa.76.1564594978845;
+        Wed, 31 Jul 2019 10:42:58 -0700 (PDT)
+Received: from localhost.localdomain ([2607:fb90:4ad:5a0b:2aff:6e0f:8973:5a26])
+        by smtp.gmail.com with ESMTPSA id k8sm65941259pgm.14.2019.07.31.10.42.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 10:42:58 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-watchdog@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rick Ramstetter <rick@anteaterllc.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Ziirave_wdt driver fixes
+Date:   Wed, 31 Jul 2019 10:42:47 -0700
+Message-Id: <20190731174252.18041-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731161223.2928-1-areber@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 31 Jul 2019 17:41:39 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/31, Adrian Reber wrote:
->
-> Extending clone3() to support CLONE_SET_TID makes it possible restore a
-> process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
-> race free (as long as the desired PID/TID is available).
+Everyone,
 
-I personally like this... but please see the question below.
+This series contains various fixes/improvements for ziirave_wdt
+driver. Hopefully each commit is self-explanatory.
 
-> +struct pid *alloc_pid(struct pid_namespace *ns, int set_tid)
->  {
->  	struct pid *pid;
->  	enum pid_type type;
-> @@ -186,12 +186,28 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->  		if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
->  			pid_min = RESERVED_PIDS;
->  
-> -		/*
-> -		 * Store a null pointer so find_pid_ns does not find
-> -		 * a partially initialized PID (see below).
-> -		 */
-> -		nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-> -				      pid_max, GFP_ATOMIC);
-> +		if (set_tid) {
-> +			/*
-> +			 * Also fail if a PID != 1 is requested
-> +			 * and no PID 1 exists.
-> +			 */
-> +			if ((set_tid >= pid_max) || ((set_tid != 1) &&
-> +				(idr_get_cursor(&tmp->idr) <= 1)))
-                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Feedback is welcome!
 
-Ah, I forgot to mention... this should work but only because
-RESERVED_PIDS > 0. How about idr_is_empty() ?
+Thanks,
+Andrey Smirnov
 
+Andrey Smirnov (5):
+  watchdog: ziirave_wdt: Add missing newline
+  watchdog: ziirave_wdt: Be verbose about errors in probe()
+  watchdog: ziirave_wdt: Be more verbose during firmware update
+  watchdog: ziirave_wdt: Don't bail out on unexpected timeout value
+  watchdog: ziirave_wdt: Log bootloader/firmware info during probe
 
-But the main question is how it can really help if ns->level > 0, unlikely
-CRIU will ever need to clone the process with the same pid_nr == set_tid
-in the ns->parent chain.
+ drivers/watchdog/ziirave_wdt.c | 74 +++++++++++++++++++++++-----------
+ 1 file changed, 51 insertions(+), 23 deletions(-)
 
-So may be kernel_clone_args->set_tid should be pid_t __user *set_tid_array?
-Or I missed something ?
-
-Oleg.
+-- 
+2.21.0
 
