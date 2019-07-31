@@ -2,144 +2,143 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34431C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6989C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21F6206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD15A208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWYJ5Hsw"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ACnXznkI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbfGaAIn (ORCPT
+        id S1728282AbfGaAIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 20:08:43 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35307 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfGaAIn (ORCPT
+        Tue, 30 Jul 2019 20:08:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46418 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfGaAIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 20:08:43 -0400
-Received: by mail-io1-f66.google.com with SMTP id m24so132349657ioo.2;
-        Tue, 30 Jul 2019 17:08:42 -0700 (PDT)
+        Tue, 30 Jul 2019 20:08:46 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z23so39910048ote.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 17:08:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8JheWTgIzFxYJeqUL2EvPnkBwvWfIxP2sSvvMHXbZc4=;
-        b=hWYJ5Hswuxo5q6pljdWc5Msm3VQGPE+o0HSCQmzoXmEPpO4Z+T78LSXBhG2RqlKjA5
-         uuHQ1vElZ+CI1PYhfIjSjVmxF+yXKi/O93nZMTrtRa0m21fyg2+JGse6k3wFoGXup9lP
-         bNxdr5XyabSWOxZ8nS3tsaecozIcnxczcu71Ko1/opKV8LhMDy/bdSgSXTlDA6nVnGe/
-         WJDgjLIInCFxEFkHKUpjj3ok4lp9ISYt3dlugX7qNuFCQQ4EvmiL+mkFCY/ZEY+MfL+y
-         CacADCQ3DvEVeKzsAjzKyhLQ216WFCimRRRaOv5irGoCAMZUXg8xpKt9CYWu6jV/L5OK
-         Iadg==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=6FtxAw9Mh/kQnOEyufqBh4q3auEokVswtxFLId11t7w=;
+        b=ACnXznkI8Y3/x8dnoJ2ZoM0NExdUytG7wf7/wY+QAEyUOy9nZk2Ua3sZFyLulMDBXL
+         ckWzOHG4M3yPlH8J9nP5jRV5x/jhCJf2oFZf1Z7lWcSPV8cvE99YVvnhdqMc7woiXPeV
+         B/nsb6wfNt0qeNRVDhELdTBOXVHsUQAR+T+azvhNsMn4okgi5ByniqCF7RqInqECYod8
+         DpI9rHKCEgG/hZHNwNsQkszXXw95tX+SrJnfhYRPKChd+QX82wq/ZveSW2Kfqmr5/vbN
+         OzaX+qlAAjlPIQNvUT+CUhalTus+0fHZ4BGvNPHXCh+mYVyX/iuKa0JykG88Mobvr4j2
+         9Vzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8JheWTgIzFxYJeqUL2EvPnkBwvWfIxP2sSvvMHXbZc4=;
-        b=YPMXIndRAYkPai/IeGW/4ViNay9s5d6hU17PzNTvrp07FPSTH7GSz841HqLCl6La47
-         ITTJcWpd5lGaJcu/S4iN+QoEvVbpddNvcIrRwPRYqgBZinmEm3twn0PlWWQmjZpSIOzD
-         4Pes2tKRiTKXphDcjskJfW2l28G6K+meMd1gRoMFEyJkETqoFIPxV6wOq3dRCqalbtI6
-         0WHe/ogbpj8x72XKqngujalUAtSIciGpxZgvVUeSkx4gSbfSnDm0A0u2KEr8DnwfPdaz
-         vsWvlKkhf4dJaJYSzgXv2erpcR1tRRAh6u62MigGK/XGLrXgWbzJ5e8XqmfIgu6hUYwF
-         F7+A==
-X-Gm-Message-State: APjAAAXbkkTV/LD4MZ5NAQpgRBHiQwRuMzM/1Ox/6ROVJxRhd++W4eMU
-        0dfYza7JiUrbqVTiWbhUT82cpaxi+ENM5hkTlyU=
-X-Google-Smtp-Source: APXvYqw7z/G000E74naYRSALQNnmNRrw0cRjYs2C5wAzrF9FiInot9iHNesX21g3d95n0NHpLL9UMtgt3fxiJGInFeE=
-X-Received: by 2002:a6b:f406:: with SMTP id i6mr38634089iog.110.1564531722141;
- Tue, 30 Jul 2019 17:08:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=6FtxAw9Mh/kQnOEyufqBh4q3auEokVswtxFLId11t7w=;
+        b=bkXJOICZKmy5xV/ETDH7TsoZqsY57/v65CyQQFL7TJOCmPJvIO6niRLqosnQ72m1Ye
+         f6epcPrQATWrQ0l0qfy+6P2050jjooQzWh6zfa7tyd6zOZxq3GfpJjEpJTgd9ed7MdpO
+         uRMskxC9CJyodD9uBZR9lINraeg02HsyhU7fb/1wZDrJSHDXQmMaYacW8FkhhYgrrsxR
+         +VS0kpD7m9m+3vtsgfbMQq0ngp50Jw8ziOZORO3O35yv03CoY3Hmqe9ZCwt07UTftWCF
+         Oup33yy65YWrIJGs7gu+l2SUo1gmATMOyUaPP1X1O3X5UYAnVRzHV5V7KWYQR3DZGIwV
+         fhJw==
+X-Gm-Message-State: APjAAAWoiS8VVXdnKtxcN++BU2yrrN2o+M8AvAJCoX3LKqFGdm7f94q1
+        FeF98kL7cLo+l54L4MP0E1GG7w==
+X-Google-Smtp-Source: APXvYqz2Us9f38GubAYvmzLgNu4K8Qkyq4AhOrDg4xZKDqSuCjcqYtOj/+WEP3rqhBMeYTITMD1oIw==
+X-Received: by 2002:a9d:7259:: with SMTP id a25mr10777964otk.30.1564531725418;
+        Tue, 30 Jul 2019 17:08:45 -0700 (PDT)
+Received: from localhost ([2600:100e:b005:6ca0:a8bb:e820:e6d3:8809])
+        by smtp.gmail.com with ESMTPSA id c29sm24726790otd.66.2019.07.30.17.08.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 17:08:44 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 17:08:42 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <Atish.Patra@wdc.com>
+cc:     "anup@brainfault.org" <anup@brainfault.org>,
+        "alankao@andestech.com" <alankao@andestech.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "johan@kernel.org" <johan@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "allison@lohutok.net" <allison@lohutok.net>
+Subject: Re: [PATCH 3/4] RISC-V: Support case insensitive ISA string
+ parsing.
+In-Reply-To: <8ed4d461ffe5ac41b475d22b38019578b29a8d09.camel@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1907301611040.4874@viisi.sifive.com>
+References: <20190726194638.8068-1-atish.patra@wdc.com>  <20190726194638.8068-3-atish.patra@wdc.com>  <alpine.DEB.2.21.9999.1907261346560.26670@viisi.sifive.com>  <a8a6be2c-2dcb-fe58-2c32-e3baa357819c@wdc.com>  <alpine.DEB.2.21.9999.1907261625220.26670@viisi.sifive.com>
+  <MN2PR04MB6061790AFE4E0AAA838678028DC30@MN2PR04MB6061.namprd04.prod.outlook.com>  <alpine.DEB.2.21.9999.1907270043190.26998@viisi.sifive.com>  <CAAhSdy0Eycc0ORSnh6LJeC_D_x9yLOkoc7OkPNuN6qOcZEGVWg@mail.gmail.com>  <alpine.DEB.2.21.9999.1907270108420.26998@viisi.sifive.com>
+ <8ed4d461ffe5ac41b475d22b38019578b29a8d09.camel@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-4-deepa.kernel@gmail.com>
- <87d0hsapwr.fsf@mail.parknet.co.jp> <CABeXuvqgaxDSR8N_D1Tdw06g_5PGinZS--6nx-bPtAWP4v+mwg@mail.gmail.com>
- <5340224D-5625-48A6-909E-70B24D2084BC@tuxera.com>
-In-Reply-To: <5340224D-5625-48A6-909E-70B24D2084BC@tuxera.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Tue, 30 Jul 2019 17:08:30 -0700
-Message-ID: <CABeXuvq_9YTTGZwmxO1WuEivuttDesNHKxeSQL5SsvkBSR884Q@mail.gmail.com>
-Subject: Re: [PATCH 03/20] timestamp_truncate: Replace users of timespec64_trunc
-To:     Anton Altaparmakov <anton@tuxera.com>
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        stoph Hellwig <hch@lst.de>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Joel Becker <jlbec@evilplan.org>,
-        Richard Weinberger <richard@nod.at>, Tejun Heo <tj@kernel.org>,
-        "yuchao0@huawei.com" <yuchao0@huawei.com>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-ntfs-dev@lists.sourceforge.net" 
-        <linux-ntfs-dev@lists.sourceforge.net>,
-        linux-mtd <linux-mtd@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 3:28 PM Anton Altaparmakov <anton@tuxera.com> wrote=
-:
->
-> Hi Deepa,
->
-> > On 30 Jul 2019, at 18:26, Deepa Dinamani <deepa.kernel@gmail.com> wrote=
-:
-> >
-> > On Tue, Jul 30, 2019 at 1:27 AM OGAWA Hirofumi
-> > <hirofumi@mail.parknet.co.jp> wrote:
-> >>
-> >> Deepa Dinamani <deepa.kernel@gmail.com> writes:
-> >>
-> >>> diff --git a/fs/fat/misc.c b/fs/fat/misc.c
-> >>> index 1e08bd54c5fb..53bb7c6bf993 100644
-> >>> --- a/fs/fat/misc.c
-> >>> +++ b/fs/fat/misc.c
-> >>> @@ -307,8 +307,9 @@ int fat_truncate_time(struct inode *inode, struct=
- timespec64 *now, int flags)
-> >>>              inode->i_atime =3D (struct timespec64){ seconds, 0 };
-> >>>      }
-> >>>      if (flags & S_CTIME) {
-> >>> -             if (sbi->options.isvfat)
-> >>> -                     inode->i_ctime =3D timespec64_trunc(*now, 10000=
-000);
-> >>> +             if (sbi->options.isvfat) {
-> >>> +                     inode->i_ctime =3D timestamp_truncate(*now, ino=
-de);
-> >>> +             }
-> >>>              else
-> >>>                      inode->i_ctime =3D fat_timespec64_trunc_2secs(*n=
-ow);
-> >>>      }
-> >>
-> >> Looks like broken. It changed to sb->s_time_gran from 10000000, and
-> >> changed coding style.
-> >
-> > This is using a new api: timestamp_truncate(). granularity is gotten
-> > by inode->sb->s_time_gran. See Patch [2/20]:
-> > https://lkml.org/lkml/2019/7/29/1853
-> >
-> > So this is not broken if fat is filling in the right granularity in the=
- sb.
->
-> It is broken for FAT because FAT has different granularities for differen=
-t timestamps so it cannot put the correct value in the sb as that only allo=
-ws one granularity.  Your patch is totally broken for fat as it would be im=
-mediately obvious if you spent a few minutes looking at the code...
+On Mon, 29 Jul 2019, Atish Patra wrote:
 
-It seemed to me that FAT had already covered the special cases (2s and
-1d) granularities by using internal functions. This one could also be
-an inlined calculation, but I will just drop the FAT part from this
-patch and leave it as is for now.
+> The yaml document did not specify anything about all isa-strings has to 
+> be lowercase unless I missed something. The two enum values are all 
+> lowercase but the description says all ISA strings are documented in ISA 
+> specification which describes the ISA strings to be case insensitive. 
+> IMHO, this creates confusion resulting the patch.
 
-Thanks,
-Deepa
+If it's helpful in understanding my earlier comments, I don't think that 
+your patches were "wrong," or anything like that.  And you're right that 
+the DT YAML binding does not unequivocally state that all future additions 
+to the riscv,isa string must be in lowercase.  But to be clear, the DT 
+YAML schema defines exactly what is currently permissible for riscv,isa 
+strings in kernel-oriented DT data, and right now, all of the permissible 
+values are lowercase.
+
+Good Linux kernel patches are driven by clear functional motivations.  
+Like, "The current kernel crashes or doesn't support the hardware in 
+situation X; thus we change the kernel to add feature or bugfix Y."  And 
+in the kernel, solutions that involve fewer lines of code are generally 
+preferred to solutions that involve more lines of code - more bugs, more 
+noise, etc.  
+
+Where these case-insensitivity parsing patches fall short, in my opinion, 
+is that they don't have strong functional motivations.  There's been a 
+precedent for a few years now in the mainline kernel that the RISC-V ISA 
+string is all lowercase.  I've asked you and Anup for situations where 
+that precedent isn't sufficient to handle functionality that's described 
+in the RISC-V specification, or to phrase it differently, "what breaks if 
+we don't make this change?"  So far no one's been able to cite anything 
+here.  There's just a repeated appeal to authority to the section of the 
+RISC-V specification that states that "[t]he ISA naming strings are case 
+insensitive."  As you can probably sense, this doesn't seem like a strong 
+justification for changing the existing behavior.  From a functional point 
+of view, if case doesn't matter, why care if the DT data and kernel only 
+support lowercase strings?  An all-lowercase string should be functionally 
+equivalent to an all-uppercase or mixed-case string.  Since there's no 
+functional point to the changes, why add more code to the kernel?
+
+Later in your E-mail, it sounds like you ultimately agree with these basic 
+conclusions.  If that's so, I don't understand the amount of effort that 
+you and Anup have put into pushing back here.  There's nothing personal 
+about these review comments.  If there's some meta-problem here that's 
+unrelated to the technical merit of the patches, please send a private 
+E-mail.  Otherwise, if you disagree with the functional conclusions in the 
+previous paragraph, let's hash the issues out here.
+
+> I am fine with dropping this patch if yaml clearly document the case 
+> sensititve thing.
+
+Great!  If you still think so now, let's resolve this issue with a 
+one-line patch to the DT YAML schema to note that riscv,isa DT string 
+values should be all lowercase.  Will you send a patch?
+
+
+- Paul
