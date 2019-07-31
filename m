@@ -2,184 +2,229 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A08C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219DDC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916022089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:12:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="uH0E9XUu"
+	by mail.kernel.org (Postfix) with ESMTP id E668A2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:14:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbfGaJMv (ORCPT
+        id S1728318AbfGaJOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:12:51 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:36103 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbfGaJMv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:12:51 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 2VToodoYeA4ELyFkqytApnqFDE5AFd6jOWhZ2KdXBvwCKKC3A3Kx4FoGnYe9W8UpRpm5A7jkIx
- I64f3InapddNAHA14M0YswCWkN/vRB6WhqtiSdIG6KWWFcK/wZL5H2JkOnv+aDI73E26oqneb5
- c9n8/EUC5yco96QaahZDVc/nqRNtDHPHpa10WrJIRxZxD87ZjZgZwUsBBMWceXBbJcDg9nTLfK
- CsXJ9PvAfqDxo4t289lwX5ONXDDOwnUqdAxK1wlsPgd3LmF2krT0OrtEOAj9IT2Lm5M7v0qMQl
- MSQ=
-X-IronPort-AV: E=Sophos;i="5.64,329,1559545200"; 
-   d="scan'208";a="40401035"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Jul 2019 02:12:50 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 31 Jul 2019 02:12:20 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 31 Jul 2019 02:12:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GXEXc/93HiONigmj6c3oKsZIbX4p/FEGzP52Oy1P+fI3ReRJrTD4u5G3CRkXmqqH/8mQdAj4ldtsGK4HYsQFz5ZdvDm5PYF1jzJDdImCKQz88dS+19cxGNDAQCRF97PVzBAEe8qx3HRglQ3xrIVsU3d/sLvepmgcsfb8LjH1HsvYzwU7bCkrgXAak10NCNoM+o/RbdOzuOcetggd7gwomE95sRsb/UOQrJP1po3Kv8qxr3jmkgYPU6PqQbbffuDkFiHaOsbI+BzJ6ImTIWezsmmnSZiT9lUJkmD3Ij7tR0sOXGDfiVytbSCiGEJVXH4GPvh8xL6RXMq4FvAf0gOlvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dg1WU0iRP+9iGB8K1aX6SAI4fd/RmXUOoHnvhLMOtVE=;
- b=nlctdB19WUmndgsmpcDOWyPBrvgsE+bQEYJPbdJDr3gljcXUXBCfCUZGBZoWkW3pxtp7No3J1+gX7pMpmHpGQ3bwPduMqiOIWPbKl4uKivA0QsU4zA6GsFaWl39oOgLvAkc6uU4zku34LoE27f7xqT6HfyHlGgpTCSI9p0uzDG3J4lQ/msF4SBLqlDUmlqu5kq1HuABNn8d31Al5XqrocVbiGAVpng6BrAR2QIzuo7Zs13wdHvdnydHf0qKYvST11/QKOKcEnRudjbZUqIp7VBaNpxWB6ik35Ab2pNm8Y54p33iPPYyFDjsZzw/DrnP/yX5Dvge8turifNF2NW3Srw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microchip.com;dmarc=pass action=none
- header.from=microchip.com;dkim=pass header.d=microchip.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dg1WU0iRP+9iGB8K1aX6SAI4fd/RmXUOoHnvhLMOtVE=;
- b=uH0E9XUuNbQ8Z460IUvLFutaKmVq7MTxqmcxZO4EyIBi/REMwKE20PAntlr1u/nAZ32bgn5icrWfNsN0OTFUGQVKgvnaB5xZ8DuOvPvPxHVhWdB0IRMORbyyIEbU9Hn5H/ZJQu0sz9O6gqo8B+w9WOJjF7CHpvAi36NXelKNsLQ=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB4414.namprd11.prod.outlook.com (52.135.36.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Wed, 31 Jul 2019 09:12:18 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::61d1:6408:89a2:8de5]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::61d1:6408:89a2:8de5%2]) with mapi id 15.20.2115.005; Wed, 31 Jul 2019
- 09:12:18 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <boris.brezillon@collabora.com>, <marek.vasut@gmail.com>,
-        <vigneshr@ti.com>
-CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <boris.brezillon@bootlin.com>, <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 6/6] mtd: spi-nor: Add the SPI_NOR_XSR_RDY flag
-Thread-Topic: [PATCH 6/6] mtd: spi-nor: Add the SPI_NOR_XSR_RDY flag
-Thread-Index: AQHVR4ANBFbmyZuDXEi4qln0HD1tDQ==
-Date:   Wed, 31 Jul 2019 09:12:18 +0000
-Message-ID: <20190731091145.27374-7-tudor.ambarus@microchip.com>
-References: <20190731091145.27374-1-tudor.ambarus@microchip.com>
-In-Reply-To: <20190731091145.27374-1-tudor.ambarus@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR08CA0130.eurprd08.prod.outlook.com
- (2603:10a6:800:d4::32) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.9.5
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 09ff4768-7759-4998-4b61-08d715972fd5
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR11MB4414;
-x-ms-traffictypediagnostic: MN2PR11MB4414:
-x-microsoft-antispam-prvs: <MN2PR11MB4414B1F1FE955C056F684631F0DF0@MN2PR11MB4414.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 011579F31F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(396003)(39860400002)(376002)(346002)(199004)(189003)(14454004)(26005)(81166006)(6116002)(50226002)(76176011)(5660300002)(66066001)(2501003)(6512007)(25786009)(486006)(102836004)(107886003)(2201001)(110136005)(305945005)(3846002)(7736002)(68736007)(53936002)(6486002)(478600001)(86362001)(71200400001)(71190400001)(14444005)(186003)(476003)(256004)(8936002)(6436002)(7416002)(386003)(52116002)(54906003)(316002)(66946007)(81156014)(11346002)(2616005)(2906002)(64756008)(4326008)(446003)(99286004)(36756003)(66556008)(8676002)(66476007)(66446008)(1076003)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4414;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Z+1cTLumtkQnvZJJIVvBDlJGGhMzeErIFZVQ/jwYR7aQEzeVVZqs//EEyNl02BfcesksKU8/TXN8wrqniCE5tGPUs1SVwjizq8JOARNBbyyYgMbMNzD0DSLGBqXeiNe14MoDxOwLMu8F350+rrsGT5s3IgKul3ExOdo8fPEGggoPLVApuqwTdIT+uc1eOUMinMzCufywUPqoNoJ1ml0AI/9pKwT6dDQfTKbFHwObgghFRfgSDwT2IJSEQvmqt107CV9uMbhOdR/glZsCxePe3H5lIwaJwKZ0QYrmbZ4hSmtuqUVu2//9wK/XUJ19CcKxL3Ib0WpVNtGPQKU4vAz9SXNkUZv6sXXzY0O2nShmd90eb3Tn6kEQZ6gLNsmdK7wesg94n74k3nFczvJ/7CstyJ5EWM6wFgEcnXOwtxAkAvI=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09ff4768-7759-4998-4b61-08d715972fd5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 09:12:18.4278
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4414
+        Wed, 31 Jul 2019 05:14:15 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48470 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbfGaJOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:14:15 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1B9A0200959;
+        Wed, 31 Jul 2019 11:14:13 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 56F3620093B;
+        Wed, 31 Jul 2019 11:14:09 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AF014402F2;
+        Wed, 31 Jul 2019 17:14:04 +0800 (SGT)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     jassisinghbrar@gmail.com, o.rempel@pengutronix.de,
+        aisheng.dong@nxp.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Richard Zhu <hongxing.zhu@nxp.com>
+Subject: [PATCH v3] mailbox: imx: add support for imx v1 mu
+Date:   Wed, 31 Jul 2019 16:51:47 +0800
+Message-Id: <1564563107-23736-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@bootlin.com>
+There is a version1.0 MU on i.MX7ULP platform.
+One new version ID register is added, and it's offset is 0.
+TRn registers are defined at the offset 0x20 ~ 0x2C.
+RRn registers are defined at the offset 0x40 ~ 0x4C.
+SR/CR registers are defined at 0x60/0x64.
+Extend this driver to support it.
 
-S3AN flashes use a specific opcode to read the status register.
-We currently use the SPI_S3AN flag to decide whether this specific
-SR read opcode should be used, but SPI_S3AN is about to disappear, so
-let's add a new flag.
-
-Note that we use the same bit as SPI_S3AN implies SPI_NOR_XSR_RDY and
-vice versa.
-
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Suggested-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/mtd/spi-nor/spi-nor.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Change logs:
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 5fea5d7ce2cb..01be6d49ce3b 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -213,6 +213,14 @@ struct flash_info {
- 					 * bit. Must be used with
- 					 * SPI_NOR_HAS_LOCK.
- 					 */
-+#define SPI_NOR_XSR_RDY		BIT(10)	/*
-+					 * S3AN flashes have specific opcode to
-+					 * read the status register.
-+					 * Flags SPI_NOR_XSR_RDY and SPI_S3AN
-+					 * use the same bit as one implies the
-+					 * other, but we will get rid of
-+					 * SPI_S3AN soon.
-+					 */
- #define	SPI_S3AN		BIT(10)	/*
- 					 * Xilinx Spartan 3AN In-System Flash
- 					 * (MFR cannot be used for probing
-@@ -4818,7 +4826,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *nam=
-e,
- 	 * spi_nor_wait_till_ready(). Xilinx S3AN share MFR
- 	 * with Atmel spi-nor
- 	 */
--	if (info->flags & SPI_S3AN)
-+	if (info->flags & SPI_NOR_XSR_RDY)
- 		nor->flags |=3D  SNOR_F_READY_XSR_RDY;
-=20
- 	/* Kept only for backward compatibility purpose. */
---=20
-2.9.5
+v2 --> v3:
+  - Format the patch-set refer to Oleksij's guidance.
+  - Init the register array by a simple way recommended by Oleksij.
+  - Add Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de> tag.
+
+v1 --> v2:
+  - Use to have the register layout linked on probe, suggested by
+  Oleksij Rempel <o.rempel@pengutronix.de>.
+  - Add Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com> tag.
+
+
+Richard Zhu (1):
+  mailbox: imx: add support for imx v1 mu
+
+ drivers/mailbox/imx-mailbox.c | 55 ++++++++++++++++++++++++++++++-------------
+ 1 file changed, 38 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+index 25be8bb..c81be1c 100644
+--- a/drivers/mailbox/imx-mailbox.c
++++ b/drivers/mailbox/imx-mailbox.c
+@@ -12,19 +12,11 @@
+ #include <linux/of_device.h>
+ #include <linux/slab.h>
+ 
+-/* Transmit Register */
+-#define IMX_MU_xTRn(x)		(0x00 + 4 * (x))
+-/* Receive Register */
+-#define IMX_MU_xRRn(x)		(0x10 + 4 * (x))
+-/* Status Register */
+-#define IMX_MU_xSR		0x20
+ #define IMX_MU_xSR_GIPn(x)	BIT(28 + (3 - (x)))
+ #define IMX_MU_xSR_RFn(x)	BIT(24 + (3 - (x)))
+ #define IMX_MU_xSR_TEn(x)	BIT(20 + (3 - (x)))
+ #define IMX_MU_xSR_BRDIP	BIT(9)
+ 
+-/* Control Register */
+-#define IMX_MU_xCR		0x24
+ /* General Purpose Interrupt Enable */
+ #define IMX_MU_xCR_GIEn(x)	BIT(28 + (3 - (x)))
+ /* Receive Interrupt Enable */
+@@ -44,6 +36,13 @@ enum imx_mu_chan_type {
+ 	IMX_MU_TYPE_RXDB,	/* Rx doorbell */
+ };
+ 
++struct imx_mu_dcfg {
++	u32	xTR[4];		/* Transmit Registers */
++	u32	xRR[4];		/* Receive Registers */
++	u32	xSR;		/* Status Register */
++	u32	xCR;		/* Control Register */
++};
++
+ struct imx_mu_con_priv {
+ 	unsigned int		idx;
+ 	char			irq_desc[IMX_MU_CHAN_NAME_SIZE];
+@@ -61,12 +60,27 @@ struct imx_mu_priv {
+ 	struct mbox_chan	mbox_chans[IMX_MU_CHANS];
+ 
+ 	struct imx_mu_con_priv  con_priv[IMX_MU_CHANS];
++	const struct imx_mu_dcfg	*dcfg;
+ 	struct clk		*clk;
+ 	int			irq;
+ 
+ 	bool			side_b;
+ };
+ 
++static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
++	.xTR	= {0x0, 0x4, 0x8, 0xc},
++	.xRR	= {0x10, 0x14, 0x18, 0x1c},
++	.xSR	= 0x20,
++	.xCR	= 0x24,
++};
++
++static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
++	.xTR	= {0x20, 0x24, 0x28, 0x2c},
++	.xRR	= {0x40, 0x44, 0x48, 0x4c},
++	.xSR	= 0x60,
++	.xCR	= 0x64,
++};
++
+ static struct imx_mu_priv *to_imx_mu_priv(struct mbox_controller *mbox)
+ {
+ 	return container_of(mbox, struct imx_mu_priv, mbox);
+@@ -88,10 +102,10 @@ static u32 imx_mu_xcr_rmw(struct imx_mu_priv *priv, u32 set, u32 clr)
+ 	u32 val;
+ 
+ 	spin_lock_irqsave(&priv->xcr_lock, flags);
+-	val = imx_mu_read(priv, IMX_MU_xCR);
++	val = imx_mu_read(priv, priv->dcfg->xCR);
+ 	val &= ~clr;
+ 	val |= set;
+-	imx_mu_write(priv, val, IMX_MU_xCR);
++	imx_mu_write(priv, val, priv->dcfg->xCR);
+ 	spin_unlock_irqrestore(&priv->xcr_lock, flags);
+ 
+ 	return val;
+@@ -111,8 +125,8 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
+ 	struct imx_mu_con_priv *cp = chan->con_priv;
+ 	u32 val, ctrl, dat;
+ 
+-	ctrl = imx_mu_read(priv, IMX_MU_xCR);
+-	val = imx_mu_read(priv, IMX_MU_xSR);
++	ctrl = imx_mu_read(priv, priv->dcfg->xCR);
++	val = imx_mu_read(priv, priv->dcfg->xSR);
+ 
+ 	switch (cp->type) {
+ 	case IMX_MU_TYPE_TX:
+@@ -138,10 +152,10 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
+ 		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
+ 		mbox_chan_txdone(chan, 0);
+ 	} else if (val == IMX_MU_xSR_RFn(cp->idx)) {
+-		dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
++		dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
+ 		mbox_chan_received_data(chan, (void *)&dat);
+ 	} else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
+-		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), IMX_MU_xSR);
++		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), priv->dcfg->xSR);
+ 		mbox_chan_received_data(chan, NULL);
+ 	} else {
+ 		dev_warn_ratelimited(priv->dev, "Not handled interrupt\n");
+@@ -159,7 +173,7 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
+ 
+ 	switch (cp->type) {
+ 	case IMX_MU_TYPE_TX:
+-		imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
++		imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
+ 		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
+ 		break;
+ 	case IMX_MU_TYPE_TXDB:
+@@ -257,7 +271,7 @@ static void imx_mu_init_generic(struct imx_mu_priv *priv)
+ 		return;
+ 
+ 	/* Set default MU configuration */
+-	imx_mu_write(priv, 0, IMX_MU_xCR);
++	imx_mu_write(priv, 0, priv->dcfg->xCR);
+ }
+ 
+ static int imx_mu_probe(struct platform_device *pdev)
+@@ -265,6 +279,7 @@ static int imx_mu_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+ 	struct imx_mu_priv *priv;
++	const struct imx_mu_dcfg *dcfg;
+ 	unsigned int i;
+ 	int ret;
+ 
+@@ -282,6 +297,11 @@ static int imx_mu_probe(struct platform_device *pdev)
+ 	if (priv->irq < 0)
+ 		return priv->irq;
+ 
++	dcfg = of_device_get_match_data(dev);
++	if (!dcfg)
++		return -EINVAL;
++	priv->dcfg = dcfg;
++
+ 	priv->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(priv->clk)) {
+ 		if (PTR_ERR(priv->clk) != -ENOENT)
+@@ -335,7 +355,8 @@ static int imx_mu_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id imx_mu_dt_ids[] = {
+-	{ .compatible = "fsl,imx6sx-mu" },
++	{ .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
++	{ .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
+-- 
+2.7.4
 
