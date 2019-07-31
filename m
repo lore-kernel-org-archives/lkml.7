@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFCBC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8324FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C9B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A212206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564577050;
-	bh=dOauvtVe9yCPSP0ChARSYwAi6eemkfSk00etuTmxP94=;
+	s=default; t=1564577051;
+	bh=OpLDvIxJpuqw1Y07+slcLl/ar6SV0gGmWVthQGmxjtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LRJ0vEIQwjagzqTcTSekKLTPxD6FXxsBjKDaXZQsOSfGjK5IGOCJgJBHEM8eY5K3J
-	 kE1Vz2C+tb/gq8bIGSCxmYerD5+Pb3SjD257Y0vbjrp7eebIp6r3/xM9AS7dyaAYj9
-	 1fKSyLpm8Jyg3OJ3avSs9FIjdwThs7t25BOrpktQ=
+	b=jYxiynAM96wDPkInirbJ4GgjyC+SsnLD7ZBUkxcy5tkY2/r+yp83jxlAIm+KYRgkV
+	 s5JdJEdIUUGFsvaQXfIxfQUcHTrfilQ1FbRd92dEgQ2HaWDga4jXH/4flyXOFqD4QK
+	 R2rXoxmG66C/yxkhJmYTdKg1/d78RDMKlltG3KkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387988AbfGaMoI (ORCPT
+        id S2388008AbfGaMoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:44:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36354 "EHLO mail.kernel.org"
+        Wed, 31 Jul 2019 08:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387466AbfGaMoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:44:06 -0400
+        id S2387985AbfGaMoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:44:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3CD6208E3;
-        Wed, 31 Jul 2019 12:44:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C742206B8;
+        Wed, 31 Jul 2019 12:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564577045;
-        bh=dOauvtVe9yCPSP0ChARSYwAi6eemkfSk00etuTmxP94=;
+        s=default; t=1564577047;
+        bh=OpLDvIxJpuqw1Y07+slcLl/ar6SV0gGmWVthQGmxjtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rDjo31Gp98T2gFdLY039cbiyj4PAacUBKvstkRQIB1ZAszuZ1lLwgJ4RrJkSdwedK
-         d8bygUyV0zt4ievvAetFIsLr45vONXfpE6cNuMsj1/U+1gbVbvEBKFFUFaOlfvJR9x
-         E8ronTcaI/nWIQomapLDtcVwHuImfvVG+Qvtqmtk=
+        b=tDKo50NGE77WI8eo25aSgbqjia32TVpK0C4drtWImg+lv0lYu8kouDCPwYoBZ+33x
+         TsM21lwfHU9khTHftDxdEPLcp/RrmiZlgI+vKVgy8xyHKSvZi7qEXmF0xlP/qKnzDH
+         Z+Wz83KvK4VrGhJ8CYiSZzZZyqwfRQk21DiKFWEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org,
         Richard Gong <richard.gong@linux.intel.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH v2 10/10] video: fbdev: sm501fb: convert platform driver to use dev_groups
-Date:   Wed, 31 Jul 2019 14:43:49 +0200
-Message-Id: <20190731124349.4474-11-gregkh@linuxfoundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2 02/10] uio: uio_fsl_elbc_gpcm: convert platform driver to use dev_groups
+Date:   Wed, 31 Jul 2019 14:43:41 +0200
+Message-Id: <20190731124349.4474-3-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190731124349.4474-1-gregkh@linuxfoundation.org>
 References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
@@ -61,88 +59,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Platform drivers now have the option to have the platform core create
 and remove any needed sysfs attribute files.  So take advantage of that
-and do not register "by hand" a bunch of sysfs files.
+and do not register "by hand" a sysfs group of attributes.
 
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/video/fbdev/sm501fb.c | 37 +++++++++--------------------------
- 1 file changed, 9 insertions(+), 28 deletions(-)
+ drivers/uio/uio_fsl_elbc_gpcm.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/video/fbdev/sm501fb.c b/drivers/video/fbdev/sm501fb.c
-index 6edb4492e675..3dd1b1d76e98 100644
---- a/drivers/video/fbdev/sm501fb.c
-+++ b/drivers/video/fbdev/sm501fb.c
-@@ -1271,6 +1271,14 @@ static ssize_t sm501fb_debug_show_pnl(struct device *dev,
+diff --git a/drivers/uio/uio_fsl_elbc_gpcm.c b/drivers/uio/uio_fsl_elbc_gpcm.c
+index 450e2f5c9b43..be8a6905f507 100644
+--- a/drivers/uio/uio_fsl_elbc_gpcm.c
++++ b/drivers/uio/uio_fsl_elbc_gpcm.c
+@@ -71,6 +71,13 @@ static ssize_t reg_store(struct device *dev, struct device_attribute *attr,
+ static DEVICE_ATTR(reg_br, 0664, reg_show, reg_store);
+ static DEVICE_ATTR(reg_or, 0664, reg_show, reg_store);
  
- static DEVICE_ATTR(fbregs_pnl, 0444, sm501fb_debug_show_pnl, NULL);
- 
-+static struct attribute *sm501fb_attrs[] = {
-+	&dev_attr_crt_src.attr,
-+	&dev_attr_fbregs_pnl.attr,
-+	&dev_attr_fbregs_crt.attr,
++static struct attribute *uio_fsl_elbc_gpcm_attrs[] = {
++	&dev_attr_reg_br.attr,
++	&dev_attr_reg_or.attr,
 +	NULL,
 +};
-+ATTRIBUTE_GROUPS(sm501fb);
++ATTRIBUTE_GROUPS(uio_fsl_elbc_gpcm);
 +
- /* acceleration operations */
- static int sm501fb_sync(struct fb_info *info)
+ static ssize_t reg_show(struct device *dev, struct device_attribute *attr,
+ 			char *buf)
  {
-@@ -2011,33 +2019,9 @@ static int sm501fb_probe(struct platform_device *pdev)
- 		goto err_started_crt;
- 	}
+@@ -411,25 +418,12 @@ static int uio_fsl_elbc_gpcm_probe(struct platform_device *pdev)
+ 	/* store private data */
+ 	platform_set_drvdata(pdev, info);
  
--	/* create device files */
--
--	ret = device_create_file(dev, &dev_attr_crt_src);
+-	/* create sysfs files */
+-	ret = device_create_file(priv->dev, &dev_attr_reg_br);
 -	if (ret)
--		goto err_started_panel;
--
--	ret = device_create_file(dev, &dev_attr_fbregs_pnl);
+-		goto out_err3;
+-	ret = device_create_file(priv->dev, &dev_attr_reg_or);
 -	if (ret)
--		goto err_attached_crtsrc_file;
+-		goto out_err4;
 -
--	ret = device_create_file(dev, &dev_attr_fbregs_crt);
--	if (ret)
--		goto err_attached_pnlregs_file;
--
- 	/* we registered, return ok */
+ 	dev_info(priv->dev,
+ 		 "eLBC/GPCM device (%s) at 0x%llx, bank %d, irq=%d\n",
+ 		 priv->name, (unsigned long long)res.start, priv->bank,
+ 		 irq != NO_IRQ ? irq : -1);
+ 
  	return 0;
+-out_err4:
+-	device_remove_file(priv->dev, &dev_attr_reg_br);
+-out_err3:
+-	platform_set_drvdata(pdev, NULL);
+-	uio_unregister_device(info);
+ out_err2:
+ 	if (priv->shutdown)
+ 		priv->shutdown(info, true);
+@@ -448,8 +442,6 @@ static int uio_fsl_elbc_gpcm_remove(struct platform_device *pdev)
+ 	struct uio_info *info = platform_get_drvdata(pdev);
+ 	struct fsl_elbc_gpcm *priv = info->priv;
  
--err_attached_pnlregs_file:
--	device_remove_file(dev, &dev_attr_fbregs_pnl);
--
--err_attached_crtsrc_file:
--	device_remove_file(dev, &dev_attr_crt_src);
--
--err_started_panel:
--	unregister_framebuffer(info->fb[HEAD_PANEL]);
--	sm501_free_init_fb(info, HEAD_PANEL);
--
- err_started_crt:
- 	unregister_framebuffer(info->fb[HEAD_CRT]);
- 	sm501_free_init_fb(info, HEAD_CRT);
-@@ -2067,10 +2051,6 @@ static int sm501fb_remove(struct platform_device *pdev)
- 	struct fb_info	   *fbinfo_crt = info->fb[0];
- 	struct fb_info	   *fbinfo_pnl = info->fb[1];
- 
--	device_remove_file(&pdev->dev, &dev_attr_fbregs_crt);
--	device_remove_file(&pdev->dev, &dev_attr_fbregs_pnl);
--	device_remove_file(&pdev->dev, &dev_attr_crt_src);
--
- 	sm501_free_init_fb(info, HEAD_CRT);
- 	sm501_free_init_fb(info, HEAD_PANEL);
- 
-@@ -2234,6 +2214,7 @@ static struct platform_driver sm501fb_driver = {
- 	.resume		= sm501fb_resume,
- 	.driver		= {
- 		.name	= "sm501-fb",
-+		.dev_groups	= sm501fb_groups,
+-	device_remove_file(priv->dev, &dev_attr_reg_or);
+-	device_remove_file(priv->dev, &dev_attr_reg_br);
+ 	platform_set_drvdata(pdev, NULL);
+ 	uio_unregister_device(info);
+ 	if (priv->shutdown)
+@@ -474,6 +466,7 @@ static struct platform_driver uio_fsl_elbc_gpcm_driver = {
+ 	.driver = {
+ 		.name = "fsl,elbc-gpcm-uio",
+ 		.of_match_table = uio_fsl_elbc_gpcm_match,
++		.dev_groups = uio_fsl_elbc_gpcm_groups,
  	},
- };
- 
+ 	.probe = uio_fsl_elbc_gpcm_probe,
+ 	.remove = uio_fsl_elbc_gpcm_remove,
 -- 
 2.22.0
 
