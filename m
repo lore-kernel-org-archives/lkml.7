@@ -2,120 +2,84 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D558EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8623C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9199208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564577861;
-	bh=okXF5i5vaeExDoO318U4IQz1NUTULDtYpMjX5VybXa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jwlqFFDMmFAY+94TXRylcSXBhNAwMihYOGR7bUIpj4HGfoR+FmM9/PgQan8Y2U2SZ
-	 2aPgOiJRtdFzjufPkX2yetYmQbGtjAUWQkLnI1R6Ayo+p+Px6k6s8Uzk1gp11k1poP
-	 jRyy+bu8JwHdCPkNzu9odvlY83NrGByuajoPOvHQ=
+	by mail.kernel.org (Postfix) with ESMTP id AAE86208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfGaM5k (ORCPT
+        id S1729202AbfGaM5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 31 Jul 2019 08:57:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41919 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727500AbfGaM5k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 08:57:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbfGaM5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:57:40 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34DE2206B8;
-        Wed, 31 Jul 2019 12:57:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564577859;
-        bh=okXF5i5vaeExDoO318U4IQz1NUTULDtYpMjX5VybXa8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0gNz/z2N2FVKJSq5nKsfxQ6jkM5bXwbk5ejbg/oueGFf+66HxtP1VObGp+PPHvXcT
-         FCqoVb+UTvs3fMs+tQ9QtSOVfexkt+fZ9rSzwg53vqD9CtvotI1ILU8g0mcNCNOeBK
-         w8h++X9My6pAOdZdbUIMywBPN0q2a84InCI2zQ6U=
-Date:   Wed, 31 Jul 2019 13:57:33 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: debug: Make 'btc' and similar work in kdb
-Message-ID: <20190731125733.op3y5j5psuj6pet3@willie-the-truck>
-References: <20190730221800.28326-1-dianders@chromium.org>
+Received: by mail-wr1-f65.google.com with SMTP id c2so66355010wrm.8
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:57:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JZf3ntVvlrIXripUKO5rZBanmNCibf9/L/ozsw4HA8o=;
+        b=exNavQIHpfFaXKeEWSbv/N6iIlL75137KC6EHP7ffCenbG0tgpJwo5zmkn+Ol54l2I
+         yUiC9TSoX+1dvAXDJ3DcQ3N59jN+U2BkNwfzX+3h7yZVFuSQFcTPFf6rNqajxk/h9T/9
+         vQbqEo93+2yzejmuRIhRbuv4C3PRR+zsPmpKSL/ERsYhex6iPi6YO97gv3j7gnkoY+Pm
+         mW47eKV/pLOZpjxM8NkqDNws/8AWROHLb5o+OjiGNsw9oR/cgl4vLnNAyBvdfLqxJLR+
+         9zQJIXXwEnsZBKxqmixu7jVaGnu3E0ukRSFJ9lWKVbNdt8w1Tzqse3wlZtvsVmYJ/jAz
+         zOtA==
+X-Gm-Message-State: APjAAAXpLX4gtfIk5AMNaD3keAdGi0b3kgJVJA7Z7/7KdtgVO4XORfSL
+        pRRFZFA0T6O9xrzyOSoSqS3tw7VlwOE=
+X-Google-Smtp-Source: APXvYqw7bOP3kc6TQ9IqEEedb7bS/T5LWV18de5oQMupwOl7c6btl9JW5t7pYEd70NAd/6Zc55OWqA==
+X-Received: by 2002:a05:6000:12c8:: with SMTP id l8mr41721246wrx.72.1564577858774;
+        Wed, 31 Jul 2019 05:57:38 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:91e7:65e:d8cd:fdb3? ([2001:b07:6468:f312:91e7:65e:d8cd:fdb3])
+        by smtp.gmail.com with ESMTPSA id c1sm155407528wrh.1.2019.07.31.05.57.37
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 05:57:38 -0700 (PDT)
+Subject: Re: [PATCH 1/2] KVM: selftests: Implement ucall() for s390x
+To:     Thomas Huth <thuth@redhat.com>, Andrew Jones <drjones@redhat.com>
+Cc:     kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
+References: <20190730100112.18205-1-thuth@redhat.com>
+ <20190730100112.18205-2-thuth@redhat.com>
+ <20190730104807.7uzuvd52foybakgu@kamzik.brq.redhat.com>
+ <d9cb3c86-6390-3803-f2c6-d47f5c24139f@redhat.com>
+ <20190731102849.x26rdan7cddmpvhe@kamzik.brq.redhat.com>
+ <0c38beb7-7383-a7ac-13d4-9d4bde4a21bb@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <f7a103fa-51ef-533d-d3a4-7764fb742e44@redhat.com>
+Date:   Wed, 31 Jul 2019 14:57:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730221800.28326-1-dianders@chromium.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <0c38beb7-7383-a7ac-13d4-9d4bde4a21bb@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
+On 31/07/19 13:16, Thomas Huth wrote:
+> Or maybe even better: Let's move this file into lib/x86_64/ and
+> lib/aarch64/ instead, since there is more different code between the
+> architectures here than common code.
 
-On Tue, Jul 30, 2019 at 03:18:00PM -0700, Douglas Anderson wrote:
-> diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-> index 43119922341f..b666210fbc75 100644
-> --- a/arch/arm64/kernel/kgdb.c
-> +++ b/arch/arm64/kernel/kgdb.c
-> @@ -148,6 +148,45 @@ sleeping_thread_to_gdb_regs(unsigned long *gdb_regs, struct task_struct *task)
->  	gdb_regs[32] = cpu_context->pc;
->  }
->  
-> +void kgdb_call_nmi_hook(void *ignored)
-> +{
-> +	struct pt_regs *regs;
-> +
-> +	/*
-> +	 * NOTE: get_irq_regs() is supposed to get the registers from
-> +	 * before the IPI interrupt happened and so is supposed to
-> +	 * show where the processor was.  In some situations it's
-> +	 * possible we might be called without an IPI, so it might be
-> +	 * safer to figure out how to make kgdb_breakpoint() work
-> +	 * properly here.
-> +	 */
-> +	regs = get_irq_regs();
-> +
-> +	/*
-> +	 * Some commands (like 'btc') assume that they can find info about
-> +	 * a task in the 'cpu_context'.  Unfortunately that's only valid
-> +	 * for sleeping tasks.  ...but let's make it work anyway by just
-> +	 * writing the registers to the right place.  This is safe because
-> +	 * nobody else is using the 'cpu_context' for a running task.
-> +	 */
-> +	current->thread.cpu_context.x19 = regs->regs[19];
-> +	current->thread.cpu_context.x20 = regs->regs[20];
-> +	current->thread.cpu_context.x21 = regs->regs[21];
-> +	current->thread.cpu_context.x22 = regs->regs[22];
-> +	current->thread.cpu_context.x23 = regs->regs[23];
-> +	current->thread.cpu_context.x24 = regs->regs[24];
-> +	current->thread.cpu_context.x25 = regs->regs[25];
-> +	current->thread.cpu_context.x26 = regs->regs[26];
-> +	current->thread.cpu_context.x27 = regs->regs[27];
-> +	current->thread.cpu_context.x28 = regs->regs[28];
-> +	current->thread.cpu_context.fp = regs->regs[29];
-> +
-> +	current->thread.cpu_context.sp = regs->sp;
-> +	current->thread.cpu_context.pc = regs->pc;
-> +
-> +	kgdb_nmicallback(raw_smp_processor_id(), regs);
-> +}
+All good solutions, just choose one. :))
 
-This is really gross... :/
-
-Can you IPI the other CPUs instead and have them backtrace locally, like we
-do for things like magic sysrq (sysrq_handle_showallcpus())?
-
-Will
+Paolo
