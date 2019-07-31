@@ -2,66 +2,97 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A890BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877E1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8220B20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603FF20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfGaHl3 (ORCPT
+        id S1727474AbfGaHmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 03:41:29 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35522 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726248AbfGaHl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 03:41:29 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7408DE2C8C3B3B880C43;
-        Wed, 31 Jul 2019 15:41:27 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 15:41:20 +0800
-Subject: Re: [PATCH 09/22] staging: erofs: clean up shrinker stuffs
-To:     Gao Xiang <gaoxiang25@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     <linux-erofs@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>, <weidu.du@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190729065159.62378-1-gaoxiang25@huawei.com>
- <20190729065159.62378-10-gaoxiang25@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <633ea8ac-c502-68dd-e0b0-b618e9195a43@huawei.com>
-Date:   Wed, 31 Jul 2019 15:41:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 31 Jul 2019 03:42:00 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:7260 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfGaHmA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 03:42:00 -0400
+Received: from localhost.localdomain (10.28.8.29) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 31 Jul 2019
+ 15:42:34 +0800
+From:   chunguo feng <chunguo.feng@amlogic.com>
+To:     <lgirdwood@gmail.com>
+CC:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <RyanS.Lee@maximintegrated.com>, <bleung@chromium.org>,
+        <pierre-louis.bossart@linux.intel.com>, <grundler@chromium.org>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <chunguo.feng@amlogic.com>
+Subject: [PATCH] ASoC: max98373: add  88200 and 96000 sampling rate support
+Date:   Wed, 31 Jul 2019 15:41:56 +0800
+Message-ID: <20190731074156.5620-1-chunguo.feng@amlogic.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190729065159.62378-10-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.28.8.29]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/29 14:51, Gao Xiang wrote:
-> - rename erofs_register_super / erofs_unregister_super
->   to erofs_shrinker_register / erofs_shrinker_unregister;
-> - fold the only erofs_shrink_workstation external call
->   to erofs_shrinker_unregister;
-> - localize erofs_shrink_workstation;
-> - localize erofs_shrinker_info by introducing
->   erofs_init_shrinker and erofs_exit_shrinker.
-> 
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+From: fengchunguo <chunguo.feng@amlogic.com>
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+88200 and 96000 sampling rate was not enabled on driver, so can't be played.
 
-Thanks,
+The error information:
+max98373 3-0031：rate 96000 not supported
+max98373 3-0031：ASoC: can't set max98373-aif1 hw params: -22
+
+Signed-off-by: fengchunguo <chunguo.feng@amlogic.com>
+---
+ sound/soc/codecs/max98373.c | 6 ++++++
+ sound/soc/codecs/max98373.h | 2 ++
+ 2 files changed, 8 insertions(+)
+ mode change 100644 => 100755 sound/soc/codecs/max98373.c
+ mode change 100644 => 100755 sound/soc/codecs/max98373.h
+
+diff --git a/sound/soc/codecs/max98373.c b/sound/soc/codecs/max98373.c
+old mode 100644
+new mode 100755
+index 528695cd6a1c..8c601a3ebc27
+--- a/sound/soc/codecs/max98373.c
++++ b/sound/soc/codecs/max98373.c
+@@ -267,6 +267,12 @@ static int max98373_dai_hw_params(struct snd_pcm_substream *substream,
+ 	case 48000:
+ 		sampling_rate = MAX98373_PCM_SR_SET1_SR_48000;
+ 		break;
++	case 88200:
++		sampling_rate = MAX98373_PCM_SR_SET1_SR_88200;
++		break;
++	case 96000:
++		sampling_rate = MAX98373_PCM_SR_SET1_SR_96000;
++		break;
+ 	default:
+ 		dev_err(component->dev, "rate %d not supported\n",
+ 			params_rate(params));
+diff --git a/sound/soc/codecs/max98373.h b/sound/soc/codecs/max98373.h
+old mode 100644
+new mode 100755
+index f6a37aa02f26..a59e51355a84
+--- a/sound/soc/codecs/max98373.h
++++ b/sound/soc/codecs/max98373.h
+@@ -130,6 +130,8 @@
+ #define MAX98373_PCM_SR_SET1_SR_32000 (0x6 << 0)
+ #define MAX98373_PCM_SR_SET1_SR_44100 (0x7 << 0)
+ #define MAX98373_PCM_SR_SET1_SR_48000 (0x8 << 0)
++#define MAX98373_PCM_SR_SET1_SR_88200 (0x9 << 0)
++#define MAX98373_PCM_SR_SET1_SR_96000 (0xA << 0)
+ 
+ /* MAX98373_R2028_PCM_SR_SETUP_2 */
+ #define MAX98373_PCM_SR_SET2_SR_MASK (0xF << 4)
+-- 
+2.22.0
+
