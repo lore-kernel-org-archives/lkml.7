@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0B4C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86636C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD0120449
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653D820449
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbfGaXfl (ORCPT
+        id S1730830AbfGaXfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:35:41 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:39844 "EHLO ale.deltatee.com"
+        Wed, 31 Jul 2019 19:35:43 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39848 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfGaXfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730791AbfGaXfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 19:35:41 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hsy8B-0003W5-Ki; Wed, 31 Jul 2019 17:35:40 -0600
+        id 1hsy8B-0003W6-Ki; Wed, 31 Jul 2019 17:35:41 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hsy89-0001Gw-Ok; Wed, 31 Jul 2019 17:35:37 -0600
+        id 1hsy89-0001Gz-S1; Wed, 31 Jul 2019 17:35:37 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
@@ -34,8 +34,8 @@ Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 31 Jul 2019 17:35:32 -0600
-Message-Id: <20190731233534.4841-3-logang@deltatee.com>
+Date:   Wed, 31 Jul 2019 17:35:33 -0600
+Message-Id: <20190731233534.4841-4-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190731233534.4841-1-logang@deltatee.com>
 References: <20190731233534.4841-1-logang@deltatee.com>
@@ -44,7 +44,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me, chaitanya.kulkarni@wdc.com, maxg@mellanox.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v3 2/4] nvmet-loop: Flush nvme_delete_wq when removing the port
+Subject: [PATCH v3 3/4] nvmet-file: fix nvmet_file_flush() always returning an error
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,43 +52,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After calling nvme_loop_delete_ctrl(), the controllers will not
-yet be deleted because nvme_delete_ctrl() only schedules work
-to do the delete.
+Presently, nvmet_file_flush() always returns a call to
+errno_to_nvme_status() but that helper doesn't take into account the
+case when errno=0. So nvmet_file_flush() always returns an error code.
 
-This means a race can occur if a port is removed but there
-are still active controllers trying to access that memory.
+All other callers of errno_to_nvme_status() check for success before
+calling it.
 
-To fix this, flush the nvme_delete_wq before returning from
-nvme_loop_remove_port() so that any controllers that might
-be in the process of being deleted won't access a freed port.
+To fix this, ensure errno_to_nvme_status() returns success if the
+errno is zero. This should prevent future mistakes like this from
+happening.
 
+Fixes: c6aa3542e010 ("nvmet: add error log support for file backend")
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 ---
- drivers/nvme/target/loop.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/nvme/target/core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
-index b16dc3981c69..0940c5024a34 100644
---- a/drivers/nvme/target/loop.c
-+++ b/drivers/nvme/target/loop.c
-@@ -654,6 +654,14 @@ static void nvme_loop_remove_port(struct nvmet_port *port)
- 	mutex_lock(&nvme_loop_ports_mutex);
- 	list_del_init(&port->entry);
- 	mutex_unlock(&nvme_loop_ports_mutex);
-+
-+	/*
-+	 * Ensure any ctrls that are in the process of being
-+	 * deleted are in fact deleted before we return
-+	 * and free the port. This is to prevent active
-+	 * ctrls from using a port after it's freed.
-+	 */
-+	flush_workqueue(nvme_delete_wq);
- }
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index b86a23aa9020..3a67e244e568 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -46,6 +46,9 @@ inline u16 errno_to_nvme_status(struct nvmet_req *req, int errno)
+ 	u16 status;
  
- static const struct nvmet_fabrics_ops nvme_loop_ops = {
+ 	switch (errno) {
++	case 0:
++		status = NVME_SC_SUCCESS;
++		break;
+ 	case -ENOSPC:
+ 		req->error_loc = offsetof(struct nvme_rw_command, length);
+ 		status = NVME_SC_CAP_EXCEEDED | NVME_SC_DNR;
 -- 
 2.20.1
 
