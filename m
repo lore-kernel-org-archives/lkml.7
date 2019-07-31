@@ -2,103 +2,131 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0562C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F3FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF27A206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:32:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YNHkNtgB"
+	by mail.kernel.org (Postfix) with ESMTP id C09E120679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbfGaVcw (ORCPT
+        id S1730931AbfGaVdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:32:52 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39262 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfGaVcw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:32:52 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so31089209pls.6;
-        Wed, 31 Jul 2019 14:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=N9gPxJSS+drGx3gkBDyyqIUQ628VPY96K/YYURGM20I=;
-        b=YNHkNtgBwrh6nbpMkE8s3S3DSkUREUY/zJ2lSMLIGS/mcdDXEu61HGn0u5lfYe3SdE
-         6Go5On1veg0XK8WJi7hoYXZsPxNh6JX/ZFzk1LCQZezGU+hn7E8ciqMiM9d7WnhBcwQj
-         nDiRLpMV4Zq/V35AdaeT1sCJXmtALheS2q/h34dZDk1FD0d4udGXjbhjiVXFkebOUkwp
-         tC/WiopiafnP5mBCYfGZRFa6iihOMplq97v1Opz9zqHRdPf67wWlmGbpxJxtNgt7Te6H
-         GmKh7Hrtxj49Gps3mFuGfssRxNEXAT2EnQFktBFA4a51QQRptYLap9SIcJAHb3vhMmkb
-         WHhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=N9gPxJSS+drGx3gkBDyyqIUQ628VPY96K/YYURGM20I=;
-        b=XBc3O3OuayndMfKq5gw+uarNizVhl3NSbYQ7w/sJuCnzJgv9JAOtKyHcdyNXN17hUQ
-         opaxwjTkHYw+/1mPxTuwq5LNRC3z22IfCCtkO0DBuohV6yCue4NNR9ozenOd7YT4xoyI
-         qromiBcEnEJPp/aVlVO0ls0oBgAbuFJCFpa3RpJU51MDUKF3amUMGefcWPGfYsRpE4Ke
-         ObeKXjdorMRCkhDvtjefK1IQOkMSFEwHs+ZPS4R2lo/ObZMM1mpS1nlMgNSRBlyTG78h
-         3az5yw/GHZ2qD0hyR576MTvws+r9cNiqcJ9hQ57dANT+vLlFz2eLD6wEc2iKinaJasOi
-         QN/A==
-X-Gm-Message-State: APjAAAUrKYtNfp3gzm5FU1GmjYh5tIs00EW/7NXnau2D2J+NFUHivT2R
-        CAn+e+UC02v2JNtxP9bfPSpp/J0XgBY=
-X-Google-Smtp-Source: APXvYqwtPtb7EptjDKSGnhnZQetheDAKXUj8SLRER2Ll27IMu2RKc7zxzE2dlBUODNwFvzF3lXVDfA==
-X-Received: by 2002:a17:902:6b85:: with SMTP id p5mr118280098plk.225.1564608771566;
-        Wed, 31 Jul 2019 14:32:51 -0700 (PDT)
-Received: from [192.168.1.4] (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id i7sm2309345pjk.24.2019.07.31.14.32.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 14:32:50 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-X-Google-Original-From: Mark Balantzyan <mbalantz@exun.local>
-Date:   Wed, 31 Jul 2019 14:32:46 -0700 (PDT)
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-cc:     Mark Balantzyan <mbalant3@gmail.com>,
-        ezequiel@vanguardiasur.com.ar, linux-media@vger.kernel.org,
+        Wed, 31 Jul 2019 17:33:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40966 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728928AbfGaVdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 17:33:31 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B44F630872C2;
+        Wed, 31 Jul 2019 21:33:30 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5CE355D9C9;
+        Wed, 31 Jul 2019 21:33:28 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 15:33:27 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media input infrastructure:tw686x: Fix of possibleinconsistent
- memory deallocation and/or race condition by implementation of custom
- video_device_release function in tw686x driver
-In-Reply-To: <40d14e23-636e-ed8a-6608-99427f5b8169@xs4all.nl>
-Message-ID: <alpine.OSX.2.21.1907311431410.3567@exun.local>
-References: <alpine.DEB.2.21.1907291256080.16959@mbalantz-desktop> <40d14e23-636e-ed8a-6608-99427f5b8169@xs4all.nl>
-User-Agent: Alpine 2.21 (OSX 202 2017-01-01)
+Subject: Re: [PATCH] vfio: re-arrange vfio region definitions
+Message-ID: <20190731153327.7d65b90d@x1.home>
+In-Reply-To: <05e97697-70a3-51dd-dd2a-4a8bf6c380bb@redhat.com>
+References: <20190717114956.16263-1-cohuck@redhat.com>
+        <05e97697-70a3-51dd-dd2a-4a8bf6c380bb@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 31 Jul 2019 21:33:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans, all,
+On Wed, 31 Jul 2019 20:47:07 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
 
-Sorry for the poor patching, I am a student and as you may tell still new 
-to this system. At the time of the patching, I wasn't fully informed of 
-all the requirements that go into such things, and am still learning.
+> Hi Connie,
+> 
+> On 7/17/19 1:49 PM, Cornelia Huck wrote:
+> > It is easy to miss already defined region types. Let's re-arrange
+> > the definitions a bit and add more comments to make it hopefully
+> > a bit clearer.
+> > 
+> > No functional change.
+> > 
+> > Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+> > ---
+> >  include/uapi/linux/vfio.h | 19 ++++++++++++-------
+> >  1 file changed, 12 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > index 8f10748dac79..d9bcf40240be 100644
+> > --- a/include/uapi/linux/vfio.h
+> > +++ b/include/uapi/linux/vfio.h
+> > @@ -295,15 +295,23 @@ struct vfio_region_info_cap_type {
+> >  	__u32 subtype;	/* type specific */
+> >  };
+> >  
+> > +/*
+> > + * List of region types, global per bus driver.
+> > + * If you introduce a new type, please add it here.
+> > + */
+> > +
+> > +/* PCI region type containing a PCI vendor part */
+> >  #define VFIO_REGION_TYPE_PCI_VENDOR_TYPE	(1 << 31)
+> >  #define VFIO_REGION_TYPE_PCI_VENDOR_MASK	(0xffff)
+> > +#define VFIO_REGION_TYPE_GFX                    (1)
+> > +#define VFIO_REGION_TYPE_CCW			(2)
+> >  
+> > -/* 8086 Vendor sub-types */
+> > +/* 8086 vendor PCI sub-types */
+> >  #define VFIO_REGION_SUBTYPE_INTEL_IGD_OPREGION	(1)
+> >  #define VFIO_REGION_SUBTYPE_INTEL_IGD_HOST_CFG	(2)
+> >  #define VFIO_REGION_SUBTYPE_INTEL_IGD_LPC_CFG	(3)
+> >  
+> > -#define VFIO_REGION_TYPE_GFX                    (1)
+> > +/* GFX sub-types */
+> >  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
+> >  
+> >  /**
+> > @@ -353,20 +361,17 @@ struct vfio_region_gfx_edid {
+> >  #define VFIO_DEVICE_GFX_LINK_STATE_DOWN  2
+> >  };
+> >  
+> > -#define VFIO_REGION_TYPE_CCW			(2)
+> >  /* ccw sub-types */
+> >  #define VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD	(1)
+> >  
+> > +/* 10de vendor PCI sub-types */
+> >  /*
+> > - * 10de vendor sub-type
+> > - *
+> >   * NVIDIA GPU NVlink2 RAM is coherent RAM mapped onto the host address space.
+> >   */
+> >  #define VFIO_REGION_SUBTYPE_NVIDIA_NVLINK2_RAM	(1)
+> >  
+> > +/* 1014 vendor PCI sub-types*/
+> >  /*
+> > - * 1014 vendor sub-type  
+> Maybe the 10de vendor sub-type and 1014 vendor sub-type could be put
+> just after /* 8086 vendor PCI sub-types */
+> 
+> More generally if it were possible to leave the subtypes close to their
+> parent type too, this would be beneficial I think.
+> 
+> Besides that becomes sensible to put all those definitions together.
 
-Would it be alright if I submit a report instead? In order to, I am 
-(still, sorry) trying to understand the issue at hand. How in fact may the 
-release() callback be overridden (by a tw686x-specific function) to free 
-the dma memory and call video_device_release()? To my understanding at the 
-time, this was merely a re-implementation of video_device_release with 
-said requirements and subtraction of extra features from 
-tw686x_video_free()..
+Any sort of consolidation or grouping is an improvement here, thanks
+for taking this on, Connie!  I haven't started my branch yet for v5.4,
+but if you want to iterate to something agreeable, I'll happily take
+the end product :)  The original patch here looks like a good degree of
+consolidating the type definitions and improving consistency without
+moving large chunks of code.  Thanks,
 
- 	This release() callback is called by the V4L2 framework when the last user
- 	of the device closes its filehandle, so that's a good point to free all
- 	the memory. Doing it earlier (as the current code does) runs the risk that someone might
- 	still access that memory, and you don't want that.
-
-Yes, I definitely don't want that. :)
-
-Thank you,
-Mark
-
+Alex
