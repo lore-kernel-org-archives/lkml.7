@@ -2,188 +2,158 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CF1C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CEFC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C07C20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="NRoJL3bi"
+	by mail.kernel.org (Postfix) with ESMTP id 62234208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbfGaPYm (ORCPT
+        id S1730161AbfGaPYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:24:42 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38828 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfGaPXu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:23:50 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r12so31268224edo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=a18UOZt3FCDvDMvgP9zldJLt6lTKwFfHbu73YInWFn4=;
-        b=NRoJL3bi5X5MHI+UHT7B1S62Fze3JOWhyFVaj3bzy32xghKUPsGgZO7GdGj/I+MGwQ
-         IcszjXoHkHLCYl9E9+S0TVZkBMexB6yUan+V+lOdKu1ZTL//k329IuqiUOHsMZt8zobx
-         DpyOBiRYKgBlkPN70qU0UyV4A9sw+9NOai6RD5k+KXVTchojnkBQ/9wvCG9xsOR3lQJH
-         25Orq3JTmZBnhwFdJDSLbIjUUACw24Q/2V5Z/1iDJXDUwr6CPtjVVjX8EN+dRQ/iWt3F
-         ajr2K45loyNYVlzJu2bXoVrUmjOiINR3+Zakf9U0MEFo74tWWpXOujPELeLbtPwG7Bf+
-         4HTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=a18UOZt3FCDvDMvgP9zldJLt6lTKwFfHbu73YInWFn4=;
-        b=SSCX6DFSNjQ5uoCotYVhRiLC/pcLf2RJSkKLbhtCFgVs16dirlKSSElDGhr62T+/LL
-         vRuSiY0LFqhbjkKXDv+02Y6oQgMq4ERi4Jagmtmxz1DLYnduwA45ns/mX1NsdlY+ue/P
-         UeFLbWFmAUoRh08X3SZdFWT1CkW2Hms0eckM/428edUGyF6Sw7+yM9n/w9YW2fDkSeF5
-         Q3oINAiN7v8nIoqkmU+yrWhhrshLbQgIzGOq9IyLJ0CX4QbMQ3GYWHlfccSAdhI2o/h1
-         d7IOvjV2hr4Lj9sBeWPlN9gzZTo4AFLGKQSNWZi/UONcz4FzHlPOWJv5a1O6jUX7/DwC
-         U7Iw==
-X-Gm-Message-State: APjAAAWYk3pjzTZi3lNKL0evzKk0qMvRCT8js559S96Z1iiXDmRIG7GJ
-        ZnrGFpyxcwgZlEkVsyEsTGg=
-X-Google-Smtp-Source: APXvYqz4eqsH2iJwU1tjXfKb0+/bNd+u2NkjVb8FXDZ8ZsSkbsVxoPTi6IlMDOoUIFCjKkMNnj7bMA==
-X-Received: by 2002:a50:b87c:: with SMTP id k57mr105890483ede.226.1564586627977;
-        Wed, 31 Jul 2019 08:23:47 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id f24sm17482856edf.30.2019.07.31.08.23.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:23:47 -0700 (PDT)
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 953461030BF; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
-To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 24/59] keys/mktme: Introduce a Kernel Key Service for MKTME
-Date:   Wed, 31 Jul 2019 18:07:38 +0300
-Message-Id: <20190731150813.26289-25-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
-References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
+        Wed, 31 Jul 2019 11:24:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36454 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730143AbfGaPYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:24:51 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B07AF89C3A;
+        Wed, 31 Jul 2019 15:15:41 +0000 (UTC)
+Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF8F019C65;
+        Wed, 31 Jul 2019 15:15:39 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     kvm@vger.kernel.org, Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Janosch Frank <frankja@linux.ibm.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Xu <peterx@redhat.com>, Andrew Jones <drjones@redhat.com>
+Subject: [PATCH v3 2/3] KVM: selftests: Implement ucall() for s390x
+Date:   Wed, 31 Jul 2019 17:15:24 +0200
+Message-Id: <20190731151525.17156-3-thuth@redhat.com>
+In-Reply-To: <20190731151525.17156-1-thuth@redhat.com>
+References: <20190731151525.17156-1-thuth@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 31 Jul 2019 15:15:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+On s390x, we can neither exit via PIO nor MMIO, but have to use an
+instruction like DIAGNOSE. Now that ucall() is implemented, we can
+use it in the sync_reg_test on s390x, too.
 
-MKTME (Multi-Key Total Memory Encryption) is a technology that allows
-transparent memory encryption in upcoming Intel platforms. MKTME will
-support multiple encryption domains, each having their own key.
-
-The MKTME key service will manage the hardware encryption keys. It
-will map Userspace Keys to Hardware KeyIDs and program the hardware
-with the user requested encryption options.
-
-Here the mapping structure is introduced, as well as the key service
-initialization and registration.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Andrew Jones <drjones@redhat.com>
+Signed-off-by: Thomas Huth <thuth@redhat.com>
 ---
- security/keys/Makefile     |  1 +
- security/keys/mktme_keys.c | 60 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
- create mode 100644 security/keys/mktme_keys.c
+ tools/testing/selftests/kvm/Makefile          |  2 +-
+ tools/testing/selftests/kvm/lib/s390x/ucall.c | 56 +++++++++++++++++++
+ .../selftests/kvm/s390x/sync_regs_test.c      |  6 +-
+ 3 files changed, 61 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/lib/s390x/ucall.c
 
-diff --git a/security/keys/Makefile b/security/keys/Makefile
-index 9cef54064f60..28799be801a9 100644
---- a/security/keys/Makefile
-+++ b/security/keys/Makefile
-@@ -30,3 +30,4 @@ obj-$(CONFIG_ASYMMETRIC_KEY_TYPE) += keyctl_pkey.o
- obj-$(CONFIG_BIG_KEYS) += big_key.o
- obj-$(CONFIG_TRUSTED_KEYS) += trusted.o
- obj-$(CONFIG_ENCRYPTED_KEYS) += encrypted-keys/
-+obj-$(CONFIG_X86_INTEL_MKTME) += mktme_keys.o
-diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index a51e3b83df40..75ea1ecbf85a 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -10,7 +10,7 @@ UNAME_M := $(shell uname -m)
+ LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
+ LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/ucall.c
+ LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
+-LIBKVM_s390x = lib/s390x/processor.c
++LIBKVM_s390x = lib/s390x/processor.c lib/s390x/ucall.c
+ 
+ TEST_GEN_PROGS_x86_64 = x86_64/cr4_cpuid_sync_test
+ TEST_GEN_PROGS_x86_64 += x86_64/evmcs_test
+diff --git a/tools/testing/selftests/kvm/lib/s390x/ucall.c b/tools/testing/selftests/kvm/lib/s390x/ucall.c
 new file mode 100644
-index 000000000000..d262e0f348e4
+index 000000000000..fd589dc9bfab
 --- /dev/null
-+++ b/security/keys/mktme_keys.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-3.0
++++ b/tools/testing/selftests/kvm/lib/s390x/ucall.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ucall support. A ucall is a "hypercall to userspace".
++ *
++ * Copyright (C) 2019 Red Hat, Inc.
++ */
++#include "kvm_util.h"
 +
-+/* Documentation/x86/mktme/ */
-+
-+#include <linux/init.h>
-+#include <linux/key.h>
-+#include <linux/key-type.h>
-+#include <linux/mm.h>
-+#include <keys/user-type.h>
-+
-+#include "internal.h"
-+
-+static unsigned int mktme_available_keyids;  /* Free Hardware KeyIDs */
-+
-+enum mktme_keyid_state {
-+	KEYID_AVAILABLE,	/* Available to be assigned */
-+	KEYID_ASSIGNED,		/* Assigned to a userspace key */
-+	KEYID_REF_KILLED,	/* Userspace key has been destroyed */
-+	KEYID_REF_RELEASED,	/* Last reference is released */
-+};
-+
-+/* 1:1 Mapping between Userspace Keys (struct key) and Hardware KeyIDs */
-+struct mktme_mapping {
-+	struct key		*key;
-+	enum mktme_keyid_state	state;
-+};
-+
-+static struct mktme_mapping *mktme_map;
-+
-+struct key_type key_type_mktme = {
-+	.name		= "mktme",
-+	.describe	= user_describe,
-+};
-+
-+static int __init init_mktme(void)
++void ucall_init(struct kvm_vm *vm, void *arg)
 +{
-+	int ret;
-+
-+	/* Verify keys are present */
-+	if (mktme_nr_keyids() < 1)
-+		return 0;
-+
-+	mktme_available_keyids = mktme_nr_keyids();
-+
-+	/* Mapping of Userspace Keys to Hardware KeyIDs */
-+	mktme_map = kvzalloc((sizeof(*mktme_map) * (mktme_nr_keyids() + 1)),
-+			     GFP_KERNEL);
-+	if (!mktme_map)
-+		return -ENOMEM;
-+
-+	ret = register_key_type(&key_type_mktme);
-+	if (!ret)
-+		return ret;			/* SUCCESS */
-+
-+	kvfree(mktme_map);
-+
-+	return -ENOMEM;
 +}
 +
-+late_initcall(init_mktme);
++void ucall_uninit(struct kvm_vm *vm)
++{
++}
++
++void ucall(uint64_t cmd, int nargs, ...)
++{
++	struct ucall uc = {
++		.cmd = cmd,
++	};
++	va_list va;
++	int i;
++
++	nargs = nargs <= UCALL_MAX_ARGS ? nargs : UCALL_MAX_ARGS;
++
++	va_start(va, nargs);
++	for (i = 0; i < nargs; ++i)
++		uc.args[i] = va_arg(va, uint64_t);
++	va_end(va);
++
++	/* Exit via DIAGNOSE 0x501 (normally used for breakpoints) */
++	asm volatile ("diag 0,%0,0x501" : : "a"(&uc) : "memory");
++}
++
++uint64_t get_ucall(struct kvm_vm *vm, uint32_t vcpu_id, struct ucall *uc)
++{
++	struct kvm_run *run = vcpu_state(vm, vcpu_id);
++	struct ucall ucall = {};
++
++	if (run->exit_reason == KVM_EXIT_S390_SIEIC &&
++	    run->s390_sieic.icptcode == 4 &&
++	    (run->s390_sieic.ipa >> 8) == 0x83 &&    /* 0x83 means DIAGNOSE */
++	    (run->s390_sieic.ipb >> 16) == 0x501) {
++		int reg = run->s390_sieic.ipa & 0xf;
++
++		memcpy(&ucall, addr_gva2hva(vm, run->s.regs.gprs[reg]),
++		       sizeof(ucall));
++
++		vcpu_run_complete_io(vm, vcpu_id);
++		if (uc)
++			memcpy(uc, &ucall, sizeof(ucall));
++	}
++
++	return ucall.cmd;
++}
+diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+index e85ff0d69548..bbc93094519b 100644
+--- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
++++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+@@ -25,9 +25,11 @@
+ 
+ static void guest_code(void)
+ {
++	register u64 stage asm("11") = 0;
++
+ 	for (;;) {
+-		asm volatile ("diag 0,0,0x501");
+-		asm volatile ("ahi 11,1");
++		GUEST_SYNC(0);
++		asm volatile ("ahi %0,1" : : "r"(stage));
+ 	}
+ }
+ 
 -- 
 2.21.0
 
