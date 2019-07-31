@@ -5,223 +5,267 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2522AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DDBC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E266A21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B492216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bajk5gYe"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MBLYy0La"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfGaWSc (ORCPT
+        id S1731394AbfGaWSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:18:32 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:41771 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729954AbfGaWRb (ORCPT
+        Wed, 31 Jul 2019 18:18:39 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:55037 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731390AbfGaWRa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:17:31 -0400
-Received: by mail-pg1-f201.google.com with SMTP id b18so43751593pgg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:17:30 -0700 (PDT)
+        Wed, 31 Jul 2019 18:17:30 -0400
+Received: by mail-pf1-f202.google.com with SMTP id y66so44180766pfb.21
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:17:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Ogy4z5xXdkGcZVx/gotBD44dFgIvUZxytASg1dmnrz4=;
-        b=Bajk5gYeO0raa2iJAXLUTeo1rNux2thWTyxy5cP2BZX9rVUFcLLwBM1Ihyr4IW6Uxu
-         OVe2hKqMjonh2PlJah6B/xRvCxOEBYAVBGbGtG5SxGXbvgbox/ljX9f23uTjmk8CdtHj
-         OpACdBgg8QTDRBPMzNVaG3NusYWPWtzuSDBMG1K3yU06iS9f0IVwyo5+DUjxp1ZaqLKn
-         2PqUsKDMn3y2VNU/ELITmp+dzRb2ku3sU7bSFIAZC3m3mAJLzfVbP0Edc+IQpH/qk47X
-         2UowsAKC5Wju2BwdPCp4ZZhOFCQRE0tSdOQOXnHroYpPv2eDlt8O+buvUZBVcS1GIREQ
-         Qz/w==
+        bh=OnKmoN0QgYSG+HpqRnEbvKh0k0jhPRahto7anqATcaM=;
+        b=MBLYy0Lak0T38MDEzzWKAgDySK8T5Xee27t2eytVgdYcoJcbIJRx9yjEgqhs8DUAkp
+         Tklz3IFprKSCdhOTzvEBuvNiylpo36JHm3jwD8+HXz/tN3s64ujHSdhBhJCHdmSM9LFy
+         ieSo4vwLlJJ+dpklOoBzvOFbB/Kx8fkplEW7J2iXppF30oGmZFr1s6WxiSraehzXBrhS
+         lmxhvLEz3ujZVHaq4whOy6RajL1l5PuRE+Sagt69ZpY+D7acCbcRPiUAr3sbMw8fj1Hx
+         ry6EXCP8M4ZQsAL0poje4iajUWLp0XdkEK34/C8y2wtEiVO/+BIp1AY+i40rHeMkFgqC
+         8vmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Ogy4z5xXdkGcZVx/gotBD44dFgIvUZxytASg1dmnrz4=;
-        b=EjqXYwW+RZXn8QLAQOcDSFx7agpjv1lus+3d4WAMn1F6UbwCx3XPzrcFRZITwv24Dm
-         V0iMz3kjmNfWmaMem9oygTRXSYg++JSvlgbcniqNElS+Ai/Cy8hb6qbXpP7ySjXxlYFx
-         4daEjs18HnTUBmqfhGnwnwdu0jYtWiQr/9FUPozTZ+fnr9RsZzgU3s1xk4sTU11kapGV
-         DrTmpCGgVVPtH2ADh7RMRdVgivjnVlbkPtF4N6NGKKyvTBIghDJftUdK9GSaDASPUwvb
-         TR5bjUcgYNOZTDbZyFLcmI9ovVIek7SiCxkm9moy5bl6WVpdOIOr4pMWszCCgRbld0yW
-         Ut8g==
-X-Gm-Message-State: APjAAAX8bM4JCfw0D6WvOpqXxtXSBgfPlr2IpzY/l0Teci9/HYZO2cJh
-        LUJwpuHgkePla2Eg1o8s1W3VYPBwo82CKWVAjhkvsQ==
-X-Google-Smtp-Source: APXvYqxZSsn4zOtqAMIbC8IIUJ8BgotlRvfyfmjrcz+Kzfba+ryUsIe0e+54iON0Ue9ORs3wFILRx4yWxTev9k6Xexi4Gg==
-X-Received: by 2002:a63:6c7:: with SMTP id 190mr114475501pgg.7.1564611450073;
- Wed, 31 Jul 2019 15:17:30 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 15:16:13 -0700
-In-Reply-To: <20190731221617.234725-1-matthewgarrett@google.com>
-Message-Id: <20190731221617.234725-26-matthewgarrett@google.com>
+        bh=OnKmoN0QgYSG+HpqRnEbvKh0k0jhPRahto7anqATcaM=;
+        b=nuXGIMnEIUXcQWoKeshlsVrmOMs1VgCs2A0iyl8pMb6Ha3ookz7aMMhhd0cgbS7AH3
+         dl3K7N8Mmi9M/KXnampWUp0zk1BZbVEMIONAYdczmbtiSw9PCs5mJa1hDGs/eLC3VnCc
+         OlnmxwmVYUlfBBOvOf6Lnx9M9fhZLqjJiT7vjSHjHHCjAwKKktq6Vi5Y7N8+hIUjJBEk
+         8jss4xBD5v5Zd2VF+ZUz7LJhBhCNxOIzYK2paM+WfbtB1mJPZJt/MN8YbksnuWMKPjgU
+         zwbVVBB9bH3/AG7yR/edRQfMXtK6rs7Rz/T7wfpVQVyz6Ej8HaOWVfvyzpGeYvYlSr/x
+         Pwcg==
+X-Gm-Message-State: APjAAAX2QkiTY5JPZQMVG88dbmJUjhXyd+r1LC3iG6GQKY5KIMzBicsh
+        JSu4DCx32beXeWnnfR0d2zGW+mt2iqXWkhY=
+X-Google-Smtp-Source: APXvYqzMv4915VXwnfJXYFfzVew/8he9vwTr2Dio4L8xulwuu4Ymt7bDCs1Xan1Hp5j+XU+d4su4AIE4KZCJecA=
+X-Received: by 2002:a65:5188:: with SMTP id h8mr4948711pgq.294.1564611449041;
+ Wed, 31 Jul 2019 15:17:29 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 15:17:14 -0700
+In-Reply-To: <20190731221721.187713-1-saravanak@google.com>
+Message-Id: <20190731221721.187713-2-saravanak@google.com>
 Mime-Version: 1.0
-References: <20190731221617.234725-1-matthewgarrett@google.com>
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-Subject: [PATCH V37 25/29] kexec: Allow kexec_file() with appropriate IMA
- policy when locked down
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     jmorris@namei.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org
+References: <20190731221721.187713-1-saravanak@google.com>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
+Subject: [PATCH v9 1/7] driver core: Add support for linking devices during
+ device addition
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        David Collins <collinsd@codeaurora.org>,
+        kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Systems in lockdown mode should block the kexec of untrusted kernels.
-For x86 and ARM we can ensure that a kernel is trustworthy by validating
-a PE signature, but this isn't possible on other architectures. On those
-platforms we can use IMA digital signatures instead. Add a function to
-determine whether IMA has or will verify signatures for a given event type,
-and if so permit kexec_file() even if the kernel is otherwise locked down.
-This is restricted to cases where CONFIG_INTEGRITY_TRUSTED_KEYRING is set
-in order to prevent an attacker from loading additional keys at runtime.
+When devices are added, the bus might want to create device links to track
+functional dependencies between supplier and consumer devices. This
+tracking of supplier-consumer relationship allows optimizing device probe
+order and tracking whether all consumers of a supplier are active. The
+add_links bus callback is added to support this.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Acked-by: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc: linux-integrity@vger.kernel.org
+However, when consumer devices are added, they might not have a supplier
+device to link to despite needing mandatory resources/functionality from
+one or more suppliers. A waiting_for_suppliers list is created to track
+such consumers and retry linking them when new devices get added.
+
+Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- include/linux/ima.h                 |  9 ++++++
- kernel/kexec_file.c                 | 12 +++++--
- security/integrity/ima/ima.h        |  2 ++
- security/integrity/ima/ima_main.c   |  2 +-
- security/integrity/ima/ima_policy.c | 50 +++++++++++++++++++++++++++++
- 5 files changed, 72 insertions(+), 3 deletions(-)
+ drivers/base/core.c    | 83 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/device.h | 14 +++++++
+ 2 files changed, 97 insertions(+)
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index a20ad398d260..1c37f17f7203 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -131,4 +131,13 @@ static inline int ima_inode_removexattr(struct dentry *dentry,
- 	return 0;
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 950e3bd0f45c..62d416e667bd 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -44,6 +44,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
+ #endif
+ 
+ /* Device links support. */
++static LIST_HEAD(wait_for_suppliers);
++static DEFINE_MUTEX(wfs_lock);
+ 
+ #ifdef CONFIG_SRCU
+ static DEFINE_MUTEX(device_links_lock);
+@@ -416,6 +418,51 @@ struct device_link *device_link_add(struct device *consumer,
  }
- #endif /* CONFIG_IMA_APPRAISE */
-+
-+#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
-+extern bool ima_appraise_signature(enum kernel_read_file_id func);
-+#else
-+static inline bool ima_appraise_signature(enum kernel_read_file_id func)
+ EXPORT_SYMBOL_GPL(device_link_add);
+ 
++/**
++ * device_link_wait_for_supplier - Mark device as waiting for supplier
++ * @consumer: Consumer device
++ *
++ * Marks the consumer device as waiting for suppliers to become available. The
++ * consumer device will never be probed until it's unmarked as waiting for
++ * suppliers. The caller is responsible for adding the link to the supplier
++ * once the supplier device is present.
++ *
++ * This function is NOT meant to be called from the probe function of the
++ * consumer but rather from code that creates/adds the consumer device.
++ */
++static void device_link_wait_for_supplier(struct device *consumer)
 +{
-+	return false;
++	mutex_lock(&wfs_lock);
++	list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
++	mutex_unlock(&wfs_lock);
 +}
-+#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
- #endif /* _LINUX_IMA_H */
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index dd06f1070d66..13c9960a5860 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -228,9 +228,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 			goto out;
- 		}
- 
--		ret = security_locked_down(LOCKDOWN_KEXEC);
--		if (ret)
-+		ret = 0;
 +
-+		/* If IMA is guaranteed to appraise a signature on the kexec
-+		 * image, permit it even if the kernel is otherwise locked
-+		 * down.
-+		 */
-+		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
-+		    security_locked_down(LOCKDOWN_KEXEC)) {
-+			ret = -EPERM;
- 			goto out;
-+		}
++/**
++ * device_link_check_waiting_consumers - Try to unmark waiting consumers
++ *
++ * Loops through all consumers waiting on suppliers and tries to add all their
++ * supplier links. If that succeeds, the consumer device is unmarked as waiting
++ * for suppliers. Otherwise, they are left marked as waiting on suppliers,
++ *
++ * The add_links bus callback is expected to return 0 if it has found and added
++ * all the supplier links for the consumer device. It should return an error if
++ * it isn't able to do so.
++ *
++ * The caller of device_link_wait_for_supplier() is expected to call this once
++ * it's aware of potential suppliers becoming available.
++ */
++static void device_link_check_waiting_consumers(void)
++{
++	struct device *dev, *tmp;
++
++	mutex_lock(&wfs_lock);
++	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
++				 links.needs_suppliers)
++		if (!dev->bus->add_links(dev))
++			list_del_init(&dev->links.needs_suppliers);
++	mutex_unlock(&wfs_lock);
++}
++
+ static void device_link_free(struct device_link *link)
+ {
+ 	while (refcount_dec_not_one(&link->rpm_active))
+@@ -550,6 +597,19 @@ int device_links_check_suppliers(struct device *dev)
+ 	struct device_link *link;
+ 	int ret = 0;
  
- 		break;
++	/*
++	 * If a device is waiting for one or more suppliers (in
++	 * wait_for_suppliers list), it is not ready to probe yet. So just
++	 * return -EPROBE_DEFER without having to check the links with existing
++	 * suppliers.
++	 */
++	mutex_lock(&wfs_lock);
++	if (!list_empty(&dev->links.needs_suppliers)) {
++		mutex_unlock(&wfs_lock);
++		return -EPROBE_DEFER;
++	}
++	mutex_unlock(&wfs_lock);
++
+ 	device_links_write_lock();
  
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 011b91c79351..64dcb11cf444 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -113,6 +113,8 @@ struct ima_kexec_hdr {
- 	u64 count;
+ 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+@@ -834,6 +894,10 @@ static void device_links_purge(struct device *dev)
+ {
+ 	struct device_link *link, *ln;
+ 
++	mutex_lock(&wfs_lock);
++	list_del(&dev->links.needs_suppliers);
++	mutex_unlock(&wfs_lock);
++
+ 	/*
+ 	 * Delete all of the remaining links from this device to any other
+ 	 * devices (either consumers or suppliers).
+@@ -1698,6 +1762,7 @@ void device_initialize(struct device *dev)
+ #endif
+ 	INIT_LIST_HEAD(&dev->links.consumers);
+ 	INIT_LIST_HEAD(&dev->links.suppliers);
++	INIT_LIST_HEAD(&dev->links.needs_suppliers);
+ 	dev->links.status = DL_DEV_NO_DRIVER;
+ }
+ EXPORT_SYMBOL_GPL(device_initialize);
+@@ -2133,6 +2198,24 @@ int device_add(struct device *dev)
+ 					     BUS_NOTIFY_ADD_DEVICE, dev);
+ 
+ 	kobject_uevent(&dev->kobj, KOBJ_ADD);
++
++	/*
++	 * Check if any of the other devices (consumers) have been waiting for
++	 * this device (supplier) to be added so that they can create a device
++	 * link to it.
++	 *
++	 * This needs to happen after device_pm_add() because device_link_add()
++	 * requires the supplier be registered before it's called.
++	 *
++	 * But this also needs to happe before bus_probe_device() to make sure
++	 * waiting consumers can link to it before the driver is bound to the
++	 * device and the driver sync_state callback is called for this device.
++	 */
++	device_link_check_waiting_consumers();
++
++	if (dev->bus && dev->bus->add_links && dev->bus->add_links(dev))
++		device_link_wait_for_supplier(dev);
++
+ 	bus_probe_device(dev);
+ 	if (parent)
+ 		klist_add_tail(&dev->p->knode_parent,
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 5093691f56e7..dbcf1de5e9fa 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -78,6 +78,17 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
+  *		-EPROBE_DEFER it will queue the device for deferred probing.
+  * @uevent:	Called when a device is added, removed, or a few other things
+  *		that generate uevents to add the environment variables.
++ * @add_links:	Called, perhaps multiple times per device, after a device is
++ *		added to this bus.  The function is expected to create device
++ *		links to all the suppliers of the input device that are
++ *		available at the time this function is called.  As in, the
++ *		function should NOT stop at the first failed device link if
++ *		other unlinked supplier devices are present in the system.
++ *
++ *		Return 0 if device links have been successfully created to all
++ *		the suppliers of this device.  Return an error if some of the
++ *		suppliers are not yet available and this function needs to be
++ *		reattempted in the future.
+  * @probe:	Called when a new device or driver add to this bus, and callback
+  *		the specific driver's probe to initial the matched device.
+  * @remove:	Called when a device removed from this bus.
+@@ -122,6 +133,7 @@ struct bus_type {
+ 
+ 	int (*match)(struct device *dev, struct device_driver *drv);
+ 	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
++	int (*add_links)(struct device *dev);
+ 	int (*probe)(struct device *dev);
+ 	int (*remove)(struct device *dev);
+ 	void (*shutdown)(struct device *dev);
+@@ -895,11 +907,13 @@ enum dl_dev_state {
+  * struct dev_links_info - Device data related to device links.
+  * @suppliers: List of links to supplier devices.
+  * @consumers: List of links to consumer devices.
++ * @needs_suppliers: Hook to global list of devices waiting for suppliers.
+  * @status: Driver status information.
+  */
+ struct dev_links_info {
+ 	struct list_head suppliers;
+ 	struct list_head consumers;
++	struct list_head needs_suppliers;
+ 	enum dl_dev_state status;
  };
  
-+extern const int read_idmap[];
-+
- #ifdef CONFIG_HAVE_IMA_KEXEC
- void ima_load_kexec_buffer(void);
- #else
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 584019728660..b9f57503af2c 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -502,7 +502,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
- 	return 0;
- }
- 
--static const int read_idmap[READING_MAX_ID] = {
-+const int read_idmap[READING_MAX_ID] = {
- 	[READING_FIRMWARE] = FIRMWARE_CHECK,
- 	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
- 	[READING_MODULE] = MODULE_CHECK,
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 6df7f641ff66..827f1e33fe86 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -1456,3 +1456,53 @@ int ima_policy_show(struct seq_file *m, void *v)
- 	return 0;
- }
- #endif	/* CONFIG_IMA_READ_POLICY */
-+
-+#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
-+/*
-+ * ima_appraise_signature: whether IMA will appraise a given function using
-+ * an IMA digital signature. This is restricted to cases where the kernel
-+ * has a set of built-in trusted keys in order to avoid an attacker simply
-+ * loading additional keys.
-+ */
-+bool ima_appraise_signature(enum kernel_read_file_id id)
-+{
-+	struct ima_rule_entry *entry;
-+	bool found = false;
-+	enum ima_hooks func;
-+
-+	if (id >= READING_MAX_ID)
-+		return false;
-+
-+	func = read_idmap[id] ?: FILE_CHECK;
-+
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(entry, ima_rules, list) {
-+		if (entry->action != APPRAISE)
-+			continue;
-+
-+		/*
-+		 * A generic entry will match, but otherwise require that it
-+		 * match the func we're looking for
-+		 */
-+		if (entry->func && entry->func != func)
-+			continue;
-+
-+		/*
-+		 * We require this to be a digital signature, not a raw IMA
-+		 * hash.
-+		 */
-+		if (entry->flags & IMA_DIGSIG_REQUIRED)
-+			found = true;
-+
-+		/*
-+		 * We've found a rule that matches, so break now even if it
-+		 * didn't require a digital signature - a later rule that does
-+		 * won't override it, so would be a false positive.
-+		 */
-+		break;
-+	}
-+
-+	rcu_read_unlock();
-+	return found;
-+}
-+#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
 -- 
-2.22.0.770.g0f2c4a37fd-goog
+2.22.0.709.g102302147b-goog
 
