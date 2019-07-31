@@ -2,78 +2,249 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827F3C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47A4C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58CB820693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF2720693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:10:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nekoboi.moe header.i=@nekoboi.moe header.b="UTFq3jdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388333AbfGaNJ1 (ORCPT
+        id S2388207AbfGaNKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:09:27 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:35306 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388174AbfGaNI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:08:28 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6627F1A09E3;
-        Wed, 31 Jul 2019 15:08:26 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A4761A09DB;
-        Wed, 31 Jul 2019 15:08:26 +0200 (CEST)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0743B205F3;
-        Wed, 31 Jul 2019 15:08:25 +0200 (CEST)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: [PATCH v5 14/14] crypto: caam - change return value in case CAAM has no MDHA
-Date:   Wed, 31 Jul 2019 16:08:15 +0300
-Message-Id: <1564578495-9883-15-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1564578495-9883-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1564578495-9883-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 31 Jul 2019 09:10:00 -0400
+Received: from datenwanderung.de ([194.59.205.165]:36904 "EHLO
+        mail.nekoboi.moe" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387811AbfGaNJ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:09:59 -0400
+X-Greylist: delayed 499 seconds by postgrey-1.27 at vger.kernel.org; Wed, 31 Jul 2019 09:09:56 EDT
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: kinky_nekoboi@nekoboi.moe)
+        by mail.nekoboi.moe (Postcow) with ESMTPSA id 6D4ECB40023
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:01:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nekoboi.moe; s=dkim;
+        t=1564578095; h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:openpgp:openpgp:autocrypt:autocrypt;
+        bh=aD6+HaZbhjKnWUmHNC8+JnQCp632DukB5hVYcCQ6z9E=;
+        b=UTFq3jdZuz3hD1ekFts2oW5w9NTLjB4HhROTJeo8o30AKb6XctBcIi7AHtnciVJjHFNVow
+        zW1cPtqSibR+G/YxpZSVrhpKFqTEkhyaebcg6m0g3a5gy2PqcPUUxiEee7T6M6KJBuQToS
+        wKNFhLmnIHea9AehTE/ZO0nt+UmRRHCEfAVaWidz9IAn/haU4BrK87osn7Wx5b39KHnWWv
+        YGUi04+bn9z0/LE6j+F4qOsQWIdUg0w5Cdr6KZlJtAdaOFHkcVy/oy3tubSRxlIUAtdq6Q
+        f9GXEeAMZzyEtM4kR/+f4XEe4RuZRjdLuPs3wCKmkYkMwiRjVNbAQcqSeMR0PQ==
+To:     linux-kernel@vger.kernel.org
+Reply-To: kinky_nekoboi@nekoboi.moe
+From:   Kinky Nekoboi <kinky_nekoboi@nekoboi.moe>
+Subject: XFS segementation fault with new linux 4.19.63
+Openpgp: preference=signencrypt
+Autocrypt: addr=kinky_nekoboi@nekoboi.moe; keydata=
+ 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
+ KlTseuU=
+Message-ID: <e0ca189e-2f96-6599-40ce-a4fc8866d8d1@nekoboi.moe>
+Date:   Wed, 31 Jul 2019 15:01:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: de-DE
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=nekoboi.moe;
+        s=dkim; t=1564578095; h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:openpgp:openpgp:autocrypt:autocrypt;
+        bh=aD6+HaZbhjKnWUmHNC8+JnQCp632DukB5hVYcCQ6z9E=;
+        b=gxSvBHe4NONNO6phmzE2XQYTxskyzHW5YE5zCJN9Qx9pqj9fSKVSDH9W/+ejXoECvvVYxV
+        9uQVd1jzBc3nPNz4oejrh7k9DwIM6olrjjRXBQ5TORYTcHeRZIQqEXzztFXy0vktQ0y43G
+        kFX1emxicVNE1XQiOnoLGe8BzoVpTTqLnwFR+pGCmHE8iF/nzi+/R9S1Jvj1oGYfhQ1Wut
+        KQzzRjW4xhGyB7DC3T5Z3smuVC1y9+Ohx+OMrFIE+BcPoHqn3jLIg2zQ4pb64yJp+QPrGP
+        4s/PhdvLsvoQ2pXvoM26kp34j4uMLzMq/4EHPoxXlFNELg97S0lustcnla4hvg==
+ARC-Seal: i=1; s=dkim; d=nekoboi.moe; t=1564578095; a=rsa-sha256; cv=none;
+        b=Q9y/3uCEz+O0v1ZBoUmLejhcax67L7bpHSxta7egJZzNTI2ppUI/Bxi7XvstZ0anAY1kfE
+        05Xeb5IEHa1ggBAh2fYkG39wUivLKmKRvael9RtBht3K3D74jTU7HBs5AhNgeKARnoFLPd
+        GUTj0zsWL923CqygFrLD+nd1NNP7vhY5jXd0XuiEtzb7JIIHZCnOuPseSZa0QoNdYJIPcM
+        QEWk7gLC+V18ZhkNk6Jgs6GO5lezmthgKyjM1On6MtqhqUJLFsGg2z1ah96YioP4Oh1HTO
+        RV4NCS1xCDGUKkNot7rLXCHh4tk6eegrfBeAlhDDVXy5IXTc/TMWaYFu9cYJCw==
+ARC-Authentication-Results: i=1;
+        mail.nekoboi.moe;
+        auth=pass smtp.mailfrom=kinky_nekoboi@nekoboi.moe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To be consistent with other CAAM modules, caamhash should return 0
-instead of -ENODEV in case CAAM has no MDHA.
+I am not subscribed, so if you want to contact me do Direkt Email.
 
-Based on commit 1b46c90c8e00 ("crypto: caam - convert top level drivers to libraries")
-the value returned by entry point is never checked and
-the exit point is always executed.
+kern output:
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
----
- drivers/crypto/caam/caamhash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
-index ed1931f..8a07edb 100644
---- a/drivers/crypto/caam/caamhash.c
-+++ b/drivers/crypto/caam/caamhash.c
-@@ -2007,7 +2007,7 @@ int caam_algapi_hash_init(struct device *ctrldev)
- 	 * is not present.
- 	 */
- 	if (!md_inst)
--		return -ENODEV;
-+		return 0;
- 
- 	/* Limit digest size based on LP256 */
- 	if (md_vid == CHA_VER_VID_MD_LP256)
--- 
-2.1.0
+ul 31 13:51:53 lain kernel: [   71.660736] XFS: Assertion failed:
+xfs_perag_resv(pag, XFS_AG_RESV_METADATA)->ar_reserved +
+xfs_perag_resv(pag, XFS_AG_RESV_RMAPBT)->ar_reserved <=
+pag->pagf_freeblks + pag->pagf_flcount, file:
+fs/xfs/libxfs/xfs_ag_resv.c, line: 319
+Jul 31 13:51:53 lain kernel: [   71.681711] ------------[ cut here
+]------------
+Jul 31 13:51:53 lain kernel: [   71.686416] kernel BUG at
+fs/xfs/xfs_message.c:102!
+Jul 31 13:51:53 lain kernel: [   71.691431] invalid opcode: 0000 [#1]
+SMP NOPTI
+Jul 31 13:51:53 lain kernel: [   71.696047] CPU: 2 PID: 1322 Comm: mount
+Not tainted 4.19.63-custom #1
+Jul 31 13:51:53 lain kernel: [   71.702730] Hardware name: ASUS
+KGPE-D16/KGPE-D16, BIOS 4.10-108-gc19161538c 07/29/2019
+Jul 31 13:51:53 lain kernel: [   71.711028] RIP: 0010:assfail+0x25/0x36
+[xfs]
+Jul 31 13:51:53 lain kernel: [   71.715475] Code: d4 e8 0f 0b c3 0f 1f
+44 00 00 48 89 f1 41 89 d0 48 c7 c6 80 62 fb c0 48 89 fa 31 ff e8 72 f9
+ff ff 80 3d 2e cb 08 00 00 74 02 <0f> 0b 48 c7 c7 b0 62 fb c0 e8 74 11
+d4 e8 0f 0b c3 48 8b b3 a8 01
+Jul 31 13:51:53 lain kernel: [   71.734532] RSP: 0018:ffffb3a584117cb8
+EFLAGS: 00010202
+Jul 31 13:51:53 lain kernel: [   71.739849] RAX: 0000000000000000 RBX:
+ffffa0259fc22a00 RCX: 0000000000000000
+Jul 31 13:51:53 lain kernel: [   71.747135] RDX: 00000000ffffffc0 RSI:
+000000000000000a RDI: ffffffffc0fa971b
+Jul 31 13:51:53 lain kernel: [   71.754407] RBP: 0000000000000000 R08:
+0000000000000000 R09: 0000000000000000
+Jul 31 13:51:53 lain kernel: [   71.761633] R10: 000000000000000a R11:
+f000000000000000 R12: ffffa0259c157000
+Jul 31 13:51:53 lain kernel: [   71.768861] R13: 0000000000000008 R14:
+ffffa0259c157000 R15: 0000000000000000
+Jul 31 13:51:53 lain kernel: [   71.776110] FS:  00007f169d61f100(0000)
+GS:ffffa025a7c80000(0000) knlGS:0000000000000000
+Jul 31 13:51:53 lain kernel: [   71.784330] CS:  0010 DS: 0000 ES: 0000
+CR0: 0000000080050033
+Jul 31 13:51:53 lain kernel: [   71.790198] CR2: 00007fa8c52fc441 CR3:
+000000042453c000 CR4: 00000000000406e0
+Jul 31 13:51:53 lain kernel: [   71.797446] Call Trace:
+Jul 31 13:51:53 lain kernel: [   71.800040] 
+xfs_ag_resv_init+0x1bd/0x1d0 [xfs]
+Jul 31 13:51:53 lain kernel: [   71.804717] 
+xfs_fs_reserve_ag_blocks+0x3e/0xb0 [xfs]
+Jul 31 13:51:53 lain kernel: [   71.809937]  xfs_mountfs+0x5b3/0x920 [xfs]
+Jul 31 13:51:53 lain kernel: [   71.814212] 
+xfs_fs_fill_super+0x44d/0x620 [xfs]
+Jul 31 13:51:53 lain kernel: [   71.818997]  ?
+xfs_test_remount_options+0x60/0x60 [xfs]
+Jul 31 13:51:53 lain kernel: [   71.824320]  mount_bdev+0x177/0x1b0
+Jul 31 13:51:53 lain kernel: [   71.827868]  mount_fs+0x3e/0x145
+Jul 31 13:51:53 lain kernel: [   71.831178] 
+vfs_kern_mount.part.35+0x54/0x120
+Jul 31 13:51:53 lain kernel: [   71.835728]  do_mount+0x20e/0xcc0
+Jul 31 13:51:53 lain kernel: [   71.839098]  ? _copy_from_user+0x37/0x60
+Jul 31 13:51:53 lain kernel: [   71.843097]  ? memdup_user+0x4b/0x70
+Jul 31 13:51:53 lain kernel: [   71.846751]  ksys_mount+0xb6/0xd0
+Jul 31 13:51:53 lain kernel: [   71.850137]  __x64_sys_mount+0x21/0x30
+Jul 31 13:51:53 lain kernel: [   71.853983]  do_syscall_64+0x55/0xf0
+Jul 31 13:51:53 lain kernel: [   71.857621] 
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Jul 31 13:51:53 lain kernel: [   71.862727] RIP: 0033:0x7f169d2b1fea
+Jul 31 13:51:53 lain kernel: [   71.866362] Code: 48 8b 0d a9 0e 0c 00
+f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00
+00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d
+76 0e 0c 00 f7 d8 64 89 01 48
+Jul 31 13:51:53 lain kernel: [   71.885417] RSP: 002b:00007ffe6c4dd048
+EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+Jul 31 13:51:53 lain kernel: [   71.895075] RAX: ffffffffffffffda RBX:
+000055e2f3093a40 RCX: 00007f169d2b1fea
+Jul 31 13:51:53 lain kernel: [   71.904309] RDX: 000055e2f309b220 RSI:
+000055e2f3093c70 RDI: 000055e2f3093c50
+Jul 31 13:51:53 lain kernel: [   71.913532] RBP: 00007f169d6061c4 R08:
+0000000000000000 R09: 00007f169d2f3400
+Jul 31 13:51:53 lain kernel: [   71.922730] R10: 0000000000000000 R11:
+0000000000000246 R12: 0000000000000000
+Jul 31 13:51:53 lain kernel: [   71.931950] R13: 0000000000000000 R14:
+000055e2f3093c50 R15: 000055e2f309b220
+Jul 31 13:51:53 lain kernel: [   71.941107] Modules linked in: dm_crypt
+twofish_generic twofish_avx_x86_64 twofish_x86_64_3way twofish_x86_64
+twofish_common xts algif_skcipher af_alg dm_mod tun devlink
+cpufreq_userspace cpufreq_powersave cpufreq_conservative binfmt_misc xfs
+amd64_edac_mod edac_mce_amd kvm_amd ccp rng_core kvm irqbypass
+crct10dif_pclmul crc32_pclmul ghash_clmulni_intel pcbc snd_hda_intel ast
+snd_hda_codec ttm snd_hda_core evdev snd_pcsp snd_hwdep drm_kms_helper
+snd_pcm snd_timer aesni_intel aes_x86_64 drm crypto_simd snd cryptd
+serio_raw i2c_algo_bit fam15h_power k10temp glue_helper soundcore sg
+sp5100_tco pcc_cpufreq button acpi_cpufreq nft_counter nft_ct
+nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables_set nf_tables
+nfnetlink ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 fscrypto
+raid10 raid1 raid0 multipath
+Jul 31 13:51:53 lain kernel: [   72.027825]  linear raid456
+async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq
+libcrc32c crc32c_generic md_mod sd_mod ohci_pci ata_generic ahci
+firewire_ohci xhci_pci libahci ohci_hcd ehci_pci pata_atiixp xhci_hcd
+firewire_core ehci_hcd crc_itu_t libata psmouse crc32c_intel i2c_piix4
+usbcore scsi_mod e1000e
+Jul 31 13:51:53 lain kernel: [   72.064151] ---[ end trace
+a6475ff3d1350cc4 ]---
+Jul 31 13:51:53 lain kernel: [   72.071244] RIP: 0010:assfail+0x25/0x36
+[xfs]
+Jul 31 13:51:53 lain kernel: [   72.077951] Code: d4 e8 0f 0b c3 0f 1f
+44 00 00 48 89 f1 41 89 d0 48 c7 c6 80 62 fb c0 48 89 fa 31 ff e8 72 f9
+ff ff 80 3d 2e cb 08 00 00 74 02 <0f> 0b 48 c7 c7 b0 62 fb c0 e8 74 11
+d4 e8 0f 0b c3 48 8b b3 a8 01
+Jul 31 13:51:53 lain kernel: [   72.101469] RSP: 0018:ffffb3a584117cb8
+EFLAGS: 00010202
+Jul 31 13:51:53 lain kernel: [   72.109081] RAX: 0000000000000000 RBX:
+ffffa0259fc22a00 RCX: 0000000000000000
+Jul 31 13:51:53 lain kernel: [   72.118620] RDX: 00000000ffffffc0 RSI:
+000000000000000a RDI: ffffffffc0fa971b
+Jul 31 13:51:53 lain kernel: [   72.128206] RBP: 0000000000000000 R08:
+0000000000000000 R09: 0000000000000000
+Jul 31 13:51:53 lain kernel: [   72.137789] R10: 000000000000000a R11:
+f000000000000000 R12: ffffa0259c157000
+Jul 31 13:51:53 lain kernel: [   72.147332] R13: 0000000000000008 R14:
+ffffa0259c157000 R15: 0000000000000000
+Jul 31 13:51:53 lain kernel: [   72.156892] FS:  00007f169d61f100(0000)
+GS:ffffa025a7c80000(0000) knlGS:0000000000000000
+Jul 31 13:51:53 lain kernel: [   72.167382] CS:  0010 DS: 0000 ES: 0000
+CR0: 0000000080050033
+Jul 31 13:51:53 lain kernel: [   72.175498] CR2: 00007fa8c52fc441 CR3:
+000000042453c000 CR4: 00000000000406e0
 
