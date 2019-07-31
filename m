@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060DCC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657E2C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77B3214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4796F214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:46:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbfGaPqh (ORCPT
+        id S1729815AbfGaPqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:46:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:49700 "EHLO foss.arm.com"
+        Wed, 31 Jul 2019 11:46:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:49736 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfGaPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:46:33 -0400
+        id S1729758AbfGaPqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:46:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEEA41596;
-        Wed, 31 Jul 2019 08:46:32 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 230CC1570;
+        Wed, 31 Jul 2019 08:46:36 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 034703F694;
-        Wed, 31 Jul 2019 08:46:29 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21C233F694;
+        Wed, 31 Jul 2019 08:46:33 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -45,12 +45,13 @@ Cc:     Steven Price <steven.price@arm.com>,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH v10 07/22] riscv: mm: Add p?d_leaf() definitions
-Date:   Wed, 31 Jul 2019 16:45:48 +0100
-Message-Id: <20190731154603.41797-8-steven.price@arm.com>
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v10 08/22] s390: mm: Add p?d_leaf() definitions
+Date:   Wed, 31 Jul 2019 16:45:49 +0100
+Message-Id: <20190731154603.41797-9-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190731154603.41797-1-steven.price@arm.com>
 References: <20190731154603.41797-1-steven.price@arm.com>
@@ -66,54 +67,39 @@ those of user space. For this it needs to know when it has reached a
 'leaf' entry in the page tables. This information is provided by the
 p?d_leaf() functions/macros.
 
-For riscv a page is a leaf page when it has a read, write or execute bit
-set on it.
+For s390, pud_large() and pmd_large() are already implemented as static
+inline functions. Add a macro to provide the p?d_leaf names for the
+generic code to use.
 
-CC: Palmer Dabbelt <palmer@sifive.com>
-CC: Albert Ou <aou@eecs.berkeley.edu>
-CC: linux-riscv@lists.infradead.org
+CC: Heiko Carstens <heiko.carstens@de.ibm.com>
+CC: Vasily Gorbik <gor@linux.ibm.com>
+CC: Christian Borntraeger <borntraeger@de.ibm.com>
+CC: linux-s390@vger.kernel.org
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/riscv/include/asm/pgtable-64.h | 7 +++++++
- arch/riscv/include/asm/pgtable.h    | 7 +++++++
- 2 files changed, 14 insertions(+)
+ arch/s390/include/asm/pgtable.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-index 74630989006d..e88a8e8acbdf 100644
---- a/arch/riscv/include/asm/pgtable-64.h
-+++ b/arch/riscv/include/asm/pgtable-64.h
-@@ -43,6 +43,13 @@ static inline int pud_bad(pud_t pud)
- 	return !pud_present(pud);
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 9b274fcaacb6..f99a5f546e5e 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -674,6 +674,7 @@ static inline int pud_none(pud_t pud)
+ 	return pud_val(pud) == _REGION3_ENTRY_EMPTY;
  }
  
-+#define pud_leaf	pud_leaf
-+static inline int pud_leaf(pud_t pud)
-+{
-+	return pud_present(pud)
-+		&& (pud_val(pud) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
-+}
-+
- static inline void set_pud(pud_t *pudp, pud_t pud)
++#define pud_leaf	pud_large
+ static inline int pud_large(pud_t pud)
  {
- 	*pudp = pud;
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index a364aba23d55..f6523155111a 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -105,6 +105,13 @@ static inline int pmd_bad(pmd_t pmd)
- 	return !pmd_present(pmd);
+ 	if ((pud_val(pud) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R3)
+@@ -691,6 +692,7 @@ static inline unsigned long pud_pfn(pud_t pud)
+ 	return (pud_val(pud) & origin_mask) >> PAGE_SHIFT;
  }
  
-+#define pmd_leaf	pmd_leaf
-+static inline int pmd_leaf(pmd_t pmd)
-+{
-+	return pmd_present(pmd)
-+		&& (pmd_val(pmd) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
-+}
-+
- static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
++#define pmd_leaf	pmd_large
+ static inline int pmd_large(pmd_t pmd)
  {
- 	*pmdp = pmd;
+ 	return (pmd_val(pmd) & _SEGMENT_ENTRY_LARGE) != 0;
 -- 
 2.20.1
 
