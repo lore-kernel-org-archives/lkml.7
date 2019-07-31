@@ -2,140 +2,83 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41F0C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DD2C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BBA206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B35206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbfGaIoR (ORCPT
+        id S1726817AbfGaIp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:44:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38484 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbfGaIoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:44:17 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 62E3B883D7;
-        Wed, 31 Jul 2019 08:44:16 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 64BEF1001281;
-        Wed, 31 Jul 2019 08:44:07 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 10:44:05 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH 2/2] KVM: selftests: Enable dirty_log_test on s390x
-Message-ID: <20190731084405.tn3x6nmt2svkjkiq@kamzik.brq.redhat.com>
-References: <20190730100112.18205-1-thuth@redhat.com>
- <20190730100112.18205-3-thuth@redhat.com>
- <20190730105721.z4zsul7uxl2igoue@kamzik.brq.redhat.com>
- <a9824265-daf8-db36-86b8-ad890dc73f14@redhat.com>
+        Wed, 31 Jul 2019 04:45:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34062 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725857AbfGaIp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 04:45:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3337EAE2C;
+        Wed, 31 Jul 2019 08:45:58 +0000 (UTC)
+Subject: Re: [patch 11/12] hrtimer: Prepare support for PREEMPT_RT
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>, x86@kernel.org,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190726183048.982726647@linutronix.de>
+ <20190726185753.737767218@linutronix.de>
+ <42299f02-ff29-f7e3-45f0-b9fef041aec9@suse.com>
+ <20190729110806.57c57399@gandalf.local.home>
+ <9a9bde89-e0b3-a7b9-749e-a6b35d74b729@redhat.com>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <0910bd2b-b5b1-aa41-7f5e-b44f51a516d3@suse.com>
+Date:   Wed, 31 Jul 2019 10:45:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9824265-daf8-db36-86b8-ad890dc73f14@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 31 Jul 2019 08:44:16 +0000 (UTC)
+In-Reply-To: <9a9bde89-e0b3-a7b9-749e-a6b35d74b729@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 10:19:57AM +0200, Thomas Huth wrote:
-> On 30/07/2019 12.57, Andrew Jones wrote:
-> > On Tue, Jul 30, 2019 at 12:01:12PM +0200, Thomas Huth wrote:
-> >> To run the dirty_log_test on s390x, we have to make sure that we
-> >> access the dirty log bitmap with little endian byte ordering and
-> >> we have to properly align the memslot of the guest.
-> >> Also all dirty bits of a segment are set once on s390x when one
-> >> of the pages of a segment are written to for the first time, so
-> >> we have to make sure that we touch all pages during the first
-> >> iteration to keep the test in sync here.
-> >>
-> >> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> >> ---
-> [...]
-> >> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-> >> index ceb52b952637..7a1223ad0ff3 100644
-> >> --- a/tools/testing/selftests/kvm/dirty_log_test.c
-> >> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-> >> @@ -26,9 +26,22 @@
-> >>  /* The memory slot index to track dirty pages */
-> >>  #define TEST_MEM_SLOT_INDEX		1
-> >>  
-> >> +#ifdef __s390x__
-> >> +
-> >> +/*
-> >> + * On s390x, the ELF program is sometimes linked at 0x80000000, so we can
-> >> + * not use 0x40000000 here without overlapping into that region. Thus let's
-> >> + * use 0xc0000000 as base address there instead.
-> >> + */
-> >> +#define DEFAULT_GUEST_TEST_MEM		0xc0000000
-> > 
-> > I think both x86 and aarch64 should be ok with this offset. If testing
-> > proves it does, then we can just change it for all architecture.
+On 29.07.19 19:30, Paolo Bonzini wrote:
+> On 29/07/19 17:08, Steven Rostedt wrote:
+>> On Sun, 28 Jul 2019 11:06:50 +0200
+>> Juergen Gross <jgross@suse.com> wrote:
+>>
+>>> In case we'd want to change that I'd rather not special case timers, but
+>>> apply a more general solution to the quite large amount of similar
+>>> cases: I assume the majority of cpu_relax() uses are affected, so adding
+>>> a paravirt op cpu_relax() might be appropriate.
+>>>
+>>> That could be put under CONFIG_PARAVIRT_SPINLOCK. If called in a guest
+>>> it could ask the hypervisor to give up the physical cpu voluntarily
+>>> (in Xen this would be a "yield" hypercall).
+>>
+>> Seems paravirt wants our cpu_chill() ;-)
 > 
-> Ok. It seems to work on x86 - could you please check aarch64, since I
-> don't have such a system available right now?
+> Actually that is not really a joke! :)
 
-Tested it. It works on aarch64 too.
+As CONFIG_PARAVIRT is no longer so massive intrusive as some time ago
+it might really be worth thinking of.
 
-> 
-> >> +/* Dirty bitmaps are always little endian, so we need to swap on big endian */
-> >> +#if defined(__s390x__)
-> >> +# define BITOP_LE_SWIZZLE	((BITS_PER_LONG-1) & ~0x7)
-> >> +# define test_bit_le(nr, addr) \
-> >> +	test_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> >> +# define set_bit_le(nr, addr) \
-> >> +	set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> >> +# define clear_bit_le(nr, addr) \
-> >> +	clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> >> +# define test_and_set_bit_le(nr, addr) \
-> >> +	test_and_set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> >> +# define test_and_clear_bit_le(nr, addr) \
-> >> +	test_and_clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> >> +#else
-> >> +# define test_bit_le	test_bit
-> >> +# define set_bit_le	set_bit
-> >> +# define clear_bit_le	clear_bit
-> >> +# define test_and_set_bit_le	test_and_set_bit
-> >> +# define test_and_clear_bit_le	test_and_clear_bit
-> >> +#endif
-> > 
-> > nit: does the formatting above look right after applying the patch?
-> 
-> It looked ok to me, but I can add some more tabs to even make it nicer :)
-> 
-> >> @@ -293,6 +341,10 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
-> >>  	 * case where the size is not aligned to 64 pages.
-> >>  	 */
-> >>  	guest_num_pages = (1ul << (30 - guest_page_shift)) + 16;
-> >> +#ifdef __s390x__
-> >> +	/* Round up to multiple of 1M (segment size) */
-> >> +	guest_num_pages = (guest_num_pages + 0xff) & ~0xffUL;
-> > 
-> > We could maybe do this for all architectures as well.
-> 
-> It's really only needed on s390x, so I think we should keep the #ifdef here.
->
+ From Xen perspective I'd really like a way to give up the vcpu instead
+of doing a busy wait. And having another user and (even better) already
+some patches addressing some (or all?) callsites sounds like a win-win
+situation for me.
 
-OK
+So +1 from me for cpu_chill() via a new paravirt op.
 
-Thanks,
-drew 
+
+Juergen
