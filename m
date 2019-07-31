@@ -2,99 +2,121 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F6FC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5673C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BEE21851
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:04:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dIae7+Ig"
+	by mail.kernel.org (Postfix) with ESMTP id 81A1121851
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbfGaREd (ORCPT
+        id S1730501AbfGaRFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:04:33 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37442 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfGaREc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:04:32 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so30785135plr.4;
-        Wed, 31 Jul 2019 10:04:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=02uZUKd556myZ+F9DbZFuNYIVZOabJKu9/VOGEOym5U=;
-        b=dIae7+Igo3ltQMb7FnEbyeio8IyM1uNgubphIg4B+0bi4A7FXCd+qPbZuPLFUcVnqZ
-         Tqyb69AUklajqvqq9g8fyvbVW05oBVhwtoIraiBzfXQAqm2XWQvZv41Q5E900YSWSKuh
-         Bw2rdB02zsc4MT9LtcYUw4AJB+DCF6NovXIZuudmV/z7JKKXNMc6PwVlmKl3XYGKhkU6
-         b3bgtIdJhdNow0Va46Tpd5TcjTDh+ptQ0OWDXMRMOL/kU5U4JWMCfeJ50p1Jl5xI+J2L
-         sHq1INFZgEyJyTN81rp2+3VFuqlgkqjI7JxMTYD4DEqyjbVJIl9N/kfiQjxq7/COaMcC
-         kZgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=02uZUKd556myZ+F9DbZFuNYIVZOabJKu9/VOGEOym5U=;
-        b=BAkPj9302L9uYkBjytOaeFebzOgqHjbaVfiaBqO1RoEd+NkoLOaZ+6Dstwi1OLq4MH
-         402jDQx+1JPlHI94ZuPzymbB0/FlF0P2UX89B2Ltgc4h0ASP364rH1F5ihgAjhsWQ4zx
-         1DYL138OVsXeDTO5TqCENdLxeT9fVTGXdkBd+EYP33fzqygC59/Gk+4l3gcPlRLfN5AZ
-         Cxb6vv+uLTxyRC3gQRDybCFF0TLSyQmA6mTtjWE9D14z1qnAYp+raKqki6B1MGDQK/Sv
-         q2hh9xZVrUYNjEs2Ps3SpF59JiLHXG2XJ8SwaBSnBcl+DIAwlzySGBejXPFGT1r7v8IK
-         e1KQ==
-X-Gm-Message-State: APjAAAXI/DHm9uW61gjZ+M9OoPNClsJeR1x6ScQhAdBl5X7gJMkbvmiN
-        yTi96P/dIKLDVDVTTyZc0jU=
-X-Google-Smtp-Source: APXvYqwGsj0ZGlniKBN07CjFyqECjuTrRu/I0JtIHH8wCdnVnF2MiO69+EFwTXNWPSE7NiazPmCDbA==
-X-Received: by 2002:a17:902:112c:: with SMTP id d41mr110771356pla.33.1564592671257;
-        Wed, 31 Jul 2019 10:04:31 -0700 (PDT)
-Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id x7sm4800350pga.0.2019.07.31.10.04.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 10:04:30 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
-Date:   Wed, 31 Jul 2019 10:04:26 -0700 (PDT)
-To:     Guenter Roeck <linux@roeck-us.net>
-cc:     Mark Balantzyan <mbalant3@gmail.com>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pavel Andrianov <andrianov@ispras.ru>
-Subject: Re: [PATCH] watchdog:alim1535_wdt: Fix data race in ali_settimer()
- concerning ali_timeout_bits variable.
-In-Reply-To: <20190731164337.GA13646@roeck-us.net>
-Message-ID: <alpine.DEB.2.21.1907310949440.37824@mbalantz-desktop>
-References: <20190718155238.3066-1-mbalant3@gmail.com> <20190718163458.GA18125@roeck-us.net> <alpine.DEB.2.21.1907310911120.29703@mbalantz-desktop> <20190731164337.GA13646@roeck-us.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 31 Jul 2019 13:05:07 -0400
+Received: from relay.sw.ru ([185.231.240.75]:36950 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbfGaRFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 13:05:07 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hss1z-0001ux-M2; Wed, 31 Jul 2019 20:04:51 +0300
+Subject: Re: [PATCH v3] kasan: add memory corruption identification for
+ software tag-based mode
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>
+References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
+ <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
+ <1560447999.15814.15.camel@mtksdccf07> <1560479520.15814.34.camel@mtksdccf07>
+ <1560744017.15814.49.camel@mtksdccf07>
+ <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
+ <1560774735.15814.54.camel@mtksdccf07> <1561974995.18866.1.camel@mtksdccf07>
+ <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
+ <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
+ <1562640832.9077.32.camel@mtksdccf07>
+ <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
+ <1562839579.5846.12.camel@mtksdccf07>
+ <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
+ <1563160001.4793.4.camel@mtksdccf07>
+ <9ab1871a-2605-ab34-3fd3-4b44a0e17ab7@virtuozzo.com>
+ <1563789162.31223.3.camel@mtksdccf07>
+ <e62da62a-2a63-3a1c-faeb-9c5561a5170c@virtuozzo.com>
+ <1564144097.515.3.camel@mtksdccf07>
+ <71df2bd5-7bc8-2c82-ee31-3f68c3b6296d@virtuozzo.com>
+ <1564147164.515.10.camel@mtksdccf07>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <f29ee964-cf12-1b5d-e570-1d5baa49a580@virtuozzo.com>
+Date:   Wed, 31 Jul 2019 20:04:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+In-Reply-To: <1564147164.515.10.camel@mtksdccf07>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My employer (and yes, I am working for the Linux Foundation) has me 
-working on analysing race condition warnings in the Linux kernel. They 
-have a driver verification project running under the umbrella of the ELISA 
-project involved in the research, investigation, experimentation, and 
-establishment of linux kernel verification measures and tools.
 
-I actually do have assigned to me coaches and/or mentors that I have been 
-corresponding with. They are aware of what is going on and are being cc'd 
-to (most of) our emails.
 
-pc87413_wdt was detected by our race condition analysis tool as having 
-warning. Even outside this work we've been doing, I've been trying to apply
-the reasoning of the race condition analysis tool to different kernel modules,
-as part of my menteeship.
+On 7/26/19 4:19 PM, Walter Wu wrote:
+> On Fri, 2019-07-26 at 15:52 +0300, Andrey Ryabinin wrote:
+>>
+>> On 7/26/19 3:28 PM, Walter Wu wrote:
+>>> On Fri, 2019-07-26 at 15:00 +0300, Andrey Ryabinin wrote:
+>>>>
+>>>
+>>>>>
+>>>>>
+>>>>> I remember that there are already the lists which you concern. Maybe we
+>>>>> can try to solve those problems one by one.
+>>>>>
+>>>>> 1. deadlock issue? cause by kmalloc() after kfree()?
+>>>>
+>>>> smp_call_on_cpu()
+>>>
+>>>>> 2. decrease allocation fail, to modify GFP_NOWAIT flag to GFP_KERNEL?
+>>>>
+>>>> No, this is not gonna work. Ideally we shouldn't have any allocations there.
+>>>> It's not reliable and it hurts performance.
+>>>>
+>>> I dont know this meaning, we need create a qobject and put into
+>>> quarantine, so may need to call kmem_cache_alloc(), would you agree this
+>>> action?
+>>>
+>>
+>> How is this any different from what you have now?
+> 
+> I originally thought you already agreed the free-list(tag-based
+> quarantine) after fix those issue. If no allocation there,
 
-I hope you can respect that this is a process primarily for learning and 
-experimentation. I'm sorry if I'm creating too much work for you at once. 
-If so, let me know and I'll try to spread it out.
+If no allocation there, than it must be somewhere else.
+We known exactly the amount of memory we need, so it's possible to preallocate it in advance.
 
-Thank you,
-Mark
+
+> i think maybe
+> only move generic quarantine into tag-based kasan, but its memory
+> consumption is more bigger our patch. what do you think?
+> 
