@@ -2,149 +2,116 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6BDC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D47C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A584E206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:11:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pn45YGzO"
+	by mail.kernel.org (Postfix) with ESMTP id 8731D206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:12:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387710AbfGaOLF (ORCPT
+        id S2387780AbfGaOMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:11:05 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40067 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729129AbfGaOLF (ORCPT
+        Wed, 31 Jul 2019 10:12:09 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:41922 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387663AbfGaOMJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:11:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so60002804wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DaSfQVSBloP6ituQwd3gN2sNQYfvnC2s71RqutisBq0=;
-        b=Pn45YGzOCoqVPj5ruMllJckodlhVBmgzWrH3x/e0USvGBmmg4/Ju4GVTO3/dRSpBTY
-         576PmDDVUKYSxfaA1m94qhQ8UbmUNa4NfL1mXsG4Cq5I/yz4KkQozkzA+tTJ5oyrS9a5
-         wahvQMETUJkBFk2+TS9+O3vcsd4sB1rUI5rgIBWJvS6kGoYyzNBRtoOh/brUuKjLVgqb
-         lJkOws6k7U0nPUeGV0XD+Cc9eDsiWdIXbue+NdiSajyLETAOv5J2/b38B0MNu0VMg1ss
-         pRO70fcoPMvX0eHH4aQKvcl9z9u4yPd3QOFBhz23Zxc8o6UX+WAxo7JKNb4ZvLBDrnWr
-         m9Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DaSfQVSBloP6ituQwd3gN2sNQYfvnC2s71RqutisBq0=;
-        b=AkRG6o+H4OjljjmXr+st4vBjKsVCyJBZCAP48jMlx7FJrzwyBEyFtcHbEaDdprOXzu
-         urGPzO+z8GFfoMn3jiwqeFgiIPZsIxoOQH2C+FZmHTeZ5R2F2yxGEa388YhmG/S0i4iL
-         UsPQLYSSzkqjcYFSzPxMtidNn1M1KHzMMa3MUvGUWxrqM7/Bh0TYt0StfsoyyisUIpY/
-         wVklidpR81MHWzrdl/JItOOcQsBXVq/5vYi+/+ORDHIIMOm1MpnTodDOFFDhANkjBl2T
-         Lalpen7+LyNiZKYrLSwfdaBVTBxi3sXpWA6gyihoJv7VtzikMSKfwdWUNv0kX12aP+J9
-         PTNg==
-X-Gm-Message-State: APjAAAUKK1d3crI6MTETtAoaNMemcgX8s4E/pKwWVCF9JH5OVW8/Pkwx
-        CeIHnd0cGngPwz0Fx215fX0F9Q==
-X-Google-Smtp-Source: APXvYqw/pUX7GShISMzCbUQtESxSOCGVNvngtydQFUT3NN7ACbQtiRIRf1AbgIrVwpXKDn1FZaNSkQ==
-X-Received: by 2002:a05:600c:34d:: with SMTP id u13mr85321496wmd.48.1564582262533;
-        Wed, 31 Jul 2019 07:11:02 -0700 (PDT)
-Received: from [192.168.1.6] (19.red-176-86-136.dynamicip.rima-tde.net. [176.86.136.19])
-        by smtp.gmail.com with ESMTPSA id a81sm71773684wmh.3.2019.07.31.07.11.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 07:11:01 -0700 (PDT)
-Subject: Re: [PATCH v3 02/14] mbox: qcom: add APCS child device for QCS404
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com,
-        mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org,
-        will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au,
-        heiko@sntech.de, sibis@codeaurora.org,
-        enric.balletbo@collabora.com, jagan@amarulasolutions.com,
-        olof@lixom.net, vkoul@kernel.org, niklas.cassel@linaro.org,
-        georgi.djakov@linaro.org, amit.kucheria@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
-References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
- <20190625164733.11091-3-jorge.ramirez-ortiz@linaro.org>
- <20190711144424.GD7234@tuxbook-pro>
-From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Message-ID: <5111bc6e-4155-e99e-71b2-1aac3610b71e@linaro.org>
-Date:   Wed, 31 Jul 2019 16:10:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190711144424.GD7234@tuxbook-pro>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 31 Jul 2019 10:12:09 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45zFjf3NX3z1rNS5;
+        Wed, 31 Jul 2019 16:12:06 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45zFjf1XTpz1qqkP;
+        Wed, 31 Jul 2019 16:12:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id aLVG6JH7RSJq; Wed, 31 Jul 2019 16:12:04 +0200 (CEST)
+X-Auth-Info: 9DZkl6bNBSxiBxcPQAY5c4wJPOvHXx2BrlhQ44j+GPw=
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed, 31 Jul 2019 16:12:04 +0200 (CEST)
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v3] ARM: dts: vf610-bk4: Fix qspi node description
+Date:   Wed, 31 Jul 2019 16:11:51 +0200
+Message-Id: <20190731141151.7196-1-lukma@denx.de>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/11/19 16:44, Bjorn Andersson wrote:
-> On Tue 25 Jun 09:47 PDT 2019, Jorge Ramirez-Ortiz wrote:
-> 
->> There is clock controller functionality in the APCS hardware block of
->> qcs404 devices similar to msm8916.
->>
->> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
->> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
->> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->> ---
->>  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 18 ++++++++++--------
->>  1 file changed, 10 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
->> index 705e17a5479c..a05dc3aabac7 100644
->> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
->> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
->> @@ -89,16 +89,18 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
->>  		return ret;
->>  	}
->>  
->> -	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
->> -		apcs->clk = platform_device_register_data(&pdev->dev,
->> -							  "qcom-apcs-msm8916-clk",
->> -							  -1, NULL, 0);
->> -		if (IS_ERR(apcs->clk))
->> -			dev_err(&pdev->dev, "failed to register APCS clk\n");
->> -	}
->> -
->>  	platform_set_drvdata(pdev, apcs);
->>  
->> +	if (!of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global") &&
->> +	    !of_device_is_compatible(np, "qcom,qcs404-apcs-apps-global"))
-> 
-> If the remainder of the function was a long snippet I think this would
-> motivate the somewhat unusual early return. But I think it would be
-> cleaner to just add to the existing conditional.
+Before this change the device tree description of qspi node for
+second memory on BK4 board was wrong (applicable to old, removed
+fsl-quadspi.c driver).
 
-sure can do that. I dont agree (I wouldnt have bothered otherwise :))
-but will do
+As a result this memory was not recognized correctly when used
+with the new spi-fsl-qspi.c driver.
 
-> 
-> Regards,
-> Bjorn
-> 
->> +		return 0;
->> +
->> +	apcs->clk = platform_device_register_data(&pdev->dev,
->> +						  "qcom-apcs-msm8916-clk",
->> +						  -1, NULL, 0);
->> +	if (IS_ERR(apcs->clk))
->> +		dev_err(&pdev->dev, "failed to register APCS clk\n");
->> +
->>  	return 0;
->>  }
->>  
->> -- 
->> 2.21.0
->>
-> 
+From the dt-bindings:
+
+"Required SPI slave node properties:
+  - reg: There are two buses (A and B) with two chip selects each.
+This encodes to which bus and CS the flash is connected:
+<0>: Bus A, CS 0
+<1>: Bus A, CS 1
+<2>: Bus B, CS 0
+<3>: Bus B, CS 1"
+
+According to above with new driver the second SPI-NOR memory shall
+have reg=<2> as it is connected to Bus B, CS 0.
+
+Fixes: a67d2c52a82f ("ARM: dts: Add support for Liebherr's BK4 device (vf610 based)")
+Suggested-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+
+---
+Changes for v3:
+- Reorder Signed-off, Suggested-by and Fixes tags
+- Add Reviewed-by: Fabio Estevam <festevam@gmail.com>
+
+Changes for v2:
+- Add proper Suggested-by tag as Fabio was the one who pointed out the
+  the issue with wrong reg number assignment for the second SPI-NOR memory
+- Add Fixes: tag, so the patch could be added to LTS kernels
+- Fix the subject line to more appropriate
+---
+ arch/arm/boot/dts/vf610-bk4.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
+index 3fa0cbe456db..0f3870d3b099 100644
+--- a/arch/arm/boot/dts/vf610-bk4.dts
++++ b/arch/arm/boot/dts/vf610-bk4.dts
+@@ -246,13 +246,13 @@
+ 		reg = <0>;
+ 	};
+ 
+-	n25q128a13_2: flash@1 {
++	n25q128a13_2: flash@2 {
+ 		compatible = "n25q128a13", "jedec,spi-nor";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		spi-max-frequency = <66000000>;
+ 		spi-rx-bus-width = <2>;
+-		reg = <1>;
++		reg = <2>;
+ 	};
+ };
+ 
+-- 
+2.11.0
 
