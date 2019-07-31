@@ -2,106 +2,186 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76446C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F73EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4E9206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62338208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:21:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yl8AqYJN"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="yNcUiWdQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbfGaPVg (ORCPT
+        id S1728721AbfGaPV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:21:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40597 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfGaPVe (ORCPT
+        Wed, 31 Jul 2019 11:21:56 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35522 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfGaPVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:21:34 -0400
-Received: by mail-pf1-f196.google.com with SMTP id p184so32048733pfp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:21:33 -0700 (PDT)
+        Wed, 31 Jul 2019 11:21:55 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w20so66035915edd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8Z0P5Wb3N6RNbSuxVxTxovjy+jlIt5UjpbTJFLTHGvg=;
-        b=Yl8AqYJNSj8Uxqi6ahv+iq+Yf5YGpSzIGgio2doxdbl+ZbJpe2L80fRRMpzBWrHjSo
-         JT2/+vjR5pjbF8HuSpNq+tjQns7I5KyAb6VSFhDyfI6IcRINOXrGX0Sx0+4152EVCKyi
-         QG9CnJOjxyeAkcfsxwU4HM2nM4XLhiz6V/k1TyDO8nIicoOnaPi1q9KOJRYgf5cXpCDD
-         SN0e7PyBSpRf/Xz+PSbwTQ5iYd/P/pK6KQ6Pv9XSpy9LgufVH4mgoSbdwRE89BK5kv7T
-         Ebk/BY7eRL3FwpeM5CHABrx73aJnw/blKmMVxCyhz6czHFJoR5e1ZbmwEgZo0KCTjCd5
-         2eYQ==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZkftAsGdSxojE0fJOOOF/MZdp7LK73Cocd1bOG6H+X8=;
+        b=yNcUiWdQFKls9CJ+s1kmqNYTq4HAt/+z4PQnyTb2R/O/QG4HejvHYbZEnDpZkx4u6m
+         rYryPmrZZw5X0yVl9cqTObJ/vAbi3N2kcWUJTn/nS5m7u0j1NeO76bPx86u5y6/FFXzG
+         GwvkGwtp3dVrAmLGNQwceerYEf8lbhe3A3hpQ9jH6pM/+5oR2hB1poc9BJZ/qpFk3lFg
+         AVoV+a8D/wx7gKubBM5x0ly/CpnY4m7riIc5gECoUZ1ttMWB61O3sn/gxcaUYdZYR3rm
+         riJBLh8bckwgmhvRhWjFVk43K9z3429hxlIIgWZDxIvHcCVj0zmgN7kgBdEg+aubIbZF
+         aYoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8Z0P5Wb3N6RNbSuxVxTxovjy+jlIt5UjpbTJFLTHGvg=;
-        b=OdTYlZqtfoSn3IVGF/ws+R2JUgnVRqHSvEXQ3D0YxqvCjStF8/6zORt2V3Xbxz3V/n
-         i6F4bTOVWJQ9xfYDazx28/5Bp9em1IOid1TUqTt722T3GNeXiIQoBoYXx4vX4vzi60AC
-         DNo7Op9xAXjnNlJI/ahJYakXSa8oqilem55r9skyLkqOh9sbuFZa9DFo1eAtmfaPQ6tl
-         AORw1zfDbHjoSgGNM/tToBEa5tyKLDQYRQ7zAkVTUQtqm4MZlZnS5YsqKMxP01VW6ps7
-         kCE+BQoQrrC4UTcA/FhC44Ey7f+LC0vp69qVjZClo1H2/hdj2WwqyXT9IkclzpuI9nNM
-         TCbQ==
-X-Gm-Message-State: APjAAAUQN45xNUsREZooFbDJNwGfdWUqsYCAmFjkIRI2EFH6o5+5QEKr
-        tiDxSQ2D0mXfks11Zb/6N6o=
-X-Google-Smtp-Source: APXvYqxk/3mnPslHedIH4JtnaBWENkwBQDDY+6Lyxq4miRBwLaykFQeTXEDI0WyNnUgIF/fxXL2bXg==
-X-Received: by 2002:a17:90a:25af:: with SMTP id k44mr3435781pje.122.1564586151955;
-        Wed, 31 Jul 2019 08:15:51 -0700 (PDT)
-Received: from [10.69.137.114] ([50.228.72.82])
-        by smtp.gmail.com with ESMTPSA id c70sm23254601pfb.36.2019.07.31.08.15.50
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZkftAsGdSxojE0fJOOOF/MZdp7LK73Cocd1bOG6H+X8=;
+        b=K7hBRWwavWIs3HybuIHsCsbuq9c+VR7xGY0NvGKKSQnSv5/PYekxqvvwRC1hDQMOCH
+         EGtHfOdF0qhlo5lJpp+2SUA8kshX+0clWRtSs1nXFCTJA/feTRzJUtXUJDSPatYGlqOV
+         nFRjuSgebPRemNuSiCt8pF99Fp70dSq2raXg9DXfbWmzGikzMCQ9Yu8P/q/RdB9UqIxc
+         nzwJxDrvTw9gmX0NMO8JYLViV5Kb7A5lhEnYjKBa6aQ8nM+/K+l91iOMnJwXpyvE3dfM
+         +8WyAbv4AnRV2+CB1nBbP4C+n61PVW8HQSizGG0IEvoDxoNPNk5fBbnuBInWVMurSeWw
+         9Y7g==
+X-Gm-Message-State: APjAAAXpJ9xfpiWENk2T7y9AVTVKh3ZbuP8/SZUAIveOCNmJVeyDE7tO
+        bVZwZS720/iSxDaA6aRwvMg=
+X-Google-Smtp-Source: APXvYqxlBWhD79QJcY6LnrhxwdW4BCeLIylkUAMRGP9j6V32DYMCll5/WusJdm6IK3xrXEoHhQo02A==
+X-Received: by 2002:a17:906:94ce:: with SMTP id d14mr97075606ejy.251.1564586031480;
+        Wed, 31 Jul 2019 08:13:51 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id j37sm17791942ede.23.2019.07.31.08.13.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:15:51 -0700 (PDT)
-Subject: Re: [PATCH RFC 2/2] futex: Implement mechanism to wait on any of
- several futexes
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, dvhart@infradead.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Steven Noonan <steven@valvesoftware.com>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        viro@zeniv.linux.org.uk, jannh@google.com
-References: <20190730220602.28781-1-krisman@collabora.com>
- <20190730220602.28781-2-krisman@collabora.com>
- <20190731120600.GT31381@hirez.programming.kicks-ass.net>
-From:   Zebediah Figura <z.figura12@gmail.com>
-Message-ID: <306b3332-0065-59dc-e6d6-ee3c8a67ef53@gmail.com>
-Date:   Wed, 31 Jul 2019 10:15:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 08:13:50 -0700 (PDT)
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 251F0104601; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
+To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 43/59] x86/mm: Set KeyIDs in encrypted VMAs for MKTME
+Date:   Wed, 31 Jul 2019 18:07:57 +0300
+Message-Id: <20190731150813.26289-44-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
+References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190731120600.GT31381@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/19 7:06 AM, Peter Zijlstra wrote:
-> On Tue, Jul 30, 2019 at 06:06:02PM -0400, Gabriel Krisman Bertazi wrote:
->> This is a new futex operation, called FUTEX_WAIT_MULTIPLE, which allows
->> a thread to wait on several futexes at the same time, and be awoken by
->> any of them.  In a sense, it implements one of the features that was
->> supported by pooling on the old FUTEX_FD interface.
->>
->> My use case for this operation lies in Wine, where we want to implement
->> a similar interface available in Windows, used mainly for event
->> handling.  The wine folks have an implementation that uses eventfd, but
->> it suffers from FD exhaustion (I was told they have application that go
->> to the order of multi-milion FDs), and higher CPU utilization.
-> 
-> So is multi-million the range we expect for @count ?
-> 
+From: Alison Schofield <alison.schofield@intel.com>
 
-Not in Wine's case; in fact Wine has a hard limit of 64 synchronization 
-primitives that can be waited on at once (which, with the current 
-user-side code, translates into 65 futexes). The exhaustion just had to 
-do with the number of primitives created; some programs seem to leak 
-them badly.
+MKTME architecture requires the KeyID to be placed in PTE bits 51:46.
+To create an encrypted VMA, place the KeyID in the upper bits of
+vm_page_prot that matches the position of those PTE bits.
+
+When the VMA is assigned a KeyID it is always considered a KeyID
+change. The VMA is either going from not encrypted to encrypted,
+or from encrypted with any KeyID to encrypted with any other KeyID.
+To make the change safely, remove the user pages held by the VMA
+and unlink the VMA's anonymous chain.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/include/asm/mktme.h |  4 ++++
+ arch/x86/mm/mktme.c          | 26 ++++++++++++++++++++++++++
+ include/linux/mm.h           |  6 ++++++
+ 3 files changed, 36 insertions(+)
+
+diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
+index d26ada6b65f7..e8f7f80bb013 100644
+--- a/arch/x86/include/asm/mktme.h
++++ b/arch/x86/include/asm/mktme.h
+@@ -16,6 +16,10 @@ extern int __mktme_nr_keyids;
+ extern int mktme_nr_keyids(void);
+ extern unsigned int mktme_algs;
+ 
++/* Set the encryption keyid bits in a VMA */
++extern void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
++				unsigned long start, unsigned long end);
++
+ DECLARE_STATIC_KEY_FALSE(mktme_enabled_key);
+ static inline bool mktme_enabled(void)
+ {
+diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
+index ed13967bb543..05bbf5058ade 100644
+--- a/arch/x86/mm/mktme.c
++++ b/arch/x86/mm/mktme.c
+@@ -1,5 +1,6 @@
+ #include <linux/mm.h>
+ #include <linux/highmem.h>
++#include <linux/rmap.h>
+ #include <asm/mktme.h>
+ #include <asm/pgalloc.h>
+ #include <asm/tlbflush.h>
+@@ -71,6 +72,31 @@ int __vma_keyid(struct vm_area_struct *vma)
+ 	return (prot & mktme_keyid_mask()) >> mktme_keyid_shift();
+ }
+ 
++/* Set the encryption keyid bits in a VMA */
++void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
++			  unsigned long start, unsigned long end)
++{
++	int oldkeyid = vma_keyid(vma);
++	pgprotval_t newprot;
++
++	/* Unmap pages with old KeyID if there's any. */
++	zap_page_range(vma, start, end - start);
++
++	if (oldkeyid == newkeyid)
++		return;
++
++	newprot = pgprot_val(vma->vm_page_prot);
++	newprot &= ~mktme_keyid_mask();
++	newprot |= (unsigned long)newkeyid << mktme_keyid_shift();
++	vma->vm_page_prot = __pgprot(newprot);
++
++	/*
++	 * The VMA doesn't have any inherited pages.
++	 * Start anon VMA tree from scratch.
++	 */
++	unlink_anon_vmas(vma);
++}
++
+ /* Prepare page to be used for encryption. Called from page allocator. */
+ void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
+ {
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 3f9640f388ac..98a6d2bd66a6 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2905,5 +2905,11 @@ void __init setup_nr_node_ids(void);
+ static inline void setup_nr_node_ids(void) {}
+ #endif
+ 
++#ifndef CONFIG_X86_INTEL_MKTME
++static inline void mprotect_set_encrypt(struct vm_area_struct *vma,
++					int newkeyid,
++					unsigned long start,
++					unsigned long end) {}
++#endif /* CONFIG_X86_INTEL_MKTME */
+ #endif /* __KERNEL__ */
+ #endif /* _LINUX_MM_H */
+-- 
+2.21.0
+
