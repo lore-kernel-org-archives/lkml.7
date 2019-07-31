@@ -2,141 +2,109 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51104C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732F4C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F47A206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="akhndPKO"
+	by mail.kernel.org (Postfix) with ESMTP id 5851E208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730853AbfGaTTZ (ORCPT
+        id S1730863AbfGaTWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:19:25 -0400
-Received: from gateway23.websitewelcome.com ([192.185.49.218]:27094 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730079AbfGaTTY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:19:24 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 1A7135B01
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:55:00 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id stkah7EhuiQerstkahVyDm; Wed, 31 Jul 2019 13:55:00 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KIJv1aOM1ysMzR07N3FqA1hGoliaxCsgaIx5trxif/g=; b=akhndPKOuVlMO4SCbZd6JPHzEY
-        0WMX7pBKsNJEwCHoZ1mjnjO422FmDfNANLZT7NXHmhFt/fTdPpP7Qppqqlahn5yPCGb7dKp3/r6Hq
-        M4KEUSr0BLrBHAfGB67bqI2pGJNZya+BTuty+ycZaOxN02KT69Pzqh5f4iDY5GrYZtOgF0Lv2w5G0
-        ORyp7lcPiFSSMThZZf/D+E2b/WYp8BSVLuMt8tzasDgRL9JiTZVosBnfNGU6Iz/XmXc8Lb/3C5o72
-        1uKtAWtB17diOLZfcOzhNszcNg6Tzch0Kj/9byNyFy4umMa7GNlzXvDPUuxBOOr5VqcmjY72KfyFD
-        bbcDzwEw==;
-Received: from [187.192.11.120] (port=38908 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hstkY-003ws3-UA; Wed, 31 Jul 2019 13:54:59 -0500
-Date:   Wed, 31 Jul 2019 13:54:57 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] tomoyo: common: Fix potential Spectre v1 vulnerability
-Message-ID: <20190731185457.GA21407@embeddedor>
+        Wed, 31 Jul 2019 15:22:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46204 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730413AbfGaTWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 15:22:23 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7D0917FDFB;
+        Wed, 31 Jul 2019 19:22:23 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E459010016EA;
+        Wed, 31 Jul 2019 19:22:21 +0000 (UTC)
+Message-ID: <96896eaeaac7cefed65098da268f92e96db69591.camel@redhat.com>
+Subject: Re: [PATCH V2] IB/core: Add mitigation for Spectre V1
+From:   Doug Ledford <dledford@redhat.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Luck, Tony" <tony.luck@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 31 Jul 2019 15:22:19 -0400
+In-Reply-To: <c48b7b8db29126fe8991a4b65ed0b793f10501fa.camel@redhat.com>
+References: <20190730202407.31046-1-tony.luck@intel.com>
+         <95f5cf70-1a1d-f48c-efac-f389360f585e@embeddedor.com>
+         <20190731042801.GA2179@iweiny-DESK2.sc.intel.com>
+         <20190731043957.GA1600@agluck-desk2.amr.corp.intel.com>
+         <09a994054e43c8bd6ee49b7d1087c9c4e793058f.camel@redhat.com>
+         <1fc90610-7189-c99b-2af1-ae516faa20b4@embeddedor.com>
+         <c48b7b8db29126fe8991a4b65ed0b793f10501fa.camel@redhat.com>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Wv/u9qT9ydWeDsWxVynx"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hstkY-003ws3-UA
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:38908
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 31 Jul 2019 19:22:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-profile is controlled by user-space via /sys/kernel/security/tomoyo/profile,
-hence leading to a potential exploitation of the Spectre variant 1
-vulnerability.
 
-This issue was detected with the help of Smatch:
+--=-Wv/u9qT9ydWeDsWxVynx
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-security/tomoyo/common.c:498 tomoyo_assign_profile() warn: potential spectre issue 'ns->profile_ptr' [r] (local cap)
-security/tomoyo/common.c:499 tomoyo_assign_profile() warn: possible spectre second half.  'ptr'
-security/tomoyo/common.c:505 tomoyo_assign_profile() warn: possible spectre second half.  'ptr'
-security/tomoyo/common.c:523 tomoyo_assign_profile() warn: possible spectre second half.  'ptr'
+On Wed, 2019-07-31 at 14:52 -0400, Doug Ledford wrote:
+> On Wed, 2019-07-31 at 12:52 -0500, Gustavo A. R. Silva wrote:
+> > This is insufficient. The speculation windows are large:
+> >=20
+> > "Speculative  execution  on  modern  CPUs  can  run  several
+> > hundred  instructions  ahead." [1]
+> >=20
+> > [1] https://spectreattack.com/spectre.pdf
+>=20
+> Thanks, I'll take a look at that.  That issue aside, returning without
+> wasting time on two mutexes is still better IMO, so I like my patch
+> more
+> than the proposed one.  Tony, would you like to resubmit?
+>=20
 
-Fix this by sanitizing profile before using it to index ns->profile_ptr
+Never mind, I took your V2 and fixed it up like I wanted.  Patch
+applied, thanks.
 
-Notice that given that speculation windows are large, the policy is
-to kill the speculation on the first load and not worry if it can be
-completed with a dependent load/store [1].
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
 
-[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+--=-Wv/u9qT9ydWeDsWxVynx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- security/tomoyo/common.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/security/tomoyo/common.c b/security/tomoyo/common.c
-index dd3d5942e669..45858dbcfdb9 100644
---- a/security/tomoyo/common.c
-+++ b/security/tomoyo/common.c
-@@ -8,6 +8,7 @@
- #include <linux/uaccess.h>
- #include <linux/slab.h>
- #include <linux/security.h>
-+#include <linux/nospec.h>
- #include "common.h"
- 
- /* String table for operation mode. */
-@@ -488,13 +489,15 @@ static void tomoyo_print_number_union(struct tomoyo_io_buffer *head,
-  * Returns pointer to "struct tomoyo_profile" on success, NULL otherwise.
-  */
- static struct tomoyo_profile *tomoyo_assign_profile
--(struct tomoyo_policy_namespace *ns, const unsigned int profile)
-+(struct tomoyo_policy_namespace *ns, unsigned int profile)
- {
- 	struct tomoyo_profile *ptr;
- 	struct tomoyo_profile *entry;
- 
- 	if (profile >= TOMOYO_MAX_PROFILES)
- 		return NULL;
-+	profile = array_index_nospec(profile, TOMOYO_MAX_PROFILES);
-+
- 	ptr = ns->profile_ptr[profile];
- 	if (ptr)
- 		return ptr;
--- 
-2.22.0
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1B6msACgkQuCajMw5X
+L920EQ//ZnYSHmoGTzfKPPATbtwiddtsOQRjlO2abLNYDTXpOCjGHf0FZBmvoWgt
+jiRcT2P/pPCoHhijeJdpRJwazHTc6NXrtI7lz2kCjP3aZh17Fb5uWB6tupwokFrR
+8ODtSzJ3emIn6bxiJy+Ej8RKUpAbqaIuytCN5EAsToqJoi1vxz5/I8HeLquMDf0a
+RtKujhNtiGgGgqHiT6QfsREGiTF0KnCJUvJzpyqgbaHqI7HfFRrXda65pR/GKvWu
+Oc45GQCACy9g8AorLaclu7WxxMMAkRwWY5oRHE6TyXhDdCu+551rzQMmYBZUPrZI
+N1ybzIM+GXJigzEKrnQeMunxCe1NfWoTV9fUbRHk0ItDw+5QwRGOFPFC3bzPAxsw
+BARfqsWhlUkD1paEaskXZLQP72bxGjnuXaCZbqcYoCquvN2yRpM2+C4mL8uZF1/X
+tOcQL1GUS/H4i2+w1mNjoBV4g7ft0Rm7zmWzCuV4+y2lYbMIMaH/xY1wCf56cHsI
+PZ10Nkb+KiXbivDvzbGqmJNyotxZh7JZw1ZfoOGgU6YQABY2vsMEiU/q5IOjM3Rt
+5zo+9VpR9FQhmF2zAZ89trqFOR4xltv+b3iTKgvMl6gQEcrdcpOGaJvgSmiSzg8v
+lzqJhIELmSF+ZlBobJejKZMDCUa29ZXGq0LSZneFII0HgVY6cUM=
+=biB6
+-----END PGP SIGNATURE-----
+
+--=-Wv/u9qT9ydWeDsWxVynx--
 
