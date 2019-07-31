@@ -2,79 +2,141 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBD7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2E8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2B52089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564557186;
-	bh=Sp4+FZc9NKQ051raBO4CbmbijqaCq4A+7t/KXzXR3DA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aMNvtBxMFAMCzBRRG8v4dZ9Vf+v4lU+gO0xBDKUl/Km5ordQuiwBpJaxzEWJMd187
-	 MvLWoX3cXEPge0AWQtxTjQetFCBxZNACdw06SlnbhgRtH0X+2jDJv3NBbkY3i3up38
-	 VYq/HaRkUN3BEZjwziyF82o48kSkQD+AhFIHTq2A=
+	by mail.kernel.org (Postfix) with ESMTP id 794DD217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:14:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="m3aMCZfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfGaHNE (ORCPT
+        id S1727411AbfGaHOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 03:13:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45480 "EHLO mail.kernel.org"
+        Wed, 31 Jul 2019 03:14:14 -0400
+Received: from uho.ysoft.cz ([81.19.3.130]:56498 "EHLO uho.ysoft.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbfGaHNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 03:13:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A39B206A3;
-        Wed, 31 Jul 2019 07:13:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564557183;
-        bh=Sp4+FZc9NKQ051raBO4CbmbijqaCq4A+7t/KXzXR3DA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dcPNd1Dbfemj0DZ/Hg9Jj+agvHlLUgthS0/+2n9XUyeuAwQp2I7SGqTxagJmH0NMy
-         CL1NODGY2Lhc/C0+S14MXS+YGoSu/327OQu7/gfhJupm0HYcRA3LaYhLu3B6cHj7RY
-         U1dIuXFpyYM4lUGToh3B19lANrE5BZGZW76ytwGc=
-Date:   Wed, 31 Jul 2019 09:13:01 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v6 36/57] pwm: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190731071301.GA23317@kroah.com>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-37-swboyd@chromium.org>
- <20190731065853.3ohrhqtjtuhxfq5r@pengutronix.de>
+        id S1725913AbfGaHOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 03:14:14 -0400
+Received: from [10.1.8.111] (unknown [10.1.8.111])
+        by uho.ysoft.cz (Postfix) with ESMTP id 28A1CA5931;
+        Wed, 31 Jul 2019 09:14:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
+        s=20160406-ysoft-com; t=1564557252;
+        bh=rtatZtXbN7GFHkDU8P+IOkQRQ4um7ZK8IiXYbfc5WeE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=m3aMCZfI4z3bF4vToIjgXPVOvKiFQOzjM/YKOXl53xcSKSDin8DIZTkNldPCPXPJG
+         EE0qy8Y/J9v/FNtMvIadvnVMWqfbCXMpEjB+3wf4zgTkyny49Qqo7+7cCOKL/rQoQJ
+         lv/c7r3PmgxkOYZcfaq1K3vbsZsxu6gQDBj4Pllg=
+Subject: Re: [PATCH 11/22] ARM: dts: imx6: Add sleep state to can interfaces
+To:     Philippe Schenker <dev@pschenker.ch>, marcel.ziswiler@toradex.com,
+        max.krummenacher@toradex.com, stefan@agner.ch,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+References: <20190730144649.19022-1-dev@pschenker.ch>
+ <20190730144649.19022-12-dev@pschenker.ch>
+From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Message-ID: <86f1e50b-97d6-5bdb-7cc2-e7dc162d147a@ysoft.com>
+Date:   Wed, 31 Jul 2019 09:14:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190731065853.3ohrhqtjtuhxfq5r@pengutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190730144649.19022-12-dev@pschenker.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 08:58:53AM +0200, Uwe Kleine-König wrote:
-> On Tue, Jul 30, 2019 at 11:15:36AM -0700, Stephen Boyd wrote:
-> > We don't need dev_err() messages when platform_get_irq() fails now that
-> > platform_get_irq() prints an error message itself when something goes
-> > wrong. Let's remove these prints with a simple semantic patch.
+On 30. 07. 19 16:46, Philippe Schenker wrote:
+> From: Philippe Schenker <philippe.schenker@toradex.com>
 > 
-> Looking at v5.3-rc2 it's not obvious to me that all error paths of
-> platform_get_irq issue an error message. Do I miss something?
+> This patch prepares the devicetree for the new Ixora V1.2 where we are
+> able to turn off the supply of the can transceiver. This implies to use
+> a sleep state on transmission pins in order to prevent backfeeding.
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> ---
 
-The commit is in my driver-core tree at the moment, so this should wait
-until 5.4-rc1.  I woudn't recommend merging it in 5.3-rc as it's not a
-bugfix.
+What about "ARM: dts: imx6qdl-apalis: " for the subject?
+To be clear that this is not related to the imx6 SoC itself.
 
-thanks,
+> 
+>   arch/arm/boot/dts/imx6qdl-apalis.dtsi | 27 +++++++++++++++++++++------
+>   1 file changed, 21 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> index 7c4ad541c3f5..59ed2e4a1fd1 100644
+> --- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> @@ -148,14 +148,16 @@
+>   };
+>   
+>   &can1 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_flexcan1>;
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&pinctrl_flexcan1_default>;
+> +	pinctrl-1 = <&pinctrl_flexcan1_sleep>;
+>   	status = "disabled";
+>   };
+>   
+>   &can2 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_flexcan2>;
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&pinctrl_flexcan2_default>;
+> +	pinctrl-1 = <&pinctrl_flexcan2_sleep>;
+>   	status = "disabled";
+>   };
+>   
+> @@ -599,19 +601,32 @@
+>   		>;
+>   	};
+>   
+> -	pinctrl_flexcan1: flexcan1grp {
+> +	pinctrl_flexcan1_default: flexcan1defgrp {
+>   		fsl,pins = <
+>   			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX 0x1b0b0
+>   			MX6QDL_PAD_GPIO_8__FLEXCAN1_RX 0x1b0b0
+>   		>;
+>   	};
+>   
+> -	pinctrl_flexcan2: flexcan2grp {
+> +	pinctrl_flexcan1_sleep: flexcan1slpgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_7__GPIO1_IO07 0x0
+> +			MX6QDL_PAD_GPIO_8__GPIO1_IO08 0x0
+> +		>;
+> +	};
+> +
+> +	pinctrl_flexcan2_default: flexcan2defgrp {
+>   		fsl,pins = <
+>   			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x1b0b0
+>   			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x1b0b0
+>   		>;
+>   	};
+> +	pinctrl_flexcan2_sleep: flexcan2slpgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL4__GPIO4_IO14 0x0
+> +			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15 0x0
+> +		>;
+> +	};
+>   
+>   	pinctrl_gpio_bl_on: gpioblon {
+>   		fsl,pins = <
+> 
 
-greg k-h
