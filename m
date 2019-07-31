@@ -2,177 +2,133 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CFBC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80189C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B00206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D84C206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbfGaPtF (ORCPT
+        id S1730093AbfGaPtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:49:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50746 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726755AbfGaPtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:49:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C38D7AF95;
-        Wed, 31 Jul 2019 15:49:02 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 007DA1E3F4D; Wed, 31 Jul 2019 17:48:59 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 17:48:59 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Wed, 31 Jul 2019 11:49:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:64121 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbfGaPtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:49:22 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5434130C26DA;
+        Wed, 31 Jul 2019 15:49:22 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 68AA160852;
+        Wed, 31 Jul 2019 15:49:20 +0000 (UTC)
+Subject: Re: [PATCH v3] sched/core: Don't use dying mm as active_mm of
+ kthreads
+To:     Rik van Riel <riel@surriel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Theodore Tso <tytso@mit.edu>, Julia Cartwright <julia@ni.com>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [patch 4/4] fs: jbd/jbd2: Substitute BH locks for RT and lock
- debugging
-Message-ID: <20190731154859.GI15806@quack2.suse.cz>
-References: <20190730112452.871257694@linutronix.de>
- <20190730120321.489374435@linutronix.de>
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Phil Auld <pauld@redhat.com>, Michal Hocko <mhocko@kernel.org>
+References: <20190729210728.21634-1-longman@redhat.com>
+ <ec9effc07a94b28ecf364de40dee183bcfb146fc.camel@surriel.com>
+ <3e2ff4c9-c51f-8512-5051-5841131f4acb@redhat.com>
+ <8021be4426fdafdce83517194112f43009fb9f6d.camel@surriel.com>
+ <b5a462b8-8ef6-6d2c-89aa-b5009c194000@redhat.com>
+ <c91e6104acaef118ae09e4b4b0c70232c4583293.camel@surriel.com>
+ <01125822-c883-18ce-42e4-942a4f28c128@redhat.com>
+ <76dbc397e21d64da75cd07d90b3ca15ca50d6fbb.camel@surriel.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <3307e8f7-4a68-95fc-a5dd-925fd3a5f8d7@redhat.com>
+Date:   Wed, 31 Jul 2019 11:49:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730120321.489374435@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <76dbc397e21d64da75cd07d90b3ca15ca50d6fbb.camel@surriel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 31 Jul 2019 15:49:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 30-07-19 13:24:56, Thomas Gleixner wrote:
-> Bit spinlocks are problematic if PREEMPT_RT is enabled. They disable
-> preemption, which is undesired for latency reasons and breaks when regular
-> spinlocks are taken within the bit_spinlock locked region because regular
-> spinlocks are converted to 'sleeping spinlocks' on RT.
-> 
-> Substitute the BH_State and BH_JournalHead bit spinlocks with regular
-> spinlock for PREEMPT_RT enabled kernels.
+On 7/31/19 11:07 AM, Rik van Riel wrote:
+> On Wed, 2019-07-31 at 10:15 -0400, Waiman Long wrote:
+>> On 7/31/19 9:48 AM, Rik van Riel wrote:
+>>> On Tue, 2019-07-30 at 17:01 -0400, Waiman Long wrote:
+>>>> On 7/29/19 8:26 PM, Rik van Riel wrote:
+>>>>> On Mon, 2019-07-29 at 17:42 -0400, Waiman Long wrote:
+>>>>>
+>>>>>> What I have found is that a long running process on a mostly
+>>>>>> idle
+>>>>>> system
+>>>>>> with many CPUs is likely to cycle through a lot of the CPUs
+>>>>>> during
+>>>>>> its
+>>>>>> lifetime and leave behind its mm in the active_mm of those
+>>>>>> CPUs.  My
+>>>>>> 2-socket test system have 96 logical CPUs. After running the
+>>>>>> test
+>>>>>> program for a minute or so, it leaves behind its mm in about
+>>>>>> half
+>>>>>> of
+>>>>>> the
+>>>>>> CPUs with a mm_count of 45 after exit. So the dying mm will
+>>>>>> stay
+>>>>>> until
+>>>>>> all those 45 CPUs get new user tasks to run.
+>>>>> OK. On what kernel are you seeing this?
+>>>>>
+>>>>> On current upstream, the code in native_flush_tlb_others()
+>>>>> will send a TLB flush to every CPU in mm_cpumask() if page
+>>>>> table pages have been freed.
+>>>>>
+>>>>> That should cause the lazy TLB CPUs to switch to init_mm
+>>>>> when the exit->zap_page_range path gets to the point where
+>>>>> it frees page tables.
+>>>>>
+>>>> I was using the latest upstream 5.3-rc2 kernel. It may be the
+>>>> case
+>>>> that
+>>>> the mm has been switched, but the mm_count field of the active_mm
+>>>> of
+>>>> the
+>>>> kthread is not being decremented until a user task runs on a CPU.
+>>> Is that something we could fix from the TLB flushing
+>>> code?
+>>>
+>>> When switching to init_mm, drop the refcount on the
+>>> lazy mm?
+>>>
+>>> That way that overhead is not added to the context
+>>> switching code.
+>> I have thought about that. That will require changing the active_mm
+>> of
+>> the current task to point to init_mm, for example. Since TLB flush is
+>> done in interrupt context, proper coordination between interrupt and
+>> process context will require some atomic instruction which will
+>> defect
+>> the purpose.
+> Would it be possible to work around that by scheduling
+> a work item that drops the active_mm?
+>
+> After all, a work item runs in a kernel thread, so by
+> the time the work item is run, either the kernel will
+> still be running the mm you want to get rid of as
+> active_mm, or it will have already gotten rid of it
+> earlier.
 
-Is there a real need for substitution for BH_JournalHead bit spinlock?  The
-critical sections are pretty tiny, all located within fs/jbd2/journal.c.
-Maybe only the one around __journal_remove_journal_head() would need a bit
-of refactoring so that journal_free_journal_head() doesn't get called
-under the bit-spinlock.
+Yes, that may work.
 
-BH_State lock is definitely worth it. In fact, if you placed the spinlock
-inside struct journal_head (which is the structure whose members are in
-fact protected by it), I'd be even fine with just using the spinlock always
-instead of the bit spinlock. journal_head is pretty big anyway (and there's
-even 4-byte hole in it for 64-bit archs) and these structures are pretty
-rare (only for actively changed metadata buffers).
+Thanks,
+Longman
 
-								Honza
-
-> 
-> Bit spinlocks are also not covered by lock debugging, e.g. lockdep. With
-> the spinlock substitution in place, they can be exposed via
-> CONFIG_DEBUG_BIT_SPINLOCKS.
-> 
-> Originally-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-ext4@vger.kernel.org
-> Cc: "Theodore Ts'o" <tytso@mit.edu>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Jan Kara <jack@suse.com>
-> --
->  include/linux/buffer_head.h |    8 ++++++++
->  include/linux/jbd2.h        |   36 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 44 insertions(+)
-> 
-> --- a/include/linux/buffer_head.h
-> +++ b/include/linux/buffer_head.h
-> @@ -79,6 +79,10 @@ struct buffer_head {
->  
->  #if defined(CONFIG_PREEMPT_RT) || defined(CONFIG_DEBUG_BIT_SPINLOCKS)
->  	spinlock_t b_uptodate_lock;
-> +# if IS_ENABLED(CONFIG_JBD2)
-> +	spinlock_t b_state_lock;
-> +	spinlock_t b_journal_head_lock;
-> +# endif
->  #endif
->  };
->  
-> @@ -101,6 +105,10 @@ bh_uptodate_unlock_irqrestore(struct buf
->  static inline void buffer_head_init_locks(struct buffer_head *bh)
->  {
->  	spin_lock_init(&bh->b_uptodate_lock);
-> +#if IS_ENABLED(CONFIG_JBD2)
-> +	spin_lock_init(&bh->b_state_lock);
-> +	spin_lock_init(&bh->b_journal_head_lock);
-> +#endif
->  }
->  
->  #else /* PREEMPT_RT || DEBUG_BIT_SPINLOCKS */
-> --- a/include/linux/jbd2.h
-> +++ b/include/linux/jbd2.h
-> @@ -342,6 +342,40 @@ static inline struct journal_head *bh2jh
->  	return bh->b_private;
->  }
->  
-> +#if defined(CONFIG_PREEMPT_RT) || defined(CONFIG_DEBUG_BIT_SPINLOCKS)
-> +
-> +static inline void jbd_lock_bh_state(struct buffer_head *bh)
-> +{
-> +	spin_lock(&bh->b_state_lock);
-> +}
-> +
-> +static inline int jbd_trylock_bh_state(struct buffer_head *bh)
-> +{
-> +	return spin_trylock(&bh->b_state_lock);
-> +}
-> +
-> +static inline int jbd_is_locked_bh_state(struct buffer_head *bh)
-> +{
-> +	return spin_is_locked(&bh->b_state_lock);
-> +}
-> +
-> +static inline void jbd_unlock_bh_state(struct buffer_head *bh)
-> +{
-> +	spin_unlock(&bh->b_state_lock);
-> +}
-> +
-> +static inline void jbd_lock_bh_journal_head(struct buffer_head *bh)
-> +{
-> +	spin_lock(&bh->b_journal_head_lock);
-> +}
-> +
-> +static inline void jbd_unlock_bh_journal_head(struct buffer_head *bh)
-> +{
-> +	spin_unlock(&bh->b_journal_head_lock);
-> +}
-> +
-> +#else /* PREEMPT_RT || DEBUG_BIT_SPINLOCKS */
-> +
->  static inline void jbd_lock_bh_state(struct buffer_head *bh)
->  {
->  	bit_spin_lock(BH_State, &bh->b_state);
-> @@ -372,6 +406,8 @@ static inline void jbd_unlock_bh_journal
->  	bit_spin_unlock(BH_JournalHead, &bh->b_state);
->  }
->  
-> +#endif /* !PREEMPT_RT && !DEBUG_BIT_SPINLOCKS */
-> +
->  #define J_ASSERT(assert)	BUG_ON(!(assert))
->  
->  #define J_ASSERT_BH(bh, expr)	J_ASSERT(expr)
-> 
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
