@@ -2,335 +2,109 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F43C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2234C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2E5F214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF76206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:06:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="G8rAEk4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfGaUFq (ORCPT
+        id S1729121AbfGaUGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:05:46 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:38567 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfGaUFq (ORCPT
+        Wed, 31 Jul 2019 16:06:09 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35904 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfGaUGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:05:46 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Ml3ym-1ie2tU2XXw-00lY85; Wed, 31 Jul 2019 22:05:08 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/14] ARM: dove: clean up mach/*.h headers
-Date:   Wed, 31 Jul 2019 21:56:54 +0200
-Message-Id: <20190731195713.3150463-13-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190731195713.3150463-1-arnd@arndb.de>
-References: <20190731195713.3150463-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:wm+KSeGGuXF5WOxKnt5YWZSFWSzwpQiV1pnc7vH9hnQfyF3uo3n
- gCrFBQ3yKHG0+DFWqQmfJqP6Itkdlnc8qKU99KkNC34vbDMv3YzmXoRwQFdjHC8eo7cpDHV
- j+SDEsiC6bWTa2enEM/7xwU7Kn5GLhBnlOb3naY4fXgocB8zpeFrPODfH8cbg3PRji5BClB
- j8I/Iv2fiM5yc2zhXYchQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5i9Pzgm/3dc=:/w8M1fT6vtSN5U1kHGY3ph
- SGSal8B1dZSKdDqAKV4r8z+19BRsTRWV16aimYGBkMDHyOUz6zpNKR4niLX/Om2qVaOQURJbL
- XURssmFZVOd8nruSi4JIxo9+TLstHX/YfK6xSI0/W42yzX8Y6brLdEPD+vU6LayI8OHSZr1mM
- Vbf0ESPZP0wo5wj5KNHgpJlbQmNb63x+7ABammyca8R2lwHzDfvYwu4R51VBnbiLrslfLjbns
- JPTvxyOWxtV7X56r6lSTiU3tyHin5fOZWnSD7b9mtkZ/es9F6EIx23V8OdLWXsivZjbWAxVui
- 7jfvISGfL858CtIlqu0abInX7iom6syFCHd/risPtyzH/8JzwPUdJV5z7ddlWiRIKXPGBdPse
- uYr6aeY0kmuOGfP8wSl7HkVPnf+Y3HRfzBePoED2LQPqEP9kD3y7CO5hOQEay1UJ6yn35LQ85
- AkE8v7PeVXAxQ9Xd274uGZaTlhrfKLmt0fz/erSf6DS42HxMbcZe8cA9nT0OGb+qvw7VEbg3O
- N/HH/DkBh8Ckk1FEaqvDz7wuAHGrqiRlm+rlCNbJ5Zg6IjfZHcuQshUknPCoFOHtp3HHU46n6
- 3cSEpfZjWPldZXeQqZzlTvel84GguhGCCFVRS+AtoaVUP0zZntzy+e18HerdrZ28fUeulDRn9
- wL88M+46YUFYW7o7K6zhFZ56wPZP+kO52PeXe44ViwpGJtwDCMKjz3LzfOgpLuPBluglyHuJm
- nFAS/hbAMJgT66nhvQMH9GdS8rPtkQfCmJ0Ifw==
+        Wed, 31 Jul 2019 16:06:09 -0400
+Received: by mail-vs1-f67.google.com with SMTP id y16so47116550vsc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:06:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=xmPjjmmf4+gFo5kALeeHuZbdpMAsYz3IH/3r3H4+9ag=;
+        b=G8rAEk4u8bQFqyZvsdRqDU+I5cYozB4lVT2OE2OcGrXZSPpFoi5VRmJiZuBXbPE7Ps
+         t89Kb/cgo/PjpoU0beaAKd8TU84LTlL6EjaDhdQQZWxW8obpVyuKeMAu0RkePO59Ghcf
+         jfujlAw6IkDEyzp6vuamu/1K8k2YZwfdHVPIMpzCIuSV2ew8+1Q8U1hQ/i4FQnYKAX/m
+         ofq3/saeJxblLG3EK1CLbK8Ky4WjImDfrE87wrzFIkDBbFsjbAQW1V1leQAqpFQI77SG
+         xMaiNn9WTWax+ELQ1xPCNwmzXZS6idZh9LRnZP7N2YGkwme0I/gHURd4mIp1iqsifxOT
+         wMRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xmPjjmmf4+gFo5kALeeHuZbdpMAsYz3IH/3r3H4+9ag=;
+        b=JXTHIWBihcLpOSmdzBOGfIJ+Q5Z3ZiVtd/LenPPecIXr3GWRXMgD0LB3nE+KlrJLyR
+         lDrUhdWzEupHMv+d+LSwaoAx8Dyr7E7FNAdzwsGwbJf+KK3jHitjvO3K29WGUfwteS7j
+         UJSxvwzvzxCxEE9ihdQt55j5n8La4YzUaswkhFkMpcmaVOobwUWzrXgxb5KKIb16CP/l
+         f494+uK9713jNEKeTVoK1ec93YQIdMvfrzvmDEkgv8Rj61PRQPFyST1A/+3zM0/f2/nD
+         wswxE1xtX5fGAdoc95FcmhpkNAZLYc9z2/OCmxmlWhnUl9m9s3bTXeRjVIahfCcA9VIk
+         JYzQ==
+X-Gm-Message-State: APjAAAUHEzq8mvKbhGgdD54SK+KnkKaP/FjqO4Q/zqfIGobZ2dvrhURJ
+        iL+abxl3VZ0UTI074iQEzGkYhQ==
+X-Google-Smtp-Source: APXvYqwDFXXJKVaaRLQNlrqo/ycvYqOMZDQRyXsC9KjeEADy44EzhJcvaxN6b4K4kmpA/leb8BQa2A==
+X-Received: by 2002:a67:fc50:: with SMTP id p16mr81886754vsq.79.1564603568705;
+        Wed, 31 Jul 2019 13:06:08 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id e3sm12703871vsp.6.2019.07.31.13.06.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 13:06:08 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     catalin.marinas@arm.com
+Cc:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] arm64/mm: fix variable 'pud' set but not used
+Date:   Wed, 31 Jul 2019 16:05:45 -0400
+Message-Id: <1564603545-14776-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a simple move of all header files that are no longer
-included by anything else from the include/mach directory
-to the platform directory itself as preparation for
-multiplatform support.
+GCC throws a warning,
 
-The mach/uncompress.h headers are left in place for now,
-and are mildly modified to be independent of the other
-headers. They will be removed entirely when ARCH_MULTIPLATFORM
-gets enabled and they become obsolete.
+arch/arm64/mm/mmu.c: In function 'pud_free_pmd_page':
+arch/arm64/mm/mmu.c:1033:8: warning: variable 'pud' set but not used
+[-Wunused-but-set-variable]
+  pud_t pud;
+        ^~~
 
-Rather than updating the path names inside of the comments
-of each header, I delete those comments to avoid having to
-update them again, should they get moved or copied another
-time.
+because pud_table() is a macro and compiled away. Fix it by making it a
+static inline function and for pud_sect() as well.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- .../{include/mach => }/bridge-regs.h          |  4 +---
- arch/arm/mach-dove/cm-a510.c                  |  3 +--
- arch/arm/mach-dove/common.c                   |  4 ++--
- arch/arm/mach-dove/dove-db-setup.c            |  2 +-
- arch/arm/mach-dove/{include/mach => }/dove.h  |  4 +---
- arch/arm/mach-dove/include/mach/hardware.h    | 19 -------------------
- arch/arm/mach-dove/include/mach/uncompress.h  |  8 +++-----
- arch/arm/mach-dove/irq.c                      |  5 ++++-
- arch/arm/mach-dove/{include/mach => }/irqs.h  |  2 --
- arch/arm/mach-dove/mpp.c                      |  2 +-
- arch/arm/mach-dove/pcie.c                     |  4 ++--
- arch/arm/mach-dove/{include/mach => }/pm.h    |  4 +---
- 12 files changed, 17 insertions(+), 44 deletions(-)
- rename arch/arm/mach-dove/{include/mach => }/bridge-regs.h (96%)
- rename arch/arm/mach-dove/{include/mach => }/dove.h (99%)
- delete mode 100644 arch/arm/mach-dove/include/mach/hardware.h
- rename arch/arm/mach-dove/{include/mach => }/irqs.h (98%)
- rename arch/arm/mach-dove/{include/mach => }/pm.h (97%)
+ arch/arm64/include/asm/pgtable.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-dove/include/mach/bridge-regs.h b/arch/arm/mach-dove/bridge-regs.h
-similarity index 96%
-rename from arch/arm/mach-dove/include/mach/bridge-regs.h
-rename to arch/arm/mach-dove/bridge-regs.h
-index f4a5b34489b7..ace0b0bfbf11 100644
---- a/arch/arm/mach-dove/include/mach/bridge-regs.h
-+++ b/arch/arm/mach-dove/bridge-regs.h
-@@ -1,6 +1,4 @@
- /*
-- * arch/arm/mach-dove/include/mach/bridge-regs.h
-- *
-  * Mbus-L to Mbus Bridge Registers
-  *
-  * This file is licensed under the terms of the GNU General Public
-@@ -11,7 +9,7 @@
- #ifndef __ASM_ARCH_BRIDGE_REGS_H
- #define __ASM_ARCH_BRIDGE_REGS_H
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 3f5461f7b560..541cb4a15341 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -447,8 +447,15 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+ 				 PMD_TYPE_SECT)
  
--#include <mach/dove.h>
-+#include "dove.h"
- 
- #define CPU_CONFIG		(BRIDGE_VIRT_BASE + 0x0000)
- 
-diff --git a/arch/arm/mach-dove/cm-a510.c b/arch/arm/mach-dove/cm-a510.c
-index b9a7c33db29a..9f25c993d863 100644
---- a/arch/arm/mach-dove/cm-a510.c
-+++ b/arch/arm/mach-dove/cm-a510.c
-@@ -22,8 +22,7 @@
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
- 
--#include <mach/dove.h>
--
-+#include "dove.h"
- #include "common.h"
- 
- static struct mv643xx_eth_platform_data cm_a510_ge00_data = {
-diff --git a/arch/arm/mach-dove/common.c b/arch/arm/mach-dove/common.c
-index d7b826d2695c..01b830afcea9 100644
---- a/arch/arm/mach-dove/common.c
-+++ b/arch/arm/mach-dove/common.c
-@@ -22,11 +22,11 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- #include <asm/mach/time.h>
--#include <mach/bridge-regs.h>
--#include <mach/pm.h>
- #include <plat/common.h>
- #include <plat/irq.h>
- #include <plat/time.h>
-+#include "bridge-regs.h"
-+#include "pm.h"
- #include "common.h"
- 
- /* These can go away once Dove uses the mvebu-mbus DT binding */
-diff --git a/arch/arm/mach-dove/dove-db-setup.c b/arch/arm/mach-dove/dove-db-setup.c
-index 8971c3c0f0fe..418ab21b9d9b 100644
---- a/arch/arm/mach-dove/dove-db-setup.c
-+++ b/arch/arm/mach-dove/dove-db-setup.c
-@@ -24,7 +24,7 @@
- #include <linux/gpio.h>
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
--#include <mach/dove.h>
-+#include "dove.h"
- #include "common.h"
- 
- static struct mv643xx_eth_platform_data dove_db_ge00_data = {
-diff --git a/arch/arm/mach-dove/include/mach/dove.h b/arch/arm/mach-dove/dove.h
-similarity index 99%
-rename from arch/arm/mach-dove/include/mach/dove.h
-rename to arch/arm/mach-dove/dove.h
-index 00f45458b3ec..539e735f968d 100644
---- a/arch/arm/mach-dove/include/mach/dove.h
-+++ b/arch/arm/mach-dove/dove.h
-@@ -1,6 +1,4 @@
- /*
-- * arch/arm/mach-dove/include/mach/dove.h
-- *
-  * Generic definitions for Marvell Dove 88AP510 SoC
-  *
-  * This file is licensed under the terms of the GNU General Public
-@@ -11,7 +9,7 @@
- #ifndef __ASM_ARCH_DOVE_H
- #define __ASM_ARCH_DOVE_H
- 
--#include <mach/irqs.h>
-+#include "irqs.h"
- 
- /*
-  * Marvell Dove address maps.
-diff --git a/arch/arm/mach-dove/include/mach/hardware.h b/arch/arm/mach-dove/include/mach/hardware.h
-deleted file mode 100644
-index f1368b9a8ece..000000000000
---- a/arch/arm/mach-dove/include/mach/hardware.h
-+++ /dev/null
-@@ -1,19 +0,0 @@
--/*
-- * arch/arm/mach-dove/include/mach/hardware.h
-- *
-- * This file is licensed under the terms of the GNU General Public
-- * License version 2.  This program is licensed "as is" without any
-- * warranty of any kind, whether express or implied.
-- */
--
--#ifndef __ASM_ARCH_HARDWARE_H
--#define __ASM_ARCH_HARDWARE_H
--
--#include "dove.h"
--
--/* Macros below are required for compatibility with PXA AC'97 driver.	*/
--#define __REG(x)	(*((volatile u32 *)((x) - DOVE_SB_REGS_PHYS_BASE + \
--				DOVE_SB_REGS_VIRT_BASE)))
--#define __PREG(x)	(((u32)&(x)) - DOVE_SB_REGS_VIRT_BASE + \
--		DOVE_SB_REGS_PHYS_BASE)
--#endif
-diff --git a/arch/arm/mach-dove/include/mach/uncompress.h b/arch/arm/mach-dove/include/mach/uncompress.h
-index 5c8ae9b9d39a..7a4bd8838036 100644
---- a/arch/arm/mach-dove/include/mach/uncompress.h
-+++ b/arch/arm/mach-dove/include/mach/uncompress.h
-@@ -1,15 +1,13 @@
- /*
-- * arch/arm/mach-dove/include/mach/uncompress.h
-- *
-  * This file is licensed under the terms of the GNU General Public
-  * License version 2.  This program is licensed "as is" without any
-  * warranty of any kind, whether express or implied.
-  */
- 
--#include <mach/dove.h>
-+#define UART0_PHYS_BASE (0xf1000000 + 0x12000)
- 
--#define UART_THR ((volatile unsigned char *)(DOVE_UART0_PHYS_BASE + 0x0))
--#define UART_LSR ((volatile unsigned char *)(DOVE_UART0_PHYS_BASE + 0x14))
-+#define UART_THR ((volatile unsigned char *)(UART0_PHYS_BASE + 0x0))
-+#define UART_LSR ((volatile unsigned char *)(UART0_PHYS_BASE + 0x14))
- 
- #define LSR_THRE	0x20
- 
-diff --git a/arch/arm/mach-dove/irq.c b/arch/arm/mach-dove/irq.c
-index d6627c1f7f30..31ccbcee2627 100644
---- a/arch/arm/mach-dove/irq.c
-+++ b/arch/arm/mach-dove/irq.c
-@@ -11,9 +11,12 @@
- #include <linux/irq.h>
- #include <linux/io.h>
- #include <asm/exception.h>
+ #if defined(CONFIG_ARM64_64K_PAGES) || CONFIG_PGTABLE_LEVELS < 3
+-#define pud_sect(pud)		(0)
+-#define pud_table(pud)		(1)
++static inline bool pud_sect(pud_t pud)
++{
++	return false;
++}
 +
- #include <plat/irq.h>
--#include <mach/bridge-regs.h>
- #include <plat/orion-gpio.h>
-+
-+#include "pm.h"
-+#include "bridge-regs.h"
- #include "common.h"
- 
- static int __initdata gpio0_irqs[4] = {
-diff --git a/arch/arm/mach-dove/include/mach/irqs.h b/arch/arm/mach-dove/irqs.h
-similarity index 98%
-rename from arch/arm/mach-dove/include/mach/irqs.h
-rename to arch/arm/mach-dove/irqs.h
-index 8ff0fa8b4fcd..a0742179faff 100644
---- a/arch/arm/mach-dove/include/mach/irqs.h
-+++ b/arch/arm/mach-dove/irqs.h
-@@ -1,6 +1,4 @@
- /*
-- * arch/arm/mach-dove/include/mach/irqs.h
-- *
-  * IRQ definitions for Marvell Dove 88AP510 SoC
-  *
-  * This file is licensed under the terms of the GNU General Public
-diff --git a/arch/arm/mach-dove/mpp.c b/arch/arm/mach-dove/mpp.c
-index 8a433a51289c..6acd8488bb05 100644
---- a/arch/arm/mach-dove/mpp.c
-+++ b/arch/arm/mach-dove/mpp.c
-@@ -12,8 +12,8 @@
- #include <linux/gpio.h>
- #include <linux/io.h>
- #include <plat/mpp.h>
--#include <mach/dove.h>
- #include <plat/orion-gpio.h>
-+#include "dove.h"
- #include "mpp.h"
- 
- struct dove_mpp_grp {
-diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
-index dfb62f3f5dcf..ee91ac6b5ebf 100644
---- a/arch/arm/mach-dove/pcie.c
-+++ b/arch/arm/mach-dove/pcie.c
-@@ -17,9 +17,9 @@
- #include <asm/setup.h>
- #include <asm/delay.h>
- #include <plat/pcie.h>
--#include <mach/irqs.h>
--#include <mach/bridge-regs.h>
- #include <plat/addr-map.h>
-+#include "irqs.h"
-+#include "bridge-regs.h"
- #include "common.h"
- 
- struct pcie_port {
-diff --git a/arch/arm/mach-dove/include/mach/pm.h b/arch/arm/mach-dove/pm.h
-similarity index 97%
-rename from arch/arm/mach-dove/include/mach/pm.h
-rename to arch/arm/mach-dove/pm.h
-index d22b9b174007..01267746d707 100644
---- a/arch/arm/mach-dove/include/mach/pm.h
-+++ b/arch/arm/mach-dove/pm.h
-@@ -1,6 +1,4 @@
- /*
-- * arch/arm/mach-dove/include/mach/pm.h
-- *
-  * This file is licensed under the terms of the GNU General Public
-  * License version 2.  This program is licensed "as is" without any
-  * warranty of any kind, whether express or implied.
-@@ -10,7 +8,7 @@
- #define __ASM_ARCH_PM_H
- 
- #include <asm/errno.h>
--#include <mach/irqs.h>
-+#include "irqs.h"
- 
- #define CLOCK_GATING_CONTROL	(DOVE_PMU_VIRT_BASE + 0x38)
- #define  CLOCK_GATING_BIT_USB0		0
++static inline bool pud_table(pud_t pud)
++{
++	return true;
++}
+ #else
+ #define pud_sect(pud)		((pud_val(pud) & PUD_TYPE_MASK) == \
+ 				 PUD_TYPE_SECT)
 -- 
-2.20.0
+1.8.3.1
 
