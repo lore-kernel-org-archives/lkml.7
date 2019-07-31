@@ -2,108 +2,73 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAA5C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D14EDC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBBB206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564566442;
-	bh=lL2lo8DlwbLLdQWW3NO2uszBJC91kGckp3xrQvR1t9c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=smatTiLewDuNvLCiHimIVYj3xEBU5zr1HFCtxni227C3klFLTc3/oZ5A1iUNnqty8
-	 bwo3dGXCbdB/mSlryOUqMB/MGllL0mP/nKZ3vhBT837/BICgjgP/geM6KWqjusYrH5
-	 XJXjy+y6FCRx5qZ/m19/KMJylFKzMewVOD0PfZZs=
+	by mail.kernel.org (Postfix) with ESMTP id AD6AD206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfGaJrU (ORCPT
+        id S1728333AbfGaJrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbfGaJrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:47:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E916320665;
-        Wed, 31 Jul 2019 09:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564566439;
-        bh=lL2lo8DlwbLLdQWW3NO2uszBJC91kGckp3xrQvR1t9c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jzAuw+NUUfjH+lgnxL08F+LzTF4iTVjwkUEN3Eew2meU6uuuIR6xrcV6H1I579WqT
-         +8XXWXa8HIohlMlAxlK0tVhjIXVxJbHFPLsRZVdAq6Jy+C1hmY8VDljIvzeVApPDKy
-         JIJLq/dr7HSFKKinRBS3+KEyKCNsI9UdxYYocOK8=
-Date:   Wed, 31 Jul 2019 11:47:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        "# 4 . 9+" <stable@vger.kernel.org>,
-        Aurelien Jarno <aurelien@aurel32.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] arm64: compat: Provide definition for COMPAT_SIGMINSTKSZ
-Message-ID: <20190731094717.GH18269@kroah.com>
-References: <20190730092547.1284-1-will@kernel.org>
- <20190730093713.GB15402@kroah.com>
- <20190730093938.bimxbvhd3alo3u37@willie-the-truck>
- <20190730094226.GA16071@kroah.com>
+        Wed, 31 Jul 2019 05:47:42 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36495 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfGaJrl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:47:41 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hslCr-0006P6-2g; Wed, 31 Jul 2019 09:47:37 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Straube <straube.linux@gmail.com>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8188eu: remove redundant assignment to variable rtstatus
+Date:   Wed, 31 Jul 2019 10:47:36 +0100
+Message-Id: <20190731094736.28637-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730094226.GA16071@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:42:26AM +0200, Greg KH wrote:
-> On Tue, Jul 30, 2019 at 10:39:38AM +0100, Will Deacon wrote:
-> > On Tue, Jul 30, 2019 at 11:37:13AM +0200, Greg KH wrote:
-> > > On Tue, Jul 30, 2019 at 10:25:47AM +0100, Will Deacon wrote:
-> > > > From: Will Deacon <will.deacon@arm.com>
-> > > > 
-> > > > [ Upstream commit 24951465cbd279f60b1fdc2421b3694405bcff42 ]
-> > > > 
-> > > > arch/arm/ defines a SIGMINSTKSZ of 2k, so we should use the same value
-> > > > for compat tasks.
-> > > > 
-> > > > Cc: <stable@vger.kernel.org> # 4.9+
-> > > > Cc: Aurelien Jarno <aurelien@aurel32.net>
-> > > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > > Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-> > > > Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > Reviewed-by: Dave Martin <Dave.Martin@arm.com>
-> > > > Reported-by: Steve McIntyre <steve.mcintyre@arm.com>
-> > > > Tested-by: Steve McIntyre <93sam@debian.org>
-> > > > Signed-off-by: Will Deacon <will.deacon@arm.com>
-> > > > Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> > > > ---
-> > > > 
-> > > > Aurelien points out that this didn't get selected for -stable despite its
-> > > > counterpart (22839869f21a ("signal: Introduce COMPAT_SIGMINSTKSZ for use
-> > > > in compat_sys_sigaltstack")) being backported to 4.9. Oops.
-> > > 
-> > > So this needs to go into 4.9.y, 4.14.y, and 4.19.y?
-> > 
-> > Yes, please.
-> 
-> Thanks, will do after this next round of kernels goes out.
+From: Colin Ian King <colin.king@canonical.com>
 
-Now queued up, thanks.
+Variable rtstatus is being initialized with a value that is never read
+and rtstatus is being re-assigned a little later on. The assignment is
+redundant and hence can be removed.  Also, make rtstatus a bool to
+match the function return type.
 
-greg k-h
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/staging/rtl8188eu/hal/bb_cfg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8188eu/hal/bb_cfg.c b/drivers/staging/rtl8188eu/hal/bb_cfg.c
+index 11e0bb9c67d7..51882858fcf0 100644
+--- a/drivers/staging/rtl8188eu/hal/bb_cfg.c
++++ b/drivers/staging/rtl8188eu/hal/bb_cfg.c
+@@ -653,7 +653,7 @@ static bool config_parafile(struct adapter *adapt)
+ 
+ bool rtl88eu_phy_bb_config(struct adapter *adapt)
+ {
+-	int rtstatus = true;
++	bool rtstatus;
+ 	u32 regval;
+ 	u8 crystal_cap;
+ 
+-- 
+2.20.1
+
