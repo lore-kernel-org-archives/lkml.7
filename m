@@ -6,60 +6,65 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F5FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26118C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C379214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E97172171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564605306;
-	bh=ckTmi0QWfObMDroHcYyKuNJqJCI0ICW43anDqxZzDkA=;
+	s=default; t=1564605319;
+	bh=Q/sIV9523h3i8lCTiYNbY5Y9xmNac/O1XoFaujU1Xn4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=VsdyaubVEnX3UR4dqJTkk7AgZQA4NxDy9yinTkkyQfu9NQNkbEesyYPuTx3Z2B8ds
-	 8dFvVTBfFlEj33kPHpLJP05/xkwgEAQsueC+Q4gTgViNyyd52dlEjDZ7AiiVHWJatn
-	 9HX4TQAaTjWq2q3o+H/W3k+ZfTmMkNLPIaxWaZhk=
+	b=NzuhGB+kGZbL9KQGiEAZDJY8nGK49hotuTJkNB/edFqaYfLvIJxgYrZDgczzUByuL
+	 yce1fl9BJspXcPvxboBysYXhINOvGXhCWX/bq4HEqlv6UbbY39FuUN35fx79tu4gKR
+	 rlOrf5dCGmhHnZRfWyJzfBYSaxux/KAqp7ac0eDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbfGaUfF (ORCPT
+        id S1730684AbfGaUfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52088 "EHLO mail.kernel.org"
+        Wed, 31 Jul 2019 16:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfGaUfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:35:05 -0400
-Subject: Re: [git pull] vfs.git mount_capable() fix
+        id S1728050AbfGaUfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 16:35:16 -0400
+Subject: Re: [GIT PULL] tracing: Minor fixes for v5.3-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564605304;
-        bh=ckTmi0QWfObMDroHcYyKuNJqJCI0ICW43anDqxZzDkA=;
+        s=default; t=1564605315;
+        bh=Q/sIV9523h3i8lCTiYNbY5Y9xmNac/O1XoFaujU1Xn4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=as23Yu0KJxgDTKcYx4aQJyb3Bp9e8oqMOyLI9niUxLG7ge7yVa8rCfzSwUuszy22t
-         ETVL2zn9tcZJEHyaKZjsCBltQoOI5j9ouk+Cm03/sgSbzest6+CN1umlo0zD4J7nH0
-         fanbxYhsYgockTTWNv9gH4nEqJua1w5ko4Ga23DM=
+        b=ixpEfEB08vouyxP/f3XxZyprYD3AUd1N0LEb0a77jDITrqwML3JtApRAVY/XSCNy/
+         QpnqYNrKo5eZ/6lv1G9VIZvHU08887k8+hgG9+3mh+K/zJkhKMlpAap2rf/REPacQN
+         R2en8uMjdsjl0lwUTKvV8EHoLzoM/fJGZZ2oFo14=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190731185327.GV1131@ZenIV.linux.org.uk>
-References: <20190731185327.GV1131@ZenIV.linux.org.uk>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190731185327.GV1131@ZenIV.linux.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
-X-PR-Tracked-Commit-Id: c2c44ec20a8496f7a3b3401c092afe96908eced1
+In-Reply-To: <20190731110517.4e065b29@gandalf.local.home>
+References: <20190731110517.4e065b29@gandalf.local.home>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190731110517.4e065b29@gandalf.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+ trace-v5.3-rc2
+X-PR-Tracked-Commit-Id: 6c77221df96177da0520847ce91e33f539fb8b2d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5c6207539aea8b22490f9569db5aa72ddfd0d486
-Message-Id: <156460530413.15680.12944463764728962093.pr-tracker-bot@kernel.org>
-Date:   Wed, 31 Jul 2019 20:35:04 +0000
-To:     Al Viro <viro@zeniv.linux.org.uk>
+X-PR-Merge-Commit-Id: d2eee9fca172d0d010ef3060cdc971e0b079b87f
+Message-Id: <156460531584.15680.4846519904319741266.pr-tracker-bot@kernel.org>
+Date:   Wed, 31 Jul 2019 20:35:15 +0000
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Changbin Du <changbin.du@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 31 Jul 2019 19:53:27 +0100:
+The pull request you sent on Wed, 31 Jul 2019 11:05:17 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git trace-v5.3-rc2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5c6207539aea8b22490f9569db5aa72ddfd0d486
+https://git.kernel.org/torvalds/c/d2eee9fca172d0d010ef3060cdc971e0b079b87f
 
 Thank you!
 
