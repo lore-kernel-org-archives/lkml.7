@@ -2,129 +2,88 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADE4C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D92C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E97206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:58:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="kUhRcSb9"
+	by mail.kernel.org (Postfix) with ESMTP id EA457206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbfGaJ6f (ORCPT
+        id S1729029AbfGaJ7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:58:35 -0400
-Received: from mail-eopbgr1410090.outbound.protection.outlook.com ([40.107.141.90]:11115
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        Wed, 31 Jul 2019 05:59:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54150 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728996AbfGaJ6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:58:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A0WEaXFJfSdoOjL1JSd07s54kj6dZsumYi9c2vEmF4aLHLjJXjXPL1M1zrAPNnTwt1wyfDR3stjScOz8xiVOvpTwg5pa7BjMU2pVkDBNJ9UPv3axv/JgpiWwfN01N1JFtyLNRL0Rom/qINO+QD0B8Ycf+eLyPlg7PmtzycBJZrTm77qGncKtfJVqyzV4F7StHXietOLwiXmKnb1cIv7fGusVh4zPoK60oPPWHPPJ62IDvi0qz8flpN4liq429HUBVXe6okDfe6q4cpSXWOyZRSJHX/1ce0jlNNHV+CIZQrO657OOzj4iUazgqoBjG7TddgC5vjuq+kOpTtvDKMYx0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CMp3YtS4wCIucwyFoj6GQZKQTJ+7805ULG6CeFkscfk=;
- b=lMfJ9h0H5Q0cFS6QxD14dtVdhH3k6olR6Lu9ooUzL/KEyYsl7YVACpf30vzwspmvvsujN9SKUqWdQdQ7ifeQ54gnWB4+mcNru0Ef12EW2Js+0jHVtWPAPRqDd+DG+OKdxMGqcjfRGeAaAyLa/IIEYUso0PHTQTczPg2QuVW3najzHXurgszVoAOIuP4OkOB9BWvTJ2zUw7g2r23enUd69pA61LoWXDxe5RQLlbhfclgwD/sTLZHc/xY3QUt0p+GksauMx33ghmzpS4ULKvTs3wOgygVNElVzfVfz2O4JbLqC3gTiMw0okhpSpg7iqGKHaiRNubeAzhAxBEU/UZibkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=renesas.com;dmarc=pass action=none
- header.from=renesas.com;dkim=pass header.d=renesas.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CMp3YtS4wCIucwyFoj6GQZKQTJ+7805ULG6CeFkscfk=;
- b=kUhRcSb9BIymyuinU2RxTfZ7yeC3BR5BaEamVN1+aCwVBXVwKl2n4zEpnoL98ZwYv9AL7lgQVgzxzOiZYWacaRqncGNkqsJBiX8VrFqDDPozOK2xoTICHCZqBDILOEBfiSOMsvARoPtrWK+pux5sonqiZHfUf+0CHkHPyOBVguo=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.174.85) by
- TYAPR01MB2672.jpnprd01.prod.outlook.com (20.177.105.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.14; Wed, 31 Jul 2019 09:58:31 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::5c8d:f422:6a44:57a9]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::5c8d:f422:6a44:57a9%5]) with mapi id 15.20.2136.010; Wed, 31 Jul 2019
- 09:58:31 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Pavel Machek <pavel@denx.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: RE: [PATCH] phy: renesas: rcar-gen3-usb2: Fix sysfs interface of
- "role"
-Thread-Topic: [PATCH] phy: renesas: rcar-gen3-usb2: Fix sysfs interface of
- "role"
-Thread-Index: AQHVR362otT33prCaEaK92EBfQQMwabkdToAgAAHfuA=
-Date:   Wed, 31 Jul 2019 09:58:30 +0000
-Message-ID: <TYAPR01MB4544CFAACC4C81316CF0760DD8DF0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1564563689-25863-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdWhA2xxKKEmmobZDDKGnWNfO4xDb6m6gM16CCFX-1UyTQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdWhA2xxKKEmmobZDDKGnWNfO4xDb6m6gM16CCFX-1UyTQ@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [118.238.235.108]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 737e20b0-b13d-49e2-baae-08d7159da47e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TYAPR01MB2672;
-x-ms-traffictypediagnostic: TYAPR01MB2672:
-x-microsoft-antispam-prvs: <TYAPR01MB2672B8DE347C65A9738C44CDD8DF0@TYAPR01MB2672.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 011579F31F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(189003)(199004)(25786009)(14454004)(3846002)(2906002)(6916009)(6116002)(33656002)(26005)(53546011)(6506007)(54906003)(4326008)(316002)(7696005)(6436002)(99286004)(229853002)(446003)(53936002)(478600001)(76176011)(55016002)(9686003)(11346002)(186003)(66066001)(476003)(305945005)(66556008)(66446008)(71190400001)(71200400001)(7736002)(74316002)(8936002)(6246003)(486006)(8676002)(102836004)(66476007)(86362001)(64756008)(256004)(81166006)(52536014)(76116006)(5660300002)(81156014)(66946007)(68736007);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB2672;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: u3iK9iFwc4nzwS2nross6tJ7uBFufAE7s2wbxcj07RrY/mVoBBLirnIXMYEkK/2L9jufMSgqHuIdrD1a7WKd9QZ4ZlWfnfiUJZDz1Zy4fl1yR70U4Xl/+IgyT/pn53U+GfO1dfiJxnaQUABP7SU9CZg1TxMvK1hPIeRWWCWb/8ys9ZrdoT3F83DbMeC/9Cwpd9KySbhloLvvaANUIICmi4Z/Wd1eaA0lFseJ2OW7bAPWe/AJAxgvY7rB6zv67deaz5w1aVfn/PJmB5VzFqFQQmuV+WdL4psUa+IVujBGq3eHUoPtdv9C3IP+RvhcezF8A0yFWc9L2x0Kx+3xIHh6WI4irdem20Lrvd7YjTiqr+Sa2F6ai4CR1Dzi3k0nhKJYlv3v2pUXg4wzhW2HAPKPt2z8kC7FUBg7AAj7a7tvHok=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725793AbfGaJ7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:59:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C7150AE15;
+        Wed, 31 Jul 2019 09:59:03 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 4DD871E43D6; Wed, 31 Jul 2019 11:59:01 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 11:59:01 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Steve Magnani <steve.magnani@digidescorp.com>
+Cc:     Jan Kara <jack@suse.com>, Steve Magnani <steve@digidescorp.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] udf: prevent allocation beyond UDF partition
+Message-ID: <20190731095901.GC15806@quack2.suse.cz>
+References: <1564341552-129750-1-git-send-email-steve@digidescorp.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 737e20b0-b13d-49e2-baae-08d7159da47e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 09:58:30.7433
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2672
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564341552-129750-1-git-send-email-steve@digidescorp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVz
-ZGF5LCBKdWx5IDMxLCAyMDE5IDY6MjcgUE0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4g
-T24gV2VkLCBKdWwgMzEsIDIwMTkgYXQgMTE6MDQgQU0gWW9zaGloaXJvIFNoaW1vZGENCj4gPHlv
-c2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBTaW5jZSB0aGUgcm9s
-ZV9zdG9yZSgpIHVzZXMgc3RybmNtcCgpLCBpdCdzIHBvc3NpYmxlIHRvIHJlZmVyDQo+ID4gb3V0
-LW9mLW1lbW9yeSBpZiB0aGUgc3lzZnMgZGF0YSBzaXplIGlzIHNtYWxsZXIgdGhhbiBzdHJsZW4o
-Imhvc3QiKS4NCj4gPiBUaGlzIHBhdGNoIGZpeGVzIGl0IGJ5IHVzaW5nIHN5c2ZzX3N0cmVxKCkg
-aW5zdGVhZCBvZiBzdHJuY21wKCkuDQo+ID4NCj4gPiBSZXBvcnRlZC1ieTogUGF2ZWwgTWFjaGVr
-IDxwYXZlbEBkZW54LmRlPg0KPiA+IEZpeGVzOiA5YmI4Njc3N2ZiNzEgKCJwaHk6IHJjYXItZ2Vu
-My11c2IyOiBhZGQgc3lzZnMgZm9yIHVzYiByb2xlIHN3YXAiKQ0KPiA+IENjOiA8c3RhYmxlQHZn
-ZXIua2VybmVsLm9yZz4gIyB2NC4xMCsNCj4gPiBTaWduZWQtb2ZmLWJ5OiBZb3NoaWhpcm8gU2hp
-bW9kYSA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+DQo+IA0KPiBSZXZpZXdlZC1i
-eTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCg0KVGhhbmsg
-eW91IGZvciB5b3VyIHJldmlldyENCg0KPiA+IC0tLQ0KPiA+ICBKdXN0IGEgcmVjb3JkLiBUaGUg
-cm9sZV9zdG9yZSgpIGRvZXNuJ3QgbmVlZCB0byBjaGVjayB0aGUgY291bnQgYmVjYXVzZQ0KPiA+
-ICB0aGUgc3lzZnNfc3RyZXEoKSBjaGVja3MgdGhlIGZpcnN0IGFyZ3VtZW50IGlzIE5VTEwgb3Ig
-bm90Lg0KPiANCj4gSXMgdGhhdCB3YXQgeW91IG1lYW4/IHN5c2ZzX3N0cmVxKCkgZG9lc24ndCBz
-ZWVtIHRvIGNoZWNrIGZvciBOVUxMIHBvaW50ZXJzLg0KDQpPb3BzLCBzb3JyeSBmb3IgdW5jbGVh
-ci4gSSBtZWFudCBhIE5VTEwtdGVybWluYXRlZCBzdHJpbmcsIG5vdCBOVUxMIHBvaW50ZXIuDQoN
-Cj4gSXNuJ3QgdGhlIHJlYWwgcmVhc29uIHRoYXQgc3lzZnMgKGtlcm5mcykgZ3VhcmFudGVlcyB0
-aGF0IHRoZSBwYXNzZWQgYnVmZmVyDQo+IGlzIE5VTC10ZXJtaW5hdGVkPw0KDQpJIGRvZXNuJ3Qg
-Y2hlY2sgaW4gZGV0YWlsLCBidXQgSSBhc3N1bWUgc28uDQoNCkJlc3QgcmVnYXJkcywNCllvc2hp
-aGlybyBTaGltb2RhDQoNCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAgICAgICAgICAg
-ICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJl
-J3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPiAN
-Cj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2Fs
-bCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3Rz
-IEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
+On Sun 28-07-19 14:19:12, Steve Magnani wrote:
+> The UDF bitmap allocation code assumes that a recorded 
+> Unallocated Space Bitmap is compliant with ECMA-167 4/13,
+> which requires that pad bytes between the end of the bitmap 
+> and the end of a logical block are all zero.
+> 
+> When a recorded bitmap does not comply with this requirement,
+> for example one padded with FF to the block boundary instead
+> of 00, the allocator may "allocate" blocks that are outside
+> the UDF partition extent. This can result in UDF volume descriptors
+> being overwritten by file data or by partition-level descriptors,
+> and in extreme cases, even in scribbling on a subsequent disk partition.
+> 
+> Add a check that the block selected by the allocator actually
+> resides within the UDF partition extent.
+> 
+> Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
+
+Thanks for the patch! Added to my tree. I've just slightly modified the
+patch to also output error message about filesystem corruption.
+
+								Honza
+
+> 
+> --- a/fs/udf/balloc.c	2019-07-26 11:35:28.249563705 -0500
+> +++ b/fs/udf/balloc.c	2019-07-28 13:11:25.061431597 -0500
+> @@ -325,6 +325,13 @@ got_block:
+>  	newblock = bit + (block_group << (sb->s_blocksize_bits + 3)) -
+>  		(sizeof(struct spaceBitmapDesc) << 3);
+>  
+> +	if (newblock >= sbi->s_partmaps[partition].s_partition_len) {
+> +		/* Ran off the end of the bitmap,
+> +		 * and bits following are non-compliant (not all zero)
+> +		 */
+> +		goto error_return;
+> +	}
+> +
+>  	if (!udf_clear_bit(bit, bh->b_data)) {
+>  		udf_debug("bit already cleared for block %d\n", bit);
+>  		goto repeat;
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
