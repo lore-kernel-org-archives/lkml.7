@@ -2,49 +2,50 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FFAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554C6C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B10E2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C12D206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="i+KNzgzO"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="ikmpWOvp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387655AbfGaMiG (ORCPT
+        id S2387683AbfGaMiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:38:06 -0400
-Received: from mail-eopbgr00139.outbound.protection.outlook.com ([40.107.0.139]:62301
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        Wed, 31 Jul 2019 08:38:11 -0400
+Received: from mail-eopbgr50111.outbound.protection.outlook.com ([40.107.5.111]:36399
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726259AbfGaMiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:38:05 -0400
+        id S2387662AbfGaMiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:38:07 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MCl8zJNeoBAdLCOWzeSmXY6JQvhU7o830Om9pMAEQwsbC/G5cqVES+m3tto1Pp4yIjkl1zmMBxcTt8L6YukhvXVSnf7521jBjdXykNtcOfqEatV7/sJIe6G4jhJsF0n/u/vMZqFNCJtRIIc3HPaOsMY8RzsrsHQpioicxUVG10ceM5u4xSLofcygBuILw1Q3daZFFOeWoWm1V3cssn+qxhi4sTECu2aAOA5A6Sj5N5om7JyK7PcJlz7iJ5B5nEuTi8KSYjPZdkgTKggNq3bNjE/kKzSMaCZ45gmAY0+ZxAK4XK1Y4ygOiGzA3pursuvVENjjEdGPUZIAidOV4Os+7A==
+ b=XfmOnnvl6oONxi3TZXiyOarPFLpTKAPlzAXLgn3jWwQMT2MomVpmpovrR7cXdMa9KAAUkt9tTHsVs/XPOvRKLbIC9PmjuHsPYkGKi6TO4TFh8SMcGjO2N6PiXnut4NE0E5cLizrc273k620LcSxSbtXsmKznNN1HTP0dbXb1gja320Yn3P25DVocALjVvX7BdrQLOBf6FJdviHPjnCDiKaXa9fzAI3MhOBNRezYOz0SItCpltykiK9DzelqraJNyS+wpo4cQfUnJdK3gab0pZ6p5CLM8mKaQwfyCNVVInfHM+pvGXv8BdIRN6IO4PugFmB9qmjWmYERIO+9TitHe7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jHEm+LOKeLrvYCN7RsDwfk1aXf6jnOP4V9fDiKY/rkU=;
- b=N99J+Tx6FqBU4badJgJJXSY3/BmRe82P+X6YXBZ9C7z2/VbJ6cEbtQfKs5pjFQThJcwPF219YjyJ1DDOi7+1agc5FPzh7tnwXS8Jrjv3cn1ORAXkTJVS3Wmz/W7aZxoSFd4oCLvExCy8dIJtU4p22r4BD+WJ2tF4c7uxifmBxorAYG1tk401wQ3c4gdvQsaf9qDyu74J+otpxokG3kRK7pl/6VsxGJNMz1RZEg1RSiejuqx5NhsQoEK6zwBdBs17TIs9GY9QT2/BoaqZPYoyAUGo/yngVNXxSnoHMT0RJXC6BPX4ZEmFT1IoXyyJFTBP0OikYGmrXY7VVaHCzSDwTg==
+ bh=KvTSlKwlyM3A4JjJZOWeFx3QtVyJcCpEY4tgRXDZoNo=;
+ b=BM+rmO6wjVyhQxpyxRz805DBQKhHIxmr8YDdASfp+x+f8RdflX7WAjEVZJkSWjWlivLqCfdkXEuMf2XZZPjL5B5V9udTvEDHmND3DGbsK0qGEd8HqzkIImGWU3ThNBoc5SGLZOfBF2NcJvH0GqItrbEX+pOjL+TKFxh7tvmfaNll9fjHgrttqWuTQ/FmKcIAQwLlTilmHtYQF86xp2cMh+llv3qSqnn0XIyMPnxRY84JNfOjvZMwTf0fmkBgltMwNuES1V+kevoAui4nJDO2DdAlu+v4Ml8jtNuiOuFeTH2F0E/NUHcv3EeLN6oqChpurHwCvuKZVdEH6btWfjw+2g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
  smtp.mailfrom=toradex.com;dmarc=pass action=none
  header.from=toradex.com;dkim=pass header.d=toradex.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jHEm+LOKeLrvYCN7RsDwfk1aXf6jnOP4V9fDiKY/rkU=;
- b=i+KNzgzOWsuP0hmKxVfXy1IrsMn/xsM/20dXcdt/hDuKTjxCBSXGvQuMbZth0OFAgOP3YK7fG3VJDM+WVHYvxsWVAwlBCJVs1bUIK5BLpBt2YG3ZPJ5o7aduxxdrtfCtFksMPcHkZU8i5LUPr3QfZN12bHsOCW7Xfdh2nu2gOiY=
+ bh=KvTSlKwlyM3A4JjJZOWeFx3QtVyJcCpEY4tgRXDZoNo=;
+ b=ikmpWOvpZzpxrZXQD6Lu7+ezK0OEQsfXEoZVSOBUV6p/JWe4+rMtKbBYID+CVOROsyk14V5XDvbG7otyX1fuK+XbohwmMc3kAxfm8FLjJQp8j6Zd12aDuEftrMNJiZsqlG8dBwziINnhFBJnONftRgVVz2Se0kT3niOBZhVo+ms=
 Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
- VI1PR0502MB3615.eurprd05.prod.outlook.com (52.134.7.26) with Microsoft SMTP
+ VI1PR0502MB2944.eurprd05.prod.outlook.com (10.175.25.138) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Wed, 31 Jul 2019 12:37:59 +0000
+ 15.20.2136.14; Wed, 31 Jul 2019 12:38:03 +0000
 Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
  ([fe80::8405:5b51:b25d:39a2]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
  ([fe80::8405:5b51:b25d:39a2%6]) with mapi id 15.20.2115.005; Wed, 31 Jul 2019
- 12:37:59 +0000
+ 12:38:03 +0000
 From:   Philippe Schenker <philippe.schenker@toradex.com>
 To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
         Max Krummenacher <max.krummenacher@toradex.com>,
@@ -53,20 +54,23 @@ To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
         Rob Herring <robh+dt@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>,
+        =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>,
         Fabio Estevam <festevam@gmail.com>
-CC:     Philippe Schenker <philippe.schenker@toradex.com>,
+CC:     Stefan Agner <stefan.agner@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v2 00/20] Common patches from downstream development
-Thread-Topic: [PATCH v2 00/20] Common patches from downstream development
-Thread-Index: AQHVR5zJQnJDf+SlSUKaCGGthm+ICA==
-Date:   Wed, 31 Jul 2019 12:37:59 +0000
-Message-ID: <20190731123750.25670-1-philippe.schenker@toradex.com>
+Subject: [PATCH v2 02/20] ARM: dts: imx7-colibri: disable HS400
+Thread-Topic: [PATCH v2 02/20] ARM: dts: imx7-colibri: disable HS400
+Thread-Index: AQHVR5zLnUdQa6E7rUWjJNiDWooPFA==
+Date:   Wed, 31 Jul 2019 12:38:03 +0000
+Message-ID: <20190731123750.25670-3-philippe.schenker@toradex.com>
+References: <20190731123750.25670-1-philippe.schenker@toradex.com>
+In-Reply-To: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -80,80 +84,69 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.22.0
 x-originating-ip: [46.140.72.82]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a63e66e0-bbe1-4e56-0e58-08d715b3ebca
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB3615;
-x-ms-traffictypediagnostic: VI1PR0502MB3615:
-x-microsoft-antispam-prvs: <VI1PR0502MB361545511E98C48542136BCBF4DF0@VI1PR0502MB3615.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:478;
+x-ms-office365-filtering-correlation-id: 394ca94e-46c1-431a-7b5c-08d715b3edf3
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB2944;
+x-ms-traffictypediagnostic: VI1PR0502MB2944:
+x-microsoft-antispam-prvs: <VI1PR0502MB2944803C3BE746E7F3EB0CCBF4DF0@VI1PR0502MB2944.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
 x-forefront-prvs: 011579F31F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(376002)(136003)(396003)(366004)(346002)(199004)(189003)(66946007)(52116002)(66446008)(64756008)(66556008)(66476007)(99286004)(53936002)(6512007)(6436002)(5660300002)(4326008)(7416002)(66066001)(6486002)(25786009)(478600001)(14454004)(7736002)(305945005)(71190400001)(71200400001)(3846002)(6116002)(36756003)(2501003)(68736007)(2906002)(2201001)(44832011)(486006)(476003)(86362001)(2616005)(14444005)(256004)(186003)(81166006)(81156014)(26005)(102836004)(50226002)(8936002)(8676002)(6506007)(386003)(316002)(54906003)(110136005)(1076003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3615;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(346002)(39850400004)(396003)(366004)(189003)(199004)(66066001)(305945005)(26005)(2906002)(81166006)(81156014)(7736002)(52116002)(1076003)(36756003)(476003)(64756008)(66446008)(186003)(66556008)(66946007)(66476007)(256004)(2501003)(14444005)(71200400001)(8676002)(86362001)(68736007)(5660300002)(71190400001)(8936002)(4744005)(76176011)(478600001)(54906003)(110136005)(14454004)(6486002)(2201001)(6436002)(3846002)(99286004)(6116002)(446003)(11346002)(6512007)(2616005)(7416002)(386003)(486006)(102836004)(44832011)(6506007)(316002)(25786009)(53936002)(50226002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB2944;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: toradex.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: luo8dK12L+LCtDT7VklScPG3rK+l6RaDEwxerHBvcNLXMDwuz9lZUJa3EARd2mSY+74cejMYoPJ8yHwPcTz6fsNtHbODMiXOC29b4oFXA2m2pmf4UletCJ/I+OXm7Vqc3UrtRDvaXsDeHqL4llEDq1wy4I7hjLsd8g3Ql0OvysjsLqoLcogK1t1n8uRoOUmy2tNKSBSflH0JT6feHO9UDCdcO2ERlMKkAMjxnhZ/rkebCngzbbWLYp1U0pH5adqqTBoH7eqraHbSaJbOUHjy0R1Kp3nAJ9DcT8+GDd83/WdzCz2A3Vwx0+QunqFj8+so/gwtg/6Epu1FytAq7yEYJNkm67xAM94biKl4MQIz6gD38EhumsKktcmb8sYQEfJkkvHYUPok1XfoV40fR0M5hVBPVCOcpDZEBFBTiMVzVHE=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6CBC9BD2EFA2D04A86C2C30573DA87B8@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: UdWY6FxhYQwHh0Ol4NTTCPFrlOdfokbrNMZWAVxuH8g57YNGpYlH4XYAPWwSrU/MneF5uf9l9KzlHh7QDafBAQLzpV+4Y3U8XOQ6kkDT0Sa12SiiKu/V8BznJ3AGOoS414n5VZ8i5EQltv7r+Wcninnk9vHq7kUgn7I1ZO/qkNM8MqxdcpVHnZD9RWYC/jILkFHAYLx1La0NOt/nFN4JxEn6dOxXMjjjYi7jgttZIwCIdUmFMkoq2wtPuMxxQf+OLrEIoucs0XllpgzM18aSbWwm2kjR24Ftpec0KrT0mVlPp11ZJqzMs2jJKPKRUd5kERBbJQMNP0ZlMskYuQI/4jUD2AtZNpmU6v3r8QFeaYNHZhq7aFx4Lpscda8EdmqU1Sb5wlLIWvYSA5PtSlH3+vvONRmflzDmg+2OprlnpNk=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a63e66e0-bbe1-4e56-0e58-08d715b3ebca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 12:37:59.7560
+X-MS-Exchange-CrossTenant-Network-Message-Id: 394ca94e-46c1-431a-7b5c-08d715b3edf3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 12:38:03.3689
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
 X-MS-Exchange-CrossTenant-userprincipalname: philippe.schenker@toradex.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3615
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB2944
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpUaGlzIHBhdGNoc2V0IGhvbGRzIHNvbWUgY29tbW9uIGNoYW5nZXMgdGhhdCB3ZXJlIG5ldmVy
-IHVwc3RyZWFtZWQuDQpXaXRoIGxhdGVzdCBkb3duc3RyZWFtIGtlcm5lbCB1cGdyYWRlLCBJIHRv
-b2sgdGhlIGFwcm9hY2ggdG8gc2VsZWN0DQptYWlubGluZSBkZXZpY2V0cmVlcyBhbmQgYXRvbWlj
-YWxseSBhZGQgbWlzc2luZyBzdHVmZiBmb3IgZG93bnN0cmVhbS4NCg0KVGhlc2UgcGF0Y2hlcyBJ
-IHNlbmQgaGVyZSBhcmUgc2VwYXJhdGVkIG91dCB3aXRoIGNoYW5nZXMgdGhhdCBhbHNvDQpoYXZl
-IGEgYmVuZml0IGZvciBtYWlubGluZS4NCg0KUGhpbGlwcGUNCg0KQ2hhbmdlcyBpbiB2MjoNCi0g
-RGVsZXRlZCB0b3VjaHJldm9sdXRpb24gZG93bnN0cmVhbSBzdHVmZg0KLSBVc2UgZ2VuZXJpYyBu
-b2RlIG5hbWUNCi0gQmV0dGVyIGNvbW1lbnQNCi0gQ2hhbmdlZCBjb21taXQgdGl0bGUgdG8gJy4u
-LmlteDZxZGwtYXBhbGlzOi4uLicNCi0gRGVsZXRlZCB0b3VjaHJldm9sdXRpb24gZG93bnN0cmVh
-bSBzdHVmZg0KLSBVc2UgZ2VuZXJpYyBub2RlIG5hbWUNCi0gUHV0IGEgYmV0dGVyIGNvbW1lbnQg
-aW4gdGhlcmUNCi0gQ29tbWl0IHRpdGxlDQotIFJlbW92ZWQgZjA3MTBhLCB0aGF0IGlzIGRvd25z
-dHJlYW0gb25seQ0KLSBDaGFuZ2VkIHRvIGdlbmVyaWMgbm9kZSBuYW1lDQotIEJldHRlciBjb21t
-ZW50DQoNCk1hcmNlbCBaaXN3aWxlciAoMSk6DQogIEFSTTogZHRzOiBpbXg3LWNvbGlicmk6IG1h
-a2Ugc3VyZSBtb2R1bGUgc3VwcGxpZXMgYXJlIGFsd2F5cyBvbg0KDQpNYXggS3J1bW1lbmFjaGVy
-ICgyKToNCiAgQVJNOiBkdHM6IGlteDZ1bGwtY29saWJyaTogcmVkdWNlIHZfYmF0dCBjdXJyZW50
-IGluIHBvd2VyIG9mZg0KICBBUk06IGR0czogaW14NnVsbDogaW1wcm92ZSBjYW4gdGVtcGxhdGVz
-DQoNCk9sZWtzYW5kciBTdXZvcm92ICgxKToNCiAgQVJNOiBkdHM6IGFkZCByZWNvdmVyeSBmb3Ig
-STJDIGZvciBpTVg3DQoNClBoaWxpcHBlIFNjaGVua2VyICgxMyk6DQogIEFSTTogZHRzOiBpbXg3
-LWNvbGlicmk6IHByZXBhcmUgbW9kdWxlIGRldmljZSB0cmVlIGZvciBGbGV4Q0FODQogIEFSTTog
-ZHRzOiBpbXg3LWNvbGlicmk6IEFkZCBzbGVlcCBtb2RlIHRvIGV0aGVybmV0DQogIEFSTTogZHRz
-OiBpbXg3LWNvbGlicmk6IEFkZCB0b3VjaCBjb250cm9sbGVycw0KICBBUk06IGR0czogaW14NnFk
-bC1jb2xpYnJpOiBhZGQgcGh5IHRvIGZlYw0KICBBUk06IGR0czogaW14NnFkbC1jb2xpYnJpOiBB
-ZGQgbWlzc2luZyBwaW4gZGVjbGFyYXRpb24gaW4gaW9tdXhjDQogIEFSTTogZHRzOiBpbXg2cWRs
-LWFwYWxpczogQWRkIHNsZWVwIHN0YXRlIHRvIGNhbiBpbnRlcmZhY2VzDQogIEFSTTogZHRzOiBp
-bXg2OiBBZGQgdG91Y2hzY3JlZW5zIHVzZWQgb24gVG9yYWRleCBldmFsIGJvYXJkcw0KICBBUk06
-IGR0czogaW14Ni1jb2xpYnJpOiBBZGQgbWlzc2luZyBwaW5tdXhpbmcgdG8gVG9yYWRleCBldmFs
-IGJvYXJkDQogIEFSTTogZHRzOiBpbXg2dWxsLWNvbGlicmk6IEFkZCBzbGVlcCBtb2RlIHRvIGZl
-Yw0KICBBUk06IGR0czogaW14NnVsbC1jb2xpYnJpOiBBZGQgd2F0Y2hkb2cNCiAgQVJNOiBkdHM6
-IGlteDZ1bGwtY29saWJyaTogQWRkIGdlbmVyYWwgd2FrZXVwIGtleSB1c2VkIG9uIENvbGlicmkN
-CiAgQVJNOiBkdHM6IGlteDYvNy1jb2xpYnJpOiBzd2l0Y2ggZHJfbW9kZSB0byBvdGcNCiAgQVJN
-OiBkdHM6IGlteDZ1bGwtY29saWJyaTogQWRkIHRvdWNoc2NyZWVuIHVzZWQgd2l0aCBFdmFsIEJv
-YXJkDQoNClN0ZWZhbiBBZ25lciAoMyk6DQogIEFSTTogZHRzOiBpbXg3LWNvbGlicmk6IGRpc2Fi
-bGUgSFM0MDANCiAgQVJNOiBkdHM6IGlteDctY29saWJyaTogYWRkIEdQSU8gd2FrZXVwIGtleQ0K
-ICBBUk06IGR0czogaW14Ny1jb2xpYnJpOiBmaXggMS44Vi9VSFMgc3VwcG9ydA0KDQogYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NmRsLWNvbGlicmktZXZhbC12My5kdHMgIHwgIDM5ICsrKysrKw0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1ldmFsLmR0cyAgICAgICB8ICAxMyArKw0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1peG9yYS12MS4xLmR0cyB8ICAxMyArKw0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1peG9yYS5kdHMgICAgICB8ICAxMyArKw0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtYXBhbGlzLmR0c2kgICAgICAgICB8ICAyNyArKysrLQ0K
-IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtY29saWJyaS5kdHNpICAgICAgICB8ICAyNyArKysr
-LQ0KIC4uLi9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8ICA1MCAr
-KysrKysrKw0KIC4uLi9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLW5vbndpZmkuZHRzaSB8
-ICAgMiArLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS13aWZpLmR0c2kgICB8
-ICAgMiArLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpICAgICAgICB8
-ICA1MiArKysrKysrLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS1ldmFsLXYzLmR0
-c2kgICB8ICAzOCArKysrKysNCiBhcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaSAg
-ICAgICAgICAgfCAxMTQgKysrKysrKysrKysrKysrKy0tDQogMTIgZmlsZXMgY2hhbmdlZCwgMzY0
-IGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQ0KDQotLSANCjIuMjIuMA0KDQo=
+From: Stefan Agner <stefan.agner@toradex.com>
+
+Force HS200 by masking bit 63 of the SDHCI capability register.
+The i.MX ESDHC driver uses SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400. With
+that the stack checks bit 63 to descide whether HS400 is available.
+Using sdhci-caps-mask allows to mask bit 63. The stack then selects
+HS200 as operating mode.
+
+This prevents rare communication errors with minimal effect on
+performance:
+	sdhci-esdhc-imx 30b60000.usdhc: warning! HS400 strobe DLL
+		status REF not lock!
+
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
+
+Changes in v2: None
+
+ arch/arm/boot/dts/imx7-colibri.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index f1c1971f2160..f7c9ce5bed47 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -325,6 +325,7 @@
+ 	vmmc-supply =3D <&reg_module_3v3>;
+ 	vqmmc-supply =3D <&reg_DCDC3>;
+ 	non-removable;
++	sdhci-caps-mask =3D <0x80000000 0x0>;
+ };
+=20
+ &iomuxc {
+--=20
+2.22.0
+
