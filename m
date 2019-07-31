@@ -2,95 +2,217 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746DFC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED27C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514CB208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF6D206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:15:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iZN0sGcC";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iZN0sGcC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbfGaSOs (ORCPT
+        id S1729155AbfGaSPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:14:48 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:46161 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfGaSOs (ORCPT
+        Wed, 31 Jul 2019 14:15:08 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41864 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729056AbfGaSPH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:14:48 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id EEAD2802F0; Wed, 31 Jul 2019 20:14:33 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 20:14:45 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jane Chu <jane.chu@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 4.19 112/113] libnvdimm/bus: Stop holding
- nvdimm_bus_list_mutex over __nd_ioctl()
-Message-ID: <20190731181444.GA821@amd>
-References: <20190729190655.455345569@linuxfoundation.org>
- <20190729190721.610390670@linuxfoundation.org>
+        Wed, 31 Jul 2019 14:15:07 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E34DE6021C; Wed, 31 Jul 2019 18:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564596905;
+        bh=wPD8Jvb3E0+Q5f60Lu+t9iCbpuIdPyPu6BDAgfitmnE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iZN0sGcCib+Tib7h4Lv8pbN3m/8JYnsyl/SV1ggFmoKCYGNXZJdWfkF/xfWwAQou0
+         eW99NM/oU1419H5jEfpWzN93LTNHJ0PROg/cGGgwcV0VCG9KUuJYyFaRU/2LEzHqEV
+         U0vobtw0qo3ezO2uSrzxIHXu+scNSLYdvLToEEY8=
+Received: from [10.79.162.111] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0E8F6021C;
+        Wed, 31 Jul 2019 18:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564596905;
+        bh=wPD8Jvb3E0+Q5f60Lu+t9iCbpuIdPyPu6BDAgfitmnE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iZN0sGcCib+Tib7h4Lv8pbN3m/8JYnsyl/SV1ggFmoKCYGNXZJdWfkF/xfWwAQou0
+         eW99NM/oU1419H5jEfpWzN93LTNHJ0PROg/cGGgwcV0VCG9KUuJYyFaRU/2LEzHqEV
+         U0vobtw0qo3ezO2uSrzxIHXu+scNSLYdvLToEEY8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0E8F6021C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 1/2] clk: qcom: rcg2: Add support for display port
+ clock ops
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1557894039-31835-1-git-send-email-tdas@codeaurora.org>
+ <1557894039-31835-2-git-send-email-tdas@codeaurora.org>
+ <20190715224345.938B02080A@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <57d35673-10cd-0bc2-1c65-c777de3a000a@codeaurora.org>
+Date:   Wed, 31 Jul 2019 23:45:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
-Content-Disposition: inline
-In-Reply-To: <20190729190721.610390670@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190715224345.938B02080A@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Stephen,
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your review.
 
-On Mon 2019-07-29 21:23:19, Greg Kroah-Hartman wrote:
-> From: Dan Williams <dan.j.williams@intel.com>
->=20
-> commit b70d31d054ee3a6fc1034b9d7fc0ae1e481aa018 upstream.
->=20
-> In preparation for fixing a deadlock between wait_for_bus_probe_idle()
-> and the nvdimm_bus_list_mutex arrange for __nd_ioctl() without
-> nvdimm_bus_list_mutex held. This also unifies the 'dimm' and 'bus' level
-> ioctls into a common nd_ioctl() preamble implementation.
+On 7/16/2019 4:13 AM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-05-14 21:20:38)
+>> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+>> index 18bdf34..0de080f 100644
+>> --- a/drivers/clk/qcom/Kconfig
+>> +++ b/drivers/clk/qcom/Kconfig
+>> @@ -15,6 +15,7 @@ menuconfig COMMON_CLK_QCOM
+>>          depends on ARCH_QCOM || COMPILE_TEST
+>>          select REGMAP_MMIO
+>>          select RESET_CONTROLLER
+>> +       select RATIONAL
+> 
+> Make this an alphabetical list of selects please.
+> 
 
-Ok, so this is a preparation patch, not a fix...
+Sure, would take care in the next patch.
 
-> Marked for -stable as it is a pre-requisite for a follow-on fix.
+>>
+>>   if COMMON_CLK_QCOM
+>>
+>> diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+>> index 8c02bff..98071c0 100644
+>> --- a/drivers/clk/qcom/clk-rcg2.c
+>> +++ b/drivers/clk/qcom/clk-rcg2.c
+>> @@ -1128,3 +1129,81 @@ int qcom_cc_register_rcg_dfs(struct regmap *regmap,
+>>          return 0;
+>>   }
+>>   EXPORT_SYMBOL_GPL(qcom_cc_register_rcg_dfs);
+>> +
+>> +static int clk_rcg2_dp_set_rate(struct clk_hw *hw, unsigned long rate,
+>> +                       unsigned long parent_rate)
+>> +{
+>> +       struct clk_rcg2 *rcg = to_clk_rcg2(hw);
+>> +       struct freq_tbl f = { 0 };
+>> +       u32 mask = BIT(rcg->hid_width) - 1;
+>> +       u32 hid_div, cfg;
+>> +       int i, num_parents = clk_hw_get_num_parents(hw);
+>> +       unsigned long num, den;
+>> +
+>> +       rational_best_approximation(parent_rate, rate,
+>> +                       GENMASK(rcg->mnd_width - 1, 0),
+>> +                       GENMASK(rcg->mnd_width - 1, 0), &den, &num);
+>> +
+>> +       if (!num || !den) {
+>> +               pr_err("Invalid MN values derived for requested rate %lu\n",
+> 
+> Does this ever happen? I worry that this printk could happen many times
+> if a driver gets into a bad state and starts selecting invalid
+> frequencies over and over again for each frame (every 16ms). Maybe just
+> return -EINVAL instead of printing anything.
+> 
 
-=2E..but follow-on fixes are going to be applied for 5.2 but not
-4.19. So perhaps this one should not be in 4.19, either?
+Would remove the pr_err.
 
-Best regards,
-								Pavel
+>> +                                                       rate);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       regmap_read(rcg->clkr.regmap, rcg->cmd_rcgr + CFG_REG, &cfg);
+>> +       hid_div = cfg;
+>> +       cfg &= CFG_SRC_SEL_MASK;
+>> +       cfg >>= CFG_SRC_SEL_SHIFT;
+>> +
+>> +       for (i = 0; i < num_parents; i++)
+>> +               if (cfg == rcg->parent_map[i].cfg) {
+>> +                       f.src = rcg->parent_map[i].src;
+>> +                       break;
+>> +       }
+> 
+> Weird indent for this brace. Please fix and put a brace on the for
+> statement too.
+> 
 
-(Plus its quite complex).
->  drivers/nvdimm/bus.c     |   94 ++++++++++++++++++++++++++++------------=
--------
->  drivers/nvdimm/nd-core.h |    3 +
+My bad would fix in the next patch.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+>> +
+>> +       f.pre_div = hid_div;
+>> +       f.pre_div >>= CFG_SRC_DIV_SHIFT;
+>> +       f.pre_div &= mask;
+>> +
+>> +       if (num == den) {
+>> +               f.m = 0;
+>> +               f.n = 0;
+> 
+> Isn't this the default? So just have if (num != den) here.
+> 
 
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I would check for (num != den).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+>> +       } else {
+>> +               f.m = num;
+>> +               f.n = den;
+>> +       }
+>> +
+>> +       return clk_rcg2_configure(rcg, &f);
+>> +}
+>> +
+>> +static int clk_rcg2_dp_set_rate_and_parent(struct clk_hw *hw,
+>> +               unsigned long rate, unsigned long parent_rate, u8 index)
+>> +{
+>> +       return clk_rcg2_dp_set_rate(hw, rate, parent_rate);
+>> +}
+> 
+> Does this need to be implemented? The parent index isn't passed to
+> clk_rcg2_dp_set_rate() so I suspect the parent index doesn't matter?
+> Does the parent change?
+> 
 
-iEYEARECAAYFAl1B2pQACgkQMOfwapXb+vJpdgCbBAV9m0328rZBqRMvo6K0u83S
-HvkAni7cGN1XvGoPutUfrRqfcb/9Z14u
-=BEUc
------END PGP SIGNATURE-----
+I guess it is required as the RCG SRC would be 0x0 by default.
 
---PNTmBPCT7hxwcZjr--
+>> +
+>> +static int clk_rcg2_dp_determine_rate(struct clk_hw *hw,
+>> +                               struct clk_rate_request *req)
+>> +{
+>> +       struct clk_rate_request parent_req = *req;
+>> +       int ret;
+>> +
+>> +       ret = __clk_determine_rate(clk_hw_get_parent(hw), &parent_req);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       req->best_parent_rate = parent_req.rate;
+>> +
+>> +       return 0;
+>> +}
+> 
+> Do you need this op? It's just calling determine rate on the parent, so
+> we already do that if the proper flag is set. I'm confused about this
+> function.
+> 
+Would it be good to leave this function :).
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
