@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74780C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224A6C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C15E206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F369321726
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n6sHKkfa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k/M0HVfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbfGaU3u (ORCPT
+        id S1730737AbfGaU3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:29:50 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39281 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730640AbfGaU3r (ORCPT
+        Wed, 31 Jul 2019 16:29:55 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34800 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730739AbfGaU3v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:29:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x4so17922050wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:29:46 -0700 (PDT)
+        Wed, 31 Jul 2019 16:29:51 -0400
+Received: by mail-wm1-f66.google.com with SMTP id w9so2067436wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:29:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BoMlESuV3B6tPWN9XWP2L6fpdT8XV6yqfKxT2xNxK2o=;
-        b=n6sHKkfaAZlka5CATr3XtZRARQ3pNoD6Mf1sXo2WWw8trtUv/46OA3woHnhBMu0b0E
-         6b/b/Mt+v3BxRwqJeBaAfR4dXduuxA/gGaZDNGnwJDnYsQDkRBImyl8xD0eYnPo+yxQ0
-         jBT/Pi0Zfg9u4jQoFELZbrv8WqznsZuz5aa/ykhC6JiyiEK74G4O0cvTMGLdKpqvOBTQ
-         tA9D56Ag6WUbe6fuL75YnPpHQItr6F7A4lcd/PmjTlUSnOlmJXhua5N7P5eFsOkVJ7zC
-         t0POw5bAvNfWz2eiMONKgBWktBxCeUV2NMKlOuupDWYmfCz8YKl16g1UYi5xdIoRKuBQ
-         8lBw==
+        bh=AduWeROQMDkKls+kl/fLswGL+rHZfEiqcyM0mR/LCMQ=;
+        b=k/M0HVfeNBuPo+VT6LzsO154/layPjQ0BQjQ1FFLye6ZzLKSs9A3C1xWB1r1myjpdq
+         VsGHmcwTky6N2aoUIcOBvHs3Dr0Hq+Df+PFt33LCiPqEU7s/m3/C4bW8Sdd0qYvdjyvL
+         6cX+bIGf0Nkuhy1V84m5xfa/Cqm+S9MwUgxShE72HrcBEuvo0tGCt/aw23hRAgtNwH7a
+         zI2PhMl2zV9kX8z9UVzHuNDJlXQ5VjZaBkhKiqmUGqTCguZkYX/DmsRhFlRG6YrSUTnC
+         bXz4oKCCe71Q2ifNJard7uAi+9PPyrbCFYcz+XmGnXz6htC3D0vHb6qNDUa6NJBINyiO
+         r4Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BoMlESuV3B6tPWN9XWP2L6fpdT8XV6yqfKxT2xNxK2o=;
-        b=dVTv+JrJOJo/DRGwtoGxaMwE+Vd7MjpPWvanNsNmiqlLm5KtdVMFqBoBdgmovsvzKF
-         tWftj34oCmqnRKlTxKV+bGCQtbz3DGK8qwMKXvsS51Ggk1uqMPJpf84mL4njMvJ5ZW+0
-         5kVM9c/gD6kh0LQTwbs1bQUhXCzhAgq6jvHxam1d2ihltoTLDUbK+moDi2GCHlQPk/af
-         XvCUSb8dGOLB6ambe9+lCLaaOfjt9SRd1u3W3j6ndd+VFSg55NaBSCjIHOLbkf3cqTcY
-         NdOovWi2JpcHPsSevqtJkhHO4Y4aXocL3EzEqKY4DGgyqN/qD+BxB8uNx5pE50ls0KMS
-         UEXQ==
-X-Gm-Message-State: APjAAAWo+OD+C8ywsAcMILZxmFuXqWRAnk7N87ModzRf5ddi02iEWBQ1
-        1RHr9V4aKOvkyqw2iUM6bhjG0w==
-X-Google-Smtp-Source: APXvYqwpQEfh6lRzSLC7qveHzHmaJHjlrp6uAR1UHcFOtEzkTfXHHYUkxxhDNW/ynLeN4Zqrid8yeg==
-X-Received: by 2002:adf:fa42:: with SMTP id y2mr54956154wrr.170.1564604985426;
-        Wed, 31 Jul 2019 13:29:45 -0700 (PDT)
+        bh=AduWeROQMDkKls+kl/fLswGL+rHZfEiqcyM0mR/LCMQ=;
+        b=MtIAu2l3ZUJQgCPSmDz8ROp6huW1yGY+M/VWml1/EJVOxYp3SfV89diqRDZNTtKkul
+         1iZncMnqXG4QIaq6FKKUtNuul6s4ms3uRbBQA8mz5+qCNH3/18yhcJztldGCTNJJZDx/
+         80TuVSaSm6PCBbp/WQIMsFIoHS8grPQ6yQT0nSD6CH0ytb4qkiHZk7mMlb8CTFWTxUio
+         L0gzRDijOm09cVjUDR+DKEuBrGGth98kpywaskaiSqgolILEaQs2YiPZRX91ygML/BWA
+         FfNVyr98jXV0p20UOdkQLzNT7jbDAgyeQ37wsuF8pmMEOQYl4uW1g7ZJsJpiFx0adyWu
+         /upQ==
+X-Gm-Message-State: APjAAAWUAXFw8dZt6v4jUNDwE1KlAf7TCvYDMaNnlmG/SwbnX0XfTp1G
+        eO3AzcVwAmny3ff4jekRAfwNBA==
+X-Google-Smtp-Source: APXvYqw/ot9U03TpeI7X60P6SYKQcEDn5iziVJjTikkQkab39pGBlt5kTQ3vo31YrhMRUB4IxxUwaw==
+X-Received: by 2002:a1c:cb0a:: with SMTP id b10mr110875853wmg.41.1564604989405;
+        Wed, 31 Jul 2019 13:29:49 -0700 (PDT)
 Received: from localhost.localdomain (19.red-176-86-136.dynamicip.rima-tde.net. [176.86.136.19])
-        by smtp.gmail.com with ESMTPSA id i18sm91905591wrp.91.2019.07.31.13.29.43
+        by smtp.gmail.com with ESMTPSA id i18sm91905591wrp.91.2019.07.31.13.29.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 31 Jul 2019 13:29:44 -0700 (PDT)
+        Wed, 31 Jul 2019 13:29:48 -0700 (PDT)
 From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 To:     jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org,
         sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com,
@@ -69,9 +69,9 @@ Cc:     vkoul@kernel.org, niklas.cassel@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
-Subject: [PATCH v4 06/13] clk: qcom: hfpll: get parent clock names from DT
-Date:   Wed, 31 Jul 2019 22:29:22 +0200
-Message-Id: <20190731202929.16443-7-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v4 08/13] clk: qcom: hfpll: CLK_IGNORE_UNUSED
+Date:   Wed, 31 Jul 2019 22:29:24 +0200
+Message-Id: <20190731202929.16443-9-jorge.ramirez-ortiz@linaro.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
 References: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
@@ -82,48 +82,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow accessing the parent clock name required for the driver
-operation using the device tree node.
+When COMMON_CLK_DISABLED_UNUSED is set, in an effort to save power and
+to keep the software model of the clock in line with reality, the
+framework transverses the clock tree and disables those clocks that
+were enabled by the firmware but have not been enabled by any device
+driver.
 
-This permits extending the driver to other platforms without having to
-modify its source code.
+If CPUFREQ is enabled, early during the system boot, it might attempt
+to change the CPU frequency ("set_rate"). If the HFPLL is selected as
+a provider, it will then change the rate for this clock.
 
-For backwards compatibility leave the previous value as default.
+As boot continues, clk_disable_unused_subtree will run. Since it wont
+find a valid counter (enable_count) for a clock that is actually
+enabled it will attempt to disable it which will cause the CPU to
+stop. Notice that in this driver, calls to check whether the clock is
+enabled are routed via the is_enabled callback which queries the
+hardware.
+
+The following commit, rather than marking the clock critical and
+forcing the clock to be always enabled, addresses the above scenario
+making sure the clock is not disabled but it continues to rely on the
+firmware to enable the clock.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/clk/qcom/hfpll.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/qcom/hfpll.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
-index a6de7101430c..87b7f46d27e0 100644
+index 0ffed0d41c50..d5fd27938e7b 100644
 --- a/drivers/clk/qcom/hfpll.c
 +++ b/drivers/clk/qcom/hfpll.c
-@@ -52,6 +52,7 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
- 	void __iomem *base;
- 	struct regmap *regmap;
- 	struct clk_hfpll *h;
-+	struct clk *pclk;
- 	struct clk_init_data init = {
+@@ -58,6 +58,13 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
  		.parent_names = (const char *[]){ "xo" },
  		.num_parents = 1,
-@@ -75,6 +76,13 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
- 					  0, &init.name))
- 		return -ENODEV;
+ 		.ops = &clk_ops_hfpll,
++		/*
++		 * rather than marking the clock critical and forcing the clock
++		 * to be always enabled, we make sure that the clock is not
++		 * disabled: the firmware remains responsible of enabling this
++		 * clock (for more info check the commit log)
++		 */
++		.flags = CLK_IGNORE_UNUSED,
+ 	};
  
-+	/* get parent clock from device tree (optional) */
-+	pclk = devm_clk_get(dev, "xo");
-+	if (!IS_ERR(pclk))
-+		init.parent_names = (const char *[]){ __clk_get_name(pclk) };
-+	else if (PTR_ERR(pclk) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
- 	h->d = &hdata;
- 	h->clkr.hw.init = &init;
- 	spin_lock_init(&h->lock);
+ 	h = devm_kzalloc(dev, sizeof(*h), GFP_KERNEL);
 -- 
 2.22.0
 
