@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CF2C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6D4C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052D4206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419F5206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DTXJINGX"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HJX07Igz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbfGaKUa (ORCPT
+        id S1729109AbfGaKUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:20:30 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:32944 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728210AbfGaKUY (ORCPT
+        Wed, 31 Jul 2019 06:20:33 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35702 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728169AbfGaKU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:20:24 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c14so30217877plo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:20:23 -0700 (PDT)
+        Wed, 31 Jul 2019 06:20:27 -0400
+Received: by mail-pf1-f195.google.com with SMTP id u14so31633133pfn.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:20:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RQGFkwgFaLnGGoQ1NvDOCDLZIEZUzuJI5zevIe71AxU=;
-        b=DTXJINGXVoTql1fXQHHPFsg3EipbEhbHQzDr6FeRofUSP/OzviQIKQg+49YLikdEqQ
-         YjNM5/uykn2qAyF0kVd/+4V/lByaAjL4OlR1muQrRUKLmQ3xs48e9VAQruzJToarL/XU
-         3YIZuGVXB1XvgHJh22L/KCNzYkMI96K7Qz0es=
+        bh=rmBxdiW7S2WiXQ4zlUGo+/gbkMEWIhLilBouSwb9Zms=;
+        b=HJX07IgzuA3T2hq6Y26IP9Rn+7DO6LW+EcnXufRcqpZX4JAJUmAvVnptuZWkMbvsry
+         ESPOby87HWI3S8sEhCDQLCFGNSrCq5QBUcehvat5GmpdHGUyTmtjYoR9RGB85BdPbW9I
+         EpeJ7fKEpL8jHSFdoXFCCiagfU4ap+R6B8c/w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=RQGFkwgFaLnGGoQ1NvDOCDLZIEZUzuJI5zevIe71AxU=;
-        b=I9Zrx6DHye6bg8+yAEO8rtTTlAGdL8tG84K/9Lc9RMLgJa/PNbxO3c5utajxm8QMMA
-         gShOYJccYDqBE+gL9dq5tnn/ReRonjicbBL+WqPpaIrMgl7op/fkY2cKorokseX/4KrP
-         R4iEMsFEBON7kQewkH+6fjRom627OVNLe82jhEMZJmR8v1Tjnu/oua/GQA3eYWnrmrtQ
-         +jo/Qdo3c08fYPuSayrSsDwKXl3U4rkCRihwULHGEILd9UUelf1BTTBxJnav4vUCKiXq
-         KkJFF8Sssu5mac5HTa3SL1mIU2bzw9iTbZk7aPC1a1e6m6hzlV1nNGi1OJOvXJCQuIAy
-         xuAw==
-X-Gm-Message-State: APjAAAUSwBZC1o9PKOw3sGfe9i9auTw+AEIXM/XRXjc/96MvZ1OQbImu
-        LrdWiCZkhfBMC1kAoh9qVtjTEw==
-X-Google-Smtp-Source: APXvYqyQgTrw9DUSsZLKLghRHWUN5/nvwSS94vv8+O0RVIrayMcxuja5bB0RZ59O26Nh4mBQFbfI0w==
-X-Received: by 2002:a17:902:2926:: with SMTP id g35mr119247923plb.269.1564568423495;
-        Wed, 31 Jul 2019 03:20:23 -0700 (PDT)
+        bh=rmBxdiW7S2WiXQ4zlUGo+/gbkMEWIhLilBouSwb9Zms=;
+        b=TJZBJoIBFaev+7DelzpZe6wGX0ujUNZz104/VXvNLy578UYephJJDZDvhEHDkcTjSe
+         a5E9rSAKgvrrwZ9DQuRvYWCt++ic9kyD1GK7mzKCehoFgQTfR/4cufwAuGs6TeDuCb3b
+         FBcRztOIh0YxVZwpQTWO+aSYDR+Fiz3HGZ08Et8EVsaNJ/7DEETDPFpTzBSvvE+ixwuY
+         DbCUoA8vt33MX+Haon4Y2m8p7bZMfUw/pxH1JAY+znI/oDkZyMHhdq5pYRk59aP71uKH
+         Cg6p5K3H7mqWuW4xCf7XNLmWgN0I++Gusd592eEvKLc/uXiu20RteTHHldFNOyJAPPrp
+         7rtA==
+X-Gm-Message-State: APjAAAXFymklnOXFui9RLa72P7/V5wF8ACXaTbrQeWeawza5bgIuTuxm
+        tODaldSzet8u7vZhEZDEjMHtOQ==
+X-Google-Smtp-Source: APXvYqxIook3htLQsXXlA83hjcsGEZbtTQ038Kp8tgnmjDpYGMt7dCACN9TE2RD9YTyaG4BJePLbDA==
+X-Received: by 2002:a17:90a:8984:: with SMTP id v4mr2166486pjn.133.1564568427244;
+        Wed, 31 Jul 2019 03:20:27 -0700 (PDT)
 Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id 3sm71161776pfg.186.2019.07.31.03.20.20
+        by smtp.gmail.com with ESMTPSA id 3sm71161776pfg.186.2019.07.31.03.20.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 31 Jul 2019 03:20:22 -0700 (PDT)
+        Wed, 31 Jul 2019 03:20:26 -0700 (PDT)
 From:   Srinath Mannam <srinath.mannam@broadcom.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mathias Nyman <mathias.nyman@intel.com>,
@@ -62,9 +62,9 @@ Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
         Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v2 3/5] phy: sr-usb: Set phy ports
-Date:   Wed, 31 Jul 2019 15:49:53 +0530
-Message-Id: <1564568395-9980-4-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v2 4/5] dt-bindings: usb-xhci: Add platform specific compatible for Stingray xHCI
+Date:   Wed, 31 Jul 2019 15:49:54 +0530
+Message-Id: <1564568395-9980-5-git-send-email-srinath.mannam@broadcom.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
 References: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
@@ -73,36 +73,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-set phy ports value in xlate handler which is taken from second argument
-of PHY phandle.
+Add Platform specific compatible, because xHCI of this SoC has an issue
+with HS port which has to reset on disconnect event.
 
 Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 ---
- drivers/phy/broadcom/phy-bcm-sr-usb.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/phy/broadcom/phy-bcm-sr-usb.c b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-index fe6c589..5274e45 100644
---- a/drivers/phy/broadcom/phy-bcm-sr-usb.c
-+++ b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-@@ -278,9 +278,16 @@ static struct phy *bcm_usb_phy_xlate(struct device *dev,
- 		if (WARN_ON(phy_idx > 1))
- 			return ERR_PTR(-ENODEV);
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 97400e8..ee1f051 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -22,6 +22,7 @@ Required properties:
+       device
+     - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 or RZ/G2 compatible
+       device
++    - "brcm,sr-xhci" for Stingray SoC
+     - "xhci-platform" (deprecated)
  
-+		if (args->args[1])
-+			phy_set_phy_ports(phy_cfg[phy_idx].phy, args->args[1]);
-+
- 		return phy_cfg[phy_idx].phy;
--	} else
-+	} else {
-+		if (args->args[0])
-+			phy_set_phy_ports(phy_cfg->phy, args->args[0]);
-+
- 		return phy_cfg->phy;
-+	}
- }
- 
- static int bcm_usb_phy_create(struct device *dev, struct device_node *node,
+     When compatible with the generic version, nodes must list the
 -- 
 2.7.4
 
