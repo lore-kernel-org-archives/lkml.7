@@ -2,178 +2,180 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A907AC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AB9C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F33B2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99301206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myVCrKCs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHIhXfbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfGaFqf (ORCPT
+        id S1727083AbfGaFxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 01:46:35 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44971 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfGaFqf (ORCPT
+        Wed, 31 Jul 2019 01:53:53 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50307 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfGaFxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 01:46:35 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so31348501pgl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 22:46:35 -0700 (PDT)
+        Wed, 31 Jul 2019 01:53:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v15so59400930wml.0;
+        Tue, 30 Jul 2019 22:53:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=p6QGy8H2ePkXvIW5OjCWCW9I4ubm5QJ73F/M0Ennkq8=;
-        b=myVCrKCsUFUksjU5eNgjiIaA9FiRUzXksa0sJK+WMZU4MNuZfbc/0b5ZilY2qgy1/l
-         GLkSUm/uHbtvGQsfDM3NPdt6ChOEMfNd92HNAN9hpvivQhK1C6KW4NXuiWHpu6IMzujz
-         m8cwwClKrpq+JIe0qk7yvJQo51TrzIOQpErU5Q1Sj/x+mtlOHOHWqRIcbfHCuLo1V3yJ
-         2yqeiFIVJgG5snASpyKwboXglUUhh5yNXJ4XvAbX3MpBx2u7M0KEhp2ISp/smboasPls
-         qOIZPjCLDvcEfxPQsLcr3Qk7EgYsGymFH1negtqSoUWN8IRrgSJAs6ZjGHP/4kGNWvx0
-         lz/Q==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2JTqLAiaEqn4jb2/kDH9to4xIdNkVzT/KRCcOQVGiWA=;
+        b=XHIhXfbzV6O6NqjePEP+GAdd2O7islM48KasbZHOuxIkXfhQAsXkdqqaFiqB7LFOXa
+         XBoo4F93vl//1nKoUXExjLdGOqz6wmvKO2UOnV168P9vZBz8EnT2pS1Xn47y0rLWoPER
+         9Qm8yi65yiQAkWxZTquMKtVvgN6uGUEt5V9wEXHScGdU99lVp9gJzPkZ151chjigJje4
+         FegQiICcEsJnpzrvt0kU017xMkL20Tg2O0fSCDsSIcInxZ79uYyIkEs5SMnvHqtTR9sv
+         F1CuNuVAUlwLqfCUy0ViZQRgTFC0J2LHf+nJMrOyd6VBC9nelrW6LC5cvmSduGtgqy7O
+         pkoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=p6QGy8H2ePkXvIW5OjCWCW9I4ubm5QJ73F/M0Ennkq8=;
-        b=R+ARxsoC2SlHH7ICosK6dmP1791+Iq/VtCHc+sLZTMNzCsZ2ozwwPbL82MlLB06iS4
-         JiiMSDgNV4XRFiikhDUvf0rTnoUR9mpxzaFX6qvkciNBqfvU0wOfQHpq2ThazV2k6bM6
-         ONfwCdPAZ8cgNdwllr1tavq+z7JsULGwAfccZpSdtunZpfuuH9bn1haCwt9Wj9Pcd96i
-         yaRK6uJHqb7IP86yCfVYwvbOrwXGTJQESKmcVmbWU0+oX05Zn8NswCLuaA20/KnB4WoD
-         pMAQAmbj9resCuECBG4dJs4Ca6pHlyWN7Ahtzn94kp4QPtRk+GfWkchn7PzeU0b+Gsj4
-         GEig==
-X-Gm-Message-State: APjAAAUdvbbIPinHRsiUMb2z+QYwfDGqc6YzzuZMzPugbDeUqwE+PhAJ
-        cRTnaMF5YkvhBUZxGaJ4MC0=
-X-Google-Smtp-Source: APXvYqydX2FUe1au42qKaH66YrtwLMR+lMYDdn0iHnkcuMcXIRsHv+6j70Y5e1qxgCLf9viuONJPsQ==
-X-Received: by 2002:a63:e907:: with SMTP id i7mr110370211pgh.84.1564551994819;
-        Tue, 30 Jul 2019 22:46:34 -0700 (PDT)
-Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id k70sm648127pje.14.2019.07.30.22.46.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 22:46:34 -0700 (PDT)
-From:   john.hubbard@gmail.com
-X-Google-Original-From: jhubbard@nvidia.com
-To:     "H . Peter Anvin" <hpa@zytor.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v2] x86/boot: save fields explicitly, zero out everything else
-Date:   Tue, 30 Jul 2019 22:46:27 -0700
-Message-Id: <20190731054627.5627-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190731054627.5627-1-jhubbard@nvidia.com>
-References: <20190731054627.5627-1-jhubbard@nvidia.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2JTqLAiaEqn4jb2/kDH9to4xIdNkVzT/KRCcOQVGiWA=;
+        b=tHMAKSuskXW+3KWr5lHm2RkpNQQF0v1GRAlewRRaNk/BA7E7l1HK0syDfl/BGsjWbW
+         uWbwJq5BOZODAULOGFJR/wcS9tXLn2OGjPxRwbIqC38RodgRndfyVXLkcMGLLrc8WhiR
+         VMfQW0z2cH5MvNKhy3oXds4f6C/ck9czycwVLgz4LwWJI16a0KpGSuauA0JQA/sGT5iR
+         n4jCTJZRO2+rb+5VHfYRMNTIKwMHVc9c+LM4yZ6vCfgbkc+BP9CuwF3/8MxOhC6dbp8r
+         EKdrYWtQZnR2GIvTmhr2qcS3EbamrixOZ2A25lnyFAUIwC5fx/kbSN9w83+TRFSUJqXo
+         3ORw==
+X-Gm-Message-State: APjAAAUvCuWdnQV6RYbEoQuqGhM6IajagxMrcbcV8MCHPDobQpO38SaY
+        sOkqh/7uio2xZFCrVhrMlOM=
+X-Google-Smtp-Source: APXvYqxADSkVC3kemNRRL16/R/vJwoRHPCEJZtJYenFRHMIsUzp2XPOTrklyEPyTCX504Hl/JSawoA==
+X-Received: by 2002:a1c:f009:: with SMTP id a9mr7155081wmb.32.1564552430383;
+        Tue, 30 Jul 2019 22:53:50 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f43:4200:f423:8074:ec73:3cf8? (p200300EA8F434200F4238074EC733CF8.dip0.t-ipconnect.de. [2003:ea:8f43:4200:f423:8074:ec73:3cf8])
+        by smtp.googlemail.com with ESMTPSA id o20sm169985833wrh.8.2019.07.30.22.53.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 22:53:49 -0700 (PDT)
+Subject: Re: [RFC] net: phy: read link status twice when
+ phy_check_link_status()
+To:     liuyonglong <liuyonglong@huawei.com>, andrew@lunn.ch,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, salil.mehta@huawei.com,
+        yisen.zhuang@huawei.com, shiju.jose@huawei.com
+References: <1564134831-24962-1-git-send-email-liuyonglong@huawei.com>
+ <92f42ee8-3659-87a7-ac96-d312a98046ba@gmail.com>
+ <4b4ba599-f160-39e7-d611-45ac53268389@huawei.com>
+ <a0b26e4b-e288-cf44-049a-7d0b7f5696eb@gmail.com>
+ <1d4be6ad-ffe6-2325-ceab-9f35da617ee9@huawei.com>
+ <5087ee34-5776-f02b-d7e5-bce005ba3b92@gmail.com>
+ <03708d00-a8d9-4a9d-4188-9fe0e38de2b8@huawei.com>
+ <9a0a8094-42ee-0a18-0e9a-d3ca783d6d4b@gmail.com>
+ <6add4874-fd2b-9b21-cd78-80b6dde4dd53@huawei.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <5634113b-f5b5-6fa8-851d-1402e046c3df@gmail.com>
+Date:   Wed, 31 Jul 2019 07:44:15 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
+In-Reply-To: <6add4874-fd2b-9b21-cd78-80b6dde4dd53@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+On 31.07.2019 05:33, liuyonglong wrote:
+> 
+> 
+> On 2019/7/31 3:04, Heiner Kallweit wrote:
+>> On 30.07.2019 08:35, liuyonglong wrote:
+>>> :/sys/kernel/debug/tracing$ cat trace
+>>> # tracer: nop
+>>> #
+>>> # entries-in-buffer/entries-written: 45/45   #P:128
+>>> #
+>>> #                              _-----=> irqs-off
+>>> #                             / _----=> need-resched
+>>> #                            | / _---=> hardirq/softirq
+>>> #                            || / _--=> preempt-depth
+>>> #                            ||| /     delay
+>>> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+>>> #              | |       |   ||||       |         |
+>>>     kworker/64:2-1028  [064] ....   172.295687: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x02 val:0x001c
+>>>     kworker/64:2-1028  [064] ....   172.295726: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x03 val:0xc916
+>>>     kworker/64:2-1028  [064] ....   172.296902: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x01 val:0x79ad
+>>>     kworker/64:2-1028  [064] ....   172.296938: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x0f val:0x2000
+>>>     kworker/64:2-1028  [064] ....   172.321213: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x00 val:0x1040
+>>>     kworker/64:2-1028  [064] ....   172.343209: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x02 val:0x001c
+>>>     kworker/64:2-1028  [064] ....   172.343245: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x03 val:0xc916
+>>>     kworker/64:2-1028  [064] ....   172.343882: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x79ad
+>>>     kworker/64:2-1028  [064] ....   172.343918: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x0f val:0x2000
+>>>     kworker/64:2-1028  [064] ....   172.362658: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
+>>>     kworker/64:2-1028  [064] ....   172.385961: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x02 val:0x001c
+>>>     kworker/64:2-1028  [064] ....   172.385996: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x03 val:0xc916
+>>>     kworker/64:2-1028  [064] ....   172.386646: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x01 val:0x79ad
+>>>     kworker/64:2-1028  [064] ....   172.386681: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x0f val:0x2000
+>>>     kworker/64:2-1028  [064] ....   172.411286: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x00 val:0x1040
+>>>     kworker/64:2-1028  [064] ....   172.433225: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x02 val:0x001c
+>>>     kworker/64:2-1028  [064] ....   172.433260: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x03 val:0xc916
+>>>     kworker/64:2-1028  [064] ....   172.433887: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
+>>>     kworker/64:2-1028  [064] ....   172.433922: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x0f val:0x2000
+>>>     kworker/64:2-1028  [064] ....   172.452862: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
+>>>         ifconfig-1324  [011] ....   177.325585: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
+>>>   kworker/u257:0-8     [012] ....   177.325642: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x04 val:0x01e1
+>>>   kworker/u257:0-8     [012] ....   177.325654: mdio_access: mii-0000:bd:00.1 write phy:0x03 reg:0x04 val:0x05e1
+>>>   kworker/u257:0-8     [012] ....   177.325708: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x79ad
+>>>   kworker/u257:0-8     [012] ....   177.325744: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x09 val:0x0200
+>>>   kworker/u257:0-8     [012] ....   177.325779: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
+>>>   kworker/u257:0-8     [012] ....   177.325788: mdio_access: mii-0000:bd:00.1 write phy:0x03 reg:0x00 val:0x1240
+>>>   kworker/u257:0-8     [012] ....   177.325843: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x798d
+>>
+>> What I think that happens here:
+>> Writing 0x1240 to BMCR starts aneg. When reading BMSR immediately after that then the PHY seems to have cleared
+>> the "aneg complete" bit already, but not yet the "link up" bit. This results in the false "link up" notification.
+>> The following patch is based on the fact that in case of enabled aneg we can't have a valid link if aneg isn't
+>> finished. Could you please test whether this works for you?
+>>
+>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+>> index 6b5cb87f3..7ddd91df9 100644
+>> --- a/drivers/net/phy/phy_device.c
+>> +++ b/drivers/net/phy/phy_device.c
+>> @@ -1774,6 +1774,12 @@ int genphy_update_link(struct phy_device *phydev)
+>>  	phydev->link = status & BMSR_LSTATUS ? 1 : 0;
+>>  	phydev->autoneg_complete = status & BMSR_ANEGCOMPLETE ? 1 : 0;
+>>  
+>> +	/* Consider the case that autoneg was started and "aneg complete"
+>> +	 * bit has been reset, but "link up" bit not yet.
+>> +	 */
+>> +	if (phydev->autoneg == AUTONEG_ENABLE && !phydev->autoneg_complete)
+>> +		phydev->link = 0;
+>> +
+>>  	return 0;
+>>  }
+>>  EXPORT_SYMBOL(genphy_update_link);
+>>
+> 
+> This patch can solve the issue! Will it be upstream?
+> 
+I'll check for side effects, but in general: yes.
 
-Recent gcc compilers (gcc 9.1) generate warnings about an
-out of bounds memset, if you trying memset across several fields
-of a struct. This generated a couple of warnings on x86_64 builds.
+> So it's nothing to do with the bios, and just the PHY's own behavior,
+> the "link up" bit can not reset immediately，right?
+> 
+Yes, it's the PHY's own behavior, and to a certain extent it may depend on speed
+of the MDIO bus. At least few network chips require a delay of several microseconds
+after each MDIO bus access. This may be sufficient for the PHY to reset the
+link-up bit in time.
 
-Fix this by explicitly saving the fields in struct boot_params
-that are intended to be preserved, and zeroing all the rest.
+> ps: It will take 1 second more to make the link up for RTL8211F when 0x798d happend.
+> 
+In polling mode link-up is detected up to 1s after it happened.
+You could switch to interrupt mode to reduce the aneg time.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: H. Peter Anvin <hpa@zytor.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- arch/x86/include/asm/bootparam_utils.h | 62 +++++++++++++++++++-------
- 1 file changed, 47 insertions(+), 15 deletions(-)
-
-diff --git a/arch/x86/include/asm/bootparam_utils.h b/arch/x86/include/asm/bootparam_utils.h
-index 101eb944f13c..514aee24b8de 100644
---- a/arch/x86/include/asm/bootparam_utils.h
-+++ b/arch/x86/include/asm/bootparam_utils.h
-@@ -18,6 +18,20 @@
-  * Note: efi_info is commonly left uninitialized, but that field has a
-  * private magic, so it is better to leave it unchanged.
-  */
-+
-+#define sizeof_mbr(type, member) ({ sizeof(((type *)0)->member); })
-+
-+#define BOOT_PARAM_PRESERVE(struct_member)				\
-+	{								\
-+		.start = offsetof(struct boot_params, struct_member),	\
-+		.len   = sizeof_mbr(struct boot_params, struct_member),	\
-+	}
-+
-+struct boot_params_to_save {
-+	unsigned int start;
-+	unsigned int len;
-+};
-+
- static void sanitize_boot_params(struct boot_params *boot_params)
- {
- 	/* 
-@@ -35,21 +49,39 @@ static void sanitize_boot_params(struct boot_params *boot_params)
- 	 * problems again.
- 	 */
- 	if (boot_params->sentinel) {
--		/* fields in boot_params are left uninitialized, clear them */
--		boot_params->acpi_rsdp_addr = 0;
--		memset(&boot_params->ext_ramdisk_image, 0,
--		       (char *)&boot_params->efi_info -
--			(char *)&boot_params->ext_ramdisk_image);
--		memset(&boot_params->kbd_status, 0,
--		       (char *)&boot_params->hdr -
--		       (char *)&boot_params->kbd_status);
--		memset(&boot_params->_pad7[0], 0,
--		       (char *)&boot_params->edd_mbr_sig_buffer[0] -
--			(char *)&boot_params->_pad7[0]);
--		memset(&boot_params->_pad8[0], 0,
--		       (char *)&boot_params->eddbuf[0] -
--			(char *)&boot_params->_pad8[0]);
--		memset(&boot_params->_pad9[0], 0, sizeof(boot_params->_pad9));
-+		static struct boot_params scratch;
-+		char *bp_base = (char *)boot_params;
-+		char *save_base = (char *)&scratch;
-+		int i;
-+
-+		const struct boot_params_to_save to_save[] = {
-+			BOOT_PARAM_PRESERVE(screen_info),
-+			BOOT_PARAM_PRESERVE(apm_bios_info),
-+			BOOT_PARAM_PRESERVE(tboot_addr),
-+			BOOT_PARAM_PRESERVE(ist_info),
-+			BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
-+			BOOT_PARAM_PRESERVE(hd0_info),
-+			BOOT_PARAM_PRESERVE(hd1_info),
-+			BOOT_PARAM_PRESERVE(sys_desc_table),
-+			BOOT_PARAM_PRESERVE(olpc_ofw_header),
-+			BOOT_PARAM_PRESERVE(efi_info),
-+			BOOT_PARAM_PRESERVE(alt_mem_k),
-+			BOOT_PARAM_PRESERVE(scratch),
-+			BOOT_PARAM_PRESERVE(e820_entries),
-+			BOOT_PARAM_PRESERVE(eddbuf_entries),
-+			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
-+			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
-+			BOOT_PARAM_PRESERVE(e820_table),
-+			BOOT_PARAM_PRESERVE(eddbuf),
-+		};
-+
-+		memset(&scratch, 0, sizeof(scratch));
-+
-+		for (i = 0; i < ARRAY_SIZE(to_save); i++)
-+			memcpy(save_base + to_save[i].start,
-+			       bp_base + to_save[i].start, to_save[i].len);
-+
-+		memcpy(boot_params, save_base, sizeof(*boot_params));
- 	}
- }
- 
--- 
-2.22.0
-
+> 
+> 
+Heiner
