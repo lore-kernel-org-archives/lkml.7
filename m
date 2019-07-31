@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4A9C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F7FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7121220659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C47B20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="1WGj7wJ1"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="zYfX+Vek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbfGaPXx (ORCPT
+        id S1729256AbfGaPYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:23:53 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46548 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727508AbfGaPXu (ORCPT
+        Wed, 31 Jul 2019 11:24:04 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33683 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729220AbfGaPXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:23:50 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d4so66107220edr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:23:49 -0700 (PDT)
+        Wed, 31 Jul 2019 11:23:53 -0400
+Received: by mail-ed1-f66.google.com with SMTP id i11so2570938edq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:23:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UJ4hP1jpsdk64Bv8Sf387CJe/yf6g4uoo14C+HjaYmc=;
-        b=1WGj7wJ1Xlp3fgcH7vRPMztYr6U5tkfbscC1DOrRMnOQVJ19MV2EFmQ3dnX/uhMZZn
-         +9L8x0NHV+iAuJ5WNvg45vfgpudSqJX8d/cH7WzdQ31ED8yVQqTnWs55ok0ywoT/cwgf
-         LRqfk29P9c2a6t2n4GX6Zecm1hTDG8T8yRuJTxwS4MxO8xCaa30nlcP9NO9vMwzhD2/o
-         jqb8W3AN4/5jM2qm735SpdYqlgeo8FHpUWhX0TEFnQDL0Nc2/fTIBdSXwohDdZnHEMKC
-         JwVVXHl6iKII+YD7dMq1HoHGHE4mMuXMCZtypv68y+qEBnZs7tcFjmgIVrRdiTc9lYx6
-         gpdw==
+        bh=Sk1PpCuzqYjEJOS8AE7r4czQNGxEA2XkbZsiPBCfi34=;
+        b=zYfX+VekOIhFWRJ2G/0zX9v39cKod648dVL8Af3HBA6yCma0NLUJ9wn4pQd/9Jkwxo
+         plhgwkImm7vcYtinhJSQVqk1MAoTlKk+hJnnIdkIvREU+NvQYGke8sn2GbxcPE1Uwp3e
+         d9FLk488jkV3wDUFrH43C8fjJoatF8ApGk6f2jTHHmYUNGl3G4HSu0Rs89UZ/sZW/KTq
+         SN8gtRY0sjPahfYQyPAezYsBjck1HMmp6Edi2x1w5HyYUVMxaFgoLCv3ml6vi5zqcbZl
+         hC9nZo//Dc9d/32cvuxLuf0GM7cH92tu+V/365Y+aSuMJt615iXOKFwOz3OBpdQimRaz
+         LoJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UJ4hP1jpsdk64Bv8Sf387CJe/yf6g4uoo14C+HjaYmc=;
-        b=deZdC1x1csNoRnfUNoYmKlh2k+Hmft1vytoC25UxgjYLMYPGEOCSVUqgAFpwjAW8UC
-         Aqyd00LfgtAQD1zQIj5rOR9+D0usH+1TpY+wkVyjMe3AGCZZy60FpKBipuwA/iiy9eKq
-         qTIfUIyTci3XyWwLRGhneAR7ha8c1sfH2bs6BYTGjT+oUyXSOZktLTI7Q9vILP3tvmpk
-         nzkzTQa25rTw4kM5lgW8TmBookfGSoEjNkY3CR0FmtF/W6ZCpZVuX0ptdwksbFCTnKSM
-         efDuGn0evL4eveNMdvZ1FtlnrwiS3h0vCKeFlkfkf1X5VvbSjnAc1j18r28a4XJwYg7W
-         +/5Q==
-X-Gm-Message-State: APjAAAXx6HznOmHdpnx+xhWAJizDMYZjynvwvhQXBeThEJMmH4GbtqJv
-        +lIkOZ4xEjZUo7mBcjkBdY8=
-X-Google-Smtp-Source: APXvYqyzPuIoVNHRDVYCIgZPGv2mkwSHT27TYRbjUfR28hqJRIWgt4niZw9djMR/+XyBoAXfW/QEEA==
-X-Received: by 2002:a50:a5ec:: with SMTP id b41mr104531465edc.52.1564586628484;
-        Wed, 31 Jul 2019 08:23:48 -0700 (PDT)
+        bh=Sk1PpCuzqYjEJOS8AE7r4czQNGxEA2XkbZsiPBCfi34=;
+        b=UPoeHNFolKJPeWrnMTeQUkETKpsS+M7JD0phGSoYnNUP3lRbplK6knVumfFn0otxsm
+         mtuQp5a196E46IZMaLR7xcHBOO+SuODfV6CU5/z6Jl1Q+W6TCUj3Cwro9813yQ4R1MRF
+         zEd4R4zOaSBWvnbiY571huzSYIVEDmouzXbTyEd7WRPleN+AtRO8/mrior2V760BqGOq
+         pYt8wZOauUsgEPkqmp25cmwtyWmc9qvLUMag0/Pn8VN7RLVQPWNdilwMu0ppYW6XSOgO
+         SX3ce/CSMsL5s9yruyeuBXnn0nVnOC9KyUgIED3TkqnV4zx6bcszoIWQgWBFhqVxyNNz
+         Rgmg==
+X-Gm-Message-State: APjAAAVLM2my5pACJ/6rkoy/yw53IYXPFDztupXDo5axEXpj96yhS6Dv
+        swETWQuuFYOjw+u5QqNZXKw=
+X-Google-Smtp-Source: APXvYqweIFGj3MCq6N04mbC1BNfi3q/vQoLrR/zJQwa/pOxhj8VtISyLnD/wc39qKae2odfmqbvinQ==
+X-Received: by 2002:a17:906:f10d:: with SMTP id gv13mr11602301ejb.151.1564586631547;
+        Wed, 31 Jul 2019 08:23:51 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id k20sm17485239ede.66.2019.07.31.08.23.46
+        by smtp.gmail.com with ESMTPSA id e3sm7174587ejm.16.2019.07.31.08.23.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:23:47 -0700 (PDT)
+        Wed, 31 Jul 2019 08:23:49 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 6575C1048A4; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
+        id 33243104603; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,10 +74,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 52/59] x86/mm: Disable MKTME if not all system memory supports encryption
-Date:   Wed, 31 Jul 2019 18:08:06 +0300
-Message-Id: <20190731150813.26289-53-kirill.shutemov@linux.intel.com>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 45/59] x86/mm: Keep reference counts on hardware key usage for MKTME
+Date:   Wed, 31 Jul 2019 18:07:59 +0300
+Message-Id: <20190731150813.26289-46-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,134 +88,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UEFI memory attribute EFI_MEMORY_CPU_CRYPTO indicates whether the memory
-region supports encryption.
+From: Alison Schofield <alison.schofield@intel.com>
 
-Kernel doesn't handle situation when only part of the system memory
-supports encryption.
+The MKTME (Multi-Key Total Memory Encryption) Key Service needs
+a reference count the key usage. This reference count is used
+to determine when a hardware encryption KeyID is no longer in use
+and can be freed and reassigned to another Userspace Key.
 
-Disable MKTME if not all system memory supports encryption.
+The MKTME Key service does the percpu_ref_init and _kill.
 
+Encrypted VMA's and encrypted pages are included in the reference
+counts per keyid.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/mm/mktme.c        | 35 +++++++++++++++++++++++++++++++++++
- drivers/firmware/efi/efi.c | 25 +++++++++++++------------
- include/linux/efi.h        |  1 +
- 3 files changed, 49 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/mktme.h |  5 +++++
+ arch/x86/mm/mktme.c          | 37 ++++++++++++++++++++++++++++++++++--
+ include/linux/mm.h           |  2 ++
+ kernel/fork.c                |  2 ++
+ 4 files changed, 44 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
+index e8f7f80bb013..a5f664d3805b 100644
+--- a/arch/x86/include/asm/mktme.h
++++ b/arch/x86/include/asm/mktme.h
+@@ -20,6 +20,11 @@ extern unsigned int mktme_algs;
+ extern void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
+ 				unsigned long start, unsigned long end);
+ 
++/* MTKME encrypt_count for VMAs */
++extern struct percpu_ref *encrypt_count;
++extern void vma_get_encrypt_ref(struct vm_area_struct *vma);
++extern void vma_put_encrypt_ref(struct vm_area_struct *vma);
++
+ DECLARE_STATIC_KEY_FALSE(mktme_enabled_key);
+ static inline bool mktme_enabled(void)
+ {
 diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-index 17366d81c21b..4e00c244478b 100644
+index 05bbf5058ade..17366d81c21b 100644
 --- a/arch/x86/mm/mktme.c
 +++ b/arch/x86/mm/mktme.c
-@@ -1,9 +1,11 @@
- #include <linux/mm.h>
- #include <linux/highmem.h>
- #include <linux/rmap.h>
-+#include <linux/efi.h>
- #include <asm/mktme.h>
- #include <asm/pgalloc.h>
- #include <asm/tlbflush.h>
-+#include <asm/e820/api.h>
+@@ -84,11 +84,12 @@ void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
  
- /* Mask to extract KeyID from physical address. */
- phys_addr_t __mktme_keyid_mask;
-@@ -48,9 +50,42 @@ void mktme_disable(void)
+ 	if (oldkeyid == newkeyid)
+ 		return;
+-
++	vma_put_encrypt_ref(vma);
+ 	newprot = pgprot_val(vma->vm_page_prot);
+ 	newprot &= ~mktme_keyid_mask();
+ 	newprot |= (unsigned long)newkeyid << mktme_keyid_shift();
+ 	vma->vm_page_prot = __pgprot(newprot);
++	vma_get_encrypt_ref(vma);
  
- static bool need_page_mktme(void)
+ 	/*
+ 	 * The VMA doesn't have any inherited pages.
+@@ -97,6 +98,18 @@ void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
+ 	unlink_anon_vmas(vma);
+ }
+ 
++void vma_get_encrypt_ref(struct vm_area_struct *vma)
++{
++	if (vma_keyid(vma))
++		percpu_ref_get(&encrypt_count[vma_keyid(vma)]);
++}
++
++void vma_put_encrypt_ref(struct vm_area_struct *vma)
++{
++	if (vma_keyid(vma))
++		percpu_ref_put(&encrypt_count[vma_keyid(vma)]);
++}
++
+ /* Prepare page to be used for encryption. Called from page allocator. */
+ void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
  {
-+	int nid;
-+
- 	/* Make sure keyid doesn't collide with extended page flags */
- 	BUILD_BUG_ON(__NR_PAGE_EXT_FLAGS > 16);
+@@ -137,6 +150,22 @@ void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
  
-+	if (!mktme_nr_keyids())
-+		return 0;
+ 		page++;
+ 	}
 +
-+	for_each_node_state(nid, N_MEMORY) {
-+		const efi_memory_desc_t *md;
-+		unsigned long node_start, node_end;
++	/*
++	 * Make sure the KeyID cannot be freed until the last page that
++	 * uses the KeyID is gone.
++	 *
++	 * This is required because the page may live longer than VMA it
++	 * is mapped into (i.e. in get_user_pages() case) and having
++	 * refcounting per-VMA is not enough.
++	 *
++	 * Taking a reference per-4K helps in case if the page will be
++	 * split after the allocation. free_encrypted_page() will balance
++	 * out the refcount even if the page was split and freed as bunch
++	 * of 4K pages.
++	 */
 +
-+		node_start = node_start_pfn(nid) << PAGE_SHIFT;
-+		node_end = node_end_pfn(nid) << PAGE_SHIFT;
-+
-+		for_each_efi_memory_desc(md) {
-+			u64 efi_start = md->phys_addr;
-+			u64 efi_end = md->phys_addr + PAGE_SIZE * md->num_pages;
-+
-+			if (md->attribute & EFI_MEMORY_CPU_CRYPTO)
-+				continue;
-+			if (efi_start > node_end)
-+				continue;
-+			if (efi_end  < node_start)
-+				continue;
-+			if (!e820__mapped_any(efi_start, efi_end, E820_TYPE_RAM))
-+				continue;
-+
-+			printk("Memory range %#llx-%#llx: doesn't support encryption\n",
-+					efi_start, efi_end);
-+			printk("Disable MKTME\n");
-+			mktme_disable();
-+			break;
-+		}
-+	}
-+
- 	return !!mktme_nr_keyids();
++	percpu_ref_get_many(&encrypt_count[keyid], 1 << order);
  }
  
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index ad3b1f4866b3..fc19da5da3e8 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -852,25 +852,26 @@ char * __init efi_md_typeattr_format(char *buf, size_t size,
- 	if (attr & ~(EFI_MEMORY_UC | EFI_MEMORY_WC | EFI_MEMORY_WT |
- 		     EFI_MEMORY_WB | EFI_MEMORY_UCE | EFI_MEMORY_RO |
- 		     EFI_MEMORY_WP | EFI_MEMORY_RP | EFI_MEMORY_XP |
--		     EFI_MEMORY_NV |
-+		     EFI_MEMORY_NV | EFI_MEMORY_CPU_CRYPTO |
- 		     EFI_MEMORY_RUNTIME | EFI_MEMORY_MORE_RELIABLE))
- 		snprintf(pos, size, "|attr=0x%016llx]",
- 			 (unsigned long long)attr);
- 	else
- 		snprintf(pos, size,
--			 "|%3s|%2s|%2s|%2s|%2s|%2s|%2s|%3s|%2s|%2s|%2s|%2s]",
-+			 "|%3s|%2s|%2s|%2s|%2s|%2s|%2s|%2s|%3s|%2s|%2s|%2s|%2s]",
- 			 attr & EFI_MEMORY_RUNTIME ? "RUN" : "",
- 			 attr & EFI_MEMORY_MORE_RELIABLE ? "MR" : "",
--			 attr & EFI_MEMORY_NV      ? "NV"  : "",
--			 attr & EFI_MEMORY_XP      ? "XP"  : "",
--			 attr & EFI_MEMORY_RP      ? "RP"  : "",
--			 attr & EFI_MEMORY_WP      ? "WP"  : "",
--			 attr & EFI_MEMORY_RO      ? "RO"  : "",
--			 attr & EFI_MEMORY_UCE     ? "UCE" : "",
--			 attr & EFI_MEMORY_WB      ? "WB"  : "",
--			 attr & EFI_MEMORY_WT      ? "WT"  : "",
--			 attr & EFI_MEMORY_WC      ? "WC"  : "",
--			 attr & EFI_MEMORY_UC      ? "UC"  : "");
-+			 attr & EFI_MEMORY_NV         ? "NV"  : "",
-+			 attr & EFI_MEMORY_CPU_CRYPTO ? "CR"  : "",
-+			 attr & EFI_MEMORY_XP         ? "XP"  : "",
-+			 attr & EFI_MEMORY_RP         ? "RP"  : "",
-+			 attr & EFI_MEMORY_WP         ? "WP"  : "",
-+			 attr & EFI_MEMORY_RO         ? "RO"  : "",
-+			 attr & EFI_MEMORY_UCE        ? "UCE" : "",
-+			 attr & EFI_MEMORY_WB         ? "WB"  : "",
-+			 attr & EFI_MEMORY_WT         ? "WT"  : "",
-+			 attr & EFI_MEMORY_WC         ? "WC"  : "",
-+			 attr & EFI_MEMORY_UC         ? "UC"  : "");
- 	return buf;
+ /*
+@@ -145,7 +174,9 @@ void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
+  */
+ void free_encrypted_page(struct page *page, int order)
+ {
+-	int i;
++	int i, keyid;
++
++	keyid = page_keyid(page);
+ 
+ 	/*
+ 	 * The hardware/CPU does not enforce coherency between mappings
+@@ -177,6 +208,8 @@ void free_encrypted_page(struct page *page, int order)
+ 		lookup_page_ext(page)->keyid = 0;
+ 		page++;
+ 	}
++
++	percpu_ref_put_many(&encrypt_count[keyid], 1 << order);
  }
  
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index f87fabea4a85..4ac54a168ffe 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -112,6 +112,7 @@ typedef	struct {
- #define EFI_MEMORY_MORE_RELIABLE \
- 				((u64)0x0000000000010000ULL)	/* higher reliability */
- #define EFI_MEMORY_RO		((u64)0x0000000000020000ULL)	/* read-only */
-+#define EFI_MEMORY_CPU_CRYPTO 	((u64)0x0000000000080000ULL)	/* memory encryption supported */
- #define EFI_MEMORY_RUNTIME	((u64)0x8000000000000000ULL)	/* range requires runtime mapping */
- #define EFI_MEMORY_DESCRIPTOR_VERSION	1
+ static int sync_direct_mapping_pte(unsigned long keyid,
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 8551b5ebdedf..be27cb0cc0c7 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2911,6 +2911,8 @@ static inline void mprotect_set_encrypt(struct vm_area_struct *vma,
+ 					int newkeyid,
+ 					unsigned long start,
+ 					unsigned long end) {}
++static inline void vma_get_encrypt_ref(struct vm_area_struct *vma) {}
++static inline void vma_put_encrypt_ref(struct vm_area_struct *vma) {}
+ #endif /* CONFIG_X86_INTEL_MKTME */
+ #endif /* __KERNEL__ */
+ #endif /* _LINUX_MM_H */
+diff --git a/kernel/fork.c b/kernel/fork.c
+index d8ae0f1b4148..00735092d370 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -349,12 +349,14 @@ struct vm_area_struct *vm_area_dup(struct vm_area_struct *orig)
+ 	if (new) {
+ 		*new = *orig;
+ 		INIT_LIST_HEAD(&new->anon_vma_chain);
++		vma_get_encrypt_ref(new);
+ 	}
+ 	return new;
+ }
+ 
+ void vm_area_free(struct vm_area_struct *vma)
+ {
++	vma_put_encrypt_ref(vma);
+ 	kmem_cache_free(vm_area_cachep, vma);
+ }
  
 -- 
 2.21.0
