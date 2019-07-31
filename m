@@ -2,124 +2,129 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48426C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEB9C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8C520644
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74142089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:32:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlKhCE5D"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SRfNb0Jb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfGaDbB (ORCPT
+        id S1728532AbfGaDcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 23:31:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43410 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfGaDbB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 23:31:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so67929050wru.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 20:30:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=atyUolA0eJzVAQbGvrRql9UrHUdFF1jgbg7pUV5Ee5k=;
-        b=UlKhCE5DTH67YsTqyfTiaKsmJS4WGCz4V8NwIwNoOkZbD6vEDiUjn7xt2+voHYlnAr
-         I4+/bAuHDu1tbWYwI1eRPwkKz+QptFylA1Tpct1e0C2/iJSgtYXU3rniwFeeSsdLlGag
-         8XjEOhOkXfz1XGFsu+HK5Cn+10fRFPgKpDA/fmjvw+PwvMQtH7ZvvkTXdkXViIFhAKpv
-         A/dRpwMICdRjqsWyGmqkS8tbP8AH90uFAiuDMGbZD3ut4/FIOIckS8+7wu7RDIc8smQ2
-         gScyIqzfbhj+uagU5x+UfeRG7WmRAC8iqTDOL9gRycGDrLQq28VbYsxuh0ofC+nZIQw2
-         xvKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=atyUolA0eJzVAQbGvrRql9UrHUdFF1jgbg7pUV5Ee5k=;
-        b=oheutrj429X6r0mItsaj3l1CKl2ip+CcXRfr2D8XwQxH4t8FiGtfbo89EWA9rjfnoW
-         VoEIB8JCRotpopYG8641WnH7z9t0DR4aIffDtRcE9/335iiG4mKrvfs2yWtoiSr3X/9Y
-         IZ//drxP/VpDPZWCD4QHwLAbXyAgSBRsDEhmr+s3nCFwBvisWVjyPuBvuU7zO4gci5AS
-         WrqyOybHtPJtS3+800sxotCmWMa0/ZPBSfhox3v6HyB9NPjcy40NYRpbJADLN2cvuw0o
-         BuVsNfC+3gVPgoX9vtUxYiVh3MASfvlipRbjRPZY4+HPhRvkXo4NAlr1Ric9BM4Ha4Wr
-         HyxQ==
-X-Gm-Message-State: APjAAAUgjUTAhajHAtR0YiqV33pGz2kh5Rc6gGv/ELVPe/fkf/xTxFwK
-        4V1OR4XKfGh0fJhFrMKSRmC7jn/uHsuo9uqo0GeEPw==
-X-Google-Smtp-Source: APXvYqzMhgdZXK8upHjBPeiMFif34tHaHGLNz56kjr/qsVHA5wu35rMW0ISbG0qHRbD+PAYsbddI9bA1xBgaBXEB+f0=
-X-Received: by 2002:a5d:6389:: with SMTP id p9mr105527750wru.297.1564543859209;
- Tue, 30 Jul 2019 20:30:59 -0700 (PDT)
+        Tue, 30 Jul 2019 23:32:09 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49354 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbfGaDcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 23:32:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/PRBSjjzZGNNa9kAWUv68TK+FZFcHYZiK63wl+1TixQ=; b=SRfNb0JbfHkfL9RKCMGHN1hd9p
+        wxZhYIk+cBm4osChEaesCfMC/4r2t0sfxyoiqSEWiiOUDs2PammaebjYjB+CnsTzGhcfUUXbHrPaO
+        BnDNFkr5XM2odvN687G8yCemddTdEWE9VUd3D5A15digeB09pu7CA9ooylADxB38nb98=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hsfLI-0003yQ-R0; Wed, 31 Jul 2019 05:31:56 +0200
+Date:   Wed, 31 Jul 2019 05:31:56 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Ido Schimmel <idosch@idosch.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
+Message-ID: <20190731033156.GE9523@lunn.ch>
+References: <95315f9e-0d31-2d34-ba50-11e1bbc1465c@cumulusnetworks.com>
+ <20190729131420.tqukz55tz26jkg73@lx-anielsen.microsemi.net>
+ <3cc69103-d194-2eca-e7dd-e2fa6a730223@cumulusnetworks.com>
+ <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
+ <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
+ <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
+ <20190729175136.GA28572@splinter>
+ <20190730062721.p4vrxo5sxbtulkrx@lx-anielsen.microsemi.net>
+ <20190730143400.GO28552@lunn.ch>
+ <20190730190000.diacyjw6owqkf7uf@lx-anielsen.microsemi.net>
 MIME-Version: 1.0
-References: <20190722071122.22434-1-zhang.lyra@gmail.com> <20190722071419.22535-1-zhang.lyra@gmail.com>
- <CAAfSe-tPVsMjmu0CoUATGRGevCpgqk999-rpfMuXqZ-V9ft7gg@mail.gmail.com> <20190730110204.GB1330@shell.armlinux.org.uk>
-In-Reply-To: <20190730110204.GB1330@shell.armlinux.org.uk>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Wed, 31 Jul 2019 11:30:22 +0800
-Message-ID: <CAAfSe-s=UFMvLfVq1xw1OuAwgdiyg-kcFa6ZyAUkkDLnTVuWmQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: check stmfd instruction using right shift
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lvqiang Huang <lvqiang.huang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730190000.diacyjw6owqkf7uf@lx-anielsen.microsemi.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019 at 19:02, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Tue, Jul 30, 2019 at 03:18:31PM +0800, Chunyan Zhang wrote:
-> > Gentle ping
-> >
-> > probably this patch was missed or entered into spam?
->
-> Please submit it to the patch system, thanks.
+> Our plan was to implement this in pure SW, and then look at how to HW offload
+> it.
 
-Ok, thanks.
+Great.
 
->
-> >
-> > On Mon, 22 Jul 2019 at 15:14, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > >
-> > > From: Lvqiang Huang <Lvqiang.Huang@unisoc.com>
-> > >
-> > > In the commit ef41b5c92498 ("ARM: make kernel oops easier to read"),
-> > > -               .word   0xe92d0000 >> 10        @ stmfd sp!, {}
-> > > +               .word   0xe92d0000 >> 11        @ stmfd sp!, {}
-> > > then the shift need to change to 11.
-> > >
-> > > Fixes: ef41b5c92498 ("ARM: make kernel oops easier to read")
-> > > Signed-off-by: Lvqiang Huang <Lvqiang.Huang@unisoc.com>
-> > > Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
-> > > ---
-> > >  arch/arm/lib/backtrace.S |    2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/arm/lib/backtrace.S b/arch/arm/lib/backtrace.S
-> > > index 7d7952e..926851b 100644
-> > > --- a/arch/arm/lib/backtrace.S
-> > > +++ b/arch/arm/lib/backtrace.S
-> > > @@ -70,7 +70,7 @@ for_each_frame:       tst     frame, mask             @ Check for address exceptions
-> > >
-> > >  1003:          ldr     r2, [sv_pc, #-4]        @ if stmfd sp!, {args} exists,
-> > >                 ldr     r3, .Ldsi+4             @ adjust saved 'pc' back one
-> > > -               teq     r3, r2, lsr #10         @ instruction
-> > > +               teq     r3, r2, lsr #11         @ instruction
-> > >                 subne   r0, sv_pc, #4           @ allow for mov
-> > >                 subeq   r0, sv_pc, #8           @ allow for mov + stmia
-> > >
-> > > --
-> > > 1.7.9.5
-> > >
-> >
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+> But this will take some time before we have anything meaning full to show.
+> 
+> > Make it an alternative to the STP code?
+> I'm still working on learning the details of DLR, but I actually believe that it
+> in some situations may co-exists with STP ;-)
+
+The PDF you linked to suggests this as well. But i think you will need
+to make some core changes to the bridge. At the moment, STP is a
+bridge level property. But you are going to need it to be a per-port
+option. You can then use DLR on the ring ports, and optionally STP on
+the other ports.
+
+> But what we are looking at here, is to offload a
+> non-aware-(DLR|MRP)-switch which happens to be placed in a network
+> with these protocols running.
+
+So we need to think about why we are passing traffic to the CPU port,
+and under what conditions can it be blocked.
+
+1) The interface is not part of a bridge. In this case, we only need
+the switch to pass to the CPU port MC addresses which have been set
+via set_rx_mode().
+
+I think this case does not apply for what you want. You have two ports
+bridges together as part of the ring.
+
+2) The interface is part of a bridge. There are a few sub-cases
+
+a) IGMP snooping is being performed. We can block multicast where
+there is no interest in the group. But this is limited to IP
+multicast.
+
+b) IGMP snooping is not being used and all interfaces in the bridge
+are ports of the switch. IP Multicast can be blocked to the CPU.
+
+c) IGMP snooping is not being used and there is a non-switch interface
+in the bridge. Multicast needed is needed, so it can be flooded out
+this port.
+
+d) set_rx_mode() has been called on the br0 interface, indicating
+there is interest in the packets on the host. They must be sent to the
+CPU so they can be delivered locally.
+
+e) ????
+
+Does the Multicast MAC address being used by DLR also map to an IP
+mmulticast address? 01:21:6C:00:00:0[123] appear to be the MAC
+addresses used by DLR. IPv4 multicast MAC addresses are
+01:00:5E:XX:XX:XX. IPv6 multicast MAC addresses are 33:33:XX:XX:XX:XX.
+
+So one possibility here is to teach the SW bridge about non-IP
+multicast addresses. Initially the switch should forward all MAC
+multicast frames to the CPU. If the frame is not an IPv4 or IPv6
+frame, and there has not been a call to set_rx_mode() for the MAC
+address on the br0 interface, and the bridge only contains switch
+ports, switchdev could be used to block the multicast to the CPU
+frame, but forward it out all other ports of the bridge.
+
+      Andrew
