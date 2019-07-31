@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DA6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32558C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D04206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03F5217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="K8GSlHVy"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="nvqdVZ7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbfGaPUW (ORCPT
+        id S1726248AbfGaPU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:20:22 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40472 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729722AbfGaPTu (ORCPT
+        Wed, 31 Jul 2019 11:20:29 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41761 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728787AbfGaPU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:19:50 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k8so66032778eds.7
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:19:49 -0700 (PDT)
+        Wed, 31 Jul 2019 11:20:26 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p15so66014153eds.8
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:20:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0SvRw1bdF/wj1/uPaALpB1mJItIzSwaE2+8pgarmj/0=;
-        b=K8GSlHVyaCoX6eoUymMD8WNd8fo5NWDf75jpRiOk+1zSA+MpR6EfH2u4sq/cei0nEX
-         o80zJP8en7QDpE5vzs8O5n4LrgF22geCbTMxZs9xW/Bw6G07hLfzIVGyGKyQoxIOnZBD
-         YFtORfTsEPttMMQotUKNiwrIP4HCJfUjTSf2by1YSPzvrtnfC1aL0Dv/WEnFMeyqvoSY
-         1yZ+xCdOLBGgiLW+bKu/YcS0pacqJtrPn8i6k/jyqe3Rz1jF3T9VOENF63nv+EydMMBy
-         h8eN884I5s73CM7fbg8Lu/9/FG0L4WKxt0gSlNtUkWxzIvuA+TNSCpjkFO+PNMv3SZs9
-         BR7A==
+        bh=bD/5ZInA5DBfNF/OoolUD2uLCIaOC1DGsUwSCxp+njs=;
+        b=nvqdVZ7hy8prTTJcbUZBwkmbx2dG13l4tJOjU/HGiWPNPCIzhkiP7BT5p8Q5xWDndr
+         7DeAzS8uAbr6+O45Oq+aNxw5yIDCtTUXGB0id3g7Z8mpUiISvVh8+Qdpp6w9Mrz78JiC
+         0VezF9Twz7YfGrVqrIO2CaQOxV5IahFa9jvmh6yBk00rx18AqNPPp2V83WMw5/RHJxZK
+         V7Ij2TTHXT4PuakKHcAQZMB0LBshUp7ZbQOCUWMzIrguS1msbfDi5NilYa6XZJJc6A82
+         xAVNYZPhVRKGVGB4dKsMF59lYW4aPwm4ovfr9mL7D2xAkl0s4z/mmm5UiL+UO1fObzyu
+         5wPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0SvRw1bdF/wj1/uPaALpB1mJItIzSwaE2+8pgarmj/0=;
-        b=kBpAxFQeyk7gOcoakUz4Nu+jAqmmGi25D2xtilgv9by3nJQfV65bcmv2NQ0V0afhvJ
-         l4fbMH/9wHl0HnMaLacY9qxUnlWIWGqWn3q70F+oXWobjtO55FTMS/cGEcARmn/Jbl3U
-         rTgomdBeT4X1wGz3Pqg4OREXEib00lg0n8aD+u+F3151V6URUB86zx3JDWJPbNShhkEN
-         njlmdKj/meBQKBVh1iG1/Fyo4JMsV91ryfbeJdSnk7u0h9EZh1IWgJDXvj7kDoCeFSk1
-         gElUYbNaz7ZUJsEkL0uVOHVEqmBXzIf7qz4tktDu5FeJwdsH5LW2IKgKbJi+yxZbxaUk
-         hayA==
-X-Gm-Message-State: APjAAAWGFHM0d5bydwxf1CKi13PjiYtnk3shIQB+T7sI6W6BqCrxO78r
-        aMyFc4yenV09dojZJCt6iu4=
-X-Google-Smtp-Source: APXvYqwDDDPlNwfBHKIOlIbyqYdy0UrYvh8zFar3DZnhvZm8R0JCleo52KdoWAHk4ZEHWuudYw10ag==
-X-Received: by 2002:a17:906:e11a:: with SMTP id gj26mr95741299ejb.95.1564586040068;
-        Wed, 31 Jul 2019 08:14:00 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id qq13sm12564390ejb.27.2019.07.31.08.13.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=bD/5ZInA5DBfNF/OoolUD2uLCIaOC1DGsUwSCxp+njs=;
+        b=tXTf+oXfHKtaP0sNzDxz3NXjtpAfesrjzTQPbSQg1jrSJZ9j64oltBZxI5Kej4rF09
+         lsGZS+h+43y4VYrMt9oGnlBf0fBam6ZExeM5oklKy4OaP30NFQ8HffU8810LdQgg+uBm
+         Vxx6eau2ZYs6aYHN+SiXH7WRgvQrKX75VYXZ/V6XYiwQQg8aL0irBWVlUoUoesD6Yz1+
+         yc43sd4gO8QIFGkrz7D2algF1W+GcnoNXxH43SQgJkec4hhM8SGUKETyO8Vpa9Qckk99
+         Wbg2DKG11Se0amZwsKXngHVb5VBli/9eknWIX4ikKMPxQXVTTStcPNgrhEud8t3gIXBn
+         6Tag==
+X-Gm-Message-State: APjAAAVeCJs6GniBht5JWc+eJSNyphfyJ2PafN1ao8bMMkulEq+upCcK
+        SrhlD1A7xYL8tagBmW6icNQ=
+X-Google-Smtp-Source: APXvYqxJIvkHF7kejGb362uxw7wEOxIDocRJ4jXYfh9K6XIBqdmcEBR8hDmMszbdv7iLHfJZFlKGzw==
+X-Received: by 2002:a05:6402:6d0:: with SMTP id n16mr25572624edy.168.1564586037300;
         Wed, 31 Jul 2019 08:13:57 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id t2sm17397627eda.95.2019.07.31.08.13.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 08:13:54 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id EF8F91045FB; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+        id C65041044A6; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,9 +75,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 37/59] acpi/hmat: Evaluate topology presented in ACPI HMAT for MKTME
-Date:   Wed, 31 Jul 2019 18:07:51 +0300
-Message-Id: <20190731150813.26289-38-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 31/59] keys/mktme: Set up a percpu_ref_count for MKTME keys
+Date:   Wed, 31 Jul 2019 18:07:45 +0300
+Message-Id: <20190731150813.26289-32-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -90,95 +90,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-MKTME, Multi-Key Total Memory Encryption, is a feature on Intel
-platforms. The ACPI HMAT table can be used to verify that the
-platform topology is safe for the usage of MKTME.
+The MKTME key service needs to keep usage counts on the encryption
+keys in order to know when it is safe to free a key for reuse.
 
-The kernel must be capable of programming every memory controller
-on the platform. This means that there must be a CPU online, in
-the same proximity domain of each memory controller.
+percpu_ref_count applies well here because the key service will
+take the initial reference and typically hold that reference while
+the intermediary references are get/put. The intermediaries in this
+case will be encrypted VMA's,
+
+Align the percpu_ref_init and percpu_ref_kill with the key service
+instantiate and destroy methods respectively.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- drivers/acpi/hmat/hmat.c | 54 ++++++++++++++++++++++++++++++++++++++++
- include/linux/acpi.h     |  1 +
- 2 files changed, 55 insertions(+)
+ security/keys/mktme_keys.c | 39 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-index 38e3341f569f..936a403c0694 100644
---- a/drivers/acpi/hmat/hmat.c
-+++ b/drivers/acpi/hmat/hmat.c
-@@ -677,3 +677,57 @@ bool acpi_hmat_present(void)
- 	acpi_put_table(tbl);
- 	return true;
+diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
+index 3c641f3ee794..18cb57be5193 100644
+--- a/security/keys/mktme_keys.c
++++ b/security/keys/mktme_keys.c
+@@ -8,6 +8,7 @@
+ #include <linux/key-type.h>
+ #include <linux/mm.h>
+ #include <linux/parser.h>
++#include <linux/percpu-refcount.h>
+ #include <linux/string.h>
+ #include <asm/intel_pconfig.h>
+ #include <keys/mktme-type.h>
+@@ -71,6 +72,26 @@ int mktme_keyid_from_key(struct key *key)
+ 	return 0;
  }
-+
-+static int mktme_parse_proximity_domains(union acpi_subtable_headers *header,
-+					 const unsigned long end)
+ 
++struct percpu_ref *encrypt_count;
++void mktme_percpu_ref_release(struct percpu_ref *ref)
 +{
-+	struct acpi_hmat_proximity_domain *mar = (void *)header;
-+	struct acpi_hmat_structure *hdr = (void *)header;
++	unsigned long flags;
++	int keyid;
 +
-+	const struct cpumask *tmp_mask;
-+
-+	if (!hdr || hdr->type != ACPI_HMAT_TYPE_PROXIMITY)
-+		return -EINVAL;
-+
-+	if (mar->header.length != sizeof(*mar)) {
-+		pr_warn("MKTME: invalid header length in HMAT\n");
-+		return -1;
++	for (keyid = 1; keyid <= mktme_nr_keyids(); keyid++) {
++		if (&encrypt_count[keyid] == ref)
++			break;
 +	}
-+	/*
-+	 * Require a valid processor proximity domain.
-+	 * This will catch memory only physical packages with
-+	 * no processor capable of programming the key table.
-+	 */
-+	if (!(mar->flags & ACPI_HMAT_PROCESSOR_PD_VALID)) {
-+		pr_warn("MKTME: no valid processor proximity domain\n");
-+		return -1;
++	if (&encrypt_count[keyid] != ref) {
++		pr_debug("%s: invalid ref counter\n", __func__);
++		return;
 +	}
-+	/* Require an online CPU in the processor proximity domain. */
-+	tmp_mask = cpumask_of_node(pxm_to_node(mar->processor_PD));
-+	if (!cpumask_intersects(tmp_mask, cpu_online_mask)) {
-+		pr_warn("MKTME: no online CPU in proximity domain\n");
-+		return -1;
-+	}
-+	return 0;
++	percpu_ref_exit(ref);
++	spin_lock_irqsave(&mktme_lock, flags);
++	mktme_release_keyid(keyid);
++	spin_unlock_irqrestore(&mktme_lock, flags);
 +}
 +
-+/* Returns true if topology is safe for MKTME key creation */
-+bool mktme_hmat_evaluate(void)
-+{
-+	struct acpi_table_header *tbl;
-+	bool ret = true;
-+	acpi_status status;
-+
-+	status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
-+	if (ACPI_FAILURE(status))
-+		return -EINVAL;
-+
-+	if (acpi_table_parse_entries(ACPI_SIG_HMAT,
-+				     sizeof(struct acpi_table_hmat),
-+				     ACPI_HMAT_TYPE_PROXIMITY,
-+				     mktme_parse_proximity_domains, 0) < 0) {
-+		ret = false;
-+	}
-+	acpi_put_table(tbl);
-+	return ret;
-+}
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index d27f4d17dfb3..8854ae942e37 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1337,6 +1337,7 @@ acpi_platform_notify(struct device *dev, enum kobject_action action)
+ enum mktme_opt_id {
+ 	OPT_ERROR,
+ 	OPT_TYPE,
+@@ -199,8 +220,10 @@ static void mktme_destroy_key(struct key *key)
+ 	unsigned long flags;
  
- #ifdef CONFIG_X86_INTEL_MKTME
- extern bool acpi_hmat_present(void);
-+extern bool mktme_hmat_evaluate(void);
- #endif /* CONFIG_X86_INTEL_MKTME */
+ 	spin_lock_irqsave(&mktme_lock, flags);
+-	mktme_release_keyid(keyid);
++	mktme_map[keyid].key = NULL;
++	mktme_map[keyid].state = KEYID_REF_KILLED;
+ 	spin_unlock_irqrestore(&mktme_lock, flags);
++	percpu_ref_kill(&encrypt_count[keyid]);
+ }
  
- #endif	/*_LINUX_ACPI_H*/
+ /* Key Service Method to create a new key. Payload is preparsed. */
+@@ -216,9 +239,15 @@ int mktme_instantiate_key(struct key *key, struct key_preparsed_payload *prep)
+ 	if (!keyid)
+ 		return -ENOKEY;
+ 
++	if (percpu_ref_init(&encrypt_count[keyid], mktme_percpu_ref_release,
++			    0, GFP_KERNEL))
++		goto err_out;
++
+ 	if (!mktme_program_keyid(keyid, *payload))
+ 		return MKTME_PROG_SUCCESS;
+ 
++	percpu_ref_exit(&encrypt_count[keyid]);
++err_out:
+ 	spin_lock_irqsave(&mktme_lock, flags);
+ 	mktme_release_keyid(keyid);
+ 	spin_unlock_irqrestore(&mktme_lock, flags);
+@@ -405,10 +434,18 @@ static int __init init_mktme(void)
+ 	/* Initialize first programming targets */
+ 	mktme_update_pconfig_targets();
+ 
++	/* Reference counters to protect in use KeyIDs */
++	encrypt_count = kvcalloc(mktme_nr_keyids() + 1, sizeof(encrypt_count[0]),
++				 GFP_KERNEL);
++	if (!encrypt_count)
++		goto free_targets;
++
+ 	ret = register_key_type(&key_type_mktme);
+ 	if (!ret)
+ 		return ret;			/* SUCCESS */
+ 
++	kvfree(encrypt_count);
++free_targets:
+ 	free_cpumask_var(mktme_leadcpus);
+ 	bitmap_free(mktme_target_map);
+ free_cache:
 -- 
 2.21.0
 
