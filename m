@@ -4,79 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAA0C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF225C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B63E20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA6120693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfGaHiQ (ORCPT
+        id S1726683AbfGaHin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 03:38:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3664 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725921AbfGaHiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 03:38:15 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D6E559A7A884E45F7D12;
-        Wed, 31 Jul 2019 15:38:12 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
- 15:38:06 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
-        <dledford@redhat.com>, <jgg@ziepe.ca>
-CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] RDMA/hns: remove set but not used variable 'irq_num'
-Date:   Wed, 31 Jul 2019 15:37:48 +0800
-Message-ID: <20190731073748.17664-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 31 Jul 2019 03:38:43 -0400
+Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:26934 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726248AbfGaHin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 03:38:43 -0400
+Received: from localhost.localdomain ([176.167.166.146])
+        by mwinf5d75 with ME
+        id jKec2000i39qjAg03KedzC; Wed, 31 Jul 2019 09:38:39 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 31 Jul 2019 09:38:39 +0200
+X-ME-IP: 176.167.166.146
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     mark.einon@gmail.com, davem@davemloft.net, willy@infradead.org,
+        f.fainelli@gmail.com, andrew@lunn.ch
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] net: ethernet: et131x: Use GFP_KERNEL instead of GFP_ATOMIC when allocating tx_ring->tcb_ring
+Date:   Wed, 31 Jul 2019 09:38:42 +0200
+Message-Id: <20190731073842.16948-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+There is no good reason to use GFP_ATOMIC here. Other memory allocations
+are performed with GFP_KERNEL (see other 'dma_alloc_coherent()' below and
+'kzalloc()' in 'et131x_rx_dma_memory_alloc()')
 
-drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function hns_roce_v2_cleanup_eq_table:
-drivers/infiniband/hw/hns/hns_roce_hw_v2.c:5920:6:
- warning: variable irq_num set but not used [-Wunused-but-set-variable]
+Use GFP_KERNEL which should be enough.
 
-It is not used since
-commit 33db6f94847c ("RDMA/hns: Refactor eq table init for hip08")
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/agere/et131x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 83c58be..59f88bf0 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -5917,12 +5917,10 @@ static int hns_roce_v2_init_eq_table(struct hns_roce_dev *hr_dev)
- static void hns_roce_v2_cleanup_eq_table(struct hns_roce_dev *hr_dev)
- {
- 	struct hns_roce_eq_table *eq_table = &hr_dev->eq_table;
--	int irq_num;
- 	int eq_num;
- 	int i;
+diff --git a/drivers/net/ethernet/agere/et131x.c b/drivers/net/ethernet/agere/et131x.c
+index e43d922f043e..174344c450af 100644
+--- a/drivers/net/ethernet/agere/et131x.c
++++ b/drivers/net/ethernet/agere/et131x.c
+@@ -2362,7 +2362,7 @@ static int et131x_tx_dma_memory_alloc(struct et131x_adapter *adapter)
  
- 	eq_num = hr_dev->caps.num_comp_vectors + hr_dev->caps.num_aeq_vectors;
--	irq_num = eq_num + hr_dev->caps.num_other_vectors;
+ 	/* Allocate memory for the TCB's (Transmit Control Block) */
+ 	tx_ring->tcb_ring = kcalloc(NUM_TCB, sizeof(struct tcb),
+-				    GFP_ATOMIC | GFP_DMA);
++				    GFP_KERNEL | GFP_DMA);
+ 	if (!tx_ring->tcb_ring)
+ 		return -ENOMEM;
  
- 	/* Disable irq */
- 	hns_roce_v2_int_mask_enable(hr_dev, eq_num, EQ_DISABLE);
 -- 
-2.7.4
-
+2.20.1
 
