@@ -2,577 +2,166 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEAFC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FABC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664FA206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:58:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AOaE1MZ6";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JZozMyr3"
+	by mail.kernel.org (Postfix) with ESMTP id B9FFC2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfGaF6o (ORCPT
+        id S1726989AbfGaF6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 01:58:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51730 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfGaF6n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 01:58:43 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C51F260256; Wed, 31 Jul 2019 05:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564552722;
-        bh=BD+gbeeY//1Vk+nSPZc6bbcrAx6rJw3OHDMYu4lTGlo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOaE1MZ6+i5S0qejcOjznm8+wHFYHBnyiFFG0qVcpvSkiP5hZPT2g/VkOcI8fKpOC
-         JxignKcIWdVv+Noi9uxVSieDN+NzJ3GPwbuscGC8s2Xs+oMy6/bc1BYiy21TbXLWPv
-         s9PdlYUfRF+osNExDxQd/SP5D4DB0WrLGxrjzUw8=
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6C3F60E5F;
-        Wed, 31 Jul 2019 05:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564552721;
-        bh=BD+gbeeY//1Vk+nSPZc6bbcrAx6rJw3OHDMYu4lTGlo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZozMyr3NlDT9QOsHvEmzL/hOOzMRXvBbbhXxK80JeqCnvLG6f1qCdQFceWwoKDyM
-         Diwo6+oQmroUQjSTd1TC7Jk7f8TG/02gSBGGcSdzWPT5mruLHqL1NbhK9ofMZqTH0H
-         cXji2nuP+HRiq1uU4uX30QAnnz/uUX1vMmSZNG4M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6C3F60E5F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv9 3/3] arm64: dts: qcom: msm8996: Add Coresight support
-Date:   Wed, 31 Jul 2019 11:28:02 +0530
-Message-Id: <42edcabd4597b07cf8fb6a683bda9add5ff0381a.1564550873.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
+        Wed, 31 Jul 2019 01:58:48 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3929 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725970AbfGaF6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 01:58:47 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 613E384601CAD8A77DB4;
+        Wed, 31 Jul 2019 13:58:44 +0800 (CST)
+Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 31 Jul 2019 13:58:44 +0800
+Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
+ (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Wed, 31
+ Jul 2019 13:58:43 +0800
+Subject: Re: [RFC] net: phy: read link status twice when
+ phy_check_link_status()
+To:     Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
+References: <1564134831-24962-1-git-send-email-liuyonglong@huawei.com>
+ <92f42ee8-3659-87a7-ac96-d312a98046ba@gmail.com>
+ <4b4ba599-f160-39e7-d611-45ac53268389@huawei.com>
+ <a0b26e4b-e288-cf44-049a-7d0b7f5696eb@gmail.com>
+ <1d4be6ad-ffe6-2325-ceab-9f35da617ee9@huawei.com>
+ <5087ee34-5776-f02b-d7e5-bce005ba3b92@gmail.com>
+ <03708d00-a8d9-4a9d-4188-9fe0e38de2b8@huawei.com>
+ <9a0a8094-42ee-0a18-0e9a-d3ca783d6d4b@gmail.com>
+ <6add4874-fd2b-9b21-cd78-80b6dde4dd53@huawei.com>
+ <5634113b-f5b5-6fa8-851d-1402e046c3df@gmail.com>
+From:   liuyonglong <liuyonglong@huawei.com>
+Message-ID: <9dd4fe9f-5ee5-23a6-14bf-a5d644567d27@huawei.com>
+Date:   Wed, 31 Jul 2019 13:58:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <5634113b-f5b5-6fa8-851d-1402e046c3df@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.57.37.248]
+X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
+ dggeme760-chm.china.huawei.com (10.3.19.106)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
 
-Enable coresight support by adding device nodes for the
-available source, sinks and channel blocks on msm8996.
 
-This also adds coresight cpu debug nodes.
+On 2019/7/31 13:44, Heiner Kallweit wrote:
+> On 31.07.2019 05:33, liuyonglong wrote:
+>>
+>>
+>> On 2019/7/31 3:04, Heiner Kallweit wrote:
+>>> On 30.07.2019 08:35, liuyonglong wrote:
+>>>> :/sys/kernel/debug/tracing$ cat trace
+>>>> # tracer: nop
+>>>> #
+>>>> # entries-in-buffer/entries-written: 45/45   #P:128
+>>>> #
+>>>> #                              _-----=> irqs-off
+>>>> #                             / _----=> need-resched
+>>>> #                            | / _---=> hardirq/softirq
+>>>> #                            || / _--=> preempt-depth
+>>>> #                            ||| /     delay
+>>>> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+>>>> #              | |       |   ||||       |         |
+>>>>     kworker/64:2-1028  [064] ....   172.295687: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x02 val:0x001c
+>>>>     kworker/64:2-1028  [064] ....   172.295726: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x03 val:0xc916
+>>>>     kworker/64:2-1028  [064] ....   172.296902: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x01 val:0x79ad
+>>>>     kworker/64:2-1028  [064] ....   172.296938: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x0f val:0x2000
+>>>>     kworker/64:2-1028  [064] ....   172.321213: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x00 val:0x1040
+>>>>     kworker/64:2-1028  [064] ....   172.343209: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x02 val:0x001c
+>>>>     kworker/64:2-1028  [064] ....   172.343245: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x03 val:0xc916
+>>>>     kworker/64:2-1028  [064] ....   172.343882: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x79ad
+>>>>     kworker/64:2-1028  [064] ....   172.343918: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x0f val:0x2000
+>>>>     kworker/64:2-1028  [064] ....   172.362658: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
+>>>>     kworker/64:2-1028  [064] ....   172.385961: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x02 val:0x001c
+>>>>     kworker/64:2-1028  [064] ....   172.385996: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x03 val:0xc916
+>>>>     kworker/64:2-1028  [064] ....   172.386646: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x01 val:0x79ad
+>>>>     kworker/64:2-1028  [064] ....   172.386681: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x0f val:0x2000
+>>>>     kworker/64:2-1028  [064] ....   172.411286: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x00 val:0x1040
+>>>>     kworker/64:2-1028  [064] ....   172.433225: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x02 val:0x001c
+>>>>     kworker/64:2-1028  [064] ....   172.433260: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x03 val:0xc916
+>>>>     kworker/64:2-1028  [064] ....   172.433887: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
+>>>>     kworker/64:2-1028  [064] ....   172.433922: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x0f val:0x2000
+>>>>     kworker/64:2-1028  [064] ....   172.452862: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
+>>>>         ifconfig-1324  [011] ....   177.325585: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
+>>>>   kworker/u257:0-8     [012] ....   177.325642: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x04 val:0x01e1
+>>>>   kworker/u257:0-8     [012] ....   177.325654: mdio_access: mii-0000:bd:00.1 write phy:0x03 reg:0x04 val:0x05e1
+>>>>   kworker/u257:0-8     [012] ....   177.325708: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x79ad
+>>>>   kworker/u257:0-8     [012] ....   177.325744: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x09 val:0x0200
+>>>>   kworker/u257:0-8     [012] ....   177.325779: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
+>>>>   kworker/u257:0-8     [012] ....   177.325788: mdio_access: mii-0000:bd:00.1 write phy:0x03 reg:0x00 val:0x1240
+>>>>   kworker/u257:0-8     [012] ....   177.325843: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x798d
+>>>
+>>> What I think that happens here:
+>>> Writing 0x1240 to BMCR starts aneg. When reading BMSR immediately after that then the PHY seems to have cleared
+>>> the "aneg complete" bit already, but not yet the "link up" bit. This results in the false "link up" notification.
+>>> The following patch is based on the fact that in case of enabled aneg we can't have a valid link if aneg isn't
+>>> finished. Could you please test whether this works for you?
+>>>
+>>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+>>> index 6b5cb87f3..7ddd91df9 100644
+>>> --- a/drivers/net/phy/phy_device.c
+>>> +++ b/drivers/net/phy/phy_device.c
+>>> @@ -1774,6 +1774,12 @@ int genphy_update_link(struct phy_device *phydev)
+>>>  	phydev->link = status & BMSR_LSTATUS ? 1 : 0;
+>>>  	phydev->autoneg_complete = status & BMSR_ANEGCOMPLETE ? 1 : 0;
+>>>  
+>>> +	/* Consider the case that autoneg was started and "aneg complete"
+>>> +	 * bit has been reset, but "link up" bit not yet.
+>>> +	 */
+>>> +	if (phydev->autoneg == AUTONEG_ENABLE && !phydev->autoneg_complete)
+>>> +		phydev->link = 0;
+>>> +
+>>>  	return 0;
+>>>  }
+>>>  EXPORT_SYMBOL(genphy_update_link);
+>>>
+>>
+>> This patch can solve the issue! Will it be upstream?
+>>
+> I'll check for side effects, but in general: yes.
+> 
+>> So it's nothing to do with the bios, and just the PHY's own behavior,
+>> the "link up" bit can not reset immediately，right?
+>>
+> Yes, it's the PHY's own behavior, and to a certain extent it may depend on speed
+> of the MDIO bus. At least few network chips require a delay of several microseconds
+> after each MDIO bus access. This may be sufficient for the PHY to reset the
+> link-up bit in time.
+> 
+>> ps: It will take 1 second more to make the link up for RTL8211F when 0x798d happend.
+>>
+> In polling mode link-up is detected up to 1s after it happened.
+> You could switch to interrupt mode to reduce the aneg time.
+> 
+>>
+>>
+> Heiner
+> 
+> .
+> 
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 468 ++++++++++++++++++++++++++
- 1 file changed, 468 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 96c0a481f454..1533df63f056 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -633,6 +633,474 @@
- 			reg = <0x300000 0x90000>;
- 		};
- 
-+		stm@3002000 {
-+			compatible = "arm,coresight-stm", "arm,primecell";
-+			reg = <0x3002000 0x1000>,
-+			      <0x8280000 0x180000>;
-+			reg-names = "stm-base", "stm-stimulus-base";
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			out-ports {
-+				port {
-+					stm_out: endpoint {
-+						remote-endpoint =
-+						  <&funnel0_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		tpiu@3020000 {
-+			compatible = "arm,coresight-tpiu", "arm,primecell";
-+			reg = <0x3020000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			in-ports {
-+				port {
-+					tpiu_in: endpoint {
-+						remote-endpoint =
-+						  <&replicator_out1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@3021000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0x3021000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@7 {
-+					reg = <7>;
-+					funnel0_in: endpoint {
-+						remote-endpoint =
-+						  <&stm_out>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				port {
-+					funnel0_out: endpoint {
-+						remote-endpoint =
-+						  <&merge_funnel_in0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@3022000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0x3022000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@6 {
-+					reg = <6>;
-+					funnel1_in: endpoint {
-+						remote-endpoint =
-+						  <&apss_merge_funnel_out>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				port {
-+					funnel1_out: endpoint {
-+						remote-endpoint =
-+						  <&merge_funnel_in1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@3023000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0x3023000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+
-+			out-ports {
-+				port {
-+					funnel2_out: endpoint {
-+						remote-endpoint =
-+						  <&merge_funnel_in2>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@3025000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0x3025000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					merge_funnel_in0: endpoint {
-+						remote-endpoint =
-+						  <&funnel0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					merge_funnel_in1: endpoint {
-+						remote-endpoint =
-+						  <&funnel1_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					merge_funnel_in2: endpoint {
-+						remote-endpoint =
-+						  <&funnel2_out>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				port {
-+					merge_funnel_out: endpoint {
-+						remote-endpoint =
-+						  <&etf_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		replicator@3026000 {
-+			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
-+			reg = <0x3026000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			in-ports {
-+				port {
-+					replicator_in: endpoint {
-+						remote-endpoint =
-+						  <&etf_out>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					replicator_out0: endpoint {
-+						remote-endpoint =
-+						  <&etr_in>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					replicator_out1: endpoint {
-+						remote-endpoint =
-+						  <&tpiu_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@3027000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0x3027000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			in-ports {
-+				port {
-+					etf_in: endpoint {
-+						remote-endpoint =
-+						  <&merge_funnel_out>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				port {
-+					etf_out: endpoint {
-+						remote-endpoint =
-+						  <&replicator_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etr@3028000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0x3028000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+			arm,scatter-gather;
-+
-+			in-ports {
-+				port {
-+					etr_in: endpoint {
-+						remote-endpoint =
-+						  <&replicator_out0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		debug@3810000 {
-+			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-+			reg = <0x3810000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU0>;
-+		};
-+
-+		etm@3840000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0x3840000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			cpu = <&CPU0>;
-+
-+			out-ports {
-+				port {
-+					etm0_out: endpoint {
-+						remote-endpoint =
-+						  <&apss_funnel0_in0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		debug@3910000 {
-+			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-+			reg = <0x3910000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU1>;
-+		};
-+
-+		etm@3940000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0x3940000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			cpu = <&CPU1>;
-+
-+			out-ports {
-+				port {
-+					etm1_out: endpoint {
-+						remote-endpoint =
-+						  <&apss_funnel0_in1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@39b0000 { /* APSS Funnel 0 */
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0x39b0000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					apss_funnel0_in0: endpoint {
-+						remote-endpoint = <&etm0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					apss_funnel0_in1: endpoint {
-+						remote-endpoint = <&etm1_out>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				port {
-+					apss_funnel0_out: endpoint {
-+						remote-endpoint =
-+						  <&apss_merge_funnel_in0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		debug@3a10000 {
-+			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-+			reg = <0x3a10000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU2>;
-+		};
-+
-+		etm@3a40000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0x3a40000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			cpu = <&CPU2>;
-+
-+			out-ports {
-+				port {
-+					etm2_out: endpoint {
-+						remote-endpoint =
-+						  <&apss_funnel1_in0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		debug@3b10000 {
-+			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-+			reg = <0x3b10000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU3>;
-+		};
-+
-+		etm@3b40000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0x3b40000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			cpu = <&CPU3>;
-+
-+			out-ports {
-+				port {
-+					etm3_out: endpoint {
-+						remote-endpoint =
-+						  <&apss_funnel1_in1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@3bb0000 { /* APSS Funnel 1 */
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0x3bb0000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					apss_funnel1_in0: endpoint {
-+						remote-endpoint = <&etm2_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					apss_funnel1_in1: endpoint {
-+						remote-endpoint = <&etm3_out>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				port {
-+					apss_funnel1_out: endpoint {
-+						remote-endpoint =
-+						  <&apss_merge_funnel_in1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@3bc0000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0x3bc0000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-+			clock-names = "apb_pclk", "atclk";
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					apss_merge_funnel_in0: endpoint {
-+						remote-endpoint =
-+						  <&apss_funnel0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					apss_merge_funnel_in1: endpoint {
-+						remote-endpoint =
-+						  <&apss_funnel1_out>;
-+					};
-+				};
-+			};
-+
-+			out-ports {
-+				port {
-+					apss_merge_funnel_out: endpoint {
-+						remote-endpoint =
-+						  <&funnel1_in>;
-+					};
-+				};
-+			};
-+		};
-+
- 		kryocc: clock-controller@6400000 {
- 			compatible = "qcom,apcc-msm8996";
- 			reg = <0x6400000 0x90000>;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks very much!
 
