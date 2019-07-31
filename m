@@ -2,219 +2,119 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6274C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EB9C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A4B20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA15D2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wt0pU8JN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILVqBg5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbfGaMWa (ORCPT
+        id S1727593AbfGaMZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:22:30 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46077 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfGaMW3 (ORCPT
+        Wed, 31 Jul 2019 08:25:30 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38522 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfGaMZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:22:29 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y8so30439813plr.12;
-        Wed, 31 Jul 2019 05:22:28 -0700 (PDT)
+        Wed, 31 Jul 2019 08:25:30 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s15so38284093wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:25:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BARg4dgRj/eeBMzSYjIXsyCBQnffvLr7GTQzYLrEu3w=;
-        b=Wt0pU8JNIIJ+EGbiXSG8NrBYPOMzG/9e27ujtkIHfFPJmLoo2fk2xXS+iNkIpwlDwF
-         AmHLikz5JE56rmkHyfEn82ZbgorukbUnXY+A7Y/+w4oEcviRvozMDzHdLIE+krPKiXQ7
-         kNouteCK281XHHYCtAF29gLdWfmxhJdwlf9b/HfNCy7FrRSJm2dskGLpyMdSV/Lmhrb+
-         ivkheRPxTMK5eFJS4llWvH1FBGUARBjyODavP7C9FVQHz/XC1mvybXypIOjKvVioZ+9s
-         YQnngG5m0xdfiP90POx3EteeNeTawAni0PpKp7wwSNgnO3OlXc2uPVTm+19YiEXzM6lR
-         yJ9Q==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=R7XjVu1Q+2t2OCDbFe6JERwCgU5GBze4iS/iecgn0V8=;
+        b=ILVqBg5GPvAXj+lG/yEYdWeBKdGfPf7klH1okvhPhvnvb56wHJqAaW0GTzAQ43hwpt
+         UxwLHzao3BquJGq/4xOCWUk71gXgNoo+/p+ol0oMYVO5IW4jw5hKTjtOBAN6Fntkw7PE
+         uGMwYlJQ1Co/C40XS43b+Q8gf7vJk6FB8Yaw7GUM2YBJC7VdSg+KDY9SZFU44ZE2bGPk
+         apKjXkVv7Iem1UUgP5gBQQvUPrUX9UGQ9NGF0qfrAGM1TiuOjBpSNPVigkiwmXYl6JeQ
+         wYlTMMqesR7sW9CB2Ci3cX0dkE5HFlAVPnepRNx0yXNI2Awp2K7EFrZeRDaxOSGX6+ZE
+         ENlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BARg4dgRj/eeBMzSYjIXsyCBQnffvLr7GTQzYLrEu3w=;
-        b=t9qOIyj3/vv45D4Izrb7dWQ/l6mM6CachBQXWbMdF/+OLkA1dkd1WAhxvEAdnbVeOY
-         5mcRWtMDJEw6y4xfntaM66xjRNe4YIwa7etAyDhQ3ksomBmggDPjvYv7qR6qblvtiTWJ
-         00Rg5U95CtoVnIYaxYRh8oHda4NOEQbxvsvDTXCBMFn6hT5eM1oTx1h2BOlqkM7dFgXZ
-         ho6pFQgeYAqNdD3YlFiFaDvJzaiQ5DmdpWF11JoB4ZAre9hEAWvOCjmel4njlYndVQw2
-         f7W5Kzx5X4ZhWM3GMLJIxDjHUlxASdiyVsUbwMKATaihJTfnJnfz5SdxyoVWfBP3BffU
-         BnnA==
-X-Gm-Message-State: APjAAAU+ADrDgOaBwx/C4QeuiDzRYTRqJG9WYZ8XoVSCzmWPAtNRHl3l
-        Vd8JB34njbANJroZqKj95LQ=
-X-Google-Smtp-Source: APXvYqzoLYMtQVZ0QolFwexSga3N5HBdBGndW6QMs9UQYoPr38zfLjEwYuQoTgqDUcxCl9dd8fgsww==
-X-Received: by 2002:a17:902:2be8:: with SMTP id l95mr111781698plb.231.1564575748499;
-        Wed, 31 Jul 2019 05:22:28 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id c23sm62040683pgj.62.2019.07.31.05.22.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 05:22:27 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 2/2] cnic: Use refcount_t for refcount
-Date:   Wed, 31 Jul 2019 20:22:24 +0800
-Message-Id: <20190731122224.1003-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=R7XjVu1Q+2t2OCDbFe6JERwCgU5GBze4iS/iecgn0V8=;
+        b=m/pMMxHx7PUZJPshtqZOZVU973QyBG88DyhTq98lLlvzdXnLdKGCBDxPDYSq6BN+Ol
+         H7UryIIz4MmT+yP+1SafzduqKQV3apt9pgBQHOdJAUJ+2XIGwuizKouf2PRQ6NiuEY+q
+         8G5ZpMPQbH2PseeY0SoEjMDJudwMD+/4TS7YMtVR16PPG5EcR5A7/Nwk7JEjzGbe9xSv
+         a7EQXjRe3D8Pe4nKWtSVowLLGXQFAwtaLQ+gPp35eUQ4PnfE3xppj9YXWOG+jJHECyWI
+         Z2ssvp5oZFzuq0PP8x/vbaWUWtxIP0tz4BkjqJnsnOKko8Az876EJy4STyynf68hWD/2
+         iobg==
+X-Gm-Message-State: APjAAAU7FqY9nfG1AthXaX61eJcbXp1UeLHEeOPjxyDOynl7toh0mX3h
+        aGwJAVvEKc3e8RcK+vuhD9CviutrY0ciLyb8Rtk=
+X-Google-Smtp-Source: APXvYqxVxxud91q/SIqbQpYtC/q0uxNH7WkuOed0ZaYA+0PM53Kfn+D5yFaPrxj3KUv3RfPJ5OTpAibDIA5CSzzdAX4=
+X-Received: by 2002:a05:600c:225a:: with SMTP id a26mr116610265wmm.81.1564575928122;
+ Wed, 31 Jul 2019 05:25:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <51a4155c5bc2ca847a9cbe85c1c11918bb193141.1564086017.git.jpoimboe@redhat.com>
+ <alpine.DEB.2.21.1907252355150.1791@nanos.tec.linutronix.de>
+ <156416793450.30723.5556760526480191131@skylake-alporthouse-com>
+ <alpine.DEB.2.21.1907262116530.1791@nanos.tec.linutronix.de> <156416944205.21451.12269136304831943624@skylake-alporthouse-com>
+In-Reply-To: <156416944205.21451.12269136304831943624@skylake-alporthouse-com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 31 Jul 2019 14:25:16 +0200
+Message-ID: <CA+icZUXwBFS-6e+Qp4e3PhnRzEHvwdzWtS6OfVsgy85R5YNGOg@mail.gmail.com>
+Subject: Re: [PATCH] drm/i915: Remove redundant user_access_end() from
+ __copy_from_user() error path
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-refcount_t is better for reference counters since its
-implementation can prevent overflows.
-So convert atomic_t ref counters to refcount_t.
+On Fri, Jul 26, 2019 at 9:30 PM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+>
+> Quoting Thomas Gleixner (2019-07-26 20:18:32)
+> > On Fri, 26 Jul 2019, Chris Wilson wrote:
+> > > Quoting Thomas Gleixner (2019-07-25 22:55:45)
+> > > > On Thu, 25 Jul 2019, Josh Poimboeuf wrote:
+> > > >
+> > > > > Objtool reports:
+> > > > >
+> > > > >   drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x36: redundant UACCESS disable
+> > > > >
+> > > > > __copy_from_user() already does both STAC and CLAC, so the
+> > > > > user_access_end() in its error path adds an extra unnecessary CLAC.
+> > > > >
+> > > > > Fixes: 0b2c8f8b6b0c ("i915: fix missing user_access_end() in page fault exception case")
+> > > > > Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> > > > > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > > > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > > > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > > > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > > > Link: https://github.com/ClangBuiltLinux/linux/issues/617
+> > > > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > >
+> > > > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> > >
+> > > Which tree do you plan to apply it to? I can put in drm-intel, and with
+> > > the fixes tag it will percolate through to 5.3 and beyond, but if you
+> > > want to apply it directly to squash the build warnings, feel free.
+> >
+> > It would be nice to get it into 5.3. I can route it linuxwards if you give
+> > an Acked-by, but I'm happy to hand it to you :)
+>
+> Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/net/ethernet/broadcom/cnic.c    | 26 ++++++++++++-------------
- drivers/net/ethernet/broadcom/cnic_if.h |  6 +++---
- 2 files changed, 16 insertions(+), 16 deletions(-)
+Thomas did you take this through tip tree after Chris' ACK?
 
-diff --git a/drivers/net/ethernet/broadcom/cnic.c b/drivers/net/ethernet/broadcom/cnic.c
-index 57dc3cbff36e..215777d63cda 100644
---- a/drivers/net/ethernet/broadcom/cnic.c
-+++ b/drivers/net/ethernet/broadcom/cnic.c
-@@ -141,22 +141,22 @@ static int cnic_uio_close(struct uio_info *uinfo, struct inode *inode)
- 
- static inline void cnic_hold(struct cnic_dev *dev)
- {
--	atomic_inc(&dev->ref_count);
-+	refcount_inc(&dev->ref_count);
- }
- 
- static inline void cnic_put(struct cnic_dev *dev)
- {
--	atomic_dec(&dev->ref_count);
-+	refcount_dec(&dev->ref_count);
- }
- 
- static inline void csk_hold(struct cnic_sock *csk)
- {
--	atomic_inc(&csk->ref_count);
-+	refcount_inc(&csk->ref_count);
- }
- 
- static inline void csk_put(struct cnic_sock *csk)
- {
--	atomic_dec(&csk->ref_count);
-+	refcount_dec(&csk->ref_count);
- }
- 
- static struct cnic_dev *cnic_from_netdev(struct net_device *netdev)
-@@ -177,12 +177,12 @@ static struct cnic_dev *cnic_from_netdev(struct net_device *netdev)
- 
- static inline void ulp_get(struct cnic_ulp_ops *ulp_ops)
- {
--	atomic_inc(&ulp_ops->ref_count);
-+	refcount_inc(&ulp_ops->ref_count);
- }
- 
- static inline void ulp_put(struct cnic_ulp_ops *ulp_ops)
- {
--	atomic_dec(&ulp_ops->ref_count);
-+	refcount_dec(&ulp_ops->ref_count);
- }
- 
- static void cnic_ctx_wr(struct cnic_dev *dev, u32 cid_addr, u32 off, u32 val)
-@@ -494,7 +494,7 @@ int cnic_register_driver(int ulp_type, struct cnic_ulp_ops *ulp_ops)
- 	}
- 	read_unlock(&cnic_dev_lock);
- 
--	atomic_set(&ulp_ops->ref_count, 0);
-+	refcount_set(&ulp_ops->ref_count, 0);
- 	rcu_assign_pointer(cnic_ulp_tbl[ulp_type], ulp_ops);
- 	mutex_unlock(&cnic_lock);
- 
-@@ -545,12 +545,12 @@ int cnic_unregister_driver(int ulp_type)
- 
- 	mutex_unlock(&cnic_lock);
- 	synchronize_rcu();
--	while ((atomic_read(&ulp_ops->ref_count) != 0) && (i < 20)) {
-+	while ((refcount_read(&ulp_ops->ref_count) != 0) && (i < 20)) {
- 		msleep(100);
- 		i++;
- 	}
- 
--	if (atomic_read(&ulp_ops->ref_count) != 0)
-+	if (refcount_read(&ulp_ops->ref_count) != 0)
- 		pr_warn("%s: Failed waiting for ref count to go to zero\n",
- 			__func__);
- 	return 0;
-@@ -3596,7 +3596,7 @@ static int cnic_cm_create(struct cnic_dev *dev, int ulp_type, u32 cid,
- 	}
- 
- 	csk1 = &cp->csk_tbl[l5_cid];
--	if (atomic_read(&csk1->ref_count))
-+	if (refcount_read(&csk1->ref_count))
- 		return -EAGAIN;
- 
- 	if (test_and_set_bit(SK_F_INUSE, &csk1->flags))
-@@ -3651,7 +3651,7 @@ static int cnic_cm_destroy(struct cnic_sock *csk)
- 	csk_hold(csk);
- 	clear_bit(SK_F_INUSE, &csk->flags);
- 	smp_mb__after_atomic();
--	while (atomic_read(&csk->ref_count) != 1)
-+	while (refcount_read(&csk->ref_count) != 1)
- 		msleep(1);
- 	cnic_cm_cleanup(csk);
- 
-@@ -5432,11 +5432,11 @@ static void cnic_free_dev(struct cnic_dev *dev)
- {
- 	int i = 0;
- 
--	while ((atomic_read(&dev->ref_count) != 0) && i < 10) {
-+	while ((refcount_read(&dev->ref_count) != 0) && i < 10) {
- 		msleep(100);
- 		i++;
- 	}
--	if (atomic_read(&dev->ref_count) != 0)
-+	if (refcount_read(&dev->ref_count) != 0)
- 		netdev_err(dev->netdev, "Failed waiting for ref count to go to zero\n");
- 
- 	netdev_info(dev->netdev, "Removed CNIC device\n");
-diff --git a/drivers/net/ethernet/broadcom/cnic_if.h b/drivers/net/ethernet/broadcom/cnic_if.h
-index 789e5c7e9311..5232a05ac7ba 100644
---- a/drivers/net/ethernet/broadcom/cnic_if.h
-+++ b/drivers/net/ethernet/broadcom/cnic_if.h
-@@ -300,7 +300,7 @@ struct cnic_sock {
- #define SK_F_CLOSING		7
- #define SK_F_HW_ERR		8
- 
--	atomic_t ref_count;
-+	refcount_t ref_count;
- 	u32 state;
- 	struct kwqe kwqe1;
- 	struct kwqe kwqe2;
-@@ -335,7 +335,7 @@ struct cnic_dev {
- #define CNIC_F_CNIC_UP		1
- #define CNIC_F_BNX2_CLASS	3
- #define CNIC_F_BNX2X_CLASS	4
--	atomic_t	ref_count;
-+	refcount_t	ref_count;
- 	u8		mac_addr[ETH_ALEN];
- 
- 	int		max_iscsi_conn;
-@@ -378,7 +378,7 @@ struct cnic_ulp_ops {
- 				  char *data, u16 data_size);
- 	int (*cnic_get_stats)(void *ulp_ctx);
- 	struct module *owner;
--	atomic_t ref_count;
-+	refcount_t ref_count;
- };
- 
- int cnic_register_driver(int ulp_type, struct cnic_ulp_ops *ulp_ops);
--- 
-2.20.1
-
+- Sedat -
