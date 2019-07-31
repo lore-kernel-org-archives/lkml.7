@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341E0C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B215C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D0120659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1174220659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="0XV6P/gt"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="EapzB6nV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfGaPWQ (ORCPT
+        id S1730194AbfGaPWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:22:16 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40457 "EHLO
+        Wed, 31 Jul 2019 11:22:13 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43657 "EHLO
         mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729664AbfGaPTm (ORCPT
+        with ESMTP id S1727628AbfGaPWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:19:42 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so66032408eds.7
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:19:40 -0700 (PDT)
+        Wed, 31 Jul 2019 11:22:11 -0400
+Received: by mail-ed1-f67.google.com with SMTP id e3so66073142edr.10
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:22:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hC2uwgXxojO8zk/Rcrr6mceJUJW70ppjchwtq4ruRCg=;
-        b=0XV6P/gt+Sg4f27WCDZfMiz3yUD8gmqmXbpUkqw2qeKte/64P4ld/yFj9TtHQsxMva
-         Sbd6SFVGZn15wA2StFIL5OKo0viglmdPGCy3S9nsnoLjxmIaz4pZPHVNhzJMBFiEItzK
-         GGFxIZHfCywnX+w1VFB8az1H4FFBZ0dEp86xAnm0F7Jfw3TX8bJ2UwJ4MOp6xtqistdS
-         ci1LlbxLwNn2UPtS72pBvzNbUsUQSbVvUvjpSYYoWOORZ9uWxZOyAGcJabNrh3zrp7Ty
-         xsBZdp44F7iwElj0Db5RusDWd82dGLl/6L2fkZUDkulyOvXwh+aBdW95+eM1LPwVFqZZ
-         pCfQ==
+        bh=Qu4eqa88cl7hA3fQdb28KWqV5w4hCLiKuLbYR7iJuDE=;
+        b=EapzB6nV2zuG3XXqORhtOg865rDFWXiiuUO8FpJLb/h1WDao3VpOzWeFDmaFbxm/XL
+         47TBQ8nUUTf9qkmZiYlrYuMBsFG5TIn6RKRtGHhdoEi679Dd/WD/MF4HtnmQP59r+ZVS
+         lWZPfIfuMFEgQo4Y3mbUEU6Vw4ZKVnL+c9FxScjZKMpMrPiR+cuZijKKGYKRXfElKJqa
+         Xlf/ibW3jXNNJBvLlFTHpGgT5lOrKP+W2Zir2emFXNHQgTL1ugZEAXaNqYvDXjvvf1sY
+         eVxqaYVdOcCPAQPOF9hrrzA0BOHPgcYf40DmCzESR4BUuRMyXnjNV9lnjdj/b1tOOPp+
+         BzBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hC2uwgXxojO8zk/Rcrr6mceJUJW70ppjchwtq4ruRCg=;
-        b=NhiT1wW7jXoXzeZ0fs2F+94XI/GqaST0R07VxoBxglknnp8sSQF992A0SHZo8P4syX
-         U/wFokK60gcvf3YjVtIPJWfgkdtWXgD+NlmPMSv8ORSkPQeHRYNCa0NqpcBMi4E6xvcQ
-         y8D2D8gDuhJ/Whw0ZstTzRyx/kU60UYjCBTqpOJY7GLjtItIpKdqd416sTOnQ4CJ3lSn
-         1RXMNwbvzVO+TWieYmZYvI+ghYyZlE8tOAxZWieYTat5G9/H99L7E4b3Vl8Ilm7VP/5W
-         mngicJnl6oNHG6x5Kw3GnHjLruPfcXV1tFQLgrALdv9JHBYuHM6CDI33CjmVmfHf7ZKO
-         S2dA==
-X-Gm-Message-State: APjAAAUvRATnG7gWCuBKlWF6LcbQIGXGwOdizYjgM1MFelRVgjK0clLG
-        A/Nbwx+TU59YC2WLR7xxL88=
-X-Google-Smtp-Source: APXvYqz5v5Tv2OUvZrbCEWIRRAB8vEgVkF30Jl6xeuTpZr0HJyo73/wTXum206aQYtxXoB+6KiDpDg==
-X-Received: by 2002:a17:906:9447:: with SMTP id z7mr29540487ejx.165.1564586039736;
-        Wed, 31 Jul 2019 08:13:59 -0700 (PDT)
+        bh=Qu4eqa88cl7hA3fQdb28KWqV5w4hCLiKuLbYR7iJuDE=;
+        b=Msp8GkuyxvFwCRz31JCyXf24zrUn4OzcF1Prb3HLShvtSKT1MuRIJ58WfacAN5Qhj3
+         kaaccAuI1YkzUiOSXxSv5LXEjvI9BmR10yvK3wmOMyECcXxyHLBK6w4nFwhBxq0hTaq4
+         jBOddu/KuDlTIu/dEvh91pMzAjszzgh8p5H2EVjMCyml84/ZbvcZOg72Cfzb06bxFQJP
+         +Kk3UEEdyOfI/QHloG2J02jBKwQJDkChdGkptSLKUSZPgXgNng74YCAanoHk6dtyKYq1
+         HTy0iHg5SsQ4VcrR3uCIaa+epkRWAJpWmKIwWeKIcpnno3CH/EMSsXpIQNOxHw7XQMzF
+         aRKQ==
+X-Gm-Message-State: APjAAAV+RX5fAO2QOt5jv3rcRaltlfn/dVovG6c9nb4zklh9ZEi6gcni
+        h/LNl0c9WiM8mYU5dzgVOGk=
+X-Google-Smtp-Source: APXvYqx2zTJL6YB+Gc6tZHir/y3NwypWB6AAdiaRHKrntm3SVSrSWzIlrCWGYk+WyVgbmkUaGcUHkg==
+X-Received: by 2002:a50:acc6:: with SMTP id x64mr110288029edc.100.1564586034088;
+        Wed, 31 Jul 2019 08:13:54 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id g11sm12443173ejm.86.2019.07.31.08.13.53
+        by smtp.gmail.com with ESMTPSA id oe21sm11729742ejb.44.2019.07.31.08.13.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:13:57 -0700 (PDT)
+        Wed, 31 Jul 2019 08:13:52 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 488B9104606; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
+        id 172081045FF; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,9 +75,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 48/59] iommu/vt-d: Support MKTME in DMA remapping
-Date:   Wed, 31 Jul 2019 18:08:02 +0300
-Message-Id: <20190731150813.26289-49-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 41/59] mm: Generalize the mprotect implementation to support extensions
+Date:   Wed, 31 Jul 2019 18:07:55 +0300
+Message-Id: <20190731150813.26289-42-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,111 +88,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Alison Schofield <alison.schofield@intel.com>
 
-When MKTME is enabled, keyid is stored in the high order bits of physical
-address. For DMA transactions targeting encrypted physical memory, keyid
-must be included in the IOVA to physical address translation.
+Today mprotect is implemented to support legacy mprotect behavior
+plus an extension for memory protection keys. Make it more generic
+so that it can support additional extensions in the future.
 
-This patch appends page keyid when setting up the IOMMU PTEs. On the
-reverse direction, keyid bits are cleared in the physical address lookup.
-Mapping functions of both DMA ops and IOMMU ops are covered.
+This is done is preparation for adding a new system call for memory
+encyption keys. The intent is that the new encrypted mprotect will be
+another extension to legacy mprotect.
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- drivers/iommu/intel-iommu.c | 29 +++++++++++++++++++++++++++--
- include/linux/intel-iommu.h |  9 ++++++++-
- 2 files changed, 35 insertions(+), 3 deletions(-)
+ mm/mprotect.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index ac4172c02244..32d22872656b 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -867,6 +867,28 @@ static void free_context_table(struct intel_iommu *iommu)
- 	spin_unlock_irqrestore(&iommu->lock, flags);
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 82d7b194a918..4d55725228e3 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -35,6 +35,8 @@
+ 
+ #include "internal.h"
+ 
++#define NO_KEY	-1
++
+ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+ 		unsigned long addr, unsigned long end, pgprot_t newprot,
+ 		int dirty_accountable, int prot_numa)
+@@ -453,9 +455,9 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
  }
  
-+static inline void set_pte_mktme_keyid(unsigned long phys_pfn,
-+		phys_addr_t *pteval)
-+{
-+	unsigned long keyid;
-+
-+	if (!pfn_valid(phys_pfn))
-+		return;
-+
-+	keyid = page_keyid(pfn_to_page(phys_pfn));
-+
-+#ifdef CONFIG_X86_INTEL_MKTME
-+	/*
-+	 * When MKTME is enabled, set keyid in PTE such that DMA
-+	 * remapping will include keyid in the translation from IOVA
-+	 * to physical address. This applies to both user and kernel
-+	 * allocated DMA memory.
-+	 */
-+	*pteval &= ~mktme_keyid_mask();
-+	*pteval |= keyid << mktme_keyid_shift();
-+#endif
-+}
-+
- static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
- 				      unsigned long pfn, int *target_level)
- {
-@@ -893,7 +915,7 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
- 			break;
- 
- 		if (!dma_pte_present(pte)) {
--			uint64_t pteval;
-+			phys_addr_t pteval;
- 
- 			tmp_page = alloc_pgtable_page(domain->nid);
- 
-@@ -901,7 +923,8 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
- 				return NULL;
- 
- 			domain_flush_cache(domain, tmp_page, VTD_PAGE_SIZE);
--			pteval = ((uint64_t)virt_to_dma_pfn(tmp_page) << VTD_PAGE_SHIFT) | DMA_PTE_READ | DMA_PTE_WRITE;
-+			pteval = (virt_to_dma_pfn(tmp_page) << VTD_PAGE_SHIFT) | DMA_PTE_READ | DMA_PTE_WRITE;
-+			set_pte_mktme_keyid(virt_to_dma_pfn(tmp_page), &pteval);
- 			if (cmpxchg64(&pte->val, 0ULL, pteval))
- 				/* Someone else set it while we were thinking; use theirs. */
- 				free_pgtable_page(tmp_page);
-@@ -2214,6 +2237,8 @@ static int __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
- 			}
- 
- 		}
-+		set_pte_mktme_keyid(phys_pfn, &pteval);
-+
- 		/* We don't need lock here, nobody else
- 		 * touches the iova range
- 		 */
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index f2ae8a006ff8..8fbb9353d5a6 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -22,6 +22,8 @@
- 
- #include <asm/cacheflush.h>
- #include <asm/iommu.h>
-+#include <asm/page.h>
-+
- 
  /*
-  * VT-d hardware uses 4KiB page size regardless of host page size.
-@@ -608,7 +610,12 @@ static inline void dma_clear_pte(struct dma_pte *pte)
- static inline u64 dma_pte_addr(struct dma_pte *pte)
+- * pkey==-1 when doing a legacy mprotect()
++ * When pkey==NO_KEY we get legacy mprotect behavior here.
+  */
+-static int do_mprotect_pkey(unsigned long start, size_t len,
++static int do_mprotect_ext(unsigned long start, size_t len,
+ 		unsigned long prot, int pkey)
  {
- #ifdef CONFIG_64BIT
--	return pte->val & VTD_PAGE_MASK;
-+	u64 addr = pte->val;
-+	addr &= VTD_PAGE_MASK;
-+#ifdef CONFIG_X86_INTEL_MKTME
-+	addr &= ~mktme_keyid_mask();
-+#endif
-+	return addr;
- #else
- 	/* Must have a full atomic 64-bit read */
- 	return  __cmpxchg64(&pte->val, 0ULL, 0ULL) & VTD_PAGE_MASK;
+ 	unsigned long nstart, end, tmp, reqprot;
+@@ -579,7 +581,7 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
+ SYSCALL_DEFINE3(mprotect, unsigned long, start, size_t, len,
+ 		unsigned long, prot)
+ {
+-	return do_mprotect_pkey(start, len, prot, -1);
++	return do_mprotect_ext(start, len, prot, NO_KEY);
+ }
+ 
+ #ifdef CONFIG_ARCH_HAS_PKEYS
+@@ -587,7 +589,7 @@ SYSCALL_DEFINE3(mprotect, unsigned long, start, size_t, len,
+ SYSCALL_DEFINE4(pkey_mprotect, unsigned long, start, size_t, len,
+ 		unsigned long, prot, int, pkey)
+ {
+-	return do_mprotect_pkey(start, len, prot, pkey);
++	return do_mprotect_ext(start, len, prot, pkey);
+ }
+ 
+ SYSCALL_DEFINE2(pkey_alloc, unsigned long, flags, unsigned long, init_val)
 -- 
 2.21.0
 
