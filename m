@@ -2,85 +2,125 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED50DC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BC0C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C121A206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:34:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="D+dt/Wwi"
+	by mail.kernel.org (Postfix) with ESMTP id B256520693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:43:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfGaCeY (ORCPT
+        id S1727954AbfGaCmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 22:34:24 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:49314 "EHLO vps0.lunn.ch"
+        Tue, 30 Jul 2019 22:42:20 -0400
+Received: from mga05.intel.com ([192.55.52.43]:7466 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfGaCeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 22:34:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ORAf6J6JbZKYnL2Jvl8xniqzWNCdzdfxgEVUinGXEAA=; b=D+dt/WwidcTZ/t53+rgaOkq7NL
-        uuTAqcAEvNtjquwzbcddkh0S52df2snmx+NSk3oNX8TgILJg2qLGKoBfu3NWtyIl+fWH1hM2jVtFG
-        05DL0YnyRLdP8bi+J9lDTT7GFxohUzQIFvQ76kiIICSGHkl7DvtW0AMaxXdttZmOUss4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hseRV-0003nb-Tx; Wed, 31 Jul 2019 04:34:17 +0200
-Date:   Wed, 31 Jul 2019 04:34:17 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Tao Ren <taoren@fb.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH net-next 2/2] net: phy: broadcom: add 1000Base-X support
- for BCM54616S
-Message-ID: <20190731023417.GD9523@lunn.ch>
-References: <20190730002549.86824-1-taoren@fb.com>
- <CA+h21hq1+E6-ScFx425hXwTPTZHTVZbBuAm7RROFZTBOFvD8vQ@mail.gmail.com>
- <3987251b-9679-dfbe-6e15-f991c2893bac@fb.com>
- <CA+h21ho1KOGS3WsNBHzfHkpSyE4k5HTE1tV9wUtnkZhjUZGeUw@mail.gmail.com>
- <e8f85ef3-1216-8efb-a54d-84426234fe82@fb.com>
- <20190731013636.GC25700@lunn.ch>
- <885e48dd-df5b-7f08-ef58-557fc2347fa6@fb.com>
+        id S1727714AbfGaCmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 22:42:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 19:42:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,328,1559545200"; 
+   d="scan'208";a="180086832"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Jul 2019 19:42:16 -0700
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+To:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190531210816.GA24027@sinkpad> <20190606152637.GA5703@sinkpad>
+ <20190612163345.GB26997@sinkpad>
+ <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
+ <20190613032246.GA17752@sinkpad>
+ <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
+ <20190619183302.GA6775@sinkpad> <20190718100714.GA469@aaronlu>
+ <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
+ <20190725143003.GA992@aaronlu> <20190726152101.GA27884@sinkpad>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+Date:   Wed, 31 Jul 2019 10:42:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <885e48dd-df5b-7f08-ef58-557fc2347fa6@fb.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190726152101.GA27884@sinkpad>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi Andrew,
+On 2019/7/26 23:21, Julien Desfossez wrote:
+> On 25-Jul-2019 10:30:03 PM, Aaron Lu wrote:
+>>
+>> I tried a different approach based on vruntime with 3 patches following.
+> [...]
 > 
-> The BCM54616S PHY on my machine is connected to a BCM5396 switch chip over backplane (1000Base-KX).
+> We have experimented with this new patchset and indeed the fairness is
+> now much better. Interactive tasks with v3 were complete starving when
+> there were cpu-intensive tasks running, now they can run consistently.
 
-Ah, that is different. So the board is using it for RGMII to 1000Base-KX?
+Yeah, the fairness is much better now.
 
-phy-mode is about the MAC-PHY link. So in this case RGMII.
+For two cgroups created, I limited the cpuset to be one core(two siblings)
+of these two cgroups, I still run gemmbench and sysbench-mysql, and here
+is the mysql result:
 
-There is no DT way to configure the PHY-Switch link. However, it
-sounds like you have the PHY strapped so it is doing 1000BaseX on the
-PHY-Switch link. So do you actually need to configure this?
+Latency:
+.----------------------------------------------------------------------------------------------.
+|NA/AVX	vanilla-SMT	[std% / sem%]	  cpu% |coresched-SMT	[std% / sem%]	  +/-	  cpu% |
+|----------------------------------------------------------------------------------------------|
+|  1/1	        6.7	[13.8%/ 1.4%]	  2.1% |          6.4	[14.6%/ 1.5%]	  4.0%	  2.0% |
+|  2/2	        9.1	[ 5.0%/ 0.5%]	  4.0% |         11.4	[ 6.8%/ 0.7%]	-24.9%	  3.9% |
+'----------------------------------------------------------------------------------------------'
 
-You report you never see link up? So maybe the problem is actually in
-read_status? When in 1000BaseX mode, do you need to read the link
-status from some other register? The Marvell PHYs use a second page
-for 1000BaseX.
+Throughput:
+.----------------------------------------------------------------------------------------------.
+|NA/AVX	vanilla-SMT	[std% / sem%]	  cpu% |coresched-SMT	[std% / sem%]	  +/-	  cpu% |
+|----------------------------------------------------------------------------------------------|
+|  1/1	      310.2	[ 4.1%/ 0.4%]	  2.1% |        296.2	[ 5.0%/ 0.5%]	 -4.5%	  2.0% | 
+|  2/2	      547.7	[ 3.6%/ 0.4%]	  4.0% |        368.3	[ 4.8%/ 0.5%]	-32.8%	  3.9% | 
+'----------------------------------------------------------------------------------------------'
 
-    Andrew
+Note: 2/2 case means 4 threads run on one core, which is overloaded.(cpu% is overall system report)
+
+Though the latency/throughput has regressions, but standard deviation is much better now.
+
+> With my initial test of TPC-C running in large VMs with a lot of
+> background noise VMs, the results are pretty similar to v3, I will run
+> more thorough tests and report the results back here.
+
+I see something similar. I guess task placement could be another problem.
+We don't check cookie matching in load balance and task wakeup, so
+- if tasks with different cookie happen to be dispatched onto different cores,
+The result should be good
+- if tasks with different cookie are unfortunately dispatched onto the same
+core, the result should be bad.
+
+This problem is bypassed in my testing setup above, but may be one cause
+of my other scenarios, need a while to sort out.
+
+Thanks,
+-Aubrey
