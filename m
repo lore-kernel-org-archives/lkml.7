@@ -2,126 +2,93 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88714C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293EAC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE16208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:11:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564589470;
-	bh=wMw/vfv7591v5B2lTvWN47RNjbkh0FPCOeS3UTprHLk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V4HyZ+2ILV18DGGKM8oc9AYy9oSVUdk70xWPFfVhB304COY8B/rIBHYLrkCkcza1Z
-	 F5FrAus6pFY2zn2Mo4cvcd7Nz9iQihbf9n/ndw55aDVMouDQOBCcgL5qx1K+6NOPly
-	 4lMdDT46g9Iab+9Bn60Euvq3nH5HJFU9PXvOERBw=
+	by mail.kernel.org (Postfix) with ESMTP id 0116D206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:13:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="Xr7DSeFB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbfGaQLJ (ORCPT
+        id S1730024AbfGaQM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:11:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725209AbfGaQLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:11:08 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11533206A3;
-        Wed, 31 Jul 2019 16:11:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564589468;
-        bh=wMw/vfv7591v5B2lTvWN47RNjbkh0FPCOeS3UTprHLk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JWwb9h/LpO93Nj+dCkoUS/EpGOhXEKuyHtRHXJC6igJNZAwfQn0IYkY7GipJK9fRJ
-         XReuRfvbRYRviqtwDUSADC6rOMJeYCvzl9f5WmQnPcH5pZvZXdZE4wp3fSsmA+9VBr
-         U+kZr3/F/RT8+HUjng0iS0Bm/HZsFhsyWU9sfaag=
-Date:   Wed, 31 Jul 2019 17:11:04 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC 2/2] arm64/mm: Enable device memory allocation and free for
- vmemmap mapping
-Message-ID: <20190731161103.kqv3v2xlq4vnyjhp@willie-the-truck>
-References: <1561697083-7329-1-git-send-email-anshuman.khandual@arm.com>
- <1561697083-7329-3-git-send-email-anshuman.khandual@arm.com>
+        Wed, 31 Jul 2019 12:12:59 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:30086 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725209AbfGaQM6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:12:58 -0400
+Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VG9bon026232;
+        Wed, 31 Jul 2019 12:12:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=bvuyEyYL0dYLQuXorPs3yeHCIRdNISCr/Vk2kCK/8jo=;
+ b=Xr7DSeFBHEySVZFjVcTuWQtiLeyfzDjbO5EXS03DYvA7PdiZCpggN1d6+4qpJw3+emjp
+ uhWstbziepwlfgLW+kHtXg6QDYloWA5UQ4EZH7xR0uhA9Yy9+KW8l9HDYurUABtMEUyS
+ 743o7tOVzmL74EQgdDfIjXtiNduiusFi2aE63LPiAkgzTMehIS3KnplyA9XtuTYBALFg
+ 56cIThISVUyZJY1CVXTpDLo9KXEH8WJkK4bAsry6bjPfVtlmFSWWKpp05ipCms1iC55A
+ 75dCUM7gH597K1tAntWsdl11kkmLwhcF+6fbYHno2To/1mSn9Xln694TQvLItxTczpUa rw== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 2u2twectvf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 31 Jul 2019 12:12:57 -0400
+Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VG7rLi052078;
+        Wed, 31 Jul 2019 12:12:56 -0400
+Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
+        by mx0b-00154901.pphosted.com with ESMTP id 2u3c0t2ntd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Jul 2019 12:12:56 -0400
+X-LoopCount0: from 10.166.132.131
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="838363177"
+From:   <Mario.Limonciello@dell.com>
+To:     <kai.heng.feng@canonical.com>, <rjw@rjwysocki.net>
+CC:     <mika.westerberg@linux.intel.com>, <anthony.wong@canonical.com>,
+        <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur
+ in special cases"
+Thread-Topic: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur
+ in special cases"
+Thread-Index: AQHVR7mqkcvT3R0NfUWTXYuokpN3/6bk5bx4
+Date:   Wed, 31 Jul 2019 16:12:54 +0000
+Message-ID: <1564589574204.11850@Dell.com>
+References: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
+In-Reply-To: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.177.49.166]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561697083-7329-3-git-send-email-anshuman.khandual@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=603 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907310160
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=715 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907310161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 10:14:43AM +0530, Anshuman Khandual wrote:
-> This enables vmemmap_populate() and vmemmap_free() functions to incorporate
-> struct vmem_altmap based device memory allocation and free requests. With
-> this device memory with specific atlmap configuration can be hot plugged
-> and hot removed as ZONE_DEVICE memory on arm64 platforms.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  arch/arm64/mm/mmu.c | 57 ++++++++++++++++++++++++++++++++++-------------------
->  1 file changed, 37 insertions(+), 20 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 39e18d1..8867bbd 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -735,15 +735,26 @@ int kern_addr_valid(unsigned long addr)
->  }
->  
->  #ifdef CONFIG_MEMORY_HOTPLUG
-> -static void free_hotplug_page_range(struct page *page, size_t size)
-> +static void free_hotplug_page_range(struct page *page, size_t size,
-> +				    struct vmem_altmap *altmap)
->  {
-> -	WARN_ON(!page || PageReserved(page));
-> -	free_pages((unsigned long)page_address(page), get_order(size));
-> +	if (altmap) {
-> +		/*
-> +		 * vmemmap_populate() creates vmemmap mapping either at pte
-> +		 * or pmd level. Unmapping request at any other level would
-> +		 * be a problem.
-> +		 */
-> +		WARN_ON((size != PAGE_SIZE) && (size != PMD_SIZE));
-> +		vmem_altmap_free(altmap, size >> PAGE_SHIFT);
-> +	} else {
-> +		WARN_ON(!page || PageReserved(page));
-> +		free_pages((unsigned long)page_address(page), get_order(size));
-> +	}
->  }
->  
->  static void free_hotplug_pgtable_page(struct page *page)
->  {
-> -	free_hotplug_page_range(page, PAGE_SIZE);
-> +	free_hotplug_page_range(page, PAGE_SIZE, NULL);
->  }
->  
->  static void free_pte_table(pmd_t *pmdp, unsigned long addr)
-> @@ -807,7 +818,8 @@ static void free_pud_table(pgd_t *pgdp, unsigned long addr)
->  }
->  
->  static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
-> -				    unsigned long end, bool sparse_vmap)
-> +				    unsigned long end, bool sparse_vmap,
-> +				    struct vmem_altmap *altmap)
-
-Do you still need the sparse_vmap parameter, or can you just pass a NULL
-altmap pointer when sparse_vmap is false?
-
-Will
+I've actually been seeing worse behavior, in that I can't get Thunderbolt t=
+o work at all with 5.3rc1 or 5.3rc2 on the 9380 system I have on hand, simi=
+lar messages related to link timeouts. =
