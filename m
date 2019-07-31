@@ -2,137 +2,223 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BC1C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED9DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5520C208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C82208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FOoxV12s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gcYhN/gR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfGaQ4q (ORCPT
+        id S1729968AbfGaQ6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:56:46 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41196 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfGaQ4q (ORCPT
+        Wed, 31 Jul 2019 12:58:37 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41916 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727487AbfGaQ6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:56:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so67259581wrm.8
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 09:56:45 -0700 (PDT)
+        Wed, 31 Jul 2019 12:58:36 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m30so32217023pff.8
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 09:58:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DqTY6aG8nZY+73IAGA5g/qZiERQkK4hZGuiPzmKKWh8=;
-        b=FOoxV12saNl7w3akWNrNCgTnPrD+3S544LRe0DFS56PBepCvDb+o+ypQ3kWM+CcjZh
-         A60KOtsbTCJSXGUZKAfj13fHFuxNpVqtz0Pk4SgCR+3P1m2UeRtJ2lGobZyvKUz2OXRP
-         3Y6pyFUe3ZMvjhYrabMaLY3VaQmTKvaLDMuGH+VDdVFcz83ty4pg9448jpvyz+GmoKZF
-         RDl+6A3WygeFh88OBt1z+RM4uPZZZtsgNPTwtoUV90DTQP7P/OPtE7f6yu9CFgmdi+RX
-         a+3W1n2/MyoIRxKRJ/VdwFxAz08GPRoe9ie7NX2ycW1cpBYQeiXQ1t4zZeY8LE5WTgol
-         1+Lw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BbYGW1om6PC71p94etYGN3/okI4rSt3mD1Fla+dsCZI=;
+        b=gcYhN/gR9O1Pe9ZLLVnRXrYNlqcViNsBD9U+GWnDzGiTqP8BVudlcK6mYTh5KrhO1w
+         aPil5ZmAZyWrMboSY/Y4EWCOKqTrOByXbdolL7wrTtQQigNu3FCKkYHuY/f8LOCXZn1u
+         ag8qe88aaYi4cK4Mfe8I/EeGUX2kgbjRo2JPexbLBAxz/4y8a14v3Vg1RNt/bIRzUwcG
+         vcvAbuxpYD56GqmAnN1CoBopaj00u0e2dPBhLKzQ8gki7fyFmQ9T2Gf65RoFjifXYT5N
+         ZJY+aIxyu6kEy2OB53kVekkt/E7IokVuCTGKJ1lXzFJ9A3wj7gq/JRJAFrWHV39z7cGm
+         xIiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DqTY6aG8nZY+73IAGA5g/qZiERQkK4hZGuiPzmKKWh8=;
-        b=FWOgZUptgOmwNv5CJFUhJuy02I5/x0wQhGuOvwZusbS9ZwHyThjW2YyXIQoTqV/RwX
-         /rQtC1QjTE8SR5puLI8UOsxeeXYszsuFvLEXDCeZk6c0k9JAp14epVPG4XuH636lCVEA
-         5suwFb3JsWMBWTpzk2wv9Wo9X0Nulbd4GAeWQxr4CzsSVc2ko8MbToMWAMCoYBjt2oAT
-         6cIV3eb+lhFY3N7+sP1W+MrR8nWat2xMCV1hz+4u3+tanOqwFXP6QY49r0RtmzRmYPdq
-         2KrItGOLh/naQIzrrNGtJ+Dh+eYVoOBoDNgiYOni383JPR5wp5xOm102I0/LvB4BLF29
-         4PiQ==
-X-Gm-Message-State: APjAAAWRNOC/bK7WJIoqbm+WNCxreQq4m82pOkG+JhXrNjI7glfwkcZv
-        gjG3+ma2fPRWT34645gE/RTkS5Pp
-X-Google-Smtp-Source: APXvYqyEr5vH+yM6CVIKtJRwhUsYkjz2ReBhxlt3hz+0NTQ0s/DV5AxWE2VrUwtuelDy4jhVJndneg==
-X-Received: by 2002:a05:6000:11c6:: with SMTP id i6mr34529911wrx.193.1564592204430;
-        Wed, 31 Jul 2019 09:56:44 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id v5sm83709220wre.50.2019.07.31.09.56.43
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 09:56:43 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] fork: extend clone3() to support CLONE_SET_TID
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-To:     Adrian Reber <areber@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-References: <20190731161223.2928-1-areber@redhat.com>
- <417a9682-c7fc-fec4-3510-81a8aa7cd0af@gmail.com>
-Message-ID: <6ccdda8e-73a3-c8e9-1f37-f89bf688c0fa@gmail.com>
-Date:   Wed, 31 Jul 2019 17:56:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BbYGW1om6PC71p94etYGN3/okI4rSt3mD1Fla+dsCZI=;
+        b=BTPGUOIOZuOxujJzcGvWfAfvvUG7566n/fnfdM7H/N7FUE8CRI2Ica/YgreIwk30mZ
+         L39uu43PjXUI5SfRWsekaLNOLbupvlGb7a3/23EHJnTAiyxezeRePF7O79zDxTcV5TSY
+         QVkkyPN5M1BNj4+r7t7Ku06dNX/jfJu9Gnd02phBG9sRCUKsO3P6Wnuce1E8WG7NXHOL
+         thz2N8YyMPmGBOfgA+Wx3te6Eoe1+ZcRrfEcNXQBKHhut95HUXbQmrAe6fYho5VWg0EI
+         1qd48URY0eAcNGULe2Ze1DgIUXdT4FjzNVhwj7nO7rfm/SxKsqfCZSRpMbe1lZjjVi+q
+         r1HQ==
+X-Gm-Message-State: APjAAAWLRtK73JMNZiSh1uJXvMOJMVzsTafMrCEa24jmnaF6T2yXnqyK
+        cf+G4g/xLnC9IzOxKkho0GoH1Q==
+X-Google-Smtp-Source: APXvYqyt4Vp+5qcTUWTv9ZC5LXoMgRwNq9/qEfHAcFZBWQDCFk9UuJV9yUPdKUQAFbAsce0aLp0V9Q==
+X-Received: by 2002:a65:464d:: with SMTP id k13mr103144274pgr.99.1564592315501;
+        Wed, 31 Jul 2019 09:58:35 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li1433-81.members.linode.com. [45.33.106.81])
+        by smtp.gmail.com with ESMTPSA id i124sm128217887pfe.61.2019.07.31.09.58.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 31 Jul 2019 09:58:34 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 00:58:26 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Justin He <Justin.He@arm.com>
+Subject: Re: [PATCH 1/2] arm64: Add support for function error injection
+Message-ID: <20190731165826.GG16088@leoy-ThinkPad-X240s>
+References: <20190716111301.1855-1-leo.yan@linaro.org>
+ <20190716111301.1855-2-leo.yan@linaro.org>
+ <20190731160836.qmzlk3ndbahwhfmu@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <417a9682-c7fc-fec4-3510-81a8aa7cd0af@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731160836.qmzlk3ndbahwhfmu@willie-the-truck>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/19 5:49 PM, Dmitry Safonov wrote:
-> Hi Adrian,
-> 
-> On 7/31/19 5:12 PM, Adrian Reber wrote:
-> [..]
->> @@ -2530,14 +2530,12 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
->>  					      struct clone_args __user *uargs,
->>  					      size_t size)
->>  {
->> +	struct pid_namespace *pid_ns = task_active_pid_ns(current);
->>  	struct clone_args args;
->>  
->>  	if (unlikely(size > PAGE_SIZE))
->>  		return -E2BIG;
->>  
->> -	if (unlikely(size < sizeof(struct clone_args)))
->> -		return -EINVAL;
->> -
-> 
-> It might be better to validate it still somehow, but I don't insist.
-> 
-> [..]
->> @@ -2578,11 +2580,16 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
->>  
->>  static bool clone3_args_valid(const struct kernel_clone_args *kargs)
->>  {
->> -	/*
->> -	 * All lower bits of the flag word are taken.
->> -	 * Verify that no other unknown flags are passed along.
->> -	 */
->> -	if (kargs->flags & ~CLONE_LEGACY_FLAGS)
->> +	/* Verify that no other unknown flags are passed along. */
->> +	if (kargs->flags & ~(CLONE_LEGACY_FLAGS | CLONE_SET_TID))
->> +		return false;
->> +
->> +	/* Fail if set_tid is set without CLONE_SET_TID */
->> +	if (kargs->set_tid && !(kargs->flags & CLONE_SET_TID))
->> +		return false;
->> +
->> +	/* Also fail if set_tid is invalid */
->> +	if ((kargs->set_tid <= 0) && (kargs->flags & CLONE_SET_TID))
->>  		return false;
-> 
-> Sorry for not mentioning it on v1, but I've noticed it only now:
-> you check kargs->set_tid even with the legacy-sized kernel_clone_args,
-> which is probably some random value on a task's stack?
+Hi Will,
 
-Self-correction: On kernel stack in copy_clone_args_from_user().
-Which may probably be considered as a security leak..
-Sorry again for not spotting it in v1.
+Thanks for reviewing.
+
+On Wed, Jul 31, 2019 at 05:08:37PM +0100, Will Deacon wrote:
+> On Tue, Jul 16, 2019 at 07:13:00PM +0800, Leo Yan wrote:
+> > This patch implement regs_set_return_value() and
+> > override_function_with_return() to support function error injection
+> > for arm64.
+> > 
+> > In the exception flow, arm64's general register x30 contains the value
+> > for the link register; so we can just update pt_regs::pc with it rather
+> > than redirecting execution to a dummy function that returns.
+> > 
+> > This patch is heavily inspired by the commit 7cd01b08d35f ("powerpc:
+> > Add support for function error injection").
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  arch/arm64/Kconfig                       |  1 +
+> >  arch/arm64/include/asm/error-injection.h | 13 +++++++++++++
+> >  arch/arm64/include/asm/ptrace.h          |  5 +++++
+> >  arch/arm64/lib/Makefile                  |  2 ++
+> >  arch/arm64/lib/error-inject.c            | 19 +++++++++++++++++++
+> >  5 files changed, 40 insertions(+)
+> >  create mode 100644 arch/arm64/include/asm/error-injection.h
+> >  create mode 100644 arch/arm64/lib/error-inject.c
+> > 
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index 697ea0510729..a6d9e622977d 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -142,6 +142,7 @@ config ARM64
+> >  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+> >  	select HAVE_FTRACE_MCOUNT_RECORD
+> >  	select HAVE_FUNCTION_TRACER
+> > +	select HAVE_FUNCTION_ERROR_INJECTION
+> >  	select HAVE_FUNCTION_GRAPH_TRACER
+> >  	select HAVE_GCC_PLUGINS
+> >  	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+> > diff --git a/arch/arm64/include/asm/error-injection.h b/arch/arm64/include/asm/error-injection.h
+> > new file mode 100644
+> > index 000000000000..da057e8ed224
+> > --- /dev/null
+> > +++ b/arch/arm64/include/asm/error-injection.h
+> > @@ -0,0 +1,13 @@
+> > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > +
+> > +#ifndef __ASM_ERROR_INJECTION_H_
+> > +#define __ASM_ERROR_INJECTION_H_
+> > +
+> > +#include <linux/compiler.h>
+> > +#include <linux/linkage.h>
+> > +#include <asm/ptrace.h>
+> > +#include <asm-generic/error-injection.h>
+> > +
+> > +void override_function_with_return(struct pt_regs *regs);
+> > +
+> > +#endif /* __ASM_ERROR_INJECTION_H_ */
+> 
+> Why isn't this prototype in the asm-generic header? Seems weird to have to
+> duplicate it for each architecture.
+
+Yeah.  When I spin for new version patches, will try to refactor in
+the asm-generic header.
+
+> > diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
+> > index dad858b6adc6..3aafbbe218a2 100644
+> > --- a/arch/arm64/include/asm/ptrace.h
+> > +++ b/arch/arm64/include/asm/ptrace.h
+> > @@ -294,6 +294,11 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
+> >  	return regs->regs[0];
+> >  }
+> >  
+> > +static inline void regs_set_return_value(struct pt_regs *regs, unsigned long rc)
+> > +{
+> > +	regs->regs[0] = rc;
+> > +}
+> > +
+> >  /**
+> >   * regs_get_kernel_argument() - get Nth function argument in kernel
+> >   * @regs:	pt_regs of that context
+> > diff --git a/arch/arm64/lib/Makefile b/arch/arm64/lib/Makefile
+> > index 33c2a4abda04..f182ccb0438e 100644
+> > --- a/arch/arm64/lib/Makefile
+> > +++ b/arch/arm64/lib/Makefile
+> > @@ -33,3 +33,5 @@ UBSAN_SANITIZE_atomic_ll_sc.o	:= n
+> >  lib-$(CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE) += uaccess_flushcache.o
+> >  
+> >  obj-$(CONFIG_CRC32) += crc32.o
+> > +
+> > +obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
+> > diff --git a/arch/arm64/lib/error-inject.c b/arch/arm64/lib/error-inject.c
+> > new file mode 100644
+> > index 000000000000..35661c2de4b0
+> > --- /dev/null
+> > +++ b/arch/arm64/lib/error-inject.c
+> > @@ -0,0 +1,19 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#include <linux/error-injection.h>
+> > +#include <linux/kprobes.h>
+> > +
+> > +void override_function_with_return(struct pt_regs *regs)
+> > +{
+> > +	/*
+> > +	 * 'regs' represents the state on entry of a predefined function in
+> > +	 * the kernel/module and which is captured on a kprobe.
+> > +	 *
+> > +	 * 'regs->regs[30]' contains the the link register for the probed
+> 
+> extra "the"
+
+Will fix.
+
+> > +	 * function and assign it to 'regs->pc', so when kprobe returns
+> > +	 * back from exception it will override the end of probed function
+> > +	 * and drirectly return to the predefined function's caller.
+> 
+> directly
+
+Will fix.
+
+> > +	 */
+> > +	regs->pc = regs->regs[30];
+> 
+> I suppose we could be all fancy and do:
+> 
+> 	instruction_pointer_set(regs, procedure_link_pointer(regs));
+> 
+> How about that?
+
+Ah, good point.  Will change to use the common APIs.
 
 Thanks,
-          Dmitry
+Leo Yan
