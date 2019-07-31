@@ -2,261 +2,129 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0C2C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADE4C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A274206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E97206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:58:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="kUhRcSb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbfGaJ54 (ORCPT
+        id S1728893AbfGaJ6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:57:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57604 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727224AbfGaJ5z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:57:55 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6V9vMcW033778
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:57:54 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u370yw6dq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:57:53 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
-        Wed, 31 Jul 2019 10:57:51 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 31 Jul 2019 10:57:48 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6V9vlWW33358064
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 Jul 2019 09:57:47 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C11224C04A;
-        Wed, 31 Jul 2019 09:57:47 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 465574C044;
-        Wed, 31 Jul 2019 09:57:44 +0000 (GMT)
-Received: from in.ibm.com (unknown [9.109.246.128])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 31 Jul 2019 09:57:43 +0000 (GMT)
-Date:   Wed, 31 Jul 2019 15:27:35 +0530
-From:   Bharata B Rao <bharata@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] nouveau: simplify nouveau_dmem_migrate_to_ram
-Reply-To: bharata@linux.ibm.com
-References: <20190729142843.22320-1-hch@lst.de>
- <20190729142843.22320-6-hch@lst.de>
+        Wed, 31 Jul 2019 05:58:35 -0400
+Received: from mail-eopbgr1410090.outbound.protection.outlook.com ([40.107.141.90]:11115
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728996AbfGaJ6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:58:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A0WEaXFJfSdoOjL1JSd07s54kj6dZsumYi9c2vEmF4aLHLjJXjXPL1M1zrAPNnTwt1wyfDR3stjScOz8xiVOvpTwg5pa7BjMU2pVkDBNJ9UPv3axv/JgpiWwfN01N1JFtyLNRL0Rom/qINO+QD0B8Ycf+eLyPlg7PmtzycBJZrTm77qGncKtfJVqyzV4F7StHXietOLwiXmKnb1cIv7fGusVh4zPoK60oPPWHPPJ62IDvi0qz8flpN4liq429HUBVXe6okDfe6q4cpSXWOyZRSJHX/1ce0jlNNHV+CIZQrO657OOzj4iUazgqoBjG7TddgC5vjuq+kOpTtvDKMYx0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CMp3YtS4wCIucwyFoj6GQZKQTJ+7805ULG6CeFkscfk=;
+ b=lMfJ9h0H5Q0cFS6QxD14dtVdhH3k6olR6Lu9ooUzL/KEyYsl7YVACpf30vzwspmvvsujN9SKUqWdQdQ7ifeQ54gnWB4+mcNru0Ef12EW2Js+0jHVtWPAPRqDd+DG+OKdxMGqcjfRGeAaAyLa/IIEYUso0PHTQTczPg2QuVW3najzHXurgszVoAOIuP4OkOB9BWvTJ2zUw7g2r23enUd69pA61LoWXDxe5RQLlbhfclgwD/sTLZHc/xY3QUt0p+GksauMx33ghmzpS4ULKvTs3wOgygVNElVzfVfz2O4JbLqC3gTiMw0okhpSpg7iqGKHaiRNubeAzhAxBEU/UZibkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=renesas.com;dmarc=pass action=none
+ header.from=renesas.com;dkim=pass header.d=renesas.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CMp3YtS4wCIucwyFoj6GQZKQTJ+7805ULG6CeFkscfk=;
+ b=kUhRcSb9BIymyuinU2RxTfZ7yeC3BR5BaEamVN1+aCwVBXVwKl2n4zEpnoL98ZwYv9AL7lgQVgzxzOiZYWacaRqncGNkqsJBiX8VrFqDDPozOK2xoTICHCZqBDILOEBfiSOMsvARoPtrWK+pux5sonqiZHfUf+0CHkHPyOBVguo=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.174.85) by
+ TYAPR01MB2672.jpnprd01.prod.outlook.com (20.177.105.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.14; Wed, 31 Jul 2019 09:58:31 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::5c8d:f422:6a44:57a9]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::5c8d:f422:6a44:57a9%5]) with mapi id 15.20.2136.010; Wed, 31 Jul 2019
+ 09:58:31 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Pavel Machek <pavel@denx.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: RE: [PATCH] phy: renesas: rcar-gen3-usb2: Fix sysfs interface of
+ "role"
+Thread-Topic: [PATCH] phy: renesas: rcar-gen3-usb2: Fix sysfs interface of
+ "role"
+Thread-Index: AQHVR362otT33prCaEaK92EBfQQMwabkdToAgAAHfuA=
+Date:   Wed, 31 Jul 2019 09:58:30 +0000
+Message-ID: <TYAPR01MB4544CFAACC4C81316CF0760DD8DF0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1564563689-25863-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWhA2xxKKEmmobZDDKGnWNfO4xDb6m6gM16CCFX-1UyTQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdWhA2xxKKEmmobZDDKGnWNfO4xDb6m6gM16CCFX-1UyTQ@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [118.238.235.108]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 737e20b0-b13d-49e2-baae-08d7159da47e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TYAPR01MB2672;
+x-ms-traffictypediagnostic: TYAPR01MB2672:
+x-microsoft-antispam-prvs: <TYAPR01MB2672B8DE347C65A9738C44CDD8DF0@TYAPR01MB2672.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 011579F31F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(189003)(199004)(25786009)(14454004)(3846002)(2906002)(6916009)(6116002)(33656002)(26005)(53546011)(6506007)(54906003)(4326008)(316002)(7696005)(6436002)(99286004)(229853002)(446003)(53936002)(478600001)(76176011)(55016002)(9686003)(11346002)(186003)(66066001)(476003)(305945005)(66556008)(66446008)(71190400001)(71200400001)(7736002)(74316002)(8936002)(6246003)(486006)(8676002)(102836004)(66476007)(86362001)(64756008)(256004)(81166006)(52536014)(76116006)(5660300002)(81156014)(66946007)(68736007);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB2672;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: u3iK9iFwc4nzwS2nross6tJ7uBFufAE7s2wbxcj07RrY/mVoBBLirnIXMYEkK/2L9jufMSgqHuIdrD1a7WKd9QZ4ZlWfnfiUJZDz1Zy4fl1yR70U4Xl/+IgyT/pn53U+GfO1dfiJxnaQUABP7SU9CZg1TxMvK1hPIeRWWCWb/8ys9ZrdoT3F83DbMeC/9Cwpd9KySbhloLvvaANUIICmi4Z/Wd1eaA0lFseJ2OW7bAPWe/AJAxgvY7rB6zv67deaz5w1aVfn/PJmB5VzFqFQQmuV+WdL4psUa+IVujBGq3eHUoPtdv9C3IP+RvhcezF8A0yFWc9L2x0Kx+3xIHh6WI4irdem20Lrvd7YjTiqr+Sa2F6ai4CR1Dzi3k0nhKJYlv3v2pUXg4wzhW2HAPKPt2z8kC7FUBg7AAj7a7tvHok=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729142843.22320-6-hch@lst.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-TM-AS-GCONF: 00
-x-cbid: 19073109-0012-0000-0000-00000337F1FF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19073109-0013-0000-0000-000021719A7D
-Message-Id: <20190731095735.GB18807@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907310102
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 737e20b0-b13d-49e2-baae-08d7159da47e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 09:58:30.7433
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2672
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 05:28:39PM +0300, Christoph Hellwig wrote:
-> Factor the main copy page to ram routine out into a helper that acts on
-> a single page and which doesn't require the nouveau_dmem_fault
-> structure for argument passing.  Also remove the loop over multiple
-> pages as we only handle one at the moment, although the structure of
-> the main worker function makes it relatively easy to add multi page
-> support back if needed in the future.  But at least for now this avoid
-> the needed to dynamically allocate memory for the dma addresses in
-> what is essentially the page fault path.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_dmem.c | 158 ++++++-------------------
->  1 file changed, 39 insertions(+), 119 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> index 21052a4aaf69..036e6c07d489 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> @@ -86,13 +86,6 @@ static inline struct nouveau_dmem *page_to_dmem(struct page *page)
->  	return container_of(page->pgmap, struct nouveau_dmem, pagemap);
->  }
->  
-> -struct nouveau_dmem_fault {
-> -	struct nouveau_drm *drm;
-> -	struct nouveau_fence *fence;
-> -	dma_addr_t *dma;
-> -	unsigned long npages;
-> -};
-> -
->  struct nouveau_migrate {
->  	struct vm_area_struct *vma;
->  	struct nouveau_drm *drm;
-> @@ -146,130 +139,55 @@ static void nouveau_dmem_fence_done(struct nouveau_fence **fence)
->  	}
->  }
->  
-> -static void
-> -nouveau_dmem_fault_alloc_and_copy(struct vm_area_struct *vma,
-> -				  const unsigned long *src_pfns,
-> -				  unsigned long *dst_pfns,
-> -				  unsigned long start,
-> -				  unsigned long end,
-> -				  struct nouveau_dmem_fault *fault)
-> +static vm_fault_t nouveau_dmem_fault_copy_one(struct nouveau_drm *drm,
-> +		struct vm_area_struct *vma, unsigned long addr,
-> +		unsigned long src, unsigned long *dst, dma_addr_t *dma_addr)
->  {
-> -	struct nouveau_drm *drm = fault->drm;
->  	struct device *dev = drm->dev->dev;
-> -	unsigned long addr, i, npages = 0;
-> -	nouveau_migrate_copy_t copy;
-> -	int ret;
-> -
-> -
-> -	/* First allocate new memory */
-> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, i++) {
-> -		struct page *dpage, *spage;
-> -
-> -		dst_pfns[i] = 0;
-> -		spage = migrate_pfn_to_page(src_pfns[i]);
-> -		if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE))
-> -			continue;
-> +	struct page *dpage, *spage;
->  
-> -		dpage = alloc_page_vma(GFP_HIGHUSER, vma, addr);
-> -		if (!dpage) {
-> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
-> -			continue;
-> -		}
-> -		lock_page(dpage);
-> -
-> -		dst_pfns[i] = migrate_pfn(page_to_pfn(dpage)) |
-> -			      MIGRATE_PFN_LOCKED;
-> -		npages++;
-> -	}
-> +	spage = migrate_pfn_to_page(src);
-> +	if (!spage || !(src & MIGRATE_PFN_MIGRATE))
-> +		return 0;
->  
-> -	/* Allocate storage for DMA addresses, so we can unmap later. */
-> -	fault->dma = kmalloc(sizeof(*fault->dma) * npages, GFP_KERNEL);
-> -	if (!fault->dma)
-> +	dpage = alloc_page_vma(GFP_HIGHUSER, args->vma, addr);
-> +	if (!dpage)
->  		goto error;
-> +	lock_page(dpage);
->  
-> -	/* Copy things over */
-> -	copy = drm->dmem->migrate.copy_func;
-> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, i++) {
-> -		struct page *spage, *dpage;
-> -
-> -		dpage = migrate_pfn_to_page(dst_pfns[i]);
-> -		if (!dpage || dst_pfns[i] == MIGRATE_PFN_ERROR)
-> -			continue;
-> -
-> -		spage = migrate_pfn_to_page(src_pfns[i]);
-> -		if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE)) {
-> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
-> -			__free_page(dpage);
-> -			continue;
-> -		}
-> -
-> -		fault->dma[fault->npages] =
-> -			dma_map_page_attrs(dev, dpage, 0, PAGE_SIZE,
-> -					   PCI_DMA_BIDIRECTIONAL,
-> -					   DMA_ATTR_SKIP_CPU_SYNC);
-> -		if (dma_mapping_error(dev, fault->dma[fault->npages])) {
-> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
-> -			__free_page(dpage);
-> -			continue;
-> -		}
-> -
-> -		ret = copy(drm, 1, NOUVEAU_APER_HOST,
-> -				fault->dma[fault->npages++],
-> -				NOUVEAU_APER_VRAM,
-> -				nouveau_dmem_page_addr(spage));
-> -		if (ret) {
-> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
-> -			__free_page(dpage);
-> -			continue;
-> -		}
-> -	}
-> +	*dma_addr = dma_map_page(dev, dpage, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
-> +	if (dma_mapping_error(dev, *dma_addr))
-> +		goto error_free_page;
->  
-> -	nouveau_fence_new(drm->dmem->migrate.chan, false, &fault->fence);
-> +	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_HOST, *dma_addr,
-> +			NOUVEAU_APER_VRAM, nouveau_dmem_page_addr(spage)))
-> +		goto error_dma_unmap;
->  
-> -	return;
-> +	*dst = migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
->  
-> +error_dma_unmap:
-> +	dma_unmap_page(dev, *dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
-> +error_free_page:
-> +	__free_page(dpage);
->  error:
-> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, ++i) {
-> -		struct page *page;
-> -
-> -		if (!dst_pfns[i] || dst_pfns[i] == MIGRATE_PFN_ERROR)
-> -			continue;
-> -
-> -		page = migrate_pfn_to_page(dst_pfns[i]);
-> -		dst_pfns[i] = MIGRATE_PFN_ERROR;
-> -		if (page == NULL)
-> -			continue;
-> -
-> -		__free_page(page);
-> -	}
-> -}
-> -
-> -static void
-> -nouveau_dmem_fault_finalize_and_map(struct nouveau_dmem_fault *fault)
-> -{
-> -	struct nouveau_drm *drm = fault->drm;
-> -
-> -	nouveau_dmem_fence_done(&fault->fence);
-> -
-> -	while (fault->npages--) {
-> -		dma_unmap_page(drm->dev->dev, fault->dma[fault->npages],
-> -			       PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
-> -	}
-> -	kfree(fault->dma);
-> +	return VM_FAULT_SIGBUS;
-
-Looks like nouveau_dmem_fault_copy_one() is now returning VM_FAULT_SIGBUS
-for success case. Is this expected?
-
-Regards,
-Bharata.
-
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVz
+ZGF5LCBKdWx5IDMxLCAyMDE5IDY6MjcgUE0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4g
+T24gV2VkLCBKdWwgMzEsIDIwMTkgYXQgMTE6MDQgQU0gWW9zaGloaXJvIFNoaW1vZGENCj4gPHlv
+c2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBTaW5jZSB0aGUgcm9s
+ZV9zdG9yZSgpIHVzZXMgc3RybmNtcCgpLCBpdCdzIHBvc3NpYmxlIHRvIHJlZmVyDQo+ID4gb3V0
+LW9mLW1lbW9yeSBpZiB0aGUgc3lzZnMgZGF0YSBzaXplIGlzIHNtYWxsZXIgdGhhbiBzdHJsZW4o
+Imhvc3QiKS4NCj4gPiBUaGlzIHBhdGNoIGZpeGVzIGl0IGJ5IHVzaW5nIHN5c2ZzX3N0cmVxKCkg
+aW5zdGVhZCBvZiBzdHJuY21wKCkuDQo+ID4NCj4gPiBSZXBvcnRlZC1ieTogUGF2ZWwgTWFjaGVr
+IDxwYXZlbEBkZW54LmRlPg0KPiA+IEZpeGVzOiA5YmI4Njc3N2ZiNzEgKCJwaHk6IHJjYXItZ2Vu
+My11c2IyOiBhZGQgc3lzZnMgZm9yIHVzYiByb2xlIHN3YXAiKQ0KPiA+IENjOiA8c3RhYmxlQHZn
+ZXIua2VybmVsLm9yZz4gIyB2NC4xMCsNCj4gPiBTaWduZWQtb2ZmLWJ5OiBZb3NoaWhpcm8gU2hp
+bW9kYSA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+DQo+IA0KPiBSZXZpZXdlZC1i
+eTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCg0KVGhhbmsg
+eW91IGZvciB5b3VyIHJldmlldyENCg0KPiA+IC0tLQ0KPiA+ICBKdXN0IGEgcmVjb3JkLiBUaGUg
+cm9sZV9zdG9yZSgpIGRvZXNuJ3QgbmVlZCB0byBjaGVjayB0aGUgY291bnQgYmVjYXVzZQ0KPiA+
+ICB0aGUgc3lzZnNfc3RyZXEoKSBjaGVja3MgdGhlIGZpcnN0IGFyZ3VtZW50IGlzIE5VTEwgb3Ig
+bm90Lg0KPiANCj4gSXMgdGhhdCB3YXQgeW91IG1lYW4/IHN5c2ZzX3N0cmVxKCkgZG9lc24ndCBz
+ZWVtIHRvIGNoZWNrIGZvciBOVUxMIHBvaW50ZXJzLg0KDQpPb3BzLCBzb3JyeSBmb3IgdW5jbGVh
+ci4gSSBtZWFudCBhIE5VTEwtdGVybWluYXRlZCBzdHJpbmcsIG5vdCBOVUxMIHBvaW50ZXIuDQoN
+Cj4gSXNuJ3QgdGhlIHJlYWwgcmVhc29uIHRoYXQgc3lzZnMgKGtlcm5mcykgZ3VhcmFudGVlcyB0
+aGF0IHRoZSBwYXNzZWQgYnVmZmVyDQo+IGlzIE5VTC10ZXJtaW5hdGVkPw0KDQpJIGRvZXNuJ3Qg
+Y2hlY2sgaW4gZGV0YWlsLCBidXQgSSBhc3N1bWUgc28uDQoNCkJlc3QgcmVnYXJkcywNCllvc2hp
+aGlybyBTaGltb2RhDQoNCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAgICAgICAgICAg
+ICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJl
+J3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPiAN
+Cj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2Fs
+bCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3Rz
+IEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
