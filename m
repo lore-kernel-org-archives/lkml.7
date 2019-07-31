@@ -2,105 +2,81 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAD9C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC91C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C81E2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564612415;
-	bh=6RNLK1EnvXMTC/HY84N6KnVd7oUHr/U3UFROChHmaSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=u9m/kww0bfaMXUkj/0gMNyajCXGxbthy/AFRXiHFcc20GIg15h4W6ckoNvYz8YBtp
-	 aaeoH2FP5KeOCvH1VeElPR3VH6GA3Q/IT8pTP7qTVHvPNQLpjV2q5tsSkxZDkCLZMl
-	 svvCK3/O++fdcimkGQzg92j4ZtPTH9+HxVfdZU7o=
+	by mail.kernel.org (Postfix) with ESMTP id 58C7920693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:39:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbfGaWde (ORCPT
+        id S1727970AbfGaWjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:33:34 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41006 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfGaWde (ORCPT
+        Wed, 31 Jul 2019 18:39:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33338 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfGaWjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:33:34 -0400
-Received: by mail-oi1-f196.google.com with SMTP id g7so52028763oia.8;
-        Wed, 31 Jul 2019 15:33:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VaXwfXqQ6zKWmX/DQNzZhY9vhSL25uLPNg24lm+Z3A8=;
-        b=qqP7ZFZtQ6JT3+hg8eNhjVot7m2hsHFL3UZ/+bnuky4q/W6XmrH7Qjty/NOLBCjEsf
-         G0FT3CfVc49impsdoBb7pyG5KdiuU/8/VbXYf1q/GRw+1g61wzIrngXiS0cUdBxVqPy3
-         mIARvZG65jB4a1P00lnUxgGI3A86ODkmrl/MfFfd34FdNQH56ShowCSHUnBGUOWNdirQ
-         Qyt7XKvqyPrlWmwHRTDPRvG3lDC1FBLQ/VjLV4ZzA7dByvRrN1DDb9miOJHqxQtxQDcM
-         G53++U4k0/DLCxZ1ULVlxi6QSva5kbkYq1lK+4Hr9tEKKNyYbRBcsXVmtVgQ8HxauX8l
-         4pcQ==
-X-Gm-Message-State: APjAAAU8Q+RYSfJkG/LSlSMbJGpzPoXiKStyrtiHL/eo2Nqy7kGwAXo8
-        X5ljywLlEq9U7WmKSdYhDynU3RXTQoChRGGZISo=
-X-Google-Smtp-Source: APXvYqy8K7rZdrHVIEm+dsJBeW1kcKphsprmEu9CobF2YPMA7ZXivzELY8vw8GCI9RouGZeDmDxamMQKdzwozZVARMY=
-X-Received: by 2002:aca:5a41:: with SMTP id o62mr60704040oib.110.1564612412985;
- Wed, 31 Jul 2019 15:33:32 -0700 (PDT)
+        Wed, 31 Jul 2019 18:39:19 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hsxFX-0000Hx-Ig; Thu, 01 Aug 2019 00:39:12 +0200
+Date:   Thu, 1 Aug 2019 00:39:10 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Zebediah Figura <z.figura12@gmail.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        mingo@redhat.com, dvhart@infradead.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Steven Noonan <steven@valvesoftware.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        viro@zeniv.linux.org.uk, jannh@google.com
+Subject: Re: [PATCH RFC 2/2] futex: Implement mechanism to wait on any of
+ several futexes
+In-Reply-To: <306b3332-0065-59dc-e6d6-ee3c8a67ef53@gmail.com>
+Message-ID: <alpine.DEB.2.21.1908010038040.1788@nanos.tec.linutronix.de>
+References: <20190730220602.28781-1-krisman@collabora.com> <20190730220602.28781-2-krisman@collabora.com> <20190731120600.GT31381@hirez.programming.kicks-ass.net> <306b3332-0065-59dc-e6d6-ee3c8a67ef53@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
- <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
- <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
- <20190731221956.GB15795@localhost.localdomain>
-In-Reply-To: <20190731221956.GB15795@localhost.localdomain>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 1 Aug 2019 00:33:20 +0200
-Message-ID: <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 12:22 AM Keith Busch <kbusch@kernel.org> wrote:
->
-> On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
-> >
-> > A couple of remarks if you will.
-> >
-> > First, we don't know which case is the majority at this point.  For
-> > now, there is one example of each, but it may very well turn out that
-> > the SK Hynix BC501 above needs to be quirked.
-> >
-> > Second, the reference here really is 5.2, so if there are any systems
-> > that are not better off with 5.3-rc than they were with 5.2, well, we
-> > have not made progress.  However, if there are systems that are worse
-> > off with 5.3, that's bad.  In the face of the latest findings the only
-> > way to avoid that is to be backwards compatible with 5.2 and that's
-> > where my patch is going.  That cannot be achieved by quirking all
-> > cases that are reported as "bad", because there still may be
-> > unreported ones.
->
-> I have to agree. I think your proposal may allow PCI D3cold,
+On Wed, 31 Jul 2019, Zebediah Figura wrote:
+> On 7/31/19 7:06 AM, Peter Zijlstra wrote:
+> > On Tue, Jul 30, 2019 at 06:06:02PM -0400, Gabriel Krisman Bertazi wrote:
+> > > This is a new futex operation, called FUTEX_WAIT_MULTIPLE, which allows
+> > > a thread to wait on several futexes at the same time, and be awoken by
+> > > any of them.  In a sense, it implements one of the features that was
+> > > supported by pooling on the old FUTEX_FD interface.
+> > > 
+> > > My use case for this operation lies in Wine, where we want to implement
+> > > a similar interface available in Windows, used mainly for event
+> > > handling.  The wine folks have an implementation that uses eventfd, but
+> > > it suffers from FD exhaustion (I was told they have application that go
+> > > to the order of multi-milion FDs), and higher CPU utilization.
+> > 
+> > So is multi-million the range we expect for @count ?
+> > 
+> 
+> Not in Wine's case; in fact Wine has a hard limit of 64 synchronization
+> primitives that can be waited on at once (which, with the current user-side
+> code, translates into 65 futexes). The exhaustion just had to do with the
+> number of primitives created; some programs seem to leak them badly.
 
-Yes, it may.
+And how is the futex approach better suited to 'fix' resource leaks?
 
-> In which case we do need to reintroduce the HMB handling.
+Thanks,
 
-Right.
+	tglx
+
+
