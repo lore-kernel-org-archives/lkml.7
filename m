@@ -2,120 +2,116 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A88C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3308C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7F4218A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:18:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="houTSLkW"
+	by mail.kernel.org (Postfix) with ESMTP id B5C5C218A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564557664;
+	bh=BRyD0XI4GwRe0VUf5a7t1pGnEl0FtkVXZqDPETjZ4Go=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sAc9R62jIcubnJYxorT/k4d8aRspUXCvDEnXt4IZdfHqhiwwP9kR+YpW0fA22I7N4
+	 ZGVBNg3yTh0eq1yejSAXH6Gc/udS/j65GgbACds5VzTlHB0tpUHUKg2WL33kN3Npk1
+	 NOT4p5Fx0aBMbdmqSSfSwX/70hoA0wIfMTzoI3DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfGaHSy (ORCPT
+        id S1727488AbfGaHVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 03:18:54 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50623 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbfGaHSy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 03:18:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v15so59614898wml.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 00:18:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KtSNFiPVmHNMGf6EfCgApRoebnc5Uef1+tJZX1b5aA8=;
-        b=houTSLkWhFruGS1YjP+F2HpMrtJKvRK3yOUcGB2tYJsjZigE90sUSKY40izByu2hKj
-         Ure9Oo/Xq6LZXTR/nbw7gSnqxopbYu1OetoClC7ERoctUDTXYJlQwLBybE5F9t0F3ofF
-         rE+qSdtkpKNe6aXBNmD8Hjarz9xZmxkqK0jbCnSNGOO+w3DC1u+SP3nnPYpW3+yIRvnL
-         Ov45LxDeqCEV/YWYIZZhigyrxKlCiTOKqycngm3y6+Dqe7zpRJiRtqq26iDY2nZM/VXj
-         jRGa5W72huDFQJUPtvtE656mqeZ9BBuJpCXC0SKZPozz1akAEzSAVEJE6wHgrQcJib0I
-         0MFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KtSNFiPVmHNMGf6EfCgApRoebnc5Uef1+tJZX1b5aA8=;
-        b=oZ6FaDhTcgjWFZ6LxeB3YW1oGQDC4unE77lsO7kRPRH7SvP69JfukuNKvXUx06wBoA
-         oM1R1ESFPc/19r9MwCYayeNqSnLcFAJ4R/6RxWDJI5ZUGhZ/0kHZUeCybaP2KeZecIQm
-         Y32VfQHPJ0Cadqht+c/vJ0wkuc8MIipkKc/RYfxBydMCPGBxbfgLE83sSTg1f6+XAe37
-         bhiSI0NjqXh5gxSm0h9/nuNcHXKVJhjEE6W5EkcN+dM9sWkIIoQaH1rF0G7750qD020q
-         UmR6Te7a3tqhX1mzCUNbjCjautn6ukuwTDcOdg/JMagpl4gqA13bceF+/HESzPiflXqH
-         XGSQ==
-X-Gm-Message-State: APjAAAX0ZvVAz2lzQrZurbw/iRH+f/9VLR+QG+ni6U7BR74/BuQeGhyf
-        IekIzc5oAv2Mu/q0V2acdwbsfYr8/sonkBcsTUB3zJp7
-X-Google-Smtp-Source: APXvYqy52+S5rr0NnlEGRsA77YNyOQmNKrtlbAN8NxTIIT8HZ+91Pp6OkSOIRc4QpchzintHUX5ziKABydJCtuPT/iY=
-X-Received: by 2002:a1c:be05:: with SMTP id o5mr110753474wmf.52.1564557532038;
- Wed, 31 Jul 2019 00:18:52 -0700 (PDT)
+        Wed, 31 Jul 2019 03:21:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38478 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725913AbfGaHVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 03:21:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E663DAE52;
+        Wed, 31 Jul 2019 07:21:01 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 09:21:01 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Miguel de Dios <migueldedios@google.com>,
+        Wei Wang <wvw@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH] mm: release the spinlock on zap_pte_range
+Message-ID: <20190731072101.GX9330@dhcp22.suse.cz>
+References: <20190729071037.241581-1-minchan@kernel.org>
+ <20190729074523.GC9330@dhcp22.suse.cz>
+ <20190729082052.GA258885@google.com>
+ <20190729083515.GD9330@dhcp22.suse.cz>
+ <20190730121110.GA184615@google.com>
+ <20190730123237.GR9330@dhcp22.suse.cz>
+ <20190730123935.GB184615@google.com>
+ <20190730125751.GS9330@dhcp22.suse.cz>
+ <20190731054447.GB155569@google.com>
 MIME-Version: 1.0
-References: <20190729115544.17895-1-anup.patel@wdc.com> <20190729115544.17895-14-anup.patel@wdc.com>
- <abedb067-b91f-8821-9bce-d27f6c4efdee@redhat.com> <7fe9e845c33e49e4c215e12b1ee1b5ed86a95bc1.camel@wdc.com>
- <0be68aeb-06de-71c7-375e-95f82112dae1@redhat.com>
-In-Reply-To: <0be68aeb-06de-71c7-375e-95f82112dae1@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 31 Jul 2019 12:48:40 +0530
-Message-ID: <CAAhSdy2KoYW0BiuUhZ9BEYH1wmh5xg6zcifF-rHPk5iktBBytQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 13/16] RISC-V: KVM: Add timer functionality
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Atish Patra <Atish.Patra@wdc.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731054447.GB155569@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 12:28 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 31/07/19 03:55, Atish Patra wrote:
-> > On Tue, 2019-07-30 at 13:26 +0200, Paolo Bonzini wrote:
-> >> On 29/07/19 13:57, Anup Patel wrote:
-> >>> +   if (delta_ns > VCPU_TIMER_PROGRAM_THRESHOLD_NS) {
-> >>> +           hrtimer_start(&t->hrt, ktime_add_ns(ktime_get(),
-> >>> delta_ns),
-> >>
-> >> I think the guest would prefer if you saved the time before enabling
-> >> interrupts on the host, and use that here instead of ktime_get().
-> >> Otherwise the timer could be delayed arbitrarily by host interrupts.
-> >>
-> >> (Because the RISC-V SBI timer is relative only---which is
-> >> unfortunate---
-> >
-> > Just to clarify: RISC-V SBI timer call passes absolute time.
-> >
-> > https://elixir.bootlin.com/linux/v5.3-rc2/source/drivers/clocksource/timer-riscv.c#L32
-> >
-> > That's why we compute a delta between absolute time passed via SBI and
-> > current time. hrtimer is programmed to trigger only after the delta
-> > time from now.
->
-> Nevermind, I got lost in all the conversions.
->
-> One important issue is the lack of ability to program a delta between
-> HS/HU-mode cycles and VS/VU-mode cycles.  Without this, it's impossible
-> to do virtual machine migration (except with hcounteren
-> trap-and-emulate, which I think we agree is not acceptable).  I found
-> the open issue at https://github.com/riscv/riscv-isa-manual/issues/298
-> and commented on it.
+On Wed 31-07-19 14:44:47, Minchan Kim wrote:
+> On Tue, Jul 30, 2019 at 02:57:51PM +0200, Michal Hocko wrote:
+> > [Cc Nick - the email thread starts http://lkml.kernel.org/r/20190729071037.241581-1-minchan@kernel.org
+> >  A very brief summary is that mark_page_accessed seems to be quite
+> >  expensive and the question is whether we still need it and why
+> >  SetPageReferenced cannot be used instead. More below.]
+> > 
+> > On Tue 30-07-19 21:39:35, Minchan Kim wrote:
+[...]
+> > > commit bf3f3bc5e73
+> > > Author: Nick Piggin <npiggin@suse.de>
+> > > Date:   Tue Jan 6 14:38:55 2009 -0800
+> > > 
+> > >     mm: don't mark_page_accessed in fault path
+> > > 
+> > >     Doing a mark_page_accessed at fault-time, then doing SetPageReferenced at
+> > >     unmap-time if the pte is young has a number of problems.
+> > > 
+> > >     mark_page_accessed is supposed to be roughly the equivalent of a young pte
+> > >     for unmapped references. Unfortunately it doesn't come with any context:
+> > >     after being called, reclaim doesn't know who or why the page was touched.
+> > > 
+> > >     So calling mark_page_accessed not only adds extra lru or PG_referenced
+> > >     manipulations for pages that are already going to have pte_young ptes anyway,
+> > >     but it also adds these references which are difficult to work with from the
+> > >     context of vma specific references (eg. MADV_SEQUENTIAL pte_young may not
+> > >     wish to contribute to the page being referenced).
+> > > 
+> > >     Then, simply doing SetPageReferenced when zapping a pte and finding it is
+> > >     young, is not a really good solution either. SetPageReferenced does not
+> > >     correctly promote the page to the active list for example. So after removing
+> > >     mark_page_accessed from the fault path, several mmap()+touch+munmap() would
+> > >     have a very different result from several read(2) calls for example, which
+> > >     is not really desirable.
+> > 
+> > Well, I have to say that this is rather vague to me. Nick, could you be
+> > more specific about which workloads do benefit from this change? Let's
+> > say that the zapped pte is the only referenced one and then reclaim
+> > finds the page on inactive list. We would go and reclaim it. But does
+> > that matter so much? Hot pages would be referenced from multiple ptes
+> > very likely, no?
+> 
+> As Nick mentioned in the description, without mark_page_accessed in
+> zapping part, repeated mmap + touch + munmap never acticated the page
+> while several read(2) calls easily promote it.
 
-This Github issue is open since quite some time now.
+And is this really a problem? If we refault the same page then the
+refaults detection should catch it no? In other words is the above still
+a problem these days?
 
-Thanks for commenting. I have pinged RISC-V spec maintainers as well.
-
-Regards,
-Anup
+-- 
+Michal Hocko
+SUSE Labs
