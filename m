@@ -2,111 +2,120 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D00C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D558EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2889A206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9199208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564577861;
+	bh=okXF5i5vaeExDoO318U4IQz1NUTULDtYpMjX5VybXa8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jwlqFFDMmFAY+94TXRylcSXBhNAwMihYOGR7bUIpj4HGfoR+FmM9/PgQan8Y2U2SZ
+	 2aPgOiJRtdFzjufPkX2yetYmQbGtjAUWQkLnI1R6Ayo+p+Px6k6s8Uzk1gp11k1poP
+	 jRyy+bu8JwHdCPkNzu9odvlY83NrGByuajoPOvHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388170AbfGaM5D (ORCPT
+        id S1728989AbfGaM5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:57:03 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38840 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388017AbfGaM5A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:57:00 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s15so38376262wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:56:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IZIh6MlDVtHPiwAsFVJnNtW03boho+9QyTSEdiXSHBw=;
-        b=AjZdmR7Vrh0heSuyoz9V2gpHq1aMBoFnhWjc/XjMPBakGnZoaPOJf16RG5060yfEWK
-         H9dAwkc6Cq/RLhwLlMRqpDZIaAJ9RV11AdubRi2/UuzrM9uHXavIY0wh0oQ20IBdKl5y
-         K0AJhkK+pSc3dS70y4eCT9CoAMefG7f4nLRzo1GOupsq+WSVxMxL4e5a1xDHVEKOe715
-         Tbyyv3JzTnW03U0/4k1eENK7Dvzc2auIgKeaIn9Nzv7UpuFfrf9R5/lrMIojSlkILPHU
-         jxnDFaT3aw2RLUqbWZXgqCkziV7WUkzg7uaT4/bcPnQgNsKfklzJ6YvGBwdDcCqrEF5p
-         zpBg==
-X-Gm-Message-State: APjAAAXqLxTZdSOuVk23yJ8t6ZlnP1pJ5leOfty/M1G/8orzObDg4C2v
-        ytbinCqbEK1fctR0N40G35tnag==
-X-Google-Smtp-Source: APXvYqz8x2TA8RbHG4GAy8dlpCQQz81WPB7zCXKR7/QFoeY/qXr2v3TBsMrBuO+d2w6k9t6UtAvXsg==
-X-Received: by 2002:a1c:be05:: with SMTP id o5mr112635648wmf.52.1564577818394;
-        Wed, 31 Jul 2019 05:56:58 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:91e7:65e:d8cd:fdb3? ([2001:b07:6468:f312:91e7:65e:d8cd:fdb3])
-        by smtp.gmail.com with ESMTPSA id r4sm40675504wrq.82.2019.07.31.05.56.57
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 05:56:57 -0700 (PDT)
-Subject: Re: [PATCH 1/3] KVM: Don't need to wakeup vCPU twice afer timer fire
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <1564572438-15518-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <ab8f8b07-e3f9-4831-c386-0bfa0314f9c3@redhat.com>
-Date:   Wed, 31 Jul 2019 14:56:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 08:57:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726786AbfGaM5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:57:40 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34DE2206B8;
+        Wed, 31 Jul 2019 12:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564577859;
+        bh=okXF5i5vaeExDoO318U4IQz1NUTULDtYpMjX5VybXa8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0gNz/z2N2FVKJSq5nKsfxQ6jkM5bXwbk5ejbg/oueGFf+66HxtP1VObGp+PPHvXcT
+         FCqoVb+UTvs3fMs+tQ9QtSOVfexkt+fZ9rSzwg53vqD9CtvotI1ILU8g0mcNCNOeBK
+         w8h++X9My6pAOdZdbUIMywBPN0q2a84InCI2zQ6U=
+Date:   Wed, 31 Jul 2019 13:57:33 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: debug: Make 'btc' and similar work in kdb
+Message-ID: <20190731125733.op3y5j5psuj6pet3@willie-the-truck>
+References: <20190730221800.28326-1-dianders@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <1564572438-15518-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730221800.28326-1-dianders@chromium.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/07/19 13:27, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> kvm_set_pending_timer() will take care to wake up the sleeping vCPU which 
-> has pending timer, don't need to check this in apic_timer_expired() again.
+Hi Doug,
 
-No, it doesn't.  kvm_make_request never kicks the vCPU.
-
-Paolo
-
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c | 8 --------
->  1 file changed, 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 0aa1586..685d17c 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1548,7 +1548,6 @@ static void kvm_apic_inject_pending_timer_irqs(struct kvm_lapic *apic)
->  static void apic_timer_expired(struct kvm_lapic *apic)
->  {
->  	struct kvm_vcpu *vcpu = apic->vcpu;
-> -	struct swait_queue_head *q = &vcpu->wq;
->  	struct kvm_timer *ktimer = &apic->lapic_timer;
->  
->  	if (atomic_read(&apic->lapic_timer.pending))
-> @@ -1566,13 +1565,6 @@ static void apic_timer_expired(struct kvm_lapic *apic)
->  
->  	atomic_inc(&apic->lapic_timer.pending);
->  	kvm_set_pending_timer(vcpu);
-> -
-> -	/*
-> -	 * For x86, the atomic_inc() is serialized, thus
-> -	 * using swait_active() is safe.
-> -	 */
-> -	if (swait_active(q))
-> -		swake_up_one(q);
+On Tue, Jul 30, 2019 at 03:18:00PM -0700, Douglas Anderson wrote:
+> diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
+> index 43119922341f..b666210fbc75 100644
+> --- a/arch/arm64/kernel/kgdb.c
+> +++ b/arch/arm64/kernel/kgdb.c
+> @@ -148,6 +148,45 @@ sleeping_thread_to_gdb_regs(unsigned long *gdb_regs, struct task_struct *task)
+>  	gdb_regs[32] = cpu_context->pc;
 >  }
 >  
->  static void start_sw_tscdeadline(struct kvm_lapic *apic)
-> 
+> +void kgdb_call_nmi_hook(void *ignored)
+> +{
+> +	struct pt_regs *regs;
+> +
+> +	/*
+> +	 * NOTE: get_irq_regs() is supposed to get the registers from
+> +	 * before the IPI interrupt happened and so is supposed to
+> +	 * show where the processor was.  In some situations it's
+> +	 * possible we might be called without an IPI, so it might be
+> +	 * safer to figure out how to make kgdb_breakpoint() work
+> +	 * properly here.
+> +	 */
+> +	regs = get_irq_regs();
+> +
+> +	/*
+> +	 * Some commands (like 'btc') assume that they can find info about
+> +	 * a task in the 'cpu_context'.  Unfortunately that's only valid
+> +	 * for sleeping tasks.  ...but let's make it work anyway by just
+> +	 * writing the registers to the right place.  This is safe because
+> +	 * nobody else is using the 'cpu_context' for a running task.
+> +	 */
+> +	current->thread.cpu_context.x19 = regs->regs[19];
+> +	current->thread.cpu_context.x20 = regs->regs[20];
+> +	current->thread.cpu_context.x21 = regs->regs[21];
+> +	current->thread.cpu_context.x22 = regs->regs[22];
+> +	current->thread.cpu_context.x23 = regs->regs[23];
+> +	current->thread.cpu_context.x24 = regs->regs[24];
+> +	current->thread.cpu_context.x25 = regs->regs[25];
+> +	current->thread.cpu_context.x26 = regs->regs[26];
+> +	current->thread.cpu_context.x27 = regs->regs[27];
+> +	current->thread.cpu_context.x28 = regs->regs[28];
+> +	current->thread.cpu_context.fp = regs->regs[29];
+> +
+> +	current->thread.cpu_context.sp = regs->sp;
+> +	current->thread.cpu_context.pc = regs->pc;
+> +
+> +	kgdb_nmicallback(raw_smp_processor_id(), regs);
+> +}
 
+This is really gross... :/
+
+Can you IPI the other CPUs instead and have them backtrace locally, like we
+do for things like magic sysrq (sysrq_handle_showallcpus())?
+
+Will
