@@ -2,112 +2,125 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05076C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47F7C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FAB20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 798D120693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:10:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gs78//H7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388197AbfGaNK3 (ORCPT
+        id S2388293AbfGaNKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:10:29 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51990 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387811AbfGaNK2 (ORCPT
+        Wed, 31 Jul 2019 09:10:50 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38618 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387696AbfGaNKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:10:28 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id 05184289377
-Subject: Re: Review required [Was: Associate ddc adapters with connectors]
-To:     Sam Ravnborg <sam@ravnborg.org>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     David Airlie <airlied@linux.ie>, Liviu Dudau <liviu.dudau@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Shawn Guo <shawnguo@kernel.org>, kernel@collabora.com,
-        linux-samsung-soc@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        Maxime Ripard <mripard@kernel.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        amd-gfx@lists.freedesktop.org,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        freedreno@lists.freedesktop.org,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Gerd Hoffmann <kraxel@redhat.com>
-References: <cover.1564161140.git.andrzej.p@collabora.com>
- <20190726183520.GA22572@ravnborg.org> <20190726185538.GD14981@ravnborg.org>
- <6560f93c-a48f-2a8c-afeb-d5e8e200480d@baylibre.com>
- <20190731104007.GA23138@ravnborg.org>
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Message-ID: <959cf323-c6b9-895b-592c-81c52aacae6e@collabora.com>
-Date:   Wed, 31 Jul 2019 15:10:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 09:10:50 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y15so31861676pfn.5;
+        Wed, 31 Jul 2019 06:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rt+guMwNhJRHRn5IfYwFQ/sgOXInz6KxTo8lw7aiy5o=;
+        b=gs78//H7LNShCsnjSw8NmM/oTXR89tctjqExwGarNFR1HPDda39C7FVxzEan5zMHdK
+         6cB24JjcjAbQy8XtUkZodo4u6df686F71Mv/q7oDld/FoFf/tUwpH8Ya396ePXCTfD0o
+         Dvgu62a6MeZYYZInpUcG3Fb+JTJxaZenxvpq3gvsy/xll4qitJKWbPeGlVPtgYnCNQLR
+         EPlshKNhjkQhbqyB0pQFFls299RawuFj12qdOUx2n+J0Ko7JvNfb1x0RR0EIG+LYodIQ
+         anMWP0EuZVFFnYgh1OC+Xwui/N0TFC1OY/jUToGF5CcotzxoYJGX807D8jgfAJdSfeIG
+         A3ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rt+guMwNhJRHRn5IfYwFQ/sgOXInz6KxTo8lw7aiy5o=;
+        b=AKNGKz1NtvTBgOAbu8I2A5LswhiiCsbRGQo1k0WuPz+zduq/1J1WGhxG+qAQ2JUqR2
+         MXI+EiUVYJo62eLJ1gc1oJECx1+16LeD+WaUc/JV5bETsTRQiawmw6J2wt5GihJI/7gf
+         R2UaYKegKDa9K6jkhHx2HwJX+1J7X/9+Wzg6XCSdWDXWGYx+pbO/ji+2P4hMRIDTe8QS
+         8bCoRqhdfVzhnxipUpOCv7davMDbPNEmYNxKTzJ4UBaPS0vVvye8IDwgNGcImndr8RsU
+         SETIypH1VSr0BMQ9lS1oRaaoyFVSMJVub8rhkKdW/39EZb7jjLmy49rWZpzAVCU08CXz
+         0/DQ==
+X-Gm-Message-State: APjAAAWSYtsBZ7sJmtWhURZmTWbNtCJf6wkbjZybXoEHSsXcze9ImAfQ
+        IhWEXnlpSBiAuY4+qBC5fTQ=
+X-Google-Smtp-Source: APXvYqw6zrs3C36FlP+BQfVYwpgNJ/uT+OXNK7FouVI0RYpGcs21O7mEWzL/gYHEOWg9kiuYl3v9Hg==
+X-Received: by 2002:a17:90a:b908:: with SMTP id p8mr2967626pjr.94.1564578649195;
+        Wed, 31 Jul 2019 06:10:49 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r12sm47427239pgb.73.2019.07.31.06.10.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 06:10:48 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 06:10:45 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Richard Gong <richard.gong@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups
+ easily
+Message-ID: <20190731131045.GB147138@dtor-ws>
+References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190731104007.GA23138@ravnborg.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731124349.4474-1-gregkh@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-W dniu 31.07.2019 o 12:40, Sam Ravnborg pisze:
-> Hi Neil.
+On Wed, Jul 31, 2019 at 02:43:39PM +0200, Greg Kroah-Hartman wrote:
+> This patch originally started out just as a way for platform drivers to
+> easily add a sysfs group in a race-free way, but thanks to Dmitry's
+> patch, this series now is for all drivers in the kernel (hey, a unified
+> driver model works!!!)
 > 
-> On Wed, Jul 31, 2019 at 10:00:14AM +0200, Neil Armstrong wrote:
->> Hi Sam,
->>
->> On 26/07/2019 20:55, Sam Ravnborg wrote:
->>> Hi all.
->>>
->>> Andrzej have done a good job following up on feedback and this series is
->>> now ready.
->>>
->>> We need ack on the patches touching the individual drivers before we can
->>> proceed.
->>> Please check your drivers and get back.
->>
->> I can apply all core and maintainer-acked patches for now :
->> 1, 2, 7, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23
->>
->> and Andrzej can resend not applied patches with Yours and Emil's Reviewed-by,
->> so we can wait a few more days to apply them.
+> I've only converted a few platform drivers here in this series to show
+> how it works, but other busses can be converted after the first patch
+> goes into the tree.
 > 
-> Sounds like a good plan.
-> Thanks for thaking care of this.
+> Here's the original 00 message, for people to get an idea of what is
+> going on here:
+> 
+> If a platform driver wants to add a sysfs group, it has to do so in a
+> racy way, adding it after the driver is bound.  To resolve this issue,
+> have the platform driver core do this for the driver, making the
+> individual drivers logic smaller and simpler, and solving the race at
+> the same time.
+> 
+> All of these patches depend on the first patch.  I'll take the first one
+> through my driver-core tree, and any subsystem maintainer can either ack
+> their individul patch and I will be glad to also merge it, or they can
+> wait until after 5.4-rc1 when the core patch hits Linus's tree and then
+> take it, it's up to them.
 
-When is it good time to resend patches 3, 4, 5, 6, 8, 9, 12, 13, 14, 15, 24 as a
-new series?
+Maybe make an immutable branch off 5.2 with just patch 1/10 so that
+subsystems (and the driver core tree itself) could pull it in at their
+leisure into their "*-next" branches and did not have to wait till 5.4
+or risk merge clashes?
 
-Andrzej
+Thanks.
+
+-- 
+Dmitry
