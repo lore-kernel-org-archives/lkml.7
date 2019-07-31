@@ -2,224 +2,208 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0045DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95409C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA21720651
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B1B20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:13:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WnpKvvn7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kU8NnR4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfGaKLX (ORCPT
+        id S1727776AbfGaKNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:11:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36227 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfGaKLW (ORCPT
+        Wed, 31 Jul 2019 06:13:30 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44950 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfGaKNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:11:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n4so69088906wrs.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:11:20 -0700 (PDT)
+        Wed, 31 Jul 2019 06:13:30 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r15so30052886lfm.11;
+        Wed, 31 Jul 2019 03:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=OkLpFW3muTNu0EBzFfltcBJdzbpj7Ripja8zgyGMop8=;
-        b=WnpKvvn7BxnNcYPdHk5rlNRVoK48qLNjkRF5xzBiIdj23FGF8TjRn685wlUr3Wa1Nx
-         XtTMN7Vm+NNYe9s/xWjUGnJHFeBaO/7jGfiB0X2s5s10iJGAzdGJ1CkSp/6zCugJ343M
-         8ucm8shTtQ0tlvHSXBgE7T5mxFJolvQHEvGCdyvIYRtoop7N3r1uF4WNSVe6eStgwSTQ
-         KZgaOBmxJyx+I98Y6gB2B3SPymcUK7NvY7+0PjB0UVHdxjhvGgu0xZSBhZ7MCFI42SX1
-         R+NrqMTxwaT1ySyALVEqVfXrXJBnyrKHujIH0SwTtHRVrVMG6R8ElH+VgjieaP8Kmwj5
-         mNBA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7SxGuds9OQOVwnoD/O7wV/C951qTVXKAusYltSAWo2E=;
+        b=kU8NnR4lHdxPexUj2w7TRQ2ONxWzKF3ORsM4eaFWLT59cjDHRSreT8XsNuEhGejPYj
+         LNIKPBdlQtfRJM3BmStlhZgFp86wdbAh7CjGZEQx6IOkfnIfC3zKLJWz3TAiN/7BlRQN
+         JvmedyTOsw3HKwUNIrBq4C+rIxCvc5Xjo+mT/fR3HurISEmMzFpLphaQSSeYWEGgwF5q
+         cE1J8C8kvbD/ztj+tHOLAPfb1wPEs5MEPelOoUo+GVdoVXt4fZT4hztr2BFCADMQrf/9
+         lr9marqa5gYK77OjPy115xAlFw1uBUlG8bL8Q6ZLrzpNEEbvt25RZLVmI2Z/hxVV88M2
+         ijYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=OkLpFW3muTNu0EBzFfltcBJdzbpj7Ripja8zgyGMop8=;
-        b=Q1Nh+kiM+rRAQODc5Fhm3QplJ0cturYb8SeDWarTExN3s6cvCj2+GoaYcZQFIkqzGP
-         XbaplXJzTjIyKnic01tIOc/HeC8xJX0ujunDc/3NMDoUQ9YbGuIiAMJIQQWqaYGObsMD
-         BU7K5ufl302Wtp/XWmcB/4+xvOquCiybjgiGq+VUpIisXPUXuJqod3M3sE/ySTpC6Hb1
-         HUnMP3NWFD4Hz1N4nC4AihtD293/oNqfmwh6DKak++breeMtr46ptumP4QKOT/gLzTeL
-         2dcPkQOFaXc0PRAbkpnI65svv3quPNDSvWz0Xpx0rRoH4RCE/GI/lnu3EHLFz9coETlp
-         h9wg==
-X-Gm-Message-State: APjAAAXPAnhpBRTccXHKvzHB1qhmXZi7kyoFt4lhipfQDH/YelHaitnD
-        hajnnNWwbR6A4L25lgzcP0NfWw==
-X-Google-Smtp-Source: APXvYqysgBG6cPtJElknFrwTIdYfNo3Xd1fba0pMgwDmQ+ln+puS5XlLek/zYQ+11IJ4b1XSy5P9VA==
-X-Received: by 2002:a5d:4b91:: with SMTP id b17mr13477615wrt.57.1564567879247;
-        Wed, 31 Jul 2019 03:11:19 -0700 (PDT)
-Received: from [192.168.0.100] (88-147-65-240.dyn.eolo.it. [88.147.65.240])
-        by smtp.gmail.com with ESMTPSA id p18sm66750384wrm.16.2019.07.31.03.11.18
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7SxGuds9OQOVwnoD/O7wV/C951qTVXKAusYltSAWo2E=;
+        b=qkz8YU5OrUedp6k/Q7vK76s83ibxrYk2pIzHstzNCf7Antk6HKGtm/BIn7F1mqZhgi
+         E+ULP0cFkkIxx5b9PZ53xeOwcnoaCOD0ejbwUwqV3UB6fOhpKNc1BprMEebbH4oe75Kx
+         RKJ3HNoJoq3sTSDtTWpG4LihkaVWJoFA+FwiISmGBbR7YHnlYHBVClABf+cBVLOcJl+u
+         qmiiMFsIWKgTWBwXiCZCJeC+F4UXXdL3oyFSdttXHeqrk9gTNd5B2czTgRwDhshB2Nor
+         lFabmneCSKLbM8Rk991Fk1bVY9dXNtAWsPKpL+C3/mdZNaVj1X/a6332rpWuUbQjdV/L
+         ls8w==
+X-Gm-Message-State: APjAAAVx/DkiScFk3IlQg8+TBVv5rck6fLvGZQRbWwy07UoLDrFE8JCA
+        ckzJpTfIq8xm5TMvHfQZcdzsV7QM
+X-Google-Smtp-Source: APXvYqzZ1UHd829MHPvXhuhYL3vcX7dTb78E05fpBFoBXx5+vBVCQb1Gl2IFQWf9tkeN6BtavgrZdQ==
+X-Received: by 2002:a19:6e41:: with SMTP id q1mr47761072lfk.20.1564568006447;
+        Wed, 31 Jul 2019 03:13:26 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id m17sm13150783lfb.9.2019.07.31.03.13.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 03:11:18 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] bfq: Check if bfqq is NULL in bfq_insert_request
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <23890163-facd-3838-ddee-770b7c2f32ea@roeck-us.net>
-Date:   Wed, 31 Jul 2019 12:11:11 +0200
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Hsin-Yi Wang <hsinyi@google.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5162CB3B-39B1-4348-AEBD-2197330A3BA3@linaro.org>
-References: <1563816648-12057-1-git-send-email-linux@roeck-us.net>
- <20190728151931.GA29181@roeck-us.net>
- <0BCD5EDA-6D08-4023-9EEA-087F0AB99D47@linaro.org>
- <23890163-facd-3838-ddee-770b7c2f32ea@roeck-us.net>
-To:     Guenter Roeck <linux@roeck-us.net>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Wed, 31 Jul 2019 03:13:25 -0700 (PDT)
+Subject: Re: [PATCH v7 10/20] clk: tegra: clk-dfll: Add suspend and resume
+ support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-11-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <523ba069-5663-6593-d954-475720864eab@gmail.com>
+Date:   Wed, 31 Jul 2019 13:12:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <1564532424-10449-11-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+31.07.2019 3:20, Sowjanya Komatineni пишет:
+> This patch implements DFLL suspend and resume operation.
+> 
+> During system suspend entry, CPU clock will switch CPU to safe
+> clock source of PLLP and disables DFLL clock output.
+> 
+> DFLL driver suspend confirms DFLL disable state and errors out on
+> being active.
+> 
+> DFLL is re-initialized during the DFLL driver resume as it goes
+> through complete reset during suspend entry.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-dfll.c               | 56 ++++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk-dfll.h               |  2 ++
+>  drivers/clk/tegra/clk-tegra124-dfll-fcpu.c |  1 +
+>  3 files changed, 59 insertions(+)
+> 
+> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
+> index f8688c2ddf1a..9900097ec2aa 100644
+> --- a/drivers/clk/tegra/clk-dfll.c
+> +++ b/drivers/clk/tegra/clk-dfll.c
+> @@ -1513,6 +1513,62 @@ static int dfll_init(struct tegra_dfll *td)
+>  	return ret;
+>  }
+>  
+> +/**
+> + * tegra_dfll_suspend - check DFLL is disabled
+> + * @dev: DFLL device *
+> + *
+> + * DFLL clock should be disabled by the CPUFreq driver. So, make
+> + * sure it is disabled and disable all clocks needed by the DFLL.
+> + */
+> +int tegra_dfll_suspend(struct device *dev)
+> +{
+> +	struct tegra_dfll *td = dev_get_drvdata(dev);
+> +
+> +	if (dfll_is_running(td)) {
+> +		dev_err(td->dev, "dfll is enabled while shouldn't be\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	reset_control_assert(td->dvco_rst);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(tegra_dfll_suspend);
+> +
+> +/**
+> + * tegra_dfll_resume - reinitialize DFLL on resume
+> + * @dev: DFLL instance
+> + *
+> + * DFLL is disabled and reset during suspend and resume.
+> + * So, reinitialize the DFLL IP block back for use.
+> + * DFLL clock is enabled later in closed loop mode by CPUFreq
+> + * driver before switching its clock source to DFLL output.
+> + */
+> +int tegra_dfll_resume(struct device *dev)
+> +{
+> +	struct tegra_dfll *td = dev_get_drvdata(dev);
+> +
+> +	reset_control_deassert(td->dvco_rst);
+> +
+> +	pm_runtime_irq_safe(td->dev);
 
+1. Interrupts are allowed here.
+2. It's enough to invoke that function once during probe.
+3. That function bumps runtime-enable count of the parent, which
+immediately should raise some questions.
 
-> Il giorno 30 lug 2019, alle ore 15:35, Guenter Roeck =
-<linux@roeck-us.net> ha scritto:
->=20
-> On 7/30/19 1:55 AM, Paolo Valente wrote:
->> Hi Guenter,
->> sorry for the delay (Dolomiti's fault).
->> I didn't consider that rq->elv-icq might have been NULL also
->> because of OOM.  Thanks for spotting this issue.
->> As for the other places where the return value of bfq_init_rq is =
-used,
->> unfortunately I think they matter too.  Those other places are =
-related
->> to request merging, which is the alternative destiny of requests
->> (instead of being just inserted).  But, regardless of whether a
->> request is to be merged or inserted, that request may be destined to =
-a
->> bfq_queue (possibly merged with a request already in a bfq_queue), =
-and
->> a NULL return value by bfq_init_rq leads to a crash.  I guess you can
->> reproduce your failure also for the merge case, by generating
->> sequential, direct I/O with queue depth > 1, and of course by =
-enabling
->> failslab.
-> My assumption was that requests would only be merged if they are =
-associated
-> with the same io context. In that case, that IO context isn't =
-reallocated
-> with ioc_create_icq() but reused, and icq would thus never be NULL.
-> I guess that assumption was wrong.
+Corollary: you should remove pm_runtime_irq_safe() because it is not needed.
 
-I don't remember such a filtering.  I had a look again, but didn't
-find anything relevant.  However, more competent people see these
-emails.  Maybe someone can give us better advice.  Otherwise, to stay
-on the safe side, I'd propose to handle any possible NULL return.
-
-And I'll manage it, as per your request.
-
-Thanks,
-Paolo
-
->=20
->> If my considerations above are correct, do you want to propose a
->> complete fix yourself?
->=20
-> Sure, I'll send an updated patch.
->=20
-> Thanks,
-> Guenter
->=20
->> Thanks,
->> Paolo
->>> Il giorno 28 lug 2019, alle ore 17:19, Guenter Roeck =
-<linux@roeck-us.net> ha scritto:
->>>=20
->>> ping ... just in case this patch got lost in Paolo's queue.
->>>=20
->>> Guenter
->>>=20
->>> On Mon, Jul 22, 2019 at 10:30:48AM -0700, Guenter Roeck wrote:
->>>> In bfq_insert_request(), bfqq is initialized with:
->>>> 	bfqq =3D bfq_init_rq(rq);
->>>> In bfq_init_rq(), we find:
->>>> 	if (unlikely(!rq->elv.icq))
->>>> 		return NULL;
->>>> Indeed, rq->elv.icq can be NULL if the memory allocation in
->>>> create_task_io_context() failed.
->>>>=20
->>>> A comment in bfq_insert_request() suggests that bfqq is supposed to =
-be
->>>> non-NULL if 'at_head || blk_rq_is_passthrough(rq)' is false. Yet, =
-as
->>>> debugging and practical experience shows, this is not the case in =
-the
->>>> above situation.
->>>>=20
->>>> This results in the following crash.
->>>>=20
->>>> Unable to handle kernel NULL pointer dereference
->>>> 	at virtual address 00000000000001b0
->>>> ...
->>>> Call trace:
->>>> bfq_setup_cooperator+0x44/0x134
->>>> bfq_insert_requests+0x10c/0x630
->>>> blk_mq_sched_insert_requests+0x60/0xb4
->>>> blk_mq_flush_plug_list+0x290/0x2d4
->>>> blk_flush_plug_list+0xe0/0x230
->>>> blk_finish_plug+0x30/0x40
->>>> generic_writepages+0x60/0x94
->>>> blkdev_writepages+0x24/0x30
->>>> do_writepages+0x74/0xac
->>>> __filemap_fdatawrite_range+0x94/0xc8
->>>> file_write_and_wait_range+0x44/0xa0
->>>> blkdev_fsync+0x38/0x68
->>>> vfs_fsync_range+0x68/0x80
->>>> do_fsync+0x44/0x80
->>>>=20
->>>> The problem is relatively easy to reproduce by running an image =
-with
->>>> failslab enabled, such as with:
->>>>=20
->>>> cd /sys/kernel/debug/failslab
->>>> echo 10 > probability
->>>> echo 300 > times
->>>>=20
->>>> Avoid the problem by checking if bfqq is NULL before using it. With =
-the
->>>> NULL check in place, requests with missing io context are queued
->>>> immediately, and the crash is no longer seen.
->>>>=20
->>>> Fixes: 18e5a57d79878 ("block, bfq: postpone rq preparation to =
-insert or merge")
->>>> Reported-by: Hsin-Yi Wang  <hsinyi@google.com>
->>>> Cc: Hsin-Yi Wang <hsinyi@google.com>
->>>> Cc: Nicolas Boichat <drinkcat@chromium.org>
->>>> Cc: Doug Anderson <dianders@chromium.org>
->>>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->>>> ---
->>>> block/bfq-iosched.c | 2 +-
->>>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>>=20
->>>> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
->>>> index 72860325245a..56f3f4227010 100644
->>>> --- a/block/bfq-iosched.c
->>>> +++ b/block/bfq-iosched.c
->>>> @@ -5417,7 +5417,7 @@ static void bfq_insert_request(struct =
-blk_mq_hw_ctx *hctx, struct request *rq,
->>>>=20
->>>> 	spin_lock_irq(&bfqd->lock);
->>>> 	bfqq =3D bfq_init_rq(rq);
->>>> -	if (at_head || blk_rq_is_passthrough(rq)) {
->>>> +	if (!bfqq || at_head || blk_rq_is_passthrough(rq)) {
->>>> 		if (at_head)
->>>> 			list_add(&rq->queuelist, &bfqd->dispatch);
->>>> 		else
->>>> --=20
->>>> 2.7.4
->>>>=20
->=20
+> +	pm_runtime_get_sync(td->dev);
+> +
+> +	dfll_set_mode(td, DFLL_DISABLED);
+> +	dfll_set_default_params(td);
+> +
+> +	if (td->soc->init_clock_trimmers)
+> +		td->soc->init_clock_trimmers();
+> +
+> +	dfll_set_open_loop_config(td);
+> +
+> +	dfll_init_out_if(td);
+> +
+> +	pm_runtime_put_sync(td->dev);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(tegra_dfll_resume);
+> +
+>  /*
+>   * DT data fetch
+>   */
+> diff --git a/drivers/clk/tegra/clk-dfll.h b/drivers/clk/tegra/clk-dfll.h
+> index 1b14ebe7268b..fb209eb5f365 100644
+> --- a/drivers/clk/tegra/clk-dfll.h
+> +++ b/drivers/clk/tegra/clk-dfll.h
+> @@ -42,5 +42,7 @@ int tegra_dfll_register(struct platform_device *pdev,
+>  struct tegra_dfll_soc_data *tegra_dfll_unregister(struct platform_device *pdev);
+>  int tegra_dfll_runtime_suspend(struct device *dev);
+>  int tegra_dfll_runtime_resume(struct device *dev);
+> +int tegra_dfll_suspend(struct device *dev);
+> +int tegra_dfll_resume(struct device *dev);
+>  
+>  #endif /* __DRIVERS_CLK_TEGRA_CLK_DFLL_H */
+> diff --git a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+> index e84b6d52cbbd..2ac2679d696d 100644
+> --- a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+> +++ b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+> @@ -631,6 +631,7 @@ static int tegra124_dfll_fcpu_remove(struct platform_device *pdev)
+>  static const struct dev_pm_ops tegra124_dfll_pm_ops = {
+>  	SET_RUNTIME_PM_OPS(tegra_dfll_runtime_suspend,
+>  			   tegra_dfll_runtime_resume, NULL)
+> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_dfll_suspend, tegra_dfll_resume)
+>  };
+>  
+>  static struct platform_driver tegra124_dfll_fcpu_driver = {
+> 
 
