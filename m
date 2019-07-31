@@ -2,151 +2,474 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B215C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C116C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1174220659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="EapzB6nV"
+	by mail.kernel.org (Postfix) with ESMTP id D9DCC20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfGaPWN (ORCPT
+        id S1730113AbfGaPWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:22:13 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43657 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727628AbfGaPWL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:22:11 -0400
-Received: by mail-ed1-f67.google.com with SMTP id e3so66073142edr.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Qu4eqa88cl7hA3fQdb28KWqV5w4hCLiKuLbYR7iJuDE=;
-        b=EapzB6nV2zuG3XXqORhtOg865rDFWXiiuUO8FpJLb/h1WDao3VpOzWeFDmaFbxm/XL
-         47TBQ8nUUTf9qkmZiYlrYuMBsFG5TIn6RKRtGHhdoEi679Dd/WD/MF4HtnmQP59r+ZVS
-         lWZPfIfuMFEgQo4Y3mbUEU6Vw4ZKVnL+c9FxScjZKMpMrPiR+cuZijKKGYKRXfElKJqa
-         Xlf/ibW3jXNNJBvLlFTHpGgT5lOrKP+W2Zir2emFXNHQgTL1ugZEAXaNqYvDXjvvf1sY
-         eVxqaYVdOcCPAQPOF9hrrzA0BOHPgcYf40DmCzESR4BUuRMyXnjNV9lnjdj/b1tOOPp+
-         BzBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Qu4eqa88cl7hA3fQdb28KWqV5w4hCLiKuLbYR7iJuDE=;
-        b=Msp8GkuyxvFwCRz31JCyXf24zrUn4OzcF1Prb3HLShvtSKT1MuRIJ58WfacAN5Qhj3
-         kaaccAuI1YkzUiOSXxSv5LXEjvI9BmR10yvK3wmOMyECcXxyHLBK6w4nFwhBxq0hTaq4
-         jBOddu/KuDlTIu/dEvh91pMzAjszzgh8p5H2EVjMCyml84/ZbvcZOg72Cfzb06bxFQJP
-         +Kk3UEEdyOfI/QHloG2J02jBKwQJDkChdGkptSLKUSZPgXgNng74YCAanoHk6dtyKYq1
-         HTy0iHg5SsQ4VcrR3uCIaa+epkRWAJpWmKIwWeKIcpnno3CH/EMSsXpIQNOxHw7XQMzF
-         aRKQ==
-X-Gm-Message-State: APjAAAV+RX5fAO2QOt5jv3rcRaltlfn/dVovG6c9nb4zklh9ZEi6gcni
-        h/LNl0c9WiM8mYU5dzgVOGk=
-X-Google-Smtp-Source: APXvYqx2zTJL6YB+Gc6tZHir/y3NwypWB6AAdiaRHKrntm3SVSrSWzIlrCWGYk+WyVgbmkUaGcUHkg==
-X-Received: by 2002:a50:acc6:: with SMTP id x64mr110288029edc.100.1564586034088;
-        Wed, 31 Jul 2019 08:13:54 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id oe21sm11729742ejb.44.2019.07.31.08.13.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:13:52 -0700 (PDT)
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 172081045FF; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
-To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 41/59] mm: Generalize the mprotect implementation to support extensions
-Date:   Wed, 31 Jul 2019 18:07:55 +0300
-Message-Id: <20190731150813.26289-42-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
-References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
+        Wed, 31 Jul 2019 11:22:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35858 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727599AbfGaPWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:22:20 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8EA63C01B3E2;
+        Wed, 31 Jul 2019 15:15:39 +0000 (UTC)
+Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 99B3919C65;
+        Wed, 31 Jul 2019 15:15:30 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     kvm@vger.kernel.org, Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Janosch Frank <frankja@linux.ibm.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Xu <peterx@redhat.com>, Andrew Jones <drjones@redhat.com>
+Subject: [PATCH v3 1/3] KVM: selftests: Split ucall.c into architecture specific files
+Date:   Wed, 31 Jul 2019 17:15:23 +0200
+Message-Id: <20190731151525.17156-2-thuth@redhat.com>
+In-Reply-To: <20190731151525.17156-1-thuth@redhat.com>
+References: <20190731151525.17156-1-thuth@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 31 Jul 2019 15:15:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+The way we exit from a guest to userspace is very specific to the
+architecture: On x86, we use PIO, on aarch64 we are using MMIO and on
+s390x we're going to use an instruction instead. The possibility to
+select a type via the ucall_type_t enum is currently also completely
+unused, so the code in ucall.c currently looks more complex than
+required. Let's split this up into architecture specific ucall.c
+files instead, so we can get rid of the #ifdefs and the unnecessary
+ucall_type_t handling.
 
-Today mprotect is implemented to support legacy mprotect behavior
-plus an extension for memory protection keys. Make it more generic
-so that it can support additional extensions in the future.
-
-This is done is preparation for adding a new system call for memory
-encyption keys. The intent is that the new encrypted mprotect will be
-another extension to legacy mprotect.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Andrew Jones <drjones@redhat.com>
+Signed-off-by: Thomas Huth <thuth@redhat.com>
 ---
- mm/mprotect.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ tools/testing/selftests/kvm/Makefile          |   6 +-
+ tools/testing/selftests/kvm/dirty_log_test.c  |   2 +-
+ .../testing/selftests/kvm/include/kvm_util.h  |   8 +-
+ .../testing/selftests/kvm/lib/aarch64/ucall.c | 112 +++++++++++++
+ tools/testing/selftests/kvm/lib/ucall.c       | 157 ------------------
+ .../testing/selftests/kvm/lib/x86_64/ucall.c  |  56 +++++++
+ 6 files changed, 173 insertions(+), 168 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/lib/aarch64/ucall.c
+ delete mode 100644 tools/testing/selftests/kvm/lib/ucall.c
+ create mode 100644 tools/testing/selftests/kvm/lib/x86_64/ucall.c
 
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 82d7b194a918..4d55725228e3 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -35,6 +35,8 @@
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index ba7849751989..a51e3b83df40 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -7,9 +7,9 @@ top_srcdir = ../../../..
+ KSFT_KHDR_INSTALL := 1
+ UNAME_M := $(shell uname -m)
  
- #include "internal.h"
+-LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/ucall.c lib/sparsebit.c
+-LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c
+-LIBKVM_aarch64 = lib/aarch64/processor.c
++LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
++LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/ucall.c
++LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
+ LIBKVM_s390x = lib/s390x/processor.c
  
-+#define NO_KEY	-1
+ TEST_GEN_PROGS_x86_64 = x86_64/cr4_cpuid_sync_test
+diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+index ceb52b952637..5d5ae1be4984 100644
+--- a/tools/testing/selftests/kvm/dirty_log_test.c
++++ b/tools/testing/selftests/kvm/dirty_log_test.c
+@@ -337,7 +337,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+ 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+ #endif
+ #ifdef __aarch64__
+-	ucall_init(vm, UCALL_MMIO, NULL);
++	ucall_init(vm, NULL);
+ #endif
+ 
+ 	/* Export the shared variables to the guest */
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index e0e66b115ef2..5463b7896a0a 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -165,12 +165,6 @@ int vm_create_device(struct kvm_vm *vm, struct kvm_create_device *cd);
+ 	memcpy(&(g), _p, sizeof(g));				\
+ })
+ 
+-/* ucall implementation types */
+-typedef enum {
+-	UCALL_PIO,
+-	UCALL_MMIO,
+-} ucall_type_t;
+-
+ /* Common ucalls */
+ enum {
+ 	UCALL_NONE,
+@@ -186,7 +180,7 @@ struct ucall {
+ 	uint64_t args[UCALL_MAX_ARGS];
+ };
+ 
+-void ucall_init(struct kvm_vm *vm, ucall_type_t type, void *arg);
++void ucall_init(struct kvm_vm *vm, void *arg);
+ void ucall_uninit(struct kvm_vm *vm);
+ void ucall(uint64_t cmd, int nargs, ...);
+ uint64_t get_ucall(struct kvm_vm *vm, uint32_t vcpu_id, struct ucall *uc);
+diff --git a/tools/testing/selftests/kvm/lib/aarch64/ucall.c b/tools/testing/selftests/kvm/lib/aarch64/ucall.c
+new file mode 100644
+index 000000000000..6cd91970fbad
+--- /dev/null
++++ b/tools/testing/selftests/kvm/lib/aarch64/ucall.c
+@@ -0,0 +1,112 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ucall support. A ucall is a "hypercall to userspace".
++ *
++ * Copyright (C) 2018, Red Hat, Inc.
++ */
++#include "kvm_util.h"
++#include "../kvm_util_internal.h"
 +
- static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
- 		unsigned long addr, unsigned long end, pgprot_t newprot,
- 		int dirty_accountable, int prot_numa)
-@@ -453,9 +455,9 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
- }
- 
- /*
-- * pkey==-1 when doing a legacy mprotect()
-+ * When pkey==NO_KEY we get legacy mprotect behavior here.
-  */
--static int do_mprotect_pkey(unsigned long start, size_t len,
-+static int do_mprotect_ext(unsigned long start, size_t len,
- 		unsigned long prot, int pkey)
- {
- 	unsigned long nstart, end, tmp, reqprot;
-@@ -579,7 +581,7 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
- SYSCALL_DEFINE3(mprotect, unsigned long, start, size_t, len,
- 		unsigned long, prot)
- {
--	return do_mprotect_pkey(start, len, prot, -1);
-+	return do_mprotect_ext(start, len, prot, NO_KEY);
- }
- 
- #ifdef CONFIG_ARCH_HAS_PKEYS
-@@ -587,7 +589,7 @@ SYSCALL_DEFINE3(mprotect, unsigned long, start, size_t, len,
- SYSCALL_DEFINE4(pkey_mprotect, unsigned long, start, size_t, len,
- 		unsigned long, prot, int, pkey)
- {
--	return do_mprotect_pkey(start, len, prot, pkey);
-+	return do_mprotect_ext(start, len, prot, pkey);
- }
- 
- SYSCALL_DEFINE2(pkey_alloc, unsigned long, flags, unsigned long, init_val)
++static vm_vaddr_t *ucall_exit_mmio_addr;
++
++static bool ucall_mmio_init(struct kvm_vm *vm, vm_paddr_t gpa)
++{
++	if (kvm_userspace_memory_region_find(vm, gpa, gpa + 1))
++		return false;
++
++	virt_pg_map(vm, gpa, gpa, 0);
++
++	ucall_exit_mmio_addr = (vm_vaddr_t *)gpa;
++	sync_global_to_guest(vm, ucall_exit_mmio_addr);
++
++	return true;
++}
++
++void ucall_init(struct kvm_vm *vm, void *arg)
++{
++	vm_paddr_t gpa, start, end, step, offset;
++	unsigned int bits;
++	bool ret;
++
++	if (arg) {
++		gpa = (vm_paddr_t)arg;
++		ret = ucall_mmio_init(vm, gpa);
++		TEST_ASSERT(ret, "Can't set ucall mmio address to %lx", gpa);
++		return;
++	}
++
++	/*
++	 * Find an address within the allowed physical and virtual address
++	 * spaces, that does _not_ have a KVM memory region associated with
++	 * it. Identity mapping an address like this allows the guest to
++	 * access it, but as KVM doesn't know what to do with it, it
++	 * will assume it's something userspace handles and exit with
++	 * KVM_EXIT_MMIO. Well, at least that's how it works for AArch64.
++	 * Here we start with a guess that the addresses around 5/8th
++	 * of the allowed space are unmapped and then work both down and
++	 * up from there in 1/16th allowed space sized steps.
++	 *
++	 * Note, we need to use VA-bits - 1 when calculating the allowed
++	 * virtual address space for an identity mapping because the upper
++	 * half of the virtual address space is the two's complement of the
++	 * lower and won't match physical addresses.
++	 */
++	bits = vm->va_bits - 1;
++	bits = vm->pa_bits < bits ? vm->pa_bits : bits;
++	end = 1ul << bits;
++	start = end * 5 / 8;
++	step = end / 16;
++	for (offset = 0; offset < end - start; offset += step) {
++		if (ucall_mmio_init(vm, start - offset))
++			return;
++		if (ucall_mmio_init(vm, start + offset))
++			return;
++	}
++	TEST_ASSERT(false, "Can't find a ucall mmio address");
++}
++
++void ucall_uninit(struct kvm_vm *vm)
++{
++	ucall_exit_mmio_addr = 0;
++	sync_global_to_guest(vm, ucall_exit_mmio_addr);
++}
++
++void ucall(uint64_t cmd, int nargs, ...)
++{
++	struct ucall uc = {
++		.cmd = cmd,
++	};
++	va_list va;
++	int i;
++
++	nargs = nargs <= UCALL_MAX_ARGS ? nargs : UCALL_MAX_ARGS;
++
++	va_start(va, nargs);
++	for (i = 0; i < nargs; ++i)
++		uc.args[i] = va_arg(va, uint64_t);
++	va_end(va);
++
++	*ucall_exit_mmio_addr = (vm_vaddr_t)&uc;
++}
++
++uint64_t get_ucall(struct kvm_vm *vm, uint32_t vcpu_id, struct ucall *uc)
++{
++	struct kvm_run *run = vcpu_state(vm, vcpu_id);
++	struct ucall ucall = {};
++
++	if (run->exit_reason == KVM_EXIT_MMIO &&
++	    run->mmio.phys_addr == (uint64_t)ucall_exit_mmio_addr) {
++		vm_vaddr_t gva;
++
++		TEST_ASSERT(run->mmio.is_write && run->mmio.len == 8,
++			    "Unexpected ucall exit mmio address access");
++		memcpy(&gva, run->mmio.data, sizeof(gva));
++		memcpy(&ucall, addr_gva2hva(vm, gva), sizeof(ucall));
++
++		vcpu_run_complete_io(vm, vcpu_id);
++		if (uc)
++			memcpy(uc, &ucall, sizeof(ucall));
++	}
++
++	return ucall.cmd;
++}
+diff --git a/tools/testing/selftests/kvm/lib/ucall.c b/tools/testing/selftests/kvm/lib/ucall.c
+deleted file mode 100644
+index dd9a66700f96..000000000000
+--- a/tools/testing/selftests/kvm/lib/ucall.c
++++ /dev/null
+@@ -1,157 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * ucall support. A ucall is a "hypercall to userspace".
+- *
+- * Copyright (C) 2018, Red Hat, Inc.
+- */
+-#include "kvm_util.h"
+-#include "kvm_util_internal.h"
+-
+-#define UCALL_PIO_PORT ((uint16_t)0x1000)
+-
+-static ucall_type_t ucall_type;
+-static vm_vaddr_t *ucall_exit_mmio_addr;
+-
+-static bool ucall_mmio_init(struct kvm_vm *vm, vm_paddr_t gpa)
+-{
+-	if (kvm_userspace_memory_region_find(vm, gpa, gpa + 1))
+-		return false;
+-
+-	virt_pg_map(vm, gpa, gpa, 0);
+-
+-	ucall_exit_mmio_addr = (vm_vaddr_t *)gpa;
+-	sync_global_to_guest(vm, ucall_exit_mmio_addr);
+-
+-	return true;
+-}
+-
+-void ucall_init(struct kvm_vm *vm, ucall_type_t type, void *arg)
+-{
+-	ucall_type = type;
+-	sync_global_to_guest(vm, ucall_type);
+-
+-	if (type == UCALL_PIO)
+-		return;
+-
+-	if (type == UCALL_MMIO) {
+-		vm_paddr_t gpa, start, end, step, offset;
+-		unsigned bits;
+-		bool ret;
+-
+-		if (arg) {
+-			gpa = (vm_paddr_t)arg;
+-			ret = ucall_mmio_init(vm, gpa);
+-			TEST_ASSERT(ret, "Can't set ucall mmio address to %lx", gpa);
+-			return;
+-		}
+-
+-		/*
+-		 * Find an address within the allowed physical and virtual address
+-		 * spaces, that does _not_ have a KVM memory region associated with
+-		 * it. Identity mapping an address like this allows the guest to
+-		 * access it, but as KVM doesn't know what to do with it, it
+-		 * will assume it's something userspace handles and exit with
+-		 * KVM_EXIT_MMIO. Well, at least that's how it works for AArch64.
+-		 * Here we start with a guess that the addresses around 5/8th
+-		 * of the allowed space are unmapped and then work both down and
+-		 * up from there in 1/16th allowed space sized steps.
+-		 *
+-		 * Note, we need to use VA-bits - 1 when calculating the allowed
+-		 * virtual address space for an identity mapping because the upper
+-		 * half of the virtual address space is the two's complement of the
+-		 * lower and won't match physical addresses.
+-		 */
+-		bits = vm->va_bits - 1;
+-		bits = vm->pa_bits < bits ? vm->pa_bits : bits;
+-		end = 1ul << bits;
+-		start = end * 5 / 8;
+-		step = end / 16;
+-		for (offset = 0; offset < end - start; offset += step) {
+-			if (ucall_mmio_init(vm, start - offset))
+-				return;
+-			if (ucall_mmio_init(vm, start + offset))
+-				return;
+-		}
+-		TEST_ASSERT(false, "Can't find a ucall mmio address");
+-	}
+-}
+-
+-void ucall_uninit(struct kvm_vm *vm)
+-{
+-	ucall_type = 0;
+-	sync_global_to_guest(vm, ucall_type);
+-	ucall_exit_mmio_addr = 0;
+-	sync_global_to_guest(vm, ucall_exit_mmio_addr);
+-}
+-
+-static void ucall_pio_exit(struct ucall *uc)
+-{
+-#ifdef __x86_64__
+-	asm volatile("in %[port], %%al"
+-		: : [port] "d" (UCALL_PIO_PORT), "D" (uc) : "rax");
+-#endif
+-}
+-
+-static void ucall_mmio_exit(struct ucall *uc)
+-{
+-	*ucall_exit_mmio_addr = (vm_vaddr_t)uc;
+-}
+-
+-void ucall(uint64_t cmd, int nargs, ...)
+-{
+-	struct ucall uc = {
+-		.cmd = cmd,
+-	};
+-	va_list va;
+-	int i;
+-
+-	nargs = nargs <= UCALL_MAX_ARGS ? nargs : UCALL_MAX_ARGS;
+-
+-	va_start(va, nargs);
+-	for (i = 0; i < nargs; ++i)
+-		uc.args[i] = va_arg(va, uint64_t);
+-	va_end(va);
+-
+-	switch (ucall_type) {
+-	case UCALL_PIO:
+-		ucall_pio_exit(&uc);
+-		break;
+-	case UCALL_MMIO:
+-		ucall_mmio_exit(&uc);
+-		break;
+-	};
+-}
+-
+-uint64_t get_ucall(struct kvm_vm *vm, uint32_t vcpu_id, struct ucall *uc)
+-{
+-	struct kvm_run *run = vcpu_state(vm, vcpu_id);
+-	struct ucall ucall = {};
+-	bool got_ucall = false;
+-
+-#ifdef __x86_64__
+-	if (ucall_type == UCALL_PIO && run->exit_reason == KVM_EXIT_IO &&
+-	    run->io.port == UCALL_PIO_PORT) {
+-		struct kvm_regs regs;
+-		vcpu_regs_get(vm, vcpu_id, &regs);
+-		memcpy(&ucall, addr_gva2hva(vm, (vm_vaddr_t)regs.rdi), sizeof(ucall));
+-		got_ucall = true;
+-	}
+-#endif
+-	if (ucall_type == UCALL_MMIO && run->exit_reason == KVM_EXIT_MMIO &&
+-	    run->mmio.phys_addr == (uint64_t)ucall_exit_mmio_addr) {
+-		vm_vaddr_t gva;
+-		TEST_ASSERT(run->mmio.is_write && run->mmio.len == 8,
+-			    "Unexpected ucall exit mmio address access");
+-		memcpy(&gva, run->mmio.data, sizeof(gva));
+-		memcpy(&ucall, addr_gva2hva(vm, gva), sizeof(ucall));
+-		got_ucall = true;
+-	}
+-
+-	if (got_ucall) {
+-		vcpu_run_complete_io(vm, vcpu_id);
+-		if (uc)
+-			memcpy(uc, &ucall, sizeof(ucall));
+-	}
+-
+-	return ucall.cmd;
+-}
+diff --git a/tools/testing/selftests/kvm/lib/x86_64/ucall.c b/tools/testing/selftests/kvm/lib/x86_64/ucall.c
+new file mode 100644
+index 000000000000..4bfc9a90b1de
+--- /dev/null
++++ b/tools/testing/selftests/kvm/lib/x86_64/ucall.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ucall support. A ucall is a "hypercall to userspace".
++ *
++ * Copyright (C) 2018, Red Hat, Inc.
++ */
++#include "kvm_util.h"
++
++#define UCALL_PIO_PORT ((uint16_t)0x1000)
++
++void ucall_init(struct kvm_vm *vm, void *arg)
++{
++}
++
++void ucall_uninit(struct kvm_vm *vm)
++{
++}
++
++void ucall(uint64_t cmd, int nargs, ...)
++{
++	struct ucall uc = {
++		.cmd = cmd,
++	};
++	va_list va;
++	int i;
++
++	nargs = nargs <= UCALL_MAX_ARGS ? nargs : UCALL_MAX_ARGS;
++
++	va_start(va, nargs);
++	for (i = 0; i < nargs; ++i)
++		uc.args[i] = va_arg(va, uint64_t);
++	va_end(va);
++
++	asm volatile("in %[port], %%al"
++		: : [port] "d" (UCALL_PIO_PORT), "D" (&uc) : "rax");
++}
++
++uint64_t get_ucall(struct kvm_vm *vm, uint32_t vcpu_id, struct ucall *uc)
++{
++	struct kvm_run *run = vcpu_state(vm, vcpu_id);
++	struct ucall ucall = {};
++
++	if (run->exit_reason == KVM_EXIT_IO && run->io.port == UCALL_PIO_PORT) {
++		struct kvm_regs regs;
++
++		vcpu_regs_get(vm, vcpu_id, &regs);
++		memcpy(&ucall, addr_gva2hva(vm, (vm_vaddr_t)regs.rdi),
++		       sizeof(ucall));
++
++		vcpu_run_complete_io(vm, vcpu_id);
++		if (uc)
++			memcpy(uc, &ucall, sizeof(ucall));
++	}
++
++	return ucall.cmd;
++}
 -- 
 2.21.0
 
