@@ -2,98 +2,114 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F88CC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E66DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BA720C01
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D202089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vOqnA7p5"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="LZt8N0gx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbfGaOjE (ORCPT
+        id S1729906AbfGaOjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:39:04 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45813 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbfGaOjE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:39:04 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u10so8871774lfm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:39:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ctmBDHo9TX2dbSp2AaSHsPzQrsJdvD0Z0tQiKSJILjI=;
-        b=vOqnA7p5rkZBV1OzvJdBY8iKuYdA1b4/1o8F1w0IN2uTr1QTWzn7WwJ2JFJulsfP9n
-         w7SXEHZMs3OROdBscJxfm3yqK9ykTM2PKIM1oR1tL2f1241B9xYMdSVWTnrMHbmOd9VA
-         mAPZDUO9HHBe830SnSJXzdgMSSIEPBHBeQe84S0kLGX8L+iv7XtRoPM2CXTUOuZ6dEH7
-         B6aO1hPD3ht6n0bJLtnoxUg9cuq5DY7bj7JYiayjoj4jbBFKArFvRvlrFY6jxT+osgBK
-         CDJg8qjTb01Y8yRl6THr9PaB5tdxxrnbZ70xpFwfysyJN6KNOtOOA/6JqLIDDSPmGMp5
-         fVdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ctmBDHo9TX2dbSp2AaSHsPzQrsJdvD0Z0tQiKSJILjI=;
-        b=pIYFVSj0CGYcyQxJRWwMmYfvgr4GFhsutvnGi4Nmb71saiiSl8WEhDoYbQErWqmH9j
-         oMCoFZPIqVECu1X7e8YyRFSLTZ2I1EMyrmFVdeExvYts4+diSSBPj/a+L3P872kRYYdm
-         46xt3eig9nupFyPQV1iPunYZbqBq0vINemd68ZSZXpQy+S0m6U+1nPPhgqHoKbbjsG7t
-         n5Dr8AUilMe422FojHnZy/lUGyyt6cayuhtKS8rCks5+ybMcYC+qU+hi7yM0xZFn3SAk
-         thmzY417FDMfGk3puUjPQDl9Nh4WW+ntSQUTJYg5xXTO2vLor2xV/llkYsDbiZ8gK5GA
-         wIyw==
-X-Gm-Message-State: APjAAAVsG94uzLcbdQFS7asOJNHwnXD7qyie7mzhlwuBXURVwDFM0PDM
-        MsUiRZ2Ts6BC925xLe/jZpVtK/6cD1NpjbgNHEH4XQ==
-X-Google-Smtp-Source: APXvYqzUvYIZI+JTlouZm26wyL/S+M0wK6ZP0t5id5XDl31AGiIZPngdjFnaNrgG32VgIjVn4hRZhKk2bdPsATnEjw8=
-X-Received: by 2002:ac2:482d:: with SMTP id 13mr46123622lft.132.1564583942340;
- Wed, 31 Jul 2019 07:39:02 -0700 (PDT)
+        Wed, 31 Jul 2019 10:39:25 -0400
+Received: from mail-eopbgr10127.outbound.protection.outlook.com ([40.107.1.127]:11589
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729249AbfGaOjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:39:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lVpjd/i/eVx0lI8YxZDvRiBAKcOIRrw4DkFkImm15MiRzlscZTd0ZxovgxKGCjL79BS+tewI2VvkkIarKWqfqkF3Fc5VMIBkE7l2kgBUof6mn9ksaPFif9Bd5JD7YsnkOLlXAm4hZnMDgOOasPO3Snk/55q9KBj93xejE1sGeZ+fQI2bl0gQS0bR5FMG+3VUNXMH34CgoMON89dKELUHZNlwiL4ykIOrAPLajsKcu8LZzan29OvjGky/R65U20gE1JrVJlOuUNxhxJS/ymx9bRRRY9AUxCNe1uB+FnZ8qDCbHZqrQFhCztmSzrSrzmLM059+xJ4J32kEvZHurUl5Og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8+XH4gmHLneMT/tW5/acb2ISNC7xH+b3TxM52Z3XVpw=;
+ b=LFVc+XRI2frywTEpxntvMyTeEMHpevQbwuW1QWdTCgZPDCE9I8Ndcnfx2L8tI6ClaUSwqt2rK0jeJZ729hyN+rjBEBRaedaEg/Ono4KGNUj9odrigwf5RQBAbJQoeXmbYy7zvx1sDMIv6o/EybyHSiFxva1B4m+IJdXHgO+QtH9UPvvwFXuK/WQSFtICfw2Tpraozab03Y8s339oG1ngtfYwsH5wmLqD5XcY0NhGnpTbbXZGDfkN5sSV8rgSCuNzWwZSKWMB4YoUk9xXjjx/fuGRovVUCWJg8d3+UaBYWcCvq0NVMojev0kCH9+cYu2tcevsvrtTqPMcILHufpxHAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=toradex.com;dmarc=pass action=none
+ header.from=toradex.com;dkim=pass header.d=toradex.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8+XH4gmHLneMT/tW5/acb2ISNC7xH+b3TxM52Z3XVpw=;
+ b=LZt8N0gxwTpNG3OjfwHbRma1VyZMEQGRsBYrXBSRBITjaivfejD3QkgpNDLdn9XxeTXkflTCfgHHUmy/fcvB73IIVr/F0DFBA6m6/bXBRZlxDlTTnGn5/VPwPQbLkzxeGurLMZjfxLQB3z5eSp1VORMT/UNpHOrqfEDIt3poInA=
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
+ VI1PR0502MB4095.eurprd05.prod.outlook.com (52.134.19.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.15; Wed, 31 Jul 2019 14:39:19 +0000
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::8405:5b51:b25d:39a2]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::8405:5b51:b25d:39a2%6]) with mapi id 15.20.2115.005; Wed, 31 Jul 2019
+ 14:39:19 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     "festevam@gmail.com" <festevam@gmail.com>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>
+Subject: Re: [PATCH v2 08/20] ARM: dts: imx7-colibri: Add touch controllers
+Thread-Topic: [PATCH v2 08/20] ARM: dts: imx7-colibri: Add touch controllers
+Thread-Index: AQHVR5zSfqDLO7YI3kGn89/J0dQlQqbkq6cAgAAglgA=
+Date:   Wed, 31 Jul 2019 14:39:19 +0000
+Message-ID: <8ba2c50bbe5a4a02bd676371a24e2d6f2b05f102.camel@toradex.com>
+References: <20190731123750.25670-1-philippe.schenker@toradex.com>
+         <20190731123750.25670-9-philippe.schenker@toradex.com>
+         <CAOMZO5B3BcpjbnsXuE5abX8YsuLDrkkHU=RBt6w_SpwuRkTvXA@mail.gmail.com>
+In-Reply-To: <CAOMZO5B3BcpjbnsXuE5abX8YsuLDrkkHU=RBt6w_SpwuRkTvXA@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-originating-ip: [46.140.72.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 76ca7865-608a-455d-fd29-08d715c4decf
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB4095;
+x-ms-traffictypediagnostic: VI1PR0502MB4095:
+x-microsoft-antispam-prvs: <VI1PR0502MB4095FB7F3B7AA8D98597F7A1F4DF0@VI1PR0502MB4095.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:136;
+x-forefront-prvs: 011579F31F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(136003)(39850400004)(396003)(366004)(189003)(199004)(256004)(5660300002)(54906003)(99286004)(558084003)(53546011)(6506007)(1730700003)(66066001)(44832011)(118296001)(8676002)(186003)(1411001)(2501003)(8936002)(36756003)(14454004)(102836004)(316002)(25786009)(3846002)(26005)(7736002)(446003)(64756008)(81166006)(1361003)(86362001)(229853002)(81156014)(53936002)(6116002)(478600001)(11346002)(66446008)(2906002)(6486002)(76176011)(2616005)(486006)(476003)(68736007)(66946007)(6246003)(4326008)(66476007)(66556008)(6916009)(6512007)(305945005)(71190400001)(71200400001)(6436002)(91956017)(2351001)(7416002)(5640700003)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB4095;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Gh7Tqsb/QjzPU6lVNzYptZ1+gSg7B8clNQB0P4HebHmV5ki1QTe/oTlVFzsbZ3VdbXKDUiUKtY7ILnW1NXBFoz68QX4udRpmMMAbjEf3w50AlWW4Upv9AIw6C+3MUaCGHbTYUOMfTgc7fDi5cPJkZMfS+0HYX/6mkqCaLktODbQYvMdVuMxzaw/UxF9Rbb7e9c/cV3uTZWn066FEz2hmLMJViM5vAUN4tTsY9SOck31vEfjS6OUsMmt5YGAdsnr1Mr6zFTpyE4OT7uRjH7smm4/HOVkq0CqzbL3mSpzjb3+C8FB8CkYRHYrTH+NnUbkwPTtW/W49q54jE9jGLxW4k5nYhaBH3mRQA8N/C+vIuPQQnWF+TcEC3J8HMcuazmrnaFh2nkwslt4HKkEqJ67FQ5R1Eub9ABrjLDhJQw17CTI=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <ADF45B12F529474F828A569027DB3A3C@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190731105540.28962-1-naresh.kamboju@linaro.org> <43fd5a9b-7ecd-3fff-2381-1dfce7b8618a@redhat.com>
-In-Reply-To: <43fd5a9b-7ecd-3fff-2381-1dfce7b8618a@redhat.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 31 Jul 2019 20:08:51 +0530
-Message-ID: <CA+G9fYvf_3JZFauHUzqjgdg9kir4i__oSsboiOGzBBS63zg7+g@mail.gmail.com>
-Subject: Re: [PATCH] selftests: kvm: Adding config fragments
-To:     Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kvm list <kvm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Jones <drjones@redhat.com>,
-        sean.j.christopherson@intel.com, lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76ca7865-608a-455d-fd29-08d715c4decf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 14:39:19.0721
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: philippe.schenker@toradex.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB4095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 at 18:32, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 31/07/19 12:55, Naresh Kamboju wrote:
-> > selftests kvm test cases need pre-required kernel configs for the test
-> > to get pass.
-> >
-> > Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
->
-> Most of these are selected by other items.  CONFIG_KVM should be enough
-> on ARM and s390 but MIPS, x86 and PPC may also need to select the
-> specific "flavors" (for example Intel/AMD for x86).
-
-If the below listed configs are not harmful i would like to keep all listed
-configs. Because we (Linaro 's test farm) building kernels with maximum
-available kernel fragments for a given test case to get better coverage.
-
->
-> How are these used?  Are they used to build a kernel, or to check that
-> an existing kernel supports virtualization?
-
-"make kselftest-merge"
-will get configs from tools/testing/selftests/*/config
-and enables configs fragments and we build kernel for running
-kvm-unit-tests, kselftests, LTP, libhugetlbfs, ssuite, perf and
-v4l2-compliance.
-
-- Naresh
+T24gV2VkLCAyMDE5LTA3LTMxIGF0IDA5OjQyIC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
+PiBPbiBXZWQsIEp1bCAzMSwgMjAxOSBhdCA5OjM4IEFNIFBoaWxpcHBlIFNjaGVua2VyDQo+IDxw
+aGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4gd3JvdGU6DQo+ID4gQWRkIGF0bWVsIG14dCBt
+dWx0aXRvdWNoIGNvbnRyb2xsZXIgYW5kIFRvdWNoUmV2b2x1dGlvbiBtdWx0aXRvdWNoDQo+IA0K
+PiBZb3UgbWlzc2VkIHRvIHVwZGF0ZWQgdGhlIGNvbW1pdCBsb2cgOy0pDQoNCkFoLCBzaG9vdCEg
+Oi0pIFRoYW5rcy4NCg0KSSB3aWxsIHNlbmQgYSB2MyB0aGVuLCBuZXh0IHdlZWsuDQo=
