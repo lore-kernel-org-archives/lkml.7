@@ -2,115 +2,143 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D79C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15ADEC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E948E2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE9E206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="1DKQveMm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rcbdxqgr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfGaSCO (ORCPT
+        id S1727089AbfGaSG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:02:14 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41295 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728718AbfGaSBO (ORCPT
+        Wed, 31 Jul 2019 14:06:58 -0400
+Received: from mail-yw1-f45.google.com ([209.85.161.45]:46336 "EHLO
+        mail-yw1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfGaSG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:01:14 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6VI0iV53778308
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 31 Jul 2019 11:00:44 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6VI0iV53778308
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564596045;
-        bh=Q0FaiK0C3p12cF4gvd/mtqQ1oguAUujBX1/6wh/pe8U=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=1DKQveMmG+WlEaOyj0si0gdgF2286kH+vZdvXl1odjERTYlR4aavTUaKSTonC8Fef
-         87tWAvDiM/ngr9fMoPkHs5BkxGwUjV4/FlvcU1SyZihyDHldNbgBd4qutTXbMxLkXQ
-         pzbIxJSWBHBe1hWIOVmVwco8nFpx5IAhqoQgy/od3ahFbqjjtVu/6sF+xLIavT9MUt
-         LpUSCqdxwGUoOHA/EZYy1XX43jDXFZFiJxUh+08d3x25H+NDX+T5VX4uVE9Bg+sjP5
-         d1/3hwR4XzQyGfz2qQ9TrtQ011b+g3r1kwcOfDcvuRDiOB2schAcVjPbhKkAMYOrz+
-         AuwpYY89RCPfg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6VI0hiq3778304;
-        Wed, 31 Jul 2019 11:00:43 -0700
-Date:   Wed, 31 Jul 2019 11:00:43 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-09c7e8b21d67c3c78ab9701dbc0fb1e9f14a0ba5@git.kernel.org>
-Cc:     hpa@zytor.com, mhiramat@kernel.org, paulmck@linux.ibm.com,
-        mingo@kernel.org, torvalds@linux-foundation.org,
-        pbonzini@redhat.com, tglx@linutronix.de, rostedt@goodmis.org,
-        peterz@infradead.org, linux-kernel@vger.kernel.org
-Reply-To: pbonzini@redhat.com, mingo@kernel.org,
-          torvalds@linux-foundation.org, paulmck@linux.ibm.com,
-          linux-kernel@vger.kernel.org, peterz@infradead.org,
-          rostedt@goodmis.org, tglx@linutronix.de, mhiramat@kernel.org,
-          hpa@zytor.com
-In-Reply-To: <20190726212124.789755413@linutronix.de>
-References: <20190726212124.789755413@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/rt] x86/kvm: Use CONFIG_PREEMPTION
-Git-Commit-ID: 09c7e8b21d67c3c78ab9701dbc0fb1e9f14a0ba5
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 31 Jul 2019 14:06:58 -0400
+Received: by mail-yw1-f45.google.com with SMTP id z197so25266994ywd.13;
+        Wed, 31 Jul 2019 11:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=df8HZ1GC9xOAmz5J1hSYCy+taJAv5J2Wpa+VxaLhh1Y=;
+        b=RcbdxqgrG3y+GDCzQOvIQ2f0PpzXyiUA4YWz6EhGtPVJhAGwrLjg9i1yza5fKgkkfN
+         Hfm3Hr2nA28+1PrGms493NV13/FF7icOG96uqLUg9/QjWMBQiyaZxRxq6fotEg85Vrns
+         dIIRhE46xRxor3Wbjk/v7UrZko82uJ0/u2DS2NbX5/yi8R2uv+ZSZH1J5ldKhlKnrJhk
+         V879z8qB9i7ika0xSmJ+50776YGZC8BCHXSGyACSGclch8PFPXygnMEH0okR6ObHJRQC
+         5Wo6by+9U1ogSFBD84bXtKmemuV9oBfAmfcNxzr0Q3fd5P8zjQZOEo72ygdP6frqc8Z7
+         CkeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=df8HZ1GC9xOAmz5J1hSYCy+taJAv5J2Wpa+VxaLhh1Y=;
+        b=JKV1wr547ApVkdhJvVye79Qvglu0moQE22H9mqKrbWJMdGIfTRifH5M6SG4+zp9V+b
+         6Uwe4Ykw0cQK5GN122AjnFTrATb9xO4j+F0c8SayAsv0g27tTEbJXeHyhKnDDa2C0eiR
+         NlL4eMv43a/EjeAtpSg+MD2pEOs0dkWAka25NdI0Su/7JVjQfzVv0RfqNVEzJ23wNDFI
+         4a9viQAxOFHre8hB2YvbzSmg/q29yxSpO7Yw3i/helLSjQLJIq26q6wAIm0n7UPCuwJ0
+         mKiPwL+no/jn1eAZqmE4ncySNr2OqRK/e1OegwQOP4GJ9AC9vNXq2S1XC96ZATdZIMTd
+         6CAA==
+X-Gm-Message-State: APjAAAWFMS8zbzRq5yzlGmDsmhjD6+Uuov+G2rgUSuZxjljjOb9OCsZj
+        A+SWPfsNlzGbciTAc9AjNEwO7IE=
+X-Google-Smtp-Source: APXvYqxGAvGmxT/Xvwx8ft7lfG43YgFrxFXLXKUFG1vnBgPqstbweBPflRhHUg2sXHrsPjONu7UtMA==
+X-Received: by 2002:a81:3313:: with SMTP id z19mr75142313ywz.188.1564596417093;
+        Wed, 31 Jul 2019 11:06:57 -0700 (PDT)
+Received: from localhost.localdomain ([12.156.111.130])
+        by smtp.gmail.com with ESMTPSA id v68sm16426317ywe.23.2019.07.31.11.06.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 11:06:56 -0700 (PDT)
+From:   Ayman Bagabas <ayman.bagabas@gmail.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ayman Bagabas <ayman.bagabas@gmail.com>
+Subject: [RFC 1/9] platform/x86: huawei-wmi: Rename guid and driver name
+Date:   Wed, 31 Jul 2019 14:06:41 -0400
+Message-Id: <20190731180641.30121-1-ayman.bagabas@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190731175255.25676-2-ayman.bagabas@gmail.com>
+References: <20190731175255.25676-2-ayman.bagabas@gmail.com>
 MIME-Version: 1.0
+X-Mailer: git-send-email 2.20.1
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  09c7e8b21d67c3c78ab9701dbc0fb1e9f14a0ba5
-Gitweb:     https://git.kernel.org/tip/09c7e8b21d67c3c78ab9701dbc0fb1e9f14a0ba5
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 23:19:44 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 31 Jul 2019 19:03:36 +0200
+Use WMI device UID, AMW0 has a UID of HWMI. WMI0 is the device name
+and doesn't have a UID so keep it as it is.
 
-x86/kvm: Use CONFIG_PREEMPTION
+Change module description to reflect the upcoming changes.
 
-CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by
-CONFIG_PREEMPT_RT. Both PREEMPT and PREEMPT_RT require the same
-functionality which today depends on CONFIG_PREEMPT.
-
-Switch the conditional for async pagefaults to use CONFIG_PREEMPTION.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20190726212124.789755413@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- arch/x86/kernel/kvm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/huawei-wmi.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index b7f34fe2171e..3d07f84c4846 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -314,7 +314,7 @@ static void kvm_guest_cpu_init(void)
- 	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf) {
- 		u64 pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 52fcac5b393a..a1159850a16c 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- *  Huawei WMI hotkeys
++ *  Huawei WMI laptop extras driver
+  *
+  *  Copyright (C) 2018	      Ayman Bagabas <ayman.bagabas@gmail.com>
+  */
+@@ -15,10 +15,12 @@
+ /*
+  * Huawei WMI GUIDs
+  */
+-#define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
+-#define AMW0_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
++#define HWMI_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
  
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 		pa |= KVM_ASYNC_PF_SEND_ALWAYS;
- #endif
- 		pa |= KVM_ASYNC_PF_ENABLED;
++/* Legacy GUIDs */
+ #define WMI0_EXPENSIVE_GUID "39142400-C6A3-40fa-BADB-8A2652834100"
++#define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
++
+ 
+ struct huawei_wmi_priv {
+ 	struct input_dev *idev;
+@@ -37,7 +39,7 @@ static const struct key_entry huawei_wmi_keymap[] = {
+ 	{ KE_KEY,    0x289, { KEY_WLAN } },
+ 	// Huawei |M| key
+ 	{ KE_KEY,    0x28a, { KEY_CONFIG } },
+-	// Keyboard backlight
++	// Keyboard backlit
+ 	{ KE_IGNORE, 0x293, { KEY_KBDILLUMTOGGLE } },
+ 	{ KE_IGNORE, 0x294, { KEY_KBDILLUMUP } },
+ 	{ KE_IGNORE, 0x295, { KEY_KBDILLUMUP } },
+@@ -186,7 +188,7 @@ static int huawei_wmi_probe(struct wmi_device *wdev)
+ 
+ static const struct wmi_device_id huawei_wmi_id_table[] = {
+ 	{ .guid_string = WMI0_EVENT_GUID },
+-	{ .guid_string = AMW0_EVENT_GUID },
++	{ .guid_string = HWMI_EVENT_GUID },
+ 	{  }
+ };
+ 
+@@ -203,5 +205,5 @@ module_wmi_driver(huawei_wmi_driver);
+ 
+ MODULE_DEVICE_TABLE(wmi, huawei_wmi_id_table);
+ MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
+-MODULE_DESCRIPTION("Huawei WMI hotkeys");
++MODULE_DESCRIPTION("Huawei WMI laptop extras driver");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.20.1
+
+
