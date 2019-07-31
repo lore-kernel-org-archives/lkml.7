@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A9EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A078AC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D058D20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8118C206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbfGaN6x (ORCPT
+        id S1729158AbfGaN7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:58:53 -0400
+        Wed, 31 Jul 2019 09:59:13 -0400
 Received: from mga05.intel.com ([192.55.52.43]:47382 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729799AbfGaN6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:58:47 -0400
+        id S1729795AbfGaN6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:58:50 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 06:58:47 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 06:58:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,330,1559545200"; 
-   d="scan'208";a="177318797"
+   d="scan'208";a="177318813"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 31 Jul 2019 06:58:44 -0700
+  by orsmga006.jf.intel.com with ESMTP; 31 Jul 2019 06:58:47 -0700
 From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
 To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
         kan.liang@linux.intel.com, Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH v2 4/7] perf tools: Add itrace option 'o' to synthesize aux-source events
-Date:   Wed, 31 Jul 2019 16:58:26 +0300
-Message-Id: <20190731135829.54435-5-alexander.shishkin@linux.intel.com>
+Subject: [PATCH v2 5/7] perf intel-pt: Process options for PEBS event synthesis
+Date:   Wed, 31 Jul 2019 16:58:27 +0300
+Message-Id: <20190731135829.54435-6-alexander.shishkin@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190731135829.54435-1-alexander.shishkin@linux.intel.com>
 References: <20190731135829.54435-1-alexander.shishkin@linux.intel.com>
@@ -49,73 +49,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Add itrace option 'o' to synthesize events recorded in the AUX area due to
-the use of perf record's aux-source config term.
+Process synth_opts.other_events and attr.aux_source to set up for
+synthesizing PEBs via Intel PT events.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 ---
- tools/perf/Documentation/itrace.txt | 2 ++
- tools/perf/util/auxtrace.c          | 4 ++++
- tools/perf/util/auxtrace.h          | 3 +++
- 3 files changed, 9 insertions(+)
+ tools/perf/arch/x86/util/intel-pt.c | 23 +++++++++++++++++++++++
+ tools/perf/util/intel-pt.c          | 18 ++++++++++++++++++
+ 2 files changed, 41 insertions(+)
 
-diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index c2182cbabde3..a9d1ff65e52b 100644
---- a/tools/perf/Documentation/itrace.txt
-+++ b/tools/perf/Documentation/itrace.txt
-@@ -5,6 +5,8 @@
- 		x	synthesize transactions events
- 		w	synthesize ptwrite events
- 		p	synthesize power events
-+		o	synthesize other events recorded due to the use
-+			of aux-source (refer to perf record)
- 		e	synthesize error events
- 		d	create a debug log
- 		g	synthesize a call chain (use with i or x)
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index ec0af36697c4..cd763f9e7400 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -964,6 +964,7 @@ void itrace_synth_opts__set_default(struct itrace_synth_opts *synth_opts,
- 	synth_opts->transactions = true;
- 	synth_opts->ptwrites = true;
- 	synth_opts->pwr_events = true;
-+	synth_opts->other_events = true;
- 	synth_opts->errors = true;
- 	if (no_sample) {
- 		synth_opts->period_type = PERF_ITRACE_PERIOD_INSTRUCTIONS;
-@@ -1061,6 +1062,9 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
- 		case 'p':
- 			synth_opts->pwr_events = true;
- 			break;
-+		case 'o':
-+			synth_opts->other_events = true;
-+			break;
- 		case 'e':
- 			synth_opts->errors = true;
- 			break;
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index e9b4c5edf78b..2690791974b0 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -60,6 +60,8 @@ enum itrace_period_type {
-  * @transactions: whether to synthesize events for transactions
-  * @ptwrites: whether to synthesize events for ptwrites
-  * @pwr_events: whether to synthesize power events
-+ * @other_events: whether to synthesize other events recorded due to the use of
-+ *                aux_source
-  * @errors: whether to synthesize decoder error events
-  * @dont_decode: whether to skip decoding entirely
-  * @log: write a decoding log
-@@ -86,6 +88,7 @@ struct itrace_synth_opts {
- 	bool			transactions;
- 	bool			ptwrites;
- 	bool			pwr_events;
-+	bool			other_events;
- 	bool			errors;
- 	bool			dont_decode;
- 	bool			log;
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index 609088c01e3a..c92ece8af3b8 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -548,6 +548,26 @@ static int intel_pt_validate_config(struct perf_pmu *intel_pt_pmu,
+ 					evsel->attr.config);
+ }
+ 
++/*
++ * Currently, there is not enough information to disambiguate different PEBS
++ * events, so only allow one.
++ */
++static bool intel_pt_too_many_aux_source(struct perf_evlist *evlist)
++{
++	struct perf_evsel *evsel;
++	int aux_source_cnt = 0;
++
++	evlist__for_each_entry(evlist, evsel)
++		aux_source_cnt += !!evsel->attr.aux_source;
++
++	if (aux_source_cnt > 1) {
++		pr_err(INTEL_PT_PMU_NAME " supports at most one event with aux-source\n");
++		return true;
++	}
++
++	return false;
++}
++
+ static int intel_pt_recording_options(struct auxtrace_record *itr,
+ 				      struct perf_evlist *evlist,
+ 				      struct record_opts *opts)
+@@ -588,6 +608,9 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+ 		return -EINVAL;
+ 	}
+ 
++	if (intel_pt_too_many_aux_source(evlist))
++		return -EINVAL;
++
+ 	if (!opts->full_auxtrace)
+ 		return 0;
+ 
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index df061599fef4..587a2dfb416b 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -2894,6 +2894,22 @@ static int intel_pt_synth_events(struct intel_pt *pt,
+ 	return 0;
+ }
+ 
++static void intel_pt_setup_pebs_events(struct intel_pt *pt)
++{
++	struct perf_evsel *evsel;
++
++	if (!pt->synth_opts.other_events)
++		return;
++
++	evlist__for_each_entry(pt->session->evlist, evsel) {
++		if (evsel->attr.aux_source && evsel->id) {
++			pt->sample_pebs = true;
++			pt->pebs_evsel = evsel;
++			return;
++		}
++	}
++}
++
+ static struct perf_evsel *intel_pt_find_sched_switch(struct perf_evlist *evlist)
+ {
+ 	struct perf_evsel *evsel;
+@@ -3263,6 +3279,8 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 	if (err)
+ 		goto err_delete_thread;
+ 
++	intel_pt_setup_pebs_events(pt);
++
+ 	err = auxtrace_queues__process_index(&pt->queues, session);
+ 	if (err)
+ 		goto err_delete_thread;
 -- 
 2.20.1
 
