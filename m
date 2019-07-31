@@ -2,112 +2,79 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FA4C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A09C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCE9206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D1E206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:55:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564592113;
+	bh=JDEMB0zREMLmLrMHdC+useYBlGljcUC+uo1OriFFjzw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZV/n4+BKF+J2VyWt2p/jiWP4Iqbg+MEts2ER03Yg1lTaSsdF+rMYA0yq6LPDWpqJx
+	 QbqhSWTabmKy/Sx3naY2QzDmhuDw+rMzJpbrMuhGM0Wp14WVfxtuf7Dbk6IccRSzkN
+	 0AYl+VItWL0o+7Dj+Ym8nCtT7OV2df0M9Bimwdqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfGaQyF (ORCPT
+        id S1728388AbfGaQzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:54:05 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:55740 "EHLO honk.sigxcpu.org"
+        Wed, 31 Jul 2019 12:55:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbfGaQyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:54:05 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id AF4D4FB03;
-        Wed, 31 Jul 2019 18:54:02 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id WqV7ea2juLfn; Wed, 31 Jul 2019 18:54:01 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 9B60D46D8A; Wed, 31 Jul 2019 18:54:00 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 18:54:00 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        id S1726073AbfGaQzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:55:11 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA5EB214DA;
+        Wed, 31 Jul 2019 16:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564592111;
+        bh=JDEMB0zREMLmLrMHdC+useYBlGljcUC+uo1OriFFjzw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cAImF8l+MTX5ADdOiJKH/QneD3b8zhh4NS+aA1NAyHVfIxsAaqLYpsv7WWoB0TtwC
+         2c+ItTFSXRfvJm8NLwOGBwC1tdL2l53EDDw8O2zAvqikMvMFvGEZ4ep8NiaBCipCVO
+         J/gR1tv6gsEb3B4cn2OBbd6Mpyprif+nWU17dCsY=
+Received: by mail-qk1-f180.google.com with SMTP id r21so49828242qke.2;
+        Wed, 31 Jul 2019 09:55:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAUTqP6S7VK1YnaxO2UaYHxZ5Vt4OoMtmi5qk8vKm9Ltj+lwm28o
+        KybPu5BSIyooVf4MtO1FXh56sfrN+uZtN9YIPQ==
+X-Google-Smtp-Source: APXvYqyL4gjIwP3FgCPMgYyaj67zGUm/qznjmZ2P2Af+LHVuDZ8XmiPXVioHVdq5jApCgeXPOXaATEbkx/ux3T/Eogs=
+X-Received: by 2002:a37:a48e:: with SMTP id n136mr83759357qke.223.1564592110116;
+ Wed, 31 Jul 2019 09:55:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190731124000.22072-1-narmstrong@baylibre.com> <20190731124000.22072-3-narmstrong@baylibre.com>
+In-Reply-To: <20190731124000.22072-3-narmstrong@baylibre.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 31 Jul 2019 10:54:58 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJh0VJpRQtjEv4B9Zhw4vYPbx8spJtoR0Pmx3Mier5gjg@mail.gmail.com>
+Message-ID: <CAL_JsqJh0VJpRQtjEv4B9Zhw4vYPbx8spJtoR0Pmx3Mier5gjg@mail.gmail.com>
+Subject: Re: [PATCH 2/6] dt-bindings: arm: amlogic: add bindings for G12B
+ based S922X SoC
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
-Message-ID: <20190731165400.GA30745@bogon.m.sigxcpu.org>
-References: <cover.1563983037.git.agx@sigxcpu.org>
- <3158f4f8c97c21f98c394e5631d74bc60d796522.1563983037.git.agx@sigxcpu.org>
- <CAOMZO5BRbV_1du1b9eJqcBvvXSE2Mon3yxSPJxPpZgBqYNjBSg@mail.gmail.com>
- <20190731143532.GA1935@bogon.m.sigxcpu.org>
- <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Wed, Jul 31, 2019 at 11:43:47AM -0300, Fabio Estevam wrote:
-> Hi Guido,
-> 
-> On Wed, Jul 31, 2019 at 11:35 AM Guido Günther <agx@sigxcpu.org> wrote:
-> 
-> > The idea is to have
-> >
-> >     "%sabling platform clocks", enable ? "en" : "dis");
-> >
-> > depending whether clocks are enabled/disabled.
-> 
-> Yes, I understood the idea, but this would print:
-> 
-> ensabling or dissabling :-)
+On Wed, Jul 31, 2019 at 6:40 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Add a specific compatible for the Amlogic G12B family based S922X SoC
+> to differentiate with the A311D SoC from the same family.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-The 's' is from the '%s' format specifier:
-
-[ 2610.804174] imx-nwl-dsi 30a00000.mipi_dsi: [drm:imx_nwl_dsi_bridge_disable] disabling platform clocks
-[ 2710.996279] imx-nwl-dsi 30a00000.mipi_dsi: [drm:imx_nwl_dsi_bridge_pre_enable] enabling platform clocks
-
-I'll change that to use the full strings though since i also had to look
-twice to be sure there's no double 's'.
-
-> 
-> > > Same here. Please return 'int' instead.
-> >
-> > This is from drm_bridge_funcs so the prototype is fixed. I'm not sure
-> > how what's the best way to bubble up fatal errors through the drm layer?
-> 
-> Ok, so let's not change this one.
-> 
-> > I went for DRM_DEV_ERROR() since that what i used in the rest of the
-> > driver and these ones were omission. Hope that's o.k.
-> 
-> No strong preferences here. I just think dev_err() easier to type and shorter.
-> 
-> Thanks for this work!
-
-Thanks again for having a look!
- -- Guido
+Reviewed-by: Rob Herring <robh@kernel.org>
