@@ -2,130 +2,113 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F23C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EF5C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E437206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:20:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564604454;
-	bh=eSpZl/myp0wLmres0SzdL8uz08rnblNQITo3VV+tXno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NqvfLiBegHIM9SjaQMFZq8VcVF0D5u6kL/Ecsn/COlZS6yP/IWj3lTCDzO/Xojjyx
-	 bo63VanlonDx2ewjajIRpTJCCdf2qNXr7oKEw67MDkd1NTNsHqecRVesYLQVwAvbsH
-	 urW7+LaK4xAAOcoYE4xGNJSUAdx+oeNqgkg6iCVg=
+	by mail.kernel.org (Postfix) with ESMTP id 82C37206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbfGaUUx (ORCPT
+        id S1729514AbfGaUVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:20:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51904 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfGaUUw (ORCPT
+        Wed, 31 Jul 2019 16:21:01 -0400
+Received: from mail.santannapisa.it ([193.205.80.98]:34075 "EHLO
+        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaUVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:20:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eSpZl/myp0wLmres0SzdL8uz08rnblNQITo3VV+tXno=; b=YYhiErzLfdL7neEK7d0phFEhA
-        9rYVeR7x7t8t6paB3ZYVvcpsMo/itLyxCB2hOJT8gnOe2xOO8iAjeWRiY7cTpKhSE6/BN2x8m4rMQ
-        cSB16hNa+oZ9qF3mqcbLxgvqdCuQVoTjgi1w17GQcvLfcOoOipIPzkfbVKuqdLoY5fX+c=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hsv4y-0003F9-G4; Wed, 31 Jul 2019 20:20:08 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 634FD2742C99; Wed, 31 Jul 2019 21:20:07 +0100 (BST)
-Date:   Wed, 31 Jul 2019 21:20:07 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        samba-technical@lists.samba.org, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve French <sfrench@samba.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-cifs@vger.kernel.org, Dave Kleikamp <shaggy@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org,
-        Hartmut Knaack <knaack.h@gmx.de>, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 0/6] ReST conversion patches not applied yet
-Message-ID: <20190731202007.GI4369@sirena.org.uk>
-References: <cover.1564603513.git.mchehab+samsung@kernel.org>
- <20190731141734.1fa9ce64@lwn.net>
+        Wed, 31 Jul 2019 16:21:00 -0400
+Received: from [151.41.39.6] (account l.abeni@santannapisa.it HELO sweethome)
+  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
+  with ESMTPSA id 141248120; Wed, 31 Jul 2019 22:20:56 +0200
+Date:   Wed, 31 Jul 2019 22:20:46 +0200
+From:   luca abeni <luca.abeni@santannapisa.it>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <Valentin.Schneider@arm.com>,
+        Qais Yousef <Qais.Yousef@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] sched/deadline: Cleanup on_dl_rq() handling
+Message-ID: <20190731222046.5ff83259@sweethome>
+In-Reply-To: <c93f6c12-b804-99da-7e38-bbaf55fe7a1b@arm.com>
+References: <20190726082756.5525-1-dietmar.eggemann@arm.com>
+        <20190726082756.5525-5-dietmar.eggemann@arm.com>
+        <20190729164932.GN31398@hirez.programming.kicks-ass.net>
+        <20190730064115.GC8927@localhost.localdomain>
+        <20190730082108.GJ31381@hirez.programming.kicks-ass.net>
+        <c93f6c12-b804-99da-7e38-bbaf55fe7a1b@arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9s922KAXlWjPfK/Q"
-Content-Disposition: inline
-In-Reply-To: <20190731141734.1fa9ce64@lwn.net>
-X-Cookie: FEELINGS are cascading over me!!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 31 Jul 2019 18:32:47 +0100
+Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+[...]
+> >>>>  static void dequeue_dl_entity(struct sched_dl_entity *dl_se)
+> >>>>  {
+> >>>> +	if (!on_dl_rq(dl_se))
+> >>>> +		return;  
+> >>>
+> >>> Why allow double dequeue instead of WARN?  
+> >>
+> >> As I was saying to Valentin, it can currently happen that a task
+> >> could have already been dequeued by update_curr_dl()->throttle
+> >> called by dequeue_task_dl() before calling __dequeue_task_dl(). Do
+> >> you think we should check for this condition before calling into
+> >> dequeue_dl_entity()?  
+> > 
+> > Yes, that's what ->dl_throttled is for, right? And !->dl_throttled
+> > && !on_dl_rq() is a BUG.  
+> 
+> OK, I will add the following snippet to the patch.
+> Although it's easy to provoke a situation in which DL tasks are
+> throttled, I haven't seen a throttling happening when the task is
+> being dequeued.
 
---9s922KAXlWjPfK/Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is a not-so-common situation, that can happen with periodic tasks
+(a-la rt-app) blocking on clock_nanosleep() (or similar) after
+executing for an amount of time comparable with the SCHED_DEADLINE
+runtime.
 
-On Wed, Jul 31, 2019 at 02:17:34PM -0600, Jonathan Corbet wrote:
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+It might happen that the task consumed a little bit more than the
+remaining runtime (but has not been throttled yet, because the
+accounting happens at every tick)... So, when dequeue_task_dl() invokes
+update_task_dl() the runtime becomes negative and the task is throttled.
 
-> > As promised, this is the rebased version of the patches that were not a=
-pplied
-> > from the /26 patch series because you had merge conflicts.
-> >=20
-> > They're all based on your docs-next branch, so should apply fine.
-> >=20
-> > The first one fixes all but one error with a broken reference.
-> >=20
-> > The only broken reference right now is due to a DT patch with was not
-> > accepted (no idea why), but whose driver is upstream.
+This happens infrequently, but if you try rt-app tasksets with multiple
+tasks and execution times near to the runtime you will see it
+happening, sooner or later.
 
-> All but 5/6 applied, thanks.
 
-Oh, I still hadn't reviewed this version of the SPI stuff :(
+[...]
+> @@ -1592,6 +1591,10 @@ static void __dequeue_task_dl(struct rq *rq,
+> struct task_struct *p) static void dequeue_task_dl(struct rq *rq,
+> struct task_struct *p, int flags) {
+>         update_curr_dl(rq);
+> +
+> +       if (p->dl.dl_throttled)
+> +               return;
 
-There were outstanding questions about where it was going to get moved
-to but if I read the diff correctly it looks like it didn't actually get
-moved in the end?
+Sorry, I missed part of the previous discussion, so maybe I am missing
+something... But I suspect this "return" might be wrong (you risk to
+miss a call to task_non_contending(), coming later in this function).
 
---9s922KAXlWjPfK/Q
-Content-Type: application/pgp-signature; name="signature.asc"
+Maybe you cound use
+	if (!p->dl_throttled)
+		__dequeue_task_dl(rq, p)
 
------BEGIN PGP SIGNATURE-----
+Or did I misunderstand something?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1B9/YACgkQJNaLcl1U
-h9Bg/wf5AdzUWJa+NJteGVMxcv2AdvS61I9agmCR6mMbPERTL3lRkGvteyyk4FqS
-OLlGCoSv8ytbJJ7mVGt28aBLCB7cHeDQGGmdf7OM3nJGun9yy4mmhOUIWxgjWRCl
-SgO2qZpfOz121zfa2goqOfdNzbPOotjeuIyVJxvNH0NLLvRjjDZ1+4rXUjvMZf26
-cVK4dXIu7+m0Kh6N6EFG9vmpNjbh23zfkd89kH8bMBGaOHdhj/3cRmCw2ZxK8Uiz
-Z+xwRCyTI0CIegyUp0ZKheAqubruDFR7y0F9sYcI5KR+w0cDrfxYjOUgZa2JJKn7
-Rdr1TAWXS/LG/aYR09ZGPHQsIsDKIw==
-=V4AT
------END PGP SIGNATURE-----
 
---9s922KAXlWjPfK/Q--
+
+			Thanks,
+				Luca
