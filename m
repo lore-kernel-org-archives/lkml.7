@@ -2,68 +2,109 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3A1C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4BFC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5842064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156902064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZfCkNYHw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfGaNW7 (ORCPT
+        id S1729496AbfGaNXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:22:59 -0400
-Received: from andre.telenet-ops.be ([195.130.132.53]:50994 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729461AbfGaNWU (ORCPT
+        Wed, 31 Jul 2019 09:23:21 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51436 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729255AbfGaNXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:22:20 -0400
-Received: from ramsan ([84.194.98.4])
-        by andre.telenet-ops.be with bizsmtp
-        id jRNK2000F05gfCL01RNKft; Wed, 31 Jul 2019 15:22:19 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hsoYd-00018A-9m; Wed, 31 Jul 2019 15:22:19 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hsoYd-0004UY-8n; Wed, 31 Jul 2019 15:22:19 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 8/8] net: samsung: Spelling s/case/cause/
-Date:   Wed, 31 Jul 2019 15:22:16 +0200
-Message-Id: <20190731132216.17194-9-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190731132216.17194-1-geert+renesas@glider.be>
-References: <20190731132216.17194-1-geert+renesas@glider.be>
+        Wed, 31 Jul 2019 09:23:20 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6VDNAlG080355;
+        Wed, 31 Jul 2019 08:23:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564579390;
+        bh=0fUgRNTdr1H1z9bwTUX3/k1AsGS3eKBtv0BltL7AUXU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ZfCkNYHwDcVMQFgdZ6MOFeaj3KK7HpxBfPeP4ixWJ8+pnkRx8TtUIZvKtYM+Ijs+8
+         avV1JIDdTM52t8tytAKP8XzvbFGRA50+0RJQboZnPnCYcKUTHVejPZZ/698H0Arf77
+         8aYY/E8fs9IEUBn0lXpcuFkennebLTmbC3cDfBNU=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6VDNAhi048603
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 31 Jul 2019 08:23:10 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 31
+ Jul 2019 08:23:10 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 31 Jul 2019 08:23:10 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6VDN720083249;
+        Wed, 31 Jul 2019 08:23:08 -0500
+Subject: Re: [PATCH v4 2/4] leds: Add managed API to get a LED from a device
+ driver
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>
+References: <20190717141514.21171-1-jjhiblot@ti.com>
+ <20190717141514.21171-3-jjhiblot@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <94bdabf4-0922-5016-ed96-9916ed6bda9d@ti.com>
+Date:   Wed, 31 Jul 2019 16:23:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190717141514.21171-3-jjhiblot@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/net/ethernet/samsung/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 17/07/2019 17:15, Jean-Jacques Hiblot wrote:
 
-diff --git a/drivers/net/ethernet/samsung/Kconfig b/drivers/net/ethernet/samsung/Kconfig
-index 027938017579130f..e92a178a76df0849 100644
---- a/drivers/net/ethernet/samsung/Kconfig
-+++ b/drivers/net/ethernet/samsung/Kconfig
-@@ -11,7 +11,7 @@ config NET_VENDOR_SAMSUNG
- 	  say Y.
- 
- 	  Note that the answer to this question does not directly affect
--	  the kernel: saying N will just case the configurator to skip all
-+	  the kernel: saying N will just cause the configurator to skip all
- 	  the questions about Samsung chipsets. If you say Y, you will be asked
- 	  for your specific chipset/driver in the following questions.
- 
+> +struct led_classdev *__must_check devm_led_get(struct device *dev,
+> +					       int index)
+> +{
+> +	struct led_classdev *led;
+> +	struct led_classdev **dr;
+> +
+
+Should you check here if dev->of_node == NULL? Or should of_led_get() 
+check it.
+
+> +	led = of_led_get(dev->of_node, index);
+> +	if (IS_ERR(led))
+> +		return led;
+> +
+> +	dr = devres_alloc(devm_led_release, sizeof(struct led_classdev *),
+> +			  GFP_KERNEL);
+> +	if (!dr) {
+> +		led_put(led);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	*dr = led;
+> +	devres_add(dev, dr);
+> +
+> +	return led;
+> +}
+
+  Tomi
+
 -- 
-2.17.1
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
