@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23249C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09966C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEDF6214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52B2214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:30:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fbHyeQff"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TobnQ1A6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbfGaUae (ORCPT
+        id S1730927AbfGaUak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:30:34 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38087 "EHLO
+        Wed, 31 Jul 2019 16:30:40 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33463 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729743AbfGaU3n (ORCPT
+        with ESMTP id S1730588AbfGaU3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:29:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s15so39639181wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:29:42 -0700 (PDT)
+        Wed, 31 Jul 2019 16:29:39 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h19so2071143wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:29:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YOocsbJSeEFZluDhuzPE1zAAorjfBXrmhgRxid6+uG4=;
-        b=fbHyeQffSQKLyJZweT+WJ4+v6XLbm73VRmJtKif+8DkHNYy3c9TYTD2MYwCZOHUcUr
-         QJ+vr34pV4wi2sUxPS6fRLR0yLGRbeUDIZFRi5yetwxKdN1qQ8heUZvrxUwtBJP7Vthp
-         VlkwzSdOiLVviHfnmXUJvONySuBWzlgMYw85+NZgGvgNNJ+IzBK7FE08NVPFkrFZHZiY
-         98InzBB2uz5dK7VvdIFyKPNsSu1/1ae2NMb6JwLDDLB4m9K0PuCmkUzlmQBPu2/lr9IG
-         cfe6YpP2wTjzhuv2QouZ/Jy4zJx1+WmxjetGIQcELpeKyUQLsiyLszwnRdnaJtBFA+q6
-         FzBw==
+        bh=nxlnCpV0F3leEABjK0OQeWrArZ1TknDUFhS5oY3oysQ=;
+        b=TobnQ1A6wip0UtD/g3bDWT+S5CD8CP1ZGTctAaOyZrq5umuF3Fsy0wdsk0Lw089w6R
+         FO84q7Lw+RUUGLid2tdjgOQYVYSCnawnjla1ZdgyUXT1mw4Pj0nPsdBgyWiBbcC3NG7v
+         Wcf6ktXpSNUlXwiugNEPgnDyvHRxFWNwyJlpiBxfaSK7C8RXOXoh/BbOflyAoO5EHgUi
+         Rc91LfDiMW+QvAVNBHBPe1tiUJuxWToECnhIAy18MGrEQRl/wvoCoqK74VrQRTyiKgaY
+         DoIaJGBAJXRKbLYn7eztJ5raJW/7LXxuu06tpn0PRPXk79oker2ESsHnT2FZyb/UALoJ
+         V/Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YOocsbJSeEFZluDhuzPE1zAAorjfBXrmhgRxid6+uG4=;
-        b=Wpsfm5idqM1S5xm6GaEEsdvp9wTQj5hQTMHprFJa2Kb9JA94vXMpM51n16n4Orsj6h
-         QwewBMUOQSvNI1Ei8H0Qvp6t5GJLt4xiG9/1ch6xEpNi8iRoMez1/KiUAauOYCUHp5oE
-         +zgvAtE5eBA1EoIPHujTOPimwWh7++oJNrTFJ20ttdEDYmzCYK4uT3hjJIT9HP9LYaQc
-         kUxfOkMIcOtHyBueROdSn5YTHtJyBcwZH7JLnnZclbie74qhfXZJPAsIO3I/E7p+uF40
-         UjKNr44v06+vPSQkAp1UC1QLy6I/dprv8M+CVpJNFq57OC9DTIzjOPW1Z0jfYawYxTc/
-         IDkg==
-X-Gm-Message-State: APjAAAV9CUyaoDVPQ5GCz6KVPEzuqX6bHnINl8LzklXp5F1s3Dq0+4af
-        G36gag+Tu3iOkRN+8udEM6qb9Q==
-X-Google-Smtp-Source: APXvYqzXIxgckZrkrnAp9ds5RzMoiAUwWdZwbhnFGifcbNCZHENWdnEhg2gML/kMDfxfHu1Tmc21pw==
-X-Received: by 2002:a1c:9a53:: with SMTP id c80mr51418847wme.173.1564604981865;
-        Wed, 31 Jul 2019 13:29:41 -0700 (PDT)
+        bh=nxlnCpV0F3leEABjK0OQeWrArZ1TknDUFhS5oY3oysQ=;
+        b=UiUp7jR5/NtLydCPNXtxyaBj8pWjE6hAKdLp1Op0XDkhRFN2YVsS5wMz0oF3/3IWn0
+         S7nYymeqxx3rJmi7POWJoAscoUdxCHdLtmUJke2oRZXMNfG/3znF/A0pJfl9128Qo1MU
+         XrTRHZmQqM75tOrrDMaARcZIueBTlmrW9hhsAY6Ac+pysihCufs19SZ9du8sTyS9KeBI
+         O9Fkqh2qJQRLx31HR2Xd4vq3FjDrHkLNlBMZhROquBPEg5v8ZTVe24SshVEQEPAqOrbQ
+         VAeq4xPZOfC2nD0mF9l84z1BWtoYfhuECry0e1fLfr0gV2BkXpvySFab1/goDYni1u5Q
+         KZ9w==
+X-Gm-Message-State: APjAAAUwfPYLAFIW4dbTXfGkf4/nq85EOs17FQn5DHuTJMMY3M3iAE+g
+        oRcsmXjgWTm8c0VRgI5b70TS1A==
+X-Google-Smtp-Source: APXvYqyyTC1stOjdGSZiXTNDxIBxPvxI8gB4mh/on+sczAEFRxCYUb1W4QtpSlahmmSy9W02gw2JvA==
+X-Received: by 2002:a1c:7e90:: with SMTP id z138mr108712019wmc.128.1564604978346;
+        Wed, 31 Jul 2019 13:29:38 -0700 (PDT)
 Received: from localhost.localdomain (19.red-176-86-136.dynamicip.rima-tde.net. [176.86.136.19])
-        by smtp.gmail.com with ESMTPSA id i18sm91905591wrp.91.2019.07.31.13.29.40
+        by smtp.gmail.com with ESMTPSA id i18sm91905591wrp.91.2019.07.31.13.29.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 31 Jul 2019 13:29:41 -0700 (PDT)
+        Wed, 31 Jul 2019 13:29:37 -0700 (PDT)
 From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 To:     jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org,
         sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com,
@@ -69,9 +69,9 @@ Cc:     vkoul@kernel.org, niklas.cassel@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
-Subject: [PATCH v4 04/13] dt-bindings: mailbox: qcom: Add clock-name optional property
-Date:   Wed, 31 Jul 2019 22:29:20 +0200
-Message-Id: <20190731202929.16443-5-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v4 02/13] mbox: qcom: add APCS child device for QCS404
+Date:   Wed, 31 Jul 2019 22:29:18 +0200
+Message-Id: <20190731202929.16443-3-jorge.ramirez-ortiz@linaro.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
 References: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
@@ -82,69 +82,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the APCS clock is registered (platform dependent), it retrieves
-its parent names from hardcoded values in the driver.
-
-The following commit allows the DT node to provide such clock names to
-the platform data based clock driver therefore avoiding having to
-explicitly embed those names in the clock driver source code.
+There is clock controller functionality in the APCS hardware block of
+qcs404 devices similar to msm8916.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../mailbox/qcom,apcs-kpss-global.txt         | 24 ++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-index 1232fc9fc709..b69310322b09 100644
---- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-@@ -18,10 +18,11 @@ platforms.
- 	Usage: required
- 	Value type: <prop-encoded-array>
- 	Definition: must specify the base address and size of the global block
-+
- - clocks:
--	Usage: required if #clocks-cells property is present
--	Value type: <phandle>
--	Definition: phandle to the input PLL, which feeds the APCS mux/divider
-+	Usage: required if #clock-names property is present
-+	Value type: <phandle array>
-+	Definition: phandles to the two parent clocks of the clock driver.
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 705e17a5479c..76e1ad433b3f 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -89,7 +89,11 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
- - #mbox-cells:
- 	Usage: required
-@@ -33,6 +34,12 @@ platforms.
- 	Value type: <u32>
- 	Definition: as described in clock.txt, must be 0
- 
-+- clock-names:
-+	Usage: required if the platform data based clock driver needs to
-+	retrieve the parent clock names from device tree.
-+	This will requires two mandatory clocks to be defined.
-+	Value type: <string-array>
-+	Definition: must be "aux" and "pll"
- 
- = EXAMPLE
- The following example describes the APCS HMSS found in MSM8996 and part of the
-@@ -65,3 +72,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
- 		clocks = <&a53pll>;
- 		#clock-cells = <0>;
- 	};
+-	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
++	platform_set_drvdata(pdev, apcs);
 +
-+Below is another example of the APCS binding on QCS404 platforms:
++	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global") ||
++	    of_device_is_compatible(np, "qcom,qcs404-apcs-apps-global")) {
 +
-+	apcs_glb: mailbox@b011000 {
-+		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
-+		reg = <0x0b011000 0x1000>;
-+		#mbox-cells = <1>;
-+		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
-+		clock-names = "aux", "pll";
-+		#clock-cells = <0>;
-+	};
+ 		apcs->clk = platform_device_register_data(&pdev->dev,
+ 							  "qcom-apcs-msm8916-clk",
+ 							  -1, NULL, 0);
+@@ -97,8 +101,6 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ 			dev_err(&pdev->dev, "failed to register APCS clk\n");
+ 	}
+ 
+-	platform_set_drvdata(pdev, apcs);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.22.0
 
