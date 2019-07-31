@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEFCC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2FEC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C482067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1075A2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KsY1PHc+"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WxNZMbGJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730685AbfGaVLN (ORCPT
+        id S1730773AbfGaVLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:11:13 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17157 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730210AbfGaVLJ (ORCPT
+        Wed, 31 Jul 2019 17:11:18 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:9218 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730534AbfGaVLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:11:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4203ee0000>; Wed, 31 Jul 2019 14:11:10 -0700
+        Wed, 31 Jul 2019 17:11:11 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4203f70000>; Wed, 31 Jul 2019 14:11:19 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 31 Jul 2019 14:11:08 -0700
+  Wed, 31 Jul 2019 14:11:10 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 31 Jul 2019 14:11:08 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
- 2019 21:11:08 +0000
+        by hqpgpgate101.nvidia.com on Wed, 31 Jul 2019 14:11:10 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:11:10 +0000
 Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 31 Jul 2019 21:11:08 +0000
+ Transport; Wed, 31 Jul 2019 21:11:09 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.167]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d4203ec0000>; Wed, 31 Jul 2019 14:11:08 -0700
+        id <B5d4203ed0002>; Wed, 31 Jul 2019 14:11:09 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -52,9 +52,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>,
         <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
         <linux-pm@vger.kernel.org>
-Subject: [PATCH v7 12/20] clk: tegra210: Use fence_udelay during PLLU init
-Date:   Wed, 31 Jul 2019 14:10:55 -0700
-Message-ID: <1564607463-28802-13-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v7 18/20] soc/tegra: pmc: Configure deep sleep control settings
+Date:   Wed, 31 Jul 2019 14:11:01 -0700
+Message-ID: <1564607463-28802-19-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
 References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
@@ -62,68 +62,85 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564607470; bh=RJjtD/wR8zo8cV5BUXlwlwAAOA63IpXqmMNKlX37eJo=;
+        t=1564607479; bh=e0L/CBaNsglm/ojFaoC8UfipD1BklMJFbKMEJWbcTJ0=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=KsY1PHc+gsCUrg2LpeKJzk/XGLcoS1weMDaHKPj4digJhhLahZU9XBiLDP9Ci28H+
-         Pd91b+UrAbxM6jBzlTFcpnwKua0n1Z16L3MDLZXvPGi1TfAWrsE7Nj0Id6GJPuKqkq
-         SSub7J/+LNkBg/q9DY3PdXJzHPXq3wFA7hHVQxXU5b/0QhKbBNcX4CROERJPAG4eFl
-         MMnocmiAXESPPeE39NaD/2fuNQv16+xl191Py247fcia001+m3ZapNxGr89F6bSC8F
-         qH7RaknQJxXeC4f49Sv7bIkyp8Yb4pEA323LmbS9Xe0lnWJuUvVFaD1MRqdVjtHnsX
-         qDQ6oibpexHQQ==
+        b=WxNZMbGJr6f5ZolVCgTYwloWqM+HmNtxiGgHSlOOWEmOfbNJWTBGtlMoIhNwQF3KR
+         eWu/hs1k8CiHZ4d+PlXro1Ci9g5aB/BpTUZYcM4GMcImP6BVAvZcIZM/vq22MRwHQs
+         LxzRsZ/4XMIFgjZ/5H2hltylwhKbo4n+SS8ymEFn+l4FI1C8nfHn5dP2ovOHe2CAI+
+         0tvY2tHwzR0ekfrKkxbjLSJcn0DWq/Iq16sEVnK7UFvJwti9kbN4Y5lbcsLEH48SfJ
+         yUbtrhf6UjfqM/PqeuaZ0w9bHtC8wGkXXJMdeEJwzXKuRluzIjAgDGF4fY/A1GYbeZ
+         Sn3XQz0qINuEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch uses fence_udelay rather than udelay during PLLU
-initialization to ensure writes to clock registers happens before
-waiting for specified delay.
+Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
+timings which are platform specific that should be configured before
+entering into deep sleep.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Below are the timing specific configurations for deep sleep entry and
+wakeup.
+- Core rail power-on stabilization timer
+- OSC clock stabilization timer after SOC rail power is stabilized.
+- Core power off time is the minimum wake delay to keep the system
+  in deep sleep state irrespective of any quick wake event.
+
+These values depends on the discharge time of regulators and turn OFF
+time of the PMIC to allow the complete system to finish entering into
+deep sleep state.
+
+These values vary based on the platform design and are specified
+through the device tree.
+
+This patch has implementation to configure these timings which are must
+to have for proper deep sleep and wakeup operations.
+
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-tegra210.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/soc/tegra/pmc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index 4721ee030d1c..998bf60b219a 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -2841,7 +2841,7 @@ static int tegra210_enable_pllu(void)
- 	reg = readl_relaxed(clk_base + pllu.params->ext_misc_reg[0]);
- 	reg &= ~BIT(pllu.params->iddq_bit_idx);
- 	writel_relaxed(reg, clk_base + pllu.params->ext_misc_reg[0]);
--	udelay(5);
-+	fence_udelay(5, clk_base);
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index e013ada7e4e9..9a78d8417367 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -88,6 +88,8 @@
  
- 	reg = readl_relaxed(clk_base + PLLU_BASE);
- 	reg &= ~GENMASK(20, 0);
-@@ -2849,7 +2849,7 @@ static int tegra210_enable_pllu(void)
- 	reg |= fentry->n << 8;
- 	reg |= fentry->p << 16;
- 	writel(reg, clk_base + PLLU_BASE);
--	udelay(1);
-+	fence_udelay(1, clk_base);
- 	reg |= PLL_ENABLE;
- 	writel(reg, clk_base + PLLU_BASE);
+ #define PMC_CPUPWRGOOD_TIMER		0xc8
+ #define PMC_CPUPWROFF_TIMER		0xcc
++#define PMC_COREPWRGOOD_TIMER		0x3c
++#define PMC_COREPWROFF_TIMER		0xe0
  
-@@ -2895,12 +2895,12 @@ static int tegra210_init_pllu(void)
- 		reg = readl_relaxed(clk_base + XUSB_PLL_CFG0);
- 		reg &= ~XUSB_PLL_CFG0_PLLU_LOCK_DLY_MASK;
- 		writel_relaxed(reg, clk_base + XUSB_PLL_CFG0);
--		udelay(1);
-+		fence_udelay(1, clk_base);
+ #define PMC_PWR_DET_VALUE		0xe4
  
- 		reg = readl_relaxed(clk_base + PLLU_HW_PWRDN_CFG0);
- 		reg |= PLLU_HW_PWRDN_CFG0_SEQ_ENABLE;
- 		writel_relaxed(reg, clk_base + PLLU_HW_PWRDN_CFG0);
--		udelay(1);
-+		fence_udelay(1, clk_base);
+@@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs tegra20_pmc_regs = {
  
- 		reg = readl_relaxed(clk_base + PLLU_BASE);
- 		reg &= ~PLLU_BASE_CLKENABLE_USB;
+ static void tegra20_pmc_init(struct tegra_pmc *pmc)
+ {
+-	u32 value;
++	u32 value, osc, pmu, off;
+ 
+ 	/* Always enable CPU power request */
+ 	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+@@ -2303,6 +2305,15 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
+ 	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+ 	value |= PMC_CNTRL_SYSCLK_OE;
+ 	tegra_pmc_writel(pmc, value, PMC_CNTRL);
++
++	osc = DIV_ROUND_UP(pmc->core_osc_time * 8192, 1000000);
++	pmu = DIV_ROUND_UP(pmc->core_pmu_time * 32768, 1000000);
++	off = DIV_ROUND_UP(pmc->core_off_time * 32768, 1000000);
++	if (osc && pmu)
++		tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
++				 PMC_COREPWRGOOD_TIMER);
++	if (off)
++		tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
+ }
+ 
+ static void tegra20_pmc_setup_irq_polarity(struct tegra_pmc *pmc,
 -- 
 2.7.4
 
