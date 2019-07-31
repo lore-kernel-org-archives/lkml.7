@@ -2,175 +2,83 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFD7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E0EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D762067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90396217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="K5bYlTKi"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eE8FsgX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbfGaR6I (ORCPT
+        id S1727798AbfGaR6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:58:08 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38079 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbfGaR6H (ORCPT
+        Wed, 31 Jul 2019 13:58:51 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:42660 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfGaR6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:58:07 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6VHva7h3777692
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 31 Jul 2019 10:57:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6VHva7h3777692
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564595857;
-        bh=cR1BkJ0GbpUK+Xsakva9+nE2ErJTB2ZsdHvnGlx+lPU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=K5bYlTKizR3B+0L1YsSKvdnnDc2nh43YdZSIqJTVVAbYmgB3quk9Fk1C/r2rtbZjx
-         Px4eCQ+ui95vZVozG1bh0RuKyHYQm2g7tlCfpU+IVW5XWBno2ioQDvFBnCg+Lwdp/5
-         eBHXi3Akh1K7phU5oQQJVDvCkj8UzYYqRD+KvCk+E6q4Iy/SLHZ3FMHT/Rc2a9Gmi+
-         hju+w1JrUEi6A+KyfN2jW9iBnZnGrsz49Vi+CgmlJtoXF0jv7tiq97pg5fkyU4InYI
-         C21S3btXfagtEQBWmBYmpdM/h/9cn0eHg0T5UfWi4Hmt8HOEpTYpupvNIJ5/DxmZeL
-         4SNR7+MlUuIGQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6VHvZbL3777689;
-        Wed, 31 Jul 2019 10:57:35 -0700
-Date:   Wed, 31 Jul 2019 10:57:35 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-30c937043b2db09ae3408f5534824f9ececdb581@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, paulmck@linux.ibm.com,
-        tglx@linutronix.de, mhiramat@kernel.org, mingo@kernel.org,
-        peterz@infradead.org, hpa@zytor.com, torvalds@linux-foundation.org,
-        rostedt@goodmis.org, pbonzini@redhat.com
-Reply-To: rostedt@goodmis.org, pbonzini@redhat.com, mingo@kernel.org,
-          peterz@infradead.org, hpa@zytor.com,
-          torvalds@linux-foundation.org, tglx@linutronix.de,
-          paulmck@linux.ibm.com, mhiramat@kernel.org,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190726212124.409766323@linutronix.de>
-References: <20190726212124.409766323@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/rt] tracing: Use CONFIG_PREEMPTION
-Git-Commit-ID: 30c937043b2db09ae3408f5534824f9ececdb581
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 31 Jul 2019 13:58:50 -0400
+Received: by mail-yw1-f66.google.com with SMTP id z63so25277693ywz.9
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 10:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kle/jIqFf1IBE1ChD4Ekr3jmYwXu/5ocoCRxbcDWju8=;
+        b=eE8FsgX7scWFsv3ZMwBZQ7axOCEi+d10t8w6hFWXlivn3IMzmsGuTmyWHXdxPCwRKv
+         o+y8WWvSNtpaGElI7rzmnGJO4ic98MrxUyhjnEiDbhAjk+2YVXO1iRYlrnxtxQFqiCQ2
+         DQPgEFSaZS6nf3TaVpT9xi7XiX5dhLwrV+3ag=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kle/jIqFf1IBE1ChD4Ekr3jmYwXu/5ocoCRxbcDWju8=;
+        b=kLs99aIDw/DTVeX0x4m3WTtnJamlE4z6L5v6y4xNpC+YcKKFEXjWv0nai/5OHNgbY/
+         aoN9c7eXZNKBAl2y2pUz58GufqqvhucqrFcubNcqF3XiOGp34hyMqchYoZZYTxyr3D/7
+         YE8DOEH96BSvbKNmAA234MoPaRzAw6yeQXlUW4ozmrRwmt1x1OrFyhuL9fVAuuVPYSYd
+         wn3w6w29Mlo2cArdHDgXbfkCftyltzhXocgnJIaHrUq0veotH/ZNL9h16iACADbXhJcr
+         P38Kf9L7UvFUX6q/RBHHesncpWtBRB0U+mXJpqgIkDlGZ/nUWacY4fXUqvvNrHnu+il1
+         iG9Q==
+X-Gm-Message-State: APjAAAXW4Td6FL107Xn2zPYgc9v5BMsV0LVV7Y2NlT0ir2yZmusBKd9b
+        Ek56hgZtHW8AMzl84dFDaiLLDa5yzDsa3GwQgRHJdQ==
+X-Google-Smtp-Source: APXvYqwWX1s49fHEyXmj/CofKnB+QyLedV3m2fr3vgSBgPElXrzY9e4fYwGTyrZZNe4IbQYauEVPw9LEIb0HRbPGyEM=
+X-Received: by 2002:a81:9a01:: with SMTP id r1mr70879517ywg.490.1564595929908;
+ Wed, 31 Jul 2019 10:58:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190731122224.1003-1-hslester96@gmail.com>
+In-Reply-To: <20190731122224.1003-1-hslester96@gmail.com>
+From:   Michael Chan <michael.chan@broadcom.com>
+Date:   Wed, 31 Jul 2019 10:58:38 -0700
+Message-ID: <CACKFLinuFebDgJN=BgK5e-bNaFqNpk61teva0=2xMH6R_iT39g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] cnic: Use refcount_t for refcount
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  30c937043b2db09ae3408f5534824f9ececdb581
-Gitweb:     https://git.kernel.org/tip/30c937043b2db09ae3408f5534824f9ececdb581
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 23:19:40 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 31 Jul 2019 19:03:35 +0200
+On Wed, Jul 31, 2019 at 5:22 AM Chuhong Yuan <hslester96@gmail.com> wrote:
 
-tracing: Use CONFIG_PREEMPTION
+>  static void cnic_ctx_wr(struct cnic_dev *dev, u32 cid_addr, u32 off, u32 val)
+> @@ -494,7 +494,7 @@ int cnic_register_driver(int ulp_type, struct cnic_ulp_ops *ulp_ops)
+>         }
+>         read_unlock(&cnic_dev_lock);
+>
+> -       atomic_set(&ulp_ops->ref_count, 0);
+> +       refcount_set(&ulp_ops->ref_count, 0);
+>         rcu_assign_pointer(cnic_ulp_tbl[ulp_type], ulp_ops);
+>         mutex_unlock(&cnic_lock);
+>
 
-CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by
-CONFIG_PREEMPT_RT. Both PREEMPT and PREEMPT_RT require the same
-functionality which today depends on CONFIG_PREEMPT.
+Willem's comment applies here too.  The driver needs to be modified to
+count from 1 to use refcount_t.
 
-Switch the conditionals in the tracer over to CONFIG_PREEMPTION.
-
-This is the first step to make the tracer work on RT. The other small
-tweaks are submitted separately.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20190726212124.409766323@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/trace/Kconfig                 | 4 ++--
- kernel/trace/ftrace.c                | 2 +-
- kernel/trace/ring_buffer_benchmark.c | 2 +-
- kernel/trace/trace_events.c          | 4 ++--
- 4 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index d2c1fe0b451d..6a64d7772870 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -179,7 +179,7 @@ config TRACE_PREEMPT_TOGGLE
- config PREEMPTIRQ_EVENTS
- 	bool "Enable trace events for preempt and irq disable/enable"
- 	select TRACE_IRQFLAGS
--	select TRACE_PREEMPT_TOGGLE if PREEMPT
-+	select TRACE_PREEMPT_TOGGLE if PREEMPTION
- 	select GENERIC_TRACER
- 	default n
- 	help
-@@ -214,7 +214,7 @@ config PREEMPT_TRACER
- 	bool "Preemption-off Latency Tracer"
- 	default n
- 	depends on !ARCH_USES_GETTIMEOFFSET
--	depends on PREEMPT
-+	depends on PREEMPTION
- 	select GENERIC_TRACER
- 	select TRACER_MAX_TRACE
- 	select RING_BUFFER_ALLOW_SWAP
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index eca34503f178..a800e867c1a3 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -2814,7 +2814,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
- 		 * synchornize_rcu_tasks() will wait for those tasks to
- 		 * execute and either schedule voluntarily or enter user space.
- 		 */
--		if (IS_ENABLED(CONFIG_PREEMPT))
-+		if (IS_ENABLED(CONFIG_PREEMPTION))
- 			synchronize_rcu_tasks();
- 
-  free_ops:
-diff --git a/kernel/trace/ring_buffer_benchmark.c b/kernel/trace/ring_buffer_benchmark.c
-index 0564f6db0561..09b0b49f346e 100644
---- a/kernel/trace/ring_buffer_benchmark.c
-+++ b/kernel/trace/ring_buffer_benchmark.c
-@@ -267,7 +267,7 @@ static void ring_buffer_producer(void)
- 		if (consumer && !(cnt % wakeup_interval))
- 			wake_up_process(consumer);
- 
--#ifndef CONFIG_PREEMPT
-+#ifndef CONFIG_PREEMPTION
- 		/*
- 		 * If we are a non preempt kernel, the 10 second run will
- 		 * stop everything while it runs. Instead, we will call
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index c7506bc81b75..5a189fb8ec23 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -255,12 +255,12 @@ void *trace_event_buffer_reserve(struct trace_event_buffer *fbuffer,
- 	local_save_flags(fbuffer->flags);
- 	fbuffer->pc = preempt_count();
- 	/*
--	 * If CONFIG_PREEMPT is enabled, then the tracepoint itself disables
-+	 * If CONFIG_PREEMPTION is enabled, then the tracepoint itself disables
- 	 * preemption (adding one to the preempt_count). Since we are
- 	 * interested in the preempt_count at the time the tracepoint was
- 	 * hit, we need to subtract one to offset the increment.
- 	 */
--	if (IS_ENABLED(CONFIG_PREEMPT))
-+	if (IS_ENABLED(CONFIG_PREEMPTION))
- 		fbuffer->pc--;
- 	fbuffer->trace_file = trace_file;
- 
+Thanks.
