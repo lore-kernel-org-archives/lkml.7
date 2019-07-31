@@ -2,75 +2,78 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65623C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCC0C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C15206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CC9208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564603748;
-	bh=ywC7gB8XQ/17aOOZG37EpBdlHuf+W6vMaWGqefykNwI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zj11yI8aeGyTt4QmGlBP8sCWna4GwY797gPFY2yqYh8D/ML8rNwXLuHptybQXLTRc
-	 MO1ConkuaBnMzLNnENqicsK3U6aKc+CL7ncV85A4mf8YoIzPEGf1mqU5WhzWymUo+J
-	 2WJ7lgeUCgk9Stf+tVGPRguQ3WpFlR39IPsmNDBg=
+	s=default; t=1564603750;
+	bh=/bQladvlrcGeUPYJvTIR2x+UKuptiwRfEW3LI6Q5Evw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iOV1tgj0G50ye626yTxrQ2NPynPf+Gz/5FUN3yWF83DATrtHa6MoIPI4geDZMK7U6
+	 j5Kw5J81jLJgYWcexITuqv+w7tL5mKQWiez5ub4JsGtL3UcxnnNDp1T2wMQBfO4h1Z
+	 UzOF4rro6R8vRHQE96s2PaL80Ogx5TBWhJVMIlqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbfGaUJH (ORCPT
+        id S1730105AbfGaUJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 31 Jul 2019 16:09:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43370 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.133]:43634 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbfGaUI6 (ORCPT
+        with ESMTP id S1729114AbfGaUJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:08:58 -0400
+        Wed, 31 Jul 2019 16:09:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=RGnIbstR67/d58/2VBeEsEJ/D0YYSvIZYvE9aUkOglI=; b=sXCTHXEsA7iDFFkPD1idGMZHXg
-        rljnX14PeB7vCozRMFWMAx92dwvrdMapCECbrpmzysy4xykG2nB25d/IAmmNTkv2qwr1obwhmSs24
-        PBT5iy7zEoisaKGVdcoUHBom22tylx57JldxYMsbU5fxVChyHfRycxRWfaK4gIyOToNX82M8QxRXU
-        T80P6hzjoV+MXn/JADYfhvA3wTaUxHTT9igt/zZS2BSRqmN3DgEevpWCLfREFWsnlAiiphCpkkSkX
-        G5zHBKJpgFnZvtb9sYeT9c2EN2GIv4yt6U6Hu/+0y41PGzAaGziR2djBMnRUNKVazBVAmQXraXxt9
-        Dq6GqtZQ==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rn3NfiDEXL+oS6VUOY4mnQO1Et+scTwEHQCpCkBADwE=; b=PIUUBnByQyRMkMGC65MPAbH3v
+        bMlAvUmVeuHt9/joMWoQz0I2rMP2LxUacVIVYNPvlFnKF1xaPRAEMuLb/E5C2nzCdb3Rm77OtWPKp
+        iCfxZE0OZPA+rLw4ckvP7fYxFk9CdgslaN/TEmJNQKtm0T4+Z/8q7p42cP3GUi//2c7yNXqXJFYNT
+        Zqn84uOVfZtk5DnzRYsS8OcjdOCjQ7NSyRKDsTgE9Yv5MUJuU+I3flClQ3gwLdBhCQvwec6sUkDbz
+        9LoOXiw2jlR5pTDbwBFdOMiAu4XecH5BAKWEjUVe5Tzz832jRG+dgxixJ5m9vBWnnVp15U9Fq9s+1
+        XKgn45ysw==;
 Received: from [191.33.152.89] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsuu8-0007qC-HH; Wed, 31 Jul 2019 20:08:56 +0000
+        id 1hsuu9-0007qH-8b; Wed, 31 Jul 2019 20:08:57 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hsuu6-00079g-72; Wed, 31 Jul 2019 17:08:54 -0300
+        id 1hsuu6-00079d-61; Wed, 31 Jul 2019 17:08:54 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
         Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Dave Kleikamp <shaggy@kernel.org>,
+        samba-technical@lists.samba.org, Mark Brown <broonie@kernel.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
         Evgeniy Dushistov <dushistov@mail.ru>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve French <sfrench@samba.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-cifs@vger.kernel.org, Dave Kleikamp <shaggy@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        jfs-discussion@lists.sourceforge.net,
         linux-arm-kernel@lists.infradead.org,
-        jfs-discussion@lists.sourceforge.net
-Subject: [PATCH 1/6] docs: fix a couple of new broken references
-Date:   Wed, 31 Jul 2019 17:08:48 -0300
-Message-Id: <5b4fae5978d309641fa8ba233a9efe2b48201cd6.1564603513.git.mchehab+samsung@kernel.org>
+        Hartmut Knaack <knaack.h@gmx.de>, linux-spi@vger.kernel.org
+Subject: [PATCH 0/6] ReST conversion patches not applied yet
+Date:   Wed, 31 Jul 2019 17:08:47 -0300
+Message-Id: <cover.1564603513.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1564603513.git.mchehab+samsung@kernel.org>
-References: <cover.1564603513.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,97 +81,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Those are due to recent changes. Most of the issues
-can be automatically fixed with:
+Hi Jon,
 
-	$ ./scripts/documentation-file-ref-check --fix
+As promised, this is the rebased version of the patches that were not applied
+from the /26 patch series because you had merge conflicts.
 
-The only exception was the sound binding with required
-manual work.
+They're all based on your docs-next branch, so should apply fine.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt | 2 +-
- MAINTAINERS                                                 | 4 ++--
- drivers/hwtracing/coresight/Kconfig                         | 2 +-
- fs/jfs/Kconfig                                              | 2 +-
- fs/ufs/Kconfig                                              | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
+The first one fixes all but one error with a broken reference.
 
-diff --git a/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt b/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt
-index 2ca3d138528e..7ecf6bd60d27 100644
---- a/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt
-+++ b/Documentation/devicetree/bindings/sound/sun8i-a33-codec.txt
-@@ -4,7 +4,7 @@ Allwinner SUN8I audio codec
- On Sun8i-A33 SoCs, the audio is separated in different parts:
- 	  - A DAI driver. It uses the "sun4i-i2s" driver which is
- 	  documented here:
--	  Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-+	  Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml
- 	  - An analog part of the codec which is handled as PRCM registers.
- 	  See Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
- 	  - An digital part of the codec which is documented in this current
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6de82f019a52..f109a8bcffda 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8659,7 +8659,7 @@ L:	jfs-discussion@lists.sourceforge.net
- W:	http://jfs.sourceforge.net/
- T:	git git://github.com/kleikamp/linux-shaggy.git
- S:	Maintained
--F:	Documentation/filesystems/jfs.txt
-+F:	Documentation/admin-guide/jfs.rst
- F:	fs/jfs/
- 
- JME NETWORK DRIVER
-@@ -16439,7 +16439,7 @@ F:	drivers/hid/hid-udraw-ps3.c
- UFS FILESYSTEM
- M:	Evgeniy Dushistov <dushistov@mail.ru>
- S:	Maintained
--F:	Documentation/filesystems/ufs.txt
-+F:	Documentation/admin-guide/ufs.rst
- F:	fs/ufs/
- 
- UHID USERSPACE HID IO DRIVER:
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index 14638db4991d..7a9f5fb08330 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -106,7 +106,7 @@ config CORESIGHT_CPU_DEBUG
- 	  can quickly get to know program counter (PC), secure state,
- 	  exception level, etc. Before use debugging functionality, platform
- 	  needs to ensure the clock domain and power domain are enabled
--	  properly, please refer Documentation/trace/coresight-cpu-debug.txt
-+	  properly, please refer Documentation/trace/coresight-cpu-debug.rst
- 	  for detailed description and the example for usage.
- 
- endif
-diff --git a/fs/jfs/Kconfig b/fs/jfs/Kconfig
-index 22a273bd4648..05cb0e8e4382 100644
---- a/fs/jfs/Kconfig
-+++ b/fs/jfs/Kconfig
-@@ -5,7 +5,7 @@ config JFS_FS
- 	select CRC32
- 	help
- 	  This is a port of IBM's Journaled Filesystem .  More information is
--	  available in the file <file:Documentation/filesystems/jfs.txt>.
-+	  available in the file <file:Documentation/admin-guide/jfs.rst>.
- 
- 	  If you do not intend to use the JFS filesystem, say N.
- 
-diff --git a/fs/ufs/Kconfig b/fs/ufs/Kconfig
-index fcb41516ea59..6d30adb6b890 100644
---- a/fs/ufs/Kconfig
-+++ b/fs/ufs/Kconfig
-@@ -9,7 +9,7 @@ config UFS_FS
- 	  this file system as well. Saying Y here will allow you to read from
- 	  these partitions; if you also want to write to them, say Y to the
- 	  experimental "UFS file system write support", below. Please read the
--	  file <file:Documentation/filesystems/ufs.txt> for more information.
-+	  file <file:Documentation/admin-guide/ufs.rst> for more information.
- 
-           The recently released UFS2 variant (used in FreeBSD 5.x) is
-           READ-ONLY supported.
+The only broken reference right now is due to a DT patch with was not
+accepted (no idea why), but whose driver is upstream.
+
+
+Mauro Carvalho Chehab (6):
+  docs: fix a couple of new broken references
+  docs: writing-schema.md: convert from markdown to ReST
+  spi: docs: convert to ReST and add it to the kABI bookset
+  docs: fs: cifs: convert to ReST and add to admin-guide book
+  docs: fs: convert porting to ReST
+  docs: w1: convert to ReST and add to the kAPI group of docs
+
+ Documentation/ABI/stable/sysfs-bus-w1         |   2 +-
+ .../ABI/stable/sysfs-driver-w1_ds28e04        |   4 +-
+ .../ABI/stable/sysfs-driver-w1_ds28ea00       |   2 +-
+ .../AUTHORS => admin-guide/cifs/authors.rst}  |  64 +-
+ .../CHANGES => admin-guide/cifs/changes.rst}  |   4 +
+ Documentation/admin-guide/cifs/index.rst      |  21 +
+ .../cifs/introduction.rst}                    |   8 +
+ .../cifs/TODO => admin-guide/cifs/todo.rst}   |  87 +--
+ .../README => admin-guide/cifs/usage.rst}     | 560 +++++++++++-------
+ .../cifs/winucase_convert.pl                  |   0
+ Documentation/admin-guide/index.rst           |   1 +
+ .../bindings/sound/sun8i-a33-codec.txt        |   2 +-
+ Documentation/devicetree/writing-schema.md    | 130 ----
+ Documentation/devicetree/writing-schema.rst   | 153 +++++
+ Documentation/filesystems/porting.rst         |   2 +-
+ Documentation/index.rst                       |   2 +
+ .../spi/{butterfly => butterfly.rst}          |  44 +-
+ Documentation/spi/index.rst                   |  22 +
+ Documentation/spi/{pxa2xx => pxa2xx.rst}      |  95 +--
+ .../spi/{spi-lm70llp => spi-lm70llp.rst}      |  17 +-
+ .../spi/{spi-sc18is602 => spi-sc18is602.rst}  |   3 +
+ .../spi/{spi-summary => spi-summary.rst}      | 105 ++--
+ Documentation/spi/{spidev => spidev.rst}      |  30 +-
+ Documentation/w1/index.rst                    |  21 +
+ .../w1/masters/{ds2482 => ds2482.rst}         |  16 +-
+ .../w1/masters/{ds2490 => ds2490.rst}         |   6 +-
+ Documentation/w1/masters/index.rst            |  14 +
+ Documentation/w1/masters/mxc-w1               |  12 -
+ Documentation/w1/masters/mxc-w1.rst           |  17 +
+ .../w1/masters/{omap-hdq => omap-hdq.rst}     |  12 +-
+ .../w1/masters/{w1-gpio => w1-gpio.rst}       |  21 +-
+ Documentation/w1/slaves/index.rst             |  16 +
+ .../w1/slaves/{w1_ds2406 => w1_ds2406.rst}    |   4 +-
+ .../w1/slaves/{w1_ds2413 => w1_ds2413.rst}    |   9 +
+ Documentation/w1/slaves/w1_ds2423             |  47 --
+ Documentation/w1/slaves/w1_ds2423.rst         |  54 ++
+ .../w1/slaves/{w1_ds2438 => w1_ds2438.rst}    |  10 +-
+ .../w1/slaves/{w1_ds28e04 => w1_ds28e04.rst}  |   5 +
+ .../w1/slaves/{w1_ds28e17 => w1_ds28e17.rst}  |  16 +-
+ .../w1/slaves/{w1_therm => w1_therm.rst}      |  11 +-
+ .../w1/{w1.generic => w1-generic.rst}         |  88 +--
+ .../w1/{w1.netlink => w1-netlink.rst}         |  89 +--
+ MAINTAINERS                                   |   6 +-
+ drivers/hwtracing/coresight/Kconfig           |   2 +-
+ drivers/iio/dummy/iio_simple_dummy.c          |   2 +-
+ drivers/spi/Kconfig                           |   2 +-
+ drivers/spi/spi-butterfly.c                   |   2 +-
+ drivers/spi/spi-lm70llp.c                     |   2 +-
+ fs/jfs/Kconfig                                |   2 +-
+ fs/ufs/Kconfig                                |   2 +-
+ include/linux/platform_data/sc18is602.h       |   2 +-
+ 51 files changed, 1126 insertions(+), 722 deletions(-)
+ rename Documentation/{filesystems/cifs/AUTHORS => admin-guide/cifs/authors.rst} (60%)
+ rename Documentation/{filesystems/cifs/CHANGES => admin-guide/cifs/changes.rst} (91%)
+ create mode 100644 Documentation/admin-guide/cifs/index.rst
+ rename Documentation/{filesystems/cifs/cifs.txt => admin-guide/cifs/introduction.rst} (98%)
+ rename Documentation/{filesystems/cifs/TODO => admin-guide/cifs/todo.rst} (58%)
+ rename Documentation/{filesystems/cifs/README => admin-guide/cifs/usage.rst} (72%)
+ rename Documentation/{filesystems => admin-guide}/cifs/winucase_convert.pl (100%)
+ delete mode 100644 Documentation/devicetree/writing-schema.md
+ create mode 100644 Documentation/devicetree/writing-schema.rst
+ rename Documentation/spi/{butterfly => butterfly.rst} (71%)
+ create mode 100644 Documentation/spi/index.rst
+ rename Documentation/spi/{pxa2xx => pxa2xx.rst} (83%)
+ rename Documentation/spi/{spi-lm70llp => spi-lm70llp.rst} (88%)
+ rename Documentation/spi/{spi-sc18is602 => spi-sc18is602.rst} (97%)
+ rename Documentation/spi/{spi-summary => spi-summary.rst} (93%)
+ rename Documentation/spi/{spidev => spidev.rst} (90%)
+ create mode 100644 Documentation/w1/index.rst
+ rename Documentation/w1/masters/{ds2482 => ds2482.rst} (71%)
+ rename Documentation/w1/masters/{ds2490 => ds2490.rst} (98%)
+ create mode 100644 Documentation/w1/masters/index.rst
+ delete mode 100644 Documentation/w1/masters/mxc-w1
+ create mode 100644 Documentation/w1/masters/mxc-w1.rst
+ rename Documentation/w1/masters/{omap-hdq => omap-hdq.rst} (90%)
+ rename Documentation/w1/masters/{w1-gpio => w1-gpio.rst} (75%)
+ create mode 100644 Documentation/w1/slaves/index.rst
+ rename Documentation/w1/slaves/{w1_ds2406 => w1_ds2406.rst} (96%)
+ rename Documentation/w1/slaves/{w1_ds2413 => w1_ds2413.rst} (81%)
+ delete mode 100644 Documentation/w1/slaves/w1_ds2423
+ create mode 100644 Documentation/w1/slaves/w1_ds2423.rst
+ rename Documentation/w1/slaves/{w1_ds2438 => w1_ds2438.rst} (93%)
+ rename Documentation/w1/slaves/{w1_ds28e04 => w1_ds28e04.rst} (93%)
+ rename Documentation/w1/slaves/{w1_ds28e17 => w1_ds28e17.rst} (88%)
+ rename Documentation/w1/slaves/{w1_therm => w1_therm.rst} (95%)
+ rename Documentation/w1/{w1.generic => w1-generic.rst} (59%)
+ rename Documentation/w1/{w1.netlink => w1-netlink.rst} (77%)
+
 -- 
 2.21.0
+
 
