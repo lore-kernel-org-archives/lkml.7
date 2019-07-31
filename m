@@ -2,104 +2,85 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9103CC32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED50DC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A2F2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564540425;
-	bh=mOgp1gGuB0ZTei6SqT972fot/2M39pzT02+gl9jejbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GDxNjB1rd6g4l269WUgu1l6eMplmrZTXqXQRe3do7ZYflF/NaBA4A49v4rYC+TXTp
-	 t8L/mdSBsOdfQHG36bUk7jTNbjE7kKlzwCn42Uo0q41iLW1r4d8hAsvpKLeueb0YU4
-	 u+sCHfbPs2OkkjftS45wF8hSXca3UyFDEE00tbJ4=
+	by mail.kernel.org (Postfix) with ESMTP id C121A206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="D+dt/Wwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfGaCdo (ORCPT
+        id S1727652AbfGaCeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 22:33:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59454 "EHLO mail.kernel.org"
+        Tue, 30 Jul 2019 22:34:24 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49314 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfGaCdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 22:33:43 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4044F206E0;
-        Wed, 31 Jul 2019 02:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564540423;
-        bh=mOgp1gGuB0ZTei6SqT972fot/2M39pzT02+gl9jejbA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YJ8V0yxJ+fxwpThn3lp89oCV859VEwbAMyhwRys3utwcaQGiEo/xYZpI75BK70cP+
-         xMqnsgC+k+L+5096dJwXEKnTIJi7jmLhvVsR5CxlULbx3QTFzDdmR+TOTmX0suZamq
-         bgjrl/NHjn8IYsE9tlcQtbV77Nqnv5iAtVA8qFAY=
-Date:   Tue, 30 Jul 2019 19:33:41 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: Reminder: 1 open syzbot bug in rtc subsystem
-Message-ID: <20190731023341.GD687@sol.localdomain>
-Mail-Followup-To: Hillf Danton <hdanton@sina.com>,
-        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <20190724025008.GL643@sol.localdomain>
+        id S1725877AbfGaCeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 22:34:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ORAf6J6JbZKYnL2Jvl8xniqzWNCdzdfxgEVUinGXEAA=; b=D+dt/WwidcTZ/t53+rgaOkq7NL
+        uuTAqcAEvNtjquwzbcddkh0S52df2snmx+NSk3oNX8TgILJg2qLGKoBfu3NWtyIl+fWH1hM2jVtFG
+        05DL0YnyRLdP8bi+J9lDTT7GFxohUzQIFvQ76kiIICSGHkl7DvtW0AMaxXdttZmOUss4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hseRV-0003nb-Tx; Wed, 31 Jul 2019 04:34:17 +0200
+Date:   Wed, 31 Jul 2019 04:34:17 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Tao Ren <taoren@fb.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH net-next 2/2] net: phy: broadcom: add 1000Base-X support
+ for BCM54616S
+Message-ID: <20190731023417.GD9523@lunn.ch>
+References: <20190730002549.86824-1-taoren@fb.com>
+ <CA+h21hq1+E6-ScFx425hXwTPTZHTVZbBuAm7RROFZTBOFvD8vQ@mail.gmail.com>
+ <3987251b-9679-dfbe-6e15-f991c2893bac@fb.com>
+ <CA+h21ho1KOGS3WsNBHzfHkpSyE4k5HTE1tV9wUtnkZhjUZGeUw@mail.gmail.com>
+ <e8f85ef3-1216-8efb-a54d-84426234fe82@fb.com>
+ <20190731013636.GC25700@lunn.ch>
+ <885e48dd-df5b-7f08-ef58-557fc2347fa6@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724025008.GL643@sol.localdomain>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <885e48dd-df5b-7f08-ef58-557fc2347fa6@fb.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 03:47:45PM +0800, Hillf Danton wrote:
+> Hi Andrew,
 > 
-> On Tue, 23 Jul 2019 19:50:08 -0700
-> > 
-> > [This email was generated by a script.  Let me know if you have any suggestions
-> > to make it better, or if you want it re-generated with the latest status.]
-> > 
-> > Of the currently open syzbot reports against the upstream kernel, I've manually
-> > marked 1 of them as possibly being a bug in the rtc subsystem.
-> > 
-> > If you believe this bug is no longer valid, please close the syzbot report by
-> > sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-> > original thread, as explained at https://goo.gl/tpsmEJ#status
-> > 
-> > If you believe I misattributed this bug to the rtc subsystem, please let me
-> > know, and if possible forward the report to the correct people or mailing list.
-> > 
-> > Here is the bug:
-> > 
-> > --------------------------------------------------------------------------------
-> > Title:              BUG: workqueue lockup (4)
-> > Last occurred:      40 days ago
-> > Reported:           289 days ago
-> > Branches:           Mainline and others
-> > Dashboard link:     https://syzkaller.appspot.com/bug?id=0041bf1423916e9ae458b08b760e269a33c14960
-> > Original thread:    https://lkml.kernel.org/lkml/0000000000005764090577a27486@google.com/T/#u
-> > 
-> Better if %s=lkml.kernel.org=lore.kernel.org=
-> 
+> The BCM54616S PHY on my machine is connected to a BCM5396 switch chip over backplane (1000Base-KX).
 
-Out of curiosity, is there a reason for this?  They both go to the same place,
-but the reason I used lkml.kernel.org is that some high-profile kernel
-developers (e.g. Andrew Morton) are using it in the "Link: " tag in commits.
-So it seems like lkml.kernel.org is maybe "right" one that is intended to
-always keep working in the future?
+Ah, that is different. So the board is using it for RGMII to 1000Base-KX?
 
-But then I see Greg KH is using lore.kernel.org, so maybe it doesn't matter?
+phy-mode is about the MAC-PHY link. So in this case RGMII.
 
-Maybe lore.kernel.org is better because people won't confuse it with lkml.org
-and refuse to go to it :-)
+There is no DT way to configure the PHY-Switch link. However, it
+sounds like you have the PHY strapped so it is doing 1000BaseX on the
+PHY-Switch link. So do you actually need to configure this?
 
-- Eric
+You report you never see link up? So maybe the problem is actually in
+read_status? When in 1000BaseX mode, do you need to read the link
+status from some other register? The Marvell PHYs use a second page
+for 1000BaseX.
+
+    Andrew
