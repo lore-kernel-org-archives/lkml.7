@@ -2,473 +2,99 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FD5C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7890EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27BEF206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5638C206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:51:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfGaIvD (ORCPT
+        id S1727919AbfGaIvb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:51:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58824 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbfGaIvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:51:02 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CF17C3084025;
-        Wed, 31 Jul 2019 08:51:01 +0000 (UTC)
-Received: from [10.72.12.51] (ovpn-12-51.pek2.redhat.com [10.72.12.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F03B85D6A7;
-        Wed, 31 Jul 2019 08:50:55 +0000 (UTC)
-Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
- with worker
-To:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgg@ziepe.ca
-References: <20190731084655.7024-1-jasowang@redhat.com>
- <20190731084655.7024-8-jasowang@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <cab99dc3-962e-57a2-70f3-73e9f64f3a49@redhat.com>
-Date:   Wed, 31 Jul 2019 16:50:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190731084655.7024-8-jasowang@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 31 Jul 2019 04:51:31 -0400
+Received: from mail.cloudbasesolutions.com ([91.232.152.5]:40862 "EHLO
+        mail.cloudbasesolutions.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726699AbfGaIva (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 04:51:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.cloudbasesolutions.com (Postfix) with ESMTP id AD23C40202;
+        Wed, 31 Jul 2019 11:51:28 +0300 (EEST)
+X-Virus-Scanned: amavisd-new at cloudbasesolutions.com
+Received: from mail.cloudbasesolutions.com ([127.0.0.1])
+        by localhost (mail.cloudbasesolutions.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id UD0F8Q3V59Ke; Wed, 31 Jul 2019 11:51:28 +0300 (EEST)
+Received: from mail.cloudbasesolutions.com (unknown [10.77.78.3])
+        by mail.cloudbasesolutions.com (Postfix) with ESMTP id 1E1923FB0A;
+        Wed, 31 Jul 2019 11:51:28 +0300 (EEST)
+Received: from CBSEX1.cloudbase.local ([10.77.78.3]) by CBSEX1.cloudbase.local
+ ([10.77.78.3]) with mapi id 14.03.0468.000; Wed, 31 Jul 2019 11:51:27 +0300
+From:   Adrian Vladu <avladu@cloudbasesolutions.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     Dexuan Cui <decui@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        "Haiyang Zhang" <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Subject: RE: [PATCH v2] hv: tools: fixed Python pep8/flake8 warnings for
+ lsvmbus
+Thread-Topic: [PATCH v2] hv: tools: fixed Python pep8/flake8 warnings for
+ lsvmbus
+Thread-Index: AQHVBDHgWNITe/5yDUiixarWB+egkaZe6YqAgALjioCAgfdowIAATBUAgADhEgA=
+Date:   Wed, 31 Jul 2019 08:51:26 +0000
+Message-ID: <F5008595B06C564AB347C30B4FDE4BC5596986FB@CBSEX1.cloudbase.local>
+References: <20190506172737.18122-1-avladu@cloudbasesolutions.com>
+ <20190506173331.18906-1-avladu@cloudbasesolutions.com>
+ <PU1P153MB016957AD2B1C356FA1BFB1A8BF310@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190509010941.GT1747@sasha-vm>
+ <F5008595B06C564AB347C30B4FDE4BC559697F85@CBSEX1.cloudbase.local>
+ <20190730222500.GG29162@sasha-vm>
+In-Reply-To: <20190730222500.GG29162@sasha-vm>
+Accept-Language: en-GB, ro-RO, it-IT, en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 31 Jul 2019 08:51:01 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.77.78.1]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Great, thank you!
 
-On 2019/7/31 下午4:46, Jason Wang wrote:
-> We used to use RCU to synchronize MMU notifier with worker. This leads
-> calling synchronize_rcu() in invalidate_range_start(). But on a busy
-> system, there would be many factors that may slow down the
-> synchronize_rcu() which makes it unsuitable to be called in MMU
-> notifier.
->
-> A solution is SRCU but its overhead is obvious with the expensive full
-> memory barrier. Another choice is to use seqlock, but it doesn't
-> provide a synchronization method between readers and writers. The last
-> choice is to use vq mutex, but it need to deal with the worst case
-> that MMU notifier must be blocked and wait for the finish of swap in.
->
-> So this patch switches use a counter to track whether or not the map
-> was used. The counter was increased when vq try to start or finish
-> uses the map. This means, when it was even, we're sure there's no
-> readers and MMU notifier is synchronized. When it was odd, it means
-> there's a reader we need to wait it to be even again then we are
-> synchronized. To avoid full memory barrier, store_release +
-> load_acquire on the counter is used.
-
-
-For reviewers, I try hard to avoid e.g smp_mb(), please double check 
-whether or not this trick work.
-
-Thanks
-
-
->
-> Consider the read critical section is pretty small the synchronization
-> should be done very fast.
->
-> Note the patch lead about 3% PPS dropping.
->
-> Reported-by: Michael S. Tsirkin <mst@redhat.com>
-> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->   drivers/vhost/vhost.c | 145 ++++++++++++++++++++++++++----------------
->   drivers/vhost/vhost.h |   7 +-
->   2 files changed, 94 insertions(+), 58 deletions(-)
->
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index cfc11f9ed9c9..db2c81cb1e90 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -324,17 +324,16 @@ static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
->   
->   	spin_lock(&vq->mmu_lock);
->   	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
-> -		map[i] = rcu_dereference_protected(vq->maps[i],
-> -				  lockdep_is_held(&vq->mmu_lock));
-> +		map[i] = vq->maps[i];
->   		if (map[i]) {
->   			vhost_set_map_dirty(vq, map[i], i);
-> -			rcu_assign_pointer(vq->maps[i], NULL);
-> +			vq->maps[i] = NULL;
->   		}
->   	}
->   	spin_unlock(&vq->mmu_lock);
->   
-> -	/* No need for synchronize_rcu() or kfree_rcu() since we are
-> -	 * serialized with memory accessors (e.g vq mutex held).
-> +	/* No need for synchronization since we are serialized with
-> +	 * memory accessors (e.g vq mutex held).
->   	 */
->   
->   	for (i = 0; i < VHOST_NUM_ADDRS; i++)
-> @@ -362,6 +361,44 @@ static bool vhost_map_range_overlap(struct vhost_uaddr *uaddr,
->   	return !(end < uaddr->uaddr || start > uaddr->uaddr - 1 + uaddr->size);
->   }
->   
-> +static void inline vhost_vq_access_map_begin(struct vhost_virtqueue *vq)
-> +{
-> +	int ref = READ_ONCE(vq->ref);
-> +
-> +	smp_store_release(&vq->ref, ref + 1);
-> +	/* Make sure ref counter is visible before accessing the map */
-> +	smp_load_acquire(&vq->ref);
-> +}
-> +
-> +static void inline vhost_vq_access_map_end(struct vhost_virtqueue *vq)
-> +{
-> +	int ref = READ_ONCE(vq->ref);
-> +
-> +	/* Make sure vq access is done before increasing ref counter */
-> +	smp_store_release(&vq->ref, ref + 1);
-> +}
-> +
-> +static void inline vhost_vq_sync_access(struct vhost_virtqueue *vq)
-> +{
-> +	int ref;
-> +
-> +	/* Make sure map change was done before checking ref counter */
-> +	smp_mb();
-> +
-> +	ref = READ_ONCE(vq->ref);
-> +	if (ref & 0x1) {
-> +		/* When ref change, we are sure no reader can see
-> +		 * previous map */
-> +		while (READ_ONCE(vq->ref) == ref) {
-> +			set_current_state(TASK_RUNNING);
-> +			schedule();
-> +		}
-> +	}
-> +	/* Make sure ref counter was checked before any other
-> +	 * operations that was dene on map. */
-> +	smp_mb();
-> +}
-> +
->   static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
->   				      int index,
->   				      unsigned long start,
-> @@ -376,16 +413,15 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
->   	spin_lock(&vq->mmu_lock);
->   	++vq->invalidate_count;
->   
-> -	map = rcu_dereference_protected(vq->maps[index],
-> -					lockdep_is_held(&vq->mmu_lock));
-> +	map = vq->maps[index];
->   	if (map) {
->   		vhost_set_map_dirty(vq, map, index);
-> -		rcu_assign_pointer(vq->maps[index], NULL);
-> +		vq->maps[index] = NULL;
->   	}
->   	spin_unlock(&vq->mmu_lock);
->   
->   	if (map) {
-> -		synchronize_rcu();
-> +		vhost_vq_sync_access(vq);
->   		vhost_map_unprefetch(map);
->   	}
->   }
-> @@ -457,7 +493,7 @@ static void vhost_init_maps(struct vhost_dev *dev)
->   	for (i = 0; i < dev->nvqs; ++i) {
->   		vq = dev->vqs[i];
->   		for (j = 0; j < VHOST_NUM_ADDRS; j++)
-> -			RCU_INIT_POINTER(vq->maps[j], NULL);
-> +			vq->maps[j] = NULL;
->   	}
->   }
->   #endif
-> @@ -655,6 +691,7 @@ void vhost_dev_init(struct vhost_dev *dev,
->   		vq->indirect = NULL;
->   		vq->heads = NULL;
->   		vq->dev = dev;
-> +		vq->ref = 0;
->   		mutex_init(&vq->mutex);
->   		spin_lock_init(&vq->mmu_lock);
->   		vhost_vq_reset(dev, vq);
-> @@ -921,7 +958,7 @@ static int vhost_map_prefetch(struct vhost_virtqueue *vq,
->   	map->npages = npages;
->   	map->pages = pages;
->   
-> -	rcu_assign_pointer(vq->maps[index], map);
-> +	vq->maps[index] = map;
->   	/* No need for a synchronize_rcu(). This function should be
->   	 * called by dev->worker so we are serialized with all
->   	 * readers.
-> @@ -1216,18 +1253,18 @@ static inline int vhost_put_avail_event(struct vhost_virtqueue *vq)
->   	struct vring_used *used;
->   
->   	if (!vq->iotlb) {
-> -		rcu_read_lock();
-> +		vhost_vq_access_map_begin(vq);
->   
-> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
-> +		map = vq->maps[VHOST_ADDR_USED];
->   		if (likely(map)) {
->   			used = map->addr;
->   			*((__virtio16 *)&used->ring[vq->num]) =
->   				cpu_to_vhost16(vq, vq->avail_idx);
-> -			rcu_read_unlock();
-> +			vhost_vq_access_map_end(vq);
->   			return 0;
->   		}
->   
-> -		rcu_read_unlock();
-> +		vhost_vq_access_map_end(vq);
->   	}
->   #endif
->   
-> @@ -1245,18 +1282,18 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
->   	size_t size;
->   
->   	if (!vq->iotlb) {
-> -		rcu_read_lock();
-> +		vhost_vq_access_map_begin(vq);
->   
-> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
-> +		map = vq->maps[VHOST_ADDR_USED];
->   		if (likely(map)) {
->   			used = map->addr;
->   			size = count * sizeof(*head);
->   			memcpy(used->ring + idx, head, size);
-> -			rcu_read_unlock();
-> +			vhost_vq_access_map_end(vq);
->   			return 0;
->   		}
->   
-> -		rcu_read_unlock();
-> +		vhost_vq_access_map_end(vq);
->   	}
->   #endif
->   
-> @@ -1272,17 +1309,17 @@ static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
->   	struct vring_used *used;
->   
->   	if (!vq->iotlb) {
-> -		rcu_read_lock();
-> +		vhost_vq_access_map_begin(vq);
->   
-> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
-> +		map = vq->maps[VHOST_ADDR_USED];
->   		if (likely(map)) {
->   			used = map->addr;
->   			used->flags = cpu_to_vhost16(vq, vq->used_flags);
-> -			rcu_read_unlock();
-> +			vhost_vq_access_map_end(vq);
->   			return 0;
->   		}
->   
-> -		rcu_read_unlock();
-> +		vhost_vq_access_map_end(vq);
->   	}
->   #endif
->   
-> @@ -1298,17 +1335,17 @@ static inline int vhost_put_used_idx(struct vhost_virtqueue *vq)
->   	struct vring_used *used;
->   
->   	if (!vq->iotlb) {
-> -		rcu_read_lock();
-> +		vhost_vq_access_map_begin(vq);
->   
-> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
-> +		map = vq->maps[VHOST_ADDR_USED];
->   		if (likely(map)) {
->   			used = map->addr;
->   			used->idx = cpu_to_vhost16(vq, vq->last_used_idx);
-> -			rcu_read_unlock();
-> +			vhost_vq_access_map_end(vq);
->   			return 0;
->   		}
->   
-> -		rcu_read_unlock();
-> +		vhost_vq_access_map_end(vq);
->   	}
->   #endif
->   
-> @@ -1362,17 +1399,17 @@ static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
->   	struct vring_avail *avail;
->   
->   	if (!vq->iotlb) {
-> -		rcu_read_lock();
-> +		vhost_vq_access_map_begin(vq);
->   
-> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
-> +		map = vq->maps[VHOST_ADDR_AVAIL];
->   		if (likely(map)) {
->   			avail = map->addr;
->   			*idx = avail->idx;
-> -			rcu_read_unlock();
-> +			vhost_vq_access_map_end(vq);
->   			return 0;
->   		}
->   
-> -		rcu_read_unlock();
-> +		vhost_vq_access_map_end(vq);
->   	}
->   #endif
->   
-> @@ -1387,17 +1424,17 @@ static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
->   	struct vring_avail *avail;
->   
->   	if (!vq->iotlb) {
-> -		rcu_read_lock();
-> +		vhost_vq_access_map_begin(vq);
->   
-> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
-> +		map = vq->maps[VHOST_ADDR_AVAIL];
->   		if (likely(map)) {
->   			avail = map->addr;
->   			*head = avail->ring[idx & (vq->num - 1)];
-> -			rcu_read_unlock();
-> +			vhost_vq_access_map_end(vq);
->   			return 0;
->   		}
->   
-> -		rcu_read_unlock();
-> +		vhost_vq_access_map_end(vq);
->   	}
->   #endif
->   
-> @@ -1413,17 +1450,17 @@ static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
->   	struct vring_avail *avail;
->   
->   	if (!vq->iotlb) {
-> -		rcu_read_lock();
-> +		vhost_vq_access_map_begin(vq);
->   
-> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
-> +		map = vq->maps[VHOST_ADDR_AVAIL];
->   		if (likely(map)) {
->   			avail = map->addr;
->   			*flags = avail->flags;
-> -			rcu_read_unlock();
-> +			vhost_vq_access_map_end(vq);
->   			return 0;
->   		}
->   
-> -		rcu_read_unlock();
-> +		vhost_vq_access_map_end(vq);
->   	}
->   #endif
->   
-> @@ -1438,15 +1475,15 @@ static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
->   	struct vring_avail *avail;
->   
->   	if (!vq->iotlb) {
-> -		rcu_read_lock();
-> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
-> +		vhost_vq_access_map_begin(vq);
-> +		map = vq->maps[VHOST_ADDR_AVAIL];
->   		if (likely(map)) {
->   			avail = map->addr;
->   			*event = (__virtio16)avail->ring[vq->num];
-> -			rcu_read_unlock();
-> +			vhost_vq_access_map_end(vq);
->   			return 0;
->   		}
-> -		rcu_read_unlock();
-> +		vhost_vq_access_map_end(vq);
->   	}
->   #endif
->   
-> @@ -1461,17 +1498,17 @@ static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
->   	struct vring_used *used;
->   
->   	if (!vq->iotlb) {
-> -		rcu_read_lock();
-> +		vhost_vq_access_map_begin(vq);
->   
-> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
-> +		map = vq->maps[VHOST_ADDR_USED];
->   		if (likely(map)) {
->   			used = map->addr;
->   			*idx = used->idx;
-> -			rcu_read_unlock();
-> +			vhost_vq_access_map_end(vq);
->   			return 0;
->   		}
->   
-> -		rcu_read_unlock();
-> +		vhost_vq_access_map_end(vq);
->   	}
->   #endif
->   
-> @@ -1486,17 +1523,17 @@ static inline int vhost_get_desc(struct vhost_virtqueue *vq,
->   	struct vring_desc *d;
->   
->   	if (!vq->iotlb) {
-> -		rcu_read_lock();
-> +		vhost_vq_access_map_begin(vq);
->   
-> -		map = rcu_dereference(vq->maps[VHOST_ADDR_DESC]);
-> +		map = vq->maps[VHOST_ADDR_DESC];
->   		if (likely(map)) {
->   			d = map->addr;
->   			*desc = *(d + idx);
-> -			rcu_read_unlock();
-> +			vhost_vq_access_map_end(vq);
->   			return 0;
->   		}
->   
-> -		rcu_read_unlock();
-> +		vhost_vq_access_map_end(vq);
->   	}
->   #endif
->   
-> @@ -1843,13 +1880,11 @@ static bool iotlb_access_ok(struct vhost_virtqueue *vq,
->   #if VHOST_ARCH_CAN_ACCEL_UACCESS
->   static void vhost_vq_map_prefetch(struct vhost_virtqueue *vq)
->   {
-> -	struct vhost_map __rcu *map;
-> +	struct vhost_map *map;
->   	int i;
->   
->   	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
-> -		rcu_read_lock();
-> -		map = rcu_dereference(vq->maps[i]);
-> -		rcu_read_unlock();
-> +		map = vq->maps[i];
->   		if (unlikely(!map))
->   			vhost_map_prefetch(vq, i);
->   	}
-> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-> index a9a2a93857d2..f9e9558a529d 100644
-> --- a/drivers/vhost/vhost.h
-> +++ b/drivers/vhost/vhost.h
-> @@ -115,16 +115,17 @@ struct vhost_virtqueue {
->   #if VHOST_ARCH_CAN_ACCEL_UACCESS
->   	/* Read by memory accessors, modified by meta data
->   	 * prefetching, MMU notifier and vring ioctl().
-> -	 * Synchonrized through mmu_lock (writers) and RCU (writers
-> -	 * and readers).
-> +	 * Synchonrized through mmu_lock (writers) and ref counters,
-> +	 * see vhost_vq_access_map_begin()/vhost_vq_access_map_end().
->   	 */
-> -	struct vhost_map __rcu *maps[VHOST_NUM_ADDRS];
-> +	struct vhost_map *maps[VHOST_NUM_ADDRS];
->   	/* Read by MMU notifier, modified by vring ioctl(),
->   	 * synchronized through MMU notifier
->   	 * registering/unregistering.
->   	 */
->   	struct vhost_uaddr uaddrs[VHOST_NUM_ADDRS];
->   #endif
-> +	int ref;
->   	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
->   
->   	struct file *kick;
+> -----Original Message-----
+> From: Sasha Levin <sashal@kernel.org>
+> Sent: Wednesday, July 31, 2019 1:25 AM
+> To: Adrian Vladu <avladu@cloudbasesolutions.com>
+> Cc: Dexuan Cui <decui@microsoft.com>; linux-kernel@vger.kernel.org; KY
+> Srinivasan <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
+> Stephen Hemminger <sthemmin@microsoft.com>; Alessandro Pilotti
+> <apilotti@cloudbasesolutions.com>
+> Subject: Re: [PATCH v2] hv: tools: fixed Python pep8/flake8 warnings for
+> lsvmbus
+> 
+> On Tue, Jul 30, 2019 at 02:53:35PM +0000, Adrian Vladu wrote:
+> >Hello,
+> >
+> >There were two patches you have queued for hyperv-fixes a while ago, but I
+> don't see them anymore in the hyperv-fixes tree:
+> >https://lore.kernel.org/patchwork/patch/1070848/
+> >https://lore.kernel.org/patchwork/patch/1070806/
+> >
+> >I have checked them and they can still be applied successfully on the latest
+> master tree.
+> >Please let me know if I need to make some amends to get them merged.
+> 
+> They must have got lost when we dealt with the clocksource mess. I'll
+> re-queue these, thanks!
+> 
+> --
+> Thanks,
+> Sasha
