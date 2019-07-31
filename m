@@ -2,495 +2,469 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F75C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31659C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407CD206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0524C206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:07:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GzLuMAAe"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ro5URSlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbfGaTG4 (ORCPT
+        id S1730766AbfGaTG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:06:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40956 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfGaTGz (ORCPT
+        Wed, 31 Jul 2019 15:06:59 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53404 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfGaTG5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:06:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m8so33123231lji.7
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xgz4zt52D9yXjgYGNg9lfhE7R81F7YpPwzn7+bKCViI=;
-        b=GzLuMAAeuICQp1F249fZmT9F7HY0y3VrOEFOraZJ/hKyEtzldZFmNfBPBXpd1WBzFQ
-         a3lTP1Egy9iPYmsY0UME09DcEOC1YAubO5XvqlVkpDSA2VP8V0BFC0mxXjGpGYJIkLCh
-         sGeontTls2KZJSmPUWrex8RTrWowpfg7LkSdM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xgz4zt52D9yXjgYGNg9lfhE7R81F7YpPwzn7+bKCViI=;
-        b=tqe2x3Fl7y9Tb2jO9d5yv4xYFPeMqO1jvgRdzdLqoWXdobuFSSpN5eqHmUCkoUmVGT
-         tMk85pnwPUrFClkWUkhxk0I0Z0F80JD1ekaDe6/EsnqnewtbvkGuVrW1iRfmW2waUF01
-         yYPr10mfzE0cv9NPTqynWBzcYem9/91fCDHliOZqMq/oi5Otre7r903AVEh0XoJETVWV
-         wMrq1n6UlLMakZU0Ej7pWDNw+IYXLCCQ1Eu/1zbx57jH9dP98CIwta885C+0TD6fNuvB
-         u9vQ/NabCq9PuJKrkYb8YS94cgUH9Qw+xi2NRPvwZgKZ4CODbbbxf2oY3y9bxEUm93qG
-         rI+g==
-X-Gm-Message-State: APjAAAUj7qYnqpQD1MU/XIpFBiHmHpr65Oe0PfmzZ5LaomjWAMysoGN6
-        OAx5qlbbpG5S2vcPz0YMEmEYyQoc7xE=
-X-Google-Smtp-Source: APXvYqwTP3ih6BEJc6CC0Zbi0h8Z5YQ6JSUGMvKVCdWz+MvVPUucqgTSdX7Q921QC3u72aOWJWGWFA==
-X-Received: by 2002:a2e:5d92:: with SMTP id v18mr65739623lje.9.1564600011299;
-        Wed, 31 Jul 2019 12:06:51 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id j14sm14161521ljc.67.2019.07.31.12.06.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 12:06:50 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id r15so31242698lfm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:06:49 -0700 (PDT)
-X-Received: by 2002:ac2:4839:: with SMTP id 25mr6808111lft.79.1564600009080;
- Wed, 31 Jul 2019 12:06:49 -0700 (PDT)
+        Wed, 31 Jul 2019 15:06:57 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6VJ6q94106629;
+        Wed, 31 Jul 2019 14:06:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564600012;
+        bh=bzbiBsyTzX5cmwqp7/4rSsG0MPh+H96yBn7LuYc+vkM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Ro5URSlWOrtWIvjM30iR6JFdDVaBPN1lBcA+7hDknh5MI+6rV5HEk8BQWnY3D/1Dl
+         5tOtRQA8PA2G7VUDYrGYyhpObT01ovhfcivsKwv8rIiiCa9sE6WRVnsnMY/qDtCEmj
+         IBwTm5AJyeFiP9cEdGuGBHPOii0BoxK8c3FgkO2w=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6VJ6qrc068144
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 31 Jul 2019 14:06:52 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 31
+ Jul 2019 14:06:52 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 31 Jul 2019 14:06:52 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6VJ6pDv030640;
+        Wed, 31 Jul 2019 14:06:52 -0500
+Subject: Re: [PATCH v4 6/9] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190725182818.29556-1-dmurphy@ti.com>
+ <20190725182818.29556-7-dmurphy@ti.com>
+ <fa74cc04-61fc-161f-2ce1-6de5921fce2f@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f83b0f42-a310-a800-1b78-d5fb89516114@ti.com>
+Date:   Wed, 31 Jul 2019 14:06:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190618091724.28232-1-georgi.djakov@linaro.org>
- <20190618091724.28232-3-georgi.djakov@linaro.org> <CAE=gft7=ZbK3ARtWyv8n_hWJ4kuXRs0UA0QsE420pqL8R1quUQ@mail.gmail.com>
- <05d9fea0-c040-d609-38bf-11cddbe6aa4d@codeaurora.org> <CAE=gft4pQXyCdRsMkN7Xs-R5HU=2baYhCPqSsw=uqOfT+hTJDg@mail.gmail.com>
- <1fa30512-a0aa-dcc1-4160-778100a03e7c@codeaurora.org> <CAE=gft5_ZNUd7WC3c6t59Dwg32jeapvPFLxnESt143SaLqdO3g@mail.gmail.com>
- <37f56f17-9988-522f-f66c-2865954a52d0@codeaurora.org>
-In-Reply-To: <37f56f17-9988-522f-f66c-2865954a52d0@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 31 Jul 2019 12:06:11 -0700
-X-Gmail-Original-Message-ID: <CAE=gft78_zcQT=yxpnPhE=1S-pefqrSL6+cPdG8Sm9Utuza85A@mail.gmail.com>
-Message-ID: <CAE=gft78_zcQT=yxpnPhE=1S-pefqrSL6+cPdG8Sm9Utuza85A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] interconnect: qcom: Add tagging and wake/sleep
- support for sdm845
-To:     David Dai <daidavid1@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        amit.kucheria@linaro.org, Doug Anderson <dianders@chromium.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        grahamr@qti.qualcomm.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <fa74cc04-61fc-161f-2ce1-6de5921fce2f@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 5:37 PM David Dai <daidavid1@codeaurora.org> wrote:
+Jacek
+
+On 7/29/19 3:50 PM, Jacek Anaszewski wrote:
+> Dan,
 >
+> On 7/25/19 8:28 PM, Dan Murphy wrote:
+>> Introduce a multicolor class that groups colored LEDs
+>> within a LED node.
+>>
+>> The framework allows for dynamically setting individual LEDs
+>> or setting brightness levels of LEDs and updating them virtually
+>> simultaneously.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/leds/Kconfig                 |  10 +
+>>   drivers/leds/Makefile                |   1 +
+>>   drivers/leds/led-class-multicolor.c  | 402 +++++++++++++++++++++++++++
+>>   include/linux/led-class-multicolor.h |  96 +++++++
+>>   4 files changed, 509 insertions(+)
+>>   create mode 100644 drivers/leds/led-class-multicolor.c
+>>   create mode 100644 include/linux/led-class-multicolor.h
+>>
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index f7a3dd7ecf3d..7f780d5b8490 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -30,6 +30,16 @@ config LEDS_CLASS_FLASH
+>>   	  for the flash related features of a LED device. It can be built
+>>   	  as a module.
+>>   
+>> +config LEDS_CLASS_MULTI_COLOR
+>> +	tristate "LED Mulit Color LED Class Support"
+>> +	depends on LEDS_CLASS
+>> +	help
+>> +	  This option enables the multicolor LED sysfs class in /sys/class/leds.
+>> +	  It wraps LED Class and adds multicolor LED specific sysfs attributes
+> s/Class/class/
 >
-> On 7/30/2019 3:54 PM, Evan Green wrote:
-> > On Thu, Jul 18, 2019 at 10:59 AM David Dai <daidavid1@codeaurora.org> wrote:
-> >> On 7/16/2019 1:15 PM, Evan Green wrote:
-> >>> On Mon, Jul 15, 2019 at 4:34 PM David Dai <daidavid1@codeaurora.org> wrote:
-> >>>> Hi Evan,
-> >>>>
-> >>>> Thanks for the continued help in reviewing these patches!
-> >>> No problem. I want to do more, but haven't found time to do the
-> >>> prerequisite research before jumping into some of the other
-> >>> discussions yet.
-> >>>
-> >>>> On 7/11/2019 10:06 AM, Evan Green wrote:
-> >>>>> Hi Georgi and David,
-> >>>>>
-> >>>>> On Tue, Jun 18, 2019 at 2:17 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
-> >>>>>> From: David Dai <daidavid1@codeaurora.org>
-> >>>>>>
-> >>>>>> Add support for wake and sleep commands by using a tag to indicate
-> >>>>>> whether or not the aggregate and set requests fall into execution
-> >>>>>> state specific bucket.
-> >>>>>>
-> >>>>>> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> >>>>>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> >>>>>> ---
-> >>>>>>     drivers/interconnect/qcom/sdm845.c | 129 ++++++++++++++++++++++-------
-> >>>>>>     1 file changed, 98 insertions(+), 31 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-> >>>>>> index fb526004c82e..c100aab39415 100644
-> >>>>>> --- a/drivers/interconnect/qcom/sdm845.c
-> >>>>>> +++ b/drivers/interconnect/qcom/sdm845.c
-> >>>>>> @@ -66,6 +66,17 @@ struct bcm_db {
-> >>>>>>     #define SDM845_MAX_BCM_PER_NODE        2
-> >>>>>>     #define SDM845_MAX_VCD         10
-> >>>>>>
-> >>>>>> +#define QCOM_ICC_BUCKET_AMC            0
-> >>>>> What is AMC again? Is it the "right now" bucket? Maybe a comment on
-> >>>>> the meaning of this bucket would be helpful.
-> >>>> That's correct. Will add a comment for this.
-> >>>>>> +#define QCOM_ICC_BUCKET_WAKE           1
-> >>>>>> +#define QCOM_ICC_BUCKET_SLEEP          2
-> >>>>>> +#define QCOM_ICC_NUM_BUCKETS           3
-> >>>>>> +#define QCOM_ICC_TAG_AMC               BIT(QCOM_ICC_BUCKET_AMC)
-> >>>>>> +#define QCOM_ICC_TAG_WAKE              BIT(QCOM_ICC_BUCKET_WAKE)
-> >>>>>> +#define QCOM_ICC_TAG_SLEEP             BIT(QCOM_ICC_BUCKET_SLEEP)
-> >>>>>> +#define QCOM_ICC_TAG_ACTIVE_ONLY       (QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
-> >>>>>> +#define QCOM_ICC_TAG_ALWAYS            (QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
-> >>>>>> +                                        QCOM_ICC_TAG_SLEEP)
-> >>>>>> +
-> >>>>>>     /**
-> >>>>>>      * struct qcom_icc_node - Qualcomm specific interconnect nodes
-> >>>>>>      * @name: the node name used in debugfs
-> >>>>>> @@ -75,7 +86,9 @@ struct bcm_db {
-> >>>>>>      * @channels: num of channels at this node
-> >>>>>>      * @buswidth: width of the interconnect between a node and the bus
-> >>>>>>      * @sum_avg: current sum aggregate value of all avg bw requests
-> >>>>>> + * @sum_avg_cached: previous sum aggregate value of all avg bw requests
-> >>>>>>      * @max_peak: current max aggregate value of all peak bw requests
-> >>>>>> + * @max_peak_cached: previous max aggregate value of all peak bw requests
-> >>>>>>      * @bcms: list of bcms associated with this logical node
-> >>>>>>      * @num_bcms: num of @bcms
-> >>>>>>      */
-> >>>>>> @@ -86,8 +99,10 @@ struct qcom_icc_node {
-> >>>>>>            u16 num_links;
-> >>>>>>            u16 channels;
-> >>>>>>            u16 buswidth;
-> >>>>>> -       u64 sum_avg;
-> >>>>>> -       u64 max_peak;
-> >>>>>> +       u64 sum_avg[QCOM_ICC_NUM_BUCKETS];
-> >>>>>> +       u64 sum_avg_cached[QCOM_ICC_NUM_BUCKETS];
-> >>>>>> +       u64 max_peak[QCOM_ICC_NUM_BUCKETS];
-> >>>>>> +       u64 max_peak_cached[QCOM_ICC_NUM_BUCKETS];
-> >>>>>>            struct qcom_icc_bcm *bcms[SDM845_MAX_BCM_PER_NODE];
-> >>>>>>            size_t num_bcms;
-> >>>>>>     };
-> >>>>>> @@ -112,8 +127,8 @@ struct qcom_icc_bcm {
-> >>>>>>            const char *name;
-> >>>>>>            u32 type;
-> >>>>>>            u32 addr;
-> >>>>>> -       u64 vote_x;
-> >>>>>> -       u64 vote_y;
-> >>>>>> +       u64 vote_x[QCOM_ICC_NUM_BUCKETS];
-> >>>>>> +       u64 vote_y[QCOM_ICC_NUM_BUCKETS];
-> >>>>>>            bool dirty;
-> >>>>>>            bool keepalive;
-> >>>>>>            struct bcm_db aux_data;
-> >>>>>> @@ -555,7 +570,7 @@ inline void tcs_cmd_gen(struct tcs_cmd *cmd, u64 vote_x, u64 vote_y,
-> >>>>>>                    cmd->wait = true;
-> >>>>>>     }
-> >>>>>>
-> >>>>>> -static void tcs_list_gen(struct list_head *bcm_list,
-> >>>>>> +static void tcs_list_gen(struct list_head *bcm_list, int bucket,
-> >>>>>>                             struct tcs_cmd tcs_list[SDM845_MAX_VCD],
-> >>>>>>                             int n[SDM845_MAX_VCD])
-> >>>>>>     {
-> >>>>>> @@ -573,8 +588,8 @@ static void tcs_list_gen(struct list_head *bcm_list,
-> >>>>>>                            commit = true;
-> >>>>>>                            cur_vcd_size = 0;
-> >>>>>>                    }
-> >>>>>> -               tcs_cmd_gen(&tcs_list[idx], bcm->vote_x, bcm->vote_y,
-> >>>>>> -                           bcm->addr, commit);
-> >>>>>> +               tcs_cmd_gen(&tcs_list[idx], bcm->vote_x[bucket],
-> >>>>>> +                           bcm->vote_y[bucket], bcm->addr, commit);
-> >>>>>>                    idx++;
-> >>>>>>                    n[batch]++;
-> >>>>>>                    /*
-> >>>>>> @@ -595,32 +610,39 @@ static void tcs_list_gen(struct list_head *bcm_list,
-> >>>>>>
-> >>>>>>     static void bcm_aggregate(struct qcom_icc_bcm *bcm)
-> >>>>>>     {
-> >>>>>> -       size_t i;
-> >>>>>> -       u64 agg_avg = 0;
-> >>>>>> -       u64 agg_peak = 0;
-> >>>>>> +       size_t i, bucket;
-> >>>>>> +       u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
-> >>>>>> +       u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
-> >>>>>>            u64 temp;
-> >>>>>>
-> >>>>>> -       for (i = 0; i < bcm->num_nodes; i++) {
-> >>>>>> -               temp = bcm->nodes[i]->sum_avg * bcm->aux_data.width;
-> >>>>>> -               do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
-> >>>>>> -               agg_avg = max(agg_avg, temp);
-> >>>>>> +       for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
-> >>>>>> +               for (i = 0; i < bcm->num_nodes; i++) {
-> >>>>>> +                       temp = bcm->nodes[i]->sum_avg_cached[bucket] * bcm->aux_data.width;
-> >>>>>> +                       do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
-> >>>>>> +                       agg_avg[bucket] = max(agg_avg[bucket], temp);
-> >>>>>>
-> >>>>>> -               temp = bcm->nodes[i]->max_peak * bcm->aux_data.width;
-> >>>>>> -               do_div(temp, bcm->nodes[i]->buswidth);
-> >>>>> Why is it that this one doesn't have the multiply by
-> >>>>> bcm->nodes[i]->channels again? I can't recall if there was a reason.
-> >>>>> If it's correct maybe it deserves a comment.
-> >>>> I think the rationale behind this is generally for consumers to target a
-> >>>> certain minimum threshold to satisfy some structural latency
-> >>>> requirements as opposed to strictly throughput, and it may be easier for
-> >>>> consumers to reuse certain values to support hitting some minimum NoC
-> >>>> frequencies without having to be concerned with the number of channels
-> >>>> that may change from platform to platform.
-> >>> I was mostly pointing out that sum_avg seems to have the multiply, but
-> >>> max_peak does not. I would have expected those two things to be of the
-> >>> same units, and get the same treatment. Maybe the hardware is taking
-> >>> in different final units for that field, one that is per-channel and
-> >>> one that isn't?
-> >> The hardware isn't treating the values differently. I couldn't find any
-> >> justification other than the intuition mentioned above for the ease of
-> >> voting from the consumer perspective. The consumer would know that this
-> >> peak_bw value results in some floor performance from the system to
-> >> satisfy its latency requirements. The same approach would work if we
-> >> accounted for the number of channels as well, but given that channels
-> >> may vary from platform to platform or even on the same platform that
-> >> shares multiple channel configurations(DDR), it can be difficult for
-> >> consumers to keep track of and have to adjust their votes constantly(to
-> >> try to hit some frequency/latency requirement, this intuition doesn't
-> >> apply for avg_bw since we're concerned with throughput in that case).
-> >>
-> >>>>>> -               agg_peak = max(agg_peak, temp);
-> >>>>>> -       }
-> >>>>>> +                       temp = bcm->nodes[i]->max_peak_cached[bucket] * bcm->aux_data.width;
-> >>>>>> +                       do_div(temp, bcm->nodes[i]->buswidth);
-> >>>>>> +                       agg_peak[bucket] = max(agg_peak[bucket], temp);
-> >>>>>>
-> >>>>>> -       temp = agg_avg * 1000ULL;
-> >>>>>> -       do_div(temp, bcm->aux_data.unit);
-> >>>>>> -       bcm->vote_x = temp;
-> >>>>>> +                       bcm->nodes[i]->sum_avg[bucket] = 0;
-> >>>>>> +                       bcm->nodes[i]->max_peak[bucket] = 0;
-> >>>>> I don't understand the sum_avg vs sum_avg_cached. Here's what I understand:
-> >>>>> 1. qcom_icc_aggregate() does the math from the incoming values on
-> >>>>> sum_avg, and then clobbers sum_avg_cached with those values.
-> >>>>> 2. bcm_aggregate() uses sum_avg_cached in its calculations, then clears sum_avg.
-> >>>>>
-> >>>>> But I don't get why that's needed. Why not just have sum_avg? Wouldn't
-> >>>>> it work the same? Ok, it wouldn't if you ended up calling
-> >>>>> bcm_aggregate() multiple times on the same bcm. But you have a dirty
-> >>>>> flag that prevents this from happening. So I think it's safe to remove
-> >>>>> the cached arrays, and just clear out the sum_avg when you aggregate.
-> >>>> You are correct in that the dirty flag would prevent another repeat of
-> >>>> the bcm_aggregate() call in the same icc_set request. But consider a
-> >>>> following icc_set request on a different node that shares the same BCM,
-> >>>> the next bcm_aggregate() would result in an incorrect aggregate sum_avg
-> >>>> for the BCM since the avg_sum from the previous node(from the previous
-> >>>> icc_set) was cleared out. We need a way to retain the current state of
-> >>>> all nodes to accurately aggregate the bw values for the BCM.
-> >>> I don't get it. qcom_icc_aggregate() clobbers sum_avg_cached. So
-> >>> they're only ever a) equal, like after qcom_icc_aggregate(), or b)
-> >>> sum_avg is zeroed, and sum_avg_cached is its old value. A new
-> >>> icc_set_bw() would call aggregate_requests(), which would clobber
-> >>> sum_avg_cached to sum_avg for every BCM involved. Then the core would
-> >>> call apply_constraints(), then qcom_icc_set(), which would use
-> >>> sum_avg_cached, and clear out sum_avg, being sure with the dirty flag
-> >>> that bcm_aggregate() is only called once per BCM. This all happens
-> >>> under the mutex held in the core. A new request would start the whole
-> >>> thing over, since sum_avg is cleared. It seems to me that flow would
-> >>> work the same with one array as it does with two. Maybe you can walk
-> >>> me through a scenario?
-> >>> -Evan
-> >> Let's walk through the scenario you've just described with the
-> >> assumption that there's only one avg_sum value per node with two
-> >> icc_set_bw() requests on two different nodes(say 2MB for node 1 and 1MB
-> >> for node 2) under the same BCM(say BCM A). The first
-> >> qcom_icc_aggregate() aggregates to a 2MB avg_sum at the node1 followed
-> >> by apply_constraints(), qcom_icc_set(), bcm_aggregate() which causes BCM
-> >> A to aggregate to max(node1->avg_sum, node2->avg_sum) and reach a vote_x
-> >> of 2MB(for simplicity let's ignore unit). We then clear out
-> >> node1->avg_sum before we start the next icc_set_bw(). In the following
-> >> icc_set_bw(), the qcom_icc_aggregate() aggregates to 1MB in node2
-> >> followed by apply_constraints(), qcom_icc_set(), bcm_aggregate(), but
-> >> now incorrectly aggregates BCM A to 1MB by looking at
-> >> max(node1->avg_sum, node2->avg_sum) because node1->avg_sum was cleared
-> >> out when in reality BCM A should have a vote_x value of 2MB at this
-> >> point. The subsequent bcm_aggregate do not re-aggregate all of the
-> >> requests for each of its nodes, but assumes that the aggregated results
-> >> at the nodes are correct.
-> > Ah, I finally get it. Thanks for the detailed explanation. It's pretty
-> > confusing that there are essentially two connected graphs laid on top
-> > of each other, one graph consisting of nodes the framework deals with,
-> > and another graph that groups those nodes together into BCMs. I was
-> > failing to understand that bcm_aggregate loops over nodes that have
-> > nothing to do with the current request, and so it needs to remember
-> > the old totals from former requests. You've got the two arrays
-> > basically to differentiate between "add together all requests for this
-> > node", and "max all nodes into a BCM", since you need to reset sum_avg
-> > at the start of the first call to qcom_icc_aggregate().
-> Well it's not really two graphs since the BCMs aren't really connected
-> to each other, they only have association with some groups of physical
-> nodes that share a clock domain(There's some nuances here, but let's
-> assume for the sake of simplicity). Their only job is to aggregate to
-> some threshold value and select a performance point and they don't
-> contain any information about the connectivity of the nodes.
-
-Right ok, I see.
-
-> > I had suggested a callback in the core earlier to tell the providers
-> > "I'm about to start aggregating on these nodes", which would have
-> > allowed you to clear sum_avg in that callback and reduce down to one
-> > array. IMO that's a lot easier to understand than these double arrays,
-> > but maybe it's just me that gets confused.
-> I do admit looking at this is somewhat confusing. I'm not totally
-> against the idea of adding another callback in the framework, maybe we
-> can re-evaluate this when there are other providers using the
-> interconnect framework. I'd prefer to have the justification of needing
-> additional ops in the core if somehow there's some hardware out there
-> that dictates that we need some pre or post aggregation stage as opposed
-> to easier book keeping? Though I do like the idea of reducing complexity
-> overall, any thoughts on this Georgi?
-
-Sure. I suppose any other SoC that does this same grouping thing in
-the hardware will end up duplicating this same complexity. We'll see
-if anybody has anything like this. It also might end up being useful
-even if it's just for QC SoCs if we find ourselves copy/pasting a lot
-of this logic in sdm845.c for sdm-next.c. Generally we should aim to
-keep the providers as dumb as we can, but I'm fine waiting until
-there's something to refactor down.
-
-> >
-> > Why do we bother with the individual nodes at all, why don't we just
-> > build a graph out of the BCMs themselves and pass that to the
-> > framework? I guess you can't do that because of .channels and
-> > .bus_width, you wouldn't know what to multiply/divide by to translate
-> > to a vote value? Hm... it would be great to make this simpler, but I'm
-> > out of suggestions for now.
+> I'll need to fix it in LED flash class entry too.
 >
-> I appreciate the thought, but not only do the nodes provide the
-> width/channel, they provide all the connectivity data and an accurate
-> representation of the NoC topology. There's no way to aggregate the
-> nodes and the paths properly if we lose out on the granularity that the
-> current graph provides(Imagine the example of two nodes on some mutually
-> exclusive path under the same BCM again using avg_bw, 1MBps on node1 and
-> 1MBps node2 should result in an aggregate BCM node of 1MBps since they
-> physically don't share the same port where as if we clobbered the nodes
-> together and represent them under a single BCM, it would suggest that
-> they share the same physical port and aggregate 2MBps when in reality
-> they don't need to be since they are parallel).
+>> +	  and kernel internal API to it. You'll need this to provide support
+>> +	  for multicolor LEDs that are grouped together. This class is not
+>> +	  intended for single color LEDs. It can be built as a module.
+>> +
+>>   config LEDS_BRIGHTNESS_HW_CHANGED
+>>   	bool "LED Class brightness_hw_changed attribute support"
+>>   	depends on LEDS_CLASS
+>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>> index 41fb073a39c1..897b810257dd 100644
+>> --- a/drivers/leds/Makefile
+>> +++ b/drivers/leds/Makefile
+>> @@ -4,6 +4,7 @@
+>>   obj-$(CONFIG_NEW_LEDS)			+= led-core.o
+>>   obj-$(CONFIG_LEDS_CLASS)		+= led-class.o
+>>   obj-$(CONFIG_LEDS_CLASS_FLASH)		+= led-class-flash.o
+>> +obj-$(CONFIG_LEDS_CLASS_MULTI_COLOR)	+= led-class-multicolor.o
+>>   obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
+>>   
+>>   # LED Platform Drivers
+>> diff --git a/drivers/leds/led-class-multicolor.c b/drivers/leds/led-class-multicolor.c
+>> new file mode 100644
+>> index 000000000000..123443e6d3eb
+>> --- /dev/null
+>> +++ b/drivers/leds/led-class-multicolor.c
+>> @@ -0,0 +1,402 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// LED Multi Color class interface
+>> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/init.h>
+>> +#include <linux/led-class-multicolor.h>
+>> +#include <linux/module.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/uaccess.h>
+>> +
+>> +#include "leds.h"
+>> +
+>> +struct led_classdev_mc_priv {
+>> +	struct led_classdev_mc *mcled_cdev;
+>> +
+>> +	struct device_attribute max_intensity_attr;
+>> +	struct device_attribute intensity_attr;
+>> +	struct device_attribute color_index_attr;
+>> +
+>> +	enum led_brightness max_intensity;
+>> +	enum led_brightness intensity;
+>> +	enum led_brightness new_intensity;
+>> +
+>> +	struct list_head list;
+>> +
+>> +	int color_id;
+>> +	int color_index;
+> We need to differentiate both more meaningfully.
+> Maybe led_color_id and cluster_color_id?
 
-Oh right, that makes sense. I'm on board.
--Evan
+Thats looks better.
+
+
+>> +};
+>> +static int calculate_brightness(int brightness, int intensity, int max_intensity)
+> How about led_mc_calculate_brightness ?
+
+I was trying to keep the function name short for this to keep it the LoC 
+boundary.
+
+But I can change it.
 
 >
-> > -Evan
-> >
-> >>>>>> +               }
-> >>>>>>
-> >>>>>> -       temp = agg_peak * 1000ULL;
-> >>>>>> -       do_div(temp, bcm->aux_data.unit);
-> >>>>>> -       bcm->vote_y = temp;
-> >>>>>> +               temp = agg_avg[bucket] * 1000ULL;
-> >>>>>> +               do_div(temp, bcm->aux_data.unit);
-> >>>>>> +               bcm->vote_x[bucket] = temp;
-> >>>>>>
-> >>>>>> -       if (bcm->keepalive && bcm->vote_x == 0 && bcm->vote_y == 0) {
-> >>>>>> -               bcm->vote_x = 1;
-> >>>>>> -               bcm->vote_y = 1;
-> >>>>>> +               temp = agg_peak[bucket] * 1000ULL;
-> >>>>>> +               do_div(temp, bcm->aux_data.unit);
-> >>>>>> +               bcm->vote_y[bucket] = temp;
-> >>>>>> +       }
-> >>>>>> +
-> >>>>>> +       if (bcm->keepalive && bcm->vote_x[0] == 0 && bcm->vote_y[0] == 0) {
-> >>>>>> +               bcm->vote_x[QCOM_ICC_BUCKET_AMC] = 1;
-> >>>>>> +               bcm->vote_x[QCOM_ICC_BUCKET_WAKE] = 1;
-> >>>>>> +               bcm->vote_y[QCOM_ICC_BUCKET_AMC] = 1;
-> >>>>>> +               bcm->vote_y[QCOM_ICC_BUCKET_WAKE] = 1;
-> >>>>>>            }
-> >>>>>>
-> >>>>>>            bcm->dirty = false;
-> >>>>>> @@ -631,15 +653,25 @@ static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-> >>>>>>     {
-> >>>>>>            size_t i;
-> >>>>>>            struct qcom_icc_node *qn;
-> >>>>>> +       unsigned long tag_word = (unsigned long)tag;
-> >>>>>>
-> >>>>>>            qn = node->data;
-> >>>>>>
-> >>>>>> +       if (!tag)
-> >>>>>> +               tag_word = QCOM_ICC_TAG_ALWAYS;
-> >>>>>> +
-> >>>>>> +       for (i = 0; i < QCOM_ICC_NUM_BUCKETS; i++) {
-> >>>>>> +               if (test_bit(i, &tag_word)) {
-> >>>>> I guess all this extra business with tag_word and casting is so that
-> >>>>> you can use test_bit, which is presumably a tiny bit faster? Does this
-> >>>>> actually make a measurable difference? Maybe in the name of simplicity
-> >>>>> we just do if (tag & BIT(i)), and then optimize if we find that
-> >>>>> conditional to be a hotspot?
-> >>>> Using (tag & BIT(i)) as opposed to test_bit seems reasonable to me.
-> >>>>>> +                       qn->sum_avg[i] += avg_bw;
-> >>>>>> +                       qn->max_peak[i] = max_t(u32, qn->max_peak[i], peak_bw);
-> >>>>>> +                       qn->sum_avg_cached[i] = qn->sum_avg[i];
-> >>>>>> +                       qn->max_peak_cached[i] = qn->max_peak[i];
-> >>>>>> +               }
-> >>>>>> +       }
-> >>>>>> +
-> >>>>>>            *agg_avg += avg_bw;
-> >>>>>>            *agg_peak = max_t(u32, *agg_peak, peak_bw);
-> >>>>>>
-> >>>>>> -       qn->sum_avg = *agg_avg;
-> >>>>>> -       qn->max_peak = *agg_peak;
-> >>>>>> -
-> >>>>>>            for (i = 0; i < qn->num_bcms; i++)
-> >>>>>>                    qn->bcms[i]->dirty = true;
-> >>>>>>
-> >>>>>> @@ -675,7 +707,7 @@ static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> >>>>>>             * Construct the command list based on a pre ordered list of BCMs
-> >>>>>>             * based on VCD.
-> >>>>>>             */
-> >>>>>> -       tcs_list_gen(&commit_list, cmds, commit_idx);
-> >>>>>> +       tcs_list_gen(&commit_list, QCOM_ICC_BUCKET_AMC, cmds, commit_idx);
-> >>>>>>
-> >>>>>>            if (!commit_idx[0])
-> >>>>>>                    return ret;
-> >>>>>> @@ -693,6 +725,41 @@ static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> >>>>>>                    return ret;
-> >>>>>>            }
-> >>>>>>
-> >>>>>> +       INIT_LIST_HEAD(&commit_list);
-> >>>>>> +
-> >>>>>> +       for (i = 0; i < qp->num_bcms; i++) {
-> >>>>>> +               /*
-> >>>>>> +                * Only generate WAKE and SLEEP commands if a resource's
-> >>>>>> +                * requirements change as the execution environment transitions
-> >>>>>> +                * between different power states.
-> >>>>>> +                */
-> >>>>>> +               if (qp->bcms[i]->vote_x[QCOM_ICC_BUCKET_WAKE] !=
-> >>>>>> +                   qp->bcms[i]->vote_x[QCOM_ICC_BUCKET_SLEEP] ||
-> >>>>>> +                   qp->bcms[i]->vote_y[QCOM_ICC_BUCKET_WAKE] !=
-> >>>>>> +                   qp->bcms[i]->vote_y[QCOM_ICC_BUCKET_SLEEP]) {
-> >>>>>> +                       list_add_tail(&qp->bcms[i]->list, &commit_list);
-> >>>>>> +               }
-> >>>>>> +       }
-> >>>>>> +
-> >>>>>> +       if (list_empty(&commit_list))
-> >>>>>> +               return ret;
-> >>>>>> +
-> >>>>>> +       tcs_list_gen(&commit_list, QCOM_ICC_BUCKET_WAKE, cmds, commit_idx);
-> >>>>>> +
-> >>>>>> +       ret = rpmh_write_batch(qp->dev, RPMH_WAKE_ONLY_STATE, cmds, commit_idx);
-> >>>>>> +       if (ret) {
-> >>>>>> +               pr_err("Error sending WAKE RPMH requests (%d)\n", ret);
-> >>>>>> +               return ret;
-> >>>>>> +       }
-> >>>>>> +
-> >>>>>> +       tcs_list_gen(&commit_list, QCOM_ICC_BUCKET_SLEEP, cmds, commit_idx);
-> >>>>>> +
-> >>>>>> +       ret = rpmh_write_batch(qp->dev, RPMH_SLEEP_STATE, cmds, commit_idx);
-> >>>>>> +       if (ret) {
-> >>>>>> +               pr_err("Error sending SLEEP RPMH requests (%d)\n", ret);
-> >>>>>> +               return ret;
-> >>>>>> +       }
-> >>>>>> +
-> >>>>>>            return ret;
-> >>>>>>     }
-> >>>>>>
-> >>>> --
-> >>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> >>>> a Linux Foundation Collaborative Project
-> >>>>
-> >> --
-> >> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> >> a Linux Foundation Collaborative Project
-> >>
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+>> +{
+>> +	if (brightness && intensity && max_intensity)
+>> +		return brightness * intensity / max_intensity;
+>> +
+>> +	return LED_OFF;
+>> +}
+>> +
+>> +void set_cluster_brightness(struct led_classdev_mc *mcled_cdev,
+>> +			    enum led_brightness brightness, int adj_value[])
+> s/set_cluster/led_mc_set_cluster/
 >
+> And I think adj_value is not telling too much. How about:
+>
+> s/adj_value/color_intensity/
+
+Ack
+
+...
+
+Ack
+
+
+>
+>> +{
+>> +	struct led_classdev_mc_data *data = mcled_cdev->data;
+>> +	struct led_classdev_mc_priv *priv;
+>> +	int i = 0;
+>> +
+>> +	list_for_each_entry(priv, &data->color_list, list) {
+>> +		adj_value[i] = calculate_brightness(brightness, priv->intensity,
+>> +						    priv->max_intensity);
+>> +		i++;
+>> +	}
+>> +
+>> +	data->cluster_brightness = brightness;
+> This property duplicates brightness stored in struct led_classdev and
+> thus it is redundant.
+
+Ack
+
+
+>> +}
+>> +
+>> +void get_cluster_brightness(struct led_classdev_mc *mcled_cdev,
+>> +				  int brightness_val[])
+> s/get_cluster/led_mc_get_cluster/
+>
+> s/brightness_val/color_intensity/
+
+Ack
+
+Ack
+
+
+>
+>> +{
+>> +	struct led_classdev_mc_data *data = mcled_cdev->data;
+>> +	struct led_classdev_mc_priv *priv;
+>> +	int i = 0;
+>> +
+>> +	list_for_each_entry(priv, &data->color_list, list) {
+>> +		brightness_val[i] = priv->intensity;
+>> +		i++;
+>> +	}
+>> +}
+>> +
+>> +static ssize_t color_index_show(struct device *dev,
+>> +				   struct device_attribute *color_index_attr,
+>> +				   char *buf)
+>> +{
+>> +	struct led_classdev_mc_priv *priv = container_of(color_index_attr,
+>> +						    struct led_classdev_mc_priv,
+>> +						      color_index_attr);
+>> +
+>> +	return sprintf(buf, "%d\n", priv->color_id);
+>> +}
+>> +
+>> +static ssize_t color_mix_store(struct device *dev,
+>> +				struct device_attribute *color_mix_attr,
+>> +				const char *buf, size_t size)
+>> +{
+>> +	struct led_classdev_mc_data *data = container_of(color_mix_attr,
+>> +						    struct led_classdev_mc_data,
+>> +						      color_mix_attr);
+>> +	struct led_classdev_mc *mcled_cdev = data->mcled_cdev;
+>> +	const struct led_multicolor_ops *ops = mcled_cdev->ops;
+>> +	struct led_classdev_mc_priv *priv;
+>> +	unsigned int value[LED_COLOR_ID_MAX];
+>> +	int adj_brightness;
+>> +	int nrchars, offset = 0;
+>> +	unsigned int i;
+>> +	int ret;
+>> +
+>> +	for (i = 0; i < mcled_cdev->num_leds; i++) {
+>> +		ret = sscanf(buf + offset, "%i%n", &value[i], &nrchars);
+>> +		if (ret != 1)
+>> +			break;
+>> +
+>> +		offset += nrchars;
+>> +	}
+>> +
+>> +	if (i != mcled_cdev->num_leds) {
+> Shouldn't we return error if i != mcled_cdev->num_leds - 1 ?
+> How can we know which color the value will be for if there is less
+> values passed than the total number of colors in the cluster?
+
+Ok so during my testing if I had the monochrome array as <R G B>
+
+When I wrote only <R G> and no blue I was getting random values in the 
+array for the
+
+remaining indexes and the blue LED would randomly turn on/off at 
+different levels.
+
+So if the user passes in less then expected only ids with data will be 
+written and the other colors will be turned off by the for loop below.
+
+
+>
+>> +		for (; i < LED_COLOR_ID_MAX; i++)
+>> +			value[i] = 0;
+> What use case is it for?
+
+See above but this should be
+
+for (; i < mcled_cdev->num_leds; i++)
+
+
+>
+>> +	}
+>> +
+>> +	list_for_each_entry(priv, &data->color_list, list) {
+>> +		if (data->cluster_brightness) {
+>> +			adj_brightness = calculate_brightness(data->cluster_brightness,
+>> +							      value[priv->color_index],
+>> +							     priv->max_intensity);
+>> +			ret = ops->set_color_brightness(priv->mcled_cdev,
+>> +							priv->color_id,
+>> +							adj_brightness);
+>> +			if (ret < 0)
+>> +				goto done;
+>> +		}
+>> +
+>> +		priv->intensity = value[priv->color_index];
+>> +	}
+> Here we could use just brightness_set op as a single call. We should
+> always write all colors as a result of write to color_mix anyway.
+
+I guess what is gained by just passing the array down to the device 
+driver and having it
+
+parse the array and do the peripheral call?
+
+
+>
+>> +
+>> +done:
+>> +	return size;
+>> +}
+>> +
+>> +static ssize_t intensity_store(struct device *dev,
+>> +				struct device_attribute *intensity_attr,
+>> +				const char *buf, size_t size)
+>> +{
+>> +	struct led_classdev_mc_priv *priv = container_of(intensity_attr,
+>> +						    struct led_classdev_mc_priv,
+>> +						      intensity_attr);
+>> +	struct led_classdev_mc_data *data = priv->mcled_cdev->data;
+>> +	struct led_classdev *led_cdev = priv->mcled_cdev->led_cdev;
+>> +	struct led_multicolor_ops *ops = priv->mcled_cdev->ops;
+>> +	unsigned int adj_value;
+>> +	unsigned long value;
+>> +	ssize_t ret;
+>> +
+>> +	mutex_lock(&led_cdev->led_access);
+>> +
+>> +	ret = kstrtoul(buf, 10, &value);
+>> +	if (ret)
+>> +		goto unlock;
+>> +
+>> +	if (value > priv->max_intensity) {
+>> +		ret = -EINVAL;
+>> +		goto unlock;
+>> +	}
+> We don't fail in this case in LED class, so let's proceed in the same
+> way here:
+>
+> priv->intensity = min(value, priv->max_brightness);
+
+ACK
+
+
+>> +
+>> +	priv->new_intensity = value;
+>> +
+>> +	if (data->cluster_brightness) {
+>> +		adj_value = calculate_brightness(data->cluster_brightness,
+>> +					priv->new_intensity,
+>> +					priv->max_intensity);
+>> +		ret = ops->set_color_brightness(priv->mcled_cdev,
+>> +						priv->color_id, adj_value);
+>> +		if (ret < 0) {
+>> +			priv->new_intensity = priv->intensity;
+> This is unnecessary complication. Just write the calculated iout
+> intensity.
+
+Not sure what complication you are referring to.
+
+
+> We need to highlight it in the documentation that exact requested color
+> intensity values are written to the hardware only when
+> brightness == max_brightness.
+
+But that is not a true statement.  Thats not really how it was designed.
+
+
+>
+>> +			goto unlock;
+>> +		}
+>> +	}
+>> +
+>> +	priv->intensity = priv->new_intensity;
+>> +	ret = size;
+>> +
+>> +unlock:
+>> +	mutex_unlock(&led_cdev->led_access);
+>> +	return ret;
+>> +}
+>> +
+>> +static ssize_t intensity_show(struct device *dev,
+>> +			      struct device_attribute *intensity_attr,
+>> +			      char *buf)
+>> +{
+>> +	struct led_classdev_mc_priv *priv = container_of(intensity_attr,
+>> +						    struct led_classdev_mc_priv,
+>> +						      intensity_attr);
+>> +	const struct led_multicolor_ops *ops = priv->mcled_cdev->ops;
+>> +	int value = 0;
+>> +
+>> +	if (ops->get_color_brightness) {
+>> +		value = ops->get_color_brightness(priv->mcled_cdev,
+>> +						  priv->color_id);
+>> +		priv->intensity = value;
+>> +	} else {
+>> +		value = priv->intensity;
+>> +	}
+>> +
+>> +	return sprintf(buf, "%d\n", value);
+>> +}
+>> +
+>> +static ssize_t max_intensity_show(struct device *dev,
+>> +				   struct device_attribute *max_intensity_attr,
+>> +				   char *buf)
+>> +{
+>> +	struct led_classdev_mc_priv *priv = container_of(max_intensity_attr,
+>> +						    struct led_classdev_mc_priv,
+>> +						      max_intensity_attr);
+>> +
+>> +	return sprintf(buf, "%d\n", priv->max_intensity);
+>> +}
+>> +
+>> +static int led_multicolor_init_color(struct led_classdev_mc_data *data,
+>> +				     struct led_classdev_mc *mcled_cdev,
+>> +				     int color_id, int color_index)
+>> +{
+>> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
+>> +	struct led_classdev_mc_priv *mc_priv;
+>> +	int ret;
+>> +
+>> +	mc_priv = devm_kzalloc(led_cdev->dev, sizeof(*mc_priv), GFP_KERNEL);
+>> +	if (!mc_priv)
+>> +		return -ENOMEM;
+>> +
+>> +	mc_priv->color_id = color_id;
+>> +	mc_priv->mcled_cdev = mcled_cdev;
+>> +
+>> +	data->led_kobj = kobject_create_and_add(led_colors[color_id],
+>> +						data->color_kobj);
+> You should not use kobject API in the drivers. See [0].
+
+I will look at it.
+
+Dan
+
+<snip> no other comments till v5
+
+
