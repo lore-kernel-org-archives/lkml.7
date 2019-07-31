@@ -2,227 +2,110 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4559C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E283C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC5120651
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3052089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pd2paGNz"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OJw/xktc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfGaKPm (ORCPT
+        id S1727913AbfGaKUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:15:42 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44893 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfGaKPm (ORCPT
+        Wed, 31 Jul 2019 06:20:14 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38553 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfGaKUN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:15:42 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k18so64997219ljc.11;
-        Wed, 31 Jul 2019 03:15:39 -0700 (PDT)
+        Wed, 31 Jul 2019 06:20:13 -0400
+Received: by mail-pl1-f196.google.com with SMTP id az7so30266939plb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:20:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kYuNKMCAxCoE9jGfijKuwUBIftsipcHdKWjFzPUyR1o=;
-        b=Pd2paGNzXOmQAk49AesUQapUo5XqZH9+6bm+SgCq2QkSSRrhCbsUKRGzy/RqVnv3QM
-         zTypuFuf8iN+MY7MgUx4RFf7C/VOyDx6yPdWNSmAs3lx+f+tw62iSViYeqlJptMn23sf
-         YZsFElhyMr14d4onEys+WTHraBwel3ZzEAQqhuwWBqv5ABOU18oIifPTgq3LTE/ZL69s
-         tZBmADUn4mQ3AXVE8vCQsaSZz5qBFWJSH1PU4adCx+hXn/v64wna3YrBtdiv8q1Apzt0
-         niFTSwtAOxl/kpYqlGBxb+l3jnzndiNlG2SkeIx5df7D25ljkOInM/1DLyteXRbgoUup
-         3S+w==
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=qG0whHfhXOjtcfLzk188sCOar57eu2kC3PTAbz1gCBo=;
+        b=OJw/xktcfO+P4ZQakjW7xr5hrf9cUCU/WoE6ccO8ljF+2fnEBdH+PiLzw/mr+QN3ZM
+         xcGe6PTn+eUF8ZHKDSEPxaMT2bvttHqJGAvz8OkjnCxA7ZXm9hXRTjgd93xa5RDfD7pn
+         aJSJMLq2r8GboOskpZVxFDFt5UvuWnUYd6nms=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kYuNKMCAxCoE9jGfijKuwUBIftsipcHdKWjFzPUyR1o=;
-        b=oav52mtT7MI68PuoSzdiQPAMk3jTXe7F1BqyKQzxj4yUlWFtMAbRxsm3RZZSLHpR3N
-         SjGl4ZnBkY2KpUlHdEdoNuWSc2KAdx9EBq53XB4t9cNt5SbHjFbg3PJ5cSgebI0KaeiZ
-         ZRGow0Cxp4PE7N4D1l3RGmQdEpIXN/MBsOe88tQIA79O0rHdEQ2u7TZgnJLCFWwkTOiN
-         Z7LWQwJARVu3Lk6cLmSjhA7vV6DTffKy0F08rmgmOFZEcneVCHNKRv6756MN0MnAVKht
-         m5EmfScnRjdnHU+UKK4iLtgshdn+bC7e/EuIX4sN2aH6J1/OMPTg5BGv/yc1tazKHpgB
-         z5qg==
-X-Gm-Message-State: APjAAAVqHd+HeOYUt4Ghg/oEhrr+dkO6ih2RaLJw+aVs+CtTV9gs5u60
-        uctM6d3FTpZ9++mPcILlH9RIaX/R
-X-Google-Smtp-Source: APXvYqzDRHh537Wiw8+igHK/hVqvDbVwL1fBp0p92R5PGyaS22DG9/dGPZVaXS/FNGGh8QduFfm0kA==
-X-Received: by 2002:a2e:9b10:: with SMTP id u16mr21862914lji.231.1564568138448;
-        Wed, 31 Jul 2019 03:15:38 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id t1sm13946057lji.52.2019.07.31.03.15.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 03:15:37 -0700 (PDT)
-Subject: Re: [PATCH v7 08/20] clk: tegra: clk-super: Fix to enable PLLP
- branches to CPU
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-9-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3ce20cbf-fe6f-c62b-c7b9-e3cad46f3381@gmail.com>
-Date:   Wed, 31 Jul 2019 13:14:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <1564532424-10449-9-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qG0whHfhXOjtcfLzk188sCOar57eu2kC3PTAbz1gCBo=;
+        b=WunWQCRE29XfYNkJYREDbxXE01WoV/R9TqIlyWgK9G+HHsO3Jolg0zXnC1XQE25pCK
+         q+zJXRAaGw8lf+uhvEOeiuiGgojPFQ7gfEo4pWI6q/ceNwmN9/o3mVLVS1TG1vB/8iho
+         fzcGW1Po3piDU2rUdMdJ1P6Y6r7XUBmtnV3gbqoqV8oPqzBiTCoWWqhzVi35G0x1Tpou
+         jtvMF/yyyAVYnd0DeT6pICJ4ZlouInWv7FFH72t4dSiHK9vOcuOGGdxc3Fv86/F9yRWV
+         ltBGSnZy6be4b0PipaEvjtuwMa07Svnf9vmn5hHI8qelvq92bpmwWk1vAAGzPDu8d8bo
+         yMpw==
+X-Gm-Message-State: APjAAAUOblOBLVTs7O8AdmMW9JnsD3XTGcC06KYorEzCILQXrx38V8rV
+        aB5yqDRF1NtNwIDcrSclb//hjcqko4s=
+X-Google-Smtp-Source: APXvYqxo4nj3CQ1TbR22Q60IlXDAeO1/mETjinmS8a+Y2ov0Lk7OIA4TM0/MdXOXuCjdEFt/+9QbHA==
+X-Received: by 2002:a17:902:383:: with SMTP id d3mr35046302pld.176.1564568412688;
+        Wed, 31 Jul 2019 03:20:12 -0700 (PDT)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id 3sm71161776pfg.186.2019.07.31.03.20.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 31 Jul 2019 03:20:11 -0700 (PDT)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v2 0/4] Reset xHCI port PHY on disconnect
+Date:   Wed, 31 Jul 2019 15:49:50 +0530
+Message-Id: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.07.2019 3:20, Sowjanya Komatineni пишет:
-> This patch has a fix to enable PLLP branches to CPU before changing
-> the CPU clusters clock source to PLLP for Gen5 Super clock and
-> disables PLLP branches to CPU when not in use.
-> 
-> During system suspend entry and exit, CPU source will be switched
-> to PLLP and this needs PLLP branches to be enabled to CPU prior to
-> the switch.
-> 
-> On system resume, warmboot code enables PLLP branches to CPU and
-> powers up the CPU with PLLP clock source.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-super.c            | 14 ++++++++++++++
->  drivers/clk/tegra/clk-tegra-super-gen4.c |  2 +-
->  drivers/clk/tegra/clk.c                  | 14 ++++++++++++++
->  drivers/clk/tegra/clk.h                  |  5 +++++
->  4 files changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-super.c b/drivers/clk/tegra/clk-super.c
-> index 39ef31b46df5..e2a1e95a8db7 100644
-> --- a/drivers/clk/tegra/clk-super.c
-> +++ b/drivers/clk/tegra/clk-super.c
-> @@ -28,6 +28,9 @@
->  #define super_state_to_src_shift(m, s) ((m->width * s))
->  #define super_state_to_src_mask(m) (((1 << m->width) - 1))
->  
-> +#define CCLK_SRC_PLLP_OUT0 4
-> +#define CCLK_SRC_PLLP_OUT4 5
-> +
->  static u8 clk_super_get_parent(struct clk_hw *hw)
->  {
->  	struct tegra_clk_super_mux *mux = to_clk_super_mux(hw);
-> @@ -97,12 +100,23 @@ static int clk_super_set_parent(struct clk_hw *hw, u8 index)
->  		if (index == mux->div2_index)
->  			index = mux->pllx_index;
->  	}
-> +
-> +	/* enable PLLP branches to CPU before selecting PLLP source */
-> +	if ((mux->flags & TEGRA210_CPU_CLK) &&
-> +	    (index == CCLK_SRC_PLLP_OUT0 || index == CCLK_SRC_PLLP_OUT4))
-> +		tegra_clk_set_pllp_out_cpu(true);
-> +
->  	val &= ~((super_state_to_src_mask(mux)) << shift);
->  	val |= (index & (super_state_to_src_mask(mux))) << shift;
->  
->  	writel_relaxed(val, mux->reg);
->  	udelay(2);
->  
-> +	/* disable PLLP branches to CPU if not used */
-> +	if ((mux->flags & TEGRA210_CPU_CLK) &&
-> +	    index != CCLK_SRC_PLLP_OUT0 && index != CCLK_SRC_PLLP_OUT4)
-> +		tegra_clk_set_pllp_out_cpu(false);
-> +
->  out:
->  	if (mux->lock)
->  		spin_unlock_irqrestore(mux->lock, flags);
-> diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra/clk-tegra-super-gen4.c
-> index cdfe7c9697e1..888d76b01c75 100644
-> --- a/drivers/clk/tegra/clk-tegra-super-gen4.c
-> +++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
-> @@ -180,7 +180,7 @@ static void __init tegra_super_clk_init(void __iomem *clk_base,
->  					gen_info->num_cclk_g_parents,
->  					CLK_SET_RATE_PARENT,
->  					clk_base + CCLKG_BURST_POLICY,
-> -					0, 4, 8, 0, NULL);
-> +					TEGRA210_CPU_CLK, 4, 8, 0, NULL);
+This patch set adds a quirk in xHCI driver to reset PHY of xHCI port on
+its disconnect event.
 
-Don't we want a clarifying comment for cclk_lp telling why it doesn't
-have the TEGRA210_CPU_CLK flag?
+This patch set is based on Linux-5.2-rc4.
 
->  		} else {
->  			clk = tegra_clk_register_super_mux("cclk_g",
->  					gen_info->cclk_g_parents,
-> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-> index 573e3c967ae1..eb08047fd02f 100644
-> --- a/drivers/clk/tegra/clk.c
-> +++ b/drivers/clk/tegra/clk.c
-> @@ -23,6 +23,7 @@
->  #define CLK_OUT_ENB_W			0x364
->  #define CLK_OUT_ENB_X			0x280
->  #define CLK_OUT_ENB_Y			0x298
-> +#define CLK_ENB_PLLP_OUT_CPU		BIT(31)
->  #define CLK_OUT_ENB_SET_L		0x320
->  #define CLK_OUT_ENB_CLR_L		0x324
->  #define CLK_OUT_ENB_SET_H		0x328
-> @@ -199,6 +200,19 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
->  	}
->  }
->  
-> +void tegra_clk_set_pllp_out_cpu(bool enable)
-> +{
-> +	u32 val;
-> +
-> +	val = readl_relaxed(clk_base + CLK_OUT_ENB_Y);
-> +	if (enable)
-> +		val |= CLK_ENB_PLLP_OUT_CPU;
-> +	else
-> +		val &= ~CLK_ENB_PLLP_OUT_CPU;
-> +
-> +	writel_relaxed(val, clk_base + CLK_OUT_ENB_Y);
-> +}
-> +
->  struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
->  {
->  	clk_base = regs;
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index d61e61eebf4a..f8de447f505b 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -687,6 +687,9 @@ struct clk *tegra_clk_register_periph_data(void __iomem *clk_base,
->   * Flags:
->   * TEGRA_DIVIDER_2 - LP cluster has additional divider. This flag indicates
->   *     that this is LP cluster clock.
-> + * TEGRA210_CPU_CLK - This flag indicates this is CPU cluster clock. To use
-> + * PLLP for CPU clock source, need to enable PLLP branches to CPU by setting
-> + * additional bit PLLP_OUT_CPU for gen5 super clock.
->   */
->  struct tegra_clk_super_mux {
->  	struct clk_hw	hw;
-> @@ -703,6 +706,7 @@ struct tegra_clk_super_mux {
->  #define to_clk_super_mux(_hw) container_of(_hw, struct tegra_clk_super_mux, hw)
->  
->  #define TEGRA_DIVIDER_2 BIT(0)
-> +#define TEGRA210_CPU_CLK BIT(1)
->  
->  extern const struct clk_ops tegra_clk_super_ops;
->  struct clk *tegra_clk_register_super_mux(const char *name,
-> @@ -849,6 +853,7 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
->  int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
->  		 u8 frac_width, u8 flags);
->  void tegra_clk_osc_resume(void __iomem *clk_base);
-> +void tegra_clk_set_pllp_out_cpu(bool enable);
->  
->  
->  /* Combined read fence with delay */
-> 
+Changes from v1:
+  - Addressed Mathias's comments
+    - Modified mapping of HC ports and their corresponding PHYs
+  - Addressed Rob's comments
+    - Removed usb-phy-port-reset DT property.
+    - Added quirk in platform data using HCI compatible string.
+  - Add phy ports in phy attr structure to have enabled ports bitmask.
+  - Modified #phy-cells of sr-phy to pass phy ports bitmask.
+
+Srinath Mannam (4):
+  phy: Add phy ports in attrs
+  dt-bindings: phy: Modify Stingray USB PHY #phy-cells
+  phy: sr-usb: Set phy ports
+  dt-bindings: usb-xhci: Add platform specific compatible for Stingray
+    xHCI
+  drivers: xhci: Add quirk to reset xHCI port PHY
+
+ .../devicetree/bindings/phy/brcm,stingray-usb-phy.txt | 14 ++++++++------
+ Documentation/devicetree/bindings/usb/usb-xhci.txt    |  1 +
+ drivers/phy/broadcom/phy-bcm-sr-usb.c                 |  9 ++++++++-
+ drivers/usb/core/hcd.c                                |  6 ++++++
+ drivers/usb/core/phy.c                                | 19 +++++++++++++++++++
+ drivers/usb/core/phy.h                                |  1 +
+ drivers/usb/host/xhci-plat.c                          | 10 ++++++++++
+ drivers/usb/host/xhci-plat.h                          |  1 +
+ drivers/usb/host/xhci-ring.c                          |  9 ++++++---
+ drivers/usb/host/xhci.h                               |  1 +
+ include/linux/phy/phy.h                               | 10 ++++++++++
+ include/linux/usb/hcd.h                               |  1 +
+ 12 files changed, 72 insertions(+), 10 deletions(-)
+
+-- 
+2.7.4
 
