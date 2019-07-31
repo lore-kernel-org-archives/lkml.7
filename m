@@ -2,124 +2,95 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8354C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A43C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89925206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB130206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbfGaMJe (ORCPT
+        id S1729081AbfGaMKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:09:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3671 "EHLO huawei.com"
+        Wed, 31 Jul 2019 08:10:54 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3672 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725793AbfGaMJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:09:33 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CD03E15202C67FF2B54E;
-        Wed, 31 Jul 2019 20:09:30 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
- 20:09:26 +0800
-Subject: Re: [PATCH] gpio: remove duplicated function definition
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <yamada.masahiro@socionext.com>
-References: <20190731100028.48884-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <1ce6b018-fca4-7b5e-7ddf-e55be9cdb221@huawei.com>
-Date:   Wed, 31 Jul 2019 20:09:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        id S1725793AbfGaMKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:10:54 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1A25B41E2D691E92CF1D;
+        Wed, 31 Jul 2019 20:10:48 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
+ 2019 20:10:40 +0800
+Subject: Re: [PATCH 08/22] staging: erofs: kill CONFIG_EROFS_FS_IO_MAX_RETRIES
+To:     Gao Xiang <gaoxiang25@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>, <weidu.du@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>
+References: <20190729065159.62378-1-gaoxiang25@huawei.com>
+ <20190729065159.62378-9-gaoxiang25@huawei.com>
+ <1c979e3f-54ec-cce8-650c-39e060e72169@huawei.com>
+ <2d7abbad-61d0-df2b-6a42-26f2606d775a@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <985b3ca7-afee-006e-a367-98a865995246@huawei.com>
+Date:   Wed, 31 Jul 2019 20:10:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190731100028.48884-1-yuehaibing@huawei.com>
+In-Reply-To: <2d7abbad-61d0-df2b-6a42-26f2606d775a@huawei.com>
 Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
+X-Originating-IP: [10.134.22.195]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pls drop this
+Hi Xiang,
 
-On 2019/7/31 18:00, YueHaibing wrote:
-> when building without CONFIG_PINCTRL:
+On 2019/7/31 15:11, Gao Xiang wrote:
+> Hi Chao,
 > 
-> In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
-> ./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
->  gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
->  ^~~~~~~~~~~~~~~~~~~~~~
-> In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
-> ./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
->  gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
->  ^~~~~~~~~~~~~~~~~~~~~~
+> On 2019/7/31 15:05, Chao Yu wrote:
+>> On 2019/7/29 14:51, Gao Xiang wrote:
+>>> CONFIG_EROFS_FS_IO_MAX_RETRIES seems a runtime setting
+>>> and users have no idea about the change in behaviour.
+>>>
+>>> Let's remove the setting currently and fold it into code,
+>>> turn it into a module parameter if it's really needed.
+>>>
+>>> Suggested-by: David Sterba <dsterba@suse.cz>
+>>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>>
+>> It's fine to me, but I'd like to suggest to add this as a sys entry which can be
+>> more flexible for user to change.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  include/linux/gpio/driver.h | 35 +----------------------------------
->  1 file changed, 1 insertion(+), 34 deletions(-)
+> I think it can be added in the later version, the original view
+> from David is that he had question how users using this option.
 > 
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index f28f534..09f96ec 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -10,6 +10,7 @@
->  #include <linux/lockdep.h>
->  #include <linux/pinctrl/pinctrl.h>
->  #include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/gpio.h>
->  
->  struct gpio_desc;
->  struct of_phandle_args;
-> @@ -560,40 +561,6 @@ struct gpio_pin_range {
->  	struct pinctrl_gpio_range range;
->  };
->  
-> -#ifdef CONFIG_PINCTRL
-> -
-> -int gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
-> -			   unsigned int gpio_offset, unsigned int pin_offset,
-> -			   unsigned int npins);
-> -int gpiochip_add_pingroup_range(struct gpio_chip *chip,
-> -			struct pinctrl_dev *pctldev,
-> -			unsigned int gpio_offset, const char *pin_group);
-> -void gpiochip_remove_pin_ranges(struct gpio_chip *chip);
-> -
-> -#else /* ! CONFIG_PINCTRL */
-> -
-> -static inline int
-> -gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
-> -		       unsigned int gpio_offset, unsigned int pin_offset,
-> -		       unsigned int npins)
-> -{
-> -	return 0;
-> -}
-> -static inline int
-> -gpiochip_add_pingroup_range(struct gpio_chip *chip,
-> -			struct pinctrl_dev *pctldev,
-> -			unsigned int gpio_offset, const char *pin_group)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline void
-> -gpiochip_remove_pin_ranges(struct gpio_chip *chip)
-> -{
-> -}
-> -
-> -#endif /* CONFIG_PINCTRL */
-> -
->  struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip, u16 hwnum,
->  					    const char *label,
->  					    enum gpio_lookup_flags lflags,
-> 
+> Maybe we can use the default value and leave it to users who
+> really need to modify this value (real requirement).
 
+I think we need to decide it in this version, otherwise it may face backward
+compatibility issue if we change module argument to sys entry later.
+
+Maybe just leave it as an fixed macro is fine, since there is actually no
+requirement on this.
+
+Thanks,
+
+> 
+> Thanks,
+> Gao Xiang
+> 
+>>
+>> Thanks
+>>
+> .
+> 
