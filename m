@@ -2,143 +2,121 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BDAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348DBC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B44206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:05:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dhOPVJkK"
+	by mail.kernel.org (Postfix) with ESMTP id 1600920693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfGaDFb (ORCPT
+        id S1728388AbfGaDKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 23:05:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42721 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfGaDFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 23:05:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45yywR2MSbz9s00;
-        Wed, 31 Jul 2019 13:05:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564542327;
-        bh=yzpwz0hsgkC5drBtW2RNTVx643PRuHkVkQ9BYH+3fy8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dhOPVJkK3W8DZYaiq7Goh9fnCC5uMbSXi7B3/14HEbvpHnZzNPBQ7vkf723jAy66L
-         1WBnWu13WH1D/PLTDdE7WpIVPlpt7y9dwxOMRWkIuRGEHR7sKtCtse6J5ipitHHBs5
-         Xm7xN5wTC0+MXvR2A4ZMhWRzyPvfcdzaQMgM6O1ZuY0zlg+dQotDlWHdktE3snwxix
-         Vmm8rtJFT0n8TgDnfLwP9CuC9bOh5Hd2p8yJ/6f2wmDaVyOQV37c4bYgp5X1HPNwHq
-         1SvgXVtJHn6KVCYMbxnEyDV8s7JSDbODHSSmKOq4oBSGBz109OYojixl4xc1MQIpIt
-         G+yM143yiD6bA==
-Date:   Wed, 31 Jul 2019 13:05:26 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org
-Subject: Re: linux-next: build warnings after merge of the keys tree
-Message-ID: <20190731130526.53684e6b@canb.auug.org.au>
-In-Reply-To: <20190731014034.GB687@sol.localdomain>
-References: <20190730123042.1f17cdd4@canb.auug.org.au>
-        <20190730034704.GA1966@sol.localdomain>
-        <20190730135216.377a16d5@canb.auug.org.au>
-        <20190731014034.GB687@sol.localdomain>
+        Tue, 30 Jul 2019 23:10:08 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3256 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727137AbfGaDKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 23:10:08 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CEE4DA57303E09839F76;
+        Wed, 31 Jul 2019 11:10:05 +0800 (CST)
+Received: from RH5885H-V3.huawei.com (10.90.53.225) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 31 Jul 2019 11:09:55 +0800
+From:   SunKe <sunke32@huawei.com>
+To:     <sunke32@huawei.com>, <josef@toxicpanda.com>, <axboe@kernel.dk>,
+        <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>, <kamatam@amazon.com>,
+        <manoj.br@gmail.com>, <stable@vger.kernel.org>, <dwmw@amazon.com>
+Subject: [PATCH] nbd: replace kill_bdev() with __invalidate_device() again
+Date:   Wed, 31 Jul 2019 11:15:46 +0800
+Message-ID: <1564542946-26255-1-git-send-email-sunke32@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Z+JbBgYKmEVCFloWuRyZJGv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Z+JbBgYKmEVCFloWuRyZJGv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Munehisa Kamata <kamatam@amazon.com>
 
-Hi Eric,
+Commit abbbdf12497d ("replace kill_bdev() with __invalidate_device()")
+once did this, but 29eaadc03649 ("nbd: stop using the bdev everywhere")
+resurrected kill_bdev() and it has been there since then. So buffer_head
+mappings still get killed on a server disconnection, and we can still
+hit the BUG_ON on a filesystem on the top of the nbd device.
 
-On Tue, 30 Jul 2019 18:40:34 -0700 Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Tue, Jul 30, 2019 at 01:52:16PM +1000, Stephen Rothwell wrote:
-> > Hi Eric,
-> >=20
-> > On Mon, 29 Jul 2019 20:47:04 -0700 Eric Biggers <ebiggers@kernel.org> w=
-rote: =20
-> > >
-> > > On Tue, Jul 30, 2019 at 12:30:42PM +1000, Stephen Rothwell wrote: =20
-> > > > +static struct key_acl fsverity_acl =3D {
-> > > > +	.usage	=3D REFCOUNT_INIT(1),
-> > > > +	.possessor_viewable =3D true,   =20
-> > >=20
-> > > I don't think .possessor_viewable should be set here, since there's no
-> > > KEY_POSSESSOR_ACE(KEY_ACE_VIEW) in the ACL.  David, this bool is supp=
-osed to
-> > > mean such an entry is present, right?  Is it really necessary, since =
-it's
-> > > redundant with the ACL itself? =20
-> >=20
-> > OK, I can take that out of the patch for tomorrow.
-> >  =20
-> > > Otherwise this looks good, thanks Stephen.  I'll want to remove a few=
- of these
-> > > permissions in a separate patch later, but for now we can just keep it
-> > > equivalent to the original code as you've done. =20
-> >=20
-> > Thanks for the review.
->=20
-> Hmm, apparently it's not *exactly* equivalent, since the ACL is missing I=
-NVAL
-> and JOIN permission for the owner, while those were originally granted by=
- SEARCH
-> permission.  We don't need those, but just to keep the merge resolution i=
-tself
-> as boring as possible, can you please use the following to make it equiva=
-lent:
->=20
-> static struct key_acl fsverity_acl =3D {
-> 	.usage	=3D REFCOUNT_INIT(1),
-> 	.nr_ace	=3D 2,
-> 	.aces =3D {
-> 		KEY_POSSESSOR_ACE(KEY_ACE_SEARCH | KEY_ACE_JOIN |
-> 				  KEY_ACE_INVAL),
-> 		KEY_OWNER_ACE(KEY_ACE_VIEW | KEY_ACE_READ | KEY_ACE_WRITE |
-> 			      KEY_ACE_SEARCH | KEY_ACE_SET_SECURITY |
-> 			      KEY_ACE_INVAL | KEY_ACE_REVOKE | KEY_ACE_JOIN |
-> 			      KEY_ACE_CLEAR),
-> 	}
-> };
+  EXT4-fs (nbd0): mounted filesystem with ordered data mode. Opts: (null)
+  block nbd0: Receive control failed (result -32)
+  block nbd0: shutting down sockets
+  print_req_error: I/O error, dev nbd0, sector 66264 flags 3000
+  EXT4-fs warning (device nbd0): htree_dirblock_to_tree:979: inode #2: lblock 0: comm ls: error -5 reading directory block
+  print_req_error: I/O error, dev nbd0, sector 2264 flags 3000
+  EXT4-fs error (device nbd0): __ext4_get_inode_loc:4690: inode #2: block 283: comm ls: unable to read itable block
+  EXT4-fs error (device nbd0) in ext4_reserve_inode_write:5894: IO failure
+  ------------[ cut here ]------------
+  kernel BUG at fs/buffer.c:3057!
+  invalid opcode: 0000 [#1] SMP PTI
+  CPU: 7 PID: 40045 Comm: jbd2/nbd0-8 Not tainted 5.1.0-rc3+ #4
+  Hardware name: Amazon EC2 m5.12xlarge/, BIOS 1.0 10/16/2017
+  RIP: 0010:submit_bh_wbc+0x18b/0x190
+  ...
+  Call Trace:
+   jbd2_write_superblock+0xf1/0x230 [jbd2]
+   ? account_entity_enqueue+0xc5/0xf0
+   jbd2_journal_update_sb_log_tail+0x94/0xe0 [jbd2]
+   jbd2_journal_commit_transaction+0x12f/0x1d20 [jbd2]
+   ? __switch_to_asm+0x40/0x70
+   ...
+   ? lock_timer_base+0x67/0x80
+   kjournald2+0x121/0x360 [jbd2]
+   ? remove_wait_queue+0x60/0x60
+   kthread+0xf8/0x130
+   ? commit_timeout+0x10/0x10 [jbd2]
+   ? kthread_bind+0x10/0x10
+   ret_from_fork+0x35/0x40
 
-OK, I have fixed up the patch for today (not quite as above, but
-equivalently since I am editting a patch and I usually get that
-wrong :-))
+With __invalidate_device(), I no longer hit the BUG_ON with sync or
+unmount on the disconnected device.
 
---=20
-Cheers,
-Stephen Rothwell
+Fixes: 29eaadc03649 ("nbd: stop using the bdev everywhere")
+Cc: linux-block@vger.kernel.org
+Cc: Ratna Manoj Bolla <manoj.br@gmail.com>
+Cc: nbd@other.debian.org
+Cc: stable@vger.kernel.org
+Cc: David Woodhouse <dwmw@amazon.com>
+Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
 
---Sig_/Z+JbBgYKmEVCFloWuRyZJGv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+CR: https://code.amazon.com/reviews/CR-7629288
+---
+I reproduced this phenomenon on the fat file system.
+reproduce steps :
+1.Establish a nbd connection.
+2.Run two threads:one do mount and umount,anther one do clear_sock ioctl
+3.Then hit the BUG_ON.
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1BBXYACgkQAVBC80lX
-0GzYpgf/X5Vixn+4ADwkJhXZROfU827npywKt9xRqlT3VLTRl5tkZlG86U1jR5jt
-Wz0MlRcm3iSDlADw/vLsDeR2TLsIQDyGKGtXeY5t/Cu0dqFcMH3nf1U5ZqZApQ2U
-CXgkFa9wbTgqTTObl5MBEA44m5Jg6//grYmEeKWpfwqIe9O8ZF5M9CncpEHGQSy8
-PUE76V3mMynth4/0QwAmqYSnc3y52jEKpK3uOH6m4DmWdDR0A64UwBHbezzGLYVl
-m2dU9YwKzv72sTuxHMzQvOt4XuByYdkvXhGXoFehqeQcUuDFsyWSctBbRCMuQKqB
-i/7MeQiTlGzkam5WoJNIZTces1KEVw==
-=xb3H
------END PGP SIGNATURE-----
+ drivers/block/nbd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---Sig_/Z+JbBgYKmEVCFloWuRyZJGv--
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 9bcde23..e21d2de 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1231,7 +1231,7 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
+ 				 struct block_device *bdev)
+ {
+ 	sock_shutdown(nbd);
+-	kill_bdev(bdev);
++	__invalidate_device(bdev, true);
+ 	nbd_bdev_reset(bdev);
+ 	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
+ 			       &nbd->config->runtime_flags))
+-- 
+2.7.4
+
