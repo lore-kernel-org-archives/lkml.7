@@ -2,92 +2,95 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4AFC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BF0C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBE920659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26E920659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbfGaNaZ (ORCPT
+        id S1729484AbfGaNat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:30:25 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48458 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727441AbfGaNaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:30:24 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5A6A4ECF286C3B90EAB0;
-        Wed, 31 Jul 2019 21:30:20 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 21:30:11 +0800
-Subject: Re: [PATCH v5 12/24] erofs: introduce tagged pointer
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Jan Kara <jack@suse.cz>
-CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "David Sterba" <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190730071413.11871-1-gaoxiang25@huawei.com>
- <20190730071413.11871-13-gaoxiang25@huawei.com>
- <20190731130148.GE15806@quack2.suse.cz>
- <204b7fcc-a54b-ebd6-ff4c-2d5e2e6d4a8c@huawei.com>
-Message-ID: <560f56f4-fb6d-6c78-6080-fe32df9ac4bf@huawei.com>
-Date:   Wed, 31 Jul 2019 21:30:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Wed, 31 Jul 2019 09:30:49 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:15037 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfGaNas (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:30:48 -0400
+X-RZG-AUTH: ":OWANVUa4dPFUgKR/3dpvnYP0Np73amq+g13rqGzmt2bYDnKIKaws6YXTsc4="
+X-RZG-CLASS-ID: mo00
+Received: from oxapp06-03.back.ox.d0m.de
+        by smtp-ox.front (RZmta 44.24 AUTH)
+        with ESMTPSA id h0a328v6VDUiZTi
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 31 Jul 2019 15:30:44 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 15:30:44 +0200 (CEST)
+From:   Ulrich Hecht <uli@fpond.eu>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <51684361.319230.1564579844450@webmail.strato.com>
+In-Reply-To: <20190731125053.14750-1-geert+renesas@glider.be>
+References: <20190731125053.14750-1-geert+renesas@glider.be>
+Subject: Re: [PATCH] thermal: rcar_gen3_thermal: Use
+ devm_add_action_or_reset() helper
 MIME-Version: 1.0
-In-Reply-To: <204b7fcc-a54b-ebd6-ff4c-2d5e2e6d4a8c@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+X-Priority: 3
+Importance: Medium
+X-Mailer: Open-Xchange Mailer v7.10.1-Rev16
+X-Originating-IP: 85.212.153.30
+X-Originating-Client: open-xchange-appsuite
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 2019/7/31 21:20, Gao Xiang wrote:
-> Yes, I think that is about coding style, but the legacy way we have to do
-> type cast as well, I think...
+> On July 31, 2019 at 2:50 PM Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 > 
->    struct b *ptr = tagptr_unfold_tags(tptr);
-> vs
->    struct b *ptr = (struct b *)((unsigned long)tptr & ~2);
+> 
+> Use the devm_add_action_or_reset() helper instead of open-coding the
+> same operations.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/thermal/rcar_gen3_thermal.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
+> index a56463308694e937..2db7e7f8baf939fd 100644
+> --- a/drivers/thermal/rcar_gen3_thermal.c
+> +++ b/drivers/thermal/rcar_gen3_thermal.c
+> @@ -443,11 +443,10 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
+>  		if (ret)
+>  			goto error_unregister;
+>  
+> -		ret = devm_add_action(dev, rcar_gen3_hwmon_action, zone);
+> -		if (ret) {
+> -			rcar_gen3_hwmon_action(zone);
+> +		ret = devm_add_action_or_reset(dev, rcar_gen3_hwmon_action,
+> +					       zone);
+> +		if (ret)
+>  			goto error_unregister;
+> -		}
+>  
+>  		ret = of_thermal_get_ntrips(tsc->zone);
+>  		if (ret < 0)
+> -- 
+> 2.17.1
+>
 
-and we could do "typedef tagptr1_t tptrb;" and then use tptrb for tagged
-pointer rather than barely use tagptr1_t tagptr2_t ... as I mentioned in:
-https://lore.kernel.org/lkml/0c2cdd4f-8fe7-6084-9c2d-c2e475e6806e@aol.com/
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
 
-I think "tptrb" is enough for developers to know the original pointer type
-when they coding...
-
-OTOH, I think it could be better not to directly use "struct b *" to
-represent the whole tagged pointer since it seems unsafe to do dereference
-directly.. It could introduce some potential bugs...
-
-All in all, this approach is only used for EROFS for now... If there are
-some better implementation, I can switch to it in the later version :)
-
-Thanks,
-Gao Xiang
+CU
+Uli
