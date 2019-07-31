@@ -2,194 +2,219 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913E7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE44CC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540AD206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uBXqMhXs"
+	by mail.kernel.org (Postfix) with ESMTP id B04AF206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbfGaNBu (ORCPT
+        id S1729319AbfGaNCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:01:50 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:58171 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727546AbfGaNBt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:01:49 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190731130148euoutp01ab8f2bc0bf6be7cac0d5ffddf6d57e70~2f4AIdg7F0913409134euoutp01S
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:01:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190731130148euoutp01ab8f2bc0bf6be7cac0d5ffddf6d57e70~2f4AIdg7F0913409134euoutp01S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1564578108;
-        bh=uIZjK2mDYGGIQoh1L8WzyXdHyo8GssTHvhq/RxYs6Uk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=uBXqMhXsZ5RMPNSzD+hvziPd3ueErlFr57XLeoL3zG8MSppyQ8zSXwgVodf+TBTRG
-         Qfrk7r6gX7cCPBpcCE+edtRgvETM0XSKCH2sU7uluSybyR+JjXU9Ws+n8BQTbKkJU6
-         4Ql2dATHWlcMHhGMnSsaXnQhIWcViBEPDT1iVhrM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190731130147eucas1p2622981052b71f0c9b305a38c448eab62~2f3-WA7jT2160421604eucas1p2P;
-        Wed, 31 Jul 2019 13:01:47 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 9C.F1.04298.B31914D5; Wed, 31
-        Jul 2019 14:01:47 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190731130146eucas1p13647e6bd5004b9b858f82a95d9bf2928~2f3_kUhyz3209332093eucas1p1Y;
-        Wed, 31 Jul 2019 13:01:46 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190731130146eusmtrp193ab339d7f7c267bd73035f03355d67a~2f3_WEMb62537425374eusmtrp1f;
-        Wed, 31 Jul 2019 13:01:46 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-2a-5d41913bfd1e
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 01.D3.04140.A31914D5; Wed, 31
-        Jul 2019 14:01:46 +0100 (BST)
-Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190731130145eusmtip2d16e9993c297dd63cdd5a647debb0c70~2f39r4f1i2937029370eusmtip2_;
-        Wed, 31 Jul 2019 13:01:45 +0000 (GMT)
-Message-ID: <a1fc0e2b5ef2d131f4e896c9c0aa7621bf4b79e2.camel@partner.samsung.com>
-Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, m.szyprowski@samsung.com,
-        =?UTF-8?Q?Bart=C5=82omiej_?= =?UTF-8?Q?=C5=BBo=C5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>
-Date:   Wed, 31 Jul 2019 15:01:44 +0200
-In-Reply-To: <20190724183639.GA14346@kozik-lap>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUgUYRju2zl23Br7XK19u3UjpEi3oB8DZiVELvWjC/qRme7moLVe7KSd
-        lKWEeWXZklnhklqiqDlmma2Vx7ap1KaZBZorHmmFFHmEhFrTGPXveZ/jPeBlCHUjtZg5HHuU
-        N8caorW0inzwfNLpF3A5KHTd1TFPrjK3guLejQ1RXH7TK4rrGP9Kc9fqRJq74somOafznpIT
-        +zsp7k3tTZobzWxCXK7ziYIra/qg5LrOFdNcbs4neou7Xiy5SOu7O2203pXuUOirCs/qs+6X
-        IP2ouHwXvV+1MYKPPpzIm3WbwlVR6cN2Kr7b63il6zaVhGw4DbkxgDfA1IsBRRpSMWpcjGCs
-        OB3JxRiCh809s8oogi/Dk+TfiL06lZSFuwhKxWZaLj4iqPpYhCQXi3dBakY5IWFPbARrXxsl
-        YRoHw/RQxx/shVfDu6kflBQm8DMC6ussyjTEMCReBR1PgiWPG9aBWGRD8uS1MNKSRUoWFnvA
-        VI2nRBN4BSRX3yCkNoB7lOAasdCyfyu8LbhLydgTPjvuK2W8FFpzMmavEWDwkYuSw0kIxDtN
-        hCwEQKNDWpr5PWE1VNTqZDoIRrLshEQDdof3Ix7yDu5w5cG1WZqF1AtqGa4B688QOQhwvrRz
-        trceUvqGlNnIJ+/fLXn/3ZL3b6oVESVIwycIMZG8sD6WP+YvGGKEhNhI/0NxMSL6/Vqt047v
-        NWi83diAMIO089gXF4NC1ZQhUTgR04CAIbRebIFmc6iajTCcOMmb48LMCdG80ICWMKRWw56a
-        0xuixpGGo7yJ5+N5819VwbgtTkLXtx14XlZ63Oa9aMm37hl2AW35Frax91LAy/p229Jc35K+
-        icQ9voUZD99PO4N4FLhjrylT05U8MT99ABUcHN7/+Gnh9rie8IVzy8+0rXwd1jY4zEWk7M58
-        1r8z0I5MG1oa9+XDU2PNsWX3dKV+lhar9y2j7vRMRGVOlUlxJF/0+awlhSjD+jWEWTD8AnSD
-        goRWAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsVy+t/xe7pWEx1jDdaukrDYOGM9q8X1L89Z
-        LeYfOcdqceXrezaL6Xs3sVlMuj+BxeL8+Q3sFpseX2O1uLxrDpvF594jjBYzzu9jslh75C67
-        xe3GFWwWMya/ZHPg89i0qpPN4861PWwe97uPM3lsXlLv0bdlFaPH501yAWxRejZF+aUlqQoZ
-        +cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehndL46yFtwRqdh4fxFr
-        A+MegS5GTg4JAROJo1s7WLoYuTiEBJYySnx88ZINIiEh8XH9DVYIW1jiz7UuNoiiJ4wSV+5/
-        AkvwCgRIdPSsYwaxhQWSJBY8uggWZxNwl/j3/AqYLSKgKXH973dWkGZmgUPMEusOdAM5HBws
-        AqoSV/a5g9RwCuhLbFq6hxFiwTdGid+dJxlBEsxAza3bf7NDXKEj8fZUHwtIL6+AoMTfHcIQ
-        JfISzVtnM09gFJyFpGMWQtUsJFULGJlXMYqklhbnpucWG+kVJ+YWl+al6yXn525iBEbktmM/
-        t+xg7HoXfIhRgINRiYf3RKdjrBBrYllxZe4hRgkOZiUR3sXi9rFCvCmJlVWpRfnxRaU5qcWH
-        GE2B3pnILCWanA9MFnkl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODil
-        GhgZ+s6e2hzFfYP7duW0NRvsttXPfGYa/H2fRWzHkyDeCVtNzlRLyguoJjpscFupqJb38zpf
-        ZMnyDR8XihuvLt5xab/EX9VNvab63bs5mLbfSvNKdvGbzVc3XULbl1Xy3u59fl+Zns7hnMHb
-        GHSk4OWXw/UFKcsPBtkH18ilpursPRnq/Psjv78SS3FGoqEWc1FxIgB2NBHi3gIAAA==
-X-CMS-MailID: 20190731130146eucas1p13647e6bd5004b9b858f82a95d9bf2928
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
-        <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
-        <20190723122016.30279-10-a.swigon@partner.samsung.com>
-        <20190724183639.GA14346@kozik-lap>
+        Wed, 31 Jul 2019 09:02:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54820 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726559AbfGaNCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:02:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B0D6EAEF3;
+        Wed, 31 Jul 2019 13:02:02 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 2E7961E434C; Wed, 31 Jul 2019 15:01:48 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 15:01:48 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH v5 12/24] erofs: introduce tagged pointer
+Message-ID: <20190731130148.GE15806@quack2.suse.cz>
+References: <20190730071413.11871-1-gaoxiang25@huawei.com>
+ <20190730071413.11871-13-gaoxiang25@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730071413.11871-13-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-24 at 20:36 +0200, Krzysztof Kozlowski wrote:
-> On Tue, Jul 23, 2019 at 02:20:14PM +0200, Artur Świgoń wrote:
-> > This patch adds interconnect functionality to the exynos-bus devfreq
-> > driver.
-> > 
-> > The SoC topology is a graph (or, more specifically, a tree) and most of its
-> > edges are taken from the devfreq parent-child hierarchy (cf.
-> > Documentation/devicetree/bindings/devfreq/exynos-bus.txt). The previous
-> > patch adds missing edges to the DT (under the name 'parent'). Due to
+On Tue 30-07-19 15:14:01, Gao Xiang wrote:
+> Currently kernel has scattered tagged pointer usages
+> hacked by hand in plain code, without a unique and
+> portable functionset to highlight the tagged pointer
+> itself and wrap these hacked code in order to clean up
+> all over meaningless magic masks.
 > 
-> Do not refer to DT patches. They will come through different tree so
-> "previous" will not be correct anymore. You mentioned dependencies in
-> cover letter so it is sufficient.
-
-OK.
- 
-> >  /*
-> > @@ -61,6 +69,13 @@ exynos_bus_ops_edev(enable_edev);
-> >  exynos_bus_ops_edev(disable_edev);
-> >  exynos_bus_ops_edev(set_event);
-> >  
-> > +static int exynos_bus_next_id(void)
-> > +{
-> > +	static int exynos_bus_node_id;
-> > +
-> > +	return exynos_bus_node_id++;
+> This patch introduces simple generic methods to fold
+> tags into a pointer integer. Currently it supports
+> the last n bits of the pointer for tags, which can be
+> selected by users.
 > 
-> This does not look robust. Use IDR for IDs. 
-
-OK.
-
-> > +static int exynos_bus_icc_connect(struct exynos_bus *bus)
-> > +{
-> > +	struct device_node *np = bus->dev->of_node;
-> > +	struct devfreq *parent_devfreq;
-> > +	struct icc_node *parent_node = NULL;
-> > +	struct of_phandle_args args;
-> > +	int ret = 0;
-> > +
-> > +	parent_devfreq = devfreq_get_devfreq_by_phandle(bus->dev, 0);
-> > +	if (!IS_ERR(parent_devfreq)) {
-> > +		struct exynos_bus *parent_bus;
+> In addition, it will also be used for the upcoming EROFS
+> filesystem, which heavily uses tagged pointer pproach
+>  to reduce extra memory allocation.
 > 
-> What if someone unbinds this parent devfreq? I guess everything in
-> devfreq starts exploding... however it's not the problem of this patch.
+> Link: https://en.wikipedia.org/wiki/Tagged_pointer
 > 
-> Do you also need suspend/resume order (device links)? I guess the other
-> side, e.g.  mixer, should resume before the bus?
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-Actually, I think that the bus (devfreq) should resume before mixer. However,
-suspend/resume order is another issue that applies to this driver regardless of
-using the interconnect framework, although device links could probably also be
-implemented in the interconnect framework itself.
+I'm not sure the generic approach you take is really needed here... You can
+rely on getting at most two unused bits in the pointer anyway (and on mk68
+architecture I've heard even that is not true but I guess you don't care).
+So why not just define a single pointer type representing pointer with as
+many tags as you can get? Also what I find bad about your tagptr approach
+is that the way you've implemented it you loose the information about the
+original pointer type. So overall I'm not sure the benefits outweight the
+downsides but I guess that's a matter of taste and ultimately your call as
+a maintainer of this code.
 
-> > +		parent_bus = dev_get_drvdata(parent_devfreq->dev.parent);
-> > +		parent_node = parent_bus->node;
-> > +	} else {
-> > +		/* Look for parent in DT */
-> > +		int num = of_count_phandle_with_args(np, "parent",
-> > +						     "#interconnect-cells");
-> > +		if (num != 1)
+								Honza
+
+> ---
+>  fs/erofs/tagptr.h | 110 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 fs/erofs/tagptr.h
 > 
-> You will return here 0 but isn't it an error?
-
-It is definitely not an error when 'parent' does not exist in DT (for buses that
-are parents themselves). I can extend the comment in the code to explicitly
-state that.
-
-Best regards,
+> diff --git a/fs/erofs/tagptr.h b/fs/erofs/tagptr.h
+> new file mode 100644
+> index 000000000000..a72897c86744
+> --- /dev/null
+> +++ b/fs/erofs/tagptr.h
+> @@ -0,0 +1,110 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * A tagged pointer implementation
+> + *
+> + * Copyright (C) 2018 Gao Xiang <gaoxiang25@huawei.com>
+> + */
+> +#ifndef __EROFS_FS_TAGPTR_H
+> +#define __EROFS_FS_TAGPTR_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/build_bug.h>
+> +
+> +/*
+> + * the name of tagged pointer types are tagptr{1, 2, 3...}_t
+> + * avoid directly using the internal structs __tagptr{1, 2, 3...}
+> + */
+> +#define __MAKE_TAGPTR(n) \
+> +typedef struct __tagptr##n {	\
+> +	uintptr_t v;	\
+> +} tagptr##n##_t;
+> +
+> +__MAKE_TAGPTR(1)
+> +__MAKE_TAGPTR(2)
+> +__MAKE_TAGPTR(3)
+> +__MAKE_TAGPTR(4)
+> +
+> +#undef __MAKE_TAGPTR
+> +
+> +extern void __compiletime_error("bad tagptr tags")
+> +	__bad_tagptr_tags(void);
+> +
+> +extern void __compiletime_error("bad tagptr type")
+> +	__bad_tagptr_type(void);
+> +
+> +/* fix the broken usage of "#define tagptr2_t tagptr3_t" by users */
+> +#define __tagptr_mask_1(ptr, n)	\
+> +	__builtin_types_compatible_p(typeof(ptr), struct __tagptr##n) ? \
+> +		(1UL << (n)) - 1 :
+> +
+> +#define __tagptr_mask(ptr)	(\
+> +	__tagptr_mask_1(ptr, 1) ( \
+> +	__tagptr_mask_1(ptr, 2) ( \
+> +	__tagptr_mask_1(ptr, 3) ( \
+> +	__tagptr_mask_1(ptr, 4) ( \
+> +	__bad_tagptr_type(), 0)))))
+> +
+> +/* generate a tagged pointer from a raw value */
+> +#define tagptr_init(type, val) \
+> +	((typeof(type)){ .v = (uintptr_t)(val) })
+> +
+> +/*
+> + * directly cast a tagged pointer to the native pointer type, which
+> + * could be used for backward compatibility of existing code.
+> + */
+> +#define tagptr_cast_ptr(tptr) ((void *)(tptr).v)
+> +
+> +/* encode tagged pointers */
+> +#define tagptr_fold(type, ptr, _tags) ({ \
+> +	const typeof(_tags) tags = (_tags); \
+> +	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(type))) \
+> +		__bad_tagptr_tags(); \
+> +tagptr_init(type, (uintptr_t)(ptr) | tags); })
+> +
+> +/* decode tagged pointers */
+> +#define tagptr_unfold_ptr(tptr) \
+> +	((void *)((tptr).v & ~__tagptr_mask(tptr)))
+> +
+> +#define tagptr_unfold_tags(tptr) \
+> +	((tptr).v & __tagptr_mask(tptr))
+> +
+> +/* operations for the tagger pointer */
+> +#define tagptr_eq(_tptr1, _tptr2) ({ \
+> +	typeof(_tptr1) tptr1 = (_tptr1); \
+> +	typeof(_tptr2) tptr2 = (_tptr2); \
+> +	(void)(&tptr1 == &tptr2); \
+> +(tptr1).v == (tptr2).v; })
+> +
+> +/* lock-free CAS operation */
+> +#define tagptr_cmpxchg(_ptptr, _o, _n) ({ \
+> +	typeof(_ptptr) ptptr = (_ptptr); \
+> +	typeof(_o) o = (_o); \
+> +	typeof(_n) n = (_n); \
+> +	(void)(&o == &n); \
+> +	(void)(&o == ptptr); \
+> +tagptr_init(o, cmpxchg(&ptptr->v, o.v, n.v)); })
+> +
+> +/* wrap WRITE_ONCE if atomic update is needed */
+> +#define tagptr_replace_tags(_ptptr, tags) ({ \
+> +	typeof(_ptptr) ptptr = (_ptptr); \
+> +	*ptptr = tagptr_fold(*ptptr, tagptr_unfold_ptr(*ptptr), tags); \
+> +*ptptr; })
+> +
+> +#define tagptr_set_tags(_ptptr, _tags) ({ \
+> +	typeof(_ptptr) ptptr = (_ptptr); \
+> +	const typeof(_tags) tags = (_tags); \
+> +	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
+> +		__bad_tagptr_tags(); \
+> +	ptptr->v |= tags; \
+> +*ptptr; })
+> +
+> +#define tagptr_clear_tags(_ptptr, _tags) ({ \
+> +	typeof(_ptptr) ptptr = (_ptptr); \
+> +	const typeof(_tags) tags = (_tags); \
+> +	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
+> +		__bad_tagptr_tags(); \
+> +	ptptr->v &= ~tags; \
+> +*ptptr; })
+> +
+> +#endif	/* __EROFS_FS_TAGPTR_H */
+> +
+> -- 
+> 2.17.1
+> 
 -- 
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
-
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
