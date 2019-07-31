@@ -2,101 +2,105 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B09CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E97C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062FE20449
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:37:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzIcHkSb"
+	by mail.kernel.org (Postfix) with ESMTP id 5B7942067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbfGaXhH (ORCPT
+        id S1730915AbfGaXhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:37:07 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35127 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfGaXhH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:37:07 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u14so32745403pfn.2;
-        Wed, 31 Jul 2019 16:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=HkJbMijve+37uAnT22qDE+Z0CK5Fv6mxxx9Tamb2xfY=;
-        b=lzIcHkSbX+PlBpxPfBNMHvVgD6toyym4cqqPUTR7YzdyqH4zbgv30GXBxCV29BLaUs
-         gfO7IWNMN1zfVgt3g9qMGJC86MFHEio2/9AZBKNKCNbNmHwk6QKnY/s+A+6HQcEvKg3o
-         Go6XKFK6uVSayITl/+Q6tKmfwK2oPhM2LoYzStg5hX7M3qbYHTP6qmryZpy433ul+gEC
-         22JrNP7nUE2B4B6Y5uVMciZWXPfnbJLG40vo5XZlUh5sMT7EcRezxE5u5XU7k/Qgdy3T
-         /nM/n0Id0y/NZT7WKp4OvO42Sh15ro9FY5Lze9Z71eYebYwtBE0XVWeVh2QTOA/T1Qoz
-         86Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=HkJbMijve+37uAnT22qDE+Z0CK5Fv6mxxx9Tamb2xfY=;
-        b=UcikxRXRwwMa8Y5NDMNa8UOlvOSDK/aWgTxrhndunJz0MpSSGoJNzNquQRXwuvcTg3
-         l8drS8qgEY9RaiowNbLgjYbC1bvcp1jIcGXaFfYXtcMQKs0U6ggj/M03zI6d+gzgWWPg
-         g+Y/0L5gPcN70okBQ3i8kJDpg85VYdUYY9eeEWTLOCNV86jC/KXU+zeID/9D9iY8EkzG
-         e31xJ2FLPPEDH+E+qWGQMVHNezF1cVTElyu+V4faXKmxo3rXJ4HMc7jlGdDlGFpw5I+Y
-         Oa0euTFoEICIp5WgcXvyviBTGR6WpaE9wIwLKCfGyAgP5QevI90r0lmaPoVMLlGRZHPU
-         /NKw==
-X-Gm-Message-State: APjAAAUCNsAAfrJxU3eRODpS4wbmgG4rDQjNIDZ9KHEIc29GEs/vsAug
-        nrAWGBo7zKrvgw2kDJlD1Q1xjsriRSc=
-X-Google-Smtp-Source: APXvYqwwaerEeV1TDEGtvr7CR7wMLtz0X532yMDm9O+OQlXmPRUFBa9WS8plLiKxG5iCAj+K+KXjvg==
-X-Received: by 2002:a17:90b:949:: with SMTP id dw9mr5320838pjb.49.1564616226781;
-        Wed, 31 Jul 2019 16:37:06 -0700 (PDT)
-Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
-        by smtp.gmail.com with ESMTPSA id b16sm112490514pfo.54.2019.07.31.16.37.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 16:37:06 -0700 (PDT)
-From:   Mark Balantzyan <mbalant3@gmail.com>
-X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
-Date:   Wed, 31 Jul 2019 16:37:02 -0700 (PDT)
-To:     Guenter Roeck <linux@roeck-us.net>
-cc:     Mark Balantzyan <mbalant3@gmail.com>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pavel Andrianov <andrianov@ispras.ru>
-Subject: Re: [PATCH] watchdog:alim1535_wdt: Fix data race in ali_settimer()
- concerning ali_timeout_bits variable.
-In-Reply-To: <20190731192410.GA4935@roeck-us.net>
-Message-ID: <alpine.DEB.2.21.1907311620010.2747@mbalantz-desktop>
-References: <20190718155238.3066-1-mbalant3@gmail.com> <20190718163458.GA18125@roeck-us.net> <alpine.DEB.2.21.1907310911120.29703@mbalantz-desktop> <20190731164337.GA13646@roeck-us.net> <alpine.DEB.2.21.1907311118190.81695@mbalantz-desktop>
- <20190731192410.GA4935@roeck-us.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 31 Jul 2019 19:37:33 -0400
+Received: from mga07.intel.com ([134.134.136.100]:54398 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729275AbfGaXhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 19:37:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 16:37:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,332,1559545200"; 
+   d="scan'208";a="256368246"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga001.jf.intel.com with ESMTP; 31 Jul 2019 16:37:31 -0700
+Date:   Wed, 31 Jul 2019 16:37:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH RFC 3/5] x86: KVM: svm: clear interrupt shadow on all
+ paths in skip_emulated_instruction()
+Message-ID: <20190731233731.GA2845@linux.intel.com>
+References: <20190620110240.25799-1-vkuznets@redhat.com>
+ <20190620110240.25799-4-vkuznets@redhat.com>
+ <CALMp9eQ85h58NMDh-yOYvHN6_2f2T-wu63f+yLnNbwuG+p3Uvw@mail.gmail.com>
+ <87ftmm71p3.fsf@vitty.brq.redhat.com>
+ <36a9f411-f90c-3ffa-9ee3-6ebee13a763f@redhat.com>
+ <CALMp9eQLCEzfdNzdhPtCf3bD-5c6HrSvJqP7idyoo4Gf3i5O1w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eQLCEzfdNzdhPtCf3bD-5c6HrSvJqP7idyoo4Gf3i5O1w@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter, all,
+On Wed, Jul 31, 2019 at 01:27:53PM -0700, Jim Mattson wrote:
+> On Wed, Jul 31, 2019 at 9:37 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >
+> > On 31/07/19 15:50, Vitaly Kuznetsov wrote:
+> > > Jim Mattson <jmattson@google.com> writes:
+> > >
+> > >> On Thu, Jun 20, 2019 at 4:02 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> > >>>
+> > >>> Regardless of the way how we skip instruction, interrupt shadow needs to be
+> > >>> cleared.
+> > >>
+> > >> This change is definitely an improvement, but the existing code seems
+> > >> to assume that we never call skip_emulated_instruction on a
+> > >> POP-SS/MOV-to-SS/STI. Is that enforced anywhere?
+> > >
+> > > (before I send v1 of the series) I looked at the current code and I
+> > > don't think it is enforced, however, VMX version does the same and
+> > > honestly I can't think of a situation when we would be doing 'skip' for
+> > > such an instruction.... and there's nothing we can easily enforce from
+> > > skip_emulated_instruction() as we have no idea what the instruction
+> > > is...
+> 
+> Can't we still coerce kvm into emulating any instruction by leveraging
+> a stale ITLB entry? The 'emulator' kvm-unit-test did this before the
+> KVM forced emulation prefix was introduced, but I haven't checked to
+> see if the original (admittedly fragile) approach still works. Also,
+> for POP-SS, you could always force emulation by mapping the %rsp
+> address beyond guest physical memory. The hypervisor would then have
+> to emulate the instruction to provide bus-error semantics.
+> 
+> > I agree, I think a comment is worthwhile but we can live with the
+> > limitation.
+> 
+> I think we can live with the limitation, but I'd really prefer to see
+> a KVM exit with KVM_INTERNAL_ERROR_EMULATION for an instruction that
+> kvm doesn't emulate properly. That seems better than just a comment
+> that the virtual CPU doesn't behave as architected. (I realize that I
+> am probably in the minority here.)
 
- 	I don't really understand this focus on fixing theoretic/irrelevant
- 	race conditions in drivers which no one uses anymore. Maybe someone
- 	can enlighten me ?
+At a glance, the full emulator models behavior correctly, e.g. see
+toggle_interruptibility() and setters of ctxt->interruptibility.
 
-In conjunction with linuxtesting.org and The Linux Foundation, I've been 
-enlisted to test and work on helping to test tools they use for 
-reliability testing of linux-based systems. In particular, two tools, 
-RaceHound (whose command is 'lines2insns' and which isolates race 
-conditions in kernel modules) and Klever, which is browser-based, are
-under continual development by the Center and I aim to help them improve
-their throughput by aiding in investigating where, in the automated nature
-particularly of Klever (requiring considerable configuration as well),
-there may areas to improve.
-
-Hence, yes, a large amount of our findings result in manifesting as 
-theoretical and possible only, but relevant to improving the tools 
-nonetheless.
-
-Hope that helps with the 'enlightening' :), regards,
-Mark
+I'm pretty sure that leaves the EPT misconfig MMIO and APIC access EOI
+fast paths as the only (VMX) path that would incorrectly handle a
+MOV/POP SS.  Reading the guest's instruction stream to detect MOV/POP SS
+would defeat the whole "fast path" thing, not to mention both paths aren't
+exactly architecturally compliant in the first place.
