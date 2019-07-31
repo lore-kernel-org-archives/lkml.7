@@ -2,126 +2,55 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E44BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0750AC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A29206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:44:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="MOyunKS4"
+	by mail.kernel.org (Postfix) with ESMTP id D93AF216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbfGaSoH (ORCPT
+        id S1730463AbfGaSpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:44:07 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42806 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730428AbfGaSoG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:44:06 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t28so66648738lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:44:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=S8iymda7xPMQ4926S35iyef8N5nHE8NRBoOVEkW+KiU=;
-        b=MOyunKS4ipxqo9LGPAcFwtqEOm8UGWkGuO7rQLbHcexMrHl3rDvDcdiO4C/Jo5RKI9
-         J4nc/lBbKWNLaF+MFCp8pJkWbpFpwXpaEDPUs6xCyXwZXrK3wQWniYdrY/NSf/UAIc1f
-         WJSkyj+AFRo5ypChNb3XX+Z8/xrdfdVsppMWYKlwrTj4xdMOfLTMNvsD2d8OGKiS27ny
-         jzhap1hRgLGYCamoJYJO9sJOtpJUOFij5jc9V5FtuEmYOwwfVdBmEVjZXIJm94pWEJsq
-         4xrheUp7DpybEuiXIh+NOJuyQ5KOK4NlU2zTmGmT3n6FzDJTiDO2LlI7kUsxMYERq126
-         mb5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=S8iymda7xPMQ4926S35iyef8N5nHE8NRBoOVEkW+KiU=;
-        b=AnEqvfpfU1T7CzZTU5gv4eRN0mHsNDZtq1GZG0b0qi+BHGieu1rl+sD1sjPnNgiWoz
-         lnu1QoCAFFACe1snnSqQNtKR2PSp4CXtMLnnueB0GLfTv5SSEN/qh0QNMuuEd5ISrajl
-         kRTkzpQsRWDKbam0//PxV98hXuHr0DCFgYIFv08IcjqWvATBhUAP7eYXnjNGH5cr7+Xt
-         MZ/f87ZMQ6UodSMRL/Lp4Wpd7ukxL86q3p3N0jD9JQE1lfUXaqWNezg7xmSWOZOQim9t
-         5Qb80Te3sOpN0MLXzJ/aPCCdS4B/gE31L2ASUtTmMpKtebE6GPT4Wj2RCZSfinO7oKp/
-         E2gg==
-X-Gm-Message-State: APjAAAUvHIqcB5e186JPL2phjJ+DceMf59cGvhN0H5HRcXjIOGT5MP8t
-        W3T98yEEHhKTSFI3/Daa7j7s1Chi
-X-Google-Smtp-Source: APXvYqzk/7IbaRdwdAyiPhPaBK+fYqXkLLaHXkk14KwsgUDgjDgxSu4c1Upcw5nTh1Zua41AOjxpdg==
-X-Received: by 2002:a2e:994:: with SMTP id 142mr64164643ljj.130.1564598643913;
-        Wed, 31 Jul 2019 11:44:03 -0700 (PDT)
-Received: from localhost (customer-145-14-112-32.stosn.net. [145.14.112.32])
-        by smtp.gmail.com with ESMTPSA id f1sm14065815ljf.53.2019.07.31.11.44.03
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 11:44:03 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 20:44:02 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] thermal: rcar_gen3_thermal: Use
- devm_add_action_or_reset() helper
-Message-ID: <20190731184402.GL3186@bigcity.dyn.berto.se>
-References: <20190731125053.14750-1-geert+renesas@glider.be>
+        Wed, 31 Jul 2019 14:45:16 -0400
+Received: from ms.lwn.net ([45.79.88.28]:55548 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729312AbfGaSpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 14:45:16 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 91CC27DA;
+        Wed, 31 Jul 2019 18:45:15 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 12:45:14 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     <linux-doc@vger.kernel.org>, <chao@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mailmap: add entry to connect my email addresses
+Message-ID: <20190731124514.5659597e@lwn.net>
+In-Reply-To: <20190731114510.42003-1-yuchao0@huawei.com>
+References: <20190731114510.42003-1-yuchao0@huawei.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190731125053.14750-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Wed, 31 Jul 2019 19:45:10 +0800
+Chao Yu <yuchao0@huawei.com> wrote:
 
-Thanks for your work.
-
-On 2019-07-31 14:50:53 +0200, Geert Uytterhoeven wrote:
-> Use the devm_add_action_or_reset() helper instead of open-coding the
-> same operations.
+> I've used several email accounts to contribute codes, samsung's one
+> is obsolete, so let me add entry to map them, in order to let people
+> find me easily when they blame my codes.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Applied, thanks.
 
-> ---
->  drivers/thermal/rcar_gen3_thermal.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-> index a56463308694e937..2db7e7f8baf939fd 100644
-> --- a/drivers/thermal/rcar_gen3_thermal.c
-> +++ b/drivers/thermal/rcar_gen3_thermal.c
-> @@ -443,11 +443,10 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
->  		if (ret)
->  			goto error_unregister;
->  
-> -		ret = devm_add_action(dev, rcar_gen3_hwmon_action, zone);
-> -		if (ret) {
-> -			rcar_gen3_hwmon_action(zone);
-> +		ret = devm_add_action_or_reset(dev, rcar_gen3_hwmon_action,
-> +					       zone);
-> +		if (ret)
->  			goto error_unregister;
-> -		}
->  
->  		ret = of_thermal_get_ntrips(tsc->zone);
->  		if (ret < 0)
-> -- 
-> 2.17.1
-> 
-
--- 
-Regards,
-Niklas Söderlund
+jon
