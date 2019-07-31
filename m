@@ -2,100 +2,132 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABD9C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682D7C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1BB5206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476C6206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfGaThl (ORCPT
+        id S1727817AbfGaTjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:37:41 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:38436 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbfGaThl (ORCPT
+        Wed, 31 Jul 2019 15:39:00 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:39089 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfGaTi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:37:41 -0400
-Received: by mail-ua1-f68.google.com with SMTP id j2so625052uaq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:37:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=+bKc7B4JzgT9DtuNjUTDcn35OMgA2VDnh+9KjBEbSOU=;
-        b=H29iwchNwHtctZrbJJZv0GjX42hNl/qrUMljDpkCGmNZ5nnZm7THfjws+hP5/kFaMp
-         kFATcROlXRPGa0ZN0Z3df/gT7MjFGAp/tljrc1/of40mwzZrwzSbztzDECAek4qmPjWX
-         +L/OK5gLa1kQDcN6LIUWMF4BLOUOecuCayW7jKKbyMfGBLnhzR6RG2tiLPIccqF/huUi
-         Oqaun0X1L5jsrYxJJ8WmGl2FyP896ulu99iTHlOgmWq7N6rMXpJyIp+Kv3rnuxr+TH3W
-         8FbLDoD7LKedlxKfiA3sVS+NHczNJc9Tlpr8nES423NKvHK7LpRfTnzJqcYtyPKuNQdS
-         Kh1g==
-X-Gm-Message-State: APjAAAULb3qneOsNrAzfuAsaIAuK+TFt9bjiqQg9E3Kb83WXl/zvbugc
-        JQMhfXPJs8B3Q/DkNRIKK4iVsA==
-X-Google-Smtp-Source: APXvYqw/uC7Sg0RgYeqV/6ZnjT1WzyZlwnkKUfrWxPSyTzC349Dq5/eLPf4Pq8CVGYdLBk+RnFtD3Q==
-X-Received: by 2002:ab0:175:: with SMTP id 108mr75476010uak.136.1564601860284;
-        Wed, 31 Jul 2019 12:37:40 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id a23sm8006371vkl.52.2019.07.31.12.37.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 12:37:39 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 15:37:34 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH V2 4/9] vhost: reset invalidate_count in
- vhost_set_vring_num_addr()
-Message-ID: <20190731153640-mutt-send-email-mst@kernel.org>
-References: <20190731084655.7024-1-jasowang@redhat.com>
- <20190731084655.7024-5-jasowang@redhat.com>
- <20190731124124.GD3946@ziepe.ca>
- <31ef9ed4-d74a-3454-a57d-fa843a3a802b@redhat.com>
- <20190731193252.GH3946@ziepe.ca>
+        Wed, 31 Jul 2019 15:38:59 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: QItxWUjXxfmU58bkTu20RlW73WJdjALj2MyPDaIJfYsdwd0l/DoJQ2Z5SZzQ643YJ01xgLQGcg
+ Pwd2koZ/Qv3uLxEtxpflj3G9gcFAXEFTkmVj6CtaqWU+TlVISaJz7exB7XXhELQBW9LHO9zLnk
+ 7D7il3cB1U6fX8IJ6wHFT9Txf2gdw9CYqdlkSLjY3LUIQmJK9RHZUg5J9BwN09EOi10zYR6G0m
+ ZxiTgcXeIVbAcjpEe7JKVpOGWhrUMRWXzTrzpVa0zSonlMVTcTfqLZnP7EFDXOu5XC4Wha9Scq
+ TNQ=
+X-IronPort-AV: E=Sophos;i="5.64,331,1559545200"; 
+   d="scan'208";a="43512647"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Jul 2019 12:38:58 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 31 Jul 2019 12:38:57 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 31 Jul 2019 12:38:56 -0700
+Date:   Wed, 31 Jul 2019 21:38:57 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Ido Schimmel <idosch@idosch.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
+        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
+Message-ID: <20190731193855.sgpbvam5v2a5gkia@lx-anielsen.microsemi.net>
+References: <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
+ <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
+ <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
+ <20190729175136.GA28572@splinter>
+ <20190730062721.p4vrxo5sxbtulkrx@lx-anielsen.microsemi.net>
+ <20190730143400.GO28552@lunn.ch>
+ <20190730190000.diacyjw6owqkf7uf@lx-anielsen.microsemi.net>
+ <20190731033156.GE9523@lunn.ch>
+ <20190731080149.oyqcrw42utxjizsx@lx-anielsen.microsemi.net>
+ <20190731134550.GA23028@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190731193252.GH3946@ziepe.ca>
+In-Reply-To: <20190731134550.GA23028@lunn.ch>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 04:32:52PM -0300, Jason Gunthorpe wrote:
-> On Wed, Jul 31, 2019 at 09:29:28PM +0800, Jason Wang wrote:
+The 07/31/2019 15:45, Andrew Lunn wrote:
+> > Here is how I see it:
 > > 
-> > On 2019/7/31 下午8:41, Jason Gunthorpe wrote:
-> > > On Wed, Jul 31, 2019 at 04:46:50AM -0400, Jason Wang wrote:
-> > > > The vhost_set_vring_num_addr() could be called in the middle of
-> > > > invalidate_range_start() and invalidate_range_end(). If we don't reset
-> > > > invalidate_count after the un-registering of MMU notifier, the
-> > > > invalidate_cont will run out of sync (e.g never reach zero). This will
-> > > > in fact disable the fast accessor path. Fixing by reset the count to
-> > > > zero.
-> > > > 
-> > > > Reported-by: Michael S. Tsirkin <mst@redhat.com>
-> > > Did Michael report this as well?
+> > Teach the SW bridge about non-IP multicast addresses. Initially the switch
+> > should forward all MAC multicast frames to the CPU. Today MDB rules can be
+> > installed (either static or dynamic by IGMP), which limit the flooding of IPv4/6
+> > multicast streams. In the same way, we should have a way to install a rule
+> > (FDM/ or MDB) to limit the flooding of L2 multicast frames.
 > > 
+> > If foreign interfaces (or br0 it self) is part of the destination list, then
+> > traffic also needs to go to the CPU.
 > > 
-> > Correct me if I was wrong. I think it's point 4 described in
-> > https://lkml.org/lkml/2019/7/21/25.
-> 
-> I'm not sure what that is talking about
-> 
-> But this fixes what I described:
-> 
-> https://lkml.org/lkml/2019/7/22/554
-> 
-> Jason
+> > By doing this, we can for explicitly configured dst mac address:
+> > - limit the flooding on the on the SW bridge interfaces
+> > - limit the flooding on the on the HW bridge interfaces
+> > - prevent them to go to the CPU if they are not needed
+> This is all very complex because of all the different corner cases. So
+> i don't think we want a user API to do the CPU part, we want the
+> network stack to do it. Otherwise the user is going to get is wrong,
+> break their network, and then come running to the list for help.
+Not sure I really understand what to conclude from this... Their are already
+many ways the user can break it (tc has great hooks for that), and I not think
+we can really prevent the user in configuring something that break stuff (but
+we should not make it too easy either).
 
-These are two reasons for a possible counter imbalance.
-Unsurprisingly they are both fixed if you reset the counter to 0.
+Anyway, Horatiu has come a long way in creating a (surprising simple) patch
+which allow us to limit the flooding of L2-multicast. It is following the
+guidance from Nikolay, it is using the MDB database, and I beleive it is well
+aligned with the existing sw-bridge design.
 
--- 
-MST
+I hope it will be ready tomorrow, then we can have a look at it and see if it is
+any good.
+
+> This also fits with how we do things in DSA. There is deliberately no
+> user space concept for configuring the DSA CPU port. To user space,
+> the switch is just a bunch of Linux interfaces. Everything to do with
+> the CPU port is hidden away in the DSA core layer, the DSA drivers,
+> and a little bit in the bridge.
+
+Understood, but as far as I understand, in DSA you still have the br0 interface,
+which kind-of represent the traffic going to the CPU (like in pure SW bridge,
+and SwitchDev offloaded SW-bridge).
+
+/Allan
+
