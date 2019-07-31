@@ -2,129 +2,100 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26175C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C24C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09730208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE43C208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:48:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sFymQmSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbfGaSrP (ORCPT
+        id S1730515AbfGaSsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:47:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46476 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfGaSrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:47:14 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4B10288311;
-        Wed, 31 Jul 2019 18:47:14 +0000 (UTC)
-Received: from [10.36.116.49] (ovpn-116-49.ams2.redhat.com [10.36.116.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1628B6012E;
-        Wed, 31 Jul 2019 18:47:08 +0000 (UTC)
-Subject: Re: [PATCH] vfio: re-arrange vfio region definitions
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190717114956.16263-1-cohuck@redhat.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <05e97697-70a3-51dd-dd2a-4a8bf6c380bb@redhat.com>
-Date:   Wed, 31 Jul 2019 20:47:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 31 Jul 2019 14:48:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57508 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfGaSsy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 14:48:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=T7ULjvdqUswUXl7xdVoocHJnJnvyW9s8KsaXijspzNI=; b=sFymQmSbsIBXGw2JPbXmQWGsa
+        8+7CEUKjwOY26lsLhmqwV2Th6QUZAX87HGNeH11Treo8bWR0RGYmRDRgu6JVc+yGnAHtTrsX/Sj5s
+        76vKQYPbq8UDcGHDMhnFuQ8oQvmwoPjlBPBmFv3Z79ohxE102eY8bim2lV3d2U1Dx5BiVZPFTp+Bj
+        hCkb9KhDKkeCLfFs49S0+xiPINUBlDwTL+9cSpOoQbtUGK0CBxAcCQ7wcrFEqovILqegDicPARS1+
+        ld82x5BEfdAXsKq4B4IBnCcaZKpgt8s3OCXFRX7E3kWJtfLgwx3nVpEcvCY/SdwyDGUKANQlsOoSE
+        6QIF1bZDw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsteN-0000up-BM; Wed, 31 Jul 2019 18:48:35 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 060602029F4C5; Wed, 31 Jul 2019 20:48:33 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 20:48:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     hpa@zytor.com
+Cc:     Joe Perches <joe@perches.com>, Pavel Machek <pavel@ucw.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
+ keyword for switch/case use
+Message-ID: <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+ <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
+ <20190731171429.GA24222@amd>
+ <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
+ <765E740C-4259-4835-A58D-432006628BAC@zytor.com>
 MIME-Version: 1.0
-In-Reply-To: <20190717114956.16263-1-cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 31 Jul 2019 18:47:14 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <765E740C-4259-4835-A58D-432006628BAC@zytor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Connie,
+On Wed, Jul 31, 2019 at 11:24:36AM -0700, hpa@zytor.com wrote:
+> >> > +/*
+> >> > + * Add the pseudo keyword 'fallthrough' so case statement blocks
+> >> > + * must end with any of these keywords:
+> >> > + *   break;
+> >> > + *   fallthrough;
+> >> > + *   goto <label>;
+> >> > + *   return [expression];
+> >> > + *
+> >> > + *  gcc: >https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html#Statement-Attributes
+> >> > + */
+> >> > +#if __has_attribute(__fallthrough__)
+> >> > +# define fallthrough                   __attribute__((__fallthrough__))
+> >> > +#else
+> >> > +# define fallthrough                    do {} while (0)  /* fallthrough */
+> >> > +#endif
+> >> > +
 
-On 7/17/19 1:49 PM, Cornelia Huck wrote:
-> It is easy to miss already defined region types. Let's re-arrange
-> the definitions a bit and add more comments to make it hopefully
-> a bit clearer.
-> 
-> No functional change.
-> 
-> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-> ---
->  include/uapi/linux/vfio.h | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 8f10748dac79..d9bcf40240be 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -295,15 +295,23 @@ struct vfio_region_info_cap_type {
->  	__u32 subtype;	/* type specific */
->  };
->  
-> +/*
-> + * List of region types, global per bus driver.
-> + * If you introduce a new type, please add it here.
-> + */
-> +
-> +/* PCI region type containing a PCI vendor part */
->  #define VFIO_REGION_TYPE_PCI_VENDOR_TYPE	(1 << 31)
->  #define VFIO_REGION_TYPE_PCI_VENDOR_MASK	(0xffff)
-> +#define VFIO_REGION_TYPE_GFX                    (1)
-> +#define VFIO_REGION_TYPE_CCW			(2)
->  
-> -/* 8086 Vendor sub-types */
-> +/* 8086 vendor PCI sub-types */
->  #define VFIO_REGION_SUBTYPE_INTEL_IGD_OPREGION	(1)
->  #define VFIO_REGION_SUBTYPE_INTEL_IGD_HOST_CFG	(2)
->  #define VFIO_REGION_SUBTYPE_INTEL_IGD_LPC_CFG	(3)
->  
-> -#define VFIO_REGION_TYPE_GFX                    (1)
-> +/* GFX sub-types */
->  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
->  
->  /**
-> @@ -353,20 +361,17 @@ struct vfio_region_gfx_edid {
->  #define VFIO_DEVICE_GFX_LINK_STATE_DOWN  2
->  };
->  
-> -#define VFIO_REGION_TYPE_CCW			(2)
->  /* ccw sub-types */
->  #define VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD	(1)
->  
-> +/* 10de vendor PCI sub-types */
->  /*
-> - * 10de vendor sub-type
-> - *
->   * NVIDIA GPU NVlink2 RAM is coherent RAM mapped onto the host address space.
->   */
->  #define VFIO_REGION_SUBTYPE_NVIDIA_NVLINK2_RAM	(1)
->  
-> +/* 1014 vendor PCI sub-types*/
->  /*
-> - * 1014 vendor sub-type
-Maybe the 10de vendor sub-type and 1014 vendor sub-type could be put
-just after /* 8086 vendor PCI sub-types */
+> If the comments are stripped, how would the compiler see them to be
+> able to issue a warning? I would guess that it is retained or replaced
+> with some other magic token.
 
-More generally if it were possible to leave the subtypes close to their
-parent type too, this would be beneficial I think.
+Everything that has the warning (GCC-7+/CLANG-9) has that attribute.
 
-Besides that becomes sensible to put all those definitions together.
-
-Thanks
-
-Eric
-> - *
->   * IBM NPU NVlink2 ATSD (Address Translation Shootdown) register of NPU
->   * to do TLB invalidation on a GPU.
->   */
-> 
