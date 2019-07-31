@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A263C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE82C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5C22064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A0F2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="BHAeXd7g"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="R36gYrhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388322AbfGaPKC (ORCPT
+        id S2388510AbfGaPIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:10:02 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37829 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388533AbfGaPI0 (ORCPT
+        Wed, 31 Jul 2019 11:08:23 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43815 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388314AbfGaPIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:08:26 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w13so66060906eds.4
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:25 -0700 (PDT)
+        Wed, 31 Jul 2019 11:08:19 -0400
+Received: by mail-ed1-f68.google.com with SMTP id e3so66030483edr.10
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JEZNWwFcWS55jw+6SIN48eCAvZTaxQLDv71jatzDjOE=;
-        b=BHAeXd7gVXgBxYu3UUq38JWfB9LxZIY8nRNcqLidTcyniNbN1kGL7m8gr0DYCgHyfo
-         bYCkEUg7twHqYl9//YYyF3oRucuIzp6d8krWu5AXZuwBtWBWqFWBt/UfnX3pxSNussqT
-         vPwPX9shBW0HElOKWXJF5lb9bZsc1LRrg5iG4cMsZyUylv9NMvgzxJC+ak2MqH41uDGx
-         kDLz4WiHVp5dMULHZ0AJck/7y17op+S1LY4RIr4iUP8aw3l+KaMe13SwSVOBLq30rQZD
-         RxmVZou3sCnH16cwB+iAELC3TlHF1bUMdJfNLvVlBfrQL9P/s9szyRTBQ5Oj+oYcjPpJ
-         mDPQ==
+        bh=wLPXwl8hvJobXFCl++g4aCvf+npUzZ0QqPbdONmdAQc=;
+        b=R36gYrhWPE65DAN624GOKj6Zcvo/ac/skfKDjJ3xcAQFiNmr7dX573jmLVCRaNG72Z
+         xcMGnyIs1LpXnhGK5JxEboIEAPxR/EeGcod/4MYW/A0bbBy9yBKnmU2CF6SqodBq1bbG
+         2et49Q8QeC0Gi2N/dOFWHDkpO2qo6+z6lshk3KNGVbQlqNYxKAMnCnpgag0jzwh5HEUj
+         dMc4Sem5sBJAfoYBQzfFvzczhmipMrh7ObYbRCqFmv9xdDuVsiGlTB/dwRP9co2iZadV
+         LxdeXO4uRP+DUWTuqbPXM46fxWLgXQuCInUrkr1thUYy5i2Mt2bnKrQGqLbEspEV6MTU
+         W2og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JEZNWwFcWS55jw+6SIN48eCAvZTaxQLDv71jatzDjOE=;
-        b=t6pmul2ZJ6LwxU84e6sqwBHGu5wGShNbJoqv1eTj4Y5z2lpVMJxXchLK3Hm3XWhsVx
-         ByzH03S3li9o2d4ISQEpJnnkcen+kneL6Rx7Oesv0q9XqEoZq+0St9NFbZOoNpTetz9A
-         1/rxEpcc6ezVk5ePJVuViNNuLcdga8JZxWu7A3+XnNRGfbFVjY+gcjWVdI7Swbg5nOVl
-         KgmI3znO/LuIiWeU2LjkvYKr4GKNPU9qkDjzTQ/RecsocjE1oNwetcZG54q9V7n2qe5a
-         C0uJCHItxFQCuLKGtMkuyMqtkL1apIgSJ8VqDtr3iV6ZnuXbT3WPnkPgHzCALue6QcK0
-         lFvA==
-X-Gm-Message-State: APjAAAU9dlsA7PtFb8Az9xDAc4680ysL4U654NP7U+u0JXTg/fqPBc37
-        YyWJS7JekTsSOgGYZ5B7HBQ=
-X-Google-Smtp-Source: APXvYqwrlyk+jtOIzcQNAVf6976bJtJVVuXE4BPNEUU4FrC1EBQZ1KrsVfR+sDVvD7XGNJvKjIp/UA==
-X-Received: by 2002:a05:6402:1212:: with SMTP id c18mr108401816edw.7.1564585704701;
-        Wed, 31 Jul 2019 08:08:24 -0700 (PDT)
+        bh=wLPXwl8hvJobXFCl++g4aCvf+npUzZ0QqPbdONmdAQc=;
+        b=LYRfoIPP8tEDR3cV+A+scSstJO8gryju9kRXTyOkJRTfWp/uIbC6WzMIivJY4PEICq
+         kVwV21D5B0saLADbemkL1z7LtqDt0uoZB6IYD+CuIEvW0651FRdYBO0WuVDO2rMzOpHB
+         vGz1oZ8We86ES4D030Pf9c/k3AXnb96ynpKzy0OJd4HlH9MuVjne2DtoKrDa/BQ6WLSI
+         Ynu6nFxDAB65LfQiJSFTdu+LbWc9ahcfXugeXfuJCWTA6EOL5gb8iyYdyxE7vN9TBbRh
+         OrIFQFpjQg+BU7+TR443BF9/wD2wbKS3cX7bjZ1qa1xQSjXmP0xRwHd4h+A9u/VFp6hJ
+         O12g==
+X-Gm-Message-State: APjAAAVZ3tVvi3Df+oHFeRQTEYdH48ynyi0NJ5zyOrWkuVI2bFK4WAoZ
+        OJ9mbYMy1/AZCWsqPGFrrW4=
+X-Google-Smtp-Source: APXvYqw0oWdSxi7D+H/1P5QUyRaVYREdYgbW7LIf4XE4H22UAM6yie49PO/SDUQu/e/ngKqwbq3xkA==
+X-Received: by 2002:a17:906:430a:: with SMTP id j10mr10514767ejm.92.1564585696918;
+        Wed, 31 Jul 2019 08:08:16 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id w14sm17419509eda.69.2019.07.31.08.08.20
+        by smtp.gmail.com with ESMTPSA id y11sm12444493ejb.54.2019.07.31.08.08.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:08:22 -0700 (PDT)
+        Wed, 31 Jul 2019 08:08:15 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 48F28101324; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+        id F174F101319; Wed, 31 Jul 2019 18:08:15 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,9 +75,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 13/59] x86/mm: Add a helper to retrieve KeyID for a VMA
-Date:   Wed, 31 Jul 2019 18:07:27 +0300
-Message-Id: <20190731150813.26289-14-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 02/59] mm: Add helpers to setup zero page mappings
+Date:   Wed, 31 Jul 2019 18:07:16 +0300
+Message-Id: <20190731150813.26289-3-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,67 +88,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We store KeyID in upper bits for vm_page_prot that match position of
-KeyID in PTE. vma_keyid() extracts KeyID from vm_page_prot.
+When kernel sets up an encrypted page mapping, encryption KeyID is
+derived from a VMA. KeyID is going to be part of vma->vm_page_prot and
+it will be propagated transparently to page table entry on mk_pte().
 
-With KeyID in vm_page_prot we don't need to modify any page table helper
-to propagate the KeyID to page table entires.
+But there is an exception: zero page is never encrypted and its mapping
+must use KeyID-0, regardless VMA's KeyID.
+
+Introduce helpers that create a page table entry for zero page.
+
+The generic implementation will be overridden by architecture-specific
+code that takes care about using correct KeyID.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/include/asm/mktme.h | 12 ++++++++++++
- arch/x86/mm/mktme.c          |  7 +++++++
- 2 files changed, 19 insertions(+)
+ fs/dax.c                      | 3 +--
+ include/asm-generic/pgtable.h | 8 ++++++++
+ mm/huge_memory.c              | 6 ++----
+ mm/memory.c                   | 3 +--
+ mm/userfaultfd.c              | 3 +--
+ 5 files changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
-index 46041075f617..52b115b30a42 100644
---- a/arch/x86/include/asm/mktme.h
-+++ b/arch/x86/include/asm/mktme.h
-@@ -5,6 +5,8 @@
- #include <linux/page_ext.h>
- #include <linux/jump_label.h>
- 
-+struct vm_area_struct;
-+
- #ifdef CONFIG_X86_INTEL_MKTME
- extern phys_addr_t __mktme_keyid_mask;
- extern phys_addr_t mktme_keyid_mask(void);
-@@ -31,6 +33,16 @@ static inline int page_keyid(const struct page *page)
- 	return lookup_page_ext(page)->keyid;
+diff --git a/fs/dax.c b/fs/dax.c
+index a237141d8787..6ecc9c560e62 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -1445,8 +1445,7 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
+ 		pgtable_trans_huge_deposit(vma->vm_mm, vmf->pmd, pgtable);
+ 		mm_inc_nr_ptes(vma->vm_mm);
+ 	}
+-	pmd_entry = mk_pmd(zero_page, vmf->vma->vm_page_prot);
+-	pmd_entry = pmd_mkhuge(pmd_entry);
++	pmd_entry = mk_zero_pmd(zero_page, vmf->vma->vm_page_prot);
+ 	set_pmd_at(vmf->vma->vm_mm, pmd_addr, vmf->pmd, pmd_entry);
+ 	spin_unlock(ptl);
+ 	trace_dax_pmd_load_hole(inode, vmf, zero_page, *entry);
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 75d9d68a6de7..afcfbb4af4b2 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -879,8 +879,16 @@ static inline unsigned long my_zero_pfn(unsigned long addr)
  }
+ #endif
  
-+#define vma_keyid vma_keyid
-+int __vma_keyid(struct vm_area_struct *vma);
-+static inline int vma_keyid(struct vm_area_struct *vma)
-+{
-+	if (!mktme_enabled())
-+		return 0;
++#ifndef mk_zero_pte
++#define mk_zero_pte(addr, prot) pte_mkspecial(pfn_pte(my_zero_pfn(addr), prot))
++#endif
 +
-+	return __vma_keyid(vma);
-+}
-+
- #else
- #define mktme_keyid_mask()	((phys_addr_t)0)
- #define mktme_nr_keyids()	0
-diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-index 48c2d4c97356..d02867212e33 100644
---- a/arch/x86/mm/mktme.c
-+++ b/arch/x86/mm/mktme.c
-@@ -1,3 +1,4 @@
-+#include <linux/mm.h>
- #include <asm/mktme.h>
+ #ifdef CONFIG_MMU
  
- /* Mask to extract KeyID from physical address. */
-@@ -48,3 +49,9 @@ struct page_ext_operations page_mktme_ops = {
- 	.need = need_page_mktme,
- 	.init = init_page_mktme,
- };
++#ifndef mk_zero_pmd
++#define mk_zero_pmd(zero_page, prot) pmd_mkhuge(mk_pmd(zero_page, prot))
++#endif
 +
-+int __vma_keyid(struct vm_area_struct *vma)
-+{
-+	pgprotval_t prot = pgprot_val(vma->vm_page_prot);
-+	return (prot & mktme_keyid_mask()) >> mktme_keyid_shift();
-+}
+ #ifndef CONFIG_TRANSPARENT_HUGEPAGE
+ static inline int pmd_trans_huge(pmd_t pmd)
+ {
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 1334ede667a8..e9a791413730 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -678,8 +678,7 @@ static bool set_huge_zero_page(pgtable_t pgtable, struct mm_struct *mm,
+ 	pmd_t entry;
+ 	if (!pmd_none(*pmd))
+ 		return false;
+-	entry = mk_pmd(zero_page, vma->vm_page_prot);
+-	entry = pmd_mkhuge(entry);
++	entry = mk_zero_pmd(zero_page, vma->vm_page_prot);
+ 	if (pgtable)
+ 		pgtable_trans_huge_deposit(mm, pmd, pgtable);
+ 	set_pmd_at(mm, haddr, pmd, entry);
+@@ -2109,8 +2108,7 @@ static void __split_huge_zero_page_pmd(struct vm_area_struct *vma,
+ 
+ 	for (i = 0; i < HPAGE_PMD_NR; i++, haddr += PAGE_SIZE) {
+ 		pte_t *pte, entry;
+-		entry = pfn_pte(my_zero_pfn(haddr), vma->vm_page_prot);
+-		entry = pte_mkspecial(entry);
++		entry = mk_zero_pte(haddr, vma->vm_page_prot);
+ 		pte = pte_offset_map(&_pmd, haddr);
+ 		VM_BUG_ON(!pte_none(*pte));
+ 		set_pte_at(mm, haddr, pte, entry);
+diff --git a/mm/memory.c b/mm/memory.c
+index e2bb51b6242e..81ae8c39f75b 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2970,8 +2970,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+ 	/* Use the zero-page for reads */
+ 	if (!(vmf->flags & FAULT_FLAG_WRITE) &&
+ 			!mm_forbids_zeropage(vma->vm_mm)) {
+-		entry = pte_mkspecial(pfn_pte(my_zero_pfn(vmf->address),
+-						vma->vm_page_prot));
++		entry = mk_zero_pte(vmf->address, vma->vm_page_prot);
+ 		vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+ 				vmf->address, &vmf->ptl);
+ 		if (!pte_none(*vmf->pte))
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index c7ae74ce5ff3..06bf4ea3ee05 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -120,8 +120,7 @@ static int mfill_zeropage_pte(struct mm_struct *dst_mm,
+ 	pgoff_t offset, max_off;
+ 	struct inode *inode;
+ 
+-	_dst_pte = pte_mkspecial(pfn_pte(my_zero_pfn(dst_addr),
+-					 dst_vma->vm_page_prot));
++	_dst_pte = mk_zero_pte(dst_addr, dst_vma->vm_page_prot);
+ 	dst_pte = pte_offset_map_lock(dst_mm, dst_pmd, dst_addr, &ptl);
+ 	if (dst_vma->vm_file) {
+ 		/* the shmem MAP_PRIVATE case requires checking the i_size */
 -- 
 2.21.0
 
