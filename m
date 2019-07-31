@@ -2,70 +2,71 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86158C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B6AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA79208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9999120679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="fOlK1pZT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J5kH6xrc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfGaPjB (ORCPT
+        id S1727628AbfGaPnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:39:01 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37922 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbfGaPjB (ORCPT
+        Wed, 31 Jul 2019 11:43:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:56231 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725209AbfGaPnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:39:01 -0400
-Received: by mail-qk1-f195.google.com with SMTP id a27so49596242qkk.5
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:39:00 -0700 (PDT)
+        Wed, 31 Jul 2019 11:43:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a15so61329510wmj.5;
+        Wed, 31 Jul 2019 08:43:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=o/O3YpN4O8rPb4BgrrX1qWIeA6J8/etb5rlyfqo4ciQ=;
-        b=fOlK1pZTJZmDoPZasVUypsNKooUm9H+V1U6+OsQGPQtgVMQkxb3fJ1+UwUtJOR/0a1
-         U1xjP8sYotLYI727WseY4fv7iJnqltKbNblNHQf3MWVZZsXTajVL34VYRVHYVdbt6ZQG
-         r+0HTEjMOgKgyOCoc4DPX/cbDyJnziYpmU6qzD98mje3mqCjsrLzCzC44nx8I1NUzHOT
-         uGDBZIK18qQSjuRjl3oW12PzgM4IrL8xZb/dUBn11cgWX84yOokXq1Cd+J0lOA5K17i+
-         9pJITYdbN24xX7LH4sCLKlQBFo5AZ5afeaew/VAGZAnOopNVAoAkad1RSXIgnx2IcW//
-         F97w==
+        bh=EUajwmMRGVsVrWk0eieYypSiwY+eZYJiiSFARY9Eh0U=;
+        b=J5kH6xrcC0auX3oQGQvlTUsxd4krZZWFwF2U0ThyTr3bFJ+yoJUaVJm/l5KxDmv25H
+         zz+YhFWJJQqbPmpthnTFx2P0H9SHFhmyYrX6asTGnOgLn4h/3PcmyHubpnqGGepcgCFQ
+         5uC4gR7tZxA9U6QZkbGcQI5xLk2pX/HEJYBs0HzAdSs2t1F03oD0foYTqE5YJ4hO7nS4
+         w0+xqLQaOYqWfbaH0M5C9T/3igTh/GoLExaLbPUAR3jv+vaKd7EdnO6VR8CictDf6rP0
+         IHxUe2w75iDG3WRIcm7Fyse3S//D36xaFZHQ/WuJ2mjibBBNiVRPblwNrcoFAKr4QlyF
+         h0VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=o/O3YpN4O8rPb4BgrrX1qWIeA6J8/etb5rlyfqo4ciQ=;
-        b=RU54/A6CN2UgUxvRLEhW6NENaECeSkhhyohzCJOWN+IdMCANm3Woem2KF667Wsm4CU
-         NR8wFrpHaANrTliGPx0V80lo2cJEYDF68hR4ovHZxHDjOQuisGS7j5Rvhe78dW+vVJBd
-         LkOevBqljoz/Vv+RnoIyLUMyUeSigmo0OF9W5BacdvL2vrnKWGZlZcMBEj0928I9Z+12
-         ktrlwsOoUcrf7rXsfiypSdE6EmtE6mnxv06t7cW9r6Ccq6KABsl6DYFeHFTRB9tQ31zh
-         cSuQ+PzxbbKcsSEu8re41GoMrEtVB2Fnb0kwIEA0PmWm6BnGGjZ3JrLfFVtlOlqI6M03
-         toyw==
-X-Gm-Message-State: APjAAAVCvO2po+dekO5hB99iTYP6UEAzrEpjvsv/5AFAnN/PUFAp9PnN
-        vQsxAFh4TXuVJ7I2id0gaqI=
-X-Google-Smtp-Source: APXvYqz3bX9t942bsPfIdm5UWF5TE+oazNJbrYKmlWzscRMxFVemlmAHsAGgHRnb/Jr/wSRlzl3clg==
-X-Received: by 2002:a37:a851:: with SMTP id r78mr28629493qke.120.1564587539523;
-        Wed, 31 Jul 2019 08:38:59 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id f25sm35116803qta.81.2019.07.31.08.38.58
+        bh=EUajwmMRGVsVrWk0eieYypSiwY+eZYJiiSFARY9Eh0U=;
+        b=Qd/2rcPcNKfuUDl2W5RfgecLsEtFkXXlpueXlxnucUk88wfJlG3vpxCLblgM2a1XzV
+         qm1zsQ/8V8hgCR5CWFDIhD4VLGuzTXJYhlUy4Ov3L9UoqHmxdFQMHyR71Tuqj9CZlFje
+         TZZMn9do89bLt4IFpdkvk9F/rvGRA66rTd6j8+0opQ9G8jdhdWYTFczVlqlKw7HFlNGV
+         Kf1hGBq43yI7It9vPd4T84DLMfl0Cpj6ObRM6/Lt1YUddTe89QLOaTZ/a1Bir7AwuT6Q
+         u8Q7veER50NClyd7Jz9H8Jpn7BOCFy54cxyJa/SfMcBfQBsN952K19XN74pvNj4Oh1ge
+         msVQ==
+X-Gm-Message-State: APjAAAVi1KIV5SC1z3/QhU677TTmB0tXRz5X/CgCIdUupktRLp8R2hck
+        98Ec0YjXFYNCPe2UWv3+e9S6Ez9v
+X-Google-Smtp-Source: APXvYqyMKfQd8cL8O1b5lX3gtIORrQMZrBXR7f7n6eIF2+qpf/sVd5kG49qLxWrL8b15IBud6DOFjw==
+X-Received: by 2002:a1c:a503:: with SMTP id o3mr106451221wme.37.1564587797144;
+        Wed, 31 Jul 2019 08:43:17 -0700 (PDT)
+Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
+        by smtp.gmail.com with ESMTPSA id b5sm58738042wru.69.2019.07.31.08.43.15
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 08:38:58 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        ebiederm@xmission.com, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com,
-        matthias.bgg@gmail.com, bhsharma@redhat.com
-Subject: [RFC v2 0/8] arm64: MMU enabled kexec relocation
-Date:   Wed, 31 Jul 2019 11:38:49 -0400
-Message-Id: <20190731153857.4045-1-pasha.tatashin@soleen.com>
+        Wed, 31 Jul 2019 08:43:16 -0700 (PDT)
+From:   Hubert Feurstein <h.feurstein@gmail.com>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH net] net: dsa: mv88e6xxx: drop adjust_link to enabled phylink
+Date:   Wed, 31 Jul 2019 17:42:39 +0200
+Message-Id: <20190731154239.19270-1-h.feurstein@gmail.com>
 X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,118 +75,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changelog from previous RFC:
-- Added trans_table support for both hibernate and kexec.
-- Fixed performance issue, where enabling MMU did not yield the
-  actual performance improvement.
+We have to drop the adjust_link callback in order to finally migrate to
+phylink.
 
-Bug:
-With the current state, this patch series works on kernels booted with EL1
-mode, but for some reason, when elevated to EL2 mode reboot freezes in
-both QEMU and on real hardware.
+Otherwise we get the following warning during startup:
+  "mv88e6xxx 2188000.ethernet-1:10: Using legacy PHYLIB callbacks. Please
+   migrate to PHYLINK!"
 
-The freeze happens in:
+The warning is generated in the function dsa_port_link_register_of in
+dsa/port.c:
 
-arch/arm64/kernel/relocate_kernel.S
-	turn_on_mmu()
+  int dsa_port_link_register_of(struct dsa_port *dp)
+  {
+  	struct dsa_switch *ds = dp->ds;
 
-Right after sctlr_el2 is written (MMU on EL2 is enabled)
+  	if (!ds->ops->adjust_link)
+  		return dsa_port_phylink_register(dp);
 
-	msr     sctlr_el2, \tmp1
+  	dev_warn(ds->dev,
+  		 "Using legacy PHYLIB callbacks. Please migrate to PHYLINK!\n");
+  	[...]
+  }
 
-I've been studying all the relevant control registers for EL2, but do not
-see what might be causing this hang:
+Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
+---
+ drivers/net/dsa/mv88e6xxx/chip.c | 26 --------------------------
+ 1 file changed, 26 deletions(-)
 
-MAIR_EL2 is set to be exactly the same as MAIR_EL1 0xbbff440c0400
-
-TCR_EL2        0x80843510
-Enabled bits:
-PS      Physical Address Size. (0b100   44 bits, 16TB.)
-SH0     Shareability    11 Inner Shareable
-ORGN0   Normal memory, Outer Write-Back Read-Allocate Write-Allocate Cach.
-IRGN0   Normal memory, Inner Write-Back Read-Allocate Write-Allocate Cach.
-T0SZ    01 0000
-
-SCTLR_EL2	0x30e5183f
-RES1    : Reserve ones
-M       : MMU enabled
-A       : Align check
-C       : Cacheability control
-SA      : SP Alignment check enable
-IESB    : Implicit Error Synchronization event
-I       : Instruction access Cacheability
-
-TTBR0_EL2      0x1b3069000 (address of trans_table)
-
-Any suggestion of what else might be missing that causes this freeze when
-MMU is enabled in EL2?
-
-=====
-Here is the current data from the real hardware:
-(because of bug, I forced EL1 mode by setting el2_switch always to zero in
-cpu_soft_restart()):
-
-For this experiment, the size of kernel plus initramfs is 25M. If initramfs
-was larger, than the improvements would be even greater, as time spent in
-relocation is proportional to the size of relocation.
-
-Previously:
-kernel shutdown	0.022131328s
-relocation	0.440510736s
-kernel startup	0.294706768s
-
-Relocation was taking: 58.2% of reboot time
-
-Now:
-kernel shutdown	0.032066576s
-relocation	0.022158152s
-kernel startup	0.296055880s
-
-Now: Relocation takes 6.3% of reboot time
-
-Total reboot is x2.16 times faster.
-
-Previous approaches and discussions
------------------------------------
-https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
-reserve space for kexec to avoid relocation, involves changes to generic code
-to optimize a problem that exists on arm64 only:
-
-https://lore.kernel.org/lkml/20190716165641.6990-1-pasha.tatashin@soleen.com
-The first attempt to enable MMU, some bugs that prevented performance
-improvement. The page tables unnecessary configured idmap for the whole
-physical space.
-
-Pavel Tatashin (8):
-  kexec: quiet down kexec reboot
-  arm64, mm: transitional tables
-  arm64: hibernate: switch to transtional page tables.
-  kexec: add machine_kexec_post_load()
-  arm64, kexec: move relocation function setup and clean up
-  arm64, kexec: add expandable argument to relocation function
-  arm64, kexec: configure transitional page table for kexec
-  arm64, kexec: enable MMU during kexec relocation
-
- arch/arm64/Kconfig                     |   4 +
- arch/arm64/include/asm/kexec.h         |  24 ++-
- arch/arm64/include/asm/pgtable-hwdef.h |   1 +
- arch/arm64/include/asm/trans_table.h   |  66 ++++++
- arch/arm64/kernel/asm-offsets.c        |  10 +
- arch/arm64/kernel/cpu-reset.S          |   4 +-
- arch/arm64/kernel/cpu-reset.h          |   8 +-
- arch/arm64/kernel/hibernate.c          | 261 ++++++------------------
- arch/arm64/kernel/machine_kexec.c      | 168 ++++++++++++---
- arch/arm64/kernel/relocate_kernel.S    | 238 +++++++++++++++-------
- arch/arm64/mm/Makefile                 |   1 +
- arch/arm64/mm/trans_table.c            | 272 +++++++++++++++++++++++++
- kernel/kexec.c                         |   4 +
- kernel/kexec_core.c                    |   8 +-
- kernel/kexec_file.c                    |   4 +
- kernel/kexec_internal.h                |   2 +
- 16 files changed, 756 insertions(+), 319 deletions(-)
- create mode 100644 arch/arm64/include/asm/trans_table.h
- create mode 100644 arch/arm64/mm/trans_table.c
-
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 366f70bfe055..37e8babd035f 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -27,7 +27,6 @@
+ #include <linux/platform_data/mv88e6xxx.h>
+ #include <linux/netdevice.h>
+ #include <linux/gpio/consumer.h>
+-#include <linux/phy.h>
+ #include <linux/phylink.h>
+ #include <net/dsa.h>
+ 
+@@ -482,30 +481,6 @@ static int mv88e6xxx_phy_is_internal(struct dsa_switch *ds, int port)
+ 	return port < chip->info->num_internal_phys;
+ }
+ 
+-/* We expect the switch to perform auto negotiation if there is a real
+- * phy. However, in the case of a fixed link phy, we force the port
+- * settings from the fixed link settings.
+- */
+-static void mv88e6xxx_adjust_link(struct dsa_switch *ds, int port,
+-				  struct phy_device *phydev)
+-{
+-	struct mv88e6xxx_chip *chip = ds->priv;
+-	int err;
+-
+-	if (!phy_is_pseudo_fixed_link(phydev) &&
+-	    mv88e6xxx_phy_is_internal(ds, port))
+-		return;
+-
+-	mv88e6xxx_reg_lock(chip);
+-	err = mv88e6xxx_port_setup_mac(chip, port, phydev->link, phydev->speed,
+-				       phydev->duplex, phydev->pause,
+-				       phydev->interface);
+-	mv88e6xxx_reg_unlock(chip);
+-
+-	if (err && err != -EOPNOTSUPP)
+-		dev_err(ds->dev, "p%d: failed to configure MAC\n", port);
+-}
+-
+ static void mv88e6065_phylink_validate(struct mv88e6xxx_chip *chip, int port,
+ 				       unsigned long *mask,
+ 				       struct phylink_link_state *state)
+@@ -4755,7 +4730,6 @@ static int mv88e6xxx_port_egress_floods(struct dsa_switch *ds, int port,
+ static const struct dsa_switch_ops mv88e6xxx_switch_ops = {
+ 	.get_tag_protocol	= mv88e6xxx_get_tag_protocol,
+ 	.setup			= mv88e6xxx_setup,
+-	.adjust_link		= mv88e6xxx_adjust_link,
+ 	.phylink_validate	= mv88e6xxx_validate,
+ 	.phylink_mac_link_state	= mv88e6xxx_link_state,
+ 	.phylink_mac_config	= mv88e6xxx_mac_config,
 -- 
 2.22.0
 
