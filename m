@@ -2,121 +2,118 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D5FC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC374C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27EF720679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564608368;
-	bh=ikITZ8Q46ieiuDTuAff5jC13fuc/HAAvkWzVO84JhMY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s2RjDCvxCeqnyZbEkyBswS005Pg0y7fKVyWtsVPRIuvpIqsH9kfEL//W6aRYWOLdz
-	 EkosLB0HXKKcIOvTJM0yy+jywuXNsrDQDTQcBPqMNVWO1kN7UWJGUECiFcZnl4q/M2
-	 glPBq165/slDgxPhZwpLNCt9gWNR6Ejll8Pd880Q=
+	by mail.kernel.org (Postfix) with ESMTP id 9E86820679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730392AbfGaV0H (ORCPT
+        id S1730572AbfGaV0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:26:07 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45840 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfGaV0G (ORCPT
+        Wed, 31 Jul 2019 17:26:51 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:32798 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730439AbfGaV0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:26:06 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x21so6267662otq.12;
-        Wed, 31 Jul 2019 14:26:05 -0700 (PDT)
+        Wed, 31 Jul 2019 17:26:51 -0400
+Received: by mail-io1-f68.google.com with SMTP id z3so20708937iog.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 14:26:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gY7HXwIot63TGp2osyGwD6oiBom7P9dQMkdrdkS2Nes=;
-        b=nDvTGpyX2+z65F3ZwfEFr5h/q+bSSzgg0YD/nn72NgZ8qaBdF5iCJckrxoMsoPYDgU
-         tn31BVwMBJHYQkgHMOtDUbeqsfJUKPV5mMZYaf33r9i9kqJo6L1RnCyyJihbNVA5HlG5
-         qbhexaqVf7bWcRrRh+ol5MrqGrWl9varNor5xEvXF2XX3LSI1awNADbYIfUP6niccvaD
-         VCNbOqDKcFBq9ZQLXOcl6ztlNyBhPgCY1+T63CE8GXQjKm48BkmOnd3TlgUF9iQHvx0C
-         WwgGJTxtEl7fJuARdL3EFzOZw/0tWvZRLMg76uV03JIUZT1CCmev7HqwmlHjiiWW0e2w
-         +v5g==
-X-Gm-Message-State: APjAAAWMJISIXtBpi+wMWoPut/ltRWA0S18KUMJaAqoqvCbveaWx8VAV
-        tZpL/jX3sF8VzNwThd4y4HnoEZUMa09j5fpdjvk=
-X-Google-Smtp-Source: APXvYqxVGX9+K7Xz5YfWvC/qL8u+R2fzXeqHac2HeS0SiwVZBa8gOPNuLZONFh1YvGWdr401W9asQoBJ7Yn/hXUPwSg=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr10015636oto.118.1564608365363;
- Wed, 31 Jul 2019 14:26:05 -0700 (PDT)
+        bh=tIGma61wLHtzNprRff+9TEgirnDHGnLDSLV4ZUKzd0A=;
+        b=lanLuKcthDT11oc0RMkGBwHg6SZ7Sl1NcUvD3kuQpSPKgOJ5dbnNzein5OSLnBeyEe
+         e1gLLXmVN9lRav9MK8ThH5/qmGHbB44cAH2ZJy3xJFXh8DwKBAJbVLyz436Dg+hFmwh0
+         Kgo/YoMrkYAfavEZUjzBzCUpgmfjLDdR37JNan4wJfLZUEWuK+T++Bvik40eubnBrkPp
+         s65550GdJCglreBet3ja+Lm8pG3x+OHDJ7Ei3YVGA9JzqN/IQeLzNbi9VIhvMKR35Rcz
+         oFrntxBRQKeg8pAAK8ugYCA/Sx1R+aTILFgomA2kqzP1T/8DgUUsed5xEgDikTQ7xC6t
+         VHgQ==
+X-Gm-Message-State: APjAAAUkiDGG+PSbnSxA7r8+p9jXjtxsNr/1+s4CXELOAaYMS8WyjRU8
+        cB5nn4YeNUoWsD2UpaYZlVpGyjjQIzCOOKd6C0EB7A==
+X-Google-Smtp-Source: APXvYqzESQ6j/S2FQ4K/46lCRs2V5bZ+p/HVw7BDuXGgow808D74rbDC31pUP/jqnm5XyBJWHTuU22rvCZ1LzMnu6TU=
+X-Received: by 2002:a02:230a:: with SMTP id u10mr46030961jau.117.1564608410139;
+ Wed, 31 Jul 2019 14:26:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <2332799.izEFUvJP67@kreacher> <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
- <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM> <20190730213114.GK13948@localhost.localdomain>
-In-Reply-To: <20190730213114.GK13948@localhost.localdomain>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 31 Jul 2019 23:25:51 +0200
-Message-ID: <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>
+References: <20190731201927.22054-1-lyude@redhat.com> <20190731211842.befvpoyudrm2subf@wunner.de>
+In-Reply-To: <20190731211842.befvpoyudrm2subf@wunner.de>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Wed, 31 Jul 2019 23:26:39 +0200
+Message-ID: <CACO55tu=9ZBzGkwdXPOwWARy1UTspFv+v=nrmLFoOKiSGU+E5Q@mail.gmail.com>
+Subject: Re: [PATCH] Revert "PCI: Enable NVIDIA HDA controllers"
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Lyude Paul <lyude@redhat.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Daniel Drake <drake@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Maik Freudenberg <hhfeuer@gmx.de>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:33 PM Keith Busch <kbusch@kernel.org> wrote:
+On Wed, Jul 31, 2019 at 11:18 PM Lukas Wunner <lukas@wunner.de> wrote:
 >
-> On Tue, Jul 30, 2019 at 09:05:22PM +0000, Mario.Limonciello@dell.com wrote:
-> > > -----Original Message-----
-> > > From: Keith Busch <kbusch@kernel.org>
-> > > Sent: Tuesday, July 30, 2019 2:20 PM
-> > > To: Kai-Heng Feng
-> > > Cc: Limonciello, Mario; rjw@rjwysocki.net; keith.busch@intel.com; hch@lst.de;
-> > > sagi@grimberg.me; linux-nvme@lists.infradead.org; linux-pm@vger.kernel.org;
-> > > linux-kernel@vger.kernel.org; rajatja@google.com
-> > > Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
-> > > suspend" has problems
-> > >
-> > >
-> > > [EXTERNAL EMAIL]
-> > >
-> > > On Wed, Jul 31, 2019 at 02:50:01AM +0800, Kai-Heng Feng wrote:
-> > > >
-> > > > Just did a quick test, this patch regress SK Hynix BC501, the SoC stays at
-> > > > PC3 once the patch is applied.
-> > >
-> > > Okay, I'm afraid device/platform quirks may be required unless there are
-> > > any other ideas out there.
-> >
-> > I think if a quirk goes in for Rafael's SSD it would have to be a quirk specific to this
-> > device and FW version per the findings on KH checking the same device with the
-> > older FW version.
+> On Wed, Jul 31, 2019 at 04:19:27PM -0400, Lyude Paul wrote:
+> > While this fixes audio for a number of users, this commit has the
+> > sideaffect of breaking the BIOS workaround that's required to make the
+> > GPU on the nvidia P50 work, by causing the GPU's PCI device function to
+> > stop working after it's been set to multifunction mode.
 >
-> That's fine, we have the infrastructure in place for fw specific quirks.
-> See drivers/nvme/host/core.c:nvme_core_quirk_entry
+> This is missing a reference to the commit introducing the P50 quirk,
+> which is e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot
+> if necessary").
+>
+> Please describe in more detail how the GPU's PCI function stops working.
+> Does it respond with "all ones" when accessing MMIO?
+> Do MMIO accesses cause the system to hang?
+>
+> Could you provide lspci -vvxx output for the GPU and its associated
+> HDA controller with and without b516ea586d71?
+>
+> Does this machine have external display connectors via which audio
+> can be streamed?
+>
+>
+> > I'm not really holding my breath on this patch to being accepted:
+> > there's a good chance there's a better solution for this (and I'm going
+> > to continue investigating for one after sending this patch), this is
+> > more just to start a conversation on what the proper way to fix this is.
+>
+> Posting as an RFC might have been more appropriate then.
+>
 
-A couple of remarks if you will.
+no, a revert is actually appropriate.  If a commit fixes something,
+but breaks something else, it gets either reverted or fixed. If nobody
+fixes it, then revert it is.
 
-First, we don't know which case is the majority at this point.  For
-now, there is one example of each, but it may very well turn out that
-the SK Hynix BC501 above needs to be quirked.
-
-Second, the reference here really is 5.2, so if there are any systems
-that are not better off with 5.3-rc than they were with 5.2, well, we
-have not made progress.  However, if there are systems that are worse
-off with 5.3, that's bad.  In the face of the latest findings the only
-way to avoid that is to be backwards compatible with 5.2 and that's
-where my patch is going.  That cannot be achieved by quirking all
-cases that are reported as "bad", because there still may be
-unreported ones.
+>
+> > So, I'm kind of confused about why exactly this was implemented as an
+> > early boot quirk in the first place. If we're seeing the GPU's PCI
+> > device, we already know the GPU is there. Shouldn't we be able to check
+> > for the existence of the HDA device once we probe the GPU in nouveau?
+>
+> I think a motivation to keep this generic was to make it work with
+> other drivers besides nouveau, specifically Nvidia's proprietary driver.
+> nouveau might not even be enabled.
+>
+>
+> > that still doesn't explain why this was implemented as an early quirk
+>
+> This isn't an early quirk.  Those live in arch/x86/kernel/early-quirks.c.
+> This is just a PCI quirk executed on device enumeration and on resume.
+> Devices aren't necessarily enumerated only on boot, e.g. think Thunderbolt.
+>
+> Thanks,
+>
+> Lukas
