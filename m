@@ -2,95 +2,122 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B87C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED49C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091AC208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B5D217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:00:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAqmR1eZ"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="z8sWQKvn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbfGaR7v (ORCPT
+        id S1727230AbfGaSAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:59:51 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39996 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfGaR7u (ORCPT
+        Wed, 31 Jul 2019 14:00:30 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51623 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfGaSA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:59:50 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m8so32916232lji.7;
-        Wed, 31 Jul 2019 10:59:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aNRijp+cTPu7tG+bLIT1XlN5J+/qM79IIyt09eNd6hY=;
-        b=ZAqmR1eZLTBi3vNW9AZmdo/KYKvn/Nxv8o+gLNgKf22x19kMol7U7Y7Z3R50DaRmWm
-         s+DkcGpZwFQC580FJ+AX2DkSBENFW2GQk42vdw4Aod7zfR6tvZUX0AKkJPyYGsgZ8jQu
-         7FvgiD/IX6X3jQ8g00xTTr7RUnhwDnUXkG+79oE7pFfbU1lSvTyV70+zYNCEUJL786nL
-         NgqLnyoo0eWJPSxgs1gc1l91S1Kz/ocwfQkiGSb6d92zPjgOuFNw8epsadf3SNQpoIMD
-         tEXwENeFFFsWFQ5jhFPZuCs+unwaqCjo4klG1IEb78kGooZZoS+jeb+0eM+YYbz4oGVK
-         YhHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aNRijp+cTPu7tG+bLIT1XlN5J+/qM79IIyt09eNd6hY=;
-        b=gHIyV8l9R82sBKTvAheo4pTgQ/Ln0RVbW3nV9nj1wbt4ALBQ8FRtEKJ9JPSFZFB94b
-         iYQ7tftfykwGqA+sw2kY5K04G3CP+ilPJ6JAcA91a4f8fC23YUfFIiZP5+NuD6POs3DK
-         McDTUrhXfCvNM1YBBivXTSRx9ouPBEWFtI+FhoXKVjNtCU7zDRr/KobEPRyccwiLoCrm
-         zv7qQLZcV5wEnDc8Rt7fl58UFIWBti9l+NfBO6DDo9edpRbzc0fsFz/MqZVjdPB+NGHY
-         3LEFmYk9oMQARdxPl2g1BX5XWvZEW+iV8wMQ82D1pwPKTfo+wswjjGCLgd+IQ7P/XrwT
-         z6rg==
-X-Gm-Message-State: APjAAAVgp7lscgxtGrECjRLM+MNTowDpBT3d+jNNnS1fbYidL3lnG281
-        1eEapuj6YzJzV3oDPNu3BCFnqHvUH8kltZF1wy4=
-X-Google-Smtp-Source: APXvYqycnbqijwzHTbQDpHhXHrX7zs1AsM7k0qebBLeKaeSeGLo/kTqTweH4TcuUWWZR3EkBGeb74IIqOj+U6k55ixY=
-X-Received: by 2002:a2e:a311:: with SMTP id l17mr2125199lje.214.1564595987679;
- Wed, 31 Jul 2019 10:59:47 -0700 (PDT)
+        Wed, 31 Jul 2019 14:00:29 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6VHxxJv3778051
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 31 Jul 2019 11:00:00 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6VHxxJv3778051
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564596000;
+        bh=nsYAFQM8gfidSokFIfrG+4eIsJn63TQyEXpI9WbMpEA=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=z8sWQKvnUgPDDVCFZkVheMqaVqQe6P4dUT3w7rzwAxvpORXuYx8QDtkb9wqEhMWKk
+         d4G9Akv1PPkrjxibj/FcNt1sXBVP5icuSmxB628yNy8KnF6Iz1pSWDn6oBuMvTEWhx
+         Xhnuqbb+jA418bj1AJ8eDmBDU1VRAYNDjJErxBRpq7BAI+l09EREkgIykVMBGG/sVB
+         jRJf30g0MkGno1/CRECaqAWR08EesazamX3lIUl/2FbIOJ50cFugIye+LOKnzQIgt4
+         9B+eN6VDRmnJhMtepRuKo3Liqflb1y2hE7CX65CIgfkzsmogCoBXt2mLbLnd7zJMt1
+         cspnXPcIrN6PA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6VHxxon3778046;
+        Wed, 31 Jul 2019 10:59:59 -0700
+Date:   Wed, 31 Jul 2019 10:59:59 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-cb376c26971ff54f25980ec1f0ae2f06d6a69df0@git.kernel.org>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        paulmck@linux.ibm.com, mingo@kernel.org, pbonzini@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de, mhiramat@kernel.org,
+        hpa@zytor.com, rostedt@goodmis.org
+Reply-To: tglx@linutronix.de, pbonzini@redhat.com, peterz@infradead.org,
+          hpa@zytor.com, rostedt@goodmis.org, mhiramat@kernel.org,
+          paulmck@linux.ibm.com, linux-kernel@vger.kernel.org,
+          torvalds@linux-foundation.org, mingo@kernel.org
+In-Reply-To: <20190726212124.699136351@linutronix.de>
+References: <20190726212124.699136351@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/rt] x86/dumpstack: Indicate PREEMPT_RT in dumps
+Git-Commit-ID: cb376c26971ff54f25980ec1f0ae2f06d6a69df0
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190731173045.11718-1-andrew.smirnov@gmail.com>
-In-Reply-To: <20190731173045.11718-1-andrew.smirnov@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 31 Jul 2019 14:59:59 -0300
-Message-ID: <CAOMZO5BL1BO7XGNgwqZRRCeWNURemZEVzP26kVBacyw__0=RBA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/23] LPUART fixes and improvements
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-serial@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
+Commit-ID:  cb376c26971ff54f25980ec1f0ae2f06d6a69df0
+Gitweb:     https://git.kernel.org/tip/cb376c26971ff54f25980ec1f0ae2f06d6a69df0
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Fri, 26 Jul 2019 23:19:43 +0200
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 31 Jul 2019 19:03:36 +0200
 
-On Wed, Jul 31, 2019 at 2:53 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
->
-> Everyone:
->
-> This series contains fixes/improvements to LPUART dirver I came up
-> with recently as well as fixes picked up from Toradex and NXP Vybrid
-> repos.
->
-> Feedback is welcome!
->
-> Changes since [v1]:
+x86/dumpstack: Indicate PREEMPT_RT in dumps
 
-Greg has already applied some of these patches:
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git/log/?h=tty-testing
+Stack dumps print whether the kernel has preemption enabled or not. Extend
+it so a PREEMPT_RT enabled kernel can be identified.
 
-Please rebase on his tree and send the remaining ones.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20190726212124.699136351@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/dumpstack.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Thanks
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index 2b5886401e5f..e07424e19274 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -367,13 +367,18 @@ NOKPROBE_SYMBOL(oops_end);
+ 
+ int __die(const char *str, struct pt_regs *regs, long err)
+ {
++	const char *pr = "";
++
+ 	/* Save the regs of the first oops for the executive summary later. */
+ 	if (!die_counter)
+ 		exec_summary_regs = *regs;
+ 
++	if (IS_ENABLED(CONFIG_PREEMPTION))
++		pr = IS_ENABLED(CONFIG_PREEMPT_RT) ? " PREEMPT_RT" : " PREEMPT";
++
+ 	printk(KERN_DEFAULT
+ 	       "%s: %04lx [#%d]%s%s%s%s%s\n", str, err & 0xffff, ++die_counter,
+-	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT"         : "",
++	       pr,
+ 	       IS_ENABLED(CONFIG_SMP)     ? " SMP"             : "",
+ 	       debug_pagealloc_enabled()  ? " DEBUG_PAGEALLOC" : "",
+ 	       IS_ENABLED(CONFIG_KASAN)   ? " KASAN"           : "",
