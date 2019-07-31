@@ -2,131 +2,158 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F3FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBFEC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09E120679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F8E206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730931AbfGaVdb (ORCPT
+        id S1729669AbfGaVfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:33:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40966 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728928AbfGaVdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:33:31 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B44F630872C2;
-        Wed, 31 Jul 2019 21:33:30 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5CE355D9C9;
-        Wed, 31 Jul 2019 21:33:28 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 15:33:27 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vfio: re-arrange vfio region definitions
-Message-ID: <20190731153327.7d65b90d@x1.home>
-In-Reply-To: <05e97697-70a3-51dd-dd2a-4a8bf6c380bb@redhat.com>
-References: <20190717114956.16263-1-cohuck@redhat.com>
-        <05e97697-70a3-51dd-dd2a-4a8bf6c380bb@redhat.com>
+        Wed, 31 Jul 2019 17:35:16 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39780 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728292AbfGaVfP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 17:35:15 -0400
+Received: by mail-qk1-f195.google.com with SMTP id w190so50324396qkc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 14:35:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=Yt3D9L2XmMJM/hxeEeDRbs7n5AVGloPaWA/yadI+Qrg=;
+        b=l0yVw79e6RDA45Pcs7O8N+uLcWaYEyY2CCK5ORDRjJGrYdfOTv4fVUudOqEEaW48at
+         6+SkoVRAwxK5RLRnP8VyG9Zbk8gyO+EmtdfVC8YnvZoYR4W+4bxTh+uCHBdGMi+mV4xt
+         yjQCRfgZGJaVc5o3ueJVj5No0sxrKYKz7iUPGou9V4/We4jQ4RkeEGG5SQJuA5A4fKR8
+         mJJ2AvP3nqzY3EFH9gwR2inUDsv80QprDNaDyVoOEKYeP20h0yrDJO94Mf99OkESi1CI
+         5A3bbx+jTmzYlrlfTnMqNxJKoflPQVIZc6ndFC0jthFXSa39PpIYtSLcmU+iEl8qT3vW
+         WhrQ==
+X-Gm-Message-State: APjAAAXiEZ8Uj/1FLERw0+AOdQb3x6lk/HgrRUWwmysaQWcdgIywcHye
+        pj05j+7E2Yn/ri+cM+mg3ffh8Q==
+X-Google-Smtp-Source: APXvYqwq8iZNfTZjhmXSZpr7SbYmuaQHxbwUhmb4FHrOYyaB4ijjIYu+VCEGw1Epf8zn+a0otAy3Vw==
+X-Received: by 2002:a05:620a:1411:: with SMTP id d17mr77658658qkj.137.1564608914930;
+        Wed, 31 Jul 2019 14:35:14 -0700 (PDT)
+Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id e8sm28934259qkn.95.2019.07.31.14.35.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 14:35:13 -0700 (PDT)
+Message-ID: <b27614151184f29bb147786933cb424fddb82a23.camel@redhat.com>
+Subject: Re: [PATCH] Revert "PCI: Enable NVIDIA HDA controllers"
+From:   Lyude Paul <lyude@redhat.com>
+To:     Karol Herbst <kherbst@redhat.com>, Lukas Wunner <lukas@wunner.de>
+Cc:     nouveau <nouveau@lists.freedesktop.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Daniel Drake <drake@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Maik Freudenberg <hhfeuer@gmx.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 31 Jul 2019 17:35:11 -0400
+In-Reply-To: <CACO55tu=9ZBzGkwdXPOwWARy1UTspFv+v=nrmLFoOKiSGU+E5Q@mail.gmail.com>
+References: <20190731201927.22054-1-lyude@redhat.com>
+         <20190731211842.befvpoyudrm2subf@wunner.de>
+         <CACO55tu=9ZBzGkwdXPOwWARy1UTspFv+v=nrmLFoOKiSGU+E5Q@mail.gmail.com>
 Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 31 Jul 2019 21:33:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 20:47:07 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
-
-> Hi Connie,
-> 
-> On 7/17/19 1:49 PM, Cornelia Huck wrote:
-> > It is easy to miss already defined region types. Let's re-arrange
-> > the definitions a bit and add more comments to make it hopefully
-> > a bit clearer.
+On Wed, 2019-07-31 at 23:26 +0200, Karol Herbst wrote:
+> On Wed, Jul 31, 2019 at 11:18 PM Lukas Wunner <lukas@wunner.de> wrote:
+> > On Wed, Jul 31, 2019 at 04:19:27PM -0400, Lyude Paul wrote:
+> > > While this fixes audio for a number of users, this commit has the
+> > > sideaffect of breaking the BIOS workaround that's required to make the
+> > > GPU on the nvidia P50 work, by causing the GPU's PCI device function to
+> > > stop working after it's been set to multifunction mode.
 > > 
-> > No functional change.
+> > This is missing a reference to the commit introducing the P50 quirk,
+> > which is e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot
+> > if necessary").
 > > 
-> > Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-> > ---
-> >  include/uapi/linux/vfio.h | 19 ++++++++++++-------
-> >  1 file changed, 12 insertions(+), 7 deletions(-)
+> > Please describe in more detail how the GPU's PCI function stops working.
+> > Does it respond with "all ones" when accessing MMIO?
+> > Do MMIO accesses cause the system to hang?
 > > 
-> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > index 8f10748dac79..d9bcf40240be 100644
-> > --- a/include/uapi/linux/vfio.h
-> > +++ b/include/uapi/linux/vfio.h
-> > @@ -295,15 +295,23 @@ struct vfio_region_info_cap_type {
-> >  	__u32 subtype;	/* type specific */
-> >  };
-> >  
-> > +/*
-> > + * List of region types, global per bus driver.
-> > + * If you introduce a new type, please add it here.
-> > + */
-> > +
-> > +/* PCI region type containing a PCI vendor part */
-> >  #define VFIO_REGION_TYPE_PCI_VENDOR_TYPE	(1 << 31)
-> >  #define VFIO_REGION_TYPE_PCI_VENDOR_MASK	(0xffff)
-> > +#define VFIO_REGION_TYPE_GFX                    (1)
-> > +#define VFIO_REGION_TYPE_CCW			(2)
-> >  
-> > -/* 8086 Vendor sub-types */
-> > +/* 8086 vendor PCI sub-types */
-> >  #define VFIO_REGION_SUBTYPE_INTEL_IGD_OPREGION	(1)
-> >  #define VFIO_REGION_SUBTYPE_INTEL_IGD_HOST_CFG	(2)
-> >  #define VFIO_REGION_SUBTYPE_INTEL_IGD_LPC_CFG	(3)
-> >  
-> > -#define VFIO_REGION_TYPE_GFX                    (1)
-> > +/* GFX sub-types */
-> >  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
-> >  
-> >  /**
-> > @@ -353,20 +361,17 @@ struct vfio_region_gfx_edid {
-> >  #define VFIO_DEVICE_GFX_LINK_STATE_DOWN  2
-> >  };
-> >  
-> > -#define VFIO_REGION_TYPE_CCW			(2)
-> >  /* ccw sub-types */
-> >  #define VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD	(1)
-> >  
-> > +/* 10de vendor PCI sub-types */
-> >  /*
-> > - * 10de vendor sub-type
-> > - *
-> >   * NVIDIA GPU NVlink2 RAM is coherent RAM mapped onto the host address space.
-> >   */
-> >  #define VFIO_REGION_SUBTYPE_NVIDIA_NVLINK2_RAM	(1)
-> >  
-> > +/* 1014 vendor PCI sub-types*/
-> >  /*
-> > - * 1014 vendor sub-type  
-> Maybe the 10de vendor sub-type and 1014 vendor sub-type could be put
-> just after /* 8086 vendor PCI sub-types */
+> > Could you provide lspci -vvxx output for the GPU and its associated
+> > HDA controller with and without b516ea586d71?
+> > 
+> > Does this machine have external display connectors via which audio
+> > can be streamed?
+> > 
+> > 
+> > > I'm not really holding my breath on this patch to being accepted:
+> > > there's a good chance there's a better solution for this (and I'm going
+> > > to continue investigating for one after sending this patch), this is
+> > > more just to start a conversation on what the proper way to fix this is.
+> > 
+> > Posting as an RFC might have been more appropriate then.
+> > 
 > 
-> More generally if it were possible to leave the subtypes close to their
-> parent type too, this would be beneficial I think.
+> no, a revert is actually appropriate.  If a commit fixes something,
+> but breaks something else, it gets either reverted or fixed. If nobody
+> fixes it, then revert it is.
+
+To answer Lukas's question btw: most of the details on how things break are
+back in the original commit (sorry for forgetting the reference!), there's a
+_lot_ of explanation there that I'd rather not retype, so just refer back to
+the commit and bug @ https://bugs.freedesktop.org/show_bug.cgi?id=75985
+
+Additionally, there was some extra discussion providing some more detail in
+the email thread that I had with Bjorn:
+
+https://lkml.org/lkml/2019/2/12/1172
+
+As for how this commit breaks the workaround: it seems that when we enable the
+HDA controller and put the GPU into multifunction mode, the function-level
+reset stops working and thus we can't reset the GPU anymore. Currently I can
+see a couple of solutions (again, please feel free to suggest more!):
+
+ * Just revert the commit. We should do this if necessary, but of course I'd
+   much rather try finding a fix first
+ * Disable the HDA controller temporarily when a GPU reset is neded in
+   quirk_reset_lenovo_thinkpad_p50_nvgpu(), then call the function level
+   reset, then re-enable the HDA controller. I have no idea if this actually
+   works yet, but I'm about to try this on my system
+ * Get quirk_reset_lenovo_thinkpad_p50_nvgpu() to run before
+   quirk_nvidia_hda(). This would probably be fine, but we would need to
+   rework some stuff in the PCI subsystem (maybe it already has a way to do
+   this? haven't checked yet) so that we could perform an flr probe early
+   enough to perform the quirk
 > 
-> Besides that becomes sensible to put all those definitions together.
+> > > So, I'm kind of confused about why exactly this was implemented as an
+> > > early boot quirk in the first place. If we're seeing the GPU's PCI
+> > > device, we already know the GPU is there. Shouldn't we be able to check
+> > > for the existence of the HDA device once we probe the GPU in nouveau?
+> > 
+> > I think a motivation to keep this generic was to make it work with
+> > other drivers besides nouveau, specifically Nvidia's proprietary driver.
+> > nouveau might not even be enabled.
+> > 
+> > 
+> > > that still doesn't explain why this was implemented as an early quirk
+> > 
+> > This isn't an early quirk.  Those live in arch/x86/kernel/early-quirks.c.
+> > This is just a PCI quirk executed on device enumeration and on resume.
+> > Devices aren't necessarily enumerated only on boot, e.g. think
+> > Thunderbolt.
+> > 
+> > Thanks,
+> > 
+> > Lukas
+-- 
+Cheers,
+	Lyude Paul
 
-Any sort of consolidation or grouping is an improvement here, thanks
-for taking this on, Connie!  I haven't started my branch yet for v5.4,
-but if you want to iterate to something agreeable, I'll happily take
-the end product :)  The original patch here looks like a good degree of
-consolidating the type definitions and improving consistency without
-moving large chunks of code.  Thanks,
-
-Alex
