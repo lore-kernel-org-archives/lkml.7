@@ -2,149 +2,107 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22BDC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A84C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3A2206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:11:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="K+A6FnWZ"
+	by mail.kernel.org (Postfix) with ESMTP id E2AA9206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730831AbfGaTLH (ORCPT
+        id S1730850AbfGaTLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:11:07 -0400
-Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:62535 "EHLO
-        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfGaTLH (ORCPT
+        Wed, 31 Jul 2019 15:11:19 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47597 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfGaTLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:11:07 -0400
-Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
-        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id C4A35D0006F;
-        Wed, 31 Jul 2019 21:11:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
-        s=20160407; t=1564600272;
-        bh=SfyOReVnNROKfZwttu5Z/yffmm1NmOYb+Llaggymyc8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
-        b=K+A6FnWZ2vYNRnksB4DVngotvdOUnevIk1RgwU8g3acfbqfGiL+9aaVddGfaKtmBd
-         uyGl5LKbVpIhgAmJATK1quDSGs/yrgbPD3vZypBh4eV1IOprFYM3TcN6fCpGP9iwB+
-         buoLb8CFqVJFSQ9t3CGsOa6QfT35DGjx3zKHlWnjzdizlRyxmuvGdEzBXKzNTImfS4
-         cbUnlvyRDylsexMyiSnZRHK49fG+hix0qdkrLm+QnPmLjw5OT9wfojYgHZ51zZDP9x
-         YnTpRJDKUpZCNREaLFcyHUZZF4CznTLXSlXhyqbiErIEHjFrPFCNMVTaaGnCDp/VpT
-         qQQB+ogiJJWUQ==
-Subject: Re: [PATCH bpf-next v10 06/10] bpf,landlock: Add a new map type:
- inode
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-CC:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Drysdale <drysdale@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thomas Graf <tgraf@suug.ch>, Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>
-References: <20190721213116.23476-1-mic@digikod.net>
- <20190721213116.23476-7-mic@digikod.net>
- <20190727014048.3czy3n2hi6hfdy3m@ast-mbp.dhcp.thefacebook.com>
- <a870c2c9-d2f7-e0fa-c8cc-35dbf8b5b87d@ssi.gouv.fr>
- <CAADnVQLqkfVijWoOM29PxCL_yK6K0fr8B89r4c5EKgddevJhGQ@mail.gmail.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
-Message-ID: <59e8fab9-34df-0ebe-ca6b-8b34bf582b75@ssi.gouv.fr>
-Date:   Wed, 31 Jul 2019 21:11:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
- Thunderbird/52.9.0
+        Wed, 31 Jul 2019 15:11:18 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 5177E802D1; Wed, 31 Jul 2019 21:11:04 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 21:11:15 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, Ocean Chen <oceanchen@google.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 077/113] f2fs: avoid out-of-range memory access
+Message-ID: <20190731191115.GB4630@amd>
+References: <20190729190655.455345569@linuxfoundation.org>
+ <20190729190714.022413119@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQLqkfVijWoOM29PxCL_yK6K0fr8B89r4c5EKgddevJhGQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
+Content-Disposition: inline
+In-Reply-To: <20190729190714.022413119@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--i9LlY+UWpKt15+FH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 31/07/2019 20:58, Alexei Starovoitov wrote:
-> On Wed, Jul 31, 2019 at 11:46 AM Micka=C3=ABl Sala=C3=BCn
-> <mickael.salaun@ssi.gouv.fr> wrote:
->>>> +    for (i =3D 0; i < htab->n_buckets; i++) {
->>>> +            head =3D select_bucket(htab, i);
->>>> +            hlist_nulls_for_each_entry_safe(l, n, head, hash_node) {
->>>> +                    landlock_inode_remove_map(*((struct inode **)l->k=
-ey), map);
->>>> +            }
->>>> +    }
->>>> +    htab_map_free(map);
->>>> +}
->>>
->>> user space can delete the map.
->>> that will trigger inode_htab_map_free() which will call
->>> landlock_inode_remove_map().
->>> which will simply itereate the list and delete from the list.
->>
->> landlock_inode_remove_map() removes the reference to the map (being
->> freed) from the inode (with an RCU lock).
->
-> I'm going to ignore everything else for now and focus only on this bit,
-> since it's fundamental issue to address before this discussion can
-> go any further.
-> rcu_lock is not a spin_lock. I'm pretty sure you know this.
-> But you're arguing that it's somehow protecting from the race
-> I mentioned above?
->
+Hi!
 
-I was just clarifying your comment to avoid misunderstanding about what
-is being removed.
+> [ Upstream commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a ]
+>=20
+> blkoff_off might over 512 due to fs corrupt or security
+> vulnerability. That should be checked before being using.
+>=20
+> Use ENTRIES_IN_SUM to protect invalid value in cur_data_blkoff.
+>=20
+> Signed-off-by: Ocean Chen <oceanchen@google.com>
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  fs/f2fs/segment.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 8fc3edb6760c..92f72bb5aff4 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -3261,6 +3261,11 @@ static int read_compacted_summaries(struct f2fs_sb=
+_info *sbi)
+>  		seg_i =3D CURSEG_I(sbi, i);
+>  		segno =3D le32_to_cpu(ckpt->cur_data_segno[i]);
+>  		blk_off =3D le16_to_cpu(ckpt->cur_data_blkoff[i]);
+> +		if (blk_off > ENTRIES_IN_SUM) {
+> +			f2fs_bug_on(sbi, 1);
+> +			f2fs_put_page(page, 1);
+> +			return -EFAULT;
+> +		}
+>  		seg_i->next_segno =3D segno;
 
-As said in the full response, there is currently a race but, if I add a
-bpf_map_inc() call when the map is referenced by inode->security, then I
-don't see how a race could occur because such added map could only be
-freed in a security_inode_free() (as long as it retains a reference to
-this inode).
+We normally use -EUCLEAN to signal filesystem corruption. Plus, it is
+good idea to report it to the syslog and mark filesystem as "needing
+fsck" if filesystem can do that.
 
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
---
-Micka=C3=ABl Sala=C3=BCn
-ANSSI/SDE/ST/LAM
+--i9LlY+UWpKt15+FH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
-es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
-=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
-nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
-=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
-tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
-acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
-eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
-t de d=C3=A9truire le message. The personal data collected and processed du=
-ring this exchange aims solely at completing a business relationship and is=
- limited to the necessary duration of that relationship. If you wish to use=
- your rights of consultation, rectification and deletion of your data, plea=
-se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
-n error, we thank you for informing the sender and destroying the message.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1B59MACgkQMOfwapXb+vKm+wCaA0MU06luGhPkGR0VcewLLETN
+nO0AniAbQox6kLkCPYywtE0Jd77Wlw72
+=J5xo
+-----END PGP SIGNATURE-----
+
+--i9LlY+UWpKt15+FH--
