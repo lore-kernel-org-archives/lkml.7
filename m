@@ -2,124 +2,58 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B44E4C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7696BC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B66A20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:10:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="f3zX6x0v"
+	by mail.kernel.org (Postfix) with ESMTP id 55D3920693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfGaIK6 (ORCPT
+        id S1726715AbfGaIPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:10:58 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:35754 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfGaIK6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:10:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1564560653;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Ldg0vkUExaoCJzEDplQufh0vP3aB8jIVw5TBoixU8Ng=;
-        b=f3zX6x0vVcIcbKumeVDqpAmXxb9BgyXvo/wzd5NOjA0wrhzDwgfY+56zibH64DKt1b
-        6eqqZRWgs4IcJ4CUIZi+5vgqaWE2+vQ95Lc+Xv5JdFiy8d+e864uieSqHpamGonSNYk5
-        tZGoXWkrc0W5KgyHuv+8rp5Wc98s2bRGbvlLRDj2PU8vOy+9CxBYYfHk4E2WOrvuqum2
-        6jRldWVNBPZf1ZiUJBgy7UcaDI5xzOB979fwN1ZpU++Z86I2i0MqPibVdeV6kmc3g7yL
-        2FFCFSUeSBxXqmjAeCotjiZeIuYYczT7sHtMiCwUPu6vUdjqa43ffG/TOjiOFD7MKU1n
-        /XJg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266HpF+ORJDYrzyYxhqeg=="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
-        with ESMTPSA id m0a13fv6V8Ap2Ai
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 31 Jul 2019 10:10:51 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 10:10:43 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm: shake fist angrily at dma-mapping
-Message-ID: <20190731081043.GA55937@gerhold.net>
-References: <20190730214633.17820-1-robdclark@gmail.com>
+        Wed, 31 Jul 2019 04:15:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52964 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726185AbfGaIPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 04:15:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 25221AE2C;
+        Wed, 31 Jul 2019 08:15:38 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 10:15:37 +0200
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+To:     SunKe <sunke32@huawei.com>
+Cc:     josef@toxicpanda.com, axboe@kernel.dk, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kernel@vger.kernel.org,
+        kamatam@amazon.com, manoj.br@gmail.com, stable@vger.kernel.org,
+        dwmw@amazon.com
+Subject: Re: [PATCH] nbd: replace kill_bdev() with __invalidate_device() again
+Message-ID: <20190731081536.GB3856@x250>
+References: <1564542946-26255-1-git-send-email-sunke32@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190730214633.17820-1-robdclark@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1564542946-26255-1-git-send-email-sunke32@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 02:46:28PM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> So, using dma_sync_* for our cache needs works out w/ dma iommu ops, but
-> it falls appart with dma direct ops.  The problem is that, depending on
-> display generation, we can have either set of dma ops (mdp4 and dpu have
-> iommu wired to mdss node, which maps to toplevel drm device, but mdp5
-> has iommu wired up to the mdp sub-node within mdss).
-> 
-> Fixes this splat on mdp5 devices:
-> 
->    Unable to handle kernel paging request at virtual address ffffffff80000000
->    Mem abort info:
->      ESR = 0x96000144
->      Exception class = DABT (current EL), IL = 32 bits
->      SET = 0, FnV = 0
->      EA = 0, S1PTW = 0
->    Data abort info:
->      ISV = 0, ISS = 0x00000144
->      CM = 1, WnR = 1
->    swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000810e4000
->    [ffffffff80000000] pgd=0000000000000000
->    Internal error: Oops: 96000144 [#1] SMP
->    Modules linked in: btqcomsmd btqca bluetooth cfg80211 ecdh_generic ecc rfkill libarc4 panel_simple msm wcnss_ctrl qrtr_smd drm_kms_helper venus_enc venus_dec videobuf2_dma_sg videobuf2_memops drm venus_core ipv6 qrtr qcom_wcnss_pil v4l2_mem2mem qcom_sysmon videobuf2_v4l2 qmi_helpers videobuf2_common crct10dif_ce mdt_loader qcom_common videodev qcom_glink_smem remoteproc bmc150_accel_i2c bmc150_magn_i2c bmc150_accel_core bmc150_magn snd_soc_lpass_apq8016 snd_soc_msm8916_analog mms114 mc nf_defrag_ipv6 snd_soc_lpass_cpu snd_soc_apq8016_sbc industrialio_triggered_buffer kfifo_buf snd_soc_lpass_platform snd_soc_msm8916_digital drm_panel_orientation_quirks
->    CPU: 2 PID: 33 Comm: kworker/2:1 Not tainted 5.3.0-rc2 #1
->    Hardware name: Samsung Galaxy A5U (EUR) (DT)
->    Workqueue: events deferred_probe_work_func
->    pstate: 80000005 (Nzcv daif -PAN -UAO)
->    pc : __clean_dcache_area_poc+0x20/0x38
->    lr : arch_sync_dma_for_device+0x28/0x30
->    sp : ffff0000115736a0
->    x29: ffff0000115736a0 x28: 0000000000000001
->    x27: ffff800074830800 x26: ffff000011478000
->    x25: 0000000000000000 x24: 0000000000000001
->    x23: ffff000011478a98 x22: ffff800009fd1c10
->    x21: 0000000000000001 x20: ffff800075ad0a00
->    x19: 0000000000000000 x18: ffff0000112b2000
->    x17: 0000000000000000 x16: 0000000000000000
->    x15: 00000000fffffff0 x14: ffff000011455d70
->    x13: 0000000000000000 x12: 0000000000000028
->    x11: 0000000000000001 x10: ffff00001106c000
->    x9 : ffff7e0001d6b380 x8 : 0000000000001000
->    x7 : ffff7e0001d6b380 x6 : ffff7e0001d6b382
->    x5 : 0000000000000000 x4 : 0000000000001000
->    x3 : 000000000000003f x2 : 0000000000000040
->    x1 : ffffffff80001000 x0 : ffffffff80000000
->    Call trace:
->     __clean_dcache_area_poc+0x20/0x38
->     dma_direct_sync_sg_for_device+0xb8/0xe8
->     get_pages+0x22c/0x250 [msm]
->     msm_gem_get_and_pin_iova+0xdc/0x168 [msm]
->     ...
-> 
-> Fixes the combination of two patches:
-> 
-> Fixes: 0036bc73ccbe ("drm/msm: stop abusing dma_map/unmap for cache")
-> Fixes: 449fa54d6815 ("dma-direct: correct the physical addr in dma_direct_sync_sg_for_cpu/device")
+On Wed, Jul 31, 2019 at 11:15:46AM +0800, SunKe wrote:
+> CR: https://code.amazon.com/reviews/CR-7629288
 
-Thanks for the patch! It fixes the issue on MSM8916/A5U:
+Hi, this link isn't accessible for ordinary people, please remove it from the
+patch.
 
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
+-- 
+Johannes Thumshirn                            SUSE Labs Filesystems
+jthumshirn@suse.de                                +49 911 74053 689
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
+Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
