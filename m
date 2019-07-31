@@ -2,666 +2,222 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49253C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75E8C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013F1206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF832089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfGaOfi (ORCPT
+        id S1729005AbfGaOhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:35:38 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:52568 "EHLO honk.sigxcpu.org"
+        Wed, 31 Jul 2019 10:37:09 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:52650 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfGaOfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:35:38 -0400
+        id S1728304AbfGaOhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:37:09 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 91636FB03;
-        Wed, 31 Jul 2019 16:35:35 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id DECAEFB03;
+        Wed, 31 Jul 2019 16:37:06 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mN0EiOp_Zs2F; Wed, 31 Jul 2019 16:35:32 +0200 (CEST)
+        with ESMTP id uyFt2kyVmQ3o; Wed, 31 Jul 2019 16:37:05 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 731A246D8A; Wed, 31 Jul 2019 16:35:32 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 16:35:32 +0200
+        id 2ACD946D8A; Wed, 31 Jul 2019 16:37:05 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 16:37:05 +0200
 From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Fabio Estevam <festevam@gmail.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         Andrzej Hajda <a.hajda@samsung.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         Jonas Karlman <jonas@kwiboo.se>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Lee Jones <lee.jones@linaro.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
-Message-ID: <20190731143532.GA1935@bogon.m.sigxcpu.org>
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [PATCH 2/3] dt-bindings: display/bridge: Add binding for IMX NWL
+ mipi dsi host controller
+Message-ID: <20190731143705.GB1935@bogon.m.sigxcpu.org>
 References: <cover.1563983037.git.agx@sigxcpu.org>
- <3158f4f8c97c21f98c394e5631d74bc60d796522.1563983037.git.agx@sigxcpu.org>
- <CAOMZO5BRbV_1du1b9eJqcBvvXSE2Mon3yxSPJxPpZgBqYNjBSg@mail.gmail.com>
+ <70a5c6617936a4a095e7608b96e3f9fae5ddfbb1.1563983037.git.agx@sigxcpu.org>
+ <20190727015716.GA4902@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOMZO5BRbV_1du1b9eJqcBvvXSE2Mon3yxSPJxPpZgBqYNjBSg@mail.gmail.com>
+In-Reply-To: <20190727015716.GA4902@pendragon.ideasonboard.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabio,
-thanks for having a look! I followed most of your comments, there's some
-things i'm unsure, see below:
+Hi Laurent,
 
-On Fri, Jul 26, 2019 at 05:01:52PM -0300, Fabio Estevam wrote:
+thanks for having a look.
+
+On Sat, Jul 27, 2019 at 04:57:16AM +0300, Laurent Pinchart wrote:
 > Hi Guido,
 > 
-> Thanks for your work on this driver!
+> Thank you for the patch.
 > 
-> On Wed, Jul 24, 2019 at 12:52 PM Guido Günther <agx@sigxcpu.org> wrote:
-> 
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/bridge/imx-nwl/Kconfig
-> > @@ -0,0 +1,15 @@
-> > +config DRM_IMX_NWL_DSI
-> > +       tristate "Support for Northwest Logic MIPI DSI Host controller"
-> > +       depends on DRM && (ARCH_MXC || ARCH_MULTIPLATFORM || COMPILE_TEST)
-> 
-> 
-> This IP could potentially be found on other SoCs, so no need to make
-> it depend on ARCH_MXC.
-
-Done.
-
-> > +#include <drm/drm_atomic_helper.h>
-> > +#include <drm/drm_of.h>
-> > +#include <drm/drm_panel.h>
-> > +#include <drm/drm_print.h>
-> > +#include <drm/drm_probe_helper.h>
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/component.h>
-> > +#include <linux/gpio/consumer.h>
-> 
-> I did not find gpio AP used in this driver.
-
-Dropped the include.
-
-> 
-> > +static void imx_nwl_dsi_set_clocks(struct imx_nwl_dsi *dsi, bool enable)
-> 
-> Better make it to return 'int' instead...
-
-Done, but see below.
-
-> 
-> > +{
-> > +       struct device *dev = dsi->dev;
-> > +       const char *id;
-> > +       struct clk *clk;
-> > +       unsigned long new_rate, cur_rate;
-> > +       bool enabled;
-> > +       size_t i;
-> > +       int ret;
-> > +
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "%sabling platform clocks",
-> 
-> Please remove the letter 's' from 'sabling'.
-
-The idea is to have
-
-    "%sabling platform clocks", enable ? "en" : "dis");
-
-depending whether clocks are enabled/disabled.
-
-> 
-> > +                            enable ? "en" : "dis");
-> > +                       ret = clk_prepare_enable(clk);
-> > +                       if (ret < 0) {
-> > +                               DRM_DEV_ERROR(dev, "Failed to enable clock %s",
-> > +                                             id);
-> 
-> and propagate the error in case of clk_prepare_enable() failure.
-
-done.
-
-> 
-> > +                       }
-> > +                       dsi->clk_config[i].enabled = true;
-> > +                       cur_rate = clk_get_rate(clk);
-> > +                       DRM_DEV_DEBUG_DRIVER(
-> > +                               dev, "Enabled %s clk (rate: req=%lu act=%lu)\n",
-> > +                               id, new_rate, cur_rate);
-> > +               } else if (enabled) {
-> > +                       clk_disable_unprepare(clk);
-> > +                       dsi->clk_config[i].enabled = false;
-> > +                       DRM_DEV_DEBUG_DRIVER(dev, "Disabled %s clk\n", id);
-> > +               }
-> > +       }
-> > +}
-> > +
-> > +static void imx_nwl_dsi_enable(struct imx_nwl_dsi *dsi)
-> 
-> Same here. Please return 'int' instead.
-
-This is from drm_bridge_funcs so the prototype is fixed. I'm not sure
-how what's the best way to bubble up fatal errors through the drm layer?
-
-> > +{
-> > +       struct device *dev = dsi->dev;
-> > +       int ret;
-> > +
-> > +       imx_nwl_dsi_set_clocks(dsi, true);
-> > +
-> > +       ret = dsi->pdata->poweron(dsi);
-> > +       if (ret < 0)
-> > +               DRM_DEV_ERROR(dev, "Failed to power on DSI (%d)\n", ret);
-> 
-> If the power domain failed to turn on, it is better to propagate the
-> error.
-
-If fixed the return type here as well but this will again get lost in
-`_pre_enable` which again is void in drm_bridge_funcs (see below).
-
-> 
-> > +       phy_ref_rate = clk_get_rate(dsi->phy_ref_clk);
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "PHY at ref rate: %lu\n", phy_ref_rate);
-> > +       if (ret < 0) {
-> 
-> This check looks wrong. At this point ret is always 0.
-
-Fixed.
-
-> 
-> > +               DRM_DEV_ERROR(dsi->dev,
-> > +                             "Cannot setup PHY for mode: %ux%u @%d Hz\n",
-> > +                             adjusted_mode->hdisplay, adjusted_mode->vdisplay,
-> > +                             adjusted_mode->clock);
-> > +               DRM_DEV_ERROR(dsi->dev, "PHY ref clk: %lu, bit clk: %lu\n",
-> > +                             phy_ref_rate, new_cfg.mipi_dphy.hs_clk_rate);
-> > +       } else {
-> > +               /* Save the new desired phy config */
-> > +               memcpy(&dsi->phy_cfg, &new_cfg, sizeof(new_cfg));
-> > +       }
-> > +
-> > +       /* LCDIF + NWL needs active high sync */
-> 
-> Would this still work if DCSS is used instead?
-
-I'll check once there's a DCSS driver that can drive this. The current
-vendor one is bound to imx-displays-subsystem and cant' drive a bridge.
-
-> 
-> > +       adjusted_mode->flags |= (DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
-> > +       adjusted_mode->flags &= ~(DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC);
-> > +
-> > +       drm_display_mode_to_videomode(adjusted_mode, &dsi->vm);
-> > +       drm_mode_debug_printmodeline(adjusted_mode);
-> > +
-> > +       return ret == 0;
-> 
-> At this point ret is always 0.
-
-Right, there was some more logic in there that got removed. Changed to
-always signal success.
-
-> 
-> > +static void imx_nwl_dsi_bridge_pre_enable(struct drm_bridge *bridge)
-> > +{
-> > +       struct imx_nwl_dsi *dsi = bridge_to_dsi(bridge);
-> > +
-> > +       if (dsi->dpms_mode == DRM_MODE_DPMS_ON)
-> > +               return;
-> > +
-> > +       imx_nwl_select_input_source(dsi);
-> 
-> This function is i.MX8M specific, so better protect it to run only for
-> the i.MX8M variant.
-
-Moved into imx_nwl_platform_data.
-
-> 
-> > +       pm_runtime_get_sync(dsi->dev);
-> > +       imx_nwl_dsi_enable(dsi);
-> > +       nwl_dsi_enable(dsi);
-> 
-> Please check the error and propagate in the case of failure.
-
-This one is again hooked in from drm_bridge_funcs which is void.
-
-> 
-> > +       dsi->dpms_mode = DRM_MODE_DPMS_ON;
-> > +}
-> > +
-> 
-> > +       dsi->csr = syscon_regmap_lookup_by_phandle(np, "csr");
-> > +       if (IS_ERR(dsi->csr) && dsi->pdata->ext_regs & IMX_REG_CSR) {
-> > +               ret = PTR_ERR(dsi->csr);
-> > +               DRM_DEV_ERROR(dsi->dev, "Failed to get CSR regmap: %d\n",
-> 
-> In this function (and globally in the driver) there is a mix of
-> DRM_DEV_ERROR() and dev_err().
-> 
-> Can we just pick one of the two and use it consistently?
-> 
-> Not sure what is the norm in drm code, but IMHO dev_err() looks
-> prettier :-)
-
-I went for DRM_DEV_ERROR() since that what i used in the rest of the
-driver and these ones were omission. Hope that's o.k.
-
-> 
-> > +
-> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +       base = devm_ioremap_resource(dsi->dev, res);
-> 
-> Could use devm_platform_ioremap_resource(), which makes it simpler.
-
-Done.
-
-> 
-> > +err_cleanup:
-> > +       devm_free_irq(dev, dsi->irq, dsi);
-> 
-> No need to call devm_free_irq() here. The devm functions do not need
-> to be freed on probe.
-
-Removed.
-
-> 
-> > diff --git a/drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.c b/drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.c
+> On Wed, Jul 24, 2019 at 05:52:25PM +0200, Guido Günther wrote:
+> > The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+> > 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >  .../bindings/display/bridge/imx-nwl-dsi.txt   | 89 +++++++++++++++++++
+> >  1 file changed, 89 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
 > > new file mode 100644
-> > index 000000000000..0e1463af162f
+> > index 000000000000..288fdb726d5a
 > > --- /dev/null
-> > +++ b/drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.c
-> > @@ -0,0 +1,745 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * NWL DSI host driver
-> > + *
-> > + * Copyright (C) 2017 NXP
-> > + * Copyright (C) 2019 Purism SPC
-> > + */
-> > +
-> > +#include <asm/unaligned.h>
+> > +++ b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+> > @@ -0,0 +1,89 @@
+> > +Northwest Logic MIPI-DSI on imx SoCs
+> > +=====================================
 > 
-> Is this asm header required?
+> There's one too many =.
+> 
+> > +
+> > +NWL MIPI-DSI host controller found on i.MX8 platforms. This is a
+> > +dsi bridge for the for the NWL MIPI-DSI host.
+> 
+> s/dsi/DSI/
+> s/for the for the /for the /
+> 
+> > +
+> > +Required properties:
+> > +- compatible: 		"fsl,<chip>-nwl-dsi"
+> > +	The following strings are expected:
+> > +			"fsl,imx8mq-nwl-dsi"
+> > +- reg: 			the register range of the MIPI-DSI controller
+> > +- interrupts: 		the interrupt number for this module
+> 
+> It's not just a number but a specifier (with flags).
+> 
+> > +- clock, clock-names: 	phandles to the MIPI-DSI clocks
+> 
+> That should be phandles and names.
+> 
+> > +	The following clocks are expected on all platforms:
+> 
+> Expected or required ?
+> 
+> s/ on all platforms// as you only support a single platform.
+> 
+> > +		"core"    - DSI core clock
+> > +		"tx_esc"  - TX_ESC clock (used in escape mode)
+> > +		"rx_esc"  - RX_ESC clock (used in escape mode)
+> > +		"phy_ref" - PHY_REF clock. Clock is managed by the phy. Only
+> > +                            used to read the clock rate.
+> > +- assigned-clocks:	phandles to clocks that require initial configuration
+> > +- assigned-clock-rates:	rates of the clocks that require initial configuration
+> > +	The following clocks need to have an initial configuration:
+> > +	"tx_esc" (20 MHz) and "rx_esc" (80 Mhz).
+> 
+> I think those two properties are out of scope for these bindings.
+> 
+> > +- phys: 		phandle to the phy module representing the DPHY
+> > +			inside the MIPI-DSI IP block
+> > +- phy-names: 		should be "dphy"
+> > +
+> > +Optional properties:
+> > +- power-domains 	phandle to the power domain
+> > +- src			phandle to the system reset controller (required on
+> > +			i.MX8MQ)
+> 
+> Should this use the standard resets property ?
+> 
+> > +- mux-sel		phandle to the MUX register set (required on i.MX8MQ)
+> > +- assigned-clock-parents phandles to parent clocks that needs to be assigned as
+> > +			parents to clocks defined in assigned-clocks
+> 
+> This property is also out of scope.
+> 
+> > +
+> > +Example:
+> > +	mipi_dsi: mipi_dsi@30a00000 {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		compatible = "fsl,imx8mq-nwl-dsi";
+> > +		reg = <0x30A00000 0x300>;
+> > +		clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
+> > +			 <&clk IMX8MQ_CLK_DSI_AHB>,
+> > +			 <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
+> > +			 <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> > +		clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
+> > +		assigned-clocks = <&clk IMX8MQ_CLK_DSI_AHB>,
+> > +				  <&clk IMX8MQ_CLK_DSI_CORE>,
+> > +				  <&clk IMX8MQ_CLK_DSI_IPG_DIV>;
+> > +		assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_80M>,
+> > +					 <&clk IMX8MQ_SYS1_PLL_266M>;
+> > +		assigned-clock-rates = <80000000>,
+> > +				       <266000000>,
+> > +				       <20000000>;
+> > +		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> > +		power-domains = <&pgc_mipi>;
+> > +		src = <&src>;
+> > +		mux-sel = <&iomuxc_gpr>;
+> > +		phys = <&dphy>;
+> > +		phy-names = "dphy";
+> > +		status = "okay";
+> > +
+> > +		panel@0 {
+> > +			compatible = "...";
+> > +			port {
+> > +			     panel_in: endpoint {
+> > +				       remote-endpoint = <&mipi_dsi_out>;
+> > +			     };
+> > +			};
+> > +		};
+> > +
+> > +		ports {
+> > +		      #address-cells = <1>;
+> > +		      #size-cells = <0>;
+> > +
+> > +		      port@0 {
+> > +			     reg = <0>;
+> > +			     mipi_dsi_in: endpoint {
+> > +					  remote-endpoint = <&dcss_disp0_mipi_dsi>;
+> > +			     };
+> > +		      };
+> > +		      port@1 {
+> > +			     reg = <1>;
+> > +			     mipi_dsi_out: endpoint {
+> > +					   remote-endpoint = <&panel_in>;
+> > +			     };
+> > +		      };
+> > +		};
+> 
+> The ports should be documented too. There are multiple example bindings
+> available.
 
-I dropped it after removing get_unaligned_le32.
+I've followed you suggestions while moving the whole thing to YAML
+syntax for an upcoming v2.
 
-> 
-> > +/*
-> > + * DSI Video mode
-> > + */
-> 
-> Single line comment would suffice.
-> 
-> > +#define VIDEO_MODE_BURST_MODE_WITH_SYNC_PULSES         0
-> > +#define VIDEO_MODE_NON_BURST_MODE_WITH_SYNC_EVENTS     BIT(0)
-> > +#define VIDEO_MODE_BURST_MODE                          BIT(1)
-> > +
-> > +/*
-> > + * DPI color coding
-> > + */
-> 
-> Ditto.
-> 
-> > +#define DPI_16_BIT_565_PACKED  0
-> > +#define DPI_16_BIT_565_ALIGNED 1
-> > +#define DPI_16_BIT_565_SHIFTED 2
-> > +#define DPI_18_BIT_PACKED      3
-> > +#define DPI_18_BIT_ALIGNED     4
-> > +#define DPI_24_BIT             5
-> > +
-> > +/*
-> > + * DPI Pixel format
-> > + */
-> 
-> Ditto.
-
-all fixed
-
-> 
-> > +#define PIXEL_FORMAT_16  0
-> > +#define PIXEL_FORMAT_18  BIT(0)
-> > +#define PIXEL_FORMAT_18L BIT(1)
-> > +#define PIXEL_FORMAT_24  (BIT(0) | BIT(1))
-> > +
-> > +enum transfer_direction { DSI_PACKET_SEND, DSI_PACKET_RECEIVE };
-> > +
-> > +struct mipi_dsi_transfer {
-> > +       const struct mipi_dsi_msg *msg;
-> > +       struct mipi_dsi_packet packet;
-> > +       struct completion completed;
-> > +
-> > +       int status; /* status of transmission */
-> > +       enum transfer_direction direction;
-> > +       bool need_bta;
-> > +       u8 cmd;
-> > +       u16 rx_word_count;
-> > +       size_t tx_len; /* bytes sent */
-> > +       size_t rx_len; /* bytes received */
-> > +};
-> 
-> The comments here are kind of obvious, so I would just remove them.
-
-I wanted to have the unit here so i changed to /* in bytes */
-
-> 
-> > +static inline int nwl_dsi_write(struct imx_nwl_dsi *dsi, unsigned int reg,
-> 
-> inline can be dropped.
-
-done.
-> 
-> > +                               u32 val)
-> > +{
-> > +       int ret;
-> > +
-> > +       ret = regmap_write(dsi->regmap, reg, val);
-> > +       if (ret < 0)
-> > +               DRM_DEV_ERROR(dsi->dev,
-> > +                             "Failed to write NWL DSI reg 0x%x: %d\n", reg,
-> > +                             ret);
-> > +       return ret;
-> > +}
-> > +
-> > +static inline u32 nwl_dsi_read(struct imx_nwl_dsi *dsi, u32 reg)
-> 
-> Same here.
-
-done.
-
-> > +{
-> > +       unsigned int val;
-> > +       int ret;
-> > +
-> > +       ret = regmap_read(dsi->regmap, reg, &val);
-> > +       if (ret < 0)
-> > +               DRM_DEV_ERROR(dsi->dev, "Failed to read NWL DSI reg 0x%x: %d\n",
-> > +                             reg, ret);
-> > +
-> > +       return val;
-> > +}
-> 
-> It seems that we could simply use regmap_read/write() directly instead
-> of these functions.
-
-I've checked some other drm drivers most of them seem to
-regmap_{read,write} without looking at errors. While we can't do
-anything sensible when writing fails it's seems at least useful to print
-an error. I've seen these happening and the messages were very useful
-for debugging so if possible i'd keep them.
-
-> > +int nwl_dsi_get_dphy_params(struct imx_nwl_dsi *dsi,
-> > +                           const struct drm_display_mode *mode,
-> > +                           union phy_configure_opts *phy_opts)
-> > +{
-> > +       unsigned long rate;
-> > +
-> > +       if (dsi->lanes < 1 || dsi->lanes > 4)
-> > +               return -EINVAL;
-> > +
-> > +       /*
-> > +        * So far the DPHY spec minimal timings work for both mixel
-> > +        * dphy and nwl dsi host
-> > +        */
-> > +       phy_mipi_dphy_get_default_config(
-> > +               mode->crtc_clock * 1000,
-> > +               mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes,
-> > +               &phy_opts->mipi_dphy);
-> > +       rate = clk_get_rate(dsi->tx_esc_clk);
-> > +       DRM_DEV_DEBUG_DRIVER(dsi->dev, "LP clk is @%lu Hz\n", rate);
-> > +       phy_opts->mipi_dphy.lp_clk_rate = rate;
-> > +
-> > +       return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(nwl_dsi_get_dphy_params);
-> 
-> Does it really need to be exported? Why can't it be placed inside
-> nwl-drv.c and be made static?
-
-Moved.
-
-> 
-> > +/**
-> 
-> /* is enough
-
-Fixed.
-
-> 
-> 
-> > + * ui2bc - UI time periods to byte clock cycles
-> > + */
-> > +static u32 ui2bc(struct imx_nwl_dsi *dsi, unsigned long long ui)
-> > +{
-> > +       int bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
-> > +
-> > +       return DIV_ROUND_UP(ui * dsi->lanes, dsi->vm.pixelclock * bpp);
-> > +}
-> > +
-> > +#define USEC_PER_SEC 1000000L
-> 
-> This definition already exists in include/linux/time64.h. No need to
-> redefine it.
-
-Dropped that define.
-
-> 
-> > +static int nwl_dsi_enable_tx_clock(struct imx_nwl_dsi *dsi)
-> > +{
-> > +       struct device *dev = dsi->dev;
-> > +       int ret;
-> > +
-> > +       ret = clk_prepare_enable(dsi->tx_esc_clk);
-> > +       if (ret < 0) {
-> > +               DRM_DEV_ERROR(dev, "Failed to enable tx_esc clk: %d\n", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "Enabled tx_esc clk @%lu Hz\n",
-> > +                            clk_get_rate(dsi->tx_esc_clk));
-> > +       return 0;
-> > +}
-> 
-> Do we really need this function? It looks like it would be simpler
-> just to call clk_prepare_enable() directly.
-
-Dropped since it's only used once, there were more users before.
-
-> 
-> > +
-> > +static int nwl_dsi_enable_rx_clock(struct imx_nwl_dsi *dsi)
-> > +{
-> > +       struct device *dev = dsi->dev;
-> > +       int ret;
-> > +
-> > +       ret = clk_prepare_enable(dsi->rx_esc_clk);
-> > +       if (ret < 0) {
-> > +               DRM_DEV_ERROR(dev, "Failed to enable rx_esc clk: %d\n", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "Enabled rx_esc clk @%lu Hz\n",
-> > +                            clk_get_rate(dsi->rx_esc_clk));
-> > +       return 0;
-> > +}
-> 
-> Same here.
-
-Dropped since it's only used once.
-
-> > +static ssize_t nwl_dsi_host_transfer(struct mipi_dsi_host *dsi_host,
-> > +                                    const struct mipi_dsi_msg *msg)
-> > +{
-> > +       struct imx_nwl_dsi *dsi =
-> > +               container_of(dsi_host, struct imx_nwl_dsi, dsi_host);
-> > +       struct mipi_dsi_transfer xfer;
-> > +       ssize_t ret = 0;
-> > +
-> > +       /* Create packet to be sent */
-> > +       dsi->xfer = &xfer;
-> > +       ret = mipi_dsi_create_packet(&xfer.packet, msg);
-> > +       if (ret < 0) {
-> > +               dsi->xfer = NULL;
-> > +               return ret;
-> > +       }
-> > +
-> > +       if ((msg->type & MIPI_DSI_GENERIC_READ_REQUEST_0_PARAM ||
-> > +            msg->type & MIPI_DSI_GENERIC_READ_REQUEST_1_PARAM ||
-> > +            msg->type & MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM ||
-> > +            msg->type & MIPI_DSI_DCS_READ) &&
-> > +           msg->rx_len > 0 && msg->rx_buf != NULL)
-> > +               xfer.direction = DSI_PACKET_RECEIVE;
-> > +       else
-> > +               xfer.direction = DSI_PACKET_SEND;
-> > +
-> > +       xfer.need_bta = (xfer.direction == DSI_PACKET_RECEIVE);
-> > +       xfer.need_bta |= (msg->flags & MIPI_DSI_MSG_REQ_ACK) ? 1 : 0;
-> > +       xfer.msg = msg;
-> > +       xfer.status = -ETIMEDOUT;
-> > +       xfer.rx_word_count = 0;
-> > +       xfer.rx_len = 0;
-> > +       xfer.cmd = 0x00;
-> > +       if (msg->tx_len > 0)
-> > +               xfer.cmd = ((u8 *)(msg->tx_buf))[0];
-> > +       init_completion(&xfer.completed);
-> > +
-> > +       nwl_dsi_enable_rx_clock(dsi);
-> 
-> This may fail, so better check the error.
-> 
-> ret = clk_prepare_enable()
-> if (ret < 0)
->    return ret;
-
-Done.
-
-> > +irqreturn_t nwl_dsi_irq_handler(int irq, void *data)
-> > +{
-> > +       u32 irq_status;
-> > +       struct imx_nwl_dsi *dsi = data;
-> > +
-> > +       irq_status = nwl_dsi_read(dsi, IRQ_STATUS);
-> > +
-> > +       if (irq_status & TX_PKT_DONE || irq_status & RX_PKT_HDR_RCVD ||
-> > +           irq_status & RX_PKT_PAYLOAD_DATA_RCVD)
-> > +               nwl_dsi_finish_transmission(dsi, irq_status);
-> > +
-> > +       return IRQ_HANDLED;
-> > +}
-> > +EXPORT_SYMBOL_GPL(nwl_dsi_irq_handler);
-> 
-> What about placing this function inside nwl-drv.c and make it static?
-
-Then nwl_dsi_finish_transmission would need to either be moved as well
-or we'd have another non-static function. I'd like to keeping the irq
-handling in one file and only have the registration over in imx-nwl-drv.
-I've dropped the EXPORT_SYMBOL_GPL though.
-
-> > +
-> > +int nwl_dsi_enable(struct imx_nwl_dsi *dsi)
-> > +{
-> > +       struct device *dev = dsi->dev;
-> > +       union phy_configure_opts *phy_cfg = &dsi->phy_cfg;
-> > +       int ret;
-> > +
-> > +       if (!dsi->lanes) {
-> > +               DRM_DEV_ERROR(dev, "Need DSI lanes: %d\n", dsi->lanes);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       ret = phy_init(dsi->phy);
-> > +       if (ret < 0) {
-> > +               DRM_DEV_ERROR(dev, "Failed to init DSI phy: %d\n", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       ret = phy_configure(dsi->phy, phy_cfg);
-> > +       if (ret < 0) {
-> > +               DRM_DEV_ERROR(dev, "Failed to configure DSI phy: %d\n", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       ret = nwl_dsi_enable_tx_clock(dsi);
-> > +       if (ret < 0) {
-> > +               DRM_DEV_ERROR(dev, "Failed to enable tx clock: %d\n", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       ret = nwl_dsi_config_host(dsi);
-> > +       if (ret < 0) {
-> > +               DRM_DEV_ERROR(dev, "Failed to set up DSI: %d", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       ret = nwl_dsi_config_dpi(dsi);
-> > +       if (ret < 0) {
-> > +               DRM_DEV_ERROR(dev, "Failed to set up DPI: %d", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       ret = phy_power_on(dsi->phy);
-> > +       if (ret < 0) {
-> > +               DRM_DEV_ERROR(dev, "Failed to power on DPHY (%d)\n", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       nwl_dsi_init_interrupts(dsi);
-> > +
-> > +       return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(nwl_dsi_enable);
-> 
-> Same here.
-
-The idea was to keep the dsi related operations here. Dropped
-EXPORT_SYMBOL_GPL though.
-
-> 
-> > +
-> > +int nwl_dsi_disable(struct imx_nwl_dsi *dsi)
-> > +{
-> > +       struct device *dev = dsi->dev;
-> > +
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "Disabling clocks and phy\n");
-> > +
-> > +       phy_power_off(dsi->phy);
-> > +       phy_exit(dsi->phy);
-> > +
-> > +       /* Disabling the clock before the phy breaks enabling dsi again */
-> > +       clk_disable_unprepare(dsi->tx_esc_clk);
-> > +
-> > +       return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(nwl_dsi_disable);
-> 
-> Same here.
-
-Same as above. I can move things if wanted but then it might make sense
-to only use one large file which I avoided so we can have a split
-between DSI operations and probing / bridge chaining and platform
-specific functions.
-
-Thanks again for having a look,
+Thanks for having a look,
+Cheers,
  -- Guido
+
+> > +	};
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
