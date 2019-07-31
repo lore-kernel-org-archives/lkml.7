@@ -2,177 +2,156 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62566C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B541BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3663A206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:26:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MQiLGOAW"
+	by mail.kernel.org (Postfix) with ESMTP id 95D5B206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbfGaK01 (ORCPT
+        id S2387415AbfGaK1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:26:27 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37021 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728055AbfGaK00 (ORCPT
+        Wed, 31 Jul 2019 06:27:03 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:65291 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728055AbfGaK1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:26:26 -0400
-Received: by mail-lj1-f196.google.com with SMTP id z28so10820664ljn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JUZSHlOC2NsvHH+oiYgXd/P9aGC7hBdS8UD65AtoMp4=;
-        b=MQiLGOAWAeeOz7OvhR0Srak34dyDFzwv68hLoy3nUVLq1Ok4QKDOGspGoCLiCYmrsl
-         X53gwv/rai5eej0QK73mKUVb9t737/JnqyNFTDy3ud2eorwscZF/qVEhn/BI0oZfsUMX
-         NoICCfPOb5jeWu0aA1R5XdP93vlkhILcxoIL6Bf+Pme7yWed9VVKTeOxvaXLm3EViblG
-         bGCBElPhzYPNZVjOgapbV1/DZKl2AMMCaspfmKtCBYkTr7liVQ4IXthOr4B74aJynBUX
-         0mIzuX+PD1vORUscdCQ8kS1BDpsmqzR8d5B0vqB5KEyhGRuDcTR+C0CId8saWMKP4v4l
-         0GOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JUZSHlOC2NsvHH+oiYgXd/P9aGC7hBdS8UD65AtoMp4=;
-        b=n8dxkrPRVMHyLrZKYvFqBHRBmmIVPkiPbhZmJ/wi0Vc/Kn33e7BDWBao5xGkF3QmfT
-         eWnX9AFbOS0fDBAisnlhPNWnBUHqD4mohH7QV/+pQIDTqJQAquIH1qXJL3d6tq/GIDp5
-         HRTxTcCaBaFpHTxlZJgo6V5XO5HmlEzWIFqSDSWlE/OeX5yEwTJfyi/YpapWIYcvCQC4
-         BNG26gkgyS6jEpCtB5K+9ESWU1jtGdr2ImhqVNbtfacKYR26FTWYG5B5v2njyxQhiwe/
-         OyJVdDCa7BTua+ytCiZXF8YHhW/pmzyj0BpvlX7rlJTNO5rnhg/kFMpJyiluHeE5BQqR
-         2B/Q==
-X-Gm-Message-State: APjAAAUJcyzzKdDEEMT9mVIuq9oalg7BPLdOnVobU2Psl+dmt2mISftQ
-        sJMxV5Hxcnhz09LEa4pQ96sLkG7BBbZncn+ADg1haQ==
-X-Google-Smtp-Source: APXvYqzK9w7NfgMq23mlEeHWtRc1vd+SdbVRqgKv0YbwMlIYSzawLj8RuR4WbpJLpxKS9HshxfPzK8im8DJXEMjL6UY=
-X-Received: by 2002:a2e:85d4:: with SMTP id h20mr6120835ljj.142.1564568783805;
- Wed, 31 Jul 2019 03:26:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org> <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
-In-Reply-To: <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Wed, 31 Jul 2019 15:56:12 +0530
-Message-ID: <CAFA6WYPJAzbPdcpBqioxjY=T8RLw-73B_hpzX4cGnwVvm5zpJw@mail.gmail.com>
-Subject: Re: [RFC v2 0/6] Introduce TEE based Trusted Keys support
-To:     Janne Karhunen <janne.karhunen@gmail.com>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, dhowells@redhat.com,
-        jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Wed, 31 Jul 2019 06:27:03 -0400
+Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id 517435089605ae31; Wed, 31 Jul 2019 12:27:01 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: linux-next: build failure after merge of the pm tree
+Date:   Wed, 31 Jul 2019 12:27:01 +0200
+Message-ID: <2125012.dsI546JiDj@kreacher>
+In-Reply-To: <20190731153419.7b728744@canb.auug.org.au>
+References: <20190731153419.7b728744@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Janne,
+On Wednesday, July 31, 2019 7:34:19 AM CEST Stephen Rothwell wrote:
+> 
+> --Sig_/RVaztRR.13XAL2aXFk8lo/g
+> Content-Type: text/plain; charset=US-ASCII
+> Content-Transfer-Encoding: quoted-printable
+> 
+> Hi all,
+> 
+> After merging the pm tree, today's linux-next build (x86_64 allnoconfig)
+> failed like this:
+> 
+> x86_64-linux-gnu-ld: kernel/sched/core.o: in function `cpuidle_poll_time':
+> core.c:(.text+0x230): multiple definition of `cpuidle_poll_time'; arch/x86/=
+> kernel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/loadavg.o: in function `cpuidle_poll_time=
+> ':
+> loadavg.c:(.text+0x0): multiple definition of `cpuidle_poll_time'; arch/x86=
+> /kernel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/clock.o: in function `cpuidle_poll_time':
+> clock.c:(.text+0x0): multiple definition of `cpuidle_poll_time'; arch/x86/k=
+> ernel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/cputime.o: in function `cpuidle_poll_time=
+> ':
+> cputime.c:(.text+0x0): multiple definition of `cpuidle_poll_time'; arch/x86=
+> /kernel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/idle.o: in function `cpuidle_poll_time':
+> idle.c:(.text+0xd0): multiple definition of `cpuidle_poll_time'; arch/x86/k=
+> ernel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/fair.o: in function `cpuidle_poll_time':
+> fair.c:(.text+0xb20): multiple definition of `cpuidle_poll_time'; arch/x86/=
+> kernel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/rt.o: in function `cpuidle_poll_time':
+> rt.c:(.text+0x790): multiple definition of `cpuidle_poll_time'; arch/x86/ke=
+> rnel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/deadline.o: in function `cpuidle_poll_tim=
+> e':
+> deadline.c:(.text+0xce0): multiple definition of `cpuidle_poll_time'; arch/=
+> x86/kernel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/wait.o: in function `cpuidle_poll_time':
+> wait.c:(.text+0x1d0): multiple definition of `cpuidle_poll_time'; arch/x86/=
+> kernel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/wait_bit.o: in function `cpuidle_poll_tim=
+> e':
+> wait_bit.c:(.text+0x50): multiple definition of `cpuidle_poll_time'; arch/x=
+> 86/kernel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/swait.o: in function `cpuidle_poll_time':
+> swait.c:(.text+0x30): multiple definition of `cpuidle_poll_time'; arch/x86/=
+> kernel/process.o:process.c:(.text+0xc0): first defined here
+> x86_64-linux-gnu-ld: kernel/sched/completion.o: in function `cpuidle_poll_t=
+> ime':
+> completion.c:(.text+0x0): multiple definition of `cpuidle_poll_time'; arch/=
+> x86/kernel/process.o:process.c:(.text+0xc0): first defined here
+> 
+> Caused by commit
+> 
+>   259231a04561 ("cpuidle: add poll_limit_ns to cpuidle_device structure")
+> 
+> I have added the following patch for today:
+>
 
-On Wed, 31 Jul 2019 at 12:41, Janne Karhunen <janne.karhunen@gmail.com> wrote:
->
-> Hi,
->
-> Interesting, I wrote something similar and posted it to the lists a while back:
-> https://github.com/jkrh/linux/commit/d77ea03afedcb5fd42234cd834da8f8a0809f6a6
->
-> Since there are no generic 'TEEs' available,
+I've applied this patch to my pm-cpuidle branch, thanks Stephen!
 
-There is already a generic TEE interface driver available in kernel.
-Have a look here: "Documentation/tee.txt".
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 31 Jul 2019 15:29:52 +1000
+> Subject: [PATCH] cpuidle: header file stubs must be "static inline"
+> 
+> An x86_64 allmodconfig build produces these errors:
+> 
+> x86_64-linux-gnu-ld: kernel/sched/core.o: in function `cpuidle_poll_time':
+> core.c:(.text+0x230): multiple definition of `cpuidle_poll_time'; arch/x86/=
+> kernel/process.o:process.c:(.text+0xc0): first defined here
+> 
+> (and more)
+> 
+> Fixes: 259231a04561 ("cpuidle: add poll_limit_ns to cpuidle_device structur=
+> e")
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  include/linux/cpuidle.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+> index ba535a1a47d5..1a9f54eb3aa1 100644
+> --- a/include/linux/cpuidle.h
+> +++ b/include/linux/cpuidle.h
+> @@ -170,7 +170,7 @@ static inline int cpuidle_enter(struct cpuidle_driver *=
+> drv,
+>  				struct cpuidle_device *dev, int index)
+>  {return -ENODEV; }
+>  static inline void cpuidle_reflect(struct cpuidle_device *dev, int index) =
+> { }
+> -extern u64 cpuidle_poll_time(struct cpuidle_driver *drv,
+> +static inline u64 cpuidle_poll_time(struct cpuidle_driver *drv,
+>  			     struct cpuidle_device *dev)
+>  {return 0; }
+>  static inline int cpuidle_register_driver(struct cpuidle_driver *drv)
+> --=20
+> 2.20.1
+> 
+> --=20
+> Cheers,
+> Stephen Rothwell
+> 
+> --Sig_/RVaztRR.13XAL2aXFk8lo/g
+> Content-Type: application/pgp-signature
+> Content-Description: OpenPGP digital signature
+> 
+> 
+> --Sig_/RVaztRR.13XAL2aXFk8lo/g--
+> 
 
-> I implemented the same
-> thing as a generic protocol translator. The shared memory binding for
-> instance already assumes fair amount about the TEE and how that is
-> physically present in the system. Besides, the help from usage of shm
-> is pretty limited due to the size of the keydata.
->
 
-If you look at patch #1 and #2, they add support to register kernel
-memory buffer (keydata buffer in this case) with TEE to operate on. So
-there isn't any limitation due to the size of the keydata.
 
--Sumit
 
->
-> --
-> Janne
->
->
->
->
-> On Tue, Jul 30, 2019 at 3:26 PM Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > Add support for TEE based trusted keys where TEE provides the functionality
-> > to seal and unseal trusted keys using hardware unique key. Also, this is
-> > an alternative in case platform doesn't possess a TPM device.
-> >
-> > This series also adds some TEE features like:
-> >
-> > Patch #1, #2 enables support for registered kernel shared memory with TEE.
-> >
-> > Patch #3 enables support for private kernel login method required for
-> > cases like trusted keys where we don't wan't user-space to directly access
-> > TEE service to retrieve trusted key contents.
-> >
-> > Rest of the patches from #4 to #6 adds support for TEE based trusted keys.
-> >
-> > This patch-set has been tested with OP-TEE based pseudo TA which can be
-> > found here [1].
-> >
-> > Also, this patch-set is dependent on generic Trusted Keys framework
-> > patch-set [2].
-> >
-> > [1] https://github.com/OP-TEE/optee_os/pull/3082
-> > [2] https://lkml.org/lkml/2019/7/18/284
-> >
-> > Changes in v2:
-> > 1. Add reviewed-by tags for patch #1 and #2.
-> > 2. Incorporate comments from Jens for patch #3.
-> > 3. Switch to use generic trusted keys framework.
-> >
-> > Sumit Garg (6):
-> >   tee: optee: allow kernel pages to register as shm
-> >   tee: enable support to register kernel memory
-> >   tee: add private login method for kernel clients
-> >   KEYS: trusted: Introduce TEE based Trusted Keys
-> >   doc: keys: Document usage of TEE based Trusted Keys
-> >   MAINTAINERS: Add entry for TEE based Trusted Keys
-> >
-> >  Documentation/security/keys/index.rst       |   1 +
-> >  Documentation/security/keys/tee-trusted.rst |  93 +++++++++
-> >  MAINTAINERS                                 |   9 +
-> >  drivers/tee/optee/call.c                    |   7 +
-> >  drivers/tee/tee_core.c                      |   6 +
-> >  drivers/tee/tee_shm.c                       |  16 +-
-> >  include/keys/trusted-type.h                 |   3 +
-> >  include/keys/trusted_tee.h                  |  66 +++++++
-> >  include/linux/tee_drv.h                     |   1 +
-> >  include/uapi/linux/tee.h                    |   8 +
-> >  security/keys/Kconfig                       |   3 +
-> >  security/keys/trusted-keys/Makefile         |   3 +-
-> >  security/keys/trusted-keys/trusted-tee.c    | 282 ++++++++++++++++++++++++++++
-> >  security/keys/trusted-keys/trusted.c        |   3 +
-> >  14 files changed, 498 insertions(+), 3 deletions(-)
-> >  create mode 100644 Documentation/security/keys/tee-trusted.rst
-> >  create mode 100644 include/keys/trusted_tee.h
-> >  create mode 100644 security/keys/trusted-keys/trusted-tee.c
-> >
-> > --
-> > 2.7.4
-> >
