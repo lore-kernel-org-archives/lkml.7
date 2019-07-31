@@ -2,120 +2,92 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B71A5C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9582C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906E02064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564604787;
-	bh=HiSDpvUG1X9DzOota6oWFEr3hP3pdZfxExJeEHf3noc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GxjvnGqPBdI0hkkW3zpKSdTKglTC6qUDq7fx+3kPNTZKAy3E7jxwMRCgbwCaGe5Id
-	 o4El2ASGamR+0KzRdqaiP7eETzXPlh3bGIOc0AFC6GK2z3Y/cZ02OMNtG+2gYI4UTr
-	 yt41YDxoJNy/gRnrdwJ4DU8VFYUMVa/Y2+neRq4k=
+	by mail.kernel.org (Postfix) with ESMTP id CD70D206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbfGaU00 (ORCPT
+        id S1730525AbfGaU0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:26:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58118 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728232AbfGaU00 (ORCPT
+        Wed, 31 Jul 2019 16:26:54 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37360 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728136AbfGaU0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:26:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+a5BC2SMQTZyNnosj2+NVoaE/cuHtdCJLsTbfMI7CM8=; b=cd0EZcQkx68qz1mV7MZC2uM8w
-        P5cYOfzRqT4jAj1XeIa5cZwCKRpuEARrsXGCDxCq8sgpCmoEJ8VyMoB1ZGWIv3KkGkC8AIFMmG3zu
-        rlsmWUq3FLoiDUPohjPULvC4w5BLIzEmbwgXzpFT+L80k80QNHwktIQFstvBvlBiAagdTYKLP7kd6
-        mgvL4iD+sHmcbJxX4pbsqTYJFd9WsDq0iZww0LtIbpC3Rwlt6XCZ+VcKY2odTaplLXORSAqBC7jw+
-        ktYQ73C/T59Q53D5UHvn8GEbIRSj5leo+helE+/aJGkkXgpqWFvenf2ZTIwIz7KLtjIJb7x/x8Xk3
-        8x9hawtXg==;
-Received: from [191.33.152.89] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsvB0-0001Q8-KC; Wed, 31 Jul 2019 20:26:22 +0000
-Date:   Wed, 31 Jul 2019 17:26:13 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        samba-technical@lists.samba.org, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve French <sfrench@samba.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-cifs@vger.kernel.org, Dave Kleikamp <shaggy@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org,
-        Hartmut Knaack <knaack.h@gmx.de>, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 0/6] ReST conversion patches not applied yet
-Message-ID: <20190731172613.32d65ad8@coco.lan>
-In-Reply-To: <20190731202007.GI4369@sirena.org.uk>
-References: <cover.1564603513.git.mchehab+samsung@kernel.org>
-        <20190731141734.1fa9ce64@lwn.net>
-        <20190731202007.GI4369@sirena.org.uk>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 31 Jul 2019 16:26:53 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y26so67873946qto.4;
+        Wed, 31 Jul 2019 13:26:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nexwj/gyEdfGcFhtgJkuEvqAxLsbVQicvOBgvCJpGfM=;
+        b=D9jgJbYsefhU1bp4dHus8py68/b5IqFtti2ZA0IWtdNeTXXzgHoSvZgwyATaRbMo1I
+         Y2ZCvsQkNKiv3MfwEoO16AvmHiVqDynglfC0pMvczN8idqyL5Mue63+1gp7WH8Ey6Zl5
+         q4otDS5gwreCRXddS9examugoB0OmqicTmHXCzevjo/B0Z4WIaAQvRK0HHiWWSKDv73h
+         SJNPXEYWiUALSViuZZDV6klbePjHei9zkLbp/WMrrRTy1DJyXpb4s8CuT0xBMAgxVSWJ
+         I2H6gKlCtVeQZYR2tKUDWHpUvstIUcQNUuXHWepTCde40wxp4JGtVGFZ0yiepChrzfAm
+         y4ww==
+X-Gm-Message-State: APjAAAXxEtv4W0WR0m/laJUHCGRRHEsNz2JcwmRfQqSc+67bMUvLcr9w
+        YNYoizlbjZMkCq1Q4gfVD8Z0/nUP5Rd4r7OdTvQ=
+X-Google-Smtp-Source: APXvYqxrQwILyzcU6or5m1F0P2T2g+2d1hVZgeveWHo/LNI028WFf469HVX7i9p/CxTB96w3vHftaMn2P+OT3OV3MzY=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr84957899qtd.18.1564604812113;
+ Wed, 31 Jul 2019 13:26:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-4-arnd@arndb.de>
+ <20190731202343.GA14817@roeck-us.net>
+In-Reply-To: <20190731202343.GA14817@roeck-us.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 31 Jul 2019 22:26:35 +0200
+Message-ID: <CAK8P3a2=gqeCMtdzdqg4d1n6v1-cdaHObeUoVXeB+=Okwd1rqA@mail.gmail.com>
+Subject: Re: [PATCH 03/14] watchdog: pnx4008_wdt: allow compile-testing
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     soc@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 31 Jul 2019 21:20:07 +0100
-Mark Brown <broonie@kernel.org> escreveu:
+On Wed, Jul 31, 2019 at 10:23 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Wed, Jul 31, 2019 at 09:56:45PM +0200, Arnd Bergmann wrote:
+> > The only thing that prevents building this driver on other
+> > platforms is the mach/hardware.h include, which is not actually
+> > used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>
+> What is the plan for this patch ? Push through watchdog
+> or through your branch ?
 
-> On Wed, Jul 31, 2019 at 02:17:34PM -0600, Jonathan Corbet wrote:
-> > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:  
-> 
-> > > As promised, this is the rebased version of the patches that were not applied
-> > > from the /26 patch series because you had merge conflicts.
-> > > 
-> > > They're all based on your docs-next branch, so should apply fine.
-> > > 
-> > > The first one fixes all but one error with a broken reference.
-> > > 
-> > > The only broken reference right now is due to a DT patch with was not
-> > > accepted (no idea why), but whose driver is upstream.  
-> 
-> > All but 5/6 applied, thanks.  
-> 
-> Oh, I still hadn't reviewed this version of the SPI stuff :(
+I would prefer my branch so I can apply the final patch without waiting
+for another release. Not in a hurry though, so if some other maintainer
+wants to take the respective driver patch through their tree instead of the
+arm-soc one, I'll just wait anyway.
 
-It is basically the one sent on that /26 patch series, just rebased
-on the top of docs-next.
-
-> There were outstanding questions about where it was going to get moved
-> to but if I read the diff correctly it looks like it didn't actually get
-> moved in the end?
-
-Yeah, it doesn't have the move. My understanding from our discussions
-is that we didn't reach a conclusion.
-
-In any case, I can send a separate patch with the move part once
-we reach an agreement about what's the best way to proceed (or you
-can do it directly, if you prefer so).
-
-Thanks,
-Mauro
+        Arnd
