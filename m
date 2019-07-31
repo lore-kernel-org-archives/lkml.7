@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017DBC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198CBC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1C7208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16E1214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564572715;
-	bh=ZmuVWQqkODolApzlh97/rGbX/vli0PqaF26nBX62Dmo=;
+	s=default; t=1564572723;
+	bh=viez3lfZt2CaWPafIRVLgb5bUheJI+oG60bIgo0sF0U=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=sqtp3qVPwVK0vm4jzL2X5cDnVPbglI3MiQkvNgcXNEO711PWmE8LupP9tlJFgjcFI
-	 i6WB/eDyqXPoKZqt4BlGMYfyMf1A4tcDlUVfqTA8iBgD9uaXbKS0FJbpgZed8Sj/oC
-	 C1uvBxlJhXV5QOn368roYPZLEbDkw1Ivu3No9vE8=
+	b=VJXm1In2Cl2WX2YnBJCk1yCaSJj/t9ybrDXVSoczXepx8/puZhEO/8VQAz8m/a9Oi
+	 86nDSnhWKMO3ErB3kd6kFf1A5mtV5sfo6WAB5ZzoOup475K+0v3Iti3WQDuMbvbhwl
+	 +qCr/pKBNs9rT8bgSeCAVkuP9lV/9HL/BoI7QNhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfGaLby (ORCPT
+        id S1728876AbfGaLcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:31:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35850 "EHLO
+        Wed, 31 Jul 2019 07:32:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35678 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387742AbfGaLaU (ORCPT
+        with ESMTP id S1728055AbfGaLaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:30:20 -0400
+        Wed, 31 Jul 2019 07:30:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=1oZpHXseB2euC0HA5arCblB3iFVCG5p5FPASzfvK/ww=; b=C+zXeG6OWbUR
-        r3wiOJDc2XV0cL5IIcDcDjOtNytsyDc0JLLElh1P4TFVGFFGxqpY5zEPXVgRDfU40myGol7kClduB
-        Ju0D7T/NqR2rZcYORB2SzQAdT95m0q5y7ZVrFsJucNdrYMXSeB++Ems7BG3yfFdqDxpv4yNShzCmz
-        SBt+I=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        List-Archive; bh=JDdIiMRNxz3nh4P58eL+dgzzdUBoAUTuWptHyMpnAPw=; b=AxqqpbRNKGZD
+        w7Hz+Ywyhl2Kr8lziN1RSWQFJDQzfSWLBm9w/6ibuQAD9OcT8Ttni2/CJdmYmT+ZoVFm35FVdAquM
+        Km4dy2OJ/K/R985/Xoc47p5GQaPquCn+N3FHCDrZfE50MFOQp+1vXpi7JxBrSOS0LhsRSh/4kDIFz
+        dMwqE=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hsmng-0001lr-TT; Wed, 31 Jul 2019 11:29:45 +0000
+        id 1hsmnc-0001kz-23; Wed, 31 Jul 2019 11:29:40 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 6C4FE2742CC3; Wed, 31 Jul 2019 12:29:44 +0100 (BST)
+        id 5B1722742C99; Wed, 31 Jul 2019 12:29:39 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     YueHaibing <yuehaibing@huawei.com>
 Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
@@ -71,11 +71,11 @@ Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
         thierry.reding@gmail.com, timur@kernel.org, tiwai@suse.com,
         wahrenst@gmx.net, wens@csie.org, Xiubo.Lee@gmail.com,
         yamada.masahiro@socionext.com
-Subject: Applied "ASoC: meson: axg-fifo: use devm_platform_ioremap_resource() to simplify code" to the asoc tree
-In-Reply-To: <20190727150738.54764-31-yuehaibing@huawei.com>
+Subject: Applied "ASoC: au1x: psc-i2s: use devm_platform_ioremap_resource() to simplify code" to the asoc tree
+In-Reply-To: <20190727150738.54764-25-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190731112944.6C4FE2742CC3@ypsilon.sirena.org.uk>
-Date:   Wed, 31 Jul 2019 12:29:44 +0100 (BST)
+Message-Id: <20190731112939.5B1722742C99@ypsilon.sirena.org.uk>
+Date:   Wed, 31 Jul 2019 12:29:39 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -83,7 +83,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: meson: axg-fifo: use devm_platform_ioremap_resource() to simplify code
+   ASoC: au1x: psc-i2s: use devm_platform_ioremap_resource() to simplify code
 
 has been applied to the asoc tree at
 
@@ -108,44 +108,45 @@ to this mail.
 Thanks,
 Mark
 
-From 9b2089313156ad16bd257217cc67e10597a82923 Mon Sep 17 00:00:00 2001
+From 12a63c0fa03691328b948690601dc7dde8fc527b Mon Sep 17 00:00:00 2001
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Sat, 27 Jul 2019 23:07:34 +0800
-Subject: [PATCH] ASoC: meson: axg-fifo: use devm_platform_ioremap_resource()
- to simplify code
+Date: Sat, 27 Jul 2019 23:07:28 +0800
+Subject: [PATCH] ASoC: au1x: psc-i2s: use devm_platform_ioremap_resource() to
+ simplify code
 
 Use devm_platform_ioremap_resource() to simplify the code a bit.
 This is detected by coccinelle.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190727150738.54764-31-yuehaibing@huawei.com
+Link: https://lore.kernel.org/r/20190727150738.54764-25-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/meson/axg-fifo.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ sound/soc/au1x/psc-i2s.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
-index 01c1c7db2510..80a3dde35b5c 100644
---- a/sound/soc/meson/axg-fifo.c
-+++ b/sound/soc/meson/axg-fifo.c
-@@ -314,7 +314,6 @@ int axg_fifo_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	const struct axg_fifo_match_data *data;
- 	struct axg_fifo *fifo;
--	struct resource *res;
- 	void __iomem *regs;
+diff --git a/sound/soc/au1x/psc-i2s.c b/sound/soc/au1x/psc-i2s.c
+index 076303f96b8c..767ce950d0da 100644
+--- a/sound/soc/au1x/psc-i2s.c
++++ b/sound/soc/au1x/psc-i2s.c
+@@ -291,7 +291,7 @@ static const struct snd_soc_component_driver au1xpsc_i2s_component = {
  
- 	data = of_device_get_match_data(dev);
-@@ -328,8 +327,7 @@ int axg_fifo_probe(struct platform_device *pdev)
+ static int au1xpsc_i2s_drvprobe(struct platform_device *pdev)
+ {
+-	struct resource *iores, *dmares;
++	struct resource *dmares;
+ 	unsigned long sel;
+ 	struct au1xpsc_audio_data *wd;
+ 
+@@ -300,8 +300,7 @@ static int au1xpsc_i2s_drvprobe(struct platform_device *pdev)
+ 	if (!wd)
  		return -ENOMEM;
- 	platform_set_drvdata(pdev, fifo);
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	regs = devm_ioremap_resource(dev, res);
-+	regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(regs))
- 		return PTR_ERR(regs);
+-	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	wd->mmio = devm_ioremap_resource(&pdev->dev, iores);
++	wd->mmio = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(wd->mmio))
+ 		return PTR_ERR(wd->mmio);
  
 -- 
 2.20.1
