@@ -2,143 +2,145 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15ADEC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC24C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE9E206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA695206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rcbdxqgr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFcZHoKC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfGaSG6 (ORCPT
+        id S1727466AbfGaSJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:06:58 -0400
-Received: from mail-yw1-f45.google.com ([209.85.161.45]:46336 "EHLO
-        mail-yw1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfGaSG6 (ORCPT
+        Wed, 31 Jul 2019 14:09:41 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36686 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfGaSJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:06:58 -0400
-Received: by mail-yw1-f45.google.com with SMTP id z197so25266994ywd.13;
-        Wed, 31 Jul 2019 11:06:57 -0700 (PDT)
+        Wed, 31 Jul 2019 14:09:41 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l21so32437364pgm.3;
+        Wed, 31 Jul 2019 11:09:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=df8HZ1GC9xOAmz5J1hSYCy+taJAv5J2Wpa+VxaLhh1Y=;
-        b=RcbdxqgrG3y+GDCzQOvIQ2f0PpzXyiUA4YWz6EhGtPVJhAGwrLjg9i1yza5fKgkkfN
-         Hfm3Hr2nA28+1PrGms493NV13/FF7icOG96uqLUg9/QjWMBQiyaZxRxq6fotEg85Vrns
-         dIIRhE46xRxor3Wbjk/v7UrZko82uJ0/u2DS2NbX5/yi8R2uv+ZSZH1J5ldKhlKnrJhk
-         V879z8qB9i7ika0xSmJ+50776YGZC8BCHXSGyACSGclch8PFPXygnMEH0okR6ObHJRQC
-         5Wo6by+9U1ogSFBD84bXtKmemuV9oBfAmfcNxzr0Q3fd5P8zjQZOEo72ygdP6frqc8Z7
-         CkeQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KKXrcjq5aKywCjPq+oMoki6xU2F/WPYtQ8SZIYkDkr8=;
+        b=fFcZHoKChnx7sEYX7xmn9Zpu1zg08dZAFMzIxgCNf7DRQFUmoOrySjKb+3BT3V9RxI
+         +YEdwTnFeMg0T8RmfOR20dK5hPBjb3BW1qwKRe84INXXGKPW+GR8c14+YYh7UfGQ86TN
+         Ia85W+y28aOzPTLVOqlcfzH9miK4beobT55qUVw3S1MjXTVLZrdgPftPDU/JG98v2DYD
+         JgdzrFIYO7ty7cF18VeYaxUDzo6HPHVKgHmz8gfNYnh0gh51QbBqDU5zv8ukgl8ePVvZ
+         HlY3Fj5fvgZXK3vZJVjzJFaWx05HHSJx3h4q7rLq5Q3aef37Vr3HZ8EVWQP7XdtDsXav
+         6cJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=df8HZ1GC9xOAmz5J1hSYCy+taJAv5J2Wpa+VxaLhh1Y=;
-        b=JKV1wr547ApVkdhJvVye79Qvglu0moQE22H9mqKrbWJMdGIfTRifH5M6SG4+zp9V+b
-         6Uwe4Ykw0cQK5GN122AjnFTrATb9xO4j+F0c8SayAsv0g27tTEbJXeHyhKnDDa2C0eiR
-         NlL4eMv43a/EjeAtpSg+MD2pEOs0dkWAka25NdI0Su/7JVjQfzVv0RfqNVEzJ23wNDFI
-         4a9viQAxOFHre8hB2YvbzSmg/q29yxSpO7Yw3i/helLSjQLJIq26q6wAIm0n7UPCuwJ0
-         mKiPwL+no/jn1eAZqmE4ncySNr2OqRK/e1OegwQOP4GJ9AC9vNXq2S1XC96ZATdZIMTd
-         6CAA==
-X-Gm-Message-State: APjAAAWFMS8zbzRq5yzlGmDsmhjD6+Uuov+G2rgUSuZxjljjOb9OCsZj
-        A+SWPfsNlzGbciTAc9AjNEwO7IE=
-X-Google-Smtp-Source: APXvYqxGAvGmxT/Xvwx8ft7lfG43YgFrxFXLXKUFG1vnBgPqstbweBPflRhHUg2sXHrsPjONu7UtMA==
-X-Received: by 2002:a81:3313:: with SMTP id z19mr75142313ywz.188.1564596417093;
-        Wed, 31 Jul 2019 11:06:57 -0700 (PDT)
-Received: from localhost.localdomain ([12.156.111.130])
-        by smtp.gmail.com with ESMTPSA id v68sm16426317ywe.23.2019.07.31.11.06.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 11:06:56 -0700 (PDT)
-From:   Ayman Bagabas <ayman.bagabas@gmail.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [RFC 1/9] platform/x86: huawei-wmi: Rename guid and driver name
-Date:   Wed, 31 Jul 2019 14:06:41 -0400
-Message-Id: <20190731180641.30121-1-ayman.bagabas@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190731175255.25676-2-ayman.bagabas@gmail.com>
-References: <20190731175255.25676-2-ayman.bagabas@gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KKXrcjq5aKywCjPq+oMoki6xU2F/WPYtQ8SZIYkDkr8=;
+        b=pWgp13CFIfJ8UknZYez2Sw2XU7lCczXdq8Xvr/ojfi6hu+wEDZdd9jhblcXpCHv0J7
+         D4obVwScBSRGVNwW/vt/lE/MVDcEch82fYwkXvcSOUjNiSQVSOSm66GD14AbzBxLC7sv
+         OdaNspfj/jzyHmZ9d+YAf51auO65EGsWo4UdlKTrtb6mHqbMTq4XeVynB+0DKs+dy/TV
+         1cUQSydT3pCN6LsXjGe63Y73st4ZYffTysARNuyyJmfy8axDzElIHLFBTtmaHk3j1bcb
+         X2SXbYJ+DTiv6/zLEr5IcizuBW9XdNamVWBj3pjUxosiw+FWK+PEbIo1h8H3forDCE7K
+         Sbfg==
+X-Gm-Message-State: APjAAAXWsq1bh5JXZ+MgvEl7l9bjXZ+giVMbAlD+2ovbMSQUxRtniJhR
+        wiypy6nu2+RpFz6G4mlBBJ3daiS7
+X-Google-Smtp-Source: APXvYqzDj5id5ZL3LNA7XmAXyi3YxrX1t4G5MF+rqSp4G2xF7vmxaRDeJK1xl/eTbveModMchLaMpg==
+X-Received: by 2002:a62:64d4:: with SMTP id y203mr48384136pfb.91.1564596580586;
+        Wed, 31 Jul 2019 11:09:40 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q22sm63180246pgh.49.2019.07.31.11.09.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 11:09:39 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 11:09:38 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-watchdog@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Rick Ramstetter <rick@anteaterllc.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] watchdog: ziirave_wdt: Don't bail out on unexpected
+ timeout value
+Message-ID: <20190731180938.GA3885@roeck-us.net>
+References: <20190731174252.18041-1-andrew.smirnov@gmail.com>
+ <20190731174252.18041-5-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731174252.18041-5-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use WMI device UID, AMW0 has a UID of HWMI. WMI0 is the device name
-and doesn't have a UID so keep it as it is.
+On Wed, Jul 31, 2019 at 10:42:51AM -0700, Andrey Smirnov wrote:
+> Reprogramming bootloader on watchdog MCU will result in reported
+> default timeout value of "0". That in turn will be unnecesarily
 
-Change module description to reflect the upcoming changes.
+unnecessarily
 
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
----
- drivers/platform/x86/huawei-wmi.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+> rejected by the driver as invalid device (-ENODEV). Simplify probe to
+> just read stored timeout value, clamp it to an acceptable range and
+> program the value unconditionally to fix the above.
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Rick Ramstetter <rick@anteaterllc.com>
+> Cc: linux-watchdog@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/watchdog/ziirave_wdt.c | 22 +++++++++-------------
+>  1 file changed, 9 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
+> index 89ce6982ba53..33c8d2eadada 100644
+> --- a/drivers/watchdog/ziirave_wdt.c
+> +++ b/drivers/watchdog/ziirave_wdt.c
+> @@ -667,22 +667,18 @@ static int ziirave_wdt_probe(struct i2c_client *client,
+>  			return val;
+>  		}
+>  
+> -		if (val < ZIIRAVE_TIMEOUT_MIN)
+> -			return -ENODEV;
+> -
+> -		w_priv->wdd.timeout = val;
+> -	} else {
+> -		ret = ziirave_wdt_set_timeout(&w_priv->wdd,
+> -					      w_priv->wdd.timeout);
+> -		if (ret) {
+> -			dev_err(&client->dev, "Failed to set timeout\n");
+> -			return ret;
+> -		}
+> +		w_priv->wdd.timeout = clamp(val, ZIIRAVE_TIMEOUT_MIN,
+> +					    ZIIRAVE_TIMEOUT_MAX);
 
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 52fcac5b393a..a1159850a16c 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- *  Huawei WMI hotkeys
-+ *  Huawei WMI laptop extras driver
-  *
-  *  Copyright (C) 2018	      Ayman Bagabas <ayman.bagabas@gmail.com>
-  */
-@@ -15,10 +15,12 @@
- /*
-  * Huawei WMI GUIDs
-  */
--#define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
--#define AMW0_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
-+#define HWMI_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
- 
-+/* Legacy GUIDs */
- #define WMI0_EXPENSIVE_GUID "39142400-C6A3-40fa-BADB-8A2652834100"
-+#define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
-+
- 
- struct huawei_wmi_priv {
- 	struct input_dev *idev;
-@@ -37,7 +39,7 @@ static const struct key_entry huawei_wmi_keymap[] = {
- 	{ KE_KEY,    0x289, { KEY_WLAN } },
- 	// Huawei |M| key
- 	{ KE_KEY,    0x28a, { KEY_CONFIG } },
--	// Keyboard backlight
-+	// Keyboard backlit
- 	{ KE_IGNORE, 0x293, { KEY_KBDILLUMTOGGLE } },
- 	{ KE_IGNORE, 0x294, { KEY_KBDILLUMUP } },
- 	{ KE_IGNORE, 0x295, { KEY_KBDILLUMUP } },
-@@ -186,7 +188,7 @@ static int huawei_wmi_probe(struct wmi_device *wdev)
- 
- static const struct wmi_device_id huawei_wmi_id_table[] = {
- 	{ .guid_string = WMI0_EVENT_GUID },
--	{ .guid_string = AMW0_EVENT_GUID },
-+	{ .guid_string = HWMI_EVENT_GUID },
- 	{  }
- };
- 
-@@ -203,5 +205,5 @@ module_wmi_driver(huawei_wmi_driver);
- 
- MODULE_DEVICE_TABLE(wmi, huawei_wmi_id_table);
- MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
--MODULE_DESCRIPTION("Huawei WMI hotkeys");
-+MODULE_DESCRIPTION("Huawei WMI laptop extras driver");
- MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+Are you sure ? Effectively that will set the timeout to the minimum,
+ie three seconds. It might be better to define and set some default.
+Your call, of course.
 
+Thanks,
+Guenter
 
+> +	}
+>  
+> -		dev_info(&client->dev, "Timeout set to %ds\n",
+> -			 w_priv->wdd.timeout);
+> +	ret = ziirave_wdt_set_timeout(&w_priv->wdd, w_priv->wdd.timeout);
+> +	if (ret) {
+> +		dev_err(&client->dev, "Failed to set timeout\n");
+> +		return ret;
+>  	}
+>  
+> +	dev_info(&client->dev, "Timeout set to %ds\n", w_priv->wdd.timeout);
+> +
+>  	watchdog_set_nowayout(&w_priv->wdd, nowayout);
+>  
+>  	i2c_set_clientdata(client, w_priv);
+> -- 
+> 2.21.0
+> 
