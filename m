@@ -2,151 +2,163 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103EAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE93C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA640206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564572792;
-	bh=aYWsiXNI8K1QEsZLcBctNDLA2uKxrCK5FPKxn19nrHc=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=J+ENds5/MidI3lxPw8iop5TfZ9iQ7EDzlYYnZcZGB7FmOQQolKAHLpGhDUaOU8RMx
-	 GfBxJbNYDJflQ3CiPf7Xcyl8zyI0XPViQstejayxxc1v2ne5+A5wDTpo+uCkuvIjIa
-	 2VrD6rAkYZK5uKPHx4CAnBHu6tG2UPw01Lmnex9k=
+	by mail.kernel.org (Postfix) with ESMTP id DD764206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387492AbfGaLdG (ORCPT
+        id S1726822AbfGaLfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:33:06 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35580 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387705AbfGaLaQ (ORCPT
+        Wed, 31 Jul 2019 07:35:23 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:62290 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387574AbfGaLdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:30:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=8aPxbPzX12K8YvP3KgBIApYxjMFJoZqlhnC/uijFIZI=; b=pLLKVvhA0U5i
-        HSorWl2d3QOdaOFqJ/GyAXduWDoY5IrN0eruRUmJLlv1yp0xoivAtbrkQyfGYjILHG4C74Peae4xr
-        WFOzjznHo/9M6PN4gufB8W4vzQ2pURDKeIC4woampwNdFDJN8gs9C3H7lnC5rkBkdsSgN3DoWUkFM
-        1cAQ0=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hsmnd-0001lG-Mj; Wed, 31 Jul 2019 11:29:41 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 2119E2742C99; Wed, 31 Jul 2019 12:29:41 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
-        arnaud.pouliquen@st.com, baohua@kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, broonie@kernel.org,
-        daniel@zonque.org, eric@anholt.net, festevam@gmail.com,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org,
-        haojian.zhuang@gmail.com, Hulk Robot <hulkci@huawei.com>,
-        jbrunet@baylibre.com, jcmvbkbc@gmail.com, jonathanh@nvidia.com,
-        kernel@pengutronix.de, khilman@baylibre.com, lgirdwood@gmail.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Mark Brown <broonie@kernel.org>, matthias.bgg@gmail.com,
-        mcoquelin.stm32@gmail.com, michal.simek@xilinx.com,
-        mripard@kernel.org, nicoleotsuka@gmail.com, olivier.moysan@st.com,
-        paul@crapouillou.net, perex@perex.cz, rjui@broadcom.com,
-        robert.jarzmik@free.fr, sbranden@broadcom.com,
-        s.hauer@pengutronix.de, shawnguo@kernel.org,
-        thierry.reding@gmail.com, timur@kernel.org, tiwai@suse.com,
-        wahrenst@gmx.net, wens@csie.org, Xiubo.Lee@gmail.com,
-        yamada.masahiro@socionext.com
-Subject: Applied "ASoC: jz4740: use devm_platform_ioremap_resource() to simplify code" to the asoc tree
-In-Reply-To: <20190727150738.54764-20-yuehaibing@huawei.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190731112941.2119E2742C99@ypsilon.sirena.org.uk>
-Date:   Wed, 31 Jul 2019 12:29:41 +0100 (BST)
+        Wed, 31 Jul 2019 07:33:24 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: R7AozpEsiUeC+4/7Dc7j4pVNUsX9pjR2XB3pzZMFDh6QAPI5tFCjtoBTPiH537hIRDBOjlpeS+
+ fGQlqjOs6wKIM7hBji0uinb5XRla0cEiMJmS/d5ttVP6Q5oFkjWk4yecUbJjVaeCqrYSVxnK4u
+ KTwfH+m1/OH9WDxZYSuXA7XFlAJatLiXphOEGTjhCCrEhVAf1YbKSJQq8geuFZ041aOkUDXHyd
+ AMYU/8P/E+Vu33yYo1XKVHkutu560EEG+jBBn+YHq8oPA9dduSLqR5F5X2zgiI8f/KuGp3cpyA
+ UUo=
+X-IronPort-AV: E=Sophos;i="5.64,330,1559545200"; 
+   d="scan'208";a="43442093"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Jul 2019 04:33:23 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 31 Jul 2019 04:33:11 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 31 Jul 2019 04:33:11 -0700
+Date:   Wed, 31 Jul 2019 13:32:16 +0200
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+CC:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] mmc: atmel-mci: Mark expected switch fall-throughs
+Message-ID: <20190731113216.ztxckd54a74g2lw5@M43218.corp.atmel.com>
+Mail-Followup-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kees Cook <keescook@chromium.org>
+References: <20190729000123.GA23902@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190729000123.GA23902@embeddedor>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi,
 
-   ASoC: jz4740: use devm_platform_ioremap_resource() to simplify code
+On Sun, Jul 28, 2019 at 07:01:23PM -0500, Gustavo A. R. Silva wrote:
+> 
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warnings:
+> 
+> drivers/mmc/host/atmel-mci.c: In function 'atmci_get_cap':
+> drivers/mmc/host/atmel-mci.c:2415:30: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    host->caps.has_odd_clk_div = 1;
+>    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+> drivers/mmc/host/atmel-mci.c:2416:2: note: here
+>   case 0x400:
+>   ^~~~
+> drivers/mmc/host/atmel-mci.c:2422:28: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    host->caps.has_highspeed = 1;
+>    ~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+> drivers/mmc/host/atmel-mci.c:2423:2: note: here
+>   case 0x200:
+>   ^~~~
+> drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    host->caps.need_notbusy_for_read_ops = 1;
+>    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+> drivers/mmc/host/atmel-mci.c:2427:2: note: here
+>   case 0x100:
+>   ^~~~
+> 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-has been applied to the asoc tree at
+I don't know if there is a policy in the kernel about the expression to
+use. As this one does the job
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+Thanks
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From a8dc106410a2c3c87917447fb8c132b66062443e Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Sat, 27 Jul 2019 23:07:23 +0800
-Subject: [PATCH] ASoC: jz4740: use devm_platform_ioremap_resource() to
- simplify code
-
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190727150738.54764-20-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/jz4740.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/sound/soc/codecs/jz4740.c b/sound/soc/codecs/jz4740.c
-index 974e17fa1911..460aa1fd1efe 100644
---- a/sound/soc/codecs/jz4740.c
-+++ b/sound/soc/codecs/jz4740.c
-@@ -318,7 +318,6 @@ static int jz4740_codec_probe(struct platform_device *pdev)
- {
- 	int ret;
- 	struct jz4740_codec *jz4740_codec;
--	struct resource *mem;
- 	void __iomem *base;
- 
- 	jz4740_codec = devm_kzalloc(&pdev->dev, sizeof(*jz4740_codec),
-@@ -326,8 +325,7 @@ static int jz4740_codec_probe(struct platform_device *pdev)
- 	if (!jz4740_codec)
- 		return -ENOMEM;
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(&pdev->dev, mem);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
--- 
-2.20.1
-
+> ---
+>  drivers/mmc/host/atmel-mci.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
+> index 9ee0bc0ce6d0..c26fbe5f2222 100644
+> --- a/drivers/mmc/host/atmel-mci.c
+> +++ b/drivers/mmc/host/atmel-mci.c
+> @@ -2413,6 +2413,7 @@ static void atmci_get_cap(struct atmel_mci *host)
+>  	case 0x600:
+>  	case 0x500:
+>  		host->caps.has_odd_clk_div = 1;
+> +		/* Fall through */
+>  	case 0x400:
+>  	case 0x300:
+>  		host->caps.has_dma_conf_reg = 1;
+> @@ -2420,13 +2421,16 @@ static void atmci_get_cap(struct atmel_mci *host)
+>  		host->caps.has_cfg_reg = 1;
+>  		host->caps.has_cstor_reg = 1;
+>  		host->caps.has_highspeed = 1;
+> +		/* Fall through */
+>  	case 0x200:
+>  		host->caps.has_rwproof = 1;
+>  		host->caps.need_blksz_mul_4 = 0;
+>  		host->caps.need_notbusy_for_read_ops = 1;
+> +		/* Fall through */
+>  	case 0x100:
+>  		host->caps.has_bad_data_ordering = 0;
+>  		host->caps.need_reset_after_xfer = 0;
+> +		/* Fall through */
+>  	case 0x0:
+>  		break;
+>  	default:
+> -- 
+> 2.22.0
+> 
+> 
