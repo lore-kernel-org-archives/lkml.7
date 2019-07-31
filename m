@@ -2,112 +2,113 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E320C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D57DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A76D208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:24:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyQrNpMT"
+	by mail.kernel.org (Postfix) with ESMTP id 7ED06208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:27:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730889AbfGaTYO (ORCPT
+        id S1730895AbfGaT1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:24:14 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38643 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfGaTYN (ORCPT
+        Wed, 31 Jul 2019 15:27:49 -0400
+Received: from smtprelay0153.hostedemail.com ([216.40.44.153]:38874 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726334AbfGaT1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:24:13 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y15so32422325pfn.5;
-        Wed, 31 Jul 2019 12:24:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XH0pJb+BmHDMlg3LN2C00aPw3aAxQ3SWi54ovBfgsFI=;
-        b=EyQrNpMTLGRwFJ4VkM6blKgTwhRlfj23LgEim255LUHYCYfiMoi6st1mS16619rQrq
-         IxTFOd8Dh8y9UknRLll7cWkWXYInosAa49o71KF7n913vBlJzoEvbB6Nt5NzOr8tTDlV
-         0zJrzmbWwnL3KDJk5oARea60OaB7sI7zzJbIIQyo4H4ONir3HDanBrTqvDevwHCHy/Gl
-         GkUkoA2Hg3tFJ5/vqCjnOXGAP5YkfLv9z/TN32nUGSBPj+2HPCDbA2uGQE9EuLIBSxon
-         NicejhhyXRL21Ps2eW+nDCGOYzjBeLJgpLoHcH8f3TdxZZwLWS9gLRFrKNiq/nMtsxA9
-         xw8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XH0pJb+BmHDMlg3LN2C00aPw3aAxQ3SWi54ovBfgsFI=;
-        b=pSMueICJC3WkEAIRueszoWxZ6JvaEXyTkrSAjJyuuZPK49w25dg9rTsbFuWvUWQmoO
-         HjaZdpQBY5wS5y/uOIdUh7387eb84CKQfebcMdFka/rjVY+4dX6LHDreNEBdOP4Z8CJC
-         c5fS1WbNxub5m/hXAAvChZ+D4zXP2RLtN3t7Hlk11lNuKTyRbJbWp+9CS6KCwC5LH5r2
-         +ubpalmZEw6Eiz9CvkXKYjSwyJrMvF4ZSOu7wlgPb/XoJmXxzYh9r+i3YMB0PIsNQ/Eo
-         bqoedBG6/2VMvrWpXjtFYLSxi9BYZrQdwLOu6MeAz100WWpMWhrME0tJX+IAeQXic6NZ
-         sM3w==
-X-Gm-Message-State: APjAAAX15W6HrRm/JuJyE655hBUMGWijd88zLmwsZcx7E0uDbhCumFsk
-        G0vdAyDjyN8h2rAJEUYr8PY=
-X-Google-Smtp-Source: APXvYqy67NwdfHuaYaIeCBVta5YDtxpw1Gd/SFDET9J+E1vBRX7SzwEbgdpdtF6LWFHI/NH81wLnEA==
-X-Received: by 2002:a62:b615:: with SMTP id j21mr47775389pff.190.1564601053206;
-        Wed, 31 Jul 2019 12:24:13 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a12sm3078158pje.3.2019.07.31.12.24.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 12:24:12 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 12:24:10 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Mark Balantzyan <mbalant3@gmail.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pavel Andrianov <andrianov@ispras.ru>
-Subject: Re: [PATCH] watchdog:alim1535_wdt: Fix data race in ali_settimer()
- concerning ali_timeout_bits variable.
-Message-ID: <20190731192410.GA4935@roeck-us.net>
-References: <20190718155238.3066-1-mbalant3@gmail.com>
- <20190718163458.GA18125@roeck-us.net>
- <alpine.DEB.2.21.1907310911120.29703@mbalantz-desktop>
- <20190731164337.GA13646@roeck-us.net>
- <alpine.DEB.2.21.1907311118190.81695@mbalantz-desktop>
+        Wed, 31 Jul 2019 15:27:49 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 2E7AC180A9C99;
+        Wed, 31 Jul 2019 19:27:47 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: elbow14_26156d518e555
+X-Filterd-Recvd-Size: 3559
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 31 Jul 2019 19:27:41 +0000 (UTC)
+Message-ID: <47d29791addc075431737aff4b64531a668d4c1b.camel@perches.com>
+Subject: Re: [PATCH] linux/bits.h: Add compile time sanity check of GENMASK
+ inputs
+From:   Joe Perches <joe@perches.com>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     akpm@linux-foundation.org, johannes@sipsolutions.net,
+        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com
+Date:   Wed, 31 Jul 2019 12:27:38 -0700
+In-Reply-To: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
+References: <0306bec0ec270b01b09441da3200252396abed27.camel@perches.com>
+         <20190731190309.19909-1-rikard.falkeborn@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907311118190.81695@mbalantz-desktop>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark,
-
-On Wed, Jul 31, 2019 at 11:23:19AM -0700, Mark Balantzyan wrote:
-> Hi Guenter, all,
+On Wed, 2019-07-31 at 21:03 +0200, Rikard Falkeborn wrote:
+> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+> as the first argument and the low bit as the second argument. Mixing
+> them will return a mask with zero bits set.
 > 
-> It's alright if you still don't wish to review my patch on alim1535_wdt, but
-> my employer and I, using our race condition analysis tool, detected it to
-> contain a race condition warning. I believe any possible issues could be
-> resolved if it were rewritten to use the watchdog subsystem as you've
-> previously stated.
+> Recent commits show getting this wrong is not uncommon, see e.g.
+> commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+> commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+> macro").
 > 
-> Now, I don't wish to bother you too much, but it seems I forgot to work
-> mainly with my assigned mentor prior to submitting patches..sorry. So, after
-> I have worked on rewriting the alim1535 driver into common watchdog
-> subsystem with my mentor, may I submit it to you then?
+> To prevent such mistakes from appearing again, add compile time sanity
+> checking to the arguments of GENMASK() and GENMASK_ULL(). If both the
+> arguments are known at compile time, and the low bit is higher than the
+> high bit, break the build to detect the mistake immediately.
 > 
+> Since GENMASK() is used in declarations, BUILD_BUG_OR_ZERO() must be
+> used instead of BUILD_BUG_ON(), and __is_constexpr() must be used instead
+> of __builtin_constant_p().
+> 
+> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+> available in assembly") made the macros in linux/bits.h available in
+> assembly. Since neither BUILD_BUG_OR_ZERO() or __is_constexpr() are asm
+> compatible, disable the checks if the file is included in an asm file.
+> 
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> ---
+> Joe Perches sent a series to fix the existing misuses of GENMASK() that
+> needs to be merged before this to avoid build failures. Currently, 7 of
+> the patches were not in Linus tree, and 2 were not in linux-next.
+> 
+> Also, there's currently no asm users of bits.h, but since it was made
+> asm-compatible just two weeks ago it would be a shame to break it right
+> away...
+[]
+> diff --git a/include/linux/bits.h b/include/linux/bits.h
+[]
+> @@ -18,12 +18,22 @@
+>   * position @h. For example
+>   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+>   */
+> +#ifndef __ASSEMBLY__
+> +#include <linux/build_bug.h>
+> +#define GENMASK_INPUT_CHECK(h, l)  BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> +		__is_constexpr(h) && __is_constexpr(l), (l) > (h), 0))
+> +#else
+> +#define GENMASK_INPUT_CHECK(h, l) 0
 
-Similar to pc87413, this driver very likely has zero users left, there
-won't be any hardware to test the patch, and we won't be able to accept
-such a patch because it wasn't tested.
+A few things:
 
-On top of that, the only race condition I can see in that driver is in
-ali_settimer(), between ali_timeout_bits and timeout. Yet, that is not
-really a race condition because the driver can only be opened once,
-and thus there is no means for two threads entering ali_settimer()
-at the same time.
+o Reading the final code is a bit confusing.
+  Perhaps add a comment description saying it's not checked
+  in asm .h uses.
 
-I don't really understand this focus on fixing theoretic/irrelevant
-race conditions in drivers which no one uses anymore. Maybe someone
-can enlighten me ?
+o Maybe use:
+  #define GENMASK_INPUT_CHECK(h, l) UL(0)
 
-Thanks,
-Guenter
+o The compiler error message when the arguments are in the
+  wrong order isn't obvious.  Is there some way to improve
+  the compiler error output, maybe by using BUILD_BUG_ON_MSG
+  or some other mechanism?
+
+
