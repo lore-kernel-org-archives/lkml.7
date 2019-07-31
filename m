@@ -2,142 +2,187 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAA1C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19621C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 923D8206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE1D206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="Gm0DNahb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cS2I/+70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbfGaRNV (ORCPT
+        id S1730530AbfGaRN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:13:21 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45780 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbfGaRNU (ORCPT
+        Wed, 31 Jul 2019 13:13:59 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35942 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbfGaRN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:13:20 -0400
-Received: by mail-ed1-f68.google.com with SMTP id x19so60466983eda.12
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 10:13:19 -0700 (PDT)
+        Wed, 31 Jul 2019 13:13:59 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l21so32355534pgm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 10:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=f1LF3yb4DZ7OR897ZGLAel5hvQn+h9DZaHtHoF52s7U=;
-        b=Gm0DNahbdzmxTjb6RPdo8UA5Qe2qrTf0rvxt5t7sud1MKQnztfM2FEhX1kh+2hucRs
-         pxY7Z6HR7rnXXYfCUaeEjI4m583IjMjYpZu8TzCGhT80vv7G6GBg4mJCYIVIsaHyOJc7
-         D2HNqHynhlXiS3kLSg6BPCjjmSoYz6JZrNgVATnEB+1RZSECXDcapTw3s/fQfdVAZVml
-         MEjOaHsdyjlb30goi6Z2/uQ2x1arQHVcfqxOfxpLKZX1D16EVlG3Qf2HTVZfDC2EIp6H
-         0E4gjixEiCze8baRPdPaheKeU9M5tgehQAyx93gP132xV88yxJ8Zvs5mT2vZtN0syRMS
-         547A==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:from:to:subject:user-agent:date;
+        bh=ruDF2QJk0RcaoD/jGCIEntz9VsOPy5ywGe3+1XGTF3E=;
+        b=cS2I/+703Lp0/GDvqx/aR15ZroVpe9Dj/fQg56wPORtKfsfCfjFnolIPqgXQlzHD81
+         2oXF0KRjVJm0Ahc8nVNekjVPIxSUhAL05++7dLyn2dPcoEUBC+qaD7TzXpuJ3GZFVSM+
+         yAgzSd0Me7+ShJIKHb0ARjUTBdR6Mz3ZVlPuE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=f1LF3yb4DZ7OR897ZGLAel5hvQn+h9DZaHtHoF52s7U=;
-        b=WlbRakAWQH7e38ywGHYe7C9RIJJFPUIpZOBPuCxFTMLHxW9G4Namh2KLIqZ2bDUfiO
-         9iqvIaOCBVZZ4HQrSfjVYgIu8vy4xI33bEWZq3wRrbuuWQhHLC/ks5AfFGXw4t5xKWHf
-         slUhjbg3witWIUwhxtwVdB/kHRjinihGlMNeKidE0OfoK8Hq00V6wrIM6R+HsnTz76zp
-         AeFAgviow7sWKHgyfCWidwvJSKCh9I5uBytE1/nihwv+SOSupXdbdRNTd7R3xk4rN3tp
-         xKbdUW0kSWyKdTO9Kjk7MlXndGUkcGzg3bNUhquFnJqkj0vRQt0ylZlieNs0Zpm3BpA4
-         TJFg==
-X-Gm-Message-State: APjAAAVD6GadVlj/w5iGjHatmdrc/5Y8GdccYv6G4pQP6TbUXQjg12o6
-        FIzDmtkSe+cwNMlMZbcqqeU=
-X-Google-Smtp-Source: APXvYqxYX4Jgwcn5jKDKS1R3hovfm+uGF81JcTlllqIrn/pRLr2iPcDoZYhxFP1N3pz5IGZWXmbtvw==
-X-Received: by 2002:a17:906:bcd6:: with SMTP id lw22mr96345683ejb.68.1564593199104;
-        Wed, 31 Jul 2019 10:13:19 -0700 (PDT)
-Received: from [192.168.1.177] (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
-        by smtp.gmail.com with ESMTPSA id a18sm9699868ejp.2.2019.07.31.10.13.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 10:13:17 -0700 (PDT)
-From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
-Message-Id: <C081CC43-4FBD-43DD-B494-9AFF545F79D8@javigon.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_216A0ED2-C55E-4922-AD94-CE22385C5ADA";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 4/4] block: stop exporting bio_map_kern
-Date:   Wed, 31 Jul 2019 19:13:17 +0200
-In-Reply-To: <1564566096-28756-5-git-send-email-hans@owltronix.com>
-Cc:     =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Hans Holmberg <hans@owltronix.com>
-References: <1564566096-28756-1-git-send-email-hans@owltronix.com>
- <1564566096-28756-5-git-send-email-hans@owltronix.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
+         :user-agent:date;
+        bh=ruDF2QJk0RcaoD/jGCIEntz9VsOPy5ywGe3+1XGTF3E=;
+        b=XVex+ZAmzt4JdE4259ZirzKHE5o9NoLO084Vd1y9D9j90VWtFtqCB/mRDpnoytmZfV
+         6c8mKkJJ1v1RmPAqAne46OFcII00QeZOpulGcDWcyOe8roGLUKSs8uW0y6Y9vncM9dC2
+         lWkQLzXFDeXpiOVPwfUz33MULG4egWhrMOanCwENjFC8MoR5yWA4VBiAzk94CUiKojMX
+         VfgWpDCsIkrwhjZ/9Torj2kNvQ8ATqRDuVp/go4ekurxmCWKYUXUXMwWPBij2G6ZLa/d
+         VXYUnNd3A9TNyoBigqutnwqAaN4DQE/UOWX5Ni+sRYrBtP7ouWm/iZaR6wNekIoo1v+9
+         VpaQ==
+X-Gm-Message-State: APjAAAUBIXdePF7vTrACNWBuIZxzDyqLYzPZgi6uaepjdA53TobrSrCF
+        2bgU1eLKUzwcQKtZYPHK9dqCew==
+X-Google-Smtp-Source: APXvYqwYn/0sv59L0nj+oVd0I2wmn455cZmzNOFQRyDqkMc/XkteC+z5CP9Qn0cmPUlatWoJtazi8g==
+X-Received: by 2002:a62:770e:: with SMTP id s14mr46921167pfc.150.1564593238470;
+        Wed, 31 Jul 2019 10:13:58 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x9sm45533236pgp.75.2019.07.31.10.13.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 10:13:57 -0700 (PDT)
+Message-ID: <5d41cc55.1c69fb81.9480d.8a49@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3963324.N1Qi0Ay72S@kreacher>
+References: <20190730024309.233728-1-trong@android.com> <5d40d5b3.1c69fb81.6047f.1cc3@mx.google.com> <CAJZ5v0hj-GpiYN7nwPJvKJag71MG6zEFbJ6BNwzDidD+7fNFWw@mail.gmail.com> <3963324.N1Qi0Ay72S@kreacher>
+Cc:     Tri Vo <trong@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        kbuild test robot <lkp@intel.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5] PM / wakeup: show wakeup sources stats in sysfs
+User-Agent: alot/0.8.1
+Date:   Wed, 31 Jul 2019 10:13:57 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Rafael J. Wysocki (2019-07-31 04:58:36)
+> On Wednesday, July 31, 2019 10:34:11 AM CEST Rafael J. Wysocki wrote:
+> > On Wed, Jul 31, 2019 at 1:41 AM Stephen Boyd <swboyd@chromium.org> wrot=
+e:
+> > >
+> >=20
+> > > We can run into the same problem when two buses name their devices the
+> > > same name and then we attempt to attach a wakeup source to those two
+> > > devices. Or we can have a problem where a virtual wakeup is made with
+> > > the same name, and again we'll try to make a duplicate named device.
+> > > Using something like 'event' or 'wakeup' or 'ws' as the prefix avoids=
+ this
+> > > problem and keeps things clean.
+> >=20
+> > Or suffix, like "<devname-wakeup>.
+> >=20
+> > But if prefixes are used by an existing convention, I would prefer
+> > "ws-" as it is concise enough and should not be confusing.
 
---Apple-Mail=_216A0ED2-C55E-4922-AD94-CE22385C5ADA
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
+Another possibility is 'eventN', so it reads as /sys/class/wakeup/event0
 
-> On 31 Jul 2019, at 11.41, Hans Holmberg <hans@owltronix.com> wrote:
+> >=20
+> > > We should probably avoid letting the same virtual wakeup source be ma=
+de
+> > > with the same name anyway, because userspace will be confused about w=
+hat
+> > > virtual wakeup it is otherwise. I concede that using the name of the
+> > > wakeup source catches this problem without adding extra code.
+> > >
+> > > Either way, I'd like to see what you outline implemented so that we
+> > > don't need to do more work than is necessary when userspace writes to
+> > > the file.
+> >=20
+> > Since we agree here, let's make this change first.  I can cut a patch
+> > for that in a reasonable time frame I think if no one else beats me to
+> > that.
 >=20
-> Now that there no module users left of bio_map_kern, stop
-> exporting the symbol.
+> So maybe something like the patch below (untested).
 >=20
-> Signed-off-by: Hans Holmberg <hans@owltronix.com>
-> ---
-> block/bio.c | 1 -
-> 1 file changed, 1 deletion(-)
->=20
-> diff --git a/block/bio.c b/block/bio.c
-> index 299a0e7651ec..96ca0b4e73bb 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -1521,7 +1521,6 @@ struct bio *bio_map_kern(struct request_queue =
-*q, void *data, unsigned int len,
-> 	bio->bi_end_io =3D bio_map_kern_endio;
-> 	return bio;
-> }
-> -EXPORT_SYMBOL(bio_map_kern);
->=20
-> static void bio_copy_kern_endio(struct bio *bio)
-> {
-> --
-> 2.7.4
+> Index: linux-pm/drivers/base/power/wakeup.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/base/power/wakeup.c
+> +++ linux-pm/drivers/base/power/wakeup.c
+> @@ -265,15 +244,29 @@ int device_wakeup_enable(struct device *
+>         if (pm_suspend_target_state !=3D PM_SUSPEND_ON)
+>                 dev_dbg(dev, "Suspicious %s() during system transition!\n=
+", __func__);
+> =20
+> +       spin_lock_irq(&dev->power.lock);
+> +
+> +       if (dev->power.wakeup) {
+> +               spin_unlock_irq(&dev->power.lock);
+> +               return -EEXIST;
+> +       }
+> +       dev->power.wakeup =3D ERR_PTR(-EBUSY);
+> +
+> +       spin_unlock_irq(&dev->power.lock);
+> +
+>         ws =3D wakeup_source_register(dev_name(dev));
+>         if (!ws)
+>                 return -ENOMEM;
+> =20
 
-Haven=E2=80=99t realized we were the only users at this point. Nice =
-cleanup.
+Let's say that device_wakeup_enable() is called twice at around the same
+time. First thread gets to wakeup_source_register() and it fails, we
+return -ENOMEM. dev->power.wakeup is assigned to ERR_PTR(-EBUSY). Second
+thread is at the spin_lock_irq() above, it grabs the lock and sees
+dev->power.wakeup is ERR_PTR(-EBUSY) so it bails out with return
+-EEXIST. I'd think we would want to try to create the wakeup source
+instead.
 
-Reviewed-by: Javier Gonz=C3=A1lez <javier@javigon.com>
+    CPU0                                   CPU1
+    ----                                   ----
+    spin_lock_irq(&dev->power.lock)
+    ...
+    dev->power.wakeup =3D ERR_PTR(-EBUSY)
+    spin_unlock_irq(&dev->power.lock)
+    ws =3D wakeup_source_register(...)
+    if (!ws)
+        return -ENOMEM;                 spin_lock_irq(&dev->power.lock)
+                                        if (dev->power.wakeup)
+                                            return -EEXIST; // Bad
 
 
---Apple-Mail=_216A0ED2-C55E-4922-AD94-CE22385C5ADA
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
+Similar problems probably exist with wakeup destruction racing with
+creation. I think it might have to be a create and then publish pointer
+style of code to keep the spinlock section small?
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAl1BzC0ACgkQPEYBfS0l
-eOBpoA//S0BjiAVpc1ZrajXZt6THci8rGkpZBJFH5R4am3mtz6rg5QGzEZrUavtp
-AS0ZSxh5R3DonHJQYn0+Uw/GoqRy1TLxGqfnCwJTWmCN3bwT8C4eKgMmirSAdgit
-NyiitH73st+bU5DGa2dU5mWIxru/QQJnzvVNV+K8IVgqTScG6KaZG0fK4DOCK95g
-rcjvEJjLzaS5uNtFVSeC9AVdhMHaIK1WUT27gLiad+MRGHhxyJMRkPYGR+CQW1qd
-6okzT9aCSKFvOSvIQPlXOIZ5e2IwMru0LfaLXcfVf3JDQ6jkYx+0LKj5o3Cffbw6
-MWguizKs5WHom4SQaxhsNeoUpkQYiKTwvaJBumQRISpoFJR1HJ34igRpULVyh9VS
-8vXqwHoFqwx/D/HMof6o72OET83kWKvR/sd990nMQMF0mpk5BlMpM+/S3aGMrCSI
-U7WNFHKcFhyFiB6eqsd/+GtpYYLOx0BqBZZZ6yUW/i89aSSqJhKEinceh854+du/
-rIQhJluKmRiinxpqdaLuwkLOvhJCUzfLJS8M3LoTn9nc9+C8qpi5GRwRil+B58jI
-suQRdZjufg3N+17k6jxR7S1jxAghSsqTTZDLY4xMde4hzNerfQEXtHqJR4rgSP6n
-TqShO63GV76Ub6K4gBuIWJlqUQg/sIyZfGON7d5UWcxnxmcX5wc=
-=Egr4
------END PGP SIGNATURE-----
-
---Apple-Mail=_216A0ED2-C55E-4922-AD94-CE22385C5ADA--
+> -       ret =3D device_wakeup_attach(dev, ws);
+> -       if (ret)
+> -               wakeup_source_unregister(ws);
+> +       spin_lock_irq(&dev->power.lock);
+> =20
+> -       return ret;
+> +       dev->power.wakeup =3D ws;
+> +       if (dev->power.wakeirq)
+> +               device_wakeup_attach_irq(dev, dev->power.wakeirq);
+> +
+> +       spin_unlock_irq(&dev->power.lock);
+> +
+> +       return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(device_wakeup_enable);
+> =20
