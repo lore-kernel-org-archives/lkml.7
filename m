@@ -2,101 +2,144 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61229C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655B7C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDF9206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C33206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:25:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="liCpB+jW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbfGaQYO (ORCPT
+        id S1729502AbfGaQZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:24:14 -0400
-Received: from lizzard.sbs.de ([194.138.37.39]:57591 "EHLO lizzard.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbfGaQYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:24:13 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id x6VGNsMW016786
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 Jul 2019 18:23:54 +0200
-Received: from [139.25.68.37] (md1q0hnc.ad001.siemens.net [139.25.68.37] (may be forged))
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x6VGNsUO025479;
-        Wed, 31 Jul 2019 18:23:54 +0200
-Subject: Re: [PATCH] scripts/gdb: Handle split debug
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Kieran Bingham <kbingham@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190730234052.148744-1-dianders@chromium.org>
- <34bbd6b5-2e37-159a-b75b-36a6be11c506@siemens.com>
- <CAD=FV=Uqa79UyFFj6zrr_B=rrwfmJAFLLatf8wQ73V70U-frvA@mail.gmail.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <9e3604b2-57dd-7f79-392d-47bb34eb5137@siemens.com>
-Date:   Wed, 31 Jul 2019 18:23:53 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        Wed, 31 Jul 2019 12:25:49 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45592 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfGaQZs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:25:48 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so32152122pfq.12;
+        Wed, 31 Jul 2019 09:25:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HfzyoXraaWAQfxsJbxCgGGQbWu65hE2VfQFlsfk64AI=;
+        b=liCpB+jWGUj6AJh/qQp5WSnFQt4+jRBFldNsFR7pAVkiEuDAOXYz3mL542vsI8duy9
+         +J33MzLHkCEtUkrux6BnCfUobDaBB7N7eBbqtanpLBG+YTZb5jMjlCUdtAB0plmrsC0g
+         cbacoMrGglNBmFKHNiRxTzilXSLAF7NdbmEs9VCsBT5bIGVxZlRXWLmgU5Xo5s725SAk
+         i7rVNLKg+ogkL9gCIIDvPiY327B/NwDFS75eZAxZuSksGNsdM3/Pw2XYqdl+7ScYqo1B
+         xlZVmi7W1t3o7srtQSyiGd4+JRtF6QS+1Jbq1LFV7qkyV/w+YET0WXZ+Xq0T7Aybo2Yv
+         92bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HfzyoXraaWAQfxsJbxCgGGQbWu65hE2VfQFlsfk64AI=;
+        b=KLNkqe/ZumfEPbABiy7pWFsESxoxMA55y0CRcRq0OF3nO5Ygpo36v9yCfajwl6TXH6
+         rICfVRuCBZZdxkrtLQ6qjvyr8vP9ZTJ8TFQq/ihPFEj11JQTfQUi8MGnFlRad+tNxtSv
+         lyOTiHbFze2SZxspbBxV1jhjduwaku8wRLZTuu04d2GvaTrhU22P3Oj5YpBPRarmfo+V
+         PxgWF7xvUvr3K30P0DOQpIRFmHn14leGJQReICtsW0543Mz3MV/YLa7UGIXbEjlncJ8a
+         uL5atPJSPsVJy8P7ZgI0EU7reDh82+ehbw3z9xVoG6rvPclI2YSN9op5eq0vrFNUhqZN
+         8kzw==
+X-Gm-Message-State: APjAAAWxRK55NUfaHsi3H9UyLcvhWlE6+tYSisZaQCYn9Z8EHIVnLDlW
+        15z9pZzADrMcRNEW5xLHYYc=
+X-Google-Smtp-Source: APXvYqyFUsIpvTGwvUqrZXOPYF7Qtnqh9Ca+5hAMUC4yGz8HZaole0+Y4bjNzsEIsKcHmMcrY+3FRg==
+X-Received: by 2002:a63:b10f:: with SMTP id r15mr44689474pgf.230.1564590347688;
+        Wed, 31 Jul 2019 09:25:47 -0700 (PDT)
+Received: from host ([183.101.165.200])
+        by smtp.gmail.com with ESMTPSA id q1sm80803049pfg.84.2019.07.31.09.25.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 31 Jul 2019 09:25:47 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 01:25:37 +0900
+From:   Joonwon Kang <kjw1627@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     re.emese@gmail.com, kernel-hardening@lists.openwall.com,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        jinb.park7@gmail.com
+Subject: Re: [PATCH] randstruct: fix a bug in is_pure_ops_struct()
+Message-ID: <20190731162537.GA23152@host>
+References: <20190727155841.GA13586@host>
+ <201907301008.622218EE5@keescook>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=Uqa79UyFFj6zrr_B=rrwfmJAFLLatf8wQ73V70U-frvA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201907301008.622218EE5@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.07.19 17:44, Doug Anderson wrote:
-> Hi,
+On Tue, Jul 30, 2019 at 10:11:19AM -0700, Kees Cook wrote:
+> On Sun, Jul 28, 2019 at 12:58:41AM +0900, Joonwon Kang wrote:
+> > Before this, there were false negatives in the case where a struct
+> > contains other structs which contain only function pointers because
+> > of unreachable code in is_pure_ops_struct().
 > 
-> On Wed, Jul 31, 2019 at 7:24 AM Jan Kiszka <jan.kiszka@siemens.com> wrote:
->>
->> On 31.07.19 01:40, Douglas Anderson wrote:
->>> Some systems (like Chrome OS) may use "split debug" for kernel
->>> modules.  That means that the debug symbols are in a different file
->>> than the main elf file.  Let's handle that by also searching for debug
->>> symbols that end in ".ko.debug".
->>
->> Is this split-up depending on additional kernel patches, is this already
->> possible with mainline, or is this purely a packaging topic? Wondering because
->> of testability in case it's downstream-only.
+> Ah, very true. Something like:
 > 
-> It is a packaging topic.  You can take a normal elf file and split the
-> debug out of it using objcopy.  Try "man objcopy" and then take a look
-> at the "--only-keep-debug" option.  It'll give you a whole recipe for
-> doing splitdebug.  The suffix used for the debug symbols is arbitrary.
-> If people have other another suffix besides ".ko.debug" then we could
-> presumably support that too...
+> struct internal {
+> 	void (*callback)(void);
+> };
 > 
-> For portage (which is the packaging system used by Chrome OS) split
-> debug is supported by default (and the suffix is .ko.debug).  ...and
-> so in Chrome OS we always get the installed elf files stripped and
-> then the symbols stashed away.
+> struct wrapper {
+> 	struct internal foo;
+> 	void (*other_callback)(void);
+> };
 > 
-> At the moment we don't actually use the normal portage magic to do
-> this for the kernel though since it affects our ability to get good
-> stack dumps in the kernel.  We instead pass a script as "strip" [1].
+> would have not been detected as is_pure_ops_struct()?
 > 
-> 
-> [1] https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/refs/heads/master/eclass/cros-kernel/strip_splitdebug
-> 
-> 
-> -Doug
-> 
+> How did you notice this? (Are there cases of this in the kernel?)
 
-Thanks, makes perfect sense to me. You may add my
+When I compiled kernel with allyesconfig, there seemed to be no such cases,
+but I found the bug just by code review and test.
+However, I would like to slightly modify this patch and add one more patch.
+I will send the patch set soon.
 
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
-
-Jan
-
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+> 
+> > Signed-off-by: Joonwon Kang <kjw1627@gmail.com>
+> 
+> Applied; thanks!
+> 
+> -Kees
+> 
+> > ---
+> >  scripts/gcc-plugins/randomize_layout_plugin.c | 11 +++++------
+> >  1 file changed, 5 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
+> > index 6d5bbd31db7f..a123282a4fcd 100644
+> > --- a/scripts/gcc-plugins/randomize_layout_plugin.c
+> > +++ b/scripts/gcc-plugins/randomize_layout_plugin.c
+> > @@ -443,13 +443,12 @@ static int is_pure_ops_struct(const_tree node)
+> >  		if (node == fieldtype)
+> >  			continue;
+> >  
+> > -		if (!is_fptr(fieldtype))
+> > -			return 0;
+> > -
+> > -		if (code != RECORD_TYPE && code != UNION_TYPE)
+> > -			continue;
+> > +		if (code == RECORD_TYPE || code == UNION_TYPE) {
+> > +			if (!is_pure_ops_struct(fieldtype))
+> > +				return 0;
+> > +		}
+> >  
+> > -		if (!is_pure_ops_struct(fieldtype))
+> > +		if (!is_fptr(fieldtype))
+> >  			return 0;
+> >  	}
+> >  
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> Kees Cook
