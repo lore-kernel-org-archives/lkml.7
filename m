@@ -2,232 +2,140 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABD0C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F70C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C39E20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:51:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AZ7rfQ2J"
+	by mail.kernel.org (Postfix) with ESMTP id 35F272089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564541847;
+	bh=oaJrCOH+JADa8zy97fYyMIm3ThsxnzOC4vYOhOEcIv8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mb/Kz4d+Jz7lnt7THPyNLOkH+2Nkp2WZg9JJST6F8ogqFj1c+rnSGjYOHY7ONlouv
+	 B9LuwOMiJxwRwD/JTWBOeQ4nu2/vxt/l/UlzSo25oCI/rk5KHIas6MxnY5bvVl4J5k
+	 nBEGdz+9VfcIn0FiLAW3GRpMcU9+Jo6z0UwBcenI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbfGaCvN (ORCPT
+        id S1728242AbfGaC5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 22:51:13 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:19894 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfGaCvM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 22:51:12 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x6V2oueF031454;
-        Wed, 31 Jul 2019 11:50:58 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x6V2oueF031454
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564541459;
-        bh=m6crFz6hHWQ6uC1VqWw4SBmJlXxX1Oxyb3RZsSUOdZE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AZ7rfQ2J2rZvxOZBxH8+52vTeD/7Iqo/gz++mYxVnGkvlqn9gQhZ109Uorvhx4mIu
-         yRv/86EOQz9IsE5mMYkKTmxun2J/0PtpjvHPc7Bk7i9z2z0ajIn1Gx3mJVjK3Aafi+
-         z6Yq82csrNJqwQIQqXx7pgk+P+8/MyjJn7yAdHqg3RQXNKxfzI7keh44An84YMlUYK
-         LrMAB9cYEUcKkDYlcK0Y+21JSBEF5gtA82cVmq8zQCySnl3dOyYT2vBOhy7OqsT4ih
-         OvqCTM3bSEcYAgK3F69V0gjR6mWA5RqXckiCX8/oyDsJ7J/7ozY/bfGmNB9vk2Vc/y
-         EbO7Bvx1I0P5Q==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id m8so45217853vsj.0;
-        Tue, 30 Jul 2019 19:50:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAXn+PNml88Yn5YTyUEdqN3IFhSvdFT8bynYHjJ0IgNrK8g2tyor
-        2+xKVZmWuy7P3O1OhOpOyBtXdJloD0yOczKtOW8=
-X-Google-Smtp-Source: APXvYqwuEoHyAMzVKd8WetnVlg1SfXoZSLDuA1y4ZI+YdWnyRWeci7ogbbeDwSu8HwdVIZJe7gxrOYKGUHlz3nBhhlk=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr52522588vsd.215.1564541455592;
- Tue, 30 Jul 2019 19:50:55 -0700 (PDT)
+        Tue, 30 Jul 2019 22:57:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726691AbfGaC5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 22:57:25 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2708206E0;
+        Wed, 31 Jul 2019 02:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564541844;
+        bh=oaJrCOH+JADa8zy97fYyMIm3ThsxnzOC4vYOhOEcIv8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yVNe4M49GrbLbaKCuwRXYKsSFtH/KSl9apD2e2SUyP9PYL1k+R8wxgiR/4ApygZ4S
+         29P6IfNYgLQkCaDMD27petYwc36lKZB8V6q9QsBBn0fmi9foMRPMQuTUCBLZe2JkDn
+         seRrksdk3CZ5VpsUPLtQCQj9XOAxxP0fERR4BtwY=
+Date:   Tue, 30 Jul 2019 19:57:22 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     David Miller <davem@davemloft.net>, dvyukov@google.com,
+        netdev@vger.kernel.org, fw@strlen.de, i.maximets@samsung.com,
+        edumazet@google.com, dsahern@gmail.com,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
+Message-ID: <20190731025722.GE687@sol.localdomain>
+Mail-Followup-To: Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>, dvyukov@google.com,
+        netdev@vger.kernel.org, fw@strlen.de, i.maximets@samsung.com,
+        edumazet@google.com, dsahern@gmail.com,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20190724163014.GC673@sol.localdomain>
+ <20190724.111225.2257475150626507655.davem@davemloft.net>
+ <20190724183710.GF213255@gmail.com>
+ <20190724.130928.1854327585456756387.davem@davemloft.net>
+ <20190724210950.GH213255@gmail.com>
+ <1e07462d-61e2-9885-edd0-97a82dd7883e@gmail.com>
 MIME-Version: 1.0
-References: <20190509143859.9050-1-joe.lawrence@redhat.com> <20190509143859.9050-4-joe.lawrence@redhat.com>
-In-Reply-To: <20190509143859.9050-4-joe.lawrence@redhat.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 31 Jul 2019 11:50:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT3qZ8EESs0eEtaezjgjzRa1XqoAAxpKh_sLi_JPJie2A@mail.gmail.com>
-Message-ID: <CAK7LNAT3qZ8EESs0eEtaezjgjzRa1XqoAAxpKh_sLi_JPJie2A@mail.gmail.com>
-Subject: Re: [PATCH v4 03/10] livepatch: Add klp-convert tool
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e07462d-61e2-9885-edd0-97a82dd7883e@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 11:39 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
->
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
->
-> Livepatches may use symbols which are not contained in its own scope,
-> and, because of that, may end up compiled with relocations that will
-> only be resolved during module load. Yet, when the referenced symbols
-> are not exported, solving this relocation requires information on the
-> object that holds the symbol (either vmlinux or modules) and its
-> position inside the object, as an object may contain multiple symbols
-> with the same name. Providing such information must be done
-> accordingly to what is specified in
-> Documentation/livepatch/module-elf-format.txt.
->
-> Currently, there is no trivial way to embed the required information
-> as requested in the final livepatch elf object. klp-convert solves
-> this problem in two different forms: (i) by relying on Symbols.list,
-> which is built during kernel compilation, to automatically infer the
-> relocation targeted symbol, and, when such inference is not possible
-> (ii) by using annotations in the elf object to convert the relocation
-> accordingly to the specification, enabling it to be handled by the
-> livepatch loader.
->
-> Given the above, create scripts/livepatch to hold tools developed for
-> livepatches and add source files for klp-convert there.
->
-> The core file of klp-convert is scripts/livepatch/klp-convert.c, which
-> implements the heuristics used to solve the relocations and the
-> conversion of unresolved symbols into the expected format, as defined
-> in [1].
->
-> klp-convert receives as arguments the Symbols.list file, an input
-> livepatch module to be converted and the output name for the converted
-> livepatch. When it starts running, klp-convert parses Symbols.list and
-> builds two internal lists of symbols, one containing the exported and
-> another containing the non-exported symbols. Then, by parsing the rela
-> sections in the elf object, klp-convert identifies which symbols must
-> be converted, which are those unresolved and that do not have a
-> corresponding exported symbol, and attempts to convert them
-> accordingly to the specification.
->
-> By using Symbols.list, klp-convert identifies which symbols have names
-> that only appear in a single kernel object, thus being capable of
-> resolving these cases without the intervention of the developer. When
-> various homonymous symbols exist through kernel objects, it is not
-> possible to infer the right one, thus klp-convert falls back into
-> using developer annotations. If these were not provided, then the tool
-> will print a list with all acceptable targets for the symbol being
-> processed.
->
-> Annotations in the context of klp-convert are accessible as struct
-> klp_module_reloc entries in sections named
-> .klp.module_relocs.<objname>. These entries are pairs of symbol
-> references and positions which are to be resolved against definitions
-> in <objname>.
->
-> Define the structure klp_module_reloc in
-> include/linux/uapi/livepatch.h allowing developers to annotate the
-> livepatch source code with it.
->
-> klp-convert relies on libelf and on a list implementation. Add files
-> scripts/livepatch/elf.c and scripts/livepatch/elf.h, which are a
-> libelf interfacing layer and scripts/livepatch/list.h, which is a
-> list implementation.
->
-> Update Makefiles to correctly support the compilation of the new tool,
-> update MAINTAINERS file and add a .gitignore file.
->
-> [1] - Documentation/livepatch/module-elf-format.txt
->
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Signed-off-by: Joao Moreira <jmoreira@suse.de>
-> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> ---
->  MAINTAINERS                     |   1 +
->  include/uapi/linux/livepatch.h  |   5 +
->  scripts/Makefile                |   1 +
->  scripts/livepatch/.gitignore    |   1 +
->  scripts/livepatch/Makefile      |   7 +
->  scripts/livepatch/elf.c         | 753 ++++++++++++++++++++++++++++++++
->  scripts/livepatch/elf.h         |  73 ++++
->  scripts/livepatch/klp-convert.c | 713 ++++++++++++++++++++++++++++++
->  scripts/livepatch/klp-convert.h |  39 ++
->  scripts/livepatch/list.h        | 391 +++++++++++++++++
->  10 files changed, 1984 insertions(+)
->  create mode 100644 scripts/livepatch/.gitignore
->  create mode 100644 scripts/livepatch/Makefile
->  create mode 100644 scripts/livepatch/elf.c
->  create mode 100644 scripts/livepatch/elf.h
->  create mode 100644 scripts/livepatch/klp-convert.c
->  create mode 100644 scripts/livepatch/klp-convert.h
->  create mode 100644 scripts/livepatch/list.h
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 52842fa37261..c1587e1cc385 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9022,6 +9022,7 @@ F:        arch/x86/kernel/livepatch.c
->  F:     Documentation/livepatch/
->  F:     Documentation/ABI/testing/sysfs-kernel-livepatch
->  F:     samples/livepatch/
-> +F:     scripts/livepatch/
->  F:     tools/testing/selftests/livepatch/
->  L:     live-patching@vger.kernel.org
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git
-> diff --git a/include/uapi/linux/livepatch.h b/include/uapi/linux/livepatch.h
-> index e19430918a07..1c364d42d38e 100644
-> --- a/include/uapi/linux/livepatch.h
-> +++ b/include/uapi/linux/livepatch.h
-> @@ -12,4 +12,9 @@
->  #define KLP_RELA_PREFIX                ".klp.rela."
->  #define KLP_SYM_PREFIX         ".klp.sym."
->
-> +struct klp_module_reloc {
-> +       void *sym;
-> +       unsigned int sympos;
-> +} __attribute__((packed));
-> +
->  #endif /* _UAPI_LIVEPATCH_H */
-> diff --git a/scripts/Makefile b/scripts/Makefile
-> index 9d442ee050bd..bf9ce74b70b0 100644
-> --- a/scripts/Makefile
-> +++ b/scripts/Makefile
-> @@ -39,6 +39,7 @@ build_unifdef: $(obj)/unifdef
->  subdir-$(CONFIG_GCC_PLUGINS) += gcc-plugins
->  subdir-$(CONFIG_MODVERSIONS) += genksyms
->  subdir-$(CONFIG_SECURITY_SELINUX) += selinux
-> +subdir-$(CONFIG_LIVEPATCH)   += livepatch
->
->  # Let clean descend into subdirs
->  subdir-        += basic dtc gdb kconfig mod package
-> diff --git a/scripts/livepatch/.gitignore b/scripts/livepatch/.gitignore
-> new file mode 100644
-> index 000000000000..dc22fe4b6a5b
-> --- /dev/null
-> +++ b/scripts/livepatch/.gitignore
-> @@ -0,0 +1 @@
-> +klp-convert
-> diff --git a/scripts/livepatch/Makefile b/scripts/livepatch/Makefile
-> new file mode 100644
-> index 000000000000..2842ecdba3fd
-> --- /dev/null
-> +++ b/scripts/livepatch/Makefile
-> @@ -0,0 +1,7 @@
-> +hostprogs-y                    := klp-convert
-> +always                         := $(hostprogs-y)
-> +
-> +klp-convert-objs               := klp-convert.o elf.o
-> +
-> +HOST_EXTRACFLAGS               := -g -I$(INSTALL_HDR_PATH)/include -Wall
+On Thu, Jul 25, 2019 at 07:04:47AM +0200, Eric Dumazet wrote:
+> 
+> 
+> On 7/24/19 11:09 PM, Eric Biggers wrote:
+> > On Wed, Jul 24, 2019 at 01:09:28PM -0700, David Miller wrote:
+> >> From: Eric Biggers <ebiggers@kernel.org>
+> >> Date: Wed, 24 Jul 2019 11:37:12 -0700
+> >>
+> >>> We can argue about what words to use to describe this situation, but
+> >>> it doesn't change the situation itself.
+> >>
+> >> And we should argue about those words because it matters to humans and
+> >> effects how they feel, and humans ultimately fix these bugs.
+> >>
+> >> So please stop with the hyperbole.
+> >>
+> >> Thank you.
+> > 
+> > Okay, there are 151 bugs that syzbot saw on the mainline Linux kernel in the
+> > last 7 days (90.1% with reproducers).  Of those, 59 were reported over 3 months
+> > ago (89.8% with reproducers).  Of those, 12 were reported over a year ago (83.3%
+> > with reproducers).
+> > 
+> > No opinion on whether those are small/medium/large numbers, in case it would
+> > hurt someone's feelings.
+> > 
+> > These numbers do *not* include bugs that are still valid but weren't seen on
+> > mainline in last 7 days, e.g.:
+> > 
+> > - Bugs that are seen only rarely, so by chance weren't seen in last 7 days.
+> > - Bugs only in linux-next and/or subsystem branches.
+> > - Bugs that were seen in mainline more than 7 days ago, and then only on
+> >   linux-next or subsystem branch in last 7 days.
+> > - Bugs that stopped being seen due to a change in syzkaller.
+> > - Bugs that stopped being seen due to a change in kernel config.
+> > - Bugs that stopped being seen due to other environment changes such as kernel
+> >   command line parameters.
+> > - Bugs that stopped being seen due to a kernel change that hid the bug but
+> >   didn't actually fix it, i.e. still reachable in other ways.
+> > 
+> 
+> We do not doubt syzkaller is an incredible tool.
+> 
+> But netdev@ and lkml@ are mailing lists for humans to interact,
+> exchange ideas, send patches and review them.
+> 
+> To me, an issue that was reported to netdev by a real user is _way_ more important
+> than potential issues that a bot might have found doing crazy things.
+> 
+> We need to keep optimal S/N on mailing lists, so any bots trying to interact
+> with these lists must be very cautious and damn smart.
+> 
+> When I have time to spare and can work on syzbot reports, I am going to a web
+> page where I can see them and select the ones it makes sense to fix.
+> I hate having to set up email filters.
+> 
 
-This looks strange.
+syzbot finds a lot of security bugs, and security bugs are important.  And the
+bugs are still there regardless of whether they're reported by human or bot.
 
-Theoretically, you cannot include headers in $(INSTALL_HDR_PATH)/include
-from host programs.
+Also, there *are* bugs being fixed because of these reminders; some subsystem
+maintainers have even fixed all the bugs in their subsystem.  But I can
+understand that for subsystems with a lot of open bug reports it's overwhelming.
 
-headers_install works for the target architecture, not host architecture.
-This may cause a strange result when you are cross-compiling the kernel.
+What I'll try doing next time (if there *is* a next time; it isn't actually my
+job to do any of this, I just care about the security and reliability of
+Linux...) is for subsystems with lots of open bug reports, only listing the ones
+actually seen in the last week or so, and perhaps also spending some more time
+manually checking those bugs.  That should cut down the noise a lot.
 
-BTW, which header in $(INSTALL_HDR_PATH)/include do you need to include ?
-
-
-Also, -Wall is redundant because it is set by the top-level Makefile.
-
--- 
-Best Regards
-Masahiro Yamada
+- Eric
