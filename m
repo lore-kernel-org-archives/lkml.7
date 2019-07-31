@@ -6,146 +6,257 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1F7C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0C2C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87458206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A274206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbfGaJ4A (ORCPT
+        id S1728995AbfGaJ54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:56:00 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2649 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfGaJz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:55:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 02:55:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,329,1559545200"; 
-   d="scan'208";a="191205897"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 31 Jul 2019 02:55:56 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 31 Jul 2019 12:55:55 +0300
-Date:   Wed, 31 Jul 2019 12:55:55 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Douglas Gilbert <dgilbert@interlog.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] usb: typec: tcpm: Ignore unsupported/unknown
- alternate mode requests
-Message-ID: <20190731095555.GN28600@kuha.fi.intel.com>
-References: <1564029037-22929-1-git-send-email-linux@roeck-us.net>
- <20190729140457.GC28600@kuha.fi.intel.com>
- <20190729173104.GA32556@roeck-us.net>
- <20190730120747.GL28600@kuha.fi.intel.com>
- <a14d8a51-85f6-65d8-2e1e-19538a7bf3d3@roeck-us.net>
+        Wed, 31 Jul 2019 05:57:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57604 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727224AbfGaJ5z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:57:55 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6V9vMcW033778
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:57:54 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u370yw6dq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:57:53 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
+        Wed, 31 Jul 2019 10:57:51 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 31 Jul 2019 10:57:48 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6V9vlWW33358064
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Jul 2019 09:57:47 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C11224C04A;
+        Wed, 31 Jul 2019 09:57:47 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 465574C044;
+        Wed, 31 Jul 2019 09:57:44 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.109.246.128])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 31 Jul 2019 09:57:43 +0000 (GMT)
+Date:   Wed, 31 Jul 2019 15:27:35 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/9] nouveau: simplify nouveau_dmem_migrate_to_ram
+Reply-To: bharata@linux.ibm.com
+References: <20190729142843.22320-1-hch@lst.de>
+ <20190729142843.22320-6-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a14d8a51-85f6-65d8-2e1e-19538a7bf3d3@roeck-us.net>
+In-Reply-To: <20190729142843.22320-6-hch@lst.de>
 User-Agent: Mutt/1.12.0 (2019-05-25)
+X-TM-AS-GCONF: 00
+x-cbid: 19073109-0012-0000-0000-00000337F1FF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19073109-0013-0000-0000-000021719A7D
+Message-Id: <20190731095735.GB18807@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907310102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 06:28:52AM -0700, Guenter Roeck wrote:
-> On 7/30/19 5:07 AM, Heikki Krogerus wrote:
-> > On Mon, Jul 29, 2019 at 10:31:04AM -0700, Guenter Roeck wrote:
-> > > On Mon, Jul 29, 2019 at 05:04:57PM +0300, Heikki Krogerus wrote:
-> > > > Hi,
-> > > > 
-> > > > On Wed, Jul 24, 2019 at 09:30:37PM -0700, Guenter Roeck wrote:
-> > > > > TCPM may receive PD messages associated with unknown or unsupported
-> > > > > alternate modes. If that happens, calls to typec_match_altmode()
-> > > > > will return NULL. The tcpm code does not currently take this into
-> > > > > account. This results in crashes.
-> > > > > 
-> > > > > Unable to handle kernel NULL pointer dereference at virtual address 000001f0
-> > > > > pgd = 41dad9a1
-> > > > > [000001f0] *pgd=00000000
-> > > > > Internal error: Oops: 5 [#1] THUMB2
-> > > > > Modules linked in: tcpci tcpm
-> > > > > CPU: 0 PID: 2338 Comm: kworker/u2:0 Not tainted 5.1.18-sama5-armv7-r2 #6
-> > > > > Hardware name: Atmel SAMA5
-> > > > > Workqueue: 2-0050 tcpm_pd_rx_handler [tcpm]
-> > > > > PC is at typec_altmode_attention+0x0/0x14
-> > > > > LR is at tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm]
-> > > > > ...
-> > > > > [<c03fbee8>] (typec_altmode_attention) from [<bf8030fb>]
-> > > > > 				(tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm])
-> > > > > [<bf8030fb>] (tcpm_pd_rx_handler [tcpm]) from [<c012082b>]
-> > > > > 				(process_one_work+0x123/0x2a8)
-> > > > > [<c012082b>] (process_one_work) from [<c0120a6d>]
-> > > > > 				(worker_thread+0xbd/0x3b0)
-> > > > > [<c0120a6d>] (worker_thread) from [<c012431f>] (kthread+0xcf/0xf4)
-> > > > > [<c012431f>] (kthread) from [<c01010f9>] (ret_from_fork+0x11/0x38)
-> > > > > 
-> > > > > Ignore PD messages if the asociated alternate mode is not supported.
-> > > > > 
-> > > > > Reported-by: Douglas Gilbert <dgilbert@interlog.com>
-> > > > > Cc: Douglas Gilbert <dgilbert@interlog.com>
-> > > > > Fixes: e9576fe8e605c ("usb: typec: tcpm: Support for Alternate Modes")
-> > > > > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > > > > ---
-> > > > > Taking a stab at the problem. I don't really know if this is the correct
-> > > > > fix, or even if my understanding of the problem is correct, thus marking
-> > > > > the patch as RFC.
-> > > > 
-> > > > My guess is that typec_match_altmode() is the real culprit. We can't
-> > > > rely on the partner mode index number when identifying the port alt
-> > > > mode.
-> > > > 
-> > > > Douglas, can you test the attached hack instead of this patch?
-> > > > 
-> > > > 
-> > > > thanks,
-> > > > 
-> > > > -- 
-> > > > heikki
-> > > 
-> > > > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> > > > index ec525811a9eb..033dc097ba83 100644
-> > > > --- a/drivers/usb/typec/tcpm/tcpm.c
-> > > > +++ b/drivers/usb/typec/tcpm/tcpm.c
-> > > > @@ -1067,12 +1067,11 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
-> > > >   	modep = &port->mode_data;
-> > > > -	adev = typec_match_altmode(port->port_altmode, ALTMODE_DISCOVERY_MAX,
-> > > > -				   PD_VDO_VID(p[0]), PD_VDO_OPOS(p[0]));
-> > > > -
-> > > >   	pdev = typec_match_altmode(port->partner_altmode, ALTMODE_DISCOVERY_MAX,
-> > > >   				   PD_VDO_VID(p[0]), PD_VDO_OPOS(p[0]));
-> > > > +	adev = (void *)typec_altmode_get_partner(pdev);
-> > > > +
-> > > 
-> > > I understand that typec_altmode_get_partner() returns a const *;
-> > > maybe adev should be declared as const struct typec_altmode *
-> > > instead of using a typecast.
-> > 
-> > Yes...
-> > 
-> > > Also, typec_altmode_get_partner() can return NULL as well if pdev is NULL.
-> > > Is it guaranteed that typec_match_altmode() never returns NULL for pdev ?
-> > 
-> > ...and probable no. But I don't think we can receive Attention to a
-> > mode that hasn't been entered.
-> > 
+On Mon, Jul 29, 2019 at 05:28:39PM +0300, Christoph Hellwig wrote:
+> Factor the main copy page to ram routine out into a helper that acts on
+> a single page and which doesn't require the nouveau_dmem_fault
+> structure for argument passing.  Also remove the loop over multiple
+> pages as we only handle one at the moment, although the structure of
+> the main worker function makes it relatively easy to add multi page
+> support back if needed in the future.  But at least for now this avoid
+> the needed to dynamically allocate memory for the dma addresses in
+> what is essentially the page fault path.
 > 
-> If I understand correctly, the Attention was generated by a test system.
-> What prevents badly implemented code in the connected system from sending
-> such an Attention message ?
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_dmem.c | 158 ++++++-------------------
+>  1 file changed, 39 insertions(+), 119 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> index 21052a4aaf69..036e6c07d489 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> @@ -86,13 +86,6 @@ static inline struct nouveau_dmem *page_to_dmem(struct page *page)
+>  	return container_of(page->pgmap, struct nouveau_dmem, pagemap);
+>  }
+>  
+> -struct nouveau_dmem_fault {
+> -	struct nouveau_drm *drm;
+> -	struct nouveau_fence *fence;
+> -	dma_addr_t *dma;
+> -	unsigned long npages;
+> -};
+> -
+>  struct nouveau_migrate {
+>  	struct vm_area_struct *vma;
+>  	struct nouveau_drm *drm;
+> @@ -146,130 +139,55 @@ static void nouveau_dmem_fence_done(struct nouveau_fence **fence)
+>  	}
+>  }
+>  
+> -static void
+> -nouveau_dmem_fault_alloc_and_copy(struct vm_area_struct *vma,
+> -				  const unsigned long *src_pfns,
+> -				  unsigned long *dst_pfns,
+> -				  unsigned long start,
+> -				  unsigned long end,
+> -				  struct nouveau_dmem_fault *fault)
+> +static vm_fault_t nouveau_dmem_fault_copy_one(struct nouveau_drm *drm,
+> +		struct vm_area_struct *vma, unsigned long addr,
+> +		unsigned long src, unsigned long *dst, dma_addr_t *dma_addr)
+>  {
+> -	struct nouveau_drm *drm = fault->drm;
+>  	struct device *dev = drm->dev->dev;
+> -	unsigned long addr, i, npages = 0;
+> -	nouveau_migrate_copy_t copy;
+> -	int ret;
+> -
+> -
+> -	/* First allocate new memory */
+> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, i++) {
+> -		struct page *dpage, *spage;
+> -
+> -		dst_pfns[i] = 0;
+> -		spage = migrate_pfn_to_page(src_pfns[i]);
+> -		if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE))
+> -			continue;
+> +	struct page *dpage, *spage;
+>  
+> -		dpage = alloc_page_vma(GFP_HIGHUSER, vma, addr);
+> -		if (!dpage) {
+> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
+> -			continue;
+> -		}
+> -		lock_page(dpage);
+> -
+> -		dst_pfns[i] = migrate_pfn(page_to_pfn(dpage)) |
+> -			      MIGRATE_PFN_LOCKED;
+> -		npages++;
+> -	}
+> +	spage = migrate_pfn_to_page(src);
+> +	if (!spage || !(src & MIGRATE_PFN_MIGRATE))
+> +		return 0;
+>  
+> -	/* Allocate storage for DMA addresses, so we can unmap later. */
+> -	fault->dma = kmalloc(sizeof(*fault->dma) * npages, GFP_KERNEL);
+> -	if (!fault->dma)
+> +	dpage = alloc_page_vma(GFP_HIGHUSER, args->vma, addr);
+> +	if (!dpage)
+>  		goto error;
+> +	lock_page(dpage);
+>  
+> -	/* Copy things over */
+> -	copy = drm->dmem->migrate.copy_func;
+> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, i++) {
+> -		struct page *spage, *dpage;
+> -
+> -		dpage = migrate_pfn_to_page(dst_pfns[i]);
+> -		if (!dpage || dst_pfns[i] == MIGRATE_PFN_ERROR)
+> -			continue;
+> -
+> -		spage = migrate_pfn_to_page(src_pfns[i]);
+> -		if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE)) {
+> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
+> -			__free_page(dpage);
+> -			continue;
+> -		}
+> -
+> -		fault->dma[fault->npages] =
+> -			dma_map_page_attrs(dev, dpage, 0, PAGE_SIZE,
+> -					   PCI_DMA_BIDIRECTIONAL,
+> -					   DMA_ATTR_SKIP_CPU_SYNC);
+> -		if (dma_mapping_error(dev, fault->dma[fault->npages])) {
+> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
+> -			__free_page(dpage);
+> -			continue;
+> -		}
+> -
+> -		ret = copy(drm, 1, NOUVEAU_APER_HOST,
+> -				fault->dma[fault->npages++],
+> -				NOUVEAU_APER_VRAM,
+> -				nouveau_dmem_page_addr(spage));
+> -		if (ret) {
+> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
+> -			__free_page(dpage);
+> -			continue;
+> -		}
+> -	}
+> +	*dma_addr = dma_map_page(dev, dpage, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
+> +	if (dma_mapping_error(dev, *dma_addr))
+> +		goto error_free_page;
+>  
+> -	nouveau_fence_new(drm->dmem->migrate.chan, false, &fault->fence);
+> +	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_HOST, *dma_addr,
+> +			NOUVEAU_APER_VRAM, nouveau_dmem_page_addr(spage)))
+> +		goto error_dma_unmap;
+>  
+> -	return;
+> +	*dst = migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
+>  
+> +error_dma_unmap:
+> +	dma_unmap_page(dev, *dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
+> +error_free_page:
+> +	__free_page(dpage);
+>  error:
+> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, ++i) {
+> -		struct page *page;
+> -
+> -		if (!dst_pfns[i] || dst_pfns[i] == MIGRATE_PFN_ERROR)
+> -			continue;
+> -
+> -		page = migrate_pfn_to_page(dst_pfns[i]);
+> -		dst_pfns[i] = MIGRATE_PFN_ERROR;
+> -		if (page == NULL)
+> -			continue;
+> -
+> -		__free_page(page);
+> -	}
+> -}
+> -
+> -static void
+> -nouveau_dmem_fault_finalize_and_map(struct nouveau_dmem_fault *fault)
+> -{
+> -	struct nouveau_drm *drm = fault->drm;
+> -
+> -	nouveau_dmem_fence_done(&fault->fence);
+> -
+> -	while (fault->npages--) {
+> -		dma_unmap_page(drm->dev->dev, fault->dma[fault->npages],
+> -			       PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
+> -	}
+> -	kfree(fault->dma);
+> +	return VM_FAULT_SIGBUS;
 
-Oh, if that is the case, then I don't think my change has any effect.
-I misunderstood the scenario. Sorry for that.
+Looks like nouveau_dmem_fault_copy_one() is now returning VM_FAULT_SIGBUS
+for success case. Is this expected?
 
-I think we should use your patch to fix this issue.
+Regards,
+Bharata.
 
-thanks,
-
--- 
-heikki
