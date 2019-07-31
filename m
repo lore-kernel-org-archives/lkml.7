@@ -2,116 +2,110 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BABBC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B304C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72406214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:59:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lI/F+evG"
+	by mail.kernel.org (Postfix) with ESMTP id F144E206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbfGaT7f (ORCPT
+        id S1730314AbfGaUAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:59:35 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44533 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730225AbfGaT7c (ORCPT
+        Wed, 31 Jul 2019 16:00:09 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:34817 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaUAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:59:32 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i18so32590660pgl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:59:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wj8UI6KcdGWx7+DqBC4UilgyG1YpNkyj7/yhX7S5938=;
-        b=lI/F+evGDUwaa/3jWG9s/L6Rki0XodRNIvovJ41k7O3gJBlhooGZWa8zk7zoZxPi3K
-         2TLyWEVqGdpi3hnVGLBr1Oc4gUGjDuX/e0ynTnQkvdvYvby6ThNgqwr5+OlxOfckAHXE
-         mdPb+Iuv8GNJU7luiqE0KFaafHR7acsFoLCvM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wj8UI6KcdGWx7+DqBC4UilgyG1YpNkyj7/yhX7S5938=;
-        b=tvpZsj5ELCB3uyQ+PpZ+blXLQ470tByqZLVYYtFbUOO8UMDty2WpGQtpFCiO5S8WHY
-         bf4bNk3mPFEPE8Xod6bfaRPWu7YLhynfcRYv6kZ9C3FM6s9nOfiM9EEcI3l1w8dFYD0v
-         u1r91ep8mTY3Jp6GCZdT6DgkgK372lSASD+0UjEwwZbj1yz7aAlEywFC5C1XaISU4wXW
-         TSC8Ho1uifol+OnKxQsLReAwtUNgBl6InvPCSramqnh1YK7DpWUDh7s+ItwuEvgTMgxN
-         ttsHABwd7WamN/OOOII4EMJNbeVeFPkbu1+SlzylmGhZE8rOT8EaQ//WA0xAj6LTI6Ot
-         z1zw==
-X-Gm-Message-State: APjAAAUMHFdThIX9i1M18jS6hB9YLmj5pTkotGFgLaEL1GihrnreITH/
-        Usj9cRi1kOrE5/9tSnieun4HDQ==
-X-Google-Smtp-Source: APXvYqyo7YtH0z/PjARx5H0oYP8eGymkvm90XLND0TLR+aFSRTYIsvGT3FPVBy4eGu5XU4G+pWeBtQ==
-X-Received: by 2002:a17:90a:fa07:: with SMTP id cm7mr4440377pjb.138.1564603172224;
-        Wed, 31 Jul 2019 12:59:32 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j15sm99294412pfn.150.2019.07.31.12.59.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 31 Jul 2019 12:59:31 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 12:59:30 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joonwon Kang <kjw1627@gmail.com>
-Cc:     re.emese@gmail.com, kernel-hardening@lists.openwall.com,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        jinb.park7@gmail.com
-Subject: Re: [PATCH 2/2] randstruct: remove dead code in is_pure_ops_struct()
-Message-ID: <201907311259.D485EED2B7@keescook>
-References: <cover.1564595346.git.kjw1627@gmail.com>
- <281a65cc361512e3dc6c5deffa324f800eb907be.1564595346.git.kjw1627@gmail.com>
+        Wed, 31 Jul 2019 16:00:08 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mo6WJ-1ihbS32Skt-00pgri; Wed, 31 Jul 2019 21:59:24 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH 04/14] serial: lpc32xx_hs: allow compile-testing
+Date:   Wed, 31 Jul 2019 21:56:46 +0200
+Message-Id: <20190731195713.3150463-5-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190731195713.3150463-1-arnd@arndb.de>
+References: <20190731195713.3150463-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <281a65cc361512e3dc6c5deffa324f800eb907be.1564595346.git.kjw1627@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:FgQXWHBg8JwiLqFUWJflxqSabbAP8JCw6bQWgIJ0su4bbGS+nRK
+ 0kUqcrfqJfWTc10p+TkInneDvk18LhtSmF5HyllYlbCgM6NIe2ax1LYFHpLJUPtftTqVfHY
+ LT8kDYequkxI5Lbi1wDejhDPoHyerdsb7xvK8eoFciT5n0YokYA8TO/pNPuR18xFg1KR67C
+ ohO68gbXz9QjaHkKemAWQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9zXs2NceyDg=:N9NkeMAe628aOvT2TIb/xb
+ PWR1SJ+Jn/xnW7MzNM80nxT0HFhj0IH9hRJO7YpP3nO1nzkVmMIuBW8MfuEjzvna4yYuw/NrN
+ Xdgphu9Ry1EE8S2qqTWWjhUDz545qonpnL1oJEOm/Hr5xdROH7H2WeLZJpQCtnxVxQ8Wh5hqY
+ nU5h7ie3lhbyDKd1IWAhOejvlfNepdIKHF1pDyXuAnlgQUVMople/U1mBLmt0NoxdvF/6Mcer
+ 8tH++YghoErbfk2yDkMI2HYS3ZeTBZRbPO2ZX3iDLbDarWtrQvzDqEVMyG8Y6EUmP0b4qyFjN
+ PwLeOGDMs4lB0+cFHs97ILEblNeqmOzk14Ox/7D0BPmUuVaxPFJuCwl6Uh4bTDBi8TlEtcnsF
+ qKLNzlhsV4qv+KM3IKY+XI8kOnePo6K95sFf+QHEEqVuX8oAp63/X9aVVWFpNTIHW6Va2GEm5
+ rWdpIHl6eOJoB+r3wgOJizmqDyGRWK5+D7E47X3Bac211kWk2upDTiYsqftygCXSHNH6sKjd1
+ AQJoQbtKh20u9ADOyh9GW2ko1Az6jrllCmcnPqt1XDs9uHtH/ygJG0Gn7GWFngWKjOpGMOcj0
+ CGy7SaTzt3GuiyKDn9gHxUEXhOjsb4aCnEX5bWyLhHzocWJcLWujmLb48VzchIKZJgwZWu7lf
+ UkS5FB881G9+x8p0cLogi/HR4km/FxXNvseAnDybpGdJN33PMpOBWTcW0/y9Clg0W5ImRhw22
+ ktX8KghGubpyC+mg1c2YtkHDcs3NhemMbCnviw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 03:01:49AM +0900, Joonwon Kang wrote:
-> Recursive declaration for struct which has member of the same struct
-> type, for example,
-> 
-> struct foo {
->     struct foo f;
->     ...
-> };
-> 
-> is not allowed. So, it is unnecessary to check if a struct has this
-> kind of member.
+The only thing that prevents building this driver on other
+platforms is the mach/hardware.h include, which is not actually
+used here at all, so remove the line and allow CONFIG_COMPILE_TEST.
 
-Is that the only case where this loop could happen? Seems also safe to
-just leave it as-is...
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/tty/serial/Kconfig      | 3 ++-
+ drivers/tty/serial/lpc32xx_hs.c | 2 --
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
--Kees
-
-> 
-> Signed-off-by: Joonwon Kang <kjw1627@gmail.com>
-> ---
->  scripts/gcc-plugins/randomize_layout_plugin.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
-> index bd29e4e7a524..e14efe23e645 100644
-> --- a/scripts/gcc-plugins/randomize_layout_plugin.c
-> +++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-> @@ -440,9 +440,6 @@ static int is_pure_ops_struct(const_tree node)
->  		const_tree fieldtype = get_field_type(field);
->  		enum tree_code code = TREE_CODE(fieldtype);
->  
-> -		if (node == fieldtype)
-> -			continue;
-> -
->  		if (code == RECORD_TYPE || code == UNION_TYPE) {
->  			if (!is_pure_ops_struct(fieldtype))
->  				return 0;
-> -- 
-> 2.17.1
-> 
-
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 3083dbae35f7..518aac902e4b 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -739,7 +739,8 @@ config SERIAL_PNX8XXX_CONSOLE
+ 
+ config SERIAL_HS_LPC32XX
+ 	tristate "LPC32XX high speed serial port support"
+-	depends on ARCH_LPC32XX && OF
++	depends on ARCH_LPC32XX || COMPILE_TEST
++	depends on OF
+ 	select SERIAL_CORE
+ 	help
+ 	  Support for the LPC32XX high speed serial ports (up to 900kbps).
+diff --git a/drivers/tty/serial/lpc32xx_hs.c b/drivers/tty/serial/lpc32xx_hs.c
+index f4e27d0ad947..7f14cd8fac47 100644
+--- a/drivers/tty/serial/lpc32xx_hs.c
++++ b/drivers/tty/serial/lpc32xx_hs.c
+@@ -25,8 +25,6 @@
+ #include <linux/irq.h>
+ #include <linux/gpio.h>
+ #include <linux/of.h>
+-#include <mach/platform.h>
+-#include <mach/hardware.h>
+ 
+ /*
+  * High Speed UART register offsets
 -- 
-Kees Cook
+2.20.0
+
