@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9D6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAEFC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62DB208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739EC206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:59:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8lKpOLN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIdxktZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbfGaM7J (ORCPT
+        id S1729257AbfGaM7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:59:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43285 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbfGaM7H (ORCPT
+        Wed, 31 Jul 2019 08:59:11 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33209 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729230AbfGaM7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:59:07 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so69550236wru.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:59:06 -0700 (PDT)
+        Wed, 31 Jul 2019 08:59:10 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h19so1257857wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=AOFhIckhQmYMamZEnniJSByOBHPTNuKeX0q317r/B6o=;
-        b=E8lKpOLNq06ZvxmzRtnx3rZmOP+a1TYORuNE+WwUIHemP4Z1ebjOJH3iDMSOmCgyZg
-         jCjIireKy00ANDYsbRudFA6lZsYe+qHtDO0mJA5SA3l/KRpJfEqL1OKrm72anx9bXrzg
-         rgpg56Q0tXvSQ1ANYvkUxqTstwG/DW5wyfPVaiWjBP7JHF8pZzpIHbRaTT4dY0gPmVn2
-         7cv02ze04J+t83YZOiLGLoVKeHc5u10pW4JY4OKmq1jdJqoSLW5PzdZR2NaA5NY4lRi8
-         XsjVXinmS+2jThcxectkIEaN/k5XXyFLx3Fw/13LVTrSG/skPKhqMdFZjmkp6f+BMG/o
-         lDFA==
+        bh=gd7PAH+qMyT8z8+OHzNs+/b1RDtORgMTHruHrzaE3Bs=;
+        b=ZIdxktZ7t+Xz7g7jUZmgA2Qow+2YGYAHcvBPMTFj1OHLC/AW+8qR09QSOe6BsqhZd2
+         P9F0PJadQcFPHA0Z7Ygj+cvd6sRqokD/FfcVNVbKvGkvRcP0GHDteEZEE6lkqMW+PZgh
+         NJusTzVkI0QvQjn6qsiZpdgU9c52LjjVj2PUcfNUi0oYOWH3cRn3z7yWHu1FZjBeGuC5
+         +0izySBuTKjNg5SNyDQzEEqGBgn/MIHXx7RVrYye1JOjt2+6sCJKksZRFrTl1ee0ARbY
+         fuMv5RAWSrPbM1i/OO1nZL2kpErSO5/N4OZtiyxL6Qd7DYT7yAkE0db/xIfbno9XUoqd
+         iVlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=AOFhIckhQmYMamZEnniJSByOBHPTNuKeX0q317r/B6o=;
-        b=HFk9ud4SaqdLDiSyFLha8tvY2kdCqyFlbNYt9yogPA/IaA+jD3e6TOkzr6WFqHH5/5
-         SS9/Yj41nlE5BXTXYYi+8CUvzSuQ9XivNx2VchyvfTJdSC5ouhKMYolF0x8tCTWwTdNa
-         4piCuoPzHXXPHryln+L6ao/91yqgOjI2uX8XhRmeSbC3mxbdpYJzq8DQAdhEkiNdWG+Q
-         vnrgzlmlIp8P5MsW8sUupy4Z25qwJo/6TPhIn4pcjtcupIG6WWrG9FL1dnf6Bl5i1LN2
-         jEQb9t+we2QqKqQbuByk2uapuu4Dzq/hrLaZ62ykw3SIxcTqlUCLYJdngOuN5+h4i1Iu
-         GhAw==
-X-Gm-Message-State: APjAAAX5bSYZDiDHZssCQgBTnu1Pb0fejPZLJDvl8MscmGmHeBjcu8U4
-        fcgla8k92QrCP9Sdrupcb2+4jG93Wmg=
-X-Google-Smtp-Source: APXvYqxGXUDF8d4s3G+Fzamcp5EovROGh/VEYJDLV1fzGGt5DLlTG3q3WVz92EXea/4/lHzybg4bwA==
-X-Received: by 2002:adf:ce88:: with SMTP id r8mr9331949wrn.42.1564577945300;
-        Wed, 31 Jul 2019 05:59:05 -0700 (PDT)
+        bh=gd7PAH+qMyT8z8+OHzNs+/b1RDtORgMTHruHrzaE3Bs=;
+        b=lJg/ZCBGfaWfZs+Lp/WaAlIoMcwL+2v2sc0MCCL87fG9B9yPKBbguTS7xszT+XCJoy
+         CRGg5HlwrJBWYLSQ7ATpxsBH3QpRQ5oKBLuCluGOPIxTs9l8Os2N516dVZK8EDp1yhoi
+         aE9L6RKmxsx1+3p9QSCpY9aXSAd8uwpXYzgmLCDj7OJhS7co6J+HVMB++RiE7oWaJqTo
+         OpKvG2jGkKfR6zIcDQBfPd2kTn+HG8dS7AY9KRLw5cjxYGMdAigR7tKIPowCN4vEYLEg
+         UDdSMhrTHy/tlj3uXAmwfDhK8zuqKRP/bhWUBhwo6poQ7MS1fV5XSfuTSKfQ+9NQ+gcU
+         yHYA==
+X-Gm-Message-State: APjAAAXAI9TfCYWT5NzvSRGRTQ0uJhqQrmm0nvISMBYaoZqVNlBzqwlR
+        cCsoyZeCGdrK7KBVPmdKeNfhHpmG/wI=
+X-Google-Smtp-Source: APXvYqzTUBCscxWLbpN1qW3QfKdahWnA89Sjm5odREqCTK49CZP963PjiestAbf6ES8nY93FsZYZkg==
+X-Received: by 2002:a1c:e183:: with SMTP id y125mr57931190wmg.140.1564577947867;
+        Wed, 31 Jul 2019 05:59:07 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id c6sm69247800wma.25.2019.07.31.05.59.04
+        by smtp.gmail.com with ESMTPSA id c6sm69247800wma.25.2019.07.31.05.59.06
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 05:59:04 -0700 (PDT)
+        Wed, 31 Jul 2019 05:59:07 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
         ttayar@habana.ai, gregkh@linuxfoundation.org
-Subject: [PATCH v3 1/7] habanalabs: add handle field to context structure
-Date:   Wed, 31 Jul 2019 15:58:55 +0300
-Message-Id: <20190731125901.20709-2-oded.gabbay@gmail.com>
+Subject: [PATCH v3 3/7] habanalabs: show the process context dram usage
+Date:   Wed, 31 Jul 2019 15:58:57 +0300
+Message-Id: <20190731125901.20709-4-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190731125901.20709-1-oded.gabbay@gmail.com>
 References: <20190731125901.20709-1-oded.gabbay@gmail.com>
@@ -70,86 +70,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a field to the context's structure that will hold a unique
-handle for the context.
+When the user query the dram usage of a context, show it the dram usage of
+its context, not the user context that is currently running on the device.
 
-This will be needed when the user will create the context.
+This has no effect right now as we only have a single process and a single
+context, but this makes the code more ready for multiple process support.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/context.c    | 27 ++++++++++++++++-----------
- drivers/misc/habanalabs/habanalabs.h |  2 ++
- 2 files changed, 18 insertions(+), 11 deletions(-)
+ drivers/misc/habanalabs/habanalabs_ioctl.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
-index 8682590e3f6e..1d8390418234 100644
---- a/drivers/misc/habanalabs/context.c
-+++ b/drivers/misc/habanalabs/context.c
-@@ -67,9 +67,20 @@ int hl_ctx_create(struct hl_device *hdev, struct hl_fpriv *hpriv)
- 		goto out_err;
+diff --git a/drivers/misc/habanalabs/habanalabs_ioctl.c b/drivers/misc/habanalabs/habanalabs_ioctl.c
+index 07127576b3e8..c9a4799eb251 100644
+--- a/drivers/misc/habanalabs/habanalabs_ioctl.c
++++ b/drivers/misc/habanalabs/habanalabs_ioctl.c
+@@ -89,8 +89,9 @@ static int hw_events_info(struct hl_device *hdev, struct hl_info_args *args)
+ 	return copy_to_user(out, arr, min(max_size, size)) ? -EFAULT : 0;
+ }
+ 
+-static int dram_usage_info(struct hl_device *hdev, struct hl_info_args *args)
++static int dram_usage_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
+ {
++	struct hl_device *hdev = hpriv->hdev;
+ 	struct hl_info_dram_usage dram_usage = {0};
+ 	u32 max_size = args->return_size;
+ 	void __user *out = (void __user *) (uintptr_t) args->return_pointer;
+@@ -104,7 +105,9 @@ static int dram_usage_info(struct hl_device *hdev, struct hl_info_args *args)
+ 				prop->dram_base_address);
+ 	dram_usage.dram_free_mem = (prop->dram_size - dram_kmd_size) -
+ 					atomic64_read(&hdev->dram_used_mem);
+-	dram_usage.ctx_dram_mem = atomic64_read(&hdev->user_ctx->dram_phys_mem);
++	if (hpriv->ctx)
++		dram_usage.ctx_dram_mem =
++			atomic64_read(&hpriv->ctx->dram_phys_mem);
+ 
+ 	return copy_to_user(out, &dram_usage,
+ 		min((size_t) max_size, sizeof(dram_usage))) ? -EFAULT : 0;
+@@ -218,7 +221,7 @@ static int hl_info_ioctl(struct hl_fpriv *hpriv, void *data)
+ 		break;
+ 
+ 	case HL_INFO_DRAM_USAGE:
+-		rc = dram_usage_info(hdev, args);
++		rc = dram_usage_info(hpriv, args);
+ 		break;
+ 
+ 	case HL_INFO_HW_IDLE:
+@@ -321,7 +324,7 @@ long hl_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
+ 		cmd = ioctl->cmd;
+ 	} else {
+ 		dev_err(hdev->dev, "invalid ioctl: pid=%d, nr=0x%02x\n",
+-			  task_pid_nr(current), nr);
++			task_pid_nr(current), nr);
+ 		return -ENOTTY;
  	}
  
-+	mutex_lock(&mgr->ctx_lock);
-+	rc = idr_alloc(&mgr->ctx_handles, ctx, 1, 0, GFP_KERNEL);
-+	mutex_unlock(&mgr->ctx_lock);
-+
-+	if (rc < 0) {
-+		dev_err(hdev->dev, "Failed to allocate IDR for a new CTX\n");
-+		goto free_ctx;
-+	}
-+
-+	ctx->handle = rc;
-+
- 	rc = hl_ctx_init(hdev, ctx, false);
- 	if (rc)
--		goto free_ctx;
-+		goto remove_from_idr;
- 
- 	hl_hpriv_get(hpriv);
- 	ctx->hpriv = hpriv;
-@@ -78,18 +89,12 @@ int hl_ctx_create(struct hl_device *hdev, struct hl_fpriv *hpriv)
- 	hpriv->ctx = ctx;
- 	hdev->user_ctx = ctx;
- 
--	mutex_lock(&mgr->ctx_lock);
--	rc = idr_alloc(&mgr->ctx_handles, ctx, 1, 0, GFP_KERNEL);
--	mutex_unlock(&mgr->ctx_lock);
--
--	if (rc < 0) {
--		dev_err(hdev->dev, "Failed to allocate IDR for a new CTX\n");
--		hl_ctx_free(hdev, ctx);
--		goto out_err;
--	}
--
- 	return 0;
- 
-+remove_from_idr:
-+	mutex_lock(&mgr->ctx_lock);
-+	idr_remove(&mgr->ctx_handles, ctx->handle);
-+	mutex_unlock(&mgr->ctx_lock);
- free_ctx:
- 	kfree(ctx);
- out_err:
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 57183ae9b95d..e41800e68578 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -631,6 +631,7 @@ struct hl_va_range {
-  *				execution phase before the context switch phase
-  *				has finished.
-  * @asid: context's unique address space ID in the device's MMU.
-+ * @handle: context's opaque handle for user
-  */
- struct hl_ctx {
- 	DECLARE_HASHTABLE(mem_hash, MEM_HASH_TABLE_BITS);
-@@ -652,6 +653,7 @@ struct hl_ctx {
- 	atomic_t		thread_ctx_switch_token;
- 	u32			thread_ctx_switch_wait_token;
- 	u32			asid;
-+	u32			handle;
- };
- 
- /**
 -- 
 2.17.1
 
