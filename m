@@ -2,136 +2,332 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8556C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA4FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F85A20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:27:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564608468;
-	bh=7eXmTgsfYzdQB/da8h/btuCwwBwTnk2EjWb/KNrq6mU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SUk14p8f8kX0017O3M6qajRp6wgRanH6+Dev0jaFNUg9b69K96On95ZyDQVo0KTgn
-	 XNLRZsGBF1VY9r5fZ8R7cZhXcX5eNu7PW/8ITGz8j3UTXg7Xa058xkfu2RXY6d9WUJ
-	 ApeTQic1wmemFsxxjrNjlhGQbxTyHvUR/mPJqC30=
+	by mail.kernel.org (Postfix) with ESMTP id BA25420679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UJGeL4yD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbfGaV1r (ORCPT
+        id S1728885AbfGaVaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:27:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42512 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfGaV1q (ORCPT
+        Wed, 31 Jul 2019 17:30:02 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:38958 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfGaVaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:27:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ojbkQD1a7MQMcAHB0nbk0TNEefbMHs3972JP2NcjJME=; b=g83i6fG6pLz5k+ubFSnN8EkA5
-        UONDm7X0pnk+aEXdmFccZHoiA/MwLcT3bciBvO1P/EPjm9w8DWxTy97HZrc+BdRKb+EgxEQ2sotEY
-        MsEte0kaui9SJBYnpz2cVbQjTQfjElvMKIWI6V5wqmkV+8dU6kjbQ/91+vlvuSzIz08B81Pm1tR53
-        Hvm/XYnYMcHDHQYcvFC6f8pqy/unIZORk47M8Lmo1dFfIdsORd+7CHhf8lrV4waeQjIwLfl27lujE
-        JiRPbITNDfNg+OgMhYM3B51EPP6j7Bw+mnUM0iyfG5dpLSulcXgKe3UHGtWtHkzcxSQw4+I3NKq51
-        irVg2nqrA==;
-Received: from [191.33.152.89] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsw8I-0001T3-HP; Wed, 31 Jul 2019 21:27:38 +0000
-Date:   Wed, 31 Jul 2019 18:27:29 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        samba-technical@lists.samba.org, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve French <sfrench@samba.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-cifs@vger.kernel.org, Dave Kleikamp <shaggy@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org,
-        Hartmut Knaack <knaack.h@gmx.de>, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 0/6] ReST conversion patches not applied yet
-Message-ID: <20190731182729.01c98cd3@coco.lan>
-In-Reply-To: <20190731203712.GJ4369@sirena.org.uk>
-References: <cover.1564603513.git.mchehab+samsung@kernel.org>
-        <20190731141734.1fa9ce64@lwn.net>
-        <20190731202007.GI4369@sirena.org.uk>
-        <20190731172613.32d65ad8@coco.lan>
-        <20190731203712.GJ4369@sirena.org.uk>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 31 Jul 2019 17:30:02 -0400
+Received: by mail-qt1-f201.google.com with SMTP id o16so62675079qtj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 14:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=thyn0r1sTePT7dA1IEUgi4oBaDvhUuHSp3UeUg6AYFA=;
+        b=UJGeL4yDuCd0G0L4ShisQDRQhS6hO47o5YBWvW59p2qos6bUGS/dOk1n4WJeHvuwVe
+         /KUSe3fNcjnTE/VR7V8KD3PHohkkZ+IgrPDxf/7adf3AZwVtyXPkBAVGYAG4RoVHSqhl
+         uPjTdGV5LCR4j6QzhOXzDINQUzjqWmX9/VE8ur8X7/MUcGty7uRUVLS62pC0T76fm9of
+         sMzT7W6hfDi4Dwz/aljmCjwoNf8KkyW38ZuKbAxze69AvZjyDlb/PBv6VeEJZz0tFy15
+         x17A879l39uQLS2KWoflgDch+TRrTkWqa4xfPHIS/0A4LqeRXMsEMuLX0onXUdN3b2MZ
+         9PrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=thyn0r1sTePT7dA1IEUgi4oBaDvhUuHSp3UeUg6AYFA=;
+        b=Zbn/UE9H0uy3VBISAEWpAJUWOU7u6JoNEnLLwRO8CTEDT7EJfozalTAoavR8+C5iQR
+         A60HcC5UdHs8T/IUG4FVghdxhVgjZwA6G2VUTFVkR3NkE7mqNO7HCPaaErYjP1CRzecr
+         d5o4km9d/wjPp4gwkcFqH/wVjlFrOXfPgv2X708HelZ8nZUQkF2h+KYqwxmJIFGoWub2
+         9Z51pSxHBH3joCzsAnzNdPb6hvTiMFu7WSBjSqqw285gsbyRs6PimUAcE0UIc2knvkG6
+         cnGS2yWHQxjZ3hK9fwJ0SpWIDYYheOfxpwJSHkeW0/kqFW1S9iIxvKEV5TeFpqqJ1njg
+         lxvA==
+X-Gm-Message-State: APjAAAUXyCrWDnos1b2v3GsGaC1YKwzsObdFfpPEZmORszT12EE0uEBb
+        SKrAuAkvJ7meaMCrb7UGT4eKAJ6aD7AnCismPg==
+X-Google-Smtp-Source: APXvYqyt2KCrM9NDHmkFPXiAxGvLhzqFG6G0FMz9uT0VqhvyB97MPVxlcAuOreiKXmUL4xd/ydFZC6K6aUO2ve2gYQ==
+X-Received: by 2002:a37:a80d:: with SMTP id r13mr8700473qke.209.1564608601059;
+ Wed, 31 Jul 2019 14:30:01 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 14:29:33 -0700
+In-Reply-To: <20190731050549.GA20809@kroah.com>
+Message-Id: <20190731212933.23673-1-kaleshsingh@google.com>
+Mime-Version: 1.0
+References: <20190731050549.GA20809@kroah.com>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+Subject: [PATCH v2] PM/sleep: Expose suspend stats in sysfs
+From:   Kalesh Singh <kaleshsingh@google.com>
+To:     rjw@rjwysocki.net, gregkh@linuxfoundation.org
+Cc:     trong@google.com, trong@android.com, sspatil@google.com,
+        hridya@google.com, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Kalesh Singh <kaleshsingh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 31 Jul 2019 21:37:12 +0100
-Mark Brown <broonie@kernel.org> escreveu:
+Userspace can get suspend stats from the suspend stats debugfs node.
+Since debugfs doesn't have stable ABI, expose suspend stats in
+sysfs under /sys/power/suspend_stats.
 
-> On Wed, Jul 31, 2019 at 05:26:13PM -0300, Mauro Carvalho Chehab wrote:
-> > Mark Brown <broonie@kernel.org> escreveu:  
-> 
-> > > There were outstanding questions about where it was going to get moved
-> > > to but if I read the diff correctly it looks like it didn't actually get
-> > > moved in the end?  
-> 
-> > Yeah, it doesn't have the move. My understanding from our discussions
-> > is that we didn't reach a conclusion.  
-> 
-> Yes, that was my understanding too which was why I was surprised to see
-> this going in.  This is OK then, I'd have acked it.
-> 
-> > In any case, I can send a separate patch with the move part once
-> > we reach an agreement about what's the best way to proceed (or you
-> > can do it directly, if you prefer so).  
-> 
-> I'm not likely to do anything without someone sending patches, I'm not
-> clear on the utility of the move with the current division of the
-> manuals.
+Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+---
+Changes in v2:
+  - Added separate show functions for last_failed_* stats, as per Greg
+  - Updated ABI Documentation
 
-Same here: I do see value on having docs focused on their audience.
+ Documentation/ABI/testing/sysfs-power | 106 ++++++++++++++++++++++++++
+ kernel/power/main.c                   |  97 ++++++++++++++++++++++-
+ 2 files changed, 201 insertions(+), 2 deletions(-)
 
-Yet, I'm not so sure how worth is to break some subsystem documentation 
-into books, as, on some cases, this would mean huge efforts.
+diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+index 3c5130355011..6f87b9dd384b 100644
+--- a/Documentation/ABI/testing/sysfs-power
++++ b/Documentation/ABI/testing/sysfs-power
+@@ -301,3 +301,109 @@ Description:
+ 
+ 		Using this sysfs file will override any values that were
+ 		set using the kernel command line for disk offset.
++
++What:		/sys/power/suspend_stats
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats directory contains suspend related
++		statistics.
++
++What:		/sys/power/suspend_stats/success
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/success file contains the number
++		of times entering system sleep state succeeded.
++
++What:		/sys/power/suspend_stats/fail
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/fail file contains the number
++		of times entering system sleep state failed.
++
++What:		/sys/power/suspend_stats/failed_freeze
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/failed_freeze file contains the
++		number of times freezing processes failed.
++
++What:		/sys/power/suspend_stats/failed_prepare
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/failed_prepare file contains the
++		number of times preparing all non-sysdev devices for
++		a system PM transition failed.
++
++What:		/sys/power/suspend_stats/failed_resume
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/failed_resume file contains the
++		number of times executing "resume" callbacks of
++		non-sysdev devices failed.
++
++What:		/sys/power/suspend_stats/failed_resume_early
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/failed_resume_early file contains
++		the number of times executing "early resume" callbacks
++		of devices failed.
++
++What:		/sys/power/suspend_stats/failed_resume_noirq
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/failed_resume_noirq file contains
++		the number of times executing "noirq resume" callbacks
++		of devices failed.
++
++What:		/sys/power/suspend_stats/failed_suspend
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/failed_suspend file contains
++		the number of times executing "suspend" callbacks
++		of all non-sysdev devices failed.
++
++What:		/sys/power/suspend_stats/failed_suspend_late
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/failed_suspend_late file contains
++		the number of times executing "late suspend" callbacks
++		of all devices failed.
++
++What:		/sys/power/suspend_stats/failed_suspend_noirq
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/failed_suspend_noirq file contains
++		the number of times executing "noirq suspend" callbacks
++		of all devices failed.
++
++What:		/sys/power/suspend_stats/last_failed_dev
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/last_failed_dev file contains
++		the last device for which a suspend/resume callback failed.
++
++What:		/sys/power/suspend_stats/last_failed_errno
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/last_failed_errno file contains
++		the errno of the last failed attempt at entering
++		system sleep state.
++
++What:		/sys/power/suspend_stats/last_failed_step
++Date:		July 2019
++Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
++Description:
++		The /sys/power/suspend_stats/last_failed_step file contains
++		the last failed step in the suspend/resume path.
+diff --git a/kernel/power/main.c b/kernel/power/main.c
+index bdbd605c4215..938dc53a8b94 100644
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -254,7 +254,6 @@ static ssize_t pm_test_store(struct kobject *kobj, struct kobj_attribute *attr,
+ power_attr(pm_test);
+ #endif /* CONFIG_PM_SLEEP_DEBUG */
+ 
+-#ifdef CONFIG_DEBUG_FS
+ static char *suspend_step_name(enum suspend_stat_step step)
+ {
+ 	switch (step) {
+@@ -275,6 +274,92 @@ static char *suspend_step_name(enum suspend_stat_step step)
+ 	}
+ }
+ 
++#define suspend_attr(_name)					\
++static ssize_t _name##_show(struct kobject *kobj,		\
++		struct kobj_attribute *attr, char *buf)		\
++{								\
++	return sprintf(buf, "%d\n", suspend_stats._name);	\
++}								\
++static struct kobj_attribute _name = __ATTR_RO(_name)
++
++suspend_attr(success);
++suspend_attr(fail);
++suspend_attr(failed_freeze);
++suspend_attr(failed_prepare);
++suspend_attr(failed_suspend);
++suspend_attr(failed_suspend_late);
++suspend_attr(failed_suspend_noirq);
++suspend_attr(failed_resume);
++suspend_attr(failed_resume_early);
++suspend_attr(failed_resume_noirq);
++
++static ssize_t last_failed_dev_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	int index;
++	char *last_failed_dev = NULL;
++
++	index = suspend_stats.last_failed_dev + REC_FAILED_NUM - 1;
++	index %= REC_FAILED_NUM;
++	last_failed_dev = suspend_stats.failed_devs[index];
++
++	return sprintf(buf, "%s\n", last_failed_dev);
++}
++static struct kobj_attribute last_failed_dev = __ATTR_RO(last_failed_dev);
++
++static ssize_t last_failed_errno_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	int index;
++	int last_failed_errno;
++
++	index = suspend_stats.last_failed_errno + REC_FAILED_NUM - 1;
++	index %= REC_FAILED_NUM;
++	last_failed_errno = suspend_stats.errno[index];
++
++	return sprintf(buf, "%d\n", last_failed_errno);
++}
++static struct kobj_attribute last_failed_errno = __ATTR_RO(last_failed_errno);
++
++static ssize_t last_failed_step_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	int index;
++	enum suspend_stat_step step;
++	char *last_failed_step = NULL;
++
++	index = suspend_stats.last_failed_step + REC_FAILED_NUM - 1;
++	index %= REC_FAILED_NUM;
++	step = suspend_stats.failed_steps[index];
++	last_failed_step = suspend_step_name(step);
++
++	return sprintf(buf, "%s\n", last_failed_step);
++}
++static struct kobj_attribute last_failed_step = __ATTR_RO(last_failed_step);
++
++static struct attribute *suspend_attrs[] = {
++	&success.attr,
++	&fail.attr,
++	&failed_freeze.attr,
++	&failed_prepare.attr,
++	&failed_suspend.attr,
++	&failed_suspend_late.attr,
++	&failed_suspend_noirq.attr,
++	&failed_resume.attr,
++	&failed_resume_early.attr,
++	&failed_resume_noirq.attr,
++	&last_failed_dev.attr,
++	&last_failed_errno.attr,
++	&last_failed_step.attr,
++	NULL,
++};
++
++static struct attribute_group suspend_attr_group = {
++	.name = "suspend_stats",
++	.attrs = suspend_attrs,
++};
++
++#ifdef CONFIG_DEBUG_FS
+ static int suspend_stats_show(struct seq_file *s, void *unused)
+ {
+ 	int i, index, last_dev, last_errno, last_step;
+@@ -794,6 +879,14 @@ static const struct attribute_group attr_group = {
+ 	.attrs = g,
+ };
+ 
++static const struct attribute_group *attr_groups[] = {
++	&attr_group,
++#ifdef CONFIG_PM_SLEEP
++	&suspend_attr_group,
++#endif
++	NULL,
++};
++
+ struct workqueue_struct *pm_wq;
+ EXPORT_SYMBOL_GPL(pm_wq);
+ 
+@@ -815,7 +908,7 @@ static int __init pm_init(void)
+ 	power_kobj = kobject_create_and_add("power", NULL);
+ 	if (!power_kobj)
+ 		return -ENOMEM;
+-	error = sysfs_create_group(power_kobj, &attr_group);
++	error = sysfs_create_groups(power_kobj, attr_groups);
+ 	if (error)
+ 		return error;
+ 	pm_print_times_init();
+-- 
+2.22.0.770.g0f2c4a37fd-goog
 
-I'd prefer to see the big picture first, finishing the conversion and
-then looking at the resulting docs.
-
-Meanwhile, if someone needs something that it is at the wrong book, he
-can just use some search tool to seek what he needs, no matter on
-what book the relevant information is stored.
-
-> I don't know if it makes sense to have an embedded developer's
-> manual as well?
-
-Yeah, that's a good question. 
-
-Jon is planning todo a documentation track at LPC. One of the things
-that should be discussed, IMO, is how we'll organize the books.
-
-I suspect that, once we finish the conversion of the remaining ~300
-files to ReST, the next logical step is to check what are the gaps
-and have a list of pending tasks.
-
-Thanks,
-Mauro
