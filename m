@@ -2,96 +2,82 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06F1C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DC7C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3C7214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564601760;
-	bh=IFRCG+DOCMsrYUaBHYTa4hu9qu6eBlLPQjBH37+RqZM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cTvNeaqqCY2IaiBjlmC2eZJsVpXVAWlIXcF+ngEBFhYiBRKuyA5E4i6bzwX1o0lsF
-	 Rj+oQx5h4lBkzUnCko9PNS88sv9M4z/oTUukJu/re3VoGtSS9E9CNQPYiuHOs/JkcO
-	 UxDlRZJch9JjyvH552XNBHliNGfa9aI0rCEYdKn8=
+	by mail.kernel.org (Postfix) with ESMTP id 26A602171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:36:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MerkcBq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbfGaTfT (ORCPT
+        id S1730774AbfGaTgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 31 Jul 2019 15:36:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36988 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730948AbfGaTfT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 15:35:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbfGaTfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:35:19 -0400
-Received: from mail.kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFFC021726;
-        Wed, 31 Jul 2019 19:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564601718;
-        bh=IFRCG+DOCMsrYUaBHYTa4hu9qu6eBlLPQjBH37+RqZM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmvPoHss4wBppEumgcwWs2sjose0JDB4PVjhaBEMUTB8m7wsgLQy/+Itf1MLYpa8Y
-         jI2Jgvm8Zrz8U+R4XWgD33V9/jznPuedD8VzyXFbtEOf3PtmpXvEticwmcaujY6KIq
-         G+8eL8T5xQ9CcqhKlXcoDAnJ1aniHYrCjr3Mg7/U=
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 1/9] clk: actions: Don't reference clk_init_data after registration
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dnU6IvA3KdW0SFxdpQmn9A16T5orF4xfoYuarMx2Vu0=; b=MerkcBq6fNC8YU006LyRsNhey
+        fOfZ20Clanrtet/ujAe1kIB29nLezFepLkb65Jd8OMlhcrJhgKQ4iCoSvVD+3loE3p5mkRmPgHpoQ
+        Ri/uUWJBs2ng24IYY5xG/JHwnmvjXmgqMrwQ/OOJ9L3DscnD1TiqxjWxeVOIy4LQcWzEzsBDGeU8j
+        BupwY0n3dTIRwtrbfUxsEKu3nDO9nSbC4xRxstKYzb5HX/a7yIw7HzB0i7zi2Mt7xxam3iRYOm7Mf
+        9n97kWf/xV3wd/HnN4hzk7R92oZfTQOoH+bsKo87PoxIF/p+hrfhAUZz15pHpmO3gkhVhTgTbuL3M
+        2WW1LhTSg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsuNR-0000M0-9O; Wed, 31 Jul 2019 19:35:09 +0000
 Date:   Wed, 31 Jul 2019 12:35:09 -0700
-Message-Id: <20190731193517.237136-2-sboyd@kernel.org>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-In-Reply-To: <20190731193517.237136-1-sboyd@kernel.org>
-References: <20190731193517.237136-1-sboyd@kernel.org>
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Christoph Lameter <cl@linux.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sandeep Patil <sspatil@android.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@01.org>,
+        linux-mm@kvack.org
+Subject: Re: [PATCH] mm: slub: Fix slab walking for init_on_free
+Message-ID: <20190731193509.GG4700@bombadil.infradead.org>
+References: <CAG_fn=VBGE=YvkZX0C45qu29zqfvLMP10w_owj4vfFxPcK5iow@mail.gmail.com>
+ <20190731193240.29477-1-labbott@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731193240.29477-1-labbott@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A future patch is going to change semantics of clk_register() so that
-clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-referencing this member here so that we don't run into NULL pointer
-exceptions.
+On Wed, Jul 31, 2019 at 03:32:40PM -0400, Laura Abbott wrote:
+> Fix this by ensuring the value we set with set_freepointer is either NULL
+> or another value in the chain.
+> 
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Signed-off-by: Laura Abbott <labbott@redhat.com>
 
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
----
-
-Please ack so I can take this through clk tree
-
- drivers/clk/actions/owl-common.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/actions/owl-common.c b/drivers/clk/actions/owl-common.c
-index 32dd29e0a37e..71b683c4e643 100644
---- a/drivers/clk/actions/owl-common.c
-+++ b/drivers/clk/actions/owl-common.c
-@@ -68,6 +68,7 @@ int owl_clk_probe(struct device *dev, struct clk_hw_onecell_data *hw_clks)
- 	struct clk_hw *hw;
- 
- 	for (i = 0; i < hw_clks->num; i++) {
-+		const char *name = hw->init->name;
- 
- 		hw = hw_clks->hws[i];
- 
-@@ -77,7 +78,7 @@ int owl_clk_probe(struct device *dev, struct clk_hw_onecell_data *hw_clks)
- 		ret = devm_clk_hw_register(dev, hw);
- 		if (ret) {
- 			dev_err(dev, "Couldn't register clock %d - %s\n",
--				i, hw->init->name);
-+				i, name);
- 			return ret;
- 		}
- 	}
--- 
-Sent by a computer through tubes
+Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
 
