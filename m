@@ -2,189 +2,185 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05957C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D218C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A04206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130A62067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:53:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="egTdSfJy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qtPMGVH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbfGaRwh (ORCPT
+        id S1729898AbfGaRxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:52:37 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.210]:12635 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729823AbfGaRwg (ORCPT
+        Wed, 31 Jul 2019 13:53:19 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:41256 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728083AbfGaRxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:52:36 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 18AB4400D596B
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:52:35 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ssmBhDPfx3Qi0ssmBhxr7O; Wed, 31 Jul 2019 12:52:35 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hFchKMiyDhYootubyiqttytIhZ2Edx773yhaOnhyt4Y=; b=egTdSfJyPTDGZP+Na86VroAVCR
-        2Lsuae0nFeN9LH1fgfBiG+b1aDdqyCVCmtNDmHpq9w26oE4Qmgf2Wwo9XIqGgxqQ2Jc058+oB8BSq
-        rBljmDkkbw4xGhpZ+cQxVChE9RYn4srsWFo5tVaAMRvAgHLOLR6P8l6s3H26FCx0yCy5MHgmvKSD5
-        iopQAQXGBtCiF7fNjA/kpKFq9Cxqy1V4TA10NIYHpTGCDHLu+xlIN3dXjWfnzm30JyaF3Xc27/Sla
-        L4rvt9iIvq4cRNwFqvpMrK2tF2gGflf2CDFrdRJKxJYt8IkT1fQy+bMlom0c7zMhdK5a0nbP0odt9
-        x1NYiRQA==;
-Received: from [187.192.11.120] (port=42806 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hssmA-003PXu-Kq; Wed, 31 Jul 2019 12:52:34 -0500
-To:     Doug Ledford <dledford@redhat.com>,
-        "Luck, Tony" <tony.luck@intel.com>, Ira Weiny <ira.weiny@intel.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190730202407.31046-1-tony.luck@intel.com>
- <95f5cf70-1a1d-f48c-efac-f389360f585e@embeddedor.com>
- <20190731042801.GA2179@iweiny-DESK2.sc.intel.com>
- <20190731043957.GA1600@agluck-desk2.amr.corp.intel.com>
- <09a994054e43c8bd6ee49b7d1087c9c4e793058f.camel@redhat.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH V2] IB/core: Add mitigation for Spectre V1
-Message-ID: <1fc90610-7189-c99b-2af1-ae516faa20b4@embeddedor.com>
-Date:   Wed, 31 Jul 2019 12:52:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 13:53:19 -0400
+Received: by mail-yb1-f195.google.com with SMTP id x188so2569443yba.8;
+        Wed, 31 Jul 2019 10:53:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=clQOczYwEsKKHOAzZidWMeMT4c+c0AdrHLZADibcT5I=;
+        b=qtPMGVH9PUQ/+dE6cuBI6LI/EtpmD15PTdVfRTwKmwp+oVagxHGMCTuNcYF1sOKQ6Y
+         u8nS9XEx7lSwYVrEuo91smZFoJltUuxWU+snobEQTKcmzcHgU5Zz6G2SnWnqtUdp070f
+         qCbhdYOFE54xYLAGIhxf+aclreDikaCBgfRecLXMBm92e3EBhAW0hR1b3uyYl5rxpANn
+         oja5mLEK3kqWPtA8uLrS/fgBoiP13kvlQdHLQCEsaAWiDAc4ICNk1VUMq+15bgnWteuD
+         H7jl4GHn6/jj7bOzWINYSIaG5bKn1gLi4w+WRMVB7fPuoaBv/0EgB1UXXNrAQhSHzHVw
+         eOLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=clQOczYwEsKKHOAzZidWMeMT4c+c0AdrHLZADibcT5I=;
+        b=LStJiUhAw8HIpuEfKH0uuOxDz2faCGRQX48YtwjoR2esGv2CQ8kfUdrk3siVpbLZnY
+         QUOXHiwN6JQdVb3Uh17rxNA7BUUxPy0Ipyf8qxEy41wOLJfqrxCC2+JKflKLc4Z9F3GC
+         MpXanMZJsJRbl9bmNO6940/qggpLqtXJ0fEH1tsD+m6SO0pt6A8Thqkr0ybDZb8yJgUO
+         ZLXiJltPBi3lX32c2aAg6/0SWwmZ45F+bWSLZSxNJ/+nhWK0u/cCb3dBmxWszYPrid+/
+         rMrOJrtXXEv9rkUSW8Y4j9m+nJXht9omeeJZd75+0dz29V1zUlulPtoxw9B0Tss+nWxb
+         DrhQ==
+X-Gm-Message-State: APjAAAWZVLmVwEMMhxbO2ZR8LbplT5KWgCMDrYvmkZupwV4ZCPronmHh
+        66AyPhoZqTMZnMKDYhR4YA==
+X-Google-Smtp-Source: APXvYqwit9zPBEeViX3dtDsHj4rWdLwUWJH8Ua/8RJmrOWwoJVi3KhXDMNknjfxTZW2sM6j8lXVznQ==
+X-Received: by 2002:a25:46c1:: with SMTP id t184mr78929704yba.13.1564595598056;
+        Wed, 31 Jul 2019 10:53:18 -0700 (PDT)
+Received: from localhost.localdomain ([12.156.111.130])
+        by smtp.gmail.com with ESMTPSA id w193sm10517294ywa.72.2019.07.31.10.53.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 10:53:17 -0700 (PDT)
+From:   Ayman Bagabas <ayman.bagabas@gmail.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ayman Bagabas <ayman.bagabas@gmail.com>
+Subject: [RFC 0/9] platform/x86: Huawei WMI laptop extras driver
+Date:   Wed, 31 Jul 2019 13:52:46 -0400
+Message-Id: <20190731175255.25676-1-ayman.bagabas@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <09a994054e43c8bd6ee49b7d1087c9c4e793058f.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-Mailer: git-send-email 2.20.1
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hssmA-003PXu-Kq
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:42806
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series introduce changes to huawei-wmi driver that includes:
+* Move to platform driver
+* Implement WMI management interface
+* Add micmute LED support through WMI
+* Add battery charging protection support through WMI
+* Add fn-lock support through WMI
+* Implement driver quirks and parameters
+* Add a debugfs interface to WMI
+
+# Move to platform driver
+
+The current driver offers hotkeys and micmute led support only. With
+these changes, a platform driver makes more sense since it handles these
+changes pretty nicely.
+
+# Implement WMI management interface
+
+Huawei Matebook laptops come with two WMI interfaces. The first being
+WMI0 which is considered "legacy" and AFAIK only found on the Matebook X
+released in 2017. The second has a UID of "HWMI" and is found in pretty
+much all models with a slight difference in implementation except for
+the Matebook X (2017). Since this model has two interfaces, some aspects
+are controlled through the legacy interface and some through the other
+interface. Currently, the legacy interface is not fully implemented and
+is only used for hotkeys and further debugging has to be done.
+
+The WMI interface takes a 64 bit integer, although uses 32 bits most of
+the time, and returns a 256-260 bytes buffer consists of either one ACPI
+buffer of 260 bytes, in the case of Matebook X (2017), or one ACPI
+package of two buffers, one with 4 bytes, and the other with 256 bytes.
+We only care about the latter 256 buffer in both cases since the 4 bytes
+always return zeros. The first byte of this 256 buffer always has the
+return status where 1 indicated error. Some models require calling the
+WMI interface twice to execute a command.
+
+# Add micmute LED support through WMI
+
+After implementing the WMI interface, micmute LED can be controlled
+easily. Models with the legacy interface fall back to ACPI EC method
+control since the legacy interface is not implemented.
+
+# Add battery charging protection support through WMI
+
+Most models, that has the WMI interface, are capable of battery
+protection where it can control battery charging thresholds and limits
+charging the battery to certain values.
+
+# Add fn-lock support through WMI
+
+The behavior of hotkeys is not the same among all models. Some models
+require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
+hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
+is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
+key is toggled on, the hotkeys with or without a modifier, behave as
+F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
+`Ins`.
+
+Now, some models fix this by excluding `PrtSc` and `Ins` keys from being
+treated as F11 and F12 keys with the use of a modifier. However, some
+models do not, and fixes this by the so called fn-lock.
+
+Fn-lock inverts the behavior of the top row from special keys to F1-F12
+keys. So a modifier and a special key would be possible which make
+things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
+
+* Fn-key off & fn-lock off - hotkeys treated as special keys using a
+  modifier gives F1-F12 keys.
+* Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
+  modifier gives F1-F12.
+* Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
+  a modifier gives special keys.
+* Fn-key on & fn-lock on - hotkeys are treated as special keys and using
+  a modifier gives special keys.
+
+# Implement driver quirks and parameters
+
+The driver introduces 3 quirks and 2 parameters that can change the
+driver's behavior. These quirks being as:
+1. Fixes reporting brightness keys twice since it's already handled by
+   acpi-video.
+2. Some models need a short delay when setting battery thresholds to
+   prevent a race condition when two processes read/write.
+3. Matebook X (2017) handles micmute led through the "legacy" interface
+   which is not currently implemented. Use ACPI EC method to control
+   this led.
+
+and the 2 parameters can enforce the behavior of quirk 1 & 2.
+
+# Add a debugfs interface to WMI
+
+An interface to the WMI management interface that allows easier
+debugging.
+
+Ayman Bagabas (9):
+  platform/x86: huawei-wmi: rename guid and driver name
+  platform/x86: huawei-wmi: move to platform driver
+  platform/x86: huawei-wmi: implement huawei wmi management interface
+  platform/x86: huawei-wmi: add quirks and module parameters
+  platform/x86: huawei-wmi: control micmute led through wmi interface
+  platform/x86: huawei-wmi: add battery charging thresholds
+  platform/x86: huawei-wmi: add fn-lock support
+  platform/x86: huawei-wmi: add sysfs interface support
+  platform/x86: huawei-wmi: add debugfs support
+
+ drivers/platform/x86/huawei-wmi.c | 710 ++++++++++++++++++++++++++----
+ 1 file changed, 629 insertions(+), 81 deletions(-)
+
+-- 
+2.20.1
 
 
-On 7/31/19 9:52 AM, Doug Ledford wrote:
-
-> 
-> I'm not sure this is the best fix for this.  However, here is where I
-> get to admit that I largely ignored the whole Spectre V1 thing, so I'm
-> not sure I completely understand the vulnerability and the limits to
-> that.  But, looking at the function, it seems we can do an early return
-> without ever taking any of the mutexes in the function in the case of id
->> = IB_UMAD_MAX_AGENTS, so if we did that, would that separate the
-> checking of id far enough from the usage of it as an array index that we
-> wouldn't need the clamp to prevent speculative prefetch?  About how far,
-> in code terms, does this speculative prefetch occur?
-> 
-> This is the patch I was thinking of:
-> 
-
->  
-> @@ -884,11 +885,18 @@ static int ib_umad_unreg_agent(struct ib_umad_file *file, u32 __user *arg)
->  
->         if (get_user(id, arg))
->                 return -EFAULT;
-> +       if (id >= IB_UMAD_MAX_AGENTS)
-> +               return -EINVAL;
->  
->         mutex_lock(&file->port->file_mutex);
->         mutex_lock(&file->mutex);
->  
-> -       if (id >= IB_UMAD_MAX_AGENTS || !__get_agent(file, id)) {
-> +       /*
-> +        * Is our check of id far enough away, code wise, to prevent
-> +        * speculative prefetch?
-> +        */
-> +       id = array_index_nospec(id, IB_UMAD_MAX_AGENTS);
-> +       if (!__get_agent(file, id)) {
->                 ret = -EINVAL;
->                 goto out;
->         }
-> 
-
-This is insufficient. The speculation windows are large:
-
-"Speculative  execution  on  modern  CPUs  can  run  several
-hundred  instructions  ahead." [1]
-
-[1] https://spectreattack.com/spectre.pdf
-
---
-Gustavo
-
-
-
---
-Gustavo
