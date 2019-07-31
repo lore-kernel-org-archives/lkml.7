@@ -2,116 +2,105 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AA6C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BB9C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0532089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:58:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gz4EhWDw"
+	by mail.kernel.org (Postfix) with ESMTP id 4480920693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfGaI6Y (ORCPT
+        id S1728193AbfGaI6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:58:24 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46972 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfGaI6Y (ORCPT
+        Wed, 31 Jul 2019 04:58:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30222 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727736AbfGaI63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:58:24 -0400
-Received: by mail-io1-f67.google.com with SMTP id i10so21273480iol.13;
-        Wed, 31 Jul 2019 01:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GsMyYZltyVkiUgPix6eZw4DKTyNFfETnvHB4Ds8HiVc=;
-        b=gz4EhWDwl+FFka+bG6XuRSE2IyaGBW8Ek0wnAE7rVPcqqyMm9VkwrweV7mrXFgGZFx
-         UMGO14B2lr7QR+QJ3Qkw83KZeXJInnnyoZT/nJmWEJSYN+GJPM8Ssn8Lo92YDFitn9t8
-         aaxjgS0ZGVxjVV29XHmzYtu1x5on8Mm+EaHMNfm6dpjHsjDs3ZDJ1/sSPCnF7oZk5hwo
-         5Kgo/j+dnAG6hVjaTWGjGNemZBE+eK0sVm+UKYDnEVCBERmON9sxvDm11nMwfbIAeySH
-         R9VXdXpyGI3BkYZyYW3PP8oC+QryXwmY8U+X4kHJHnvjo8cTnPEeoNRtZlljs1HrxI3R
-         Xnew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GsMyYZltyVkiUgPix6eZw4DKTyNFfETnvHB4Ds8HiVc=;
-        b=EtaewPSEwWECnjNVMkyoWmJUeCdkzls7j4SxuQRGsWQleiRny/jqI0t3840QO5cuyv
-         hAaLaL0GFaWS8QHRv4Cr7Az4CrdIDXaVK8cZx78gEsbzw3uFvc/FldI1bUktkTN35yxo
-         9p5MsC70idHcVej79GamUqn88AS4j7BFe7LRUJhVkRb/IBAojcCVj8bvKXdhgdtCSKX2
-         F9Wkqu7hW9XH00JYAiKAoYZi/vUJVgcR/u1CtP/CoqjcJGETBIvDwqQk///tYHDZxxPd
-         d20m0rL+Kxf7GObaeLdR9xBsgVEazWag5E88TtaxnhiSvMaPIHEcyO9couaLjptxKoY4
-         ji0Q==
-X-Gm-Message-State: APjAAAU77XiFJBHBe7NIzl2AgC6z6Flc8Iyu6iLdSGo+ATWMHsfBr3El
-        dSqRLx3CwG0Pcyyxuy3QsSA=
-X-Google-Smtp-Source: APXvYqzm+BH7xQRpT+4ezKyy3jdxNDHBrI0ptlr0nsU0f5AZPXTwXFCEtdwxbp5e6xwz8i9BWOTuyw==
-X-Received: by 2002:a5e:924d:: with SMTP id z13mr24840346iop.247.1564563503597;
-        Wed, 31 Jul 2019 01:58:23 -0700 (PDT)
-Received: from localhost.localdomain ([2601:285:8200:4089:3dd3:8aa0:5345:aaa3])
-        by smtp.gmail.com with ESMTPSA id a7sm54226200iok.19.2019.07.31.01.58.22
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 01:58:22 -0700 (PDT)
-Subject: Re: [PATCH v3 0/2] mm,thp: Add filemap_huge_fault() for THP
-To:     Song Liu <songliubraving@fb.com>,
-        William Kucharski <william.kucharski@oracle.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Bob Kasten <robert.a.kasten@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Chad Mynhier <chad.mynhier@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <jweiner@fb.com>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20190731082513.16957-1-william.kucharski@oracle.com>
- <C9405E2A-4A0B-4EFD-B432-C54D2C9CFC2B@fb.com>
-From:   William Kucharski <kucharsk@gmail.com>
-Message-ID: <dc8d71ca-cbec-b924-386f-678ce528aff6@gmail.com>
-Date:   Wed, 31 Jul 2019 02:58:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 04:58:29 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6V8l8xe056924
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 04:58:28 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u379a2592-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 04:58:27 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Wed, 31 Jul 2019 09:58:25 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 31 Jul 2019 09:58:23 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6V8w5Jr19005810
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Jul 2019 08:58:05 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9C6D0A405C;
+        Wed, 31 Jul 2019 08:58:21 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 573FEA4060;
+        Wed, 31 Jul 2019 08:58:21 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.134])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 31 Jul 2019 08:58:21 +0000 (GMT)
+Date:   Wed, 31 Jul 2019 10:58:20 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390@vger.kernel.org,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Patrick Steuer <steuer@linux.ibm.com>
+Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
+References: <20190731163915.3fdfcb14@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <C9405E2A-4A0B-4EFD-B432-C54D2C9CFC2B@fb.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731163915.3fdfcb14@canb.auug.org.au>
+X-TM-AS-GCONF: 00
+x-cbid: 19073108-0012-0000-0000-00000337EE06
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19073108-0013-0000-0000-000021719646
+Message-Id: <20190731085819.GA3488@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907310095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 31, 2019 at 04:39:15PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20190730:
 
+Hello Ard,
 
-On 7/31/19 2:35 AM, Song Liu wrote:
+two of your patches in the crypto tree cause build breakage on s390:
 
-> Could you please explain how to test/try this? Would it automatically map
-> all executables to THPs?
+The patch ("crypto: aes - create AES library based on the fixed time AES code")
+causes this:
 
-Until there is filesystem support you can't actually try this, though I have 
-tested it through some hacks during development and am also working on some 
-other methods to be able to test this before large page filesystem read support 
-is in place.
+arch/s390/crypto/aes_s390.c:111:13: error: conflicting types for 'aes_encrypt'
+  111 | static void aes_encrypt(struct crypto_tfm *tfm, u8 *out, const u8 *in)
+      |             ^~~~~~~~~~~
 
-The end goal is that if enabled, when a fault occurs for an RO executable where 
-the faulting address lies within a vma properly aligned/sized for the fault to 
-be satisfied by mapping a THP, and the kernel can allocate a THP, the fault WILL 
-be satisfied by mapping the THP.
+And the commit ("crypto: aegis128 - add support for SIMD acceleration") causes
+another build breakage:
 
-It's not expected that all executables nor even all pages of all executables 
-would be THP-mapped, just those executables and ranges where alignment and size 
-permit. Future optimizations may include fine-tuning these checks to try to 
-better determine whether an application would actually benefit from THP mapping.
+crypto/aegis128-core.c:19:10: fatal error: asm/simd.h: No such file or directory
+   19 | #include <asm/simd.h>
+      |          ^~~~~~~~~~~~
 
- From some quick and dirty experiments I performed, I've seen that there are a 
-surprising number of applications that may end up with THP-mapped pages, 
-including Perl, Chrome and Firefox.
-
-However I don't yet know what the actual vs. theoretical benefits would be.
-
-     -- Bill
