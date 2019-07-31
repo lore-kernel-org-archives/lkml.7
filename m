@@ -2,152 +2,165 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5161C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3A4C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD7B217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UHCfglol"
+	by mail.kernel.org (Postfix) with ESMTP id 6B5AE216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbfGaKBM (ORCPT
+        id S1726526AbfGaKCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:01:12 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37793 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387723AbfGaKBG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:01:06 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so30290771plr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=XF5mZ6TSVo4eSNdQwLP31itinD3L/9CCtkqFjn0djlU=;
-        b=UHCfglolFc+DiKNqu28PP7eW3FZEIuVvD/ZAL0ARBydSmw5J1AvOi7RqECGvzy6OyG
-         JjznumgXnMlrgA+kEdFEsntSef0+YnGvMTLpX+q4IecNPm57QuzzIsAAWnE3sBhklwoQ
-         aYzQ3bw8+p+ZPNrOrSDamq+nkI+kJfTvuVAL4kdLH6lmo3FnsURjQaFVeGvWtuV/dx7M
-         Oesx0zR11jotI5yl8mxyz374bO4ddYQKkHky0Sx447WMBTRl/sKaHqp16dEOPi1Tzgev
-         2vBnBHlc0ZsG6mTdF49WwAunGzn3pS9UeqSoQFADQK3GU6s/SIfyzE1ni8WGsDTjD2ek
-         FFBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=XF5mZ6TSVo4eSNdQwLP31itinD3L/9CCtkqFjn0djlU=;
-        b=SqgLMFaVoEKXq8CGcvdq9Qqvs05KeWz/ye3Bs4anGpy583Zh0oWieaaSoeDv7oyLSa
-         XYFMoaAYSBRDme6mAduO6RPEP1en0y8lhqMXrKGD53c2dLDrwdzpWWCEf67cW2LYfJgB
-         NU3X2MDJTvuozZlSHx+H11CNrjb+u5GJH5ry5AbR1jtRW174hRxdMesL7JVSy9eE925i
-         sWmknuUVrkm/Bk5XXOpRnxujwm6MbbphtrpSBrPEPh3uLL8Yjx9WnO8J+etY25Ptq1s9
-         B93GZm5xFRU/vPLSGd/qccdtJYio4eFwzYlwwkg9uboyHU6STU/0YVuCIAiAIT4AGuWQ
-         F0Ww==
-X-Gm-Message-State: APjAAAVDfkK/l4DUPtA1yrz1SxNRb+ksAo6Dx+HstGIH09HUmlLcwAJx
-        5M2Nyn9k6Ig0FcRp+OAzlCCcgA==
-X-Google-Smtp-Source: APXvYqwNQvRYJbmUxrXwPc+d2Y+WlvIn2qkESp52+VZCGPtoCkNpZLLC2P1EOSKz+HvgKnVzuGG4XA==
-X-Received: by 2002:a17:902:a514:: with SMTP id s20mr113281631plq.162.1564567265611;
-        Wed, 31 Jul 2019 03:01:05 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id m6sm68611352pfb.151.2019.07.31.03.01.03
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 31 Jul 2019 03:01:05 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     sre@kernel.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, yuanjiang.yu@unisoc.com,
-        baolin.wang@linaro.org, vincent.guittot@linaro.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] power: supply: sc27xx: Add POWER_SUPPLY_PROP_CALIBRATE attribute
-Date:   Wed, 31 Jul 2019 18:00:28 +0800
-Message-Id: <554dd7e2ef4f3c5247322d8b185607748144b1e6.1564566425.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1564566425.git.baolin.wang@linaro.org>
-References: <cover.1564566425.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1564566425.git.baolin.wang@linaro.org>
-References: <cover.1564566425.git.baolin.wang@linaro.org>
+        Wed, 31 Jul 2019 06:02:45 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57574 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725290AbfGaKCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 06:02:45 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9B326B11197D3251F626;
+        Wed, 31 Jul 2019 18:02:43 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
+ 2019 18:02:40 +0800
+Subject: Re: [PATCH v3 RESEND] f2fs: introduce sb.required_features to store
+ incompatible features
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <20190729150351.12223-1-chao@kernel.org>
+ <20190730231850.GA7097@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <c7232d80-a4d8-88ae-2eca-01290dd0e56a@huawei.com>
+Date:   Wed, 31 Jul 2019 18:02:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190730231850.GA7097@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
+On 2019/7/31 7:18, Jaegeuk Kim wrote:
+> On 07/29, Chao Yu wrote:
+>> From: Chao Yu <yuchao0@huawei.com>
+>>
+>> Later after this patch was merged, all new incompatible feature's
+>> bit should be added into sb.required_features field, and define new
+>> feature function with F2FS_INCOMPAT_FEATURE_FUNCS() macro.
+>>
+>> Then during mount, we will do sanity check with enabled features in
+>> image, if there are features in sb.required_features that kernel can
+>> not recognize, just fail the mount.
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>> v3:
+>> - change commit title.
+>> - fix wrong macro name.
+>>  fs/f2fs/f2fs.h          | 15 +++++++++++++++
+>>  fs/f2fs/super.c         | 10 ++++++++++
+>>  include/linux/f2fs_fs.h |  3 ++-
+>>  3 files changed, 27 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index a6eb828af57f..b8e17d4ddb8d 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -163,6 +163,15 @@ struct f2fs_mount_info {
+>>  #define F2FS_CLEAR_FEATURE(sbi, mask)					\
+>>  	(sbi->raw_super->feature &= ~cpu_to_le32(mask))
+>>  
+>> +#define F2FS_INCOMPAT_FEATURES		0
+>> +
+>> +#define F2FS_HAS_INCOMPAT_FEATURE(sbi, mask)				\
+>> +	((sbi->raw_super->required_features & cpu_to_le32(mask)) != 0)
+>> +#define F2FS_SET_INCOMPAT_FEATURE(sbi, mask)				\
+>> +	(sbi->raw_super->required_features |= cpu_to_le32(mask))
+>> +#define F2FS_CLEAR_INCOMPAT_FEATURE(sbi, mask)				\
+>> +	(sbi->raw_super->required_features &= ~cpu_to_le32(mask))
+>> +
+>>  /*
+>>   * Default values for user and/or group using reserved blocks
+>>   */
+>> @@ -3585,6 +3594,12 @@ F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
+>>  F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
+>>  F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
+>>  
+>> +#define F2FS_INCOMPAT_FEATURE_FUNCS(name, flagname) \
+>> +static inline int f2fs_sb_has_##name(struct f2fs_sb_info *sbi) \
+>> +{ \
+>> +	return F2FS_HAS_INCOMPAT_FEATURE(sbi, F2FS_FEATURE_##flagname); \
+>> +}
+>> +
+>>  #ifdef CONFIG_BLK_DEV_ZONED
+>>  static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+>>  				    block_t blkaddr)
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index 5540fee0fe3f..3701dcce90e6 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -2513,6 +2513,16 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+>>  		return -EINVAL;
+>>  	}
+>>  
+>> +	/* check whether current kernel supports all features on image */
+>> +	if (le32_to_cpu(raw_super->required_features) &
+> 
+> ...
+> #define F2FS_FEATURE_VERITY	0x0400	/* reserved */
+> ...
+> #define F2FS_FEATURE_CASEFOLD	0x1000
+> #define F2FS_FEATURE_SUPPORT	0x1BFF
+> 
+> 	if (le32_to_cpu(raw_super->required_features) & ~F2FS_FEATURE_SUPPORT) {
+> 		...
+> 		return -EINVAL;
+> 	}
 
-Add the 'POWER_SUPPLY_PROP_CALIBRATE' attribute to allow chareger manager
-to calibrate the battery capacity.
+Um, I thought .required_features are used to store new feature flags from 0x0.
 
-Signed-off-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/power/supply/sc27xx_fuel_gauge.c |   27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+All 'F2FS_FEATURE_SUPPORT' bits should be stored in sb.feature instead of
+sb.required_features, I'm confused...
 
-diff --git a/drivers/power/supply/sc27xx_fuel_gauge.c b/drivers/power/supply/sc27xx_fuel_gauge.c
-index fa85f40..6363c48 100644
---- a/drivers/power/supply/sc27xx_fuel_gauge.c
-+++ b/drivers/power/supply/sc27xx_fuel_gauge.c
-@@ -111,6 +111,7 @@ struct sc27xx_fgu_data {
- static int sc27xx_fgu_cap_to_clbcnt(struct sc27xx_fgu_data *data, int capacity);
- static void sc27xx_fgu_capacity_calibration(struct sc27xx_fgu_data *data,
- 					    int cap, int int_mode);
-+static void sc27xx_fgu_adjust_cap(struct sc27xx_fgu_data *data, int cap);
- 
- static const char * const sc27xx_charger_supply_name[] = {
- 	"sc2731_charger",
-@@ -610,17 +611,25 @@ static int sc27xx_fgu_set_property(struct power_supply *psy,
- 	struct sc27xx_fgu_data *data = power_supply_get_drvdata(psy);
- 	int ret;
- 
--	if (psp != POWER_SUPPLY_PROP_CAPACITY)
--		return -EINVAL;
--
- 	mutex_lock(&data->lock);
- 
--	ret = sc27xx_fgu_save_last_cap(data, val->intval);
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CAPACITY:
-+		ret = sc27xx_fgu_save_last_cap(data, val->intval);
-+		if (ret < 0)
-+			dev_err(data->dev, "failed to save battery capacity\n");
-+		break;
- 
--	mutex_unlock(&data->lock);
-+	case POWER_SUPPLY_PROP_CALIBRATE:
-+		sc27xx_fgu_adjust_cap(data, val->intval);
-+		ret = 0;
-+		break;
- 
--	if (ret < 0)
--		dev_err(data->dev, "failed to save battery capacity\n");
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	mutex_unlock(&data->lock);
- 
- 	return ret;
- }
-@@ -635,7 +644,8 @@ static void sc27xx_fgu_external_power_changed(struct power_supply *psy)
- static int sc27xx_fgu_property_is_writeable(struct power_supply *psy,
- 					    enum power_supply_property psp)
- {
--	return psp == POWER_SUPPLY_PROP_CAPACITY;
-+	return psp == POWER_SUPPLY_PROP_CAPACITY ||
-+		psp == POWER_SUPPLY_PROP_CALIBRATE;
- }
- 
- static enum power_supply_property sc27xx_fgu_props[] = {
-@@ -651,6 +661,7 @@ static int sc27xx_fgu_property_is_writeable(struct power_supply *psy,
- 	POWER_SUPPLY_PROP_CURRENT_AVG,
- 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
- 	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
-+	POWER_SUPPLY_PROP_CALIBRATE,
- };
- 
- static const struct power_supply_desc sc27xx_fgu_desc = {
--- 
-1.7.9.5
+Thanks,
 
+> 
+> 
+>> +			~F2FS_INCOMPAT_FEATURES) {
+>> +		f2fs_info(sbi, "Unsupported feature: %x: supported: %x",
+>> +			  le32_to_cpu(raw_super->required_features) ^
+>> +			  F2FS_INCOMPAT_FEATURES,
+>> +			  F2FS_INCOMPAT_FEATURES);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>>  	/* Check checksum_offset and crc in superblock */
+>>  	if (__F2FS_HAS_FEATURE(raw_super, F2FS_FEATURE_SB_CHKSUM)) {
+>>  		crc_offset = le32_to_cpu(raw_super->checksum_offset);
+>> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+>> index a2b36b2e286f..4141be3f219c 100644
+>> --- a/include/linux/f2fs_fs.h
+>> +++ b/include/linux/f2fs_fs.h
+>> @@ -117,7 +117,8 @@ struct f2fs_super_block {
+>>  	__u8 hot_ext_count;		/* # of hot file extension */
+>>  	__le16	s_encoding;		/* Filename charset encoding */
+>>  	__le16	s_encoding_flags;	/* Filename charset encoding flags */
+>> -	__u8 reserved[306];		/* valid reserved region */
+>> +	__le32 required_features;       /* incompatible features to old kernel */
+>> +	__u8 reserved[302];		/* valid reserved region */
+>>  	__le32 crc;			/* checksum of superblock */
+>>  } __packed;
+>>  
+>> -- 
+>> 2.22.0
+> .
+> 
