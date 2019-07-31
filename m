@@ -2,172 +2,222 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DF7C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDC7C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6302206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:59:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bkoXiW2Z"
+	by mail.kernel.org (Postfix) with ESMTP id 122B6206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbfGaC7J (ORCPT
+        id S1728271AbfGaDBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 22:59:09 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34215 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfGaC7J (ORCPT
+        Tue, 30 Jul 2019 23:01:35 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47174 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbfGaDBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 22:59:09 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b13so30955753pfo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 19:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B7l52D/cRUQyEKtM6D9Z02BVoe/7k/AeNEzc9yQ+CeI=;
-        b=bkoXiW2ZCG3VyC8G6LPZgBZuI3y0v2RUc/ccSE0ChSGLNoZT6BX5NE8m9Z8F/1Y46T
-         OlrlmQZ/RU9gu6V2zSy+QA4wqnBGe23ABaN6+GETOMjbLTwv1v0b6ssiRxV1BOsJR6OV
-         Uq1l0VsAIibFVMIuqQKhdKY/kCgPlFwMeCZh5+PL7h55QoJDscTpXhbqdZiuWmNXmreq
-         YpyyRZaweDEJoQ+Rsj6RPXrtLPb3B5O3q6827dDVLuy49O+OVtJuCmfTYghgQ0IhHMIu
-         ZAZGttFO4gUbQBSHY8UfufkMuYWTuIvjBg4AE05QyoJdH+v2asCd9GLKgyhlytygWTJa
-         xG3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B7l52D/cRUQyEKtM6D9Z02BVoe/7k/AeNEzc9yQ+CeI=;
-        b=VGapu47K4T5EZ35YNixgOd6owLyo2+0dcCtme0ZUaxIF/lBD90Iu+kSmCponskjR/u
-         lgtJ6dN60FwRcuN/eAT3EHF/WcgaiwR+BOEdOH6SXfMivz00vkRBWSkPfrYqPBjH3Hn4
-         dmDAT2XCfE2Qn8oVDqVEBpbSCoechT/288hkKneaeatTz0Bf5GwoCVodtYEYKeJbseHd
-         twN2zDDCD7MT3/p58YC85qJ5yOSHezLp67xv8XE+uOUSQaVEVgeVqeMGihmPbv68vv/I
-         6nwnQiTJqDVkaUBciDHSy0wkUSSruoTieoSekpb+o+0BnxbUmr5dpXrXeW0fmu/QlIfw
-         wgVQ==
-X-Gm-Message-State: APjAAAXirzqXQlxQPtPMND+2SffTZDaioxHl88AEISMk3hNzv+NSrpJv
-        rhjkpOzQxKYPCWVwQpcQBPT5kQ==
-X-Google-Smtp-Source: APXvYqzX977xFiSHTriuRuGYyl0OLc4P0XfrtGSCyPCZP10LRC7cWGWRT5jd8/2+n6pShJuBgEhHow==
-X-Received: by 2002:a17:90a:1b48:: with SMTP id q66mr502148pjq.83.1564541948328;
-        Tue, 30 Jul 2019 19:59:08 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id v18sm63769086pgl.87.2019.07.30.19.59.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jul 2019 19:59:07 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "v4 . 18+" <stable@vger.kernel.org>,
-        Doug Smythies <doug.smythies@gmail.com>,
+        Tue, 30 Jul 2019 23:01:34 -0400
+Received: from [IPv6:2804:431:c7f5:133:d711:794d:1c68:5ed3] (unknown [IPv6:2804:431:c7f5:133:d711:794d:1c68:5ed3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E56CD28AA3C;
+        Wed, 31 Jul 2019 04:01:30 +0100 (BST)
+Subject: Re: [PATCH 0/7] media: vimc: Add a V4L2 output device
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, kernel@collabora.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
-Date:   Wed, 31 Jul 2019 08:28:57 +0530
-Message-Id: <04ff2be6ef108585d57aa2462aa7a4c676b6d1cd.1564541875.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
+References: <20190702154752.14939-1-andrealmeid@collabora.com>
+ <00fb0dc3-0dd3-8d4c-9add-dba617f34d19@collabora.com>
+ <7189e204-ba37-930b-1738-d192f45b0af5@xs4all.nl>
+ <333e5df6-0e24-ff76-7e7f-bf338652f9ac@collabora.com>
+ <c6fe9585-cd52-ea77-3c98-cb9e70424f84@xs4all.nl>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <83383964-c382-fb04-6dd9-81908c407eb3@collabora.com>
+Date:   Wed, 31 Jul 2019 00:00:40 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <c6fe9585-cd52-ea77-3c98-cb9e70424f84@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid reducing the frequency of a CPU prematurely, we skip reducing
-the frequency if the CPU had been busy recently.
+On 7/13/19 7:03 AM, Hans Verkuil wrote:
+> On 7/12/19 5:38 PM, André Almeida wrote:
+>> Hello,
+>>
+>> On 7/10/19 4:33 AM, Hans Verkuil wrote:
+>>> On 7/10/19 12:19 AM, Helen Koike wrote:
+>>>> Hi André,
+>>>>
+>>>> Thanks for the patches.
+>>>>
+>>>> On 7/2/19 12:47 PM, André Almeida wrote:
+>>>>> Hello,
+>>>>>
+>>>>> This patch adds a V4L2 output device on vimc, that comply with V4L2 API
+>>>>> for video output. If there is an output device and a capture device at the
+>>>>> same pipeline, one can get a video loopback pipeline feeding frames at
+>>>>> the output and then seeing them at the capture. It's possible to insert
+>>>>> vimc submodules at the pipeline to modify the image (e.g. a scaler).
+>>>>>
+>>>>> If one starts a streaming at the capture, with the output off, the
+>>>>> capture will display a noisy frame. If one starts a streaming at the
+>>>>> output with the capture off, the output will just consume the buffers,
+>>>>> without sending them to the pipeline. If both output and capture are
+>>>>> streaming, the loopback will happen.
+>>>> I understand why it is done like this in vivid, but I was wondering, if we
+>>>> have a pipeline like:
+>>>> output -> capture
+>>>> Shouldn't streaming from the capture just stalls if there is no frame
+>>>> available in the output (i.e. streaming in the output is off) ? But then I'm
+>>>> not sure what the framerate in the capture would mean.
+>>>>
+>>>> Hans, what do you think?
+>>> If you set up the pipeline like this:
+>>>
+>>> Video Output -> Scaler -> Video Capture
+>>
+>> If the capture will stall if there's no frame from the video output, how
+>> can I add support for this kind of pipeline at test-media? It would be
+>> required to send frames to the output device while running
+>> `v4l2-compliance` at the capture device to make testing possible.
+> 
+> The compliance test doesn't support such devices at the moment.
 
-This should not be done when the limits of the policy are changed, for
-example due to thermal throttling. We should always get the frequency
-within the new limits as soon as possible.
+The implementation of the expected behavior can be found here:
+https://gitlab.collabora.com/tonyk/linux/tree/vimc/output-v2
 
-Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
-Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
-Reported-by: Doug Smythies <doug.smythies@gmail.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-@Doug: Can you please provide your Tested-by for this commit, as it
-already fixed the issue around acpi-cpufreq driver.
+> 
+> I think a new option (or options) are needed to tell the compliance test
+> that the capture and output video devices together constitute an m2m device.
 
-We will continue to see what's wrong with intel-pstate though.
+I've reading the v4l-utils code base and I had a look at both m2m tests
+and capture/output tests, but I'm not sure how to implement this new
+option. How do you think it should be implemented? Should it resemble
+how v4l2-compliance tests vim2m? Something like this:
 
- kernel/sched/cpufreq_schedutil.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+	v4l2-compliance -m platform:vim2m -z platform:vivid-002 -e
+vivid-002-vid-cap -s10 -P -a
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 636ca6f88c8e..2f382b0959e5 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -40,6 +40,7 @@ struct sugov_policy {
- 	struct task_struct	*thread;
- 	bool			work_in_progress;
- 
-+	bool			limits_changed;
- 	bool			need_freq_update;
- };
- 
-@@ -89,8 +90,11 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
- 	    !cpufreq_this_cpu_can_update(sg_policy->policy))
- 		return false;
- 
--	if (unlikely(sg_policy->need_freq_update))
-+	if (unlikely(sg_policy->limits_changed)) {
-+		sg_policy->limits_changed = false;
-+		sg_policy->need_freq_update = true;
- 		return true;
-+	}
- 
- 	delta_ns = time - sg_policy->last_freq_update_time;
- 
-@@ -437,7 +441,7 @@ static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
- static inline void ignore_dl_rate_limit(struct sugov_cpu *sg_cpu, struct sugov_policy *sg_policy)
- {
- 	if (cpu_bw_dl(cpu_rq(sg_cpu->cpu)) > sg_cpu->bw_dl)
--		sg_policy->need_freq_update = true;
-+		sg_policy->limits_changed = true;
- }
- 
- static void sugov_update_single(struct update_util_data *hook, u64 time,
-@@ -447,7 +451,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
- 	struct sugov_policy *sg_policy = sg_cpu->sg_policy;
- 	unsigned long util, max;
- 	unsigned int next_f;
--	bool busy;
-+	bool busy = false;
- 
- 	sugov_iowait_boost(sg_cpu, time, flags);
- 	sg_cpu->last_update = time;
-@@ -457,7 +461,9 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
- 	if (!sugov_should_update_freq(sg_policy, time))
- 		return;
- 
--	busy = sugov_cpu_is_busy(sg_cpu);
-+	/* Limits may have changed, don't skip frequency update */
-+	if (!sg_policy->need_freq_update)
-+		busy = sugov_cpu_is_busy(sg_cpu);
- 
- 	util = sugov_get_util(sg_cpu);
- 	max = sg_cpu->max;
-@@ -831,6 +837,7 @@ static int sugov_start(struct cpufreq_policy *policy)
- 	sg_policy->last_freq_update_time	= 0;
- 	sg_policy->next_freq			= 0;
- 	sg_policy->work_in_progress		= false;
-+	sg_policy->limits_changed		= false;
- 	sg_policy->need_freq_update		= false;
- 	sg_policy->cached_raw_freq		= 0;
- 
-@@ -879,7 +886,7 @@ static void sugov_limits(struct cpufreq_policy *policy)
- 		mutex_unlock(&sg_policy->work_lock);
- 	}
- 
--	sg_policy->need_freq_update = true;
-+	sg_policy->limits_changed = true;
- }
- 
- struct cpufreq_governor schedutil_gov = {
--- 
-2.21.0.rc0.269.g1a574e7a288b
+Thanks,
+	André
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
+>>
+>> Thanks,
+>>     André
+>>
+>>> Then this is a mem2mem device (except with two separate video devices) and
+>>> framerate doesn't apply anymore. And video capture will just stall if there
+>>> is no video output frame provided.
+>>>
+>>> It's how e.g. omap3isp works.
+>>>
+>>> Regards,
+>>>
+>>> 	Hans
+>>>
+>>>> Thanks,
+>>>> Helen
+>>>>
+>>>>> The patches 1 and 2 provide some ground to create the output
+>>>>> device. The patch 3 creates the device and modify how the vimc-streamer
+>>>>> was dealing with the s_stream callback on other vimc modules, to make
+>>>>> simpler implementing this callback at vimc-output. Patch 4 change the
+>>>>> behavior of the pipeline in order to be closer to a real life hardware.
+>>>>> Patches 5-7 updates the default pipeline and the documentation to
+>>>>> include the new output device.
+>>>>>
+>>>>> This is the result of v4l2-compliance after this patch series:
+>>>>> $ v4l2-compliance -m0 -s50
+>>>>> Grand Total for vimc device /dev/media0: 476, Succeeded: 476, Failed: 0,
+>>>>> Warnings: 0
+>>>>>
+>>>>> A git tree up to date with media-master and with this changes can be found
+>>>>> at: https://gitlab.collabora.com/tonyk/linux/tree/vimc/output
+>>>>>
+>>>>> In order to test it, one can follow these instructions:
+>>>>>
+>>>>> 1 - Configure the pipeline (requires v4l-utils):
+>>>>>
+>>>>> $ media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+>>>>> $ media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+>>>>> $ media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
+>>>>> $ media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
+>>>>> $ v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
+>>>>> $ v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
+>>>>> $ v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
+>>>>> $ v4l2-ctl -z platform:vimc -e "RGB/YUV Input" -v width=640,height=480
+>>>>>
+>>>>> 2 - Use a userspace application:
+>>>>> 2.a gst-launch (requires gstreamer and gst-plugins-good):
+>>>>>
+>>>>> Feed frames into the output and grab from the capture (rescaled for
+>>>>> convenience):
+>>>>>
+>>>>> $ gst-launch-1.0 videotestsrc pattern=ball ! \
+>>>>> 	video/x-raw,width=640,height=480,format=RGB \
+>>>>> 	! v4l2sink device=/dev/video2 v4l2src device=/dev/video3 ! \
+>>>>> 	video/x-raw,width=1920,height=1440,format=RGB ! videoscale ! \
+>>>>> 	video/x-raw,width=640,height=480 ! videoconvert ! ximagesink
+>>>>>
+>>>>> 2.b qv4l2 (requires v4l-utils):
+>>>>>
+>>>>> Open the output device:
+>>>>>
+>>>>> $ qv4l2 -d2
+>>>>>
+>>>>> Open the capture device:
+>>>>>
+>>>>> $ qv4l2 -d3
+>>>>>
+>>>>> Start the streaming at both, at any order. You can change the frame
+>>>>> content at "Test Pattern Generator" -> "Test Pattern" on the output.
+>>>>>
+>>>>> Thanks,
+>>>>> 	André
+>>>>>
+>>>>> André Almeida (7):
+>>>>>   media: vimc: Create video module
+>>>>>   media: vimc: video: Add write file operation
+>>>>>   media: vimc: Create a V4L2 output device
+>>>>>   media: vimc: Send null buffer through the pipeline
+>>>>>   media: vimc: core: Add output device on the pipeline
+>>>>>   media: vimc.dot: Update default topology diagram
+>>>>>   media: vimc.rst: Add output device
+>>>>>
+>>>>>  Documentation/media/v4l-drivers/vimc.dot    |   4 +-
+>>>>>  Documentation/media/v4l-drivers/vimc.rst    |  12 +-
+>>>>>  drivers/media/platform/vimc/Makefile        |   4 +-
+>>>>>  drivers/media/platform/vimc/vimc-capture.c  | 356 +++----------------
+>>>>>  drivers/media/platform/vimc/vimc-common.h   |   5 +-
+>>>>>  drivers/media/platform/vimc/vimc-core.c     |   7 +-
+>>>>>  drivers/media/platform/vimc/vimc-debayer.c  |  14 +-
+>>>>>  drivers/media/platform/vimc/vimc-output.c   | 362 ++++++++++++++++++++
+>>>>>  drivers/media/platform/vimc/vimc-scaler.c   |  13 +-
+>>>>>  drivers/media/platform/vimc/vimc-sensor.c   |  10 +-
+>>>>>  drivers/media/platform/vimc/vimc-streamer.c |  24 +-
+>>>>>  drivers/media/platform/vimc/vimc-video.c    | 273 +++++++++++++++
+>>>>>  drivers/media/platform/vimc/vimc-video.h    | 130 +++++++
+>>>>>  13 files changed, 849 insertions(+), 365 deletions(-)
+>>>>>  create mode 100644 drivers/media/platform/vimc/vimc-output.c
+>>>>>  create mode 100644 drivers/media/platform/vimc/vimc-video.c
+>>>>>  create mode 100644 drivers/media/platform/vimc/vimc-video.h
+>>>>>
+> 
 
