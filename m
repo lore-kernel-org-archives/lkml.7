@@ -2,79 +2,97 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83ABC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7587BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC79A206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D82F206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:12:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q2ubVie9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfGaHL6 (ORCPT
+        id S1727041AbfGaHMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 03:11:58 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3663 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725913AbfGaHL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 03:11:58 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BFAFD1E8D5263CB2BA72;
-        Wed, 31 Jul 2019 15:11:56 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 15:11:46 +0800
-Subject: Re: [PATCH 08/22] staging: erofs: kill CONFIG_EROFS_FS_IO_MAX_RETRIES
-To:     Chao Yu <yuchao0@huawei.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>, <weidu.du@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190729065159.62378-1-gaoxiang25@huawei.com>
- <20190729065159.62378-9-gaoxiang25@huawei.com>
- <1c979e3f-54ec-cce8-650c-39e060e72169@huawei.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <2d7abbad-61d0-df2b-6a42-26f2606d775a@huawei.com>
-Date:   Wed, 31 Jul 2019 15:11:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Wed, 31 Jul 2019 03:12:25 -0400
+Received: from ozlabs.org ([203.11.71.1]:56423 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbfGaHMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 03:12:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45z4PL3hKgz9s3l;
+        Wed, 31 Jul 2019 17:12:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564557142;
+        bh=UdwW/mnUrireVfWyIo4Ee6IEoXzagdV0hnePRChllbw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Q2ubVie93phsnRvmBAwuhn8LRJydx4UX/IHz51DwJ4zor0EKYBNBRtTIFlQ5FP4AI
+         xNeD8wkpBTutkTP5ffh1Yfg4PnCA/MXtTzpLGt6TlI7MS/3EqxY9+rCHPb8thfS8aX
+         vzKqDEPrBbqO3kZbCHV2a99ZyASKnjyBN2tC/jwjVLMWESOlLXAKU7dytr1LH+B8l+
+         9CUSjwS1G1U0Z8QWToCkg6cslLnmJI3jHkpMurd40KzQFcirMq2hz2yIAei3FHV68e
+         KsB2nrIFEtBiYqXBl8RjVd4fdqcaWQ1l5L2KhHJliFUnswqE3qaYXnH0K8jHHmcIfZ
+         XIpwg8TbqwSUg==
+Date:   Wed, 31 Jul 2019 17:12:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the tty tree
+Message-ID: <20190731171221.326095e9@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <1c979e3f-54ec-cce8-650c-39e060e72169@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/.baL9FeGwHuZIWh+eOtLaWa";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+--Sig_/.baL9FeGwHuZIWh+eOtLaWa
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/7/31 15:05, Chao Yu wrote:
-> On 2019/7/29 14:51, Gao Xiang wrote:
->> CONFIG_EROFS_FS_IO_MAX_RETRIES seems a runtime setting
->> and users have no idea about the change in behaviour.
->>
->> Let's remove the setting currently and fold it into code,
->> turn it into a module parameter if it's really needed.
->>
->> Suggested-by: David Sterba <dsterba@suse.cz>
->> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> 
-> It's fine to me, but I'd like to suggest to add this as a sys entry which can be
-> more flexible for user to change.
+Hi all,
 
-I think it can be added in the later version, the original view
-from David is that he had question how users using this option.
+In commit
 
-Maybe we can use the default value and leave it to users who
-really need to modify this value (real requirement).
+  fa04d8c1c150 ("tty: serial: fsl_lpuart: Use appropriate lpuart32_* I/O fu=
+ncs")
 
-Thanks,
-Gao Xiang
+Fixes tag
 
-> 
-> Thanks
-> 
+  Fixes: a5fa2660d787 ("tty/serial/fsl_lpuart: Add CONSOLE_POLL support
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/.baL9FeGwHuZIWh+eOtLaWa
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1BP1UACgkQAVBC80lX
+0GzAAQf8CmfbG5DLxBciqquYtgOXsgCHbJEQQBWrgf73/n7iYrcdvzOOd7clxxC0
+lKGG4xvKEmUD7ITNfs3QVPTMijBBuEwPXw39uCfn00QP/rE2aQTgusSecNxf7Za6
+RA0PF7dtlRUJ2rc2uqusDps0hr2Gxt+xjCez0izTx8VK90F1FBTFHJxQvFq9rdnU
+2W1JbuV5/VjHpFodWRn5VETTsqkqqdZshnyeiLR0EfPdBX/Xj1P8o58Zfz5gomHc
+7MJ+eJd9lR53xtk+UWJzS7HDRoRS5gSy/eCFm/Gkw1bzazcn1pGwIFcWerTNBk3m
+Bcs5iO4ERAhm7Q7YbI2IrBer7QisrA==
+=a7It
+-----END PGP SIGNATURE-----
+
+--Sig_/.baL9FeGwHuZIWh+eOtLaWa--
