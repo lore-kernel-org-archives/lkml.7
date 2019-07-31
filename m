@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B664C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CF1C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF82208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C07C20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="DRp4/04Q"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="NRoJL3bi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbfGaPXu (ORCPT
+        id S1730121AbfGaPYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:23:50 -0400
-Received: from mail-ed1-f49.google.com ([209.85.208.49]:33129 "EHLO
-        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfGaPXt (ORCPT
+        Wed, 31 Jul 2019 11:24:42 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38828 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbfGaPXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:23:49 -0400
-Received: by mail-ed1-f49.google.com with SMTP id i11so2570759edq.0
+        Wed, 31 Jul 2019 11:23:50 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r12so31268224edo.5
         for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:23:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rpVydprU+qUIbG2ieS0/pcejmTH1ILSgd/PE5xIU2l8=;
-        b=DRp4/04Ql9tuwZ8HmklcrVGbpbwpqyiHWrb5OFmDW/SEC8peDq2WPBaUHFkAudB5fO
-         O6QRunFSo/ysHy81uSqyDDbaDB0RbNas5DoSFJjERVndASSmEQlNkxI6m4UzvLb1lYXe
-         HR9PxFKm/WpkDGRuHh7/II3kWjLslUMYjW15KfsW1uUXxZKw3qH1ykdFZqetYNR65uFr
-         gcHNHUE6tyTdsEhVT4TE8EFJvr35k771sHCQxS/OJ1ZA0dTfkaCGA+sR1YMCZ/ySG35J
-         zgO0k7b/GKJH49Q3m+NOFpVJ9izt7DqzZczYOnuYmoEesdA/OGp8B5vhT4m926rqes+k
-         RWuQ==
+        bh=a18UOZt3FCDvDMvgP9zldJLt6lTKwFfHbu73YInWFn4=;
+        b=NRoJL3bi5X5MHI+UHT7B1S62Fze3JOWhyFVaj3bzy32xghKUPsGgZO7GdGj/I+MGwQ
+         IcszjXoHkHLCYl9E9+S0TVZkBMexB6yUan+V+lOdKu1ZTL//k329IuqiUOHsMZt8zobx
+         DpyOBiRYKgBlkPN70qU0UyV4A9sw+9NOai6RD5k+KXVTchojnkBQ/9wvCG9xsOR3lQJH
+         25Orq3JTmZBnhwFdJDSLbIjUUACw24Q/2V5Z/1iDJXDUwr6CPtjVVjX8EN+dRQ/iWt3F
+         ajr2K45loyNYVlzJu2bXoVrUmjOiINR3+Zakf9U0MEFo74tWWpXOujPELeLbtPwG7Bf+
+         4HTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rpVydprU+qUIbG2ieS0/pcejmTH1ILSgd/PE5xIU2l8=;
-        b=W6XPhwb6MbUeFAHJSC2rJAEy1sPIJWvMgnyaF5Zj08p1+GiWQhlyOvpNUPpRBH9kLb
-         sdIxGvragIG8xd/9jPH1Enpj/xXmfm1dhExn9pf0W4dkao0rn4GC2BJT+JYT0pDGHOso
-         UG9kRNql4yOHfVNpIEMszKwhhFn2pwZVHc/Ej2lP2ucMlwcw0fZHFex2HuLrUnPJNkww
-         43U/KuxmWWo3bZiBnCehNd9wHpYjCa0VTCsWem9+0CGn5/3lNwnm85ZXHyfKsdBr14aF
-         HNQvrC2kSjGh6f5C+o/WjcZWBJbRpTqUWTfg7+7YbzC/GLuem03TRGsgaf9AP8C7FFmg
-         bz2A==
-X-Gm-Message-State: APjAAAUgUcHzhAP+FEUpR2j0P2xQdEql/EYMITinWjye364FFRQDLN9h
-        xMnGLMHFs0xUqPsPob+8WcE=
-X-Google-Smtp-Source: APXvYqzHNAWdNlgTeKpfoNbFrJilyAoYtl9yAfdpOnAx37mkMd2b2DlC485Nke0u/zSmR8xGQJj0mw==
-X-Received: by 2002:aa7:ca45:: with SMTP id j5mr106898585edt.217.1564586627658;
+        bh=a18UOZt3FCDvDMvgP9zldJLt6lTKwFfHbu73YInWFn4=;
+        b=SSCX6DFSNjQ5uoCotYVhRiLC/pcLf2RJSkKLbhtCFgVs16dirlKSSElDGhr62T+/LL
+         vRuSiY0LFqhbjkKXDv+02Y6oQgMq4ERi4Jagmtmxz1DLYnduwA45ns/mX1NsdlY+ue/P
+         UeFLbWFmAUoRh08X3SZdFWT1CkW2Hms0eckM/428edUGyF6Sw7+yM9n/w9YW2fDkSeF5
+         Q3oINAiN7v8nIoqkmU+yrWhhrshLbQgIzGOq9IyLJ0CX4QbMQ3GYWHlfccSAdhI2o/h1
+         d7IOvjV2hr4Lj9sBeWPlN9gzZTo4AFLGKQSNWZi/UONcz4FzHlPOWJv5a1O6jUX7/DwC
+         U7Iw==
+X-Gm-Message-State: APjAAAWYk3pjzTZi3lNKL0evzKk0qMvRCT8js559S96Z1iiXDmRIG7GJ
+        ZnrGFpyxcwgZlEkVsyEsTGg=
+X-Google-Smtp-Source: APXvYqz4eqsH2iJwU1tjXfKb0+/bNd+u2NkjVb8FXDZ8ZsSkbsVxoPTi6IlMDOoUIFCjKkMNnj7bMA==
+X-Received: by 2002:a50:b87c:: with SMTP id k57mr105890483ede.226.1564586627977;
         Wed, 31 Jul 2019 08:23:47 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id j12sm12429043ejd.30.2019.07.31.08.23.46
+        by smtp.gmail.com with ESMTPSA id f24sm17482856edf.30.2019.07.31.08.23.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Wed, 31 Jul 2019 08:23:47 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 957D31048AB; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
+        id 953461030BF; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,9 +75,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 59/59] x86/mktme: Demonstration program using the MKTME APIs
-Date:   Wed, 31 Jul 2019 18:08:13 +0300
-Message-Id: <20190731150813.26289-60-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 24/59] keys/mktme: Introduce a Kernel Key Service for MKTME
+Date:   Wed, 31 Jul 2019 18:07:38 +0300
+Message-Id: <20190731150813.26289-25-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -90,82 +90,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
+MKTME (Multi-Key Total Memory Encryption) is a technology that allows
+transparent memory encryption in upcoming Intel platforms. MKTME will
+support multiple encryption domains, each having their own key.
+
+The MKTME key service will manage the hardware encryption keys. It
+will map Userspace Keys to Hardware KeyIDs and program the hardware
+with the user requested encryption options.
+
+Here the mapping structure is introduced, as well as the key service
+initialization and registration.
+
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- Documentation/x86/mktme/index.rst      |  1 +
- Documentation/x86/mktme/mktme_demo.rst | 53 ++++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/x86/mktme/mktme_demo.rst
+ security/keys/Makefile     |  1 +
+ security/keys/mktme_keys.c | 60 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 security/keys/mktme_keys.c
 
-diff --git a/Documentation/x86/mktme/index.rst b/Documentation/x86/mktme/index.rst
-index ca3c76adc596..3af322d13225 100644
---- a/Documentation/x86/mktme/index.rst
-+++ b/Documentation/x86/mktme/index.rst
-@@ -10,3 +10,4 @@ Multi-Key Total Memory Encryption (MKTME)
-    mktme_configuration
-    mktme_keys
-    mktme_encrypt
-+   mktme_demo
-diff --git a/Documentation/x86/mktme/mktme_demo.rst b/Documentation/x86/mktme/mktme_demo.rst
+diff --git a/security/keys/Makefile b/security/keys/Makefile
+index 9cef54064f60..28799be801a9 100644
+--- a/security/keys/Makefile
++++ b/security/keys/Makefile
+@@ -30,3 +30,4 @@ obj-$(CONFIG_ASYMMETRIC_KEY_TYPE) += keyctl_pkey.o
+ obj-$(CONFIG_BIG_KEYS) += big_key.o
+ obj-$(CONFIG_TRUSTED_KEYS) += trusted.o
+ obj-$(CONFIG_ENCRYPTED_KEYS) += encrypted-keys/
++obj-$(CONFIG_X86_INTEL_MKTME) += mktme_keys.o
+diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
 new file mode 100644
-index 000000000000..5af78617f887
+index 000000000000..d262e0f348e4
 --- /dev/null
-+++ b/Documentation/x86/mktme/mktme_demo.rst
-@@ -0,0 +1,53 @@
-+Demonstration Program using MKTME API's
-+=======================================
++++ b/security/keys/mktme_keys.c
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-3.0
 +
-+/* Compile with the keyutils library: cc -o mdemo mdemo.c -lkeyutils */
++/* Documentation/x86/mktme/ */
 +
-+#include <sys/mman.h>
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <keyutils.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <unistd.h>
++#include <linux/init.h>
++#include <linux/key.h>
++#include <linux/key-type.h>
++#include <linux/mm.h>
++#include <keys/user-type.h>
 +
-+#define PAGE_SIZE sysconf(_SC_PAGE_SIZE)
-+#define sys_encrypt_mprotect 434
++#include "internal.h"
 +
-+void main(void)
++static unsigned int mktme_available_keyids;  /* Free Hardware KeyIDs */
++
++enum mktme_keyid_state {
++	KEYID_AVAILABLE,	/* Available to be assigned */
++	KEYID_ASSIGNED,		/* Assigned to a userspace key */
++	KEYID_REF_KILLED,	/* Userspace key has been destroyed */
++	KEYID_REF_RELEASED,	/* Last reference is released */
++};
++
++/* 1:1 Mapping between Userspace Keys (struct key) and Hardware KeyIDs */
++struct mktme_mapping {
++	struct key		*key;
++	enum mktme_keyid_state	state;
++};
++
++static struct mktme_mapping *mktme_map;
++
++struct key_type key_type_mktme = {
++	.name		= "mktme",
++	.describe	= user_describe,
++};
++
++static int __init init_mktme(void)
 +{
-+	char *options_CPU = "algorithm=aes-xts-128 type=cpu";
-+	long size = PAGE_SIZE;
-+        key_serial_t key;
-+	void *ptra;
 +	int ret;
 +
-+        /* Allocate an MKTME Key */
-+	key = add_key("mktme", "testkey", options_CPU, strlen(options_CPU),
-+                      KEY_SPEC_THREAD_KEYRING);
++	/* Verify keys are present */
++	if (mktme_nr_keyids() < 1)
++		return 0;
 +
-+	if (key == -1) {
-+		printf("addkey FAILED\n");
-+		return;
-+	}
-+        /* Map a page of ANONYMOUS memory */
-+	ptra = mmap(NULL, size, PROT_NONE, MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
-+	if (!ptra) {
-+		printf("failed to mmap");
-+		goto inval_key;
-+	}
-+        /* Encrypt that page of memory with the MKTME Key */
-+	ret = syscall(sys_encrypt_mprotect, ptra, size, PROT_NONE, key);
-+	if (ret)
-+		printf("mprotect error [%d]\n", ret);
++	mktme_available_keyids = mktme_nr_keyids();
 +
-+        /* Enjoy that page of encrypted memory */
++	/* Mapping of Userspace Keys to Hardware KeyIDs */
++	mktme_map = kvzalloc((sizeof(*mktme_map) * (mktme_nr_keyids() + 1)),
++			     GFP_KERNEL);
++	if (!mktme_map)
++		return -ENOMEM;
 +
-+        /* Free the memory */
-+	ret = munmap(ptra, size);
++	ret = register_key_type(&key_type_mktme);
++	if (!ret)
++		return ret;			/* SUCCESS */
 +
-+inval_key:
-+        /* Free the Key */
-+	if (keyctl(KEYCTL_INVALIDATE, key) == -1)
-+		printf("invalidate failed on key [%d]\n", key);
++	kvfree(mktme_map);
++
++	return -ENOMEM;
 +}
++
++late_initcall(init_mktme);
 -- 
 2.21.0
 
