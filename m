@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C37C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 233E9C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45E4208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02CA0208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbfGaP6j (ORCPT
+        id S1730211AbfGaP6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:58:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3673 "EHLO huawei.com"
+        Wed, 31 Jul 2019 11:58:46 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3679 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730160AbfGaP6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730163AbfGaP6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 11:58:37 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EF4BF432F7119B052D93;
-        Wed, 31 Jul 2019 23:58:30 +0800 (CST)
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 17C2ED3AC4F1369DB432;
+        Wed, 31 Jul 2019 23:58:36 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 23:58:24 +0800
+ 2019 23:58:27 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Chao Yu <yuchao0@huawei.com>, <devel@driverdev.osuosl.org>
@@ -33,9 +33,9 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2 13/22] staging: erofs: refine erofs_allocpage()
-Date:   Wed, 31 Jul 2019 23:57:43 +0800
-Message-ID: <20190731155752.210602-14-gaoxiang25@huawei.com>
+Subject: [PATCH v2 15/22] staging: erofs: tidy up zpvec.h
+Date:   Wed, 31 Jul 2019 23:57:45 +0800
+Message-ID: <20190731155752.210602-16-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190731155752.210602-1-gaoxiang25@huawei.com>
 References: <20190731155752.210602-1-gaoxiang25@huawei.com>
@@ -48,93 +48,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove duplicated code in decompressor by introducing
-failable erofs_allocpage().
+- use shorter function names:
+  z_erofs_pagevec_enqueue and z_erofs_pagevec_dequeue;
+- minor code cleanup.
+
+In order to keep in line with erofs-outofstaging patchset.
 
 Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/decompressor.c | 12 +++---------
- drivers/staging/erofs/internal.h     |  2 +-
- drivers/staging/erofs/utils.c        |  5 +++--
- drivers/staging/erofs/zdata.c        |  5 +----
- 4 files changed, 8 insertions(+), 16 deletions(-)
+ drivers/staging/erofs/zdata.c |  6 +++---
+ drivers/staging/erofs/zpvec.h | 25 +++++++++----------------
+ 2 files changed, 12 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
-index ee5762351f80..744c43a456e9 100644
---- a/drivers/staging/erofs/decompressor.c
-+++ b/drivers/staging/erofs/decompressor.c
-@@ -74,15 +74,9 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
- 			victim = availables[--top];
- 			get_page(victim);
- 		} else {
--			if (!list_empty(pagepool)) {
--				victim = lru_to_page(pagepool);
--				list_del(&victim->lru);
--				DBG_BUGON(page_ref_count(victim) != 1);
--			} else {
--				victim = alloc_pages(GFP_KERNEL, 0);
--				if (!victim)
--					return -ENOMEM;
--			}
-+			victim = erofs_allocpage(pagepool, GFP_KERNEL, false);
-+			if (unlikely(!victim))
-+				return -ENOMEM;
- 			victim->mapping = Z_EROFS_MAPPING_STAGING;
- 		}
- 		rq->out[i] = victim;
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index 5e1ef2b5a458..a631acd0dc62 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -516,7 +516,7 @@ int erofs_namei(struct inode *dir, struct qstr *name,
- extern const struct file_operations erofs_dir_fops;
- 
- /* utils.c / zdata.c */
--struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp);
-+struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp, bool nofail);
- 
- #if (EROFS_PCPUBUF_NR_PAGES > 0)
- void *erofs_get_pcpubuf(unsigned int pagenr);
-diff --git a/drivers/staging/erofs/utils.c b/drivers/staging/erofs/utils.c
-index 0e86e44d60d0..260ea2970b4b 100644
---- a/drivers/staging/erofs/utils.c
-+++ b/drivers/staging/erofs/utils.c
-@@ -9,15 +9,16 @@
- #include "internal.h"
- #include <linux/pagevec.h>
- 
--struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp)
-+struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp, bool nofail)
- {
- 	struct page *page;
- 
- 	if (!list_empty(pool)) {
- 		page = lru_to_page(pool);
-+		DBG_BUGON(page_ref_count(page) != 1);
- 		list_del(&page->lru);
- 	} else {
--		page = alloc_pages(gfp | __GFP_NOFAIL, 0);
-+		page = alloc_pages(gfp | (nofail ? __GFP_NOFAIL : 0), 0);
- 	}
- 	return page;
- }
 diff --git a/drivers/staging/erofs/zdata.c b/drivers/staging/erofs/zdata.c
-index bc478eebf509..3078510e350d 100644
+index 3078510e350d..88c8c4082498 100644
 --- a/drivers/staging/erofs/zdata.c
 +++ b/drivers/staging/erofs/zdata.c
-@@ -634,10 +634,7 @@ z_erofs_vle_work_iter_end(struct z_erofs_vle_work_builder *builder)
- static inline struct page *__stagingpage_alloc(struct list_head *pagepool,
- 					       gfp_t gfp)
- {
--	struct page *page = erofs_allocpage(pagepool, gfp);
--
--	if (unlikely(!page))
--		return NULL;
-+	struct page *page = erofs_allocpage(pagepool, gfp, true);
+@@ -314,8 +314,8 @@ static int z_erofs_vle_work_add_page(
+ 	    try_to_reuse_as_compressed_page(builder, page))
+ 		return 0;
  
- 	page->mapping = Z_EROFS_MAPPING_STAGING;
- 	return page;
+-	ret = z_erofs_pagevec_ctor_enqueue(&builder->vector,
+-					   page, type, &occupied);
++	ret = z_erofs_pagevec_enqueue(&builder->vector,
++				      page, type, &occupied);
+ 	builder->work->vcnt += (unsigned int)ret;
+ 
+ 	return ret ? 0 : -EAGAIN;
+@@ -938,7 +938,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 	for (i = 0; i < work->vcnt; ++i) {
+ 		unsigned int pagenr;
+ 
+-		page = z_erofs_pagevec_ctor_dequeue(&ctor, &page_type);
++		page = z_erofs_pagevec_dequeue(&ctor, &page_type);
+ 
+ 		/* all pages in pagevec ought to be valid */
+ 		DBG_BUGON(!page);
+diff --git a/drivers/staging/erofs/zpvec.h b/drivers/staging/erofs/zpvec.h
+index 77bf6877bad8..9798f5627786 100644
+--- a/drivers/staging/erofs/zpvec.h
++++ b/drivers/staging/erofs/zpvec.h
+@@ -11,7 +11,7 @@
+ 
+ #include "tagptr.h"
+ 
+-/* page type in pagevec for unzip subsystem */
++/* page type in pagevec for decompress subsystem */
+ enum z_erofs_page_type {
+ 	/* including Z_EROFS_VLE_PAGE_TAIL_EXCLUSIVE */
+ 	Z_EROFS_PAGE_TYPE_EXCLUSIVE,
+@@ -103,16 +103,14 @@ static inline void z_erofs_pagevec_ctor_init(struct z_erofs_pagevec_ctor *ctor,
+ 			z_erofs_pagevec_ctor_pagedown(ctor, false);
+ 		}
+ 	}
+-
+ 	ctor->next = z_erofs_pagevec_ctor_next_page(ctor, i);
+ 	ctor->index = i;
+ }
+ 
+-static inline bool
+-z_erofs_pagevec_ctor_enqueue(struct z_erofs_pagevec_ctor *ctor,
+-			     struct page *page,
+-			     enum z_erofs_page_type type,
+-			     bool *occupied)
++static inline bool z_erofs_pagevec_enqueue(struct z_erofs_pagevec_ctor *ctor,
++					   struct page *page,
++					   enum z_erofs_page_type type,
++					   bool *occupied)
+ {
+ 	*occupied = false;
+ 	if (unlikely(!ctor->next && type))
+@@ -131,15 +129,13 @@ z_erofs_pagevec_ctor_enqueue(struct z_erofs_pagevec_ctor *ctor,
+ 		ctor->next = page;
+ 		*occupied = true;
+ 	}
+-
+-	ctor->pages[ctor->index++] =
+-		tagptr_fold(erofs_vtptr_t, page, type);
++	ctor->pages[ctor->index++] = tagptr_fold(erofs_vtptr_t, page, type);
+ 	return true;
+ }
+ 
+ static inline struct page *
+-z_erofs_pagevec_ctor_dequeue(struct z_erofs_pagevec_ctor *ctor,
+-			     enum z_erofs_page_type *type)
++z_erofs_pagevec_dequeue(struct z_erofs_pagevec_ctor *ctor,
++			enum z_erofs_page_type *type)
+ {
+ 	erofs_vtptr_t t;
+ 
+@@ -156,11 +152,8 @@ z_erofs_pagevec_ctor_dequeue(struct z_erofs_pagevec_ctor *ctor,
+ 	if (*type == (uintptr_t)ctor->next)
+ 		ctor->next = tagptr_unfold_ptr(t);
+ 
+-	ctor->pages[ctor->index++] =
+-		tagptr_fold(erofs_vtptr_t, NULL, 0);
+-
++	ctor->pages[ctor->index++] = tagptr_fold(erofs_vtptr_t, NULL, 0);
+ 	return tagptr_unfold_ptr(t);
+ }
+-
+ #endif
+ 
 -- 
 2.17.1
 
