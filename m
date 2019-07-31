@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE82C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090B2C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A0F2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14612064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="R36gYrhW"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="McRooZfy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388510AbfGaPIX (ORCPT
+        id S1727492AbfGaPKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:08:23 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43815 "EHLO
+        Wed, 31 Jul 2019 11:10:22 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35916 "EHLO
         mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388314AbfGaPIT (ORCPT
+        with ESMTP id S2388436AbfGaPIX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:08:19 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e3so66030483edr.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:17 -0700 (PDT)
+        Wed, 31 Jul 2019 11:08:23 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k21so66032841edq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wLPXwl8hvJobXFCl++g4aCvf+npUzZ0QqPbdONmdAQc=;
-        b=R36gYrhWPE65DAN624GOKj6Zcvo/ac/skfKDjJ3xcAQFiNmr7dX573jmLVCRaNG72Z
-         xcMGnyIs1LpXnhGK5JxEboIEAPxR/EeGcod/4MYW/A0bbBy9yBKnmU2CF6SqodBq1bbG
-         2et49Q8QeC0Gi2N/dOFWHDkpO2qo6+z6lshk3KNGVbQlqNYxKAMnCnpgag0jzwh5HEUj
-         dMc4Sem5sBJAfoYBQzfFvzczhmipMrh7ObYbRCqFmv9xdDuVsiGlTB/dwRP9co2iZadV
-         LxdeXO4uRP+DUWTuqbPXM46fxWLgXQuCInUrkr1thUYy5i2Mt2bnKrQGqLbEspEV6MTU
-         W2og==
+        bh=UEVrEENQF6GgqskaCpeVIXbw1wxW9ZHP7LEfmwaIX1Y=;
+        b=McRooZfyR/RpXN5XMwhhQ4fnXOkpn46XyCphce8PhxPou3dx2i+zeEUPZwHp8TipgC
+         BGI1enXNjaRfPWABi/58N/CnaStzBfe7I/sVoHLEwUVWO5RPpvbMnQlhUk+vrP5KitP0
+         xlN7apakZ23IIc8QM67elrLhwzfh8ZdwIfgG4AOrbh58L2rHumcrLS2HKAJ0RvRNAs4E
+         tHD5vqNYW5h49SvrGSAt/0No/7IhX7t7K59+y1G7hgFuma9uWtGUIV6MdVueE6BaPNDj
+         +qOFDedI65e57Y1anrGxh7x7TSxMfmTc9skU5uDbNPifz28H6hTWzz2877Q1hXd1xky2
+         0RXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wLPXwl8hvJobXFCl++g4aCvf+npUzZ0QqPbdONmdAQc=;
-        b=LYRfoIPP8tEDR3cV+A+scSstJO8gryju9kRXTyOkJRTfWp/uIbC6WzMIivJY4PEICq
-         kVwV21D5B0saLADbemkL1z7LtqDt0uoZB6IYD+CuIEvW0651FRdYBO0WuVDO2rMzOpHB
-         vGz1oZ8We86ES4D030Pf9c/k3AXnb96ynpKzy0OJd4HlH9MuVjne2DtoKrDa/BQ6WLSI
-         Ynu6nFxDAB65LfQiJSFTdu+LbWc9ahcfXugeXfuJCWTA6EOL5gb8iyYdyxE7vN9TBbRh
-         OrIFQFpjQg+BU7+TR443BF9/wD2wbKS3cX7bjZ1qa1xQSjXmP0xRwHd4h+A9u/VFp6hJ
-         O12g==
-X-Gm-Message-State: APjAAAVZ3tVvi3Df+oHFeRQTEYdH48ynyi0NJ5zyOrWkuVI2bFK4WAoZ
-        OJ9mbYMy1/AZCWsqPGFrrW4=
-X-Google-Smtp-Source: APXvYqw0oWdSxi7D+H/1P5QUyRaVYREdYgbW7LIf4XE4H22UAM6yie49PO/SDUQu/e/ngKqwbq3xkA==
-X-Received: by 2002:a17:906:430a:: with SMTP id j10mr10514767ejm.92.1564585696918;
-        Wed, 31 Jul 2019 08:08:16 -0700 (PDT)
+        bh=UEVrEENQF6GgqskaCpeVIXbw1wxW9ZHP7LEfmwaIX1Y=;
+        b=X6dNi0W/zYt4u335hm6iWp5+unxU1pg29ISqcEhnfwYbdxu8eJHHKBXYby3txWfooQ
+         jxG6AJaQuvcLy2b9HuPbjrqUHe9tDhLz17TfJFzCoZ3xEe1agFPfanXhtDLXg4bes7zr
+         3pMw87baVsx+qme0i0cbEz1Gg5sfOo3CbKpLfhGODOskJ4vowkszNDCmjX7/EyYuYpIZ
+         OvSwUBwSaU34Ztk9hqEzYXdbruVBFqgB8zaaVrsv/l5JswpBzJhNyZtkRLM3qGj+aorP
+         DKUvaCBSF6niePqzzP/SM9K4T8y1b3YNBK42Bf1hQgl24YzAt6WX6xfM49aKMXSnNTdN
+         KnMg==
+X-Gm-Message-State: APjAAAXtRU41jZAIs9MRwgtIrf4F72SnFiqZeqxvEKVLXloaY/xdK97f
+        ZmaZyT4A5otmoD2F7ic5yCk=
+X-Google-Smtp-Source: APXvYqz0kJ4Lqf/rOwIPdDm01UGfUWsjDSwUjlM7k6Av4cmEuFi6nnooAYqixqH6Nb/ho2xl1lQryA==
+X-Received: by 2002:a50:a3ec:: with SMTP id t41mr107352548edb.43.1564585701601;
+        Wed, 31 Jul 2019 08:08:21 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id y11sm12444493ejb.54.2019.07.31.08.08.15
+        by smtp.gmail.com with ESMTPSA id a9sm17507685edc.44.2019.07.31.08.08.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:08:15 -0700 (PDT)
+        Wed, 31 Jul 2019 08:08:19 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id F174F101319; Wed, 31 Jul 2019 18:08:15 +0300 (+03)
+        id 33AC2101321; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,9 +75,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 02/59] mm: Add helpers to setup zero page mappings
-Date:   Wed, 31 Jul 2019 18:07:16 +0300
-Message-Id: <20190731150813.26289-3-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 10/59] x86/mm: Preserve KeyID on pte_modify() and pgprot_modify()
+Date:   Wed, 31 Jul 2019 18:07:24 +0300
+Message-Id: <20190731150813.26289-11-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,114 +88,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When kernel sets up an encrypted page mapping, encryption KeyID is
-derived from a VMA. KeyID is going to be part of vma->vm_page_prot and
-it will be propagated transparently to page table entry on mk_pte().
+An encrypted VMA will have KeyID stored in vma->vm_page_prot. This way
+we don't need to do anything special to setup encrypted page table
+entries and don't need to reserve space for KeyID in a VMA.
 
-But there is an exception: zero page is never encrypted and its mapping
-must use KeyID-0, regardless VMA's KeyID.
+This patch changes _PAGE_CHG_MASK to include KeyID bits. Otherwise they
+are going to be stripped from vm_page_prot on the first pgprot_modify().
 
-Introduce helpers that create a page table entry for zero page.
-
-The generic implementation will be overridden by architecture-specific
-code that takes care about using correct KeyID.
+Define PTE_PFN_MASK_MAX similar to PTE_PFN_MASK but based on
+__PHYSICAL_MASK_SHIFT. This way we include whole range of bits
+architecturally available for PFN without referencing physical_mask and
+mktme_keyid_mask variables.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- fs/dax.c                      | 3 +--
- include/asm-generic/pgtable.h | 8 ++++++++
- mm/huge_memory.c              | 6 ++----
- mm/memory.c                   | 3 +--
- mm/userfaultfd.c              | 3 +--
- 5 files changed, 13 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/pgtable_types.h | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index a237141d8787..6ecc9c560e62 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1445,8 +1445,7 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
- 		pgtable_trans_huge_deposit(vma->vm_mm, vmf->pmd, pgtable);
- 		mm_inc_nr_ptes(vma->vm_mm);
- 	}
--	pmd_entry = mk_pmd(zero_page, vmf->vma->vm_page_prot);
--	pmd_entry = pmd_mkhuge(pmd_entry);
-+	pmd_entry = mk_zero_pmd(zero_page, vmf->vma->vm_page_prot);
- 	set_pmd_at(vmf->vma->vm_mm, pmd_addr, vmf->pmd, pmd_entry);
- 	spin_unlock(ptl);
- 	trace_dax_pmd_load_hole(inode, vmf, zero_page, *entry);
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index 75d9d68a6de7..afcfbb4af4b2 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -879,8 +879,16 @@ static inline unsigned long my_zero_pfn(unsigned long addr)
- }
- #endif
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index b5e49e6bac63..c23793146759 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -116,12 +116,25 @@
+ 				 _PAGE_ACCESSED | _PAGE_DIRTY)
  
-+#ifndef mk_zero_pte
-+#define mk_zero_pte(addr, prot) pte_mkspecial(pfn_pte(my_zero_pfn(addr), prot))
-+#endif
-+
- #ifdef CONFIG_MMU
- 
-+#ifndef mk_zero_pmd
-+#define mk_zero_pmd(zero_page, prot) pmd_mkhuge(mk_pmd(zero_page, prot))
-+#endif
-+
- #ifndef CONFIG_TRANSPARENT_HUGEPAGE
- static inline int pmd_trans_huge(pmd_t pmd)
- {
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 1334ede667a8..e9a791413730 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -678,8 +678,7 @@ static bool set_huge_zero_page(pgtable_t pgtable, struct mm_struct *mm,
- 	pmd_t entry;
- 	if (!pmd_none(*pmd))
- 		return false;
--	entry = mk_pmd(zero_page, vma->vm_page_prot);
--	entry = pmd_mkhuge(entry);
-+	entry = mk_zero_pmd(zero_page, vma->vm_page_prot);
- 	if (pgtable)
- 		pgtable_trans_huge_deposit(mm, pmd, pgtable);
- 	set_pmd_at(mm, haddr, pmd, entry);
-@@ -2109,8 +2108,7 @@ static void __split_huge_zero_page_pmd(struct vm_area_struct *vma,
- 
- 	for (i = 0; i < HPAGE_PMD_NR; i++, haddr += PAGE_SIZE) {
- 		pte_t *pte, entry;
--		entry = pfn_pte(my_zero_pfn(haddr), vma->vm_page_prot);
--		entry = pte_mkspecial(entry);
-+		entry = mk_zero_pte(haddr, vma->vm_page_prot);
- 		pte = pte_offset_map(&_pmd, haddr);
- 		VM_BUG_ON(!pte_none(*pte));
- 		set_pte_at(mm, haddr, pte, entry);
-diff --git a/mm/memory.c b/mm/memory.c
-index e2bb51b6242e..81ae8c39f75b 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2970,8 +2970,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 	/* Use the zero-page for reads */
- 	if (!(vmf->flags & FAULT_FLAG_WRITE) &&
- 			!mm_forbids_zeropage(vma->vm_mm)) {
--		entry = pte_mkspecial(pfn_pte(my_zero_pfn(vmf->address),
--						vma->vm_page_prot));
-+		entry = mk_zero_pte(vmf->address, vma->vm_page_prot);
- 		vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
- 				vmf->address, &vmf->ptl);
- 		if (!pte_none(*vmf->pte))
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index c7ae74ce5ff3..06bf4ea3ee05 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -120,8 +120,7 @@ static int mfill_zeropage_pte(struct mm_struct *dst_mm,
- 	pgoff_t offset, max_off;
- 	struct inode *inode;
- 
--	_dst_pte = pte_mkspecial(pfn_pte(my_zero_pfn(dst_addr),
--					 dst_vma->vm_page_prot));
-+	_dst_pte = mk_zero_pte(dst_addr, dst_vma->vm_page_prot);
- 	dst_pte = pte_offset_map_lock(dst_mm, dst_pmd, dst_addr, &ptl);
- 	if (dst_vma->vm_file) {
- 		/* the shmem MAP_PRIVATE case requires checking the i_size */
+ /*
+- * Set of bits not changed in pte_modify.  The pte's
+- * protection key is treated like _PAGE_RW, for
+- * instance, and is *not* included in this mask since
+- * pte_modify() does modify it.
++ * Set of bits not changed in pte_modify.
++ *
++ * The pte's protection key is treated like _PAGE_RW, for instance, and is
++ * *not* included in this mask since pte_modify() does modify it.
++ *
++ * They include the physical address and the memory encryption keyID.
++ * The paddr and the keyID never occupy the same bits at the same time.
++ * But, a given bit might be used for the keyID on one system and used for
++ * the physical address on another. As an optimization, we manage them in
++ * one unit here since their combination always occupies the same hardware
++ * bits. PTE_PFN_MASK_MAX stores combined mask.
++ *
++ * Cast PAGE_MASK to a signed type so that it is sign-extended if
++ * virtual addresses are 32-bits but physical addresses are larger
++ * (ie, 32-bit PAE).
+  */
+-#define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
++#define PTE_PFN_MASK_MAX \
++	(((signed long)PAGE_MASK) & ((1ULL << __PHYSICAL_MASK_SHIFT) - 1))
++#define _PAGE_CHG_MASK	(PTE_PFN_MASK_MAX | _PAGE_PCD | _PAGE_PWT |		\
+ 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
+ 			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
+ #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
 -- 
 2.21.0
 
