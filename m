@@ -3,102 +3,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E785C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFCAC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4E3206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CBBA206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfGaPy7 (ORCPT
+        id S1729493AbfGaP6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:54:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39692 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfGaPy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:54:58 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8F2A14E93D;
-        Wed, 31 Jul 2019 15:54:58 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 656975D6D0;
-        Wed, 31 Jul 2019 15:54:57 +0000 (UTC)
-Message-ID: <ccc04779d78c8856f3dd3ef57299a59df5686bc3.camel@redhat.com>
-Subject: Re: [PATCH][next] RDMA/core: fix spelling mistake "Nelink" ->
- "Netlink"
-From:   Doug Ledford <dledford@redhat.com>
-To:     Leon Romanovsky <leon@kernel.org>,
-        Colin King <colin.king@canonical.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 31 Jul 2019 11:54:54 -0400
-In-Reply-To: <20190731082837.GO4878@mtr-leonro.mtl.com>
-References: <20190731080144.18327-1-colin.king@canonical.com>
-         <20190731082837.GO4878@mtr-leonro.mtl.com>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-TiHXGszeHh0v77g7ujL8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 31 Jul 2019 11:58:18 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3274 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728028AbfGaP6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:58:17 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B31A9CCB8EE6D6FE45A5;
+        Wed, 31 Jul 2019 23:58:15 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
+ 2019 23:58:09 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chao Yu <yuchao0@huawei.com>, <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v2 00/22] staging: erofs: updates according to erofs-outofstaging v4
+Date:   Wed, 31 Jul 2019 23:57:30 +0800
+Message-ID: <20190731155752.210602-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 31 Jul 2019 15:54:58 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+changes from v1:
+ (mainly address comments from Chao:)
+  - keep EROFS_IO_MAX_RETRIES_NOFAIL;
+  - add a new patch "drop __GFP_NOFAIL for managed inode";
+  - kill a redundant NULL check in "__stagingpage_alloc";
+  - add some description in document about "use_vmap";
+  - rearrange erofs_vmap of "staging: erofs: kill CONFIG_EROFS_FS_USE_VM_MAP_RAM";
+ - combine two similar patches about "cleaning up internal.h"
+   since they rearrange the same file...
 
---=-TiHXGszeHh0v77g7ujL8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+----8<----
 
-On Wed, 2019-07-31 at 11:28 +0300, Leon Romanovsky wrote:
-> On Wed, Jul 31, 2019 at 09:01:44AM +0100, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >=20
-> > There is a spelling mistake in a warning message, fix it.
-> >=20
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  drivers/infiniband/core/netlink.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
->=20
-> Thanks,
-> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+This patchset includes all meaningful modifications till now according
+to erofs-outofstaging v4:
+https://lore.kernel.org/linux-fsdevel/20190725095658.155779-1-gaoxiang25@huawei.com/
 
-Thanks, applied to for-next.
+Some empty lines which were add or delete are not included in this
+patchset, I will send erofs-outofstaging v5 later in order to keep
+main code bit-for-bit identical with this staging patchset.
 
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+Thanks,
+Gao Xiang
 
---=-TiHXGszeHh0v77g7ujL8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Gao Xiang (22):
+  staging: erofs: update source file headers
+  staging: erofs: rename source files for better understanding
+  staging: erofs: fix dummy functions erofs_{get,list}xattr
+  staging: erofs: keep up erofs_fs.h with erofs-outofstaging patchset
+  staging: erofs: sunset erofs_workstn_{lock,unlock}
+  staging: erofs: clean up internal.h
+  staging: erofs: remove redundant #include "internal.h"
+  staging: erofs: kill CONFIG_EROFS_FS_IO_MAX_RETRIES
+  staging: erofs: clean up shrinker stuffs
+  staging: erofs: kill sbi->dev_name
+  staging: erofs: kill all failure handling in fill_super()
+  staging: erofs: drop __GFP_NOFAIL for managed inode
+  staging: erofs: refine erofs_allocpage()
+  staging: erofs: kill CONFIG_EROFS_FS_USE_VM_MAP_RAM
+  staging: erofs: tidy up zpvec.h
+  staging: erofs: remove redundant braces in inode.c
+  staging: erofs: tidy up decompression frontend
+  staging: erofs: remove clusterbits in sbi
+  staging: erofs: turn cache strategies into mount options
+  staging: erofs: tidy up utils.c
+  staging: erofs: update super.c
+  staging: erofs: update Kconfig
 
------BEGIN PGP SIGNATURE-----
+ .../erofs/Documentation/filesystems/erofs.txt |   14 +
+ drivers/staging/erofs/Kconfig                 |  111 +-
+ drivers/staging/erofs/Makefile                |    4 +-
+ drivers/staging/erofs/compress.h              |    2 +-
+ drivers/staging/erofs/data.c                  |    6 +-
+ drivers/staging/erofs/decompressor.c          |   45 +-
+ drivers/staging/erofs/dir.c                   |    6 +-
+ drivers/staging/erofs/erofs_fs.h              |   47 +-
+ .../erofs/include/trace/events/erofs.h        |    2 +-
+ drivers/staging/erofs/inode.c                 |   24 +-
+ drivers/staging/erofs/internal.h              |  246 +--
+ drivers/staging/erofs/namei.c                 |    7 +-
+ drivers/staging/erofs/super.c                 |  268 ++-
+ .../erofs/{include/linux => }/tagptr.h        |   12 +-
+ drivers/staging/erofs/unzip_vle.c             | 1591 -----------------
+ drivers/staging/erofs/utils.c                 |  112 +-
+ drivers/staging/erofs/xattr.c                 |    6 +-
+ drivers/staging/erofs/xattr.h                 |   22 +-
+ drivers/staging/erofs/zdata.c                 | 1405 +++++++++++++++
+ .../staging/erofs/{unzip_vle.h => zdata.h}    |  119 +-
+ drivers/staging/erofs/zmap.c                  |    5 +-
+ .../erofs/{unzip_pagevec.h => zpvec.h}        |   41 +-
+ 22 files changed, 1856 insertions(+), 2239 deletions(-)
+ rename drivers/staging/erofs/{include/linux => }/tagptr.h (94%)
+ delete mode 100644 drivers/staging/erofs/unzip_vle.c
+ create mode 100644 drivers/staging/erofs/zdata.c
+ rename drivers/staging/erofs/{unzip_vle.h => zdata.h} (56%)
+ rename drivers/staging/erofs/{unzip_pagevec.h => zpvec.h} (78%)
 
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1Buc4ACgkQuCajMw5X
-L93xDg/+L2blb3qy7x0h7UHlovEAcdgNtq8TTtGnS51i2gGaE0uLdfLC6JI7ohJJ
-SdeGHdxhrSRSeS0SbT1Q865JcmWlpt0fUpC109bAS78fhtsH/7ySJ1cKrZpCdCi3
-M/U7cGXKnZcdSqwBKYBpDzMQZzugOl5Q2tvRYeFv+8wuTFp7WReexDaZWeA0hEH9
-eOzsCHp4kR4/x4hIZw/feI4oAuI0MZtYawIqrR75Zj0JzXwWz1OpHMx0qJe58+cB
-N2lysGUmzgnID3iJXDKDmx1tWP4+d2WYFJ1Keeo9DhgcaCGBjuMmfW07LL0e2zou
-zuId8Xe5GwdOLpAIESPB7D+lANfVZpsJSDx+ge1x6gzQollIjA0bBnjds+28Z43G
-SEgbDmZSmhedEUiE/GnkJcQJxMKVE1bOD5RtcodqKmq1Vc4UCAK6oABE2peVzqSI
-3im0kHf26dvknZXh77ews4U5qIRERxLPDycGb8EuRvAe7yiF3G61qCKeeiTreDXH
-IIhjxPeCOhgpHh2WYSIyWZceWuZNnIx7e0UL9qvoYX+MnssfJdT7PoVgIZPRSxaX
-ifjk/AD79B1K6RpqdsrnyzGhmM6GCllsSPpR1kVlBn/pNqC8FIe3Jt5o0W86hh1U
-306tkS3oABmJyTLiW1TcrNMuAiJj5nFLeWxAzE28A1Mf6+HfBcQ=
-=inNQ
------END PGP SIGNATURE-----
-
---=-TiHXGszeHh0v77g7ujL8--
+-- 
+2.17.1
 
