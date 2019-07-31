@@ -2,107 +2,120 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617C5C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671FEC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F03920693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:08:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o9IAc92n"
+	by mail.kernel.org (Postfix) with ESMTP id 3E5E920693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbfGaNIF (ORCPT
+        id S1729283AbfGaNIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:08:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34161 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727768AbfGaNIE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:08:04 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b13so31850642pfo.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 06:08:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TL4ILmZRNuWApLUyD7oozpBzIfadu1ztye/qAKfEyi0=;
-        b=o9IAc92njeRE7fMYm10keRWyiBayxHYufS5PRZxQt2XBoIkDRi6h2JhPjY+nYsDzrQ
-         QierZP8IlVMrnVHJ7ICiHwRt3cq/CUuLAiSWcVzpOCKR5Yll7YEk0tKt0ji/26VwRwos
-         tKl6+dtqaujF72tNFvN3GnOyzbeajXwPuvtVDmhBTi/bd2beTcpmCFs4zAuxI79/BP0W
-         v32ftsYFvO/p31Y2xqVDjh3mNyme+qaOtImrIF3IA+tdYLPip7BckedTkXfm5RIlrvvk
-         sCfP4T0N4MxS7lpS2qWJucdZGHokv3qiamLVoYNvjPOXGgNrbhN56bih1wEId2m13qRJ
-         INRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TL4ILmZRNuWApLUyD7oozpBzIfadu1ztye/qAKfEyi0=;
-        b=t/sisQ77MPYucrZTU4sU0lY8AfrvSWmV0ZT2PxBhCww0BsX4SXUj0Wt9c3bmMqXIUi
-         yt75jYWY8r+QLclbUYE3qJfumXjhRP3jFuhjSQ/9KVjyL21VSEGGqWXS9Ff//8MdAzro
-         45/UE/raHFhmZ02F5O9XthQXbIRMpxHYv1BQjb1djzvfZyfshJjavda53Rn8DxOAy0My
-         d03bkFtC2W8cuWBhYUK7GMTt5j13gL35aAgpMd0BRsVCSRt6bSCgE3gcsaKy9LIhgEpx
-         oUrSGU/+GAH57jz6s42kFPM2LTr3wSxwNVMTxXV+STizuhp6dgNgyrfnDsqGMpqjzKm6
-         Da8w==
-X-Gm-Message-State: APjAAAXqfVIeUzj5mU1SK86hDmCuA2XaQNbnM9192Cnkjf/Y4sazCRyy
-        X8O1bExuCr/TSDiLtBnw7Hs=
-X-Google-Smtp-Source: APXvYqzz3sUkeLWgRarJc/fH+UNg3fDFQHHkDZqU062Dvg7MYNOWCYBFqo0xzt2PpEioibHX1uChIQ==
-X-Received: by 2002:aa7:8102:: with SMTP id b2mr6100364pfi.105.1564578483761;
-        Wed, 31 Jul 2019 06:08:03 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b136sm85270194pfb.73.2019.07.31.06.08.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 06:08:03 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 06:08:00 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org,
-        Richard Gong <richard.gong@linux.intel.com>
-Subject: Re: [PATCH v2 01/10] driver core: add dev_groups to all drivers
-Message-ID: <20190731130800.GA147138@dtor-ws>
-References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
- <20190731124349.4474-2-gregkh@linuxfoundation.org>
- <s5h4l32s71l.wl-tiwai@suse.de>
- <20190731125104.GA6062@kroah.com>
+        Wed, 31 Jul 2019 09:08:24 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:35130 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727841AbfGaNIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:08:22 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 432411A09D3;
+        Wed, 31 Jul 2019 15:08:21 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 367E51A09CF;
+        Wed, 31 Jul 2019 15:08:21 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id DFBF9205F3;
+        Wed, 31 Jul 2019 15:08:20 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH v5 01/14] crypto: caam/qi - fix error handling in ERN handler
+Date:   Wed, 31 Jul 2019 16:08:02 +0300
+Message-Id: <1564578495-9883-2-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1564578495-9883-1-git-send-email-iuliana.prodan@nxp.com>
+References: <1564578495-9883-1-git-send-email-iuliana.prodan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731125104.GA6062@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 02:51:04PM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Jul 31, 2019 at 02:49:26PM +0200, Takashi Iwai wrote:
-> > On Wed, 31 Jul 2019 14:43:40 +0200,
-> > Greg Kroah-Hartman wrote:
-> > > 
-> > > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > 
-> > > Add the ability for the driver core to create and remove a list of
-> > > attribute groups automatically when the device is bound/unbound from a
-> > > specific driver.
-> > > 
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > Missing sign-off from Dmitry?
-> 
-> He never provided it :(
-> 
-> Dmitry, can you please do so?  I forgot to include that in the cover
-> leter...
+From: Horia Geantă <horia.geanta@nxp.com>
 
-Yeah, sorry, I thought what I sent was a draft to be used as you wish
-with it; I did not expect to be put down as an author. Anyway,
+ERN handler calls the caam/qi frontend "done" callback with a status
+of -EIO. This is incorrect, since the callback expects a status value
+meaningful for the crypto engine - hence the cryptic messages
+like the one below:
+platform caam_qi: 15: unknown error source
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fix this by providing the callback with:
+-the status returned by the crypto engine (fd[status]) in case
+it contains an error, OR
+-a QI "No error" code otherwise; this will trigger the message:
+platform caam_qi: 50000000: Queue Manager Interface: No error
+which is fine, since QMan driver provides details about the cause of
+failure
 
-Thanks.
+Cc: <stable@vger.kernel.org> # v5.1+
+Fixes: 67c2315def06 ("crypto: caam - add Queue Interface (QI) backend support")
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+---
+ drivers/crypto/caam/error.c | 1 +
+ drivers/crypto/caam/qi.c    | 5 ++++-
+ drivers/crypto/caam/regs.h  | 1 +
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/crypto/caam/error.c b/drivers/crypto/caam/error.c
+index 4f0d458..95da6ae 100644
+--- a/drivers/crypto/caam/error.c
++++ b/drivers/crypto/caam/error.c
+@@ -118,6 +118,7 @@ static const struct {
+ 	u8 value;
+ 	const char *error_text;
+ } qi_error_list[] = {
++	{ 0x00, "No error" },
+ 	{ 0x1F, "Job terminated by FQ or ICID flush" },
+ 	{ 0x20, "FD format error"},
+ 	{ 0x21, "FD command format error"},
+diff --git a/drivers/crypto/caam/qi.c b/drivers/crypto/caam/qi.c
+index 0fe618e..19a378b 100644
+--- a/drivers/crypto/caam/qi.c
++++ b/drivers/crypto/caam/qi.c
+@@ -163,7 +163,10 @@ static void caam_fq_ern_cb(struct qman_portal *qm, struct qman_fq *fq,
+ 	dma_unmap_single(drv_req->drv_ctx->qidev, qm_fd_addr(fd),
+ 			 sizeof(drv_req->fd_sgt), DMA_BIDIRECTIONAL);
+ 
+-	drv_req->cbk(drv_req, -EIO);
++	if (fd->status)
++		drv_req->cbk(drv_req, be32_to_cpu(fd->status));
++	else
++		drv_req->cbk(drv_req, JRSTA_SSRC_QI);
+ }
+ 
+ static struct qman_fq *create_caam_req_fq(struct device *qidev,
+diff --git a/drivers/crypto/caam/regs.h b/drivers/crypto/caam/regs.h
+index 8591914..7c7ea8a 100644
+--- a/drivers/crypto/caam/regs.h
++++ b/drivers/crypto/caam/regs.h
+@@ -641,6 +641,7 @@ struct caam_job_ring {
+ #define JRSTA_SSRC_CCB_ERROR        0x20000000
+ #define JRSTA_SSRC_JUMP_HALT_USER   0x30000000
+ #define JRSTA_SSRC_DECO             0x40000000
++#define JRSTA_SSRC_QI               0x50000000
+ #define JRSTA_SSRC_JRERROR          0x60000000
+ #define JRSTA_SSRC_JUMP_HALT_CC     0x70000000
+ 
 -- 
-Dmitry
+2.1.0
+
