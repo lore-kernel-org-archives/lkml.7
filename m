@@ -2,294 +2,150 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8327CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48782C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56FDC20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1441220693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:16:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564560994;
+	bh=Tu581Sxi2KfCSLBCf35p6bgm0YTSGY4pQYhZtN6cy4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f0PcdLbB039CjvOwq/Ouu7+BDVClfk2HZyQ5L43rALiuu/c+BPusoi6tvdLxS+sMM
+	 ZlCbe/4F4omnSldnZGXMos7EZAADKaJ9dtyqGifpMJMC9aa7yJ6PMuuxlURex7eb1n
+	 JVj2Zk3bxufGG25uLiAA8eHphQgfAihMpRiC0fco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfGaIPr (ORCPT
+        id S1727089AbfGaIQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:15:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3261 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726185AbfGaIPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:15:46 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0586160CDF74577FA9B7;
-        Wed, 31 Jul 2019 16:15:44 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 16:15:37 +0800
-Subject: Re: [PATCH 11/22] staging: erofs: kill all failure handling in
- fill_super()
-To:     Gao Xiang <gaoxiang25@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     <linux-erofs@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>, <weidu.du@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190729065159.62378-1-gaoxiang25@huawei.com>
- <20190729065159.62378-12-gaoxiang25@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <56bdc87a-635f-e596-584e-fca0acb4a69e@huawei.com>
-Date:   Wed, 31 Jul 2019 16:15:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 31 Jul 2019 04:16:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726185AbfGaIQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 04:16:32 -0400
+Received: from localhost (unknown [171.76.116.36])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9913620657;
+        Wed, 31 Jul 2019 08:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564560992;
+        bh=Tu581Sxi2KfCSLBCf35p6bgm0YTSGY4pQYhZtN6cy4o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=taMMxMjqq8Db2B5xb5nNPzq9GGlIHzzbUpoNlC5yvqn/nuxdVHoDEnmchzdz9EcfE
+         3pb7VBBjD5e5PozbSOzeuREsRGUAGN8bROKTURhprYvUgoR/OQnlcMfn0nhfnpA+u6
+         rCIUXHAephkahOrlBHdiDFi86se0flcnNUCAhOgc=
+Date:   Wed, 31 Jul 2019 13:45:18 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: pms405: add unit name adc nodes
+Message-ID: <20190731081518.GS12733@vkoul-mobl.Dlink>
+References: <20190725135150.9972-1-vkoul@kernel.org>
+ <20190725135150.9972-2-vkoul@kernel.org>
+ <CAHLCerNsAX4raauTjogOpwqAjEWfd+jpaZYsFnC10tcmvnD5cg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190729065159.62378-12-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHLCerNsAX4raauTjogOpwqAjEWfd+jpaZYsFnC10tcmvnD5cg@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/29 14:51, Gao Xiang wrote:
-> .kill_sb() will do that instead in order to remove duplicated code.
+
+Thanks for the review Amit!
+
+On 30-07-19, 22:05, Amit Kucheria wrote:
+> On Thu, Jul 25, 2019 at 7:23 PM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > The adc nodes have reg property but were missing the unit name, so add
+> > that to fix these warnings:
+> >
+> > arch/arm64/boot/dts/qcom/pms405.dtsi:91.12-94.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/ref_gnd: node has a reg or ranges property, but no unit name
+> > arch/arm64/boot/dts/qcom/pms405.dtsi:96.14-99.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/vref_1p25: node has a reg or ranges property, but no unit name
+> > arch/arm64/boot/dts/qcom/pms405.dtsi:101.19-104.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/vph_pwr: node has a reg or ranges property, but no unit name
+> > arch/arm64/boot/dts/qcom/pms405.dtsi:106.13-109.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/die_temp: node has a reg or ranges property, but no unit name
+> > arch/arm64/boot/dts/qcom/pms405.dtsi:111.27-116.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/thermistor1: node has a reg or ranges property, but no unit name
+> > arch/arm64/boot/dts/qcom/pms405.dtsi:118.27-123.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/thermistor3: node has a reg or ranges property, but no unit name
+> > arch/arm64/boot/dts/qcom/pms405.dtsi:125.22-130.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/xo_temp: node has a reg or ranges property, but no unit name
+> >
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/pms405.dtsi | 14 +++++++-------
+> >  1 file changed, 7 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> > index 14240fedd916..3c10cf04d26e 100644
+> > --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> > @@ -88,41 +88,41 @@
+> >                         #size-cells = <0>;
+> >                         #io-channel-cells = <1>;
+> >
+> > -                       ref_gnd {
+> > +                       ref_gnd@0 {
+> >                                 reg = <ADC5_REF_GND>;
+> >                                 qcom,pre-scaling = <1 1>;
+> >                         };
+> >
+> > -                       vref_1p25 {
+> > +                       vref_1p25@1 {
+> >                                 reg = <ADC5_1P25VREF>;
+> >                                 qcom,pre-scaling = <1 1>;
+> >                         };
+> >
+> > -                       pon_1: vph_pwr {
+> > +                       pon_1: vph_pwr@131 {
+> >                                 reg = <ADC5_VPH_PWR>;
+> >                                 qcom,pre-scaling = <1 3>;
+> >                         };
+> >
+> > -                       die_temp {
+> > +                       die_temp@6 {
+> >                                 reg = <ADC5_DIE_TEMP>;
+> >                                 qcom,pre-scaling = <1 1>;
+> >                         };
+> >
+> > -                       pa_therm1: thermistor1 {
+> > +                       pa_therm1: thermistor1@115 {
 > 
-> Note that the initialzation of managed_cache is now moved
-> after s_root is assigned since it's more preferred to iput()
-> in .put_super() and all inodes should be evicted before
-> the end of generic_shutdown_super(sb).
+> s/115/77 ?
 > 
-> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> ---
->  drivers/staging/erofs/super.c | 121 +++++++++++++++-------------------
->  1 file changed, 53 insertions(+), 68 deletions(-)
+> >                                 reg = <ADC5_AMUX_THM1_100K_PU>;
+> >                                 qcom,ratiometric;
+> >                                 qcom,hw-settle-time = <200>;
+> >                                 qcom,pre-scaling = <1 1>;
+> >                         };
+> >
+> > -                       pa_therm3: thermistor3 {
+> > +                       pa_therm3: thermistor3@117 {
 > 
-> diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
-> index bfb6e1e09781..af5d87793e4d 100644
-> --- a/drivers/staging/erofs/super.c
-> +++ b/drivers/staging/erofs/super.c
-> @@ -343,51 +343,52 @@ static const struct address_space_operations managed_cache_aops = {
->  	.invalidatepage = managed_cache_invalidatepage,
->  };
->  
-> -static struct inode *erofs_init_managed_cache(struct super_block *sb)
-> +static int erofs_init_managed_cache(struct super_block *sb)
->  {
-> -	struct inode *inode = new_inode(sb);
-> +	struct erofs_sb_info *const sbi = EROFS_SB(sb);
-> +	struct inode *const inode = new_inode(sb);
->  
->  	if (unlikely(!inode))
-> -		return ERR_PTR(-ENOMEM);
-> +		return -ENOMEM;
->  
->  	set_nlink(inode, 1);
->  	inode->i_size = OFFSET_MAX;
->  
->  	inode->i_mapping->a_ops = &managed_cache_aops;
->  	mapping_set_gfp_mask(inode->i_mapping,
-> -			     GFP_NOFS | __GFP_HIGHMEM |
-> -			     __GFP_MOVABLE |  __GFP_NOFAIL);
-> -	return inode;
-> +			     GFP_NOFS | __GFP_HIGHMEM | __GFP_MOVABLE);
-
-It looks above change is not belong to this patch?
-
-Otherwise, it looks good to me.
-
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks,
-
-> +	sbi->managed_cache = inode;
-> +	return 0;
->  }
-> -
-> +#else
-> +static int erofs_init_managed_cache(struct super_block *sb) { return 0; }
->  #endif
->  
->  static int erofs_fill_super(struct super_block *sb, void *data, int silent)
->  {
->  	struct inode *inode;
->  	struct erofs_sb_info *sbi;
-> -	int err = -EINVAL;
-> +	int err;
->  
->  	infoln("fill_super, device -> %s", sb->s_id);
->  	infoln("options -> %s", (char *)data);
->  
-> +	sb->s_magic = EROFS_SUPER_MAGIC;
-> +
->  	if (unlikely(!sb_set_blocksize(sb, EROFS_BLKSIZ))) {
->  		errln("failed to set erofs blksize");
-> -		goto err;
-> +		return -EINVAL;
->  	}
->  
->  	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-> -	if (unlikely(!sbi)) {
-> -		err = -ENOMEM;
-> -		goto err;
-> -	}
-> -	sb->s_fs_info = sbi;
-> +	if (unlikely(!sbi))
-> +		return -ENOMEM;
->  
-> +	sb->s_fs_info = sbi;
->  	err = superblock_read(sb);
->  	if (err)
-> -		goto err_sbread;
-> +		return err;
->  
-> -	sb->s_magic = EROFS_SUPER_MAGIC;
->  	sb->s_flags |= SB_RDONLY | SB_NOATIME;
->  	sb->s_maxbytes = MAX_LFS_FILESIZE;
->  	sb->s_time_gran = 1;
-> @@ -397,13 +398,12 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
->  #ifdef CONFIG_EROFS_FS_XATTR
->  	sb->s_xattr = erofs_xattr_handlers;
->  #endif
-> -
->  	/* set erofs default mount options */
->  	default_options(sbi);
->  
->  	err = parse_options(sb, data);
-> -	if (err)
-> -		goto err_parseopt;
-> +	if (unlikely(err))
-> +		return err;
->  
->  	if (!silent)
->  		infoln("root inode @ nid %llu", ROOT_NID(sbi));
-> @@ -417,93 +417,78 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
->  	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
->  #endif
->  
-> -#ifdef EROFS_FS_HAS_MANAGED_CACHE
-> -	sbi->managed_cache = erofs_init_managed_cache(sb);
-> -	if (IS_ERR(sbi->managed_cache)) {
-> -		err = PTR_ERR(sbi->managed_cache);
-> -		goto err_init_managed_cache;
-> -	}
-> -#endif
-> -
->  	/* get the root inode */
->  	inode = erofs_iget(sb, ROOT_NID(sbi), true);
-> -	if (IS_ERR(inode)) {
-> -		err = PTR_ERR(inode);
-> -		goto err_iget;
-> -	}
-> +	if (IS_ERR(inode))
-> +		return PTR_ERR(inode);
->  
-> -	if (!S_ISDIR(inode->i_mode)) {
-> +	if (unlikely(!S_ISDIR(inode->i_mode))) {
->  		errln("rootino(nid %llu) is not a directory(i_mode %o)",
->  		      ROOT_NID(sbi), inode->i_mode);
-> -		err = -EINVAL;
->  		iput(inode);
-> -		goto err_iget;
-> +		return -EINVAL;
->  	}
->  
->  	sb->s_root = d_make_root(inode);
-> -	if (!sb->s_root) {
-> -		err = -ENOMEM;
-> -		goto err_iget;
-> -	}
-> +	if (unlikely(!sb->s_root))
-> +		return -ENOMEM;
->  
->  	erofs_shrinker_register(sb);
-> +	/* sb->s_umount is already locked, SB_ACTIVE and SB_BORN are not set */
-> +	err = erofs_init_managed_cache(sb);
-> +	if (unlikely(err))
-> +		return err;
->  
->  	if (!silent)
->  		infoln("mounted on %s with opts: %s.", sb->s_id, (char *)data);
->  	return 0;
-> -	/*
-> -	 * please add a label for each exit point and use
-> -	 * the following name convention, thus new features
-> -	 * can be integrated easily without renaming labels.
-> -	 */
-> -err_iget:
-> -#ifdef EROFS_FS_HAS_MANAGED_CACHE
-> -	iput(sbi->managed_cache);
-> -err_init_managed_cache:
-> -#endif
-> -err_parseopt:
-> -err_sbread:
-> -	sb->s_fs_info = NULL;
-> -	kfree(sbi);
-> -err:
-> -	return err;
-> +}
-> +
-> +static struct dentry *erofs_mount(struct file_system_type *fs_type, int flags,
-> +				  const char *dev_name, void *data)
-> +{
-> +	return mount_bdev(fs_type, flags, dev_name, data, erofs_fill_super);
->  }
->  
->  /*
->   * could be triggered after deactivate_locked_super()
->   * is called, thus including umount and failed to initialize.
->   */
-> -static void erofs_put_super(struct super_block *sb)
-> +static void erofs_kill_sb(struct super_block *sb)
->  {
-> -	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> +	struct erofs_sb_info *sbi;
-> +
-> +	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
-> +	infoln("unmounting for %s", sb->s_id);
->  
-> -	/* for cases which are failed in "read_super" */
-> +	kill_block_super(sb);
-> +
-> +	sbi = EROFS_SB(sb);
->  	if (!sbi)
->  		return;
-> +	kfree(sbi);
-> +	sb->s_fs_info = NULL;
-> +}
->  
-> -	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
-> +/* called when ->s_root is non-NULL */
-> +static void erofs_put_super(struct super_block *sb)
-> +{
-> +	struct erofs_sb_info *const sbi = EROFS_SB(sb);
->  
-> -	infoln("unmounted for %s", sb->s_id);
-> +	DBG_BUGON(!sbi);
->  
->  	erofs_shrinker_unregister(sb);
->  #ifdef EROFS_FS_HAS_MANAGED_CACHE
->  	iput(sbi->managed_cache);
-> +	sbi->managed_cache = NULL;
->  #endif
-> -	kfree(sbi);
-> -	sb->s_fs_info = NULL;
-> -}
-> -
-> -static struct dentry *erofs_mount(struct file_system_type *fs_type, int flags,
-> -				  const char *dev_name, void *data)
-> -{
-> -	return mount_bdev(fs_type, flags, dev_name, data, erofs_fill_super);
->  }
->  
->  static struct file_system_type erofs_fs_type = {
->  	.owner          = THIS_MODULE,
->  	.name           = "erofs",
->  	.mount          = erofs_mount,
-> -	.kill_sb        = kill_block_super,
-> +	.kill_sb        = erofs_kill_sb,
->  	.fs_flags       = FS_REQUIRES_DEV,
->  };
->  MODULE_ALIAS_FS("erofs");
+> s/117/79 ?
 > 
+> >                                 reg = <ADC5_AMUX_THM3_100K_PU>;
+> >                                 qcom,ratiometric;
+> >                                 qcom,hw-settle-time = <200>;
+> >                                 qcom,pre-scaling = <1 1>;
+> >                         };
+> >
+> > -                       xo_therm: xo_temp {
+> > +                       xo_therm: xo_temp@114 {
+> 
+> s/114/76 ?
+
+Thanks, will fix these and recheck others.
+
+-- 
+~Vinod
