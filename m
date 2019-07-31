@@ -5,39 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB3AC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3182C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890B72067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0F92067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iR0+d/KC"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rFz2cCw5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbfGaVLt (ORCPT
+        id S1730972AbfGaVMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:11:49 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17184 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730532AbfGaVLL (ORCPT
+        Wed, 31 Jul 2019 17:12:01 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10584 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729092AbfGaVLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:11:11 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4203ee0002>; Wed, 31 Jul 2019 14:11:10 -0700
+        Wed, 31 Jul 2019 17:11:10 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4203ec0001>; Wed, 31 Jul 2019 14:11:08 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 31 Jul 2019 14:11:09 -0700
+  Wed, 31 Jul 2019 14:11:08 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:11:09 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
- 2019 21:11:09 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 31 Jul 2019 21:11:09 +0000
+        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:11:08 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:11:08 +0000
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:11:07 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 31 Jul 2019 21:11:08 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.167]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d4203ec0003>; Wed, 31 Jul 2019 14:11:08 -0700
+        id <B5d4203eb0006>; Wed, 31 Jul 2019 14:11:07 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -52,9 +55,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>,
         <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
         <linux-pm@vger.kernel.org>
-Subject: [PATCH v7 15/20] soc/tegra: pmc: Add pmc wake support for tegra210
-Date:   Wed, 31 Jul 2019 14:10:58 -0700
-Message-ID: <1564607463-28802-16-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v7 09/20] clk: tegra: clk-super: Add save and restore support
+Date:   Wed, 31 Jul 2019 14:10:52 -0700
+Message-ID: <1564607463-28802-10-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
 References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
@@ -62,177 +65,115 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564607470; bh=YC2WyHhKcxO32X94/1fVg0egtzrRq/QXLMfSSFFNqSI=;
+        t=1564607469; bh=VmKb5n/2JIR1zlI4AVRsVa2NqvfH91G42xKZvFw0+7s=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=iR0+d/KCEyKPtaLCZKVJ8l2QbbKkL9bzhctXlg5QNPt9smLpgOhhe6KIlV/1JVVRv
-         0NntgQLBqOAmyxXi2iax6j7tJdAhfMNoUzMNYa1iYUU46z9v51UbRcXl0/g+WLAGDh
-         3uyV/vTgGNfibesojHepk81E2/9/NYO57n1W/bLRYjqUjSqSzQf/EKyh6oygBhZ5Ai
-         cYxq/ViY3IRqvr6pjnSNIuF4J9jE0iGH2Oq4kMnIqqHum/c4X2r196WntxtvOnmCSn
-         605a9FnEgDhbIITXLvp+1kmyllrUwoKbwH/KxXcwjY/rsQRkyOW+wDKssBMv09WRit
-         uCjFSMP/XcryA==
+        b=rFz2cCw5Z2lh2J88SbyFIBGUWr0rLUMfo4pDT+/i2m5q1MBwBmrtF69FvGxk/e+Nx
+         fvm6LlxfQ9kVUUhXr3GKBCU8d5knVTv7tPLW3UErVWLiLKGFd2SozLUeSYp/ZCIdm8
+         JhnOsgj0C+dHhPbfYYInCkyWilw30aIerqEmy3Gdbwm7PiVrUEBzV/xjsbA2CsU0L7
+         Rvc72kRReLbbjxGLGKTe/pxyKbjaYxbZnKQInXF+dzArFJq46ESBJ7dm5pUlYtjxNt
+         upbVw+Wm3JS4BO8cQsHXg22CDpDeJeoaeiKY6Kh+6byDrYhFeD4RT38u5sqQKJIAvC
+         gF8SWN6jgjZHA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements PMC wakeup sequence for Tegra210 and defines
-common used RTC alarm wake event.
+This patch implements save and restore context for clk_super_mux
+and clk_super.
+
+During system supend, core power goes off the and context of Tegra
+CAR registers is lost.
+
+So during suspend entry, context of super clock registers are saved
+through save_context clk_ops and are restored through restore_context
+clk_ops to have them in same state as before suspend.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/soc/tegra/pmc.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ drivers/clk/tegra/clk-super.c | 39 +++++++++++++++++++++++++++++++++++++++
+ drivers/clk/tegra/clk.h       |  1 +
+ 2 files changed, 40 insertions(+)
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 91c84d0e66ae..3aa71c28a10a 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -58,6 +58,11 @@
- #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
- #define  PMC_CNTRL_MAIN_RST		BIT(4)
- 
-+#define PMC_WAKE_MASK			0x0c
-+#define PMC_WAKE_LEVEL			0x10
-+#define PMC_WAKE_STATUS			0x14
-+#define PMC_SW_WAKE_STATUS		0x18
-+
- #define DPD_SAMPLE			0x020
- #define  DPD_SAMPLE_ENABLE		BIT(0)
- #define  DPD_SAMPLE_DISABLE		(0 << 0)
-@@ -87,6 +92,11 @@
- 
- #define PMC_SCRATCH41			0x140
- 
-+#define PMC_WAKE2_MASK			0x160
-+#define PMC_WAKE2_LEVEL			0x164
-+#define PMC_WAKE2_STATUS		0x168
-+#define PMC_SW_WAKE2_STATUS		0x16c
-+
- #define PMC_SENSOR_CTRL			0x1b0
- #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
- #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
-@@ -1922,6 +1932,43 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
- 	.alloc = tegra_pmc_irq_alloc,
- };
- 
-+static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
-+{
-+	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-+	unsigned int offset, bit;
-+	u32 value;
-+
-+	if (data->hwirq == ULONG_MAX)
-+		return 0;
-+
-+	offset = data->hwirq / 32;
-+	bit = data->hwirq % 32;
-+
-+	/* clear wake status */
-+	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
-+	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
-+
-+	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
-+	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
-+
-+	/* enable PMC wake */
-+	if (data->hwirq >= 32)
-+		offset = PMC_WAKE2_MASK;
-+	else
-+		offset = PMC_WAKE_MASK;
-+
-+	value = tegra_pmc_readl(pmc, offset);
-+
-+	if (on)
-+		value |= 1 << bit;
-+	else
-+		value &= ~(1 << bit);
-+
-+	tegra_pmc_writel(pmc, value, offset);
-+
-+	return 0;
-+}
-+
- static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
- {
- 	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-@@ -1954,6 +2001,49 @@ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
- 	return 0;
+diff --git a/drivers/clk/tegra/clk-super.c b/drivers/clk/tegra/clk-super.c
+index e2a1e95a8db7..be0551cb5587 100644
+--- a/drivers/clk/tegra/clk-super.c
++++ b/drivers/clk/tegra/clk-super.c
+@@ -124,9 +124,27 @@ static int clk_super_set_parent(struct clk_hw *hw, u8 index)
+ 	return err;
  }
  
-+static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int type)
++static int clk_super_mux_save_context(struct clk_hw *hw)
 +{
-+	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-+	unsigned int offset, bit;
-+	u32 value;
++	struct tegra_clk_super_mux *mux = to_clk_super_mux(hw);
 +
-+	if (data->hwirq == ULONG_MAX)
-+		return 0;
-+
-+	offset = data->hwirq / 32;
-+	bit = data->hwirq % 32;
-+
-+	if (data->hwirq >= 32)
-+		offset = PMC_WAKE2_LEVEL;
-+	else
-+		offset = PMC_WAKE_LEVEL;
-+
-+	value = tegra_pmc_readl(pmc, offset);
-+
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		value |= 1 << bit;
-+		break;
-+
-+	case IRQ_TYPE_EDGE_FALLING:
-+	case IRQ_TYPE_LEVEL_LOW:
-+		value &= ~(1 << bit);
-+		break;
-+
-+	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
-+		value ^= 1 << bit;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	tegra_pmc_writel(pmc, value, offset);
++	mux->parent_index_ctx = clk_super_get_parent(hw);
 +
 +	return 0;
 +}
 +
- static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
- {
- 	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-@@ -2540,6 +2630,10 @@ static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
- 	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
- };
- 
-+static const struct tegra_wake_event tegra210_wake_events[] = {
-+	TEGRA_WAKE_IRQ("rtc", 16, 2),
-+};
++static void clk_super_mux_restore_context(struct clk_hw *hw)
++{
++	struct tegra_clk_super_mux *mux = to_clk_super_mux(hw);
 +
- static const struct tegra_pmc_soc tegra210_pmc_soc = {
- 	.num_powergates = ARRAY_SIZE(tegra210_powergates),
- 	.powergates = tegra210_powergates,
-@@ -2557,10 +2651,14 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
- 	.regs = &tegra20_pmc_regs,
- 	.init = tegra20_pmc_init,
- 	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-+	.irq_set_wake = tegra210_pmc_irq_set_wake,
-+	.irq_set_type = tegra210_pmc_irq_set_type,
- 	.reset_sources = tegra210_reset_sources,
- 	.num_reset_sources = ARRAY_SIZE(tegra210_reset_sources),
- 	.reset_levels = NULL,
- 	.num_reset_levels = 0,
-+	.num_wake_events = ARRAY_SIZE(tegra210_wake_events),
-+	.wake_events = tegra210_wake_events,
++	clk_super_set_parent(hw, mux->parent_index_ctx);
++}
++
+ static const struct clk_ops tegra_clk_super_mux_ops = {
+ 	.get_parent = clk_super_get_parent,
+ 	.set_parent = clk_super_set_parent,
++	.save_context = clk_super_mux_save_context,
++	.restore_context = clk_super_mux_restore_context,
  };
  
- #define TEGRA186_IO_PAD_TABLE(_pad)					     \
+ static long clk_super_round_rate(struct clk_hw *hw, unsigned long rate,
+@@ -162,12 +180,33 @@ static int clk_super_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	return super->div_ops->set_rate(div_hw, rate, parent_rate);
+ }
+ 
++static int clk_super_save_context(struct clk_hw *hw)
++{
++	struct tegra_clk_super_mux *super = to_clk_super_mux(hw);
++
++	super->parent_index_ctx = clk_super_get_parent(hw);
++
++	return 0;
++}
++
++static void clk_super_restore_context(struct clk_hw *hw)
++{
++	struct tegra_clk_super_mux *super = to_clk_super_mux(hw);
++	struct clk_hw *div_hw = &super->frac_div.hw;
++
++	clk_super_set_parent(hw, super->parent_index_ctx);
++
++	super->div_ops->restore_context(div_hw);
++}
++
+ const struct clk_ops tegra_clk_super_ops = {
+ 	.get_parent = clk_super_get_parent,
+ 	.set_parent = clk_super_set_parent,
+ 	.set_rate = clk_super_set_rate,
+ 	.round_rate = clk_super_round_rate,
+ 	.recalc_rate = clk_super_recalc_rate,
++	.save_context = clk_super_save_context,
++	.restore_context = clk_super_restore_context,
+ };
+ 
+ struct clk *tegra_clk_register_super_mux(const char *name,
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index f8de447f505b..d397dda7c6d0 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -701,6 +701,7 @@ struct tegra_clk_super_mux {
+ 	u8		div2_index;
+ 	u8		pllx_index;
+ 	spinlock_t	*lock;
++	u8		parent_index_ctx;
+ };
+ 
+ #define to_clk_super_mux(_hw) container_of(_hw, struct tegra_clk_super_mux, hw)
 -- 
 2.7.4
 
