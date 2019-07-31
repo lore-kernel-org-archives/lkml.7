@@ -2,261 +2,446 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB20C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05347C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD6C208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C005C206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:19:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Z/qYdCij"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="siwyzn1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbfGaLTv (ORCPT
+        id S1728822AbfGaLTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:19:51 -0400
-Received: from mail-eopbgr140044.outbound.protection.outlook.com ([40.107.14.44]:63548
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725921AbfGaLTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:19:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fqcnwNQWbjFrpO3/BIAJtqPBfZMu8IQY2dUTkUspqx/mbpuY9FMo1SrdlMJpI+UXeNTLvsp8rLf8k0J2Yu1u2at15scQxq+fBlQs6chuj3HdihpKshgbu4NDn9LZ58pGG7BFr6oD1qnckhynvYcyjDh6JesFsQeIkhJnR4+vvcgJFy7hwkVsR2xPl53HEDW5M8NmYliggZeLKWQBJ/yP65Cp7bbLfp/c5S0vFesdzFXEjUsC6G1ot6zKaKZ4ACtpAHhp/K0LjfidPZOYGuOFiyp2DzVuQPUa/yCz+eoaCqaQGdCH+xijI5EjAIFBMQ1K9XWXFjPwtLPRC7dSrGZHoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WDIYGYXnjQCcuaEqk/dTvdrPpQz3tFsU1BjsDE28lC4=;
- b=Bq9afRPndJP44I32D1CLPta9+6VraSGqsAnWgicPA3fcBjBbDubYZoYonCGgXaHlqpzql3vJ10uY2uDfVmWsF1UmKYyk9iJoAxB5ByDb3k3ddzLvXqODxreufzundvWOl0xNRMNpU4LPwdYI1HdPUxXKrGBsAmxEzm4RgKINYZgL5PW+yI98W+Uy7H8ExGQq5lUV6CggLCOS6RgJDq+TTKAeqK4O83Ti3FfZOZOHTBrUuZNsk/pd6s2R4HLOVWnu5V9B4sUEJa2U2Qu9Ih0tV3fnk9ugMIT1z7l4nMDB/ypCLYoDhZ7XvH5uggOGpL++XyeSjW50Mywb1SBOFFbVog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WDIYGYXnjQCcuaEqk/dTvdrPpQz3tFsU1BjsDE28lC4=;
- b=Z/qYdCijbKlRX9spFcZ/jqeeQvfwmbv+OpxmssKsZD5/gAER67dcWvt3Uy9bhnHOCbtPCcgm9rba56ngT0qxSD+7hz3JQonua68lNPeJnc4bdz7yrNO5BVesnCQ7Qr6yBSsDWrLmVhV+XFo3yjisLUdZLxy+CQMxgTV9FAPPld8=
-Received: from VI1PR05MB5295.eurprd05.prod.outlook.com (20.178.12.80) by
- VI1PR05MB5869.eurprd05.prod.outlook.com (20.178.125.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Wed, 31 Jul 2019 11:19:41 +0000
-Received: from VI1PR05MB5295.eurprd05.prod.outlook.com
- ([fe80::ec21:2019:cb6f:44ae]) by VI1PR05MB5295.eurprd05.prod.outlook.com
- ([fe80::ec21:2019:cb6f:44ae%7]) with mapi id 15.20.2115.005; Wed, 31 Jul 2019
- 11:19:41 +0000
-From:   Vlad Buslov <vladbu@mellanox.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        Vlad Buslov <vladbu@mellanox.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Ran Rozenstein <ranro@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Maor Gottlieb <maorg@mellanox.com>
-Subject: Re: Failure to recreate virtual functions
-Thread-Topic: Failure to recreate virtual functions
-Thread-Index: AQHVQ89+orWUWzIuXEaLp1PfOC9kjabdupoAgAOm2YCAATVtAIAAc6GAgAFRTwCAAEA+AA==
-Date:   Wed, 31 Jul 2019 11:19:41 +0000
-Message-ID: <vbf36imsb79.fsf@mellanox.com>
-References: <vbf8sskwyiv.fsf@mellanox.com>
- <d4166595-ec4a-fc4a-3b5f-463b79c42936@linux.intel.com>
- <vbfzhkx9n32.fsf@mellanox.com>
- <838a00c4-d5bd-08db-e39c-5f00686858b5@linux.intel.com>
- <6ece232e-3fe8-4bd9-cd4b-c8d90a106a30@arm.com>
- <abba9e2b-4bd4-bca5-dd50-05ca9ad96d1f@linux.intel.com>
-In-Reply-To: <abba9e2b-4bd4-bca5-dd50-05ca9ad96d1f@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0110.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:c::26) To VI1PR05MB5295.eurprd05.prod.outlook.com
- (2603:10a6:803:b1::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vladbu@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [37.142.13.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7dde54c2-ab07-4594-ecb0-08d715a8fb9d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5869;
-x-ms-traffictypediagnostic: VI1PR05MB5869:
-x-microsoft-antispam-prvs: <VI1PR05MB5869F3F8A95606F14E02C328ADDF0@VI1PR05MB5869.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 011579F31F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(199004)(189003)(316002)(86362001)(6512007)(54906003)(7736002)(53936002)(66066001)(81156014)(81166006)(8676002)(8936002)(2906002)(6916009)(6486002)(229853002)(53546011)(6506007)(386003)(76176011)(102836004)(52116002)(14454004)(26005)(186003)(68736007)(6436002)(99286004)(66946007)(64756008)(66446008)(66476007)(66556008)(2616005)(446003)(11346002)(476003)(305945005)(5660300002)(71190400001)(71200400001)(5024004)(486006)(256004)(14444005)(478600001)(36756003)(3846002)(4326008)(6246003)(6116002)(25786009)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5869;H:VI1PR05MB5295.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: o0dcHN5V7yEcwtpG8VG1bfh8llfLVKkz4Pi1wyLUHN86VkyjTAFnMvxaWy5UG2MgFhLPE3hqAhJzt1Oq7iUPmFKeaSOgsghhgHO/eAzn4S7hK9doF7cNiIn2ljKtJlrjuoJmAYXazFC1Hvt/YQMWYSCUCXat8A1EgEb63Sm+rnPRX/1erIhVm9IOV5WwKiNW/K1e4vKiIq4E96K3kYjCj8DSenMYHnSJVqwEef04YPQVGVerqRHO69PFCqzXyZQOJ9f0j6NglNBfObhe3ZaYUOlUxwNCOVl7+WfSDKsETsO2UJv9ifIz62u10HEy6V76wuvj9EZsu2DUJqUJ/0EEQRkNvCkC4kiJuO1XEWXZ+4U+XgZSNPp1kf1wO097tFxv1d//5IxZ2RtEmPKrxf46CxJFrgbIreQ4mAUKfHTQfYM=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7dde54c2-ab07-4594-ecb0-08d715a8fb9d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 11:19:41.7633
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vladbu@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5869
+        Wed, 31 Jul 2019 07:19:53 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39207 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727686AbfGaLTu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 07:19:50 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x4so16083694wrt.6;
+        Wed, 31 Jul 2019 04:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=249Tk7pJLhkH6dKEkJPPjfgArbiJqypC5jRcZzcgcv4=;
+        b=siwyzn1hd+ANkqVt2/KMyUOMusnyUtFRj/sVQ2MzgddSDf/s9FP10LSZD5No+bxt7j
+         6A6lI9eyUHF0FNxkrBbCYKsmMTTK0ZTURSLpS+dHyU9/3mFaXX0qCIqNAN2MOZS586lB
+         Fc9Y6u57f1a7x1T8ODnRlsogjWsw/dP/mRDxRvuShoVICg6sMShCHc/3dHicvMGEYXvR
+         g7wC6LGtuoI5mmYhCbRRG7ghIZdP0GLxpFF0WpAiOe7fJV8G/cVXGNtcO9f880pLcTnN
+         f9Aguiu8TTNgYdSkioKoRh09PzIzWtO1rNd6A4Burj0PWTEsyU4cNMdQH8ggkijIO6G0
+         ceAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=249Tk7pJLhkH6dKEkJPPjfgArbiJqypC5jRcZzcgcv4=;
+        b=JEHGg2A1zp7p572OSGAFHRs9gA17ySUCNLQodM4XMVCgFxcQ5eJEcYirdFT6wENOVc
+         pIvzIWla6neM8FRvHfWJkGH2jsJSH/8lxZt477TUPTKGzxF64sRBaZaW+P59pt2K4kjL
+         U3zK99FsPerGQ8Eg7pIYox997QRexnQK2xJ0d4PzILo/8Urnsg4KJRthtm4yDhfglB9l
+         ry/qL7INwBQwsvyO0Vgb85DLMVJRM2bGeACm7zZcbUFAJ+cWWnddmxiBA4MsVUsKg/wR
+         2rsJhrPPyaDMkF26LHoCLkLaSw/Me9QQbajLbFyNSVfC5rYCswD50bmy+0iSDQyKQKx6
+         pIpA==
+X-Gm-Message-State: APjAAAVKNA2AtHxuRh5zojtK1jkJ+O5Xvx5Q7YsIGkNFzH+VkrEofmk8
+        dfbo0uh7KI54IOr11MlUME0=
+X-Google-Smtp-Source: APXvYqwZcDJk/YfJ8qxOLYiLjYl2vIfbhOAIwxf+wLhU1k2gxzwk63JhT2KvzW2jwNVGuFOt1vU4dQ==
+X-Received: by 2002:adf:fe4f:: with SMTP id m15mr59063488wrs.36.1564571987783;
+        Wed, 31 Jul 2019 04:19:47 -0700 (PDT)
+Received: from localhost.localdomain ([212.146.100.6])
+        by smtp.gmail.com with ESMTPSA id b8sm88035205wmh.46.2019.07.31.04.19.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 04:19:47 -0700 (PDT)
+From:   Andra Danciu <andradanciu1997@gmail.com>
+To:     broonie@kernel.org
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        perex@perex.cz, tiwai@suse.com, ckeepax@opensource.cirrus.com,
+        rf@opensource.wolfsonmicro.com, srinivas.kandagatla@linaro.org,
+        piotrs@opensource.cirrus.com, paul@crapouillou.net,
+        kmarinushkin@birdec.tech, anders.roxell@linaro.org,
+        jbrunet@baylibre.com, m.felsch@pengutronix.de, vkoul@kernel.org,
+        nh6z@nh6z.net, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        daniel.baluta@nxp.com
+Subject: [PATCH 2/2] ASoC: codecs: Add uda1334 codec driver
+Date:   Wed, 31 Jul 2019 14:19:30 +0300
+Message-Id: <20190731111930.20230-3-andradanciu1997@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190731111930.20230-1-andradanciu1997@gmail.com>
+References: <20190731111930.20230-1-andradanciu1997@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The UDA1334BTS supports the I2S-bus data format with word lengths of up
+to 24 bits serial data format and has basic features such as de-emphasis
+(at 44.1 kHz sampling rate) and mute.
 
-On Wed 31 Jul 2019 at 10:29, Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> Hi,
->
-> On 7/30/19 7:22 PM, Robin Murphy wrote:
->> On 30/07/2019 05:28, Lu Baolu wrote:
->>> Hi,
->>>
->>> On 7/29/19 6:05 PM, Vlad Buslov wrote:
->>>> On Sat 27 Jul 2019 at 05:15, Lu Baolu<baolu.lu@linux.intel.com>  wrote=
-:
->>>>> Hi Vilad,
->>>>>
->>>>> On 7/27/19 12:30 AM, Vlad Buslov wrote:
->>>>>> Hi Lu Baolu,
->>>>>>
->>>>>> Our mlx5 driver fails to recreate VFs when cmdline includes
->>>>>> "intel_iommu=3Don iommu=3Dpt" after recent merge of patch set "iommu=
-/vt-d:
->>>>>> Delegate DMA domain to generic iommu". I've bisected the failure to
->>>>>> patch b7297783c2bb ("iommu/vt-d: Remove duplicated code for device
->>>>>> hotplug"). Here is the dmesg log for following case: enable switchde=
-v
->>>>>> mode, set number of VFs to 0, then set it back to any value
->>>>>>> 0.
->>>>>> [  223.525282] mlx5_core 0000:81:00.0: E-Switch: E-Switch enable SRI=
-OV:
->>>>>> nvfs(2) mode (1)
->>>>>> [  223.562027] mlx5_core 0000:81:00.0: E-Switch: SRIOV enabled: acti=
-ve
->>>>>> vports(3)
->>>>>> [  223.663766] pci 0000:81:00.2: [15b3:101a] type 00 class 0x020000
->>>>>> [  223.663864] pci 0000:81:00.2: enabling Extended Tags
->>>>>> [  223.665143] pci 0000:81:00.2: Adding to iommu group 52
->>>>>> [  223.665215] pci 0000:81:00.2: Using iommu direct mapping
->>>>>> [  223.665771] mlx5_core 0000:81:00.2: enabling device (0000 -> 0002=
-)
->>>>>> [  223.665890] mlx5_core 0000:81:00.2: firmware version: 16.26.148
->>>>>> [  223.889908] mlx5_core 0000:81:00.2: Rate limit: 127 rates are
->>>>>> supported, range: 0Mbps to 97656Mbps
->>>>>> [  223.896438] mlx5_core 0000:81:00.2: MLX5E: StrdRq(1) RqSz(8)
->>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>> [  223.896636] mlx5_core 0000:81:00.2: Assigned random MAC address
->>>>>> 56:1f:95:e0:51:d6
->>>>>> [  224.012905] mlx5_core 0000:81:00.2 ens1f0v0: renamed from eth0
->>>>>> [  224.041651] pci 0000:81:00.3: [15b3:101a] type 00 class 0x020000
->>>>>> [  224.041711] pci 0000:81:00.3: enabling Extended Tags
->>>>>> [  224.043660] pci 0000:81:00.3: Adding to iommu group 53
->>>>>> [  224.043738] pci 0000:81:00.3: Using iommu direct mapping
->>>>>> [  224.044196] mlx5_core 0000:81:00.3: enabling device (0000 -> 0002=
-)
->>>>>> [  224.044298] mlx5_core 0000:81:00.3: firmware version: 16.26.148
->>>>>> [  224.268099] mlx5_core 0000:81:00.3: Rate limit: 127 rates are
->>>>>> supported, range: 0Mbps to 97656Mbps
->>>>>> [  224.274983] mlx5_core 0000:81:00.3: MLX5E: StrdRq(1) RqSz(8)
->>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>> [  224.275195] mlx5_core 0000:81:00.3: Assigned random MAC address
->>>>>> a6:1e:56:0a:d9:f2
->>>>>> [  224.388359] mlx5_core 0000:81:00.3 ens1f0v1: renamed from eth0
->>>>>> [  236.325027] mlx5_core 0000:81:00.0: E-Switch: disable SRIOV: acti=
-ve
->>>>>> vports(3) mode(1)
->>>>>> [  236.362766] mlx5_core 0000:81:00.0: E-Switch: E-Switch enable SRI=
-OV:
->>>>>> nvfs(2) mode (2)
->>>>>> [  237.290066] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8)
->>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>> [  237.350215] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8)
->>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>> [  237.373052] mlx5_core 0000:81:00.0 ens1f0: renamed from eth0
->>>>>> [  237.390768] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8)
->>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>> [  237.447846] ens1f0_0: renamed from eth0
->>>>>> [  237.460399] mlx5_core 0000:81:00.0: E-Switch: SRIOV enabled: acti=
-ve
->>>>>> vports(3)
->>>>>> [  237.526880] ens1f0_1: renamed from eth1
->>>>>> [  248.953873] pci 0000:81:00.2: Removing from iommu group 52
->>>>>> [  248.954114] pci 0000:81:00.3: Removing from iommu group 53
->>>>>> [  249.960570] mlx5_core 0000:81:00.0: E-Switch: disable SRIOV: acti=
-ve
->>>>>> vports(3) mode(2)
->>>>>> [  250.319135] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8)
->>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>> [  250.559431] mlx5_core 0000:81:00.0 ens1f0: renamed from eth0
->>>>>> [  258.819162] mlx5_core 0000:81:00.0: E-Switch: E-Switch enable SRI=
-OV:
->>>>>> nvfs(2) mode (1)
->>>>>> [  258.831625] mlx5_core 0000:81:00.0: E-Switch: SRIOV enabled: acti=
-ve
->>>>>> vports(3)
->>>>>> [  258.936160] pci 0000:81:00.2: [15b3:101a] type 00 class 0x020000
->>>>>> [  258.936258] pci 0000:81:00.2: enabling Extended Tags
->>>>>> [  258.937438] pci 0000:81:00.2: Failed to add to iommu group 52: -1=
-6
->>>>> It seems that an EBUSY error returned from iommu_group_add_device(). =
-Can
->>>>> you please hack some debug messages in iommu_group_add_device() so th=
-at
->>>>> we can know where the EBUSY returns?
->>>>>
->>>>> Best regards,
->>>>> Baolu
->>>> The error code is returned by __iommu_attach_device().
->>>>
->>>
->>> Thanks!
->>>
->>> It looks like the system has already a domain for specific pci bdf
->>> device. Does this VF share the bdf with other devices? Or has been
->>> previously created, and system failed to get chance to remove it?
->>
->> At a glance, it looks like it might be down to intel_iommu_remove_device=
-() not
->> calling dmar_remove_one_dev_info() like the old notifier did. If the gro=
-up is
->> getting torn down and recreated, but the driver still has a stale pointe=
-r to
->> the old default domain cached, which dmar_insert_one_dev_info() finds an=
-d
->> returns, that would seem to explain the observed behaviour.
->
-> Yes agreed.
->
-> Vlad,
->
-> Can you please try below change?
->
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index baf21001c339..abffc520fe05 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5575,6 +5575,8 @@ static void intel_iommu_remove_device(struct device=
- *dev)
->         if (!iommu)
->                 return;
->
-> +       dmar_remove_one_dev_info(dev);
-> +
->         iommu_group_remove_device(dev);
->
->         iommu_device_unlink(&iommu->iommu, dev);
->
-> Best regards,
-> Baolu
+Datasheet can be found at:
+https://www.nxp.com/docs/en/data-sheet/UDA1334BTS.pdf
 
-Hi Baolu,
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+---
+ sound/soc/codecs/Kconfig   |   9 ++
+ sound/soc/codecs/Makefile  |   2 +
+ sound/soc/codecs/uda1334.c | 295 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 306 insertions(+)
+ create mode 100644 sound/soc/codecs/uda1334.c
 
-This patch fixes the issue for me.
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index da4c1ae89742..89238343e34d 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -199,6 +199,7 @@ config SND_SOC_ALL_CODECS
+ 	select SND_SOC_TS3A227E if I2C
+ 	select SND_SOC_TWL4030 if TWL4030_CORE
+ 	select SND_SOC_TWL6040 if TWL6040_CORE
++	select SND_SOC_UDA1334 if GPIOLIB
+ 	select SND_SOC_UDA134X
+ 	select SND_SOC_UDA1380 if I2C
+ 	select SND_SOC_WCD9335 if SLIMBUS
+@@ -1207,6 +1208,14 @@ config SND_SOC_TWL4030
+ config SND_SOC_TWL6040
+ 	tristate
+ 
++config SND_SOC_UDA1334
++	tristate "NXP UDA1334 DAC"
++	depends on GPIOLIB
++	help
++	  The UDA1334 is an NXP audio codec, supports the I2S-bus data format
++	  and has basic features such as de-emphasis (at 44.1 kHz sampling
++	  rate) and mute.
++
+ config SND_SOC_UDA134X
+        tristate
+ 
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index 9230016b0f9f..c498373dcc5f 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -212,6 +212,7 @@ snd-soc-tscs454-objs := tscs454.o
+ snd-soc-ts3a227e-objs := ts3a227e.o
+ snd-soc-twl4030-objs := twl4030.o
+ snd-soc-twl6040-objs := twl6040.o
++snd-soc-uda1334-objs := uda1334.o
+ snd-soc-uda134x-objs := uda134x.o
+ snd-soc-uda1380-objs := uda1380.o
+ snd-soc-wcd9335-objs := wcd-clsh-v2.o wcd9335.o
+@@ -494,6 +495,7 @@ obj-$(CONFIG_SND_SOC_TSCS454)	+= snd-soc-tscs454.o
+ obj-$(CONFIG_SND_SOC_TS3A227E)	+= snd-soc-ts3a227e.o
+ obj-$(CONFIG_SND_SOC_TWL4030)	+= snd-soc-twl4030.o
+ obj-$(CONFIG_SND_SOC_TWL6040)	+= snd-soc-twl6040.o
++obj-$(CONFIG_SND_SOC_UDA1334)	+= snd-soc-uda1334.o
+ obj-$(CONFIG_SND_SOC_UDA134X)	+= snd-soc-uda134x.o
+ obj-$(CONFIG_SND_SOC_UDA1380)	+= snd-soc-uda1380.o
+ obj-$(CONFIG_SND_SOC_WCD9335)	+= snd-soc-wcd9335.o
+diff --git a/sound/soc/codecs/uda1334.c b/sound/soc/codecs/uda1334.c
+new file mode 100644
+index 000000000000..21ab8c5487ba
+--- /dev/null
++++ b/sound/soc/codecs/uda1334.c
+@@ -0,0 +1,295 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//
++// uda1334.c  --  UDA1334 ALSA SoC Audio driver
++//
++// Based on WM8523 ALSA SoC Audio driver written by Mark Brown
++
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/init.h>
++#include <linux/delay.h>
++#include <linux/slab.h>
++#include <linux/gpio/consumer.h>
++#include <linux/of_device.h>
++#include <sound/core.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++#include <sound/initval.h>
++
++#define UDA1334_NUM_RATES 6
++
++/* codec private data */
++struct uda1334_priv {
++	struct gpio_desc *mute;
++	struct gpio_desc *deemph;
++	unsigned int sysclk;
++	unsigned int rate_constraint_list[UDA1334_NUM_RATES];
++	struct snd_pcm_hw_constraint_list rate_constraint;
++};
++
++static const struct snd_soc_dapm_widget uda1334_dapm_widgets[] = {
++SND_SOC_DAPM_DAC("DAC", "Playback", SND_SOC_NOPM, 0, 0),
++SND_SOC_DAPM_OUTPUT("LINEVOUTL"),
++SND_SOC_DAPM_OUTPUT("LINEVOUTR"),
++};
++
++static const struct snd_soc_dapm_route uda1334_dapm_routes[] = {
++	{ "LINEVOUTL", NULL, "DAC" },
++	{ "LINEVOUTR", NULL, "DAC" },
++};
++
++static int uda1334_put_deemph(struct snd_kcontrol *kcontrol,
++			      struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component = snd_soc_kcontrol_component(kcontrol);
++	struct uda1334_priv *uda1334 = snd_soc_component_get_drvdata(component);
++	int deemph = ucontrol->value.integer.value[0];
++
++	if (deemph > 1)
++		return -EINVAL;
++
++	gpiod_set_value_cansleep(uda1334->deemph, deemph);
++
++	return 0;
++};
++
++static int uda1334_get_deemph(struct snd_kcontrol *kcontrol,
++			      struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component = snd_soc_kcontrol_component(kcontrol);
++	struct uda1334_priv *uda1334 = snd_soc_component_get_drvdata(component);
++	int ret;
++
++	ret = gpiod_get_value_cansleep(uda1334->deemph);
++	if (ret < 0)
++		return -EINVAL;
++
++	ucontrol->value.integer.value[0] = ret;
++
++	return 0;
++};
++
++static const struct snd_kcontrol_new uda1334_snd_controls[] = {
++	SOC_SINGLE_BOOL_EXT("Playback Deemphasis Switch", 0,
++			    uda1334_get_deemph, uda1334_put_deemph),
++};
++
++static const struct {
++	int value;
++	int ratio;
++} lrclk_ratios[UDA1334_NUM_RATES] = {
++	{ 1, 128 },
++	{ 2, 192 },
++	{ 3, 256 },
++	{ 4, 384 },
++	{ 5, 512 },
++	{ 6, 768 },
++};
++
++static int uda1334_startup(struct snd_pcm_substream *substream,
++			   struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct uda1334_priv *uda1334 = snd_soc_component_get_drvdata(component);
++
++	/*
++	 * The set of sample rates that can be supported depends on the
++	 * MCLK supplied to the CODEC - enforce this.
++	 */
++	if (!uda1334->sysclk) {
++		dev_err(component->dev,
++			"No MCLK configured, call set_sysclk() on init\n");
++		return -EINVAL;
++	}
++
++	snd_pcm_hw_constraint_list(substream->runtime, 0,
++				   SNDRV_PCM_HW_PARAM_RATE,
++				   &uda1334->rate_constraint);
++
++	gpiod_set_value_cansleep(uda1334->mute, 1);
++
++	return 0;
++}
++
++static void uda1334_shutdown(struct snd_pcm_substream *substream,
++			     struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct uda1334_priv *uda1334 = snd_soc_component_get_drvdata(component);
++
++	gpiod_set_value_cansleep(uda1334->mute, 0);
++}
++
++static int uda1334_set_dai_sysclk(struct snd_soc_dai *codec_dai,
++				  int clk_id, unsigned int freq, int dir)
++{
++	struct snd_soc_component *component = codec_dai->component;
++	struct uda1334_priv *uda1334 = snd_soc_component_get_drvdata(component);
++	unsigned int val;
++	int i, j = 0;
++
++	uda1334->sysclk = freq;
++
++	uda1334->rate_constraint.count = 0;
++	for (i = 0; i < ARRAY_SIZE(lrclk_ratios); i++) {
++		val = freq / lrclk_ratios[i].ratio;
++		/*
++		 * Check that it's a standard rate since core can't
++		 * cope with others and having the odd rates confuses
++		 * constraint matching.
++		 */
++
++		switch (val) {
++		case 8000:
++		case 32000:
++		case 44100:
++		case 48000:
++		case 64000:
++		case 88200:
++		case 96000:
++			dev_dbg(component->dev, "Supported sample rate: %dHz\n",
++				val);
++			uda1334->rate_constraint_list[j++] = val;
++			uda1334->rate_constraint.count++;
++			break;
++		default:
++			dev_dbg(component->dev, "Skipping sample rate: %dHz\n",
++				val);
++		}
++	}
++
++	/* Need at least one supported rate... */
++	if (uda1334->rate_constraint.count == 0)
++		return -EINVAL;
++
++	return 0;
++}
++
++static int uda1334_set_fmt(struct snd_soc_dai *codec_dai, unsigned int fmt)
++{
++	fmt &= (SND_SOC_DAIFMT_FORMAT_MASK | SND_SOC_DAIFMT_INV_MASK |
++		SND_SOC_DAIFMT_MASTER_MASK);
++
++	if (fmt != (SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
++		    SND_SOC_DAIFMT_CBS_CFS)) {
++		dev_err(codec_dai->dev, "Invalid DAI format\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int uda1334_mute_stream(struct snd_soc_dai *dai, int mute, int stream)
++{
++	struct uda1334_priv *uda1334 = snd_soc_component_get_drvdata(dai->component);
++
++	if (uda1334->mute)
++		gpiod_set_value_cansleep(uda1334->mute, mute);
++
++	return 0;
++}
++
++#define UDA1334_RATES SNDRV_PCM_RATE_8000_96000
++
++#define UDA1334_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
++
++static const struct snd_soc_dai_ops uda1334_dai_ops = {
++	.startup	= uda1334_startup,
++	.shutdown	= uda1334_shutdown,
++	.set_sysclk	= uda1334_set_dai_sysclk,
++	.set_fmt	= uda1334_set_fmt,
++	.mute_stream	= uda1334_mute_stream,
++};
++
++static struct snd_soc_dai_driver uda1334_dai = {
++	.name = "uda1334-hifi",
++	.playback = {
++		.stream_name = "Playback",
++		.channels_min = 2,
++		.channels_max = 2,
++		.rates = UDA1334_RATES,
++		.formats = UDA1334_FORMATS,
++	},
++	.ops = &uda1334_dai_ops,
++};
++
++static int uda1334_probe(struct snd_soc_component *component)
++{
++	struct uda1334_priv *uda1334 = snd_soc_component_get_drvdata(component);
++
++	uda1334->rate_constraint.list = &uda1334->rate_constraint_list[0];
++	uda1334->rate_constraint.count =
++		ARRAY_SIZE(uda1334->rate_constraint_list);
++
++	return 0;
++}
++
++static const struct snd_soc_component_driver soc_component_dev_uda1334 = {
++	.probe			= uda1334_probe,
++	.controls		= uda1334_snd_controls,
++	.num_controls		= ARRAY_SIZE(uda1334_snd_controls),
++	.dapm_widgets		= uda1334_dapm_widgets,
++	.num_dapm_widgets	= ARRAY_SIZE(uda1334_dapm_widgets),
++	.dapm_routes		= uda1334_dapm_routes,
++	.num_dapm_routes	= ARRAY_SIZE(uda1334_dapm_routes),
++	.idle_bias_on		= 1,
++	.use_pmdown_time	= 1,
++	.endianness		= 1,
++	.non_legacy_dai_naming	= 1,
++};
++
++static const struct of_device_id uda1334_of_match[] = {
++	{ .compatible = "nxp,uda1334" },
++	{ /* sentinel*/ }
++};
++MODULE_DEVICE_TABLE(of, uda1334_of_match);
++
++static int uda1334_codec_probe(struct platform_device *pdev)
++{
++	struct uda1334_priv *uda1334;
++	int ret;
++
++	uda1334 = devm_kzalloc(&pdev->dev, sizeof(struct uda1334_priv),
++			       GFP_KERNEL);
++	if (!uda1334)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, uda1334);
++
++	uda1334->mute = devm_gpiod_get(&pdev->dev, "nxp,mute", GPIOD_OUT_LOW);
++	if (IS_ERR(uda1334->mute)) {
++		ret = PTR_ERR(uda1334->mute);
++		dev_err(&pdev->dev, "Failed to get mute line: %d\n", ret);
++		return ret;
++	}
++
++	uda1334->deemph = devm_gpiod_get(&pdev->dev, "nxp,deemph", GPIOD_OUT_LOW);
++	if (IS_ERR(uda1334->deemph)) {
++		ret = PTR_ERR(uda1334->deemph);
++		dev_err(&pdev->dev, "Failed to get deemph line: %d\n", ret);
++		return ret;
++	}
++
++	ret = devm_snd_soc_register_component(&pdev->dev,
++					      &soc_component_dev_uda1334,
++					      &uda1334_dai, 1);
++	if (ret < 0)
++		dev_err(&pdev->dev, "Failed to register component: %d\n", ret);
++
++	return ret;
++}
++
++static struct platform_driver uda1334_codec_driver = {
++	.probe		= uda1334_codec_probe,
++	.driver		= {
++		.name	= "uda1334-codec",
++		.of_match_table = uda1334_of_match,
++	},
++};
++module_platform_driver(uda1334_codec_driver);
++
++MODULE_DESCRIPTION("ASoC UDA1334 driver");
++MODULE_AUTHOR("Andra Danciu <andradanciu1997@gmail.com>");
++MODULE_ALIAS("platform:uda1334-codec");
++MODULE_LICENSE("GPL v2");
+-- 
+2.11.0
 
-Thanks,
-Vlad
