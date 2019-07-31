@@ -2,69 +2,278 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5763C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB0FC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2372206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DD8206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbfGaL6k (ORCPT
+        id S1728536AbfGaL6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 31 Jul 2019 07:58:41 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:45169 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfGaL6k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 07:58:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbfGaL6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:58:40 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03129206A3;
-        Wed, 31 Jul 2019 11:58:38 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 07:58:37 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fgraph: Remove redundant ftrace_graph_notrace_addr()
- test
-Message-ID: <20190731075837.6d2a3995@gandalf.local.home>
-In-Reply-To: <20190731103143.ear4erai6yvt4ct6@mail.google.com>
-References: <20190730140850.7927-1-changbin.du@gmail.com>
-        <20190730121527.13f600f5@gandalf.local.home>
-        <20190731103143.ear4erai6yvt4ct6@mail.google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id 68670c7d12d42acd; Wed, 31 Jul 2019 13:58:36 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Tri Vo <trong@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v5] PM / wakeup: show wakeup sources stats in sysfs
+Date:   Wed, 31 Jul 2019 13:58:36 +0200
+Message-ID: <3963324.N1Qi0Ay72S@kreacher>
+In-Reply-To: <CAJZ5v0hj-GpiYN7nwPJvKJag71MG6zEFbJ6BNwzDidD+7fNFWw@mail.gmail.com>
+References: <20190730024309.233728-1-trong@android.com> <5d40d5b3.1c69fb81.6047f.1cc3@mx.google.com> <CAJZ5v0hj-GpiYN7nwPJvKJag71MG6zEFbJ6BNwzDidD+7fNFWw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 18:31:45 +0800
-Changbin Du <changbin.du@gmail.com> wrote:
-
-> On Tue, Jul 30, 2019 at 12:15:27PM -0400, Steven Rostedt wrote:
-> > On Tue, 30 Jul 2019 22:08:50 +0800
-> > Changbin Du <changbin.du@gmail.com> wrote:
-> >   
-> > > We already have tested it before. The second one should be removed.
-> > > With this change, the performance should have little improvement.
-> > > 
-> > > Fixes: 9cd2992f2d6c ("fgraph: Have set_graph_notrace only affect function_graph tracer")  
-> > 
-> > Thanks! I think this should even be marked for stable. Not really a bad
-> > bug, but a bug none the less.
-> >  
-> Steven, need I resend this patch and cc stable mailist?
+On Wednesday, July 31, 2019 10:34:11 AM CEST Rafael J. Wysocki wrote:
+> On Wed, Jul 31, 2019 at 1:41 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Rafael J. Wysocki (2019-07-30 16:05:55)
+> > > On Wed, Jul 31, 2019 at 12:26 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > >
+> > > > Quoting Rafael J. Wysocki (2019-07-30 15:17:55)
+> > > > > On Tuesday, July 30, 2019 8:48:09 PM CEST Stephen Boyd wrote:
+> > > > > >
+> > > > > > Using the same prefix for the class and the device name is quite common.
+> > > > > > For example, see the input, regulator, tty, tpm, remoteproc, hwmon,
+> > > > > > extcon classes. I'd prefer it was left as /sys/class/wakeup/wakeupN. The
+> > > > > > class name could be changed to wakeup_source perhaps (i.e.
+> > > > > > /sys/class/wakeup_source/wakeupN)?
+> > > > >
+> > > > > Alternatively /sys/class/wakeup/wsN
+> > > > >
+> > > >
+> > > > Or /sys/class/wakeup/eventN? It's your bikeshed to paint.
+> > >
+> > > So actually the underlying problem here is that device_wakeup_enable()
+> > > tries to register a wakeup source and then attach it to the device to
+> > > avoid calling possibly sleeping functions under a spinlock.
+> >
+> > Agreed, that is one problem.
+> >
+> > >
+> > > However, it should be possible to call wakeup_source_create(name)
+> > > first, then attach the wakeup source to the device (after checking for
+> > > presence), and then invoke wakeup_source_add() (after dropping the
+> > > lock).  If the wakeup source virtual device registration is done in
+> > > wakeup_source_add(), that should avoid the problem altogether without
+> > > having to introduce extra complexity.
+> >
+> > While reordering the code to do what you describe will fix this specific
+> > duplicate name problem, it won't fix the general problem with reusing
+> > device names from one bus on a different bus/class.
 > 
+> Fair enough.
+> 
+> > We can run into the same problem when two buses name their devices the
+> > same name and then we attempt to attach a wakeup source to those two
+> > devices. Or we can have a problem where a virtual wakeup is made with
+> > the same name, and again we'll try to make a duplicate named device.
+> > Using something like 'event' or 'wakeup' or 'ws' as the prefix avoids this
+> > problem and keeps things clean.
+> 
+> Or suffix, like "<devname-wakeup>.
+> 
+> But if prefixes are used by an existing convention, I would prefer
+> "ws-" as it is concise enough and should not be confusing.
+> 
+> > We should probably avoid letting the same virtual wakeup source be made
+> > with the same name anyway, because userspace will be confused about what
+> > virtual wakeup it is otherwise. I concede that using the name of the
+> > wakeup source catches this problem without adding extra code.
+> >
+> > Either way, I'd like to see what you outline implemented so that we
+> > don't need to do more work than is necessary when userspace writes to
+> > the file.
+> 
+> Since we agree here, let's make this change first.  I can cut a patch
+> for that in a reasonable time frame I think if no one else beats me to
+> that.
 
-No.
+So maybe something like the patch below (untested).
 
-I actually already pulled it in and ran it through my tests. I'm
-waiting on some more tests before pushing it off to Linus.
+---
+ drivers/base/power/wakeup.c |   82 +++++++++++++++++---------------------------
+ 1 file changed, 33 insertions(+), 49 deletions(-)
 
--- Steve
+Index: linux-pm/drivers/base/power/wakeup.c
+===================================================================
+--- linux-pm.orig/drivers/base/power/wakeup.c
++++ linux-pm/drivers/base/power/wakeup.c
+@@ -228,27 +228,6 @@ void wakeup_source_unregister(struct wak
+ EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+ 
+ /**
+- * device_wakeup_attach - Attach a wakeup source object to a device object.
+- * @dev: Device to handle.
+- * @ws: Wakeup source object to attach to @dev.
+- *
+- * This causes @dev to be treated as a wakeup device.
+- */
+-static int device_wakeup_attach(struct device *dev, struct wakeup_source *ws)
+-{
+-	spin_lock_irq(&dev->power.lock);
+-	if (dev->power.wakeup) {
+-		spin_unlock_irq(&dev->power.lock);
+-		return -EEXIST;
+-	}
+-	dev->power.wakeup = ws;
+-	if (dev->power.wakeirq)
+-		device_wakeup_attach_irq(dev, dev->power.wakeirq);
+-	spin_unlock_irq(&dev->power.lock);
+-	return 0;
+-}
+-
+-/**
+  * device_wakeup_enable - Enable given device to be a wakeup source.
+  * @dev: Device to handle.
+  *
+@@ -265,15 +244,29 @@ int device_wakeup_enable(struct device *
+ 	if (pm_suspend_target_state != PM_SUSPEND_ON)
+ 		dev_dbg(dev, "Suspicious %s() during system transition!\n", __func__);
+ 
++	spin_lock_irq(&dev->power.lock);
++
++	if (dev->power.wakeup) {
++		spin_unlock_irq(&dev->power.lock);
++		return -EEXIST;
++	}
++	dev->power.wakeup = ERR_PTR(-EBUSY);
++
++	spin_unlock_irq(&dev->power.lock);
++
+ 	ws = wakeup_source_register(dev_name(dev));
+ 	if (!ws)
+ 		return -ENOMEM;
+ 
+-	ret = device_wakeup_attach(dev, ws);
+-	if (ret)
+-		wakeup_source_unregister(ws);
++	spin_lock_irq(&dev->power.lock);
+ 
+-	return ret;
++	dev->power.wakeup = ws;
++	if (dev->power.wakeirq)
++		device_wakeup_attach_irq(dev, dev->power.wakeirq);
++
++	spin_unlock_irq(&dev->power.lock);
++
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(device_wakeup_enable);
+ 
+@@ -294,7 +287,7 @@ void device_wakeup_attach_irq(struct dev
+ 	struct wakeup_source *ws;
+ 
+ 	ws = dev->power.wakeup;
+-	if (!ws)
++	if (IS_ERR_OR_NULL(ws))
+ 		return;
+ 
+ 	if (ws->wakeirq)
+@@ -316,7 +309,7 @@ void device_wakeup_detach_irq(struct dev
+ 	struct wakeup_source *ws;
+ 
+ 	ws = dev->power.wakeup;
+-	if (ws)
++	if (!IS_ERR_OR_NULL(ws))
+ 		ws->wakeirq = NULL;
+ }
+ 
+@@ -353,23 +346,6 @@ void device_wakeup_disarm_wake_irqs(void
+ }
+ 
+ /**
+- * device_wakeup_detach - Detach a device's wakeup source object from it.
+- * @dev: Device to detach the wakeup source object from.
+- *
+- * After it returns, @dev will not be treated as a wakeup device any more.
+- */
+-static struct wakeup_source *device_wakeup_detach(struct device *dev)
+-{
+-	struct wakeup_source *ws;
+-
+-	spin_lock_irq(&dev->power.lock);
+-	ws = dev->power.wakeup;
+-	dev->power.wakeup = NULL;
+-	spin_unlock_irq(&dev->power.lock);
+-	return ws;
+-}
+-
+-/**
+  * device_wakeup_disable - Do not regard a device as a wakeup source any more.
+  * @dev: Device to handle.
+  *
+@@ -383,8 +359,16 @@ int device_wakeup_disable(struct device
+ 	if (!dev || !dev->power.can_wakeup)
+ 		return -EINVAL;
+ 
+-	ws = device_wakeup_detach(dev);
+-	wakeup_source_unregister(ws);
++	spin_lock_irq(&dev->power.lock);
++
++	ws = dev->power.wakeup;
++	dev->power.wakeup = NULL;
++
++	spin_unlock_irq(&dev->power.lock);
++
++	if (!IS_ERR(ws))
++		wakeup_source_unregister(ws);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(device_wakeup_disable);
+@@ -558,7 +542,7 @@ void __pm_stay_awake(struct wakeup_sourc
+ {
+ 	unsigned long flags;
+ 
+-	if (!ws)
++	if (IS_ERR_OR_NULL(ws))
+ 		return;
+ 
+ 	spin_lock_irqsave(&ws->lock, flags);
+@@ -675,7 +659,7 @@ void __pm_relax(struct wakeup_source *ws
+ {
+ 	unsigned long flags;
+ 
+-	if (!ws)
++	if (IS_ERR_OR_NULL(ws))
+ 		return;
+ 
+ 	spin_lock_irqsave(&ws->lock, flags);
+@@ -746,7 +730,7 @@ void pm_wakeup_ws_event(struct wakeup_so
+ 	unsigned long flags;
+ 	unsigned long expires;
+ 
+-	if (!ws)
++	if (IS_ERR_OR_NULL(ws))
+ 		return;
+ 
+ 	spin_lock_irqsave(&ws->lock, flags);
+
+
+
