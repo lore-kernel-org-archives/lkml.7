@@ -2,94 +2,114 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7887BC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA34C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4985521773
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F196206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387771AbfGaKhl (ORCPT
+        id S2387783AbfGaKkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:37:41 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33591 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfGaKhk (ORCPT
+        Wed, 31 Jul 2019 06:40:20 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:54500 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfGaKkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:37:40 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so69200325wru.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:37:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=k8iV1zA5X3Fl6os5LyVIh5yLsEGaYfREzD+XcT87bP0=;
-        b=HlX7JeTG3wxQGyIoLAfrdcJ/95IjAhtbeZWY7Lpv5ySkRNKfYbVzzHKm23RYkmw7G3
-         gT93IRa8Ph83/4OhV+0R9XZgPfJQt6S9o7kDCvKorlCFS9F4WwTMLoViUJiH+D3m2Cop
-         I5OSFEzdneelNPil+emcOLhg8/j1HYc16GoSTfa8JMlnn1veus/7J4xgBvn0/SNJX58j
-         uKlYFmtEPvWogUaQrexb7HO/Wt2vQSoqtmF1KTEytN8r4QWvgw9O+GgoQ9wYR3B6E3Uf
-         LV0ZMFVi915gIbLu+yyn4LcDm19BpJXLQOOWUoN9y+oejBhALiSRRQrAqavCA5VwlTA1
-         fhFA==
-X-Gm-Message-State: APjAAAWZ8APB59CRT+bBt65ew3CTk8mraPhqIKepl+wVFVV099McEYBk
-        Hm+QPsLe2MOADA6C7akr3JuOow==
-X-Google-Smtp-Source: APXvYqzD5GnZ2oX3ivmVwh9gHiLMdPlFIqAWZvrVxayj9sB0Cvqa9vaVFTrf5abCsI1zTL6R9RzbFw==
-X-Received: by 2002:adf:ef49:: with SMTP id c9mr5644912wrp.188.1564569458406;
-        Wed, 31 Jul 2019 03:37:38 -0700 (PDT)
-Received: from localhost.localdomain.com ([151.29.237.107])
-        by smtp.gmail.com with ESMTPSA id s2sm55015229wmj.33.2019.07.31.03.37.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 31 Jul 2019 03:37:37 -0700 (PDT)
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     tglx@linutronix.de, bigeasy@linutronix.de, rostedt@goodmis.org
-Cc:     linux-rt-users@vger.kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, bristot@redhat.com,
-        williams@redhat.com, Juri Lelli <juri.lelli@redhat.com>
-Subject: [RT PATCH] sched/deadline: Make inactive timer run in hardirq context
-Date:   Wed, 31 Jul 2019 12:37:15 +0200
-Message-Id: <20190731103715.4047-1-juri.lelli@redhat.com>
-X-Mailer: git-send-email 2.17.2
+        Wed, 31 Jul 2019 06:40:20 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id E4FE120020;
+        Wed, 31 Jul 2019 12:40:08 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 12:40:07 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Shawn Guo <shawnguo@kernel.org>, kernel@collabora.com,
+        linux-samsung-soc@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-arm-msm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        amd-gfx@lists.freedesktop.org,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        freedreno@lists.freedesktop.org,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+Subject: Re: Review required [Was: Associate ddc adapters with connectors]
+Message-ID: <20190731104007.GA23138@ravnborg.org>
+References: <cover.1564161140.git.andrzej.p@collabora.com>
+ <20190726183520.GA22572@ravnborg.org>
+ <20190726185538.GD14981@ravnborg.org>
+ <6560f93c-a48f-2a8c-afeb-d5e8e200480d@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6560f93c-a48f-2a8c-afeb-d5e8e200480d@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=MKLiDCnLOtWFweQeVuoA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SCHED_DEADLINE inactive timer needs to run in hardirq context (as
-dl_task_timer already does).
+Hi Neil.
 
-Make it HRTIMER_MODE_REL_HARD.
+On Wed, Jul 31, 2019 at 10:00:14AM +0200, Neil Armstrong wrote:
+> Hi Sam,
+> 
+> On 26/07/2019 20:55, Sam Ravnborg wrote:
+> > Hi all.
+> > 
+> > Andrzej have done a good job following up on feedback and this series is
+> > now ready.
+> > 
+> > We need ack on the patches touching the individual drivers before we can
+> > proceed.
+> > Please check your drivers and get back.
+> 
+> I can apply all core and maintainer-acked patches for now :
+> 1, 2, 7, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23
+> 
+> and Andrzej can resend not applied patches with Yours and Emil's Reviewed-by,
+> so we can wait a few more days to apply them.
 
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
----
-Hi,
+Sounds like a good plan.
+Thanks for thaking care of this.
 
-Both v4.19-rt and v5.2-rt need this.
-
-Mainline "sched: Mark hrtimers to expire in hard interrupt context"
-series needs this as well (20190726185753.077004842@linutronix.de in
-particular). Do I need to send out a separate patch for it?
-
-Best,
-
-Juri
----
- kernel/sched/deadline.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 1794e152d888..0889674b8915 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1292,7 +1292,7 @@ void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se)
- {
- 	struct hrtimer *timer = &dl_se->inactive_timer;
- 
--	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	timer->function = inactive_task_timer;
- }
- 
--- 
-2.17.2
-
+	Sam
