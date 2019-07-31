@@ -2,111 +2,72 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA12C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D81C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5CC20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132B220679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbfGaO0t (ORCPT
+        id S1729226AbfGaO24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:26:49 -0400
-Received: from sauhun.de ([88.99.104.3]:41960 "EHLO pokefinder.org"
+        Wed, 31 Jul 2019 10:28:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50186 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfGaO0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:26:48 -0400
-Received: from localhost (p54B33080.dip0.t-ipconnect.de [84.179.48.128])
-        by pokefinder.org (Postfix) with ESMTPSA id 6D2D32C270A;
-        Wed, 31 Jul 2019 16:26:46 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 16:26:46 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        linux-kernel@vger.kernel.org,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        cocci@systeme.lip6.fr, Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [Cocci] [PATCH v5 0/3] Add error message to platform_get_irq*()
-Message-ID: <20190731142645.GA1680@kunai>
-References: <20190730053845.126834-1-swboyd@chromium.org>
+        id S1726079AbfGaO24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:28:56 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 87BA4550CF;
+        Wed, 31 Jul 2019 14:28:56 +0000 (UTC)
+Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C8A860BEC;
+        Wed, 31 Jul 2019 14:28:55 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: selftests: Update gitignore file for latest changes
+Date:   Wed, 31 Jul 2019 16:28:51 +0200
+Message-Id: <20190731142851.9793-1-thuth@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Content-Disposition: inline
-In-Reply-To: <20190730053845.126834-1-swboyd@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 31 Jul 2019 14:28:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The kvm_create_max_vcpus test has been moved to the main directory,
+and sync_regs_test is now available on s390x, too.
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ tools/testing/selftests/kvm/.gitignore | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Hi Stephen,
+diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
+index 41266af0d3dc..b35da375530a 100644
+--- a/tools/testing/selftests/kvm/.gitignore
++++ b/tools/testing/selftests/kvm/.gitignore
+@@ -1,7 +1,7 @@
++/s390x/sync_regs_test
+ /x86_64/cr4_cpuid_sync_test
+ /x86_64/evmcs_test
+ /x86_64/hyperv_cpuid
+-/x86_64/kvm_create_max_vcpus
+ /x86_64/mmio_warning_test
+ /x86_64/platform_info_test
+ /x86_64/set_sregs_test
+@@ -13,3 +13,4 @@
+ /x86_64/vmx_tsc_adjust_test
+ /clear_dirty_log_test
+ /dirty_log_test
++/kvm_create_max_vcpus
+-- 
+2.21.0
 
-> There were some comments about adding an 'optional' platform_get_irq()
-> API in v4. This series doesn't include that, but I can add such an API
-> if it's required. I started to look into how it might work and got hung
-> up on what an optional IRQ means. I suppose it means that in DT there
-> isn't an 'interrupts' property in the device node, but in ACPI based
-> firmware I'm not sure what that would correspond to. Furthermore, the
-> return value is hard to comprehend. Do we return an error when an
-> optional irq can't be found? It doesn't seem safe to return 0 because
-> sometimes 0 is a valid IRQ. Do other errors in parsing the IRQ
-> constitute a failure when the IRQ is optional?
-
-Some time ago, I tried a series like yours and got stuck at this very
-point. I found drivers where using an interrupt was optional and
-platform_get_irq() returning a failure wasn't fatal. The drivers used
-PIO then or dropped some additional functionality. Some of them were
-very old.
-
-I didn't like the idea that platform_get_irq() will spit out errors for
-those drivers, yet I couldn't create a suitable cocci-script to convert
-drivers to use the *_optional callback where possible. So, I neither
-created the optional callback.
-
-I still have doubts of unneeded error messages popping up. Has this been
-discussed already? (Sorry, I missed the first iterations of this series)
-
-Thanks,
-
-   Wolfram
-
-
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1BpSEACgkQFA3kzBSg
-KbZhaQ/9HsT5Cy7Ah1bd3cSpQWkH7rJ4UUVNRskWX+dUIxckOfNlPnvxof79Yskr
-Fsp5ZrGlMCT3s49sfH5E2NF3Ubq2wVsIpSLH1u1Aoh1X4HPd4FuLzkX7slniJd9e
-DSCkWJaUVoxCq7O8S4LF3fZNzvsNk3HO7nxZXxwsrzJkwRIY9OOiPrkwkOR8EsPo
-mAi0TfC8kSqzHYTLoV8SwaVyOWxAGYYYHPJTCWiwAy8M5Z0fk566Jwf7fAohHDSC
-v4fGYkHpm8cy6jLGMbEPk/gqTEXYh9zIqlDelmdL+nqzJ9THZEcpU/zFITPqdNSs
-QaOci5P9DLUzGdXhlE3VvxJb8uHrgkDIYI2jg2wB58Nl/otzXZbwL7oNjF17D0Rl
-ATA/kuEnXFYVIEXBfXET4dr7JHvGpseDpjHpFau+KtbWQ0uVpCppimw2SryFUB+c
-9tymL7pdVG2t5LSMhwAYpqG7qiB5GLjtbfIbztvr9BuLnPoDmWeda7vVhI21LZXo
-NeO/w7ucmTKaMEKwwT8RgYn/TTZiGrGtnzSRdjY2AYDBxeVfRSir+Tu4x+bhMJne
-L/C/cv2uhhT+ZmysSI9CmBVeYTcVd55+43vmAbRftGRb7BSoEcuWY2vIL1SPsQUx
-Y/6gPBKbhNxLeHK6X2LHWthbBFhBqGAFJfv8+UnnU6nyJ64Rw+Q=
-=B9Za
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
