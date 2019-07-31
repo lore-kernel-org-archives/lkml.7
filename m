@@ -2,373 +2,556 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FF7C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DD3C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4CC0206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:27:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ohndJW7N";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oQjt3LvK"
+	by mail.kernel.org (Postfix) with ESMTP id ECD7B208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbfGaS1f (ORCPT
+        id S1730211AbfGaS36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:27:35 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45412 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730037AbfGaS1e (ORCPT
+        Wed, 31 Jul 2019 14:29:58 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:42105 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbfGaS36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:27:34 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5D23660734; Wed, 31 Jul 2019 18:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564597652;
-        bh=l6yPCxZR+IXtBsSBlCsz6q1pTNhqIKKVrlFGqWyp/hk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ohndJW7NQJ1LGwYF13wa1U5jWvUUHLsfVJwNXdsR2ySDAt6abzoU0OB5oPxOXoSN2
-         VwQ2nIy67si4/+H+J4SONIbyCYYItJ8Q9BYoEtp3Ld9xG6RIpU7MHfthlTMUgn853/
-         udBZiZKf3BXiZuHbr72HqJgiKfyqzlMrPllxnMQs=
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 07D8060721;
-        Wed, 31 Jul 2019 18:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564597651;
-        bh=l6yPCxZR+IXtBsSBlCsz6q1pTNhqIKKVrlFGqWyp/hk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oQjt3LvKmAxh+t2fitZAlBF52ORPmgRE4LhyN2KQahhShQf0OVEa0N3eQjMGhLzK8
-         X7pD89QylTShkqao2FFQjNS2+OKgopJZ3wdKAYro6xVsu+WAtkVd81MtR8dY9p/o/c
-         Gz2ok8FpspRJOUxScy/Q0xJ2WlxfxFqdXz+tT4AI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 07D8060721
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v3 2/2] clk: qcom : dispcc: Add support for display port clocks
-Date:   Wed, 31 Jul 2019 23:57:13 +0530
-Message-Id: <20190731182713.8123-3-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190731182713.8123-1-tdas@codeaurora.org>
-References: <20190731182713.8123-1-tdas@codeaurora.org>
+        Wed, 31 Jul 2019 14:29:58 -0400
+Received: by mail-vs1-f66.google.com with SMTP id 190so46886468vsf.9
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:29:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mkkk66qZeM7rZbp5Mkon6w+g0XNyuUrht7AlCfpNI3c=;
+        b=GPvhjOKyWbNUM62mKZdO6IrqFl2VWZyUuMm4AUh14h7c7wV0wi/30t6P8rR2T/psns
+         JsYI8W1Y201BwNrZtW4CaY4VdVXbYZjdoCAMlhvHK38aSp0lv108Uw+1wzw/RmnYuDNn
+         kVcdKDy8g3dujxWvXKtfQecsOO+jiiwfL0f1RWVgQTWOcxjJTu2f1bQ6mYz1KaPN6H3D
+         5sFsWtplZEp7Uhz+UJK2lW+ZgMU/raEadj5hgvVh1X5WUJlEprhVKQZeVcP3kONT71Lp
+         V1Eu3RxfMO5VKShvzHFy9DC/KlSgEr6GKSB2aRogmVQyHnU3QG8O72E6X/cHvcL4y/2w
+         pqpw==
+X-Gm-Message-State: APjAAAW0p+WbgfFlhFjW2Sky6m9dl4BNNWIq70HFcWzHTul0INN9W0o0
+        uGNeXKkcArAuDJluafkWOcPoXg==
+X-Google-Smtp-Source: APXvYqxwu4JXMVRdRBatu6SdqPckIbcsvlaKORV23YoYuIEhZIrdialQkGmhyfGj2U4NpBEniTRmaA==
+X-Received: by 2002:a67:c419:: with SMTP id c25mr78324215vsk.136.1564597796832;
+        Wed, 31 Jul 2019 11:29:56 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id h12sm9627521uao.15.2019.07.31.11.29.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 11:29:55 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 14:29:50 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, jgg@ziepe.ca,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
+ with worker
+Message-ID: <20190731132438-mutt-send-email-mst@kernel.org>
+References: <20190731084655.7024-1-jasowang@redhat.com>
+ <20190731084655.7024-8-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731084655.7024-8-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SDM845 dispcc supports RCG and CBCRs for display port, so add support for
-the same.
+On Wed, Jul 31, 2019 at 04:46:53AM -0400, Jason Wang wrote:
+> We used to use RCU to synchronize MMU notifier with worker. This leads
+> calling synchronize_rcu() in invalidate_range_start(). But on a busy
+> system, there would be many factors that may slow down the
+> synchronize_rcu() which makes it unsuitable to be called in MMU
+> notifier.
+> 
+> A solution is SRCU but its overhead is obvious with the expensive full
+> memory barrier. Another choice is to use seqlock, but it doesn't
+> provide a synchronization method between readers and writers. The last
+> choice is to use vq mutex, but it need to deal with the worst case
+> that MMU notifier must be blocked and wait for the finish of swap in.
+> 
+> So this patch switches use a counter to track whether or not the map
+> was used. The counter was increased when vq try to start or finish
+> uses the map. This means, when it was even, we're sure there's no
+> readers and MMU notifier is synchronized. When it was odd, it means
+> there's a reader we need to wait it to be even again then we are
+> synchronized. To avoid full memory barrier, store_release +
+> load_acquire on the counter is used.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/dispcc-sdm845.c              | 214 +++++++++++++++++-
- .../dt-bindings/clock/qcom,dispcc-sdm845.h    |  13 +-
- 2 files changed, 225 insertions(+), 2 deletions(-)
+Unfortunately this needs a lot of review and testing, so this can't make
+rc2, and I don't think this is the kind of patch I can merge after rc3.
+Subtle memory barrier tricks like this can introduce new bugs while they
+are fixing old ones.
 
-diff --git a/drivers/clk/qcom/dispcc-sdm845.c b/drivers/clk/qcom/dispcc-sdm845.c
-index 0cc4909b5dbe..5c932cd17b14 100644
---- a/drivers/clk/qcom/dispcc-sdm845.c
-+++ b/drivers/clk/qcom/dispcc-sdm845.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
-  */
 
- #include <linux/clk-provider.h>
-@@ -29,6 +29,8 @@ enum {
- 	P_DSI1_PHY_PLL_OUT_DSICLK,
- 	P_GPLL0_OUT_MAIN,
- 	P_GPLL0_OUT_MAIN_DIV,
-+	P_DP_PHY_PLL_LINK_CLK,
-+	P_DP_PHY_PLL_VCO_DIV_CLK,
- };
 
- static const struct parent_map disp_cc_parent_map_0[] = {
-@@ -45,6 +47,20 @@ static const char * const disp_cc_parent_names_0[] = {
- 	"core_bi_pll_test_se",
- };
 
-+static const struct parent_map disp_cc_parent_map_1[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_DP_PHY_PLL_LINK_CLK, 1 },
-+	{ P_DP_PHY_PLL_VCO_DIV_CLK, 2 },
-+	{ P_CORE_BI_PLL_TEST_SE, 7 },
-+};
-+
-+static const char * const disp_cc_parent_names_1[] = {
-+	"bi_tcxo",
-+	"dp_link_clk_divsel_ten",
-+	"dp_vco_divided_clk_src_mux",
-+	"core_bi_pll_test_se",
-+};
-+
- static const struct parent_map disp_cc_parent_map_2[] = {
- 	{ P_BI_TCXO, 0 },
- 	{ P_CORE_BI_PLL_TEST_SE, 7 },
-@@ -128,6 +144,81 @@ static struct clk_rcg2 disp_cc_mdss_byte1_clk_src = {
- 	},
- };
 
-+static const struct freq_tbl ftbl_disp_cc_mdss_dp_aux_clk_src[] = {
-+	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_dp_aux_clk_src = {
-+	.cmd_rcgr = 0x219c,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_2,
-+	.freq_tbl = ftbl_disp_cc_mdss_dp_aux_clk_src,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "disp_cc_mdss_dp_aux_clk_src",
-+		.parent_names = disp_cc_parent_names_2,
-+		.num_parents = 2,
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_dp_crypto_clk_src = {
-+	.cmd_rcgr = 0x2154,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_1,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "disp_cc_mdss_dp_crypto_clk_src",
-+		.parent_names = disp_cc_parent_names_1,
-+		.num_parents = 4,
-+		.ops = &clk_byte2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_dp_link_clk_src = {
-+	.cmd_rcgr = 0x2138,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_1,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "disp_cc_mdss_dp_link_clk_src",
-+		.parent_names = disp_cc_parent_names_1,
-+		.num_parents = 4,
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_byte2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_dp_pixel1_clk_src = {
-+	.cmd_rcgr = 0x2184,
-+	.mnd_width = 16,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_1,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "disp_cc_mdss_dp_pixel1_clk_src",
-+		.parent_names = disp_cc_parent_names_1,
-+		.num_parents = 4,
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_dp_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 disp_cc_mdss_dp_pixel_clk_src = {
-+	.cmd_rcgr = 0x216c,
-+	.mnd_width = 16,
-+	.hid_width = 5,
-+	.parent_map = disp_cc_parent_map_1,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "disp_cc_mdss_dp_pixel_clk_src",
-+		.parent_names = disp_cc_parent_names_1,
-+		.num_parents = 4,
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_dp_ops,
-+	},
-+};
-+
- static const struct freq_tbl ftbl_disp_cc_mdss_esc0_clk_src[] = {
- 	F(19200000, P_BI_TCXO, 1, 0, 0),
- 	{ }
-@@ -391,6 +482,114 @@ static struct clk_branch disp_cc_mdss_byte1_intf_clk = {
- 	},
- };
+> 
+> Consider the read critical section is pretty small the synchronization
+> should be done very fast.
+> 
+> Note the patch lead about 3% PPS dropping.
 
-+static struct clk_branch disp_cc_mdss_dp_aux_clk = {
-+	.halt_reg = 0x2054,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2054,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_aux_clk",
-+			.parent_names = (const char *[]){
-+				"disp_cc_mdss_dp_aux_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_dp_crypto_clk = {
-+	.halt_reg = 0x2048,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2048,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_crypto_clk",
-+			.parent_names = (const char *[]){
-+				"disp_cc_mdss_dp_crypto_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_dp_link_clk = {
-+	.halt_reg = 0x2040,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2040,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_link_clk",
-+			.parent_names = (const char *[]){
-+				"disp_cc_mdss_dp_link_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+/* reset state of disp_cc_mdss_dp_link_div_clk_src divider is 0x3 (div 4) */
-+static struct clk_branch disp_cc_mdss_dp_link_intf_clk = {
-+	.halt_reg = 0x2044,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2044,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_link_intf_clk",
-+			.parent_names = (const char *[]){
-+				"disp_cc_mdss_dp_link_clk_src",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_dp_pixel1_clk = {
-+	.halt_reg = 0x2050,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2050,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_pixel1_clk",
-+			.parent_names = (const char *[]){
-+				"disp_cc_mdss_dp_pixel1_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch disp_cc_mdss_dp_pixel_clk = {
-+	.halt_reg = 0x204c,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x204c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "disp_cc_mdss_dp_pixel_clk",
-+			.parent_names = (const char *[]){
-+				"disp_cc_mdss_dp_pixel_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch disp_cc_mdss_esc0_clk = {
- 	.halt_reg = 0x2038,
- 	.halt_check = BRANCH_HALT,
-@@ -589,6 +788,19 @@ static struct clk_regmap *disp_cc_sdm845_clocks[] = {
- 	[DISP_CC_MDSS_BYTE1_INTF_CLK] = &disp_cc_mdss_byte1_intf_clk.clkr,
- 	[DISP_CC_MDSS_BYTE1_DIV_CLK_SRC] =
- 					&disp_cc_mdss_byte1_div_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_AUX_CLK] = &disp_cc_mdss_dp_aux_clk.clkr,
-+	[DISP_CC_MDSS_DP_AUX_CLK_SRC] = &disp_cc_mdss_dp_aux_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_CRYPTO_CLK] = &disp_cc_mdss_dp_crypto_clk.clkr,
-+	[DISP_CC_MDSS_DP_CRYPTO_CLK_SRC] =
-+					&disp_cc_mdss_dp_crypto_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_LINK_CLK] = &disp_cc_mdss_dp_link_clk.clkr,
-+	[DISP_CC_MDSS_DP_LINK_CLK_SRC] = &disp_cc_mdss_dp_link_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_LINK_INTF_CLK] = &disp_cc_mdss_dp_link_intf_clk.clkr,
-+	[DISP_CC_MDSS_DP_PIXEL1_CLK] = &disp_cc_mdss_dp_pixel1_clk.clkr,
-+	[DISP_CC_MDSS_DP_PIXEL1_CLK_SRC] =
-+					&disp_cc_mdss_dp_pixel1_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_PIXEL_CLK] = &disp_cc_mdss_dp_pixel_clk.clkr,
-+	[DISP_CC_MDSS_DP_PIXEL_CLK_SRC] = &disp_cc_mdss_dp_pixel_clk_src.clkr,
- 	[DISP_CC_MDSS_ESC0_CLK] = &disp_cc_mdss_esc0_clk.clkr,
- 	[DISP_CC_MDSS_ESC0_CLK_SRC] = &disp_cc_mdss_esc0_clk_src.clkr,
- 	[DISP_CC_MDSS_ESC1_CLK] = &disp_cc_mdss_esc1_clk.clkr,
-diff --git a/include/dt-bindings/clock/qcom,dispcc-sdm845.h b/include/dt-bindings/clock/qcom,dispcc-sdm845.h
-index 11eed4bc9646..4016fd1d5b46 100644
---- a/include/dt-bindings/clock/qcom,dispcc-sdm845.h
-+++ b/include/dt-bindings/clock/qcom,dispcc-sdm845.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
-  */
+Sorry what do you mean by this last sentence? This degrades performance
+compared to what?
 
- #ifndef _DT_BINDINGS_CLK_SDM_DISP_CC_SDM845_H
-@@ -35,6 +35,17 @@
- #define DISP_CC_PLL0						25
- #define DISP_CC_MDSS_BYTE0_DIV_CLK_SRC				26
- #define DISP_CC_MDSS_BYTE1_DIV_CLK_SRC				27
-+#define DISP_CC_MDSS_DP_AUX_CLK					28
-+#define DISP_CC_MDSS_DP_AUX_CLK_SRC				29
-+#define DISP_CC_MDSS_DP_CRYPTO_CLK				30
-+#define DISP_CC_MDSS_DP_CRYPTO_CLK_SRC				31
-+#define DISP_CC_MDSS_DP_LINK_CLK				32
-+#define DISP_CC_MDSS_DP_LINK_CLK_SRC				33
-+#define DISP_CC_MDSS_DP_LINK_INTF_CLK				34
-+#define DISP_CC_MDSS_DP_PIXEL1_CLK				35
-+#define DISP_CC_MDSS_DP_PIXEL1_CLK_SRC				36
-+#define DISP_CC_MDSS_DP_PIXEL_CLK				37
-+#define DISP_CC_MDSS_DP_PIXEL_CLK_SRC				38
+> 
+> Reported-by: Michael S. Tsirkin <mst@redhat.com>
+> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/vhost/vhost.c | 145 ++++++++++++++++++++++++++----------------
+>  drivers/vhost/vhost.h |   7 +-
+>  2 files changed, 94 insertions(+), 58 deletions(-)
+> 
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index cfc11f9ed9c9..db2c81cb1e90 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -324,17 +324,16 @@ static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
+>  
+>  	spin_lock(&vq->mmu_lock);
+>  	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
+> -		map[i] = rcu_dereference_protected(vq->maps[i],
+> -				  lockdep_is_held(&vq->mmu_lock));
+> +		map[i] = vq->maps[i];
+>  		if (map[i]) {
+>  			vhost_set_map_dirty(vq, map[i], i);
+> -			rcu_assign_pointer(vq->maps[i], NULL);
+> +			vq->maps[i] = NULL;
+>  		}
+>  	}
+>  	spin_unlock(&vq->mmu_lock);
+>  
+> -	/* No need for synchronize_rcu() or kfree_rcu() since we are
+> -	 * serialized with memory accessors (e.g vq mutex held).
+> +	/* No need for synchronization since we are serialized with
+> +	 * memory accessors (e.g vq mutex held).
+>  	 */
+>  
+>  	for (i = 0; i < VHOST_NUM_ADDRS; i++)
+> @@ -362,6 +361,44 @@ static bool vhost_map_range_overlap(struct vhost_uaddr *uaddr,
+>  	return !(end < uaddr->uaddr || start > uaddr->uaddr - 1 + uaddr->size);
+>  }
+>  
+> +static void inline vhost_vq_access_map_begin(struct vhost_virtqueue *vq)
+> +{
+> +	int ref = READ_ONCE(vq->ref);
+> +
+> +	smp_store_release(&vq->ref, ref + 1);
+> +	/* Make sure ref counter is visible before accessing the map */
+> +	smp_load_acquire(&vq->ref);
 
- /* DISP_CC Reset */
- #define DISP_CC_MDSS_RSCC_BCR					0
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+The map access is after this sequence, correct?
 
+Just going by the rules in Documentation/memory-barriers.txt,
+I think that this pair will not order following accesses with ref store.
+
+Documentation/memory-barriers.txt says:
+
+
++     In addition, a RELEASE+ACQUIRE
++     pair is -not- guaranteed to act as a full memory barrier.
+
+
+
+The guarantee that is made is this:
+	after
+     an ACQUIRE on a given variable, all memory accesses preceding any prior
+     RELEASE on that same variable are guaranteed to be visible. 
+
+
+And if we also had the reverse rule we'd end up with a full barrier,
+won't we?
+
+Cc Paul in case I missed something here. And if I'm right,
+maybe we should call this out, adding
+
+	"The opposite is not true: a prior RELEASE is not
+	 guaranteed to be visible before memory accesses following
+	 the subsequent ACQUIRE".
+
+
+
+> +}
+> +
+> +static void inline vhost_vq_access_map_end(struct vhost_virtqueue *vq)
+> +{
+> +	int ref = READ_ONCE(vq->ref);
+> +
+> +	/* Make sure vq access is done before increasing ref counter */
+> +	smp_store_release(&vq->ref, ref + 1);
+> +}
+> +
+> +static void inline vhost_vq_sync_access(struct vhost_virtqueue *vq)
+> +{
+> +	int ref;
+> +
+> +	/* Make sure map change was done before checking ref counter */
+> +	smp_mb();
+> +
+> +	ref = READ_ONCE(vq->ref);
+> +	if (ref & 0x1) {
+
+Please document the even/odd trick here too, not just in the commit log.
+
+> +		/* When ref change,
+
+changes
+
+> we are sure no reader can see
+> +		 * previous map */
+> +		while (READ_ONCE(vq->ref) == ref) {
+
+
+what is the below line in aid of?
+
+> +			set_current_state(TASK_RUNNING);
+> +			schedule();
+
+                        if (need_resched())
+                                schedule();
+
+?
+
+> +		}
+
+On an interruptible kernel, there's a risk here is that
+a task got preempted with an odd ref.
+So I suspect we'll have to disable preemption when we
+make ref odd.
+
+
+> +	}
+> +	/* Make sure ref counter was checked before any other
+> +	 * operations that was dene on map. */
+
+was dene -> were done?
+
+> +	smp_mb();
+> +}
+> +
+>  static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+>  				      int index,
+>  				      unsigned long start,
+> @@ -376,16 +413,15 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+>  	spin_lock(&vq->mmu_lock);
+>  	++vq->invalidate_count;
+>  
+> -	map = rcu_dereference_protected(vq->maps[index],
+> -					lockdep_is_held(&vq->mmu_lock));
+> +	map = vq->maps[index];
+>  	if (map) {
+>  		vhost_set_map_dirty(vq, map, index);
+> -		rcu_assign_pointer(vq->maps[index], NULL);
+> +		vq->maps[index] = NULL;
+>  	}
+>  	spin_unlock(&vq->mmu_lock);
+>  
+>  	if (map) {
+> -		synchronize_rcu();
+> +		vhost_vq_sync_access(vq);
+>  		vhost_map_unprefetch(map);
+>  	}
+>  }
+> @@ -457,7 +493,7 @@ static void vhost_init_maps(struct vhost_dev *dev)
+>  	for (i = 0; i < dev->nvqs; ++i) {
+>  		vq = dev->vqs[i];
+>  		for (j = 0; j < VHOST_NUM_ADDRS; j++)
+> -			RCU_INIT_POINTER(vq->maps[j], NULL);
+> +			vq->maps[j] = NULL;
+>  	}
+>  }
+>  #endif
+> @@ -655,6 +691,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+>  		vq->indirect = NULL;
+>  		vq->heads = NULL;
+>  		vq->dev = dev;
+> +		vq->ref = 0;
+>  		mutex_init(&vq->mutex);
+>  		spin_lock_init(&vq->mmu_lock);
+>  		vhost_vq_reset(dev, vq);
+> @@ -921,7 +958,7 @@ static int vhost_map_prefetch(struct vhost_virtqueue *vq,
+>  	map->npages = npages;
+>  	map->pages = pages;
+>  
+> -	rcu_assign_pointer(vq->maps[index], map);
+> +	vq->maps[index] = map;
+>  	/* No need for a synchronize_rcu(). This function should be
+>  	 * called by dev->worker so we are serialized with all
+>  	 * readers.
+> @@ -1216,18 +1253,18 @@ static inline int vhost_put_avail_event(struct vhost_virtqueue *vq)
+>  	struct vring_used *used;
+>  
+>  	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>  
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+> +		map = vq->maps[VHOST_ADDR_USED];
+>  		if (likely(map)) {
+>  			used = map->addr;
+>  			*((__virtio16 *)&used->ring[vq->num]) =
+>  				cpu_to_vhost16(vq, vq->avail_idx);
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>  			return 0;
+>  		}
+>  
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>  	}
+>  #endif
+>  
+> @@ -1245,18 +1282,18 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
+>  	size_t size;
+>  
+>  	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>  
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+> +		map = vq->maps[VHOST_ADDR_USED];
+>  		if (likely(map)) {
+>  			used = map->addr;
+>  			size = count * sizeof(*head);
+>  			memcpy(used->ring + idx, head, size);
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>  			return 0;
+>  		}
+>  
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>  	}
+>  #endif
+>  
+> @@ -1272,17 +1309,17 @@ static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
+>  	struct vring_used *used;
+>  
+>  	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>  
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+> +		map = vq->maps[VHOST_ADDR_USED];
+>  		if (likely(map)) {
+>  			used = map->addr;
+>  			used->flags = cpu_to_vhost16(vq, vq->used_flags);
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>  			return 0;
+>  		}
+>  
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>  	}
+>  #endif
+>  
+> @@ -1298,17 +1335,17 @@ static inline int vhost_put_used_idx(struct vhost_virtqueue *vq)
+>  	struct vring_used *used;
+>  
+>  	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>  
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+> +		map = vq->maps[VHOST_ADDR_USED];
+>  		if (likely(map)) {
+>  			used = map->addr;
+>  			used->idx = cpu_to_vhost16(vq, vq->last_used_idx);
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>  			return 0;
+>  		}
+>  
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>  	}
+>  #endif
+>  
+> @@ -1362,17 +1399,17 @@ static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
+>  	struct vring_avail *avail;
+>  
+>  	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>  
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>  		if (likely(map)) {
+>  			avail = map->addr;
+>  			*idx = avail->idx;
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>  			return 0;
+>  		}
+>  
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>  	}
+>  #endif
+>  
+> @@ -1387,17 +1424,17 @@ static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
+>  	struct vring_avail *avail;
+>  
+>  	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>  
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>  		if (likely(map)) {
+>  			avail = map->addr;
+>  			*head = avail->ring[idx & (vq->num - 1)];
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>  			return 0;
+>  		}
+>  
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>  	}
+>  #endif
+>  
+> @@ -1413,17 +1450,17 @@ static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
+>  	struct vring_avail *avail;
+>  
+>  	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>  
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>  		if (likely(map)) {
+>  			avail = map->addr;
+>  			*flags = avail->flags;
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>  			return 0;
+>  		}
+>  
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>  	}
+>  #endif
+>  
+> @@ -1438,15 +1475,15 @@ static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
+>  	struct vring_avail *avail;
+>  
+>  	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+> +		vhost_vq_access_map_begin(vq);
+> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>  		if (likely(map)) {
+>  			avail = map->addr;
+>  			*event = (__virtio16)avail->ring[vq->num];
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>  			return 0;
+>  		}
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>  	}
+>  #endif
+>  
+> @@ -1461,17 +1498,17 @@ static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
+>  	struct vring_used *used;
+>  
+>  	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>  
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+> +		map = vq->maps[VHOST_ADDR_USED];
+>  		if (likely(map)) {
+>  			used = map->addr;
+>  			*idx = used->idx;
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>  			return 0;
+>  		}
+>  
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>  	}
+>  #endif
+>  
+> @@ -1486,17 +1523,17 @@ static inline int vhost_get_desc(struct vhost_virtqueue *vq,
+>  	struct vring_desc *d;
+>  
+>  	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>  
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_DESC]);
+> +		map = vq->maps[VHOST_ADDR_DESC];
+>  		if (likely(map)) {
+>  			d = map->addr;
+>  			*desc = *(d + idx);
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>  			return 0;
+>  		}
+>  
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>  	}
+>  #endif
+>  
+> @@ -1843,13 +1880,11 @@ static bool iotlb_access_ok(struct vhost_virtqueue *vq,
+>  #if VHOST_ARCH_CAN_ACCEL_UACCESS
+>  static void vhost_vq_map_prefetch(struct vhost_virtqueue *vq)
+>  {
+> -	struct vhost_map __rcu *map;
+> +	struct vhost_map *map;
+>  	int i;
+>  
+>  	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
+> -		rcu_read_lock();
+> -		map = rcu_dereference(vq->maps[i]);
+> -		rcu_read_unlock();
+> +		map = vq->maps[i];
+>  		if (unlikely(!map))
+>  			vhost_map_prefetch(vq, i);
+>  	}
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index a9a2a93857d2..f9e9558a529d 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -115,16 +115,17 @@ struct vhost_virtqueue {
+>  #if VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	/* Read by memory accessors, modified by meta data
+>  	 * prefetching, MMU notifier and vring ioctl().
+> -	 * Synchonrized through mmu_lock (writers) and RCU (writers
+> -	 * and readers).
+> +	 * Synchonrized through mmu_lock (writers) and ref counters,
+> +	 * see vhost_vq_access_map_begin()/vhost_vq_access_map_end().
+>  	 */
+> -	struct vhost_map __rcu *maps[VHOST_NUM_ADDRS];
+> +	struct vhost_map *maps[VHOST_NUM_ADDRS];
+>  	/* Read by MMU notifier, modified by vring ioctl(),
+>  	 * synchronized through MMU notifier
+>  	 * registering/unregistering.
+>  	 */
+>  	struct vhost_uaddr uaddrs[VHOST_NUM_ADDRS];
+>  #endif
+> +	int ref;
+
+Is it important that this is signed? If not I'd do unsigned here:
+even though kernel does compile with 2s complement sign overflow,
+it seems cleaner not to depend on that.
+
+>  	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
+>  
+>  	struct file *kick;
+> -- 
+> 2.18.1
