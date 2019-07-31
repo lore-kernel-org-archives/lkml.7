@@ -2,164 +2,102 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64034C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDDBC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473A6206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C9B214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:33:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Rcc1vkKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbfGaSb0 (ORCPT
+        id S1730256AbfGaSdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:31:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37993 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbfGaSbZ (ORCPT
+        Wed, 31 Jul 2019 14:33:40 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:57580 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726876AbfGaSdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:31:25 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s15so39362545wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:31:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JsmSO9sltbmYLrawEo4owrilCK99z9Mx4i8KduJVJQ0=;
-        b=AjpoBecM9sr1uUn9v95wBdyYfd3y89RZN6xAWg/PA6+hQ1whFpOnilSHKtOFqNR7Hl
-         5PSLKHWuXqS5UU1ZWvgdDgHXFD7UJoEjvJNt6OqFczJ4bUeLHmi+sA89JJoCcA6Glfru
-         Ci/HkjVYYBBhC7AgVex6ER+76dc4PB2AnMUZrXo6e/LWcsrlSQ+dmO5VsYumh5SHPeq9
-         c0q1rXS1r2EB/FzvN3yejQVjiacN4TMoyfvPmutKLEdjnXPpkKaQqbHMH7Zxail8KaIX
-         YEE+qCbyykweA0WXXQ/pUSLglbzvLT7Cze8jtYMaCInW1LCd5CzSXQm9WQiF0c5p0Y/p
-         Z0Kw==
-X-Gm-Message-State: APjAAAVyky7Jg/nGjbOJGLXhQ1J1TEMOPkjQl7b7pOGfT4PqqWs/eZzW
-        NyWCD0j3RwnqdKwefedjvx0d6q14ywE=
-X-Google-Smtp-Source: APXvYqy8gXPCPq26kwcsAHq6VNbEk7l53I+ZHTkO6Ay0SjYDjoVJnjXZsBwj5sPUalR9gv8OxdwEKg==
-X-Received: by 2002:a1c:4d05:: with SMTP id o5mr108072774wmh.129.1564597882675;
-        Wed, 31 Jul 2019 11:31:22 -0700 (PDT)
-Received: from mcroce-redhat.redhat.com (host221-208-dynamic.27-79-r.retail.telecomitalia.it. [79.27.208.221])
-        by smtp.gmail.com with ESMTPSA id v65sm77908137wme.31.2019.07.31.11.31.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 11:31:22 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@free-electrons.com>,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH net] mvpp2: fix panic on module removal
-Date:   Wed, 31 Jul 2019 20:31:16 +0200
-Message-Id: <20190731183116.4791-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 31 Jul 2019 14:33:39 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VIXFOF009959
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:33:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=bRpkMB+IavxhRux4OXH4DLu7NlF/d2cpuzrzUbrtFGI=;
+ b=Rcc1vkKI62WNwXRCQyABJMLu8U90g3ObOaBIJFUyfU+JoKhJYh8LFAsowvQyvDWbpc+C
+ BbnI81+p52tmz8vU/k5ad4M/wplt+GZtZcgCSFLe6YD9+bdnxk/CHXDrPgoAwy6DQFNu
+ tIT0AG8NJnl1lfVg3/raftTXv1YgZWQyqyY= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2u3dcu0sg8-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:33:39 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 31 Jul 2019 11:33:37 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 129EE62E1BBA; Wed, 31 Jul 2019 11:33:36 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <akpm@linux-foundation.org>
+CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
+        <oleg@redhat.com>, <kernel-team@fb.com>,
+        <william.kucharski@oracle.com>, <srikar@linux.vnet.ibm.com>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v2 0/2] khugepaged: collapse pmd for pte-mapped THP
+Date:   Wed, 31 Jul 2019 11:33:29 -0700
+Message-ID: <20190731183331.2565608-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=576 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907310187
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mvpp2 uses a delayed workqueue to gather traffic statistics.
-On module removal the workqueue can be destroyed before calling
-cancel_delayed_work_sync() on its works.
-Fix it by moving the destroy_workqueue() call after mvpp2_port_remove().
+Changes v1 => v2:
+1. Call collapse_pte_mapped_thp() directly from uprobe_write_opcode();
+2. Add VM_BUG_ON() for addr alignment in khugepaged_add_pte_mapped_thp()
+   and collapse_pte_mapped_thp().
 
-    # rmmod mvpp2
-    [ 2743.311722] mvpp2 f4000000.ethernet eth1: phy link down 10gbase-kr/10Gbps/Full
-    [ 2743.320063] mvpp2 f4000000.ethernet eth1: Link is Down
-    [ 2743.572263] mvpp2 f4000000.ethernet eth2: phy link down sgmii/1Gbps/Full
-    [ 2743.580076] mvpp2 f4000000.ethernet eth2: Link is Down
-    [ 2744.102169] mvpp2 f2000000.ethernet eth0: phy link down 10gbase-kr/10Gbps/Full
-    [ 2744.110441] mvpp2 f2000000.ethernet eth0: Link is Down
-    [ 2744.115614] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-    [ 2744.115615] Mem abort info:
-    [ 2744.115616]   ESR = 0x96000005
-    [ 2744.115617]   Exception class = DABT (current EL), IL = 32 bits
-    [ 2744.115618]   SET = 0, FnV = 0
-    [ 2744.115619]   EA = 0, S1PTW = 0
-    [ 2744.115620] Data abort info:
-    [ 2744.115621]   ISV = 0, ISS = 0x00000005
-    [ 2744.115622]   CM = 0, WnR = 0
-    [ 2744.115624] user pgtable: 4k pages, 39-bit VAs, pgdp=0000000422681000
-    [ 2744.115626] [0000000000000000] pgd=0000000000000000, pud=0000000000000000
-    [ 2744.115630] Internal error: Oops: 96000005 [#1] SMP
-    [ 2744.115632] Modules linked in: mvpp2(-) algif_hash af_alg nls_iso8859_1 nls_cp437 vfat fat xhci_plat_hcd m25p80 spi_nor xhci_hcd mtd usbcore i2c_mv64xxx sfp usb_common marvell10g phy_generic spi_orion mdio_i2c i2c_core mvmdio phylink sbsa_gwdt ip_tables x_tables autofs4 [last unloaded: mvpp2]
-    [ 2744.115654] CPU: 3 PID: 8357 Comm: kworker/3:2 Not tainted 5.3.0-rc2 #1
-    [ 2744.115655] Hardware name: Marvell 8040 MACCHIATOBin Double-shot (DT)
-    [ 2744.115665] Workqueue: events_power_efficient phylink_resolve [phylink]
-    [ 2744.115669] pstate: a0000085 (NzCv daIf -PAN -UAO)
-    [ 2744.115675] pc : __queue_work+0x9c/0x4d8
-    [ 2744.115677] lr : __queue_work+0x170/0x4d8
-    [ 2744.115678] sp : ffffff801001bd50
-    [ 2744.115680] x29: ffffff801001bd50 x28: ffffffc422597600
-    [ 2744.115684] x27: ffffff80109ae6f0 x26: ffffff80108e4018
-    [ 2744.115688] x25: 0000000000000003 x24: 0000000000000004
-    [ 2744.115691] x23: ffffff80109ae6e0 x22: 0000000000000017
-    [ 2744.115694] x21: ffffffc42c030000 x20: ffffffc42209e8f8
-    [ 2744.115697] x19: 0000000000000000 x18: 0000000000000000
-    [ 2744.115699] x17: 0000000000000000 x16: 0000000000000000
-    [ 2744.115701] x15: 0000000000000010 x14: ffffffffffffffff
-    [ 2744.115702] x13: ffffff8090e2b95f x12: ffffff8010e2b967
-    [ 2744.115704] x11: ffffff8010906000 x10: 0000000000000040
-    [ 2744.115706] x9 : ffffff80109223b8 x8 : ffffff80109223b0
-    [ 2744.115707] x7 : ffffffc42bc00068 x6 : 0000000000000000
-    [ 2744.115709] x5 : ffffffc42bc00000 x4 : 0000000000000000
-    [ 2744.115710] x3 : 0000000000000000 x2 : 0000000000000000
-    [ 2744.115712] x1 : 0000000000000008 x0 : ffffffc42c030000
-    [ 2744.115714] Call trace:
-    [ 2744.115716]  __queue_work+0x9c/0x4d8
-    [ 2744.115718]  delayed_work_timer_fn+0x28/0x38
-    [ 2744.115722]  call_timer_fn+0x3c/0x180
-    [ 2744.115723]  expire_timers+0x60/0x168
-    [ 2744.115724]  run_timer_softirq+0xbc/0x1e8
-    [ 2744.115727]  __do_softirq+0x128/0x320
-    [ 2744.115731]  irq_exit+0xa4/0xc0
-    [ 2744.115734]  __handle_domain_irq+0x70/0xc0
-    [ 2744.115735]  gic_handle_irq+0x58/0xa8
-    [ 2744.115737]  el1_irq+0xb8/0x140
-    [ 2744.115738]  console_unlock+0x3a0/0x568
-    [ 2744.115740]  vprintk_emit+0x200/0x2a0
-    [ 2744.115744]  dev_vprintk_emit+0x1c8/0x1e4
-    [ 2744.115747]  dev_printk_emit+0x6c/0x7c
-    [ 2744.115751]  __netdev_printk+0x104/0x1d8
-    [ 2744.115752]  netdev_printk+0x60/0x70
-    [ 2744.115756]  phylink_resolve+0x38c/0x3c8 [phylink]
-    [ 2744.115758]  process_one_work+0x1f8/0x448
-    [ 2744.115760]  worker_thread+0x54/0x500
-    [ 2744.115762]  kthread+0x12c/0x130
-    [ 2744.115764]  ret_from_fork+0x10/0x1c
-    [ 2744.115768] Code: aa1403e0 97fffbbe aa0003f5 b4000700 (f9400261)
+This set is the newer version of 5/6 and 6/6 of [1]. Newer version of
+1-4 of the work [2] was recently picked by Andrew.
 
-Fixes: 118d6298f6f0 ("net: mvpp2: add ethtool GOP statistics")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Patch 1 enables khugepaged to handle pte-mapped THP. These THPs are left
+in such state when khugepaged failed to get exclusive lock of mmap_sem.
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index c51f1d5b550b..5002d51fc9d6 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -5760,7 +5760,6 @@ static int mvpp2_remove(struct platform_device *pdev)
- 	mvpp2_dbgfs_cleanup(priv);
- 
- 	flush_workqueue(priv->stats_queue);
--	destroy_workqueue(priv->stats_queue);
- 
- 	fwnode_for_each_available_child_node(fwnode, port_fwnode) {
- 		if (priv->port_list[i]) {
-@@ -5770,6 +5769,8 @@ static int mvpp2_remove(struct platform_device *pdev)
- 		i++;
- 	}
- 
-+	destroy_workqueue(priv->stats_queue);
-+
- 	for (i = 0; i < MVPP2_BM_POOLS_NUM; i++) {
- 		struct mvpp2_bm_pool *bm_pool = &priv->bm_pools[i];
- 
--- 
-2.21.0
+Patch 2 leverages work in 1 for uprobe on THP. After [2], uprobe only
+splits the PMD. When the uprobe is disabled, we get pte-mapped THP.
+After this set, these pte-mapped THP will be collapsed as pmd-mapped.
 
+[1] https://lkml.org/lkml/2019/6/23/23
+[2] https://www.spinics.net/lists/linux-mm/msg185889.html
+
+Song Liu (2):
+  khugepaged: enable collapse pmd for pte-mapped THP
+  uprobe: collapse THP pmd after removing all uprobes
+
+ include/linux/khugepaged.h |  12 ++++
+ kernel/events/uprobes.c    |   9 +++
+ mm/khugepaged.c            | 138 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 159 insertions(+)
+
+--
+2.17.1
