@@ -2,101 +2,140 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A771C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B59C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4281206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F71206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:33:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b58hTByi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aEiIEPSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfGaFbE (ORCPT
+        id S1726674AbfGaFdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 01:31:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38819 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfGaFbE (ORCPT
+        Wed, 31 Jul 2019 01:33:06 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44711 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725209AbfGaFdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 01:31:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id j6so13796886ioa.5;
-        Tue, 30 Jul 2019 22:31:03 -0700 (PDT)
+        Wed, 31 Jul 2019 01:33:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p17so68133262wrf.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 22:33:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uWJCGab/Pr45O7XBllE2e+A6zxOPgE9Q7WsmyRQ4epE=;
-        b=b58hTByi1+qqHy1GWinO6qh4tlv7NUvN1AEMEW+7J9uYWd8HF621/R9BdGpZqvAti1
-         k0ibEFUqO9FrMB4hOFYQkdsacOn6WxbAH87f+Au+MTAx3emNAFyTxhqUKKRj51+8VM2P
-         omdyrnd5uZ/LwV1wEQkeqms4Nqn8DXbYqGg+niOd2udp6e2hoRK0D2gBUYLEvimLVnkp
-         DciuHF2bjHuBpNZcYzP6NZX0S59u9MM0nLC6uBMCt9RkmJ6q/H2qG3q+B+NooE+zZA9Q
-         w7tuABKfroo+p2mC0/4IihJQxa31OSvfdXcjlUvcuLs/CH9iFLSXnVDQJ16Evf2Gw2rH
-         S41Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=loiK9wXUCOiEY9KsTjnNAjKwl1yaWs5jTqxh2hr1suU=;
+        b=aEiIEPSp1AJ2+tVsqc5bS6kU/EOdjHNsSwpNEKGjlrbsV2rNvXmgTJpWFoA7vGEdOU
+         9EdsC+YaQVZM6b6VE89HsgoAhA70wVUfvEXl8SZ+x7T1fR1n5vCj+glb7dqPUfUWR0WI
+         p1j4JzNul4oGnXuhq8GYssbzgZPjUR7A6oLx0zGEpwpHJSGCwh0E3Y9ycnlIc2C2OqTi
+         nEvaZQCVFtpb9dkIJKnCR+AO1wc0i2cYn6j3tIg/bpOflUiTTPBCBx5EHQpWSRLI8+lt
+         BiHv8u1U9Q7JweVygK+icmqR3gb2F7cE+XG7JQVyhq0ZiPFgAoR+CjGLU61YpfcHdSBb
+         yC4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uWJCGab/Pr45O7XBllE2e+A6zxOPgE9Q7WsmyRQ4epE=;
-        b=Vl1Qlqb559MgK97ck33XOtbNVOsc2eYvYqDtpgNOgAGEwHdyA1A1KzoA6q2ACkgsQu
-         7tVMizKsifhd0TSJfgaokOYLWa2bOiwEDD0fKy5MLiaKDvGrNbB8M/n4zi0AcgTS3UAK
-         dVxcB09oeNf3UTfYHPHKoHJ4inzgcy63tkz/vpCf/SCEddRZq0NTbWrIkM9d0yz7J4GW
-         envGEUH5PzmOWWF7zhi2LgI3SXS8pRni9syTBdNJihdzXocTIvmeCnUJQijgN1n3N+Cc
-         FDmQ+wuulW+TqriA4MX9hv5wrlRflJhhxf24nJrA3lXvsfnzvsiD8TKm48crByn19/qP
-         BQ0A==
-X-Gm-Message-State: APjAAAWTJ26V76Wefxo2Bnxy1VERFTKk/1DUOaSrzyPvbvF2GOMbpHJy
-        f15/jruYFFLz/mhECMNB4tI=
-X-Google-Smtp-Source: APXvYqyfDHAJEuOQHD8Aq0EvHvBQgiJB436RsGGd+VDODvEspfNjFSmI/Q/WTRCosKdTySzIwx3b3g==
-X-Received: by 2002:a05:6638:627:: with SMTP id h7mr94205450jar.33.1564551063605;
-        Tue, 30 Jul 2019 22:31:03 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id e22sm50991878iob.66.2019.07.30.22.31.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 30 Jul 2019 22:31:02 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 23:31:01 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 000/293] 4.14.135-stable review
-Message-ID: <20190731053101.GC4326@JATN>
-References: <20190729190820.321094988@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=loiK9wXUCOiEY9KsTjnNAjKwl1yaWs5jTqxh2hr1suU=;
+        b=aKN5PPRDUMWn31kSNhKnv8zvLCWxstVFtVKwAV68UKTiCsOIHxojevhPu9zlk011Fz
+         kcZ3Mygw9YCCXbPZ2mJA0sOrWvt85kmRsLOEVkHtppkGdoIjFi6NvEcZZ+Qtw00GKgT3
+         LNHZRhFJDcNuW/n5BuvmznS1jbbjkHaXxwgi83Qow7H4LJbLjppikmtPsMAAdHCbCTxa
+         50rdMGvu41mTeYHhOwqyaRsjO+g5UgHO59YHj6m+5ejfK4k7QoE2IZ/fFfnS2KmSbEXG
+         Tb2x+PS8Hx8YeYIsqX1VP7HwD6QzV5zTEeK3akYPkwm0QlOdA79DlSptUGe4Ks3q0Xng
+         QOlA==
+X-Gm-Message-State: APjAAAW6R57tlkdqaHaV/wRtqyhfNAGoqsUo+WyJviGqpYX4L0lFIbGm
+        L18ENs+ZMaVs3FRdt2JWld0p2cQcMTYiatCCPTzRtA==
+X-Google-Smtp-Source: APXvYqxhshVQRxJPu9P5SIvWuW4Sa8P4b92k4Xh507OU4+Jac8/nsKvirOJ8JOEIXH82zG39w5tN3qwlUoh6wirKz+w=
+X-Received: by 2002:a5d:46cf:: with SMTP id g15mr136343841wrs.93.1564551183914;
+ Tue, 30 Jul 2019 22:33:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729190820.321094988@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1564482824-26581-1-git-send-email-iuliana.prodan@nxp.com> <1564482824-26581-3-git-send-email-iuliana.prodan@nxp.com>
+In-Reply-To: <1564482824-26581-3-git-send-email-iuliana.prodan@nxp.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 31 Jul 2019 08:32:53 +0300
+Message-ID: <CAKv+Gu_VEEZFPpJfv2JbB02vhmc_1_wpxNDBHf__pv-t7BvN0A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] crypto: aes - helper function to validate key
+ length for AES algorithms
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 09:18:11PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.135 release.
-> There are 293 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 31 Jul 2019 07:05:01 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.135-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Tue, 30 Jul 2019 at 13:33, Iuliana Prodan <iuliana.prodan@nxp.com> wrote:
+>
+> Add inline helper function to check key length for AES algorithms.
+> The key can be 128, 192 or 256 bits size.
+> This function is used in the generic aes implementation.
+>
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+> ---
+>  include/crypto/aes.h | 17 +++++++++++++++++
+>  lib/crypto/aes.c     |  8 ++++----
+>  2 files changed, 21 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/crypto/aes.h b/include/crypto/aes.h
+> index 8e0f4cf..8ee07a8 100644
+> --- a/include/crypto/aes.h
+> +++ b/include/crypto/aes.h
+> @@ -31,6 +31,23 @@ struct crypto_aes_ctx {
+>  extern const u32 crypto_ft_tab[4][256] ____cacheline_aligned;
+>  extern const u32 crypto_it_tab[4][256] ____cacheline_aligned;
+>
+> +/*
+> + * validate key length for AES algorithms
+> + */
+> +static inline int crypto_aes_check_keylen(unsigned int keylen)
 
-Compiled and booted with no regressions on my system.
+Please rename this to aes_check_keylen()
 
-Cheers,
-Kelsey 
+> +{
+> +       switch (keylen) {
+> +       case AES_KEYSIZE_128:
+> +       case AES_KEYSIZE_192:
+> +       case AES_KEYSIZE_256:
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  int crypto_aes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+>                 unsigned int key_len);
+>
+> diff --git a/lib/crypto/aes.c b/lib/crypto/aes.c
+> index 4e100af..3407b01 100644
+> --- a/lib/crypto/aes.c
+> +++ b/lib/crypto/aes.c
+> @@ -187,11 +187,11 @@ int aes_expandkey(struct crypto_aes_ctx *ctx, const u8 *in_key,
+>  {
+>         u32 kwords = key_len / sizeof(u32);
+>         u32 rc, i, j;
+> +       int err;
+>
+> -       if (key_len != AES_KEYSIZE_128 &&
+> -           key_len != AES_KEYSIZE_192 &&
+> -           key_len != AES_KEYSIZE_256)
+> -               return -EINVAL;
+> +       err = crypto_aes_check_keylen(key_len);
+> +       if (err)
+> +               return err;
+>
+>         ctx->key_length = key_len;
+>
+> --
+> 2.1.0
+>
