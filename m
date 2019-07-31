@@ -2,114 +2,152 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BB2C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272A0C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48FC920651
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:56:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jH3yCYNA"
+	by mail.kernel.org (Postfix) with ESMTP id 0630620651
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbfGaK4x (ORCPT
+        id S1728332AbfGaK56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:56:53 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42912 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728398AbfGaK4w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:56:52 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t28so65136054lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lWUtb7zcpjriA4PXCl0a7ByZXS09QukiEbZhHIw2Fjk=;
-        b=jH3yCYNA8+Yew2LxOI67IHkIjKIsIvFHYzr03cz0THjJFGu0OSsiDwfWUan3chbQpm
-         mZEmEi3yMQkW1v4HReuKE3j4j9p/8Wx1FKkBKXDmoKkeeNOzFy1e48b9yGjieDjSvsLl
-         q6eJ0Q3q7/4RU5n4aXwx1Il4o8xewvLD3mclXDsKyWQwmw6bds/boYFyVWwpAL1NV7N6
-         P3d9H0F6jh2iWh6vDuzyv9gWB6jawLP/p5I8bS9gfxJ4IGJzLQUx1/wwy2IxRGylUo9x
-         Mqx/a4sZNY16xHx/NQ2Se9O54+kiXJrC7MQtmbgVdCRhev9A/ltJvrS1pJnXqlQhKfwl
-         xyXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lWUtb7zcpjriA4PXCl0a7ByZXS09QukiEbZhHIw2Fjk=;
-        b=b5riUviBgBerzDlda2igkLpqwD/lQLddNBlya+dkiUl+xYCFMfLTkwLI6PYB0+BLb9
-         P9m3WPZ+qCLtzy5HmlqgDU0FFos+gt//fD7YYW9HoZtXeqQMhRciCbgMPojyU7D23oR2
-         XAcLazO71qNjQrIYvLg167zBTQIrtbIhNkUroxDIlsg4LHHz6UyTeCcRm7sXeWJoF+03
-         1ASs5I0f8XRW24NUlATUSlfHjIpQFxLQ5KVqjkvmREQ0vsutaazVnMegiXkOTb4Xd1JP
-         G5ETpMCRBVKhIIV4USxGo/7RBtYoIZDgCpc61V0zWdinJYpqu5MQXa55ZhnXqHydfNiF
-         dPtQ==
-X-Gm-Message-State: APjAAAVmLqiKG5LSovH1AbkHCpqDUMq4yw8pzKoHTGGQLQZOeREMZS74
-        zNHQckUTUQW1FoMAm3LywRDNww==
-X-Google-Smtp-Source: APXvYqxyeEQO8uE5Fdhzw9ds+s0/2GTAh6VgDFeXsuRN/l7VM3timHKnAv7SQw94o9XSRrHPLEphKA==
-X-Received: by 2002:a2e:b0e6:: with SMTP id h6mr12041708ljl.18.1564570610667;
-        Wed, 31 Jul 2019 03:56:50 -0700 (PDT)
-Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
-        by smtp.gmail.com with ESMTPSA id l11sm13191843lfc.18.2019.07.31.03.56.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 03:56:50 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     mika.westerberg@linux.intel.com, wsa@the-dreams.de
-Cc:     linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] i2c: core: remove unused function
-Date:   Wed, 31 Jul 2019 12:56:42 +0200
-Message-Id: <20190731105642.29664-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 31 Jul 2019 06:57:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726417AbfGaK56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 06:57:58 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC3C020651;
+        Wed, 31 Jul 2019 10:57:56 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 06:57:55 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jiping Ma <jiping.ma2@windriver.com>
+Cc:     <mingo@redhat.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Function stack size and its name mismatch in arm64
+Message-ID: <20190731065755.5f5bd8a0@gandalf.local.home>
+In-Reply-To: <20190731090437.19867-1-jiping.ma2@windriver.com>
+References: <20190731090437.19867-1-jiping.ma2@windriver.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCC warns taht function 'i2c_acpi_find_match_adapter()' is not used.
+On Wed, 31 Jul 2019 17:04:37 +0800
+Jiping Ma <jiping.ma2@windriver.com> wrote:
 
-../drivers/i2c/i2c-core-acpi.c:347:12: warning:
-  ‘i2c_acpi_find_match_adapter’ defined but not used [-Wunused-function]
- static int i2c_acpi_find_match_adapter(struct device *dev, const void *data)
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+Hi Jiping,
 
-Rework to remove the function 'i2c_acpi_find_match_adapter()'.
+Note, the subject is not properly written, as it is missing the
+subsystem. In this case, it should start with "tracing: "
 
-Fixes: 00500147cbd3 ("drivers: Introduce device lookup variants by ACPI_COMPANION device")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- drivers/i2c/i2c-core-acpi.c | 11 -----------
- 1 file changed, 11 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index bc80aafb521f..bb6b39fe343a 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -344,17 +344,6 @@ u32 i2c_acpi_find_bus_speed(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(i2c_acpi_find_bus_speed);
- 
--static int i2c_acpi_find_match_adapter(struct device *dev, const void *data)
--{
--	struct i2c_adapter *adapter = i2c_verify_adapter(dev);
--
--	if (!adapter)
--		return 0;
--
--	return ACPI_HANDLE(dev) == (acpi_handle)data;
--}
--
--
- struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
- {
- 	struct device *dev = bus_find_device_by_acpi_dev(&i2c_bus_type, handle);
--- 
-2.20.1
+> The PC of one the frame is matched to the next frame function, rather
+> than the function of his frame.
+
+The above change log doesn't make sense. I have no idea what the actual
+problem is here. Why is this different for arm64 and no one else? Seems
+the bug is with the stack logic code in arm64 not here.
+
+> 
+> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+> ---
+>  kernel/trace/trace_stack.c | 28 ++++++++++++++++++++++++++--
+>  1 file changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+> index 5d16f73898db..ed80b95abf06 100644
+> --- a/kernel/trace/trace_stack.c
+> +++ b/kernel/trace/trace_stack.c
+> @@ -40,16 +40,28 @@ static void print_max_stack(void)
+>  
+>  	pr_emerg("        Depth    Size   Location    (%d entries)\n"
+>  			   "        -----    ----   --------\n",
+> +#ifdef CONFIG_ARM64
+
+We do not allow arch specific defines in generic code. Otherwise this
+would blow up and become unmaintainable. Not to mention it makes the
+code ugly and hard to follow.
+
+Please explain the problem better. I'm sure there's much better ways to
+solve this than this patch.
+
+Thanks,
+
+-- Steve
+
+
+
+> +			   stack_trace_nr_entries - 1);
+> +#else
+>  			   stack_trace_nr_entries);
+> -
+> +#endif
+> +#ifdef CONFIG_ARM64
+> +	for (i = 1; i < stack_trace_nr_entries; i++) {
+> +#else
+>  	for (i = 0; i < stack_trace_nr_entries; i++) {
+> +#endif
+>  		if (i + 1 == stack_trace_nr_entries)
+>  			size = stack_trace_index[i];
+>  		else
+>  			size = stack_trace_index[i] - stack_trace_index[i+1];
+>  
+> +#ifdef CONFIG_ARM64
+> +		pr_emerg("%3ld) %8d   %5d   %pS\n", i-1, stack_trace_index[i],
+> +				size, (void *)stack_dump_trace[i-1]);
+> +#else
+>  		pr_emerg("%3ld) %8d   %5d   %pS\n", i, stack_trace_index[i],
+>  				size, (void *)stack_dump_trace[i]);
+> +#endif
+>  	}
+>  }
+>  
+> @@ -324,8 +336,11 @@ static int t_show(struct seq_file *m, void *v)
+>  		seq_printf(m, "        Depth    Size   Location"
+>  			   "    (%d entries)\n"
+>  			   "        -----    ----   --------\n",
+> +#ifdef CONFIG_ARM64
+> +			   stack_trace_nr_entries - 1);
+> +#else
+>  			   stack_trace_nr_entries);
+> -
+> +#endif
+>  		if (!stack_tracer_enabled && !stack_trace_max_size)
+>  			print_disabled(m);
+>  
+> @@ -334,6 +349,10 @@ static int t_show(struct seq_file *m, void *v)
+>  
+>  	i = *(long *)v;
+>  
+> +#ifdef CONFIG_ARM64
+> +	if (i == 0)
+> +		return 0;
+> +#endif
+>  	if (i >= stack_trace_nr_entries)
+>  		return 0;
+>  
+> @@ -342,9 +361,14 @@ static int t_show(struct seq_file *m, void *v)
+>  	else
+>  		size = stack_trace_index[i] - stack_trace_index[i+1];
+>  
+> +#ifdef CONFIG_ARM64
+> +	seq_printf(m, "%3ld) %8d   %5d   ", i-1, stack_trace_index[i], size);
+> +	trace_lookup_stack(m, i-1);
+> +#else
+>  	seq_printf(m, "%3ld) %8d   %5d   ", i, stack_trace_index[i], size);
+>  
+>  	trace_lookup_stack(m, i);
+> +#endif
+>  
+>  	return 0;
+>  }
 
