@@ -2,103 +2,148 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78325C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D265C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48D9A2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r1wIjjla"
+	by mail.kernel.org (Postfix) with ESMTP id E164F2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727725AbfGaEND (ORCPT
+        id S1727881AbfGaEVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 00:13:03 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33071 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfGaENC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 00:13:02 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r6so48273457qkc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 21:13:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NFVesl0ZnOpQBqtMqV5lpfo1vwR6WRneLNekq2w+A+0=;
-        b=r1wIjjlaOUYXC9i0CtRzf8gVkGR6i7HDy0I7VVJKls8IoU+bJTFRBj1qe/DGeZNwS3
-         mgGjvWiGMKJ5bP8brcspcZO4X4V9eenYomQN3tD6rEkVc0vAb+6ZpUSxr5z+Ixu7M5LS
-         C+dQ4sCispoR+WPJbpeV4A3KmqkmKV8aNcP8bUq37kWCpCN8HmKmrmVc8vrmnmmS5a1z
-         pllvWFZjj4465RcciKSuD8r9iNFT9t0DU+fajvZmzT+qVTZnQCeDyTZZLsYvTPcta7Vy
-         4NaCttjGVF1oboy6iznh59NugAeylu++kg+f7wcyJVdYPc0G39Hhm3wTwrIOxZ+x8oOL
-         cRHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NFVesl0ZnOpQBqtMqV5lpfo1vwR6WRneLNekq2w+A+0=;
-        b=DCnTqnMdb8WX/NLn5qvdUkxc1RpiAUsVpMA/1C13IudOQnSlGgC9wXole3ZnzqUdl6
-         3jlD7/IwofugdPmzoc9dSOeVqnH5HGJUqp1H8mxfWBzT/4WknsLLgXzZA7AgkZsH6fAj
-         iIOjVI/DZWs0RO5kKUefvnCCSpQvKb2AnoWx1T4J1ykbHJ1+bwlb2k+zrle8zFwFlx7x
-         UmAzmJBpdw143ElLDo2AZlqLJ7SH1Gx6QrGRF1X2ssq7p64iX1hBJqT0NluLnutVsuZw
-         pTFKSeEti2JPXmaRUJDaMCt+RstVnRLv+mo6yVhqek4fXunsNYFQveguo3Q76wIrPHKE
-         pnHg==
-X-Gm-Message-State: APjAAAUMyXKVhT7la54ZK4CHDmbDsmV2i0jkCQbFe88y3OtnNIqZW6yr
-        UDiQ3jnI4KpUvN3/vADLhpMPbbZLmanqfy7XgyfToUN9
-X-Google-Smtp-Source: APXvYqy2sz2eWCGTJfeBDvYeHklxGvXDMSeWgw1gHMMJZXav5IjX+rI/W8oAUPJin0pn2pg2QXOlbRH7FD1Tuk2ix2k=
-X-Received: by 2002:a37:5942:: with SMTP id n63mr5572295qkb.69.1564546381707;
- Tue, 30 Jul 2019 21:13:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190730044326.1805-1-luaraneda@gmail.com> <20190730104746.GA1330@shell.armlinux.org.uk>
-In-Reply-To: <20190730104746.GA1330@shell.armlinux.org.uk>
-From:   Luis Araneda <luaraneda@gmail.com>
-Date:   Wed, 31 Jul 2019 00:12:11 -0400
-Message-ID: <CAHbBuxoMBiq23Rkt7-jm42O4ePY=23ZsgNEVf3UJKQ2Dg+3fbg@mail.gmail.com>
-Subject: Re: [RFC PATCH] ARM: zynq: Use memcpy_toio instead of memcpy on smp bring-up
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 31 Jul 2019 00:21:21 -0400
+Received: from mga18.intel.com ([134.134.136.126]:41294 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbfGaEVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 00:21:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 21:21:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,328,1559545200"; 
+   d="scan'208";a="347395045"
+Received: from chenyu-office.sh.intel.com ([10.239.158.163])
+  by orsmga005.jf.intel.com with ESMTP; 30 Jul 2019 21:21:18 -0700
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     linux-pm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, yu.c.chen@intel.com,
+        Len Brown <len.brown@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Rui Zhang <rui.zhang@intel.com>,
+        David Box <david.e.box@intel.com>,
+        "Tan, Raymond" <raymond.tan@intel.com>
+Subject: [PATCH] Introducing the mask_cstate to disable specific c-states during bootup
+Date:   Wed, 31 Jul 2019 12:31:44 +0800
+Message-Id: <20190731043144.30863-1-yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
+There is request to disable specific c-states during bootup for
+debug purpose. For example, deeper c-states except C1,C1E,C10
+are disabled during bootup otherwise it might not boot up well
+due to incorrect setting in FW.
 
-Thanks for reviewing.
+For example, intel_idle.mask_cstate=0x3c, would disable cstate
+2,3,4,5 in the table
+(1<<2) | (1<<3) | (1<<4) | (1<<5)
+which is C6,C7s,C8,C9 on Broxton.
+This could have it come up as present, but with c-states disabled,
+so user can enable those c-states later to test.
 
-On Tue, Jul 30, 2019 at 6:47 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Tue, Jul 30, 2019 at 12:43:26AM -0400, Luis Araneda wrote:
-> > This fixes a kernel panic (read overflow) on memcpy when
-> > FORTIFY_SOURCE is enabled.
-[...]
->
-> I'm not convinced that this is correct.  It looks like
-> zynq_secondary_trampoline could be either ARM or Thumb code - there is
-> no .arm directive before it.  If it's ARM code, then this is fine.  If
-> Thumb code, then zynq_secondary_trampoline will be offset by one, and
-> we will miss copying the first byte of code.
+Cc: Len Brown <len.brown@intel.com>
+Cc: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+Cc: Rui Zhang <rui.zhang@intel.com>
+Cc: David Box <david.e.box@intel.com>
+Cc: "Tan, Raymond" <raymond.tan@intel.com>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+---
+ .../admin-guide/kernel-parameters.txt         |  7 ++++
+ drivers/idle/intel_idle.c                     | 36 +++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-You're right, I tested what happens if the zynq_secondary_trampoline
-is ARM or Thumb by editing the file where it's defined, headsmp.S
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7ccd158b3894..93a326c42877 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1733,6 +1733,13 @@
+ 			provided by tboot because it makes the system
+ 			vulnerable to DMA attacks.
+ 
++	intel_idle.mask_cstate=	[HW,X86]
++			Mask of C-states to be disabled during bootup. For
++			example, mask_cstate=0x3c, would disable cstate 2,3,4,5
++			in the table
++			(1<<2) | (1<<3) | (1<<4) | (1<<5)
++			which is C6,C7s,C8,C9 on Broxton.
++
+ 	intel_idle.max_cstate=	[KNL,HW,ACPI,X86]
+ 			0	disables intel_idle and fall back on acpi_idle.
+ 			1 to 9	specify maximum depth of C-state.
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index fa5ff77b8fe4..ed3233864b69 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -63,6 +63,8 @@ static struct cpuidle_driver intel_idle_driver = {
+ /* intel_idle.max_cstate=0 disables driver */
+ static int max_cstate = CPUIDLE_STATE_MAX - 1;
+ 
++static unsigned int mask_cstate;
++
+ static unsigned int mwait_substates;
+ 
+ #define LAPIC_TIMER_ALWAYS_RELIABLE 0xFFFFFFFF
+@@ -1354,6 +1356,12 @@ static void __init intel_idle_cpuidle_driver_init(void)
+ 		if (num_substates == 0)
+ 			continue;
+ 
++		if ((1UL<<cstate) & mask_cstate) {
++			pr_info("Disable #%d[%s] by user\n",
++					cstate,
++					cpuidle_state_table[cstate].name);
++			cpuidle_state_table[cstate].disabled = 1;
++		}
+ 		/* if state marked as disabled, skip it */
+ 		if (cpuidle_state_table[cstate].disabled != 0) {
+ 			pr_debug("state %s is disabled\n",
+@@ -1480,3 +1488,31 @@ device_initcall(intel_idle_init);
+  * is the easiest way (currently) to continue doing that.
+  */
+ module_param(max_cstate, int, 0444);
++
++static int mask_cstate_set(const char *arg, const struct kernel_param *kp)
++{
++	int ret = 0;
++	unsigned long new_mask_cstate, max_bit;
++
++	ret = kstrtoul(arg, 0, &new_mask_cstate);
++	if (ret)
++		goto exit_mask;
++
++	max_bit = find_last_bit(&new_mask_cstate, BITS_PER_LONG);
++	if (max_bit >= CPUIDLE_STATE_MAX) {
++		ret = -EINVAL;
++		goto exit_mask;
++	}
++
++	mask_cstate = new_mask_cstate;
++	smp_mb();
++
++exit_mask:
++	return ret;
++}
++
++static const struct kernel_param_ops mask_cstate_ops = {
++	.set = mask_cstate_set,
++	.get = param_get_int,
++};
++module_param_cb(mask_cstate, &mask_cstate_ops, &mask_cstate, 0644);
+-- 
+2.17.1
 
-When the .arm directive is used, the CPU is brought-up correctly,
-but if I use .thumb, I get the following message (no panic):
-> CPU1: failed to come online
-
-This seems unrelated to solving the panic, as the message
-even appears with memcpy and FORTIFY_SOURCE disabled.
-
-I could add the .arm directive to headsmp.S
-Is that your expected solution?
-Should that change be on a separate commit?
-
-I'd like to know Michal's opinion, as he wrote the code.
