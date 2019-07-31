@@ -2,133 +2,75 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B35C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CDAC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF4C208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF15206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564577037;
-	bh=qdKt8xMkWx3WVKyGM6p4kgZa2A5bUHnif0uObDGpacs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Dbel7FAc2CWGyJ3/Phi9F5sp6VygBfTtlw2cOJj92siRvmM7la9bTB4BWxV2APEtu
-	 XgfxMrtPjKd2OvtBDQLIR5IPUU2ytVmzCvVJrHhbDCdqKhn+OZJnEWPjAwaMVRvM5J
-	 os4HImDdo7TrBMVYg/wJaRN9zOKTmIwQQYiJEj0o=
+	s=default; t=1564577045;
+	bh=NzM5rZK8u18uLHYsnGoXrlS3dB1bxhf2/1KfDOZquw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k4SF4chOUZ33UCKqV1X6Of3RU7IhC0Vz18Wjj58hpWYMePE2ragWVK2YusPHL4Dku
+	 cX+dAYXVtt7zBakz4NcWVUOeG+1U5iQIzr85HTkoJaEPFHj2H73vbvzQWXTE4DkGv7
+	 uXKkjnQwiGOFe8ssvPEgayv+lhGty/sldl9nIXH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbfGaMn4 (ORCPT
+        id S2387444AbfGaMoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbfGaMn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:43:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94935206B8;
-        Wed, 31 Jul 2019 12:43:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564577035;
-        bh=qdKt8xMkWx3WVKyGM6p4kgZa2A5bUHnif0uObDGpacs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=2PNMPi2HyAUo2pq0bnVlLzISd0g9zVsRAilNinPTip5E5cYDt4EuxnIXHElkwTvJH
-         dPcH2fxP7sNNLV5xbJKld4HmAQXtZsA0TJ9OOL2zD56aMvLQcivlBKx2iiQgNAw2U7
-         SBbEoWYOMqoaclJc4+S40fQvW5IGe6rMUuYu8HzU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Richard Gong <richard.gong@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        x86@kernel.org
-Subject: [PATCH v2 00/10] drivers, provide a way to add sysfs groups easily
-Date:   Wed, 31 Jul 2019 14:43:39 +0200
-Message-Id: <20190731124349.4474-1-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
+        Wed, 31 Jul 2019 08:44:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49526 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728929AbfGaMoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:44:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EC03AAFA4;
+        Wed, 31 Jul 2019 12:44:01 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 14:43:56 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v1] drivers/base/memory.c: Don't store end_section_nr in
+ memory blocks
+Message-ID: <20190731124356.GL9330@dhcp22.suse.cz>
+References: <20190731122213.13392-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731122213.13392-1-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch originally started out just as a way for platform drivers to
-easily add a sysfs group in a race-free way, but thanks to Dmitry's
-patch, this series now is for all drivers in the kernel (hey, a unified
-driver model works!!!)
+On Wed 31-07-19 14:22:13, David Hildenbrand wrote:
+> Each memory block spans the same amount of sections/pages/bytes. The size
+> is determined before the first memory block is created. No need to store
+> what we can easily calculate - and the calculations even look simpler now.
 
-I've only converted a few platform drivers here in this series to show
-how it works, but other busses can be converted after the first patch
-goes into the tree.
+While this cleanup helps a bit, I am not sure this is really worth
+bothering. I guess we can agree when I say that the memblock interface
+is suboptimal (to put it mildly).  Shouldn't we strive for making it
+a real hotplug API in the future? What do I mean by that? Why should
+be any memblock fixed in size? Shouldn't we have use hotplugable units
+instead (aka pfn range that userspace can work with sensibly)? Do we
+know of any existing userspace that would depend on the current single
+section res. 2GB sized memblocks?
 
-Here's the original 00 message, for people to get an idea of what is
-going on here:
-
-If a platform driver wants to add a sysfs group, it has to do so in a
-racy way, adding it after the driver is bound.  To resolve this issue,
-have the platform driver core do this for the driver, making the
-individual drivers logic smaller and simpler, and solving the race at
-the same time.
-
-All of these patches depend on the first patch.  I'll take the first one
-through my driver-core tree, and any subsystem maintainer can either ack
-their individul patch and I will be glad to also merge it, or they can
-wait until after 5.4-rc1 when the core patch hits Linus's tree and then
-take it, it's up to them.
-
-Thank to Richard Gong for the idea and the testing of the platform
-driver patch and to Dmitry Torokhov for rewriting the first patch to
-work well for all busses.
-
------
-
-V2 - work for all busses and not just platform drivers.
-
-
-Dmitry Torokhov (1):
-  driver core: add dev_groups to all drivers
-
-Greg Kroah-Hartman (9):
-  uio: uio_fsl_elbc_gpcm: convert platform driver to use dev_groups
-  input: keyboard: gpio_keys: convert platform driver to use dev_groups
-  input: axp20x-pek: convert platform driver to use dev_groups
-  firmware: arm_scpi: convert platform driver to use dev_groups
-  olpc: x01: convert platform driver to use dev_groups
-  platform: x86: hp-wmi: convert platform driver to use dev_groups
-  video: fbdev: wm8505fb: convert platform driver to use dev_groups
-  video: fbdev: w100fb: convert platform driver to use dev_groups
-  video: fbdev: sm501fb: convert platform driver to use dev_groups
-
- arch/x86/platform/olpc/olpc-xo1-sci.c | 17 ++++------
- drivers/base/dd.c                     | 14 ++++++++
- drivers/firmware/arm_scpi.c           |  5 +--
- drivers/input/keyboard/gpio_keys.c    | 13 ++------
- drivers/input/misc/axp20x-pek.c       | 15 ++-------
- drivers/platform/x86/hp-wmi.c         | 47 +++++++--------------------
- drivers/uio/uio_fsl_elbc_gpcm.c       | 23 +++++--------
- drivers/video/fbdev/sm501fb.c         | 37 +++++----------------
- drivers/video/fbdev/w100fb.c          | 23 ++++++-------
- drivers/video/fbdev/wm8505fb.c        | 13 ++++----
- include/linux/device.h                |  3 ++
- 11 files changed, 76 insertions(+), 134 deletions(-)
-
+All that being said, I do not oppose to the patch but can we start
+thinking about the underlying memblock limitations rather than micro
+cleanups?
 -- 
-2.22.0
-
+Michal Hocko
+SUSE Labs
