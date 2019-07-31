@@ -2,75 +2,302 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C523FC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02C6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B56206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B349F206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfGaMwB (ORCPT
+        id S2387691AbfGaMwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:52:01 -0400
-Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:23172 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729131AbfGaMwB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:52:01 -0400
-Received: from localhost.localdomain ([176.167.121.156])
-        by mwinf5d70 with ME
-        id jQrw2000P3NZnML03QrxTn; Wed, 31 Jul 2019 14:51:59 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 31 Jul 2019 14:51:59 +0200
-X-ME-IP: 176.167.121.156
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     mathias.nyman@intel.com, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 2/2] usb: xhci: dbc: Use GFP_KERNEL instead of GFP_ATOMIC in 'xhci_dbc_alloc_requests()'
-Date:   Wed, 31 Jul 2019 14:52:02 +0200
-Message-Id: <557765ac7a028fa77f0e1ac6148ef2c0904f8ab7.1564577335.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1564577335.git.christophe.jaillet@wanadoo.fr>
-References: <cover.1564577335.git.christophe.jaillet@wanadoo.fr>
+        Wed, 31 Jul 2019 08:52:11 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49170 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727629AbfGaMwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:52:11 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2B0487633890531DD7CB;
+        Wed, 31 Jul 2019 20:52:09 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
+ 2019 20:52:02 +0800
+Subject: Re: [PATCH 11/22] staging: erofs: kill all failure handling in
+ fill_super()
+To:     Chao Yu <yuchao0@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>, <weidu.du@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>
+References: <20190729065159.62378-1-gaoxiang25@huawei.com>
+ <20190729065159.62378-12-gaoxiang25@huawei.com>
+ <56bdc87a-635f-e596-584e-fca0acb4a69e@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <c0c198e5-cc91-e2d1-4f54-9d9ae65c4aa3@huawei.com>
+Date:   Wed, 31 Jul 2019 20:52:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <56bdc87a-635f-e596-584e-fca0acb4a69e@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to use GFP_ATOMIC to allocate 'req'. GFP_KERNEL should be
-enough and is already used for another allocation juste a few lines below.
+Hi Chao,
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-I've done my best to check if a spinlock can be hold when reaching this
-code. Apparently it is never the case.
-But double check to be sure that it is not the kmalloc that should use
-GFP_ATOMIC.
----
- drivers/usb/host/xhci-dbgtty.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2019/7/31 16:15, Chao Yu wrote:
+> On 2019/7/29 14:51, Gao Xiang wrote:
+>> .kill_sb() will do that instead in order to remove duplicated code.
+>>
+>> Note that the initialzation of managed_cache is now moved
+>> after s_root is assigned since it's more preferred to iput()
+>> in .put_super() and all inodes should be evicted before
+>> the end of generic_shutdown_super(sb).
+>>
+>> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>> ---
+>>  drivers/staging/erofs/super.c | 121 +++++++++++++++-------------------
+>>  1 file changed, 53 insertions(+), 68 deletions(-)
+>>
+>> diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+>> index bfb6e1e09781..af5d87793e4d 100644
+>> --- a/drivers/staging/erofs/super.c
+>> +++ b/drivers/staging/erofs/super.c
+>> @@ -343,51 +343,52 @@ static const struct address_space_operations managed_cache_aops = {
+>>  	.invalidatepage = managed_cache_invalidatepage,
+>>  };
+>>  
+>> -static struct inode *erofs_init_managed_cache(struct super_block *sb)
+>> +static int erofs_init_managed_cache(struct super_block *sb)
+>>  {
+>> -	struct inode *inode = new_inode(sb);
+>> +	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+>> +	struct inode *const inode = new_inode(sb);
+>>  
+>>  	if (unlikely(!inode))
+>> -		return ERR_PTR(-ENOMEM);
+>> +		return -ENOMEM;
+>>  
+>>  	set_nlink(inode, 1);
+>>  	inode->i_size = OFFSET_MAX;
+>>  
+>>  	inode->i_mapping->a_ops = &managed_cache_aops;
+>>  	mapping_set_gfp_mask(inode->i_mapping,
+>> -			     GFP_NOFS | __GFP_HIGHMEM |
+>> -			     __GFP_MOVABLE |  __GFP_NOFAIL);
+>> -	return inode;
+>> +			     GFP_NOFS | __GFP_HIGHMEM | __GFP_MOVABLE);
 
-diff --git a/drivers/usb/host/xhci-dbgtty.c b/drivers/usb/host/xhci-dbgtty.c
-index 845939f8a0b8..be726c791323 100644
---- a/drivers/usb/host/xhci-dbgtty.c
-+++ b/drivers/usb/host/xhci-dbgtty.c
-@@ -139,7 +139,7 @@ xhci_dbc_alloc_requests(struct dbc_ep *dep, struct list_head *head,
- 	struct dbc_request	*req;
- 
- 	for (i = 0; i < DBC_QUEUE_SIZE; i++) {
--		req = dbc_alloc_request(dep, GFP_ATOMIC);
-+		req = dbc_alloc_request(dep, GFP_KERNEL);
- 		if (!req)
- 			break;
- 
--- 
-2.20.1
+Seems so, I will add a new patch addressing on it if needed.
 
+Thanks,
+Gao Xiang
+
+> 
+> It looks above change is not belong to this patch?
+> 
+> Otherwise, it looks good to me.
+> 
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> 
+> Thanks,
+> 
+>> +	sbi->managed_cache = inode;
+>> +	return 0;
+>>  }
+>> -
+>> +#else
+>> +static int erofs_init_managed_cache(struct super_block *sb) { return 0; }
+>>  #endif
+>>  
+>>  static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>>  {
+>>  	struct inode *inode;
+>>  	struct erofs_sb_info *sbi;
+>> -	int err = -EINVAL;
+>> +	int err;
+>>  
+>>  	infoln("fill_super, device -> %s", sb->s_id);
+>>  	infoln("options -> %s", (char *)data);
+>>  
+>> +	sb->s_magic = EROFS_SUPER_MAGIC;
+>> +
+>>  	if (unlikely(!sb_set_blocksize(sb, EROFS_BLKSIZ))) {
+>>  		errln("failed to set erofs blksize");
+>> -		goto err;
+>> +		return -EINVAL;
+>>  	}
+>>  
+>>  	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+>> -	if (unlikely(!sbi)) {
+>> -		err = -ENOMEM;
+>> -		goto err;
+>> -	}
+>> -	sb->s_fs_info = sbi;
+>> +	if (unlikely(!sbi))
+>> +		return -ENOMEM;
+>>  
+>> +	sb->s_fs_info = sbi;
+>>  	err = superblock_read(sb);
+>>  	if (err)
+>> -		goto err_sbread;
+>> +		return err;
+>>  
+>> -	sb->s_magic = EROFS_SUPER_MAGIC;
+>>  	sb->s_flags |= SB_RDONLY | SB_NOATIME;
+>>  	sb->s_maxbytes = MAX_LFS_FILESIZE;
+>>  	sb->s_time_gran = 1;
+>> @@ -397,13 +398,12 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>>  #ifdef CONFIG_EROFS_FS_XATTR
+>>  	sb->s_xattr = erofs_xattr_handlers;
+>>  #endif
+>> -
+>>  	/* set erofs default mount options */
+>>  	default_options(sbi);
+>>  
+>>  	err = parse_options(sb, data);
+>> -	if (err)
+>> -		goto err_parseopt;
+>> +	if (unlikely(err))
+>> +		return err;
+>>  
+>>  	if (!silent)
+>>  		infoln("root inode @ nid %llu", ROOT_NID(sbi));
+>> @@ -417,93 +417,78 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+>>  	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
+>>  #endif
+>>  
+>> -#ifdef EROFS_FS_HAS_MANAGED_CACHE
+>> -	sbi->managed_cache = erofs_init_managed_cache(sb);
+>> -	if (IS_ERR(sbi->managed_cache)) {
+>> -		err = PTR_ERR(sbi->managed_cache);
+>> -		goto err_init_managed_cache;
+>> -	}
+>> -#endif
+>> -
+>>  	/* get the root inode */
+>>  	inode = erofs_iget(sb, ROOT_NID(sbi), true);
+>> -	if (IS_ERR(inode)) {
+>> -		err = PTR_ERR(inode);
+>> -		goto err_iget;
+>> -	}
+>> +	if (IS_ERR(inode))
+>> +		return PTR_ERR(inode);
+>>  
+>> -	if (!S_ISDIR(inode->i_mode)) {
+>> +	if (unlikely(!S_ISDIR(inode->i_mode))) {
+>>  		errln("rootino(nid %llu) is not a directory(i_mode %o)",
+>>  		      ROOT_NID(sbi), inode->i_mode);
+>> -		err = -EINVAL;
+>>  		iput(inode);
+>> -		goto err_iget;
+>> +		return -EINVAL;
+>>  	}
+>>  
+>>  	sb->s_root = d_make_root(inode);
+>> -	if (!sb->s_root) {
+>> -		err = -ENOMEM;
+>> -		goto err_iget;
+>> -	}
+>> +	if (unlikely(!sb->s_root))
+>> +		return -ENOMEM;
+>>  
+>>  	erofs_shrinker_register(sb);
+>> +	/* sb->s_umount is already locked, SB_ACTIVE and SB_BORN are not set */
+>> +	err = erofs_init_managed_cache(sb);
+>> +	if (unlikely(err))
+>> +		return err;
+>>  
+>>  	if (!silent)
+>>  		infoln("mounted on %s with opts: %s.", sb->s_id, (char *)data);
+>>  	return 0;
+>> -	/*
+>> -	 * please add a label for each exit point and use
+>> -	 * the following name convention, thus new features
+>> -	 * can be integrated easily without renaming labels.
+>> -	 */
+>> -err_iget:
+>> -#ifdef EROFS_FS_HAS_MANAGED_CACHE
+>> -	iput(sbi->managed_cache);
+>> -err_init_managed_cache:
+>> -#endif
+>> -err_parseopt:
+>> -err_sbread:
+>> -	sb->s_fs_info = NULL;
+>> -	kfree(sbi);
+>> -err:
+>> -	return err;
+>> +}
+>> +
+>> +static struct dentry *erofs_mount(struct file_system_type *fs_type, int flags,
+>> +				  const char *dev_name, void *data)
+>> +{
+>> +	return mount_bdev(fs_type, flags, dev_name, data, erofs_fill_super);
+>>  }
+>>  
+>>  /*
+>>   * could be triggered after deactivate_locked_super()
+>>   * is called, thus including umount and failed to initialize.
+>>   */
+>> -static void erofs_put_super(struct super_block *sb)
+>> +static void erofs_kill_sb(struct super_block *sb)
+>>  {
+>> -	struct erofs_sb_info *sbi = EROFS_SB(sb);
+>> +	struct erofs_sb_info *sbi;
+>> +
+>> +	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
+>> +	infoln("unmounting for %s", sb->s_id);
+>>  
+>> -	/* for cases which are failed in "read_super" */
+>> +	kill_block_super(sb);
+>> +
+>> +	sbi = EROFS_SB(sb);
+>>  	if (!sbi)
+>>  		return;
+>> +	kfree(sbi);
+>> +	sb->s_fs_info = NULL;
+>> +}
+>>  
+>> -	WARN_ON(sb->s_magic != EROFS_SUPER_MAGIC);
+>> +/* called when ->s_root is non-NULL */
+>> +static void erofs_put_super(struct super_block *sb)
+>> +{
+>> +	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+>>  
+>> -	infoln("unmounted for %s", sb->s_id);
+>> +	DBG_BUGON(!sbi);
+>>  
+>>  	erofs_shrinker_unregister(sb);
+>>  #ifdef EROFS_FS_HAS_MANAGED_CACHE
+>>  	iput(sbi->managed_cache);
+>> +	sbi->managed_cache = NULL;
+>>  #endif
+>> -	kfree(sbi);
+>> -	sb->s_fs_info = NULL;
+>> -}
+>> -
+>> -static struct dentry *erofs_mount(struct file_system_type *fs_type, int flags,
+>> -				  const char *dev_name, void *data)
+>> -{
+>> -	return mount_bdev(fs_type, flags, dev_name, data, erofs_fill_super);
+>>  }
+>>  
+>>  static struct file_system_type erofs_fs_type = {
+>>  	.owner          = THIS_MODULE,
+>>  	.name           = "erofs",
+>>  	.mount          = erofs_mount,
+>> -	.kill_sb        = kill_block_super,
+>> +	.kill_sb        = erofs_kill_sb,
+>>  	.fs_flags       = FS_REQUIRES_DEV,
+>>  };
+>>  MODULE_ALIAS_FS("erofs");
+>>
