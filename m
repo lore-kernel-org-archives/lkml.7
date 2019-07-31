@@ -2,104 +2,92 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F7BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039BFC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94B3204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC46E204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:22:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564611760;
+	bh=eRxijePWptzEnqpWtysxuSDWbhdaWYF+Lnq6TrTL2G8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0OHv9BR1d0szRdk72yRt502MeCdfzzBSiMHyzzMPz2/sgqrr3e0TlrkAbgJz+o8/y
+	 /IeKwtLNWwTsyWo0ykIxzppsHRFdzEfAT3Nyde4ciugYxLsQ0j6CMh2qyggJ8ncVoo
+	 tu+7gISOueNkUMX5LfcgG370jKaDsUpyivkN2gio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbfGaWWU (ORCPT
+        id S1729210AbfGaWWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:22:20 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54794 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbfGaWWU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:22:20 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hswz8-0007fh-Tw; Wed, 31 Jul 2019 22:22:15 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: pm80xx: remove redundant assignments to variable rc
-Date:   Wed, 31 Jul 2019 23:22:14 +0100
-Message-Id: <20190731222214.15720-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 31 Jul 2019 18:22:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:38707 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbfGaWWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 18:22:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 15:22:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,331,1559545200"; 
+   d="scan'208";a="371719160"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga005.fm.intel.com with ESMTP; 31 Jul 2019 15:22:36 -0700
+Date:   Wed, 31 Jul 2019 16:19:56 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>
+Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+Message-ID: <20190731221956.GB15795@localhost.localdomain>
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
+ <47415939.KV5G6iaeJG@kreacher>
+ <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
+ <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+ <20190730213114.GK13948@localhost.localdomain>
+ <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
+> 
+> A couple of remarks if you will.
+> 
+> First, we don't know which case is the majority at this point.  For
+> now, there is one example of each, but it may very well turn out that
+> the SK Hynix BC501 above needs to be quirked.
+> 
+> Second, the reference here really is 5.2, so if there are any systems
+> that are not better off with 5.3-rc than they were with 5.2, well, we
+> have not made progress.  However, if there are systems that are worse
+> off with 5.3, that's bad.  In the face of the latest findings the only
+> way to avoid that is to be backwards compatible with 5.2 and that's
+> where my patch is going.  That cannot be achieved by quirking all
+> cases that are reported as "bad", because there still may be
+> unreported ones.
 
-There are several occasions where variable rc is being initialized
-with a value that is never read and error is being re-assigned a
-little later on.  Clean up the code by removing rc entirely and
-just returning the return value from the call to pm8001_issue_ssp_tmf
-
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/scsi/pm8001/pm8001_sas.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
-index 9453705f643a..7e48154e11c3 100644
---- a/drivers/scsi/pm8001/pm8001_sas.c
-+++ b/drivers/scsi/pm8001/pm8001_sas.c
-@@ -1308,28 +1308,22 @@ int pm8001_abort_task(struct sas_task *task)
- 
- int pm8001_abort_task_set(struct domain_device *dev, u8 *lun)
- {
--	int rc = TMF_RESP_FUNC_FAILED;
- 	struct pm8001_tmf_task tmf_task;
- 
- 	tmf_task.tmf = TMF_ABORT_TASK_SET;
--	rc = pm8001_issue_ssp_tmf(dev, lun, &tmf_task);
--	return rc;
-+	return pm8001_issue_ssp_tmf(dev, lun, &tmf_task);
- }
- 
- int pm8001_clear_aca(struct domain_device *dev, u8 *lun)
- {
--	int rc = TMF_RESP_FUNC_FAILED;
- 	struct pm8001_tmf_task tmf_task;
- 
- 	tmf_task.tmf = TMF_CLEAR_ACA;
--	rc = pm8001_issue_ssp_tmf(dev, lun, &tmf_task);
--
--	return rc;
-+	return pm8001_issue_ssp_tmf(dev, lun, &tmf_task);
- }
- 
- int pm8001_clear_task_set(struct domain_device *dev, u8 *lun)
- {
--	int rc = TMF_RESP_FUNC_FAILED;
- 	struct pm8001_tmf_task tmf_task;
- 	struct pm8001_device *pm8001_dev = dev->lldd_dev;
- 	struct pm8001_hba_info *pm8001_ha = pm8001_find_ha_by_dev(dev);
-@@ -1338,7 +1332,6 @@ int pm8001_clear_task_set(struct domain_device *dev, u8 *lun)
- 		pm8001_printk("I_T_L_Q clear task set[%x]\n",
- 		pm8001_dev->device_id));
- 	tmf_task.tmf = TMF_CLEAR_TASK_SET;
--	rc = pm8001_issue_ssp_tmf(dev, lun, &tmf_task);
--	return rc;
-+	return pm8001_issue_ssp_tmf(dev, lun, &tmf_task);
- }
- 
--- 
-2.20.1
-
+I have to agree. I think your proposal may allow PCI D3cold, in which
+case we do need to reintroduce the HMB handling.
