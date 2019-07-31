@@ -2,97 +2,189 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E56C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BA7C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0120208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:14:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sznUJdmG"
+	by mail.kernel.org (Postfix) with ESMTP id CC13D20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbfGaNOY (ORCPT
+        id S2388193AbfGaNO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:14:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40266 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfGaNOY (ORCPT
+        Wed, 31 Jul 2019 09:14:58 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45898 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728082AbfGaNO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:14:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6VDEIDL016847;
-        Wed, 31 Jul 2019 08:14:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564578858;
-        bh=RyuWh+BNkN7tLBcKmDkHzvIenVE1MdLILychpRoaXhE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sznUJdmGgOd9atjYi5PXCOPKY6zPvifrh1aRdHpQIp8az1g5pQX5IO7XQu497wOgp
-         F4on3PNJp8LI/rmy0jkZlGVs9aYgbbZgdjkf9QJZdLPqQMCu1LkisdP8E49Nr5o3yi
-         L0D70bQU+39ygjl6BaASkzPvD79yOMBv1p1i7fl0=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6VDEIqn049711
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 31 Jul 2019 08:14:18 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 31
- Jul 2019 08:14:18 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 31 Jul 2019 08:14:18 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6VDEGVj068694;
-        Wed, 31 Jul 2019 08:14:17 -0500
-Subject: Re: [PATCH v2 0/2] leds: tlc591xx: switch to OF and managed API
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <dmurphy@ti.com>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190708100620.22388-1-jjhiblot@ti.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <07bcbd79-dde9-d583-d7d3-dd3b28726092@ti.com>
-Date:   Wed, 31 Jul 2019 16:14:16 +0300
+        Wed, 31 Jul 2019 09:14:58 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f9so69619921wre.12
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 06:14:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2qO4ZtAFEjGbhKpZYZIrICeNvO6yrVyniiCc6Rw+4tA=;
+        b=P/JlJYxkGeW01Z1V5SvK27bI41mup6lk3WBSHzqHnkXTFj3IELuE2JZuO/oCjEaqzs
+         piQ81RVzR6qyAfdHZk5w0+AWApaslUzVEm1P1JkUiu8d0uRb6W7g95yLNSFipBGWFxq2
+         LVRudFJsRVirdIGUUjaOOawgZHxenSzxYDNKzaez8tsQTNmBnmxeO29HXaLrplJgkHO0
+         VkdnEk9klCa56GTDOJGB2VbZFog72erA9wYxLLcMgdfZ/l09TqCd5ig+GY3LL4Y/OxpM
+         9Qojq5dEji/8pGoYFXWD0CEAMHcHWOOZ1ifz3q7CA4mtamIVymcnkxaFmi4vS52WOZez
+         i32A==
+X-Gm-Message-State: APjAAAXxyZ2gIPoHHvk5WhWofctrq9ehMKGivYpI4ZPX+Fzh0Q0+h2+Y
+        mqZ3HwaW+NBvSuRrOVhd5FRvYQ==
+X-Google-Smtp-Source: APXvYqxYCllhTfncAoR1iIV4Cdz6EoShZ6pM0+LLTCU1P8Ot61fd3+4nd92y4hrwUv/3eSz8q1Pp5g==
+X-Received: by 2002:a5d:680d:: with SMTP id w13mr136812839wru.141.1564578895964;
+        Wed, 31 Jul 2019 06:14:55 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:91e7:65e:d8cd:fdb3? ([2001:b07:6468:f312:91e7:65e:d8cd:fdb3])
+        by smtp.gmail.com with ESMTPSA id t63sm61935053wmt.6.2019.07.31.06.14.54
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 06:14:55 -0700 (PDT)
+Subject: Re: [PATCH RFC 4/5] x86: KVM: add xsetbv to the emulator
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+References: <20190620110240.25799-1-vkuznets@redhat.com>
+ <20190620110240.25799-5-vkuznets@redhat.com>
+ <a86ca8b7-0333-398b-7bf6-90cb79366226@redhat.com>
+ <87lfwe73oz.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <73e6ddee-5ca9-64ea-d8d3-fabe046691fd@redhat.com>
+Date:   Wed, 31 Jul 2019 15:14:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190708100620.22388-1-jjhiblot@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <87lfwe73oz.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/2019 13:06, Jean-Jacques Hiblot wrote:
-> This mini-series updates the tlc591xx driver to use the managed API. The
-> driver is also modified to pass the DT node to the LED core layer.
-> The goal is to be able to the generic led-backlight [0] driver on top of
-> it.
+On 31/07/19 15:07, Vitaly Kuznetsov wrote:
+> Paolo Bonzini <pbonzini@redhat.com> writes:
 > 
-> changes in v2:
-> - fixed LED indexing. Previous version did not allow for holes: if n LEDs
->    were used, they had to be led(0) to led(n-1)
+>> On 20/06/19 13:02, Vitaly Kuznetsov wrote:
+>>> To avoid hardcoding xsetbv length to '3' we need to support decoding it in
+>>> the emulator.
+>>>
+>>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>>
+>> Can you also emulate it properly?  The code from QEMU's
+>> target/i386/fpu_helper.c can help. :)
+>>
 > 
-> Jean-Jacques Hiblot (2):
->    leds: tlc591xx: simplify driver by using the managed led API
->    leds: tlc591xx: Use the OF version of the LED registration function
+> (Had a chance to get back to this just now, sorry)
 > 
->   drivers/leds/leds-tlc591xx.c | 79 +++++++++---------------------------
->   1 file changed, 20 insertions(+), 59 deletions(-)
+> Assuming __kvm_set_xcr() is also a correct implementation, would the
+> code below do the job? (Just trying to figure out why you suggested
+> me to take a look at QEMU's variant):
 > 
 
-For the series:
+Yes, I didn't remember __kvm_set_xcr.
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Paolo
 
-  Tomi
+> diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
+> index feab24cac610..77cf6c11f66b 100644
+> --- a/arch/x86/include/asm/kvm_emulate.h
+> +++ b/arch/x86/include/asm/kvm_emulate.h
+> @@ -229,7 +229,7 @@ struct x86_emulate_ops {
+>  	int (*pre_leave_smm)(struct x86_emulate_ctxt *ctxt,
+>  			     const char *smstate);
+>  	void (*post_leave_smm)(struct x86_emulate_ctxt *ctxt);
+> -
+> +	int (*set_xcr)(struct x86_emulate_ctxt *ctxt, u32 index, u64 xcr);
+>  };
+>  
+>  typedef u32 __attribute__((vector_size(16))) sse128_t;
+> @@ -429,6 +429,7 @@ enum x86_intercept {
+>  	x86_intercept_ins,
+>  	x86_intercept_out,
+>  	x86_intercept_outs,
+> +	x86_intercept_xsetbv,
+>  
+>  	nr_x86_intercepts
+>  };
+> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+> index 718f7d9afedc..f9e843dd992a 100644
+> --- a/arch/x86/kvm/emulate.c
+> +++ b/arch/x86/kvm/emulate.c
+> @@ -4156,6 +4156,20 @@ static int em_fxrstor(struct x86_emulate_ctxt *ctxt)
+>  	return rc;
+>  }
+>  
+> +static int em_xsetbv(struct x86_emulate_ctxt *ctxt)
+> +{
+> +	u32 eax, ecx, edx;
+> +
+> +	eax = reg_read(ctxt, VCPU_REGS_RAX);
+> +	edx = reg_read(ctxt, VCPU_REGS_RDX);
+> +	ecx = reg_read(ctxt, VCPU_REGS_RCX);
+> +
+> +	if (ctxt->ops->set_xcr(ctxt, ecx, ((u64)edx << 32) | eax))
+> +		return emulate_gp(ctxt, 0);
+> +
+> +	return X86EMUL_CONTINUE;
+> +}
+> +
+>  static bool valid_cr(int nr)
+>  {
+>  	switch (nr) {
+> @@ -4409,6 +4423,12 @@ static const struct opcode group7_rm1[] = {
+>  	N, N, N, N, N, N,
+>  };
+>  
+> +static const struct opcode group7_rm2[] = {
+> +	N,
+> +	II(ImplicitOps | Priv,			em_xsetbv,	xsetbv),
+> +	N, N, N, N, N, N,
+> +};
+> +
+>  static const struct opcode group7_rm3[] = {
+>  	DIP(SrcNone | Prot | Priv,		vmrun,		check_svme_pa),
+>  	II(SrcNone  | Prot | EmulateOnUD,	em_hypercall,	vmmcall),
+> @@ -4498,7 +4518,8 @@ static const struct group_dual group7 = { {
+>  }, {
+>  	EXT(0, group7_rm0),
+>  	EXT(0, group7_rm1),
+> -	N, EXT(0, group7_rm3),
+> +	EXT(0, group7_rm2),
+> +	EXT(0, group7_rm3),
+>  	II(SrcNone | DstMem | Mov,		em_smsw, smsw), N,
+>  	II(SrcMem16 | Mov | Priv,		em_lmsw, lmsw),
+>  	EXT(0, group7_rm7),
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c6d951cbd76c..9512cc38dfe9 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6068,6 +6068,11 @@ static void emulator_post_leave_smm(struct x86_emulate_ctxt *ctxt)
+>  	kvm_smm_changed(emul_to_vcpu(ctxt));
+>  }
+>  
+> +static int emulator_set_xcr(struct x86_emulate_ctxt *ctxt, u32 index, u64 xcr)
+> +{
+> +	return __kvm_set_xcr(emul_to_vcpu(ctxt), index, xcr);
+> +}
+> +
+>  static const struct x86_emulate_ops emulate_ops = {
+>  	.read_gpr            = emulator_read_gpr,
+>  	.write_gpr           = emulator_write_gpr,
+> @@ -6109,6 +6114,7 @@ static const struct x86_emulate_ops emulate_ops = {
+>  	.set_hflags          = emulator_set_hflags,
+>  	.pre_leave_smm       = emulator_pre_leave_smm,
+>  	.post_leave_smm      = emulator_post_leave_smm,
+> +	.set_xcr             = emulator_set_xcr,
+>  };
+>  
+>  static void toggle_interruptibility(struct kvm_vcpu *vcpu, u32 mask)
+> 
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
