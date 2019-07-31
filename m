@@ -2,137 +2,280 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB765C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944BAC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B162089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EEED20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:48:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EQEb+Jko"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pnjUDc8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfGaAkh (ORCPT
+        id S1726963AbfGaAr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 20:40:37 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:50695 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfGaAkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 20:40:37 -0400
-Received: by mail-vk1-f202.google.com with SMTP id p196so28658328vke.17
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 17:40:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=BApBF9lDyDUHtKy92pMwude8bSQOUkXYIpIspp3IQpA=;
-        b=EQEb+JkoCSxT4aLpwLuHjX/vwl8+Y5yqjAP9jWQbUxf5GHiW1S2JZvjEsZ10Q+eLOR
-         5z29NQVjneEdlpoPyLpPkcqAl5p8cFacARBYXR1z8HOVLzX3dIete7sgazGKuXnoxB+h
-         l3UT4vT6MgU4yQmQpKmSE7xRMogz+slMR76BWuiKwEa7QK3CSn2atU5JtacA6VGRAtWp
-         1U1OoAXxfAFOc1j8QLZX0Reazdmj6mWykhiRlLBLDGIRE9EWXzUhdjXDqe6LpKfqwzaT
-         VpMcFliKUFgSdABibDpwnSPEJ989GGLRuHH+LBYnGuW6ph4tPiCxHW7oriL4hHPd8gTG
-         j4aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=BApBF9lDyDUHtKy92pMwude8bSQOUkXYIpIspp3IQpA=;
-        b=sAO8oyMB2G4U88v4rPKZl+5XytaYm9pmR0aRQELp1BDGU5h5zIi92OPcqMHgPzNus/
-         qMecDD36w0vnAASdWwdQF3nYd4x6Ck7ujHkMsdHSAexKNcg2NdrNAJ+l4xeUNbY6tcZG
-         suw1BoYo4Jn7DEcbaX5XdmQRPBZtCaz+Ih4pDTvCrxs3qt/vwi21bXrs9AdyaLROZgYi
-         zsydkVD8TDeWOBgfk4i20Hv8JGfjby8BP4DGOJ1sIBjJOH3qcUimPMpaE3sTJSNMS+h9
-         aDEg0onWmeCMxqPDbKf4KG3rk5NswGEV6tdp9n6AYz9ChZvtqs30Z9zD1XbFroRosjBs
-         mvIw==
-X-Gm-Message-State: APjAAAVA1Axocz9Cr5XOLCXtSHm4+qpWJFCfdC6SQIApJt8DtDCbDgGy
-        2tFkp1YWRlkBeLwr8WfvKt9Y3Os2
-X-Google-Smtp-Source: APXvYqwTwkwL1hlmyLhTuy1zLhvS74jx8z9oxy/e1/EDzKMbe5NvoecvOF4q+3mKTl/fzNchnvONdgAF
-X-Received: by 2002:a1f:f48f:: with SMTP id s137mr8990000vkh.10.1564533635841;
- Tue, 30 Jul 2019 17:40:35 -0700 (PDT)
-Date:   Tue, 30 Jul 2019 17:40:32 -0700
-In-Reply-To: <20190726192859.GG20482@kernel.org>
-Message-Id: <20190731004032.74676-1-nums@google.com>
-Mime-Version: 1.0
-References: <20190726192859.GG20482@kernel.org>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v2] Fix annotate.c use of uninitialized value error
-From:   Numfor Mbiziwo-Tiapo <nums@google.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, songliubraving@fb.com, mbd@fb.com
-Cc:     linux-kernel@vger.kernel.org, irogers@google.com,
-        eranian@google.com, Numfor Mbiziwo-Tiapo <nums@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Jul 2019 20:47:57 -0400
+Received: from ozlabs.org ([203.11.71.1]:48375 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbfGaAr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 20:47:56 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45yvsh4KYJz9s3l;
+        Wed, 31 Jul 2019 10:47:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564534073;
+        bh=9rQt8cz0JbtUi9ggE2ZHa/0gAM9GLGZUYDcK8Oqv6yU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pnjUDc8gjPlEC+OGBhNQslBkbWHeGkWBYC5A2bTI5nQS6k7R1+e5dWldTsP0RKc7W
+         ctbgk9UxWS4wpf5qIqusyAiQ80KmlwCmImQt94Ro4CQlpcsuDk3L7KcP1M1+N6Uc0M
+         +2OFSMbxDrpplwwoXVUaO+GjQu/egSmVLiMWIsx/TmyHQLzxZlRnYBq+gCza1xSDeA
+         Rowp+YV4RMIID7Rdgv8gNotlfB+jJ9Skd2JVRJY6NiNCg+Eb3KMx5wbtPk6sKoH+DA
+         lYDHH1a3YjPIFVETprTN+HNtdQf3c0tYdExwX8Q8gSsGWjlo1ox3BYZHIGh3/DfJBP
+         H82CH2fgR1ugQ==
+Date:   Wed, 31 Jul 2019 10:47:48 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Eric Biggers <ebiggers@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Rosenberg <drosen@google.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: linux-next: manual merge of the fsverity tree with the f2fs tree
+Message-ID: <20190731104748.203bf67b@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/rDBMkj_5_i.t2tiHL3ZM_tE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Our local MSAN (Memory Sanitizer) build of perf throws a warning
-that comes from the "dso__disassemble_filename" function in
-"tools/perf/util/annotate.c" when running perf record.
+--Sig_/rDBMkj_5_i.t2tiHL3ZM_tE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The warning stems from the call to readlink, in which "build_id_path"
-was being read into "linkname". Since readlink does not null terminate,
-an uninitialized memory access would later occur when "linkname" is
-passed into the strstr function. This is simply fixed by null-terminating
-"linkname" after the call to readlink.
+Hi all,
 
-To reproduce this warning, build perf by running:
-make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
- -fsanitize-memory-track-origins"
+Today's linux-next merge of the fsverity tree got conflicts in:
 
-(Additionally, llvm might have to be installed and clang might have to
-be specified as the compiler - export CC=/usr/bin/clang)
+  fs/f2fs/file.c
+  fs/f2fs/inode.c
 
-then running:
-tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
- -i - --stdio
+between commits:
 
-Please see the cover letter for why false positive warnings may be
-generated.
+  cf3dbe1481d1 ("f2fs: support FS_IOC_{GET,SET}FSLABEL")
+  01ff2b3740a6 ("f2fs: Support case-insensitive file name lookups")
 
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
----
- tools/perf/util/annotate.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+from the f2fs tree and commit:
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 70de8f6b3aee..e1b075b52dce 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1627,6 +1627,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
- 	char *build_id_filename;
- 	char *build_id_path = NULL;
- 	char *pos;
-+	int len;
- 
- 	if (dso->symtab_type == DSO_BINARY_TYPE__KALLSYMS &&
- 	    !dso__is_kcore(dso))
-@@ -1655,10 +1656,16 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
- 	if (pos && strlen(pos) < SBUILD_ID_SIZE - 2)
- 		dirname(build_id_path);
- 
--	if (dso__is_kcore(dso) ||
--	    readlink(build_id_path, linkname, sizeof(linkname)) < 0 ||
--	    strstr(linkname, DSO__NAME_KALLSYMS) ||
--	    access(filename, R_OK)) {
-+	if (dso__is_kcore(dso))
-+		goto fallback;
-+
-+	len = readlink(build_id_path, linkname, sizeof(linkname) - 1);
-+	if (len < 0)
-+		goto fallback;
-+
-+	linkname[len] = '\0';
-+	if (strstr(linkname, DSO__NAME_KALLSYMS) ||
-+		access(filename, R_OK)) {
- fallback:
- 		/*
- 		 * If we don't have build-ids or the build-id file isn't in the
--- 
-2.22.0.709.g102302147b-goog
+  60d7bf0f790f ("f2fs: add fs-verity support")
 
+from the fsverity tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/f2fs/file.c
+index eb1aa9b75eda,838bfeecbd86..000000000000
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@@ -1721,7 -1721,7 +1729,8 @@@ static const struct=20
+  		FS_ENCRYPT_FL |		\
+  		FS_INLINE_DATA_FL |	\
+  		FS_NOCOW_FL |		\
+- 		FS_CASEFOLD_FL)
+++		FS_CASEFOLD_FL |	\
++ 		FS_VERITY_FL)
+ =20
+  #define F2FS_SETTABLE_FS_FL (		\
+  		FS_SYNC_FL |		\
+@@@ -3080,86 -3088,34 +3091,110 @@@ static int f2fs_ioc_resize_fs(struct fi
+  	return ret;
+  }
+ =20
+ +static int f2fs_get_volume_name(struct file *filp, unsigned long arg)
+ +{
+ +	struct inode *inode =3D file_inode(filp);
+ +	struct f2fs_sb_info *sbi =3D F2FS_I_SB(inode);
+ +	char *vbuf;
+ +	int count;
+ +	int err =3D 0;
+ +
+ +	vbuf =3D f2fs_kzalloc(sbi, MAX_VOLUME_NAME, GFP_KERNEL);
+ +	if (!vbuf)
+ +		return -ENOMEM;
+ +
+ +	down_read(&sbi->sb_lock);
+ +	count =3D utf16s_to_utf8s(sbi->raw_super->volume_name,
+ +			sizeof(sbi->raw_super->volume_name),
+ +			UTF16_LITTLE_ENDIAN, vbuf, MAX_VOLUME_NAME);
+ +	up_read(&sbi->sb_lock);
+ +
+ +	if (copy_to_user((char __user *)arg, vbuf,
+ +				min(FSLABEL_MAX, count)))
+ +		err =3D -EFAULT;
+ +
+ +	kvfree(vbuf);
+ +	return err;
+ +}
+ +
+ +static int f2fs_set_volume_name(struct file *filp, unsigned long arg)
+ +{
+ +	struct inode *inode =3D file_inode(filp);
+ +	struct f2fs_sb_info *sbi =3D F2FS_I_SB(inode);
+ +	char *vbuf;
+ +	int len;
+ +	int err =3D 0;
+ +
+ +	vbuf =3D f2fs_kzalloc(sbi, MAX_VOLUME_NAME, GFP_KERNEL);
+ +	if (!vbuf)
+ +		return -ENOMEM;
+ +
+ +	if (copy_from_user(vbuf, (char __user *)arg, FSLABEL_MAX)) {
+ +		err =3D -EFAULT;
+ +		goto out;
+ +	}
+ +
+ +	len =3D strnlen(vbuf, FSLABEL_MAX);
+ +	if (len > FSLABEL_MAX - 1) {
+ +		err =3D -EINVAL;
+ +		goto out;
+ +	}
+ +
+ +	err =3D mnt_want_write_file(filp);
+ +	if (err)
+ +		goto out;
+ +
+ +	down_write(&sbi->sb_lock);
+ +
+ +	memset(sbi->raw_super->volume_name, 0,
+ +			sizeof(sbi->raw_super->volume_name));
+ +	utf8s_to_utf16s(vbuf, MAX_VOLUME_NAME, UTF16_LITTLE_ENDIAN,
+ +			sbi->raw_super->volume_name,
+ +			sizeof(sbi->raw_super->volume_name));
+ +
+ +	err =3D f2fs_commit_super(sbi, false);
+ +
+ +	up_write(&sbi->sb_lock);
+ +
+ +	mnt_drop_write_file(filp);
+ +out:
+ +	kvfree(vbuf);
+ +	return err;
+ +}
+ +
++ static int f2fs_ioc_enable_verity(struct file *filp, unsigned long arg)
++ {
++ 	struct inode *inode =3D file_inode(filp);
++=20
++ 	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
++=20
++ 	if (!f2fs_sb_has_verity(F2FS_I_SB(inode))) {
++ 		f2fs_warn(F2FS_I_SB(inode),
++ 			  "Can't enable fs-verity on inode %lu: the verity feature is not enab=
+led on this filesystem.\n",
++ 			  inode->i_ino);
++ 		return -EOPNOTSUPP;
++ 	}
++=20
++ 	return fsverity_ioctl_enable(filp, (const void __user *)arg);
++ }
++=20
++ static int f2fs_ioc_measure_verity(struct file *filp, unsigned long arg)
++ {
++ 	if (!f2fs_sb_has_verity(F2FS_I_SB(file_inode(filp))))
++ 		return -EOPNOTSUPP;
++=20
++ 	return fsverity_ioctl_measure(filp, (void __user *)arg);
++ }
++=20
+  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+  {
+ +	int ret;
+ +
+  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+  		return -EIO;
+ +	ret =3D f2fs_is_checkpoint_ready(F2FS_I_SB(file_inode(filp)));
+ +	if (ret)
+ +		return ret;
+ =20
+  	switch (cmd) {
+  	case F2FS_IOC_GETFLAGS:
+@@@ -3214,10 -3170,10 +3249,14 @@@
+  		return f2fs_ioc_precache_extents(filp, arg);
+  	case F2FS_IOC_RESIZE_FS:
+  		return f2fs_ioc_resize_fs(filp, arg);
+ +	case F2FS_IOC_GET_VOLUME_NAME:
+ +		return f2fs_get_volume_name(filp, arg);
+ +	case F2FS_IOC_SET_VOLUME_NAME:
+ +		return f2fs_set_volume_name(filp, arg);
++ 	case FS_IOC_ENABLE_VERITY:
++ 		return f2fs_ioc_enable_verity(filp, arg);
++ 	case FS_IOC_MEASURE_VERITY:
++ 		return f2fs_ioc_measure_verity(filp, arg);
+  	default:
+  		return -ENOTTY;
+  	}
+@@@ -3332,8 -3288,8 +3371,10 @@@ long f2fs_compat_ioctl(struct file *fil
+  	case F2FS_IOC_SET_PIN_FILE:
+  	case F2FS_IOC_PRECACHE_EXTENTS:
+  	case F2FS_IOC_RESIZE_FS:
+ +	case F2FS_IOC_GET_VOLUME_NAME:
+ +	case F2FS_IOC_SET_VOLUME_NAME:
++ 	case FS_IOC_ENABLE_VERITY:
++ 	case FS_IOC_MEASURE_VERITY:
+  		break;
+  	default:
+  		return -ENOIOCTLCMD;
+diff --cc fs/f2fs/inode.c
+index 5d78f2db7a67,06da75d418e0..000000000000
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@@ -46,11 -46,11 +46,13 @@@ void f2fs_set_inode_flags(struct inode=20
+  		new_fl |=3D S_DIRSYNC;
+  	if (file_is_encrypt(inode))
+  		new_fl |=3D S_ENCRYPTED;
+ +	if (flags & F2FS_CASEFOLD_FL)
+ +		new_fl |=3D S_CASEFOLD;
++ 	if (file_is_verity(inode))
++ 		new_fl |=3D S_VERITY;
+  	inode_set_flags(inode, new_fl,
+  			S_SYNC|S_APPEND|S_IMMUTABLE|S_NOATIME|S_DIRSYNC|
+- 			S_ENCRYPTED|S_CASEFOLD);
+ -			S_ENCRYPTED|S_VERITY);
+++			S_ENCRYPTED|S_CASEFOLD|S_VERITY);
+  }
+ =20
+  static void __get_inode_rdev(struct inode *inode, struct f2fs_inode *ri)
+
+--Sig_/rDBMkj_5_i.t2tiHL3ZM_tE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1A5TQACgkQAVBC80lX
+0Gx0agf/dYP1aN+/vMYlRsrpk9WK72mIw0IZlIVZvf6+DgXoJgD7qWL1HVl/Qae3
+5OW9Fm3kCM2wboMECOPyHawbSNjqhD6PwbOHRK9CdXUKRPiC6GZ8H2hWj6bMdjnA
+XgLFp0iGTwOH1p3NluGDRoJJhBc8yB8z2qa3UhNuUgV9GvvtIOjXdAOFiNBgHyjl
+dd3/yC6qPMYc7/Wc5Fbxsjh0o8CrawI28ANTKY5lzDXI+mSVFiKc2QMa8tmBT061
+J21QlRka9a4sSapnRpbsaY5YNzYBMKb3dnNQlTAsqmhZ2/Y8Zy1kdWzylv1XV5lk
+D0Laq9KE4IFToMh1VAOJrMrA8VZwgQ==
+=4TtB
+-----END PGP SIGNATURE-----
+
+--Sig_/rDBMkj_5_i.t2tiHL3ZM_tE--
