@@ -2,77 +2,101 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EE3C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B09CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6284E208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062FE20449
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzIcHkSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730854AbfGaXfr (ORCPT
+        id S1730491AbfGaXhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:35:47 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:39860 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730829AbfGaXfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:35:43 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hsy8B-0003W3-Ki; Wed, 31 Jul 2019 17:35:43 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hsy89-0001Gr-IZ; Wed, 31 Jul 2019 17:35:37 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 31 Jul 2019 17:35:30 -0600
-Message-Id: <20190731233534.4841-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 31 Jul 2019 19:37:07 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35127 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfGaXhH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 19:37:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u14so32745403pfn.2;
+        Wed, 31 Jul 2019 16:37:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=HkJbMijve+37uAnT22qDE+Z0CK5Fv6mxxx9Tamb2xfY=;
+        b=lzIcHkSbX+PlBpxPfBNMHvVgD6toyym4cqqPUTR7YzdyqH4zbgv30GXBxCV29BLaUs
+         gfO7IWNMN1zfVgt3g9qMGJC86MFHEio2/9AZBKNKCNbNmHwk6QKnY/s+A+6HQcEvKg3o
+         Go6XKFK6uVSayITl/+Q6tKmfwK2oPhM2LoYzStg5hX7M3qbYHTP6qmryZpy433ul+gEC
+         22JrNP7nUE2B4B6Y5uVMciZWXPfnbJLG40vo5XZlUh5sMT7EcRezxE5u5XU7k/Qgdy3T
+         /nM/n0Id0y/NZT7WKp4OvO42Sh15ro9FY5Lze9Z71eYebYwtBE0XVWeVh2QTOA/T1Qoz
+         86Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=HkJbMijve+37uAnT22qDE+Z0CK5Fv6mxxx9Tamb2xfY=;
+        b=UcikxRXRwwMa8Y5NDMNa8UOlvOSDK/aWgTxrhndunJz0MpSSGoJNzNquQRXwuvcTg3
+         l8drS8qgEY9RaiowNbLgjYbC1bvcp1jIcGXaFfYXtcMQKs0U6ggj/M03zI6d+gzgWWPg
+         g+Y/0L5gPcN70okBQ3i8kJDpg85VYdUYY9eeEWTLOCNV86jC/KXU+zeID/9D9iY8EkzG
+         e31xJ2FLPPEDH+E+qWGQMVHNezF1cVTElyu+V4faXKmxo3rXJ4HMc7jlGdDlGFpw5I+Y
+         Oa0euTFoEICIp5WgcXvyviBTGR6WpaE9wIwLKCfGyAgP5QevI90r0lmaPoVMLlGRZHPU
+         /NKw==
+X-Gm-Message-State: APjAAAUCNsAAfrJxU3eRODpS4wbmgG4rDQjNIDZ9KHEIc29GEs/vsAug
+        nrAWGBo7zKrvgw2kDJlD1Q1xjsriRSc=
+X-Google-Smtp-Source: APXvYqwwaerEeV1TDEGtvr7CR7wMLtz0X532yMDm9O+OQlXmPRUFBa9WS8plLiKxG5iCAj+K+KXjvg==
+X-Received: by 2002:a17:90b:949:: with SMTP id dw9mr5320838pjb.49.1564616226781;
+        Wed, 31 Jul 2019 16:37:06 -0700 (PDT)
+Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id b16sm112490514pfo.54.2019.07.31.16.37.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 16:37:06 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
+Date:   Wed, 31 Jul 2019 16:37:02 -0700 (PDT)
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     Mark Balantzyan <mbalant3@gmail.com>, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pavel Andrianov <andrianov@ispras.ru>
+Subject: Re: [PATCH] watchdog:alim1535_wdt: Fix data race in ali_settimer()
+ concerning ali_timeout_bits variable.
+In-Reply-To: <20190731192410.GA4935@roeck-us.net>
+Message-ID: <alpine.DEB.2.21.1907311620010.2747@mbalantz-desktop>
+References: <20190718155238.3066-1-mbalant3@gmail.com> <20190718163458.GA18125@roeck-us.net> <alpine.DEB.2.21.1907310911120.29703@mbalantz-desktop> <20190731164337.GA13646@roeck-us.net> <alpine.DEB.2.21.1907311118190.81695@mbalantz-desktop>
+ <20190731192410.GA4935@roeck-us.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me, chaitanya.kulkarni@wdc.com, maxg@mellanox.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v3 0/4] Varios NVMe Fixes
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+Hi Guenter, all,
 
-These patches are just a resend of a bunch I've sent that
-haven't been picked up yet. I don't want them to get forgotten.
+ 	I don't really understand this focus on fixing theoretic/irrelevant
+ 	race conditions in drivers which no one uses anymore. Maybe someone
+ 	can enlighten me ?
 
-Thanks,
+In conjunction with linuxtesting.org and The Linux Foundation, I've been 
+enlisted to test and work on helping to test tools they use for 
+reliability testing of linux-based systems. In particular, two tools, 
+RaceHound (whose command is 'lines2insns' and which isolates race 
+conditions in kernel modules) and Klever, which is browser-based, are
+under continual development by the Center and I aim to help them improve
+their throughput by aiding in investigating where, in the automated nature
+particularly of Klever (requiring considerable configuration as well),
+there may areas to improve.
 
-Logan
+Hence, yes, a large amount of our findings result in manifesting as 
+theoretical and possible only, but relevant to improving the tools 
+nonetheless.
 
---
-
-Logan Gunthorpe (4):
-  nvmet: Fix use-after-free bug when a port is removed
-  nvmet-loop: Flush nvme_delete_wq when removing the port
-  nvmet-file: fix nvmet_file_flush() always returning an error
-  nvme-core: Fix extra device_put() call on error path
-
- drivers/nvme/host/core.c       |  2 +-
- drivers/nvme/target/configfs.c |  1 +
- drivers/nvme/target/core.c     | 15 +++++++++++++++
- drivers/nvme/target/loop.c     |  8 ++++++++
- drivers/nvme/target/nvmet.h    |  3 +++
- 5 files changed, 28 insertions(+), 1 deletion(-)
-
---
-2.20.1
+Hope that helps with the 'enlightening' :), regards,
+Mark
