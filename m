@@ -2,127 +2,181 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2FAC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BE6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603BF208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:40:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hdHXeNjd"
+	by mail.kernel.org (Postfix) with ESMTP id A89CF208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564584082;
+	bh=GhbJUwRiiNhZF85fa859UBgY3tAHuk6moEdCD4IZZuw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d9SaORidTW7+wCl7Pg7FdOwY3aYKXVvICrPReE4Owl9v8GvxIgCdWRzpCuaZkG5ni
+	 5m4ZtqRn7sGgBCFUhER9N2hFoolxzSHyza0Y82NWBxpHV6CimSTK1fgQhtJQuvmrZg
+	 6Zwb8W/q143xIXWK4nsX0KyHbWfvZaRjqfhX5RGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbfGaOkb (ORCPT
+        id S1729953AbfGaOlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:40:31 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:8240 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727073AbfGaOkb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:40:31 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VEcGiP031653;
-        Wed, 31 Jul 2019 16:40:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=AFDZi45NFu0boqD+CAnY4m7Y5fAiIfy1q8BHKSUyjP8=;
- b=hdHXeNjda3sh2xQpndsqpigl53QQIGQeef4AE++pk6q4aoeHiWh4VNKighKTmboeWN0J
- 6fdMVK8oo3aD76eXZDTqCdan5VGuA/8a8l47Hdpoq2C+fQEV2x+NiSkxCUPuZTCwzVpa
- s2205slvDSMfpooFTvRZz2/fNEA9YAKwhs3HgjxQi1wcgnyE2MWvMQFmuKooddl5eIZU
- NAmH6KAYsQ9dQujJ4EqJqimHdx+hMtsHrfAdw0YQpofH9Y3sUHlSsIpPFJlUus9eMbT7
- SbI0D63j2Pz5emFhBr1VnYyEr8fLiIMGMEhFVzUWElaZBdbIghP9Enysptia3K0tUkgL OA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2u0bra5253-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 31 Jul 2019 16:40:19 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 09B0D41;
-        Wed, 31 Jul 2019 14:40:18 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF58FAE6AC;
-        Wed, 31 Jul 2019 16:40:18 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 31 Jul
- 2019 16:40:18 +0200
-Subject: Re: ARM: multi_v7_defconfig: Enable SPI_STM32_QSPI support
-To:     Olof Johansson <olof@lixom.net>
-CC:     Patrice CHOTARD <patrice.chotard@st.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20190729135505.15394-1-patrice.chotard@st.com>
- <CAOesGMg-3xt2qjjZ569pUE+d6tn7nz264AN9ARkBT_Ej4TFC2A@mail.gmail.com>
- <de6ab910-380e-6271-88d8-6fe670525e60@st.com>
- <CAOesGMgi2cLUZGZnzKY+4i2tZSFyLe2TEK5SPY5yu0qSh_BRxg@mail.gmail.com>
- <CAOesGMirq=42Cj4kT=dLSqUiG-yee5zuqFhg5t=ud5KPmQJYBw@mail.gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <ce2b0a2f-6775-1318-1537-eae3ad4e63fd@st.com>
-Date:   Wed, 31 Jul 2019 16:40:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 10:41:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57882 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729935AbfGaOlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:41:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E6CFCB0C6;
+        Wed, 31 Jul 2019 14:41:17 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 16:41:14 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Hoan Tran OS <hoan@os.amperecomputing.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Open Source Submission <patches@amperecomputing.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "willy@infradead.org" <willy@infradead.org>
+Subject: Re: microblaze HAVE_MEMBLOCK_NODE_MAP dependency (was Re: [PATCH v2
+ 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA)
+Message-ID: <20190731144114.GY9330@dhcp22.suse.cz>
+References: <20190712150007.GU29483@dhcp22.suse.cz>
+ <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
+ <20190730081415.GN9330@dhcp22.suse.cz>
+ <20190731062420.GC21422@rapoport-lnx>
+ <20190731080309.GZ9330@dhcp22.suse.cz>
+ <20190731111422.GA14538@rapoport-lnx>
+ <20190731114016.GI9330@dhcp22.suse.cz>
+ <20190731122631.GB14538@rapoport-lnx>
+ <20190731130037.GN9330@dhcp22.suse.cz>
+ <20190731142129.GA24998@rapoport-lnx>
 MIME-Version: 1.0
-In-Reply-To: <CAOesGMirq=42Cj4kT=dLSqUiG-yee5zuqFhg5t=ud5KPmQJYBw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_06:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731142129.GA24998@rapoport-lnx>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 31-07-19 17:21:29, Mike Rapoport wrote:
+> On Wed, Jul 31, 2019 at 03:00:37PM +0200, Michal Hocko wrote:
+> > On Wed 31-07-19 15:26:32, Mike Rapoport wrote:
+> > > On Wed, Jul 31, 2019 at 01:40:16PM +0200, Michal Hocko wrote:
+> > > > On Wed 31-07-19 14:14:22, Mike Rapoport wrote:
+> > > > > On Wed, Jul 31, 2019 at 10:03:09AM +0200, Michal Hocko wrote:
+> > > > > > On Wed 31-07-19 09:24:21, Mike Rapoport wrote:
+> > > > > > > [ sorry for a late reply too, somehow I missed this thread before ]
+> > > > > > > 
+> > > > > > > On Tue, Jul 30, 2019 at 10:14:15AM +0200, Michal Hocko wrote:
+> > > > > > > > [Sorry for a late reply]
+> > > > > > > > 
+> > > > > > > > On Mon 15-07-19 17:55:07, Hoan Tran OS wrote:
+> > > > > > > > > Hi,
+> > > > > > > > > 
+> > > > > > > > > On 7/12/19 10:00 PM, Michal Hocko wrote:
+> > > > > > > > [...]
+> > > > > > > > > > Hmm, I thought this was selectable. But I am obviously wrong here.
+> > > > > > > > > > Looking more closely, it seems that this is indeed only about
+> > > > > > > > > > __early_pfn_to_nid and as such not something that should add a config
+> > > > > > > > > > symbol. This should have been called out in the changelog though.
+> > > > > > > > > 
+> > > > > > > > > Yes, do you have any other comments about my patch?
+> > > > > > > > 
+> > > > > > > > Not really. Just make sure to explicitly state that
+> > > > > > > > CONFIG_NODES_SPAN_OTHER_NODES is only about __early_pfn_to_nid and that
+> > > > > > > > doesn't really deserve it's own config and can be pulled under NUMA.
+> > > > > > > > 
+> > > > > > > > > > Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
+> > > > > > > > > > bucket? Do we have any NUMA architecture that doesn't enable it?
+> > > > > > > > > > 
+> > > > > > > 
+> > > > > > > HAVE_MEMBLOCK_NODE_MAP makes huge difference in node/zone initialization
+> > > > > > > sequence so it's not only about a singe function.
+> > > > > > 
+> > > > > > The question is whether we want to have this a config option or enable
+> > > > > > it unconditionally for each NUMA system.
+> > > > > 
+> > > > > We can make it 'default NUMA', but we can't drop it completely because
+> > > > > microblaze uses sparse_memory_present_with_active_regions() which is
+> > > > > unavailable when HAVE_MEMBLOCK_NODE_MAP=n.
+> > > > 
+> > > > I suppose you mean that microblaze is using
+> > > > sparse_memory_present_with_active_regions even without CONFIG_NUMA,
+> > > > right?
+> > > 
+> > > Yes.
+> > > 
+> > > > I have to confess I do not understand that code. What is the deal
+> > > > with setting node id there?
+> > > 
+> > > The sparse_memory_present_with_active_regions() iterates over
+> > > memblock.memory regions and uses the node id of each region as the
+> > > parameter to memory_present(). The assumption here is that sometime before
+> > > each region was assigned a proper non-negative node id. 
+> > > 
+> > > microblaze uses device tree for memory enumeration and the current FDT code
+> > > does memblock_add() that implicitly sets nid in memblock.memory regions to -1.
+> > > 
+> > > So in order to have proper node id passed to memory_present() microblaze
+> > > has to call memblock_set_node() before it can use
+> > > sparse_memory_present_with_active_regions().
+> > 
+> > I am sorry, but I still do not follow. Who is consuming that node id
+> > information when NUMA=n. In other words why cannot we simply do
+>  
+> We can, I think nobody cared to change it.
 
-
-On 7/31/19 3:21 PM, Olof Johansson wrote:
-> On Wed, Jul 31, 2019 at 3:20 PM Olof Johansson <olof@lixom.net> wrote:
->>
->> Hi,
->>
->> On Wed, Jul 31, 2019 at 8:48 AM Alexandre Torgue
->> <alexandre.torgue@st.com> wrote:
->>>
->>> Hi Olof
->>>
->>> On 7/30/19 7:36 PM, Olof Johansson wrote:
->>>> Hi Patrice,
->>>>
->>>> If you cc soc@kernel.org on patches you want us to apply, you'll get
->>>> them automatically tracked by patchwork.
->>>>
->>>
->>> Does it means that you will take it directly in arm-soc tree ?
->>> I mean, I used to take this kind of patch (multi-v7_defconfig patch
->>> linked to STM32 driver) in my stm32 branch and to send PR for them.
->>
->> You can do that too -- it was unclear to me whether you posted the
->> patch with us in the To: line because you wanted it applied or not.
-> 
-> Also, we request that platform maintainers keep the defconfig updates
-> in a separate branch, since we normally track them in a separate
-> branch on our side. So if you do it in the future, please send
-> separate PR.
-> 
-> For single patches, it's just as easy to send us the patch as a pull request.
-> 
-
-Ok. So I'll continue as I did :)
-
-Thanks for clarifications
-
-Alex
+It would be great if somebody with the actual HW could try it out.
+I can throw a patch but I do not even have a cross compiler in my
+toolbox.
 
 > 
-> Thanks,
+> > diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
+> > index a015a951c8b7..3a47e8db8d1c 100644
+> > --- a/arch/microblaze/mm/init.c
+> > +++ b/arch/microblaze/mm/init.c
+> > @@ -175,14 +175,9 @@ void __init setup_memory(void)
+> >  
+> >  		start_pfn = memblock_region_memory_base_pfn(reg);
+> >  		end_pfn = memblock_region_memory_end_pfn(reg);
+> > -		memblock_set_node(start_pfn << PAGE_SHIFT,
+> > -				  (end_pfn - start_pfn) << PAGE_SHIFT,
+> > -				  &memblock.memory, 0);
+> > +		memory_present(0, start_pfn << PAGE_SHIFT, end_pfn << PAGE_SHIFT);
 > 
-> -Olof
-> 
+> memory_present() expects pfns, the shift is not needed.
+
+Right.
+
+-- 
+Michal Hocko
+SUSE Labs
