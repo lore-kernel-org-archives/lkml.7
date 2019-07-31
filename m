@@ -2,128 +2,193 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E39C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3B6C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C9E20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCE720659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:26:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jxZlB5bc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbfGaPZn (ORCPT
+        id S1729465AbfGaP0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:25:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727926AbfGaPZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:25:43 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B65E420659;
-        Wed, 31 Jul 2019 15:25:41 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 11:25:39 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2 00/12] tracing/probe: Add multi-probes per event
- support
-Message-ID: <20190731112539.1efac604@gandalf.local.home>
-In-Reply-To: <156095682948.28024.14190188071338900568.stgit@devnote2>
-References: <156095682948.28024.14190188071338900568.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 31 Jul 2019 11:26:23 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:41576 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726339AbfGaP0X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:26:23 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VFGFBw001928;
+        Wed, 31 Jul 2019 17:26:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=hqY6QAzzaGShhRhu9sPzoFPBiimrui7oz2W66kOYNWQ=;
+ b=jxZlB5bc3GxXWhEvCWZ/i5UcigqrTllppWki5MxLWKZLUsOoapFRNqRU+WzSf6ofL+KY
+ dQeWqjBEOgtrMdR1Y+Zfp1IeChNWAsB1/kCp0jJ8wnoJh07UjBfEcdxEdsR/zTTof4ki
+ aoQtcskK07fC+V4YEcLtmAK2BZZ743ZGrfdHS+XQqnmF2yUQG1zNTaoOXnfc3nsc/NPu
+ mXVpU3Su4EqYQWYOLWEMb9cb4D4snwTIDZFLQYbUhR7W2BPr1A+cp7+5ELBq6CG7gY8U
+ F2/Jwp2KTZUHCYETI5VdDxy36QjD9URmJVVCdGsNFdI+LIYNuZMG1L3thyFnkiyYjNoz rQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2u2jp4g33g-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 31 Jul 2019 17:26:10 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0573731;
+        Wed, 31 Jul 2019 15:26:09 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E212FF9AA8;
+        Wed, 31 Jul 2019 17:26:09 +0200 (CEST)
+Received: from localhost (10.75.127.51) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 31 Jul 2019 17:26:09
+ +0200
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>, <arnd@arndb.de>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ARM: dts: stm32: remove useless pinctrl entries in stm32mp157-pinctrl
+Date:   Wed, 31 Jul 2019 17:26:09 +0200
+Message-ID: <20190731152609.32197-1-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019 00:07:09 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+This patch removes "ngpios" and "gpio-ranges" information from
+stm32mp157-pinctrl.dtsi file as it is now filled in stm32mp157 pinctrl
+package files.
 
-> Hello,
-> 
-> This is the 2nd version of multi-probes per event support on ftrace
-> and perf-tools.
-> 
-> Previous version is here;
-> https://lkml.org/lkml/2019/5/31/573
-> 
-> >From this version, I omitted first 9 patches which has been picked  
-> to Steve's tree.
-> In this version, I've fixed some bugs and hardened some unexpected
-> error cases according to Steve's comment.
-> Here are changes in this version:
-> 
->  - [1/12] This have below changes. 
->     - Warn if the primary trace_probe does not exist.
->     - Fix enable_trace_kprobe() to not return error if the any probes
->       are "gone" state. If all probes have gone or any other error
->       reason, the event can not be enabled and return error.
->     - Fix trace_probe_enable() to roll back all enabled uprobe if
->       any one of uprobe is failed to enable.
->  - [7/12] Swap the checking order of filename for avoiding unexpected
->      memory access.
-> 
-> 
-> ====
-> For trace-event, we can insert same trace-event on several places
-> on the code, and those can record similar information as a same event
-> with same format.
-> 
-> This series implements similar feature on probe-event. Since the probe
-> event is based on the compiled binary, sometimes we find that the target
-> source line is complied into several different addresses, e.g. inlined
-> function, unrolled loop, etc. In those cases, it is useful to put a
-> same probe-event on different addresses.
-> 
-> With this series, we can append multi probes on one event as below
-> 
->   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
->   # echo p:testevent fork_idle r1=%ax r2=%cx >> kprobe_events
->   # kprobe_events
->   p:kprobes/testevent _do_fork r1=%ax r2=%dx
->   p:kprobes/testevent fork_idle r1=%ax r2=%cx
-> 
-> This means testevent is hit on both of _do_fork and fork_idle.
-> As you can see, the appended event must have same number of arguments
-> and those must have same 'type' and 'name' as original one. This is like
-> a function signature, it checks whether the appending event has the same
-> type and name of event arguments and same probe type, but doesn't care
-> about the assignment.
-> 
-> So, below appending commands will be rejected.
-> 
->   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
->   # echo p:testevent fork_idle r1=%ax >> kprobe_events
->   (No 2nd argument)
->   # echo p:testevent fork_idle r1=%ax r2=%ax:x8 >> kprobe_events
->   (The type of 2nd argument is different)
-> 
-> If one inlined code has an argument on a register, but another
-> inlined code has fixed value (as a result of optimization),
-> you can also specify the fixed immediate value, e.g.
-> 
->   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
->   # echo p:testevent fork_idle r1=%ax r2=\1 >> kprobe_events
-> 
-> 
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index df6470133574..3f6008aa28a4 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -24,8 +24,6 @@
+ 				reg = <0x0 0x400>;
+ 				clocks = <&rcc GPIOA>;
+ 				st,bank-name = "GPIOA";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 0 16>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -37,8 +35,6 @@
+ 				reg = <0x1000 0x400>;
+ 				clocks = <&rcc GPIOB>;
+ 				st,bank-name = "GPIOB";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 16 16>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -50,8 +46,6 @@
+ 				reg = <0x2000 0x400>;
+ 				clocks = <&rcc GPIOC>;
+ 				st,bank-name = "GPIOC";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 32 16>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -63,8 +57,6 @@
+ 				reg = <0x3000 0x400>;
+ 				clocks = <&rcc GPIOD>;
+ 				st,bank-name = "GPIOD";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 48 16>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -76,8 +68,6 @@
+ 				reg = <0x4000 0x400>;
+ 				clocks = <&rcc GPIOE>;
+ 				st,bank-name = "GPIOE";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 64 16>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -89,8 +79,6 @@
+ 				reg = <0x5000 0x400>;
+ 				clocks = <&rcc GPIOF>;
+ 				st,bank-name = "GPIOF";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 80 16>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -102,8 +90,6 @@
+ 				reg = <0x6000 0x400>;
+ 				clocks = <&rcc GPIOG>;
+ 				st,bank-name = "GPIOG";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 96 16>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -115,8 +101,6 @@
+ 				reg = <0x7000 0x400>;
+ 				clocks = <&rcc GPIOH>;
+ 				st,bank-name = "GPIOH";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 112 16>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -128,8 +112,6 @@
+ 				reg = <0x8000 0x400>;
+ 				clocks = <&rcc GPIOI>;
+ 				st,bank-name = "GPIOI";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 128 16>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -141,8 +123,6 @@
+ 				reg = <0x9000 0x400>;
+ 				clocks = <&rcc GPIOJ>;
+ 				st,bank-name = "GPIOJ";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 144 16>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -154,8 +134,6 @@
+ 				reg = <0xa000 0x400>;
+ 				clocks = <&rcc GPIOK>;
+ 				st,bank-name = "GPIOK";
+-				ngpios = <8>;
+-				gpio-ranges = <&pinctrl 0 160 8>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -849,8 +827,6 @@
+ 				clocks = <&rcc GPIOZ>;
+ 				st,bank-name = "GPIOZ";
+ 				st,bank-ioport = <11>;
+-				ngpios = <8>;
+-				gpio-ranges = <&pinctrl_z 0 400 8>;
+ 				status = "disabled";
+ 			};
+ 
+-- 
+2.17.1
 
-Hi Masami,
-
-I applied this patch set to my queue. Nice feature! I'll probably be
-testing it a bit more. I wont be pushing it to my repo until v5.3-rc3
-comes out, as I'll plan on rebasing my for-next branch on that.
-
-Thanks!
-
--- Steve
