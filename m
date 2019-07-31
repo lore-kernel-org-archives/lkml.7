@@ -2,166 +2,152 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBE3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AC0C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08346208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vyvdoXfZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0C307208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564572651;
+	bh=XtkAVSy+1hBVs1BOvYjreYd3ilh5WNrIH83CyFH4zxk=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=Shv31eIakZbBCwCgf8+I0F/DSQJjBIaI6XaYnURcmMqfPSSyyBw0cywPEzcT7W+EX
+	 d4ItQLSg7Rh43DnW8TaysTdeChMdKbtIpe7XczaIdI3+MzCt2Ss+F2izXcMcK51tH4
+	 hu99MThI5NygJ2AKQGkxZjKDpke1EoyqsrT3cxss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387919AbfGaLaq (ORCPT
+        id S1726582AbfGaLap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:30:46 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43230 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbfGaLaf (ORCPT
+        Wed, 31 Jul 2019 07:30:45 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36178 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbfGaLa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:30:35 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p13so69246773wru.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 04:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zTEnAMJpLFl2O5ZKL+mviLfZdYls9BPxKl0HMK9PJaA=;
-        b=vyvdoXfZro1GvjQ7G8+Gdzy3J4ViTCfqOpp2WML+hNrCG4ygR/klF3NjM98BAija3v
-         ywlgWMjLThNgmsSu+bJjRsqbxnsMBMhsOAKGx/qXmTqSRyN2uKPiB3AxapmfIa5c8rCx
-         ViZKTmkpq/BFsEoTrGCI6G3wkG217PlsaBbMgggiLjohBr98fYszo3IZN4+kwcxqx6sR
-         Kh5jaI71D7t0bKIF0XHvtJI+UPOSwcu06buTj1AuKrnpORpxzlxh75NyalHhbwHRZqQx
-         hAjauJ98AAy6kNyTvuZKoNncnJJnRI5rCtrZnieY1uBk7ctKZ//Ql35RvFOdsm9KNco7
-         GpbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zTEnAMJpLFl2O5ZKL+mviLfZdYls9BPxKl0HMK9PJaA=;
-        b=Pz/J+5xRA299FVXGANnBtDQY48jyyvLWyeIqGa6qDA5TuNVAbBMASoNmXScGwFPmhW
-         bmErkaCmHsB30MHNBLcKt3V+LhuKknToOT2jBYw2jceuqh2E9oa2lY2nPLwrNIQcBiyj
-         NAuVx00Hu8BhyTQOcWOUP5fAMD5tzG3hK1Ea9TsfB1WIprKOft/N5ilY1NbIOBybuMNk
-         Ulck0mIBZjYjttUq9qhqfvBwlIgrv3KMOn3bphM/wwcebC4VOySGrGy+rU5vzXyimTAo
-         D3ls+TGTIsBrykq8tB6YrdoOWBMpCu83aPgv2t3rB8BE8NhOg+37jbgGgLs3zMzRi4s7
-         SkaA==
-X-Gm-Message-State: APjAAAW+RZ/DJ0Xa+5SMRw6nd46tvG0q/3ChjBwhtRxIdaDc8PCrrOry
-        34+iiBU7dljHh5pNf1XHayqdb9f3iAeOzhRY1OinQ3Tjy8thqg==
-X-Google-Smtp-Source: APXvYqwo5syeoeR/KKrT2X/7tPZszHD8GhWdS52Z5eK87mSBcBGSxOC18O3IfHxxqGfy59jLrfdzNSjb92ERkN3w69I=
-X-Received: by 2002:a5d:528d:: with SMTP id c13mr50812855wrv.247.1564572631497;
- Wed, 31 Jul 2019 04:30:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <201907281218.F6D2C2DD@keescook> <CAHk-=wj+1vDh2=eZExibYF9Lo0GsGxaAjxCSwpUFVURrN44cUQ@mail.gmail.com>
- <201907281507.B3F11DD54@keescook> <CAG_fn=Us9wREo+9PG-jPCTXsNv-rencgYHowtwXahuYBgdDs4A@mail.gmail.com>
- <CAHk-=wgTM+cN7zyUZacGQDv3DuuoA4LORNPWgb1Y_Z1p4iedNQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgTM+cN7zyUZacGQDv3DuuoA4LORNPWgb1Y_Z1p4iedNQ@mail.gmail.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Wed, 31 Jul 2019 13:30:19 +0200
-Message-ID: <CAG_fn=WzcGvS7=SpigawnPDQgY13nFiqhmjFPaOH8LeuoU7Fhw@mail.gmail.com>
-Subject: Re: [GIT PULL] meminit fix for v5.3-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 31 Jul 2019 07:30:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=xP0YbjquG/wyDKLE8f0+6+xGYy0k4+i8hQ5lHngegZA=; b=LDeCmOBfK7Y+
+        LxDS8iaHmW1dYC5GamLzEvgGu1A5ko5q3X3NioSsQJSqAVdgBEn0mbb7nClVsx3vexYZ00aLXw5sd
+        ilnqcsG3MmKIHbPpUjnnjtP14ksACUPBkV+eYwcaXzA/i0rmP5nigYxHmwwyDM+To9er8zDpQvASM
+        8R1VE=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hsmnk-0001nD-1W; Wed, 31 Jul 2019 11:29:48 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 849B72742CC3; Wed, 31 Jul 2019 12:29:47 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
+        arnaud.pouliquen@st.com, baohua@kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, broonie@kernel.org,
+        daniel@zonque.org, eric@anholt.net, festevam@gmail.com,
+        f.fainelli@gmail.com, gregkh@linuxfoundation.org,
+        haojian.zhuang@gmail.com, Hulk Robot <hulkci@huawei.com>,
+        jbrunet@baylibre.com, jcmvbkbc@gmail.com, jonathanh@nvidia.com,
+        kernel@pengutronix.de, khilman@baylibre.com, lgirdwood@gmail.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Mark Brown <broonie@kernel.org>, matthias.bgg@gmail.com,
+        mcoquelin.stm32@gmail.com, michal.simek@xilinx.com,
+        mripard@kernel.org, nicoleotsuka@gmail.com, olivier.moysan@st.com,
+        paul@crapouillou.net, perex@perex.cz, rjui@broadcom.com,
+        robert.jarzmik@free.fr, sbranden@broadcom.com,
+        s.hauer@pengutronix.de, shawnguo@kernel.org,
+        thierry.reding@gmail.com, timur@kernel.org, tiwai@suse.com,
+        wahrenst@gmx.net, wens@csie.org, Xiubo.Lee@gmail.com,
+        yamada.masahiro@socionext.com
+Subject: Applied "ASoC: mxs-saif: use devm_platform_ioremap_resource() to simplify code" to the asoc tree
+In-Reply-To: <20190727150738.54764-12-yuehaibing@huawei.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190731112947.849B72742CC3@ypsilon.sirena.org.uk>
+Date:   Wed, 31 Jul 2019 12:29:47 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 9:54 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, Jul 30, 2019 at 6:53 AM Alexander Potapenko <glider@google.com> w=
-rote:
-> >
-> > I wonder how hard it should be to make a zero-filling GCC plugin?
-> > I'm not a big fan of hacking GCC, but it shouldn't differ much from
-> > the existing GCC plugins that initialize locals.
->
-> The thing is, as long as it's a plugin, I don't think we can rely on
-> it. The gcc people will rightly just laugh at us if we were to report
-> a bug with some kernel plugin.
->
-> So I'd like the zeroing of local variables to be a native compiler
-> option, so that we can (_eventually_ - these things take a long time)
-> just start saying "ok, we simply consider stack variables to be always
-> initialized".
->
-> > I've some stale data collected on an x86 QEMU instance.
-> > For 0x00 stack initialization:
-> >  - hackbench, netperf and parallel Linux build were virtually free
-> > (slowdown within stdev)
-> >  - for af_inet_loopback the slowdown was ~4%
-> > For 0xAA stack initialization:
-> >  - netperf and parallel Linux build were free
-> >  - for hackbench the slowdown was ~1.5%
-> >  - for af_inet_loopback the slowdown was ~7%
->
-> So I would expect that we have some special cases where we end up
-> having arrays (or big structures) on the stack that end up being
-> critical, and where initializing them is clearly  abad idea.
->
-> Then we can verify manually are very much initialized, and that we
-> could then mark and say "this is uninitialized".
->
-> So when a compiler has an option to initialize stack variables, it
-> would probably _also_ be a very good idea for that compiler to then
-> support a variable attribute that says "don't initialize _this_
-> variable, I will do that manually".
-FWIW Clang has __attribute((uninitialized)) already:
-https://reviews.llvm.org/rL349442
-I agree that making it in GCC is easier if initialization itself is
-implemented as part of GCC.
+The patch
 
-> But if we in ten years had a kernel model where only allocations and
-> variables that were _explicitly_ uninitialized, that would be lovely.
->
-> Then you can grep for those and verify that "yes, this is safe".
->
-> We've historically had the reverse model - things are uninitialized by
-> default, and you have to explicitly initialize them. Turning that on
-> its head is what I would like to do long-term.
->
-> (For normal allocations that wouldn't be too bad: get rid of
-> __GFP_ZERO and friends, and instead do __GFP_UNINITIALIZED).
-There've been concerns about such flags easily going out of control
-(my original proposal for heap initialization contained such a flag).
-To some extent their spread can be prevented by build-time checks, but
-a simple grep can be insufficient, as people will start creating
-helper functions to allocate with __GFP_UNINITIALIZED.
+   ASoC: mxs-saif: use devm_platform_ioremap_resource() to simplify code
 
-> Again - I don't think we want a world where everything is
-> force-initialized. There _are_ going to be situations where that just
-> hurts too much. But if we get to a place where we are zero-initialized
-> by default, and have to explicitly mark the unsafe things (and we'll
-> have comments not just about how they get initialized, but also about
-> why that particular thing is so performance-critical), that would be a
-> good place to be.
->
-> This, btw, is why I also think that the "initialize with poison" is
-> pointless and wrong. Yes, it can find bugs, but it doesn't really help
-> improve the general situation, and people see it as a debugging tool,
-> not a "improve code quality and improve the life of kernel developers"
-> tool.
-This sure makes sense. If this policy is adopted kernel-wide, we won't
-need any debugging tools for uninit variables, so it's natural to
-initialize them to zero.
->                 Linus
+has been applied to the asoc tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
---=20
-Alexander Potapenko
-Software Engineer
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 1327bfe2887c0e29bcdc0c5c3e445da107ccb4e2 Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Sat, 27 Jul 2019 23:07:15 +0800
+Subject: [PATCH] ASoC: mxs-saif: use devm_platform_ioremap_resource() to
+ simplify code
+
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20190727150738.54764-12-yuehaibing@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/mxs/mxs-saif.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/sound/soc/mxs/mxs-saif.c b/sound/soc/mxs/mxs-saif.c
+index 269b6d6df250..a2c79426513b 100644
+--- a/sound/soc/mxs/mxs-saif.c
++++ b/sound/soc/mxs/mxs-saif.c
+@@ -732,7 +732,6 @@ static int mxs_saif_mclk_init(struct platform_device *pdev)
+ static int mxs_saif_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+-	struct resource *iores;
+ 	struct mxs_saif *saif;
+ 	int irq, ret = 0;
+ 	struct device_node *master;
+@@ -786,9 +785,7 @@ static int mxs_saif_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-
+-	saif->base = devm_ioremap_resource(&pdev->dev, iores);
++	saif->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(saif->base))
+ 		return PTR_ERR(saif->base);
+ 
+-- 
+2.20.1
+
