@@ -2,60 +2,61 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1605C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A12CC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853932067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709342067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6uvUuIs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwRJHyPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfGaIZs (ORCPT
+        id S1727984AbfGaIZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:25:48 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36853 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfGaIZq (ORCPT
+        Wed, 31 Jul 2019 04:25:51 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51758 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727802AbfGaIZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:25:46 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so68713417wrs.3;
-        Wed, 31 Jul 2019 01:25:44 -0700 (PDT)
+        Wed, 31 Jul 2019 04:25:49 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 207so59800522wma.1;
+        Wed, 31 Jul 2019 01:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CjYY++Oj52N1EnyRbEN9KyQWKnxZJc8wkF23HftyvEg=;
-        b=Z6uvUuIs297lVyxTd9i3Nisc1oE+haTrOheQZNabaXEhm101/SzjvCCbgJC5VFApSy
-         vaxTs22DvbRLUvqDlfnKIgWr6gU7rqbOBzi1oabsOWZ7EamQUECghHo8zy5RSIwFiggt
-         bUmo2rGJE/pFTkTcdXBpHM8dnWHxJ4kSD0Uo2LbcDxKvp4FaOR9lhBQxU20YhgEODUTQ
-         qzeZIuagDo6MkBfRQ8SBs5BrZdZKRuTwSGC4d3r4yDnSwwPWS5ytMKZ7ARYxUVC8NAj/
-         JMulxa6SMHFKENPRce7zy9K41UeyD2WzPw5LmPSN3AHyT8U9bkVIOnXFTM9zLitUfCr4
-         OZaw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=P6ek7nCICloFfkqqmazjjgTrHsnrmhfYJ1DCm67jzWo=;
+        b=fwRJHyPAgvG2HVANNI5oru7wb9ZEELk200qyHKkBMZMdPB/MYbp1BQmynFAKIarO3E
+         5QmzW8wq5sH/Sn1zGB3ZfTmsLErvg3+wRD/+lkbNms5PMHzZMl74KnUiGh+eUlzghPja
+         Ro4oQ1Te1cZHmNa4yPvSbo8RMYekAlDRn893/DS62iZJrhqiTdZkj+S08l6sZZN+4ZPF
+         QRuuDnFJbLMHdB4tHZIEZCyEL3cEViOJGco4Dr8IFWdeSWv5RIzG0dObOXEcHTXHw5gj
+         Yh7e10pIrxCsBenstH6ESFddpe/iDoK8M9TvFQobmPSA8Knwl1oifLPxkIJbiGfKAnhw
+         +P3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CjYY++Oj52N1EnyRbEN9KyQWKnxZJc8wkF23HftyvEg=;
-        b=rdF7dMnLOE3NXnQuUbr9KluTSkTeZX5LM1Vz1E+QN+IGK1oALV2LLivD75NCtsjSx6
-         ZYvNuGRq5ke9nHarZK/kdQJ8GUqQj1VGdL5sdenQSy8HUIV0OB4YQ5usxDB/0yfzjnlz
-         6T4LQ++wVBJoH7T3pnWqga4QrD4Yy0+80qr7mUD8T/snlASqx5dlinxA09ADnROX4knb
-         x+WJ3Chd3O5jxFvFnHsd3F67ayJV5eCmPmwEv/9h8Cr03b5Xb0uSjs1yCMEdQPghcSyU
-         /GGuVVVDS1A5dyMvtXD4pMjjmPChYzN/lYOxLjKYFWBCmXHpDM420jZsj5pTmp9hNKij
-         2ALQ==
-X-Gm-Message-State: APjAAAUdgufCFqtf6PKTPUmDLSzyNlNOLs5qiVFk7w/kEfZ4OO9/XoKH
-        QWHjt8OoMAeMUZ+BIIQETvrGNvLn26E=
-X-Google-Smtp-Source: APXvYqxvsnRdIl7Zw1x4ILFCcllHcw9ziPN7lx74sQA7epi6alHZJrsJ615cEEHm4bTRExn4NhNj5w==
-X-Received: by 2002:a5d:528d:: with SMTP id c13mr49557198wrv.247.1564561543490;
-        Wed, 31 Jul 2019 01:25:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=P6ek7nCICloFfkqqmazjjgTrHsnrmhfYJ1DCm67jzWo=;
+        b=pKMBhc6ejXIAmTCa8GjrTvBf5yGJ4h/i6i+WRt9pWaMqProeW8t53IdYR7l/sA4NK2
+         FlRm4lMJOKQjSycnLWCYPmVgRBDgkpmkd/+pEQLtixWsrVVnAYPGn62AlYRw/1f4sQTG
+         a39MA8fL0oS3fTX5ZITPARZTw1FrmbDLqRrLZHsFaDXu+zqPXVsd1VcXymV5rTNMwfAQ
+         MyAX++QM8GV8G6nVxedu8lmfFcMuq8GHqNbOWtwwmS0MH6Yy8ISdnv7eC5igk7aEbmpR
+         8Rpnsy5ZQgauFvqQklsUHO0KBy7IbF2ZuX9XXW1MVbYo1CQkTNa6dLQkCjxGCds6mF2A
+         0IXA==
+X-Gm-Message-State: APjAAAXt2g1+ZsjL91TLN0riVmOojEANbRDKfQELZmeiGlFkgp5Dk26X
+        rzyLQeoTmuSUZA+Rutsqy+3mqsUEDwI=
+X-Google-Smtp-Source: APXvYqwNd/1iCGmmS4m5hrC0ENbW1WABEWYgEB5eBdOpPjhGk2I7hMFJco+zTMkQBOHp1LLgoclolg==
+X-Received: by 2002:a1c:6c08:: with SMTP id h8mr20660524wmc.62.1564561546821;
+        Wed, 31 Jul 2019 01:25:46 -0700 (PDT)
 Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
-        by smtp.gmail.com with ESMTPSA id c78sm93223959wmd.16.2019.07.31.01.25.42
+        by smtp.gmail.com with ESMTPSA id c78sm93223959wmd.16.2019.07.31.01.25.45
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 01:25:42 -0700 (PDT)
+        Wed, 31 Jul 2019 01:25:46 -0700 (PDT)
 From:   Hubert Feurstein <h.feurstein@gmail.com>
 To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
@@ -64,10 +65,12 @@ Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH net-next v2 0/6] net: dsa: mv88e6xxx: add support for MV88E6220
-Date:   Wed, 31 Jul 2019 10:23:45 +0200
-Message-Id: <20190731082351.3157-1-h.feurstein@gmail.com>
+Subject: [PATCH net-next v2 3/6] net: dsa: mv88e6xxx: introduce invalid_port_mask in mv88e6xxx_info
+Date:   Wed, 31 Jul 2019 10:23:48 +0200
+Message-Id: <20190731082351.3157-4-h.feurstein@gmail.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190731082351.3157-1-h.feurstein@gmail.com>
+References: <20190731082351.3157-1-h.feurstein@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,33 +78,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds support for the MV88E6220 chip to the mv88e6xxx driver.
-The MV88E6220 is almost the same as MV88E6250 except that the ports 2-4 are
-not routed to pins.
+With this it is possible to mark certain chip ports as invalid. This is
+required for example for the MV88E6220 (which is in general a MV88E6250
+with 7 ports) but the ports 2-4 are not routed to pins.
 
-Furthermore, PTP support is added to the MV88E6250 family.
+If a user configures an invalid port, an error is returned.
 
-v2:
- - insert all 6220 entries in correct numerical order
- - introduce invalid_port_mask
- - move ptp_cc_mult* to ptp_ops and restored original ptp_adjfine code
- - added Andrews Reviewed-By to patch 2 and 4
+Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
+---
+ drivers/net/dsa/mv88e6xxx/chip.c |  9 +++++++++
+ drivers/net/dsa/mv88e6xxx/chip.h | 10 ++++++++++
+ 2 files changed, 19 insertions(+)
 
-Hubert Feurstein (6):
-  net: dsa: mv88e6xxx: add support for MV88E6220
-  dt-bindings: net: dsa: marvell: add 6220 model to the 6250 family
-  net: dsa: mv88e6xxx: introduce invalid_port_mask in mv88e6xxx_info
-  net: dsa: mv88e6xxx: setup message port is not supported in the 6250
-    familiy
-  net: dsa: mv88e6xxx: order ptp structs numerically ascending
-  net: dsa: mv88e6xxx: add PTP support for MV88E6250 family
-
- drivers/net/dsa/mv88e6xxx/chip.c |  49 ++++++++++++--
- drivers/net/dsa/mv88e6xxx/chip.h |  15 +++++
- drivers/net/dsa/mv88e6xxx/ptp.c  | 106 ++++++++++++++++++++++++-------
- drivers/net/dsa/mv88e6xxx/ptp.h  |   6 +-
- 4 files changed, 147 insertions(+), 29 deletions(-)
-
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index c8c176da0f1c..9fdcc21f0858 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -2469,6 +2469,14 @@ static int mv88e6xxx_setup(struct dsa_switch *ds)
+ 
+ 	/* Setup Switch Port Registers */
+ 	for (i = 0; i < mv88e6xxx_num_ports(chip); i++) {
++		/* Prevent the use of an invalid port. */
++		if (mv88e6xxx_is_invalid_port(chip, i) &&
++		    !dsa_is_unused_port(ds, i)) {
++			dev_err(chip->dev, "port %d is invalid\n", i);
++			err = -EINVAL;
++			goto unlock;
++		}
++
+ 		if (dsa_is_unused_port(ds, i)) {
+ 			err = mv88e6xxx_port_set_state(chip, i,
+ 						       BR_STATE_DISABLED);
+@@ -4270,6 +4278,7 @@ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
+ 		 */
+ 		.num_ports = 7,
+ 		.num_internal_phys = 2,
++		.invalid_port_mask = BIT(2) | BIT(3) | BIT(4),
+ 		.max_vid = 4095,
+ 		.port_base_addr = 0x08,
+ 		.phy_base_addr = 0x00,
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
+index 2cc508a1cc32..359d258d7151 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.h
++++ b/drivers/net/dsa/mv88e6xxx/chip.h
+@@ -106,6 +106,11 @@ struct mv88e6xxx_info {
+ 	unsigned int g2_irqs;
+ 	bool pvt;
+ 
++	/* Mark certain ports as invalid. This is required for example for the
++	 * MV88E6220 (which is in general a MV88E6250 with 7 ports) but the
++	 * ports 2-4 are not routet to pins.
++	 */
++	unsigned int invalid_port_mask;
+ 	/* Multi-chip Addressing Mode.
+ 	 * Some chips respond to only 2 registers of its own SMI device address
+ 	 * when it is non-zero, and use indirect access to internal registers.
+@@ -571,6 +576,11 @@ static inline unsigned int mv88e6xxx_num_gpio(struct mv88e6xxx_chip *chip)
+ 	return chip->info->num_gpio;
+ }
+ 
++static inline bool mv88e6xxx_is_invalid_port(struct mv88e6xxx_chip *chip, int port)
++{
++	return (chip->info->invalid_port_mask & BIT(port)) != 0;
++}
++
+ int mv88e6xxx_read(struct mv88e6xxx_chip *chip, int addr, int reg, u16 *val);
+ int mv88e6xxx_write(struct mv88e6xxx_chip *chip, int addr, int reg, u16 val);
+ int mv88e6xxx_update(struct mv88e6xxx_chip *chip, int addr, int reg,
 -- 
 2.22.0
 
