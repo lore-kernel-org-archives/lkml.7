@@ -2,62 +2,192 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A6BC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 06:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A591C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 06:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4540206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 06:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 186A5206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 06:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfGaGg6 (ORCPT
+        id S1727670AbfGaGiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 02:36:58 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40972 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726345AbfGaGg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 02:36:57 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6845232A742159CEA9F9;
-        Wed, 31 Jul 2019 14:36:54 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 14:36:47 +0800
-Subject: Re: [PATCH 01/22] staging: erofs: update source file headers
-To:     Gao Xiang <gaoxiang25@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     <linux-erofs@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>, <weidu.du@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190729065159.62378-1-gaoxiang25@huawei.com>
- <20190729065159.62378-2-gaoxiang25@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <e383885b-7d2f-2faa-4221-4dc978aee439@huawei.com>
-Date:   Wed, 31 Jul 2019 14:36:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 31 Jul 2019 02:38:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:38422 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727534AbfGaGiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 02:38:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id h4so74343125iol.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 23:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=6yKSeJNr2BYN7aBiSCvvnqV2xPBW5i0aG/kIbGxlERg=;
+        b=B4CCqERQ8BOHWY9hgXhLZItmhaYbtzqnnr+WP2ou0iORTQULPkr2kaZ2xj+nGL7QKx
+         zs53xP1GPs8wkgdpdzAoimWnk+E6UXsMvmxaFUryqa+LW4A28Wy+Xc0D0U5Y0o60uLc+
+         kqW36pgEIESQYWrySpCUVMeIQAK5gRffOx3nXX0q/E8WcpjLyib6JIpwV8VEMSOy9qiu
+         ag57lN4wUdjsQLFBiQhK9knP3nWpDKRKk3PlfpLOzNz7oOtHRIyhHI+28VHJqJbhQ6Kx
+         NRhcN4e1yQ9WcTYrUD46/65ygK1yA1+dbx9eqEYBjJV3AIiUs8kWbRYsmtDywpfOBinZ
+         LVGw==
+X-Gm-Message-State: APjAAAWPk8Qxc4MMyL6vg0WzgsJMWz/7XP8sA9ML53VepJ85Jl7RjR82
+        vkxF3gClpq6elSK6b0t6r1uTNI+gest4mdNohuljpEYfTz4q
+X-Google-Smtp-Source: APXvYqyeyuPk+l63DTI3i0/25ez2LGjhQ7W9DJg78KvP89ffMYtM2Ui+XBNXRHB/zbsXwMXwTABk1v6eV/6wyajv/hAs1Mcf4XrB
 MIME-Version: 1.0
-In-Reply-To: <20190729065159.62378-2-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a5e:9701:: with SMTP id w1mr26363715ioj.294.1564555086293;
+ Tue, 30 Jul 2019 23:38:06 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 23:38:06 -0700
+In-Reply-To: <000000000000de000a058e9025db@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002677cc058ef45ea5@google.com>
+Subject: Re: KASAN: use-after-free Read in release_sock
+From:   syzbot <syzbot+107429d62fb1d293602f@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-hams@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/29 14:51, Gao Xiang wrote:
-> - Use the correct style for all SPDX License Identifiers;
-> - Get rid of the unnecessary license boilerplate;
-> - Use "GPL-2.0-only" instead of "GPL-2.0" suggested-by Stephen.
-> 
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+syzbot has found a reproducer for the following crash on:
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+HEAD commit:    629f8205 Merge tag 'for-linus-20190730' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11a27744600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4c7b914a2680c9c6
+dashboard link: https://syzkaller.appspot.com/bug?extid=107429d62fb1d293602f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a7c8dc600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1498cfa2600000
 
-Thanks,
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+107429d62fb1d293602f@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in debug_spin_lock_before  
+kernel/locking/spinlock_debug.c:83 [inline]
+BUG: KASAN: use-after-free in do_raw_spin_lock+0x28a/0x2e0  
+kernel/locking/spinlock_debug.c:112
+Read of size 4 at addr ffff8880a81b540c by task syz-executor143/10205
+
+CPU: 1 PID: 10205 Comm: syz-executor143 Not tainted 5.3.0-rc2+ #90
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x17 mm/kasan/common.c:612
+  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+  debug_spin_lock_before kernel/locking/spinlock_debug.c:83 [inline]
+  do_raw_spin_lock+0x28a/0x2e0 kernel/locking/spinlock_debug.c:112
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:136 [inline]
+  _raw_spin_lock_bh+0x3b/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  release_sock+0x20/0x1c0 net/core/sock.c:2932
+  nr_release+0x303/0x3e0 net/netrom/af_netrom.c:553
+  __sock_release+0xce/0x280 net/socket.c:590
+  sock_close+0x1e/0x30 net/socket.c:1268
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x92f/0x2e50 kernel/exit.c:879
+  do_group_exit+0x135/0x360 kernel/exit.c:983
+  get_signal+0x47c/0x2500 kernel/signal.c:2729
+  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x447d09
+Code: Bad RIP value.
+RSP: 002b:00007fca48b63db8 EFLAGS: 00000246 ORIG_RAX: 000000000000002b
+RAX: fffffffffffffe00 RBX: 00000000006ddc58 RCX: 0000000000447d09
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000007
+RBP: 00000000006ddc50 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006ddc5c
+R13: 00007ffe913f3ebf R14: 00007fca48b649c0 R15: 0000000000000001
+
+Allocated by task 0:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:487 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:460
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:501
+  __do_kmalloc mm/slab.c:3655 [inline]
+  __kmalloc+0x163/0x770 mm/slab.c:3664
+  kmalloc include/linux/slab.h:557 [inline]
+  sk_prot_alloc+0x23a/0x310 net/core/sock.c:1603
+  sk_alloc+0x39/0xf70 net/core/sock.c:1657
+  nr_make_new net/netrom/af_netrom.c:476 [inline]
+  nr_rx_frame+0x733/0x1e73 net/netrom/af_netrom.c:959
+  nr_loopback_timer+0x7b/0x170 net/netrom/nr_loopback.c:59
+  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1322
+  expire_timers kernel/time/timer.c:1366 [inline]
+  __run_timers kernel/time/timer.c:1685 [inline]
+  __run_timers kernel/time/timer.c:1653 [inline]
+  run_timer_softirq+0x697/0x17a0 kernel/time/timer.c:1698
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+
+Freed by task 10205:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:449
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  sk_prot_free net/core/sock.c:1640 [inline]
+  __sk_destruct+0x4f7/0x6e0 net/core/sock.c:1726
+  sk_destruct+0x86/0xa0 net/core/sock.c:1734
+  __sk_free+0xfb/0x360 net/core/sock.c:1745
+  sk_free+0x42/0x50 net/core/sock.c:1756
+  sock_put include/net/sock.h:1725 [inline]
+  nr_destroy_socket+0x3ea/0x4a0 net/netrom/af_netrom.c:288
+  nr_release+0x347/0x3e0 net/netrom/af_netrom.c:530
+  __sock_release+0xce/0x280 net/socket.c:590
+  sock_close+0x1e/0x30 net/socket.c:1268
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x92f/0x2e50 kernel/exit.c:879
+  do_group_exit+0x135/0x360 kernel/exit.c:983
+  get_signal+0x47c/0x2500 kernel/signal.c:2729
+  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a81b5380
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 140 bytes inside of
+  2048-byte region [ffff8880a81b5380, ffff8880a81b5b80)
+The buggy address belongs to the page:
+page:ffffea0002a06d00 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea0002a0ec88 ffffea0002a07708 ffff8880aa400e00
+raw: 0000000000000000 ffff8880a81b4280 0000000100000003 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a81b5300: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a81b5380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8880a81b5400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                       ^
+  ffff8880a81b5480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a81b5500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
