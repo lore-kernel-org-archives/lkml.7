@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F28FC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1F1C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739B9208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D11208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="F6Gayf2v"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="uapI7QfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbfGaPKe (ORCPT
+        id S2388442AbfGaPIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:10:34 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41211 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388470AbfGaPIW (ORCPT
+        Wed, 31 Jul 2019 11:08:21 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39053 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388436AbfGaPIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:08:22 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p15so65977310eds.8
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:21 -0700 (PDT)
+        Wed, 31 Jul 2019 11:08:19 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m10so66010575edv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mtVfWkAA6f5+WVvylDNJC/YjX6VpSH295mUWXLakGJs=;
-        b=F6Gayf2vpoXGYJV1uYsSi1oz9m/Dzpd5ss3IOuggi2htSc6htYXpy88IVTNHrSo5Kq
-         hWpzEyAGHC2mXZ2wjIjArOS3WPtQuYHcn8nT+/O5W6T39U8KBhjxYitFwEIaU42F/UUZ
-         MNDJaDmYDJ2rhvFYveEcpSA76sB3cuT4BXBPtSCQ2kN740Cc3sAloiWNwrNa1DM5fuLc
-         QNavgnJR+irD1X17yEJ886mr2816CG2BFT/M05u0Cg9IRy9uHdqMz7DhseDkDzn7Vz3t
-         VhUu8iRxDz4AskPYJARFdivUJOn42HuHlC1NNjkGej7JPSPdAEioY0xwz3pfTdTU9bkn
-         rRzQ==
+        bh=884ZxbzpLr443iBBzOV7VNSITHGDDguNP5NA41SiPjs=;
+        b=uapI7QfQSFWrfufVSM7HiFX646OQeLiAul30+HPzHGLTEAyE1mlyQ4cfs8/lAJGW3W
+         Tt7zm3MH7qjRyENcy8PkWhrnxtdtI8iaTGgI0/PL1v/DggmhR6NhObJkOFT00YyzaOrj
+         Take1nVpfJ2NoPUc7KjzORoYT7UbY7JlN5HKiuzokOrb0OjCCFMEeDyXY9EOjEuhNnPf
+         T/XVysxTCW8DaKpzjRLUEONeAMippaQbGF+ajea1j5fV5uemWPA4VqQFGgccNvC53hLa
+         leX/D6UzbHLOHMfJMnrjKWDFygclW04/fSZvcc53kO9nqx0C1i5cnaESX8bXsXcjoUoD
+         JtDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mtVfWkAA6f5+WVvylDNJC/YjX6VpSH295mUWXLakGJs=;
-        b=YWA4cM8wvNFfdqfvJQE4Ylb2XMYmQ84v9g9QbGJ7cReQWsdXXKm3e9PUGNSK2Ydhtn
-         cAOIqEhSN4nJQTWlQ1og+f3meL2NcEyadn8/V6B3jupXU2KLEmm0GuHLokSCT4HgIXsn
-         pVjcQy7Qw/HqmevjhkYjUhd40CvlMx0AsMIQojiiJhXFBbLztTNHGUhPelhyIM5WNU/W
-         Nvoh9ZbYZCyqkyLMilPD7K8K1UzFBOzeNA+iQowniNwf1AzgO3OS0nPC4LWVtyGD55xG
-         H6UjA3uWe7tkDLUa8a1O5YTLDtKbjACehFS9ohIxhXu7LSKUHegfcCnTiqg0nado8/Vx
-         36ZQ==
-X-Gm-Message-State: APjAAAWNeh94bgk6RO6JkZunkJ0CIivhDM2wodjNUujPaWhOSVIOsiKo
-        3tJEHaCZJPruD2wKjjbuhUc=
-X-Google-Smtp-Source: APXvYqxpbVO0IZEgbCImRCWNwH0wevZHXyUPfYVpywOy9u0W0e5mFEX3kiMgbftkDicJ8087eYkuCA==
-X-Received: by 2002:a17:906:7f16:: with SMTP id d22mr95105774ejr.17.1564585700959;
-        Wed, 31 Jul 2019 08:08:20 -0700 (PDT)
+        bh=884ZxbzpLr443iBBzOV7VNSITHGDDguNP5NA41SiPjs=;
+        b=RxtE3gRLrC8nZWk8dwdcuDtb0uGBmWji7OTLYjKBBhlHzjDukYQWlpS0aD+P/IWUve
+         ZGxy1g65xyRxwqEgo326hCVUHTVGCe0x1ipEH2JMXNbsz40aodDoET+N+BC7LSD5saDg
+         H1629bB7QLUoDQo5VOzSYDuuUrQZl78MqwzfKWA9PWlPust0Ru0GUyJL26trlDix1Q5Z
+         WI8M/Yyr1aeW8qJ4ZnsINHdOFVzzNTWAt6kvgDIgCls8pMnqitC9ZGI+cuQ43fleVmMy
+         4rN6muQrXFBlfauuORz5xtR3HmtZKgQXqAf7HG1aFef13+0Vr9FI8V+58DNs5MBIMMsq
+         2ewg==
+X-Gm-Message-State: APjAAAXqMURSBG7m8jzl0emCITdafacPzSS2qxTwHWljd2pTFC6McYSr
+        Xdy8pGTy78iKUirL4T3nj+o=
+X-Google-Smtp-Source: APXvYqzJuBbLlWsZbHVSwq33uygKwm+4dMWF6225mCqR1QI8GR+My+vRb8mmhCMTG8y6ZThSvSiS7A==
+X-Received: by 2002:aa7:da14:: with SMTP id r20mr107153958eds.65.1564585698000;
+        Wed, 31 Jul 2019 08:08:18 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id d7sm16505352edr.39.2019.07.31.08.08.18
+        by smtp.gmail.com with ESMTPSA id by12sm12375107ejb.37.2019.07.31.08.08.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:08:19 -0700 (PDT)
+        Wed, 31 Jul 2019 08:08:15 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 1E8B210131E; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+        id 0B25210131B; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,9 +75,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 07/59] x86/mm: Mask out KeyID bits from page table entry pfn
-Date:   Wed, 31 Jul 2019 18:07:21 +0300
-Message-Id: <20190731150813.26289-8-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 04/59] mm/page_alloc: Unify alloc_hugepage_vma()
+Date:   Wed, 31 Jul 2019 18:07:18 +0300
+Message-Id: <20190731150813.26289-5-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,55 +88,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MKTME claims several upper bits of the physical address in a page table
-entry to encode KeyID. It effectively shrinks number of bits for
-physical address. We should exclude KeyID bits from physical addresses.
+We don't need to have separate implementations of alloc_hugepage_vma()
+for NUMA and non-NUMA. Using variant based on alloc_pages_vma() we would
+cover both cases.
 
-For instance, if CPU enumerates 52 physical address bits and number of
-bits claimed for KeyID is 6, bits 51:46 must not be threated as part
-physical address.
+This is preparation patch for allocation encrypted pages.
 
-This patch adjusts __PHYSICAL_MASK during MKTME enumeration.
+alloc_pages_vma() will handle allocation of encrypted pages. With this
+change we don' t need to cover alloc_hugepage_vma() separately.
+
+The change makes typo in Alpha's implementation of
+__alloc_zeroed_user_highpage() visible. Fix it too.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/kernel/cpu/intel.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/alpha/include/asm/page.h | 2 +-
+ include/linux/gfp.h           | 6 ++----
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 8d6d92ebeb54..f03eee666761 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -616,6 +616,29 @@ static void detect_tme(struct cpuinfo_x86 *c)
- 		mktme_status = MKTME_ENABLED;
- 	}
+diff --git a/arch/alpha/include/asm/page.h b/arch/alpha/include/asm/page.h
+index f3fb2848470a..9a6fbb5269f3 100644
+--- a/arch/alpha/include/asm/page.h
++++ b/arch/alpha/include/asm/page.h
+@@ -18,7 +18,7 @@ extern void clear_page(void *page);
+ #define clear_user_page(page, vaddr, pg)	clear_page(page)
  
-+#ifdef CONFIG_X86_INTEL_MKTME
-+	if (mktme_status == MKTME_ENABLED && nr_keyids) {
-+		/*
-+		 * Mask out bits claimed from KeyID from physical address mask.
-+		 *
-+		 * For instance, if a CPU enumerates 52 physical address bits
-+		 * and number of bits claimed for KeyID is 6, bits 51:46 of
-+		 * physical address is unusable.
-+		 */
-+		phys_addr_t keyid_mask;
-+
-+		keyid_mask = GENMASK_ULL(c->x86_phys_bits - 1, c->x86_phys_bits - keyid_bits);
-+		physical_mask &= ~keyid_mask;
-+	} else {
-+		/*
-+		 * Reset __PHYSICAL_MASK.
-+		 * Maybe needed if there's inconsistent configuation
-+		 * between CPUs.
-+		 */
-+		physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
-+	}
-+#endif
-+
- 	/*
- 	 * KeyID bits effectively lower the number of physical address
- 	 * bits.  Update cpuinfo_x86::x86_phys_bits accordingly.
+ #define __alloc_zeroed_user_highpage(movableflags, vma, vaddr) \
+-	alloc_page_vma(GFP_HIGHUSER | __GFP_ZERO | movableflags, vma, vmaddr)
++	alloc_page_vma(GFP_HIGHUSER | __GFP_ZERO | movableflags, vma, vaddr)
+ #define __HAVE_ARCH_ALLOC_ZEROED_USER_HIGHPAGE
+ 
+ extern void copy_page(void * _to, void * _from);
+diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+index fb07b503dc45..3d4cb9fea417 100644
+--- a/include/linux/gfp.h
++++ b/include/linux/gfp.h
+@@ -511,21 +511,19 @@ alloc_pages(gfp_t gfp_mask, unsigned int order)
+ extern struct page *alloc_pages_vma(gfp_t gfp_mask, int order,
+ 			struct vm_area_struct *vma, unsigned long addr,
+ 			int node, bool hugepage);
+-#define alloc_hugepage_vma(gfp_mask, vma, addr, order) \
+-	alloc_pages_vma(gfp_mask, order, vma, addr, numa_node_id(), true)
+ #else
+ #define alloc_pages(gfp_mask, order) \
+ 		alloc_pages_node(numa_node_id(), gfp_mask, order)
+ #define alloc_pages_vma(gfp_mask, order, vma, addr, node, false)\
+ 	alloc_pages(gfp_mask, order)
+-#define alloc_hugepage_vma(gfp_mask, vma, addr, order) \
+-	alloc_pages(gfp_mask, order)
+ #endif
+ #define alloc_page(gfp_mask) alloc_pages(gfp_mask, 0)
+ #define alloc_page_vma(gfp_mask, vma, addr)			\
+ 	alloc_pages_vma(gfp_mask, 0, vma, addr, numa_node_id(), false)
+ #define alloc_page_vma_node(gfp_mask, vma, addr, node)		\
+ 	alloc_pages_vma(gfp_mask, 0, vma, addr, node, false)
++#define alloc_hugepage_vma(gfp_mask, vma, addr, order) \
++	alloc_pages_vma(gfp_mask, order, vma, addr, numa_node_id(), true)
+ 
+ extern unsigned long __get_free_pages(gfp_t gfp_mask, unsigned int order);
+ extern unsigned long get_zeroed_page(gfp_t gfp_mask);
 -- 
 2.21.0
 
