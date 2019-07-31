@@ -2,219 +2,95 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE44CC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F060C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04AF206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B61206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbfGaNCF (ORCPT
+        id S1729336AbfGaNCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:02:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54820 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726559AbfGaNCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:02:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B0D6EAEF3;
-        Wed, 31 Jul 2019 13:02:02 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 2E7961E434C; Wed, 31 Jul 2019 15:01:48 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 15:01:48 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v5 12/24] erofs: introduce tagged pointer
-Message-ID: <20190731130148.GE15806@quack2.suse.cz>
-References: <20190730071413.11871-1-gaoxiang25@huawei.com>
- <20190730071413.11871-13-gaoxiang25@huawei.com>
+        Wed, 31 Jul 2019 09:02:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46078 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfGaNCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:02:20 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so69570131wre.12
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 06:02:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OrhRm6hcm8XAS5rJURO8NQ/9XsfNWDSC5tHBQHcDz/M=;
+        b=aq/1M9MSICSosHk/fEu6oCZVWRs/0tHnilBtL+G7oEw2q5Gnfya8f5eF6DsDsXeiiI
+         69gHLylVVyVpEz7uy9r07LiMw2eRksv/i4BhDSjWCyQ9llh6pbCxdYB6ZwVX00QiaptW
+         Nh4ATvUvb071+6m97mWaCSYjJeqt7AB+zVQsUa1C8zyyB9VdU6gKVIpsfqKTWouk+rTJ
+         oSZmtSEG7OmjOd49kZcWC5DLopxIvETTF//vuQHHK94Dt+6iWiPICMc5rJbDsaOO3xID
+         UVYoQzaHp6KbbCleMQpG6lWbO37IEZ5V8xXm7vSJEGlanBYPw4/aI3CVwdRQuUU1g6gF
+         sgPA==
+X-Gm-Message-State: APjAAAXENIZOg7MIHSSiLKUCVXk8LBph8EaXRTDfezdAbluYExtXNf5Y
+        uWN6KEiu8l850Duy97289hZV7w==
+X-Google-Smtp-Source: APXvYqxf6pEx9kjzhl6+ziNUinxsA8XNUQEe22hXvk6qWrgDyW26ihoHLEH5Brf5eo9dygInUHQbJA==
+X-Received: by 2002:a5d:6ccd:: with SMTP id c13mr132842592wrc.4.1564578138595;
+        Wed, 31 Jul 2019 06:02:18 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:91e7:65e:d8cd:fdb3? ([2001:b07:6468:f312:91e7:65e:d8cd:fdb3])
+        by smtp.gmail.com with ESMTPSA id z7sm66068294wrh.67.2019.07.31.06.02.17
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 06:02:18 -0700 (PDT)
+Subject: Re: [PATCH] selftests: kvm: Adding config fragments
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-kselftest@vger.kernel.org, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, drjones@redhat.com,
+        sean.j.christopherson@intel.com
+References: <20190731105540.28962-1-naresh.kamboju@linaro.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <43fd5a9b-7ecd-3fff-2381-1dfce7b8618a@redhat.com>
+Date:   Wed, 31 Jul 2019 15:02:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730071413.11871-13-gaoxiang25@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190731105540.28962-1-naresh.kamboju@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 30-07-19 15:14:01, Gao Xiang wrote:
-> Currently kernel has scattered tagged pointer usages
-> hacked by hand in plain code, without a unique and
-> portable functionset to highlight the tagged pointer
-> itself and wrap these hacked code in order to clean up
-> all over meaningless magic masks.
+On 31/07/19 12:55, Naresh Kamboju wrote:
+> selftests kvm test cases need pre-required kernel configs for the test
+> to get pass.
 > 
-> This patch introduces simple generic methods to fold
-> tags into a pointer integer. Currently it supports
-> the last n bits of the pointer for tags, which can be
-> selected by users.
-> 
-> In addition, it will also be used for the upcoming EROFS
-> filesystem, which heavily uses tagged pointer pproach
->  to reduce extra memory allocation.
-> 
-> Link: https://en.wikipedia.org/wiki/Tagged_pointer
-> 
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-I'm not sure the generic approach you take is really needed here... You can
-rely on getting at most two unused bits in the pointer anyway (and on mk68
-architecture I've heard even that is not true but I guess you don't care).
-So why not just define a single pointer type representing pointer with as
-many tags as you can get? Also what I find bad about your tagptr approach
-is that the way you've implemented it you loose the information about the
-original pointer type. So overall I'm not sure the benefits outweight the
-downsides but I guess that's a matter of taste and ultimately your call as
-a maintainer of this code.
+Most of these are selected by other items.  CONFIG_KVM should be enough
+on ARM and s390 but MIPS, x86 and PPC may also need to select the
+specific "flavors" (for example Intel/AMD for x86).
 
-								Honza
+How are these used?  Are they used to build a kernel, or to check that
+an existing kernel supports virtualization?
 
-> ---
->  fs/erofs/tagptr.h | 110 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 110 insertions(+)
->  create mode 100644 fs/erofs/tagptr.h
+Paolo
+
+> +CONFIG_KVM=y
+> +CONFIG_VHOST_NET=y
+> +CONFIG_VHOST=y
+> +CONFIG_VHOST_CROSS_ENDIAN_LEGACY=y
+> +CONFIG_USER_RETURN_NOTIFIER=y
+> +CONFIG_PREEMPT_NOTIFIERS=y
+> +CONFIG_TRANSPARENT_HUGEPAGE=y
+> +CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
+> +CONFIG_THP_SWAP=y
+> +CONFIG_TRANSPARENT_HUGE_PAGECACHE=y
+> +CONFIG_IRQ_BYPASS_MANAGER=y
+> +CONFIG_XARRAY_MULTI=y
 > 
-> diff --git a/fs/erofs/tagptr.h b/fs/erofs/tagptr.h
-> new file mode 100644
-> index 000000000000..a72897c86744
-> --- /dev/null
-> +++ b/fs/erofs/tagptr.h
-> @@ -0,0 +1,110 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * A tagged pointer implementation
-> + *
-> + * Copyright (C) 2018 Gao Xiang <gaoxiang25@huawei.com>
-> + */
-> +#ifndef __EROFS_FS_TAGPTR_H
-> +#define __EROFS_FS_TAGPTR_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/build_bug.h>
-> +
-> +/*
-> + * the name of tagged pointer types are tagptr{1, 2, 3...}_t
-> + * avoid directly using the internal structs __tagptr{1, 2, 3...}
-> + */
-> +#define __MAKE_TAGPTR(n) \
-> +typedef struct __tagptr##n {	\
-> +	uintptr_t v;	\
-> +} tagptr##n##_t;
-> +
-> +__MAKE_TAGPTR(1)
-> +__MAKE_TAGPTR(2)
-> +__MAKE_TAGPTR(3)
-> +__MAKE_TAGPTR(4)
-> +
-> +#undef __MAKE_TAGPTR
-> +
-> +extern void __compiletime_error("bad tagptr tags")
-> +	__bad_tagptr_tags(void);
-> +
-> +extern void __compiletime_error("bad tagptr type")
-> +	__bad_tagptr_type(void);
-> +
-> +/* fix the broken usage of "#define tagptr2_t tagptr3_t" by users */
-> +#define __tagptr_mask_1(ptr, n)	\
-> +	__builtin_types_compatible_p(typeof(ptr), struct __tagptr##n) ? \
-> +		(1UL << (n)) - 1 :
-> +
-> +#define __tagptr_mask(ptr)	(\
-> +	__tagptr_mask_1(ptr, 1) ( \
-> +	__tagptr_mask_1(ptr, 2) ( \
-> +	__tagptr_mask_1(ptr, 3) ( \
-> +	__tagptr_mask_1(ptr, 4) ( \
-> +	__bad_tagptr_type(), 0)))))
-> +
-> +/* generate a tagged pointer from a raw value */
-> +#define tagptr_init(type, val) \
-> +	((typeof(type)){ .v = (uintptr_t)(val) })
-> +
-> +/*
-> + * directly cast a tagged pointer to the native pointer type, which
-> + * could be used for backward compatibility of existing code.
-> + */
-> +#define tagptr_cast_ptr(tptr) ((void *)(tptr).v)
-> +
-> +/* encode tagged pointers */
-> +#define tagptr_fold(type, ptr, _tags) ({ \
-> +	const typeof(_tags) tags = (_tags); \
-> +	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(type))) \
-> +		__bad_tagptr_tags(); \
-> +tagptr_init(type, (uintptr_t)(ptr) | tags); })
-> +
-> +/* decode tagged pointers */
-> +#define tagptr_unfold_ptr(tptr) \
-> +	((void *)((tptr).v & ~__tagptr_mask(tptr)))
-> +
-> +#define tagptr_unfold_tags(tptr) \
-> +	((tptr).v & __tagptr_mask(tptr))
-> +
-> +/* operations for the tagger pointer */
-> +#define tagptr_eq(_tptr1, _tptr2) ({ \
-> +	typeof(_tptr1) tptr1 = (_tptr1); \
-> +	typeof(_tptr2) tptr2 = (_tptr2); \
-> +	(void)(&tptr1 == &tptr2); \
-> +(tptr1).v == (tptr2).v; })
-> +
-> +/* lock-free CAS operation */
-> +#define tagptr_cmpxchg(_ptptr, _o, _n) ({ \
-> +	typeof(_ptptr) ptptr = (_ptptr); \
-> +	typeof(_o) o = (_o); \
-> +	typeof(_n) n = (_n); \
-> +	(void)(&o == &n); \
-> +	(void)(&o == ptptr); \
-> +tagptr_init(o, cmpxchg(&ptptr->v, o.v, n.v)); })
-> +
-> +/* wrap WRITE_ONCE if atomic update is needed */
-> +#define tagptr_replace_tags(_ptptr, tags) ({ \
-> +	typeof(_ptptr) ptptr = (_ptptr); \
-> +	*ptptr = tagptr_fold(*ptptr, tagptr_unfold_ptr(*ptptr), tags); \
-> +*ptptr; })
-> +
-> +#define tagptr_set_tags(_ptptr, _tags) ({ \
-> +	typeof(_ptptr) ptptr = (_ptptr); \
-> +	const typeof(_tags) tags = (_tags); \
-> +	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
-> +		__bad_tagptr_tags(); \
-> +	ptptr->v |= tags; \
-> +*ptptr; })
-> +
-> +#define tagptr_clear_tags(_ptptr, _tags) ({ \
-> +	typeof(_ptptr) ptptr = (_ptptr); \
-> +	const typeof(_tags) tags = (_tags); \
-> +	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
-> +		__bad_tagptr_tags(); \
-> +	ptptr->v &= ~tags; \
-> +*ptptr; })
-> +
-> +#endif	/* __EROFS_FS_TAGPTR_H */
-> +
-> -- 
-> 2.17.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
