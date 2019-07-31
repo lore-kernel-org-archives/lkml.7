@@ -2,187 +2,144 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B499AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DF5C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2292182B
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EAAE20C01
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="AOy2CWLX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXEn/5Jx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbfGaPT3 (ORCPT
+        id S1728583AbfGaPTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:19:29 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46998 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729381AbfGaPTZ (ORCPT
+        Wed, 31 Jul 2019 11:19:40 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41902 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729559AbfGaPTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:19:25 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d4so66094070edr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:19:24 -0700 (PDT)
+        Wed, 31 Jul 2019 11:19:36 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m9so30515867pls.8;
+        Wed, 31 Jul 2019 08:19:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ukIFHDJenwkznoJ0S+ycGyH8eEeHrvR6n2ACiYDuDdk=;
-        b=AOy2CWLXXb5HmAhiEuMvNlpAfvbzvVTmBhdFbnfbTg/elp4wHPlGZlanZYYDI/FrxG
-         XR1qjn43zM5orBwV4t3lyE99FyrF9PkSX5oImrC331w0Zqkq8aM4qZ7W1MIsKYtR1Iq+
-         R9RJkh8iSQEpA340quOn7TlujXd6hrIkjm5Jm0Xb21fUTBV8fnmRZXlmIojL8rcIgjCU
-         PUTp3qDE06KwYQHnhsuC+tatmmIbYIQBPxFpZQsboYojGA8UMc7qiPLpOzuIoc1jePqI
-         mj+jOHlIVv7dZaf23nr1b3w0Wc5cWJIlxSvk362WiEcqLVDtgLk3XpruSZHTCkoabCWN
-         v2Aw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W/U4EJuJSGtAQh18cTCHJ6wb0QAX2d/3mMx3nnicC/Q=;
+        b=UXEn/5Jx1+r0zOczfz5iaXt/veIp+L1moBxgVDpP9pIF+LUG8PqVSIJY4bAMnanVF+
+         oyEhkuYHzvHYqO2vGtHfekZWuv7qWEw5pswUPwHliQIFVAEV7vppPkNEhEaVbL5O1kWn
+         e9ugWQOkNMaOi4/AgVO6K8P01zOqFcG5ylXyj0jp/awOvZeeMmKxNt/LxfWxG+wuErPM
+         GPecH94fzG5v+b6mmP+eBPJ28ZcKztPBkn018lqIKFAHqBkfeOGl14TIKBUzjm688fju
+         /bN6d/aNLPLeEW1c50Av01Gc1Ke+u+Y5fFmMjSsHlIowL0fuor+HyPiun49Rj8ei26LE
+         ysfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ukIFHDJenwkznoJ0S+ycGyH8eEeHrvR6n2ACiYDuDdk=;
-        b=IDuTKXakbZE8xPiY9aL+AFg0sUjFIgmJTmJ6hsjxTmBDflHqst855Pf6HYTXkuFbSL
-         zvcdcwSk1ReMtHXflTYib2FimvkvTsyinXuC5ESv2nkHQeH/CDDOpKrJkXMIGkpieLKR
-         hRFxi6mS0ycAisetFnJQyRUe+/cZL/BoWe5aEmmMXX47Ye7n0dU26esEPFuLuTFvi44z
-         mBPngg4dTQDm6lnbqMmNNR43qZOWFACsbr9k+jqk6zSkNP3ry+g0LpTdJ5DJVfiUXSkf
-         4FGQSsbuxZ0PjPNPOgWY5nNNFMOTb124hzPe+CvSbaTCEAfWoCaKR213S44RYRTzX1kv
-         BWFQ==
-X-Gm-Message-State: APjAAAWyfnl240+QazssT/qw+3wVvuJX+Ft1CGpZLxsziurJPW8+Pxm2
-        +uAjxP+VQT/2evUQhS2PHTM=
-X-Google-Smtp-Source: APXvYqySwhWDf4JA3GLQlNS2pqACUoF55kJ2wCVDTSRm+FoPw2vi1mKPJsOuuhC2eFbEA1+1nD2ApQ==
-X-Received: by 2002:a17:906:1e85:: with SMTP id e5mr94007378ejj.200.1564586029031;
-        Wed, 31 Jul 2019 08:13:49 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id v6sm12580413ejx.28.2019.07.31.08.13.47
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W/U4EJuJSGtAQh18cTCHJ6wb0QAX2d/3mMx3nnicC/Q=;
+        b=Mj40N0boq5eDM33X91h2Ikb03FDSagaGj7ylc6CxIdIR6xkCPNcbAXd9poWqoAONrg
+         RXAV78nRIQoR5GDK7S0w/iKiwp0XxxKjnbh0Ypd9m96adIo9nMdx0c5iVqKfpdfvdjYU
+         vp6FtV5qwCgzelWPcT7dnc5olnEoctTC3aoKebkcIqj925qCk7CF6voaN/dXb6zOGp0V
+         ubTq0mTZz9i8VD+ZZFI6pisRjJRloZavDjnmchusD4nMCIjHmFzSxMc0nJwK7dzkc9IN
+         HNe38GymOJOP2G/goYQ7Z7hEPMiQqCSgvTAXabxMQh4JaRZC3fGLjEkgpxk6X8SAT0S7
+         p+vg==
+X-Gm-Message-State: APjAAAUUoCxxgRdT+yWA4OCzfNO/99FONZEHMlZkfD5lFj47cfIUdUqC
+        fMie7HpkN3a/D8ciiahIGx8+MOLp
+X-Google-Smtp-Source: APXvYqzmDgfyB8QmV/vQxBch9AbAOB/lAUUL209PSPSOWOse7jwfuYVSmgKg0FDDp5VAtOIdTBf3Dw==
+X-Received: by 2002:a17:902:b713:: with SMTP id d19mr122222858pls.267.1564586375246;
+        Wed, 31 Jul 2019 08:19:35 -0700 (PDT)
+Received: from [192.168.11.2] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id o129sm44714617pfg.1.2019.07.31.08.19.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:13:47 -0700 (PDT)
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 025681045FC; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
-To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Wed, 31 Jul 2019 08:19:34 -0700 (PDT)
+Subject: Re: [PATCH] tools: memory-model: add it to the Documentation body
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 38/59] keys/mktme: Do not allow key creation in unsafe topologies
-Date:   Wed, 31 Jul 2019 18:07:52 +0300
-Message-Id: <20190731150813.26289-39-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
-References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        SeongJae Park <sj38.park@gmail.com>, linux-arch@vger.kernel.org
+References: <Pine.LNX.4.44L0.1907310947340.1497-100000@iolanthe.rowland.org>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <cb9785b7-ed43-b91a-7392-e50216bd5771@gmail.com>
+Date:   Thu, 1 Aug 2019 00:19:25 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <Pine.LNX.4.44L0.1907310947340.1497-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Wed, 31 Jul 2019 09:52:05 -0400, Alan Stern wrote:
+> On Tue, 30 Jul 2019, Mauro Carvalho Chehab wrote:
+> 
+>> Em Tue, 30 Jul 2019 18:17:01 -0400
+>> Joel Fernandes <joel@joelfernandes.org> escreveu:
+> 
+>>>>> (4) I would argue that every occurence of
+>>>>> A ->(some dependency) B should be replaced with fixed size font in the HTML
+>>>>> results.  
+>>>>
+>>>> Just place those with ``A -> (some dependency)``. This will make them use
+>>>> a fixed size font.  
+>>>
+>>> Ok, understood all these. I guess my point was all of these will need to be
+>>> done to make this document useful from a ReST conversion standpoint. Until
+>>> then it is probably just better off being plain text - since there are so
+>>> many of those ``A -> (dep) B`` things.
+> 
+>> On a very quick look, it seems that, if we replace:
+>>
+>> 	(\S+\s->\S*\s\w+)
+>>
+>> by:
+>> 	``\1``
+>>
+>>
+>> On an editor that would allow to manually replace the regex (like kate),
+>> most of those can be get.
+>>
+>> See patch enclosed.
+> 
+> Some time ago I considered the problem of converting this file to ReST 
+> format.  But I gave up on the idea, because the necessary changes were 
+> so widespread and the resulting text file would not be easily readable.
+> 
+> Replacing things of the form "A ->dep B" just scratches the surface.  
+> That document teems with variable names, formulas, code extracts, and
+> other things which would all need to be rendered in a different font
+> style.  The density of the markup required to do this would be
+> phenomenally high.
+> 
+> In my opinion it simply was not worthwhile.
 
-MKTME depends upon at least one online CPU capable of programming
-each memory controller in the platform.
++1 on keeping this and the other .txt files of LKMM intact.
 
-An unsafe topology for MKTME is a memory only package or a package
-with no online CPUs. Key creation with unsafe topologies will fail
-with EINVAL and a warning will be logged one time.
-For example:
-	[ ] MKTME: no online CPU in proximity domain
-	[ ] MKTME: topology does not support key creation
+        Thanks, Akira
 
-These are recoverable errors. CPUs may be brought online that are
-capable of programming a previously unprogrammable memory controller.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- security/keys/mktme_keys.c | 36 ++++++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 6 deletions(-)
-
-diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
-index 6265b62801e9..70662e882674 100644
---- a/security/keys/mktme_keys.c
-+++ b/security/keys/mktme_keys.c
-@@ -23,6 +23,7 @@ static unsigned int mktme_available_keyids;  /* Free Hardware KeyIDs */
- static struct kmem_cache *mktme_prog_cache;  /* Hardware programming cache */
- static unsigned long *mktme_target_map;	     /* PCONFIG programming target */
- static cpumask_var_t mktme_leadcpus;	     /* One CPU per PCONFIG target */
-+static bool mktme_allow_keys;		     /* HW topology supports keys */
- 
- enum mktme_keyid_state {
- 	KEYID_AVAILABLE,	/* Available to be assigned */
-@@ -253,32 +254,55 @@ static void mktme_destroy_key(struct key *key)
- 	percpu_ref_kill(&encrypt_count[keyid]);
- }
- 
-+static void mktme_update_pconfig_targets(void);
- /* Key Service Method to create a new key. Payload is preparsed. */
- int mktme_instantiate_key(struct key *key, struct key_preparsed_payload *prep)
- {
- 	u32 *payload = prep->payload.data[0];
- 	unsigned long flags;
-+	int ret = -ENOKEY;
- 	int keyid;
- 
- 	spin_lock_irqsave(&mktme_lock, flags);
-+
-+	/* Topology supports key creation */
-+	if (mktme_allow_keys)
-+		goto get_key;
-+
-+	/* Topology unknown, check it. */
-+	if (!mktme_hmat_evaluate()) {
-+		ret = -EINVAL;
-+		goto out_unlock;
-+	}
-+
-+	/* Keys are now allowed. Update the programming targets. */
-+	mktme_update_pconfig_targets();
-+	mktme_allow_keys = true;
-+
-+get_key:
- 	keyid = mktme_reserve_keyid(key);
- 	spin_unlock_irqrestore(&mktme_lock, flags);
- 	if (!keyid)
--		return -ENOKEY;
-+		goto out;
- 
- 	if (percpu_ref_init(&encrypt_count[keyid], mktme_percpu_ref_release,
- 			    0, GFP_KERNEL))
--		goto err_out;
-+		goto out_free_key;
- 
--	if (!mktme_program_keyid(keyid, *payload))
--		return MKTME_PROG_SUCCESS;
-+	ret = mktme_program_keyid(keyid, *payload);
-+	if (ret == MKTME_PROG_SUCCESS)
-+		goto out;
- 
-+	/* Key programming failed */
- 	percpu_ref_exit(&encrypt_count[keyid]);
--err_out:
-+
-+out_free_key:
- 	spin_lock_irqsave(&mktme_lock, flags);
- 	mktme_release_keyid(keyid);
-+out_unlock:
- 	spin_unlock_irqrestore(&mktme_lock, flags);
--	return -ENOKEY;
-+out:
-+	return ret;
- }
- 
- /* Make sure arguments are correct for the TYPE of key requested */
--- 
-2.21.0
+> 
+> Alan Stern
+> 
 
