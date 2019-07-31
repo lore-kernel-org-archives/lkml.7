@@ -2,196 +2,121 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603F6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0D5C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F27C20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85CAC20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:33:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YOxge0Yl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kuB5pUam"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfGaRd0 (ORCPT
+        id S1728985AbfGaRd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:33:26 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42276 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfGaRdZ (ORCPT
+        Wed, 31 Jul 2019 13:33:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43542 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfGaRd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:33:25 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so32244865pff.9;
-        Wed, 31 Jul 2019 10:33:25 -0700 (PDT)
+        Wed, 31 Jul 2019 13:33:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r22so4783826pgk.10;
+        Wed, 31 Jul 2019 10:33:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1mUzN69TbVh9yZT+F3MQDO+6tQ5Mp+B1rUEtD2T6Huc=;
-        b=YOxge0Yl9i70G+adD8fcIAQFr/+MKP/AFeajQGmNOUU3PSBiJFy13XEVeByt0H23Fm
-         eQzDcQe68Apu1iZpVUkzBjb1K8sNEmZZT1vTc0iVLJa71adt7IaZsg7HXfFrupSDvu2t
-         /AbaO7TzbQzEOfsYUnbE8+0dT8MWRwsp1fjykU0avS6hF4Jk57q5gwhJWRcTwnruRx8D
-         PzGi9hcvi/tT1aDkbKf0dLDit1UyoCPYI0SUX4i4V74v4YxmWPog8KRGZn0aniBLbdUA
-         HNRGCy5jpKlcLfKvyalbj8kL5hQfmFY6LXC6ZzkipEieZEKSDhpcT5WZw6P56IE6NcoA
-         AxYw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JdV6/Tiu5GvjTMQ9QyyZRYNM9k08hzpDwPXSgG/A8Dg=;
+        b=kuB5pUamsLMzn3eMA3P/mkWE7du9IThy0cdm9QUoImLarnasa8mUfzp3zsMNI9pqJm
+         h92Kt4xPIRpV9MDiBSQAhGYjEYw4MwWX6OTF4MxVejLuCAY8fb8+S1flttfD66GqeyfQ
+         z8ycPseeJlLQj8Dglybe156Hn1EtIDvmrD8ongvSQ+l1SSGeno8gU60pB0iQ15fW2GRY
+         xAZolxpl94nHXkM/wmAwxf9cuBM++7tkPdebUYg95aRvATCd1t7oGGQh0njltsqWleKR
+         ieI+RrieK/cx0LCRqfcX+3/nnGG1OEJPRuweZDya+gBbJ/YA93hMtn1PaCqL3r2mhqV+
+         2fFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1mUzN69TbVh9yZT+F3MQDO+6tQ5Mp+B1rUEtD2T6Huc=;
-        b=ZRW4HZzsbuSJSyog9F0pt3s0UBhhSrxs2RTBxWDqpJG0XCP2MouhGo4kZt6iVfwRBf
-         vI6LZz+KfowtOFS1p0hx0t/fiBFLtUsbON8nDstHXSthtdc0MD0YGjHPOqDAZFBZzbOx
-         KffbHOSCLAtDeb+DI6suyaA/HEXjIcForwO98eAKNOaXos+1X+j/onxQyL5goEjLMfb8
-         MLCGW2+5JCRVNxSt+pb1ZgVkYg7ycmY9sM+M04pjIJDp3SnJ8zmhO9q3WU4CykyumU1T
-         DpmJ8KrH63qbuVLs2eW7A4PH1/gWGbTSBCUdFVxhcfHv3ddD6zbyfC5IjMcjRiunM7h5
-         LiZA==
-X-Gm-Message-State: APjAAAUWlYrRPBPnzmrnpE2Ffuy6RUDOKpiDXKXpBwa2/a4xSZaECPvS
-        V9dU5iOPpW4oVW+1ZCIrkcA=
-X-Google-Smtp-Source: APXvYqwzc3V4hpBjzjfpPb1vXFYPZ0Qeb7PGWHW8bph0fdJAOdbQdQV14uAoPp6X+iZ/zBHaMBAOoQ==
-X-Received: by 2002:a62:7d13:: with SMTP id y19mr48612603pfc.62.1564594404588;
-        Wed, 31 Jul 2019 10:33:24 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e10sm71043899pfi.173.2019.07.31.10.33.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 10:33:23 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 10:33:22 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Alex Ghiti <alex@ghiti.fr>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v5 14/14] riscv: Make mmap allocation top-down by default
-Message-ID: <20190731173322.GA30870@roeck-us.net>
-References: <20190730055113.23635-1-alex@ghiti.fr>
- <20190730055113.23635-15-alex@ghiti.fr>
- <88a9bbf8-872f-97cc-fc1a-83eb7694478f@ghiti.fr>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JdV6/Tiu5GvjTMQ9QyyZRYNM9k08hzpDwPXSgG/A8Dg=;
+        b=CxM83wrVZBf78IaO0dP/QYDylcQnAWeG0xAbnB3uQqYeFS1ha1VgUYr2KalMOAzPJD
+         EWeBfbQAMvH25kxWwcKUZySG17bav2TXbSHjQdMeQi46G71wFT/8BFozVHahQC+uqpCR
+         yj2jWzXV/vXukquZkMvBiz7MstGMiphBnjtXvSDQD7hC5vj52Jd/G3Z/YqYwUk/09RKW
+         bvMHEkJcQIVWRk1rF6t23HfBBKeM8oZIizUeRnLealeIY3Rp/rdn7RdqDhOeUtMVMLBx
+         JY/N9F+EDKdWpqJWu4LmDB4SyoXvpOnsWgSe1hrLvYps1KS0nGA3izAQ5k8ndpDhTiuu
+         rRLA==
+X-Gm-Message-State: APjAAAW+FNqUpgvj5H0iDoq0bm9Cuw53tQXOkPZ22pL5JMXrfms0os0T
+        6aRyYVG9E0md0F24I0H174Slma2G
+X-Google-Smtp-Source: APXvYqyOZTU8Urd2YRmIKl/GZ5fXUT532nAQ5L5R7ou+tXyadFX616pjxt0kLCYsjFhFg5XaLMhyDQ==
+X-Received: by 2002:a63:550d:: with SMTP id j13mr52267097pgb.173.1564594406609;
+        Wed, 31 Jul 2019 10:33:26 -0700 (PDT)
+Received: from localhost.localdomain ([2607:fb90:4ad:5a0b:2aff:6e0f:8973:5a26])
+        by smtp.gmail.com with ESMTPSA id bo20sm2089617pjb.23.2019.07.31.10.32.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 10:33:25 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-serial@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 22/23] tty: serial: fsl_lpuart: Don't enable TIE in .startup() or .resume()
+Date:   Wed, 31 Jul 2019 10:30:44 -0700
+Message-Id: <20190731173045.11718-23-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190731173045.11718-1-andrew.smirnov@gmail.com>
+References: <20190731173045.11718-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <88a9bbf8-872f-97cc-fc1a-83eb7694478f@ghiti.fr>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 02:05:23AM -0400, Alex Ghiti wrote:
-> On 7/30/19 1:51 AM, Alexandre Ghiti wrote:
-> >In order to avoid wasting user address space by using bottom-up mmap
-> >allocation scheme, prefer top-down scheme when possible.
-> >
-> >Before:
-> >root@qemuriscv64:~# cat /proc/self/maps
-> >00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
-> >00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
-> >00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
-> >00018000-00039000 rw-p 00000000 00:00 0          [heap]
-> >1555556000-155556d000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
-> >155556d000-155556e000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
-> >155556e000-155556f000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
-> >155556f000-1555570000 rw-p 00000000 00:00 0
-> >1555570000-1555572000 r-xp 00000000 00:00 0      [vdso]
-> >1555574000-1555576000 rw-p 00000000 00:00 0
-> >1555576000-1555674000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
-> >1555674000-1555678000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
-> >1555678000-155567a000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
-> >155567a000-15556a0000 rw-p 00000000 00:00 0
-> >3fffb90000-3fffbb1000 rw-p 00000000 00:00 0      [stack]
-> >
-> >After:
-> >root@qemuriscv64:~# cat /proc/self/maps
-> >00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
-> >00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
-> >00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
-> >2de81000-2dea2000 rw-p 00000000 00:00 0          [heap]
-> >3ff7eb6000-3ff7ed8000 rw-p 00000000 00:00 0
-> >3ff7ed8000-3ff7fd6000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
-> >3ff7fd6000-3ff7fda000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
-> >3ff7fda000-3ff7fdc000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
-> >3ff7fdc000-3ff7fe2000 rw-p 00000000 00:00 0
-> >3ff7fe4000-3ff7fe6000 r-xp 00000000 00:00 0      [vdso]
-> >3ff7fe6000-3ff7ffd000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
-> >3ff7ffd000-3ff7ffe000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
-> >3ff7ffe000-3ff7fff000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
-> >3ff7fff000-3ff8000000 rw-p 00000000 00:00 0
-> >3fff888000-3fff8a9000 rw-p 00000000 00:00 0      [stack]
-> >
-> >Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> >Reviewed-by: Christoph Hellwig <hch@lst.de>
-> >Reviewed-by: Kees Cook <keescook@chromium.org>
-> >Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-> >---
-> >  arch/riscv/Kconfig | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> >diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> >index 8ef64fe2c2b3..8d0d8af1a744 100644
-> >--- a/arch/riscv/Kconfig
-> >+++ b/arch/riscv/Kconfig
-> >@@ -54,6 +54,19 @@ config RISCV
-> >  	select EDAC_SUPPORT
-> >  	select ARCH_HAS_GIGANTIC_PAGE
-> >  	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
-> >+	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
-> >+	select HAVE_ARCH_MMAP_RND_BITS
-> >+
-> >+config ARCH_MMAP_RND_BITS_MIN
-> >+	default 18 if 64BIT
-> >+	default 8
-> >+
-> >+# max bits determined by the following formula:
-> >+#  VA_BITS - PAGE_SHIFT - 3
-> >+config ARCH_MMAP_RND_BITS_MAX
-> >+	default 33 if RISCV_VM_SV48
-> >+	default 24 if RISCV_VM_SV39
-> >+	default 17 if RISCV_VM_SV32
-> >  config MMU
-> >  	def_bool y
-> 
-> 
-> Hi Andrew,
-> 
-> I have just seen you took this series into mmotm but without Paul's patch
-> ("riscv: kbuild: add virtual memory system selection") on which this commit
-> relies, I'm not sure it could
-> compile without it as there is no default for ARCH_MMAP_RND_BITS_MAX.
-> 
-Yes, this patch results in a bad configuration file.
+Enabling TIE in .startup() callback causes the driver to start (or at
+least try) to transmit data before .start_tx() is called. Which, while
+harmless (since TIE handler will immediately disable it), is a no-op
+and shouldn't really happen. Drop UARTCR2_TIE from list of bits set in
+lpuart_startup().
 
-CONFIG_ARCH_MMAP_RND_BITS_MIN=18
-CONFIG_HAVE_ARCH_MMAP_RND_BITS=y
-CONFIG_ARCH_MMAP_RND_BITS=0
+This change will also not enable TIE in .resume(), but it seems that,
+similart to .startup(), transmit interrupt shouldn't be enabled there
+either.
 
-CONFIG_ARCH_MMAP_RND_BITS=0 is outside the valid range, causing make to ask
-for a valid number. Since none exists, one is stuck with something like:
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: linux-imx@nxp.com
+Cc: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/tty/serial/fsl_lpuart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Number of bits to use for ASLR of mmap base address (ARCH_MMAP_RND_BITS) [0] (NEW) 1
-Number of bits to use for ASLR of mmap base address (ARCH_MMAP_RND_BITS) [0] (NEW) 2
-Number of bits to use for ASLR of mmap base address (ARCH_MMAP_RND_BITS) [0] (NEW) 3
-Number of bits to use for ASLR of mmap base address (ARCH_MMAP_RND_BITS) [0] (NEW) 4
-Number of bits to use for ASLR of mmap base address (ARCH_MMAP_RND_BITS) [0] (NEW) 5
-Number of bits to use for ASLR of mmap base address (ARCH_MMAP_RND_BITS) [0] (NEW) 6
-Number of bits to use for ASLR of mmap base address (ARCH_MMAP_RND_BITS) [0] (NEW) 7
-Number of bits to use for ASLR of mmap base address (ARCH_MMAP_RND_BITS) [0] (NEW) 8
-Number of bits to use for ASLR of mmap base address (ARCH_MMAP_RND_BITS) [0] (NEW) 19
-Number of bits to use for ASLR of mmap base address (ARCH_MMAP_RND_BITS) [0] (NEW) 18
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 8ab5f9939597..237690a6e80a 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1410,7 +1410,7 @@ static void lpuart_setup_watermark_enable(struct lpuart_port *sport)
+ 	lpuart_setup_watermark(sport);
+ 
+ 	cr2 = readb(sport->port.membase + UARTCR2);
+-	cr2 |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
++	cr2 |= UARTCR2_RIE | UARTCR2_RE | UARTCR2_TE;
+ 	writeb(cr2, sport->port.membase + UARTCR2);
+ }
+ 
+-- 
+2.21.0
 
-when trying to compile riscv images. Plus, of course, all automatic builders
-bail out as result. 
-
-Guenter
