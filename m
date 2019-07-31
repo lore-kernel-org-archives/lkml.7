@@ -2,95 +2,84 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F060C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE47C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B61206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28480206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564578149;
+	bh=KjEe7amqpCqC9w7RxZ3Oq8fK75FxK2HEnrDQMQKNAvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hPsxvC7BcoxWBvTjoFSlDrTwTr43rDekglrh3izNLQnjZAe9TRJbwFrOyfyjFfMme
+	 a5LBHTbhrWlxGvntC4df2JceyslvDAuebnuatVp2k9PNUOu3UoHDT0QNJLK9UEwJW+
+	 +Lbvr4UjzfmMnUWPUa+U1CeN/L3aY5K41i2VypBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbfGaNCV (ORCPT
+        id S1729352AbfGaNC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:02:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46078 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfGaNCU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:02:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so69570131wre.12
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 06:02:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OrhRm6hcm8XAS5rJURO8NQ/9XsfNWDSC5tHBQHcDz/M=;
-        b=aq/1M9MSICSosHk/fEu6oCZVWRs/0tHnilBtL+G7oEw2q5Gnfya8f5eF6DsDsXeiiI
-         69gHLylVVyVpEz7uy9r07LiMw2eRksv/i4BhDSjWCyQ9llh6pbCxdYB6ZwVX00QiaptW
-         Nh4ATvUvb071+6m97mWaCSYjJeqt7AB+zVQsUa1C8zyyB9VdU6gKVIpsfqKTWouk+rTJ
-         oSZmtSEG7OmjOd49kZcWC5DLopxIvETTF//vuQHHK94Dt+6iWiPICMc5rJbDsaOO3xID
-         UVYoQzaHp6KbbCleMQpG6lWbO37IEZ5V8xXm7vSJEGlanBYPw4/aI3CVwdRQuUU1g6gF
-         sgPA==
-X-Gm-Message-State: APjAAAXENIZOg7MIHSSiLKUCVXk8LBph8EaXRTDfezdAbluYExtXNf5Y
-        uWN6KEiu8l850Duy97289hZV7w==
-X-Google-Smtp-Source: APXvYqxf6pEx9kjzhl6+ziNUinxsA8XNUQEe22hXvk6qWrgDyW26ihoHLEH5Brf5eo9dygInUHQbJA==
-X-Received: by 2002:a5d:6ccd:: with SMTP id c13mr132842592wrc.4.1564578138595;
-        Wed, 31 Jul 2019 06:02:18 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:91e7:65e:d8cd:fdb3? ([2001:b07:6468:f312:91e7:65e:d8cd:fdb3])
-        by smtp.gmail.com with ESMTPSA id z7sm66068294wrh.67.2019.07.31.06.02.17
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 06:02:18 -0700 (PDT)
-Subject: Re: [PATCH] selftests: kvm: Adding config fragments
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux-kselftest@vger.kernel.org, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, drjones@redhat.com,
-        sean.j.christopherson@intel.com
-References: <20190731105540.28962-1-naresh.kamboju@linaro.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <43fd5a9b-7ecd-3fff-2381-1dfce7b8618a@redhat.com>
-Date:   Wed, 31 Jul 2019 15:02:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 09:02:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729337AbfGaNC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:02:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A1D206B8;
+        Wed, 31 Jul 2019 13:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564578145;
+        bh=KjEe7amqpCqC9w7RxZ3Oq8fK75FxK2HEnrDQMQKNAvE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SCEgr1blBe2Jtrqctr1QgorJfZNSL+7Asd5bf7r05K4ZMoBTowaiuB/hR6+XCeKnr
+         kBfuBfkAoMbhlPtJZZ99dWeMRZ6OhAW/G7fDxgALknV7I0bix4P3A7/9p8UcxkVmBm
+         3OFb5cax0Dvdizet+qqBRAxciDMd8lCDMqSJdZVQ=
+Date:   Wed, 31 Jul 2019 15:02:23 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Subject: Re: [PATCH v3 7/7] habanalabs: create two char devices per ASIC
+Message-ID: <20190731130223.GB7590@kroah.com>
+References: <20190731125901.20709-1-oded.gabbay@gmail.com>
+ <20190731125901.20709-8-oded.gabbay@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190731105540.28962-1-naresh.kamboju@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731125901.20709-8-oded.gabbay@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/07/19 12:55, Naresh Kamboju wrote:
-> selftests kvm test cases need pre-required kernel configs for the test
-> to get pass.
+On Wed, Jul 31, 2019 at 03:59:01PM +0300, Oded Gabbay wrote:
+> This patch changes the driver to create two char devices for each ASIC
+> it discovers. This is done to allow system/monitoring applications to
+> query the device for stats, information, idle state and more, while also
+> allowing the deep-learning application to send work to the ASIC.
 > 
-> Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-
-Most of these are selected by other items.  CONFIG_KVM should be enough
-on ARM and s390 but MIPS, x86 and PPC may also need to select the
-specific "flavors" (for example Intel/AMD for x86).
-
-How are these used?  Are they used to build a kernel, or to check that
-an existing kernel supports virtualization?
-
-Paolo
-
-> +CONFIG_KVM=y
-> +CONFIG_VHOST_NET=y
-> +CONFIG_VHOST=y
-> +CONFIG_VHOST_CROSS_ENDIAN_LEGACY=y
-> +CONFIG_USER_RETURN_NOTIFIER=y
-> +CONFIG_PREEMPT_NOTIFIERS=y
-> +CONFIG_TRANSPARENT_HUGEPAGE=y
-> +CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
-> +CONFIG_THP_SWAP=y
-> +CONFIG_TRANSPARENT_HUGE_PAGECACHE=y
-> +CONFIG_IRQ_BYPASS_MANAGER=y
-> +CONFIG_XARRAY_MULTI=y
+> One char device is the original device, hlX. IOCTL calls through this
+> device file can perform any task on the device (compute, memory, queries).
+> The open function for this device will fail if it was called before but
+> the file-descriptor it created was not completely released yet (the
+> release callback function is not called from the kernel until all
+> instances of that FD are closed). The driver needs to keep this behavior
+> to support backward compatibility with existing userspace, which count
+> that the open will fail if the device is "occupied".
 > 
+> The second char device is called "hl_controlDx", where x is the same index
+> of the main device with a minor number of the original char device + 1.
+> Applications that open this device can only call the INFO IOCTL. There is
+> no limitation on the number of applications opening this device.
+> 
+> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 
+Looks good, thanks for changing the minor allocation:
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
