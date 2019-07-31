@@ -2,131 +2,131 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290D2C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C330BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34F6206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:23:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b7ckL2eS"
+	by mail.kernel.org (Postfix) with ESMTP id 9B420206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfGaOXX (ORCPT
+        id S1728880AbfGaOXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:23:23 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46444 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfGaOXW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:23:22 -0400
-Received: by mail-lf1-f65.google.com with SMTP id z15so43317167lfh.13
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:23:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Mwmelmzw6bH/7dTu0yxXhnmtM+/gvfBNAeELEGk+uk=;
-        b=b7ckL2eSD9hJ7+SslSVgXgqXaYtTrghJzWVqnzRH5arC0as5UaAex1ADlOstZ0ZAgH
-         w5ZSSbXXNcoX8jtKyrctiyVtd6HsBbsFQtSIzZfS28PPueiU1cGACGc9zWiXCdQJ0wpk
-         DuLQOPY6YkD5kUNXs40RHrruT+f6kC9kF/wo6v+T1ORrj4UiuM6wfpvSj2z9NXqnYLZx
-         HgBwJ+wmjHC5w/e9yaL+cigyFxUP3EOJu/ohNtfLocTQL4WpgiRDQdhC4JvAcqraz54h
-         jeVh4ugy80tt9CPL8cyTLUzJDd1ZgLNDIcSfQc8LqwcMzYNldlPqEfbX2KUc9A9DpGGy
-         yiGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Mwmelmzw6bH/7dTu0yxXhnmtM+/gvfBNAeELEGk+uk=;
-        b=Ww7da1Hdcy8EWIV2NzkMy+gO1/ix1DHvaHC3iWS34tX2BuqbQZ575+HCdpjqWoBEMh
-         fwgj72aJ0uAXzKS7YctUfB7J2fPuBlHI3PFhlnAhtGzxBVIsc2vkskvFBlsWfLF+ZVgB
-         Jsvnr3zlDsok0HmyY43HRqPYd+7ar0feQViwehCBB8gTdmY8JVNXNADXefkYqSD5wYXS
-         izD0MuA6d4A1IXflPQU8KLhRXhX84Q69GJh9YSGzxI4yKGZdNaeai0USguPHrA0/Bh3r
-         Wsyt1FR4TAuR5QSt0ABicjMacuTvKns/NqAXWJo9bBA9ct6OpxiUFwbj3n8M7Xq8C1Pq
-         tJAg==
-X-Gm-Message-State: APjAAAW9mkIkhH/zimb4y/h6GXRn9OcdkvQFbv+Su6VlqzIm2DsVkQ1I
-        b4ChqjYIN9szPtfjCd5t9G2B0QKU4Aw1fzvtII7t1Q==
-X-Google-Smtp-Source: APXvYqzO1Rb1XuGHlY4gc7gehMJjpGhQ7bcBJg5KgrHrj/rbdrN0MlhufGWBshlYJcrDu7aQUEzfCCAGZ0ad3gulmm0=
-X-Received: by 2002:a19:c7ca:: with SMTP id x193mr3049727lff.151.1564583000498;
- Wed, 31 Jul 2019 07:23:20 -0700 (PDT)
+        Wed, 31 Jul 2019 10:23:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37162 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727169AbfGaOXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:23:49 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 83ECB3091D55;
+        Wed, 31 Jul 2019 14:23:48 +0000 (UTC)
+Received: from [10.36.117.240] (ovpn-117-240.ams2.redhat.com [10.36.117.240])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B447A5D9CA;
+        Wed, 31 Jul 2019 14:23:46 +0000 (UTC)
+Subject: Re: [PATCH v1] drivers/base/memory.c: Don't store end_section_nr in
+ memory blocks
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Oscar Salvador <osalvador@suse.de>
+References: <20190731122213.13392-1-david@redhat.com>
+ <20190731124356.GL9330@dhcp22.suse.cz>
+ <f0894c30-105a-2241-a505-7436bc15b864@redhat.com>
+ <20190731132534.GQ9330@dhcp22.suse.cz>
+ <58bd9479-051b-a13b-b6d0-c93aac2ed1b3@redhat.com>
+ <92a8ba85-b913-177c-66a2-d86074e54700@redhat.com>
+ <20190731141545.GV9330@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <21d48bda-dfc8-1c7e-6b3a-81a33c8ea4ac@redhat.com>
+Date:   Wed, 31 Jul 2019 16:23:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
- <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
- <CAFA6WYPJAzbPdcpBqioxjY=T8RLw-73B_hpzX4cGnwVvm5zpJw@mail.gmail.com> <CAE=Ncrb23q++z8R8UMbjDE2epEq4YVcNGzrRD31eH3JAooYejg@mail.gmail.com>
-In-Reply-To: <CAE=Ncrb23q++z8R8UMbjDE2epEq4YVcNGzrRD31eH3JAooYejg@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Wed, 31 Jul 2019 19:53:08 +0530
-Message-ID: <CAFA6WYOKcOzSwakHhgshZcebD8ZBMSi7xQdjWYFS79=Xc+odOg@mail.gmail.com>
-Subject: Re: [RFC v2 0/6] Introduce TEE based Trusted Keys support
-To:     Janne Karhunen <janne.karhunen@gmail.com>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, dhowells@redhat.com,
-        jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190731141545.GV9330@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 31 Jul 2019 14:23:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 at 16:33, Janne Karhunen <janne.karhunen@gmail.com> wrote:
->
-> On Wed, Jul 31, 2019 at 1:26 PM Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> > > Interesting, I wrote something similar and posted it to the lists a while back:
-> > > https://github.com/jkrh/linux/commit/d77ea03afedcb5fd42234cd834da8f8a0809f6a6
-> > >
-> > > Since there are no generic 'TEEs' available,
-> >
-> > There is already a generic TEE interface driver available in kernel.
-> > Have a look here: "Documentation/tee.txt".
->
-> I guess my wording was wrong, tried to say that physical TEEs in the
-> wild vary massively hardware wise. Generalizing these things is rough.
->
+On 31.07.19 16:15, Michal Hocko wrote:
+> On Wed 31-07-19 16:04:10, David Hildenbrand wrote:
+>> On 31.07.19 15:42, David Hildenbrand wrote:
+> [...]
+>>> Powerpc userspace queries it:
+>>> https://groups.google.com/forum/#!msg/powerpc-utils-devel/dKjZCqpTxus/AwkstV2ABwAJ
+>>
+>> FWIW, powerpc-utils also uses the "removable" property - which means
+>> we're also stuck with that unfortunately. :(
+> 
+> Yeah, I am aware of that and I strongly suspect this is actually in use
+> because it is terribly unreliable for any non-idle system. There is
+> simply no way to find out whether something is offlinable than to try
+> it.
 
-There are already well defined GlobalPlatform Standards to generalize
-the TEE interface. One of them is GlobalPlatform TEE Client API [1]
-which provides the basis for this TEE interface.
+According to the introducing commit "removable" is only used to not even
+try some memory blocks (IOW to save cpu cycles) - not treated as a
+guaranteed (which is correct).
 
->
-> > > I implemented the same
-> > > thing as a generic protocol translator. The shared memory binding for
-> > > instance already assumes fair amount about the TEE and how that is
-> > > physically present in the system. Besides, the help from usage of shm
-> > > is pretty limited due to the size of the keydata.
-> > >
-> >
-> > If you look at patch #1 and #2, they add support to register kernel
-> > memory buffer (keydata buffer in this case) with TEE to operate on. So
-> > there isn't any limitation due to the size of the keydata.
->
-> Ah, didn't mean that. Meant that the keydata is typically pretty small
-> in size, so there is limited benefit from passing that in via shm if
-> that complicates anything.
->
+-- 
 
-Ah, ok. Do you think of any better approach rather than to use SHM?
+Thanks,
 
-[1] https://globalplatform.org/specs-library/tee-client-api-specification/
-
--Sumit
-
->
-> --
-> Janne
+David / dhildenb
