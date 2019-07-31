@@ -2,117 +2,121 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25709C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A440C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC423206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJKCzsXg"
+	by mail.kernel.org (Postfix) with ESMTP id 57FEC206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfGaLTv (ORCPT
+        id S2387537AbfGaLUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:19:51 -0400
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:35111 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727487AbfGaLTs (ORCPT
+        Wed, 31 Jul 2019 07:20:14 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:38667 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaLUN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:19:48 -0400
-Received: by mail-wr1-f42.google.com with SMTP id y4so69253571wrm.2;
-        Wed, 31 Jul 2019 04:19:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iwm4409GkWSovNI5a28ZeCS8PpOJ5Po1sAR5h0Q4NOk=;
-        b=PJKCzsXg02GfsV86/cw/f0DH7KxeKUmb+cOQqTvmpYx2AMUeoD1o0XZsGpzMELUNQX
-         4/QZ5OFf5xGIuBMSzaDjOFymvkKZ3nXAD4JrzDt8V3sqZ8/656TN+XigWvf/ooS7BdOz
-         EdfAY7IXmfQo91bXW8Wg7H/yjbNJwNCSfJsGOSHv0y6f4BbZtlcGB0j4iXAqk0TWOQGe
-         EhHIFkDrm/q1K++ZrnJEw/60WVMs4DRqgyOYh3M2vhuSkQEX2HEBzagXdUF2OWPDdwEr
-         +VOQLU1LOzaifKYyHgAFCEznHO3/HUWiT6T5VvP4m17Mla0g556Gt2RS6HAhub8xSRPW
-         R7eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=iwm4409GkWSovNI5a28ZeCS8PpOJ5Po1sAR5h0Q4NOk=;
-        b=o+rep3++3SD48dit6/fINDhYF4/tah/96kFAQ8/S7IAqsZj7HxMla9T68TnCEsvsLc
-         TG0dxSvFd6KymILd9ly7oD06sXid6m1HHQ0XHMdPhV5yx6/6gb+HPI1iOPr/2AjgDU80
-         kFa9AIoEtmX03Yuv7YLqhIKhTsQ/xiCTn9doRl46kVBvccghb5Hz+Ee+sLHnccaIsj5O
-         WdzWMM5Kya1EePCi31nfBLtfFygW9582CURBNYR9ivMjZuKNuNhxmP7EKrmOyrQnwPi+
-         XIZasGuqIlY+i0x6gqrZum3q/3ukC+OFIgcEFGVm8+KyaKVOyJldJYwip4B7C2IPkVHf
-         Y4jQ==
-X-Gm-Message-State: APjAAAXX3j22EwkY/nvQ5VpqdwN3L43Twb6LFVFHkCVPkhpIn/jy/UQT
-        jHDfkIASDIgdTZJxMsOnSY0=
-X-Google-Smtp-Source: APXvYqyusirBoYaJR6jtqQDE+MJXX+qRWwQpfIKjRG9oNIFQoc6F7W7Yrb2A9IBm1sQmBxCcX0qtQw==
-X-Received: by 2002:adf:df8b:: with SMTP id z11mr77357896wrl.62.1564571985817;
-        Wed, 31 Jul 2019 04:19:45 -0700 (PDT)
-Received: from localhost.localdomain ([212.146.100.6])
-        by smtp.gmail.com with ESMTPSA id b8sm88035205wmh.46.2019.07.31.04.19.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 04:19:45 -0700 (PDT)
-From:   Andra Danciu <andradanciu1997@gmail.com>
-To:     broonie@kernel.org
-Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        perex@perex.cz, tiwai@suse.com, ckeepax@opensource.cirrus.com,
-        rf@opensource.wolfsonmicro.com, srinivas.kandagatla@linaro.org,
-        piotrs@opensource.cirrus.com, paul@crapouillou.net,
-        kmarinushkin@birdec.tech, anders.roxell@linaro.org,
-        jbrunet@baylibre.com, m.felsch@pengutronix.de, vkoul@kernel.org,
-        nh6z@nh6z.net, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        daniel.baluta@nxp.com
-Subject: [PATCH 1/2] dt-bindings: sound: Add bindings for UDA1334 codec
-Date:   Wed, 31 Jul 2019 14:19:29 +0300
-Message-Id: <20190731111930.20230-2-andradanciu1997@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190731111930.20230-1-andradanciu1997@gmail.com>
-References: <20190731111930.20230-1-andradanciu1997@gmail.com>
+        Wed, 31 Jul 2019 07:20:13 -0400
+Received: from cpe-2606-a000-111b-6140-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:6140::162e] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hsmeG-0001W9-GP; Wed, 31 Jul 2019 07:20:05 -0400
+Date:   Wed, 31 Jul 2019 07:19:32 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Vlad Yasevich <vyasevich@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: sctp: Rename fallthrough label to unhandled
+Message-ID: <20190731111932.GA9823@hmswarspite.think-freely.org>
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The UDA1334 is an NXP audio codec, supports the I2S-bus data format
-and has basic features such as de-emphasis (at 44.1 kHz sampling
-rate) and mute. Product information can be found at:
-https://www.nxp.com/pages/low-power-audio-dac-with-pll:UDA1334
+On Tue, Jul 30, 2019 at 10:04:37PM -0700, Joe Perches wrote:
+> fallthrough may become a pseudo reserved keyword so this only use of
+> fallthrough is better renamed to allow it.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+Are you referring to the __attribute__((fallthrough)) statement that gcc
+supports?  If so the compiler should by all rights be able to differentiate
+between a null statement attribute and a explicit goto and label without the
+need for renaming here.  Or are you referring to something else?
 
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
----
- Documentation/devicetree/bindings/sound/uda1334.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/uda1334.txt
+Neil
 
-diff --git a/Documentation/devicetree/bindings/sound/uda1334.txt b/Documentation/devicetree/bindings/sound/uda1334.txt
-new file mode 100644
-index 000000000000..f64071b25e8d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/uda1334.txt
-@@ -0,0 +1,17 @@
-+UDA1334 audio CODEC
-+
-+This device uses simple GPIO pins for controlling codec settings.
-+
-+Required properties:
-+
-+  - compatible : "nxp,uda1334"
-+  - nxp,mute-gpios: a GPIO spec for the MUTE pin.
-+  - nxp,deemph-gpios: a GPIO spec for the De-emphasis pin
-+
-+Example:
-+
-+uda1334: audio-codec {
-+	compatible = "nxp,uda1334";
-+	nxp,mute-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
-+	nxp,deemph-gpios = <&gpio3 3 GPIO_ACTIVE_LOW>;
-+};
--- 
-2.11.0
-
+> ---
+>  net/sctp/sm_make_chunk.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
+> index 36bd8a6e82df..3fdcaa2fbf12 100644
+> --- a/net/sctp/sm_make_chunk.c
+> +++ b/net/sctp/sm_make_chunk.c
+> @@ -2152,7 +2152,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+>  	case SCTP_PARAM_SET_PRIMARY:
+>  		if (net->sctp.addip_enable)
+>  			break;
+> -		goto fallthrough;
+> +		goto unhandled;
+>  
+>  	case SCTP_PARAM_HOST_NAME_ADDRESS:
+>  		/* Tell the peer, we won't support this param.  */
+> @@ -2163,11 +2163,11 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+>  	case SCTP_PARAM_FWD_TSN_SUPPORT:
+>  		if (ep->prsctp_enable)
+>  			break;
+> -		goto fallthrough;
+> +		goto unhandled;
+>  
+>  	case SCTP_PARAM_RANDOM:
+>  		if (!ep->auth_enable)
+> -			goto fallthrough;
+> +			goto unhandled;
+>  
+>  		/* SCTP-AUTH: Secion 6.1
+>  		 * If the random number is not 32 byte long the association
+> @@ -2184,7 +2184,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+>  
+>  	case SCTP_PARAM_CHUNKS:
+>  		if (!ep->auth_enable)
+> -			goto fallthrough;
+> +			goto unhandled;
+>  
+>  		/* SCTP-AUTH: Section 3.2
+>  		 * The CHUNKS parameter MUST be included once in the INIT or
+> @@ -2200,7 +2200,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+>  
+>  	case SCTP_PARAM_HMAC_ALGO:
+>  		if (!ep->auth_enable)
+> -			goto fallthrough;
+> +			goto unhandled;
+>  
+>  		hmacs = (struct sctp_hmac_algo_param *)param.p;
+>  		n_elt = (ntohs(param.p->length) -
+> @@ -2223,7 +2223,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+>  			retval = SCTP_IERROR_ABORT;
+>  		}
+>  		break;
+> -fallthrough:
+> +unhandled:
+>  	default:
+>  		pr_debug("%s: unrecognized param:%d for chunk:%d\n",
+>  			 __func__, ntohs(param.p->type), cid);
+> -- 
+> 2.15.0
+> 
+> 
