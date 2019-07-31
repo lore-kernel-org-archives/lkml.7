@@ -2,142 +2,246 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81B7C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9177EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADED42089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0752089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:36:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FJ3tbwUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfGaDdx (ORCPT
+        id S1728550AbfGaDgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 23:33:53 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:35926 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbfGaDdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 23:33:52 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 011A4E5A6231014557A5;
-        Wed, 31 Jul 2019 11:33:51 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 31 Jul 2019 11:33:50 +0800
-Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
- (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Wed, 31
- Jul 2019 11:33:50 +0800
-Subject: Re: [RFC] net: phy: read link status twice when
- phy_check_link_status()
-To:     Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
-References: <1564134831-24962-1-git-send-email-liuyonglong@huawei.com>
- <92f42ee8-3659-87a7-ac96-d312a98046ba@gmail.com>
- <4b4ba599-f160-39e7-d611-45ac53268389@huawei.com>
- <a0b26e4b-e288-cf44-049a-7d0b7f5696eb@gmail.com>
- <1d4be6ad-ffe6-2325-ceab-9f35da617ee9@huawei.com>
- <5087ee34-5776-f02b-d7e5-bce005ba3b92@gmail.com>
- <03708d00-a8d9-4a9d-4188-9fe0e38de2b8@huawei.com>
- <9a0a8094-42ee-0a18-0e9a-d3ca783d6d4b@gmail.com>
-From:   liuyonglong <liuyonglong@huawei.com>
-Message-ID: <6add4874-fd2b-9b21-cd78-80b6dde4dd53@huawei.com>
-Date:   Wed, 31 Jul 2019 11:33:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 30 Jul 2019 23:36:54 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:50617 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfGaDgx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 23:36:53 -0400
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x6V3agnq023839;
+        Wed, 31 Jul 2019 12:36:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6V3agnq023839
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564544205;
+        bh=ZWUXlJ6vCyDfxDsdJIqtKViAIw2UA65PS88eID+Zq5s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FJ3tbwUl7HgSgYGVuOcJoaNhC8Sposhetgk7+SQRefX9gJUOi6alyn/NUSDT9YvEg
+         7YLfnIfWkY64gXlES2Qpsj8T05VpxIMdCU8rj9sR16fS81pg14UmqpkkyxSQjzMklK
+         GkKyTNv2I7Rmgs7kINCt6DlUaRt5E4EMV0M61J1irriKgvHg/yJJ+BKuqDEwJGhfI/
+         4JUUNhvgQsiYPLTPGN9kQLrXiWee3QBshV22B5ruUPSNww7hqPAi7v3ZEsqbB98NUe
+         Nf48qAQpfzjWWaV/iRRNhWOVj7ZaRUJbxZOWdkSssMQqd2rOHM+HvEHXomyq39AkXz
+         6PPr7IhkmLRPQ==
+X-Nifty-SrcIP: [209.85.222.42]
+Received: by mail-ua1-f42.google.com with SMTP id a97so26368983uaa.9;
+        Tue, 30 Jul 2019 20:36:45 -0700 (PDT)
+X-Gm-Message-State: APjAAAVUYgZ+ExF0l0g0H/G9diiiEDchVqg2QI3hVjxzUBg0tMVk81us
+        sjkZzweio2rSApGthe0Pqf9w9vYZLrSff6r5gpI=
+X-Google-Smtp-Source: APXvYqz6s/L4vEIgOO2gnaVIIJ8dt0VbYEcQqKM0Wi8oUweR8OASjZl3ArznIJxx3/aQwf0xeNqQaVdKGtWMddWarxo=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr76076029uag.40.1564544202169;
+ Tue, 30 Jul 2019 20:36:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9a0a8094-42ee-0a18-0e9a-d3ca783d6d4b@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.57.37.248]
-X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
- dggeme760-chm.china.huawei.com (10.3.19.106)
-X-CFilter-Loop: Reflected
+References: <20190509143859.9050-1-joe.lawrence@redhat.com>
+ <20190509143859.9050-4-joe.lawrence@redhat.com> <CAK7LNAT3qZ8EESs0eEtaezjgjzRa1XqoAAxpKh_sLi_JPJie2A@mail.gmail.com>
+In-Reply-To: <CAK7LNAT3qZ8EESs0eEtaezjgjzRa1XqoAAxpKh_sLi_JPJie2A@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 31 Jul 2019 12:36:05 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAToLyKSk9C0hwuMRxDK8yjJtghi_y6fH1p0+wK7N1wKow@mail.gmail.com>
+Message-ID: <CAK7LNAToLyKSk9C0hwuMRxDK8yjJtghi_y6fH1p0+wK7N1wKow@mail.gmail.com>
+Subject: Re: [PATCH v4 03/10] livepatch: Add klp-convert tool
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 31, 2019 at 11:50 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Thu, May 9, 2019 at 11:39 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
+> >
+> > From: Josh Poimboeuf <jpoimboe@redhat.com>
+> >
+> > Livepatches may use symbols which are not contained in its own scope,
+> > and, because of that, may end up compiled with relocations that will
+> > only be resolved during module load. Yet, when the referenced symbols
+> > are not exported, solving this relocation requires information on the
+> > object that holds the symbol (either vmlinux or modules) and its
+> > position inside the object, as an object may contain multiple symbols
+> > with the same name. Providing such information must be done
+> > accordingly to what is specified in
+> > Documentation/livepatch/module-elf-format.txt.
+> >
+> > Currently, there is no trivial way to embed the required information
+> > as requested in the final livepatch elf object. klp-convert solves
+> > this problem in two different forms: (i) by relying on Symbols.list,
+> > which is built during kernel compilation, to automatically infer the
+> > relocation targeted symbol, and, when such inference is not possible
+> > (ii) by using annotations in the elf object to convert the relocation
+> > accordingly to the specification, enabling it to be handled by the
+> > livepatch loader.
+> >
+> > Given the above, create scripts/livepatch to hold tools developed for
+> > livepatches and add source files for klp-convert there.
+> >
+> > The core file of klp-convert is scripts/livepatch/klp-convert.c, which
+> > implements the heuristics used to solve the relocations and the
+> > conversion of unresolved symbols into the expected format, as defined
+> > in [1].
+> >
+> > klp-convert receives as arguments the Symbols.list file, an input
+> > livepatch module to be converted and the output name for the converted
+> > livepatch. When it starts running, klp-convert parses Symbols.list and
+> > builds two internal lists of symbols, one containing the exported and
+> > another containing the non-exported symbols. Then, by parsing the rela
+> > sections in the elf object, klp-convert identifies which symbols must
+> > be converted, which are those unresolved and that do not have a
+> > corresponding exported symbol, and attempts to convert them
+> > accordingly to the specification.
+> >
+> > By using Symbols.list, klp-convert identifies which symbols have names
+> > that only appear in a single kernel object, thus being capable of
+> > resolving these cases without the intervention of the developer. When
+> > various homonymous symbols exist through kernel objects, it is not
+> > possible to infer the right one, thus klp-convert falls back into
+> > using developer annotations. If these were not provided, then the tool
+> > will print a list with all acceptable targets for the symbol being
+> > processed.
+> >
+> > Annotations in the context of klp-convert are accessible as struct
+> > klp_module_reloc entries in sections named
+> > .klp.module_relocs.<objname>. These entries are pairs of symbol
+> > references and positions which are to be resolved against definitions
+> > in <objname>.
+> >
+> > Define the structure klp_module_reloc in
+> > include/linux/uapi/livepatch.h allowing developers to annotate the
+> > livepatch source code with it.
+> >
+> > klp-convert relies on libelf and on a list implementation. Add files
+> > scripts/livepatch/elf.c and scripts/livepatch/elf.h, which are a
+> > libelf interfacing layer and scripts/livepatch/list.h, which is a
+> > list implementation.
+> >
+> > Update Makefiles to correctly support the compilation of the new tool,
+> > update MAINTAINERS file and add a .gitignore file.
+> >
+> > [1] - Documentation/livepatch/module-elf-format.txt
+> >
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> > Signed-off-by: Joao Moreira <jmoreira@suse.de>
+> > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> > ---
+> >  MAINTAINERS                     |   1 +
+> >  include/uapi/linux/livepatch.h  |   5 +
+> >  scripts/Makefile                |   1 +
+> >  scripts/livepatch/.gitignore    |   1 +
+> >  scripts/livepatch/Makefile      |   7 +
+> >  scripts/livepatch/elf.c         | 753 ++++++++++++++++++++++++++++++++
+> >  scripts/livepatch/elf.h         |  73 ++++
+> >  scripts/livepatch/klp-convert.c | 713 ++++++++++++++++++++++++++++++
+> >  scripts/livepatch/klp-convert.h |  39 ++
+> >  scripts/livepatch/list.h        | 391 +++++++++++++++++
+> >  10 files changed, 1984 insertions(+)
+> >  create mode 100644 scripts/livepatch/.gitignore
+> >  create mode 100644 scripts/livepatch/Makefile
+> >  create mode 100644 scripts/livepatch/elf.c
+> >  create mode 100644 scripts/livepatch/elf.h
+> >  create mode 100644 scripts/livepatch/klp-convert.c
+> >  create mode 100644 scripts/livepatch/klp-convert.h
+> >  create mode 100644 scripts/livepatch/list.h
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 52842fa37261..c1587e1cc385 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -9022,6 +9022,7 @@ F:        arch/x86/kernel/livepatch.c
+> >  F:     Documentation/livepatch/
+> >  F:     Documentation/ABI/testing/sysfs-kernel-livepatch
+> >  F:     samples/livepatch/
+> > +F:     scripts/livepatch/
+> >  F:     tools/testing/selftests/livepatch/
+> >  L:     live-patching@vger.kernel.org
+> >  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git
+> > diff --git a/include/uapi/linux/livepatch.h b/include/uapi/linux/livepatch.h
+> > index e19430918a07..1c364d42d38e 100644
+> > --- a/include/uapi/linux/livepatch.h
+> > +++ b/include/uapi/linux/livepatch.h
+> > @@ -12,4 +12,9 @@
+> >  #define KLP_RELA_PREFIX                ".klp.rela."
+> >  #define KLP_SYM_PREFIX         ".klp.sym."
+> >
+> > +struct klp_module_reloc {
+> > +       void *sym;
+> > +       unsigned int sympos;
+> > +} __attribute__((packed));
+> > +
+> >  #endif /* _UAPI_LIVEPATCH_H */
+> > diff --git a/scripts/Makefile b/scripts/Makefile
+> > index 9d442ee050bd..bf9ce74b70b0 100644
+> > --- a/scripts/Makefile
+> > +++ b/scripts/Makefile
+> > @@ -39,6 +39,7 @@ build_unifdef: $(obj)/unifdef
+> >  subdir-$(CONFIG_GCC_PLUGINS) += gcc-plugins
+> >  subdir-$(CONFIG_MODVERSIONS) += genksyms
+> >  subdir-$(CONFIG_SECURITY_SELINUX) += selinux
+> > +subdir-$(CONFIG_LIVEPATCH)   += livepatch
+> >
+> >  # Let clean descend into subdirs
+> >  subdir-        += basic dtc gdb kconfig mod package
+> > diff --git a/scripts/livepatch/.gitignore b/scripts/livepatch/.gitignore
+> > new file mode 100644
+> > index 000000000000..dc22fe4b6a5b
+> > --- /dev/null
+> > +++ b/scripts/livepatch/.gitignore
+> > @@ -0,0 +1 @@
+> > +klp-convert
+> > diff --git a/scripts/livepatch/Makefile b/scripts/livepatch/Makefile
+> > new file mode 100644
+> > index 000000000000..2842ecdba3fd
+> > --- /dev/null
+> > +++ b/scripts/livepatch/Makefile
+> > @@ -0,0 +1,7 @@
+> > +hostprogs-y                    := klp-convert
+> > +always                         := $(hostprogs-y)
+> > +
+> > +klp-convert-objs               := klp-convert.o elf.o
+> > +
+> > +HOST_EXTRACFLAGS               := -g -I$(INSTALL_HDR_PATH)/include -Wall
+>
+> This looks strange.
+>
+> Theoretically, you cannot include headers in $(INSTALL_HDR_PATH)/include
+> from host programs.
+>
+> headers_install works for the target architecture, not host architecture.
+> This may cause a strange result when you are cross-compiling the kernel.
+>
+> BTW, which header in $(INSTALL_HDR_PATH)/include do you need to include ?
+>
+>
+> Also, -Wall is redundant because it is set by the top-level Makefile.
 
 
-On 2019/7/31 3:04, Heiner Kallweit wrote:
-> On 30.07.2019 08:35, liuyonglong wrote:
->> :/sys/kernel/debug/tracing$ cat trace
->> # tracer: nop
->> #
->> # entries-in-buffer/entries-written: 45/45   #P:128
->> #
->> #                              _-----=> irqs-off
->> #                             / _----=> need-resched
->> #                            | / _---=> hardirq/softirq
->> #                            || / _--=> preempt-depth
->> #                            ||| /     delay
->> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
->> #              | |       |   ||||       |         |
->>     kworker/64:2-1028  [064] ....   172.295687: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x02 val:0x001c
->>     kworker/64:2-1028  [064] ....   172.295726: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x03 val:0xc916
->>     kworker/64:2-1028  [064] ....   172.296902: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x01 val:0x79ad
->>     kworker/64:2-1028  [064] ....   172.296938: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x0f val:0x2000
->>     kworker/64:2-1028  [064] ....   172.321213: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x00 val:0x1040
->>     kworker/64:2-1028  [064] ....   172.343209: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x02 val:0x001c
->>     kworker/64:2-1028  [064] ....   172.343245: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x03 val:0xc916
->>     kworker/64:2-1028  [064] ....   172.343882: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x79ad
->>     kworker/64:2-1028  [064] ....   172.343918: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x0f val:0x2000
->>     kworker/64:2-1028  [064] ....   172.362658: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
->>     kworker/64:2-1028  [064] ....   172.385961: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x02 val:0x001c
->>     kworker/64:2-1028  [064] ....   172.385996: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x03 val:0xc916
->>     kworker/64:2-1028  [064] ....   172.386646: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x01 val:0x79ad
->>     kworker/64:2-1028  [064] ....   172.386681: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x0f val:0x2000
->>     kworker/64:2-1028  [064] ....   172.411286: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x00 val:0x1040
->>     kworker/64:2-1028  [064] ....   172.433225: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x02 val:0x001c
->>     kworker/64:2-1028  [064] ....   172.433260: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x03 val:0xc916
->>     kworker/64:2-1028  [064] ....   172.433887: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
->>     kworker/64:2-1028  [064] ....   172.433922: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x0f val:0x2000
->>     kworker/64:2-1028  [064] ....   172.452862: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
->>         ifconfig-1324  [011] ....   177.325585: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
->>   kworker/u257:0-8     [012] ....   177.325642: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x04 val:0x01e1
->>   kworker/u257:0-8     [012] ....   177.325654: mdio_access: mii-0000:bd:00.1 write phy:0x03 reg:0x04 val:0x05e1
->>   kworker/u257:0-8     [012] ....   177.325708: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x79ad
->>   kworker/u257:0-8     [012] ....   177.325744: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x09 val:0x0200
->>   kworker/u257:0-8     [012] ....   177.325779: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
->>   kworker/u257:0-8     [012] ....   177.325788: mdio_access: mii-0000:bd:00.1 write phy:0x03 reg:0x00 val:0x1240
->>   kworker/u257:0-8     [012] ....   177.325843: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x798d
-> 
-> What I think that happens here:
-> Writing 0x1240 to BMCR starts aneg. When reading BMSR immediately after that then the PHY seems to have cleared
-> the "aneg complete" bit already, but not yet the "link up" bit. This results in the false "link up" notification.
-> The following patch is based on the fact that in case of enabled aneg we can't have a valid link if aneg isn't
-> finished. Could you please test whether this works for you?
-> 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 6b5cb87f3..7ddd91df9 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -1774,6 +1774,12 @@ int genphy_update_link(struct phy_device *phydev)
->  	phydev->link = status & BMSR_LSTATUS ? 1 : 0;
->  	phydev->autoneg_complete = status & BMSR_ANEGCOMPLETE ? 1 : 0;
->  
-> +	/* Consider the case that autoneg was started and "aneg complete"
-> +	 * bit has been reset, but "link up" bit not yet.
-> +	 */
-> +	if (phydev->autoneg == AUTONEG_ENABLE && !phydev->autoneg_complete)
-> +		phydev->link = 0;
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL(genphy_update_link);
-> 
-
-This patch can solve the issue! Will it be upstream?
-
-So it's nothing to do with the bios, and just the PHY's own behavior,
-the "link up" bit can not reset immediately，right?
-
-ps: It will take 1 second more to make the link up for RTL8211F when 0x798d happend.
+I deleted HOST_EXTRACFLAGS entirely,
+and I was still able to build klp-convert.
 
 
+What is the purpose of '-g' ?
+If it is only needed for local debugging,
+it should be removed from the upstream code, in my opinion.
+
+
+-- 
+Best Regards
+Masahiro Yamada
