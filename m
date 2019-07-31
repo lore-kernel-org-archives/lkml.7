@@ -2,132 +2,83 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C72C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C188DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A620D208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564573221;
-	bh=xjr0soVElPo4a92RzZsbQaMGSEbPZGoMP3gic7Sk218=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a1/YX5TzMQTZSf7Vb9NHu9g5d4yvri3kfWpgxUsZTqYfhq4VoUsxABBN6Ir7lZRYq
-	 pNME64QsPHcWKUSHg+Nj6KDyFUI/wogUzL208u35qPujsavE2mZVVaoPHcW7OPOA8e
-	 3cqVFIuGoSKwoJxl+t9lqH2JxLIadWyLqMeMgyag=
+	by mail.kernel.org (Postfix) with ESMTP id 948832064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfGaLkU (ORCPT
+        id S1727478AbfGaLlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:40:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54426 "EHLO mx1.suse.de"
+        Wed, 31 Jul 2019 07:41:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55172 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727086AbfGaLkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:40:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4AF45AF04;
-        Wed, 31 Jul 2019 11:40:17 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 13:40:16 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Hoan Tran OS <hoan@os.amperecomputing.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Open Source Submission <patches@amperecomputing.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "willy@infradead.org" <willy@infradead.org>
-Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20190731114016.GI9330@dhcp22.suse.cz>
-References: <20190712070247.GM29483@dhcp22.suse.cz>
- <586ae736-a429-cf94-1520-1a94ffadad88@os.amperecomputing.com>
- <20190712121223.GR29483@dhcp22.suse.cz>
- <20190712143730.au3662g4ua2tjudu@willie-the-truck>
- <20190712150007.GU29483@dhcp22.suse.cz>
- <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
- <20190730081415.GN9330@dhcp22.suse.cz>
- <20190731062420.GC21422@rapoport-lnx>
- <20190731080309.GZ9330@dhcp22.suse.cz>
- <20190731111422.GA14538@rapoport-lnx>
+        id S1726301AbfGaLlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 07:41:23 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 052F69A63D0C3EB13A6F;
+        Wed, 31 Jul 2019 19:41:20 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
+ 19:41:16 +0800
+Subject: Re: [PATCH] HID: logitech-dj: Fix check of
+ logi_dj_recv_query_paired_devices()
+To:     Hans de Goede <hdegoede@redhat.com>, Petr Vorel <pvorel@suse.cz>
+References: <20190725145719.8344-1-yuehaibing@huawei.com>
+ <20190731105927.GA5092@dell5510> <20190731110629.GB5092@dell5510>
+ <3e9bda5b-68dc-15b9-ca79-2e73567ea0a5@redhat.com>
+CC:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <917e5209-8e58-076d-bb25-0716d7414e5a@huawei.com>
+Date:   Wed, 31 Jul 2019 19:41:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731111422.GA14538@rapoport-lnx>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3e9bda5b-68dc-15b9-ca79-2e73567ea0a5@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 31-07-19 14:14:22, Mike Rapoport wrote:
-> On Wed, Jul 31, 2019 at 10:03:09AM +0200, Michal Hocko wrote:
-> > On Wed 31-07-19 09:24:21, Mike Rapoport wrote:
-> > > [ sorry for a late reply too, somehow I missed this thread before ]
-> > > 
-> > > On Tue, Jul 30, 2019 at 10:14:15AM +0200, Michal Hocko wrote:
-> > > > [Sorry for a late reply]
-> > > > 
-> > > > On Mon 15-07-19 17:55:07, Hoan Tran OS wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > On 7/12/19 10:00 PM, Michal Hocko wrote:
-> > > > [...]
-> > > > > > Hmm, I thought this was selectable. But I am obviously wrong here.
-> > > > > > Looking more closely, it seems that this is indeed only about
-> > > > > > __early_pfn_to_nid and as such not something that should add a config
-> > > > > > symbol. This should have been called out in the changelog though.
-> > > > > 
-> > > > > Yes, do you have any other comments about my patch?
-> > > > 
-> > > > Not really. Just make sure to explicitly state that
-> > > > CONFIG_NODES_SPAN_OTHER_NODES is only about __early_pfn_to_nid and that
-> > > > doesn't really deserve it's own config and can be pulled under NUMA.
-> > > > 
-> > > > > > Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
-> > > > > > bucket? Do we have any NUMA architecture that doesn't enable it?
-> > > > > > 
-> > > 
-> > > HAVE_MEMBLOCK_NODE_MAP makes huge difference in node/zone initialization
-> > > sequence so it's not only about a singe function.
-> > 
-> > The question is whether we want to have this a config option or enable
-> > it unconditionally for each NUMA system.
+On 2019/7/31 19:29, Hans de Goede wrote:
+> Hi Petr,
 > 
-> We can make it 'default NUMA', but we can't drop it completely because
-> microblaze uses sparse_memory_present_with_active_regions() which is
-> unavailable when HAVE_MEMBLOCK_NODE_MAP=n.
+> On 31-07-19 13:06, Petr Vorel wrote:
+>> Hi,
+>>
+>>>> In delayedwork_callback(), logi_dj_recv_query_paired_devices
+>>>> may return positive value while success now, so check it
+>>>> correctly.
+>>
+>>>> Fixes: dbcbabf7da92 ("HID: logitech-dj: fix return value of logi_dj_recv_query_hidpp_devices")
+>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>> Reviewed-by: Petr Vorel <pvorel@suse.cz>
+>> OK, not only it didn't fix problems with logitech mouse (see below),
+>> but removing mouses USB dongle effectively crashes kernel, so this one probably
+>> shouldn't be applied :).
+>>
+>> [  330.721629] logitech-djreceiver: probe of 0003:046D:C52F.0013 failed with error 7
+>> [  331.462335] hid 0003:046D:C52F.0013: delayedwork_callback: logi_dj_recv_query_paired_devices error: 7
+> 
+> Please test my patch titled: "HID: logitech-dj: Really fix return value of logi_dj_recv_query_hidpp_devices"
+> which should fix this.
 
-I suppose you mean that microblaze is using
-sparse_memory_present_with_active_regions even without CONFIG_NUMA,
-right? I have to confess I do not understand that code. What is the deal
-with setting node id there?
--- 
-Michal Hocko
-SUSE Labs
+Yes, this is better one, thanks!
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> .
+> 
+
