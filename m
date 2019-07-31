@@ -2,108 +2,280 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0DCC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CBEC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79CC4216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C148C2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:09:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwHmDfLq"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="d+M66eBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbfGaXGs (ORCPT
+        id S1730623AbfGaXJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:06:48 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45978 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfGaXGr (ORCPT
+        Wed, 31 Jul 2019 19:09:56 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:16154 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaXJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:06:47 -0400
-Received: by mail-pg1-f196.google.com with SMTP id o13so32798537pgp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 16:06:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=049t7JxvZTTTjSKZ1poKKugPV6OSOy/7hb4LReWg88o=;
-        b=uwHmDfLq0KdRRrIpXBZ7eh2E2Di7CZCsc7Q4ENgQh9pTHk3z1+zjKf7oTZBOymsGIS
-         mnqtFBhdLcW/vLb9BKhOsF1r8tKUhH2SZyNqHdaOOW4EhxFLBdByJFXqYtU3rct1sR8x
-         DQ4pUSojQb0BZPBAzWpkCE8DfLkjinN+3dMTHyT3vVnRNHra0YbWT/Gfw69nX8iJwdAi
-         Lseiy9WWaE54CJg+RUrgeDBd7td8wHWw3TPatkiaa6sOTqPXRZqBLfjOGpLkCJMfxHJm
-         RnJ2r6c81O9ZleTk+YaUC2O/dZPpRL18733LECbGGYlK9s72ycaGCqYaL4b1Gc0DEXYt
-         w3Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=049t7JxvZTTTjSKZ1poKKugPV6OSOy/7hb4LReWg88o=;
-        b=P744u7Z1ABeaeuD/aAEjzTSU5ptREsuilasVpvKPxBL2WskJIsr8sPEdh9RSuuUj+o
-         Fyo4ITWqLhWfg/Z9r375Wjk4SuMKi3LeLDdL1DUdfmXfgtqe8WO+dS+g5dH16SCCz8ey
-         tGZt+fa5VmG7HiVBZb1ME/hbqgG5Bu8+fDKRUoyiAaNjiJIlVKN6s5+7zWq9hbV/wEil
-         aALG0tXRlqyAeuXVQ5oZSNVfornjvSVoQM+uOQApnbjZA7AjdSKFP4F6HGs8UsJDqw+L
-         HzsqMnIGGbj435Er/fOXUPX3XYgGReczNPHe/iXLVxyQ/hlygeL14w2+0m+3PYztEcP9
-         pgKg==
-X-Gm-Message-State: APjAAAXpFJGudcz4It5vDNKhA+fvdiXHt7mTNcaawjzjCCN18L6/5iML
-        wdR3szuXygJwArLa8Ubr6v+D7z+z
-X-Google-Smtp-Source: APXvYqxp2QruKLqLy7023Eu9qytL/7DmpVnAriEavxnn4B49X9D6LXrlXTRhvHAAadOvWaRD1E0HQA==
-X-Received: by 2002:a62:f20b:: with SMTP id m11mr50144512pfh.125.1564614407259;
-        Wed, 31 Jul 2019 16:06:47 -0700 (PDT)
-Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.googlemail.com with ESMTPSA id p187sm110668968pfg.89.2019.07.31.16.06.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 16:06:46 -0700 (PDT)
-Message-ID: <4ddee0dd719abd50350f997b8089fa26f6004c0c.camel@gmail.com>
-Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
-From:   Rashmica Gupta <rashmica.g@gmail.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        pasha.tatashin@soleen.com, Jonathan.Cameron@huawei.com,
-        anshuman.khandual@arm.com, Vlastimil Babka <vbabka@suse.cz>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Thu, 01 Aug 2019 09:06:40 +1000
-In-Reply-To: <20190731120859.GJ9330@dhcp22.suse.cz>
-References: <20190625075227.15193-1-osalvador@suse.de>
-         <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
-         <20190626080249.GA30863@linux>
-         <2750c11a-524d-b248-060c-49e6b3eb8975@redhat.com>
-         <20190626081516.GC30863@linux>
-         <887b902e-063d-a857-d472-f6f69d954378@redhat.com>
-         <9143f64391d11aa0f1988e78be9de7ff56e4b30b.camel@gmail.com>
-         <20190702074806.GA26836@linux>
-         <CAC6rBskRyh5Tj9L-6T4dTgA18H0Y8GsMdC-X5_0Jh1SVfLLYtg@mail.gmail.com>
-         <20190731120859.GJ9330@dhcp22.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 31 Jul 2019 19:09:56 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d421fca0002>; Wed, 31 Jul 2019 16:10:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 31 Jul 2019 16:09:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 16:09:53 -0700
+Received: from [10.110.102.167] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 23:09:52 +0000
+Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
+ support
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
+ <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
+ <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <67cf6c13-688d-0305-61e2-c63c8e8b4729@nvidia.com>
+Date:   Wed, 31 Jul 2019 16:09:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564614602; bh=bCESBTEjRJ2yCPeCpf0LHLzZ8JR/d7ttmqShyTrMFH4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=d+M66eBI3Q7G4ZXGia/V2zgqJl/vOgZ3mWNiE48qOmaSSgYHN/6KTtvyHujrqEqDv
+         nWW9wwsgF8fWClYWe/5kv3pnAphceBOQTQaqrefRvKaSogKwPR6kV8t/xAwDShCCGL
+         Ea94ji49VzFEFJLbZaf3kwJT4yliueYjJ+MYaD2PO3K+yZ8Imwnk8WjGIhw27kefEw
+         5T2Gdiy7OLqDXyjHb4uoTkQ0ifilbzh21i6kMSQ4vsmdirbXDUxWyo7hFQd3P5Wzo0
+         ea85PE0w7WHplFwNmwTVrI0erPiKV1J9wdFz2VCsN+rA8Xxw0bC45wnH1CBdVLM2uz
+         XhI34B1mg/IXA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-31 at 14:08 +0200, Michal Hocko wrote:
-> On Tue 02-07-19 18:52:01, Rashmica Gupta wrote:
-> [...]
-> > > 2) Why it was designed, what is the goal of the interface?
-> > > 3) When it is supposed to be used?
-> > > 
-> > > 
-> > There is a hardware debugging facility (htm) on some power chips.
-> > To use
-> > this you need a contiguous portion of memory for the output to be
-> > dumped
-> > to - and we obviously don't want this memory to be simultaneously
-> > used by
-> > the kernel.
-> 
-> How much memory are we talking about here? Just curious.
 
-From what I've seen a couple of GB per node, so maybe 2-10GB total.
+On 7/31/19 3:44 AM, Dmitry Osipenko wrote:
+> 31.07.2019 12:50, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> This patch implements save and restore context for peripheral fixed
+>>> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
+>>> peripheral clock ops.
+>>>
+>>> During system suspend, core power goes off and looses the settings
+>>> of the Tegra CAR controller registers.
+>>>
+>>> So during suspend entry clock and reset state of peripherals is saved
+>>> and on resume they are restored to have clocks back to same rate and
+>>> state as before suspend.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   drivers/clk/tegra/clk-periph-fixed.c | 33 +++++++++++++++++++++++++++=
++++++
+>>>   drivers/clk/tegra/clk-periph-gate.c  | 34 +++++++++++++++++++++++++++=
+++++++
+>>>   drivers/clk/tegra/clk-periph.c       | 37 +++++++++++++++++++++++++++=
++++++++++
+>>>   drivers/clk/tegra/clk-sdmmc-mux.c    | 28 +++++++++++++++++++++++++++
+>>>   drivers/clk/tegra/clk.h              |  6 ++++++
+>>>   5 files changed, 138 insertions(+)
+>>>
+>>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c b/drivers/clk/tegra/c=
+lk-periph-fixed.c
+>>> index c088e7a280df..21b24530fa00 100644
+>>> --- a/drivers/clk/tegra/clk-periph-fixed.c
+>>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
+>>> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct clk_hw *h=
+w,
+>>>   	return (unsigned long)rate;
+>>>   }
+>>>  =20
+>>> +static int tegra_clk_periph_fixed_save_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph_fixed *fixed =3D to_tegra_clk_periph_fixed(hw=
+);
+>>> +	u32 mask =3D 1 << (fixed->num % 32);
+>>> +
+>>> +	fixed->enb_ctx =3D readl_relaxed(fixed->base + fixed->regs->enb_reg) =
+&
+>>> +			 mask;
+>>> +	fixed->rst_ctx =3D readl_relaxed(fixed->base + fixed->regs->rst_reg) =
+&
+>>> +			 mask;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void tegra_clk_periph_fixed_restore_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph_fixed *fixed =3D to_tegra_clk_periph_fixed(hw=
+);
+>>> +	u32 mask =3D 1 << (fixed->num % 32);
+>>> +
+>>> +	if (fixed->enb_ctx)
+>>> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_set_reg);
+>>> +	else
+>>> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_clr_reg);
+>>> +
+>>> +	udelay(2);
+>>> +
+>>> +	if (!fixed->rst_ctx) {
+>>> +		udelay(5); /* reset propogation delay */
+>>> +		writel_relaxed(mask, fixed->base + fixed->regs->rst_reg);
+>>> +	}
+>>> +}
+>>> +
+>>>   static const struct clk_ops tegra_clk_periph_fixed_ops =3D {
+>>>   	.is_enabled =3D tegra_clk_periph_fixed_is_enabled,
+>>>   	.enable =3D tegra_clk_periph_fixed_enable,
+>>>   	.disable =3D tegra_clk_periph_fixed_disable,
+>>>   	.recalc_rate =3D tegra_clk_periph_fixed_recalc_rate,
+>>> +	.save_context =3D tegra_clk_periph_fixed_save_context,
+>>> +	.restore_context =3D tegra_clk_periph_fixed_restore_context,
+>>>   };
+>>>  =20
+>>>   struct clk *tegra_clk_register_periph_fixed(const char *name,
+>>> diff --git a/drivers/clk/tegra/clk-periph-gate.c b/drivers/clk/tegra/cl=
+k-periph-gate.c
+>>> index 4b31beefc9fc..6ba5b08e0787 100644
+>>> --- a/drivers/clk/tegra/clk-periph-gate.c
+>>> +++ b/drivers/clk/tegra/clk-periph-gate.c
+>>> @@ -25,6 +25,8 @@ static DEFINE_SPINLOCK(periph_ref_lock);
+>>>  =20
+>>>   #define read_rst(gate) \
+>>>   	readl_relaxed(gate->clk_base + (gate->regs->rst_reg))
+>>> +#define write_rst_set(val, gate) \
+>>> +	writel_relaxed(val, gate->clk_base + (gate->regs->rst_set_reg))
+>>>   #define write_rst_clr(val, gate) \
+>>>   	writel_relaxed(val, gate->clk_base + (gate->regs->rst_clr_reg))
+>>>  =20
+>>> @@ -110,10 +112,42 @@ static void clk_periph_disable(struct clk_hw *hw)
+>>>   	spin_unlock_irqrestore(&periph_ref_lock, flags);
+>>>   }
+>>>  =20
+>>> +static int clk_periph_gate_save_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph_gate *gate =3D to_clk_periph_gate(hw);
+>>> +
+>>> +	gate->clk_state_ctx =3D read_enb(gate) & periph_clk_to_bit(gate);
+>>> +	gate->rst_state_ctx =3D read_rst(gate) & periph_clk_to_bit(gate);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void clk_periph_gate_restore_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph_gate *gate =3D to_clk_periph_gate(hw);
+>>> +
+>>> +	if (gate->clk_state_ctx)
+>>> +		write_enb_set(periph_clk_to_bit(gate), gate);
+>>> +	else
+>>> +		write_enb_clr(periph_clk_to_bit(gate), gate);
+>>> +
+>>> +	udelay(5);
+>>> +
+>>> +	if (!(gate->flags & TEGRA_PERIPH_NO_RESET) &&
+>>> +	    !(gate->flags & TEGRA_PERIPH_MANUAL_RESET)) {
+>>> +		if (gate->rst_state_ctx)
+>>> +			write_rst_set(periph_clk_to_bit(gate), gate);
+>>> +		else
+>>> +			write_rst_clr(periph_clk_to_bit(gate), gate);
+>>> +	}
+>>> +}
+>>> +
+>>>   const struct clk_ops tegra_clk_periph_gate_ops =3D {
+>>>   	.is_enabled =3D clk_periph_is_enabled,
+>>>   	.enable =3D clk_periph_enable,
+>>>   	.disable =3D clk_periph_disable,
+>>> +	.save_context =3D clk_periph_gate_save_context,
+>>> +	.restore_context =3D clk_periph_gate_restore_context,
+>>>   };
+>>>  =20
+>>>   struct clk *tegra_clk_register_periph_gate(const char *name,
+>>> diff --git a/drivers/clk/tegra/clk-periph.c b/drivers/clk/tegra/clk-per=
+iph.c
+>>> index 58437da25156..06fb62955768 100644
+>>> --- a/drivers/clk/tegra/clk-periph.c
+>>> +++ b/drivers/clk/tegra/clk-periph.c
+>>> @@ -99,6 +99,37 @@ static void clk_periph_disable(struct clk_hw *hw)
+>>>   	gate_ops->disable(gate_hw);
+>>>   }
+>>>  =20
+>>> +static int clk_periph_save_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph *periph =3D to_clk_periph(hw);
+>>> +	const struct clk_ops *gate_ops =3D periph->gate_ops;
+>>> +	struct clk_hw *gate_hw =3D &periph->gate.hw;
+>>> +
+>>> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_GATE))
+>>> +		gate_ops->save_context(gate_hw);
+>>> +
+>>> +	periph->parent_ctx =3D clk_periph_get_parent(hw);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void clk_periph_restore_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph *periph =3D to_clk_periph(hw);
+>>> +	const struct clk_ops *gate_ops =3D periph->gate_ops;
+>>> +	struct clk_hw *gate_hw =3D &periph->gate.hw;
+>>> +	const struct clk_ops *div_ops =3D periph->div_ops;
+>>> +	struct clk_hw *div_hw =3D &periph->divider.hw;
+>>> +
+>>> +	clk_periph_set_parent(hw, periph->parent_ctx);
+>>> +
+>>> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_DIV))
+>>> +		div_ops->restore_context(div_hw);
+>> Could you please point to where the divider's save_context() happens?
+>> Because I can't see it.
+> Ah, I now see that there is no need to save the dividers context because
+> clk itself has enough info that is needed for the context's restoring
+> (like I pointed in the review to v6).
+>
+> Looks like you could also implement a new clk_hw_get_parent_index()
+> generic helper to get the index instead of storing it manually.
+
+clk_periph_get_parent basically invokes existing clk_mux_ops=20
+get_parent() which is then saved in tegra_clk_periph.
+
+All existing drivers are using directly get_parent() from clk_mux which=20
+actually gets index from the register read.
+
+To have this more generic w.r.t save/restore context point of view,=20
+probably instead of implementing new get_parent_index helper, I think=20
+its better to implement save_context and restore_context to clk_mux_ops=20
+along with creating parent_index field into clk_mux to cache index=20
+during set_parent.
+
+So we just need to invoke mux_ops save_context and restore_context.
 
