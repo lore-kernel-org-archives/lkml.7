@@ -2,92 +2,112 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FBBC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823C6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C8B206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CA0206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbfGaQkO (ORCPT
+        id S1730254AbfGaQkS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:40:14 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39996 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729479AbfGaQkC (ORCPT
+        Wed, 31 Jul 2019 12:40:18 -0400
+Received: from mailoutvs30.siol.net ([185.57.226.221]:34957 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729842AbfGaQkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:40:02 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r1so70396108wrl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 09:40:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XI06jTjz4+2NKP2BFSy4p2nkfAb+YDjyBM/JZqjZVIM=;
-        b=ACw1s+I6MMWbiYCIdzWbj0ERGB890ivnzAf36UbHkJVbXZHAlHsvjMZ8MhnB30kZud
-         FR5P+W4X5oQx9c9ChRQyXMwXXN1dbOGImJTJNWlzORKZFRHThTeKqFVaISk9LWvXK+8U
-         pfNQg5/A2Vmo9ovLV69nkyXXYMB9D/DAbjPRzQJJDWNOJu2xd8ek6/khjCtw6RwfWMju
-         vNKvOcgvEyC6oqMDnN2vMlV0gVGaDcYDF6RSQphsCLZyfU4hNZC0xHZubqrVVeh3BGPT
-         Dzva5zl8Dyk7vVmV9G6OifNJ/lFY+Zr9ITTCOOzI0wJBwmV3MEVOCT2CIEUTn+63761Q
-         J8Fg==
-X-Gm-Message-State: APjAAAX+avgmIjuH/AWTKA7OBgj3b/5KghN3MSlyqv23/os+Hm6GYdGy
-        ZS83Xd04hbGr6Qc59ZR3kw2veQ==
-X-Google-Smtp-Source: APXvYqzGvsX8Ui9AnwLJ1T6O1kIB86uHMLmhVL+oWhIIY1U3ZwpCTgm/bsOd5xhk8P++HgN8/F2sNw==
-X-Received: by 2002:adf:edd1:: with SMTP id v17mr50892863wro.348.1564591200457;
-        Wed, 31 Jul 2019 09:40:00 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id b19sm48840224wmj.13.2019.07.31.09.39.59
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 09:39:59 -0700 (PDT)
-Subject: Re: [PATCH 1/3] KVM: Don't need to wakeup vCPU twice afer timer fire
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <kernellwp@gmail.com>
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <1564572438-15518-1-git-send-email-wanpengli@tencent.com>
- <ab8f8b07-e3f9-4831-c386-0bfa0314f9c3@redhat.com>
- <87imri73dp.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <a3c6d25e-8ede-695d-8f2d-632799c5fb1c@redhat.com>
-Date:   Wed, 31 Jul 2019 18:39:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 12:40:12 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 7B0A05209AE;
+        Wed, 31 Jul 2019 18:40:08 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id fXh7Bj71aPKg; Wed, 31 Jul 2019 18:40:08 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 84F755233C1;
+        Wed, 31 Jul 2019 18:40:07 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id 488405209AE;
+        Wed, 31 Jul 2019 18:40:04 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Lee Jones <lee.jones@linaro.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
+Date:   Wed, 31 Jul 2019 18:40:03 +0200
+Message-ID: <13373313.BzCyiC4ED7@jernej-laptop>
+In-Reply-To: <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
+References: <cover.1563983037.git.agx@sigxcpu.org> <20190731143532.GA1935@bogon.m.sigxcpu.org> <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87imri73dp.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/07/19 15:14, Vitaly Kuznetsov wrote:
-> Paolo Bonzini <pbonzini@redhat.com> writes:
-> 
->> On 31/07/19 13:27, Wanpeng Li wrote:
->>> From: Wanpeng Li <wanpengli@tencent.com>
->>>
->>> kvm_set_pending_timer() will take care to wake up the sleeping vCPU which 
->>> has pending timer, don't need to check this in apic_timer_expired() again.
->>
->> No, it doesn't.  kvm_make_request never kicks the vCPU.
->>
-> 
-> Hm, but kvm_set_pending_timer() currently looks like:
-> 
-> void kvm_set_pending_timer(struct kvm_vcpu *vcpu)
-> {
-> 	kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
-> 	kvm_vcpu_kick(vcpu);
-> }
+Hi!
 
-Doing "git fetch" could have helped indeed.
+Dne sreda, 31. julij 2019 ob 16:43:47 CEST je Fabio Estevam napisal(a):
+> Hi Guido,
+> 
+> On Wed, Jul 31, 2019 at 11:35 AM Guido Günther <agx@sigxcpu.org> wrote:
+> > The idea is to have
+> > 
+> >     "%sabling platform clocks", enable ? "en" : "dis");
+> > 
+> > depending whether clocks are enabled/disabled.
+> 
+> Yes, I understood the idea, but this would print:
+> 
+> ensabling or dissabling :-)
 
-Paolo
+No, it wouldn't. That extra "s" is part of "%s", e.g. part of format specifier.
+
+Best regards,
+Jernej
+
+> 
+> > > Same here. Please return 'int' instead.
+> > 
+> > This is from drm_bridge_funcs so the prototype is fixed. I'm not sure
+> > how what's the best way to bubble up fatal errors through the drm layer?
+> 
+> Ok, so let's not change this one.
+> 
+> > I went for DRM_DEV_ERROR() since that what i used in the rest of the
+> > driver and these ones were omission. Hope that's o.k.
+> 
+> No strong preferences here. I just think dev_err() easier to type and
+> shorter.
+> 
+> Thanks for this work!
+
+
+
 
