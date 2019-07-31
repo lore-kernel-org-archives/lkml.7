@@ -2,80 +2,103 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFC9C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0562C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD07206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF27A206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:32:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YNHkNtgB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbfGaVcB (ORCPT
+        id S1730865AbfGaVcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:32:01 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:40063 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729721AbfGaVcB (ORCPT
+        Wed, 31 Jul 2019 17:32:52 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39262 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfGaVcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:32:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id v11so76700653iop.7
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 14:32:00 -0700 (PDT)
+        Wed, 31 Jul 2019 17:32:52 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so31089209pls.6;
+        Wed, 31 Jul 2019 14:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=N9gPxJSS+drGx3gkBDyyqIUQ628VPY96K/YYURGM20I=;
+        b=YNHkNtgBwrh6nbpMkE8s3S3DSkUREUY/zJ2lSMLIGS/mcdDXEu61HGn0u5lfYe3SdE
+         6Go5On1veg0XK8WJi7hoYXZsPxNh6JX/ZFzk1LCQZezGU+hn7E8ciqMiM9d7WnhBcwQj
+         nDiRLpMV4Zq/V35AdaeT1sCJXmtALheS2q/h34dZDk1FD0d4udGXjbhjiVXFkebOUkwp
+         tC/WiopiafnP5mBCYfGZRFa6iihOMplq97v1Opz9zqHRdPf67wWlmGbpxJxtNgt7Te6H
+         GmKh7Hrtxj49Gps3mFuGfssRxNEXAT2EnQFktBFA4a51QQRptYLap9SIcJAHb3vhMmkb
+         WHhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=f0dy6kexOd2FnIvWJ+xs8RuUZn++/g3nMaxpfE04Ep0=;
-        b=cRaGC0qPWGJtWUiCYyiYkThItTkApgKOdlyKfNdbNaIgyU7oAxa7ccr5pKzqlx93bm
-         7T8SSC/EEvJ3mrsmywhtmzOdsj+El7Y7ktxTM0WQBo3TWKte6N5/2JHJe2DAr2yaBPEJ
-         WfNdEEoeEClHxoCcmURQGOtkg0E+MZXcW+hSdlApVtMXHh73jkyKHGIH5kSG3MP/GcbB
-         y7Rm8kR2rIYJAj8dTO59FTwml9Kbzs4Gc4iLAoYQF7dlkI/bmrfSY/imQJHSFF0HpiCQ
-         rb1ccxJstbL3DNorMu4hKz2dYP1XO1jXdAKOPXbBTpP4NEET0YXU5KR9b/3XUvGQ/cUK
-         Dxag==
-X-Gm-Message-State: APjAAAU6zRheY+BQEToM7M6TPH6qeh9zz6jRpxSk1SPDGxwjuyQuIal6
-        4sXDkGQ8IQ+EbZ/gwKJC2PD9L0Sw3L2pvTaO9Ihhn8ac58tm
-X-Google-Smtp-Source: APXvYqwVPz+8gD0GBmy3CsE0op/bI4tHp70A9CTOcj/3hT40iRHICuhe/dAtU7/Fw6Klat0pJPM5AyBuP8aWPA3vxEXR67WnoJpp
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=N9gPxJSS+drGx3gkBDyyqIUQ628VPY96K/YYURGM20I=;
+        b=XBc3O3OuayndMfKq5gw+uarNizVhl3NSbYQ7w/sJuCnzJgv9JAOtKyHcdyNXN17hUQ
+         opaxwjTkHYw+/1mPxTuwq5LNRC3z22IfCCtkO0DBuohV6yCue4NNR9ozenOd7YT4xoyI
+         qromiBcEnEJPp/aVlVO0ls0oBgAbuFJCFpa3RpJU51MDUKF3amUMGefcWPGfYsRpE4Ke
+         ObeKXjdorMRCkhDvtjefK1IQOkMSFEwHs+ZPS4R2lo/ObZMM1mpS1nlMgNSRBlyTG78h
+         3az5yw/GHZ2qD0hyR576MTvws+r9cNiqcJ9hQ57dANT+vLlFz2eLD6wEc2iKinaJasOi
+         QN/A==
+X-Gm-Message-State: APjAAAUrKYtNfp3gzm5FU1GmjYh5tIs00EW/7NXnau2D2J+NFUHivT2R
+        CAn+e+UC02v2JNtxP9bfPSpp/J0XgBY=
+X-Google-Smtp-Source: APXvYqwtPtb7EptjDKSGnhnZQetheDAKXUj8SLRER2Ll27IMu2RKc7zxzE2dlBUODNwFvzF3lXVDfA==
+X-Received: by 2002:a17:902:6b85:: with SMTP id p5mr118280098plk.225.1564608771566;
+        Wed, 31 Jul 2019 14:32:51 -0700 (PDT)
+Received: from [192.168.1.4] (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id i7sm2309345pjk.24.2019.07.31.14.32.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 14:32:50 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+X-Google-Original-From: Mark Balantzyan <mbalantz@exun.local>
+Date:   Wed, 31 Jul 2019 14:32:46 -0700 (PDT)
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+cc:     Mark Balantzyan <mbalant3@gmail.com>,
+        ezequiel@vanguardiasur.com.ar, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media input infrastructure:tw686x: Fix of possibleinconsistent
+ memory deallocation and/or race condition by implementation of custom
+ video_device_release function in tw686x driver
+In-Reply-To: <40d14e23-636e-ed8a-6608-99427f5b8169@xs4all.nl>
+Message-ID: <alpine.OSX.2.21.1907311431410.3567@exun.local>
+References: <alpine.DEB.2.21.1907291256080.16959@mbalantz-desktop> <40d14e23-636e-ed8a-6608-99427f5b8169@xs4all.nl>
+User-Agent: Alpine 2.21 (OSX 202 2017-01-01)
 MIME-Version: 1.0
-X-Received: by 2002:a02:914c:: with SMTP id b12mr83757999jag.105.1564608720391;
- Wed, 31 Jul 2019 14:32:00 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 14:32:00 -0700
-In-Reply-To: <000000000000e42667058e554371@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fdd90c058f00daca@google.com>
-Subject: Re: KASAN: use-after-free Read in nr_rx_frame (2)
-From:   syzbot <syzbot+701728447042217b67c1@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dvyukov@google.com,
-        linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, ralf@linux-mips.org,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Hi Hans, all,
 
-commit c8c8218ec5af5d2598381883acbefbf604e56b5e
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu Jun 27 21:30:58 2019 +0000
+Sorry for the poor patching, I am a student and as you may tell still new 
+to this system. At the time of the patching, I wasn't fully informed of 
+all the requirements that go into such things, and am still learning.
 
-     netrom: fix a memory leak in nr_rx_frame()
+Would it be alright if I submit a report instead? In order to, I am 
+(still, sorry) trying to understand the issue at hand. How in fact may the 
+release() callback be overridden (by a tw686x-specific function) to free 
+the dma memory and call video_device_release()? To my understanding at the 
+time, this was merely a re-implementation of video_device_release with 
+said requirements and subtraction of extra features from 
+tw686x_video_free()..
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=122ddaec600000
-start commit:   629f8205 Merge tag 'for-linus-20190730' of git://git.kerne..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=112ddaec600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=162ddaec600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e397351d2615e10
-dashboard link: https://syzkaller.appspot.com/bug?extid=701728447042217b67c1
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a6e008600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11937d92600000
+ 	This release() callback is called by the V4L2 framework when the last user
+ 	of the device closes its filehandle, so that's a good point to free all
+ 	the memory. Doing it earlier (as the current code does) runs the risk that someone might
+ 	still access that memory, and you don't want that.
 
-Reported-by: syzbot+701728447042217b67c1@syzkaller.appspotmail.com
-Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
+Yes, I definitely don't want that. :)
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Thank you,
+Mark
+
