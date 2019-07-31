@@ -2,373 +2,97 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C486AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A5FC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888A0206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:51:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pu3WXnPX"
+	by mail.kernel.org (Postfix) with ESMTP id 3301E206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbfGaJvM (ORCPT
+        id S1728966AbfGaJyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:51:12 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41341 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfGaJvM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:51:12 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d24so64949546ljg.8;
-        Wed, 31 Jul 2019 02:51:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uXMzma96yP1mu/MdRyIduiN1huH25HRlQy8bnWBwt3g=;
-        b=Pu3WXnPX6uPxFbsTZexh+C6HQK8Y55AZReH4lb2Fiz8yMsyFkfYQkpHfYQQg7CsSUt
-         ygWGP2JMigXfD8FUj1CGsbzPVKPaX0amz40V49XvOrQbHfSpSHHiuNVoq+FPUagdUIaC
-         9LeTmnpuvnHkLqJ1tNvjjJm38XHe8IvgDOOnPYIKaRhf06/SEKBKgDNQloV1/innCNN5
-         SghlBgcfHxtIS+/wfcs+64ZWVSBv/L4rTMN33UtdhLJnpR8gQY55+jpuxTf0uwDJxmsA
-         N5aavL7sb7LRqOGMNGskCPdjJdekWBFbV0lgke0yRhgSHbhNctA6n7tx50BvMtF9/0B1
-         HguA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uXMzma96yP1mu/MdRyIduiN1huH25HRlQy8bnWBwt3g=;
-        b=ZuzrXIqQrFCU0f4SH7887eCQzaU/FuO95mRrftonL7nANzXd3Z9ke4VZbWdRGincoz
-         coBWRRoMBo3JQD7MRixVra06linao3fNjSWdDahw9nMw4iRHb9vB1nu6d6Iph4VmvKV/
-         E2YkZKgN+1LFzxg8ecBXPqWrNl8H/7pTAjVP8+7S2yCBLuX6tPb6fxu1/SKXojQw8kpd
-         fr0FBU0RYLZrDeV+keZ82gaCp+oMtBPjp7eedD3UI1GslO6Dmc5UAm+cDPIG2Fb0hMoc
-         11QGGggCk7CHTk4FV1tiMMq98rOoOCORRdWEC44xg11+/l0YFJRKvexo2FY7oG6R9stL
-         FyeQ==
-X-Gm-Message-State: APjAAAWHPtV/mPJQTx7WaN0JoDq4DLq1hVPdxTha6eEZIWN/1oxb/L7N
-        eScE6FXTIJgiMpYs1MvOEKkPKtYc
-X-Google-Smtp-Source: APXvYqyx82z4kX/qQMvLFAPOYggQbAGp2YtEpUY47/9X1xrOTyeYEsbekaRIHTZvpg18fWOKU7+Xgw==
-X-Received: by 2002:a2e:3c1a:: with SMTP id j26mr64245005lja.230.1564566668268;
-        Wed, 31 Jul 2019 02:51:08 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id x22sm11820919lfq.20.2019.07.31.02.51.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 02:51:07 -0700 (PDT)
-Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
- support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
-Date:   Wed, 31 Jul 2019 12:50:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 31 Jul 2019 05:54:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:43700 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbfGaJyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:54:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D67D0337;
+        Wed, 31 Jul 2019 02:53:59 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E50EE3F71F;
+        Wed, 31 Jul 2019 02:53:58 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 10:53:56 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v2] mm: kmemleak: Use mempool allocations for kmemleak
+ objects
+Message-ID: <20190731095355.GC63307@arrakis.emea.arm.com>
+References: <20190727132334.9184-1-catalin.marinas@arm.com>
+ <20190730125743.113e59a9c449847d7f6ae7c3@linux-foundation.org>
+ <1564518157.11067.34.camel@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1564518157.11067.34.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.07.2019 3:20, Sowjanya Komatineni Ð¿Ð¸ÑˆÐµÑ‚:
-> This patch implements save and restore context for peripheral fixed
-> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
-> peripheral clock ops.
+On Tue, Jul 30, 2019 at 04:22:37PM -0400, Qian Cai wrote:
+> On Tue, 2019-07-30 at 12:57 -0700, Andrew Morton wrote:
+> > On Sat, 27 Jul 2019 14:23:33 +0100 Catalin Marinas <catalin.marinas@arm.com>
+> > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > @@ -2011,6 +2011,12 @@
+> > >  			Built with CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF=y,
+> > >  			the default is off.
+> > >  
+> > > +	kmemleak.mempool=
+> > > +			[KNL] Boot-time tuning of the minimum kmemleak
+> > > +			metadata pool size.
+> > > +			Format: <int>
+> > > +			Default: NR_CPUS * 4
+> > > +
 > 
-> During system suspend, core power goes off and looses the settings
-> of the Tegra CAR controller registers.
+> Catalin, BTW, it is right now unable to handle a large size. I tried to reserve
+> 64M (kmemleak.mempool=67108864),
 > 
-> So during suspend entry clock and reset state of peripherals is saved
-> and on resume they are restored to have clocks back to same rate and
-> state as before suspend.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-periph-fixed.c | 33 ++++++++++++++++++++++++++++++++
->  drivers/clk/tegra/clk-periph-gate.c  | 34 +++++++++++++++++++++++++++++++++
->  drivers/clk/tegra/clk-periph.c       | 37 ++++++++++++++++++++++++++++++++++++
->  drivers/clk/tegra/clk-sdmmc-mux.c    | 28 +++++++++++++++++++++++++++
->  drivers/clk/tegra/clk.h              |  6 ++++++
->  5 files changed, 138 insertions(+)
-> 
-> diff --git a/drivers/clk/tegra/clk-periph-fixed.c b/drivers/clk/tegra/clk-periph-fixed.c
-> index c088e7a280df..21b24530fa00 100644
-> --- a/drivers/clk/tegra/clk-periph-fixed.c
-> +++ b/drivers/clk/tegra/clk-periph-fixed.c
-> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct clk_hw *hw,
->  	return (unsigned long)rate;
->  }
->  
-> +static int tegra_clk_periph_fixed_save_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_periph_fixed *fixed = to_tegra_clk_periph_fixed(hw);
-> +	u32 mask = 1 << (fixed->num % 32);
-> +
-> +	fixed->enb_ctx = readl_relaxed(fixed->base + fixed->regs->enb_reg) &
-> +			 mask;
-> +	fixed->rst_ctx = readl_relaxed(fixed->base + fixed->regs->rst_reg) &
-> +			 mask;
-> +
-> +	return 0;
-> +}
-> +
-> +static void tegra_clk_periph_fixed_restore_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_periph_fixed *fixed = to_tegra_clk_periph_fixed(hw);
-> +	u32 mask = 1 << (fixed->num % 32);
-> +
-> +	if (fixed->enb_ctx)
-> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_set_reg);
-> +	else
-> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_clr_reg);
-> +
-> +	udelay(2);
-> +
-> +	if (!fixed->rst_ctx) {
-> +		udelay(5); /* reset propogation delay */
-> +		writel_relaxed(mask, fixed->base + fixed->regs->rst_reg);
-> +	}
-> +}
-> +
->  static const struct clk_ops tegra_clk_periph_fixed_ops = {
->  	.is_enabled = tegra_clk_periph_fixed_is_enabled,
->  	.enable = tegra_clk_periph_fixed_enable,
->  	.disable = tegra_clk_periph_fixed_disable,
->  	.recalc_rate = tegra_clk_periph_fixed_recalc_rate,
-> +	.save_context = tegra_clk_periph_fixed_save_context,
-> +	.restore_context = tegra_clk_periph_fixed_restore_context,
->  };
->  
->  struct clk *tegra_clk_register_periph_fixed(const char *name,
-> diff --git a/drivers/clk/tegra/clk-periph-gate.c b/drivers/clk/tegra/clk-periph-gate.c
-> index 4b31beefc9fc..6ba5b08e0787 100644
-> --- a/drivers/clk/tegra/clk-periph-gate.c
-> +++ b/drivers/clk/tegra/clk-periph-gate.c
-> @@ -25,6 +25,8 @@ static DEFINE_SPINLOCK(periph_ref_lock);
->  
->  #define read_rst(gate) \
->  	readl_relaxed(gate->clk_base + (gate->regs->rst_reg))
-> +#define write_rst_set(val, gate) \
-> +	writel_relaxed(val, gate->clk_base + (gate->regs->rst_set_reg))
->  #define write_rst_clr(val, gate) \
->  	writel_relaxed(val, gate->clk_base + (gate->regs->rst_clr_reg))
->  
-> @@ -110,10 +112,42 @@ static void clk_periph_disable(struct clk_hw *hw)
->  	spin_unlock_irqrestore(&periph_ref_lock, flags);
->  }
->  
-> +static int clk_periph_gate_save_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_periph_gate *gate = to_clk_periph_gate(hw);
-> +
-> +	gate->clk_state_ctx = read_enb(gate) & periph_clk_to_bit(gate);
-> +	gate->rst_state_ctx = read_rst(gate) & periph_clk_to_bit(gate);
-> +
-> +	return 0;
-> +}
-> +
-> +static void clk_periph_gate_restore_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_periph_gate *gate = to_clk_periph_gate(hw);
-> +
-> +	if (gate->clk_state_ctx)
-> +		write_enb_set(periph_clk_to_bit(gate), gate);
-> +	else
-> +		write_enb_clr(periph_clk_to_bit(gate), gate);
-> +
-> +	udelay(5);
-> +
-> +	if (!(gate->flags & TEGRA_PERIPH_NO_RESET) &&
-> +	    !(gate->flags & TEGRA_PERIPH_MANUAL_RESET)) {
-> +		if (gate->rst_state_ctx)
-> +			write_rst_set(periph_clk_to_bit(gate), gate);
-> +		else
-> +			write_rst_clr(periph_clk_to_bit(gate), gate);
-> +	}
-> +}
-> +
->  const struct clk_ops tegra_clk_periph_gate_ops = {
->  	.is_enabled = clk_periph_is_enabled,
->  	.enable = clk_periph_enable,
->  	.disable = clk_periph_disable,
-> +	.save_context = clk_periph_gate_save_context,
-> +	.restore_context = clk_periph_gate_restore_context,
->  };
->  
->  struct clk *tegra_clk_register_periph_gate(const char *name,
-> diff --git a/drivers/clk/tegra/clk-periph.c b/drivers/clk/tegra/clk-periph.c
-> index 58437da25156..06fb62955768 100644
-> --- a/drivers/clk/tegra/clk-periph.c
-> +++ b/drivers/clk/tegra/clk-periph.c
-> @@ -99,6 +99,37 @@ static void clk_periph_disable(struct clk_hw *hw)
->  	gate_ops->disable(gate_hw);
->  }
->  
-> +static int clk_periph_save_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_periph *periph = to_clk_periph(hw);
-> +	const struct clk_ops *gate_ops = periph->gate_ops;
-> +	struct clk_hw *gate_hw = &periph->gate.hw;
-> +
-> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_GATE))
-> +		gate_ops->save_context(gate_hw);
-> +
-> +	periph->parent_ctx = clk_periph_get_parent(hw);
-> +
-> +	return 0;
-> +}
-> +
-> +static void clk_periph_restore_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_periph *periph = to_clk_periph(hw);
-> +	const struct clk_ops *gate_ops = periph->gate_ops;
-> +	struct clk_hw *gate_hw = &periph->gate.hw;
-> +	const struct clk_ops *div_ops = periph->div_ops;
-> +	struct clk_hw *div_hw = &periph->divider.hw;
-> +
-> +	clk_periph_set_parent(hw, periph->parent_ctx);
-> +
-> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_DIV))
-> +		div_ops->restore_context(div_hw);
+> [    0.039254][    T0] WARNING: CPU: 0 PID: 0 at mm/page_alloc.c:4707 __alloc_pages_nodemask+0x3b8/0x1780
+[...]
+> [    0.039646][    T0] NIP [c000000000395038] __alloc_pages_nodemask+0x3b8/0x1780
+> [    0.039693][    T0] LR [c0000000003d9320] kmalloc_large_node+0x100/0x1a0
+> [    0.039727][    T0] Call Trace:
+> [    0.039795][    T0] [c00000000170fc80] [c0000000003e5080] __kmalloc_node+0x520/0x890
+> [    0.039816][    T0] [c00000000170fd20] [c0000000002e9544] mempool_init_node+0xb4/0x1e0
+> [    0.039836][    T0] [c00000000170fd80] [c0000000002e975c] mempool_create_node+0xcc/0x150
+> [    0.039857][    T0] [c00000000170fdf0] [c000000000b2a730] kmemleak_init+0x16c/0x54c
+> [    0.039878][    T0] [c00000000170fef0] [c000000000ae460c] start_kernel+0x69c/0x7cc
+> [    0.039908][    T0] [c00000000170ff90] [c00000000000a7d4] start_here_common+0x1c/0x434
+[...]
+> [    0.040100][    T0] kmemleak: Kernel memory leak detector disabled
 
-Could you please point to where the divider's save_context() happens?
-Because I can't see it.
+It looks like the mempool cannot be created. 64M objects means a
+kmalloc(512MB) for the pool array in mempool_init_node(), so that hits
+the MAX_ORDER warning in __alloc_pages_nodemask().
 
-> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_GATE))
-> +		gate_ops->restore_context(gate_hw);
-> +}
-> +
->  const struct clk_ops tegra_clk_periph_ops = {
->  	.get_parent = clk_periph_get_parent,
->  	.set_parent = clk_periph_set_parent,
-> @@ -108,6 +139,8 @@ const struct clk_ops tegra_clk_periph_ops = {
->  	.is_enabled = clk_periph_is_enabled,
->  	.enable = clk_periph_enable,
->  	.disable = clk_periph_disable,
-> +	.save_context = clk_periph_save_context,
-> +	.restore_context = clk_periph_restore_context,
->  };
->  
->  static const struct clk_ops tegra_clk_periph_nodiv_ops = {
-> @@ -116,6 +149,8 @@ static const struct clk_ops tegra_clk_periph_nodiv_ops = {
->  	.is_enabled = clk_periph_is_enabled,
->  	.enable = clk_periph_enable,
->  	.disable = clk_periph_disable,
-> +	.save_context = clk_periph_save_context,
-> +	.restore_context = clk_periph_restore_context,
->  };
->  
->  static const struct clk_ops tegra_clk_periph_no_gate_ops = {
-> @@ -124,6 +159,8 @@ static const struct clk_ops tegra_clk_periph_no_gate_ops = {
->  	.recalc_rate = clk_periph_recalc_rate,
->  	.round_rate = clk_periph_round_rate,
->  	.set_rate = clk_periph_set_rate,
-> +	.save_context = clk_periph_save_context,
-> +	.restore_context = clk_periph_restore_context,
->  };
->  
->  static struct clk *_tegra_clk_register_periph(const char *name,
-> diff --git a/drivers/clk/tegra/clk-sdmmc-mux.c b/drivers/clk/tegra/clk-sdmmc-mux.c
-> index a5cd3e31dbae..48da9d7fea80 100644
-> --- a/drivers/clk/tegra/clk-sdmmc-mux.c
-> +++ b/drivers/clk/tegra/clk-sdmmc-mux.c
-> @@ -194,6 +194,32 @@ static void clk_sdmmc_mux_disable(struct clk_hw *hw)
->  	gate_ops->disable(gate_hw);
->  }
->  
-> +static int clk_sdmmc_mux_save_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_sdmmc_mux *sdmmc_mux = to_clk_sdmmc_mux(hw);
-> +	const struct clk_ops *gate_ops = sdmmc_mux->gate_ops;
-> +	struct clk_hw *gate_hw = &sdmmc_mux->gate.hw;
-> +
-> +	sdmmc_mux->parent_ctx = clk_sdmmc_mux_get_parent(hw);
-> +	gate_ops->save_context(gate_hw);
-> +
-> +	return 0;
-> +}
-> +
-> +static void clk_sdmmc_mux_restore_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_sdmmc_mux *sdmmc_mux = to_clk_sdmmc_mux(hw);
-> +	const struct clk_ops *gate_ops = sdmmc_mux->gate_ops;
-> +	struct clk_hw *gate_hw = &sdmmc_mux->gate.hw;
-> +	struct clk_hw *parent = clk_hw_get_parent(hw);
-> +	unsigned long parent_rate = clk_hw_get_rate(parent);
-> +	unsigned long rate = clk_hw_get_rate(hw);
-> +
-> +	clk_sdmmc_mux_set_parent(hw, sdmmc_mux->parent_ctx);
-> +	clk_sdmmc_mux_set_rate(hw, rate, parent_rate);
-> +	gate_ops->restore_context(gate_hw);
-> +}
-> +
->  static const struct clk_ops tegra_clk_sdmmc_mux_ops = {
->  	.get_parent = clk_sdmmc_mux_get_parent,
->  	.set_parent = clk_sdmmc_mux_set_parent,
-> @@ -203,6 +229,8 @@ static const struct clk_ops tegra_clk_sdmmc_mux_ops = {
->  	.is_enabled = clk_sdmmc_mux_is_enabled,
->  	.enable = clk_sdmmc_mux_enable,
->  	.disable = clk_sdmmc_mux_disable,
-> +	.save_context = clk_sdmmc_mux_save_context,
-> +	.restore_context = clk_sdmmc_mux_restore_context,
->  };
->  
->  struct clk *tegra_clk_register_sdmmc_mux_div(const char *name,
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index abba6d8a04cd..d61e61eebf4a 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -517,6 +517,8 @@ struct tegra_clk_periph_gate {
->  	int			clk_num;
->  	int			*enable_refcnt;
->  	const struct tegra_clk_periph_regs *regs;
-> +	bool			clk_state_ctx;
-> +	bool			rst_state_ctx;
->  };
->  
->  #define to_clk_periph_gate(_hw)					\
-> @@ -543,6 +545,8 @@ struct tegra_clk_periph_fixed {
->  	unsigned int mul;
->  	unsigned int div;
->  	unsigned int num;
-> +	bool enb_ctx;
-> +	bool rst_ctx;
->  };
->  
->  struct clk *tegra_clk_register_periph_fixed(const char *name,
-> @@ -575,6 +579,7 @@ struct tegra_clk_periph {
->  	const struct clk_ops	*mux_ops;
->  	const struct clk_ops	*div_ops;
->  	const struct clk_ops	*gate_ops;
-> +	u8			parent_ctx;
->  };
->  
->  #define to_clk_periph(_hw) container_of(_hw, struct tegra_clk_periph, hw)
-> @@ -726,6 +731,7 @@ struct tegra_sdmmc_mux {
->  	const struct clk_ops	*gate_ops;
->  	struct tegra_clk_periph_gate	gate;
->  	u8			div_flags;
-> +	u8			parent_ctx;
->  };
->  
->  #define to_clk_sdmmc_mux(_hw) container_of(_hw, struct tegra_sdmmc_mux, hw)
-> 
+Maybe the mempool tunable won't help much for your case if you need so
+many objects. It's still worth having a mempool for kmemleak but we
+could look into changing the refill logic while keeping the original
+size constant (say 1024 objects).
 
+> [   16.192449][    T1] BUG: Unable to handle kernel data access at 0xffffffffffffb2aa
+
+This doesn't seem kmemleak related from the trace.
+
+-- 
+Catalin
