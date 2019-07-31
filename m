@@ -2,101 +2,170 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EA3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66236C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A86620693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:29:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UNwu0c4w"
+	by mail.kernel.org (Postfix) with ESMTP id 3E20D20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387623AbfGaM3c (ORCPT
+        id S1727645AbfGaM35 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:29:32 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49476 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387594AbfGaM3c (ORCPT
+        Wed, 31 Jul 2019 08:29:57 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:36433 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfGaM34 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:29:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6VCSffp017250;
-        Wed, 31 Jul 2019 12:29:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=QinEdhda0QF80hZU/Agg8fmLabZy/oSbGrNclrokDBw=;
- b=UNwu0c4wPTcK+P1xidV4FT1LKRMkQxaz1cUkvPP0Ee+M+UU7Gz6OFj/z0zrdjsIBiIq4
- RR8DcnO5BwNTbkOvMba9ntx0ugykK37yx2s+Jx6DIgjqa48IZxcBXUaErA1PKGdhWr8G
- S8WWUkZgU4BlTabEqJIoeeOVWQGWLj0dAYvOkqC0FbbM0/OAXdFd2cjaI2oHoDA481B2
- +wEqkrBjyxFUHotQBrap0c7q5fg3j/fm9XhJXH2VLylTe5PSkrLLX5CH1ijL6LQ1clmv
- z5rKCBCAVw8gaAgmgUgsyHemIMKZ2yOeJ8PUZZ2MFFIg2K8J4ASWSTjwi0sYZWoA5hKV vg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2u0e1tw392-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 Jul 2019 12:29:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6VCRT7A074339;
-        Wed, 31 Jul 2019 12:29:03 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2u2exbjc4u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 Jul 2019 12:29:03 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6VCSwSp004011;
-        Wed, 31 Jul 2019 12:28:58 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 31 Jul 2019 12:28:57 +0000
-Date:   Wed, 31 Jul 2019 15:28:41 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     =?iso-8859-1?Q?Aur=E9lien?= Aptel <aaptel@suse.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        samba-technical@lists.samba.org, Steve French <sfrench@samba.org>,
-        linux-cifs@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cifs: remove redundant assignment to variable rc
-Message-ID: <20190731122841.GA1974@kadam>
-References: <20190731090526.27245-1-colin.king@canonical.com>
- <87r266seg4.fsf@suse.com>
+        Wed, 31 Jul 2019 08:29:56 -0400
+X-Originating-IP: 88.168.111.231
+Received: from localhost (lpr83-1-88-168-111-231.fbx.proxad.net [88.168.111.231])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 364B860015;
+        Wed, 31 Jul 2019 12:29:54 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 14:29:53 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc:     linux-sunxi@googlegroups.com, codekipper@gmail.com,
+        Christopher Obbard <chris@64studio.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
+Subject: Re: [linux-sunxi] Re: [PATCH v4 6/9] ASoC: sun4i-i2s: Add multi-lane
+ functionality
+Message-ID: <20190731122953.2u3iabd6gkn7jv7k@flea>
+References: <20190603174735.21002-1-codekipper@gmail.com>
+ <CAP03XepJVPge5sz4WcmK8pp2jHAPJdGb6v6A3R0DzSf5O6qj-g@mail.gmail.com>
+ <CAEKpxBmxAQKgDhvjpczAWwNtNhYRs07wjMSnr8nqHk1XxMT=nw@mail.gmail.com>
+ <2092329.vleAuWJ0xl@jernej-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87r266seg4.fsf@suse.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907310127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9334 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907310127
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <2092329.vleAuWJ0xl@jernej-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 12:09:31PM +0200, Aurélien Aptel wrote:
-> Colin King <colin.king@canonical.com> writes:
-> > Variable rc is being initialized with a value that is never read
-> > and rc is being re-assigned a little later on. The assignment is
-> > redundant and hence can be removed.
-> 
-> I think I would actually rather have rc set to an error by default than
-> uninitialized. Just my personal opinion.
+On Tue, Jul 30, 2019 at 07:57:10PM +0200, Jernej Å krabec wrote:
+> Dne torek, 04. junij 2019 ob 11:38:44 CEST je Code Kipper napisal(a):
+> > On Tue, 4 Jun 2019 at 11:02, Christopher Obbard <chris@64studio.com> wrote:
+> > > On Tue, 4 Jun 2019 at 09:43, Code Kipper <codekipper@gmail.com> wrote:
+> > > > On Tue, 4 Jun 2019 at 09:58, Maxime Ripard <maxime.ripard@bootlin.com>
+> wrote:
+> > > > > On Mon, Jun 03, 2019 at 07:47:32PM +0200, codekipper@gmail.com wrote:
+> > > > > > From: Marcus Cooper <codekipper@gmail.com>
+> > > > > >
+> > > > > > The i2s block supports multi-lane i2s output however this
+> > > > > > functionality
+> > > > > > is only possible in earlier SoCs where the pins are exposed and for
+> > > > > > the i2s block used for HDMI audio on the later SoCs.
+> > > > > >
+> > > > > > To enable this functionality, an optional property has been added to
+> > > > > > the bindings.
+> > > > > >
+> > > > > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > > > >
+> > > > > I'd like to have Mark's input on this, but I'm really worried about
+> > > > > the interaction with the proper TDM support.
+> > > > >
+> > > > > Our fundamental issue is that the controller can have up to 8
+> > > > > channels, but either on 4 lines (instead of 1), or 8 channels on 1
+> > > > > (like proper TDM) (or any combination between the two, but that should
+> > > > > be pretty rare).
+> > > >
+> > > > I understand...maybe the TDM needs to be extended to support this to
+> > > > consider channel mapping and multiple transfer lines. I was thinking
+> > > > about the later when someone was requesting support on IIRC a while
+> > > > ago, I thought masking might of been a solution. These can wait as the
+> > > > only consumer at the moment is LibreELEC and we can patch it there.
+> > >
+> > > Hi Marcus,
+> > >
+> > > FWIW, the TI McASP driver has support for TDM & (i think?) multiple
+> > > transfer lines which are called serializers.
+> > > Maybe this can help with inspiration?
+> > > see
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/s
+> > > ound/soc/ti/davinci-mcasp.c sample DTS:
+> > >
+> > > &mcasp0 {
+> > >
+> > >     #sound-dai-cells = <0>;
+> > >     status = "okay";
+> > >     pinctrl-names = "default";
+> > >     pinctrl-0 = <&mcasp0_pins>;
+> > >
+> > >     op-mode = <0>;
+> > >     tdm-slots = <8>;
+> > >     serial-dir = <
+> > >
+> > >         2 0 1 0
+> > >         0 0 0 0
+> > >         0 0 0 0
+> > >         0 0 0 0
+> > >     >
+> > >     >;
+> > >
+> > >     tx-num-evt = <1>;
+> > >     rx-num-evt = <1>;
+> > >
+> > > };
+> > >
+> > > Cheers!
+> >
+> > Thanks, this looks good.
+>
+> I would really like to see this issue resolved, because HDMI audio support in
+> mainline Linux for those SoCs is long overdue.
+>
+> However, there is a possibility to still add HDMI audio suport (stereo only)
+> even if this issue is not completely solved. If we agree that configuration of
+> channels would be solved with additional property as Christopher suggested,
+> support for >2 channels can be left for a later time when support for that
+> property would be implemented. Currently, stereo HDMI audio support can be
+> added with a few patches.
+>
+> I think all I2S cores are really the same, no matter if internally connected
+> to HDMI controller or routed to pins, so it would make sense to use same
+> compatible for all of them. It's just that those I2S cores which are routed to
+> pins can use only one lane and >2 channels can be used only in TDM mode of
+> operation, if I understand this correctly.
+>
+> New property would have to be optional, so it's omission would result in same
+> channel configuration as it is already present, to preserve compatibility with
+> old device trees. And this mode is already sufficient for stereo HDMI audio
+> support.
 
-You're just turning off GCC's static analysis (and introducing false
-positives) when you do that.  We have seen bugs caused by this and never
-seen any bugs prevented by this style.
+Yeah, it looks like a good plan.
 
-regards,
-dan carpenter
+> Side note: HDMI audio with current sun4i-i2s driver has a delay (about a
+> second), supposedly because DW HDMI controller automatically generates CTS
+> value based on I2S clock (auto CTS value generation is enabled per DesignWare
+> recomendation for DW HDMI I2S interface).
+
+Is that a constant delay during the audio playback, or only at startup?
+
+> I2S driver from BSP Linux solves that by having I2S clock output
+> enabled all the time. Should this be flagged with some additional
+> property in DT?
+
+I'd say that if the codec has that requirement, then it should be
+between the codec and the DAI, the DT doesn't really have anything to
+do with this.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
