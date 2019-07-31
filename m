@@ -2,112 +2,171 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823C6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD69EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CA0206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E95206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbfGaQkS convert rfc822-to-8bit (ORCPT
+        id S1729615AbfGaQkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:40:18 -0400
-Received: from mailoutvs30.siol.net ([185.57.226.221]:34957 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729842AbfGaQkM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 12:40:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 7B0A05209AE;
-        Wed, 31 Jul 2019 18:40:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id fXh7Bj71aPKg; Wed, 31 Jul 2019 18:40:08 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 84F755233C1;
-        Wed, 31 Jul 2019 18:40:07 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-11-237.cable.triera.net [194.152.11.237])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Zimbra) with ESMTPA id 488405209AE;
-        Wed, 31 Jul 2019 18:40:04 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Lee Jones <lee.jones@linaro.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
-Date:   Wed, 31 Jul 2019 18:40:03 +0200
-Message-ID: <13373313.BzCyiC4ED7@jernej-laptop>
-In-Reply-To: <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
-References: <cover.1563983037.git.agx@sigxcpu.org> <20190731143532.GA1935@bogon.m.sigxcpu.org> <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Received: from mga18.intel.com ([134.134.136.126]:31397 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729951AbfGaQkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:40:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 09:40:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,330,1559545200"; 
+   d="scan'208";a="174219980"
+Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
+  by fmsmga007.fm.intel.com with ESMTP; 31 Jul 2019 09:40:00 -0700
+From:   thor.thayer@linux.intel.com
+To:     mdf@kernel.org, richard.gong@linux.intel.com, agust@denx.de
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thor Thayer <thor.thayer@linux.intel.com>
+Subject: [PATCHv4 2/3] fpga: altera-cvp: Preparation for V2 parts.
+Date:   Wed, 31 Jul 2019 11:42:00 -0500
+Message-Id: <1564591321-19037-3-git-send-email-thor.thayer@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564591321-19037-1-git-send-email-thor.thayer@linux.intel.com>
+References: <1564591321-19037-1-git-send-email-thor.thayer@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Dne sreda, 31. julij 2019 ob 16:43:47 CEST je Fabio Estevam napisal(a):
-> Hi Guido,
-> 
-> On Wed, Jul 31, 2019 at 11:35 AM Guido Günther <agx@sigxcpu.org> wrote:
-> > The idea is to have
-> > 
-> >     "%sabling platform clocks", enable ? "en" : "dis");
-> > 
-> > depending whether clocks are enabled/disabled.
-> 
-> Yes, I understood the idea, but this would print:
-> 
-> ensabling or dissabling :-)
+In preparation for adding newer V2 parts that use a FIFO,
+reorganize altera_cvp_chk_error() and change the write
+function to block based.
+V2 parts have a block size matching the FIFO while older
+V1 parts write a 32 bit word at a time.
 
-No, it wouldn't. That extra "s" is part of "%s", e.g. part of format specifier.
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+---
+v2 Remove inline function declaration
+   Reverse Christmas Tree format for local variables
+v3 Add return code check in altera_cvp_chk_error()
+v4 Use min() function to determine block length
+---
+ drivers/fpga/altera-cvp.c | 69 +++++++++++++++++++++++++++++------------------
+ 1 file changed, 43 insertions(+), 26 deletions(-)
 
-Best regards,
-Jernej
-
-> 
-> > > Same here. Please return 'int' instead.
-> > 
-> > This is from drm_bridge_funcs so the prototype is fixed. I'm not sure
-> > how what's the best way to bubble up fatal errors through the drm layer?
-> 
-> Ok, so let's not change this one.
-> 
-> > I went for DRM_DEV_ERROR() since that what i used in the rest of the
-> > driver and these ones were omission. Hope that's o.k.
-> 
-> No strong preferences here. I just think dev_err() easier to type and
-> shorter.
-> 
-> Thanks for this work!
-
-
-
+diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+index 9df2073331cb..3b8386fd32e7 100644
+--- a/drivers/fpga/altera-cvp.c
++++ b/drivers/fpga/altera-cvp.c
+@@ -143,6 +143,42 @@ static int altera_cvp_wait_status(struct altera_cvp_conf *conf, u32 status_mask,
+ 	return -ETIMEDOUT;
+ }
+ 
++static int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
++{
++	struct altera_cvp_conf *conf = mgr->priv;
++	u32 val;
++	int ret;
++
++	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
++	ret = altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
++	if (ret || (val & VSE_CVP_STATUS_CFG_ERR)) {
++		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
++			bytes);
++		return -EPROTO;
++	}
++	return 0;
++}
++
++static int altera_cvp_send_block(struct altera_cvp_conf *conf,
++				 const u32 *data, size_t len)
++{
++	u32 mask, words = len / sizeof(u32);
++	int i, remainder;
++
++	for (i = 0; i < words; i++)
++		conf->write_data(conf, *data++);
++
++	/* write up to 3 trailing bytes, if any */
++	remainder = len % sizeof(u32);
++	if (remainder) {
++		mask = BIT(remainder * 8) - 1;
++		if (mask)
++			conf->write_data(conf, *data & mask);
++	}
++
++	return 0;
++}
++
+ static int altera_cvp_teardown(struct fpga_manager *mgr,
+ 			       struct fpga_image_info *info)
+ {
+@@ -265,39 +301,25 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
+ 	return 0;
+ }
+ 
+-static inline int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
+-{
+-	struct altera_cvp_conf *conf = mgr->priv;
+-	u32 val;
+-
+-	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
+-	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
+-	if (val & VSE_CVP_STATUS_CFG_ERR) {
+-		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
+-			bytes);
+-		return -EPROTO;
+-	}
+-	return 0;
+-}
+-
+ static int altera_cvp_write(struct fpga_manager *mgr, const char *buf,
+ 			    size_t count)
+ {
+ 	struct altera_cvp_conf *conf = mgr->priv;
++	size_t done, remaining, len;
+ 	const u32 *data;
+-	size_t done, remaining;
+ 	int status = 0;
+-	u32 mask;
+ 
+ 	/* STEP 9 - write 32-bit data from RBF file to CVP data register */
+ 	data = (u32 *)buf;
+ 	remaining = count;
+ 	done = 0;
+ 
+-	while (remaining >= 4) {
+-		conf->write_data(conf, *data++);
+-		done += 4;
+-		remaining -= 4;
++	while (remaining) {
++		len = min(sizeof(u32), remaining);
++		altera_cvp_send_block(conf, data, len);
++		data++;
++		done += len;
++		remaining -= len;
+ 
+ 		/*
+ 		 * STEP 10 (optional) and STEP 11
+@@ -315,11 +337,6 @@ static int altera_cvp_write(struct fpga_manager *mgr, const char *buf,
+ 		}
+ 	}
+ 
+-	/* write up to 3 trailing bytes, if any */
+-	mask = BIT(remaining * 8) - 1;
+-	if (mask)
+-		conf->write_data(conf, *data & mask);
+-
+ 	if (altera_cvp_chkcfg)
+ 		status = altera_cvp_chk_error(mgr, count);
+ 
+-- 
+2.7.4
 
