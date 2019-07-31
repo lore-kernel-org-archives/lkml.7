@@ -2,93 +2,219 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1B7C32751
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AADCC433FF
 	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9732067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F59208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dM/JvIQO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ftYDBFAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730934AbfGaXpd (ORCPT
+        id S1730952AbfGaXpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:45:33 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41107 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfGaXpd (ORCPT
+        Wed, 31 Jul 2019 19:45:34 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32861 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728083AbfGaXpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 19:45:33 -0400
-Received: by mail-io1-f68.google.com with SMTP id j5so136107244ioj.8
+Received: by mail-pg1-f194.google.com with SMTP id n190so1417075pgn.0
         for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 16:45:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rPPJInGn5mcKaK62eGkVbrjaFAcg+JQw+Axl27ql6vE=;
-        b=dM/JvIQODfYw8czZ9IPfxhBOPNK/TztKjUSRlcmFQPeaLDr2O1SNPXVwau4KeZJIeD
-         m/bhzguK5AX5MeKLhRXovtQNIW9REEXOeLXLxm7mRIpGAO3PklbLd4A8zSxNwSKP/Oqb
-         Lhm5DoA2qGkIscJqEeP65qybIaVNiUktLQjTVPj5+adWFlh0MW5AmYXZd6drGu0JhoYA
-         113AoBMq/pMH4EMo4QhQsxmDW+CdxvFkBrJDhUYOINFRik+krsBzJy/iI5M/4BdzOpln
-         Pk5MH+LgIH7YpxuJjm+m31TqvEHErBQsaJ3pOMhJLsEusO3UOcla8NBnpiF024TczZay
-         3Hag==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:from:to:subject:user-agent:date;
+        bh=2aTqXCxfS0wES19jPnEhvSwuE9w59s+Ba6S/ZSuGNNY=;
+        b=ftYDBFAuvCukNdwLQxFOFw0D47LFOVpE9titYeQErJZGve6bds0/csNvRpFmz4WSSf
+         VU9D98vtfozObHI2w10LxC1cOKtSNqfUMerIIaIiDDsBuKyzZOzf5VQUJbMjIXc6n43W
+         aLdxS5baeyz+kNSrC5bOO13Fz8t9Fk9NROzjM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rPPJInGn5mcKaK62eGkVbrjaFAcg+JQw+Axl27ql6vE=;
-        b=RsMh+4xe8kdiE4MnmcyIvzjWzMtMp9Ud+NYSgaAH5KvgOKs3/plKg08ZeNPflNSAU6
-         wm5SybLxjUBwDV6teMY+hlsq5IEbQTEfinoRP0+FcO1Jq+pMGrnc4ZFf1YC9P20hWiox
-         SY3e31yaUetTp4C7oSgkWOOIgC9SfCL2zvhca8fzCpTjROKTubJdqIr9/9T6MwSj3QWD
-         NWC5CdABdh0vvh2L1W3baD/Y9t0Bhj0fcsMNABPR2ipdQOB8WHPNlG5ZJo+R6qfkqIpy
-         d+SB+UXoyE4V9/sGuwyDHAoK4pQVUolMmkbVknfjrXfo+R0kHqGdNCzahw+DC4GDmRdu
-         6VoQ==
-X-Gm-Message-State: APjAAAVfG/2OVNVz/IE7LCW080Dvki9UilXDeXacnxb3fjy2rAAZMa+a
-        ZnldlxMg1V20tQVXAnENM2rM758raYhaQKkq6ZVaDA==
-X-Google-Smtp-Source: APXvYqxsAnlo0HnFzOoBpzX+/vkVOreIRE1vIVYBe7yxFQriMXMo/a7UaidTN0LxSPRocHjQy0k75hCc8NIXhMTb6Bk=
-X-Received: by 2002:a5e:8508:: with SMTP id i8mr122215860ioj.108.1564616732306;
- Wed, 31 Jul 2019 16:45:32 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
+         :user-agent:date;
+        bh=2aTqXCxfS0wES19jPnEhvSwuE9w59s+Ba6S/ZSuGNNY=;
+        b=brVbwIrZHJkl10WNAuiEEc+Nh99bulkjAkmYNivwcL/8V+inWwjQPk/el5PyS0D83n
+         m+qTHsSR/1bsCG6ki+5sPEfBEscTijFfYJBk6PZQRT/hTrkd9XCE8GcEbBdmC7SRCuEy
+         pNBLJuAPG/B8E5B5L4fnAjD7MSBwVNbd02gts9ar3a/qdyqotkt5O/POnuQkgnuxj+FS
+         qeSkjc3IdfEY1iZMAZFJpKw1aX9zYQ2+tU0NwoOGzp3AXSC2Q+j+P3WvLyZlGL6Fi17N
+         xtRWBd0F4Z4rXUEGOVrUDVY43geHQxS7gnZPQ8+zieDoY4XOwagS+txqVdkAHEuHIUXe
+         h1mA==
+X-Gm-Message-State: APjAAAVVq8HsgWN5P1sCdqjoWhO/tvKlV7PkKeAXnSrNBNGRQRQCLm5k
+        HBlUqWUyEjnhTrKDQXMEUMwt8g==
+X-Google-Smtp-Source: APXvYqzpR+yF2tlL0G8/rKxh8Cfu9rEUYcaYuyAEnU2+suNL/2Oh/9t4urfyQDt9WpQjQE8iR5ILsg==
+X-Received: by 2002:a65:4507:: with SMTP id n7mr8434326pgq.86.1564616732856;
+        Wed, 31 Jul 2019 16:45:32 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id i7sm2433751pjk.24.2019.07.31.16.45.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 16:45:32 -0700 (PDT)
+Message-ID: <5d42281c.1c69fb81.bcda1.71f5@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190620110240.25799-1-vkuznets@redhat.com> <20190620110240.25799-4-vkuznets@redhat.com>
- <CALMp9eQ85h58NMDh-yOYvHN6_2f2T-wu63f+yLnNbwuG+p3Uvw@mail.gmail.com>
- <87ftmm71p3.fsf@vitty.brq.redhat.com> <36a9f411-f90c-3ffa-9ee3-6ebee13a763f@redhat.com>
- <CALMp9eQLCEzfdNzdhPtCf3bD-5c6HrSvJqP7idyoo4Gf3i5O1w@mail.gmail.com> <20190731233731.GA2845@linux.intel.com>
-In-Reply-To: <20190731233731.GA2845@linux.intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 31 Jul 2019 16:45:21 -0700
-Message-ID: <CALMp9eRRqCLKAL4FoZVMk=fHfnrN7EnTVxR___soiHUdrHLAMQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/5] x86: KVM: svm: clear interrupt shadow on all
- paths in skip_emulated_instruction()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com>
+References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher> <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com> <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com> <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>, Tri Vo <trong@android.com>
+Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
+User-Agent: alot/0.8.1
+Date:   Wed, 31 Jul 2019 16:45:31 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 4:37 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+Quoting Rafael J. Wysocki (2019-07-31 16:10:38)
+> On Thu, Aug 1, 2019 at 12:59 AM Tri Vo <trong@android.com> wrote:
+> >
+> > On Wed, Jul 31, 2019 at 3:42 PM Rafael J. Wysocki <rjw@rjwysocki.net> w=
+rote:
+> > >
+> > > That's not my point (see below).
+> > >
+> > > > > > > +       if (id < 0)
+> > > > > > > +               return id;
+> > > > > > > +       ws->id =3D id;
+> > > > > > > +
+> > > > > > > +       dev =3D device_create_with_groups(wakeup_class, paren=
+t, MKDEV(0, 0), ws,
+> > > > > > > +                                       wakeup_source_groups,=
+ "ws%d",
+> > > > > >
+> > > > > > I thought the name was going to still be 'wakeupN'?
+> > > > >
+> > > > > So can't we prefix the wakeup source name with something like "wa=
+keup:" or similar here?
+> > > >
+> > > > "ws%d" here is the name in the sysfs path rather than the name of t=
+he
+> > > > wakeup source. Wakeup source name is not altered in this patch.
+> > > >
+> > >
+> > > So why wouldn't something like this suffice:
+> > >
+> > > dev =3D device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), =
+ws,
+> > >                                 wakeup_source_groups, "wakeup:%s", ws=
+->name);
+> > >
+> > > ?
+> >
+> > ws->name is inherited from the device name. IIUC device names are not
+> > guaranteed to be unique. So if different devices with the same name
+> > register wakeup sources, there is an error.
+>=20
+> OK
+>=20
+> So I guess the names are retained for backwards compatibility with
+> existing user space that may be using them?
+>=20
+> That's kind of fair enough, but having two different identification
+> schemes for wakeup sources will end up confusing.
 
-> At a glance, the full emulator models behavior correctly, e.g. see
-> toggle_interruptibility() and setters of ctxt->interruptibility.
->
-> I'm pretty sure that leaves the EPT misconfig MMIO and APIC access EOI
-> fast paths as the only (VMX) path that would incorrectly handle a
-> MOV/POP SS.  Reading the guest's instruction stream to detect MOV/POP SS
-> would defeat the whole "fast path" thing, not to mention both paths aren't
-> exactly architecturally compliant in the first place.
+I understand your concern about the IDA now. Thanks for clarifying.
 
-The proposed patch clears the interrupt shadow in the VMCB on all
-paths through svm's skip_emulated_instruction. If this happens at the
-tail end of emulation, it doesn't matter if the full emulator does the
-right thing.
+How about we name the devices 'wakeupN' with the IDA when they're
+registered with a non-NULL device pointer and then name them whatever
+the name argument is when the device pointer is NULL. If we have this,
+we should be able to drop the name attribute in sysfs and figure out the
+name either by looking at the device name in /sys/class/wakeup/ if it
+isn't 'wakeupN', or follow the symlink to the device in /sys/devices/
+and look at the parent device name there.
+
+The only problem I see is the alarmtimer code where it might register a
+second wakeup source for the same rtc device. In this case, we probably
+want to use whatever name is passed in ("alarmtimer") instead of the
+IDA.
+
+This approach also nicely detects duplicate wakeup source names in the
+case that the string passed in to wakeup_source_register() is already
+used on the virtual bus.
+
+---8<----
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 79668b45eae6..1c98f83c576e 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -201,7 +201,7 @@ EXPORT_SYMBOL_GPL(wakeup_source_remove);
+ /**
+  * wakeup_source_register - Create wakeup source and add it to the list.
+  * @dev: Device this wakeup source is associated with (or NULL if virtual).
+- * @name: Name of the wakeup source to register.
++ * @name: Name of the wakeup source to register (or NULL if device wakeup).
+  */
+ struct wakeup_source *wakeup_source_register(struct device *dev,
+ 					     const char *name)
+@@ -209,6 +209,9 @@ struct wakeup_source *wakeup_source_register(struct dev=
+ice *dev,
+ 	struct wakeup_source *ws;
+ 	int ret;
+=20
++	if (!name)
++		name =3D dev_name(dev);
++
+ 	ws =3D wakeup_source_create(name);
+ 	if (ws) {
+ 		ret =3D wakeup_source_sysfs_add(dev, ws);
+@@ -275,7 +278,7 @@ int device_wakeup_enable(struct device *dev)
+ 	if (pm_suspend_target_state !=3D PM_SUSPEND_ON)
+ 		dev_dbg(dev, "Suspicious %s() during system transition!\n", __func__);
+=20
+-	ws =3D wakeup_source_register(dev, dev_name(dev));
++	ws =3D wakeup_source_register(dev, NULL);
+ 	if (!ws)
+ 		return -ENOMEM;
+=20
+diff --git a/drivers/base/power/wakeup_stats.c b/drivers/base/power/wakeup_=
+stats.c
+index a26f019faca9..11e2906dca4c 100644
+--- a/drivers/base/power/wakeup_stats.c
++++ b/drivers/base/power/wakeup_stats.c
+@@ -132,16 +132,22 @@ int wakeup_source_sysfs_add(struct device *parent, st=
+ruct wakeup_source *ws)
+ 	struct device *dev;
+ 	int id;
+=20
+-	id =3D ida_alloc(&wakeup_ida, GFP_KERNEL);
+-	if (id < 0)
+-		return id;
+-	ws->id =3D id;
++	if (parent) {
++		id =3D ida_alloc(&wakeup_ida, GFP_KERNEL);
++		if (id < 0)
++			return id;
++		ws->id =3D id;
++	} else {
++		ws->id =3D -1;
++	}
+=20
+ 	dev =3D device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
+-					wakeup_source_groups, "ws%d",
+-					ws->id);
++					wakeup_source_groups,
++					ws->id >=3D 0 ? "wakeup%d" : "%s",
++					ws->id >=3D 0 ? ws->id : ws->name);
+ 	if (IS_ERR(dev)) {
+-		ida_free(&wakeup_ida, ws->id);
++		if (ws->id >=3D 0)
++			ida_free(&wakeup_ida, ws->id);
+ 		return PTR_ERR(dev);
+ 	}
+=20
