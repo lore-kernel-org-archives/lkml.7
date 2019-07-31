@@ -2,38 +2,85 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5912C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27BBC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 805F920659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E1321773
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:23:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="0D+e9OKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfGaPXH (ORCPT
+        id S1729203AbfGaPXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:23:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:48920 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbfGaPXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:23:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10E4E344;
-        Wed, 31 Jul 2019 08:23:06 -0700 (PDT)
-Received: from arrakis.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3A28A3F694;
-        Wed, 31 Jul 2019 08:23:05 -0700 (PDT)
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm: kmemleak: Disable early logging in case of error
-Date:   Wed, 31 Jul 2019 16:23:02 +0100
-Message-Id: <20190731152302.42073-1-catalin.marinas@arm.com>
-X-Mailer: git-send-email 2.23.0.rc0
+        Wed, 31 Jul 2019 11:23:51 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35772 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfGaPXu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:23:50 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w20so66041720edd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:23:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=fyWNol/pClGETI/+3Fy8S0o8APly1L7wYaUOInJ7cro=;
+        b=0D+e9OKImyb4sTdS3DaGli2ESSvrhwMepoaeber6sOi6xNQeOXqjqOnb/1KIv5eA0x
+         eNNtaJSwMUTdya3x65wpEduqQWVFqNJxowmsYurkJg6idVmOJAgynHTMtURvl6pRH+lp
+         /AXQs/PGw3QMUYeGMcitYEalW7K8jjmrvIDBQFxHoyvKOlQjQp1wt8RvB40She7x5nMN
+         Km17y2HW/2HnGsAkyXDWsXdzi+suKv/3bNL7rEATTZ6hOD/1GmoI3RxM+fG1oxMgjoTb
+         i0NcERRrgjS3qiNo560qZowGrKNWVHk2bwOr/TVDT1ncGB5cnkrBEBAJUPDEPQtBhvsJ
+         S6vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fyWNol/pClGETI/+3Fy8S0o8APly1L7wYaUOInJ7cro=;
+        b=C5fYBNeLiifJdll5IjlVOtgIdTB8dhJVT7PpwdfUv4rYzhAdRldtAzzVPiJYgnX3t/
+         GS2qpr81euhxC0VO4izEoFmFlAdMqQu7F9f6lojIOtEdFrNiagoOE6XOYQdk9RPoDxbp
+         WLhdh4XQauplEbU7N9zkH3qthZr6obagAI/WJd4nbmagw+Y/hUOstZRXIQmTteU/XPfW
+         eyBSiRKDw1h9hRIerwWaS/V0pmLKlKoB9vemptEE+VFPnNNjypccDab0enu8QJDv3UY1
+         7HEA/bXF1g11nU081uxLp4EXP43CGOjC2hu6Vx3T+8T25fg3+HHrSwzkRm0CufueGHew
+         BUxg==
+X-Gm-Message-State: APjAAAUWBSVh5ryAZuhhF0/O3JRaaL53vZKjFYQ6zw3Z5NnCfX/5m3Zv
+        /xB44aRaSY4GJFCycDDOPqA=
+X-Google-Smtp-Source: APXvYqwsOKPemvbbrapjzGTexE0e+E42HWLS7Zg61PJSi6P6DFE4jdPIWGYYycTh80vcUaFlClexVw==
+X-Received: by 2002:a50:b388:: with SMTP id s8mr106143247edd.15.1564586629069;
+        Wed, 31 Jul 2019 08:23:49 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id f24sm16699742edt.82.2019.07.31.08.23.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 08:23:47 -0700 (PDT)
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Received: by box.localdomain (Postfix, from userid 1000)
+        id E1BE61045F9; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 35/59] acpi/hmat: Determine existence of an ACPI HMAT
+Date:   Wed, 31 Jul 2019 18:07:49 +0300
+Message-Id: <20190731150813.26289-36-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
+References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,36 +88,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If an error occurs during kmemleak_init() (e.g. kmem cache cannot be
-created), kmemleak is disabled but kmemleak_early_log remains enabled.
-Subsequently, when the .init.text section is freed, the log_early()
-function no longer exists. To avoid a page fault in such scenario,
-ensure that kmemleak_disable() also disables early logging.
+From: Alison Schofield <alison.schofield@intel.com>
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Platforms that need to confirm the presence of an HMAT table
+can use this function that simply reports the HMATs existence.
+
+This is added in support of the Multi-Key Total Memory Encryption
+(MKTME), a feature on future Intel platforms. These platforms will
+need to confirm an HMAT is present at init time.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- mm/kmemleak.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/hmat/hmat.c | 13 +++++++++++++
+ include/linux/acpi.h     |  4 ++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 6e9e8cca663e..f6e602918dac 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1966,6 +1966,7 @@ static void kmemleak_disable(void)
+diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
+index 96b7d39a97c6..38e3341f569f 100644
+--- a/drivers/acpi/hmat/hmat.c
++++ b/drivers/acpi/hmat/hmat.c
+@@ -664,3 +664,16 @@ static __init int hmat_init(void)
+ 	return 0;
+ }
+ subsys_initcall(hmat_init);
++
++bool acpi_hmat_present(void)
++{
++	struct acpi_table_header *tbl;
++	acpi_status status;
++
++	status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
++	if (ACPI_FAILURE(status))
++		return false;
++
++	acpi_put_table(tbl);
++	return true;
++}
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index fc1e7d4648bf..d27f4d17dfb3 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1335,4 +1335,8 @@ acpi_platform_notify(struct device *dev, enum kobject_action action)
+ }
+ #endif
  
- 	/* stop any memory operation tracing */
- 	kmemleak_enabled = 0;
-+	kmemleak_early_log = 0;
- 
- 	/* check whether it is too early for a kernel thread */
- 	if (kmemleak_initialized)
-@@ -2009,7 +2010,6 @@ void __init kmemleak_init(void)
- 
- #ifdef CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF
- 	if (!kmemleak_skip_disable) {
--		kmemleak_early_log = 0;
- 		kmemleak_disable();
- 		return;
- 	}
++#ifdef CONFIG_X86_INTEL_MKTME
++extern bool acpi_hmat_present(void);
++#endif /* CONFIG_X86_INTEL_MKTME */
++
+ #endif	/*_LINUX_ACPI_H*/
+-- 
+2.21.0
+
