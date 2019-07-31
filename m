@@ -2,214 +2,161 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5B3C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35ECFC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4A1216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D9AD20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbfGaOVs (ORCPT
+        id S1728372AbfGaOVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:21:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34694 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726582AbfGaOVs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:21:48 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VEEV9K039550
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 10:21:46 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u3byvtjh7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 10:21:46 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 31 Jul 2019 15:21:44 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 31 Jul 2019 15:21:37 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6VELZYv35258606
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 Jul 2019 14:21:35 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 32CF3A4066;
-        Wed, 31 Jul 2019 14:21:34 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 958CCA406D;
-        Wed, 31 Jul 2019 14:21:31 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.206.240])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 31 Jul 2019 14:21:31 +0000 (GMT)
-Date:   Wed, 31 Jul 2019 17:21:29 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
+        Wed, 31 Jul 2019 10:21:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44830 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726762AbfGaOVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:21:50 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8C73430C1345;
+        Wed, 31 Jul 2019 14:21:49 +0000 (UTC)
+Received: from [10.36.117.240] (ovpn-117-240.ams2.redhat.com [10.36.117.240])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AB92410016EA;
+        Wed, 31 Jul 2019 14:21:47 +0000 (UTC)
+Subject: Re: [PATCH v1] drivers/base/memory.c: Don't store end_section_nr in
+ memory blocks
 To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Hoan Tran OS <hoan@os.amperecomputing.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Open Source Submission <patches@amperecomputing.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "willy@infradead.org" <willy@infradead.org>
-Subject: Re: microblaze HAVE_MEMBLOCK_NODE_MAP dependency (was Re: [PATCH v2
- 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA)
-References: <20190712143730.au3662g4ua2tjudu@willie-the-truck>
- <20190712150007.GU29483@dhcp22.suse.cz>
- <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
- <20190730081415.GN9330@dhcp22.suse.cz>
- <20190731062420.GC21422@rapoport-lnx>
- <20190731080309.GZ9330@dhcp22.suse.cz>
- <20190731111422.GA14538@rapoport-lnx>
- <20190731114016.GI9330@dhcp22.suse.cz>
- <20190731122631.GB14538@rapoport-lnx>
- <20190731130037.GN9330@dhcp22.suse.cz>
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Oscar Salvador <osalvador@suse.de>
+References: <20190731122213.13392-1-david@redhat.com>
+ <20190731124356.GL9330@dhcp22.suse.cz>
+ <f0894c30-105a-2241-a505-7436bc15b864@redhat.com>
+ <20190731132534.GQ9330@dhcp22.suse.cz>
+ <58bd9479-051b-a13b-b6d0-c93aac2ed1b3@redhat.com>
+ <20190731141411.GU9330@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <c92a4d6f-b0f2-e080-5157-b90ab61a8c49@redhat.com>
+Date:   Wed, 31 Jul 2019 16:21:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731130037.GN9330@dhcp22.suse.cz>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19073114-0028-0000-0000-00000389AADE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19073114-0029-0000-0000-00002449FC15
-Message-Id: <20190731142129.GA24998@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907310144
+In-Reply-To: <20190731141411.GU9330@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 31 Jul 2019 14:21:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 03:00:37PM +0200, Michal Hocko wrote:
-> On Wed 31-07-19 15:26:32, Mike Rapoport wrote:
-> > On Wed, Jul 31, 2019 at 01:40:16PM +0200, Michal Hocko wrote:
-> > > On Wed 31-07-19 14:14:22, Mike Rapoport wrote:
-> > > > On Wed, Jul 31, 2019 at 10:03:09AM +0200, Michal Hocko wrote:
-> > > > > On Wed 31-07-19 09:24:21, Mike Rapoport wrote:
-> > > > > > [ sorry for a late reply too, somehow I missed this thread before ]
-> > > > > > 
-> > > > > > On Tue, Jul 30, 2019 at 10:14:15AM +0200, Michal Hocko wrote:
-> > > > > > > [Sorry for a late reply]
-> > > > > > > 
-> > > > > > > On Mon 15-07-19 17:55:07, Hoan Tran OS wrote:
-> > > > > > > > Hi,
-> > > > > > > > 
-> > > > > > > > On 7/12/19 10:00 PM, Michal Hocko wrote:
-> > > > > > > [...]
-> > > > > > > > > Hmm, I thought this was selectable. But I am obviously wrong here.
-> > > > > > > > > Looking more closely, it seems that this is indeed only about
-> > > > > > > > > __early_pfn_to_nid and as such not something that should add a config
-> > > > > > > > > symbol. This should have been called out in the changelog though.
-> > > > > > > > 
-> > > > > > > > Yes, do you have any other comments about my patch?
-> > > > > > > 
-> > > > > > > Not really. Just make sure to explicitly state that
-> > > > > > > CONFIG_NODES_SPAN_OTHER_NODES is only about __early_pfn_to_nid and that
-> > > > > > > doesn't really deserve it's own config and can be pulled under NUMA.
-> > > > > > > 
-> > > > > > > > > Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
-> > > > > > > > > bucket? Do we have any NUMA architecture that doesn't enable it?
-> > > > > > > > > 
-> > > > > > 
-> > > > > > HAVE_MEMBLOCK_NODE_MAP makes huge difference in node/zone initialization
-> > > > > > sequence so it's not only about a singe function.
-> > > > > 
-> > > > > The question is whether we want to have this a config option or enable
-> > > > > it unconditionally for each NUMA system.
-> > > > 
-> > > > We can make it 'default NUMA', but we can't drop it completely because
-> > > > microblaze uses sparse_memory_present_with_active_regions() which is
-> > > > unavailable when HAVE_MEMBLOCK_NODE_MAP=n.
-> > > 
-> > > I suppose you mean that microblaze is using
-> > > sparse_memory_present_with_active_regions even without CONFIG_NUMA,
-> > > right?
-> > 
-> > Yes.
-> > 
-> > > I have to confess I do not understand that code. What is the deal
-> > > with setting node id there?
-> > 
-> > The sparse_memory_present_with_active_regions() iterates over
-> > memblock.memory regions and uses the node id of each region as the
-> > parameter to memory_present(). The assumption here is that sometime before
-> > each region was assigned a proper non-negative node id. 
-> > 
-> > microblaze uses device tree for memory enumeration and the current FDT code
-> > does memblock_add() that implicitly sets nid in memblock.memory regions to -1.
-> > 
-> > So in order to have proper node id passed to memory_present() microblaze
-> > has to call memblock_set_node() before it can use
-> > sparse_memory_present_with_active_regions().
+On 31.07.19 16:14, Michal Hocko wrote:
+> On Wed 31-07-19 15:42:53, David Hildenbrand wrote:
+>> On 31.07.19 15:25, Michal Hocko wrote:
+> [...]
+>>> I know we have documented this as an ABI and it is really _sad_ that
+>>> this ABI didn't get through normal scrutiny any user visible interface
+>>> should go through but these are sins of the past...
+>>
+>> A quick google search indicates that
+>>
+>> Kata containers queries the block size:
+>> https://github.com/kata-containers/runtime/issues/796
+>>
+>> Powerpc userspace queries it:
+>> https://groups.google.com/forum/#!msg/powerpc-utils-devel/dKjZCqpTxus/AwkstV2ABwAJ
+>>
+>> I can imagine that ppc dynamic memory onlines only pieces of added
+>> memory - DIMMs AFAIK (haven't looked at the details).
+>>
+>> There might be more users.
 > 
-> I am sorry, but I still do not follow. Who is consuming that node id
-> information when NUMA=n. In other words why cannot we simply do
- 
-We can, I think nobody cared to change it.
+> Thanks! I suspect most of them are just using the information because
+> they do not have anything better.
 
-> diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
-> index a015a951c8b7..3a47e8db8d1c 100644
-> --- a/arch/microblaze/mm/init.c
-> +++ b/arch/microblaze/mm/init.c
-> @@ -175,14 +175,9 @@ void __init setup_memory(void)
->  
->  		start_pfn = memblock_region_memory_base_pfn(reg);
->  		end_pfn = memblock_region_memory_end_pfn(reg);
-> -		memblock_set_node(start_pfn << PAGE_SHIFT,
-> -				  (end_pfn - start_pfn) << PAGE_SHIFT,
-> -				  &memblock.memory, 0);
-> +		memory_present(0, start_pfn << PAGE_SHIFT, end_pfn << PAGE_SHIFT);
+powerpc-utils actually seem to use the fine-grained API to dynamically
+manage memory assignment to the VM.
 
-memory_present() expects pfns, the shift is not needed.
+> 
+> Thinking about it some more, I believe that we can reasonably provide
+> both APIs controlable by a command line parameter for backwards
+> compatibility. It is the hotplug code to control sysfs APIs.  E.g.
+> create one sysfs entry per add_memory_resource for the new semantic.
 
->  	}
->  
-> -	/* XXX need to clip this if using highmem? */
-> -	sparse_memory_present_with_active_regions(0);
-> -
->  	paging_init();
->  }
->  
-> -- 
-> Michal Hocko
-> SUSE Labs
+Yeah, but the real question is: who needs it. I can only think about
+some DIMM scenarios (some, not all). I would be interested in more use
+cases. Of course, to provide and maintain two APIs we need a good reason.
+
+(one sysfs per add_memory_resource() won't cover all DIMMs completely as
+far as I remember - I might be wrong, I remember there could be a
+sequence of add_memory(). Also, some DIMMs might actually overlap with
+memory indicated during boot - complicated stuff)
+
+> 
+> It is some time since I've checked the ACPI side of the matter but that
+> code shouldn't really depend on a particular size of the memblock
+> either when trigerring udev events. I might be wrong here of course.
+
+It only has to respect the alignment/size restriction when calling
+add_memory() right now. That would map to a "minimum block size"
 
 -- 
-Sincerely yours,
-Mike.
 
+Thanks,
+
+David / dhildenb
