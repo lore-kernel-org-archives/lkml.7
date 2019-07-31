@@ -2,1093 +2,224 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255B9C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE597C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 01:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C985020665
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977E22067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 01:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="CnYUEzdC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HE+pGjXe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5AKCIfn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfGaAvs (ORCPT
+        id S1727248AbfGaBBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 20:51:48 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:54767 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726369AbfGaAvs (ORCPT
+        Tue, 30 Jul 2019 21:01:12 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:39697 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfGaBBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 20:51:48 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 3B41B22355;
-        Tue, 30 Jul 2019 20:51:47 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 30 Jul 2019 20:51:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=WkqnO80XQGbOw0Ei+zqy93YBShBkfdf
-        rZbBtahOCbg8=; b=CnYUEzdC5FmVKkQjCItKDf894o0mbql8NHjYrDgJBwqCOZE
-        CzaCHHmZOJWWIzkSZyFNXasRKrRkIaUnw/KYMrEhL1bkiJDbOaOI+ozbtqhnFCcH
-        sPR0vNedfC8UtjF0uDu5aV8ck8/8GR5dQLEvALJYX5F0nmBJKScueh7ZxTINeL2o
-        PSBnp44bpOmk/4FstOF0E5Smsn9ezRyl2gw/Zha8BBGxHHg3n/ZsXDqeFfJIeNJW
-        oQSzw9BzIXP5RoIZh/h8pqS2ekYJeGbEtCzy9SmUeFAFVRC/amOEwmPMpcSdUlCp
-        lw8rncuDCH+s+KbBizNw2sxevCX+Tv1sgMjuFiw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=WkqnO8
-        0XQGbOw0Ei+zqy93YBShBkfdfrZbBtahOCbg8=; b=HE+pGjXeCiOjdp9/fMzXl4
-        ZORrRuJNcpovUiXEExpvlNX6hLeHs92QUYyVrAVcQDcIo5yrUdbPl7VX38RRggdi
-        bn3aQwAn5B4r/pP2/WSEcN/SSzmbVluf184bAtR/jpC3bmobP5+5EuMHPvEo8+XS
-        J2XBT7vIFFsxPjj2QUuz4LNlZMeHG6BlfcrV848lhV82fG2t98Tk+myNzxkq2dL5
-        RgMvNwWqIxtF5FZQFDriEauJ8PWgagq9xzjaP5yjgDsYQJgag0BYiJoL8dIeQ4hM
-        dWv+exabk/aOYbuOd63aH1r0QJz0Yv70xO4pL3qzGg/JDVxBTqaL1e8heEN3tyRw
-        ==
-X-ME-Sender: <xms:IOZAXZRwekMKM4CeGWOxRZOOulIU4KYw6xu4tO0Zfb6IFSz2WeD_yw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleeggdegudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:IOZAXY7KQdrzTTMG2992i6iBLQ3vmHyFbwiBmR6yuj1n92MOHh7lew>
-    <xmx:IOZAXVWEGLOy5ZlYBGdSj1VizZZ7_3ZqO_ArvQnXYIoyY3pOBDj6BQ>
-    <xmx:IOZAXbBLSc0pqPSAG1SMxW07flktczXBLKyOpM1ihtko9u49i_J0Nw>
-    <xmx:I-ZAXb7wMk34b1FCp5LZwFF9281XhplUDVaJYaRxYJ-LRBQGz4w9_Q>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id B84EBE00A2; Tue, 30 Jul 2019 20:51:44 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-799-g925e343-fmstable-20190729v1
-Mime-Version: 1.0
-Message-Id: <155d7473-fdf6-4a01-bda4-5cbb9c7e2822@www.fastmail.com>
-In-Reply-To: <20190730060029.25268-1-Ben_Pai@wistron.com>
-References: <20190730060029.25268-1-Ben_Pai@wistron.com>
-Date:   Wed, 31 Jul 2019 10:21:58 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Ben Pai" <Ben_Pai@wistron.com>,
-        "Rob Herring" <robh+dt@kernel.org>, mark.rutland@arm.com,
-        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     wangat@tw.ibm.com
-Subject: Re: [PATCH] ARM: dts: aspeed: Add Mihawk BMC platform
-Content-Type: text/plain
+        Tue, 30 Jul 2019 21:01:11 -0400
+Received: by mail-vs1-f66.google.com with SMTP id u3so44974211vsh.6;
+        Tue, 30 Jul 2019 18:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2DpG6Pls3sGs33c/51s1e3Ae1XsBxNxwDLzXf7kXUSw=;
+        b=X5AKCIfn/GgIafPTqFsTAmeHOet9XvUPazV0LfFodfaDqzPCZGY/UWHCsBwAam4fE8
+         IbfWXTJwSZS3aMXRaGig1X1xjsFFHIw/IuUX3T0MNQWKMtgaxTvqSfuUcQHzPPHgVfTK
+         TD6/3uKtQNvR/uK5ulqdVqJCFnnSsiHW3xZHZMdJc1zDgE279X3WDdFWdo6RMFv+qDCB
+         ZJNv6uwQh0hxSOsC4GMGBa4iqG9XrnZH8ScIcZYDOjiqab9BINv20cw4pJntspmVjp5F
+         mThxZLhY2YRtwpvP4cy8PfjyLp3a8rXqw1df3y3LA1BnuLBF0qivvcI098ilpmLttQDV
+         Fw9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2DpG6Pls3sGs33c/51s1e3Ae1XsBxNxwDLzXf7kXUSw=;
+        b=d8o3AKPl5EKFgVvLIyw3rgXmZYpN+OfVdx0NGaJ08EkPCZQy1BJ/hTNNCmeIwF+5pe
+         /r8LzfU5AW8/RGjrN/X7ybjRvY1DB9VTFqh+V0FBX8KbXGKynOnIzOH5izLICgxZU446
+         sVLkNvGMUTC+s1O/fK4hGOaa2UAERThctfr2Nr41DRARAjZSZ5G4KP/UHCvKxDNLKwes
+         Ew7LpuzYocW/Mk7j7BYIt7CVtFWBPKdJBNXGnaF92MbURQuypNAjWvSIIfZ1JYT8dIl3
+         kJbyk/usKOW3d6B1k0GiqgHZhYJSM2wjV002PzVJtM/N3zXMv9tRPLSddGxpIHXfIVLr
+         b5LA==
+X-Gm-Message-State: APjAAAW078SFv7Us4GpGNW6ruRj9KO/8+NfBpJa53DEEIFU9r1NhsLMc
+        mWJ5J8lSkzQy4UfZtEaslA==
+X-Google-Smtp-Source: APXvYqyR23c8oTFPsWQScFifTuy5rluSAcnBQlOPX47GHA0PP0bgQUg91j6rFFWzNT7Xq4CfyxNhjw==
+X-Received: by 2002:a67:d993:: with SMTP id u19mr81057784vsj.0.1564534869745;
+        Tue, 30 Jul 2019 18:01:09 -0700 (PDT)
+Received: from localhost ([2601:900:8200:a529::f9b4])
+        by smtp.gmail.com with ESMTPSA id n187sm66931526vkd.9.2019.07.30.18.01.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 18:01:08 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 21:01:07 -0400
+From:   Ayman Bagabas <ayman.bagabas@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 0/9] platform/x86: Huawei WMI laptop extras driver
+Message-ID: <20190731010107.oksopxcpe3y6t7su@960>
+References: <20190630054108.19205-1-ayman.bagabas@gmail.com>
+ <CAHp75VdKCms0ZsqCcq2wWaMFYE3G+kT8FFDQuw=CZKeyDov8pg@mail.gmail.com>
+ <20190725200509.snft3xy65ngaaxvs@960>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725200509.snft3xy65ngaaxvs@960>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Ben,
-
-Thanks for the patch! Some minor comments below.
-
-On Tue, 30 Jul 2019, at 15:30, Ben Pai wrote:
-> The Mihawk BMC is an ASPEED ast2500 based BMC that is part of an
-> OpenPower Power9 server.
+On 19/07/25 04:05PM, Ayman Bagabas wrote:
+> On 19/07/25 08:33PM, Andy Shevchenko wrote:
+> > On Sun, Jun 30, 2019 at 8:41 AM Ayman Bagabas <ayman.bagabas@gmail.com> wrote:
+> > >
+> > > This patch series introduce changes to huawei-wmi driver that includes:
+> > > * Move to platform driver
+> > > * Implement WMI management interface
+> > > * Add micmute LED support through WMI
+> > > * Add battery charging protection support through WMI
+> > > * Add fn-lock support through WMI
+> > > * Implement driver quirks and parameters
+> > > * Add a debugfs interface to WMI
+> > >
+> > > # Move to platform driver
+> > >
+> > > The current driver offers hotkeys and micmute led support only. With
+> > > these changes, a platform driver makes more sense since it handles these
+> > > changes pretty nicely.
+> > >
+> > > # Implement WMI management interface
+> > >
+> > > Huawei Matebook laptops come with two WMI interfaces. The first being
+> > > WMI0 which is considered "legacy" and AFAIK only found on the Matebook X
+> > > released in 2017. The second has a UID of "HWMI" and is found in pretty
+> > > much all models with a slight difference in implementation except for
+> > > the Matebook X (2017). Since this model has two interfaces, some aspects
+> > > are controlled through the legacy interface and some through the other
+> > > interface. Currently, the legacy interface is not fully implemented and
+> > > is only used for hotkeys and further debugging has to be done.
+> > >
+> > > The WMI interface takes a 64 bit integer, although uses 32 bits most of
+> > > the time, and returns a 256-260 bytes buffer consists of either one ACPI
+> > > buffer of 260 bytes, in the case of Matebook X (2017), or one ACPI
+> > > package of two buffers, one with 4 bytes, and the other with 256 bytes.
+> > > We only care about the latter 256 buffer in both cases since the 4 bytes
+> > > always return zeros. The first byte of this 256 buffer always has the
+> > > return status where 1 indicated error. Some models require calling the
+> > > WMI interface twice to execute a command.
+> > >
+> > > # Add micmute LED support through WMI
+> > >
+> > > After implementing the WMI interface, micmute LED can be controlled
+> > > easily. Models with the legacy interface fall back to ACPI EC method
+> > > control since the legacy interface is not implemented.
+> > >
+> > > # Add battery charging protection support through WMI
+> > >
+> > > Most models, that has the WMI interface, are capable of battery
+> > > protection where it can control battery charging thresholds and limits
+> > > charging the battery to certain values.
+> > >
+> > > # Add fn-lock support through WMI
+> > >
+> > > The behavior of hotkeys is not the same among all models. Some models
+> > > require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
+> > > hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
+> > > is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
+> > > key is toggled on, the hotkeys with or without a modifier, behave as
+> > > F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
+> > > `Ins`.
+> > >
+> > > Now, some models fix this by excluding `PrtSc` and `Ins` keys from being
+> > > treated as F11 and F12 keys with the use of a modifier. However, some
+> > > models do not, and fixes this by the so called fn-lock.
+> > >
+> > > Fn-lock inverts the behavior of the top row from special keys to F1-F12
+> > > keys. So a modifier and a special key would be possible which make
+> > > things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
+> > >
+> > > * Fn-key off & fn-lock off - hotkeys treated as special keys using a
+> > >   modifier gives F1-F12 keys.
+> > > * Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
+> > >   modifier gives F1-F12.
+> > > * Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
+> > >   a modifier gives special keys.
+> > > * Fn-key on & fn-lock on - hotkeys are treated as special keys and using
+> > >   a modifier gives special keys.
+> > >
+> > > # Implement driver quirks and parameters
+> > >
+> > > The driver introduces 3 quirks and 2 parameters that can change the
+> > > driver's behavior. These quirks being as:
+> > > 1. Fixes reporting brightness keys twice since it's already handled by
+> > >    acpi-video.
+> > > 2. Some models need a short delay when setting battery thresholds to
+> > >    prevent a race condition when two processes read/write.
+> > > 3. Matebook X (2017) handles micmute led through the "legacy" interface
+> > >    which is not currently implemented. Use ACPI EC method to control
+> > >    this led.
+> > >
+> > > and the 2 parameters can enforce the behavior of quirk 1 & 2.
+> > >
+> > > # Add a debugfs interface to WMI
+> > >
+> > > An interface to the WMI management interface that allows easier
+> > > debugging.
+> > >
+> > 
+> > It doesn't apply to current for-next.
 > 
-> This adds the device tree description for most upstream components. It
-> is a squashed commit from the OpenBMC kernel tree.
-
-That it's a squashed commit isn't relevant, neither is the mention of the OpenBMC
-kernel tree. I'd drop both from the commit message.
-
+> Hey Andi,
+I'm sorry, I meant Andy.
 > 
-> Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
-> ---
->  arch/arm/boot/dts/Makefile                  |   1 +
->  arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts | 922 ++++++++++++++++++++
->  2 files changed, 923 insertions(+)
->  create mode 100755 arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+> I was basing them on the stable branch.
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index eb6de52c1936..262345544359 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1281,5 +1281,6 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
->  	aspeed-bmc-opp-vesnin.dtb \
->  	aspeed-bmc-opp-witherspoon.dtb \
->  	aspeed-bmc-opp-zaius.dtb \
-> +	aspeed-bmc-opp-mihawk.dtb \
->  	aspeed-bmc-portwell-neptune.dtb \
->  	aspeed-bmc-quanta-q71l.dtb
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts 
-> b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-> new file mode 100755
-> index 000000000000..cfa20e0b2939
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-> @@ -0,0 +1,922 @@
-> +/dts-v1/;
-> +
-> +#include "aspeed-g5.dtsi"
-> +#include <dt-bindings/gpio/aspeed-gpio.h>
-> +#include <dt-bindings/leds/leds-pca955x.h>
-> +
-> +/ {
-> +	model = "Mihawk BMC";
-> +	compatible = "ibm,mihawk-bmc", "aspeed,ast2500";
-
-I think this should be "ips,mihawk-bmc". You may also need to add "ips" to the
-vendor-prefixes list. 
-
-> +
-> +
-> +	chosen {
-> +		stdout-path = &uart5;
-> +		bootargs = "console=ttyS4,115200 earlyprintk";
-> +	};
-> +
-> +	memory@80000000 {
-> +		reg = <0x80000000 0x20000000>; /* address and size of RAM(512MB) */
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		flash_memory: region@98000000 {
-> +			no-map;
-> +			reg = <0x98000000 0x04000000>; /* 64M */
-> +		};
-> +
-> +		gfx_memory: framebuffer {
-> +			size = <0x01000000>;
-> +			alignment = <0x01000000>;
-> +			compatible = "shared-dma-pool";
-> +			reusable;
-> +		};
-> +
-> +		video_engine_memory: jpegbuffer {
-> +			size = <0x02000000>;	/* 32MM */
-> +			alignment = <0x01000000>;
-> +			compatible = "shared-dma-pool";
-> +			reusable;
-> +		};
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +
-> +		air-water {
-> +			label = "air-water";
-> +			gpios = <&gpio ASPEED_GPIO(F, 6) GPIO_ACTIVE_LOW>;
-> +			linux,code = <ASPEED_GPIO(F, 6)>;
-> +		};
-> +
-> +		checkstop {
-> +			label = "checkstop";
-> +			gpios = <&gpio ASPEED_GPIO(J, 2) GPIO_ACTIVE_LOW>;
-> +			linux,code = <ASPEED_GPIO(J, 2)>;
-> +		};
-> +
-> +		ps0-presence {
-> +			label = "ps0-presence";
-> +			gpios = <&gpio ASPEED_GPIO(Z, 2) GPIO_ACTIVE_LOW>;
-> +			linux,code = <ASPEED_GPIO(Z, 2)>;
-> +		};
-> +
-> +		ps1-presence {
-> +			label = "ps1-presence";
-> +			gpios = <&gpio ASPEED_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
-> +			linux,code = <ASPEED_GPIO(Z, 0)>;
-> +		};
-> +		id-button {
-> +			label = "id-button";
-> +			gpios = <&gpio ASPEED_GPIO(F, 1) GPIO_ACTIVE_LOW>;
-> +			linux,code = <ASPEED_GPIO(F, 1)>;
-> +		};
-> +	};
-> +
-> +	gpio-keys-polled {
-> +		compatible = "gpio-keys-polled";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-
-Please remove the #address-cells and #size-cells properties, they aren't
-relevant for gpio-keys-polled.
-
-> +		poll-interval = <1000>;
-> +
-> +		fan0-presence {
-> +			label = "fan0-presence";
-> +			gpios = <&pca9552 9 GPIO_ACTIVE_LOW>;
-> +			linux,code = <9>;
-> +		};
-> +
-> +		fan1-presence {
-> +			label = "fan1-presence";
-> +			gpios = <&pca9552 10 GPIO_ACTIVE_LOW>;
-> +			linux,code = <10>;
-> +		};
-> +
-> +		fan2-presence {
-> +			label = "fan2-presence";
-> +			gpios = <&pca9552 11 GPIO_ACTIVE_LOW>;
-> +			linux,code = <11>;
-> +		};
-> +
-> +		fan3-presence {
-> +			label = "fan3-presence";
-> +			gpios = <&pca9552 12 GPIO_ACTIVE_LOW>;
-> +			linux,code = <12>;
-> +		};
-> +
-> +		fan4-presence {
-> +			label = "fan4-presence";
-> +			gpios = <&pca9552 13 GPIO_ACTIVE_LOW>;
-> +			linux,code = <13>;
-> +		};
-> +
-> +		fan5-presence {
-> +			label = "fan5-presence";
-> +			gpios = <&pca9552 14 GPIO_ACTIVE_LOW>;
-> +			linux,code = <14>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		fault {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		power {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&gpio ASPEED_GPIO(AA, 1) GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		rear-id {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		rear-g {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&gpio ASPEED_GPIO(AA, 4) GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		rear-ok {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&gpio ASPEED_GPIO(Y, 0) GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		fan0 {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&pca9552 0 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		fan1 {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&pca9552 1 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		fan2 {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&pca9552 2 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		fan3 {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&pca9552 3 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		fan4 {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&pca9552 4 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		fan5 {
-> +			retain-state-shutdown;
-> +			default-state = "keep";
-> +			gpios = <&pca9552 5 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
-> +	fsi: gpio-fsi {
-> +		compatible = "fsi-master-gpio", "fsi-master";
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +		no-gpio-delays;
-> +
-> +		clock-gpios = <&gpio ASPEED_GPIO(E, 6) GPIO_ACTIVE_HIGH>;
-> +		data-gpios = <&gpio ASPEED_GPIO(E, 7) GPIO_ACTIVE_HIGH>;
-> +		mux-gpios = <&gpio ASPEED_GPIO(E, 5) GPIO_ACTIVE_HIGH>;
-> +		enable-gpios = <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
-> +		trans-gpios = <&gpio ASPEED_GPIO(R, 2) GPIO_ACTIVE_HIGH>;
-> +	};
-> +	iio-hwmon-12v {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 0>;
-> +	};
-> +	
-> +	iio-hwmon-5v {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 1>;
-> +	};
-> +	
-> +	iio-hwmon-3v {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 2>;
-> +	};
-> +		
-> +	iio-hwmon-vdd0 {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 3>;
-> +	};
-> +	
-> +	iio-hwmon-vdd1 {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 4>;
-> +	};
-> +	
-> +	iio-hwmon-vcs0 {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 5>;
-> +	};
-> +	
-> +	iio-hwmon-vcs1 {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 6>;
-> +	};
-> +
-> +	iio-hwmon-vdn0 {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 7>;
-> +	};
-> +	
-> +	iio-hwmon-vdn1 {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 8>;
-> +	};
-> +	
-> +	iio-hwmon-vio0 {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 9>;
-> +	};
-> +	
-> +	iio-hwmon-vio1 {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 10>;
-> +	};
-> +	
-> +	iio-hwmon-vddra {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 11>;
-> +	};
-> +	
-> +	iio-hwmon-vddrb {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 13>;
-> +	};
-> +	
-> +	iio-hwmon-vddrc {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 14>;
-> +	};
-> +	
-> +	iio-hwmon-vddrd {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 15>;
-> +	};
-> +	
-> +	iio-hwmon-battery {
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 12>;
-> +	};
-> +};
-> +
-> +&pwm_tacho {
-> +	status = "okay";
-> +	/*compatible = "aspeed,ast2500-pwm-tacho";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	reg = <0x1e786000 0x1000>;
-> +	clocks = <&pwm_tacho_fixed_clk>;*/
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default
-> +		&pinctrl_pwm2_default &pinctrl_pwm3_default
-> +		&pinctrl_pwm4_default &pinctrl_pwm5_default>;
-> +
-> +	fan@0 {
-> +		reg = <0x00>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-> +	};
-> +
-> +	fan@1 {
-> +		reg = <0x01>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-> +	};
-> +
-> +	fan@2 {
-> +		reg = <0x02>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-> +	};
-> +
-> +	fan@3 {
-> +		reg = <0x03>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
-> +	};
-> +
-> +	fan@4 {
-> +		reg = <0x04>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
-> +	};
-> +
-> +	fan@5 {
-> +		reg = <0x05>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
-> +	};
-> +
-> +	fan@6 {
-> +		reg = <0x00>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
-> +	};
-> +
-> +	fan@7 {
-> +		reg = <0x01>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
-> +	};
-> +
-> +	fan@8 {
-> +		reg = <0x02>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x08>;
-> +	};
-> +
-> +	fan@9 {
-> +		reg = <0x03>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x09>;
-> +	};
-> +
-> +	fan@10 {
-> +		reg = <0x04>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
-> +	};
-> +
-> +	fan@11 {
-> +		reg = <0x05>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
-> +	};
-> +};
-> +
-> +&fmc {
-> +	status = "okay";
-> +	flash@0 {
-> +		status = "okay";
-> +		label = "bmc";
-> +		m25p,fast-read;
-> +		spi-max-frequency = <50000000>;
-> +		partitions {
-> +			#address-cells = < 1 >;
-> +			#size-cells = < 1 >;
-> +			compatible = "fixed-partitions";
-> +			u-boot@0 {
-> +				reg = < 0 0x60000 >;
-> +				label = "u-boot";
-> +			};
-> +			u-boot-env@60000 {
-> +				reg = < 0x60000 0x20000 >;
-> +				label = "u-boot-env";
-> +			};
-> +			obmc-ubi@80000 {
-> +				reg = < 0x80000 0x1F80000 >;
-> +				label = "obmc-ubi";
-> +			};
-> +		};
-> +	};
-> +	flash@1 {
-> +		status = "okay";
-> +		label = "alt-bmc";
-> +		m25p,fast-read;
-> +		spi-max-frequency = <50000000>;
-> +		partitions {
-> +			#address-cells = < 1 >;
-> +			#size-cells = < 1 >;
-> +			compatible = "fixed-partitions";
-> +			u-boot@0 {
-> +				reg = < 0 0x60000 >;
-> +				label = "alt-u-boot";
-> +			};
-> +			u-boot-env@60000 {
-> +				reg = < 0x60000 0x20000 >;
-> +				label = "alt-u-boot-env";
-> +			};
-> +			obmc-ubi@80000 {
-> +				reg = < 0x80000 0x1F80000 >;
-> +				label = "alt-obmc-ubi";
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&spi1 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_spi1_default>;
-> +
-> +	flash@0 {
-> +		status = "okay";
-> +		label = "pnor";
-> +		m25p,fast-read;
-> +		spi-max-frequency = <100000000>;
-> +	};
-> +};
-> +
-> +&lpc_ctrl {
-> +	status = "okay";
-> +	memory-region = <&flash_memory>;
-> +	flash = <&spi1>;
-> +};
-> +
-> +&uart1 {
-> +	/* Rear RS-232 connector */
-> +	status = "okay";
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_txd1_default
-> +			&pinctrl_rxd1_default
-> +			&pinctrl_nrts1_default
-> +			&pinctrl_ndtr1_default
-> +			&pinctrl_ndsr1_default
-> +			&pinctrl_ncts1_default
-> +			&pinctrl_ndcd1_default
-> +			&pinctrl_nri1_default>;
-> +};
-> +
-> +&uart2 {
-> +	/* APSS */
-> +	status = "okay";
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_txd2_default &pinctrl_rxd2_default>;
-> +};
-> +
-> +&uart5 {
-> +	status = "okay";
-> +};
-> +
-> +&mac0 {
-> +	status = "okay";
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_rmii1_default>;
-> +	use-ncsi;
-> +};
-> +
-> +&mac1 {
-> +	status = "okay";
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
-> +};
-> +
-> +&i2c0 {
-> +	status = "disabled";
-> +};
-> +
-> +&i2c1 {
-> +	status = "disabled";
-> +};
-> +
-> +&i2c2 {
-> +	status = "okay";
-> +
-> +	/* SAMTEC P0 */
-> +	/* SAMTEC P1 */
-> +	
-> +};
-> +
-> +&i2c3 {
-> +	status = "okay";
-> +
-> +	/* APSS */
-> +	/* CPLD */
-> +
-> +	/* PCA9516 (repeater) ->
-> +	 *    CLK Buffer 9FGS9092
-> +	 *    CLK Buffer 9DBL0651BKILFT
-> +	 *    CLK Buffer 9DBL0651BKILFT
-> +	 *    Power Supply 0
-> +	 *    Power Supply 1
-> +	 *    PCA 9552 LED
-> +	 */
-> +	 
-> +	power-supply@58 {
-> +		compatible = "ibm,cffps1";
-> +		reg = <0x58>;
-> +	};
-> +
-> +	power-supply@5b {
-> +		compatible = "ibm,cffps1";
-> +		reg = <0x5b>;
-> +	};
-> +
-> +	pca9552: pca9552@60 {
-> +		compatible = "nxp,pca9552";
-> +		reg = <0x60>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		gpio@0 {
-> +			reg = <0>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@1 {
-> +			reg = <1>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@2 {
-> +			reg = <2>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@3 {
-> +			reg = <3>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@4 {
-> +			reg = <4>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@5 {
-> +			reg = <5>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@6 {
-> +			reg = <6>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@7 {
-> +			reg = <7>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@8 {
-> +			reg = <8>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@9 {
-> +			reg = <9>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@10 {
-> +			reg = <10>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@11 {
-> +			reg = <11>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@12 {
-> +			reg = <12>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@13 {
-> +			reg = <13>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@14 {
-> +			reg = <14>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +		gpio@15 {
-> +			reg = <15>;
-> +			type = <PCA955X_TYPE_GPIO>;
-> +		};
-> +
-> +	};
-> +
-> +};
-> +
-> +&i2c4 {
-> +	status = "okay";
-> +
-> +	/* CP0 VDD & VCS : IR35221 */
-> +	/* CP0 VDN : IR35221 */
-> +	/* CP0 VIO : IR38064 */
-> +        /* CP0 VDDR : PXM1330 */
-> +
-> +	ir35221@70 {
-> +		compatible = "infineon,ir35221";
-> +		reg = <0x70>;
-> +	};
-> +
-> +	ir35221@72 {
-> +		compatible = "infineon,ir35221";
-> +		reg = <0x72>;
-> +	};
-> +
-> +};
-> +
-> +&i2c5 {
-> +	status = "okay";
-> +	
-> +	/* CP0 VDD & VCS : IR35221 */
-> +	/* CP0 VDN : IR35221 */
-> +	/* CP0 VIO : IR38064 */
-> +        /* CP0 VDDR : PXM1330 */
-> +
-> +	ir35221@70 {
-> +		compatible = "infineon,ir35221";
-> +		reg = <0x70>;
-> +	};
-> +
-> +	ir35221@72 {
-> +		compatible = "infineon,ir35221";
-> +		reg = <0x72>;
-> +	};
-> +	
-> +};
-> +
-> +&i2c6 {
-> +	status = "okay";
-> +	
-> +	/* pca9548 -> NVMe1 to 8 */
-> +	
-> +	pca9548@70 {
-> +		compatible = "nxp,pca9548";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +	};
-> +	
-> +};
-> +
-> +&i2c7 {
-> +	status = "okay";
-> +	
-> +	/* pca9548 -> NVMe9 to 16 */
-> +	
-> +	pca9548@70 {
-> +		compatible = "nxp,pca9548";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +	};
-> +	
-> +};
-> +
-> +&i2c8 {
-> +	status = "okay";
-> +
-> +	/* FSI CLK/DAT */
-
-This comment doesn't make sense?
-
-> +	eeprom@50 {
-> +		compatible = "atmel,24c64";
-> +		reg = <0x50>;
-> +	};
-> +};
-> +
-> +&i2c9 {
-> +	status = "okay";
-> +	
-> +	/* pca9545 Riser -> 
-> +	* 	PCIe x8  Slot3 
-> +	* 	PCIe x16 slot4 
-> +	* 	PCIe x8  slot5 
-> +	* 	I2C BMC RISER PCA9554
-> +	* 	BMC SCL/SDA PCA9554 
-> +	* 	PCA9554
-> +	*/
-> +	
-> +	/* pca9545 -> 
-> +	* 	PCIe x16 Slot1 
-> +	* 	PCIe x8  slot2 
-> +	* 	PEX8748 
-> +	*/
-> +
-> +	pca9545riser@70 {
-> +		compatible = "nxp,pca9545";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +
-> +		/*interrupt-parent = <&ipic>;*/
-> +		/*interrupts = <17 IRQ_TYPE_LEVEL_LOW>;*/
-> +		i2c-mux-idle-disconnect;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +	
-> +	pca9545@71 {
-> +		compatible = "nxp,pca9545";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x71>;
-> +
-> +		/*interrupt-parent = <&ipic>;*/
-> +		/*interrupts = <17 IRQ_TYPE_LEVEL_LOW>;*/
-> +		i2c-mux-idle-disconnect;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;	
-> +	};
-> +};
-> +
-> +&i2c10 {
-> +	status = "okay";
-> +	
-> +	/* pca9545 Riser -> 
-> +	* 	PCIe x8  Slot8 
-> +	* 	PCIe x16 slot9 
-> +	* 	PCIe x8  slot10 
-> +	* 	I2C BMC RISER PCA9554
-> +	* 	BMC SCL/SDA PCA9554 
-> +	* 	PCA9554
-> +	*/
-> +	
-> +	/* pca9545 -> 
-> +	* 	PCIe x16 Slot1 
-> +	* 	PCIe x8  slot2 
-> +	* 	PEX8748 
-> +	*/
-> +	
-> +	pca9545riser@70 {
-> +		compatible = "nxp,pca9545";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +
-> +		/*interrupt-parent = <&ipic>;*/
-> +		/*interrupts = <17 IRQ_TYPE_LEVEL_LOW>;*/
-
-Remove the commented properties.
-
-> +		i2c-mux-idle-disconnect;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +	
-> +	pca9545@71 {
-> +		compatible = "nxp,pca9545";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x71>;
-> +
-> +		/*interrupt-parent = <&ipic>;*/
-> +		/*interrupts = <17 IRQ_TYPE_LEVEL_LOW>;*/
-
-Again here.
-
-> +		i2c-mux-idle-disconnect;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;	
-> +	};
-> +};
-> +
-> +&i2c11 {
-> +	status = "okay";
-> +	
-> +	/* TPM */
-> +	/* RTC RX8900CE */
-> +	/* FPGA for power sequence */
-> +	/* TMP275A */
-> +	/* TMP275A */
-> +	/* EMC1462 */
-> +
-> +	tpm@57 {
-> +		compatible = "infineon,slb9645tt";
-> +		reg = <0x57>;
-> +	};
-> +	
-> +	rtc@32 {
-> +		compatible = "epson,rx8900";
-> +		reg = <0x32>;
-> +	};
-> +	
-> +	tmp275@48 {
-> +		compatible = "ti,tmp275";
-> +		reg = <0x48>;
-> +	};
-> +	
-> +	tmp275@49 {
-> +		compatible = "ti,tmp275";
-> +		reg = <0x49>;
-> +	};
-> +
-> +    /* chip emc1462 use emc1403 driver */
-> +    emc1403@4c {
-> +        compatible = "smsc,emc1403";
-> +        reg = <0x4c>;
-> +    };
-> +
-> +};
-> +
-> +&i2c12 {
-> +	status = "okay";
-> +
-> +	/* pca9545 ->
-> +	*	SAS BP1
-> +	*	SAS BP2
-> +	*	NVMe BP
-> +	*	M.2 riser
-> +	*/
-> +	
-> +	pca9545@70 {
-> +		compatible = "nxp,pca9545";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +
-> +		/*interrupt-parent = <&ipic>;*/
-> +		/*interrupts = <17 IRQ_TYPE_LEVEL_LOW>;*/
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		
-> +		i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +			
-> +			eeprom@50 {
-> +				compatible = "atmel,24c64";
-> +				reg = <0x50>;
-> +			};
-> +		};
-> +		
-> +		i2c@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +			
-> +			eeprom@50 {
-> +				compatible = "atmel,24c64";
-> +				reg = <0x50>;
-> +			};
-> +		};
-> +		
-> +		i2c@2 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <2>;
-> +			
-> +			eeprom@50 {
-> +				compatible = "atmel,24c64";
-> +				reg = <0x50>;
-> +			};
-> +		};
-> +		
-> +		i2c@3 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <3>;
-> +			
-> +			tmp275@48 {
-> +				compatible = "ti,tmp275";
-> +				reg = <0x48>;
-> +			};
-> +		};
-> +		
-> +	};
-> +	
-> +};
-> +
-> +&i2c13 {
-> +	status = "okay";
-> +	
-> +	/* pca9548 ->
-> +	*	NVMe BP
-> +	*	NVMe HDD17 to 24
-> +	*/
-> +	
-> +	pca9548@70 {
-> +		compatible = "nxp,pca9548";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +	};	
-> +};
-> +
-> +&vuart {
-> +	status = "okay";
-> +};
-> +
-> +&gfx {
-> +	status = "okay";
-> +	memory-region = <&gfx_memory>;
-> +};
-> +
-> +&pinctrl {
-> +	aspeed,external-nodes = <&gfx &lhc>;
-
-This is already provided by aspeed-g5.dtsi, please drop it.
-
-> +};
-> +
-> +&adc {
-> +	status = "okay";
-
-Please add the pinmux properties to mux the ADC lines that you're using
-
-> +};
-> +
-> +&wdt1 {
-> +	aspeed,reset-type = "none";
-> +	aspeed,external-signal;
-> +	aspeed,ext-push-pull;
-> +	aspeed,ext-active-high;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_wdtrst1_default>;
-> +};
-> +
-> +&wdt2 {
-> +	aspeed,alt-boot;
-> +};
-> +
-> +&ibt {
-> +	status = "okay";
-> +};
-> +
-> +&vhub {
-> +	status = "okay";
-> +};
-> +
-> +&video {
-> +	status = "okay";
-> +	memory-region = <&video_engine_memory>;
-> +};
-> +
-> +#include "ibm-power9-dual.dtsi"
-> \ No newline at end of file
-
-Add a newline here to avoid the warning.
-
+> It doesn't apply because of commit 440c4983de262f78033ec58f6abcd199a664327d
+> (platform/x86: wmi: add context argument to the probe function)
+> 
+> One line change in huawei-wmi.c:
+> -static int huawei_wmi_probe(struct wmi_device *wdev)
+> +static int huawei_wmi_probe(struct wmi_device *wdev, const void *context)
+> 
+> I'll address that in the next version. For now, feedback is really
+> appreciated.
+> 
+> > 
+> > > Ayman Bagabas (9):
+> > >   platform/x86: huawei-wmi: rename guid and driver name
+> > >   platform/x86: huawei-wmi: move to platform driver
+> > >   platform/x86: huawei-wmi: implement huawei wmi management interface
+> > >   platform/x86: huawei-wmi: add quirks and module parameters
+> > >   platform/x86: huawei-wmi: control micmute led through wmi interface
+> > >   platform/x86: huawei-wmi: add battery charging thresholds
+> > >   platform/x86: huawei-wmi: add fn-lock support
+> > >   platform/x86: huawei-wmi: add sysfs interface support
+> > >   platform/x86: huawei-wmi: add debugfs support
+> > >
+> > >  drivers/platform/x86/huawei-wmi.c | 710 ++++++++++++++++++++++++++----
+> > >  1 file changed, 629 insertions(+), 81 deletions(-)
+> > >
+> > > --
+> > > 2.20.1
+> > >
+> > 
+> > 
+> > -- 
+> > With Best Regards,
+> > Andy Shevchenko
+> 
 > -- 
-> 2.17.1
-> 
-> 
-> ---------------------------------------------------------------------------------------------------------------------------------------------------------------
-> This email contains confidential or legally privileged information and 
-> is for the sole use of its intended recipient. 
-> Any unauthorized review, use, copying or distribution of this email or 
-> the content of this email is strictly prohibited.
-> If you are not the intended recipient, you may reply to the sender and 
-> should delete this e-mail immediately.
-> ---------------------------------------------------------------------------------------------------------------------------------------------------------------
->
+> Thank you,
+> Ayman
 
-Please try to avoid posting footers like this to public mailing lists.
-
-Cheers,
-
-Andrew
+-- 
+Thank you,
+Ayman
