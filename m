@@ -2,124 +2,77 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D82C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3662FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67573208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AD03208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564574943;
+	bh=SInHiofjgRi6cQb0T69CsQ8lJPIHN1g6yLmZe6X9VMc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EtJ/MKVnMvU97egx4NhOqGQwDc/kZUaJlbvCrVALnfyTSFt2d24U5YS54/WyOSE3s
+	 RcLYXwvUpRBccwPv5sebou+K+GKL+9L+oDnscVqP8Ay6Pzo4Ve42pfldmdXBHqHKjd
+	 vCjpySTy+12QaZVveGJbHTuJKTUDvGtMdRB1mF0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfGaMHq (ORCPT
+        id S1729019AbfGaMJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:07:46 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3670 "EHLO huawei.com"
+        Wed, 31 Jul 2019 08:09:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34628 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726185AbfGaMHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:07:46 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 26166B29F60F478F0E4D;
-        Wed, 31 Jul 2019 20:07:27 +0800 (CST)
-Received: from RH5885H-V3.huawei.com (10.90.53.225) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 31 Jul 2019 20:07:18 +0800
-From:   SunKe <sunke32@huawei.com>
-To:     <sunke32@huawei.com>, <josef@toxicpanda.com>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
-        <linux-kernel@vger.kernel.org>, <kamatam@amazon.com>,
-        <manoj.br@gmail.com>, <stable@vger.kernel.org>, <dwmw@amazon.com>
-Subject: [PATCH v2] nbd: replace kill_bdev() with __invalidate_device() again
-Date:   Wed, 31 Jul 2019 20:13:10 +0800
-Message-ID: <1564575190-132357-1-git-send-email-sunke32@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        id S1725793AbfGaMJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:09:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 56879AF30;
+        Wed, 31 Jul 2019 12:09:00 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 14:08:59 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Rashmica Gupta <rashmica.g@gmail.com>
+Cc:     Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        pasha.tatashin@soleen.com, Jonathan.Cameron@huawei.com,
+        anshuman.khandual@arm.com, Vlastimil Babka <vbabka@suse.cz>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
+Message-ID: <20190731120859.GJ9330@dhcp22.suse.cz>
+References: <20190625075227.15193-1-osalvador@suse.de>
+ <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
+ <20190626080249.GA30863@linux>
+ <2750c11a-524d-b248-060c-49e6b3eb8975@redhat.com>
+ <20190626081516.GC30863@linux>
+ <887b902e-063d-a857-d472-f6f69d954378@redhat.com>
+ <9143f64391d11aa0f1988e78be9de7ff56e4b30b.camel@gmail.com>
+ <20190702074806.GA26836@linux>
+ <CAC6rBskRyh5Tj9L-6T4dTgA18H0Y8GsMdC-X5_0Jh1SVfLLYtg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAC6rBskRyh5Tj9L-6T4dTgA18H0Y8GsMdC-X5_0Jh1SVfLLYtg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Munehisa Kamata <kamatam@amazon.com>
+On Tue 02-07-19 18:52:01, Rashmica Gupta wrote:
+[...]
+> > 2) Why it was designed, what is the goal of the interface?
+> > 3) When it is supposed to be used?
+> >
+> >
+> There is a hardware debugging facility (htm) on some power chips. To use
+> this you need a contiguous portion of memory for the output to be dumped
+> to - and we obviously don't want this memory to be simultaneously used by
+> the kernel.
 
-Commit abbbdf12497d ("replace kill_bdev() with __invalidate_device()")
-once did this, but 29eaadc03649 ("nbd: stop using the bdev everywhere")
-resurrected kill_bdev() and it has been there since then. So buffer_head
-mappings still get killed on a server disconnection, and we can still
-hit the BUG_ON on a filesystem on the top of the nbd device.
-
-  EXT4-fs (nbd0): mounted filesystem with ordered data mode. Opts: (null)
-  block nbd0: Receive control failed (result -32)
-  block nbd0: shutting down sockets
-  print_req_error: I/O error, dev nbd0, sector 66264 flags 3000
-  EXT4-fs warning (device nbd0): htree_dirblock_to_tree:979: inode #2: lblock 0: comm ls: error -5 reading directory block
-  print_req_error: I/O error, dev nbd0, sector 2264 flags 3000
-  EXT4-fs error (device nbd0): __ext4_get_inode_loc:4690: inode #2: block 283: comm ls: unable to read itable block
-  EXT4-fs error (device nbd0) in ext4_reserve_inode_write:5894: IO failure
-  ------------[ cut here ]------------
-  kernel BUG at fs/buffer.c:3057!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 7 PID: 40045 Comm: jbd2/nbd0-8 Not tainted 5.1.0-rc3+ #4
-  Hardware name: Amazon EC2 m5.12xlarge/, BIOS 1.0 10/16/2017
-  RIP: 0010:submit_bh_wbc+0x18b/0x190
-  ...
-  Call Trace:
-   jbd2_write_superblock+0xf1/0x230 [jbd2]
-   ? account_entity_enqueue+0xc5/0xf0
-   jbd2_journal_update_sb_log_tail+0x94/0xe0 [jbd2]
-   jbd2_journal_commit_transaction+0x12f/0x1d20 [jbd2]
-   ? __switch_to_asm+0x40/0x70
-   ...
-   ? lock_timer_base+0x67/0x80
-   kjournald2+0x121/0x360 [jbd2]
-   ? remove_wait_queue+0x60/0x60
-   kthread+0xf8/0x130
-   ? commit_timeout+0x10/0x10 [jbd2]
-   ? kthread_bind+0x10/0x10
-   ret_from_fork+0x35/0x40
-
-With __invalidate_device(), I no longer hit the BUG_ON with sync or
-unmount on the disconnected device.
-
-Fixes: 29eaadc03649 ("nbd: stop using the bdev everywhere")
-Cc: linux-block@vger.kernel.org
-Cc: Ratna Manoj Bolla <manoj.br@gmail.com>
-Cc: nbd@other.debian.org
-Cc: stable@vger.kernel.org
-Cc: David Woodhouse <dwmw@amazon.com>
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
-
----
-I reproduced this phenomenon on the fat file system.
-reproduce steps :
-1.Establish a nbd connection.
-2.Run two threads:one do mount and umount,anther one do clear_sock ioctl
-3.Then hit the BUG_ON.
-
-v2: Delete a link.
-
-Signed-off-by: SunKe <sunke32@huawei.com>
-
- drivers/block/nbd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 9bcde23..e21d2de 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1231,7 +1231,7 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
- 				 struct block_device *bdev)
- {
- 	sock_shutdown(nbd);
--	kill_bdev(bdev);
-+	__invalidate_device(bdev, true);
- 	nbd_bdev_reset(bdev);
- 	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
- 			       &nbd->config->runtime_flags))
+How much memory are we talking about here? Just curious.
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
