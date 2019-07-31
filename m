@@ -2,148 +2,187 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D265C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4496C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E164F2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979FB206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="glzUp8gA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfGaEVV (ORCPT
+        id S1727949AbfGaEXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 00:21:21 -0400
-Received: from mga18.intel.com ([134.134.136.126]:41294 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfGaEVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 00:21:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 21:21:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,328,1559545200"; 
-   d="scan'208";a="347395045"
-Received: from chenyu-office.sh.intel.com ([10.239.158.163])
-  by orsmga005.jf.intel.com with ESMTP; 30 Jul 2019 21:21:18 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     linux-pm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, yu.c.chen@intel.com,
-        Len Brown <len.brown@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Rui Zhang <rui.zhang@intel.com>,
-        David Box <david.e.box@intel.com>,
-        "Tan, Raymond" <raymond.tan@intel.com>
-Subject: [PATCH] Introducing the mask_cstate to disable specific c-states during bootup
-Date:   Wed, 31 Jul 2019 12:31:44 +0800
-Message-Id: <20190731043144.30863-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 31 Jul 2019 00:23:21 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38166 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfGaEXV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 00:23:21 -0400
+Received: by mail-ot1-f67.google.com with SMTP id d17so68803095oth.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 21:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=tm6ntfcYmNHUpIkveTc5p4r6569ul1qIUEH4oxRjwA4=;
+        b=glzUp8gAgo6Q9+gjT5xKBMG30uah/MGW3tgERppjauRxj/tmhas8EEff6tCjk6x9Oo
+         y4yyZpqHDXgaIfsG4COlY9nVCd1boATU3DBufsqEy40c28G9vJaAsDkpn0KK+No1GvNH
+         qTG5qAKnhCkwiGa6BBEERHNzSbb8ZEClpQLptBPI8pxEXmmih6Jd7qqCXTXelHmSSfV2
+         PngzgOomffODrlcUHKczYix6KxGwDAzWrQ7M739Hp0U6FwXuxSj2Nn1VdFfspfag6XCs
+         AcALx/y+P3AngYVbf2fVaNiAQbx4faQhsUnrcqe6vRdyXlKg9OCXPZM1AWyOudTLoarK
+         KXPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=tm6ntfcYmNHUpIkveTc5p4r6569ul1qIUEH4oxRjwA4=;
+        b=iyiA5U7OFlzluoTPPmNzVDi9lLXoaPF+lfRt3gbvmQRVujLvqHjp/Y5nt7mhDQYWe4
+         lfVw0OtWhY1lT2ajwWjRlJ3U+3+LrdeMPMaVPYkgm6TwFnJL3eO05uJzGRkj9FUUZLyB
+         1dpx5Wl1heegURj/Yx52b6g2P4Q/iHMwQiWOmiFK15htV5xsu0Io0Vf8m8V9JO/CxkA3
+         8jreFxv3qY2Xp5OfoOc/UK9owP2wY10eifh+u7VgZH6SiupdHc/q16lykYiDbAC0Hs2C
+         xDd1WXoxfQpAmBMRhf6EHrtVBQeviUdw4MgOoCFs1oL/H4CI+NdW/krD5EQqqVy+V49R
+         VRTg==
+X-Gm-Message-State: APjAAAUpswlXsAB8HR9xhT+9oE2FQXyWRJgLz1IsFs8gIv4oTAIKfW0t
+        prn3gIUTqbIhI2MQJPGy2xOl0w==
+X-Google-Smtp-Source: APXvYqyrmqRX0TMTUvKRI9kn2OfHhiN/A4ouvjYOKSZwB7DvlVq/p3PsehROt3mdsdg2QXOYNxFx/w==
+X-Received: by 2002:a05:6830:2119:: with SMTP id i25mr9479782otc.282.1564547000208;
+        Tue, 30 Jul 2019 21:23:20 -0700 (PDT)
+Received: from localhost ([2600:100e:b005:6ca0:a8bb:e820:e6d3:8809])
+        by smtp.gmail.com with ESMTPSA id v203sm25607331oie.5.2019.07.30.21.23.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 21:23:19 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 21:23:18 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>
+cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 2/5] RISC-V: Add riscv_isa reprensenting ISA features
+ common across CPUs
+In-Reply-To: <20190731012418.24565-3-atish.patra@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1907302117420.15340@viisi.sifive.com>
+References: <20190731012418.24565-1-atish.patra@wdc.com> <20190731012418.24565-3-atish.patra@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is request to disable specific c-states during bootup for
-debug purpose. For example, deeper c-states except C1,C1E,C10
-are disabled during bootup otherwise it might not boot up well
-due to incorrect setting in FW.
+On Tue, 30 Jul 2019, Atish Patra wrote:
 
-For example, intel_idle.mask_cstate=0x3c, would disable cstate
-2,3,4,5 in the table
-(1<<2) | (1<<3) | (1<<4) | (1<<5)
-which is C6,C7s,C8,C9 on Broxton.
-This could have it come up as present, but with c-states disabled,
-so user can enable those c-states later to test.
+> From: Anup Patel <anup.patel@wdc.com>
+> 
+> This patch adds riscv_isa integer to represent ISA features common
+> across all CPUs. The riscv_isa is not same as elf_hwcap because
+> elf_hwcap will only have ISA features relevant for user-space apps
+> whereas riscv_isa will have ISA features relevant to both kernel
+> and user-space apps.
+> 
+> One of the use case is KVM hypervisor where riscv_isa will be used
+> to do following operations:
+> 
+> 1. Check whether hypervisor extension is available
+> 2. Find ISA features that need to be virtualized (e.g. floating
+>    point support, vector extension, etc.)
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/include/asm/hwcap.h | 25 +++++++++++++++++++++
+>  arch/riscv/kernel/cpufeature.c | 41 +++++++++++++++++++++++++++++++---
+>  2 files changed, 63 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> index 7ecb7c6a57b1..e069f60ad5d2 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -22,5 +22,30 @@ enum {
+>  };
+>  
+>  extern unsigned long elf_hwcap;
+> +
+> +#define RISCV_ISA_EXT_A		(1UL << ('A' - 'A'))
 
-Cc: Len Brown <len.brown@intel.com>
-Cc: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Cc: Rui Zhang <rui.zhang@intel.com>
-Cc: David Box <david.e.box@intel.com>
-Cc: "Tan, Raymond" <raymond.tan@intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- .../admin-guide/kernel-parameters.txt         |  7 ++++
- drivers/idle/intel_idle.c                     | 36 +++++++++++++++++++
- 2 files changed, 43 insertions(+)
+Are these uppercase variants still needed if we define the ISA string to 
+be all lowercase, per our recent discussion?
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 7ccd158b3894..93a326c42877 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1733,6 +1733,13 @@
- 			provided by tboot because it makes the system
- 			vulnerable to DMA attacks.
- 
-+	intel_idle.mask_cstate=	[HW,X86]
-+			Mask of C-states to be disabled during bootup. For
-+			example, mask_cstate=0x3c, would disable cstate 2,3,4,5
-+			in the table
-+			(1<<2) | (1<<3) | (1<<4) | (1<<5)
-+			which is C6,C7s,C8,C9 on Broxton.
-+
- 	intel_idle.max_cstate=	[KNL,HW,ACPI,X86]
- 			0	disables intel_idle and fall back on acpi_idle.
- 			1 to 9	specify maximum depth of C-state.
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index fa5ff77b8fe4..ed3233864b69 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -63,6 +63,8 @@ static struct cpuidle_driver intel_idle_driver = {
- /* intel_idle.max_cstate=0 disables driver */
- static int max_cstate = CPUIDLE_STATE_MAX - 1;
- 
-+static unsigned int mask_cstate;
-+
- static unsigned int mwait_substates;
- 
- #define LAPIC_TIMER_ALWAYS_RELIABLE 0xFFFFFFFF
-@@ -1354,6 +1356,12 @@ static void __init intel_idle_cpuidle_driver_init(void)
- 		if (num_substates == 0)
- 			continue;
- 
-+		if ((1UL<<cstate) & mask_cstate) {
-+			pr_info("Disable #%d[%s] by user\n",
-+					cstate,
-+					cpuidle_state_table[cstate].name);
-+			cpuidle_state_table[cstate].disabled = 1;
-+		}
- 		/* if state marked as disabled, skip it */
- 		if (cpuidle_state_table[cstate].disabled != 0) {
- 			pr_debug("state %s is disabled\n",
-@@ -1480,3 +1488,31 @@ device_initcall(intel_idle_init);
-  * is the easiest way (currently) to continue doing that.
-  */
- module_param(max_cstate, int, 0444);
-+
-+static int mask_cstate_set(const char *arg, const struct kernel_param *kp)
-+{
-+	int ret = 0;
-+	unsigned long new_mask_cstate, max_bit;
-+
-+	ret = kstrtoul(arg, 0, &new_mask_cstate);
-+	if (ret)
-+		goto exit_mask;
-+
-+	max_bit = find_last_bit(&new_mask_cstate, BITS_PER_LONG);
-+	if (max_bit >= CPUIDLE_STATE_MAX) {
-+		ret = -EINVAL;
-+		goto exit_mask;
-+	}
-+
-+	mask_cstate = new_mask_cstate;
-+	smp_mb();
-+
-+exit_mask:
-+	return ret;
-+}
-+
-+static const struct kernel_param_ops mask_cstate_ops = {
-+	.set = mask_cstate_set,
-+	.get = param_get_int,
-+};
-+module_param_cb(mask_cstate, &mask_cstate_ops, &mask_cstate, 0644);
--- 
-2.17.1
+> +#define RISCV_ISA_EXT_a		RISCV_ISA_EXT_A
+> +#define RISCV_ISA_EXT_C		(1UL << ('C' - 'A'))
+> +#define RISCV_ISA_EXT_c		RISCV_ISA_EXT_C
+> +#define RISCV_ISA_EXT_D		(1UL << ('D' - 'A'))
+> +#define RISCV_ISA_EXT_d		RISCV_ISA_EXT_D
+> +#define RISCV_ISA_EXT_F		(1UL << ('F' - 'A'))
+> +#define RISCV_ISA_EXT_f		RISCV_ISA_EXT_F
+> +#define RISCV_ISA_EXT_H		(1UL << ('H' - 'A'))
+> +#define RISCV_ISA_EXT_h		RISCV_ISA_EXT_H
+> +#define RISCV_ISA_EXT_I		(1UL << ('I' - 'A'))
+> +#define RISCV_ISA_EXT_i		RISCV_ISA_EXT_I
+> +#define RISCV_ISA_EXT_M		(1UL << ('M' - 'A'))
+> +#define RISCV_ISA_EXT_m		RISCV_ISA_EXT_M
+> +#define RISCV_ISA_EXT_S		(1UL << ('S' - 'A'))
+> +#define RISCV_ISA_EXT_s		RISCV_ISA_EXT_S
+> +#define RISCV_ISA_EXT_U		(1UL << ('U' - 'A'))
+> +#define RISCV_ISA_EXT_u		RISCV_ISA_EXT_U
+> +
+> +extern unsigned long riscv_isa;
+> +
+> +#define riscv_isa_extension_available(ext_char)	\
+> +		(riscv_isa & RISCV_ISA_EXT_##ext_char)
+> +
+>  #endif
+>  #endif
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index b1ade9a49347..177529d48d87 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
 
+[ ... ]
+
+> @@ -43,8 +49,22 @@ void riscv_fill_hwcap(void)
+>  			continue;
+>  		}
+>  
+> -		for (i = 0; i < strlen(isa); ++i)
+> +		i = 0;
+> +		isa_len = strlen(isa);
+> +#if defined(CONFIG_32BIT)
+> +		if (strncasecmp(isa, "rv32", 4) != 0)
+
+strcmp()?
+
+> +			i += 4;
+> +#elif defined(CONFIG_64BIT)
+> +		if (strncasecmp(isa, "rv64", 4) != 0)
+
+And again here?
+
+> +			i += 4;
+> +#endif
+> +		for (; i < isa_len; ++i) {
+>  			this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
+> +			if ('a' <= isa[i] && isa[i] <= 'z')
+> +				this_isa |= (1UL << (isa[i] - 'a'));
+> +			if ('A' <= isa[i] && isa[i] <= 'Z')
+> +				this_isa |= (1UL << (isa[i] - 'A'));
+
+Are these uppercase variants still needed?
+
+
+- Paul
