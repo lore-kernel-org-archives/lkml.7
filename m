@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BD6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFE4C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D35217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01ACD21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:01:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JYv4Dfa5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kIXAp4Mz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387718AbfGaKBF (ORCPT
+        id S1728994AbfGaKBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:01:05 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41025 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387690AbfGaKBB (ORCPT
+        Wed, 31 Jul 2019 06:01:08 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44545 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387667AbfGaKBE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:01:01 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m9so30152788pls.8
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:01:01 -0700 (PDT)
+        Wed, 31 Jul 2019 06:01:04 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i18so31716009pgl.11
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=lzudkxND7QXBPzukVZ8caM1zSAxHaq1C/uuuYUCx2po=;
-        b=JYv4Dfa5hcngN9DoTOGV4efGVdwLlRNapWP8kKxPLBBoo8QqvDyDZqRLCkSwKS1E+I
-         NOX/xhTUok4OWxNDBqrXEDfiTWFgfk2d38fMFffnafAiCMyUQD0o800ed1YjDeoL7HT9
-         ZTG/w8M9Whi8WhgceM0vjdQ7K/iN5cfK8LxHF7iNXjB0Z3tnrhb2SFGsfEEi6aS4HSY2
-         wi38XC1RfJl7qJ+C0L3S6BCvibvLQ2CgLYoHC8JNNQwmp47MAY3X8JLS3A+p5MuWlKcB
-         6Efxk2uOLoWwHEtebA++1wAID8Y+ffRS3dD+hpdxRHr50yUsa2aqEOijbNN/QhwB+vSO
-         8zfA==
+        bh=hT++od96JIv4ERj/5q43A9sdV6GV4nXuETH/GErjU/I=;
+        b=kIXAp4MzviR01IRWqe7+ak4T/tIj/IFNOIOhRvpjmPe4Iky3tFm/wfi5mHwn+pc5DK
+         BQr4/V2CGVXy3LsdNBMhg93+PTiKMQhTlHIm5KoA1US4OPQS9jfABuFeaTh5gnT+r2aX
+         nIoi4PywtlKhdVqSZOj3IKK1NvCelqy/7qMhasvUnDLoaz2EMKpUZIxxfyXFzAraP4Ox
+         iKncbdTOLXT99eGgIOaUMIJJzvIoi2zdT+fSBRWqENUmT/UezZtf8dIF2BK3IICY2HN+
+         D695VleypTnWA8Je1k4uXVgjgWZ8D8GJiwdlybFBgC7IWA4KSWK3FBUq7x1kMW9XG3xw
+         eB2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=lzudkxND7QXBPzukVZ8caM1zSAxHaq1C/uuuYUCx2po=;
-        b=M945yypQajNENLvMfkHV65YmiJsLFqQ5UfAbGPO1rbOgcHGlQQkjO4fzL9Sq/ruCKf
-         797YiE9CdJMX+VpbmKGV7JgJBu0XAO0IogP8cBs312WnIcayhuSqISAz7Djks9c7gTCk
-         EPnMWs5XQaI9buGrNxIUyNbbSRdtmD+sW/UiDoY0P1/BIl3gaiyTDHi5MoJKwon+qndR
-         Y+KMt0JUviotdgKOApLGhi1ntIeBvpnQ7B4N/hxN9Vkhg0K+laBGXc7xaIbGeOyKviMb
-         MNyXbuAz+ef4dTvvUpRHKkyp6W52GfAagSB19PzpaBgpbbAEFSjFKdOL+vCgC5OySbFH
-         ViRA==
-X-Gm-Message-State: APjAAAWcxHDMdEU2+FwXGcPjZtO8qG+4B/CEKsUNSbgG0jDbjC9C99+P
-        R8HxTfP337T68/ybN5DeXbqy+L5IRA4BMQ==
-X-Google-Smtp-Source: APXvYqyR0e1/G2szSnTUlBQRznNPz+DXSU8mTfqTNHVZx5Nio2FgWQ4Gqlinf5EjrfrfMnJCKcFi9g==
-X-Received: by 2002:a17:902:2de4:: with SMTP id p91mr88832811plb.28.1564567260751;
-        Wed, 31 Jul 2019 03:01:00 -0700 (PDT)
+        bh=hT++od96JIv4ERj/5q43A9sdV6GV4nXuETH/GErjU/I=;
+        b=rpPxLIO1cUaaoCWS1GHhA9ISQGI2USoYIuY52GoUD57ombqHBgEHrBuEyutMeoYqwj
+         WR595MiSDW4QcPBF+ILVWzQyaTOY4/Or4YHvRmPl8O4khxGKRAW2lKUzWeOH86Ah800I
+         ba02eg3gzPY06iYz21kgv1ebgbF5sO4kNUAgfjiNvgA8iOLTVdC4eLJqK1Ocdm8sKemr
+         2Z4IP16KZd+n5zCKKFAjX4cPsOhwCJMBMbK9g/4lb9403khmUMFcB1tKUdkEVF14lj+U
+         1MOKEMGX0N8ggoo5loM0QUc5FQFq8F8zdK8T3nemFKSK6b7k2l8SCIQB4te9k4xikXUR
+         9yaw==
+X-Gm-Message-State: APjAAAUZcWhUKk5RBB/5I9TMPGw6NLNbdAyvsMz0PWeQAuruHj86Gb50
+        CrFRF0xH55V0RFSDNKJAnBnsyQ==
+X-Google-Smtp-Source: APXvYqzXNx5w1M0CUiKp7nGMuwNt7ZCkwdDTEa9GNGjgnC2N3BvUWTewMA7HX54pOwDNkuJOSYLSgw==
+X-Received: by 2002:aa7:8acb:: with SMTP id b11mr44975412pfd.109.1564567263283;
+        Wed, 31 Jul 2019 03:01:03 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id m6sm68611352pfb.151.2019.07.31.03.00.58
+        by smtp.gmail.com with ESMTPSA id m6sm68611352pfb.151.2019.07.31.03.01.00
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 31 Jul 2019 03:01:00 -0700 (PDT)
+        Wed, 31 Jul 2019 03:01:02 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     sre@kernel.org
 Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, yuanjiang.yu@unisoc.com,
         baolin.wang@linaro.org, vincent.guittot@linaro.org,
         linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] power: supply: sc27xx: Optimize the battery capacity calibration
-Date:   Wed, 31 Jul 2019 18:00:26 +0800
-Message-Id: <6d4155a2d95a67546c27b49ba4cd1ab2898cb570.1564566425.git.baolin.wang@linaro.org>
+Subject: [PATCH 5/6] power: supply: sc27xx: Make sure the alarm capacity is larger than 0
+Date:   Wed, 31 Jul 2019 18:00:27 +0800
+Message-Id: <5c3bb516c6020410a932c12eb2481fd75c34b7fe.1564566425.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1564566425.git.baolin.wang@linaro.org>
 References: <cover.1564566425.git.baolin.wang@linaro.org>
@@ -76,206 +76,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
 
-This patch factors out the capacity calibration into one single function
-to calibrate the battery capacity, and adding more abnormal cases to
-calibrate the capacity when the OCV value is not matchable with current
-capacity.
-
-Moreover we also allow to calibrate the capacity when charger magager
-tries to get current capacity to make sure we give a correct capacity
-for userspace.
+We must make sure the alarm capacity is larger than 0, to help to
+calibrate the low battery capacity.
 
 Signed-off-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/power/supply/sc27xx_fuel_gauge.c |  127 ++++++++++++++++++++++--------
- 1 file changed, 92 insertions(+), 35 deletions(-)
+ drivers/power/supply/sc27xx_fuel_gauge.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/power/supply/sc27xx_fuel_gauge.c b/drivers/power/supply/sc27xx_fuel_gauge.c
-index ab3afa1..f670131 100644
+index f670131..fa85f40 100644
 --- a/drivers/power/supply/sc27xx_fuel_gauge.c
 +++ b/drivers/power/supply/sc27xx_fuel_gauge.c
-@@ -109,6 +109,8 @@ struct sc27xx_fgu_data {
- };
+@@ -915,6 +915,8 @@ static int sc27xx_fgu_hw_init(struct sc27xx_fgu_data *data)
+ 	data->alarm_cap = power_supply_ocv2cap_simple(data->cap_table,
+ 						      data->table_len,
+ 						      data->min_volt);
++	if (!data->alarm_cap)
++		data->alarm_cap += 1;
  
- static int sc27xx_fgu_cap_to_clbcnt(struct sc27xx_fgu_data *data, int capacity);
-+static void sc27xx_fgu_capacity_calibration(struct sc27xx_fgu_data *data,
-+					    int cap, int int_mode);
+ 	power_supply_put_battery_info(data->battery, &info);
  
- static const char * const sc27xx_charger_supply_name[] = {
- 	"sc2731_charger",
-@@ -389,6 +391,9 @@ static int sc27xx_fgu_get_capacity(struct sc27xx_fgu_data *data, int *cap)
- 	delta_cap = DIV_ROUND_CLOSEST(temp * 100, data->total_cap);
- 	*cap = delta_cap + data->init_cap;
- 
-+	/* Calibrate the battery capacity in a normal range. */
-+	sc27xx_fgu_capacity_calibration(data, *cap, false);
-+
- 	return 0;
- }
- 
-@@ -661,50 +666,62 @@ static int sc27xx_fgu_property_is_writeable(struct power_supply *psy,
- 
- static void sc27xx_fgu_adjust_cap(struct sc27xx_fgu_data *data, int cap)
- {
-+	int ret;
-+
- 	data->init_cap = cap;
--	data->init_clbcnt = sc27xx_fgu_cap_to_clbcnt(data, data->init_cap);
-+	ret = sc27xx_fgu_get_clbcnt(data, &data->init_clbcnt);
-+	if (ret)
-+		dev_err(data->dev, "failed to get init coulomb counter\n");
- }
- 
--static irqreturn_t sc27xx_fgu_interrupt(int irq, void *dev_id)
-+static void sc27xx_fgu_capacity_calibration(struct sc27xx_fgu_data *data,
-+					    int cap, int int_mode)
- {
--	struct sc27xx_fgu_data *data = dev_id;
--	int ret, cap, ocv, adc;
--	u32 status;
--
--	mutex_lock(&data->lock);
-+	int ret, ocv, chg_sts, adc;
- 
--	ret = regmap_read(data->regmap, data->base + SC27XX_FGU_INT_STS,
--			  &status);
--	if (ret)
--		goto out;
-+	ret = sc27xx_fgu_get_vbat_ocv(data, &ocv);
-+	if (ret) {
-+		dev_err(data->dev, "get battery ocv error.\n");
-+		return;
-+	}
- 
--	ret = regmap_update_bits(data->regmap, data->base + SC27XX_FGU_INT_CLR,
--				 status, status);
--	if (ret)
--		goto out;
-+	ret = sc27xx_fgu_get_status(data, &chg_sts);
-+	if (ret) {
-+		dev_err(data->dev, "get charger status error.\n");
-+		return;
-+	}
- 
- 	/*
--	 * When low overload voltage interrupt happens, we should calibrate the
--	 * battery capacity in lower voltage stage.
-+	 * If we are in charging mode, then we do not need to calibrate the
-+	 * lower capacity.
- 	 */
--	if (!(status & SC27XX_FGU_LOW_OVERLOAD_INT))
--		goto out;
-+	if (chg_sts == POWER_SUPPLY_STATUS_CHARGING)
-+		return;
- 
--	ret = sc27xx_fgu_get_capacity(data, &cap);
--	if (ret)
--		goto out;
--
--	ret = sc27xx_fgu_get_vbat_ocv(data, &ocv);
--	if (ret)
--		goto out;
--
--	/*
--	 * If current OCV value is less than the minimum OCV value in OCV table,
--	 * which means now battery capacity is 0%, and we should adjust the
--	 * inititial capacity to 0.
--	 */
--	if (ocv <= data->cap_table[data->table_len - 1].ocv) {
-+	if ((ocv > data->cap_table[0].ocv && cap < 100) || cap > 100) {
-+		/*
-+		 * If current OCV value is larger than the max OCV value in
-+		 * OCV table, or the current capacity is larger than 100,
-+		 * we should force the inititial capacity to 100.
-+		 */
-+		sc27xx_fgu_adjust_cap(data, 100);
-+	} else if (ocv <= data->cap_table[data->table_len - 1].ocv) {
-+		/*
-+		 * If current OCV value is leass than the minimum OCV value in
-+		 * OCV table, we should force the inititial capacity to 0.
-+		 */
- 		sc27xx_fgu_adjust_cap(data, 0);
-+	} else if ((ocv > data->cap_table[data->table_len - 1].ocv && cap <= 0) ||
-+		   (ocv > data->min_volt && cap <= data->alarm_cap)) {
-+		/*
-+		 * If current OCV value is not matchable with current capacity,
-+		 * we should re-calculate current capacity by looking up the
-+		 * OCV table.
-+		 */
-+		int cur_cap = power_supply_ocv2cap_simple(data->cap_table,
-+							  data->table_len, ocv);
-+
-+		sc27xx_fgu_adjust_cap(data, cur_cap);
- 	} else if (ocv <= data->min_volt) {
- 		/*
- 		 * If current OCV value is less than the low alarm voltage, but
-@@ -713,7 +730,7 @@ static irqreturn_t sc27xx_fgu_interrupt(int irq, void *dev_id)
- 		 */
- 		if (cap > data->alarm_cap) {
- 			sc27xx_fgu_adjust_cap(data, data->alarm_cap);
--		} else if (cap <= 0) {
-+		} else {
- 			int cur_cap;
- 
- 			/*
-@@ -728,15 +745,55 @@ static irqreturn_t sc27xx_fgu_interrupt(int irq, void *dev_id)
- 			sc27xx_fgu_adjust_cap(data, cur_cap);
- 		}
- 
-+		if (!int_mode)
-+			return;
-+
- 		/*
- 		 * After adjusting the battery capacity, we should set the
- 		 * lowest alarm voltage instead.
- 		 */
- 		data->min_volt = data->cap_table[data->table_len - 1].ocv;
-+		data->alarm_cap = power_supply_ocv2cap_simple(data->cap_table,
-+							      data->table_len,
-+							      data->min_volt);
-+
- 		adc = sc27xx_fgu_voltage_to_adc(data, data->min_volt / 1000);
--		regmap_update_bits(data->regmap, data->base + SC27XX_FGU_LOW_OVERLOAD,
-+		regmap_update_bits(data->regmap,
-+				   data->base + SC27XX_FGU_LOW_OVERLOAD,
- 				   SC27XX_FGU_LOW_OVERLOAD_MASK, adc);
- 	}
-+}
-+
-+static irqreturn_t sc27xx_fgu_interrupt(int irq, void *dev_id)
-+{
-+	struct sc27xx_fgu_data *data = dev_id;
-+	int ret, cap;
-+	u32 status;
-+
-+	mutex_lock(&data->lock);
-+
-+	ret = regmap_read(data->regmap, data->base + SC27XX_FGU_INT_STS,
-+			  &status);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_update_bits(data->regmap, data->base + SC27XX_FGU_INT_CLR,
-+				 status, status);
-+	if (ret)
-+		goto out;
-+
-+	/*
-+	 * When low overload voltage interrupt happens, we should calibrate the
-+	 * battery capacity in lower voltage stage.
-+	 */
-+	if (!(status & SC27XX_FGU_LOW_OVERLOAD_INT))
-+		goto out;
-+
-+	ret = sc27xx_fgu_get_capacity(data, &cap);
-+	if (ret)
-+		goto out;
-+
-+	sc27xx_fgu_capacity_calibration(data, cap, true);
- 
- out:
- 	mutex_unlock(&data->lock);
 -- 
 1.7.9.5
 
