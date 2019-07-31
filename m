@@ -2,104 +2,74 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26006C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D13C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B1A206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564586958;
-	bh=+BRKzUwM8OwruXRsxUuLWu4ziaD3FNKMFe2NrmJpS6Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xIXlO5ZpU5j1tfUTQsNJ882eY+f3NyV04YD6jVIVsHFyxwuZuc05GbS49UxhnXK3e
-	 iZCnJN9I0LrcE+7RruB09Tg1rY71ANIkPIUPtRECQ9xrTvUgzUYK8GdEF+1NEjD+GH
-	 MqkTw6pHFAzGAe2V9mMrylotlWN5H/pWqxetxc4o=
+	by mail.kernel.org (Postfix) with ESMTP id CBF3D206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfGaP3Q (ORCPT
+        id S1728216AbfGaP3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbfGaP3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:29:16 -0400
-Received: from localhost (unknown [171.76.116.36])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B577206A3;
-        Wed, 31 Jul 2019 15:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564586955;
-        bh=+BRKzUwM8OwruXRsxUuLWu4ziaD3FNKMFe2NrmJpS6Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pliu9DlraLieV4H56poR/05eLtgrQXF2E550yCD/1BqkY5J8a4LBlP0GQ3TUz5W+R
-         MySUdpCGd0XuxIluW9RFS9kEIlqodJ6wKmzRenzG17xQaoBMaHXde4mAhZC/NhuU08
-         c2tn4Qxy41GvYxCrBRol7OFAuj+nVN21IMbUMwFQ=
-Date:   Wed, 31 Jul 2019 20:58:02 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 10/57] dmaengine: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190731152802.GW12733@vkoul-mobl.Dlink>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-11-swboyd@chromium.org>
+        Wed, 31 Jul 2019 11:29:21 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:37509 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727813AbfGaP3U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:29:20 -0400
+Received: from [192.168.1.110] ([95.117.90.94]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M5gAG-1hzz9A2h6A-007FEO; Wed, 31 Jul 2019 17:29:18 +0200
+To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: RFC: phase out static using gpio numbers in platform drivers
+Organization: metux IT consult
+Message-ID: <40af948c-3407-2100-777c-3bfb30f22708@metux.net>
+Date:   Wed, 31 Jul 2019 17:29:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730181557.90391-11-swboyd@chromium.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:v4Wlby4rz9oTskEIAtRyd/kheOPqYOdOlkIZ5DA/JgaMU2bz6xQ
+ pfI8Wl1evQJP7vTB88OMkKAy0T8P+VRAv+aygeXnYaeOAHFTAxGXjyAAqPJGfjoE2/6VAg3
+ /gjiEN3oOG758Bwi97AGS17VoJ+Im7A9myOmrb5Bc8midB0vALD9ikN6yO7N02hcHaYcZ0c
+ 0TpU10ivS4je0+W0n6EhA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:u2inyiIyJiI=:T2eoryU69631mVBFryr1Vl
+ gv4gTP8kMwp21lLipMx51RtcT8A5a36oDDA0/m4a+oVocEeWlJwx8IIa8LZMg185boAxQGw3C
+ MruwRuVumaCm8mqm63I4E9RPhBJtW65yMpM91EADkmg/uJH2/1RNgsVD7/MFRFaDizoOvUiUR
+ j7KZhAxwf+h079kDnJW+bKaGXG5AprGqZC1DFN/821FbDrjrJNXoZnIeCT27zguK9Z2XNoMpU
+ fJ5ESZKdqlqTsTHsEIimj8FtmAxv/4g5/iyM/DlzCQ6PUPQHBDxyovFueaXs+Vf2hkDo+RRlI
+ cJMs/n/jlQQIdVtjKNO0QuuSkx0800waAs6Mxo8TmRrDc3Zjbrd2qp0/daJ9ZYmwWcVTJLpvn
+ 9FMICu7Ff7MGc1xs3tXHejWyFByAgSiGYA/hFOt0YXQODNhLf6O5RY5m8nwtdZaHW0vOHdW97
+ ef/PiQtkBNZui0A6ScKgN3xosvwJub47Z/h7QCR/013rujm3h/lR6DH2PUg6+xhlH3D1dgBwH
+ 16Bse4I4ZhHcyVqvWsxtR9SrV506UkBSEYsfGQwpm8MNBVodqY4usM4cZ2MKZcG8dc7A1KhL3
+ V9y1qoiEgPAvkv3AxHi/8XD+ukT3DwpZHvL+8Sah/J6v2YBqZevF2zjlImemH4cE8f4JX8AIs
+ /n0/rSQvHnZRgLGQaa+Kc3SraiIz2j+RIbZykNLGX++1UxVadGwbBrudAqRbfdN9qEz3SvpU+
+ El/osFm4clp++X5Ej5II0cwg6pq7PaDqyELdRfnVNl/27uQIrBnaUV96qKE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-07-19, 11:15, Stephen Boyd wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
-> 
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
-> 
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
-> 
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
-> 
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
+Hello folks,
 
-I would have preferred a patch per driver, but that does become insane
-for treewide work, so I am taking this as is
 
-Applied, thanks
+I've seen a lot of drivers (eg. many arch specific board init code)
+are still using raw gpio numbers, which AFAIK are deprecated.
+
+Shall we start phasing them out and rewrite the corresponding drivers
+to use match tables ?
+
+
+--mtx
 
 -- 
-~Vinod
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
