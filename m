@@ -2,140 +2,172 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F70C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DF7C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F272089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564541847;
-	bh=oaJrCOH+JADa8zy97fYyMIm3ThsxnzOC4vYOhOEcIv8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mb/Kz4d+Jz7lnt7THPyNLOkH+2Nkp2WZg9JJST6F8ogqFj1c+rnSGjYOHY7ONlouv
-	 B9LuwOMiJxwRwD/JTWBOeQ4nu2/vxt/l/UlzSo25oCI/rk5KHIas6MxnY5bvVl4J5k
-	 nBEGdz+9VfcIn0FiLAW3GRpMcU9+Jo6z0UwBcenI=
+	by mail.kernel.org (Postfix) with ESMTP id D6302206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bkoXiW2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfGaC5Z (ORCPT
+        id S1727858AbfGaC7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 22:57:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbfGaC5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 22:57:25 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2708206E0;
-        Wed, 31 Jul 2019 02:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564541844;
-        bh=oaJrCOH+JADa8zy97fYyMIm3ThsxnzOC4vYOhOEcIv8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yVNe4M49GrbLbaKCuwRXYKsSFtH/KSl9apD2e2SUyP9PYL1k+R8wxgiR/4ApygZ4S
-         29P6IfNYgLQkCaDMD27petYwc36lKZB8V6q9QsBBn0fmi9foMRPMQuTUCBLZe2JkDn
-         seRrksdk3CZ5VpsUPLtQCQj9XOAxxP0fERR4BtwY=
-Date:   Tue, 30 Jul 2019 19:57:22 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     David Miller <davem@davemloft.net>, dvyukov@google.com,
-        netdev@vger.kernel.org, fw@strlen.de, i.maximets@samsung.com,
-        edumazet@google.com, dsahern@gmail.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
-Message-ID: <20190731025722.GE687@sol.localdomain>
-Mail-Followup-To: Eric Dumazet <eric.dumazet@gmail.com>,
-        David Miller <davem@davemloft.net>, dvyukov@google.com,
-        netdev@vger.kernel.org, fw@strlen.de, i.maximets@samsung.com,
-        edumazet@google.com, dsahern@gmail.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <20190724163014.GC673@sol.localdomain>
- <20190724.111225.2257475150626507655.davem@davemloft.net>
- <20190724183710.GF213255@gmail.com>
- <20190724.130928.1854327585456756387.davem@davemloft.net>
- <20190724210950.GH213255@gmail.com>
- <1e07462d-61e2-9885-edd0-97a82dd7883e@gmail.com>
+        Tue, 30 Jul 2019 22:59:09 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34215 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfGaC7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 22:59:09 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b13so30955753pfo.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 19:59:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B7l52D/cRUQyEKtM6D9Z02BVoe/7k/AeNEzc9yQ+CeI=;
+        b=bkoXiW2ZCG3VyC8G6LPZgBZuI3y0v2RUc/ccSE0ChSGLNoZT6BX5NE8m9Z8F/1Y46T
+         OlrlmQZ/RU9gu6V2zSy+QA4wqnBGe23ABaN6+GETOMjbLTwv1v0b6ssiRxV1BOsJR6OV
+         Uq1l0VsAIibFVMIuqQKhdKY/kCgPlFwMeCZh5+PL7h55QoJDscTpXhbqdZiuWmNXmreq
+         YpyyRZaweDEJoQ+Rsj6RPXrtLPb3B5O3q6827dDVLuy49O+OVtJuCmfTYghgQ0IhHMIu
+         ZAZGttFO4gUbQBSHY8UfufkMuYWTuIvjBg4AE05QyoJdH+v2asCd9GLKgyhlytygWTJa
+         xG3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B7l52D/cRUQyEKtM6D9Z02BVoe/7k/AeNEzc9yQ+CeI=;
+        b=VGapu47K4T5EZ35YNixgOd6owLyo2+0dcCtme0ZUaxIF/lBD90Iu+kSmCponskjR/u
+         lgtJ6dN60FwRcuN/eAT3EHF/WcgaiwR+BOEdOH6SXfMivz00vkRBWSkPfrYqPBjH3Hn4
+         dmDAT2XCfE2Qn8oVDqVEBpbSCoechT/288hkKneaeatTz0Bf5GwoCVodtYEYKeJbseHd
+         twN2zDDCD7MT3/p58YC85qJ5yOSHezLp67xv8XE+uOUSQaVEVgeVqeMGihmPbv68vv/I
+         6nwnQiTJqDVkaUBciDHSy0wkUSSruoTieoSekpb+o+0BnxbUmr5dpXrXeW0fmu/QlIfw
+         wgVQ==
+X-Gm-Message-State: APjAAAXirzqXQlxQPtPMND+2SffTZDaioxHl88AEISMk3hNzv+NSrpJv
+        rhjkpOzQxKYPCWVwQpcQBPT5kQ==
+X-Google-Smtp-Source: APXvYqzX977xFiSHTriuRuGYyl0OLc4P0XfrtGSCyPCZP10LRC7cWGWRT5jd8/2+n6pShJuBgEhHow==
+X-Received: by 2002:a17:90a:1b48:: with SMTP id q66mr502148pjq.83.1564541948328;
+        Tue, 30 Jul 2019 19:59:08 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id v18sm63769086pgl.87.2019.07.30.19.59.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 19:59:07 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "v4 . 18+" <stable@vger.kernel.org>,
+        Doug Smythies <doug.smythies@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
+Date:   Wed, 31 Jul 2019 08:28:57 +0530
+Message-Id: <04ff2be6ef108585d57aa2462aa7a4c676b6d1cd.1564541875.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e07462d-61e2-9885-edd0-97a82dd7883e@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 07:04:47AM +0200, Eric Dumazet wrote:
-> 
-> 
-> On 7/24/19 11:09 PM, Eric Biggers wrote:
-> > On Wed, Jul 24, 2019 at 01:09:28PM -0700, David Miller wrote:
-> >> From: Eric Biggers <ebiggers@kernel.org>
-> >> Date: Wed, 24 Jul 2019 11:37:12 -0700
-> >>
-> >>> We can argue about what words to use to describe this situation, but
-> >>> it doesn't change the situation itself.
-> >>
-> >> And we should argue about those words because it matters to humans and
-> >> effects how they feel, and humans ultimately fix these bugs.
-> >>
-> >> So please stop with the hyperbole.
-> >>
-> >> Thank you.
-> > 
-> > Okay, there are 151 bugs that syzbot saw on the mainline Linux kernel in the
-> > last 7 days (90.1% with reproducers).  Of those, 59 were reported over 3 months
-> > ago (89.8% with reproducers).  Of those, 12 were reported over a year ago (83.3%
-> > with reproducers).
-> > 
-> > No opinion on whether those are small/medium/large numbers, in case it would
-> > hurt someone's feelings.
-> > 
-> > These numbers do *not* include bugs that are still valid but weren't seen on
-> > mainline in last 7 days, e.g.:
-> > 
-> > - Bugs that are seen only rarely, so by chance weren't seen in last 7 days.
-> > - Bugs only in linux-next and/or subsystem branches.
-> > - Bugs that were seen in mainline more than 7 days ago, and then only on
-> >   linux-next or subsystem branch in last 7 days.
-> > - Bugs that stopped being seen due to a change in syzkaller.
-> > - Bugs that stopped being seen due to a change in kernel config.
-> > - Bugs that stopped being seen due to other environment changes such as kernel
-> >   command line parameters.
-> > - Bugs that stopped being seen due to a kernel change that hid the bug but
-> >   didn't actually fix it, i.e. still reachable in other ways.
-> > 
-> 
-> We do not doubt syzkaller is an incredible tool.
-> 
-> But netdev@ and lkml@ are mailing lists for humans to interact,
-> exchange ideas, send patches and review them.
-> 
-> To me, an issue that was reported to netdev by a real user is _way_ more important
-> than potential issues that a bot might have found doing crazy things.
-> 
-> We need to keep optimal S/N on mailing lists, so any bots trying to interact
-> with these lists must be very cautious and damn smart.
-> 
-> When I have time to spare and can work on syzbot reports, I am going to a web
-> page where I can see them and select the ones it makes sense to fix.
-> I hate having to set up email filters.
-> 
+To avoid reducing the frequency of a CPU prematurely, we skip reducing
+the frequency if the CPU had been busy recently.
 
-syzbot finds a lot of security bugs, and security bugs are important.  And the
-bugs are still there regardless of whether they're reported by human or bot.
+This should not be done when the limits of the policy are changed, for
+example due to thermal throttling. We should always get the frequency
+within the new limits as soon as possible.
 
-Also, there *are* bugs being fixed because of these reminders; some subsystem
-maintainers have even fixed all the bugs in their subsystem.  But I can
-understand that for subsystems with a lot of open bug reports it's overwhelming.
+Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
+Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
+Reported-by: Doug Smythies <doug.smythies@gmail.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+@Doug: Can you please provide your Tested-by for this commit, as it
+already fixed the issue around acpi-cpufreq driver.
 
-What I'll try doing next time (if there *is* a next time; it isn't actually my
-job to do any of this, I just care about the security and reliability of
-Linux...) is for subsystems with lots of open bug reports, only listing the ones
-actually seen in the last week or so, and perhaps also spending some more time
-manually checking those bugs.  That should cut down the noise a lot.
+We will continue to see what's wrong with intel-pstate though.
 
-- Eric
+ kernel/sched/cpufreq_schedutil.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 636ca6f88c8e..2f382b0959e5 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -40,6 +40,7 @@ struct sugov_policy {
+ 	struct task_struct	*thread;
+ 	bool			work_in_progress;
+ 
++	bool			limits_changed;
+ 	bool			need_freq_update;
+ };
+ 
+@@ -89,8 +90,11 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
+ 	    !cpufreq_this_cpu_can_update(sg_policy->policy))
+ 		return false;
+ 
+-	if (unlikely(sg_policy->need_freq_update))
++	if (unlikely(sg_policy->limits_changed)) {
++		sg_policy->limits_changed = false;
++		sg_policy->need_freq_update = true;
+ 		return true;
++	}
+ 
+ 	delta_ns = time - sg_policy->last_freq_update_time;
+ 
+@@ -437,7 +441,7 @@ static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
+ static inline void ignore_dl_rate_limit(struct sugov_cpu *sg_cpu, struct sugov_policy *sg_policy)
+ {
+ 	if (cpu_bw_dl(cpu_rq(sg_cpu->cpu)) > sg_cpu->bw_dl)
+-		sg_policy->need_freq_update = true;
++		sg_policy->limits_changed = true;
+ }
+ 
+ static void sugov_update_single(struct update_util_data *hook, u64 time,
+@@ -447,7 +451,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+ 	struct sugov_policy *sg_policy = sg_cpu->sg_policy;
+ 	unsigned long util, max;
+ 	unsigned int next_f;
+-	bool busy;
++	bool busy = false;
+ 
+ 	sugov_iowait_boost(sg_cpu, time, flags);
+ 	sg_cpu->last_update = time;
+@@ -457,7 +461,9 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+ 	if (!sugov_should_update_freq(sg_policy, time))
+ 		return;
+ 
+-	busy = sugov_cpu_is_busy(sg_cpu);
++	/* Limits may have changed, don't skip frequency update */
++	if (!sg_policy->need_freq_update)
++		busy = sugov_cpu_is_busy(sg_cpu);
+ 
+ 	util = sugov_get_util(sg_cpu);
+ 	max = sg_cpu->max;
+@@ -831,6 +837,7 @@ static int sugov_start(struct cpufreq_policy *policy)
+ 	sg_policy->last_freq_update_time	= 0;
+ 	sg_policy->next_freq			= 0;
+ 	sg_policy->work_in_progress		= false;
++	sg_policy->limits_changed		= false;
+ 	sg_policy->need_freq_update		= false;
+ 	sg_policy->cached_raw_freq		= 0;
+ 
+@@ -879,7 +886,7 @@ static void sugov_limits(struct cpufreq_policy *policy)
+ 		mutex_unlock(&sg_policy->work_lock);
+ 	}
+ 
+-	sg_policy->need_freq_update = true;
++	sg_policy->limits_changed = true;
+ }
+ 
+ struct cpufreq_governor schedutil_gov = {
+-- 
+2.21.0.rc0.269.g1a574e7a288b
+
