@@ -2,54 +2,53 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA0AC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30A3C32754
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0EF206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969F22054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jn8chFsq"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fC5Mvih1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfGaM4n (ORCPT
+        id S2388118AbfGaM4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:56:43 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50015 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727090AbfGaM4n (ORCPT
+        Wed, 31 Jul 2019 08:56:48 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:32536 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727090AbfGaM4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:56:43 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VCr7uL026490;
-        Wed, 31 Jul 2019 14:56:29 +0200
+        Wed, 31 Jul 2019 08:56:46 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VCpUJh016802;
+        Wed, 31 Jul 2019 14:56:27 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=XIOcvogBjeCYx69E1hVuZzDFWgsxfeUEGBiLYqR1/tc=;
- b=jn8chFsqGAsR50o8OfHvjpxYFlfuoRoH+EHMxSgS1073F75QpYBEydpR/S5Rh0n0hTQ1
- xzQSp4z184jVtVcMUrO/Z58akHcGhwyciHIwJmV9YPuF3/K//yaVkL2qokn6ZUngAKGq
- hKkh5O5Y+tWu/k6GUJ/LpZFB+VJK8FDg9hQJVJg1RECSgp5oK3vZ4Tb33oVoQUJwLk3Q
- ALbgIronZamiDnQRWFaYpG2nah+8ZDaS06BDJ0nMUZUfetoaj2IzZ1sZ4c8dnspTvi2w
- G3/z4NGZhzTvKsPy9IGVmzidixfxjZ3YyHGr7v1Yzs4qr+A18iCT040O4sKwY+x5j2Ep fw== 
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=lcqx0uZw6dlZ+99bC8ZqWM7F55NO2x68BB/LQEBznPQ=;
+ b=fC5Mvih1s6e2NHIa7kpJqYmXDYNq5LPcYDGyWs9UN+KhhqsDI8Oaba0sHyd1pCDeDUPV
+ bhlDGWDGqrtjuFkX3xtVdbkQHvskitO6AZRDm07MIyIewmctAFvNiY3JhcG3qZ/FSgwk
+ Wptqa+Tzqhb8iUz5o9pv5L64GCBFfzQP/v1syJOREnhzsGL3B6qdyW19ikLeHoF9aCOm
+ LTrtlOkhmEYvZxWuWgGpgz867OkHPzWWtaQx6VnP02KFIVStB7BxUbABptMEQSHzDAZW
+ 6z1CxQLaEWqSWYXrZFdw+8+w2CnKuA9GENaeJ+/xDfFHWrAcoq2zsFsUhbXBT6hWowIT KA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2u0ccwrdbj-1
+        by mx08-00178001.pphosted.com with ESMTP id 2u0bra4m1u-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 31 Jul 2019 14:56:29 +0200
+        Wed, 31 Jul 2019 14:56:27 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 56F9731;
-        Wed, 31 Jul 2019 12:56:28 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 48CA2CB313;
-        Wed, 31 Jul 2019 14:56:28 +0200 (CEST)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 14:56:28 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 168B231;
+        Wed, 31 Jul 2019 12:56:26 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F3F25CB312;
+        Wed, 31 Jul 2019 14:56:25 +0200 (CEST)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
+ 2019 14:56:25 +0200
 Received: from localhost (10.201.23.19) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul 2019 14:56:28
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul 2019 14:56:25
  +0200
 From:   Hugues Fruchet <hugues.fruchet@st.com>
 To:     Alexandre Torgue <alexandre.torgue@st.com>,
@@ -65,12 +64,10 @@ CC:     <linux-media@vger.kernel.org>,
         Philippe CORNU <philippe.cornu@st.com>,
         "Hugues Fruchet" <hugues.fruchet@st.com>,
         Mickael GUENE <mickael.guene@st.com>
-Subject: [PATCH v4 2/3] media: stm32-dcmi: add media controller support
-Date:   Wed, 31 Jul 2019 14:56:22 +0200
-Message-ID: <1564577783-18627-3-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH v4 0/3] DCMI bridge support
+Date:   Wed, 31 Jul 2019 14:56:20 +0200
+Message-ID: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
-References: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.201.23.19]
@@ -81,146 +78,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add media controller support to dcmi in order
-to walk within remote subdevices pipeline.
+This patch serie allows to connect non-parallel camera sensor to
+DCMI thanks to a bridge connected in between such as STMIPID02 [1].
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-Change-Id: Id6280c58ea3c6f3d03da2027ac45df9f0e7a1da9
----
- drivers/media/platform/Kconfig            |  2 +-
- drivers/media/platform/stm32/stm32-dcmi.c | 52 ++++++++++++++++++++++++-------
- 2 files changed, 41 insertions(+), 13 deletions(-)
+Media controller support is introduced first, then support of
+several sub-devices within pipeline with dynamic linking
+between them.
+In order to keep backward compatibility with applications
+relying on V4L2 interface only, format set on video node
+is propagated to all sub-devices connected to camera interface.
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 8a19654..de7e21f 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -121,7 +121,7 @@ config VIDEO_S3C_CAMIF
- 
- config VIDEO_STM32_DCMI
- 	tristate "STM32 Digital Camera Memory Interface (DCMI) support"
--	depends on VIDEO_V4L2 && OF
-+	depends on VIDEO_V4L2 && OF && MEDIA_CONTROLLER
- 	depends on ARCH_STM32 || COMPILE_TEST
- 	select VIDEOBUF2_DMA_CONTIG
- 	select V4L2_FWNODE
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index b462f71..6f37617 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -169,6 +169,9 @@ struct stm32_dcmi {
- 
- 	/* Ensure DMA operations atomicity */
- 	struct mutex			dma_lock;
-+
-+	struct media_device		mdev;
-+	struct media_pad		vid_cap_pad;
- };
- 
- static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
-@@ -1551,14 +1554,6 @@ static int dcmi_graph_notify_complete(struct v4l2_async_notifier *notifier)
- 		return ret;
- 	}
- 
--	ret = video_register_device(dcmi->vdev, VFL_TYPE_GRABBER, -1);
--	if (ret) {
--		dev_err(dcmi->dev, "Failed to register video device\n");
--		return ret;
--	}
--
--	dev_dbg(dcmi->dev, "Device registered as %s\n",
--		video_device_node_name(dcmi->vdev));
- 	return 0;
- }
- 
-@@ -1751,10 +1746,19 @@ static int dcmi_probe(struct platform_device *pdev)
- 
- 	q = &dcmi->queue;
- 
-+	dcmi->v4l2_dev.mdev = &dcmi->mdev;
-+
-+	/* Initialize media device */
-+	strscpy(dcmi->mdev.model, DRV_NAME, sizeof(dcmi->mdev.model));
-+	snprintf(dcmi->mdev.bus_info, sizeof(dcmi->mdev.bus_info),
-+		 "platform:%s", DRV_NAME);
-+	dcmi->mdev.dev = &pdev->dev;
-+	media_device_init(&dcmi->mdev);
-+
- 	/* Initialize the top-level structure */
- 	ret = v4l2_device_register(&pdev->dev, &dcmi->v4l2_dev);
- 	if (ret)
--		goto err_dma_release;
-+		goto err_media_device_cleanup;
- 
- 	dcmi->vdev = video_device_alloc();
- 	if (!dcmi->vdev) {
-@@ -1774,6 +1778,25 @@ static int dcmi_probe(struct platform_device *pdev)
- 				  V4L2_CAP_READWRITE;
- 	video_set_drvdata(dcmi->vdev, dcmi);
- 
-+	/* Media entity pads */
-+	dcmi->vid_cap_pad.flags = MEDIA_PAD_FL_SINK;
-+	ret = media_entity_pads_init(&dcmi->vdev->entity,
-+				     1, &dcmi->vid_cap_pad);
-+	if (ret) {
-+		dev_err(dcmi->dev, "Failed to init media entity pad\n");
-+		goto err_device_release;
-+	}
-+	dcmi->vdev->entity.flags |= MEDIA_ENT_FL_DEFAULT;
-+
-+	ret = video_register_device(dcmi->vdev, VFL_TYPE_GRABBER, -1);
-+	if (ret) {
-+		dev_err(dcmi->dev, "Failed to register video device\n");
-+		goto err_media_entity_cleanup;
-+	}
-+
-+	dev_dbg(dcmi->dev, "Device registered as %s\n",
-+		video_device_node_name(dcmi->vdev));
-+
- 	/* Buffer queue */
- 	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
- 	q->io_modes = VB2_MMAP | VB2_READ | VB2_DMABUF;
-@@ -1789,12 +1812,12 @@ static int dcmi_probe(struct platform_device *pdev)
- 	ret = vb2_queue_init(q);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to initialize vb2 queue\n");
--		goto err_device_release;
-+		goto err_media_entity_cleanup;
- 	}
- 
- 	ret = dcmi_graph_init(dcmi);
- 	if (ret < 0)
--		goto err_device_release;
-+		goto err_media_entity_cleanup;
- 
- 	/* Reset device */
- 	ret = reset_control_assert(dcmi->rstc);
-@@ -1821,11 +1844,14 @@ static int dcmi_probe(struct platform_device *pdev)
- 
- err_cleanup:
- 	v4l2_async_notifier_cleanup(&dcmi->notifier);
-+err_media_entity_cleanup:
-+	media_entity_cleanup(&dcmi->vdev->entity);
- err_device_release:
- 	video_device_release(dcmi->vdev);
- err_device_unregister:
- 	v4l2_device_unregister(&dcmi->v4l2_dev);
--err_dma_release:
-+err_media_device_cleanup:
-+	media_device_cleanup(&dcmi->mdev);
- 	dma_release_channel(dcmi->dma_chan);
- 
- 	return ret;
-@@ -1839,7 +1865,9 @@ static int dcmi_remove(struct platform_device *pdev)
- 
- 	v4l2_async_notifier_unregister(&dcmi->notifier);
- 	v4l2_async_notifier_cleanup(&dcmi->notifier);
-+	media_entity_cleanup(&dcmi->vdev->entity);
- 	v4l2_device_unregister(&dcmi->v4l2_dev);
-+	media_device_cleanup(&dcmi->mdev);
- 
- 	dma_release_channel(dcmi->dma_chan);
- 
+[1] https://www.spinics.net/lists/devicetree/msg278002.html
+
+===========
+= history =
+===========
+version 4:
+  - Also drop subdev nodes registry as suggested by Hans:
+    https://www.spinics.net/lists/arm-kernel/msg743375.html
+
+version 3:
+  - Drop media device registry to not expose media controller
+    interface to userspace as per Laurent' suggestion:
+    https://www.spinics.net/lists/linux-media/msg153417.html
+  - Prefer "source" instead of "sensor" and keep it in 
+    dcmi_graph_entity struct, move asd as first member
+    of struct as per Sakari' suggestion:
+    https://www.spinics.net/lists/linux-media/msg153119.html
+  - Drop dcmi_graph_deinit() as per Sakari' suggestion:
+    https://www.spinics.net/lists/linux-media/msg153417.html
+
+version 2:
+  - Fix bus_info not consistent between media and V4L:
+    https://www.spinics.net/lists/arm-kernel/msg717676.html
+  - Propagation of format set on video node to the sub-devices
+    chain connected on camera interface
+
+version 1:
+  - Initial submission
+
+Hugues Fruchet (3):
+  media: stm32-dcmi: improve sensor subdev naming
+  media: stm32-dcmi: add media controller support
+  media: stm32-dcmi: add support of several sub-devices
+
+ drivers/media/platform/Kconfig            |   2 +-
+ drivers/media/platform/stm32/stm32-dcmi.c | 283 +++++++++++++++++++++++++-----
+ 2 files changed, 236 insertions(+), 49 deletions(-)
+
 -- 
 2.7.4
 
