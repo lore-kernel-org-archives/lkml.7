@@ -2,184 +2,136 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52552C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD7EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED42206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:31:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SHr5KNNb"
+	by mail.kernel.org (Postfix) with ESMTP id 4B384206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbfGaQbe (ORCPT
+        id S1729574AbfGaQdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:31:34 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33825 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725209AbfGaQbd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:31:33 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w9so1666925wmd.1;
-        Wed, 31 Jul 2019 09:31:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=aBeApz032cBY82NlaE/wZB1uRgdQ2+KunU+o8z0uyps=;
-        b=SHr5KNNbtDdRhkUSWAXLI5qCbE2fDg9+y2YLSg0SLJV2b/baDdwhlUJOX75/cIIDaB
-         V+8m9X4EuRZhg9Rs/Jt1vuLMNlVOT4kfr7isiAsrm4OcCnletrLtCFWQoF963CKgh19f
-         kM+4IopiymIOiDPImMwV3aLVncVTbOu4GsFU9Mtttu5BNJkRdiVVKRGM3TnHtOlsN75F
-         p7bGzhTrSv8YDZK+BPx9D6FgmWobqoVU4ILuZBURWFZr2TRfZRkTjyhISQt7pvXD5vqw
-         8DZn3jE2BHv3DCRlN593hl8YdyMDuZi94QmnrzbEeQeFmvyIx4Su0DLAT0QKzK0tiZ5Q
-         Y6yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
-         :in-reply-to:references:user-agent:mime-version;
-        bh=aBeApz032cBY82NlaE/wZB1uRgdQ2+KunU+o8z0uyps=;
-        b=r/GTP0ydpARYS0Ii3ktDDOle1FnL32JGEjihJpvoz5/Yc+K/1DIEl76RWVnC5rkwv0
-         gD44oSSm8wskLetmpR9xYlTXb5hJVfqQ5RNo5jQYldCA/IapSXEcEMcvO15J3UCOMzi7
-         /J/+xspFEzd1HMYGUAK2Imsm0WA/rUMfvnxhAlAXWxXFId2KofbUAFHvpAmC3I2IySeP
-         uGxKZ9fAwSXxzHbgl3oh42p0l7yOuLAooiWdPiTGFU0XE3HJxkyQknXMePTRJKP2Fh1q
-         lIGXDU01eaWpO4QMSZS/ODBmjIatVheTeVay2BhY+WVrOt7Hs0EIlCklnpCbB1/5Cz9B
-         QfCg==
-X-Gm-Message-State: APjAAAV1LJ9MJW2DfxmRXy2wdyJVcCXh/4QZxBxLsobsFJr03ZUHbusT
-        PSaObPwNnttDn/itoIoyXYY=
-X-Google-Smtp-Source: APXvYqxh6Bv/HiQuIAWU9sMSLvgcowpXMA+p+yq7EJ4FVh9xqE/gY1bAzYLd1A4k9ca/3jrBlm1EVg==
-X-Received: by 2002:a1c:7f93:: with SMTP id a141mr112184178wmd.131.1564590690106;
-        Wed, 31 Jul 2019 09:31:30 -0700 (PDT)
-Received: from [192.168.0.36] (87.78.186.89.cust.ip.kpnqwest.it. [89.186.78.87])
-        by smtp.gmail.com with ESMTPSA id z1sm72239957wrp.51.2019.07.31.09.31.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 09:31:28 -0700 (PDT)
-Message-ID: <715155f37708852ea8075190aeb4f2ec9ab158fe.camel@gmail.com>
-Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
-From:   Dario Faggioli <raistlin.df@gmail.com>
-Reply-To: dario.faggioli@linux.it
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com, graf@amazon.de,
-        rppt@linux.vnet.ibm.com, Paul Turner <pjt@google.com>
-Date:   Wed, 31 Jul 2019 18:31:26 +0200
-In-Reply-To: <8b84ac05-f639-b708-0f7f-810935b323e8@oracle.com>
-References: <1562855138-19507-1-git-send-email-alexandre.chartre@oracle.com>
-         <20190712114458.GU3402@hirez.programming.kicks-ass.net>
-         <1f97f1d9-d209-f2ab-406d-fac765006f91@oracle.com>
-         <20190712123653.GO3419@hirez.programming.kicks-ass.net>
-         <b1b7f85f-dac3-80a3-c05c-160f58716ce8@oracle.com>
-         <20190712130720.GQ3419@hirez.programming.kicks-ass.net>
-         <8b84ac05-f639-b708-0f7f-810935b323e8@oracle.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-fcfXGdMTNOfnauu1DZWy"
-User-Agent: Evolution 3.32.3 
+        Wed, 31 Jul 2019 12:33:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:51206 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729444AbfGaQdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:33:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E9B6337;
+        Wed, 31 Jul 2019 09:33:03 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AE8B3F71F;
+        Wed, 31 Jul 2019 09:33:00 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 17:32:58 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
+        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com
+Subject: Re: [RFC v2 0/8] arm64: MMU enabled kexec relocation
+Message-ID: <20190731163258.GH39768@lakrids.cambridge.arm.com>
+References: <20190731153857.4045-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731153857.4045-1-pasha.tatashin@soleen.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Pavel,
 
---=-fcfXGdMTNOfnauu1DZWy
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Generally, the cover letter should state up-front what the goal is (or
+what problem you're trying to solve). It would be really helpful to have
+that so that we understand what you're trying to achieve, and why.
 
-Hello all,
+Messing with the MMU is often fraught with danger (and very painful to
+debug, as you are now aware), and so far we've tried to minimize the
+number of places where we have to do so.
 
-I know this is a bit of an old thread, so apologies for being late to
-the party. :-)
+On Wed, Jul 31, 2019 at 11:38:49AM -0400, Pavel Tatashin wrote:
+> Changelog from previous RFC:
+> - Added trans_table support for both hibernate and kexec.
+> - Fixed performance issue, where enabling MMU did not yield the
+>   actual performance improvement.
+> 
+> Bug:
+> With the current state, this patch series works on kernels booted with EL1
+> mode, but for some reason, when elevated to EL2 mode reboot freezes in
+> both QEMU and on real hardware.
+> 
+> The freeze happens in:
+> 
+> arch/arm64/kernel/relocate_kernel.S
+> 	turn_on_mmu()
+> 
+> Right after sctlr_el2 is written (MMU on EL2 is enabled)
+> 
+> 	msr     sctlr_el2, \tmp1
+> 
+> I've been studying all the relevant control registers for EL2, but do not
+> see what might be causing this hang:
+> 
+> MAIR_EL2 is set to be exactly the same as MAIR_EL1 0xbbff440c0400
+> 
+> TCR_EL2        0x80843510
+> Enabled bits:
+> PS      Physical Address Size. (0b100   44 bits, 16TB.)
+> SH0     Shareability    11 Inner Shareable
+> ORGN0   Normal memory, Outer Write-Back Read-Allocate Write-Allocate Cach.
+> IRGN0   Normal memory, Inner Write-Back Read-Allocate Write-Allocate Cach.
+> T0SZ    01 0000
+> 
+> SCTLR_EL2	0x30e5183f
+> RES1    : Reserve ones
+> M       : MMU enabled
+> A       : Align check
+> C       : Cacheability control
+> SA      : SP Alignment check enable
+> IESB    : Implicit Error Synchronization event
+> I       : Instruction access Cacheability
+> 
+> TTBR0_EL2      0x1b3069000 (address of trans_table)
+> 
+> Any suggestion of what else might be missing that causes this freeze when
+> MMU is enabled in EL2?
+> 
+> =====
 
-I would have a question about this:
+> Here is the current data from the real hardware:
+> (because of bug, I forced EL1 mode by setting el2_switch always to zero in
+> cpu_soft_restart()):
+> 
+> For this experiment, the size of kernel plus initramfs is 25M. If initramfs
+> was larger, than the improvements would be even greater, as time spent in
+> relocation is proportional to the size of relocation.
+> 
+> Previously:
+> kernel shutdown	0.022131328s
+> relocation	0.440510736s
+> kernel startup	0.294706768s
 
-> > > On 7/12/19 2:36 PM, Peter Zijlstra wrote:
-> > > > On Fri, Jul 12, 2019 at 02:17:20PM +0200, Alexandre Chartre
-> > > > wrote:
-> > > > > On 7/12/19 1:44 PM, Peter Zijlstra wrote:
-> > > > > > AFAIK3 this wants/needs to be combined with core-scheduling=20
-> > > > > > to be
-> > > > > > useful, but not a single mention of that is anywhere.
-> > > > >=20
-> > > > > No. This is actually an alternative to core-scheduling.
-> > > > > Eventually, ASI
-> > > > > will kick all sibling hyperthreads when exiting isolation and
-> > > > > it needs to
-> > > > > run with the full kernel page-table (note that's currently
-> > > > > not in these
-> > > > > patches).
->=20
-I.e., about the fact that ASI is presented as an alternative to
-core-scheduling or, at least, as it will only need integrate a small
-subset of the logic (and of the code) from core-scheduling, as said
-here:
+In total this takes ~0.76s...
 
-> I haven't looked at details about what has been done so far.
-> Hopefully, we
-> can do something not too complex, or reuse a (small) part of co-
-> scheduling.
->=20
-Now, sticking to virtualization examples, if you don't have core-
-scheduling, it means that you can have two vcpus, one from VM A and the
-other from VM B, running on the same core, one on thread 0 and the
-other one on thread 1, at the same time.
+> 
+> Relocation was taking: 58.2% of reboot time
+> 
+> Now:
+> kernel shutdown	0.032066576s
+> relocation	0.022158152s
+> kernel startup	0.296055880s
 
-And if VM A's vcpu, running on thread 0, exits, then VM B's vcpu
-running in guest more on thread 1 can read host memory, as it is
-speculatively accessed (either "normally" or because of cache load
-gadgets) and brought in L1D cache by thread 0. And Indeed I do see how
-ASI protects us from this attack scenario.
+... and this takes ~0.35s
 
-However, when the two VMs' vcpus are both running in guest mode, each
-one on a thread of the same core, VM B's vcpu running on thread 1 can
-exploit L1TF to peek at and steal secrets that VM A's vcpu, running on
-thread 0, is accessing, as they're brought into L1D cache... can't it?=20
+So do we really need this complexity for a few blinks of an eye?
 
-How can, ASI *without* core-scheduling, prevent this other attack
-scenario?
-
-Because I may very well be missing something, but it looks to me that
-it can't. In which case, I'm not sure we can call it "alternative" to
-core-scheduling.... Or is the second attack scenario that I tried to
-describe above, not considered interesting?
-
-Thanks and Regards
---=20
-Dario Faggioli, Ph.D
-http://about.me/dario.faggioli
-Virtualization Software Engineer
-SUSE Labs, SUSE https://www.suse.com/
--------------------------------------------------------------------
-<<This happens because _I_ choose it to happen!>> (Raistlin Majere)
-
-
---=-fcfXGdMTNOfnauu1DZWy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAl1Bwl4ACgkQFkJ4iaW4
-c+5NchAAhQESRHjvBVeSBTZJyh+kcr5QKViHEitkFTtOCRshdOs/4NPb5B75STZv
-/sOxzEmdwENyJJ0aNuuLemobMIsvGbJmZYfXGPFoSH7YVT0kUNhi+6YjU28mqUXP
-3Pr5KJHLzLpDn7SeATXL6fo44Y0AFcPZbF6yq9LcyqNIg3kBxE6+NW0a0P3oR7SW
-KxuJwFLeWdzVdd+iwTV4La0+FBd3EUrJAOZ5yn0Oyhjw2+yzPSYc+2si0JffEF9V
-xAP/axNUAHF7R4lbgwhnXDLxHUAGdOwPlH2h6QPkz3C3Ef0g0EobWsJ1qUSLjJJ4
-N2h4Cb+FwjOta232LKbFT3u3Zusoe92jop66eoXl1ozrpInxSD+tmh9YLPUZxGRg
-fRMhGwGmBSne87c1S7fAw9q11lT6u8D817PGvn3t00H1wnuCBQap1XvoupAMOH7G
-XpRYPxsa9WmsABgx4WWbFyJbgpTZcwKj7S3OQSZRRtQa8qLnpD0/ot7LhqyP+x11
-FzQQ0Pqc/2Ou2Oubi6wJGDaw+cXIKoEwG6w9lYVuTGCFkTybXz+VPvsMlAmgWAsA
-raqSdvH3mu0nOzpVUgvLPygh/OKV5zICoCONGerEbDvr1TfvWGvK7+cDB4gQszhY
-4Hvg9+wEqYNbe41b1e571d7sYBhXokahSiSeTH6a/TgPzJNCrSg=
-=qx70
------END PGP SIGNATURE-----
-
---=-fcfXGdMTNOfnauu1DZWy--
-
+Thanks,
+Mark.
