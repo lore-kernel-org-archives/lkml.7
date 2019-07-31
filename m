@@ -2,32 +2,33 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098E0C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827F3C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD12D20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CB820693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388067AbfGaNIX (ORCPT
+        id S2388333AbfGaNJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:08:23 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:42690 "EHLO inva021.nxp.com"
+        Wed, 31 Jul 2019 09:09:27 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:35306 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbfGaNIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:08:22 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DEDD02009FA;
-        Wed, 31 Jul 2019 15:08:20 +0200 (CEST)
+        id S2388174AbfGaNI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:08:28 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6627F1A09E3;
+        Wed, 31 Jul 2019 15:08:26 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D1552200042;
-        Wed, 31 Jul 2019 15:08:20 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A4761A09DB;
+        Wed, 31 Jul 2019 15:08:26 +0200 (CEST)
 Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 864DA205F3;
-        Wed, 31 Jul 2019 15:08:20 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0743B205F3;
+        Wed, 31 Jul 2019 15:08:25 +0200 (CEST)
 From:   Iuliana Prodan <iuliana.prodan@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Horia Geanta <horia.geanta@nxp.com>,
@@ -35,80 +36,44 @@ To:     Herbert Xu <herbert@gondor.apana.org.au>,
 Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-imx <linux-imx@nxp.com>
-Subject: [PATCH v5 00/14] crypto: caam - fixes for kernel v5.3
-Date:   Wed, 31 Jul 2019 16:08:01 +0300
-Message-Id: <1564578495-9883-1-git-send-email-iuliana.prodan@nxp.com>
+Subject: [PATCH v5 14/14] crypto: caam - change return value in case CAAM has no MDHA
+Date:   Wed, 31 Jul 2019 16:08:15 +0300
+Message-Id: <1564578495-9883-15-git-send-email-iuliana.prodan@nxp.com>
 X-Mailer: git-send-email 2.1.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1564578495-9883-1-git-send-email-iuliana.prodan@nxp.com>
+References: <1564578495-9883-1-git-send-email-iuliana.prodan@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The series solves:
-- the failures found with fuzz testing;
-- resources clean-up on caampkc/caamrng exit path.
+To be consistent with other CAAM modules, caamhash should return 0
+instead of -ENODEV in case CAAM has no MDHA.
 
-The first 10 patches solve the issues found with
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS enabled.
-They modify the drivers to provide a valid error (and not the hardware
-error ID) to the user, via completion callbacks.
-They check key length, assoclen, authsize and input size to solve the
-fuzz tests that expect -EINVAL to be returned when these values are
-not valid.
+Based on commit 1b46c90c8e00 ("crypto: caam - convert top level drivers to libraries")
+the value returned by entry point is never checked and
+the exit point is always executed.
 
-The next 4 patches check the algorithm registration for caampkc
-module and unregister it only if the registration was successful.
-Also, on caampkc/caamrng, the exit point function is executed only if the
-registration was successful to avoid double freeing of resources in case
-the initialization function failed.
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
+---
+ drivers/crypto/caam/caamhash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patch depends on series:
-https://patchwork.kernel.org/project/linux-crypto/list/?series=153441
-
-Changes since v4:
-- use, newly renamed, helper aes function, to validate keylen.
-
-Horia Geantă (5):
-  crypto: caam/qi - fix error handling in ERN handler
-  crypto: caam - fix return code in completion callbacks
-  crypto: caam - update IV only when crypto operation succeeds
-  crypto: caam - keep both virtual and dma key addresses
-  crypto: caam - fix MDHA key derivation for certain user key lengths
-
-Iuliana Prodan (9):
-  crypto: caam - check key length
-  crypto: caam - check authsize
-  crypto: caam - check assoclen
-  crypto: caam - check zero-length input
-  crypto: caam - update rfc4106 sh desc to support zero length input
-  crypto: caam - free resources in case caam_rng registration failed
-  crypto: caam - execute module exit point only if necessary
-  crypto: caam - unregister algorithm only if the registration succeeded
-  crypto: caam - change return value in case CAAM has no MDHA
-
- drivers/crypto/caam/Kconfig         |   2 +
- drivers/crypto/caam/caamalg.c       | 227 +++++++++++++++----------
- drivers/crypto/caam/caamalg_desc.c  |  47 ++++--
- drivers/crypto/caam/caamalg_desc.h  |   2 +-
- drivers/crypto/caam/caamalg_qi.c    | 225 +++++++++++++++----------
- drivers/crypto/caam/caamalg_qi2.c   | 320 +++++++++++++++++++++++-------------
- drivers/crypto/caam/caamhash.c      | 114 ++++++++-----
- drivers/crypto/caam/caamhash_desc.c |   5 +-
- drivers/crypto/caam/caamhash_desc.h |   2 +-
- drivers/crypto/caam/caampkc.c       |  80 ++++++---
- drivers/crypto/caam/caamrng.c       |  17 +-
- drivers/crypto/caam/desc_constr.h   |  34 ++--
- drivers/crypto/caam/error.c         |  61 ++++---
- drivers/crypto/caam/error.h         |   2 +-
- drivers/crypto/caam/key_gen.c       |  14 +-
- drivers/crypto/caam/qi.c            |  10 +-
- drivers/crypto/caam/regs.h          |   1 +
- 17 files changed, 748 insertions(+), 415 deletions(-)
-
+diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
+index ed1931f..8a07edb 100644
+--- a/drivers/crypto/caam/caamhash.c
++++ b/drivers/crypto/caam/caamhash.c
+@@ -2007,7 +2007,7 @@ int caam_algapi_hash_init(struct device *ctrldev)
+ 	 * is not present.
+ 	 */
+ 	if (!md_inst)
+-		return -ENODEV;
++		return 0;
+ 
+ 	/* Limit digest size based on LP256 */
+ 	if (md_vid == CHA_VER_VID_MD_LP256)
 -- 
 2.1.0
 
