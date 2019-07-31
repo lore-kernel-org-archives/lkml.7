@@ -7,61 +7,75 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70B5C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B282C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB10206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C688206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564572618;
-	bh=YkVb1GAtKmaGeHxMNXEjyO/GFCnp31r2TMuT24xpYMY=;
+	s=default; t=1564572621;
+	bh=/lFDsiMXgD5plmbKexLmcdZ90zsJuHoMYDMqQlp+CYo=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=rwixoW14giJzUy3B7gCbQmW+dehP7t/4eO9hDL9uCqsGXeroahD0Wdmsn0HlTy5Q+
-	 n6omyNhr04ysWOGS8dw5oVf9VIwawKkB+8Vehur9fzmnZktAB2IAvpmcfU12f2wCat
-	 Hu5HWr4GCNxeQKEHjMLJIm5mZ8uOjtBO2incK5mo=
+	b=l1WibAfDxTk8hGwlAnngVPqLASlIUWcqAZhIzSDeVPOds0VJ7cUgyJ4gb/XUEZtQV
+	 aRDWJbOXx/IRxpdzrTwOOlHnfLz2fF9e4ljKrefqFuPrB/rCUaqspdADQJHtiD346t
+	 EFbCkQWBcC3QwyAphmwyhj5OCpeSK0JvLBz7VlYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbfGaLaR (ORCPT
+        id S2387747AbfGaLaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:30:17 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35268 "EHLO
+        Wed, 31 Jul 2019 07:30:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35418 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387667AbfGaLaN (ORCPT
+        with ESMTP id S2387684AbfGaLaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:30:13 -0400
+        Wed, 31 Jul 2019 07:30:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=eSeBCzNpKMCOFoL5FPkI5ImNoBEwwAZgfAmRy9oJTNY=; b=Eyu1a2+I0iZ8
-        M/Px0Z8w63HNmsjKCwsxc7YzBUqdl/vh0hrvb9MUOBC6fSj328PFbmsdawyVBlTx1mGdM2CC3QnGZ
-        pLnQ1vXJmA7C8Z3oJ2tfexly3pXPdSyhE+COszNJMCFEbh0+2+S3pWaEha4TSU5I31jSB79UGdrmJ
-        cTRm4=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        List-Archive; bh=PdT/eIhyr6y3H0l5rgN8DPLYN6B+GE6VkE6u1jqDo4M=; b=TZ07R/Bq7JWG
+        Ug2noyqlEHi+TCjSinpappZdtelQXXTyvbK6HZcYFXfRlljPKDvtVgXjP/llSeESoLlOCz0StuOsP
+        FyV+rxxYGy6DNICaVt50U83yMZmtA6sOxnRx/vk/uDnHFmbCie3Z1kPaBA8INm45YgOOwpr5gwiHO
+        n1b4k=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hsmnb-0001ks-5Z; Wed, 31 Jul 2019 11:29:39 +0000
+        id 1hsmnf-0001lY-2E; Wed, 31 Jul 2019 11:29:43 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3BF792742CC3; Wed, 31 Jul 2019 12:29:38 +0100 (BST)
+        id 8BDF32742C99; Wed, 31 Jul 2019 12:29:42 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Andra Danciu <andradanciu1997@gmail.com>
-Cc:     alsa-devel@alsa-project.org, anders.roxell@linaro.org,
-        broonie@kernel.org, ckeepax@opensource.cirrus.com,
-        Daniel Baluta <daniel.baluta@nxp.com>, daniel.baluta@nxp.com,
-        devicetree@vger.kernel.org, jbrunet@baylibre.com,
-        kmarinushkin@birdec.tech, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        mark.rutland@arm.com, m.felsch@pengutronix.de, nh6z@nh6z.net,
-        paul@crapouillou.net, perex@perex.cz, piotrs@opensource.cirrus.com,
-        rf@opensource.wolfsonmicro.com, robh+dt@kernel.org,
-        srinivas.kandagatla@linaro.org, tiwai@suse.com, vkoul@kernel.org
-Subject: Applied "dt-bindings: sound: Add bindings for UDA1334 codec" to the asoc tree
-In-Reply-To: <20190731111930.20230-2-andradanciu1997@gmail.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
+        arnaud.pouliquen@st.com, baohua@kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, broonie@kernel.org,
+        daniel@zonque.org, eric@anholt.net, festevam@gmail.com,
+        f.fainelli@gmail.com, gregkh@linuxfoundation.org,
+        haojian.zhuang@gmail.com, Hulk Robot <hulkci@huawei.com>,
+        jbrunet@baylibre.com, jcmvbkbc@gmail.com, jonathanh@nvidia.com,
+        kernel@pengutronix.de, khilman@baylibre.com, lgirdwood@gmail.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Mark Brown <broonie@kernel.org>, matthias.bgg@gmail.com,
+        mcoquelin.stm32@gmail.com, michal.simek@xilinx.com,
+        mripard@kernel.org, nicoleotsuka@gmail.com, olivier.moysan@st.com,
+        paul@crapouillou.net, perex@perex.cz, rjui@broadcom.com,
+        robert.jarzmik@free.fr, sbranden@broadcom.com,
+        s.hauer@pengutronix.de, shawnguo@kernel.org,
+        thierry.reding@gmail.com, timur@kernel.org, tiwai@suse.com,
+        wahrenst@gmx.net, wens@csie.org, Xiubo.Lee@gmail.com,
+        yamada.masahiro@socionext.com
+Subject: Applied "ASoC: stm32: sai: use devm_platform_ioremap_resource() to simplify code" to the asoc tree
+In-Reply-To: <20190727150738.54764-16-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190731112938.3BF792742CC3@ypsilon.sirena.org.uk>
-Date:   Wed, 31 Jul 2019 12:29:38 +0100 (BST)
+Message-Id: <20190731112942.8BDF32742C99@ypsilon.sirena.org.uk>
+Date:   Wed, 31 Jul 2019 12:29:42 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,7 +83,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt-bindings: sound: Add bindings for UDA1334 codec
+   ASoC: stm32: sai: use devm_platform_ioremap_resource() to simplify code
 
 has been applied to the asoc tree at
 
@@ -94,48 +108,45 @@ to this mail.
 Thanks,
 Mark
 
-From d6de65fde51644f6ed6b1c0c05fef6a2da5ff768 Mon Sep 17 00:00:00 2001
-From: Andra Danciu <andradanciu1997@gmail.com>
-Date: Wed, 31 Jul 2019 14:19:29 +0300
-Subject: [PATCH] dt-bindings: sound: Add bindings for UDA1334 codec
+From 1c63223cda84fb10643938e4e4eb02110f8ae9a2 Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Sat, 27 Jul 2019 23:07:19 +0800
+Subject: [PATCH] ASoC: stm32: sai: use devm_platform_ioremap_resource() to
+ simplify code
 
-The UDA1334 is an NXP audio codec, supports the I2S-bus data format
-and has basic features such as de-emphasis (at 44.1 kHz sampling
-rate) and mute. Product information can be found at:
-https://www.nxp.com/pages/low-power-audio-dac-with-pll:UDA1334
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-Link: https://lore.kernel.org/r/20190731111930.20230-2-andradanciu1997@gmail.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20190727150738.54764-16-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/sound/uda1334.txt       | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/uda1334.txt
+ sound/soc/stm/stm32_sai.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/uda1334.txt b/Documentation/devicetree/bindings/sound/uda1334.txt
-new file mode 100644
-index 000000000000..f64071b25e8d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/uda1334.txt
-@@ -0,0 +1,17 @@
-+UDA1334 audio CODEC
-+
-+This device uses simple GPIO pins for controlling codec settings.
-+
-+Required properties:
-+
-+  - compatible : "nxp,uda1334"
-+  - nxp,mute-gpios: a GPIO spec for the MUTE pin.
-+  - nxp,deemph-gpios: a GPIO spec for the De-emphasis pin
-+
-+Example:
-+
-+uda1334: audio-codec {
-+	compatible = "nxp,uda1334";
-+	nxp,mute-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
-+	nxp,deemph-gpios = <&gpio3 3 GPIO_ACTIVE_LOW>;
-+};
+diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
+index 63f68e663676..1ac5103cea78 100644
+--- a/sound/soc/stm/stm32_sai.c
++++ b/sound/soc/stm/stm32_sai.c
+@@ -152,7 +152,6 @@ static int stm32_sai_probe(struct platform_device *pdev)
+ {
+ 	struct stm32_sai_data *sai;
+ 	struct reset_control *rst;
+-	struct resource *res;
+ 	const struct of_device_id *of_id;
+ 	u32 val;
+ 	int ret;
+@@ -161,8 +160,7 @@ static int stm32_sai_probe(struct platform_device *pdev)
+ 	if (!sai)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	sai->base = devm_ioremap_resource(&pdev->dev, res);
++	sai->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(sai->base))
+ 		return PTR_ERR(sai->base);
+ 
 -- 
 2.20.1
 
