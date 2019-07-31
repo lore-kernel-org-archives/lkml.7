@@ -2,158 +2,113 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBFEC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90409C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F8E206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F00A208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:42:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CL3InGug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbfGaVfQ (ORCPT
+        id S1730963AbfGaVmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:35:16 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39780 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728292AbfGaVfP (ORCPT
+        Wed, 31 Jul 2019 17:42:06 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33585 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbfGaVmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:35:15 -0400
-Received: by mail-qk1-f195.google.com with SMTP id w190so50324396qkc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 14:35:15 -0700 (PDT)
+        Wed, 31 Jul 2019 17:42:06 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n190so1278056pgn.0;
+        Wed, 31 Jul 2019 14:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9p9WvHXoxlLbYWbCg+NginBLDGupg9fXAky3S1UEaX4=;
+        b=CL3InGugDJjm/WCiKfFJYSXuiQvQaUa8Cuh4AWx+CmFJ+69BClL30PnTnG+L0BaUe3
+         0zjl5yLLlOj0THI333BOWDEjai1exXSKfWvoBjgT6EADVpxQJ6pahDUIO7icCnl2P6ID
+         D9yzOVtuGXwXjPNHAv7C0mtli6r7+Fz4LUb9BYHuF2XfJa6sttNVubaflp7/lUEGEUfP
+         y7KBzaXHuEW7DcIDXp7ntxEWQW6+6LOuv5S8IPzIV0rTHK7rrhVuyxzhWHD7/sJYTh8E
+         GTcaPN+Ii6pjEmryTXOVvQ4NF6yB4EQoUstF+3eGMYiBPvv8lTrm1Dff6imj/x34QPD8
+         E8kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Yt3D9L2XmMJM/hxeEeDRbs7n5AVGloPaWA/yadI+Qrg=;
-        b=l0yVw79e6RDA45Pcs7O8N+uLcWaYEyY2CCK5ORDRjJGrYdfOTv4fVUudOqEEaW48at
-         6+SkoVRAwxK5RLRnP8VyG9Zbk8gyO+EmtdfVC8YnvZoYR4W+4bxTh+uCHBdGMi+mV4xt
-         yjQCRfgZGJaVc5o3ueJVj5No0sxrKYKz7iUPGou9V4/We4jQ4RkeEGG5SQJuA5A4fKR8
-         mJJ2AvP3nqzY3EFH9gwR2inUDsv80QprDNaDyVoOEKYeP20h0yrDJO94Mf99OkESi1CI
-         5A3bbx+jTmzYlrlfTnMqNxJKoflPQVIZc6ndFC0jthFXSa39PpIYtSLcmU+iEl8qT3vW
-         WhrQ==
-X-Gm-Message-State: APjAAAXiEZ8Uj/1FLERw0+AOdQb3x6lk/HgrRUWwmysaQWcdgIywcHye
-        pj05j+7E2Yn/ri+cM+mg3ffh8Q==
-X-Google-Smtp-Source: APXvYqwq8iZNfTZjhmXSZpr7SbYmuaQHxbwUhmb4FHrOYyaB4ijjIYu+VCEGw1Epf8zn+a0otAy3Vw==
-X-Received: by 2002:a05:620a:1411:: with SMTP id d17mr77658658qkj.137.1564608914930;
-        Wed, 31 Jul 2019 14:35:14 -0700 (PDT)
-Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id e8sm28934259qkn.95.2019.07.31.14.35.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 14:35:13 -0700 (PDT)
-Message-ID: <b27614151184f29bb147786933cb424fddb82a23.camel@redhat.com>
-Subject: Re: [PATCH] Revert "PCI: Enable NVIDIA HDA controllers"
-From:   Lyude Paul <lyude@redhat.com>
-To:     Karol Herbst <kherbst@redhat.com>, Lukas Wunner <lukas@wunner.de>
-Cc:     nouveau <nouveau@lists.freedesktop.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Maik Freudenberg <hhfeuer@gmx.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 31 Jul 2019 17:35:11 -0400
-In-Reply-To: <CACO55tu=9ZBzGkwdXPOwWARy1UTspFv+v=nrmLFoOKiSGU+E5Q@mail.gmail.com>
-References: <20190731201927.22054-1-lyude@redhat.com>
-         <20190731211842.befvpoyudrm2subf@wunner.de>
-         <CACO55tu=9ZBzGkwdXPOwWARy1UTspFv+v=nrmLFoOKiSGU+E5Q@mail.gmail.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        bh=9p9WvHXoxlLbYWbCg+NginBLDGupg9fXAky3S1UEaX4=;
+        b=tCs+yHmUBHdXmgYBKiY+H7fsD4wDL0nl6cXXOR7u5b9AhrA4LrYG1SVv9i/bZlu9nP
+         lo2WvBHs/JQwva2kZSDMv/vz9Z7qvcX1J5HIQde7EtxH2NFS1E6XlcfisZxyB/domrT6
+         cw9NUN7/UDRyEA0dQdXjXWcmtXQAODIJC9s8CJ0wk38t6FjmecbslmxzluFfnx+MFQCI
+         KLRm9MwU7dOIfewr7uQVLXqkrVj73D86UFS9mn4MW3qG/tUju9iWJsIvK/gU0K4diCL0
+         ccA8gkuIfI3b4OiKu2k9+CI6X+Ok79Skx++hEQaH/SrgHhY3DmMkxblb4luyEpjBGH1y
+         T28A==
+X-Gm-Message-State: APjAAAVUVB0zkLiYYrm0pT4zFD/yrfTQDr403nTb/zxWvSECQyNINhk9
+        Ikw8FQpBe8d8S3EV3pPprYNW2zDU
+X-Google-Smtp-Source: APXvYqz0WrTX6sGWLnRtQfzthNqaPcLqG+VLyMyOuA0v9DWEfQ1lM3hZ4vQbFkrfLAiYLiWrNZ8F/g==
+X-Received: by 2002:a63:5048:: with SMTP id q8mr114161150pgl.446.1564609325331;
+        Wed, 31 Jul 2019 14:42:05 -0700 (PDT)
+Received: from [172.27.227.172] ([216.129.126.118])
+        by smtp.googlemail.com with ESMTPSA id o9sm39374330pgv.19.2019.07.31.14.42.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 14:42:04 -0700 (PDT)
+Subject: Re: [PATCH net v3] net: ipv6: Fix a bug in ndisc_send_ns when netdev
+ only has a global address
+To:     Su Yanjun <suyj.fnst@cn.fujitsu.com>, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1564537972-76503-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <d599b296-5122-6b72-8869-5c457c2f9e3c@gmail.com>
+Date:   Wed, 31 Jul 2019 15:42:01 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <1564537972-76503-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-31 at 23:26 +0200, Karol Herbst wrote:
-> On Wed, Jul 31, 2019 at 11:18 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > On Wed, Jul 31, 2019 at 04:19:27PM -0400, Lyude Paul wrote:
-> > > While this fixes audio for a number of users, this commit has the
-> > > sideaffect of breaking the BIOS workaround that's required to make the
-> > > GPU on the nvidia P50 work, by causing the GPU's PCI device function to
-> > > stop working after it's been set to multifunction mode.
-> > 
-> > This is missing a reference to the commit introducing the P50 quirk,
-> > which is e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot
-> > if necessary").
-> > 
-> > Please describe in more detail how the GPU's PCI function stops working.
-> > Does it respond with "all ones" when accessing MMIO?
-> > Do MMIO accesses cause the system to hang?
-> > 
-> > Could you provide lspci -vvxx output for the GPU and its associated
-> > HDA controller with and without b516ea586d71?
-> > 
-> > Does this machine have external display connectors via which audio
-> > can be streamed?
-> > 
-> > 
-> > > I'm not really holding my breath on this patch to being accepted:
-> > > there's a good chance there's a better solution for this (and I'm going
-> > > to continue investigating for one after sending this patch), this is
-> > > more just to start a conversation on what the proper way to fix this is.
-> > 
-> > Posting as an RFC might have been more appropriate then.
-> > 
+On 7/30/19 7:52 PM, Su Yanjun wrote:
+> When the egress interface does not have a link local address, it can
+> not communicate with other hosts.
 > 
-> no, a revert is actually appropriate.  If a commit fixes something,
-> but breaks something else, it gets either reverted or fixed. If nobody
-> fixes it, then revert it is.
-
-To answer Lukas's question btw: most of the details on how things break are
-back in the original commit (sorry for forgetting the reference!), there's a
-_lot_ of explanation there that I'd rather not retype, so just refer back to
-the commit and bug @ https://bugs.freedesktop.org/show_bug.cgi?id=75985
-
-Additionally, there was some extra discussion providing some more detail in
-the email thread that I had with Bjorn:
-
-https://lkml.org/lkml/2019/2/12/1172
-
-As for how this commit breaks the workaround: it seems that when we enable the
-HDA controller and put the GPU into multifunction mode, the function-level
-reset stops working and thus we can't reset the GPU anymore. Currently I can
-see a couple of solutions (again, please feel free to suggest more!):
-
- * Just revert the commit. We should do this if necessary, but of course I'd
-   much rather try finding a fix first
- * Disable the HDA controller temporarily when a GPU reset is neded in
-   quirk_reset_lenovo_thinkpad_p50_nvgpu(), then call the function level
-   reset, then re-enable the HDA controller. I have no idea if this actually
-   works yet, but I'm about to try this on my system
- * Get quirk_reset_lenovo_thinkpad_p50_nvgpu() to run before
-   quirk_nvidia_hda(). This would probably be fine, but we would need to
-   rework some stuff in the PCI subsystem (maybe it already has a way to do
-   this? haven't checked yet) so that we could perform an flr probe early
-   enough to perform the quirk
+> In RFC4861, 7.2.2 says
+> "If the source address of the packet prompting the solicitation is the
+> same as one of the addresses assigned to the outgoing interface, that
+> address SHOULD be placed in the IP Source Address of the outgoing
+> solicitation.  Otherwise, any one of the addresses assigned to the
+> interface should be used."
 > 
-> > > So, I'm kind of confused about why exactly this was implemented as an
-> > > early boot quirk in the first place. If we're seeing the GPU's PCI
-> > > device, we already know the GPU is there. Shouldn't we be able to check
-> > > for the existence of the HDA device once we probe the GPU in nouveau?
-> > 
-> > I think a motivation to keep this generic was to make it work with
-> > other drivers besides nouveau, specifically Nvidia's proprietary driver.
-> > nouveau might not even be enabled.
-> > 
-> > 
-> > > that still doesn't explain why this was implemented as an early quirk
-> > 
-> > This isn't an early quirk.  Those live in arch/x86/kernel/early-quirks.c.
-> > This is just a PCI quirk executed on device enumeration and on resume.
-> > Devices aren't necessarily enumerated only on boot, e.g. think
-> > Thunderbolt.
-> > 
-> > Thanks,
-> > 
-> > Lukas
--- 
-Cheers,
-	Lyude Paul
+> In this patch we try get a global address if we get ll address failed.
+> 
+> Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+> ---
+> Changes since V2:
+> 	- Let banned_flags under the scope of its use.
+> ---
+>  include/net/addrconf.h |  2 ++
+>  net/ipv6/addrconf.c    | 34 ++++++++++++++++++++++++++++++++++
+>  net/ipv6/ndisc.c       | 10 +++++++---
+>  3 files changed, 43 insertions(+), 3 deletions(-)
+> 
 
+
+This change looks fine to me given the RFC reference, so for that part:
+Reviewed-by: David Ahern <dsahern@gmail.com>
+
+Bigger picture is the issue Mark raised that a different RFC says all
+links should have an LLA, so use of IN6_ADDR_GEN_MODE_NONE means
+userspace is expected to create and add the LLA. Lack of an LLA is a
+misconfigured system. If that is enforced via some to be developed
+patch, then this patch would not be needed.
