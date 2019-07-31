@@ -2,214 +2,122 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3627C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603F0C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F922205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37AAB208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564586246;
+	bh=QLtbVtyJYSI7n5fVnkziSsOezk9bUyYirENwCfguXxI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vrpaUoebQemGAQMBA++5HTPrJCxB9KNxA9hf5or8N47X9e6yF9emLlV0eGFzXUGKx
+	 i6Y3rD/K8gCdIWdZOY7Sc2WzEOu/EasmEBtiI5cIXh5ICzTpWm6dn+7q9qXk8yRaRA
+	 QlOq/0YPH9xMElOvB9rZIx0FDkcW00jNBYmM2OvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfGaPQW (ORCPT
+        id S1727622AbfGaPRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:16:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53152 "EHLO mx1.redhat.com"
+        Wed, 31 Jul 2019 11:17:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbfGaPQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:16:22 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726859AbfGaPRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:17:25 -0400
+Received: from localhost (unknown [171.76.116.36])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D56CC30A7C66;
-        Wed, 31 Jul 2019 15:16:20 +0000 (UTC)
-Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F030C19C78;
-        Wed, 31 Jul 2019 15:15:41 +0000 (UTC)
-From:   Thomas Huth <thuth@redhat.com>
-To:     kvm@vger.kernel.org, Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Janosch Frank <frankja@linux.ibm.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>, Andrew Jones <drjones@redhat.com>
-Subject: [PATCH v3 3/3] KVM: selftests: Enable dirty_log_test on s390x
-Date:   Wed, 31 Jul 2019 17:15:25 +0200
-Message-Id: <20190731151525.17156-4-thuth@redhat.com>
-In-Reply-To: <20190731151525.17156-1-thuth@redhat.com>
-References: <20190731151525.17156-1-thuth@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 043D5206A2;
+        Wed, 31 Jul 2019 15:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564586244;
+        bh=QLtbVtyJYSI7n5fVnkziSsOezk9bUyYirENwCfguXxI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lbzuLgqb5ns6zxuRild0zWDqNUDFQPIZGJ7Fb4av46TQnhuG4/wrb4hZprvP0cT8C
+         KU54V3L8FjH2uk6USMAu/AM6/lP3w++MBb24XnXqobPpgHMhRa9xX9wl//+hHhJmL9
+         UwPz49l5flgfdOFWG4taG3u0nQVUH5cC37Tngm5M=
+Date:   Wed, 31 Jul 2019 20:46:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Sameer Pujar <spujar@nvidia.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        dan.j.williams@intel.com, tiwai@suse.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
+        mkumard@nvidia.com
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+Message-ID: <20190731151610.GT12733@vkoul-mobl.Dlink>
+References: <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
+ <20190618043308.GJ2962@vkoul-mobl>
+ <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
+ <20190624062609.GV2962@vkoul-mobl>
+ <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
+ <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
+ <20190719050459.GM12733@vkoul-mobl.Dlink>
+ <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
+ <20190729061010.GC12733@vkoul-mobl.Dlink>
+ <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 31 Jul 2019 15:16:21 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To run the dirty_log_test on s390x, we have to make sure that we
-access the dirty log bitmap with little endian byte ordering and
-we have to properly align the memslot of the guest.
-Also all dirty bits of a segment are set once on s390x when one
-of the pages of a segment are written to for the first time, so
-we have to make sure that we touch all pages during the first
-iteration to keep the test in sync here.
-DEFAULT_GUEST_TEST_MEM needs an adjustment, too. On some s390x
-distributions, the ELF binary is linked to address 0x80000000,
-so we have to avoid that our test region overlaps into this area.
-0xc0000000 seems to be a good alternative that should work on x86
-and aarch64, too.
+On 31-07-19, 10:48, Jon Hunter wrote:
+> 
+> On 29/07/2019 07:10, Vinod Koul wrote:
+> > On 23-07-19, 11:24, Sameer Pujar wrote:
+> >>
+> >> On 7/19/2019 10:34 AM, Vinod Koul wrote:
+> >>> On 05-07-19, 11:45, Sameer Pujar wrote:
+> >>>> Hi Vinod,
+> >>>>
+> >>>> What are your final thoughts regarding this?
+> >>> Hi sameer,
+> >>>
+> >>> Sorry for the delay in replying
+> >>>
+> >>> On this, I am inclined to think that dma driver should not be involved.
+> >>> The ADMAIF needs this configuration and we should take the path of
+> >>> dma_router for this piece and add features like this to it
+> >>
+> >> Hi Vinod,
+> >>
+> >> The configuration is needed by both ADMA and ADMAIF. The size is
+> >> configurable
+> >> on ADMAIF side. ADMA needs to know this info and program accordingly.
+> > 
+> > Well I would say client decides the settings for both DMA, DMAIF and
+> > sets the peripheral accordingly as well, so client communicates the two
+> > sets of info to two set of drivers
+> 
+> That maybe, but I still don't see how the information is passed from the
+> client in the first place. The current problem is that there is no means
+> to pass both a max-burst size and fifo-size to the DMA driver from the
+> client.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Andrew Jones <drjones@redhat.com>
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- tools/testing/selftests/kvm/Makefile         |  1 +
- tools/testing/selftests/kvm/dirty_log_test.c | 59 +++++++++++++++++---
- 2 files changed, 53 insertions(+), 7 deletions(-)
+So one thing not clear to me is why ADMA needs fifo-size, I thought it
+was to program ADMAIF and if we have client programme the max-burst
+size to ADMA and fifo-size to ADMAIF we wont need that. Can you please
+confirm if my assumption is valid?
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 75ea1ecbf85a..1b48a94b4350 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -33,6 +33,7 @@ TEST_GEN_PROGS_aarch64 += dirty_log_test
- TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
- 
- TEST_GEN_PROGS_s390x += s390x/sync_regs_test
-+TEST_GEN_PROGS_s390x += dirty_log_test
- TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
- 
- TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
-diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-index 5d5ae1be4984..dc3346e090f5 100644
---- a/tools/testing/selftests/kvm/dirty_log_test.c
-+++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -26,8 +26,8 @@
- /* The memory slot index to track dirty pages */
- #define TEST_MEM_SLOT_INDEX		1
- 
--/* Default guest test memory offset, 1G */
--#define DEFAULT_GUEST_TEST_MEM		0x40000000
-+/* Default guest test virtual memory offset */
-+#define DEFAULT_GUEST_TEST_MEM		0xc0000000
- 
- /* How many pages to dirty for each guest loop */
- #define TEST_PAGES_PER_LOOP		1024
-@@ -38,6 +38,27 @@
- /* Interval for each host loop (ms) */
- #define TEST_HOST_LOOP_INTERVAL		10UL
- 
-+/* Dirty bitmaps are always little endian, so we need to swap on big endian */
-+#if defined(__s390x__)
-+# define BITOP_LE_SWIZZLE	((BITS_PER_LONG-1) & ~0x7)
-+# define test_bit_le(nr, addr) \
-+	test_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-+# define set_bit_le(nr, addr) \
-+	set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-+# define clear_bit_le(nr, addr) \
-+	clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-+# define test_and_set_bit_le(nr, addr) \
-+	test_and_set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-+# define test_and_clear_bit_le(nr, addr) \
-+	test_and_clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-+#else
-+# define test_bit_le		test_bit
-+# define set_bit_le		set_bit
-+# define clear_bit_le		clear_bit
-+# define test_and_set_bit_le	test_and_set_bit
-+# define test_and_clear_bit_le	test_and_clear_bit
-+#endif
-+
- /*
-  * Guest/Host shared variables. Ensure addr_gva2hva() and/or
-  * sync_global_to/from_guest() are used when accessing from
-@@ -69,11 +90,23 @@ static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
-  */
- static void guest_code(void)
- {
-+	uint64_t addr;
- 	int i;
- 
-+	/*
-+	 * On s390x, all pages of a 1M segment are initially marked as dirty
-+	 * when a page of the segment is written to for the very first time.
-+	 * To compensate this specialty in this test, we need to touch all
-+	 * pages during the first iteration.
-+	 */
-+	for (i = 0; i < guest_num_pages; i++) {
-+		addr = guest_test_virt_mem + i * guest_page_size;
-+		*(uint64_t *)addr = READ_ONCE(iteration);
-+	}
-+
- 	while (true) {
- 		for (i = 0; i < TEST_PAGES_PER_LOOP; i++) {
--			uint64_t addr = guest_test_virt_mem;
-+			addr = guest_test_virt_mem;
- 			addr += (READ_ONCE(random_array[i]) % guest_num_pages)
- 				* guest_page_size;
- 			addr &= ~(host_page_size - 1);
-@@ -158,15 +191,15 @@ static void vm_dirty_log_verify(unsigned long *bmap)
- 		value_ptr = host_test_mem + page * host_page_size;
- 
- 		/* If this is a special page that we were tracking... */
--		if (test_and_clear_bit(page, host_bmap_track)) {
-+		if (test_and_clear_bit_le(page, host_bmap_track)) {
- 			host_track_next_count++;
--			TEST_ASSERT(test_bit(page, bmap),
-+			TEST_ASSERT(test_bit_le(page, bmap),
- 				    "Page %"PRIu64" should have its dirty bit "
- 				    "set in this iteration but it is missing",
- 				    page);
- 		}
- 
--		if (test_bit(page, bmap)) {
-+		if (test_bit_le(page, bmap)) {
- 			host_dirty_count++;
- 			/*
- 			 * If the bit is set, the value written onto
-@@ -209,7 +242,7 @@ static void vm_dirty_log_verify(unsigned long *bmap)
- 				 * should report its dirtyness in the
- 				 * next run
- 				 */
--				set_bit(page, host_bmap_track);
-+				set_bit_le(page, host_bmap_track);
- 			}
- 		}
- 	}
-@@ -293,6 +326,10 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
- 	 * case where the size is not aligned to 64 pages.
- 	 */
- 	guest_num_pages = (1ul << (30 - guest_page_shift)) + 16;
-+#ifdef __s390x__
-+	/* Round up to multiple of 1M (segment size) */
-+	guest_num_pages = (guest_num_pages + 0xff) & ~0xffUL;
-+#endif
- 	host_page_size = getpagesize();
- 	host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
- 			 !!((guest_num_pages * guest_page_size) % host_page_size);
-@@ -304,6 +341,11 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
- 		guest_test_phys_mem = phys_offset;
- 	}
- 
-+#ifdef __s390x__
-+	/* Align to 1M (segment size) */
-+	guest_test_phys_mem &= ~((1 << 20) - 1);
-+#endif
-+
- 	DEBUG("guest physical test memory offset: 0x%lx\n", guest_test_phys_mem);
- 
- 	bmap = bitmap_alloc(host_num_pages);
-@@ -454,6 +496,9 @@ int main(int argc, char *argv[])
- 		vm_guest_mode_params_init(VM_MODE_P48V48_64K, true, true);
- 	}
- #endif
-+#ifdef __s390x__
-+	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
-+#endif
- 
- 	while ((opt = getopt(argc, argv, "hi:I:p:m:")) != -1) {
- 		switch (opt) {
+> IMO there needs to be a way to pass vendor specific DMA configuration
+> (if this information is not common) otherwise we just end up in a
+> scenario like there is for the xilinx DMA driver
+> (include/linux/dma/xilinx_dma.h) that has a custom API for passing this
+> information.
+> 
+> Cheers
+> Jon
+> 
+> -- 
+> nvpublic
+
 -- 
-2.21.0
-
+~Vinod
