@@ -2,121 +2,107 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6CCC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0134C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5EEB214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:02:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HX/EPF1G"
+	by mail.kernel.org (Postfix) with ESMTP id CAA8821726
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbfGaUCL (ORCPT
+        id S1730590AbfGaUCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:02:11 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40518 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730526AbfGaUCJ (ORCPT
+        Wed, 31 Jul 2019 16:02:22 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:34959 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729550AbfGaUCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:02:09 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a93so30903318pla.7
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wxJGZH7300Hgl5asMFjAs9ArUsIJe/EH5/uSYQ1iyTY=;
-        b=HX/EPF1G9PXWWCeOuwtSGUYRGPz8KC0ErJdpABtKhERiS3N871Qmms8DCCGQlhE8LV
-         I9IaFsrGl2wuuUB/Us84dpAaxGjTlPfCwe/nfUhmTCqX+Pr7R5VGvA/6OPrHfFph1rjd
-         H8gKwwHigNku3W/W2ISHwc82SSQBos0giQSHo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wxJGZH7300Hgl5asMFjAs9ArUsIJe/EH5/uSYQ1iyTY=;
-        b=uj9cHTHabm2ru+g2uqjpirBBbD5llc2lnUEByBkzRDm9w/LtLlX/bBn0PSmyTM7m6i
-         4oW7oSw9ik2AqX0sW+fEk6A4vEHhFRDB5kwyW31ML1zZb/noBFTvAYakjnNda/tH16qk
-         QakQRAWn3xVYqInAe/FKOWdOCtv1ldslW1akd7SiriW+pRU7hJxvlifRkxdVA7gk54Hk
-         u96rqEzPyIOEJuplNtdh7lyrcEIdEjkqnKYYTXwN6jymG9+qINce2fZwgXrxCR00PpR6
-         lpbRmV7qRWSiYLW22obKULtaFLbVvTjPRlEigwtB5nc0HEPTi+r/Xxy8HKa+dCPKL7zu
-         4SSQ==
-X-Gm-Message-State: APjAAAViMcTpaC+/qnWN3NdMDTlQ34AqDU+KT22eSw9W6siybePvJTYI
-        LWf3zoxNAih1lvCi3AQANwdU/A==
-X-Google-Smtp-Source: APXvYqwj1zep+ZZXF3Ri3+Jyb3qYUQRgfqwHDJSbxfZDvAjGESsg9IbU6tepVSR5HREw2MVEik1giA==
-X-Received: by 2002:a17:902:4401:: with SMTP id k1mr98479912pld.193.1564603329180;
-        Wed, 31 Jul 2019 13:02:09 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 196sm74088643pfy.167.2019.07.31.13.02.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 31 Jul 2019 13:02:08 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 13:02:07 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     hpa@zytor.com, Joe Perches <joe@perches.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
- keyword for switch/case use
-Message-ID: <201907311301.EC1D84F@keescook>
-References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
- <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
- <20190731171429.GA24222@amd>
- <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
- <765E740C-4259-4835-A58D-432006628BAC@zytor.com>
- <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
+        Wed, 31 Jul 2019 16:02:21 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MxHLs-1iGtlI0h4q-00xYiP; Wed, 31 Jul 2019 22:01:44 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH 08/14] net: lpc-enet: allow compile testing
+Date:   Wed, 31 Jul 2019 21:56:50 +0200
+Message-Id: <20190731195713.3150463-9-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190731195713.3150463-1-arnd@arndb.de>
+References: <20190731195713.3150463-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:bQO/P7oE1AasL5WRFX8A8Iw79gwR2TUWl5KOlZaoQbsLC6qyZ3M
+ BqjvpoU3FzeJMaTmEyNZPpDYQsGf01s7vM6mqVbCCqYpR+VH9U3/oy0xO+7d/XqDKrZRScs
+ GKPYEfqcPhZKIPwd/VF2tMUAfS5j7EliScirqrFjPu8WusX9n+IWZVIlecysf5C6EC7vNJV
+ Y+CHXjmLXL6XBHVmlDthg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wgW8X3aAw54=:zzSiZhm815Ou/Nwd6C9iLM
+ 8pGGZZ1MNm+TJLjXzf5qAu/AU+nMBlFA8b+4jZEd1w9esMERStkBfjfc+hCYa4fvIVEGyrOY2
+ rgAgi4qKEbp8czy7oAIf1f62ZHCdRci+Wx21+sgjylY/7OD9KMwh40IjuRtC5KIsOflIjss63
+ 2ny0LZzhcyhnMnSt66utWr6Py58xbkNhZYgxX2fejPF1IW734b5FLedEO34kKt0kqZ34JFOZ/
+ 4Z9/Fm+TrnN/g7EYnNC+2gnV2/4enSXdUzsNIjPjlEBCPO7VXfFNakW/QZyqg0UYxAPidEN5m
+ Qe/0NFGLMWfxGncHijKtiX9XzMqxxIvf4XjGxVSLEdlD0BDUGu6FqiQIKfhMyn1DFk/XbO42/
+ 82qzSohrF3yATVgLCrSAPqK+sOmomtx5lPd/+rmUhLqAGXFnbsnxQHaIV7OvOmqqTUnETc/kh
+ 3ef4BZR3TAwakr2EnP5cY3eC0FhJHywe0TBxiRLevIBN2c1CtinvaCxz28sGp28S2SmUbCAy/
+ pjkz8586/aXzkaJyvAr5gL76CGT5dDNUXYo1CwW7GWieGTW/P17EAWnJp0jjMSqrYgvBN5WCN
+ G2/uUtYXb8yOdCkFMBF+8CWo7hzKHuPjy+oBnUA6SrOJ61t3gb/hYLmoL3OjWWdbIGDPA5w1L
+ YaPT07myPbkUcnsdWJKaPeeBaeioX1lnNsZZ+RfngtM1BGJ16w3IOWLg+EgehEy8bW7ev6L/k
+ iaOINOy1fT0MDbzlmDp6pVMc3XbEFBEzxk9HUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 08:48:32PM +0200, Peter Zijlstra wrote:
-> On Wed, Jul 31, 2019 at 11:24:36AM -0700, hpa@zytor.com wrote:
-> > >> > +/*
-> > >> > + * Add the pseudo keyword 'fallthrough' so case statement blocks
-> > >> > + * must end with any of these keywords:
-> > >> > + *   break;
-> > >> > + *   fallthrough;
-> > >> > + *   goto <label>;
-> > >> > + *   return [expression];
-> > >> > + *
-> > >> > + *  gcc: >https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html#Statement-Attributes
-> > >> > + */
-> > >> > +#if __has_attribute(__fallthrough__)
-> > >> > +# define fallthrough                   __attribute__((__fallthrough__))
-> > >> > +#else
-> > >> > +# define fallthrough                    do {} while (0)  /* fallthrough */
-> > >> > +#endif
-> > >> > +
-> 
-> > If the comments are stripped, how would the compiler see them to be
-> > able to issue a warning? I would guess that it is retained or replaced
-> > with some other magic token.
-> 
-> Everything that has the warning (GCC-7+/CLANG-9) has that attribute.
+The lpc-enet driver can now be built on all platforms, so
+allow compile testing as well.
 
-I'd like to make sure we don't regress Coverity most of all. If the
-recent updates to the Coverity scanner include support for the attribute
-now, then I'm all for it. :)
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/nxp/Kconfig   | 2 +-
+ drivers/net/ethernet/nxp/lpc_eth.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/ethernet/nxp/Kconfig b/drivers/net/ethernet/nxp/Kconfig
+index 261f107e2be0..418afb84c84b 100644
+--- a/drivers/net/ethernet/nxp/Kconfig
++++ b/drivers/net/ethernet/nxp/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config LPC_ENET
+         tristate "NXP ethernet MAC on LPC devices"
+-        depends on ARCH_LPC32XX
++        depends on ARCH_LPC32XX || COMPILE_TEST
+         select PHYLIB
+         help
+ 	  Say Y or M here if you want to use the NXP ethernet MAC included on
+diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
+index 0893b77c385d..34fdf2100772 100644
+--- a/drivers/net/ethernet/nxp/lpc_eth.c
++++ b/drivers/net/ethernet/nxp/lpc_eth.c
+@@ -14,6 +14,7 @@
+ #include <linux/crc32.h>
+ #include <linux/etherdevice.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/of_net.h>
+ #include <linux/phy.h>
+ #include <linux/platform_device.h>
 -- 
-Kees Cook
+2.20.0
+
