@@ -2,89 +2,59 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9C1C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6FAC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F239720679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F261420449
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730747AbfGaXbL (ORCPT
+        id S1730787AbfGaXdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:31:11 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:48065 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730691AbfGaXbL (ORCPT
+        Wed, 31 Jul 2019 19:33:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33402 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaXdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:31:11 -0400
-Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 962226490afa9733; Thu, 1 Aug 2019 01:31:08 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] ACPI: PM: Fix regression in acpi_device_set_power()
-Date:   Thu, 01 Aug 2019 01:31:08 +0200
-Message-ID: <4199592.UtrPOv3ZmA@kreacher>
+        Wed, 31 Jul 2019 19:33:31 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hsy62-00016P-8Q; Thu, 01 Aug 2019 01:33:26 +0200
+Date:   Thu, 1 Aug 2019 01:33:25 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+cc:     mingo@redhat.com, peterz@infradead.org, dvhart@infradead.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCH RFC 1/2] futex: Split key setup from key queue locking
+ and read
+In-Reply-To: <20190730220602.28781-1-krisman@collabora.com>
+Message-ID: <alpine.DEB.2.21.1908010131200.1788@nanos.tec.linutronix.de>
+References: <20190730220602.28781-1-krisman@collabora.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, 30 Jul 2019, Gabriel Krisman Bertazi wrote:
 
-Commit f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in
-special cases") overlooked the fact that acpi_power_transition() may
-change the power.state value for the target device and if that
-happens, it may confuse acpi_device_set_power() and cause it to
-omit the _PS0 evaluation which on some systems is necessary to
-change power states of devices from low-power to D0.
+> split the futex key setup from the queue locking and key reading.  This
+> is useful to support the setup of multiple keys at the same time, like
+> what is done in futex_requeue() and what will be done for the
 
-Fix that by saving the current value of power.state for the
-target device before passing it to acpi_power_transition() and
-using the saved value in a subsequent check.
+What has this to do with futex_requeue()? Absolutely nothing unleass you
+can reused that code there, which I doubt.
 
-Fixes: f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in special cases")
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reported-by: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/device_pm.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Thanks,
 
-Index: linux-pm/drivers/acpi/device_pm.c
-===================================================================
---- linux-pm.orig/drivers/acpi/device_pm.c
-+++ linux-pm/drivers/acpi/device_pm.c
-@@ -236,13 +236,15 @@ int acpi_device_set_power(struct acpi_de
- 		if (device->power.flags.power_resources)
- 			result = acpi_power_transition(device, target_state);
- 	} else {
-+		int cur_state = device->power.state;
-+
- 		if (device->power.flags.power_resources) {
- 			result = acpi_power_transition(device, ACPI_STATE_D0);
- 			if (result)
- 				goto end;
- 		}
- 
--		if (device->power.state == ACPI_STATE_D0) {
-+		if (cur_state == ACPI_STATE_D0) {
- 			int psc;
- 
- 			/* Nothing to do here if _PSC is not present. */
-
-
-
+	tglx
