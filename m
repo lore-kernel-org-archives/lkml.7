@@ -2,168 +2,95 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0D1C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E781C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995E4216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A495208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fUaCEUhN"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="vOibndjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbfGaTbA (ORCPT
+        id S1730929AbfGaTbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:31:00 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:45328 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729092AbfGaTbA (ORCPT
+        Wed, 31 Jul 2019 15:31:20 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:47058 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729092AbfGaTbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:31:00 -0400
-Received: by mail-ua1-f66.google.com with SMTP id v18so27415143uad.12
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:30:59 -0700 (PDT)
+        Wed, 31 Jul 2019 15:31:19 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z23so43070906ote.13
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:31:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=V4Wcp011k9h7N5iAJkWpP1Nbu9oN4M2GGvG06LvdU2U=;
-        b=fUaCEUhNC4Tuu1n1nF8asI51cgg70GaR9H/nMdDM2BZwKIGwYESyC+ANrzEzNbyCCK
-         Oo9kAgTUGUCRJpgDkeKVwv2v7LNE0yerjxD0FFu+TlVm1wemvoI2V5qJum7RZWCsIsFu
-         caZSoA1qPEKO3nEIy2wlsOXadZQb5TaaAqtNv95x4AfEvUSG01PbXA2WgagTZHsb7aMz
-         DXvwhLJ2m6xnSVDL9BTKqy7XAh7eilMxSkpBweTk3v2EiycxvGfTJMtMv1lYRBGBE0MV
-         Tk6sq+Q07tuHcFgS507UyAJFXfBxy4xzy4NGxxbF1CNkFe49Cf8Iq4yLVLNYGHjD92T2
-         DCGg==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rS31TGE+Mlwy7Maxt5cv0TA4vXxyACTIm226Er7Yz18=;
+        b=vOibndjhZQkynS4J/8fftBuH9T/2s/u1bVZrKWX86LTDWN++MLOqRy3Ep27/E6GVWU
+         604TSX1CLsvH+6a7GFfdrcz0bOlElTQnUJyHPDHxB5BaxRZ+Or5Negww2J2ObAexe2fi
+         3iM0qn+78IhWNMoJcDYY6HRxtIFDKeS2Zm1GUfXDIEf/Md7bDlfxseS5fZURC5fvAZs1
+         ML/qgtz4s2tidgqbYLMFqk6qfgVncCuyp1caNzW8MQHd+Q6M2mu5/5l2d/s01juOsmmH
+         VZa/fznlq7uCb+9a+N25RlWsrL6UJdyEv4JPpIrFWi327pk39aN4ehcBSWC1JFdArBUj
+         T9Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=V4Wcp011k9h7N5iAJkWpP1Nbu9oN4M2GGvG06LvdU2U=;
-        b=EEvY4IlhKFTYbev7AtXKTWx1QEX0fOqxqp6AZDC27gqgXlNutlEXjkP3RPVc/cOfW9
-         VvrzvKiZIcAN/wRuEzGAH7PTi/E3+xqKJkKSnsUXnirgkIdasY4vCPzI0Ku4QuskYej1
-         HJFA03Xu8ddSP6o4OhdLelv34GutfcKMutHxV/xx9UgJa9kTuTCzDln5DcrQvPJhica3
-         LOPM7uYLIte9C8iF30tlfJSThAdB8+BcK58QNGYAbD1lbjSvasvGv8uqLRIA9xcoKb/x
-         0CYGPIgPn3FLwSEOroMtuGGWPA1y/hqrwMSvfuwjg3LbhjiylbchOWhx/ydjwEvOh8L0
-         JuBw==
-X-Gm-Message-State: APjAAAX7/MHIfEnWkWr0XJNeep4mP8OoqTav5xjlSzQiPHF42RVRgjSl
-        XzE8fi8vqOeEJhw6yDgBIwNzZS6dMHw=
-X-Google-Smtp-Source: APXvYqzup5DZ6q8bxH1OXHSeDiBtafoJQmznWiwBSNHtM04i2y2ha7deX2jX6U9UfYm6veI89m6bZw==
-X-Received: by 2002:ab0:49b0:: with SMTP id e45mr17499877uad.120.1564601458846;
-        Wed, 31 Jul 2019 12:30:58 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id 10sm28842460vkl.33.2019.07.31.12.30.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 31 Jul 2019 12:30:58 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hsuJN-0007XW-Lr; Wed, 31 Jul 2019 16:30:57 -0300
-Date:   Wed, 31 Jul 2019 16:30:57 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
- with worker
-Message-ID: <20190731193057.GG3946@ziepe.ca>
-References: <20190731084655.7024-1-jasowang@redhat.com>
- <20190731084655.7024-8-jasowang@redhat.com>
- <20190731123935.GC3946@ziepe.ca>
- <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rS31TGE+Mlwy7Maxt5cv0TA4vXxyACTIm226Er7Yz18=;
+        b=n8Md8vqEA51lQpuaxtfcTD8QTyEiaoQVq0RieubHoOf6mIZaB3M1UuqdPgWUselZpK
+         Cxh25e9qdUyjcuslis2LUby5OiKPFAUhUug8b5G+bNplgX3MEmOELrSKD8Dn2S/mo0Pw
+         1SvS7kkb1YK+KoaHhLF78NVO+1h4tmXCy8rS51ItSXdEpo1X2Rh/Ys2e2btPBGy5bfCI
+         encunSeZbl0nhnFkk2RM1hfwiQJM6zRXMefi4RYQTqZKTsuUJOymLhqENcNXvO8X3SZ4
+         +pNFCnZQwaKsvULYEREwuVUck5lCn/Uhxw5Bu2IDJSID8KQDCXf0YDXKqTnv5sSP3dCU
+         xhkQ==
+X-Gm-Message-State: APjAAAXR8gBcFRcHiM4+ARNyJcvqjWzhJL1D8MSGAEu3uTE39PosqwBn
+        aYfcSBMUw0zTUrrIDn/nc9JlJl7Izt4tdGEIj0x/qA==
+X-Google-Smtp-Source: APXvYqxvLS6tHvfy6ibysI39PnAGiA0Vn1TCXbmDTTfULDYAWuHOLzupVb55cRBZPjvI9lxKLzSQW7IbxXyfUA8LS9c=
+X-Received: by 2002:a9d:470d:: with SMTP id a13mr89782986otf.126.1564601478105;
+ Wed, 31 Jul 2019 12:31:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190729190655.455345569@linuxfoundation.org> <20190729190721.610390670@linuxfoundation.org>
+ <20190731181444.GA821@amd>
+In-Reply-To: <20190731181444.GA821@amd>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 31 Jul 2019 12:31:07 -0700
+Message-ID: <CAPcyv4iM3i3oBS3WRe8QHmD6zncAy0-CsgdbJ0WSt9RBiVgVqg@mail.gmail.com>
+Subject: Re: [PATCH 4.19 112/113] libnvdimm/bus: Stop holding
+ nvdimm_bus_list_mutex over __nd_ioctl()
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Jane Chu <jane.chu@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 09:28:20PM +0800, Jason Wang wrote:
-> 
-> On 2019/7/31 下午8:39, Jason Gunthorpe wrote:
-> > On Wed, Jul 31, 2019 at 04:46:53AM -0400, Jason Wang wrote:
-> > > We used to use RCU to synchronize MMU notifier with worker. This leads
-> > > calling synchronize_rcu() in invalidate_range_start(). But on a busy
-> > > system, there would be many factors that may slow down the
-> > > synchronize_rcu() which makes it unsuitable to be called in MMU
-> > > notifier.
-> > > 
-> > > A solution is SRCU but its overhead is obvious with the expensive full
-> > > memory barrier. Another choice is to use seqlock, but it doesn't
-> > > provide a synchronization method between readers and writers. The last
-> > > choice is to use vq mutex, but it need to deal with the worst case
-> > > that MMU notifier must be blocked and wait for the finish of swap in.
-> > > 
-> > > So this patch switches use a counter to track whether or not the map
-> > > was used. The counter was increased when vq try to start or finish
-> > > uses the map. This means, when it was even, we're sure there's no
-> > > readers and MMU notifier is synchronized. When it was odd, it means
-> > > there's a reader we need to wait it to be even again then we are
-> > > synchronized.
-> > You just described a seqlock.
-> 
-> 
-> Kind of, see my explanation below.
-> 
-> 
-> > 
-> > We've been talking about providing this as some core service from mmu
-> > notifiers because nearly every use of this API needs it.
-> 
-> 
-> That would be very helpful.
-> 
-> 
-> > 
-> > IMHO this gets the whole thing backwards, the common pattern is to
-> > protect the 'shadow pte' data with a seqlock (usually open coded),
-> > such that the mmu notififer side has the write side of that lock and
-> > the read side is consumed by the thread accessing or updating the SPTE.
-> 
-> 
-> Yes, I've considered something like that. But the problem is, mmu notifier
-> (writer) need to wait for the vhost worker to finish the read before it can
-> do things like setting dirty pages and unmapping page.  It looks to me
-> seqlock doesn't provide things like this.  
+On Wed, Jul 31, 2019 at 11:15 AM Pavel Machek <pavel@denx.de> wrote:
+>
+> On Mon 2019-07-29 21:23:19, Greg Kroah-Hartman wrote:
+> > From: Dan Williams <dan.j.williams@intel.com>
+> >
+> > commit b70d31d054ee3a6fc1034b9d7fc0ae1e481aa018 upstream.
+> >
+> > In preparation for fixing a deadlock between wait_for_bus_probe_idle()
+> > and the nvdimm_bus_list_mutex arrange for __nd_ioctl() without
+> > nvdimm_bus_list_mutex held. This also unifies the 'dimm' and 'bus' level
+> > ioctls into a common nd_ioctl() preamble implementation.
+>
+> Ok, so this is a preparation patch, not a fix...
+>
+> > Marked for -stable as it is a pre-requisite for a follow-on fix.
+>
+> ...but follow-on fixes are going to be applied for 5.2 but not
+> 4.19. So perhaps this one should not be in 4.19, either?
 
-The seqlock is usually used to prevent a 2nd thread from accessing the
-VA while it is being changed by the mm. ie you use something seqlocky
-instead of the ugly mmu_notifier_unregister/register cycle.
-
-You are supposed to use something simple like a spinlock or mutex
-inside the invalidate_range_start to serialized tear down of the SPTEs
-with their accessors.
-
-> write_seqcount_begin()
-> 
-> map = vq->map[X]
-> 
-> write or read through map->addr directly
-> 
-> write_seqcount_end()
-> 
-> 
-> There's no rmb() in write_seqcount_begin(), so map could be read before
-> write_seqcount_begin(), but it looks to me now that this doesn't harm at
-> all, maybe we can try this way.
-
-That is because it is a write side lock, not a read lock. IIRC
-seqlocks have weaker barriers because the write side needs to be
-serialized in some other way.
-
-The requirement I see is you need invalidate_range_start to block
-until another thread exits its critical section (ie stops accessing
-the SPTEs). 
-
-That is a spinlock/mutex.
-
-You just can't invent a faster spinlock by open coding something with
-barriers, it doesn't work.
-
-Jason
+I plan to follow up with a backport of the series for 4.19. I have no
+problem with v4.19 carrying this in the meantime, but if you want to
+kick it out and wait for the backport, that's fine too.
