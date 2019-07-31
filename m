@@ -2,140 +2,121 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9683C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D5FC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82CD220679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27EF720679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564608222;
-	bh=6nNxcMEovTcHoIiAfEq3DqoB8lHWiq9aCZJ9QtYeXkU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PNboMgUdSJMPP+/bwIgykcVHBeltD7DNZu+KnU9ScepeC3BM63Jj4nLQP79ZOVVwl
-	 h+Ibw9s8dOEt1PTzzeWKPCrHw/xH/brJ2PXCbAu4ehSbXqq435k7EFAD/9T4Y/A/vV
-	 zr8AVT1Dfwxjec2mIFaOIkVrRgLa7DH/eDd7OaiQ=
+	s=default; t=1564608368;
+	bh=ikITZ8Q46ieiuDTuAff5jC13fuc/HAAvkWzVO84JhMY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=s2RjDCvxCeqnyZbEkyBswS005Pg0y7fKVyWtsVPRIuvpIqsH9kfEL//W6aRYWOLdz
+	 EkosLB0HXKKcIOvTJM0yy+jywuXNsrDQDTQcBPqMNVWO1kN7UWJGUECiFcZnl4q/M2
+	 glPBq165/slDgxPhZwpLNCt9gWNR6Ejll8Pd880Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbfGaVXl (ORCPT
+        id S1730392AbfGaV0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:23:41 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44610 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfGaVXj (ORCPT
+        Wed, 31 Jul 2019 17:26:07 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45840 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfGaV0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:23:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JkzFMfYYWR9hL+mE/onPPqot2hOPIdqB/0Q4DZvIvmI=; b=wtZw7VNA1bHlFQACBOu3kQnWO
-        V3gFvCw1cvov+R/1YVxL9DcyW7NCWWy4F8XpPBfeFecFj56NJ9bZs8a7P0Lq82SxO5k1nZbQpxGKH
-        KaExNVsQloZHiOkpskzSTHkb/s3v1GDMTKE9g/Q/XrvdDiIck1QejIuU2RBkv+zRKL/gM=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hsw4O-0003MU-Te; Wed, 31 Jul 2019 21:23:37 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id DCE4C2742C6C; Wed, 31 Jul 2019 22:23:35 +0100 (BST)
-Date:   Wed, 31 Jul 2019 22:23:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/2] Regulator: Core: Add clock-enable to
- fixed-regulator
-Message-ID: <20190731212335.GL4369@sirena.org.uk>
-References: <20190730173006.15823-1-dev@pschenker.ch>
- <20190730173006.15823-2-dev@pschenker.ch>
- <20190730181038.GK4264@sirena.org.uk>
- <b5e1cc3fb5838d9ea4160078402bff95903ba0da.camel@toradex.com>
+        Wed, 31 Jul 2019 17:26:06 -0400
+Received: by mail-ot1-f68.google.com with SMTP id x21so6267662otq.12;
+        Wed, 31 Jul 2019 14:26:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gY7HXwIot63TGp2osyGwD6oiBom7P9dQMkdrdkS2Nes=;
+        b=nDvTGpyX2+z65F3ZwfEFr5h/q+bSSzgg0YD/nn72NgZ8qaBdF5iCJckrxoMsoPYDgU
+         tn31BVwMBJHYQkgHMOtDUbeqsfJUKPV5mMZYaf33r9i9kqJo6L1RnCyyJihbNVA5HlG5
+         qbhexaqVf7bWcRrRh+ol5MrqGrWl9varNor5xEvXF2XX3LSI1awNADbYIfUP6niccvaD
+         VCNbOqDKcFBq9ZQLXOcl6ztlNyBhPgCY1+T63CE8GXQjKm48BkmOnd3TlgUF9iQHvx0C
+         WwgGJTxtEl7fJuARdL3EFzOZw/0tWvZRLMg76uV03JIUZT1CCmev7HqwmlHjiiWW0e2w
+         +v5g==
+X-Gm-Message-State: APjAAAWMJISIXtBpi+wMWoPut/ltRWA0S18KUMJaAqoqvCbveaWx8VAV
+        tZpL/jX3sF8VzNwThd4y4HnoEZUMa09j5fpdjvk=
+X-Google-Smtp-Source: APXvYqxVGX9+K7Xz5YfWvC/qL8u+R2fzXeqHac2HeS0SiwVZBa8gOPNuLZONFh1YvGWdr401W9asQoBJ7Yn/hXUPwSg=
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr10015636oto.118.1564608365363;
+ Wed, 31 Jul 2019 14:26:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TdMwOTenGjBWB1uY"
-Content-Disposition: inline
-In-Reply-To: <b5e1cc3fb5838d9ea4160078402bff95903ba0da.camel@toradex.com>
-X-Cookie: FEELINGS are cascading over me!!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <2332799.izEFUvJP67@kreacher> <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
+ <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM> <20190730213114.GK13948@localhost.localdomain>
+In-Reply-To: <20190730213114.GK13948@localhost.localdomain>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 31 Jul 2019 23:25:51 +0200
+Message-ID: <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 30, 2019 at 11:33 PM Keith Busch <kbusch@kernel.org> wrote:
+>
+> On Tue, Jul 30, 2019 at 09:05:22PM +0000, Mario.Limonciello@dell.com wrote:
+> > > -----Original Message-----
+> > > From: Keith Busch <kbusch@kernel.org>
+> > > Sent: Tuesday, July 30, 2019 2:20 PM
+> > > To: Kai-Heng Feng
+> > > Cc: Limonciello, Mario; rjw@rjwysocki.net; keith.busch@intel.com; hch@lst.de;
+> > > sagi@grimberg.me; linux-nvme@lists.infradead.org; linux-pm@vger.kernel.org;
+> > > linux-kernel@vger.kernel.org; rajatja@google.com
+> > > Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+> > > suspend" has problems
+> > >
+> > >
+> > > [EXTERNAL EMAIL]
+> > >
+> > > On Wed, Jul 31, 2019 at 02:50:01AM +0800, Kai-Heng Feng wrote:
+> > > >
+> > > > Just did a quick test, this patch regress SK Hynix BC501, the SoC stays at
+> > > > PC3 once the patch is applied.
+> > >
+> > > Okay, I'm afraid device/platform quirks may be required unless there are
+> > > any other ideas out there.
+> >
+> > I think if a quirk goes in for Rafael's SSD it would have to be a quirk specific to this
+> > device and FW version per the findings on KH checking the same device with the
+> > older FW version.
+>
+> That's fine, we have the infrastructure in place for fw specific quirks.
+> See drivers/nvme/host/core.c:nvme_core_quirk_entry
 
---TdMwOTenGjBWB1uY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+A couple of remarks if you will.
 
-On Tue, Jul 30, 2019 at 09:00:01PM +0000, Philippe Schenker wrote:
-> On Tue, 2019-07-30 at 19:10 +0100, Mark Brown wrote:
-> > On Tue, Jul 30, 2019 at 07:30:04PM +0200, Philippe Schenker wrote:
+First, we don't know which case is the majority at this point.  For
+now, there is one example of each, but it may very well turn out that
+the SK Hynix BC501 above needs to be quirked.
 
-> > > This adds the possibility to enable a fixed-regulator with a clock.
-
-> > Why?  What does the hardware which makes this make sense look like?
-
-> Tomorrow I can provide some schematics if needed. But its just a simple
-> switch that is switched by a clock (on when clock is on and off when
-> clock is off). This clock is the RGMII 50MHz clock for the ethernet
-> PHY.
-
-So it's not switching with the clock, the circuit somehow keeps the
-switch latched?
-
-> Why is a regulator even needed?
-> - On power up of the PHY there is a huge time I have to wait for
-> voltage rail to settle. In the range of 100ms.
-> - Because there is a switch in the circuit I abstract it with a
-> regulator-fixed in devicetree to make use of the startup-delay.
-> - This regulator/switch is enabled with a clock. So to be able to use
-> the startup delay I need an enable-by-clock on regulator-fixed.
-
-It does feel like it might be simpler to just handle this as a quirk in
-the PHY or ethernet driver, this feels like an awful lot of work to
-add a sleep on what's probably only going to ever be one system.
-
-> Why do I think this should be in core?
-> - Normally this task is done with gpio that is already in regulator-
-> core.
-> - Because that is already there I added the functionality for enabled-
-> by-clock-functionality.
-> - I thought of creating a new regulator-clock driver but that would
-> hold a lot of code duplication from regulator-fixed.
-
-Hopefully not a *lot* of duplication.  The GPIOs are handled in the core
-because they're really common and used by many regulator devices, the
-same will I hope not be true for clocks.
-
-> Why is this a good Idea at all?
-> - Well I'm here for the software part and should just support our
-> hardware. If that is a good Idea at all I don't know, for sure it is
-> not a solution that is from some school-book. But I tried it and
-> measured it out and it seems to work pretty fine.
-> - The reason behind all of that is limited GPIO availability from the
-> iMX6ULL.
-
-I guess my question here is what the trip through the regulator API buys
-us - it's a bit of a sledgehammer to crack a nut thing.
-
---TdMwOTenGjBWB1uY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1CBtcACgkQJNaLcl1U
-h9BslQf/aeF1Faxrh/xk/9g7IdzY8k5d73wxX6BrfKWrHMJNi4YHOUw4uCeHs/kh
-W5z5AoEaqzPNIxENappg2KULLrNNMqtXqArS0TXeaqLvm0u1zXuAYVDxXzQ+S6R1
-CH1EyZbHb7e56AKunLAfrxrOVy/NS0jMGIGjLslrxJYCwA5BAJwkGlTdK358u7OG
-UrrDOjoLxQxDZBzbnx0+BtlNkJoaPgjXNTSYuQRekdN19vG3+7s8/cOil6K7dF+d
-tCM6+yiI/32YVHvOlrdiSeYW3iaHqK3DoUhETPUCiEu3W3FYeB1hT35uiFxKyn8J
-KCaHwVksAVm6z6O0840d8QSoPJDPoA==
-=HHd2
------END PGP SIGNATURE-----
-
---TdMwOTenGjBWB1uY--
+Second, the reference here really is 5.2, so if there are any systems
+that are not better off with 5.3-rc than they were with 5.2, well, we
+have not made progress.  However, if there are systems that are worse
+off with 5.3, that's bad.  In the face of the latest findings the only
+way to avoid that is to be backwards compatible with 5.2 and that's
+where my patch is going.  That cannot be achieved by quirking all
+cases that are reported as "bad", because there still may be
+unreported ones.
