@@ -2,136 +2,141 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D58AC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5C7C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36AF20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:10:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564614654;
-	bh=0NJ9o0ey7v5PuIXGAj44F6vSbzs50X/z5WB6i2CfyRk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=f0rbvJZzf98hDqrPBpWr5om3ZvLHOFBsDUtnc1aJgJv9MlPDGP70XYwD9GRzFkA4h
-	 6cFrQN6jBovPhFXzN9adOaQUQpCcPCpuG1ocvmqM59MhghTN3YZNfbNlexkPkf/zIC
-	 IG3lYNbBwztizzBTZ/syvVEauffBuOTRrcJOVzn0=
+	by mail.kernel.org (Postfix) with ESMTP id 907FD20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730687AbfGaXKx (ORCPT
+        id S1729847AbfGaXRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:10:53 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40849 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfGaXKu (ORCPT
+        Wed, 31 Jul 2019 19:17:23 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35073 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaXRX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:10:50 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l15so14775627oth.7;
-        Wed, 31 Jul 2019 16:10:49 -0700 (PDT)
+        Wed, 31 Jul 2019 19:17:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j19so33552435otq.2;
+        Wed, 31 Jul 2019 16:17:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8l1uqGOVO/FuCTz/Db7pciz7jZIb+8ZYxFrfQmQPjZo=;
-        b=dJzj/nPJEkpn+z1sYfGw1w+DsSe86+WBHXwVMdFJ2fiU5X1qhyT4SnZGtCiM5qyuvZ
-         whnBZQFg7YTLKIW++b+u1ybm2M3YXlebx1//wP720Dn0VOQY2+yc9uIGuCcqvjqOiJDo
-         rwtbo3F7+0NcGSdcMqKSkms+wsB13JShoLKj68teYKvEv1LVTMfaauqtJC0Ih/kPpUSH
-         sI8e4p/dt65bUdxBYL9UCeQdj1aP7NBCd3DgQcS2qDephmcbCwH0gl07h9ID54L2I9Yh
-         EE+WW7hvp+vNkf0pG2wFlfWx9fxCccMtvkIVFE6RuRj+8hcVLxdWT79HHkHoF4mZUVGA
-         1lJQ==
-X-Gm-Message-State: APjAAAVniAFce/UiAgg+zzg8OMJj6YspETv4RR/lFHbKrXq9OESh7AlL
-        4aKzS2Fai8287Uf2/g/A5zqZju+k3lbR2QiM7K8=
-X-Google-Smtp-Source: APXvYqx6yAMYqPQr/poKUiAMReBVpDduzbzTS2NkJNMqF48zA5VI//M+F2qpvLYX66Uu8WNqNf+61vhbEHDBc9sW45k=
-X-Received: by 2002:a9d:6b96:: with SMTP id b22mr24345908otq.262.1564614649426;
- Wed, 31 Jul 2019 16:10:49 -0700 (PDT)
+        bh=kSejrbwgUdMQ99bQrxJUA8zIPWxPSd8aucGAjk9aCgY=;
+        b=bH+8O8VJFaTCmEBvljLo0b/Qv1bkCQxEdcJeke7+zSZYcmJ4Krfc4rsOKoruhvMIwY
+         ybvjRmTUUkzTlrhhNp/bVgTMpxy3NgITtJ5qvYriP5gEbIw9byPMqHi/Q7scRSIlQ8W2
+         rzUJFPAzFtSPfImPz5/lK6uAtayQ6Z0NSXx4JRrL5r1uSzKr2V9SfshmQ+wssK9xBHUN
+         OLZJSh9XY95OxiiQTlGmJyJ5f22nt5cVjois1GLoHzDSWhsBMHYeBJ3Faw1e0szHMNTp
+         UK9+vqeFqERvOAVO9v2loIcjrEyrPCIofTQm0x4/WpfjWbYH7Ra8xEd05jWSSKlh8noC
+         6ZRg==
+X-Gm-Message-State: APjAAAUjd3eGjRG0pXjQv/z6iyaaW4s5PMfLZ3/xmiVWLFwQTLSrogR2
+        6B3N9ehhBT8osIUvOAVqTiXftsimwCs=
+X-Google-Smtp-Source: APXvYqxyTX07lvKBrxanly5ckKsAan9H+TZlg2y5CpeD3cgEC5Jcn0c5YUdLZNDVSjDTfUkOd6URYA==
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr10360425oto.118.1564615041816;
+        Wed, 31 Jul 2019 16:17:21 -0700 (PDT)
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
+        by smtp.gmail.com with ESMTPSA id e78sm24753741oib.50.2019.07.31.16.17.20
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 16:17:21 -0700 (PDT)
+Received: by mail-ot1-f51.google.com with SMTP id o101so72017209ota.8;
+        Wed, 31 Jul 2019 16:17:20 -0700 (PDT)
+X-Received: by 2002:a9d:6d0e:: with SMTP id o14mr55638119otp.205.1564615040807;
+ Wed, 31 Jul 2019 16:17:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher>
- <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com>
- <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com>
-In-Reply-To: <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 1 Aug 2019 01:10:38 +0200
-Message-ID: <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com>
-Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-To:     Tri Vo <trong@android.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
+References: <20190718094902.15562-1-hui.song_1@nxp.com>
+In-Reply-To: <20190718094902.15562-1-hui.song_1@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Wed, 31 Jul 2019 18:17:09 -0500
+X-Gmail-Original-Message-ID: <CADRPPNT3A_1apr3FNjRbQhCHWLqvAQC0Oz8cGbOjNetAF8zghw@mail.gmail.com>
+Message-ID: <CADRPPNT3A_1apr3FNjRbQhCHWLqvAQC0Oz8cGbOjNetAF8zghw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: ls1028a: Fix GPIO work fail.
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 12:59 AM Tri Vo <trong@android.com> wrote:
+On Thu, Jul 18, 2019 at 4:59 AM Hui Song <hui.song_1@nxp.com> wrote:
 >
-> On Wed, Jul 31, 2019 at 3:42 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > On Thursday, August 1, 2019 12:31:16 AM CEST Tri Vo wrote:
-> > > On Wed, Jul 31, 2019 at 3:17 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > > >
-> > > > On Wednesday, July 31, 2019 11:59:32 PM CEST Stephen Boyd wrote:
-> > > > > Quoting Tri Vo (2019-07-31 14:55:14)
-> > > > > > +/**
-> > > > > > + * wakeup_source_sysfs_add - Add wakeup_source attributes to sysfs.
-> > > > > > + * @parent: Device given wakeup source is associated with (or NULL if virtual).
-> > > > > > + * @ws: Wakeup source to be added in sysfs.
-> > > > > > + */
-> > > > > > +int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source *ws)
-> > > > > > +{
-> > > > > > +       struct device *dev;
-> > > > > > +       int id;
-> > > > > > +
-> > > > > > +       id = ida_alloc(&wakeup_ida, GFP_KERNEL);
-> > > >
-> > > > So can anyone remind me why the IDA thing is needed here at all?
-> > >
-> > > IDA is used to generate the directory name ("ws%d", ID) that is unique
-> > > among wakeup_sources. That is what ends up in
-> > > /sys/class/wakeup/ws<ID>/* path.
-> >
-> > That's not my point (see below).
-> >
-> > > > > > +       if (id < 0)
-> > > > > > +               return id;
-> > > > > > +       ws->id = id;
-> > > > > > +
-> > > > > > +       dev = device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
-> > > > > > +                                       wakeup_source_groups, "ws%d",
-> > > > >
-> > > > > I thought the name was going to still be 'wakeupN'?
-> > > >
-> > > > So can't we prefix the wakeup source name with something like "wakeup:" or similar here?
-> > >
-> > > "ws%d" here is the name in the sysfs path rather than the name of the
-> > > wakeup source. Wakeup source name is not altered in this patch.
-> > >
-> >
-> > So why wouldn't something like this suffice:
-> >
-> > dev = device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
-> >                                 wakeup_source_groups, "wakeup:%s", ws->name);
-> >
-> > ?
+
+Change the title to be something like:
+arm64: dts: ls1028a: fix gpio nodes
+
+> From: Song Hui <hui.song_1@nxp.com>
 >
-> ws->name is inherited from the device name. IIUC device names are not
-> guaranteed to be unique. So if different devices with the same name
-> register wakeup sources, there is an error.
+> Add ls1028a device specify compatible.
 
-OK
+Please submit a separate patch to update the device tree binding too.
 
-So I guess the names are retained for backwards compatibility with
-existing user space that may be using them?
+> Make gpio as little-endian deal.
 
-That's kind of fair enough, but having two different identification
-schemes for wakeup sources will end up confusing.
+"Update the nodes to include little-endian property to be consistent
+with the hardware."
+
+>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 7975519..488602b 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -277,33 +277,36 @@
+>                 };
+>
+>                 gpio1: gpio@2300000 {
+> -                       compatible = "fsl,qoriq-gpio";
+> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+>                         reg = <0x0 0x2300000 0x0 0x10000>;
+>                         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+>                         interrupt-controller;
+>                         #interrupt-cells = <2>;
+> +                       little-endian;
+>                 };
+>
+>                 gpio2: gpio@2310000 {
+> -                       compatible = "fsl,qoriq-gpio";
+> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+>                         reg = <0x0 0x2310000 0x0 0x10000>;
+>                         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+>                         interrupt-controller;
+>                         #interrupt-cells = <2>;
+> +                       little-endian;
+>                 };
+>
+>                 gpio3: gpio@2320000 {
+> -                       compatible = "fsl,qoriq-gpio";
+> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+>                         reg = <0x0 0x2320000 0x0 0x10000>;
+>                         interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+>                         interrupt-controller;
+>                         #interrupt-cells = <2>;
+> +                       little-endian;
+>                 };
+>
+>                 usb0: usb@3100000 {
+> --
+> 2.9.5
+>
