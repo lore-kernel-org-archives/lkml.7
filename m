@@ -2,106 +2,80 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50499C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 01:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD6FC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 01:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B39206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 01:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4EB206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 01:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cgTvd0V7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uKiCIlvC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfGaBfL (ORCPT
+        id S1726583AbfGaBgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 21:35:11 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52377 "EHLO ozlabs.org"
+        Tue, 30 Jul 2019 21:36:47 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49258 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726136AbfGaBfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 21:35:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45ywwC3Y7hz9sBF;
-        Wed, 31 Jul 2019 11:35:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564536908;
-        bh=U+0oStk4fqlrdWvDvsNj+synI4I7Bk845MdkuW6gz8g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cgTvd0V72RJXLcMiMMy+1xc2q+q9M260B7zynEfosMmS2Hvp+hlfwuvYRnxUqyM3f
-         dAdVEycR/0Gs2ZDKYJMpFnpzhn0I0LP6h2Vzoql5a9k5yt8mzwqW4Kop9ob2ye/o57
-         wcwHxff9Uln3i3f7IvHfbxKdaSAC8lTT26Zd0IS6M1cgeuitXMA2ICVh1QzbmWyXWW
-         eO7dnEweyay46kA1C+LWPTwcpxWix6LNGpX/EndtUfMTRLSbFXibCx/HYZNtbpA3BL
-         Le6cICwtKtCBlDH64VBVEG61D4qVcYpNzYbPdwOT/u3uKILkI8lkB2yVUDfQ7HWiw+
-         1s0yW4hKc6EbQ==
-Date:   Wed, 31 Jul 2019 11:35:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: linux-next: manual merge of the hwmon-staging tree with the mips
- tree
-Message-ID: <20190731113500.62e2eaef@canb.auug.org.au>
+        id S1726136AbfGaBgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 21:36:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=MbVNcIqleGWDajEIzwbSrkr9UJ2vlKBIQWs7BCgs3Qk=; b=uKiCIlvCjadlgle851de+bSidr
+        L+ClxfKg5jnk5yCPW2X8DH+7FvSUHNPBsCxjts2ILx7hHkhovl3GiFk58BHdK1l1oJ5cuFmLEZfQg
+        JX3N8fTjHfLsWIp1rnCUuB5PKECKrVr+zPJMigo2OjJ40dP2TVA+g7EHsXk5BY80CT24=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hsdXg-0003Cz-DV; Wed, 31 Jul 2019 03:36:36 +0200
+Date:   Wed, 31 Jul 2019 03:36:36 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Tao Ren <taoren@fb.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH net-next 2/2] net: phy: broadcom: add 1000Base-X support
+ for BCM54616S
+Message-ID: <20190731013636.GC25700@lunn.ch>
+References: <20190730002549.86824-1-taoren@fb.com>
+ <CA+h21hq1+E6-ScFx425hXwTPTZHTVZbBuAm7RROFZTBOFvD8vQ@mail.gmail.com>
+ <3987251b-9679-dfbe-6e15-f991c2893bac@fb.com>
+ <CA+h21ho1KOGS3WsNBHzfHkpSyE4k5HTE1tV9wUtnkZhjUZGeUw@mail.gmail.com>
+ <e8f85ef3-1216-8efb-a54d-84426234fe82@fb.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wG+LLzs7SmwXry35m9wBr/0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8f85ef3-1216-8efb-a54d-84426234fe82@fb.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wG+LLzs7SmwXry35m9wBr/0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> The INTF_SEL pins report correct mode (RGMII-Fiber) on my machine,
+> but there are 2 "sub-modes" (1000Base-X and 100Base-FX) and I
+> couldn't find a proper/safe way to auto-detect which "sub-mode" is
+> active. The datasheet just describes instructions to enable a
+> specific mode, but it doesn't say 1000Base-X/100Base-FX mode will be
+> auto-selected. And that's why I came up with the patch to specify
+> 1000Base-X mode.
 
-Hi all,
+Fibre does not perform any sort of auto-negotiation. I assume you have
+an SFP connected? When using PHYLINK, the sfp driver will get the
+supported baud rate from SFP EEPROM to determine what speed could be
+used. However, there is currently no mainline support for having a
+chain MAC-PHY-SFP. For that you need Russells out of tree patches.
 
-Today's linux-next merge of the hwmon-staging tree got a conflict in:
-
-  drivers/hwmon/jz4740-hwmon.c
-
-between commit:
-
-  d202742058b2 ("hwmon: Drop obsolete JZ4740 driver")
-
-from the mips tree and commit:
-
-  8d91bfd06bc1 ("hwmon: Remove dev_err() usage after platform_get_irq()")
-
-from the hwmon-staging tree.
-
-I fixed it up (I just removed the file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/wG+LLzs7SmwXry35m9wBr/0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1A8EQACgkQAVBC80lX
-0Gxpegf7BZV+Ghq5XStYN8z5j0EgygL26AcnGn4DsxJY7bqeSWv8qcZxPw38Enim
-HX4v7jwEgDKDXhQyHSZRUnn/nHAmNmcBGBiwAFo6TDPG36SL46kOyaGlPr8DQACo
-XCUj1SUuwVmoqLP3sGMUH2ftbbYdCJFszo52KJTIhVFpTBBM/aQzE1I3ruUGumqQ
-iU3uDh6glUEHFh5V3b5Bv7hgGI3D+iJ1o7oWIfEvbfzAu9O7VicXq2NXOHH2qacB
-7sxuEm3zPqehcMJJKKegGpp8c6N6I7tDuD8S4EmebG/oenwGAhTvZP73zGjnMXNm
-dSRqNocQ0abXgeR/nX7kovJUddrWlA==
-=yXVO
------END PGP SIGNATURE-----
-
---Sig_/wG+LLzs7SmwXry35m9wBr/0--
+      Andrew
