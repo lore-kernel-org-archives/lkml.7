@@ -4,126 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201B8C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290FDC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F311F20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A01D20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:05:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfGaJFN (ORCPT
+        id S1728356AbfGaJF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:05:13 -0400
-Received: from mail.windriver.com ([147.11.1.11]:41075 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfGaJFN (ORCPT
+        Wed, 31 Jul 2019 05:05:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35630 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfGaJF2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:05:13 -0400
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x6V94fug020339
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Wed, 31 Jul 2019 02:04:41 -0700 (PDT)
-Received: from pek-lpggp2 (128.224.153.75) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.40) with Microsoft SMTP Server id 14.3.468.0; Wed, 31 Jul 2019
- 02:04:40 -0700
-Received: by pek-lpggp2 (Postfix, from userid 20544)    id 34FA0720F9C; Wed, 31
- Jul 2019 17:04:37 +0800 (CST)
-From:   Jiping Ma <jiping.ma2@windriver.com>
-To:     <rostedt@goodmis.org>, <mingo@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, <jiping.ma2@windriver.com>
-Subject: [PATCH] Function stack size and its name mismatch in arm64
-Date:   Wed, 31 Jul 2019 17:04:37 +0800
-Message-ID: <20190731090437.19867-1-jiping.ma2@windriver.com>
-X-Mailer: git-send-email 2.18.1
+        Wed, 31 Jul 2019 05:05:28 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hskY2-0003Hf-Qu; Wed, 31 Jul 2019 09:05:26 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] cifs: remove redundant assignment to variable rc
+Date:   Wed, 31 Jul 2019 10:05:26 +0100
+Message-Id: <20190731090526.27245-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PC of one the frame is matched to the next frame function, rather
-than the function of his frame.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+Variable rc is being initialized with a value that is never read
+and rc is being re-assigned a little later on. The assignment is
+redundant and hence can be removed.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- kernel/trace/trace_stack.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ fs/cifs/smb2pdu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-index 5d16f73898db..ed80b95abf06 100644
---- a/kernel/trace/trace_stack.c
-+++ b/kernel/trace/trace_stack.c
-@@ -40,16 +40,28 @@ static void print_max_stack(void)
- 
- 	pr_emerg("        Depth    Size   Location    (%d entries)\n"
- 			   "        -----    ----   --------\n",
-+#ifdef CONFIG_ARM64
-+			   stack_trace_nr_entries - 1);
-+#else
- 			   stack_trace_nr_entries);
--
-+#endif
-+#ifdef CONFIG_ARM64
-+	for (i = 1; i < stack_trace_nr_entries; i++) {
-+#else
- 	for (i = 0; i < stack_trace_nr_entries; i++) {
-+#endif
- 		if (i + 1 == stack_trace_nr_entries)
- 			size = stack_trace_index[i];
- 		else
- 			size = stack_trace_index[i] - stack_trace_index[i+1];
- 
-+#ifdef CONFIG_ARM64
-+		pr_emerg("%3ld) %8d   %5d   %pS\n", i-1, stack_trace_index[i],
-+				size, (void *)stack_dump_trace[i-1]);
-+#else
- 		pr_emerg("%3ld) %8d   %5d   %pS\n", i, stack_trace_index[i],
- 				size, (void *)stack_dump_trace[i]);
-+#endif
- 	}
- }
- 
-@@ -324,8 +336,11 @@ static int t_show(struct seq_file *m, void *v)
- 		seq_printf(m, "        Depth    Size   Location"
- 			   "    (%d entries)\n"
- 			   "        -----    ----   --------\n",
-+#ifdef CONFIG_ARM64
-+			   stack_trace_nr_entries - 1);
-+#else
- 			   stack_trace_nr_entries);
--
-+#endif
- 		if (!stack_tracer_enabled && !stack_trace_max_size)
- 			print_disabled(m);
- 
-@@ -334,6 +349,10 @@ static int t_show(struct seq_file *m, void *v)
- 
- 	i = *(long *)v;
- 
-+#ifdef CONFIG_ARM64
-+	if (i == 0)
-+		return 0;
-+#endif
- 	if (i >= stack_trace_nr_entries)
- 		return 0;
- 
-@@ -342,9 +361,14 @@ static int t_show(struct seq_file *m, void *v)
- 	else
- 		size = stack_trace_index[i] - stack_trace_index[i+1];
- 
-+#ifdef CONFIG_ARM64
-+	seq_printf(m, "%3ld) %8d   %5d   ", i-1, stack_trace_index[i], size);
-+	trace_lookup_stack(m, i-1);
-+#else
- 	seq_printf(m, "%3ld) %8d   %5d   ", i, stack_trace_index[i], size);
- 
- 	trace_lookup_stack(m, i);
-+#endif
- 
- 	return 0;
- }
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index ee5d74988a9f..a653c429e8dc 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -3617,7 +3617,7 @@ SMB2_read(const unsigned int xid, struct cifs_io_parms *io_parms,
+ 	  unsigned int *nbytes, char **buf, int *buf_type)
+ {
+ 	struct smb_rqst rqst;
+-	int resp_buftype, rc = -EACCES;
++	int resp_buftype, rc;
+ 	struct smb2_read_plain_req *req = NULL;
+ 	struct smb2_read_rsp *rsp = NULL;
+ 	struct kvec iov[1];
 -- 
-2.18.1
+2.20.1
 
