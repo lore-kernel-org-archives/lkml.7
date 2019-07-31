@@ -2,97 +2,94 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9332CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BD0C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2872067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFEB0204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564612079;
+	bh=NtM0VJp7ZYW5WXvNFKc6gk7tzLfsfiMl7jjw07fYd6c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KsHShdFwt5Vq8loFcKw1GUsvKAO9/VGF1/b9Qe2wVpttGG/rogNnWcCGiRywCRCui
+	 ma3gFNKcnOorbS/B23JsbUZauuq4xaQ+0J7m2aYfifvsgQ5ZfrCaPaLL+vtnfx/yN7
+	 2FrkHSdUta0PIX06Eova3TbUPqhaIg/nLpt8zg1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfGaW1m (ORCPT
+        id S1729505AbfGaW16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:27:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33328 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfGaW1m (ORCPT
+        Wed, 31 Jul 2019 18:27:58 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:35570 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfGaW16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:27:42 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hsx3t-00009A-6X; Thu, 01 Aug 2019 00:27:09 +0200
-Date:   Thu, 1 Aug 2019 00:27:08 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jan Kara <jack@suse.cz>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Theodore Tso <tytso@mit.edu>, Julia Cartwright <julia@ni.com>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [patch 2/4] fs/buffer: Move BH_Uptodate_Lock locking into wrapper
- functions
-In-Reply-To: <20190731144639.GG15806@quack2.suse.cz>
-Message-ID: <alpine.DEB.2.21.1908010022180.1788@nanos.tec.linutronix.de>
-References: <20190730112452.871257694@linutronix.de> <20190730120321.285095769@linutronix.de> <20190731144639.GG15806@quack2.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
+        Wed, 31 Jul 2019 18:27:58 -0400
+Received: from X1 (unknown [76.191.170.112])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id BBC45416B;
+        Wed, 31 Jul 2019 22:27:55 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 15:27:53 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        dave.hansen@intel.com, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] fork: Improve error message for corrupted page tables
+Message-Id: <20190731152753.b17d9c4418f4bf6815a27ad8@linux-foundation.org>
+In-Reply-To: <20190730221820.7738-1-sai.praneeth.prakhya@intel.com>
+References: <20190730221820.7738-1-sai.praneeth.prakhya@intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019, Jan Kara wrote:
-> On Tue 30-07-19 13:24:54, Thomas Gleixner wrote:
-> > Bit spinlocks are problematic if PREEMPT_RT is enabled, because they
-> > disable preemption, which is undesired for latency reasons and breaks when
-> > regular spinlocks are taken within the bit_spinlock locked region because
-> > regular spinlocks are converted to 'sleeping spinlocks' on RT. So RT
-> > replaces the bit spinlocks with regular spinlocks to avoid this problem.
-> > 
-> > To avoid ifdeffery at the source level, wrap all BH_Uptodate_Lock bitlock
-> > operations with inline functions, so the spinlock substitution can be done
-> > at one place.
-> > 
-> > Using regular spinlocks can also be enabled for lock debugging purposes so
-> > the lock operations become visible to lockdep.
-> > 
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: "Theodore Ts'o" <tytso@mit.edu>
-> > Cc: Matthew Wilcox <willy@infradead.org>
-> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > Cc: linux-fsdevel@vger.kernel.org
+On Tue, 30 Jul 2019 15:18:20 -0700 Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com> wrote:
+
+> When a user process exits, the kernel cleans up the mm_struct of the user
+> process and during cleanup, check_mm() checks the page tables of the user
+> process for corruption (E.g: unexpected page flags set/cleared). For
+> corrupted page tables, the error message printed by check_mm() isn't very
+> clear as it prints the loop index instead of page table type (E.g: Resident
+> file mapping pages vs Resident shared memory pages). Hence, improve the
+> error message so that it's more informative.
 > 
-> Looks good to me. You can add:
+> Without patch:
+> --------------
+> [  204.836425] mm/pgtable-generic.c:29: bad p4d 0000000089eb4e92(800000025f941467)
+> [  204.836544] BUG: Bad rss-counter state mm:00000000f75895ea idx:0 val:2
+> [  204.836615] BUG: Bad rss-counter state mm:00000000f75895ea idx:1 val:5
+> [  204.836685] BUG: non-zero pgtables_bytes on freeing mm: 20480
 > 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> 
-> BTW, it should be possible to get rid of BH_Uptodate_Lock altogether using
-> bio chaining (which was non-existent when this bh code was written) to make
-> sure IO completion function gets called only once all bios used to fill in
-> / write out the page are done. It would be also more efficient. But I guess
-> that's an interesting cleanup project for some other time...
+> With patch:
+> -----------
+> [   69.815453] mm/pgtable-generic.c:29: bad p4d 0000000084653642(800000025ca37467)
+> [   69.815872] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_FILEPAGES val:2
+> [   69.815962] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_ANONPAGES val:5
+> [   69.816050] BUG: non-zero pgtables_bytes on freeing mm: 20480
 
-While 'possible cleanup' is something which triggers a certain nerve, that
-particular project certainly goes beyond my basic understanding of that
-whole fs/block conglomerate. I rather leave that to people who actually
-have a clue. :)
+Seems useful.
 
-Thanks,
+> --- a/include/linux/mm_types_task.h
+> +++ b/include/linux/mm_types_task.h
+> @@ -44,6 +44,13 @@ enum {
+>  	NR_MM_COUNTERS
+>  };
+>  
+> +static const char * const resident_page_types[NR_MM_COUNTERS] = {
+> +	"MM_FILEPAGES",
+> +	"MM_ANONPAGES",
+> +	"MM_SWAPENTS",
+> +	"MM_SHMEMPAGES",
+> +};
 
-	tglx
-
+But please let's not put this in a header file.  We're asking the
+compiler to put a copy of all of this into every compilation unit which
+includes the header.  Presumably the compiler is smart enough not to
+do that, but it's not good practice.
 
