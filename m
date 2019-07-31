@@ -2,300 +2,80 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AADC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2535C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D889F20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="jJLdKtzI"
+	by mail.kernel.org (Postfix) with ESMTP id C5BCB20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfGaN4k (ORCPT
+        id S1729763AbfGaN6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:56:40 -0400
-Received: from mail-eopbgr730077.outbound.protection.outlook.com ([40.107.73.77]:31520
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727440AbfGaN4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:56:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BxiVYsrT++gwZuqIZU4nmeB9bcVCQPh4cKN558aXUCEv9fz3LGGBSb7AzLuCti2cvU6wBdKL0bEaI8umD021yXTLKeUbe2LWYGKfFWlF0fpuQKTQSSx4Zsazt9Z6ugTlk8NQFW0mQn0Y6CTx1KS/A5AYH7A/WnyTPG0Zotn3ag52A7Gr+WN48XQf9pPpddCzx4mg+eSNJwATXgmCuDJ6I0mhj8aJH4kd9HU7+PPr8EemLaurOa5ASsnjzE4kMzRMfqaHQiDClnsOJkbdzYKQ65WLIJ3kGSeXeh9dsy0xa5wbHSb7SelNHYa3Lqm3DhF/YmFbZjJnGjvIzIhTE9BJGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VD67OJCYb1CiXl4K7jO6AkmPodV4gkuRWNcgIiNZCio=;
- b=mqZpHyKouPFMVkRx4QyXP29fCqcNSHvYxWc07X1WQfLDBI/bx7Ozbyy0SY8N0F3U2RAdMfhLl6pIuM3iQADmZ0bnt7jyk8uN9MUqXVM04i/J5wVnzhd+PL3GPuAD32zjpKksjrNw0IvUP5wv6tBibfxNdCNvf9ZqEnO/2hPX94XhaYpaY5DMOKt/nTTmQvEbceOOTNHqCX7ZtOkeDNM21/HioAbrdssotFX5n68nn4y9BEJb01FOXdJJTI6RPQu9sHw4VuArbG5zh2F+jp5epiEVVupNsEXCu6tOCKofV2XwKha/1F0d0lSiJHqOk8+Gvlpa7Mx1llZNycDpeg9uKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=xilinx.com;dmarc=pass action=none
- header.from=xilinx.com;dkim=pass header.d=xilinx.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VD67OJCYb1CiXl4K7jO6AkmPodV4gkuRWNcgIiNZCio=;
- b=jJLdKtzIqvP3WgEDuIBGkFYwxztOaMB2WuRA47/Dh9+dYMR0drSkGFTiqS3NDGSu0aF9MzJzqMdOgoynKZm/gGAI3H+sa13MuGEQ496fYrgOxVu+0qjBIFBoNvcQCaS9b7Bb1JhZJjqdKlgGyJOA1SlnYQGppAUR2P6EZwlNNPA=
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com (52.132.231.93) by
- CH2PR02MB6037.namprd02.prod.outlook.com (10.255.156.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Wed, 31 Jul 2019 13:56:33 +0000
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::5c58:16c0:d226:4c96]) by CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::5c58:16c0:d226:4c96%2]) with mapi id 15.20.2136.010; Wed, 31 Jul 2019
- 13:56:33 +0000
-From:   Dragan Cvetic <draganc@xilinx.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <dkiernan@xilinx.com>
-Subject: RE: [PATCH V7 00/11] misc: xilinx sd-fec drive
-Thread-Topic: [PATCH V7 00/11] misc: xilinx sd-fec drive
-Thread-Index: AQHVIHtLLdGbOE767U2XbDHU36aibaamNrSAgAA5XPCAAM7egIAAuPAAgD0DyYCAAAih8A==
-Date:   Wed, 31 Jul 2019 13:56:33 +0000
-Message-ID: <CH2PR02MB6359408E8F94AFB745DC273ACBDF0@CH2PR02MB6359.namprd02.prod.outlook.com>
-References: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
- <20190621141553.GA16650@kroah.com>
- <CH2PR02MB635999D7374378CEA096FE72CBE70@CH2PR02MB6359.namprd02.prod.outlook.com>
- <20190622060135.GB26200@kroah.com>
- <CH2PR02MB6359A32E03E920AE5EEB7324CBE60@CH2PR02MB6359.namprd02.prod.outlook.com>
- <20190731124853.GA4905@kroah.com>
-In-Reply-To: <20190731124853.GA4905@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=draganc@xilinx.com; 
-x-originating-ip: [149.199.80.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4a9fc310-f55b-4dce-fd0f-08d715bee5a7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6037;
-x-ms-traffictypediagnostic: CH2PR02MB6037:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <CH2PR02MB603793FF989CABE88DC1C2BDCBDF0@CH2PR02MB6037.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 011579F31F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(199004)(189003)(13464003)(8936002)(446003)(229853002)(86362001)(55016002)(52536014)(6506007)(25786009)(14454004)(53936002)(11346002)(256004)(186003)(26005)(53546011)(6436002)(486006)(4326008)(476003)(2906002)(14444005)(5660300002)(66066001)(81166006)(8676002)(81156014)(7736002)(7696005)(66946007)(66476007)(9686003)(54906003)(71200400001)(966005)(3846002)(107886003)(99286004)(498600001)(305945005)(6916009)(64756008)(6246003)(71190400001)(68736007)(74316002)(6306002)(76116006)(66556008)(66446008)(6116002)(76176011)(33656002)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6037;H:CH2PR02MB6359.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: N1M1yXFvG/seXH0zU/E4TXnZsx9RYKun19gPHTn5YwiI/B375847EgxZ3OlH/wxwW95GQoQWvWu652CzLhtJYX9jTPZ0q2wQyHW+dYUISsi/maNttH8w1fcElh0yTFCICNw39Av0Hk2iUZ22Etgcc0xXgV4ivFQ73cggrBapMnZcyX+zN9JQFuA+/AugEKI96O5TsSglMFlIwRaPB3kKYHCnjB+QKimdicQBYibK1vYYkSKusqMFw/tu00q3G14wyq+l47ZSvzg8tP7LhquTwQNvsMmCrQELy1BnTRJnCS5Xuldd+mN67K7FUh2h2I1ni95w6DB0yACQrkP2ry32OLkZDhg638j0qsqwb0ZvAXHFvBwVp0KbPE+MCyn0PH6LiVqcsZ1d7fZPsabkZmahmPcL75Gwf+JjPypUA+ioSVk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 31 Jul 2019 09:58:01 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:51259 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728938AbfGaN6B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:58:01 -0400
+Received: by mail-io1-f72.google.com with SMTP id c5so74883818iom.18
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 06:58:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=FEF26j1D9ZvC1FOg/2C+u2C5uOIP0wZpzYnp05nqnRo=;
+        b=NU4uPfXf1gnj4nrA5uyQpqj2kdaDA6fg1hm/CJc8Fj9GvPHCsqJbaPcsYTI2QV9xhf
+         HUNq4cc9qL6j87BVGRKnnBHk3tjPMZzbRaDbow8vrVQQcteuKfStFMZ7We/K1zXF93B5
+         jQZ416llyysiRQE8uhy14/r4/m4T7N7zZXDnjQ6ZLgLbmVuuXxkMBkX3K+leNAW3zN9J
+         N4biUV57SlEmAklJ2qmgLpfZay8js6vsbI9rbvE+kjmfhznyFIBcbVkohsmjGt5H635K
+         J9/Uqh+vKQufe/udlol3ZuqAZTLdRBEOYpyniPCkRAKGo9LXPMolujzJL+T12H6uQIRp
+         7Ydw==
+X-Gm-Message-State: APjAAAVnlM/HtipS5VyOSZiJswEMwxLhDeA5Se/d2ZYzqLlisIlV9GRn
+        kfTZC7/rC2IRYCFnkwrGu+7oLgk9PQlMEAUYFfnxZf00KcUg
+X-Google-Smtp-Source: APXvYqx4v+2B+tDfNufu/8jabqDh174TMHU9YBPhF6J18gSgAFOcH5r9L9/kPu54zg3r+7UAdLNDk/GmtNOPv60wADHFIKWDIzGs
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a9fc310-f55b-4dce-fd0f-08d715bee5a7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 13:56:33.5127
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: draganc@xilinx.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6037
+X-Received: by 2002:a02:230a:: with SMTP id u10mr43840113jau.117.1564581480591;
+ Wed, 31 Jul 2019 06:58:00 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 06:58:00 -0700
+In-Reply-To: <000000000000de000a058e9025db@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005f7805058efa8333@google.com>
+Subject: Re: KASAN: use-after-free Read in release_sock
+From:   syzbot <syzbot+107429d62fb1d293602f@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-hams@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has bisected this bug to:
 
+commit c8c8218ec5af5d2598381883acbefbf604e56b5e
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu Jun 27 21:30:58 2019 +0000
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Wednesday 31 July 2019 13:49
-> To: Dragan Cvetic <draganc@xilinx.com>
-> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
-sts.infradead.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
-l.org; Derek Kiernan <dkiernan@xilinx.com>
-> Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
->=20
-> On Sat, Jun 22, 2019 at 05:54:04PM +0000, Dragan Cvetic wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > Sent: Saturday 22 June 2019 07:02
-> > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kerne=
-l@lists.infradead.org; robh+dt@kernel.org;
-> > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.k=
-ernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
-> > >
-> > > On Fri, Jun 21, 2019 at 05:49:45PM +0000, Dragan Cvetic wrote:
-> > > >
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > > > Sent: Friday 21 June 2019 15:16
-> > > > > To: Dragan Cvetic <draganc@xilinx.com>
-> > > > > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-k=
-ernel@lists.infradead.org; robh+dt@kernel.org;
-> > > > > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vg=
-er.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > > > > Subject: Re: [PATCH V7 00/11] misc: xilinx sd-fec drive
-> > > > >
-> > > > > On Tue, Jun 11, 2019 at 06:29:34PM +0100, Dragan Cvetic wrote:
-> > > > > > This patchset is adding the full Soft Decision Forward Error
-> > > > > > Correction (SD-FEC) driver implementation, driver DT binding an=
-d
-> > > > > > driver documentation.
-> > > > > >
-> > > > > > Forward Error Correction (FEC) codes such as Low Density Parity
-> > > > > > Check (LDPC) and turbo codes provide a means to control errors =
-in
-> > > > > > data transmissions over unreliable or noisy communication
-> > > > > > channels. The SD-FEC Integrated Block is an optimized block for
-> > > > > > soft-decision decoding of these codes. Fixed turbo codes are
-> > > > > > supported directly, whereas custom and standardized LDPC codes
-> > > > > > are supported through the ability to specify the parity check
-> > > > > > matrix through an AXI4-Lite bus or using the optional programma=
-ble
-> > > > > > (PL)-based support logic. For the further information see
-> > > > > > https://www.xilinx.com/support/documentation/ip_documentation/
-> > > > > > sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
-> > > > > >
-> > > > > > This driver is a platform device driver which supports SDFEC16
-> > > > > > (16nm) IP. SD-FEC driver supports LDPC decoding and encoding an=
-d
-> > > > > > Turbo code decoding. LDPC codes can be specified on
-> > > > > > a codeword-by-codeword basis, also a custom LDPC code can be us=
-ed.
-> > > > > >
-> > > > > > The SD-FEC driver exposes a char device interface and supports
-> > > > > > file operations: open(), close(), poll() and ioctl(). The drive=
-r
-> > > > > > allows only one usage of the device, open() limits the number o=
-f
-> > > > > > driver instances. The driver also utilize Common Clock Framewor=
-k
-> > > > > > (CCF).
-> > > > > >
-> > > > > > The control and monitoring is supported over ioctl system call.
-> > > > > > The features supported by ioctl():
-> > > > > > - enable or disable data pipes to/from device
-> > > > > > - configure the FEC algorithm parameters
-> > > > > > - set the order of data
-> > > > > > - provide a control of a SDFEC bypass option
-> > > > > > - activates/deactivates SD-FEC
-> > > > > > - collect and provide statistical data
-> > > > > > - enable/disable interrupt mode
-> > > > >
-> > > > > Is there any userspace tool that talks to this device using these=
- custom
-> > > > > ioctls yet?
-> > > > >
-> > > > Tools no, but could be the customer who is using the driver.
-> > >
-> > > I don't understand this.  Who has written code to talk to these
-> > > special ioctls from userspace?  Is there a pointer to that code
-> > > anywhere?
-> > >
-> >
-> > The code which use this driver are written by the driver maintainers
-> > they are examples APP and test code which are not public.
->=20
-> So, no open code is talking to this one specific driver?  And you have
-> run this past your lawyers?  Please go talk to them about this and see
-> what they say (hint, creating a custom ioctl that only you use is a
-> "fun" legal area...)
+     netrom: fix a memory leak in nr_rx_frame()
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13b52242600000
+start commit:   629f8205 Merge tag 'for-linus-20190730' of git://git.kerne..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=10752242600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17b52242600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4c7b914a2680c9c6
+dashboard link: https://syzkaller.appspot.com/bug?extid=107429d62fb1d293602f
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a7c8dc600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1498cfa2600000
 
-Greg,
-this driver and all example code APP will be public and open source=20
-fully. In that sense this code is same as any other driver.=20
+Reported-by: syzbot+107429d62fb1d293602f@syzkaller.appspotmail.com
+Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
 
-
->=20
-> > > > > Doing a one-off ioctl api is always a risky thing, you are pretty=
- much
-> > > > > just creating brand new system calls for one piece of hardware.
-> > > > >
-> > > >
-> > > > Why is that wrong and what is the risk?
-> > >
-> > > You now have custom syscalls for one specfic piece of hardware that y=
-ou
-> > > now have to maintain working properly for the next 40+ years.  You ha=
-ve
-> > > to make sure those calls are correct and that this is the correct api=
- to
-> > > talk to this hardware.
-> >
-> > This is very specific HW, it's high speed Forward Error Correction HW.
->=20
-> I have no idea what that actually means.
->=20
-> What is "Forward Error Correction"?  What does it do?  Is this a network
-> device?  Video device?  Random black box that sends radio waves?
->=20
-> Is there no other in-kernel driver that does much the same type of
-> thing?  What "class" of driver would this be?
-
-This is the RF data communication device, type "misc" driver.
-
->=20
-> > > > What would you propose?
-> > > > Definitely, I have to read about this.
-> > >
-> > > What is this hardware and what is it used for?  Who will be talking t=
-o
-> >
-> > The Soft-Decision Forward Error Correction (SD-FEC) integrated block
-> > supports Low Density Parity Check (LDPC) decoding and encoding and
-> > Turbo code decoding.
->=20
-> I still don't understand what this means.
->=20
-> > SD-FEC use case is in high data rate applications such as 4G, 5G and
-> > DOCSIS3.1 Cable Access.  A high performance SD-FEC (i.e. >1Gbps), is a
-> > block used to enable these systems to function under non-ideal
-> > environments.
->=20
-> Nor do I understand what this is either.  Do you have a pointer to this
-> hardware somewhere online that might describe it better?  Given that I
-> have no clue, odds are others do not know what it is either.
-
-https://www.xilinx.com/support/documentation/ip_documentation/sd_fec/v1_1/p=
-g256-sdfec-integrated-block.pdf
-
->=20
-> > > it from userspace?  What userspace workload uses it?  What tools need=
- to
-> >
-> > There will be APP which configures the HW for the use cases listed abov=
-e.
->=20
-> What exactly are these use cases?
->=20
-> Where is the application?  Who runs it?  Is it already in a distro
-> somewhere?  Who is going to distribute it?  Who is going to support it?
-> Is it only for sale?  What is the license of it?
-
-According to marketing people here there are about 72 individual programs=20
-spanning probably ~40 different customers. These are possible users
-and APP will be created and run by them.
-Driver will be supported by us, APP by customers with our technical support=
-.
-Is it for sale? Xilinx gives away all drivers and examples for free, it's u=
-p to the
-Customer what they do with it and they meet open source licence legal requi=
-rements.
-
-Greg,
-I'll be out of the office from Friday for a couple of weeks, and I'll try m=
-y best to respond on your replies after that.
-
->=20
-> thanks,
->=20
-> greg k-h
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
