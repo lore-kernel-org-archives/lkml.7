@@ -2,374 +2,226 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6076C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AEFC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A26206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD69206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:30:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TnSg7r9Z"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v67e0bbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbfGaP3U (ORCPT
+        id S1728340AbfGaPaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:29:20 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56714 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726665AbfGaP3Q (ORCPT
+        Wed, 31 Jul 2019 11:30:25 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42145 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbfGaPaZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:29:16 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6VFSsMd122851;
-        Wed, 31 Jul 2019 10:28:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564586934;
-        bh=wM4WLBybjiGAeVXDZMD/wXoKWRVlS1GPBkndflafC7U=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TnSg7r9ZhQz29LFvz9ZmhyoAOtdtmAJWuJbtGM/C/TBd/lzKxaaHajEPOVSWDVVY7
-         dnSr9RoDB+9ldgPJdj6N9FjJdoI2yuD+0HAZIPid113XSyvllK2/+xhbV8CljjG+ac
-         fotLHSDQEsEv/td/Byd+Zs4L7Ps9gOm8MI5m/kEY=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6VFSs3o118844
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 31 Jul 2019 10:28:54 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 31
- Jul 2019 10:28:54 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 31 Jul 2019 10:28:54 -0500
-Received: from [10.250.88.190] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6VFSqO8127389;
-        Wed, 31 Jul 2019 10:28:52 -0500
-Subject: Re: [RFC PATCH 2/2] soc: ti: Add Support for the TI Page-based
- Address Translator (PAT)
-To:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, William Mills <wmills@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-CC:     <devicetree@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-media@vger.kernel.org>, <linaro-mm-sig@lists.linaro.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190607193523.25700-1-afd@ti.com>
- <20190607193523.25700-3-afd@ti.com>
- <28dea95d-8ae6-431c-ca88-149972d26502@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <1ecfd453-ecbd-cbea-605d-759ba329dd19@ti.com>
-Date:   Wed, 31 Jul 2019 11:28:52 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 11:30:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x1so20264697wrr.9
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bcjRCxVJvUuH6o4mR9oi0ph2KHZ3JtuvHfGJLyd+Vxo=;
+        b=v67e0bbhh5erh8euEd/f9MMmmgZjfkdw/uwHPjgds0C6BEQF5LAiI9ySbc9ASvhdzk
+         xu97HRuYT40GWmeA14gf2NKzJeMVKbCrsCWqxK6JjagLoo9RaUc/yRXTQV8IbzCcLHo2
+         Nmi466SNxFtYIpaoUjZaTEl5l5HoNqFRSWKCbYpY/OEiHzvU6H4shqmiP4Pf09jRl0R5
+         OUsBzqIPxKM3pdRg2XxNU/5z8OXDPwvEDApjik/JWImhMrE6vJEeYhqFxTkyqQHobgta
+         FSqgPmMx+iE9dRaMQlFPKS32soZUmckdCxJXylk86BVILfoU5mD5TeZCAyaemvcuOgE7
+         9Ybw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bcjRCxVJvUuH6o4mR9oi0ph2KHZ3JtuvHfGJLyd+Vxo=;
+        b=DilQ5pVPWTXTVEp1g6Ct9886MI+StKfPZlskk2l1fGiaNosfkfwgiJlm3vEC/pRsie
+         +QEIgKOcxaWKpB6RYNCo/xetYlDfDaax55Qtjgdbbm0YtWlV9izUfgSeiFBVzQz74m+c
+         DhVRce21VjNz9KtYBdFLaMN2F3tUgW8sMjmvCLXpt8kP/ETCgwGgTSLugTgEm0TmouWA
+         FAgbbjIFAEbI5RV5qT0mmYs7Pcr+HFhw8tUwYnLTiE0LU5Ays62ngs0Aw4j2ja4OAuYz
+         PVXdKZw7mj2s7eC6Fop7bNJJjeYy79chKfIwWmJ1UaJ+zjokN8e4pAIQDW/UI5acqTcv
+         RHrA==
+X-Gm-Message-State: APjAAAVYZ6ce03YMbG7AZ+Nx1tw3Agb5lwchKYGmarbrALKpupsB+Atg
+        xTTpUUQ8+TnsSEtT9zrE0zxVs8LYNOpaxdQnNv2EFQ==
+X-Google-Smtp-Source: APXvYqx26M8uBW6aKSEXqRRb2REVY+ufeceS13bWV/b0Nzs7V+Sv7Kl/VooGympZLSKR/ZZOlBoEsDX3lG/P4bUkJdk=
+X-Received: by 2002:a5d:518f:: with SMTP id k15mr76209607wrv.321.1564587023225;
+ Wed, 31 Jul 2019 08:30:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <28dea95d-8ae6-431c-ca88-149972d26502@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190729094316.GN22106@shao2-debian> <538637ba-f4e3-0dfa-cb13-3aee51c659bd@redhat.com>
+In-Reply-To: <538637ba-f4e3-0dfa-cb13-3aee51c659bd@redhat.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Wed, 31 Jul 2019 17:30:10 +0200
+Message-ID: <CAG_fn=VBGE=YvkZX0C45qu29zqfvLMP10w_owj4vfFxPcK5iow@mail.gmail.com>
+Subject: Re: [mm] 6471384af2: kernel_BUG_at_mm/slub.c
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Christoph Lameter <cl@linux.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sandeep Patil <sspatil@android.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@01.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/19 5:07 AM, Tero Kristo wrote:
-> On 07/06/2019 22:35, Andrew F. Davis wrote:
->> This patch adds a driver for the Page-based Address Translator (PAT)
->> present on various TI SoCs. A PAT device performs address translation
->> using tables stored in an internal SRAM. Each PAT supports a set number
->> of pages, each occupying a programmable 4KB, 16KB, 64KB, or 1MB of
->> addresses in a window for which an incoming transaction will be
->> translated.
->>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> ---
->>   drivers/soc/ti/Kconfig      |   9 +
->>   drivers/soc/ti/Makefile     |   1 +
->>   drivers/soc/ti/ti-pat.c     | 569 ++++++++++++++++++++++++++++++++++++
->>   include/uapi/linux/ti-pat.h |  44 +++
->>   4 files changed, 623 insertions(+)
->>   create mode 100644 drivers/soc/ti/ti-pat.c
->>   create mode 100644 include/uapi/linux/ti-pat.h
->>
->> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
->> index f0be35d3dcba..b838ae74d01f 100644
->> --- a/drivers/soc/ti/Kconfig
->> +++ b/drivers/soc/ti/Kconfig
->> @@ -86,4 +86,13 @@ config TI_SCI_INTA_MSI_DOMAIN
->>       help
->>         Driver to enable Interrupt Aggregator specific MSI Domain.
->>   +config TI_PAT
->> +    tristate "TI PAT DMA-BUF exporter"
->> +    select REGMAP
-> 
-> What is the reasoning for using regmap for internal register access? Why
-> not just use direct readl/writel for everything? To me it seems this is
-> only used during probe time also...
-> 
+On Wed, Jul 31, 2019 at 12:39 AM Laura Abbott <labbott@redhat.com> wrote:
+>
+> On 7/29/19 5:43 AM, kernel test robot wrote:
+> > FYI, we noticed the following commit (built with gcc-7):
+> >
+> > commit: 6471384af2a6530696fc0203bafe4de41a23c9ef ("mm: security: introd=
+uce init_on_alloc=3D1 and init_on_free=3D1 boot options")
+> > https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux=
+.git master
+> >
+> > in testcase: trinity
+> > with following parameters:
+> >
+> >       runtime: 300s
+> >
+> > test-description: Trinity is a linux system call fuzz tester.
+> > test-url: http://codemonkey.org.uk/projects/trinity/
+> >
+> >
+> > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2=
+ -m 8G
+> >
+> > caused below changes (please refer to attached dmesg/kmsg for entire lo=
+g/backtrace):
+> >
+> >
+> > +------------------------------------------+------------+------------+
+> > |                                          | ba5c5e4a5d | 6471384af2 |
+> > +------------------------------------------+------------+------------+
+> > | boot_successes                           | 8          | 0          |
+> > | boot_failures                            | 2          | 15         |
+> > | invoked_oom-killer:gfp_mask=3D0x           | 1          |            =
+|
+> > | Mem-Info                                 | 1          |            |
+> > | kernel_BUG_at_security/keys/keyring.c    | 1          |            |
+> > | invalid_opcode:#[##]                     | 1          | 15         |
+> > | RIP:__key_link_begin                     | 1          |            |
+> > | Kernel_panic-not_syncing:Fatal_exception | 1          | 15         |
+> > | kernel_BUG_at_mm/slub.c                  | 0          | 15         |
+> > | RIP:kfree                                | 0          | 15         |
+> > +------------------------------------------+------------+------------+
+> >
+> >
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kernel test robot <rong.a.chen@intel.com>
+> >
+> >
+> > [    4.478342] kernel BUG at mm/slub.c:306!
+> > [    4.482437] invalid opcode: 0000 [#1] PREEMPT PTI
+> > [    4.485750] CPU: 0 PID: 0 Comm: swapper Not tainted 5.2.0-05754-g647=
+1384a #4
+> > [    4.490635] RIP: 0010:kfree+0x58a/0x5c0
+> > [    4.493679] Code: 48 83 05 78 37 51 02 01 0f 0b 48 83 05 7e 37 51 02=
+ 01 48 83 05 7e 37 51 02 01 48 83 05 7e 37 51 02 01 48 83 05 d6 37 51 02 01=
+ <0f> 0b 48 83 05 d4 37 51 02 01 48 83 05 d4 37 51 02 01 48 83 05 d4
+> > [    4.506827] RSP: 0000:ffffffff82603d90 EFLAGS: 00010002
+> > [    4.510475] RAX: ffff8c3976c04320 RBX: ffff8c3976c04300 RCX: 0000000=
+000000000
+> > [    4.515420] RDX: ffff8c3976c04300 RSI: 0000000000000000 RDI: ffff8c3=
+976c04320
+> > [    4.520331] RBP: ffffffff82603db8 R08: 0000000000000000 R09: 0000000=
+000000000
+> > [    4.525288] R10: ffff8c3976c04320 R11: ffffffff8289e1e0 R12: ffffd52=
+cc8db0100
+> > [    4.530180] R13: ffff8c3976c01a00 R14: ffffffff810f10d4 R15: ffff8c3=
+976c04300
+> > [    4.535079] FS:  0000000000000000(0000) GS:ffffffff8266b000(0000) kn=
+lGS:0000000000000000
+> > [    4.540628] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    4.544593] CR2: ffff8c397ffff000 CR3: 0000000125020000 CR4: 0000000=
+0000406b0
+> > [    4.549558] Call Trace:
+> > [    4.551266]  apply_wqattrs_prepare+0x154/0x280
+> > [    4.554357]  apply_workqueue_attrs_locked+0x4e/0xe0
+> > [    4.557728]  apply_workqueue_attrs+0x36/0x60
+> > [    4.560654]  alloc_workqueue+0x25a/0x6d0
+> > [    4.563381]  ? kmem_cache_alloc_trace+0x1e3/0x500
+> > [    4.566628]  ? __mutex_unlock_slowpath+0x44/0x3f0
+> > [    4.569875]  workqueue_init_early+0x246/0x348
+> > [    4.573025]  start_kernel+0x3c7/0x7ec
+> > [    4.575558]  x86_64_start_reservations+0x40/0x49
+> > [    4.578738]  x86_64_start_kernel+0xda/0xe4
+> > [    4.581600]  secondary_startup_64+0xb6/0xc0
+> > [    4.584473] Modules linked in:
+> > [    4.586620] ---[ end trace f67eb9af4d8d492b ]---
+>
+> I think this is catching an edge case with the freelist walking code
+> in slab_free_freelist_hook. If we're not doing a bulk free,
+> getting the free pointer from the object is going to be bogus so
+> there's a chance it could trigger the bug in set_freepointer even
+> if we don't actually care about it since it's going to get
+> overwritten when we actually free. It's probably more robust
+> to make sure we're terminating it with NULL. Lightly tested:
+I see, my understanding was that it's safe to write the value we've
+previously read with get_freepointer().
+But chances are that the random data from this pointer simply matches
+the object pointer.
 
-There are two register spaces, the configuration space, and the actual
-translation table data. I use regmap for all the configuration space.
-Direct readl/writel would also work, but I prefer regmap as it lets me
-work with field names vs using masks and shifts, even if it adds a
-little extra code in tables at the top.
+> diff --git a/mm/slub.c b/mm/slub.c
+> index e6c030e47364..8834563cdb4b 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -1432,7 +1432,9 @@ static inline bool slab_free_freelist_hook(struct k=
+mem_cache *s,
+>         void *old_tail =3D *tail ? *tail : *head;
+>         int rsize;
+>
+> -       if (slab_want_init_on_free(s))
+> +       if (slab_want_init_on_free(s)) {
+> +               void *p =3D NULL;
+> +
+>                 do {
+>                         object =3D next;
+>                         next =3D get_freepointer(s, object);
+> @@ -1445,8 +1447,10 @@ static inline bool slab_free_freelist_hook(struct =
+kmem_cache *s,
+>                                                            : 0;
+>                         memset((char *)object + s->inuse, 0,
+>                                s->size - s->inuse - rsize);
+> -                       set_freepointer(s, object, next);
+> +                       set_freepointer(s, object, p);
+> +                       p =3D object;
+>                 } while (object !=3D old_tail);
+> +       }
+>
+>   /*
+>    * Compiler cannot detect this function can be removed if slab_free_hoo=
+k()
+>
+This one looks good, care to send a patch? Otherwise I can do that for you.
 
->> +    help
->> +      Driver for TI Page-based Address Translator (PAT). This driver
->> +      provides the an API allowing the remapping of a non-contiguous
->> +      DMA-BUF into a contiguous one that is sutable for devices needing
->> +      coniguous memory.
-> 
-> Minor typo: contiguous.
-> 
+--=20
+Alexander Potapenko
+Software Engineer
 
-ACK
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
 
->> +
->>   endif # SOC_TI
->> diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
->> index b3868d392d4f..1369642b40c3 100644
->> --- a/drivers/soc/ti/Makefile
->> +++ b/drivers/soc/ti/Makefile
->> @@ -9,3 +9,4 @@ obj-$(CONFIG_AMX3_PM)            += pm33xx.o
->>   obj-$(CONFIG_WKUP_M3_IPC)        += wkup_m3_ipc.o
->>   obj-$(CONFIG_TI_SCI_PM_DOMAINS)        += ti_sci_pm_domains.o
->>   obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)    += ti_sci_inta_msi.o
->> +obj-$(CONFIG_TI_PAT)            += ti-pat.o
->> diff --git a/drivers/soc/ti/ti-pat.c b/drivers/soc/ti/ti-pat.c
->> new file mode 100644
->> index 000000000000..7359ea0f7ccf
->> --- /dev/null
->> +++ b/drivers/soc/ti/ti-pat.c
->> @@ -0,0 +1,569 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * TI PAT mapped DMA-BUF memory re-exporter
->> + *
->> + * Copyright (C) 2018-2019 Texas Instruments Incorporated -
->> http://www.ti.com/
->> + *    Andrew F. Davis <afd@ti.com>
->> + */
->> +
->> +#include <linux/fs.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/uaccess.h>
->> +#include <linux/miscdevice.h>
->> +#include <linux/regmap.h>
->> +#include <linux/dma-buf.h>
->> +#include <linux/genalloc.h>
->> +#include <linux/vmalloc.h>
->> +#include <linux/slab.h>
->> +
->> +#include <linux/ti-pat.h>
->> +
->> +#define TI_PAT_DRIVER_NAME    "ti-pat"
-> 
-> Why do you have a define for this seeing it is only used in single
-> location?
-> 
-
-Just habit when starting a driver, but you are right it is not needed here.
-
->> +
->> +/* TI PAT MMRS registers */
->> +#define TI_PAT_MMRS_PID        0x0 /* Revision Register */
->> +#define TI_PAT_MMRS_CONFIG    0x4 /* Config Register */
->> +#define TI_PAT_MMRS_CONTROL    0x10 /* Control Register */
->> +
->> +/* TI PAT CONTROL register field values */
->> +#define TI_PAT_CONTROL_ARB_MODE_UF    0x0 /* Updates first */
->> +#define TI_PAT_CONTROL_ARB_MODE_RR    0x2 /* Round-robin */
->> +
->> +#define TI_PAT_CONTROL_PAGE_SIZE_4KB    0x0
->> +#define TI_PAT_CONTROL_PAGE_SIZE_16KB    0x1
->> +#define TI_PAT_CONTROL_PAGE_SIZE_64KB    0x2
->> +#define TI_PAT_CONTROL_PAGE_SIZE_1MB    0x3
->> +
->> +static unsigned int ti_pat_page_sizes[] = {
->> +    [TI_PAT_CONTROL_PAGE_SIZE_4KB]  = 4 * 1024,
->> +    [TI_PAT_CONTROL_PAGE_SIZE_16KB] = 16 * 1024,
->> +    [TI_PAT_CONTROL_PAGE_SIZE_64KB] = 64 * 1024,
->> +    [TI_PAT_CONTROL_PAGE_SIZE_1MB]  = 1024 * 1024,
->> +};
->> +
->> +enum ti_pat_mmrs_fields {
->> +    /* Revision */
->> +    F_PID_MAJOR,
->> +    F_PID_MINOR,
->> +
->> +    /* Controls */
->> +    F_CONTROL_ARB_MODE,
->> +    F_CONTROL_PAGE_SIZE,
->> +    F_CONTROL_REPLACE_OID_EN,
->> +    F_CONTROL_EN,
->> +
->> +    /* sentinel */
->> +    F_MAX_FIELDS
->> +};
->> +
->> +static const struct reg_field ti_pat_mmrs_reg_fields[] = {
->> +    /* Revision */
->> +    [F_PID_MAJOR]            = REG_FIELD(TI_PAT_MMRS_PID, 8, 10),
->> +    [F_PID_MINOR]            = REG_FIELD(TI_PAT_MMRS_PID, 0, 5),
->> +    /* Controls */
->> +    [F_CONTROL_ARB_MODE]        = REG_FIELD(TI_PAT_MMRS_CONTROL, 6, 7),
->> +    [F_CONTROL_PAGE_SIZE]        = REG_FIELD(TI_PAT_MMRS_CONTROL, 4, 5),
->> +    [F_CONTROL_REPLACE_OID_EN]    = REG_FIELD(TI_PAT_MMRS_CONTROL, 1,
->> 1),
->> +    [F_CONTROL_EN]            = REG_FIELD(TI_PAT_MMRS_CONTROL, 0, 0),
->> +};
->> +
->> +/**
->> + * struct ti_pat_data - PAT device instance data
->> + * @dev: PAT device structure
->> + * @mdev: misc device
->> + * @mmrs_map: Register map of MMRS region
->> + * @table_base: Base address of TABLE region
-> 
-> Please add kerneldoc comments for all fields.
-> 
-
-Will add.
-
->> + */
->> +struct ti_pat_data {
->> +    struct device *dev;
->> +    struct miscdevice mdev;
->> +    struct regmap *mmrs_map;
->> +    struct regmap_field *mmrs_fields[F_MAX_FIELDS];
->> +    void __iomem *table_base;
->> +    unsigned int page_count;
->> +    unsigned int page_size;
->> +    phys_addr_t window_base;
->> +    struct gen_pool *pool;
->> +};
->> +
-> 
-> Kerneldoc comments for below structs would be also useful, especially
-> for ti_pat_buffer.
-> 
-
-Will add.
-
->> +struct ti_pat_dma_buf_attachment {
->> +    struct device *dev;
->> +    struct sg_table *table;
->> +    struct ti_pat_buffer *buffer;
->> +    struct list_head list;
->> +};
->> +
->> +struct ti_pat_buffer {
->> +    struct ti_pat_data *pat;
->> +    struct dma_buf *i_dma_buf;
->> +    size_t size;
->> +    unsigned long offset;
->> +    struct dma_buf *e_dma_buf;
->> +
->> +    struct dma_buf_attachment *attachment;
->> +    struct sg_table *sgt;
->> +
->> +    struct list_head attachments;
->> +    int map_count;
->> +
->> +    struct mutex lock;
->> +};
->> +
->> +static const struct regmap_config ti_pat_regmap_config = {
->> +    .reg_bits = 32,
->> +    .val_bits = 32,
->> +    .reg_stride = 4,
->> +};
->> +
->> +static int ti_pat_dma_buf_attach(struct dma_buf *dmabuf,
->> +                 struct dma_buf_attachment *attachment)
->> +{
->> +    struct ti_pat_dma_buf_attachment *a;
->> +    struct ti_pat_buffer *buffer = dmabuf->priv;
->> +
->> +    a = kzalloc(sizeof(*a), GFP_KERNEL);
->> +    if (!a)
->> +        return -ENOMEM;
->> +
->> +    a->dev = attachment->dev;
->> +    a->buffer = buffer;
->> +    INIT_LIST_HEAD(&a->list);
->> +
->> +    a->table = kzalloc(sizeof(*a->table), GFP_KERNEL);
->> +    if (!a->table) {
->> +        kfree(a);
->> +        return -ENOMEM;
->> +    }
->> +
->> +    if (sg_alloc_table(a->table, 1, GFP_KERNEL)) {
->> +        kfree(a->table);
->> +        kfree(a);
->> +        return -ENOMEM;
->> +    }
->> +
->> +    sg_set_page(a->table->sgl, pfn_to_page(PFN_DOWN(buffer->offset)),
->> buffer->size, 0);
->> +
->> +    attachment->priv = a;
->> +
->> +    mutex_lock(&buffer->lock);
->> +    /* First time attachment we attach to parent */
->> +    if (list_empty(&buffer->attachments)) {
->> +        buffer->attachment = dma_buf_attach(buffer->i_dma_buf,
->> buffer->pat->dev);
->> +        if (IS_ERR(buffer->attachment)) {
->> +            dev_err(buffer->pat->dev, "Unable to attach to parent
->> DMA-BUF\n");
->> +            mutex_unlock(&buffer->lock);
->> +            kfree(a->table);
->> +            kfree(a);
->> +            return PTR_ERR(buffer->attachment);
->> +        }
->> +    }
->> +    list_add(&a->list, &buffer->attachments);
->> +    mutex_unlock(&buffer->lock);
->> +
->> +    return 0;
->> +}
->> +
->> +static void ti_pat_dma_buf_detatch(struct dma_buf *dmabuf,
->> +                   struct dma_buf_attachment *attachment)
-> 
-> Func name should be ti_pat_dma_buf_detach instead?
-> 
-
-Good catch, will fix.
-
-> Other than that, I can't see anything obvious with my limited experience
-> with dma_buf. Is there a simple way to test this driver btw?
-> 
-
-Simple way? No not really.. What I've been doing is allocating a
-non-contiguous buffer (from system DMA-BUF heaps), writing some test
-pattern to it, using this driver to convert the buffer, then sending the
-new handle to our DSS (display subsystem which cannot handle
-non-contiguous buffers). If all is working the test pattern is displayed
-correctly.
-
-Thanks,
-Andrew
-
-> -Tero
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
