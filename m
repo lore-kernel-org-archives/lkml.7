@@ -2,204 +2,100 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70577C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075A8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464BE206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FCF208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564603738;
+	bh=/ldV7hgBFO1judiC/vH/gb2ONuofZmiUw1/v86YgUQ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lL6Xn7MjxrXPXCT8Qv/HNcYebHq6Yn9lUXjmGroxwjwQLNIo7+P3TfPjr96fhtkxs
+	 ED7Qkqtrt+SNBi5+aMgSZk6iSzGJMS7Rpnv0/S1dpm+nV2KmVnO5jDgChjvUzcC45C
+	 lFyL2hQxOUDhyr5p47nQxDI2eeQgqVsIOyM4G4Eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbfGaUGW (ORCPT
+        id S1729204AbfGaUI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:06:22 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:59499 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfGaUGV (ORCPT
+        Wed, 31 Jul 2019 16:08:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43346 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfGaUI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:06:21 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MODeL-1hhZ8Q40pV-00OV4y; Wed, 31 Jul 2019 22:05:44 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH 13/14] ARM: orion/mvebu: unify debug-ll virtual addresses
-Date:   Wed, 31 Jul 2019 21:56:55 +0200
-Message-Id: <20190731195713.3150463-14-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190731195713.3150463-1-arnd@arndb.de>
-References: <20190731195713.3150463-1-arnd@arndb.de>
+        Wed, 31 Jul 2019 16:08:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zg4RblqhI5I6Ef9SjSFUPAqFeF8fbxOaVM6XwE2Auvo=; b=qZeQX8Ro2s/LxiF7ghNud4CCz/
+        GWKEy89if4IZkwFtkzE6TI1xNS9AxhFXs/onoD/cxHSKXOlbS31/9w3gx4qR/7GKLrEBNmxURpT1U
+        /FaUk/qPOt3Lp+eOa0L82EZv+HE86+sG2Ye5PHwrYC2zCIRz2pnh7uS6VzSL1NiaxtyUZq96l3tOW
+        sIoEWBrYgygLDo4xtZDO7361fbdWm5yJK5lIZ6tMKReCePzXTGQk0A05BLHH4thMe7ZLUZCybjPk/
+        BuaCfD5j1SU3hofhfUrS2QJCgp2rFscfvB33+MGRO/qdTtMg/xzwjjtBQRnHzEO54v3BoynzNJezs
+        2VHerrLg==;
+Received: from [191.33.152.89] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsuu8-0007qD-VO; Wed, 31 Jul 2019 20:08:56 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hsuu6-00079x-AR; Wed, 31 Jul 2019 17:08:54 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 5/6] docs: fs: convert porting to ReST
+Date:   Wed, 31 Jul 2019 17:08:52 -0300
+Message-Id: <a2303fe9fa2103e7d1f8589e1f91a7d65497e8b7.1564603513.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1564603513.git.mchehab+samsung@kernel.org>
+References: <cover.1564603513.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Y/ESiM0kAuRteAugQmjXsl6x4cLpUBC4xLlaR2JUNWvARfLIQGO
- TQM095s/TFn8AV8/Qoc4eHOnBtqAJBMExhkEcMP0vX7+87jSCb1X3nhD4ghe9K9doUwcdXD
- 05hEPdynsX/S9HHVozpw1JB6YUC5Qd0YS3ObojFB40I00QQE7cjOe+ixkJ6PWNW01oqP1w3
- UjMSkHlzdbzCeitJ9hg3A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fpfWvaEJtdo=:siCKSImWLjyCiT9PWAwOxl
- kzxySF8EIQd3cR7E2wjBeYRa1Acqc8iLK0RL//ox/DCx3W933S2VozzKlUNdX2jgf62v2+vPs
- lK17Y7VALtRB/PGpUsiWNGFVQ88jDpI89DJP3VNTSCF5F480mUb2F1z6pGQOze4ZIUU9N/q48
- 7rImV7js4LckRi8TskduWf+xuhgV5dXl1MB1cYwfILDqe/76r/q2XYQd6QudkDWK909llddKU
- 9bR6Lc46bzk0jv2OatvcjiEQC0eyaVGkDqGNmGMiU1qRGG423e7VNUPAjnQYUvsHjIJqqePmz
- HfA2ZCn1DhSfyzyMbxEltQ1w0QhA8hsq6Nf17NQPPnu5nm07PUEv3l+GUAprV9UaC+YPZzJzk
- mafDi0rVyKNTFNcSOz+gjiybL2xfqK1+y8iKUpZS90i+B7la/AqAsQ0/MbwsqHMwTl/i23Gyk
- VXHY7Lqs+rUPtECbf9gzg4V/iKuBxAj55MkIU0b6FxjY4IWWYI+R866bjwofevADHKQOpHxRF
- uoYL06eJdLBLHVv6xenXeNdsEJ221gFa2EJQle4LlRJVjiLtqFzKSfVogE0AwHANpY3RmD5O/
- fonLICMrJSBR2X5f+GmESwgAKCrA9H4Oe4EjDGCNw+Gy6kSxB8qnllEOcETJAjW01BifOX9pq
- 1lJ3kRo767Tsz99Zwm3pLSn4JJHhh+Hn7QKoCVm/gUrzZcVARaBm646FvB0om/1J4KgykR6w8
- EAp7pnbJhUaVFKokfOy2tCYPtHGWnObLJawqvg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a multiplatform configuration, enabling DEBUG_LL breaks booting
-on all platforms with incompatible settings. In case of the Marvell
-platforms of the Orion/MVEBU family, the physical addresses are
-all the same, we just map them at different virtual addresses,
-which makes it impossible to run a kernel with DEBUG_LL enabled on
-a combination of the merged mvebu and the legacy boardfile based
-platforms.
+This file has its own proper style, except that, after a while,
+the coding style gets violated and whitespaces are placed on
+different ways.
 
-This is easily solved by using the same virtual address everywhere.
-I picked the address that is already used by mach-mvebu for UART0:
-0xfec12000. All these platforms have a 1MB region with their internal
-registers, almost always at physical address 0xf1000000, so I'm
-updating the iotable for that entry.
+As Sphinx and ReST are very sentitive to whitespace differences,
+I had to opt if each entry after required/mandatory/... fields
+should start with zero spaces or with a tab. I opted to start them
+all from the zero position, in order to avoid needing to break lines
+with more than 80 columns, with would make harder for review.
 
-In case of mach-dove, this is slightly trickier, as the existing
-mapping is 8MB and a second 8MB mapping is already at the 0xfec00000
-address. I have verified from the datasheet that the last 7MB of the
-physical mapping are "reserved" and nothing in Linux tries to use
-it either. I'm putting this 1MB mapping at the same address as the
-others, and the second 8MB register area immediately before that.
+Most of the other changes at porting.rst were made to use an unified
+notation with works nice as a text file while also produce a good html
+output after being parsed.
 
-Link: https://lore.kernel.org/linux-arm-kernel/87si3eb1z8.fsf@free-electrons.com/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
-I posted this in 2015, and Gregory said he would like to see
-some testing on it. I don't think anyone ever tested it, but
-we probably still want to have this.
----
- arch/arm/Kconfig.debug          |  5 +----
- arch/arm/mach-dove/dove.h       | 10 +++++-----
- arch/arm/mach-mv78xx0/mv78xx0.h |  4 ++--
- arch/arm/mach-orion5x/orion5x.h |  4 ++--
- 4 files changed, 10 insertions(+), 13 deletions(-)
+ Documentation/filesystems/porting.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 85710e078afb..0ad316a160c7 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1772,10 +1772,7 @@ config DEBUG_UART_VIRT
- 	default 0xfc705000 if DEBUG_ZTE_ZX
- 	default 0xfcfe8600 if DEBUG_BCM63XX_UART
- 	default 0xfd000000 if DEBUG_SPEAR3XX || DEBUG_SPEAR13XX
--	default 0xfd012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_MV78XX0
- 	default 0xfd883000 if DEBUG_ALPINE_UART0
--	default 0xfde12000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_DOVE
--	default 0xfe012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_ORION5X
- 	default 0xfe017000 if DEBUG_MMP_UART2
- 	default 0xfe018000 if DEBUG_MMP_UART3
- 	default 0xfe100000 if DEBUG_IMX23_UART || DEBUG_IMX28_UART
-@@ -1790,7 +1787,7 @@ config DEBUG_UART_VIRT
- 	default 0xfec02000 if DEBUG_SOCFPGA_UART0
- 	default 0xfec02100 if DEBUG_SOCFPGA_ARRIA10_UART1
- 	default 0xfec03000 if DEBUG_SOCFPGA_CYCLONE5_UART1
--	default 0xfec12000 if (DEBUG_MVEBU_UART0 || DEBUG_MVEBU_UART0_ALTERNATE) && ARCH_MVEBU
-+	default 0xfec12000 if DEBUG_MVEBU_UART0 || DEBUG_MVEBU_UART0_ALTERNATE
- 	default 0xfec12100 if DEBUG_MVEBU_UART1_ALTERNATE
- 	default 0xfec10000 if DEBUG_SIRFATLAS7_UART0
- 	default 0xfec20000 if DEBUG_DAVINCI_DMx_UART0
-diff --git a/arch/arm/mach-dove/dove.h b/arch/arm/mach-dove/dove.h
-index 539e735f968d..320ed1696abd 100644
---- a/arch/arm/mach-dove/dove.h
-+++ b/arch/arm/mach-dove/dove.h
-@@ -18,8 +18,8 @@
-  * c8000000	fdb00000	1M	Cryptographic SRAM
-  * e0000000	@runtime	128M	PCIe-0 Memory space
-  * e8000000	@runtime	128M	PCIe-1 Memory space
-- * f1000000	fde00000	8M	on-chip south-bridge registers
-- * f1800000	fe600000	8M	on-chip north-bridge registers
-+ * f1000000	fec00000	1M	on-chip south-bridge registers
-+ * f1800000	fe400000	8M	on-chip north-bridge registers
-  * f2000000	fee00000	1M	PCIe-0 I/O space
-  * f2100000	fef00000	1M	PCIe-1 I/O space
-  */
-@@ -42,11 +42,11 @@
- #define DOVE_SCRATCHPAD_SIZE		SZ_1M
+diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
+index 66aa521e6376..f18506083ced 100644
+--- a/Documentation/filesystems/porting.rst
++++ b/Documentation/filesystems/porting.rst
+@@ -158,7 +158,7 @@ Callers of notify_change() need ->i_mutex now.
+ New super_block field ``struct export_operations *s_export_op`` for
+ explicit support for exporting, e.g. via NFS.  The structure is fully
+ documented at its declaration in include/linux/fs.h, and in
+-Documentation/filesystems/nfs/Exporting.
++Documentation/filesystems/nfs/exporting.rst.
  
- #define DOVE_SB_REGS_PHYS_BASE		0xf1000000
--#define DOVE_SB_REGS_VIRT_BASE		IOMEM(0xfde00000)
--#define DOVE_SB_REGS_SIZE		SZ_8M
-+#define DOVE_SB_REGS_VIRT_BASE		IOMEM(0xfec00000)
-+#define DOVE_SB_REGS_SIZE		SZ_1M
- 
- #define DOVE_NB_REGS_PHYS_BASE		0xf1800000
--#define DOVE_NB_REGS_VIRT_BASE		IOMEM(0xfe600000)
-+#define DOVE_NB_REGS_VIRT_BASE		IOMEM(0xfe400000)
- #define DOVE_NB_REGS_SIZE		SZ_8M
- 
- #define DOVE_PCIE0_IO_PHYS_BASE		0xf2000000
-diff --git a/arch/arm/mach-mv78xx0/mv78xx0.h b/arch/arm/mach-mv78xx0/mv78xx0.h
-index 2db1265ec121..c1a9a1d1b295 100644
---- a/arch/arm/mach-mv78xx0/mv78xx0.h
-+++ b/arch/arm/mach-mv78xx0/mv78xx0.h
-@@ -37,7 +37,7 @@
-  * fee50000	f0d00000	64K	PCIe #5 I/O space
-  * fee60000	f0e00000	64K	PCIe #6 I/O space
-  * fee70000	f0f00000	64K	PCIe #7 I/O space
-- * fd000000	f1000000	1M	on-chip peripheral registers
-+ * fec00000	f1000000	1M	on-chip peripheral registers
-  */
- #define MV78XX0_CORE0_REGS_PHYS_BASE	0xf1020000
- #define MV78XX0_CORE1_REGS_PHYS_BASE	0xf1024000
-@@ -49,7 +49,7 @@
- #define MV78XX0_PCIE_IO_SIZE		SZ_1M
- 
- #define MV78XX0_REGS_PHYS_BASE		0xf1000000
--#define MV78XX0_REGS_VIRT_BASE		IOMEM(0xfd000000)
-+#define MV78XX0_REGS_VIRT_BASE		IOMEM(0xfec00000)
- #define MV78XX0_REGS_SIZE		SZ_1M
- 
- #define MV78XX0_PCIE_MEM_PHYS_BASE	0xc0000000
-diff --git a/arch/arm/mach-orion5x/orion5x.h b/arch/arm/mach-orion5x/orion5x.h
-index 3364df331f01..2b66120fba86 100644
---- a/arch/arm/mach-orion5x/orion5x.h
-+++ b/arch/arm/mach-orion5x/orion5x.h
-@@ -31,13 +31,13 @@
-  * fc000000	device bus mappings (cs0/cs1)
-  *
-  * virt		phys		size
-- * fe000000	f1000000	1M	on-chip peripheral registers
-+ * fec00000	f1000000	1M	on-chip peripheral registers
-  * fee00000	f2000000	64K	PCIe I/O space
-  * fee10000	f2100000	64K	PCI I/O space
-  * fd000000	f0000000	16M	PCIe WA space (Orion-1/Orion-NAS only)
-  ****************************************************************************/
- #define ORION5X_REGS_PHYS_BASE		0xf1000000
--#define ORION5X_REGS_VIRT_BASE		IOMEM(0xfe000000)
-+#define ORION5X_REGS_VIRT_BASE		IOMEM(0xfec00000)
- #define ORION5X_REGS_SIZE		SZ_1M
- 
- #define ORION5X_PCIE_IO_PHYS_BASE	0xf2000000
+ Briefly it allows for the definition of decode_fh and encode_fh operations
+ to encode and decode filehandles, and allows the filesystem to use
 -- 
-2.20.0
+2.21.0
 
