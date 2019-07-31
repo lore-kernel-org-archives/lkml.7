@@ -2,117 +2,106 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45194C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364EBC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B459206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564580027;
-	bh=q4J3oHCwmb/3CSINPmu5yP2WKvdxJBz4F1wFaOWg6cE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fWVftip6XFy0w5DLtM7LnqS09NdaiQ8oydrOgAzsHo8XbRHr9Sw7mtcx+qnDAiOeh
-	 mH4j0zSZp8U8zU/NIyYcwIlzwNwAozMWsjA/uj8VCr9+Z4PgUKg+fFktiSYivwkEeD
-	 0IH+7b9XaHZiUGgkH2Wtymmk/cwYf0zkfVa9pNDY=
+	by mail.kernel.org (Postfix) with ESMTP id 1768C206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:35:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbfGaNdq (ORCPT
+        id S1729612AbfGaNfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:33:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36084 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727809AbfGaNdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:33:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C41B9AFCF;
-        Wed, 31 Jul 2019 13:33:44 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 15:33:44 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-acpi@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v1] drivers/acpi/scan.c: Fixup "acquire
- device_hotplug_lock in acpi_scan_init()"
-Message-ID: <20190731133344.GR9330@dhcp22.suse.cz>
-References: <20190731123201.13893-1-david@redhat.com>
- <20190731125334.GM9330@dhcp22.suse.cz>
- <d3cc595d-7e6f-ef6f-044c-b20bd1de3fb0@redhat.com>
- <20190731131408.GP9330@dhcp22.suse.cz>
- <23f28590-7765-bcd9-15f2-94e985b64218@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23f28590-7765-bcd9-15f2-94e985b64218@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 31 Jul 2019 09:35:24 -0400
+Received: from michel.telenet-ops.be ([195.130.137.88]:51996 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfGaNfY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:35:24 -0400
+Received: from ramsan ([84.194.98.4])
+        by michel.telenet-ops.be with bizsmtp
+        id jRbM2000f05gfCL06RbNwn; Wed, 31 Jul 2019 15:35:22 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hsolF-0001Cx-TU; Wed, 31 Jul 2019 15:35:21 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hsolF-0004g7-RV; Wed, 31 Jul 2019 15:35:21 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] arm64: Move TIF_* documentation to individual definitions
+Date:   Wed, 31 Jul 2019 15:35:20 +0200
+Message-Id: <20190731133520.17939-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 31-07-19 15:18:42, David Hildenbrand wrote:
-> On 31.07.19 15:14, Michal Hocko wrote:
-> > On Wed 31-07-19 15:02:49, David Hildenbrand wrote:
-> >> On 31.07.19 14:53, Michal Hocko wrote:
-> >>> On Wed 31-07-19 14:32:01, David Hildenbrand wrote:
-> >>>> Let's document why we take the lock here. If we're going to overhaul
-> >>>> memory hotplug locking, we'll have to touch many places - this comment
-> >>>> will help to clairfy why it was added here.
-> >>>
-> >>> And how exactly is "lock for consistency" comment going to help the poor
-> >>> soul touching that code? How do people know that it is safe to remove it?
-> >>> I am not going to repeat my arguments how/why I hate "locking for
-> >>> consistency" (or fun or whatever but a real synchronization reasons)
-> >>> but if you want to help then just explicitly state what should done to
-> >>> remove this lock.
-> >>>
-> >>
-> >> I know that you have a different opinion here. To remove the lock,
-> >> add_memory() locking has to be changed *completely* to the point where
-> >> we can drop the lock from the documentation of the function (*whoever
-> >> knows what we have to exactly change* - and I don't have time to do that
-> >> *right now*).
-> > 
-> > Not really. To remove a lock in this particular path it would be
-> > sufficient to add
-> > 	/*
-> > 	 * Although __add_memory used down the road is documented to
-> > 	 * require lock_device_hotplug, it is not necessary here because
-> > 	 * this is an early code when userspace or any other code path
-> > 	 * cannot trigger hotplug operations.
-> > 	 */
-> 
-> Okay, let me phrase it like this: Are you 100% (!) sure that we don't
-> need the lock here. I am not -  I only know what I documented back then
-> and what I found out - could be that we are forgetting something else
-> the lock protects.
-> 
-> As I already said, I am fine with adding such a comment instead. But I
-> am not convinced that the absence of the lock is 100% safe. (I am 99.99%
-> sure ;) ).
+Some TIF_* flags are documented in the comment block at the top, some
+next to their definitions, some in both places.
 
-I am sorry but this is a shiny example of cargo cult programming. You do
-not add locks just because you are not sure. Locks are protecting data
-structures not code paths! If it is not clear what is actually protected
-then that should be explored first before the lock is spread "just to be
-sure"
+Move all documentation to the individual definitions for consistency,
+and for easy lookup.
 
-Just look here. You have pushed that uncertainty to whoever is going
-touch this code and guess what, they are going to follow that lead and
-we are likely to grow the unjustified usage and any further changes will
-be just harder. I have seen that pattern so many times that it is even
-not funny. And that's why I pushed back here.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+The alternative is to move all of them to the comment block, and using
+linuxdoc style.
 
-So let me repeat. If the lock is to stay then make sure that the comment
-actually explains what has to be done to remove it because it is not
-really required as of now.
+ arch/arm64/include/asm/thread_info.h | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
+diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+index 180b34ec59650a9b..cb3eb1ccccc4116b 100644
+--- a/arch/arm64/include/asm/thread_info.h
++++ b/arch/arm64/include/asm/thread_info.h
+@@ -60,28 +60,20 @@ void arch_release_task_struct(struct task_struct *tsk);
+ #endif
+ 
+ /*
+- * thread information flags:
+- *  TIF_SYSCALL_TRACE	- syscall trace active
+- *  TIF_SYSCALL_TRACEPOINT - syscall tracepoint for ftrace
+- *  TIF_SYSCALL_AUDIT	- syscall auditing
+- *  TIF_SECCOMP		- syscall secure computing
+- *  TIF_SYSCALL_EMU     - syscall emulation active
+- *  TIF_SIGPENDING	- signal pending
+- *  TIF_NEED_RESCHED	- rescheduling necessary
+- *  TIF_NOTIFY_RESUME	- callback before returning to user
++ * thread information flags
+  */
+-#define TIF_SIGPENDING		0
+-#define TIF_NEED_RESCHED	1
++#define TIF_SIGPENDING		0	/* signal pending */
++#define TIF_NEED_RESCHED	1	/* rescheduling necessary */
+ #define TIF_NOTIFY_RESUME	2	/* callback before returning to user */
+ #define TIF_FOREIGN_FPSTATE	3	/* CPU's FP state is not current's */
+ #define TIF_UPROBE		4	/* uprobe breakpoint or singlestep */
+ #define TIF_FSCHECK		5	/* Check FS is USER_DS on return */
+ #define TIF_NOHZ		7
+-#define TIF_SYSCALL_TRACE	8
+-#define TIF_SYSCALL_AUDIT	9
+-#define TIF_SYSCALL_TRACEPOINT	10
+-#define TIF_SECCOMP		11
+-#define TIF_SYSCALL_EMU		12
++#define TIF_SYSCALL_TRACE	8	/* syscall trace active */
++#define TIF_SYSCALL_AUDIT	9	/* syscall auditing */
++#define TIF_SYSCALL_TRACEPOINT	10	/* syscall tracepoint for ftrace */
++#define TIF_SECCOMP		11	/* syscall secure computing */
++#define TIF_SYSCALL_EMU		12	/* syscall emulation active */
+ #define TIF_MEMDIE		18	/* is terminating due to OOM killer */
+ #define TIF_FREEZE		19
+ #define TIF_RESTORE_SIGMASK	20
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
