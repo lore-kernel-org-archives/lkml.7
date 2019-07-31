@@ -2,93 +2,80 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293EAC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513D3C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0116D206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="Xr7DSeFB"
+	by mail.kernel.org (Postfix) with ESMTP id 1BA38208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:14:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564589677;
+	bh=3nZlk0eBNHY1d+Gv/KlEoYiujgMy0mBOFWsNo7lFoJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HngCY3gSJri00dC73RgqvzyLsK8z6V5OU01/HL6AwM9w4agDeQGo9zfdCMC8qWiTv
+	 6fRR9HQeKAQ48psxtcLxb7vnYGQ9E5LVnluyC0BoIRzFFpe9cTtGmm3Sj5WH3cuRa6
+	 vX27Dh4NFaN8aBYWqp7wC+jGS54QDF/QrD6FRER0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbfGaQM7 (ORCPT
+        id S1729716AbfGaQOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:12:59 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:30086 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725209AbfGaQM6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:12:58 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VG9bon026232;
-        Wed, 31 Jul 2019 12:12:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=bvuyEyYL0dYLQuXorPs3yeHCIRdNISCr/Vk2kCK/8jo=;
- b=Xr7DSeFBHEySVZFjVcTuWQtiLeyfzDjbO5EXS03DYvA7PdiZCpggN1d6+4qpJw3+emjp
- uhWstbziepwlfgLW+kHtXg6QDYloWA5UQ4EZH7xR0uhA9Yy9+KW8l9HDYurUABtMEUyS
- 743o7tOVzmL74EQgdDfIjXtiNduiusFi2aE63LPiAkgzTMehIS3KnplyA9XtuTYBALFg
- 56cIThISVUyZJY1CVXTpDLo9KXEH8WJkK4bAsry6bjPfVtlmFSWWKpp05ipCms1iC55A
- 75dCUM7gH597K1tAntWsdl11kkmLwhcF+6fbYHno2To/1mSn9Xln694TQvLItxTczpUa rw== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 2u2twectvf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 31 Jul 2019 12:12:57 -0400
-Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VG7rLi052078;
-        Wed, 31 Jul 2019 12:12:56 -0400
-Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
-        by mx0b-00154901.pphosted.com with ESMTP id 2u3c0t2ntd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 Jul 2019 12:12:56 -0400
-X-LoopCount0: from 10.166.132.131
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="838363177"
-From:   <Mario.Limonciello@dell.com>
-To:     <kai.heng.feng@canonical.com>, <rjw@rjwysocki.net>
-CC:     <mika.westerberg@linux.intel.com>, <anthony.wong@canonical.com>,
-        <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur
- in special cases"
-Thread-Topic: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur
- in special cases"
-Thread-Index: AQHVR7mqkcvT3R0NfUWTXYuokpN3/6bk5bx4
-Date:   Wed, 31 Jul 2019 16:12:54 +0000
-Message-ID: <1564589574204.11850@Dell.com>
-References: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
-In-Reply-To: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.177.49.166]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 31 Jul 2019 12:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725209AbfGaQOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:14:35 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52302206A3;
+        Wed, 31 Jul 2019 16:14:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564589674;
+        bh=3nZlk0eBNHY1d+Gv/KlEoYiujgMy0mBOFWsNo7lFoJ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fDBHHkW4nKT2VAx0DNHkH8Hu2aD50O8ZDB/g6v8dRFMQTbrFVS01l4qNhb0mSpgqJ
+         JWlcTZnp07CGG1OS8mBPtuPoXwAjpIxAt5VkSwVrSye89pX9hulUjwTCDjkf6VxV7m
+         Eg9WZ2BtHA6tCR/KM5LISOtTlXNjUqsNP6jdPWRY=
+Date:   Wed, 31 Jul 2019 17:14:30 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Drewry <wad@chromium.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com
+Subject: Re: [PATCH] arm64: Move TIF_* documentation to individual definitions
+Message-ID: <20190731161430.e4v5ag3ff5p2i6q6@willie-the-truck>
+References: <20190731133520.17939-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=603 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907310160
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=715 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907310161
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731133520.17939-1-geert+renesas@glider.be>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've actually been seeing worse behavior, in that I can't get Thunderbolt t=
-o work at all with 5.3rc1 or 5.3rc2 on the 9380 system I have on hand, simi=
-lar messages related to link timeouts. =
+On Wed, Jul 31, 2019 at 03:35:20PM +0200, Geert Uytterhoeven wrote:
+> Some TIF_* flags are documented in the comment block at the top, some
+> next to their definitions, some in both places.
+> 
+> Move all documentation to the individual definitions for consistency,
+> and for easy lookup.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> The alternative is to move all of them to the comment block, and using
+> linuxdoc style.
+> 
+>  arch/arm64/include/asm/thread_info.h | 24 ++++++++----------------
+>  1 file changed, 8 insertions(+), 16 deletions(-)
+
+Queued for 5.4, with Mark's Ack.
+
+Will
