@@ -2,96 +2,96 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B95FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A81F5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC3920679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845DF20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387452AbfGaOYo (ORCPT
+        id S2387589AbfGaOZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:24:44 -0400
-Received: from goliath.siemens.de ([192.35.17.28]:43945 "EHLO
-        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727169AbfGaOYo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:24:44 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id x6VEOTva024755
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 Jul 2019 16:24:30 +0200
-Received: from [139.25.68.37] (md1q0hnc.ad001.siemens.net [139.25.68.37] (may be forged))
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x6VEOTdf027880;
-        Wed, 31 Jul 2019 16:24:29 +0200
-Subject: Re: [PATCH] scripts/gdb: Handle split debug
-To:     Douglas Anderson <dianders@chromium.org>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org
-References: <20190730234052.148744-1-dianders@chromium.org>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <34bbd6b5-2e37-159a-b75b-36a6be11c506@siemens.com>
-Date:   Wed, 31 Jul 2019 16:24:28 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        Wed, 31 Jul 2019 10:25:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38430 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726079AbfGaOZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:25:19 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B5FD53082129;
+        Wed, 31 Jul 2019 14:25:19 +0000 (UTC)
+Received: from torg.hsv.redhat.com (ovpn-124-191.rdu2.redhat.com [10.10.124.191])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9769E60C4C;
+        Wed, 31 Jul 2019 14:25:09 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 09:25:07 -0500
+From:   Clark Williams <williams@redhat.com>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     tglx@linutronix.de, bigeasy@linutronix.de, rostedt@goodmis.org,
+        linux-rt-users@vger.kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, bristot@redhat.com
+Subject: Re: [RT PATCH] sched/deadline: Make inactive timer run in hardirq
+ context
+Message-ID: <20190731092507.3c57d4db@torg.hsv.redhat.com>
+In-Reply-To: <20190731103715.4047-1-juri.lelli@redhat.com>
+References: <20190731103715.4047-1-juri.lelli@redhat.com>
+Organization: Red Hat, Inc
 MIME-Version: 1.0
-In-Reply-To: <20190730234052.148744-1-dianders@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 31 Jul 2019 14:25:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.07.19 01:40, Douglas Anderson wrote:
-> Some systems (like Chrome OS) may use "split debug" for kernel
-> modules.  That means that the debug symbols are in a different file
-> than the main elf file.  Let's handle that by also searching for debug
-> symbols that end in ".ko.debug".
+On Wed, 31 Jul 2019 12:37:15 +0200
+Juri Lelli <juri.lelli@redhat.com> wrote:
 
-Is this split-up depending on additional kernel patches, is this already
-possible with mainline, or is this purely a packaging topic? Wondering because
-of testability in case it's downstream-only.
-
-Jan
-
+> SCHED_DEADLINE inactive timer needs to run in hardirq context (as
+> dl_task_timer already does).
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Make it HRTIMER_MODE_REL_HARD.
+> 
+> Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
 > ---
+> Hi,
 > 
->  scripts/gdb/linux/symbols.py | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Both v4.19-rt and v5.2-rt need this.
 > 
-> diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
-> index 2f5b95f09fa0..34e40e96dee2 100644
-> --- a/scripts/gdb/linux/symbols.py
-> +++ b/scripts/gdb/linux/symbols.py
-> @@ -77,12 +77,12 @@ lx-symbols command."""
->              gdb.write("scanning for modules in {0}\n".format(path))
->              for root, dirs, files in os.walk(path):
->                  for name in files:
-> -                    if name.endswith(".ko"):
-> +                    if name.endswith(".ko") or name.endswith(".ko.debug"):
->                          self.module_files.append(root + "/" + name)
->          self.module_files_updated = True
+> Mainline "sched: Mark hrtimers to expire in hard interrupt context"
+> series needs this as well (20190726185753.077004842@linutronix.de in
+> particular). Do I need to send out a separate patch for it?
+> 
+> Best,
+> 
+> Juri
+> ---
+>  kernel/sched/deadline.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index 1794e152d888..0889674b8915 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -1292,7 +1292,7 @@ void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se)
+>  {
+>  	struct hrtimer *timer = &dl_se->inactive_timer;
 >  
->      def _get_module_file(self, module_name):
-> -        module_pattern = ".*/{0}\.ko$".format(
-> +        module_pattern = ".*/{0}\.ko(?:.debug)?$".format(
->              module_name.replace("_", r"[_\-]"))
->          for name in self.module_files:
->              if re.match(module_pattern, name) and os.path.exists(name):
+> -	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> +	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+>  	timer->function = inactive_task_timer;
+>  }
+>  
+> -- 
+> 2.17.2
 > 
+Acked-by: Clark Williams <williams@redhat.com>
 
 -- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+The United States Coast Guard
+Ruining Natural Selection since 1790
