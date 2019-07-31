@@ -2,119 +2,112 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E60CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFF7C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFD0206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F35206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:00:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F2cmNKe8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387641AbfGaKAx (ORCPT
+        id S2387666AbfGaKAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:00:53 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3268 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387612AbfGaKAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:00:51 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EA85F9BBF657C09B2632;
-        Wed, 31 Jul 2019 18:00:48 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
- 18:00:39 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <yamada.masahiro@socionext.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] gpio: remove duplicated function definition
-Date:   Wed, 31 Jul 2019 18:00:28 +0800
-Message-ID: <20190731100028.48884-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Wed, 31 Jul 2019 06:00:55 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43724 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387644AbfGaKAy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 06:00:54 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i189so31588857pfg.10
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:00:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=MmBOwwNeN+W1dC0nmIPZG6LtIHwgJLZWSo5QrSMSqcg=;
+        b=F2cmNKe82FILmNf5yBHDnTc0fv/W9P8ElxWyX9nD9eNEddHhrjcVcMripReHGh+S0v
+         tSNdYbOTYj5QQBmbdLKklAfAnbsGhNRFF8O/+LB3M71Jf26oCbFHGBxBwHSsBhGdqxyA
+         +KxTVK8klRgp4/pNwu9f2ux4WWomzu+suJyXaCfOMITmKuJ2rNjMgyJNtefNtQk/6Ced
+         +G4XQdEfuvog8fX/p/pcnavzvF0fv3pGjJxnKPAJzsT26oHgPzE1HZaAb08cu8XimFcy
+         Ot89rgQl1jDKVtz6fQ/61d+80sPzURiNrw0u2ctVaFEOZ6aLQg8LP6zliTaQ5zR/CcnX
+         jBig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=MmBOwwNeN+W1dC0nmIPZG6LtIHwgJLZWSo5QrSMSqcg=;
+        b=oJJgog/3Nl65Yhhtrn3VADu/DS59/JHmDVQG9IqFv2Ko7sPycdxLeT4AztUmFeh5wC
+         U/Hu8WQZT68Rx/g9w8mqKmFUDnDyLwpmqS6h94s7OGlmENtLfk1E84uBvHda920rB8NY
+         j3n7pZAmLCHNgCd2KTY9jGIqow1d6dnPb3vhDBi6aJPCBDyN4NzNTZCUmz/3HFmd7e0V
+         CiLWPfpHDi0Frd7lUs5oxg3FyUNSxk3I2XSyj07n93J+tEe0zHHaEyIG0+JD7FeSHqvk
+         MClYsNpVP6hXbXKzpUw3mJm+G7rRoCRZ2WT/SG5JP1Xsht9gCSwnWaAmvcvrKUY5x55w
+         VH/A==
+X-Gm-Message-State: APjAAAWdMCrLHr3t/2UQaVTkDpFcSjYCAOVcXcyVOtdfqmQm6c1qBh9m
+        XckZapi0b2fIHqBxT5QvCcMl8Q==
+X-Google-Smtp-Source: APXvYqwtDG50+CDnx8yHTX0XWjamhJQ0wzyuOwxWwmAtlyxz5NNOSYgypMSGVytueAL/Ooa0yoUJyA==
+X-Received: by 2002:a63:d555:: with SMTP id v21mr90143798pgi.179.1564567253116;
+        Wed, 31 Jul 2019 03:00:53 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id m6sm68611352pfb.151.2019.07.31.03.00.50
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 31 Jul 2019 03:00:52 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     sre@kernel.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, yuanjiang.yu@unisoc.com,
+        baolin.wang@linaro.org, vincent.guittot@linaro.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/6] power: supply: sc27xx: Add POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN attribute
+Date:   Wed, 31 Jul 2019 18:00:23 +0800
+Message-Id: <a48b8acd5111120e3effe71e05d5f8166470f725.1564566425.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1564566425.git.baolin.wang@linaro.org>
+References: <cover.1564566425.git.baolin.wang@linaro.org>
+In-Reply-To: <cover.1564566425.git.baolin.wang@linaro.org>
+References: <cover.1564566425.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-when building without CONFIG_PINCTRL:
+From: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
 
-In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
-./include/linux/gpio/driver.h:576:1: error: redefinition of gpiochip_add_pin_range
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
-./include/linux/gpio.h:245:1: note: previous definition of gpiochip_add_pin_range was here
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- ^~~~~~~~~~~~~~~~~~~~~~
+Add POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN attribute to provide the battery's
+design capacity for charger manager to calculate the charging counter.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 964cb341882f ("gpio: move pincontrol calls to <linux/gpio/driver.h>")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- include/linux/gpio/driver.h | 35 +----------------------------------
- 1 file changed, 1 insertion(+), 34 deletions(-)
+ drivers/power/supply/sc27xx_fuel_gauge.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index f28f534..09f96ec 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -10,6 +10,7 @@
- #include <linux/lockdep.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/gpio.h>
+diff --git a/drivers/power/supply/sc27xx_fuel_gauge.c b/drivers/power/supply/sc27xx_fuel_gauge.c
+index 24895cc..2fe97ae 100644
+--- a/drivers/power/supply/sc27xx_fuel_gauge.c
++++ b/drivers/power/supply/sc27xx_fuel_gauge.c
+@@ -587,6 +587,10 @@ static int sc27xx_fgu_get_property(struct power_supply *psy,
+ 		val->intval = value * 1000;
+ 		break;
  
- struct gpio_desc;
- struct of_phandle_args;
-@@ -560,40 +561,6 @@ struct gpio_pin_range {
- 	struct pinctrl_gpio_range range;
++	case POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN:
++		val->intval = data->total_cap * 1000;
++		break;
++
+ 	default:
+ 		ret = -EINVAL;
+ 		break;
+@@ -644,6 +648,7 @@ static int sc27xx_fgu_property_is_writeable(struct power_supply *psy,
+ 	POWER_SUPPLY_PROP_CURRENT_NOW,
+ 	POWER_SUPPLY_PROP_CURRENT_AVG,
+ 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
++	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
  };
  
--#ifdef CONFIG_PINCTRL
--
--int gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
--			   unsigned int gpio_offset, unsigned int pin_offset,
--			   unsigned int npins);
--int gpiochip_add_pingroup_range(struct gpio_chip *chip,
--			struct pinctrl_dev *pctldev,
--			unsigned int gpio_offset, const char *pin_group);
--void gpiochip_remove_pin_ranges(struct gpio_chip *chip);
--
--#else /* ! CONFIG_PINCTRL */
--
--static inline int
--gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
--		       unsigned int gpio_offset, unsigned int pin_offset,
--		       unsigned int npins)
--{
--	return 0;
--}
--static inline int
--gpiochip_add_pingroup_range(struct gpio_chip *chip,
--			struct pinctrl_dev *pctldev,
--			unsigned int gpio_offset, const char *pin_group)
--{
--	return 0;
--}
--
--static inline void
--gpiochip_remove_pin_ranges(struct gpio_chip *chip)
--{
--}
--
--#endif /* CONFIG_PINCTRL */
--
- struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip, u16 hwnum,
- 					    const char *label,
- 					    enum gpio_lookup_flags lflags,
+ static const struct power_supply_desc sc27xx_fgu_desc = {
 -- 
-2.7.4
-
+1.7.9.5
 
