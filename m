@@ -6,83 +6,116 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776FEC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107EBC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5158D205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E2A206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbfGaTlY (ORCPT
+        id S1729048AbfGaToX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:41:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33039 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfGaTlX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:41:23 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hsuSw-0005XI-1F; Wed, 31 Jul 2019 21:40:50 +0200
-Date:   Wed, 31 Jul 2019 21:40:42 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jan Kara <jack@suse.cz>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Theodore Tso <tytso@mit.edu>, Julia Cartwright <julia@ni.com>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [patch 4/4] fs: jbd/jbd2: Substitute BH locks for RT and lock
- debugging
-In-Reply-To: <20190731154859.GI15806@quack2.suse.cz>
-Message-ID: <alpine.DEB.2.21.1907312137500.1788@nanos.tec.linutronix.de>
-References: <20190730112452.871257694@linutronix.de> <20190730120321.489374435@linutronix.de> <20190731154859.GI15806@quack2.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 31 Jul 2019 15:44:23 -0400
+Received: from sauhun.de ([88.99.104.3]:44572 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727482AbfGaToW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 15:44:22 -0400
+Received: from localhost (p54B33080.dip0.t-ipconnect.de [84.179.48.128])
+        by pokefinder.org (Postfix) with ESMTPSA id 1F9E42C270A;
+        Wed, 31 Jul 2019 21:44:20 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 21:44:19 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
+Message-ID: <20190731194419.GB4084@kunai>
+References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
+ <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
+Content-Disposition: inline
+In-Reply-To: <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019, Jan Kara wrote:
-> On Tue 30-07-19 13:24:56, Thomas Gleixner wrote:
-> > Bit spinlocks are problematic if PREEMPT_RT is enabled. They disable
-> > preemption, which is undesired for latency reasons and breaks when regular
-> > spinlocks are taken within the bit_spinlock locked region because regular
-> > spinlocks are converted to 'sleeping spinlocks' on RT.
-> > 
-> > Substitute the BH_State and BH_JournalHead bit spinlocks with regular
-> > spinlock for PREEMPT_RT enabled kernels.
-> 
-> Is there a real need for substitution for BH_JournalHead bit spinlock?  The
-> critical sections are pretty tiny, all located within fs/jbd2/journal.c.
-> Maybe only the one around __journal_remove_journal_head() would need a bit
-> of refactoring so that journal_free_journal_head() doesn't get called
-> under the bit-spinlock.
 
-Makes sense.
+--dTy3Mrz/UPE2dbVg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> BH_State lock is definitely worth it. In fact, if you placed the spinlock
-> inside struct journal_head (which is the structure whose members are in
-> fact protected by it), I'd be even fine with just using the spinlock always
-> instead of the bit spinlock. journal_head is pretty big anyway (and there's
-> even 4-byte hole in it for 64-bit archs) and these structures are pretty
-> rare (only for actively changed metadata buffers).
+Hi Javier,
 
-Just need to figure out what to do with the ASSERT_JH(state_is_locked) case for
-UP. Perhaps just return true for UP && !DEBUG_SPINLOCK?
+thank you for providing the extra information.
 
-Thanks,
+(And Kieran, thanks for the patch!)
 
-	tglx
+> The other option is to remove i2c_of_match_device() and don't make OF mat=
+ch
+> to fallback to i2c_of_match_device_sysfs(). This is what happens in the A=
+CPI
+> case, since i2c_device_match() just calls acpi_driver_match_device() dire=
+ctly
+> and doesn't have a wrapper function that fallbacks to sysfs matching.
+>=20
+> In this case an I2C device ID table would be required if the devices have=
+ to
+> be instantiated through sysfs. That way the I2C table would be used both =
+for
+> auto-loading and also to match the device when it doesn't have an of_node.
+
+That would probably mean that only a minority of drivers will not add an I2C
+device ID table because it is easy to add an you get the sysfs feature?
+
+Then we are back again with the situation that most drivers will have
+multiple tables. With the minor change that the I2C device id table is
+not required anymore by the core, but it will be just very useful to
+have? Or?
+
+> If the former is the correct way to solve this then the patch looks good =
+to me.
+>=20
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+
+For this actual patch from Kieran, I'd like to hear an opinion from the
+people maintaining modpost. The aproach looks okay to me, yet I can't
+tell how "easy" we are with adding new types like 'i2c_of'.
+
+Thanks everyone,
+
+   Wolfram
+
+
+--dTy3Mrz/UPE2dbVg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1B75MACgkQFA3kzBSg
+KbbU8w//dvqEPnqPyKnvyM5J6IbOToq7hML3V6OFjYE77Tq2I6WxoRI938OiLZQ8
+zDMkansmVtC33fuRDoQBNy1QXwT8RAggj9OJ6qLP3phJxI426Q3NAO4kyAgYbNfP
+59y+Ek7fbM5jrnUZgeAlskR09H6Ji+v6FRaiDAmWRAL1hwQM8/LZ6dB/JqizpA/Z
+jZgu4W9OY+sdGtO81seJp1DoAMgsf/bWm7qX9n1Dz0vOzH+GMzqGgO+rmb6u+8DQ
+YTfOrrNXeAvnU71ttt78YXHon/Y3mSMD5CfYoIY1cYjvLV/LZuXdeYU0tMWCk0dQ
+xO1debrcAM8yAAdITXoYPnXiPeUFq3i6/VnZUXVpx4cWIo+UAtYlGbbC9aUL0RWg
+Janfacmuql1pq8ozpkYMz3e2oJxoaqTSjFW1Arw1JSJSrvySp5WG9tik9qXPrMv4
+NS5HlNP+odj/3PzIqH27sBHgNPhns6oBmzeJDzRDSfhBx1/GogS2F/zxanRBscfL
+bjV7LqWBd3MTbJI7LvJoSEYnE77nZSzuuNu5VWQWEE0zioFc6N0TCqboo7XgLfLo
+AsYRT5LWZHZVDdxEqCfptSyB1boQCsdHJi8k4Dw6xRy7Txa+n4nFSr8sjc0IR0IQ
+B6AtHRIQqwJkKVKeUccKydMsQHtN40wUsIQu2EcPOBhiPkquAFk=
+=3ETA
+-----END PGP SIGNATURE-----
+
+--dTy3Mrz/UPE2dbVg--
