@@ -2,219 +2,125 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC11C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A395C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5072206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C9E2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ur4RswjW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z0cwZYY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387416AbfGaCJh (ORCPT
+        id S1728206AbfGaCVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 22:09:37 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34327 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfGaCJh (ORCPT
+        Tue, 30 Jul 2019 22:21:24 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34691 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfGaCVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 22:09:37 -0400
-Received: by mail-io1-f66.google.com with SMTP id k8so132864429iot.1;
-        Tue, 30 Jul 2019 19:09:37 -0700 (PDT)
+        Tue, 30 Jul 2019 22:21:23 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b13so30910532pfo.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 19:21:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eFgQyuzi8P9FL54Z0M1TxPqHgOnZN/olpyMNCaDDGCE=;
-        b=ur4RswjWN0+4M/o9T9fW4/8qqPJy5u530QsBvEwWcZMYRkJpwk/3vhbZNLTv7Yl4lO
-         2SkwukhzUMyzJUGpar0+bqC3ZHdNVbBdaQ5LnwYInQ1Y+FgTQGtS32SPstBrb2esfoiI
-         91vTYf8U9IJLFV88NCIu9r1kPG46RBKIQO4ZRfWt3b952j8IuEYM8kbdoaZtOWXhZdP+
-         BmyGrKBi3zg2utvVXHiQfteNevS9+hU9C0W3Cwr0h3HlytNBNZykCQMTuyy4yaEX2ovr
-         50RbrLaln3TnS8Q2byf5B7PIHlMiLjN2NNQnZniZ3kfTj/bjyTCc7VfvTyeypz2imW1I
-         7VNw==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=wfO9r2YHzfXnuX5Kr+rPkjXbDXK210fTn6hrztawxZ0=;
+        b=Z0cwZYY6NB9z3AeRFZ5F9ivrbekqwqA754MYg0lxZjoYmmBYsJ/Bl5wHSjCKN2LKBb
+         RiVb5ZqBigEi4yXwuIOEc+nJm9XYTqh9pkF3ES4VOLOnLst2nENuMZ5bG6Gbp4kPWl+X
+         o4vpIC701znWr7RpZaoEqbr+/iYRHbkWllXL4o2GCx4fis/KCQhsrL0vYoZ88J5Amasj
+         iNC5H8rZr6XTCcyOtcWZGOYJ5RxHa4DpWz9b98qFzLk7iUJODCPdexNE2tz+I6fQfbhv
+         ZQ7hTkO3HvNNx1onQLjN+IFoG63qcYI0uegXN2aKkbVSDUnES9G0m5qhEHNx+/x5H/1A
+         Rntw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eFgQyuzi8P9FL54Z0M1TxPqHgOnZN/olpyMNCaDDGCE=;
-        b=jbLvCjEYcqN82CpmzbRtvjkDRr+TItVde3rUj/Ptd8pMKMkH2MCWs9QlEVd0bAxfyd
-         BxYuOQmgoPv0AwaqEFsGgPDNQmeMs9bryTp4Rwnr09DZMn80iCMsS9K+uT46IWFd7Y4O
-         Obk5ArUJxNrBQbSmkkAa0aDgVHrpKtkExIw2KrTmT9KTN0QDcZ36hBHJdGdMr6MVPiG1
-         dw+rtZbs4jdny6gGl9tm5Lia3LVM+U7tUwGN6mepLgFewSn9KsWRF67rWuJT2/T5Eg4q
-         WH4+98wd7jMP/Q/4vOzH1PQNH0mCyPLzBj2cXjHSHSEFtfrGNHMXBG6N8eSgjSzbjyLR
-         pX9A==
-X-Gm-Message-State: APjAAAXSZSB8uPDRnrrEFF5/f7IyV4FomIfLBjA+qF+1xET0EphFwWcS
-        4necGa2YccupUlJqHTVIvpwI9lmgfQ+kFFIaRz4=
-X-Google-Smtp-Source: APXvYqwkX75OkFE9A6SeIr4vgmxP3XbOopohv7bxJXGPsO8Bqhha84W0Dm8hnVR/qegmVuI8cbMEI+fS1tCYN1uxqYE=
-X-Received: by 2002:a5d:9711:: with SMTP id h17mr37343638iol.280.1564538976505;
- Tue, 30 Jul 2019 19:09:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190729195226.8862-1-andrew.smirnov@gmail.com>
- <20190729195226.8862-20-andrew.smirnov@gmail.com> <20190730155608.GA3990@kroah.com>
-In-Reply-To: <20190730155608.GA3990@kroah.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Tue, 30 Jul 2019 19:09:25 -0700
-Message-ID: <CAHQ1cqHJzmgcpd3SmchygNiOVGNCHWKZvwHcEBEWweboOiZu0w@mail.gmail.com>
-Subject: Re: [PATCH 19/24] tty: serial: fsl_lpuart: Introduce lpuart_tx_dma_startup()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-serial@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Jiri Slaby <jslaby@suse.com>, dl-linux-imx <linux-imx@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=wfO9r2YHzfXnuX5Kr+rPkjXbDXK210fTn6hrztawxZ0=;
+        b=HqpF6FlAzMdD7p5txEvNaEk/R5REOLLd4RfhqbbUKjc1WoFKO9VR9astgxIYu5tIbT
+         JjZkCMM/5KZk5ixrw9Yk01fu8GiU86L/WZ3Yv45BHjYPbeiowomveu4gyPpVUEWpbjYC
+         gAkyAibTxEv2cosjSTNew5gwjFPKlkJlHv5C2khjpieEMzHr3869Z3SICmX8Au9syEZo
+         sXdXU+wnogN8N57ulF0/jqbS+ugPwWIeh24BZ8B8d7vmparf3IF5f7eC6wDCgyylIP+6
+         1DwaiLdshohrvRwAOIk2k/bFwmUOVDnACIUgdbm5WRRzblGJGcbt7e2AkaQ0iSLKie/c
+         XRuw==
+X-Gm-Message-State: APjAAAXZDk7ETevefH1dHS28MOoNiT0UBWil1SN3Fuscqx2b0FkZAg+o
+        qUgXCqA6lQWq74X7UyMTtEI=
+X-Google-Smtp-Source: APXvYqxyqpyYZY8qY7B1CMLxmEvGtOzFCCg6NIwd49Af1HowMQkaHr7BFniHgWBtLUGq47Ht38tPyw==
+X-Received: by 2002:a62:14c4:: with SMTP id 187mr43672529pfu.241.1564539683105;
+        Tue, 30 Jul 2019 19:21:23 -0700 (PDT)
+Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
+        by smtp.googlemail.com with ESMTPSA id e11sm79504488pfm.35.2019.07.30.19.21.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 19:21:22 -0700 (PDT)
+Message-ID: <7c49e493510ce04371d8d6cd6c436c347b1f8469.camel@gmail.com>
+Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
+From:   Rashmica Gupta <rashmica.g@gmail.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        dan.j.williams@intel.com, pasha.tatashin@soleen.com,
+        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
+        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Wed, 31 Jul 2019 12:21:16 +1000
+In-Reply-To: <b3fd1177-45ef-fd9e-78c8-d05138c647da@redhat.com>
+References: <20190625075227.15193-1-osalvador@suse.de>
+         <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
+         <20190626080249.GA30863@linux>
+         <2750c11a-524d-b248-060c-49e6b3eb8975@redhat.com>
+         <20190626081516.GC30863@linux>
+         <887b902e-063d-a857-d472-f6f69d954378@redhat.com>
+         <9143f64391d11aa0f1988e78be9de7ff56e4b30b.camel@gmail.com>
+         <0cd2c142-66ba-5b6d-bc9d-fe68c1c65c77@redhat.com>
+         <b7de7d9d84e9dd47358a254d36f6a24dd48da963.camel@gmail.com>
+         <b3fd1177-45ef-fd9e-78c8-d05138c647da@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 8:56 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jul 29, 2019 at 12:52:21PM -0700, Andrey Smirnov wrote:
-> > Code configure DMA TX path in lpuart_startup(), lpuart32_startup() and
-> > lpuart_resume() is doing exactly the same thing, so move it into a
-> > standalone subroutine.
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Stefan Agner <stefan@agner.ch>
-> > Cc: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Cory Tusar <cory.tusar@zii.aero>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Jiri Slaby <jslaby@suse.com>
-> > Cc: linux-imx@nxp.com
-> > Cc: linux-serial@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  drivers/tty/serial/fsl_lpuart.c | 53 ++++++++++++++-------------------
-> >  1 file changed, 23 insertions(+), 30 deletions(-)
-> >
-> > diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-> > index 2ad5750fe511..558acf29cbed 100644
-> > --- a/drivers/tty/serial/fsl_lpuart.c
-> > +++ b/drivers/tty/serial/fsl_lpuart.c
-> > @@ -1434,6 +1434,26 @@ static void rx_dma_timer_init(struct lpuart_port *sport)
-> >       add_timer(&sport->lpuart_timer);
-> >  }
-> >
-> > +static void lpuart_tx_dma_startup(struct lpuart_port *sport)
-> > +{
-> > +     u32 uartbaud;
-> > +
-> > +     if (sport->dma_tx_chan && !lpuart_dma_tx_request(&sport->port)) {
-> > +             init_waitqueue_head(&sport->dma_wait);
-> > +             sport->lpuart_dma_tx_use = true;
-> > +             if (lpuart_is_32(sport)) {
-> > +                     uartbaud = lpuart32_read(&sport->port, UARTBAUD);
-> > +                     lpuart32_write(&sport->port,
-> > +                                    uartbaud | UARTBAUD_TDMAE, UARTBAUD);
-> > +             } else {
-> > +                     writeb(readb(sport->port.membase + UARTCR5) |
-> > +                             UARTCR5_TDMAS, sport->port.membase + UARTCR5);
-> > +             }
-> > +     } else {
-> > +             sport->lpuart_dma_tx_use = false;
-> > +     }
-> > +}
-> > +
-> >  static int lpuart_startup(struct uart_port *port)
-> >  {
-> >       struct lpuart_port *sport = container_of(port, struct lpuart_port, port);
-> > @@ -1471,14 +1491,7 @@ static int lpuart_startup(struct uart_port *port)
-> >               sport->lpuart_dma_rx_use = false;
-> >       }
-> >
-> > -     if (sport->dma_tx_chan && !lpuart_dma_tx_request(port)) {
-> > -             init_waitqueue_head(&sport->dma_wait);
-> > -             sport->lpuart_dma_tx_use = true;
-> > -             temp = readb(port->membase + UARTCR5);
-> > -             writeb(temp | UARTCR5_TDMAS, port->membase + UARTCR5);
-> > -     } else {
-> > -             sport->lpuart_dma_tx_use = false;
-> > -     }
-> > +     lpuart_tx_dma_startup(port);
-> >
-> >       spin_unlock_irqrestore(&sport->port.lock, flags);
-> >
-> > @@ -1522,14 +1535,7 @@ static int lpuart32_startup(struct uart_port *port)
-> >               sport->lpuart_dma_rx_use = false;
-> >       }
-> >
-> > -     if (sport->dma_tx_chan && !lpuart_dma_tx_request(port)) {
-> > -             init_waitqueue_head(&sport->dma_wait);
-> > -             sport->lpuart_dma_tx_use = true;
-> > -             temp = lpuart32_read(&sport->port, UARTBAUD);
-> > -             lpuart32_write(&sport->port, temp | UARTBAUD_TDMAE, UARTBAUD);
-> > -     } else {
-> > -             sport->lpuart_dma_tx_use = false;
-> > -     }
-> > +     lpuart_tx_dma_startup(port);
-> >
-> >       if (sport->lpuart_dma_rx_use) {
-> >               /* RXWATER must be 0 */
-> > @@ -2581,20 +2587,7 @@ static int lpuart_resume(struct device *dev)
-> >               }
-> >       }
-> >
-> > -     if (sport->dma_tx_chan && !lpuart_dma_tx_request(&sport->port)) {
-> > -             init_waitqueue_head(&sport->dma_wait);
-> > -             sport->lpuart_dma_tx_use = true;
-> > -             if (lpuart_is_32(sport)) {
-> > -                     temp = lpuart32_read(&sport->port, UARTBAUD);
-> > -                     lpuart32_write(&sport->port,
-> > -                                    temp | UARTBAUD_TDMAE, UARTBAUD);
-> > -             } else {
-> > -                     writeb(readb(sport->port.membase + UARTCR5) |
-> > -                             UARTCR5_TDMAS, sport->port.membase + UARTCR5);
-> > -             }
-> > -     } else {
-> > -             sport->lpuart_dma_tx_use = false;
-> > -     }
-> > +     lpuart_tx_dma_startup(sport);
-> >
-> >       if (lpuart_is_32(sport)) {
-> >               if (sport->lpuart_dma_rx_use) {
-> > --
-> > 2.21.0
-> >
->
-> This patch breaks the build:
->
-> drivers/tty/serial/fsl_lpuart.c: In function lpuart_startup:
-> drivers/tty/serial/fsl_lpuart.c:1494:24: error: passing argument 1 of lpuart_tx_dma_startup from incompatible pointer type [-Werror=incompatible-pointer-types]
->  1494 |  lpuart_tx_dma_startup(port);
->       |                        ^~~~
->       |                        |
->       |                        struct uart_port *
-> drivers/tty/serial/fsl_lpuart.c:1438:55: note: expected struct lpuart_port * but argument is of type struct uart_port *
->  1438 | static void lpuart_tx_dma_startup(struct lpuart_port *sport)
->       |                                   ~~~~~~~~~~~~~~~~~~~~^~~~~
-> drivers/tty/serial/fsl_lpuart.c: In function lpuart32_startup:
-> drivers/tty/serial/fsl_lpuart.c:1537:24: error: passing argument 1 of lpuart_tx_dma_startup from incompatible pointer type [-Werror=incompatible-pointer-types]
->  1537 |  lpuart_tx_dma_startup(port);
->       |                        ^~~~
->       |                        |
->       |                        struct uart_port *
-> drivers/tty/serial/fsl_lpuart.c:1438:55: note: expected struct lpuart_port * but argument is of type struct uart_port *
->  1438 | static void lpuart_tx_dma_startup(struct lpuart_port *sport)
->       |                                   ~~~~~~~~~~~~~~~~~~~~^~~~~
-> cc1: some warnings being treated as errors
->
->
-> So I've stopped applying the series here.
->
-> Please fix up and resend the remaining ones.
->
+On Mon, 2019-07-29 at 10:06 +0200, David Hildenbrand wrote:
+> > > Of course, other interfaces might make sense.
+> > > 
+> > > You can then start using these memory blocks and hinder them from
+> > > getting onlined (as a safety net) via memory notifiers.
+> > > 
+> > > That would at least avoid you having to call
+> > > add_memory/remove_memory/offline_pages/device_online/modifying
+> > > memblock
+> > > states manually.
+> > 
+> > I see what you're saying and that definitely sounds safer.
+> > 
+> > We would still need to call remove_memory and add_memory from
+> > memtrace
+> > as
+> > just offlining memory doesn't remove it from the linear page tables
+> > (if 
+> > it's still in the page tables then hardware can prefetch it and if
+> > hardware tracing is using it then the box checkstops).
+> 
+> That prefetching part is interesting (and nasty as well). If we could
+> at
+> least get rid of the manual onlining/offlining, I would be able to
+> sleep
+> better at night ;) One step at a time.
+> 
 
-Ugh, my bad, sorry about that. Will do in v2.
+What are your thoughts on adding remove to state_store in
+drivers/base/memory.c? And an accompanying add? So then userspace could
+do "echo remove > memory34/state"? 
 
-Thanks,
-Andrey Smirnov
+Then most of the memtrace code could be moved to a userspace tool. The
+only bit that we would need to keep in the kernel is setting up debugfs
+files in memtrace_init_debugfs.
+
+
+
