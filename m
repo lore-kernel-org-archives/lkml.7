@@ -2,101 +2,111 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE40C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FB8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A04208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:21:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qN3EkyES"
+	by mail.kernel.org (Postfix) with ESMTP id E0870208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564590198;
+	bh=fONs4BmZttEHPUKNIEeG8afpWoHG1Ramxy67XPpPajA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vTNbg+GxEYbRsifhW7org/vnaarwTZHpNdLBmT8Bo5r1VgzC8rUfDELlryUnmmRBU
+	 U0AHOo2Xhs9r1r8hC/jalJSLVljnzIlGY2p0RnTQHQZ4UBaHEA2T0Z4eMqAAFjwff5
+	 msYBZbeWu4BbmsbqJ66TijahUiEGgTw1KTHsNaiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfGaQVK (ORCPT
+        id S1727926AbfGaQXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:21:10 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43702 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725209AbfGaQVJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:21:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DLywjtf9AHnfBiRIBY4kbj0CidghKY4rkO0+gFvevPc=; b=qN3EkyES0mtU/oRjNGDFtlNOV
-        PPM8kGpiLJivmqs5TVUCSyDa/a6I7LInZ2CIDHdqEDaWZmnCqaB/n6GUOH7902b8P/C/RIPs2AD0a
-        A17l4XreXtdgW6kNjhYcIETjNUfwmzoq7u5WmvIG3RIFnzmAXI6MK2dwR0XR8k/bFlX+UHTIjUKDU
-        JUliRvAdM5Ufgc+jdZVZ9pVWvWpfKfHGcq2XjjhmuERmfCwnwYSEEGZlD3kc+KC4JyWRaydYgsxQy
-        qOC4F6W9Y/7uep20plhAIiTu7iKUfKI0DYh7bYe63619WRYrv8Kd/0yEW74dZuCSRGGnynEwhG//1
-        Ke0mxGBag==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hsrLf-0004Ip-W1; Wed, 31 Jul 2019 16:21:08 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id ABFC92029F869; Wed, 31 Jul 2019 18:21:06 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 18:21:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        kan.liang@linux.intel.com
-Subject: Re: [PATCH v3 1/7] perf: Allow normal events to be sources of AUX
- data
-Message-ID: <20190731162106.GX31381@hirez.programming.kicks-ass.net>
-References: <20190731143041.64678-1-alexander.shishkin@linux.intel.com>
- <20190731143041.64678-2-alexander.shishkin@linux.intel.com>
+        Wed, 31 Jul 2019 12:23:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725209AbfGaQXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:23:16 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B1F3206B8;
+        Wed, 31 Jul 2019 16:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564590195;
+        bh=fONs4BmZttEHPUKNIEeG8afpWoHG1Ramxy67XPpPajA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D44JUbuyGA42vB4ZF39we2YnbDD4WU6p1kIXD+46Hx0pzXbYxSOckTA97vCFO1ipg
+         wH1v9tT8ZPQLGiCC7rdTep1hDWwnO6XsJHzqY0qm1rnxrL61jnMF/LD9s5t+iOS6Bs
+         ArsM59Htt9AJU3/IxBzAsab4hjUew2T1H5FCi+Mk=
+Date:   Wed, 31 Jul 2019 17:23:10 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        arnd@arndb.de, tglx@linutronix.de, salyzyn@android.com,
+        pcc@google.com, 0x7f454c46@gmail.com, linux@rasmusvillemoes.dk,
+        sthotton@marvell.com, andre.przywara@arm.com, luto@kernel.org,
+        Matteo Croce <mcroce@redhat.com>
+Subject: Re: [PATCH] arm64: vdso: Fix Makefile regression
+Message-ID: <20190731162309.6sqeylyoauv7seeb@willie-the-truck>
+References: <CAGnkfhyT=2kPsiUy-V=aCA_s-C4BXgD++hAZ9ii1h0p94mMVQA@mail.gmail.com>
+ <20190729125421.32482-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190731143041.64678-2-alexander.shishkin@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190729125421.32482-1-vincenzo.frascino@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 05:30:35PM +0300, Alexander Shishkin wrote:
-> +static void perf_put_aux_event(struct perf_event *event)
-> +{
-> +	struct perf_event_context *ctx = event->ctx;
-> +	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
-> +	struct perf_event *iter = NULL;
-> +
-> +	/*
-> +	 * If event uses aux_event tear down the link
-> +	 */
-> +	if (event->aux_event) {
-> +		put_event(event->aux_event);
-> +		event->aux_event = NULL;
+On Mon, Jul 29, 2019 at 01:54:21PM +0100, Vincenzo Frascino wrote:
+> Using an old .config in combination with "make oldconfig" can cause
+> an incorrect detection of the compat compiler:
+> 
+> $ grep CROSS_COMPILE_COMPAT .config
+> CONFIG_CROSS_COMPILE_COMPAT_VDSO=""
+> 
+> $ make oldconfig && make
+> arch/arm64/Makefile:58: gcc not found, check CROSS_COMPILE_COMPAT.
+> Stop.
+> 
+> Accordingly to the section 7.2 of the GNU Make manual "Syntax of
+> Conditionals", "When the value results from complex expansions of
+> variables and functions, expansions you would consider empty may
+> actually contain whitespace characters and thus are not seen as
+> empty. However, you can use the strip function to avoid interpreting
+> whitespace as a non-empty value."
+> 
+> Fix the issue adding strip to the CROSS_COMPILE_COMPAT string
+> evaluation.
+> 
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Reported-by: Matteo Croce <mcroce@redhat.com>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> ---
+>  arch/arm64/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index bb1f1dbb34e8..61de992bbea3 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -52,7 +52,7 @@ ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
+>  
+>    ifeq ($(CONFIG_CC_IS_CLANG), y)
+>      $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
+> -  else ifeq ($(CROSS_COMPILE_COMPAT),)
+> +  else ifeq ($(strip $(CROSS_COMPILE_COMPAT)),)
+>      $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
+>    else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
+>      $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
+> -- 
+> 2.22.0
 
-Those lines should probably be reversed; put_event() should be done
-after clearing the link.
+Acked-by: Will Deacon <will@kernel.org>
 
-It probably doesn't matter, but it is confusing.
-
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * If the event is an aux_event, tear down all links to
-> +	 * it from other events.
-> +	 */
-> +	for_each_sibling_event(iter, event->group_leader) {
-> +		if (iter->aux_event != event)
-> +			continue;
-> +
-> +		iter->aux_event = NULL;
-> +		put_event(event);
-> +
-> +		/*
-> +		 * If it's ACTIVE, schedule it out. It won't schedule
-> +		 * again because !aux_event.
-> +		 */
-> +		event_sched_out(iter, cpuctx, ctx);
-> +	}
-> +}
+Will
