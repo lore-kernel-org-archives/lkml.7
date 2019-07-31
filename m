@@ -2,126 +2,91 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B7DC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01556C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B60206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:27:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSzE4VGK"
+	by mail.kernel.org (Postfix) with ESMTP id D20FA206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387543AbfGaL1c (ORCPT
+        id S1727729AbfGaL3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:27:32 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36688 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfGaL1Z (ORCPT
+        Wed, 31 Jul 2019 07:29:37 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36877 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaL3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:27:25 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k8so30376917plt.3;
-        Wed, 31 Jul 2019 04:27:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VHS57PmtuwPLtfBLBbltEv6DFT+0iXK6WiNzQSWrzrE=;
-        b=dSzE4VGKLVc5cptEp5NMZBvonc0E/Mbzeb3v3kZ2sxvS3MocB+Ey4AdqyrtDCd6y9v
-         DCf8ngnHUtuo4l20ghiUhdYu6+Q/lyQ8YQWECVv7FndGXX5UKvoZVCitKN+DrOyJQWm7
-         hgoAjRHZSDUtBTLnwIHv1IYkMXQylL7hCoaD0lRfZK7+eMPyoHp8kmoPJqKu0aVLbkCs
-         /NrFg0TZLA5QR8NH12QCUVHuPdD+N3VDuDmGkAuwmA1WXBFBY/tacPzvhs0eoT2+l4I8
-         1YsCb9omqhQgf5Hp95OJNL2jHAtRHp6lVTj/EndYIFZ8Fle7RoKtMaVvt1Ky2kxVKzAS
-         +eug==
+        Wed, 31 Jul 2019 07:29:36 -0400
+Received: by mail-ed1-f68.google.com with SMTP id w13so65411485eds.4
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 04:29:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VHS57PmtuwPLtfBLBbltEv6DFT+0iXK6WiNzQSWrzrE=;
-        b=iEWWK25ljgyrrUkgef5PlzvgB8xX+Mur5wrq0dpoHxWY9Xtd0n0ZqqnAFzPvWVES71
-         ByYxRhfRftT0ZjM76RSneEfPVGPk3rMczt2cABuB6lYYO/EgsFhjK0viv1scMmmRdnBX
-         Nb1BDZ1KiNuzTvu3F1+dQOp6BcoTW7W7r5lFfQS0D2bOdR+vvYnXHfs9/H8LGwb86x6/
-         DUT+zHU5dthM2nGCdXaoRi343MRywIIhD/nMBq1y2ZQ9aBZGY8egv2EqpHtvx8XAoFnZ
-         fzKZVlokyGP5p0pjBN8F6QGnUc7ribH/2JaYCgTzXHBRgcRCCOVFkWVD/KKwFHNbOACM
-         r3vw==
-X-Gm-Message-State: APjAAAVp6rN/3ATY58vUtSMnQww+pBNVqXhbNU9iaV6P4N/WbUly5rtQ
-        dZI5VTkisq+du019wif7fFgBhMj2Y8Y=
-X-Google-Smtp-Source: APXvYqy2Umcofp2a7ba/gLc41pb58cmWuK120xoCrZgYeHsxJpEp44GERukISjQ4a835VZZtogc5YQ==
-X-Received: by 2002:a17:902:ba8b:: with SMTP id k11mr119794439pls.107.1564572444762;
-        Wed, 31 Jul 2019 04:27:24 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id e3sm1211441pgm.64.2019.07.31.04.27.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 31 Jul 2019 04:27:24 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH 2/3] KVM: Check preempted_in_kernel for involuntary preemption
-Date:   Wed, 31 Jul 2019 19:27:17 +0800
-Message-Id: <1564572438-15518-2-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564572438-15518-1-git-send-email-wanpengli@tencent.com>
-References: <1564572438-15518-1-git-send-email-wanpengli@tencent.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jCrdi6iZTx1g9vmHzrs+JIRim7u1VeaT1iHowsMbIo4=;
+        b=rJukYSBONc8Fj+b3Wtsut9rWwPKuoTjQAL2wSXaJjQkwhxYdTPxfscWWfFY84CE4Y9
+         lxbdUk7H31p2YNfLuUzxfz3wBzxh4xBHNLtvuJwf2KcWZ9WUGsusCUwonq7uuUjU6R0F
+         NAFa2IqoikxLSJBnxT6IFK7lf+EjAss9j11ITLMz2qc7lAczGG5ChmarrPWiMxK3EkJb
+         NwxBKTjKMWNphD4+paJ2c83NRLBA2LqAJcKiop6wQQsHlciRGeeKx+FuuGn1cdelkraH
+         9zvj6NcnjIKGO9yLmBJ5IQJuOJ9E6gPruiQX9um7NwJaE+flux37xV9W0ZNcXUvtuedP
+         g1EQ==
+X-Gm-Message-State: APjAAAUeOQcq6IAYcXJk3nOtPot4L6voiaqSu9L05tWCOU4yGM2qYFQI
+        5D56KXWEyomUKR39cWuAt5Mkng==
+X-Google-Smtp-Source: APXvYqwOYCoIM0Y8Cm011SWOMkANiaWqTnW6O1Cb1YzR1A/upfKO6SxW+Kdwc9RPcZ48XkcHgVo05Q==
+X-Received: by 2002:a50:b343:: with SMTP id r3mr103636766edd.16.1564572575321;
+        Wed, 31 Jul 2019 04:29:35 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id t7sm4548498edw.87.2019.07.31.04.29.33
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 04:29:34 -0700 (PDT)
+Subject: Re: [PATCH] HID: logitech-dj: Fix check of
+ logi_dj_recv_query_paired_devices()
+To:     Petr Vorel <pvorel@suse.cz>, YueHaibing <yuehaibing@huawei.com>
+Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+References: <20190725145719.8344-1-yuehaibing@huawei.com>
+ <20190731105927.GA5092@dell5510> <20190731110629.GB5092@dell5510>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <3e9bda5b-68dc-15b9-ca79-2e73567ea0a5@redhat.com>
+Date:   Wed, 31 Jul 2019 13:29:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190731110629.GB5092@dell5510>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+Hi Petr,
 
-preempted_in_kernel is updated in preempt_notifier when involuntary preemption 
-ocurrs, it can be stale when the voluntarily preempted vCPUs are taken into 
-account by kvm_vcpu_on_spin() loop. This patch lets it just check preempted_in_kernel 
-for involuntary preemption.
+On 31-07-19 13:06, Petr Vorel wrote:
+> Hi,
+> 
+>>> In delayedwork_callback(), logi_dj_recv_query_paired_devices
+>>> may return positive value while success now, so check it
+>>> correctly.
+> 
+>>> Fixes: dbcbabf7da92 ("HID: logitech-dj: fix return value of logi_dj_recv_query_hidpp_devices")
+>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> Reviewed-by: Petr Vorel <pvorel@suse.cz>
+> OK, not only it didn't fix problems with logitech mouse (see below),
+> but removing mouses USB dongle effectively crashes kernel, so this one probably
+> shouldn't be applied :).
+> 
+> [  330.721629] logitech-djreceiver: probe of 0003:046D:C52F.0013 failed with error 7
+> [  331.462335] hid 0003:046D:C52F.0013: delayedwork_callback: logi_dj_recv_query_paired_devices error: 7
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- virt/kvm/kvm_main.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Please test my patch titled: "HID: logitech-dj: Really fix return value of logi_dj_recv_query_hidpp_devices"
+which should fix this.
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 887f3b0..ed061d8 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2508,7 +2508,8 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *me, bool yield_to_kernel_mode)
- 				continue;
- 			if (swait_active(&vcpu->wq) && !kvm_arch_vcpu_runnable(vcpu))
- 				continue;
--			if (yield_to_kernel_mode && !kvm_arch_vcpu_in_kernel(vcpu))
-+			if (READ_ONCE(vcpu->preempted) && yield_to_kernel_mode &&
-+				!kvm_arch_vcpu_in_kernel(vcpu))
- 				continue;
- 			if (!kvm_vcpu_eligible_for_directed_yield(vcpu))
- 				continue;
-@@ -4205,7 +4206,7 @@ static void kvm_sched_in(struct preempt_notifier *pn, int cpu)
- {
- 	struct kvm_vcpu *vcpu = preempt_notifier_to_vcpu(pn);
- 
--	vcpu->preempted = false;
-+	WRITE_ONCE(vcpu->preempted, false);
- 	WRITE_ONCE(vcpu->ready, false);
- 
- 	kvm_arch_sched_in(vcpu, cpu);
-@@ -4219,7 +4220,7 @@ static void kvm_sched_out(struct preempt_notifier *pn,
- 	struct kvm_vcpu *vcpu = preempt_notifier_to_vcpu(pn);
- 
- 	if (current->state == TASK_RUNNING) {
--		vcpu->preempted = true;
-+		WRITE_ONCE(vcpu->preempted, true);
- 		WRITE_ONCE(vcpu->ready, true);
- 	}
- 	kvm_arch_vcpu_put(vcpu);
--- 
-2.7.4
+Regards,
 
+Hans
