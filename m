@@ -2,128 +2,115 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82274C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAAEC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFDA206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19C2208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PPotgx+T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uVJ4kuvi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbfGaSeC (ORCPT
+        id S1730320AbfGaSgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:34:02 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:8374 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729992AbfGaSeB (ORCPT
+        Wed, 31 Jul 2019 14:36:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36895 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727572AbfGaSgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:34:01 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VIWCZu005889
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:34:00 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=S84BXpGsArP8gRpx4jT/dGDAfOA51Safqnff7k6UND8=;
- b=PPotgx+T02mUnkJtzfdAahQCsMtNDPcOAJE4FsfH+HW1pFFI/GAnG3RGLnj/ayFXv3Hf
- K7xVsCp9+Mb36e/m12+ceQcP2hzCvMVdNcyS5aMsmOUD9uCKSOtfJoI6wv2iHyoVHkB1
- l6YE5YpZyMsDIU/I3dIEmMpkGyxrZ9ytfAE= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u2uhtma26-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:34:00 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 31 Jul 2019 11:33:57 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 6ABC962E1BBA; Wed, 31 Jul 2019 11:33:55 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <akpm@linux-foundation.org>
-CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        <oleg@redhat.com>, <kernel-team@fb.com>,
-        <william.kucharski@oracle.com>, <srikar@linux.vnet.ibm.com>,
-        Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v2 2/2] uprobe: collapse THP pmd after removing all uprobes
-Date:   Wed, 31 Jul 2019 11:33:31 -0700
-Message-ID: <20190731183331.2565608-3-songliubraving@fb.com>
+        Wed, 31 Jul 2019 14:36:33 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 19so32345351pfa.4
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CDz+d68kK243TDqiK1NIHv51qZyJgsAbmVMIQB4C8hA=;
+        b=uVJ4kuvizTFMl0PZZfBRuMnaeJnygWvwTvlBnQWHCYFjp2qWosEZ2sdvgNNW/JTj97
+         i8YrnN4IXGmWGPg1Ul+XABKjMvZDXiP4X/h8LMdRejyiQeNDPMZQdOYtkvj/nctz3rOp
+         nBsGFD3Ks6OwSD6X2hNvQFBEOTmul2dmx+bm6Y1ZwupyzP4X6/FBdMFXXuwOa0jnR9BD
+         mG3ooqmf9Wa3MRvq7bI1adrevwTdQ2dDL3Q6LWaLJMDOOavQ3gPxKNxgAEfbgs5zzzUW
+         rslv7djoSK1Va99wkPMsF41urYs2Z+usZ5aLnKNt9by0t399bTqje9qSr4I/satSCxYt
+         WL4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CDz+d68kK243TDqiK1NIHv51qZyJgsAbmVMIQB4C8hA=;
+        b=ijFC5IwU6gfsOS6Kv/UNdUT78HsJIotBZ1UDIWc+szPx87DUQjEn1dmIfiJk4ctPzq
+         QYWu+KY9SLdlMTQPsuN0WdvnLpgBMa/5rHz+FSM6+eVhkugz11wBhhI4hmBJ4aLOg9po
+         osRHdvCwM2cHQ6Dk3sfH13KkjXQWC6Kr8Vf30Vsla6MGZr1zn98UAf74nkd1vLLpxm8u
+         FluhkgJ9L4japdlUNe4GfoKIGO3p6lx9REwtTc2sPOIXEBJuXcjhvR/fdo+SGJAyxWRL
+         xe7SxNqOQ8RwHTXcBodLbmDuNzyvHK8VD/Ylnvrg45D8WJ73ib4eXo6LzpthetuCzC3m
+         f+6w==
+X-Gm-Message-State: APjAAAVr4Exu9QtOQuprErC6DwH/kPVqH6KSPs/8dWshTbBTk4v07jaZ
+        d39KOUjI8I81mz4trv2ASuY=
+X-Google-Smtp-Source: APXvYqxt778NrcDU6VEz3IsXTgcrNE1lZ37D3/J/5XP2DykdutWw96vKy1J0UYLYfRz6P6Ji/0MArg==
+X-Received: by 2002:a63:6bc5:: with SMTP id g188mr85059063pgc.225.1564598192338;
+        Wed, 31 Jul 2019 11:36:32 -0700 (PDT)
+Received: from localhost.localdomain ([183.83.73.90])
+        by smtp.gmail.com with ESMTPSA id y14sm19780610pge.7.2019.07.31.11.36.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 11:36:31 -0700 (PDT)
+From:   Harsh Jain <harshjain32@gmail.com>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     harshjain32@gmail.com
+Subject: [PATCH] staging:kpc2000:Fix dubious x | !y sparse warning
+Date:   Thu,  1 Aug 2019 00:06:06 +0530
+Message-Id: <20190731183606.2513-1-harshjain32@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190731183331.2565608-1-songliubraving@fb.com>
-References: <20190731183331.2565608-1-songliubraving@fb.com>
-X-FB-Internal: Safe
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=424 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907310186
-X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After all uprobes are removed from the huge page (with PTE pgtable), it
-is possible to collapse the pmd and benefit from THP again. This patch
-does the collapse by calling collapse_pte_mapped_thp().
+Bitwise OR(|) operation with 0 always yield same result.
+It fixes dubious x | !y sparse warning.
 
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Harsh Jain <harshjain32@gmail.com>
 ---
- kernel/events/uprobes.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/staging/kpc2000/kpc2000_i2c.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 27b596f14463..e5c30941ea04 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -26,6 +26,7 @@
- #include <linux/percpu-rwsem.h>
- #include <linux/task_work.h>
- #include <linux/shmem_fs.h>
-+#include <linux/khugepaged.h>
+diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
+index b108da4..5f027d7c 100644
+--- a/drivers/staging/kpc2000/kpc2000_i2c.c
++++ b/drivers/staging/kpc2000/kpc2000_i2c.c
+@@ -536,29 +536,15 @@ static u32 i801_func(struct i2c_adapter *adapter)
  
- #include <linux/uprobes.h>
+ 	u32 f =
+ 		I2C_FUNC_I2C                     | /* 0x00000001 (I enabled this one) */
+-		!I2C_FUNC_10BIT_ADDR             | /* 0x00000002 */
+-		!I2C_FUNC_PROTOCOL_MANGLING      | /* 0x00000004 */
+ 		((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) | /* 0x00000008 */
+-		!I2C_FUNC_SMBUS_BLOCK_PROC_CALL  | /* 0x00008000 */
+ 		I2C_FUNC_SMBUS_QUICK             | /* 0x00010000 */
+-		!I2C_FUNC_SMBUS_READ_BYTE        | /* 0x00020000 */
+-		!I2C_FUNC_SMBUS_WRITE_BYTE       | /* 0x00040000 */
+-		!I2C_FUNC_SMBUS_READ_BYTE_DATA   | /* 0x00080000 */
+-		!I2C_FUNC_SMBUS_WRITE_BYTE_DATA  | /* 0x00100000 */
+-		!I2C_FUNC_SMBUS_READ_WORD_DATA   | /* 0x00200000 */
+-		!I2C_FUNC_SMBUS_WRITE_WORD_DATA  | /* 0x00400000 */
+-		!I2C_FUNC_SMBUS_PROC_CALL        | /* 0x00800000 */
+-		!I2C_FUNC_SMBUS_READ_BLOCK_DATA  | /* 0x01000000 */
+-		!I2C_FUNC_SMBUS_WRITE_BLOCK_DATA | /* 0x02000000 */
+ 		((priv->features & FEATURE_I2C_BLOCK_READ) ? I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0) | /* 0x04000000 */
+ 		I2C_FUNC_SMBUS_WRITE_I2C_BLOCK   | /* 0x08000000 */
  
-@@ -472,6 +473,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 	struct page *old_page, *new_page;
- 	struct vm_area_struct *vma;
- 	int ret, is_register, ref_ctr_updated = 0;
-+	bool orig_page_huge = false;
- 
- 	is_register = is_swbp_insn(&opcode);
- 	uprobe = container_of(auprobe, struct uprobe, arch);
-@@ -529,6 +531,9 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 				/* let go new_page */
- 				put_page(new_page);
- 				new_page = NULL;
-+
-+				if (PageCompound(orig_page))
-+					orig_page_huge = true;
- 			}
- 			put_page(orig_page);
- 		}
-@@ -547,6 +552,10 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 	if (ret && is_register && ref_ctr_updated)
- 		update_ref_ctr(uprobe, mm, -1);
- 
-+	/* try collapse pmd for compound page */
-+	if (!ret && orig_page_huge)
-+		collapse_pte_mapped_thp(mm, vaddr & HPAGE_PMD_MASK);
-+
- 	return ret;
+ 		I2C_FUNC_SMBUS_BYTE              | /* _READ_BYTE  _WRITE_BYTE */
+ 		I2C_FUNC_SMBUS_BYTE_DATA         | /* _READ_BYTE_DATA  _WRITE_BYTE_DATA */
+ 		I2C_FUNC_SMBUS_WORD_DATA         | /* _READ_WORD_DATA  _WRITE_WORD_DATA */
+-		I2C_FUNC_SMBUS_BLOCK_DATA        | /* _READ_BLOCK_DATA  _WRITE_BLOCK_DATA */
+-		!I2C_FUNC_SMBUS_I2C_BLOCK        | /* _READ_I2C_BLOCK  _WRITE_I2C_BLOCK */
+-		!I2C_FUNC_SMBUS_EMUL;              /* _QUICK  _BYTE  _BYTE_DATA  _WORD_DATA  _PROC_CALL  _WRITE_BLOCK_DATA  _I2C_BLOCK _PEC */
++		I2C_FUNC_SMBUS_BLOCK_DATA;	   /* _READ_BLOCK_DATA  _WRITE_BLOCK_DATA */
+ 	return f;
  }
  
 -- 
-2.17.1
+2.7.4
 
