@@ -2,281 +2,173 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D259AC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914F6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAB6206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA47206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:54:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="KqDEHSeN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nt6cMM8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbfGaNyV (ORCPT
+        id S1729718AbfGaNyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:54:21 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40808 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfGaNyV (ORCPT
+        Wed, 31 Jul 2019 09:54:24 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42204 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727708AbfGaNyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 09:54:21 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m8so32091353lji.7
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 06:54:18 -0700 (PDT)
+Received: by mail-pl1-f194.google.com with SMTP id ay6so30568515plb.9;
+        Wed, 31 Jul 2019 06:54:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=/dP/P13uRe43vvjt8C6QOCwp1lgDg0ptlUzZV7Cu/NM=;
-        b=KqDEHSeNmULTm1N+Ex6QcsKbXhzbS0z46WTY8kzYDNWhItWmMnQDiMCUGbn7EPjKNA
-         4UiD2B3/Y9BBakvLy6W3xFOrv7ukbSaXP6rRzKICPJbgCC73SryHj78t54UpBpvTw/jp
-         4yVCGK08l6LKC81mMkAiNGB3lHBKDzlsWAW0BnIBUH+RqXpV+ps4NO9fyjNU6fRggYvT
-         HeXqgUL12teT3fxNw9szPZQSIFw9eNwmA+uyn1Wk+prgFGtzJOsA3HPvkWZx2d84jAJD
-         rWzVpq7dN9yvJTYox50JYfgvWzwuQ1NC9HA7GhJvPHNm431E8xSkNpU7BHGLr/+b4Qm6
-         om3Q==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NMHoNMkwZIjttRoQclv/No/h1YkPwIfxBhh7UosFrCo=;
+        b=nt6cMM8cKfDQBR7KEsqpXraXr/TS7TxUrSquIpxxKJEIQU/KrSZUh1EdWzsGrk6M9Z
+         xQHfyseFfzYpJygezf4x6ys1Foun2MhQdR0j/UG+BJHeP7ihcP9xWSw4UJ/2m+98+Pkx
+         q2MRvvu50jo+0CEoRqs8pfOrR9gH+6VbkMo5BqqByA6lxd7IevLy9F2PozH7xUokVBhk
+         jzTYBCP7dycssJ1lTBvgu6sbJ/sD47t7TeSjrW6RO6LdOuXBzeYj3eHJ1E27Ejj45ek8
+         c20ZhFSw1OBvL7qhzRERIMgFJxNZanhNQkxtsTje9/xWqFngP+B8s+UaOEAynPlfjdZl
+         Rlrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=/dP/P13uRe43vvjt8C6QOCwp1lgDg0ptlUzZV7Cu/NM=;
-        b=d/5Y/UMyA8PKr1V+w6kSTWI7wPOdrlaAF30qaCYpP1IF1RIoG1MtiCo80JSWek+C93
-         h+Prx1vIbW4svxh3vdUkYULJvlOZSCCHojHugsp5GYVb2sCLWfCP6Dw4HWB8FgI+7xeT
-         D5uMXmhV8gTNNiuI5Y5eUg/bEFmZTXKOEAnOnIG6+ZTx2NkNrdOI8BLI2jnaUGNvY20P
-         D6s+xTf1WAfuPbygdXclg2uvRZUeLdRP1DOAhWKtTaIst1xxZbUz9jkfxzkCzF/jQTso
-         roTCabqzk40OxVVMssfMcHgCaL8DwMFG5+LvzVoPTRAZoEsGQ/x3pxifRLpVRzmIBCSc
-         DjLA==
-X-Gm-Message-State: APjAAAVvEWr/ctwE4rss8pS4a3ronSPseKibL+m6B5mfw9aAHYAkyCfp
-        raHH+/8hWoXQU2rsstxMYy8=
-X-Google-Smtp-Source: APXvYqx8VUEFmveAe6BQEzhC+hFMDN5xD6KjL0nBWd4T9PkXb7DdQOLLvlQ1SZMrbnYoLpyh2cvLaw==
-X-Received: by 2002:a2e:9b81:: with SMTP id z1mr64913295lji.101.1564581258104;
-        Wed, 31 Jul 2019 06:54:18 -0700 (PDT)
-Received: from [172.20.10.13] (212.27.19.10.bredband.3.dk. [212.27.19.10])
-        by smtp.gmail.com with ESMTPSA id w1sm16124377ljm.81.2019.07.31.06.54.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 06:54:17 -0700 (PDT)
-From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
-Message-Id: <2282D925-D153-474D-99F3-4830EE16F69F@javigon.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_69A10665-6BE3-433C-97AE-23B8517D9DCC";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 1/4] lightnvm: remove nvm_submit_io_sync_fn
-Date:   Wed, 31 Jul 2019 15:54:15 +0200
-In-Reply-To: <1564566096-28756-2-git-send-email-hans@owltronix.com>
-Cc:     =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Hans Holmberg <hans@owltronix.com>
-References: <1564566096-28756-1-git-send-email-hans@owltronix.com>
- <1564566096-28756-2-git-send-email-hans@owltronix.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NMHoNMkwZIjttRoQclv/No/h1YkPwIfxBhh7UosFrCo=;
+        b=ukcfTaMR7xZ+iWfKIKtlOKSUONn625e7LRgZ8OJP+BE/73/2QdsU6ZGFriHnTHQXOD
+         tB6dtwJ5FaBQvhuHHaLapZPcEqy6zGWoI8TPaB+P4qq5SFezNYCWTcGDO3f3U/BihBaa
+         FVK7Xu4oE3FVMz+oRFJLDjbkUUVtdY8/ygICkFPhuZFLww1hSBXbh444vfqVVOO2SpSX
+         OkZtG0Ir/xVVIWCL1nA1TqfYzbYZOnOw2zR/S/KwHUf8wK+IM25WMUo+4c/UoypH1D2G
+         UV82x24EevI0ljez0ulJsbYvIxY05c3oHh3cnvPNxE4NAgVpDwOkSyDHWCGmajJ72ZD+
+         iJhA==
+X-Gm-Message-State: APjAAAUIqAZj6pFKvj2CSWms29P0kRvBKs/OYX4LYupkLAhnUwTxYfS2
+        hmslX+xWG16o4KZRFGhtlJg=
+X-Google-Smtp-Source: APXvYqwf7iFI8IPFMwE49BO1MBfggFyFXdCWGnl/9js+QXKFf0Hyn4QBBo0ttQZmr3aN8bfyhXQ08A==
+X-Received: by 2002:a17:902:8d92:: with SMTP id v18mr122418654plo.211.1564581260564;
+        Wed, 31 Jul 2019 06:54:20 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id u6sm2133736pjx.23.2019.07.31.06.54.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 06:54:19 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 06:54:17 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
+Message-ID: <20190731135417.GF147138@dtor-ws>
+References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
+ <20190713075259.243565-2-dmitry.torokhov@gmail.com>
+ <20190729120715.GA28600@kuha.fi.intel.com>
+ <20190729131532.GA1201@penguin>
+ <20190730115247.GK28600@kuha.fi.intel.com>
+ <e36fb47b-2969-5f53-97d4-8e94b4c98283@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e36fb47b-2969-5f53-97d4-8e94b4c98283@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 30, 2019 at 04:49:50PM +0200, Rafael J. Wysocki wrote:
+> On 7/30/2019 1:52 PM, Heikki Krogerus wrote:
+> > On Mon, Jul 29, 2019 at 03:15:32PM +0200, Dmitry Torokhov wrote:
+> > > On Mon, Jul 29, 2019 at 03:07:15PM +0300, Heikki Krogerus wrote:
+> > > > On Sat, Jul 13, 2019 at 12:52:58AM -0700, Dmitry Torokhov wrote:
+> > > > > It is helpful to know what device, if any, a software node is tied to, so
+> > > > > let's store a pointer to the device in software node structure. Note that
+> > > > > children software nodes will inherit their parent's device pointer, so we
+> > > > > do not have to traverse hierarchy to see what device the [sub]tree belongs
+> > > > > to.
+> > > > > 
+> > > > > We will be using the device pointer to locate GPIO lookup tables for
+> > > > > devices with static properties.
+> > > > > 
+> > > > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > > > ---
+> > > > >   drivers/base/property.c  |  1 +
+> > > > >   drivers/base/swnode.c    | 35 ++++++++++++++++++++++++++++++++++-
+> > > > >   include/linux/property.h |  5 +++++
+> > > > >   3 files changed, 40 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > > > > index 348b37e64944..3bc93d4b35c4 100644
+> > > > > --- a/drivers/base/property.c
+> > > > > +++ b/drivers/base/property.c
+> > > > > @@ -527,6 +527,7 @@ int device_add_properties(struct device *dev,
+> > > > >   	if (IS_ERR(fwnode))
+> > > > >   		return PTR_ERR(fwnode);
+> > > > > +	software_node_link_device(fwnode, dev);
+> > > > >   	set_secondary_fwnode(dev, fwnode);
+> > > > >   	return 0;
+> > > > >   }
+> > > > > diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> > > > > index 7fc5a18e02ad..fd12eea539b6 100644
+> > > > > --- a/drivers/base/swnode.c
+> > > > > +++ b/drivers/base/swnode.c
+> > > > > @@ -24,6 +24,9 @@ struct software_node {
+> > > > >   	/* properties */
+> > > > >   	const struct property_entry *properties;
+> > > > > +
+> > > > > +	/* device this node is associated with */
+> > > > > +	struct device *dev;
+> > > > >   };
+> > > > Let's not do that! The nodes can be, and in many cases are, associated
+> > > > with multiple devices.
+> > > They do? Where? I see that set of properties can be shared between
+> > > several devices, but when we instantiate SW node we create a new
+> > > instance for device. This is also how ACPI and OF properties work; they
+> > > not shared between devices (or, rather, the kernel creates distinct _and
+> > > single_ devices for instance of ACPI or OF node). I do not think we want
+> > > swnodes work differently from the other firmware nodes.
+> > Having multiple devices linked to a single node is quite normal. Most
+> > multifunctional devices will share a single node. The USB port devices
+> > will share their node (if they have one) with any device that is
+> > attached to them. Etc.
+> > 
+> > If you want to check how this works with ACPI, then find
+> > "physical_node" named files from sysfs. The ACPI node folders in sysfs
+> > have symlinks named "physical_node<n>" for every device they are bind
+> > to. The first one is named just "physical_node", the second
+> > "physical_node1", the third "physical_node2", and so on.
+> > 
+> > > > Every device is already linked with the software node kobject, so
+> > > > isn't it possible to simply walk trough those links in order to check
+> > > > the devices associated with the node?
+> > > No, we need to know the exact instance of a device, not a set of
+> > > devices, because even though some properties can be shared, others can
+> > > not. For example, even if 2 exactly same touch controllers in the system
+> > > have "reset-gpios" property, they won't be the same GPIO for the both of
+> > > them.
+> > I don't think I completely understand the use case you had in mind for
+> > this API, but since you planned to use it with the GPIO lookup tables,
+> > I'm going to assume it's not needed after all. Let's replace those
+> > with the references instead like I proposed in my reply to the 2/2
+> > patch.
+> > 
+> > Linking a single device with a node like that is in any case not
+> > acceptable nor possible.
+> > 
+> I think I need to withdraw my ACK here at this point.
 
---Apple-Mail=_69A10665-6BE3-433C-97AE-23B8517D9DCC
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
+OK, fair enough, I'll see if I can make the references that Heikki
+mentioned work for me.
 
-> On 31 Jul 2019, at 11.41, Hans Holmberg <hans@owltronix.com> wrote:
->=20
-> Move the redundant sync handling interface and wait for a completion
-> in the lightnvm core instead.
->=20
-> Signed-off-by: Hans Holmberg <hans@owltronix.com>
-> ---
-> drivers/lightnvm/core.c      | 35 +++++++++++++++++++++++++++++------
-> drivers/nvme/host/lightnvm.c | 29 -----------------------------
-> include/linux/lightnvm.h     |  2 --
-> 3 files changed, 29 insertions(+), 37 deletions(-)
->=20
-> diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-> index a600934fdd9c..01d098fb96ac 100644
-> --- a/drivers/lightnvm/core.c
-> +++ b/drivers/lightnvm/core.c
-> @@ -752,12 +752,36 @@ int nvm_submit_io(struct nvm_tgt_dev *tgt_dev, =
-struct nvm_rq *rqd)
-> }
-> EXPORT_SYMBOL(nvm_submit_io);
->=20
-> +static void nvm_sync_end_io(struct nvm_rq *rqd)
-> +{
-> +	struct completion *waiting =3D rqd->private;
-> +
-> +	complete(waiting);
-> +}
-> +
-> +static int nvm_submit_io_wait(struct nvm_dev *dev, struct nvm_rq =
-*rqd)
-> +{
-> +	DECLARE_COMPLETION_ONSTACK(wait);
-> +	int ret =3D 0;
-> +
-> +	rqd->end_io =3D nvm_sync_end_io;
-> +	rqd->private =3D &wait;
-> +
-> +	ret =3D dev->ops->submit_io(dev, rqd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	wait_for_completion_io(&wait);
-> +
-> +	return 0;
-> +}
-> +
-> int nvm_submit_io_sync(struct nvm_tgt_dev *tgt_dev, struct nvm_rq =
-*rqd)
-> {
-> 	struct nvm_dev *dev =3D tgt_dev->parent;
-> 	int ret;
->=20
-> -	if (!dev->ops->submit_io_sync)
-> +	if (!dev->ops->submit_io)
-> 		return -ENODEV;
->=20
-> 	nvm_rq_tgt_to_dev(tgt_dev, rqd);
-> @@ -765,9 +789,7 @@ int nvm_submit_io_sync(struct nvm_tgt_dev =
-*tgt_dev, struct nvm_rq *rqd)
-> 	rqd->dev =3D tgt_dev;
-> 	rqd->flags =3D nvm_set_flags(&tgt_dev->geo, rqd);
->=20
-> -	/* In case of error, fail with right address format */
-> -	ret =3D dev->ops->submit_io_sync(dev, rqd);
-> -	nvm_rq_dev_to_tgt(tgt_dev, rqd);
-> +	ret =3D nvm_submit_io_wait(dev, rqd);
->=20
-> 	return ret;
-> }
-> @@ -788,12 +810,13 @@ EXPORT_SYMBOL(nvm_end_io);
->=20
-> static int nvm_submit_io_sync_raw(struct nvm_dev *dev, struct nvm_rq =
-*rqd)
-> {
-> -	if (!dev->ops->submit_io_sync)
-> +	if (!dev->ops->submit_io)
-> 		return -ENODEV;
->=20
-> +	rqd->dev =3D NULL;
-> 	rqd->flags =3D nvm_set_flags(&dev->geo, rqd);
->=20
-> -	return dev->ops->submit_io_sync(dev, rqd);
-> +	return nvm_submit_io_wait(dev, rqd);
-> }
->=20
-> static int nvm_bb_chunk_sense(struct nvm_dev *dev, struct ppa_addr =
-ppa)
-> diff --git a/drivers/nvme/host/lightnvm.c =
-b/drivers/nvme/host/lightnvm.c
-> index ba009d4c9dfa..d6f121452d5d 100644
-> --- a/drivers/nvme/host/lightnvm.c
-> +++ b/drivers/nvme/host/lightnvm.c
-> @@ -690,34 +690,6 @@ static int nvme_nvm_submit_io(struct nvm_dev =
-*dev, struct nvm_rq *rqd)
-> 	return 0;
-> }
->=20
-> -static int nvme_nvm_submit_io_sync(struct nvm_dev *dev, struct nvm_rq =
-*rqd)
-> -{
-> -	struct request_queue *q =3D dev->q;
-> -	struct request *rq;
-> -	struct nvme_nvm_command cmd;
-> -	int ret =3D 0;
-> -
-> -	memset(&cmd, 0, sizeof(struct nvme_nvm_command));
-> -
-> -	rq =3D nvme_nvm_alloc_request(q, rqd, &cmd);
-> -	if (IS_ERR(rq))
-> -		return PTR_ERR(rq);
-> -
-> -	/* I/Os can fail and the error is signaled through rqd. Callers =
-must
-> -	 * handle the error accordingly.
-> -	 */
-> -	blk_execute_rq(q, NULL, rq, 0);
-> -	if (nvme_req(rq)->flags & NVME_REQ_CANCELLED)
-> -		ret =3D -EINTR;
-> -
-> -	rqd->ppa_status =3D le64_to_cpu(nvme_req(rq)->result.u64);
-> -	rqd->error =3D nvme_req(rq)->status;
-> -
-> -	blk_mq_free_request(rq);
-> -
-> -	return ret;
-> -}
-> -
-> static void *nvme_nvm_create_dma_pool(struct nvm_dev *nvmdev, char =
-*name,
-> 					int size)
-> {
-> @@ -754,7 +726,6 @@ static struct nvm_dev_ops nvme_nvm_dev_ops =3D {
-> 	.get_chk_meta		=3D nvme_nvm_get_chk_meta,
->=20
-> 	.submit_io		=3D nvme_nvm_submit_io,
-> -	.submit_io_sync		=3D nvme_nvm_submit_io_sync,
->=20
-> 	.create_dma_pool	=3D nvme_nvm_create_dma_pool,
-> 	.destroy_dma_pool	=3D nvme_nvm_destroy_dma_pool,
-> diff --git a/include/linux/lightnvm.h b/include/linux/lightnvm.h
-> index 4d0d5655c7b2..8891647b24b1 100644
-> --- a/include/linux/lightnvm.h
-> +++ b/include/linux/lightnvm.h
-> @@ -89,7 +89,6 @@ typedef int (nvm_op_set_bb_fn)(struct nvm_dev *, =
-struct ppa_addr *, int, int);
-> typedef int (nvm_get_chk_meta_fn)(struct nvm_dev *, sector_t, int,
-> 							struct =
-nvm_chk_meta *);
-> typedef int (nvm_submit_io_fn)(struct nvm_dev *, struct nvm_rq *);
-> -typedef int (nvm_submit_io_sync_fn)(struct nvm_dev *, struct nvm_rq =
-*);
-> typedef void *(nvm_create_dma_pool_fn)(struct nvm_dev *, char *, int);
-> typedef void (nvm_destroy_dma_pool_fn)(void *);
-> typedef void *(nvm_dev_dma_alloc_fn)(struct nvm_dev *, void *, gfp_t,
-> @@ -104,7 +103,6 @@ struct nvm_dev_ops {
-> 	nvm_get_chk_meta_fn	*get_chk_meta;
->=20
-> 	nvm_submit_io_fn	*submit_io;
-> -	nvm_submit_io_sync_fn	*submit_io_sync;
->=20
-> 	nvm_create_dma_pool_fn	*create_dma_pool;
-> 	nvm_destroy_dma_pool_fn	*destroy_dma_pool;
-> --
-> 2.7.4
+Thanks.
 
-Looks good to me. Thanks Hans.
-
-Reviewed-by: Javier Gonz=C3=A1lez <javier@javigon.com>
-
-
---Apple-Mail=_69A10665-6BE3-433C-97AE-23B8517D9DCC
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAl1BnYcACgkQPEYBfS0l
-eOCEZhAA2wX54VCYX3bFLZPozqYlUm9011/lbUW2WWZp/X8HPuECuo1LNfsMcDdx
-5OrhRUj1smOVJJCfjUsrfQNvbla4PZtEpky22wEYDT6Pu/KTqajq8VbAOD7LBQeO
-sW0RCV92R6W0i52h8sB37rYr4+lOS7iEm0gcVgjEUUS7E5E957AjPUZF95MKtq3r
-nLRvSucV4LTD7XTie5DdWo/vwlrE/EDYFtHwdA9/DV2z1cNzpi6Nvtcc1RKkXc4m
-O0TDQ4vtT/FGGrduj+TUCbf0zD+ZN8lUJ7yQA36jdBb4BdawyV4UKLD5Y/Og9j8+
-mHb/irXzx1pT44H18LZgpdoEFjZextUdTxpgv9uPnqpXHxQHNAGzNJkuRKk72+6e
-RZce7d3EtKVAAhLjy0rgTCUZNNGIAjRWmSc+pSbOJUj1nJkeAZt88YwKr7DIz8cv
-nkfZKBfsUnWge8nf0f3svYlCcy3WgSYywBrYNLJX9Nq+qKInAUmHGTr7YjvB3G+n
-1Fz3LFSTW1+5dcBuWVgd/8T1fJKkGaHA88Do3W2D7AP+Wk8TdSJQewMBnmQN07c2
-nUw8rW9wcI26cdf0nu97rTnl3bkodXErAaW9Iy21jw7sMGSDcnoFI6qrpOo+1GFb
-5KgWvkitfMYT6MOjXJFUyOEf88fh0IG/dc+1tVsYifEoS3GHbpg=
-=/tgP
------END PGP SIGNATURE-----
-
---Apple-Mail=_69A10665-6BE3-433C-97AE-23B8517D9DCC--
+-- 
+Dmitry
