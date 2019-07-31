@@ -2,300 +2,133 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24A4C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A25C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811E0206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FA2206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:18:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8cVLqui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfGaPSW (ORCPT
+        id S1728847AbfGaPSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:18:22 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:63362 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726859AbfGaPSV (ORCPT
+        Wed, 31 Jul 2019 11:18:48 -0400
+Received: from mail-io1-f41.google.com ([209.85.166.41]:33702 "EHLO
+        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728226AbfGaPSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:18:21 -0400
-X-UUID: fec258378a214b9681d644dcc4839ef7-20190731
-X-UUID: fec258378a214b9681d644dcc4839ef7-20190731
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 11032262; Wed, 31 Jul 2019 23:13:11 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 31 Jul 2019 23:13:10 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 31 Jul 2019 23:13:10 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: [PATCH v3] checkpatch: add several Kconfig default value tests
-Date:   Wed, 31 Jul 2019 23:13:09 +0800
-Message-ID: <20190731151309.1167-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Wed, 31 Jul 2019 11:18:45 -0400
+Received: by mail-io1-f41.google.com with SMTP id z3so18215577iog.0;
+        Wed, 31 Jul 2019 08:18:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=xuzQG46X17DsEpMfhQGwH6+7cSvNDOWNUULAqRblVrE=;
+        b=G8cVLquixj9RJ5F5DWhx6mOs8B+caqB1IGByYL8abw/1gBpACEU5BpYF8+NgotXC0c
+         kKFV0rfirAAyP1gXl5HsIPjwuIAgD6W3pwYE37ceM86I+WBcmmGB6FALWXa2pbTFhsAI
+         j9dMpX123uZAoJktmdulPiM/Im15dZjEJR/gEkbqmrdlYkk/cNQXSuvH79gDb63wb7jC
+         DR10MLq6Q44IP34Qg1k00FENeVQ374/hDv78ASzDgvMq4m6w4lZL1yBwTpb4b0IS0pbT
+         AGIOY0ljrVqg9Wpfg2MptFcrVEB9coViK9KJnyEEB7gI5WHMvEzhmUNPCPqQnOxL+dVB
+         h/9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xuzQG46X17DsEpMfhQGwH6+7cSvNDOWNUULAqRblVrE=;
+        b=YWerkMsG+rUekFLSvsTPMqcF7iX/uuG9UrH9Dgb3i2S2CYx8/5ujPxYyJUSZGWZ6PV
+         AuBoePJ8aPJ9MKiUofPKpuRHdOt0bl8KRClmeZdVPtm5jk9XuADbdjIRYew5xCyFR7kH
+         /Al+KffoqSVPrYxm3wXnQ00qVUoi5dLW753h1PB4Fmuy5TBkMU8XHO2GRMrPIVA/03/a
+         Gwy8xZFGPJZUGaIG362Jo/2fmK2+UmPkjHiUqdmRxjVJWjBIAzKpNP6NSpAwq8txLx0O
+         +wOoD1bFvn0e0Xol2O/hnXpQd+RebdZOlxgtBAMLxSDqoSmsnWBVN5lPuVNPR9exN771
+         mqTw==
+X-Gm-Message-State: APjAAAXPGnj5wXpfXiGBxXwLu4wQRS6I9nVE5KlRYwftqmsB4vf1Z48b
+        PvWqJzwMKE1G3GdG7UY49N0QrcDK
+X-Google-Smtp-Source: APXvYqxOFT93yS6bZ+rjOjuZjbsCKjPMDY24dDZN+q//o80Gi+2JowsiHkq+n8GrBvsuD0LMbsA7dg==
+X-Received: by 2002:a5d:8d12:: with SMTP id p18mr1923906ioj.251.1564585996161;
+        Wed, 31 Jul 2019 08:13:16 -0700 (PDT)
+Received: from ?IPv6:2601:284:8200:5cfb:d4eb:7c00:40f8:97e? ([2601:284:8200:5cfb:d4eb:7c00:40f8:97e])
+        by smtp.googlemail.com with ESMTPSA id t4sm51695019iop.0.2019.07.31.08.13.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 08:13:15 -0700 (PDT)
+Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>, dvyukov@google.com,
+        netdev@vger.kernel.org, fw@strlen.de, i.maximets@samsung.com,
+        edumazet@google.com, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <20190724163014.GC673@sol.localdomain>
+ <20190724.111225.2257475150626507655.davem@davemloft.net>
+ <20190724183710.GF213255@gmail.com>
+ <20190724.130928.1854327585456756387.davem@davemloft.net>
+ <20190724210950.GH213255@gmail.com>
+ <1e07462d-61e2-9885-edd0-97a82dd7883e@gmail.com>
+ <20190731025722.GE687@sol.localdomain>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <5b38eb74-43d0-c7d7-88e1-103a4f82333f@gmail.com>
+Date:   Wed, 31 Jul 2019 09:13:11 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <20190731025722.GE687@sol.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds 3 Kconfig default value tests.
-Repost patch v3 (Follow Joe's suggestion in v2)
+On 7/30/19 8:57 PM, Eric Biggers wrote:
+> syzbot finds a lot of security bugs, and security bugs are important.  And the
+> bugs are still there regardless of whether they're reported by human or bot.
+> 
+> Also, there *are* bugs being fixed because of these reminders; some subsystem
+> maintainers have even fixed all the bugs in their subsystem.  But I can
+> understand that for subsystems with a lot of open bug reports it's overwhelming.
+> 
+> What I'll try doing next time (if there *is* a next time; it isn't actually my
+> job to do any of this, I just care about the security and reliability of
+> Linux...) is for subsystems with lots of open bug reports, only listing the ones
+> actually seen in the last week or so, and perhaps also spending some more time
+> manually checking those bugs.  That should cut down the noise a lot.
 
-1. discourage default n cases:
-e.g.,
-default n
+I don't think anyone questions the overall value of syzbot. It's the
+maintenance of bug reports that needs refining.
 
-2. discourage default "[ynm]" cases:
-e.g.,
-arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
-arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
-arch/powerpc/Kconfig:   default "n"
-drivers/auxdisplay/Kconfig:     default "n"
-drivers/crypto/Kconfig: default "m"
-drivers/rapidio/devices/Kconfig:        default "n"
+As an example, this one:
 
-3. discourage default EXPERT or default !EXPERT cases:
-e.g.,
-drivers/hid/Kconfig:    default !EXPERT
+https://syzkaller.appspot.com/bug?id=079bd8408abd95b492f127edf0df44ddc09d9405
 
-tested cases:
-default m
-default n if ALPHA_EV5 || ALPHA_EV56 || (ALPHA_EV4 && !ALPHA_LCA)
-default y if ALPHA_QEMU
-default n if PPC_POWERNV
-default n
-default EXPERT
-default !EXPERT
-default "m"
-default "n"
-default "y" if EXPERT
-default "y" if PPC_POWERNV
+was in reality a very short-lived bug in net-next but because bpf-next
+managed to merge net-next in the small time window, the bug life seems
+more extended that it apparently was (fuzzy words since we do not know
+which commit fixed it).
 
-test result:
-WARNING: 'default n' is the default value, no need to write it explicitly
-+       default n
+Also, there is inconsistency with the report. It shows a bisected commit of:
 
-WARNING: Avoid using default EXPERT
-+       default EXPERT
+commit f40b6ae2b612446dc970d7b51eeec47bd1619f82
+Author: David Ahern <dsahern@gmail.com>
+Date: Thu May 23 03:27:55 2019 +0000
 
-WARNING: Avoid using default EXPERT
-+       default !EXPERT
+  ipv6: Move pcpu cached routes to fib6_nh
 
-WARNING: Use 'default m' not 'default "m"'
-+       default "m"
+yet the report shows an entry in net tree on April 27. Even the net
+instance on June 14 is questionable given that the above commit is only
+in net-next on June 14.
 
-WARNING: Use 'default n' not 'default "n"'
-+       default "n"
+Taking all of those references out and there are 2 'real', unique
+reports - the linux-next on May 31 and the net-next on June 5.
 
-WARNING: Use 'default y' not 'default "y"'
-+       default "y" if EXPERT
+Given that nothing has appeared in the last 8 weeks it seems clear to me
+that this bug has been fixed we just don't know by which commit.
 
-WARNING: Use 'default y' not 'default "y"'
-+       default "y" if PPC_POWERNV
-
-test --fix capability:
-default n => delete line
-default "m" => default m
-default "n" => default n
-default "y" if EXPERT => default y if EXPERT
-default "y" if PPC_POWERNV => default y if PPC_POWERNV
-default !EXPERT => no change
-default EXPERT => no change
-
-Change since v1:
-discourage default n$
-discourage default "[ynm]"
-discourage default \!?EXPERT
-
-Change since v2:
-test Kconfig in a single block
-print precise message such as 'default "m"', not 'default "[ynm]"'
-provide --fix capability
-
-Cc: Joe Perches <joe@perches.com>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
----
- scripts/checkpatch.pl | 139 ++++++++++++++++++++++++++----------------
- 1 file changed, 85 insertions(+), 54 deletions(-)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 93a7edfe0f05..b080eea68cf6 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2932,60 +2932,98 @@ sub process {
- 				      "Do not include the paragraph about writing to the Free Software Foundation's mailing address from the sample GPL notice. The FSF has changed addresses in the past, and may do so again. Linux already includes a copy of the GPL.\n" . $herevet)
- 		}
- 
--# check for Kconfig help text having a real description
--# Only applies when adding the entry originally, after that we do not have
--# sufficient context to determine whether it is indeed long enough.
--		if ($realfile =~ /Kconfig/ &&
--		    # 'choice' is usually the last thing on the line (though
--		    # Kconfig supports named choices), so use a word boundary
--		    # (\b) rather than a whitespace character (\s)
--		    $line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
--			my $length = 0;
--			my $cnt = $realcnt;
--			my $ln = $linenr + 1;
--			my $f;
--			my $is_start = 0;
--			my $is_end = 0;
--			for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
--				$f = $lines[$ln - 1];
--				$cnt-- if ($lines[$ln - 1] !~ /^-/);
--				$is_end = $lines[$ln - 1] =~ /^\+/;
--
--				next if ($f =~ /^-/);
--				last if (!$file && $f =~ /^\@\@/);
--
--				if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
--					$is_start = 1;
--				} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
--					if ($lines[$ln - 1] =~ "---help---") {
--						WARN("CONFIG_DESCRIPTION",
--						     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
-+# Kconfig tests
-+		if ($realfile =~ /Kconfig/) {
-+			# check for Kconfig help text having a real description
-+			# Only applies when adding the entry originally, after
-+			# that we do not have sufficient context to determine
-+			# whether it is indeed long enough.
-+			# 'choice' is usually the last thing on the line (though
-+			# Kconfig supports named choices), so use a word
-+			# boundary (\b) rather than a whitespace character (\s)
-+			if ($line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
-+				my $length = 0;
-+				my $cnt = $realcnt;
-+				my $ln = $linenr + 1;
-+				my $f;
-+				my $is_start = 0;
-+				my $is_end = 0;
-+				for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
-+					$f = $lines[$ln - 1];
-+					$cnt-- if ($lines[$ln - 1] !~ /^-/);
-+					$is_end = $lines[$ln - 1] =~ /^\+/;
-+
-+					next if ($f =~ /^-/);
-+					last if (!$file && $f =~ /^\@\@/);
-+
-+					if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
-+						$is_start = 1;
-+					} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
-+						if ($lines[$ln - 1] =~ "---help---") {
-+							WARN("CONFIG_DESCRIPTION",
-+							     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
-+						}
-+						$length = -1;
-+					}
-+
-+					$f =~ s/^.//;
-+					$f =~ s/#.*//;
-+					$f =~ s/^\s+//;
-+					next if ($f =~ /^$/);
-+
-+					# This only checks context lines in the patch
-+					# and so hopefully shouldn't trigger false
-+					# positives, even though some of these are
-+					# common words in help texts
-+					if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
-+							   if|endif|menu|endmenu|source)\b/x) {
-+						$is_end = 1;
-+						last;
- 					}
--					$length = -1;
-+					$length++;
-+				}
-+				if ($is_start && $is_end && $length < $min_conf_desc_length) {
-+					WARN("CONFIG_DESCRIPTION",
-+					     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
- 				}
-+				#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
-+			}
- 
--				$f =~ s/^.//;
--				$f =~ s/#.*//;
--				$f =~ s/^\s+//;
--				next if ($f =~ /^$/);
--
--				# This only checks context lines in the patch
--				# and so hopefully shouldn't trigger false
--				# positives, even though some of these are
--				# common words in help texts
--				if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
--						  if|endif|menu|endmenu|source)\b/x) {
--					$is_end = 1;
--					last;
-+# discourage the use of boolean for type definition attributes
-+			if ($line =~ /^\+\s*\bboolean\b/) {
-+				if (WARN("CONFIG_TYPE_BOOLEAN",
-+					 "Use of boolean is deprecated, please use bool instead\n" . $herecurr) &&
-+				    $fix) {
-+					$fixed[$fixlinenr] =~ s/\bboolean\b/bool/;
-+				}
-+			}
-+
-+# Kconfig: discourage redundant 'default n'
-+			if ($line =~ /^\+\s*default\s+n$/) {
-+				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
-+					 "'default n' is the default value, no need to write it explicitly\n" . $herecurr) &&
-+				    $fix) {
-+					fix_delete_line($fixlinenr, $rawline);
- 				}
--				$length++;
- 			}
--			if ($is_start && $is_end && $length < $min_conf_desc_length) {
--				WARN("CONFIG_DESCRIPTION",
--				     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
-+
-+# Kconfig: discourage quoted defaults: use default [ynm], not default "[ynm]"
-+			if ($rawline =~ /^\+\s*default\s+"([ynm])"/) {
-+				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
-+					 "Use 'default $1' not 'default \"$1\"'\n" . $herecurr) &&
-+				    $fix) {
-+					$fixed[$fixlinenr] =~ s/\b(default\s+)"(.)"/$1$2/;
-+				}
-+			}
-+
-+# Kconfig: discourage using default EXPERT or !EXPERT
-+			if ($line =~ /^\+\s*default\s+\!?\s*EXPERT\b/) {
-+				WARN("CONFIG_DEFAULT_VALUE_STYLE",
-+				     "Avoid using default EXPERT\n" . $herecurr);
- 			}
--			#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
- 		}
-+# End of Kconfig tests
-+
- 
- # check for MAINTAINERS entries that don't have the right form
- 		if ($realfile =~ /^MAINTAINERS$/ &&
-@@ -2998,13 +3036,6 @@ sub process {
- 			}
- 		}
- 
--# discourage the use of boolean for type definition attributes of Kconfig options
--		if ($realfile =~ /Kconfig/ &&
--		    $line =~ /^\+\s*\bboolean\b/) {
--			WARN("CONFIG_TYPE_BOOLEAN",
--			     "Use of boolean is deprecated, please use bool instead.\n" . $herecurr);
--		}
--
- 		if (($realfile =~ /Makefile.*/ || $realfile =~ /Kbuild.*/) &&
- 		    ($line =~ /\+(EXTRA_[A-Z]+FLAGS).*/)) {
- 			my $flag = $1;
--- 
-2.18.0
-
+If there is a way to reduce to some of that information or even to have
+a button on that console that says 'apparently fixed' and close it would
+be a help.
