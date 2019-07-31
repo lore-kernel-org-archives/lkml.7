@@ -2,147 +2,287 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD59C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD1CC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36DE20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:40:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QvM5gURg"
+	by mail.kernel.org (Postfix) with ESMTP id 2F26320693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbfGaWki (ORCPT
+        id S1729244AbfGaWl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:40:38 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46155 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727348AbfGaWkh (ORCPT
+        Wed, 31 Jul 2019 18:41:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39022 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727348AbfGaWl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:40:37 -0400
-Received: by mail-io1-f68.google.com with SMTP id i10so26629174iol.13
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=egRpxJBa9oK7OchDbNGXXbbAvoOMUOmZrCvbt5gO8zI=;
-        b=QvM5gURgmBtYYb5ewAA6jGZY4ljdEgJDQkLHHqVikVD66zPlOj6SuWDfLaZFvi4LUF
-         FQdJPeaP2xBSfu5VhEpovno9nnLQOcyhglyYB0pRP4JDwGr0eAqZbpbagc3uUt7s9USv
-         Mpj2IzZzl+bJl5mUIlw221ntI2T0Gd3i5626L0lZpF3NQf2YbT9pIlRRSe+aFdedyfsu
-         M2J7DASUn+cy4TT7B8G64SBFNLwKRalGaUFXLhzgYJLwUMSwiCHsd5R54xYkxPti/wZi
-         C3bY3XL25Z5iZQrpq93tCxIGxwS4lBIYfZ/mctkv1io4wB2KYJZz7fo2JWv6xUDgj8Db
-         lqfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=egRpxJBa9oK7OchDbNGXXbbAvoOMUOmZrCvbt5gO8zI=;
-        b=RwmhiSJATU88U7v9XVQ2FfaNzDT8JLImlNEjOIY6c6F0Xw2N2VNFvCN92W//FDSBZ+
-         G7kWVuBiJL4Dpf06IchVdGvxQHmVZ77qegTh1NXxtOk8ELBajGdKpLv4cTjPKdZyWvjl
-         arTk+IYpXI/uGcbPJ85VOahNGKz7DPb6AipsjjOTuFqKHji5AfvLeODpdRKhL0iifcM1
-         gsYTTbPlDMq+O6HFq9RephJGK7MGj7FQ5ilYI6Hzd8lsYYAHlyhZuCWLUx2/U6CTDrog
-         7QKv2fkcEzrb/rK1nwXrpCNyr3vR30kRnGUdH9pw6atq1CcbALlebov0SRKG/8/HzeTW
-         6a1A==
-X-Gm-Message-State: APjAAAWJWhLhhZUiTbzz4o6kirxRG4f8i+9VM6ffJGUBTw94ZMr4sKmH
-        VLpdPtFsuAEIJVj7ES/4iR/Xkg==
-X-Google-Smtp-Source: APXvYqwrG00LBhTpDLsR7IvSvLbPRzUfGNUjyuov0y6Pr5JYCZwHs6hWm99dQiGbrjWMUvsaR2nw9Q==
-X-Received: by 2002:a6b:f406:: with SMTP id i6mr44093290iog.110.1564612836637;
-        Wed, 31 Jul 2019 15:40:36 -0700 (PDT)
-Received: from localhost ([170.10.65.222])
-        by smtp.gmail.com with ESMTPSA id a7sm56245658iok.19.2019.07.31.15.40.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 15:40:35 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 15:40:35 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Alexandre Ghiti <alex@ghiti.fr>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v5 14/14] riscv: Make mmap allocation top-down by
- default
-In-Reply-To: <20190730055113.23635-15-alex@ghiti.fr>
-Message-ID: <alpine.DEB.2.21.9999.1907311538460.22372@viisi.sifive.com>
-References: <20190730055113.23635-1-alex@ghiti.fr> <20190730055113.23635-15-alex@ghiti.fr>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 31 Jul 2019 18:41:28 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VMX66x003995;
+        Wed, 31 Jul 2019 18:41:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u3j3n434k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 31 Jul 2019 18:41:26 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6VMXY72005387;
+        Wed, 31 Jul 2019 18:41:26 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u3j3n4348-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 31 Jul 2019 18:41:26 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6VMenfT025332;
+        Wed, 31 Jul 2019 22:41:25 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma02dal.us.ibm.com with ESMTP id 2u0e85vwrx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 31 Jul 2019 22:41:25 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6VMfMXK53215670
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Jul 2019 22:41:22 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8AEB52805A;
+        Wed, 31 Jul 2019 22:41:22 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B613D28059;
+        Wed, 31 Jul 2019 22:41:21 +0000 (GMT)
+Received: from akrowiak-ThinkPad-P50.ibm.com (unknown [9.85.130.145])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Wed, 31 Jul 2019 22:41:21 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v5 1/7] s390: vfio-ap: Refactor vfio_ap driver probe and remove callbacks
+Date:   Wed, 31 Jul 2019 18:41:11 -0400
+Message-Id: <1564612877-7598-2-git-send-email-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564612877-7598-1-git-send-email-akrowiak@linux.ibm.com>
+References: <1564612877-7598-1-git-send-email-akrowiak@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907310225
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019, Alexandre Ghiti wrote:
+In order to limit the number of private mdev functions called from the
+vfio_ap device driver as well as to provide a landing spot for dynamic
+configuration code related to binding/unbinding AP queue devices to/from
+the vfio_ap driver, the following changes are being introduced:
 
-> In order to avoid wasting user address space by using bottom-up mmap
-> allocation scheme, prefer top-down scheme when possible.
-> 
-> Before:
-> root@qemuriscv64:~# cat /proc/self/maps
-> 00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
-> 00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
-> 00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
-> 00018000-00039000 rw-p 00000000 00:00 0          [heap]
-> 1555556000-155556d000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
-> 155556d000-155556e000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
-> 155556e000-155556f000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
-> 155556f000-1555570000 rw-p 00000000 00:00 0
-> 1555570000-1555572000 r-xp 00000000 00:00 0      [vdso]
-> 1555574000-1555576000 rw-p 00000000 00:00 0
-> 1555576000-1555674000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
-> 1555674000-1555678000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
-> 1555678000-155567a000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
-> 155567a000-15556a0000 rw-p 00000000 00:00 0
-> 3fffb90000-3fffbb1000 rw-p 00000000 00:00 0      [stack]
-> 
-> After:
-> root@qemuriscv64:~# cat /proc/self/maps
-> 00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
-> 00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
-> 00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
-> 2de81000-2dea2000 rw-p 00000000 00:00 0          [heap]
-> 3ff7eb6000-3ff7ed8000 rw-p 00000000 00:00 0
-> 3ff7ed8000-3ff7fd6000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
-> 3ff7fd6000-3ff7fda000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
-> 3ff7fda000-3ff7fdc000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
-> 3ff7fdc000-3ff7fe2000 rw-p 00000000 00:00 0
-> 3ff7fe4000-3ff7fe6000 r-xp 00000000 00:00 0      [vdso]
-> 3ff7fe6000-3ff7ffd000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
-> 3ff7ffd000-3ff7ffe000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
-> 3ff7ffe000-3ff7fff000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
-> 3ff7fff000-3ff8000000 rw-p 00000000 00:00 0
-> 3fff888000-3fff8a9000 rw-p 00000000 00:00 0      [stack]
-> 
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+* Move code from the vfio_ap driver's probe callback into a function
+  defined in the mdev private operations file.
 
-Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # for arch/riscv
+* Move code from the vfio_ap driver's remove callback into a function
+  defined in the mdev private operations file.
 
-As Alex notes, this patch depends on "[PATCH] riscv: kbuild: add virtual 
-memory system selection":
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_drv.c     | 23 +++--------
+ drivers/s390/crypto/vfio_ap_ops.c     | 78 ++++++++++++++++++++++++++++-------
+ drivers/s390/crypto/vfio_ap_private.h |  6 +--
+ 3 files changed, 71 insertions(+), 36 deletions(-)
 
-https://lore.kernel.org/linux-riscv/alpine.DEB.2.21.9999.1907301218560.3486@viisi.sifive.com/T/#t
+diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+index 003662aa8060..9e61d4c6e6b5 100644
+--- a/drivers/s390/crypto/vfio_ap_drv.c
++++ b/drivers/s390/crypto/vfio_ap_drv.c
+@@ -49,15 +49,9 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
+  */
+ static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+ {
+-	struct vfio_ap_queue *q;
+-
+-	q = kzalloc(sizeof(*q), GFP_KERNEL);
+-	if (!q)
+-		return -ENOMEM;
+-	dev_set_drvdata(&apdev->device, q);
+-	q->apqn = to_ap_queue(&apdev->device)->qid;
+-	q->saved_isc = VFIO_AP_ISC_INVALID;
+-	return 0;
++	struct ap_queue *queue = to_ap_queue(&apdev->device);
++
++	return vfio_ap_mdev_probe_queue(queue);
+ }
+ 
+ /**
+@@ -68,17 +62,10 @@ static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+  */
+ static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+ {
+-	struct vfio_ap_queue *q;
+-	int apid, apqi;
++	struct ap_queue *queue = to_ap_queue(&apdev->device);
+ 
+ 	mutex_lock(&matrix_dev->lock);
+-	q = dev_get_drvdata(&apdev->device);
+-	dev_set_drvdata(&apdev->device, NULL);
+-	apid = AP_QID_CARD(q->apqn);
+-	apqi = AP_QID_QUEUE(q->apqn);
+-	vfio_ap_mdev_reset_queue(apid, apqi, 1);
+-	vfio_ap_irq_disable(q);
+-	kfree(q);
++	vfio_ap_mdev_remove_queue(queue);
+ 	mutex_unlock(&matrix_dev->lock);
+ }
+ 
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 0604b49a4d32..e9a6a7d8395d 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -144,7 +144,7 @@ static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
+  * Returns if ap_aqic function failed with invalid, deconfigured or
+  * checkstopped AP.
+  */
+-struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
++static struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+ {
+ 	struct ap_qirq_ctrl aqic_gisa = {};
+ 	struct ap_queue_status status;
+@@ -1128,23 +1128,47 @@ static void vfio_ap_irq_disable_apqn(int apqn)
+ 	}
+ }
+ 
+-int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+-			     unsigned int retry)
++static void vfio_ap_mdev_wait_for_qempty(ap_qid_t qid)
++{
++	struct ap_queue_status status;
++	int retry = 5;
++
++	do {
++		status = ap_tapq(qid, NULL);
++		switch (status.response_code) {
++		case AP_RESPONSE_NORMAL:
++			if (status.queue_empty)
++				return;
++			break;
++		case AP_RESPONSE_RESET_IN_PROGRESS:
++		case AP_RESPONSE_BUSY:
++			msleep(20);
++			break;
++		default:
++			pr_warn("%s: tapq response %02x waiting for queue %04x.%02x empty\n",
++				__func__, status.response_code,
++				AP_QID_CARD(qid), AP_QID_QUEUE(qid));
++			return;
++		}
++	} while (--retry);
++
++	WARN_ON_ONCE(retry <= 0);
++}
++
++int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
+ {
+ 	struct ap_queue_status status;
+-	int retry2 = 2;
+ 	int apqn = AP_MKQID(apid, apqi);
++	int retry = 5;
+ 
+ 	do {
+ 		status = ap_zapq(apqn);
+ 		switch (status.response_code) {
+ 		case AP_RESPONSE_NORMAL:
+-			while (!status.queue_empty && retry2--) {
+-				msleep(20);
+-				status = ap_tapq(apqn, NULL);
+-			}
+-			WARN_ON_ONCE(retry <= 0);
++			vfio_ap_mdev_wait_for_qempty(AP_MKQID(apid, apqi));
+ 			return 0;
++		case AP_RESPONSE_DECONFIGURED:
++			return -ENODEV;
+ 		case AP_RESPONSE_RESET_IN_PROGRESS:
+ 		case AP_RESPONSE_BUSY:
+ 			msleep(20);
+@@ -1169,14 +1193,10 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+ 			     matrix_mdev->matrix.apm_max + 1) {
+ 		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+ 				     matrix_mdev->matrix.aqm_max + 1) {
+-			ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
+-			/*
+-			 * Regardless whether a queue turns out to be busy, or
+-			 * is not operational, we need to continue resetting
+-			 * the remaining queues.
+-			 */
++			ret = vfio_ap_mdev_reset_queue(apid, apqi);
+ 			if (ret)
+ 				rc = ret;
++
+ 			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
+ 		}
+ 	}
+@@ -1302,3 +1322,31 @@ void vfio_ap_mdev_unregister(void)
+ {
+ 	mdev_unregister_device(&matrix_dev->device);
+ }
++
++int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
++{
++	struct vfio_ap_queue *q;
++
++	q = kzalloc(sizeof(*q), GFP_KERNEL);
++	if (!q)
++		return -ENOMEM;
++	dev_set_drvdata(&queue->ap_dev.device, q);
++	q->apqn = queue->qid;
++	q->saved_isc = VFIO_AP_ISC_INVALID;
++
++	return 0;
++}
++
++void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
++{
++	struct vfio_ap_queue *q;
++	int apid, apqi;
++
++	q = dev_get_drvdata(&queue->ap_dev.device);
++	dev_set_drvdata(&queue->ap_dev.device, NULL);
++	apid = AP_QID_CARD(q->apqn);
++	apqi = AP_QID_QUEUE(q->apqn);
++	vfio_ap_mdev_reset_queue(apid, apqi);
++	vfio_ap_irq_disable(q);
++	kfree(q);
++}
+diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+index f46dde56b464..5cc3c2ebf151 100644
+--- a/drivers/s390/crypto/vfio_ap_private.h
++++ b/drivers/s390/crypto/vfio_ap_private.h
+@@ -90,8 +90,6 @@ struct ap_matrix_mdev {
+ 
+ extern int vfio_ap_mdev_register(void);
+ extern void vfio_ap_mdev_unregister(void);
+-int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+-			     unsigned int retry);
+ 
+ struct vfio_ap_queue {
+ 	struct ap_matrix_mdev *matrix_mdev;
+@@ -100,5 +98,7 @@ struct vfio_ap_queue {
+ #define VFIO_AP_ISC_INVALID 0xff
+ 	unsigned char saved_isc;
+ };
+-struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q);
++int vfio_ap_mdev_probe_queue(struct ap_queue *queue);
++void vfio_ap_mdev_remove_queue(struct ap_queue *queue);
++
+ #endif /* _VFIO_AP_PRIVATE_H_ */
+-- 
+2.7.4
 
-which will likely go up during v5.3-rc.
-
-
-- Paul
