@@ -2,73 +2,55 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF0CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F79C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935A82067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94BCB2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZeX5/P8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="F0zZsJVd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbfGaU7P (ORCPT
+        id S1729369AbfGaVB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:59:15 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39024 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfGaU7O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:59:14 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v85so48415485lfa.6
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cT2pwWCno8U0E9z595FUeml+E2FjE1G6WM/y1TMSDeY=;
-        b=gZeX5/P8VVl76PaeOu/zqWAJHYlar5uwTH6ZSuTtMeOHfMoggs2cR9PtHqjwO/0LcS
-         KR8sEFP1yrtuL1bNbZEyWkQVaKovN98Trdj5riPrkVTnneRjkanxjOcEgyC42OrB39Wg
-         3PZFNp/sQIAi6mwbnWj1HGYiXX9wxNjew6V3VI2ikkUhyGLXBtXa5TaxOQUcLbEPsOq1
-         W09VJ9OMxn9lZrxDrCr9WJHFPEgLpbLDCD1UGVNLXq1cKssVIHk6vfWfpj+mTSFaGEcO
-         9vqsYpG/re4449zo0g/Jr9waZwwOWFcCsrNkCAiYg5GML0UgOfN5MZ7yzX8S9Wl9jexJ
-         pGrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cT2pwWCno8U0E9z595FUeml+E2FjE1G6WM/y1TMSDeY=;
-        b=qqUt5cqx43U2st7yAHNxlSwV6CuwMWCBePX0WfmOCtFpwV8QSF4XCUyt2fEo18FYcW
-         dwWYjfysGDfu4hU8B/K/ppiWQVD9qdGO4/faswLqpOOgIIhzNTBl6mQq17ag0sqri0cC
-         xe1O3x1chMAQMku2Yy+LHdAr/sWLBiWz0m1SxNlRcsEesl0ETdHxkg1WM2giC8CKAtNp
-         dJuveNRg9JB8OaNeqXBEJ+flwZjyPptOPFXqlY693DfG8etSTxhz7P+pHrCwiuQjT1iw
-         UMC5zuNCEQj/mczEmJcG0VfKToBf6NRmTxwQwRE0pJbc4QAH0ZpIFvPNto+zzSxpr3lC
-         zXAw==
-X-Gm-Message-State: APjAAAXjAXlLW0yirxxTSZbdMliov7lM2aUSmkcSSwm6pwuqgYASTQpG
-        Mi4XJgdTMBiu8fSqWsvbIqPRwiiKDuj3kvLH35PnxdQK
-X-Google-Smtp-Source: APXvYqz4jC/AaXCiF0F+j6GjeNnZYwk7zRg9/r/Ml/j5d8O3uBU8ic7CjPFoZqtog5Gy3uWN5GY0Y5xRGyAJM+Mnnq8=
-X-Received: by 2002:ac2:46d5:: with SMTP id p21mr26180782lfo.133.1564606752711;
- Wed, 31 Jul 2019 13:59:12 -0700 (PDT)
+        Wed, 31 Jul 2019 17:01:59 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55015 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfGaVB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 17:01:59 -0400
+Received: from [10.171.236.151] ([192.55.54.60])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x6VL18h23835409
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Wed, 31 Jul 2019 14:01:09 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x6VL18h23835409
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564606870;
+        bh=J4m+H7cdshvin9EGtiYO5Wa6yJDmrnfiy/VAp1iSDaM=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=F0zZsJVdaTBQUP8fo5GcPrrvJ96pbX3GPo8JR1MZr9WqTreh23E82R9SF61F1k6x/
+         SHWZn9HOTL5MhVIQCU1j+ZzkxXfhHq4WIBodbfT69UPheDb7/S+SXdJJGzBv9CtYsT
+         Ao6r6CxIsqdYIt+GxEDw5ikOmA6jl7rW8XbDvAHNLr0z/dUuWZxNhWvcE5M+EAmRe9
+         5934YHB1ipMSeg2PjkR1khGp3uajQMjfdDWPYJSAAUMveyilGCsswsyDYCng7GlEbW
+         Qi/4NdMqBLVW9PVKd70nW9RJ/4dTBiitVuEz1M9elF+Je6O+otXDwfwM0ToxMPeJme
+         UQ4fFGAhfP48A==
+Date:   Wed, 31 Jul 2019 14:01:05 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com> <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com> <20190731171429.GA24222@amd> <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com> <765E740C-4259-4835-A58D-432006628BAC@zytor.com> <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
- <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
- <20190731171429.GA24222@amd> <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
- <765E740C-4259-4835-A58D-432006628BAC@zytor.com> <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
- <201907311301.EC1D84F@keescook>
-In-Reply-To: <201907311301.EC1D84F@keescook>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 31 Jul 2019 22:59:01 +0200
-Message-ID: <CANiq72kMpP_PSBb0e5wMVNiuYvwSWdR+x_H_tPrEnQ_j1y7X+Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
- keyword for switch/case use
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joe Perches <joe@perches.com>,
-        Pavel Machek <pavel@ucw.cz>,
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo keyword for switch/case use
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Joe Perches <joe@perches.com>, Pavel Machek <pavel@ucw.cz>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
         Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -78,53 +60,49 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Shawn Landden <shawn@git.icu>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+From:   hpa@zytor.com
+Message-ID: <F1AB2846-CA91-41ED-B8E7-3799895DCF06@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 10:02 PM Kees Cook <keescook@chromium.org> wrote:
+On July 31, 2019 11:48:32 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg> w=
+rote:
+>On Wed, Jul 31, 2019 at 11:24:36AM -0700, hpa@zytor=2Ecom wrote:
+>> >> > +/*
+>> >> > + * Add the pseudo keyword 'fallthrough' so case statement
+>blocks
+>> >> > + * must end with any of these keywords:
+>> >> > + *   break;
+>> >> > + *   fallthrough;
+>> >> > + *   goto <label>;
+>> >> > + *   return [expression];
+>> >> > + *
+>> >> > + *  gcc:
+>>https://gcc=2Egnu=2Eorg/onlinedocs/gcc/Statement-Attributes=2Ehtml#State=
+ment-Attributes
+>> >> > + */
+>> >> > +#if __has_attribute(__fallthrough__)
+>> >> > +# define fallthrough                 =20
+>__attribute__((__fallthrough__))
+>> >> > +#else
+>> >> > +# define fallthrough                    do {} while (0)  /*
+>fallthrough */
+>> >> > +#endif
+>> >> > +
 >
-> On Wed, Jul 31, 2019 at 08:48:32PM +0200, Peter Zijlstra wrote:
-> > On Wed, Jul 31, 2019 at 11:24:36AM -0700, hpa@zytor.com wrote:
-> > > >> > +/*
-> > > >> > + * Add the pseudo keyword 'fallthrough' so case statement blocks
-> > > >> > + * must end with any of these keywords:
-> > > >> > + *   break;
-> > > >> > + *   fallthrough;
-> > > >> > + *   goto <label>;
-> > > >> > + *   return [expression];
-> > > >> > + *
-> > > >> > + *  gcc: >https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html#Statement-Attributes
-> > > >> > + */
-> > > >> > +#if __has_attribute(__fallthrough__)
-> > > >> > +# define fallthrough                   __attribute__((__fallthrough__))
-> > > >> > +#else
-> > > >> > +# define fallthrough                    do {} while (0)  /* fallthrough */
-> > > >> > +#endif
-> > > >> > +
-> >
-> > > If the comments are stripped, how would the compiler see them to be
-> > > able to issue a warning? I would guess that it is retained or replaced
-> > > with some other magic token.
-> >
-> > Everything that has the warning (GCC-7+/CLANG-9) has that attribute.
+>> If the comments are stripped, how would the compiler see them to be
+>> able to issue a warning? I would guess that it is retained or
+>replaced
+>> with some other magic token=2E
 >
-> I'd like to make sure we don't regress Coverity most of all. If the
-> recent updates to the Coverity scanner include support for the attribute
-> now, then I'm all for it. :)
+>Everything that has the warning (GCC-7+/CLANG-9) has that attribute=2E
 
-We had this discussion a while ago (October) and the consensus was
-that we would like to wait for a while until all tools were ready to
-use the attribute and everyone's would be happy:
-
-  https://lore.kernel.org/lkml/20181021171414.22674-1-miguel.ojeda.sandonis@gmail.com/
-
-Is everyone happy this time around? :-)
-
-Cheers,
-Miguel
+The standard is moving toward adding this as an attribute with the [[fallt=
+hrough]] syntax; it is in C++17, not sure when it will be in C be if it isn=
+'t already=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
