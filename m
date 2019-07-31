@@ -2,102 +2,64 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EABC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A79C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A0F206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9869206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfGaOAt (ORCPT
+        id S1728902AbfGaOCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:00:49 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48780 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726276AbfGaOAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:00:49 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AFEEC8CB03ECE0FCABD2;
-        Wed, 31 Jul 2019 22:00:33 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
- 22:00:26 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <nishkadg.linux@gmail.com>,
-        <madhumithabiw@gmail.com>, <hdegoede@redhat.com>,
-        <dan.carpenter@oracle.com>
-CC:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] staging: rtl8723bs: remove set but not used variables 'prspbuf' and 'auth'
-Date:   Wed, 31 Jul 2019 21:59:53 +0800
-Message-ID: <20190731135953.16784-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 31 Jul 2019 10:02:08 -0400
+Received: from mga14.intel.com ([192.55.52.115]:44779 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbfGaOCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:02:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 07:02:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,330,1559545200"; 
+   d="scan'208";a="196363057"
+Received: from um.fi.intel.com (HELO localhost) ([10.237.72.183])
+  by fmsmga004.fm.intel.com with ESMTP; 31 Jul 2019 07:02:06 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        kan.liang@linux.intel.com, alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH v1 2/7] perf/x86/intel: Support PEBS output to PT
+In-Reply-To: <20190729133705.GC31381@hirez.programming.kicks-ass.net>
+References: <20190704160024.56600-1-alexander.shishkin@linux.intel.com> <20190704160024.56600-3-alexander.shishkin@linux.intel.com> <20190729133705.GC31381@hirez.programming.kicks-ass.net>
+Date:   Wed, 31 Jul 2019 17:02:05 +0300
+Message-ID: <871ry6480y.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Peter Zijlstra <peterz@infradead.org> writes:
 
-drivers/staging/rtl8723bs/core/rtw_cmd.c: In function rtw_cmd_thread:
-drivers/staging/rtl8723bs/core/rtw_cmd.c:405:16: warning: variable prspbuf set but not used [-Wunused-but-set-variable]
-drivers/staging/rtl8723bs/core/rtw_cmd.c: In function rtw_joinbss_cmd:
-drivers/staging/rtl8723bs/core/rtw_cmd.c:771:6: warning: variable auth set but not used [-Wunused-but-set-variable]
+> On Thu, Jul 04, 2019 at 07:00:19PM +0300, Alexander Shishkin wrote:
+>> +	/*
+>> +	 * In case there's a mix of PEBS->PT and PEBS->DS, fall back
+>> +	 * to DS.
+>> +	 */
+>
+> I thought we disallowed that from happening !?
 
-They are never used, so can be removed.
+Yes, that was a weird leftover.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/rtl8723bs/core/rtw_cmd.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Thanks a bunch for the comments, they should all be addressed in v2:
+https://marc.info/?l=linux-kernel&m=156458152126310
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-index addc557..c6565b0 100644
---- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-@@ -402,7 +402,7 @@ int rtw_cmd_thread(void *context)
- {
- 	u8 ret;
- 	struct cmd_obj *pcmd;
--	u8 *pcmdbuf, *prspbuf;
-+	u8 *pcmdbuf;
- 	unsigned long cmd_start_time;
- 	unsigned long cmd_process_time;
- 	u8 (*cmd_hdl)(struct adapter *padapter, u8 *pbuf);
-@@ -414,7 +414,6 @@ int rtw_cmd_thread(void *context)
- 	thread_enter("RTW_CMD_THREAD");
- 
- 	pcmdbuf = pcmdpriv->cmd_buf;
--	prspbuf = pcmdpriv->rsp_buf;
- 
- 	pcmdpriv->stop_req = 0;
- 	atomic_set(&(pcmdpriv->cmdthd_running), true);
-@@ -768,7 +767,7 @@ int rtw_startbss_cmd(struct adapter  *padapter, int flags)
- 
- u8 rtw_joinbss_cmd(struct adapter  *padapter, struct wlan_network *pnetwork)
- {
--	u8 *auth, res = _SUCCESS;
-+	u8 res = _SUCCESS;
- 	uint	t_len = 0;
- 	struct wlan_bssid_ex		*psecnetwork;
- 	struct cmd_obj		*pcmd;
-@@ -825,7 +824,6 @@ u8 rtw_joinbss_cmd(struct adapter  *padapter, struct wlan_network *pnetwork)
- 
- 	memcpy(psecnetwork, &pnetwork->network, get_wlan_bssid_ex_sz(&pnetwork->network));
- 
--	auth = &psecuritypriv->authenticator_ie[0];
- 	psecuritypriv->authenticator_ie[0] = (unsigned char)psecnetwork->IELength;
- 
- 	if ((psecnetwork->IELength-12) < (256-1)) {
--- 
-2.7.4
-
-
+Regards,
+--
+Alex
