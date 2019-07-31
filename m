@@ -2,166 +2,208 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FABC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92532C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FFC2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C14B2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:59:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="E+l61C0K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfGaF6s (ORCPT
+        id S1727000AbfGaF7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 01:58:48 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3929 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725970AbfGaF6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 01:58:47 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 613E384601CAD8A77DB4;
-        Wed, 31 Jul 2019 13:58:44 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 31 Jul 2019 13:58:44 +0800
-Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
- (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Wed, 31
- Jul 2019 13:58:43 +0800
-Subject: Re: [RFC] net: phy: read link status twice when
- phy_check_link_status()
-To:     Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
-References: <1564134831-24962-1-git-send-email-liuyonglong@huawei.com>
- <92f42ee8-3659-87a7-ac96-d312a98046ba@gmail.com>
- <4b4ba599-f160-39e7-d611-45ac53268389@huawei.com>
- <a0b26e4b-e288-cf44-049a-7d0b7f5696eb@gmail.com>
- <1d4be6ad-ffe6-2325-ceab-9f35da617ee9@huawei.com>
- <5087ee34-5776-f02b-d7e5-bce005ba3b92@gmail.com>
- <03708d00-a8d9-4a9d-4188-9fe0e38de2b8@huawei.com>
- <9a0a8094-42ee-0a18-0e9a-d3ca783d6d4b@gmail.com>
- <6add4874-fd2b-9b21-cd78-80b6dde4dd53@huawei.com>
- <5634113b-f5b5-6fa8-851d-1402e046c3df@gmail.com>
-From:   liuyonglong <liuyonglong@huawei.com>
-Message-ID: <9dd4fe9f-5ee5-23a6-14bf-a5d644567d27@huawei.com>
-Date:   Wed, 31 Jul 2019 13:58:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 31 Jul 2019 01:59:20 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:37145 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfGaF7T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 01:59:19 -0400
+X-Greylist: delayed 11287 seconds by postgrey-1.27 at vger.kernel.org; Wed, 31 Jul 2019 01:59:17 EDT
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x6V5x46Z020578;
+        Wed, 31 Jul 2019 14:59:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x6V5x46Z020578
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564552747;
+        bh=pb22LnSUq/I5TuyMMV/ed22byQ1Vd9m60c55OfeuMhI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=E+l61C0K8NMre7x8Ip9zckBBpPk4LsH/enunjZIfdV1+ykHT3zfDPAmQn3a1B3PRh
+         zFboEnr4Xgt/jMyhawQUOQqTpltUAbV4Q8FXzV6f+YE0+lqIrFze1+weknyaneA2hC
+         r97Yxqu+AvkD5zsiSv9LEkkWgGy3JBXPO0q84NeW+OBoO4DaZM/A8kqoBwCY/7n20T
+         55VjFeR7oDTesi6qJhAXv32mPpgSzremGe0tfEJ9svL7YxC8arDLzfGTsRPfue26hy
+         2wOvMAlxtKM4v2p13bxzNZ5dxDGc+4LFe8CKzbI61kM+omKfrJt8pyNGXgFVA4PBms
+         jXFn1aqG4YCrA==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id 34so26500080uar.8;
+        Tue, 30 Jul 2019 22:59:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAW7XurefAVn10eb0lliGeWdXoCGO4CE/l2m1t0QTOPqQe5uLstu
+        vCl53Mwc5f27h0bdpJ97AUMLCJ3QC9dS2hAw4oQ=
+X-Google-Smtp-Source: APXvYqzUIBQ+X2Qhsv3t3MCmTOaywit/O1KFV5D0RgL5oi4OIjK2ALX40Vb/IhgnVqtvrl3BHdGPzv8CCw0HpFG5Wlk=
+X-Received: by 2002:ab0:70d9:: with SMTP id r25mr47885061ual.109.1564552743799;
+ Tue, 30 Jul 2019 22:59:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5634113b-f5b5-6fa8-851d-1402e046c3df@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.57.37.248]
-X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
- dggeme760-chm.china.huawei.com (10.3.19.106)
-X-CFilter-Loop: Reflected
+References: <20190509143859.9050-1-joe.lawrence@redhat.com> <20190509143859.9050-7-joe.lawrence@redhat.com>
+In-Reply-To: <20190509143859.9050-7-joe.lawrence@redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 31 Jul 2019 14:58:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com>
+Message-ID: <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com>
+Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch modules
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="00000000000086ed9a058ef3d24e"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--00000000000086ed9a058ef3d24e
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Joe,
 
 
-On 2019/7/31 13:44, Heiner Kallweit wrote:
-> On 31.07.2019 05:33, liuyonglong wrote:
->>
->>
->> On 2019/7/31 3:04, Heiner Kallweit wrote:
->>> On 30.07.2019 08:35, liuyonglong wrote:
->>>> :/sys/kernel/debug/tracing$ cat trace
->>>> # tracer: nop
->>>> #
->>>> # entries-in-buffer/entries-written: 45/45   #P:128
->>>> #
->>>> #                              _-----=> irqs-off
->>>> #                             / _----=> need-resched
->>>> #                            | / _---=> hardirq/softirq
->>>> #                            || / _--=> preempt-depth
->>>> #                            ||| /     delay
->>>> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
->>>> #              | |       |   ||||       |         |
->>>>     kworker/64:2-1028  [064] ....   172.295687: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x02 val:0x001c
->>>>     kworker/64:2-1028  [064] ....   172.295726: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x03 val:0xc916
->>>>     kworker/64:2-1028  [064] ....   172.296902: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x01 val:0x79ad
->>>>     kworker/64:2-1028  [064] ....   172.296938: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x0f val:0x2000
->>>>     kworker/64:2-1028  [064] ....   172.321213: mdio_access: mii-0000:bd:00.0 read  phy:0x01 reg:0x00 val:0x1040
->>>>     kworker/64:2-1028  [064] ....   172.343209: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x02 val:0x001c
->>>>     kworker/64:2-1028  [064] ....   172.343245: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x03 val:0xc916
->>>>     kworker/64:2-1028  [064] ....   172.343882: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x79ad
->>>>     kworker/64:2-1028  [064] ....   172.343918: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x0f val:0x2000
->>>>     kworker/64:2-1028  [064] ....   172.362658: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
->>>>     kworker/64:2-1028  [064] ....   172.385961: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x02 val:0x001c
->>>>     kworker/64:2-1028  [064] ....   172.385996: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x03 val:0xc916
->>>>     kworker/64:2-1028  [064] ....   172.386646: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x01 val:0x79ad
->>>>     kworker/64:2-1028  [064] ....   172.386681: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x0f val:0x2000
->>>>     kworker/64:2-1028  [064] ....   172.411286: mdio_access: mii-0000:bd:00.2 read  phy:0x05 reg:0x00 val:0x1040
->>>>     kworker/64:2-1028  [064] ....   172.433225: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x02 val:0x001c
->>>>     kworker/64:2-1028  [064] ....   172.433260: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x03 val:0xc916
->>>>     kworker/64:2-1028  [064] ....   172.433887: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
->>>>     kworker/64:2-1028  [064] ....   172.433922: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x0f val:0x2000
->>>>     kworker/64:2-1028  [064] ....   172.452862: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
->>>>         ifconfig-1324  [011] ....   177.325585: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
->>>>   kworker/u257:0-8     [012] ....   177.325642: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x04 val:0x01e1
->>>>   kworker/u257:0-8     [012] ....   177.325654: mdio_access: mii-0000:bd:00.1 write phy:0x03 reg:0x04 val:0x05e1
->>>>   kworker/u257:0-8     [012] ....   177.325708: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x79ad
->>>>   kworker/u257:0-8     [012] ....   177.325744: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x09 val:0x0200
->>>>   kworker/u257:0-8     [012] ....   177.325779: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x00 val:0x1040
->>>>   kworker/u257:0-8     [012] ....   177.325788: mdio_access: mii-0000:bd:00.1 write phy:0x03 reg:0x00 val:0x1240
->>>>   kworker/u257:0-8     [012] ....   177.325843: mdio_access: mii-0000:bd:00.1 read  phy:0x03 reg:0x01 val:0x798d
->>>
->>> What I think that happens here:
->>> Writing 0x1240 to BMCR starts aneg. When reading BMSR immediately after that then the PHY seems to have cleared
->>> the "aneg complete" bit already, but not yet the "link up" bit. This results in the false "link up" notification.
->>> The following patch is based on the fact that in case of enabled aneg we can't have a valid link if aneg isn't
->>> finished. Could you please test whether this works for you?
->>>
->>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
->>> index 6b5cb87f3..7ddd91df9 100644
->>> --- a/drivers/net/phy/phy_device.c
->>> +++ b/drivers/net/phy/phy_device.c
->>> @@ -1774,6 +1774,12 @@ int genphy_update_link(struct phy_device *phydev)
->>>  	phydev->link = status & BMSR_LSTATUS ? 1 : 0;
->>>  	phydev->autoneg_complete = status & BMSR_ANEGCOMPLETE ? 1 : 0;
->>>  
->>> +	/* Consider the case that autoneg was started and "aneg complete"
->>> +	 * bit has been reset, but "link up" bit not yet.
->>> +	 */
->>> +	if (phydev->autoneg == AUTONEG_ENABLE && !phydev->autoneg_complete)
->>> +		phydev->link = 0;
->>> +
->>>  	return 0;
->>>  }
->>>  EXPORT_SYMBOL(genphy_update_link);
->>>
->>
->> This patch can solve the issue! Will it be upstream?
->>
-> I'll check for side effects, but in general: yes.
-> 
->> So it's nothing to do with the bios, and just the PHY's own behavior,
->> the "link up" bit can not reset immediately，right?
->>
-> Yes, it's the PHY's own behavior, and to a certain extent it may depend on speed
-> of the MDIO bus. At least few network chips require a delay of several microseconds
-> after each MDIO bus access. This may be sufficient for the PHY to reset the
-> link-up bit in time.
-> 
->> ps: It will take 1 second more to make the link up for RTL8211F when 0x798d happend.
->>
-> In polling mode link-up is detected up to 1s after it happened.
-> You could switch to interrupt mode to reduce the aneg time.
-> 
->>
->>
-> Heiner
-> 
-> .
-> 
+On Thu, May 9, 2019 at 11:39 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
+>
+> From: Miroslav Benes <mbenes@suse.cz>
+>
+> Currently, livepatch infrastructure in the kernel relies on
+> MODULE_INFO(livepatch, "Y") statement in a livepatch module. Then the
+> kernel module loader knows a module is indeed livepatch module and can
+> behave accordingly.
+>
+> klp-convert, on the other hand relies on LIVEPATCH_* statement in the
+> module's Makefile for exactly the same reason.
+>
+> Remove dependency on modinfo and generate MODULE_INFO flag
+> automatically in modpost when LIVEPATCH_* is defined in the module's
+> Makefile. Generate a list of all built livepatch modules based on
+> the .livepatch file and store it in (MODVERDIR)/livepatchmods. Give
+> this list as an argument for modpost which will use it to identify
+> livepatch modules.
+>
+> As MODULE_INFO is no longer needed, remove it.
 
-Thanks very much!
 
+I do not understand this patch.
+This makes the implementation so complicated.
+
+I think MODULE_INFO(livepatch, "Y") is cleaner than
+LIVEPATCH_* in Makefile.
+
+
+How about this approach?
+
+
+[1] Make modpost generate the list of livepatch modules.
+    (livepatch-modules)
+
+[2] Generate Symbols.list in scripts/Makefile.modpost
+    (vmlinux + modules excluding livepatch-modules)
+
+[3] Run klp-convert for modules in livepatch-modules.
+
+
+If you do this, you can remove most of the build system hacks
+can't you?
+
+
+I attached an example implementation for [1].
+
+Please check whether this works.
+
+Thanks.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+
+--00000000000086ed9a058ef3d24e
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-livepatch-make-modpost-generate-the-list-of-livepatc.patch"
+Content-Disposition: attachment; 
+	filename="0001-livepatch-make-modpost-generate-the-list-of-livepatc.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jyqu4zy00>
+X-Attachment-Id: f_jyqu4zy00
+
+RnJvbSA4NTU3MTQzMGFhMTJjZDE5YTc1Y2JjODU2ZGExMDkyMTk5ODc2ZTZhIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXNhaGlybyBZYW1hZGEgPHlhbWFkYS5tYXNhaGlyb0Bzb2Np
+b25leHQuY29tPgpEYXRlOiBXZWQsIDMxIEp1bCAyMDE5IDE0OjUxOjI5ICswOTAwClN1YmplY3Q6
+IFtQQVRDSF0gbGl2ZXBhdGNoOiBtYWtlIG1vZHBvc3QgZ2VuZXJhdGUgdGhlIGxpc3Qgb2YgbGl2
+ZXBhdGNoCiBtb2R1bGVzCgpSZXZlcnNlIHRoZSBsaXZlcGF0Y2gtbW9kdWxlcyBkaXJlY3Rpb24u
+CgpUaGUgbW9kcG9zdCBnZW5lcmF0ZXMgdGhlIGxpdmVwYXRjaC1tb2R1bGVzIGZpbGUgaW5zdGVh
+ZCBvZgpNYWtlZmlsZSBmZWVkaW5nIGl0IHRvIG1vZHBvc3QuCgpUaGUgaW1wbGVtZW50YXRpb24g
+anVzdCBtaW1pY3Mgd3JpdGVfZHVtcCgpLgoKU2lnbmVkLW9mZi1ieTogTWFzYWhpcm8gWWFtYWRh
+IDx5YW1hZGEubWFzYWhpcm9Ac29jaW9uZXh0LmNvbT4KLS0tCiBzY3JpcHRzL01ha2VmaWxlLm1v
+ZHBvc3QgfCAgMyArKy0KIHNjcmlwdHMvbW9kL21vZHBvc3QuYyAgICB8IDI4ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrLS0KIHNjcmlwdHMvbW9kL21vZHBvc3QuaCAgICB8ICAxICsKIDMgZmls
+ZXMgY2hhbmdlZCwgMjkgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQg
+YS9zY3JpcHRzL01ha2VmaWxlLm1vZHBvc3QgYi9zY3JpcHRzL01ha2VmaWxlLm1vZHBvc3QKaW5k
+ZXggOTJlZDAyZDdjZDVlLi5jODg0YjdiNzA5Y2EgMTAwNjQ0Ci0tLSBhL3NjcmlwdHMvTWFrZWZp
+bGUubW9kcG9zdAorKysgYi9zY3JpcHRzL01ha2VmaWxlLm1vZHBvc3QKQEAgLTU2LDcgKzU2LDgg
+QEAgTU9EUE9TVCA9IHNjcmlwdHMvbW9kL21vZHBvc3QJCQkJCQlcCiAJJChpZiAkKEtCVUlMRF9F
+WFRNT0QpLCQoYWRkcHJlZml4IC1lICwkKEtCVUlMRF9FWFRSQV9TWU1CT0xTKSkpCVwKIAkkKGlm
+ICQoS0JVSUxEX0VYVE1PRCksLW8gJChtb2R1bGVzeW1maWxlKSkJCQlcCiAJJChpZiAkKENPTkZJ
+R19TRUNUSU9OX01JU01BVENIX1dBUk5fT05MWSksLC1FKQkJCVwKLQkkKGlmICQoS0JVSUxEX01P
+RFBPU1RfV0FSTiksLXcpCisJJChpZiAkKEtCVUlMRF9NT0RQT1NUX1dBUk4pLC13KQkJCQkJXAor
+CSQoaWYgJChDT05GSUdfTElWRVBBVENIKSwtbCBsaXZlcGF0Y2gtbW9kdWxlcykKIAogaWZkZWYg
+TU9EUE9TVF9WTUxJTlVYCiAKZGlmZiAtLWdpdCBhL3NjcmlwdHMvbW9kL21vZHBvc3QuYyBiL3Nj
+cmlwdHMvbW9kL21vZHBvc3QuYwppbmRleCAzZTZkMzZkZGZjZGYuLmUzZjYzN2YyMjVlNCAxMDA2
+NDQKLS0tIGEvc2NyaXB0cy9tb2QvbW9kcG9zdC5jCisrKyBiL3NjcmlwdHMvbW9kL21vZHBvc3Qu
+YwpAQCAtMTk3Niw2ICsxOTc2LDEwIEBAIHN0YXRpYyB2b2lkIHJlYWRfc3ltYm9scyhjb25zdCBj
+aGFyICptb2RuYW1lKQogCQlsaWNlbnNlID0gZ2V0X25leHRfbW9kaW5mbygmaW5mbywgImxpY2Vu
+c2UiLCBsaWNlbnNlKTsKIAl9CiAKKwkvKiBMaXZlcGF0Y2ggbW9kdWxlcyBoYXZlIHVucmVzb2x2
+ZWQgc3ltYm9scyByZXNvbHZlZCBieSBrbHAtY29udmVydCAqLworCWlmIChnZXRfbW9kaW5mbygm
+aW5mbywgImxpdmVwYXRjaCIpKQorCQltb2QtPmxpdmVwYXRjaCA9IDE7CisKIAlmb3IgKHN5bSA9
+IGluZm8uc3ltdGFiX3N0YXJ0OyBzeW0gPCBpbmZvLnN5bXRhYl9zdG9wOyBzeW0rKykgewogCQlz
+eW1uYW1lID0gcmVtb3ZlX2RvdChpbmZvLnN0cnRhYiArIHN5bS0+c3RfbmFtZSk7CiAKQEAgLTIx
+MTgsNyArMjEyMiw3IEBAIHN0YXRpYyBpbnQgY2hlY2tfZXhwb3J0cyhzdHJ1Y3QgbW9kdWxlICpt
+b2QpCiAJCWNvbnN0IGNoYXIgKmJhc2VuYW1lOwogCQlleHAgPSBmaW5kX3N5bWJvbChzLT5uYW1l
+KTsKIAkJaWYgKCFleHAgfHwgZXhwLT5tb2R1bGUgPT0gbW9kKSB7Ci0JCQlpZiAoaGF2ZV92bWxp
+bnV4ICYmICFzLT53ZWFrKSB7CisJCQlpZiAoaGF2ZV92bWxpbnV4ICYmICFzLT53ZWFrICYmICFt
+b2QtPmxpdmVwYXRjaCkgewogCQkJCWlmICh3YXJuX3VucmVzb2x2ZWQpIHsKIAkJCQkJd2Fybigi
+XCIlc1wiIFslcy5rb10gdW5kZWZpbmVkIVxuIiwKIAkJCQkJICAgICBzLT5uYW1lLCBtb2QtPm5h
+bWUpOwpAQCAtMjQyOSw2ICsyNDMzLDIwIEBAIHN0YXRpYyB2b2lkIHdyaXRlX2R1bXAoY29uc3Qg
+Y2hhciAqZm5hbWUpCiAJZnJlZShidWYucCk7CiB9CiAKK3N0YXRpYyB2b2lkIHdyaXRlX2xpdmVw
+YXRjaF9tb2R1bGVzKGNvbnN0IGNoYXIgKmZuYW1lKQoreworCXN0cnVjdCBidWZmZXIgYnVmID0g
+eyB9OworCXN0cnVjdCBtb2R1bGUgKm1vZDsKKworCWZvciAobW9kID0gbW9kdWxlczsgbW9kOyBt
+b2QgPSBtb2QtPm5leHQpIHsKKwkJaWYgKG1vZC0+bGl2ZXBhdGNoKQorCQkJYnVmX3ByaW50Zigm
+YnVmLCAiJXNcbiIsIG1vZC0+bmFtZSk7CisJfQorCisJd3JpdGVfaWZfY2hhbmdlZCgmYnVmLCBm
+bmFtZSk7CisJZnJlZShidWYucCk7Cit9CisKIHN0cnVjdCBleHRfc3ltX2xpc3QgewogCXN0cnVj
+dCBleHRfc3ltX2xpc3QgKm5leHQ7CiAJY29uc3QgY2hhciAqZmlsZTsKQEAgLTI0NDAsMTMgKzI0
+NTgsMTQgQEAgaW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKiphcmd2KQogCXN0cnVjdCBidWZmZXIg
+YnVmID0geyB9OwogCWNoYXIgKmtlcm5lbF9yZWFkID0gTlVMTCwgKm1vZHVsZV9yZWFkID0gTlVM
+TDsKIAljaGFyICpkdW1wX3dyaXRlID0gTlVMTCwgKmZpbGVzX3NvdXJjZSA9IE5VTEw7CisJY2hh
+ciAqbGl2ZXBhdGNoX21vZHVsZXMgPSBOVUxMOwogCWludCBvcHQ7CiAJaW50IGVycjsKIAlpbnQg
+bjsKIAlzdHJ1Y3QgZXh0X3N5bV9saXN0ICpleHRzeW1faXRlcjsKIAlzdHJ1Y3QgZXh0X3N5bV9s
+aXN0ICpleHRzeW1fc3RhcnQgPSBOVUxMOwogCi0Jd2hpbGUgKChvcHQgPSBnZXRvcHQoYXJnYywg
+YXJndiwgImk6STplOm1uc1Q6bzphd0UiKSkgIT0gLTEpIHsKKwl3aGlsZSAoKG9wdCA9IGdldG9w
+dChhcmdjLCBhcmd2LCAiaTpJOmU6bDptbnNUOm86YXdFIikpICE9IC0xKSB7CiAJCXN3aXRjaCAo
+b3B0KSB7CiAJCWNhc2UgJ2knOgogCQkJa2VybmVsX3JlYWQgPSBvcHRhcmc7CkBAIC0yNDYzLDYg
+KzI0ODIsOSBAQCBpbnQgbWFpbihpbnQgYXJnYywgY2hhciAqKmFyZ3YpCiAJCQlleHRzeW1faXRl
+ci0+ZmlsZSA9IG9wdGFyZzsKIAkJCWV4dHN5bV9zdGFydCA9IGV4dHN5bV9pdGVyOwogCQkJYnJl
+YWs7CisJCWNhc2UgJ2wnOgorCQkJbGl2ZXBhdGNoX21vZHVsZXMgPSBvcHRhcmc7CisJCQlicmVh
+azsKIAkJY2FzZSAnbSc6CiAJCQltb2R2ZXJzaW9ucyA9IDE7CiAJCQlicmVhazsKQEAgLTI1MzUs
+NiArMjU1Nyw4IEBAIGludCBtYWluKGludCBhcmdjLCBjaGFyICoqYXJndikKIAl9CiAJaWYgKGR1
+bXBfd3JpdGUpCiAJCXdyaXRlX2R1bXAoZHVtcF93cml0ZSk7CisJaWYgKGxpdmVwYXRjaF9tb2R1
+bGVzKQorCQl3cml0ZV9saXZlcGF0Y2hfbW9kdWxlcyhsaXZlcGF0Y2hfbW9kdWxlcyk7CiAJaWYg
+KHNlY19taXNtYXRjaF9jb3VudCAmJiBzZWNfbWlzbWF0Y2hfZmF0YWwpCiAJCWZhdGFsKCJtb2Rw
+b3N0OiBTZWN0aW9uIG1pc21hdGNoZXMgZGV0ZWN0ZWQuXG4iCiAJCSAgICAgICJTZXQgQ09ORklH
+X1NFQ1RJT05fTUlTTUFUQ0hfV0FSTl9PTkxZPXkgdG8gYWxsb3cgdGhlbS5cbiIpOwpkaWZmIC0t
+Z2l0IGEvc2NyaXB0cy9tb2QvbW9kcG9zdC5oIGIvc2NyaXB0cy9tb2QvbW9kcG9zdC5oCmluZGV4
+IDg0NTNkNmFjMmY3Ny4uMmFjZmFhZTA2NGVjIDEwMDY0NAotLS0gYS9zY3JpcHRzL21vZC9tb2Rw
+b3N0LmgKKysrIGIvc2NyaXB0cy9tb2QvbW9kcG9zdC5oCkBAIC0xMTgsNiArMTE4LDcgQEAgc3Ry
+dWN0IG1vZHVsZSB7CiAJaW50IHNraXA7CiAJaW50IGhhc19pbml0OwogCWludCBoYXNfY2xlYW51
+cDsKKwlpbnQgbGl2ZXBhdGNoOwogCXN0cnVjdCBidWZmZXIgZGV2X3RhYmxlX2J1ZjsKIAljaGFy
+CSAgICAgc3JjdmVyc2lvblsyNV07CiAJaW50IGlzX2RvdF9vOwotLSAKMi4xNy4xCgo=
+--00000000000086ed9a058ef3d24e--
