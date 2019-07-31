@@ -2,118 +2,96 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D10DC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AB0C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 191D1208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F88D208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:18:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcSnA+bD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfGaNRo (ORCPT
+        id S1729399AbfGaNSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:17:44 -0400
-Received: from mga02.intel.com ([134.134.136.20]:63732 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729371AbfGaNRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:17:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 06:17:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,330,1559545200"; 
-   d="scan'208";a="191241302"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 31 Jul 2019 06:17:36 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        mm-commits@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>, mhocko@suse.cz,
-        linux-mm@kvack.org, Mark Brown <broonie@kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: mmotm 2019-07-04-15-01 uploaded (gpu/drm/i915/oa/)
-In-Reply-To: <CAK7LNATF+D5TgTZijG3EPBVON5NmN+JcwmCBvnvkMFyR+3wF2A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org> <80bf2204-558a-6d3f-c493-bf17b891fc8a@infradead.org> <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com> <CAK7LNASLfyreDPvNuL1svvHPC0woKnXO_bsNku4DMK6UNn4oHw@mail.gmail.com> <5e5353e2-bfab-5360-26b2-bf8c72ac7e70@infradead.org> <CAK7LNATF+D5TgTZijG3EPBVON5NmN+JcwmCBvnvkMFyR+3wF2A@mail.gmail.com>
-Date:   Wed, 31 Jul 2019 16:21:58 +0300
-Message-ID: <87v9vimj9l.fsf@intel.com>
+        Wed, 31 Jul 2019 09:18:13 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37105 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfGaNSM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:18:12 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b3so30513742plr.4;
+        Wed, 31 Jul 2019 06:18:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uhwL5piXx8aF6MDFp0KeoIkRi/tSrSG0FpkMUYDNB8w=;
+        b=lcSnA+bD0JH+vYNptcNwz2JYiVL9882K4fhLYaWfPqIYBST1F2NzD6gs1cJENFdz+i
+         tYhHVFQH2NEBddswHK9G4eFvyiLsGC32lc2RG4TXAouKmV89kOvASrORmM8XJieNc275
+         /v2b7vF250RvyD0dCj51TGnx/xFCE2ElcJaZdYrMjVaGs7EuBZhGijPNH2na1G6BLStX
+         mTDy0B9ZvRL36WeT7uxQ1+/jJ+kqqDg8xnhHqWu3WkuEELj9f43TPLGc2RxrLrOt3tv1
+         ZzQVI5KLkntvFqmTYPqcoGEA8/bO2+9gXs26yS7m3h9whENc8MocFmZ2YAjwGi4dW2/k
+         Bkdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uhwL5piXx8aF6MDFp0KeoIkRi/tSrSG0FpkMUYDNB8w=;
+        b=kWLLX7TpKHzlPtt5CQr10JG8JIWjrk/XRRPeVfxstMAUrsb5eURw8hVorRE6RGawON
+         9J6e1eihnL9BiDPxgXc97nAvuOP4EvQok6PwswLVKgz+DXAqSjcdbhopDoKTgSQBW5kS
+         F6TbUFGLkPwOlMgR37xKVM8lIEbthxMt/IpsREk1ola/8zTOGHXLbuB7YPRxhTkw1WsH
+         wG8nW3q/dygnfAM98bFkchopePowLD1CIgu16V6GgkNr+Dp1VgxCQx8tx3seu7QdcjWz
+         lysHtXsoTobafey7+Nh+FL1s0UBxQCg5Czc3hVKpSLqrIvnoe7FxZOvFIa8aFXOj7e/b
+         50+w==
+X-Gm-Message-State: APjAAAWE4XVFSAHNyv+5tXH/tVJycXU2KxIK2vfwXGWVyjMcAeorUaNS
+        +BWPiIltFT2gcCsnKIP7XCAwepUB
+X-Google-Smtp-Source: APXvYqyZxm7zrncvEbqxeQgNtgZ976e1XdkioNQZ1x05Rs55Sl8buDxbyID8dK3I1aVQSIiGFy7Qgg==
+X-Received: by 2002:a17:902:8ec3:: with SMTP id x3mr9148169plo.313.1564579092111;
+        Wed, 31 Jul 2019 06:18:12 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h6sm65868832pfb.20.2019.07.31.06.18.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 06:18:11 -0700 (PDT)
+Subject: Re: [PATCH] watchdog: pc87413: Rewriting of pc87413_wdt driver to use
+ watchdog subsystem
+To:     Mark Balantzyan <mbalant3@gmail.com>
+Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, andrianov@ispras.ru
+References: <20190731032204.78951-1-mbalant3@gmail.com>
+ <59b298ec-028b-7585-3477-ff4eabb27b80@roeck-us.net>
+ <alpine.DEB.2.21.1907302202420.106416@mbalantz-desktop>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <ca05eb5a-a3b9-419c-22ff-d4f722e1f08c@roeck-us.net>
+Date:   Wed, 31 Jul 2019 06:18:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <alpine.DEB.2.21.1907302202420.106416@mbalantz-desktop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 05 Jul 2019, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> On Fri, Jul 5, 2019 at 12:23 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> On 7/4/19 8:09 PM, Masahiro Yamada wrote:
->> > On Fri, Jul 5, 2019 at 12:05 PM Masahiro Yamada
->> > <yamada.masahiro@socionext.com> wrote:
->> >>
->> >> On Fri, Jul 5, 2019 at 10:09 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->> >>>
->> >>> On 7/4/19 3:01 PM, akpm@linux-foundation.org wrote:
->> >>>> The mm-of-the-moment snapshot 2019-07-04-15-01 has been uploaded to
->> >>>>
->> >>>>    http://www.ozlabs.org/~akpm/mmotm/
->> >>>>
->> >>>> mmotm-readme.txt says
->> >>>>
->> >>>> README for mm-of-the-moment:
->> >>>>
->> >>>> http://www.ozlabs.org/~akpm/mmotm/
->> >>>
->> >>> I get a lot of these but don't see/know what causes them:
->> >>>
->> >>> ../scripts/Makefile.build:42: ../drivers/gpu/drm/i915/oa/Makefile: No such file or directory
->> >>> make[6]: *** No rule to make target '../drivers/gpu/drm/i915/oa/Makefile'.  Stop.
->> >>> ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915/oa' failed
->> >>> make[5]: *** [drivers/gpu/drm/i915/oa] Error 2
->> >>> ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915' failed
->> >>>
->> >>
->> >> I checked next-20190704 tag.
->> >>
->> >> I see the empty file
->> >> drivers/gpu/drm/i915/oa/Makefile
->> >>
->> >> Did someone delete it?
->> >>
->> >
->> >
->> > I think "obj-y += oa/"
->> > in drivers/gpu/drm/i915/Makefile
->> > is redundant.
->>
->> Thanks.  It seems to be working after deleting that line.
->
->
-> Could you check whether or not
-> drivers/gpu/drm/i915/oa/Makefile exists in your source tree?
->
-> Your build log says it was missing.
->
-> But, commit 5ed7a0cf3394 ("drm/i915: Move OA files to separate folder")
-> added it.  (It is just an empty file)
->
-> I am just wondering why.
+On 7/30/19 10:06 PM, Mark Balantzyan wrote:
+> Hi all, Guenter,
+> 
+> Thank you for your email. Unfortunately, on my end, the indentation is
+> straight and perhaps through protocol transfer there was stray
+> modification.
+> 
 
-I've sent patches adding some content, and they'll make their way
-upstream eventually. I am not sure why the empty file was added
-originally. Perhaps as a placeholder, seemed benign enough.
+checkpatch --strict says:
 
-BR,
-Jani.
+total: 13 errors, 13 warnings, 4 checks, 439 lines checked
 
+Please fix all those, including the checks, before you resubmit.
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Thanks,
+Guenter
