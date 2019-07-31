@@ -2,133 +2,137 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B306BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A108BC32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8528E20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:56:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564610173;
-	bh=K/tOdg0rARIHNKt8myQdNk7juboEm6U9R00/FeIUiBE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z7+KT/rBIweKnw2QNxloM39EnPtmkaOiPulVuMdrvsXKAB/X6/HoKf5mkjWwH8+Y8
-	 AhOr+tJ2biC1qfg/2mXeG+00tS9rqc0WWUMWEF+FFp61y4xCfCWbqlbZLEW3QFr4/R
-	 EhERamv+5kakYDx2oSELbSDra8li78HclzQ+AbMo=
+	by mail.kernel.org (Postfix) with ESMTP id 7702620659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:59:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n3A6uLsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731087AbfGaV4M (ORCPT
+        id S1730716AbfGaV7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:56:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42876 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbfGaV4M (ORCPT
+        Wed, 31 Jul 2019 17:59:35 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33798 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfGaV7f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:56:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=K/tOdg0rARIHNKt8myQdNk7juboEm6U9R00/FeIUiBE=; b=dAQCdVcqawi/p92YlttDZTR93
-        BKyG7tTLWgF7ROCBKJ78mPeMReOpPz03DvX3MgsE3fL4jZKpXbSgEfnsqgHzMIJoSh2RNJNUt/7Vs
-        W4pmxcdPzOCef23B1cmjFfttX03YC386eRlZje3tRqBKZnkd81Qs+16ww3Bey4vn/dVho=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hswZ4-0003OG-Ci; Wed, 31 Jul 2019 21:55:18 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 1A3322742C6C; Wed, 31 Jul 2019 22:55:17 +0100 (BST)
-Date:   Wed, 31 Jul 2019 22:55:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        samba-technical@lists.samba.org, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve French <sfrench@samba.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-cifs@vger.kernel.org, Dave Kleikamp <shaggy@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org,
-        Hartmut Knaack <knaack.h@gmx.de>, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 0/6] ReST conversion patches not applied yet
-Message-ID: <20190731215516.GM4369@sirena.org.uk>
-References: <cover.1564603513.git.mchehab+samsung@kernel.org>
- <20190731141734.1fa9ce64@lwn.net>
- <20190731202007.GI4369@sirena.org.uk>
- <20190731172613.32d65ad8@coco.lan>
- <20190731203712.GJ4369@sirena.org.uk>
- <20190731182729.01c98cd3@coco.lan>
+        Wed, 31 Jul 2019 17:59:35 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b13so32614971pfo.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 14:59:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:from:to:subject:user-agent:date;
+        bh=IlRwSSoXPkPO8ZlfGQyrA2PVh0oI2jbeG8M+xqYWNuc=;
+        b=n3A6uLscWmFreF939tyOlPubPIYDf44Y3GSbMd5VGwmGbOLz9PMLsYyy6hnO/F5hv7
+         HRy2Eq8dQckDsTk18S0fC9yE3YBQk2EeHDpNnOb5HFGvC/FFwabnJ4NyZjZOxhGFbpDJ
+         KsRbZRE0bAvaZy7+ZMWdBaHcQQyv7phuAIuXk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
+         :user-agent:date;
+        bh=IlRwSSoXPkPO8ZlfGQyrA2PVh0oI2jbeG8M+xqYWNuc=;
+        b=MqVZmCoTgEkOS24ymSAHjbVy2qastS011OG5/gbyu3vXBtbHG4PwLYEYlbtsqpPnA4
+         f+kkmbCXE1tfaBjwJz7lx9HVYVNF9yf39Cxg2/bp1NEnAi9nAX9ufirRmGutnN4bYyUO
+         7H2UC7sfwnA/vuFhmV+d6wVlECiO2qUN4Z66uI9SLDcYEKuD/g7AI/rjgUCR1+nfk7kz
+         1h5LzfOjc/cKolQ2cpa17D6gz5Hff6AgbyVCE96BaxEyfJSE5J74e2bBl1heyd7mBKs7
+         Bjn5i77CmuvCF+CG64jHpRJC4AFm04xxfByveQFthOiPSLuli36fDhDb7VS0S5asKCTZ
+         yy/A==
+X-Gm-Message-State: APjAAAV1wwBOiSaodE/gi4qR93gXThfJNi1BjP2DNYNYnhyOjyn+Bd4Y
+        pC7HFsa1Zwa1OKF8CDYETf3oJA==
+X-Google-Smtp-Source: APXvYqxRyvbUZhJsewElOw/jGc81nEj+n2gFMTff3FnLVzjQbJ+uJcjTMouUatne6W5Kncq5F9kkXQ==
+X-Received: by 2002:a63:184b:: with SMTP id 11mr55358650pgy.112.1564610374310;
+        Wed, 31 Jul 2019 14:59:34 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id i14sm108093300pfk.0.2019.07.31.14.59.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 14:59:33 -0700 (PDT)
+Message-ID: <5d420f45.1c69fb81.35877.3d86@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iKKZt69u2Wx/rspf"
-Content-Disposition: inline
-In-Reply-To: <20190731182729.01c98cd3@coco.lan>
-X-Cookie: FEELINGS are cascading over me!!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190731215514.212215-1-trong@android.com>
+References: <20190731215514.212215-1-trong@android.com>
+Cc:     rafael@kernel.org, hridya@google.com, sspatil@google.com,
+        kaleshsingh@google.com, ravisadineni@chromium.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com, Tri Vo <trong@android.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Tri Vo <trong@android.com>, gregkh@linuxfoundation.org,
+        rjw@rjwysocki.net, viresh.kumar@linaro.org
+Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
+User-Agent: alot/0.8.1
+Date:   Wed, 31 Jul 2019 14:59:32 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Tri Vo (2019-07-31 14:55:14)
+> +/**
+> + * wakeup_source_sysfs_add - Add wakeup_source attributes to sysfs.
+> + * @parent: Device given wakeup source is associated with (or NULL if vi=
+rtual).
+> + * @ws: Wakeup source to be added in sysfs.
+> + */
+> +int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source =
+*ws)
+> +{
+> +       struct device *dev;
+> +       int id;
+> +
+> +       id =3D ida_alloc(&wakeup_ida, GFP_KERNEL);
+> +       if (id < 0)
+> +               return id;
+> +       ws->id =3D id;
+> +
+> +       dev =3D device_create_with_groups(wakeup_class, parent, MKDEV(0, =
+0), ws,
+> +                                       wakeup_source_groups, "ws%d",
 
---iKKZt69u2Wx/rspf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I thought the name was going to still be 'wakeupN'?
 
-On Wed, Jul 31, 2019 at 06:27:29PM -0300, Mauro Carvalho Chehab wrote:
+> +                                       ws->id);
+> +       if (IS_ERR(dev)) {
+> +               ida_free(&wakeup_ida, ws->id);
+> +               return PTR_ERR(dev);
+> +       }
+> +
+> +       ws->dev =3D dev;
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_source_sysfs_add);
+> +
+> +/**
+> + * wakeup_source_sysfs_remove - Remove wakeup_source attributes from sys=
+fs.
+> + * @ws: Wakeup source to be removed from sysfs.
+> + */
+> +void wakeup_source_sysfs_remove(struct wakeup_source *ws)
+> +{
+> +       device_unregister(ws->dev);
+> +       ida_simple_remove(&wakeup_ida, ws->id);
 
-> Meanwhile, if someone needs something that it is at the wrong book, he
-> can just use some search tool to seek what he needs, no matter on
-> what book the relevant information is stored.
+Should be ida_free()?
 
-OTOH it might be weird for the intended audience of the book.
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_source_sysfs_remove);
+> +
+> +static int __init wakeup_sources_sysfs_init(void)
+> +{
+> +       wakeup_class =3D class_create(THIS_MODULE, "wakeup");
+> +
+> +       return PTR_ERR_OR_ZERO(wakeup_class);
+> +}
+> +
+> +postcore_initcall(wakeup_sources_sysfs_init);
 
-> Mark Brown <broonie@kernel.org> escreveu:
+Style nitpick: Stick the initcall to the function it calls by dropping
+the extra newline between them.
 
-> > I don't know if it makes sense to have an embedded developer's
-> > manual as well?
-
-> Yeah, that's a good question.=20
-
-> Jon is planning todo a documentation track at LPC. One of the things
-> that should be discussed, IMO, is how we'll organize the books.
-
-I'll be at Plumbers, not sure what the schedule's looking like yet
-though.
-
---iKKZt69u2Wx/rspf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1CDkQACgkQJNaLcl1U
-h9DmyQf8CbO6RT3vDVCTbWB0f/yKJ/A87r+D9XnXG94SH0Vqj3KAl/HFsPpl4gyU
-1t9Uo9ZtFC8lSFh29z5fxpIzNkfsanBjnTrJS1lxOvU+DgmoTfXV5+2xa3rel1E0
-oOzMumEUJLWQmAQIaSzObUMvLTHaHZXE9UwveI9WkjfE0k7lsrK4vKzotxGDUk1a
-6B/LdVb+NH3ME369z6GL2hpH6SkNc0jCRYj4PcGud8PTKBqHim7kBI3AeE51lFUV
-Dsr7zD6gH+cbj/GXdXApIDJvlR8bH6LLM/dakss84cM6CvJoD/pd4z9fn2kmUkVY
-5tMO7f2i3x9slM6yQ78bDwGSrn8XIg==
-=1tp/
------END PGP SIGNATURE-----
-
---iKKZt69u2Wx/rspf--
