@@ -2,65 +2,58 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CB5C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F59C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36A1206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="MZwcDUi4"
+	by mail.kernel.org (Postfix) with ESMTP id 0E0DE206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564614018;
+	bh=YJcoj50QMjqL7JK7JWKHQ8Z0YD5n6jkuRunz6lXXSqY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A5bV2UtjcgoLkmo054yi/9SlpSo5OLwl7zvlgJbPJzSHTLb42Cz3kR7kA48APqjmw
+	 aeX+1HGCc1wET0+t1I10gVMJE0Eb1mmu3u2uFEk0qCEkcSAEcf+Zt/nb1EK3Ia2bLU
+	 uB7lXUKuL4hVvdw/UMoDhd3/pscdVYdEIS79Ss/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbfGaW7F (ORCPT
+        id S1730516AbfGaXAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:59:05 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36537 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727508AbfGaW7F (ORCPT
+        Wed, 31 Jul 2019 19:00:16 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38532 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfGaXAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:59:05 -0400
-Received: by mail-oi1-f194.google.com with SMTP id q4so22887314oij.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fvayO7XeLTy4X/5U3hiq/uu/ecirEncxcxFHnyvxXOY=;
-        b=MZwcDUi4tR1G4oOJB4TqUTN5aSX1GloRDcsyDdkg9pgM6Y4OOeIdzBZz+5e9apI2TF
-         SfqkvWNFv8Hp7X83FA7vjkoOPtJiWY9tLmmHUvhcyo+lyjS1ZCHoS2x74bE1dX8YEFPl
-         WAHZ8LyXqJ63ftyyerKaspMAHnrCjY6J5lgp3VSKoHklPJwMsP6DlW2EKdgqv2gg1OmK
-         bdapoa0TuPAT5F5ZICJwjifRuzY7TWULCwViKgLADIwKMa1pOo9W5Mm2T4Tg4ZebCfDH
-         RGeJxb2rwYX219Fyq3lT1DzNEDCkEitB6etiQCdh5Pm2hZyIEE7513zhXdcjE/fH7lGD
-         wnEw==
+        Wed, 31 Jul 2019 19:00:16 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v186so52076112oie.5;
+        Wed, 31 Jul 2019 16:00:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fvayO7XeLTy4X/5U3hiq/uu/ecirEncxcxFHnyvxXOY=;
-        b=hGHnETiobpRsX80dyXqCf3/NGdDwn7sY+TmAtoSHNePlkrey0R8QvgDFT9XFRPdIyY
-         mpkun1KslNQmx9CbHArka2lv7glbevJ+Gqm41h7cj0lGf1YnjDZMUnlUWeONPQvWjV1P
-         x6EfexvzkIu19R0Am9TKyXHfLsnXuGvOWPahAbyVNDzTLQ/+1A3he5s2iNQGNzaihc/8
-         8FkQ6sKcRjqAsYotNqMTvbL5nIeODE7OOXnr/JbnXVm4M7mH4TB3C2Z1Yc8ZfnQx5+gn
-         8I3tFd56oKbotlBwL3jVfhDHQeO8NAha2w/VVvQAgq+5Uw8utj4kM58c2Lzogg+Qq98L
-         w9VQ==
-X-Gm-Message-State: APjAAAUAfX+VdjqrNgsMmMFRLxEpXWKoTg6/YA8cEfMqXd90EQmG27/g
-        pjyOcOnJr2NG3NDmA712nQXsQ2EFZzyYqfdgmX8=
-X-Google-Smtp-Source: APXvYqyUMhMQGrPCnz4Km3SI1BL8a++DrhrK10Cd3/evsUszLBjGzYJ96bkzEQgPGssDRVfcF2DZTFh6Eh/vfDu63eU=
-X-Received: by 2002:aca:af55:: with SMTP id y82mr59277816oie.172.1564613944162;
- Wed, 31 Jul 2019 15:59:04 -0700 (PDT)
+        bh=g1XGA7+OOT5M94yaSPtFGkRyMp9RBaIxbFA4iWh0TPU=;
+        b=oir4h7Qbwxjou/TsIYiSWBpO5s7T+pl0WM4ye2uPEBT2APk0dqegCcdXBNm3ZY1/JY
+         z18bACf5lRlOVW/HkHXdsV5v8xGNImn4mE55pWayZqNdZdQcfQ8bMfJ4KyMYfamsi4fN
+         0uyoPCc72Ma413Xcn1MPqam5mupMLmTE5CT8dtsE3vb/kivq0blfH5Y0+H4pyRq+6+9x
+         rpKsSHfBqg79VuF2Jg0Qsh1peZYek3236uvn8YacjjTS/Yz9J7golr9GP2rSVzy4ldaM
+         7cO33hL+wE6W1F79Ymco7Z12VCmDKON9ar0twI2pyWzjr1A3TPzdUB6ovQGBBZcl5YJm
+         sQ+Q==
+X-Gm-Message-State: APjAAAU1GHDRncXHbjoQamqbh7E+/Ev4ZqaK5urI8DYPC8eneIB/2jG6
+        HeKVenYBryt6kqofnRt4M/vOhixhDfNp3wXLCYg=
+X-Google-Smtp-Source: APXvYqxyKtZ+TJkRBsq9SCAb52PyvOrYXcza7RJymYREaG9NE3KY9niyKZ+Sn4OndoXJqhnn9omlWX7RrQb2pWMtrFs=
+X-Received: by 2002:aca:edc8:: with SMTP id l191mr60392932oih.103.1564614015358;
+ Wed, 31 Jul 2019 16:00:15 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher>
  <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com> <6987393.M0uybTKmdI@kreacher>
 In-Reply-To: <6987393.M0uybTKmdI@kreacher>
-From:   Tri Vo <trong@android.com>
-Date:   Wed, 31 Jul 2019 15:58:53 -0700
-Message-ID: <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 1 Aug 2019 01:00:03 +0200
+Message-ID: <CAJZ5v0j7ZbSq45U9DFt_KsKuk30h5vB1m2a7L6qx2fRb+4kP2A@mail.gmail.com>
 Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Tri Vo <trong@android.com>
 Cc:     Stephen Boyd <swboyd@chromium.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
@@ -78,7 +71,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 3:42 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+On Thu, Aug 1, 2019 at 12:42 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 >
 > On Thursday, August 1, 2019 12:31:16 AM CEST Tri Vo wrote:
 > > On Wed, Jul 31, 2019 at 3:17 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
@@ -127,6 +120,6 @@ On Wed, Jul 31, 2019 at 3:42 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 >
 > ?
 
-ws->name is inherited from the device name. IIUC device names are not
-guaranteed to be unique. So if different devices with the same name
-register wakeup sources, there is an error.
+And more generally speaking, we are adding another way to identify
+wakeup sources (by id), which is not related to the one we already
+have (by name).  Why do we need both of them?
