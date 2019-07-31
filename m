@@ -2,146 +2,241 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2879C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAE2C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 807D1208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0032120659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:46:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbfGaOqg (ORCPT
+        id S2387638AbfGaOqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:46:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:48362 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbfGaOqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:46:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42F3C344;
-        Wed, 31 Jul 2019 07:46:32 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F5A23F694;
-        Wed, 31 Jul 2019 07:46:31 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 15:46:29 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jiping Ma <jiping.ma2@windriver.com>
-Cc:     rostedt@goodmis.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        will.deacon@arm.com, catalin.marinas@arm.com
-Subject: Re: [PATCH] Function stack size and its name mismatch in arm64
-Message-ID: <20190731144628.GD39768@lakrids.cambridge.arm.com>
-References: <20190731090437.19867-1-jiping.ma2@windriver.com>
+        Wed, 31 Jul 2019 10:46:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59602 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728482AbfGaOqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:46:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1DA3AB607;
+        Wed, 31 Jul 2019 14:46:42 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 32C8F1E3F4D; Wed, 31 Jul 2019 16:46:39 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 16:46:39 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Theodore Tso <tytso@mit.edu>, Julia Cartwright <julia@ni.com>,
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [patch 2/4] fs/buffer: Move BH_Uptodate_Lock locking into
+ wrapper functions
+Message-ID: <20190731144639.GG15806@quack2.suse.cz>
+References: <20190730112452.871257694@linutronix.de>
+ <20190730120321.285095769@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190731090437.19867-1-jiping.ma2@windriver.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190730120321.285095769@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-If you have a patch affecting arm64, please Cc LAKML and the arm64
-maintainers. I've added them to this sub-thread.
-
-On Wed, Jul 31, 2019 at 05:04:37PM +0800, Jiping Ma wrote:
-> The PC of one the frame is matched to the next frame function, rather
-> than the function of his frame.
-
-As Steve said in another reply, please could you explain the problem
-more thoroughly? An example would be very helpful.
-
-It sounds like arm64 behaves differently to other architectures here,
-which could be an arm64-specific bug, or it could be that the behaviour
-is inconsistent across archtiectures and needs more general cleanup.
-
-Thanks,
-Mark.
-
+On Tue 30-07-19 13:24:54, Thomas Gleixner wrote:
+> Bit spinlocks are problematic if PREEMPT_RT is enabled, because they
+> disable preemption, which is undesired for latency reasons and breaks when
+> regular spinlocks are taken within the bit_spinlock locked region because
+> regular spinlocks are converted to 'sleeping spinlocks' on RT. So RT
+> replaces the bit spinlocks with regular spinlocks to avoid this problem.
 > 
-> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+> To avoid ifdeffery at the source level, wrap all BH_Uptodate_Lock bitlock
+> operations with inline functions, so the spinlock substitution can be done
+> at one place.
+> 
+> Using regular spinlocks can also be enabled for lock debugging purposes so
+> the lock operations become visible to lockdep.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: "Theodore Ts'o" <tytso@mit.edu>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: linux-fsdevel@vger.kernel.org
+
+Looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+BTW, it should be possible to get rid of BH_Uptodate_Lock altogether using
+bio chaining (which was non-existent when this bh code was written) to make
+sure IO completion function gets called only once all bios used to fill in
+/ write out the page are done. It would be also more efficient. But I guess
+that's an interesting cleanup project for some other time...
+
+								Honza
+
 > ---
->  kernel/trace/trace_stack.c | 28 ++++++++++++++++++++++++++--
->  1 file changed, 26 insertions(+), 2 deletions(-)
+>  fs/buffer.c                 |   20 ++++++--------------
+>  fs/ext4/page-io.c           |    6 ++----
+>  fs/ntfs/aops.c              |   10 +++-------
+>  include/linux/buffer_head.h |   16 ++++++++++++++++
+>  4 files changed, 27 insertions(+), 25 deletions(-)
 > 
-> diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-> index 5d16f73898db..ed80b95abf06 100644
-> --- a/kernel/trace/trace_stack.c
-> +++ b/kernel/trace/trace_stack.c
-> @@ -40,16 +40,28 @@ static void print_max_stack(void)
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -275,8 +275,7 @@ static void end_buffer_async_read(struct
+>  	 * decide that the page is now completely done.
+>  	 */
+>  	first = page_buffers(page);
+> -	local_irq_save(flags);
+> -	bit_spin_lock(BH_Uptodate_Lock, &first->b_state);
+> +	flags = bh_uptodate_lock_irqsave(first);
+>  	clear_buffer_async_read(bh);
+>  	unlock_buffer(bh);
+>  	tmp = bh;
+> @@ -289,8 +288,7 @@ static void end_buffer_async_read(struct
+>  		}
+>  		tmp = tmp->b_this_page;
+>  	} while (tmp != bh);
+> -	bit_spin_unlock(BH_Uptodate_Lock, &first->b_state);
+> -	local_irq_restore(flags);
+> +	bh_uptodate_unlock_irqrestore(first, flags);
 >  
->  	pr_emerg("        Depth    Size   Location    (%d entries)\n"
->  			   "        -----    ----   --------\n",
-> +#ifdef CONFIG_ARM64
-> +			   stack_trace_nr_entries - 1);
-> +#else
->  			   stack_trace_nr_entries);
-> -
-> +#endif
-> +#ifdef CONFIG_ARM64
-> +	for (i = 1; i < stack_trace_nr_entries; i++) {
-> +#else
->  	for (i = 0; i < stack_trace_nr_entries; i++) {
-> +#endif
->  		if (i + 1 == stack_trace_nr_entries)
->  			size = stack_trace_index[i];
->  		else
->  			size = stack_trace_index[i] - stack_trace_index[i+1];
+>  	/*
+>  	 * If none of the buffers had errors and they are all
+> @@ -302,9 +300,7 @@ static void end_buffer_async_read(struct
+>  	return;
 >  
-> +#ifdef CONFIG_ARM64
-> +		pr_emerg("%3ld) %8d   %5d   %pS\n", i-1, stack_trace_index[i],
-> +				size, (void *)stack_dump_trace[i-1]);
-> +#else
->  		pr_emerg("%3ld) %8d   %5d   %pS\n", i, stack_trace_index[i],
->  				size, (void *)stack_dump_trace[i]);
-> +#endif
+>  still_busy:
+> -	bit_spin_unlock(BH_Uptodate_Lock, &first->b_state);
+> -	local_irq_restore(flags);
+> -	return;
+> +	bh_uptodate_unlock_irqrestore(first, flags);
+>  }
+>  
+>  /*
+> @@ -331,8 +327,7 @@ void end_buffer_async_write(struct buffe
 >  	}
+>  
+>  	first = page_buffers(page);
+> -	local_irq_save(flags);
+> -	bit_spin_lock(BH_Uptodate_Lock, &first->b_state);
+> +	flags = bh_uptodate_lock_irqsave(first);
+>  
+>  	clear_buffer_async_write(bh);
+>  	unlock_buffer(bh);
+> @@ -344,15 +339,12 @@ void end_buffer_async_write(struct buffe
+>  		}
+>  		tmp = tmp->b_this_page;
+>  	}
+> -	bit_spin_unlock(BH_Uptodate_Lock, &first->b_state);
+> -	local_irq_restore(flags);
+> +	bh_uptodate_unlock_irqrestore(first, flags);
+>  	end_page_writeback(page);
+>  	return;
+>  
+>  still_busy:
+> -	bit_spin_unlock(BH_Uptodate_Lock, &first->b_state);
+> -	local_irq_restore(flags);
+> -	return;
+> +	bh_uptodate_unlock_irqrestore(first, flags);
+>  }
+>  EXPORT_SYMBOL(end_buffer_async_write);
+>  
+> --- a/fs/ext4/page-io.c
+> +++ b/fs/ext4/page-io.c
+> @@ -90,8 +90,7 @@ static void ext4_finish_bio(struct bio *
+>  		 * We check all buffers in the page under BH_Uptodate_Lock
+>  		 * to avoid races with other end io clearing async_write flags
+>  		 */
+> -		local_irq_save(flags);
+> -		bit_spin_lock(BH_Uptodate_Lock, &head->b_state);
+> +		flags = bh_uptodate_lock_irqsave(head);
+>  		do {
+>  			if (bh_offset(bh) < bio_start ||
+>  			    bh_offset(bh) + bh->b_size > bio_end) {
+> @@ -103,8 +102,7 @@ static void ext4_finish_bio(struct bio *
+>  			if (bio->bi_status)
+>  				buffer_io_error(bh);
+>  		} while ((bh = bh->b_this_page) != head);
+> -		bit_spin_unlock(BH_Uptodate_Lock, &head->b_state);
+> -		local_irq_restore(flags);
+> +		bh_uptodate_unlock_irqrestore(head, flags);
+>  		if (!under_io) {
+>  			fscrypt_free_bounce_page(bounce_page);
+>  			end_page_writeback(page);
+> --- a/fs/ntfs/aops.c
+> +++ b/fs/ntfs/aops.c
+> @@ -92,8 +92,7 @@ static void ntfs_end_buffer_async_read(s
+>  				"0x%llx.", (unsigned long long)bh->b_blocknr);
+>  	}
+>  	first = page_buffers(page);
+> -	local_irq_save(flags);
+> -	bit_spin_lock(BH_Uptodate_Lock, &first->b_state);
+> +	flags = bh_uptodate_lock_irqsave(first);
+>  	clear_buffer_async_read(bh);
+>  	unlock_buffer(bh);
+>  	tmp = bh;
+> @@ -108,8 +107,7 @@ static void ntfs_end_buffer_async_read(s
+>  		}
+>  		tmp = tmp->b_this_page;
+>  	} while (tmp != bh);
+> -	bit_spin_unlock(BH_Uptodate_Lock, &first->b_state);
+> -	local_irq_restore(flags);
+> +	bh_uptodate_unlock_irqrestore(first, flags);
+>  	/*
+>  	 * If none of the buffers had errors then we can set the page uptodate,
+>  	 * but we first have to perform the post read mst fixups, if the
+> @@ -142,9 +140,7 @@ static void ntfs_end_buffer_async_read(s
+>  	unlock_page(page);
+>  	return;
+>  still_busy:
+> -	bit_spin_unlock(BH_Uptodate_Lock, &first->b_state);
+> -	local_irq_restore(flags);
+> -	return;
+> +	bh_uptodate_unlock_irqrestore(first, flags);
 >  }
 >  
-> @@ -324,8 +336,11 @@ static int t_show(struct seq_file *m, void *v)
->  		seq_printf(m, "        Depth    Size   Location"
->  			   "    (%d entries)\n"
->  			   "        -----    ----   --------\n",
-> +#ifdef CONFIG_ARM64
-> +			   stack_trace_nr_entries - 1);
-> +#else
->  			   stack_trace_nr_entries);
-> -
-> +#endif
->  		if (!stack_tracer_enabled && !stack_trace_max_size)
->  			print_disabled(m);
+>  /**
+> --- a/include/linux/buffer_head.h
+> +++ b/include/linux/buffer_head.h
+> @@ -78,6 +78,22 @@ struct buffer_head {
+>  	atomic_t b_count;		/* users using this buffer_head */
+>  };
 >  
-> @@ -334,6 +349,10 @@ static int t_show(struct seq_file *m, void *v)
->  
->  	i = *(long *)v;
->  
-> +#ifdef CONFIG_ARM64
-> +	if (i == 0)
-> +		return 0;
-> +#endif
->  	if (i >= stack_trace_nr_entries)
->  		return 0;
->  
-> @@ -342,9 +361,14 @@ static int t_show(struct seq_file *m, void *v)
->  	else
->  		size = stack_trace_index[i] - stack_trace_index[i+1];
->  
-> +#ifdef CONFIG_ARM64
-> +	seq_printf(m, "%3ld) %8d   %5d   ", i-1, stack_trace_index[i], size);
-> +	trace_lookup_stack(m, i-1);
-> +#else
->  	seq_printf(m, "%3ld) %8d   %5d   ", i, stack_trace_index[i], size);
->  
->  	trace_lookup_stack(m, i);
-> +#endif
->  
->  	return 0;
->  }
-> -- 
-> 2.18.1
+> +static inline unsigned long bh_uptodate_lock_irqsave(struct buffer_head *bh)
+> +{
+> +	unsigned long flags;
+> +
+> +	local_irq_save(flags);
+> +	bit_spin_lock(BH_Uptodate_Lock, &bh->b_state);
+> +	return flags;
+> +}
+> +
+> +static inline void
+> +bh_uptodate_unlock_irqrestore(struct buffer_head *bh, unsigned long flags)
+> +{
+> +	bit_spin_unlock(BH_Uptodate_Lock, &bh->b_state);
+> +	local_irq_restore(flags);
+> +}
+> +
+>  /*
+>   * macro tricks to expand the set_buffer_foo(), clear_buffer_foo()
+>   * and buffer_foo() functions.
 > 
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
