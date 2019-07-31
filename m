@@ -2,259 +2,142 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E920C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAA1C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9A4206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 923D8206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:13:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="Gm0DNahb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730433AbfGaRLF (ORCPT
+        id S1730518AbfGaRNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:11:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:45059 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726469AbfGaRLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:11:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 10:11:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,330,1559545200"; 
-   d="scan'208";a="323810584"
-Received: from deharris-mobl.amr.corp.intel.com ([10.251.148.13])
-  by orsmga004.jf.intel.com with ESMTP; 31 Jul 2019 10:11:03 -0700
-Message-ID: <918f9c287b7ef9efb707d88560a9ccde577c5dbf.camel@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: SOF: no need to check return
- value of debugfs_create functions
-From:   Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Wed, 31 Jul 2019 13:13:21 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45780 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbfGaRNU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 13:13:20 -0400
+Received: by mail-ed1-f68.google.com with SMTP id x19so60466983eda.12
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 10:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=f1LF3yb4DZ7OR897ZGLAel5hvQn+h9DZaHtHoF52s7U=;
+        b=Gm0DNahbdzmxTjb6RPdo8UA5Qe2qrTf0rvxt5t7sud1MKQnztfM2FEhX1kh+2hucRs
+         pxY7Z6HR7rnXXYfCUaeEjI4m583IjMjYpZu8TzCGhT80vv7G6GBg4mJCYIVIsaHyOJc7
+         D2HNqHynhlXiS3kLSg6BPCjjmSoYz6JZrNgVATnEB+1RZSECXDcapTw3s/fQfdVAZVml
+         MEjOaHsdyjlb30goi6Z2/uQ2x1arQHVcfqxOfxpLKZX1D16EVlG3Qf2HTVZfDC2EIp6H
+         0E4gjixEiCze8baRPdPaheKeU9M5tgehQAyx93gP132xV88yxJ8Zvs5mT2vZtN0syRMS
+         547A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=f1LF3yb4DZ7OR897ZGLAel5hvQn+h9DZaHtHoF52s7U=;
+        b=WlbRakAWQH7e38ywGHYe7C9RIJJFPUIpZOBPuCxFTMLHxW9G4Namh2KLIqZ2bDUfiO
+         9iqvIaOCBVZZ4HQrSfjVYgIu8vy4xI33bEWZq3wRrbuuWQhHLC/ks5AfFGXw4t5xKWHf
+         slUhjbg3witWIUwhxtwVdB/kHRjinihGlMNeKidE0OfoK8Hq00V6wrIM6R+HsnTz76zp
+         AeFAgviow7sWKHgyfCWidwvJSKCh9I5uBytE1/nihwv+SOSupXdbdRNTd7R3xk4rN3tp
+         xKbdUW0kSWyKdTO9Kjk7MlXndGUkcGzg3bNUhquFnJqkj0vRQt0ylZlieNs0Zpm3BpA4
+         TJFg==
+X-Gm-Message-State: APjAAAVD6GadVlj/w5iGjHatmdrc/5Y8GdccYv6G4pQP6TbUXQjg12o6
+        FIzDmtkSe+cwNMlMZbcqqeU=
+X-Google-Smtp-Source: APXvYqxYX4Jgwcn5jKDKS1R3hovfm+uGF81JcTlllqIrn/pRLr2iPcDoZYhxFP1N3pz5IGZWXmbtvw==
+X-Received: by 2002:a17:906:bcd6:: with SMTP id lw22mr96345683ejb.68.1564593199104;
+        Wed, 31 Jul 2019 10:13:19 -0700 (PDT)
+Received: from [192.168.1.177] (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
+        by smtp.gmail.com with ESMTPSA id a18sm9699868ejp.2.2019.07.31.10.13.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 10:13:17 -0700 (PDT)
+From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
+Message-Id: <C081CC43-4FBD-43DD-B494-9AFF545F79D8@javigon.com>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_216A0ED2-C55E-4922-AD94-CE22385C5ADA";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 4/4] block: stop exporting bio_map_kern
+Date:   Wed, 31 Jul 2019 19:13:17 +0200
+In-Reply-To: <1564566096-28756-5-git-send-email-hans@owltronix.com>
+Cc:     =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Wed, 31 Jul 2019 10:11:03 -0700
-In-Reply-To: <20190731131716.9764-3-gregkh@linuxfoundation.org>
-References: <20190731131716.9764-1-gregkh@linuxfoundation.org>
-         <20190731131716.9764-3-gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+To:     Hans Holmberg <hans@owltronix.com>
+References: <1564566096-28756-1-git-send-email-hans@owltronix.com>
+ <1564566096-28756-5-git-send-email-hans@owltronix.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-31 at 15:17 +0200, Greg Kroah-Hartman wrote:
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic
-> should
-> never do something different based on this.
-> 
-> Also, if a debugfs call fails, userspace is notified with an error in
-> the log, so no need to log the error again.
-> 
-> Because we no longer need to check the return value, there's no need
-> to
-> save the dentry returned by debugfs.  Just use the dentry in the file
-> pointer if we really need to figure out the "name" of the file being
-> opened.
-> 
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Jaroslav Kysela <perex@perex.cz>
-> Cc: Takashi Iwai <tiwai@suse.com>
-> Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Cc: alsa-devel@alsa-project.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> v2: rebase on 5.3-rc1
->     change Subject line to match the subsystem better
->     rework based on debugfs core now reporting errors.
-> 
->  sound/soc/sof/debug.c    | 49 +++++++++++++++-----------------------
-> --
->  sound/soc/sof/sof-priv.h |  1 -
->  sound/soc/sof/trace.c    |  9 ++------
->  3 files changed, 20 insertions(+), 39 deletions(-)
-> 
-> diff --git a/sound/soc/sof/debug.c b/sound/soc/sof/debug.c
-> index 2388477a965e..40940b2fe9d5 100644
-> --- a/sound/soc/sof/debug.c
-> +++ b/sound/soc/sof/debug.c
-> @@ -128,6 +128,7 @@ static ssize_t sof_dfsentry_write(struct file
-> *file, const char __user *buffer,
->  	unsigned long ipc_duration_ms = 0;
->  	bool flood_duration_test = false;
->  	unsigned long ipc_count = 0;
-> +	struct dentry *dentry;
->  	int err;
->  #endif
->  	size_t size;
-> @@ -149,11 +150,12 @@ static ssize_t sof_dfsentry_write(struct file
-> *file, const char __user *buffer,
->  	 * ipc_duration_ms test floods the DSP for the time specified
->  	 * in the debugfs entry.
->  	 */
-> -	if (strcmp(dfse->dfsentry->d_name.name, "ipc_flood_count") &&
-> -	    strcmp(dfse->dfsentry->d_name.name,
-> "ipc_flood_duration_ms"))
-> +	dentry = file->f_path.dentry;
-> +	if (strcmp(dentry->d_name.name, "ipc_flood_count") &&
-> +	    strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
->  		return -EINVAL;
->  
-> -	if (!strcmp(dfse->dfsentry->d_name.name,
-> "ipc_flood_duration_ms"))
-> +	if (!strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
->  		flood_duration_test = true;
->  
->  	/* test completion criterion */
-> @@ -219,6 +221,7 @@ static ssize_t sof_dfsentry_read(struct file
-> *file, char __user *buffer,
->  {
->  	struct snd_sof_dfsentry *dfse = file->private_data;
->  	struct snd_sof_dev *sdev = dfse->sdev;
-> +	struct dentry *dentry;
->  	loff_t pos = *ppos;
->  	size_t size_ret;
->  	int skip = 0;
-> @@ -226,8 +229,9 @@ static ssize_t sof_dfsentry_read(struct file
-> *file, char __user *buffer,
->  	u8 *buf;
->  
->  #if IS_ENABLED(CONFIG_SND_SOC_SOF_DEBUG_IPC_FLOOD_TEST)
-> -	if ((!strcmp(dfse->dfsentry->d_name.name, "ipc_flood_count") ||
-> -	     !strcmp(dfse->dfsentry->d_name.name,
-> "ipc_flood_duration_ms")) &&
-> +	dentry = file->f_path.dentry;
-> +	if ((!strcmp(dentry->d_name.name, "ipc_flood_count") ||
-> +	     !strcmp(dentry->d_name.name, "ipc_flood_duration_ms")) &&
->  	    dfse->cache_buf) {
->  		if (*ppos)
->  			return 0;
-> @@ -290,8 +294,7 @@ static ssize_t sof_dfsentry_read(struct file
-> *file, char __user *buffer,
->  		if (!pm_runtime_active(sdev->dev) &&
->  		    dfse->access_type == SOF_DEBUGFS_ACCESS_D0_ONLY) {
->  			dev_err(sdev->dev,
-> -				"error: debugfs entry %s cannot be read
-> in DSP D3\n",
-> -				dfse->dfsentry->d_name.name);
-> +				"error: debugfs entry cannot be read in
-> DSP D3\n");
->  			kfree(buf);
->  			return -EINVAL;
->  		}
-> @@ -356,17 +359,11 @@ int snd_sof_debugfs_io_item(struct snd_sof_dev
-> *sdev,
->  	}
->  #endif
->  
-> -	dfse->dfsentry = debugfs_create_file(name, 0444, sdev-
-> >debugfs_root,
-> -					     dfse, &sof_dfs_fops);
-> -	if (!dfse->dfsentry) {
-> -		/* can't rely on debugfs, only log error and keep going
-> */
-> -		dev_err(sdev->dev, "error: cannot create debugfs entry
-> %s\n",
-> -			name);
-> -	} else {
-> -		/* add to dfsentry list */
-> -		list_add(&dfse->list, &sdev->dfsentry_list);
-> +	debugfs_create_file(name, 0444, sdev->debugfs_root, dfse,
-> +			    &sof_dfs_fops);
-Minor nit-pick but looks good otherwise. This will fit all in one line
-(same with the lines below).
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
- 
->  
-> -	}
-> +	/* add to dfsentry list */
-> +	list_add(&dfse->list, &sdev->dfsentry_list);
->  
->  	return 0;
->  }
-> @@ -402,16 +399,10 @@ int snd_sof_debugfs_buf_item(struct snd_sof_dev
-> *sdev,
->  		return -ENOMEM;
->  #endif
->  
-> -	dfse->dfsentry = debugfs_create_file(name, mode, sdev-
-> >debugfs_root,
-> -					     dfse, &sof_dfs_fops);
-> -	if (!dfse->dfsentry) {
-> -		/* can't rely on debugfs, only log error and keep going
-> */
-> -		dev_err(sdev->dev, "error: cannot create debugfs entry
-> %s\n",
-> -			name);
-> -	} else {
-> -		/* add to dfsentry list */
-> -		list_add(&dfse->list, &sdev->dfsentry_list);
-> -	}
-> +	debugfs_create_file(name, mode, sdev->debugfs_root, dfse,
-> +			    &sof_dfs_fops);
-> +	/* add to dfsentry list */
-> +	list_add(&dfse->list, &sdev->dfsentry_list);
->  
->  	return 0;
->  }
-> @@ -426,10 +417,6 @@ int snd_sof_dbg_init(struct snd_sof_dev *sdev)
->  
->  	/* use "sof" as top level debugFS dir */
->  	sdev->debugfs_root = debugfs_create_dir("sof", NULL);
-> -	if (IS_ERR_OR_NULL(sdev->debugfs_root)) {
-> -		dev_err(sdev->dev, "error: failed to create debugfs
-> directory\n");
-> -		return 0;
-> -	}
->  
->  	/* init dfsentry list */
->  	INIT_LIST_HEAD(&sdev->dfsentry_list);
-> diff --git a/sound/soc/sof/sof-priv.h b/sound/soc/sof/sof-priv.h
-> index b8c0b2a22684..79b6709d1874 100644
-> --- a/sound/soc/sof/sof-priv.h
-> +++ b/sound/soc/sof/sof-priv.h
-> @@ -228,7 +228,6 @@ enum sof_debugfs_access_type {
->  
->  /* FS entry for debug files that can expose DSP memories, registers
-> */
->  struct snd_sof_dfsentry {
-> -	struct dentry *dfsentry;
->  	size_t size;
->  	enum sof_dfsentry_type type;
->  	/*
-> diff --git a/sound/soc/sof/trace.c b/sound/soc/sof/trace.c
-> index befed975161c..4c3cff031fd6 100644
-> --- a/sound/soc/sof/trace.c
-> +++ b/sound/soc/sof/trace.c
-> @@ -148,13 +148,8 @@ static int trace_debugfs_create(struct
-> snd_sof_dev *sdev)
->  	dfse->size = sdev->dmatb.bytes;
->  	dfse->sdev = sdev;
->  
-> -	dfse->dfsentry = debugfs_create_file("trace", 0444, sdev-
-> >debugfs_root,
-> -					     dfse,
-> &sof_dfs_trace_fops);
-> -	if (!dfse->dfsentry) {
-> -		/* can't rely on debugfs, only log error and keep going
-> */
-> -		dev_err(sdev->dev,
-> -			"error: cannot create debugfs entry for
-> trace\n");
-> -	}
-> +	debugfs_create_file("trace", 0444, sdev->debugfs_root, dfse,
-> +			    &sof_dfs_trace_fops);
->  
->  	return 0;
->  }
 
+--Apple-Mail=_216A0ED2-C55E-4922-AD94-CE22385C5ADA
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+> On 31 Jul 2019, at 11.41, Hans Holmberg <hans@owltronix.com> wrote:
+>=20
+> Now that there no module users left of bio_map_kern, stop
+> exporting the symbol.
+>=20
+> Signed-off-by: Hans Holmberg <hans@owltronix.com>
+> ---
+> block/bio.c | 1 -
+> 1 file changed, 1 deletion(-)
+>=20
+> diff --git a/block/bio.c b/block/bio.c
+> index 299a0e7651ec..96ca0b4e73bb 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -1521,7 +1521,6 @@ struct bio *bio_map_kern(struct request_queue =
+*q, void *data, unsigned int len,
+> 	bio->bi_end_io =3D bio_map_kern_endio;
+> 	return bio;
+> }
+> -EXPORT_SYMBOL(bio_map_kern);
+>=20
+> static void bio_copy_kern_endio(struct bio *bio)
+> {
+> --
+> 2.7.4
+
+Haven=E2=80=99t realized we were the only users at this point. Nice =
+cleanup.
+
+Reviewed-by: Javier Gonz=C3=A1lez <javier@javigon.com>
+
+
+--Apple-Mail=_216A0ED2-C55E-4922-AD94-CE22385C5ADA
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAl1BzC0ACgkQPEYBfS0l
+eOBpoA//S0BjiAVpc1ZrajXZt6THci8rGkpZBJFH5R4am3mtz6rg5QGzEZrUavtp
+AS0ZSxh5R3DonHJQYn0+Uw/GoqRy1TLxGqfnCwJTWmCN3bwT8C4eKgMmirSAdgit
+NyiitH73st+bU5DGa2dU5mWIxru/QQJnzvVNV+K8IVgqTScG6KaZG0fK4DOCK95g
+rcjvEJjLzaS5uNtFVSeC9AVdhMHaIK1WUT27gLiad+MRGHhxyJMRkPYGR+CQW1qd
+6okzT9aCSKFvOSvIQPlXOIZ5e2IwMru0LfaLXcfVf3JDQ6jkYx+0LKj5o3Cffbw6
+MWguizKs5WHom4SQaxhsNeoUpkQYiKTwvaJBumQRISpoFJR1HJ34igRpULVyh9VS
+8vXqwHoFqwx/D/HMof6o72OET83kWKvR/sd990nMQMF0mpk5BlMpM+/S3aGMrCSI
+U7WNFHKcFhyFiB6eqsd/+GtpYYLOx0BqBZZZ6yUW/i89aSSqJhKEinceh854+du/
+rIQhJluKmRiinxpqdaLuwkLOvhJCUzfLJS8M3LoTn9nc9+C8qpi5GRwRil+B58jI
+suQRdZjufg3N+17k6jxR7S1jxAghSsqTTZDLY4xMde4hzNerfQEXtHqJR4rgSP6n
+TqShO63GV76Ub6K4gBuIWJlqUQg/sIyZfGON7d5UWcxnxmcX5wc=
+=Egr4
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_216A0ED2-C55E-4922-AD94-CE22385C5ADA--
