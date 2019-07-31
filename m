@@ -2,85 +2,153 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C40C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB707C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A24214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:58:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q4jgwY+J"
+	by mail.kernel.org (Postfix) with ESMTP id 8178E206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbfGaT6J (ORCPT
+        id S1729577AbfGaT62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:58:09 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46005 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbfGaT6I (ORCPT
+        Wed, 31 Jul 2019 15:58:28 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:48395 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728326AbfGaT62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:58:08 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y8so30964650plr.12
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NfIspcnc/2t7LWXrdNE+ubsJCC83+V9yAq4B7B5lNHE=;
-        b=Q4jgwY+JqY8cWP5Ba3AUxsKHoDBJfSroGhiXbMR6OrTJimuIBMapLxpymuNCBbRYxm
-         ncoDEJL5taLB4w3SrlTtacnLIUIGo18Ay/EoIuMP3Iq+TOLJs1WFQHKC2FYJFAYTKqjY
-         XJ9EHmGJnbi6QNDD4KlOHD+Wnl3OqbAoM7DXQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NfIspcnc/2t7LWXrdNE+ubsJCC83+V9yAq4B7B5lNHE=;
-        b=SvUV1vR31Slu4NSLYoGDdFPZB9flvorAm+5mQK45+SmlKyZ+SYgm/RSHJ/NvVrg9iz
-         uiTmaLK+5TCLCzXuvtyGKc0JQSxiHtEfeObTXoEnn/LgJnB+PD816zUr4QyuzbjoeWVH
-         klBEyJ0ZZkxvqUwKN0Sa1oiL8laIoDFhi2yp65vpCDzEZcPVs4yU7rEhgb5F+BXwvN38
-         ft2AEqDVR0oGJuRL66AECLGU2ov0D9x8YaYEtP0rN4tFfgQ4F1iKESSfROtkDA0Wj/TS
-         zeusNh++JEn9ayUDbYBDKz8lJr0WROK2ZOkxdm1DYU1eiA202Cj8Zye8AQv73dDlSbFN
-         jfEg==
-X-Gm-Message-State: APjAAAVF4uTBDIEMV+CgKVM7SLYHcL/2c/V9CJ32Dr3lbYVlucGF1LcV
-        HbktdbykyEZDPpgciUjjjNhD0LOrgYk=
-X-Google-Smtp-Source: APXvYqw+WHzdDfbYGy29+WSP8iMiYjFhVylC6I4hxMOf3DMb3RNqGFamdATEt9zqoJx2J75sr60bUA==
-X-Received: by 2002:a17:902:8205:: with SMTP id x5mr123929051pln.279.1564603088343;
-        Wed, 31 Jul 2019 12:58:08 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v12sm2495362pjk.13.2019.07.31.12.58.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 31 Jul 2019 12:58:07 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 12:58:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joonwon Kang <kjw1627@gmail.com>
-Cc:     re.emese@gmail.com, kernel-hardening@lists.openwall.com,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        jinb.park7@gmail.com
-Subject: Re: [PATCH 1/2] randstruct: fix a bug in is_pure_ops_struct()
-Message-ID: <201907311257.8436E997A4@keescook>
-References: <cover.1564595346.git.kjw1627@gmail.com>
- <2ba5ebfa2c622ece4952b5068b4154213794e5c4.1564595346.git.kjw1627@gmail.com>
+        Wed, 31 Jul 2019 15:58:28 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MREqy-1hgjWs14cO-00N7VN; Wed, 31 Jul 2019 21:57:50 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH 01/14] usb: ohci-nxp: enable compile-testing
+Date:   Wed, 31 Jul 2019 21:56:43 +0200
+Message-Id: <20190731195713.3150463-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190731195713.3150463-1-arnd@arndb.de>
+References: <20190731195713.3150463-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ba5ebfa2c622ece4952b5068b4154213794e5c4.1564595346.git.kjw1627@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Y9P2ZZ0tUv+u7UP+ySO48Qnisfdw/BPCHBVVrPVOhMR0se6XHtZ
+ /rVucQltL2fuAeI04etj2w+UKbl8qnEoBbumQEN4+999lkM3I2ap2LhDhPPYCU+sPUiSn9C
+ MHqmRZQQCJodcJVkIaRsJz/aHzlJ2qbDtR9NKGZoXdpYt9iNJyi2kjLzGDf3w4RZjG9+E0D
+ 3y12ssqwzFQKPPcwF8qWQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Xo1stquwtQs=:bl7JhWbnrGGzdDgrJPO8Kj
+ DFy2wWP0ZHZ9IanjfpKj7idAUI1oh8dwC6+KdJvb4LHeY1JtZMKcx63mjHAi686NYHgQ8VVTE
+ qpvSBbWGUYS5+bYWsQ/4laOaF1bNS8KywD6IBggqWVu/qHZqfq9eI1VEV6NpVr5g5MyaMj1IH
+ P1wdZBUDAvXz+mDSgg7cQloD/0mVegg6up9JQIRaNzmyYHPSzsKpv8GSHgQBiMwAmeah7yIaO
+ cZfZOQzu/09Y4lqBFz/YeeiIARk7oD3Pa0WQbjRh+AZOmhCQaBCG4OrJn3aq3qPwJeOM0Hv1K
+ KKSuKJKjGXmywjGRQ29Orr90FifnUh8cq1ttCAtvmbagDR63yrU64szUpPnzWtecaWIRp6s5b
+ vTO1+amooJrMidahTJqQKSHM2fx4r9Sr5EmLoCZv+/c9BPTs+f02+pADSmTAUS22Fgv+0jaGt
+ 4HQm2+tHlytUCew5ukF92am1YnKG10BWAYbLXeG2MH8pUFBmgRRVR7ilL7WeTx2Gedk/V79ct
+ uGd8u0N8BHw/0ZucXrPbX+CiYkje/6ZXb3B2XMt6A0XjEX+fg0JP5yhXoUELaqnft5n+Wvivf
+ b1eeZZbdGV+ibHimys+Ct4FUkEzW13+8qoPTMA6tfQrU+zhiUJvNpnzkTBP7V31ZHaVtkPotD
+ 0n8Ep6f3eWAW9zElHMZFjMZoVXqmIZUOH9/ZHQqRINOgvWQfv5Zqa7S52aDmMcB7cQFIxgl+w
+ blDIwv7/7PJz7UoT+quSvgJ675iI9iAKHP+p6g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 03:01:10AM +0900, Joonwon Kang wrote:
-> Before this, there were false negatives in the case where a struct
-> contains other structs which contain only function pointers because
-> of unreachable code in is_pure_ops_struct().
-> 
-> Signed-off-by: Joonwon Kang <kjw1627@gmail.com>
+The driver hardcodes a hardware I/O address the way one should
+generally not do, and this prevents both compile-testing, and
+moving the platform to CONFIG_ARCH_MULTIPLATFORM.
 
-I've applied this (with some commit log tweaks) and it should be visible
-in linux-next soon. I'll send this on to Linus before -rc3.
+Change the code to be independent of the machine headers
+to allow those two. Removing the hardcoded address would
+be hard and is not necessary, so leave that in place for now.
 
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/usb/host/Kconfig    |  3 ++-
+ drivers/usb/host/ohci-nxp.c | 25 ++++++++++++++++++-------
+ 2 files changed, 20 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 40b5de597112..73d233d3bf4d 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -441,7 +441,8 @@ config USB_OHCI_HCD_S3C2410
+ 
+ config USB_OHCI_HCD_LPC32XX
+ 	tristate "Support for LPC on-chip OHCI USB controller"
+-	depends on USB_OHCI_HCD && ARCH_LPC32XX
++	depends on USB_OHCI_HCD
++	depends on ARCH_LPC32XX || COMPILE_TEST
+ 	depends on USB_ISP1301
+ 	default y
+ 	---help---
+diff --git a/drivers/usb/host/ohci-nxp.c b/drivers/usb/host/ohci-nxp.c
+index f5f532601092..c561881d0e79 100644
+--- a/drivers/usb/host/ohci-nxp.c
++++ b/drivers/usb/host/ohci-nxp.c
+@@ -29,10 +29,7 @@
+ 
+ #include "ohci.h"
+ 
+-#include <mach/hardware.h>
+-
+ #define USB_CONFIG_BASE		0x31020000
+-#define USB_OTG_STAT_CONTROL	IO_ADDRESS(USB_CONFIG_BASE + 0x110)
+ 
+ /* USB_OTG_STAT_CONTROL bit defines */
+ #define TRANSPARENT_I2C_EN	(1 << 7)
+@@ -122,19 +119,33 @@ static inline void isp1301_vbus_off(void)
+ 
+ static void ohci_nxp_start_hc(void)
+ {
+-	unsigned long tmp = __raw_readl(USB_OTG_STAT_CONTROL) | HOST_EN;
++	void __iomem *usb_otg_stat_control = ioremap(USB_CONFIG_BASE + 0x110, 4);
++	unsigned long tmp;
++
++	if (WARN_ON(!usb_otg_stat_control))
++		return;
++
++	tmp = __raw_readl(usb_otg_stat_control) | HOST_EN;
+ 
+-	__raw_writel(tmp, USB_OTG_STAT_CONTROL);
++	__raw_writel(tmp, usb_otg_stat_control);
+ 	isp1301_vbus_on();
++
++	iounmap(usb_otg_stat_control);
+ }
+ 
+ static void ohci_nxp_stop_hc(void)
+ {
++	void __iomem *usb_otg_stat_control = ioremap(USB_CONFIG_BASE + 0x110, 4);
+ 	unsigned long tmp;
+ 
++	if (WARN_ON(!usb_otg_stat_control))
++		return;
++
+ 	isp1301_vbus_off();
+-	tmp = __raw_readl(USB_OTG_STAT_CONTROL) & ~HOST_EN;
+-	__raw_writel(tmp, USB_OTG_STAT_CONTROL);
++	tmp = __raw_readl(usb_otg_stat_control) & ~HOST_EN;
++	__raw_writel(tmp, usb_otg_stat_control);
++
++	iounmap(usb_otg_stat_control);
+ }
+ 
+ static int ohci_hcd_nxp_probe(struct platform_device *pdev)
 -- 
-Kees Cook
+2.20.0
+
