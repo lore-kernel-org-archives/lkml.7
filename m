@@ -2,132 +2,281 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682D7C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9103C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476C6206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87904206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfGaTjA (ORCPT
+        id S1730186AbfGaTji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:39:00 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:39089 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfGaTi7 (ORCPT
+        Wed, 31 Jul 2019 15:39:38 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56132 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfGaTji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:38:59 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: QItxWUjXxfmU58bkTu20RlW73WJdjALj2MyPDaIJfYsdwd0l/DoJQ2Z5SZzQ643YJ01xgLQGcg
- Pwd2koZ/Qv3uLxEtxpflj3G9gcFAXEFTkmVj6CtaqWU+TlVISaJz7exB7XXhELQBW9LHO9zLnk
- 7D7il3cB1U6fX8IJ6wHFT9Txf2gdw9CYqdlkSLjY3LUIQmJK9RHZUg5J9BwN09EOi10zYR6G0m
- ZxiTgcXeIVbAcjpEe7JKVpOGWhrUMRWXzTrzpVa0zSonlMVTcTfqLZnP7EFDXOu5XC4Wha9Scq
- TNQ=
-X-IronPort-AV: E=Sophos;i="5.64,331,1559545200"; 
-   d="scan'208";a="43512647"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Jul 2019 12:38:58 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 31 Jul 2019 12:38:57 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Wed, 31 Jul 2019 12:38:56 -0700
-Date:   Wed, 31 Jul 2019 21:38:57 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Ido Schimmel <idosch@idosch.org>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
-        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-Message-ID: <20190731193855.sgpbvam5v2a5gkia@lx-anielsen.microsemi.net>
-References: <20190729135205.oiuthcyesal4b4ct@lx-anielsen.microsemi.net>
- <e4cd0db9-695a-82a7-7dc0-623ded66a4e5@cumulusnetworks.com>
- <20190729143508.tcyebbvleppa242d@lx-anielsen.microsemi.net>
- <20190729175136.GA28572@splinter>
- <20190730062721.p4vrxo5sxbtulkrx@lx-anielsen.microsemi.net>
- <20190730143400.GO28552@lunn.ch>
- <20190730190000.diacyjw6owqkf7uf@lx-anielsen.microsemi.net>
- <20190731033156.GE9523@lunn.ch>
- <20190731080149.oyqcrw42utxjizsx@lx-anielsen.microsemi.net>
- <20190731134550.GA23028@lunn.ch>
+        Wed, 31 Jul 2019 15:39:38 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 1BF22289F21
+Message-ID: <869dd8b894883715378ba681c7dd26934284bdff.camel@collabora.com>
+Subject: Re: [PATCH v4 14/23] drm/tilcdc: Provide ddc symlink in connector
+ sysfs directory
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Shawn Guo <shawnguo@kernel.org>, kernel@collabora.com,
+        linux-samsung-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, Sean Paul <sean@poorly.run>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-arm-msm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        amd-gfx@lists.freedesktop.org,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        freedreno@lists.freedesktop.org,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+Date:   Wed, 31 Jul 2019 16:39:13 -0300
+In-Reply-To: <acfd895d-ab59-0190-e25c-1827bd8d214b@suse.de>
+References: <cover.1562843413.git.andrzej.p@collabora.com>
+         <d1d415022c598fb7acd033f0f322dd67250adaa9.1562843413.git.andrzej.p@collabora.com>
+         <20190723090532.GA787@ravnborg.org>
+         <3ad60be5-49cf-4017-4b74-53a2d6272deb@collabora.com>
+         <acfd895d-ab59-0190-e25c-1827bd8d214b@suse.de>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190731134550.GA23028@lunn.ch>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 07/31/2019 15:45, Andrew Lunn wrote:
-> > Here is how I see it:
+Hi,
+
+I'm glad to see this work moving forward!
+
+On Wed, 2019-07-24 at 10:01 +0200, Thomas Zimmermann wrote:
+> Hi
+> 
+> Am 23.07.19 um 14:44 schrieb Andrzej Pietrasiewicz:
+> > Hi Sam,
 > > 
-> > Teach the SW bridge about non-IP multicast addresses. Initially the switch
-> > should forward all MAC multicast frames to the CPU. Today MDB rules can be
-> > installed (either static or dynamic by IGMP), which limit the flooding of IPv4/6
-> > multicast streams. In the same way, we should have a way to install a rule
-> > (FDM/ or MDB) to limit the flooding of L2 multicast frames.
+> > W dniu 23.07.2019 o 11:05, Sam Ravnborg pisze:
+> > > Hi Andrzej
+> > > 
+> > > On Thu, Jul 11, 2019 at 01:26:41PM +0200, Andrzej Pietrasiewicz wrote:
+> > > > Use the ddc pointer provided by the generic connector.
+> > > > 
+> > > > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> > > > ---
+> > > >   drivers/gpu/drm/tilcdc/tilcdc_tfp410.c | 1 +
+> > > >   1 file changed, 1 insertion(+)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+> > > > b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+> > > > index 62d014c20988..c373edb95666 100644
+> > > > --- a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+> > > > +++ b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+> > > > @@ -219,6 +219,7 @@ static struct drm_connector
+> > > > *tfp410_connector_create(struct drm_device *dev,
+> > > >       tfp410_connector->mod = mod;
+> > > >         connector = &tfp410_connector->base;
+> > > > +    connector->ddc = mod->i2c;
+> > > >         drm_connector_init(dev, connector, &tfp410_connector_funcs,
+> > > >               DRM_MODE_CONNECTOR_DVID);
+> > > 
+> > > When reading this code, it looks strange that we set connector->ddc
+> > > *before* the call to init the connector.
+> > > One could risk that drm_connector_init() used memset(..) to clear all
+> > > fields or so, and it would break this order.
 > > 
-> > If foreign interfaces (or br0 it self) is part of the destination list, then
-> > traffic also needs to go to the CPU.
-> > 
-> > By doing this, we can for explicitly configured dst mac address:
-> > - limit the flooding on the on the SW bridge interfaces
-> > - limit the flooding on the on the HW bridge interfaces
-> > - prevent them to go to the CPU if they are not needed
-> This is all very complex because of all the different corner cases. So
-> i don't think we want a user API to do the CPU part, we want the
-> network stack to do it. Otherwise the user is going to get is wrong,
-> break their network, and then come running to the list for help.
-Not sure I really understand what to conclude from this... Their are already
-many ways the user can break it (tc has great hooks for that), and I not think
-we can really prevent the user in configuring something that break stuff (but
-we should not make it too easy either).
+> > I verified the code of drm_connector_init() and cannot find any memset()
+> > invocations there. What is your actual concern?
+> 
+> I think this echoes my concern about the implicit order of operation. It
+> seems too easy to get this wrong. If you don't want to add an additional
+> interface for setting the ddc field, why not add a dedicated initializer
+> function that sets the ddc field? Something like this.
+> 
+> int drm_connector_init_with_ddc(connector, funcs, ..., ddc)
+> {
+> 	ret = drm_connector_init(connector, funcs, ...);
+> 	if (ret)
+> 		return ret;
+> 
+> 	if (!ddc)
+> 		return 0;
+> 
+> 	connector->ddc = ddc;
+> 	/* set up sysfs */
+> 
 
-Anyway, Horatiu has come a long way in creating a (surprising simple) patch
-which allow us to limit the flooding of L2-multicast. It is following the
-guidance from Nikolay, it is using the MDB database, and I beleive it is well
-aligned with the existing sw-bridge design.
+I know this comment comes late to the party, but I'm a slightly
+suprised to see the above instead of implementing drm_connector_init
+in terms of drm_connector_init_with_ddc, as we typically do.
 
-I hope it will be ready tomorrow, then we can have a look at it and see if it is
-any good.
+Namely, something along these lines (code might not even build!):
 
-> This also fits with how we do things in DSA. There is deliberately no
-> user space concept for configuring the DSA CPU port. To user space,
-> the switch is just a bunch of Linux interfaces. Everything to do with
-> the CPU port is hidden away in the DSA core layer, the DSA drivers,
-> and a little bit in the bridge.
+--------------------------------------8<-----------------------------
+diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
+index d49e19f3de3a..dbd095933175 100644
+--- a/drivers/gpu/drm/drm_connector.c
++++ b/drivers/gpu/drm/drm_connector.c
+@@ -179,11 +179,12 @@ void drm_connector_free_work_fn(struct work_struct *work)
+ }
+ 
+ /**
+- * drm_connector_init - Init a preallocated connector
++ * drm_connector_init_with_ddc - Init a preallocated connector
+  * @dev: DRM device
+  * @connector: the connector to init
+  * @funcs: callbacks for this connector
+  * @connector_type: user visible type of the connector
++ * @ddc: pointer to the associated ddc adapter (optional)
+  *
+  * Initialises a preallocated connector. Connectors should be
+  * subclassed as part of driver connector objects.
+@@ -191,10 +192,11 @@ void drm_connector_free_work_fn(struct work_struct *work)
+  * Returns:
+  * Zero on success, error code on failure.
+  */
+-int drm_connector_init(struct drm_device *dev,
+-		       struct drm_connector *connector,
+-		       const struct drm_connector_funcs *funcs,
+-		       int connector_type)
++int drm_connector_init_with_ddc(struct drm_device *dev,
++				struct drm_connector *connector,
++				const struct drm_connector_funcs *funcs,
++				int connector_type,
++				struct i2c_adapter *ddc)
+ {
+ 	struct drm_mode_config *config = &dev->mode_config;
+ 	int ret;
+@@ -215,6 +217,9 @@ int drm_connector_init(struct drm_device *dev,
+ 	connector->dev = dev;
+ 	connector->funcs = funcs;
+ 
++	/* provide ddc symlink in sysfs */
++	connector->ddc = ddc;
++
+ 	/* connector index is used with 32bit bitmasks */
+ 	ret = ida_simple_get(&config->connector_ida, 0, 32, GFP_KERNEL);
+ 	if (ret < 0) {
+@@ -295,41 +300,6 @@ int drm_connector_init(struct drm_device *dev,
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL(drm_connector_init);
+-
+-/**
+- * drm_connector_init_with_ddc - Init a preallocated connector
+- * @dev: DRM device
+- * @connector: the connector to init
+- * @funcs: callbacks for this connector
+- * @connector_type: user visible type of the connector
+- * @ddc: pointer to the associated ddc adapter
+- *
+- * Initialises a preallocated connector. Connectors should be
+- * subclassed as part of driver connector objects.
+- *
+- * Ensures that the ddc field of the connector is correctly set.
+- *
+- * Returns:
+- * Zero on success, error code on failure.
+- */
+-int drm_connector_init_with_ddc(struct drm_device *dev,
+-				struct drm_connector *connector,
+-				const struct drm_connector_funcs *funcs,
+-				int connector_type,
+-				struct i2c_adapter *ddc)
+-{
+-	int ret;
+-
+-	ret = drm_connector_init(dev, connector, funcs, connector_type);
+-	if (ret)
+-		return ret;
+-
+-	/* provide ddc symlink in sysfs */
+-	connector->ddc = ddc;
+-
+-	return ret;
+-}
+ EXPORT_SYMBOL(drm_connector_init_with_ddc);
+ 
+ /**
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index fc5d08438333..1884abf61a86 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -1408,10 +1408,6 @@ struct drm_connector {
+ 
+ #define obj_to_connector(x) container_of(x, struct drm_connector, base)
+ 
+-int drm_connector_init(struct drm_device *dev,
+-		       struct drm_connector *connector,
+-		       const struct drm_connector_funcs *funcs,
+-		       int connector_type);
+ int drm_connector_init_with_ddc(struct drm_device *dev,
+ 				struct drm_connector *connector,
+ 				const struct drm_connector_funcs *funcs,
+@@ -1425,6 +1421,16 @@ int drm_connector_attach_encoder(struct drm_connector *connector,
+ 
+ void drm_connector_cleanup(struct drm_connector *connector);
+ 
++static inline int
++drm_connector_init(struct drm_device *dev,
++		   struct drm_connector *connector,
++		   const struct drm_connector_funcs *funcs,
++		   int connector_type);
++{
++	return drm_connector_init_with_ddc(dev, connector, funcs,
++					   connector_type, NULL);
++}
++
+ static inline unsigned int drm_connector_index(const struct drm_connector *connector)
+ {
+ 	return connector->index;
+-------------------------------------->8-----------------------------
 
-Understood, but as far as I understand, in DSA you still have the br0 interface,
-which kind-of represent the traffic going to the CPU (like in pure SW bridge,
-and SwitchDev offloaded SW-bridge).
+This might be seen as bikeshed but it seems there's value keeping all the init
+code in the same place, as opposed to scattered.
 
-/Allan
+Unless there are reasons for the current code, that I'm missing?
+
+Thanks,
+Ezequiel
 
