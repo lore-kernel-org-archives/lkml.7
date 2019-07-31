@@ -2,133 +2,275 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A45C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68743C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA91208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3563C214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:38:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="cVrNnf7V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W6r6NVsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbfGaSht (ORCPT
+        id S1730369AbfGaSiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:37:49 -0400
-Received: from mail-eopbgr750099.outbound.protection.outlook.com ([40.107.75.99]:26831
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726944AbfGaSht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:37:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VeY/NBVCZPYFQRjW8SIEZuOK499Pn6Tn10L324BhlOZDgmPpAvP7k1l6zYPVBmqyRQ2zA3Fp3EAQ6soF3kYUmGixqeOvvr+vJOeGHxKNipt35UFTe8lrVZX6NBwoS52J2IR8cw+AhONNISqUK/mpNlhUZQ+vBQU2RGKBSW5DfoZN/CBziYFMV7LgfZ2ybZpvk9NkepH4+oDOquh0tZsYavtYSsNRAWkpn+ZqT3rqJGOdUKXNkA8L+douy9QVyHgTmne5J8LZynj9SJg2dKRkev1qhfSQBDTNVJ4ZWil78suPb4L7BEP3S772xr3I9cLF+4A2FukawkW9B0UY9gJwow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TSvIk88Nk5x2PlZt83UkZwDGUxm5wUayb5vMrWgJxO4=;
- b=HlyBhSooApp/fO5RDMj3Y1E0Llc6Ax4Wzj/jIJvzaac2D8Fpjnw943aPkiTNHq+KSFqd+qn2pq2l0NjNKjz0zeU1W0KmBAJdYbEqfyI2/WVCheOiXmuK/Y3nx05eWMd6TnCzSeVswQ/MiIXtBMJcV/XqCxj53pM/Qr1NVNlwPbfeIOB39AkynSM2NF3ltcsuxBDyPnt7waT+foW4qyjFS8Ugjg851FIDmThzn8gVRCCoxUrms65Kb2tnZjOaN43t/6MqsNOqln9AXJ5XmZkXnAabVk5RoVHkSOoypYaGUwJSxq8xivqbiU+MAZB3c43DACWqHQzo50pZoujnZT1Hkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wavecomp.com;dmarc=pass action=none
- header.from=mips.com;dkim=pass header.d=mips.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TSvIk88Nk5x2PlZt83UkZwDGUxm5wUayb5vMrWgJxO4=;
- b=cVrNnf7VinHDbsz9oksg3xAbr/amsZzKVX+KZJRi2ma+aFip3tfzqlIOlFPvxI0rP+3hBMzf5q9vHbYPLuImgIaYqIu5UrD05emFcdxSBBnT1O4z6IHRUCjy19p+ZMarm5Jc/mhD8puIFoV2SPlp9/DuDajtMYEMllzcy4BxxfA=
-Received: from CY4PR2201MB1272.namprd22.prod.outlook.com (10.171.214.23) by
- CY4PR2201MB1750.namprd22.prod.outlook.com (10.165.89.37) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Wed, 31 Jul 2019 18:37:46 +0000
-Received: from CY4PR2201MB1272.namprd22.prod.outlook.com
- ([fe80::c99b:131e:aaf3:bd81]) by CY4PR2201MB1272.namprd22.prod.outlook.com
- ([fe80::c99b:131e:aaf3:bd81%4]) with mapi id 15.20.2115.005; Wed, 31 Jul 2019
- 18:37:46 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Firoz Khan <firoz.khan@linaro.org>
-CC:     Paul Burton <pburton@wavecomp.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "y2038@lists.linaro.org" <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        "firoz.khan@linaro.org" <firoz.khan@linaro.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mips: remove nargs from __SYSCALL
-Thread-Topic: [PATCH 1/2] mips: remove nargs from __SYSCALL
-Thread-Index: AQHUoqtkUF31nts6yU+Wl0WAgPekgKbmWL4A
-Date:   Wed, 31 Jul 2019 18:37:45 +0000
-Message-ID: <CY4PR2201MB12725431D0D757F50CBDC1EBC1DF0@CY4PR2201MB1272.namprd22.prod.outlook.com>
-References: <1546440978-19569-2-git-send-email-firoz.khan@linaro.org>
-In-Reply-To: <1546440978-19569-2-git-send-email-firoz.khan@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR21CA0003.namprd21.prod.outlook.com
- (2603:10b6:a03:114::13) To CY4PR2201MB1272.namprd22.prod.outlook.com
- (2603:10b6:910:6e::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 912ebe37-2159-4a69-e113-08d715e62e12
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR2201MB1750;
-x-ms-traffictypediagnostic: CY4PR2201MB1750:
-x-microsoft-antispam-prvs: <CY4PR2201MB17501F68E92EA3300E273357C1DF0@CY4PR2201MB1750.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 011579F31F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(366004)(136003)(39850400004)(189003)(199004)(66066001)(4326008)(486006)(229853002)(446003)(476003)(44832011)(305945005)(11346002)(71200400001)(7416002)(71190400001)(102836004)(99286004)(52536014)(25786009)(6436002)(7736002)(6506007)(52116002)(7696005)(33656002)(76176011)(186003)(74316002)(2906002)(8676002)(26005)(386003)(6916009)(68736007)(42882007)(66446008)(66556008)(6246003)(64756008)(66476007)(66946007)(53936002)(9686003)(6116002)(4744005)(3846002)(14454004)(55016002)(54906003)(478600001)(256004)(316002)(5660300002)(81166006)(81156014)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR2201MB1750;H:CY4PR2201MB1272.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sjOpyFHOrcsxrIw/Epq7zOOpW/PFiHbwGPNelwUg1aQixXoUWexRboQDCs4hLYOiZYRR3wTro3WqU8woBGtizV8X31B7c6ZYJFJZ4Ibt525rXQvhr15UHN+g5YA1Qx9YblaqiyJXegSLXRbYbYb6inVpKhKFS9SxQqg9AKMkuK2Zia4lLecXUEWZxHKxZYrk8D/3LCfI+mEsKwHS9hOYRtpNCjXTJQbFejvkOxk8yC7Gr/gPFzqQNJZU1dluYSJVCNGfM32m7H3L3XnEmYDSD9xHuv7V39eYaaB3xjIVDeO0Ylk8N7ugU2rWzf7oNSgoA1FWtOBg3J6oVU87rbwuu38UyABJeO8F8Je3QOhozvUwHvH+BLUcQRl3Y2TYr0nuYD/kWnWOFFDuJ9GgMhPqP6XarBAKF2G6JPDixvfwX5A=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 31 Jul 2019 14:38:02 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34621 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbfGaSiC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 14:38:02 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so26258643pgc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zjtC8sWjZNJx0P6yMG+1aWsfMer3nnMRaqwuNWwAHUA=;
+        b=W6r6NVsSM3sfuwYaY4kLS85qQNfzYFtMTI130jGDvP1R+VuOuUwQtF64QwOqDNzNEt
+         +DuF4HJThWpun+jqGczik3D9VNSKQCBCESg+3xiq8E8J1ZB2EhQaOgtof/TD83ybsb8D
+         JqLs+CG/oEYkAQUr1z4npXyg6V7qU7Ftr6UBs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zjtC8sWjZNJx0P6yMG+1aWsfMer3nnMRaqwuNWwAHUA=;
+        b=khoAjaoV/NW0i3kG6HefLP5y9vRISjijtLoK5s9Qq+v2aA8zQQF0xVcHtYrnsJwIWj
+         lBOuvL8PuVUIYRRpHa9NR6w2qfORKyQZn7kAOyKUzurjwg0VExNczqE2QeG8w6wiRUqn
+         KXqK3aw8vjAsFUu0SbFGO1GJ8XsVMk++PQSCorUkkn8LQVieRW9pHm9cSoc1zSO3pvMM
+         xndcHfG8K1b4fXLNiKQ1AOpkg6oQk+YgaHLS+BJR8CqcH/ggL+UPnXjc/sb5W5srfrPh
+         aWT9QCqUElmEGxzK4S89+8R9ya+MSZCsJVtm5pTe74A6xTG8bAdaKxgbMe/vRah5jAyL
+         NTwg==
+X-Gm-Message-State: APjAAAVGGaq5PXmcToOYu5G36LqQLfZlL1PBmgGbw48UyeV2IHSC/8pz
+        31DhFHnD3xdysDepWyDSEa2w0iwdwmo=
+X-Google-Smtp-Source: APXvYqz2lOY5ye/a8/v4SX9s061hy4NQdE6wREGK6sZ1cqPFLmnEgkpDzKvR/YCGdE18IDSL0nneVg==
+X-Received: by 2002:aa7:8007:: with SMTP id j7mr48381112pfi.154.1564598281165;
+        Wed, 31 Jul 2019 11:38:01 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id u69sm91315929pgu.77.2019.07.31.11.38.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 11:38:00 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net,
+        Douglas Anderson <dianders@chromium.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kdb: Fix stack crawling on 'running' CPUs that aren't the master
+Date:   Wed, 31 Jul 2019 11:37:32 -0700
+Message-Id: <20190731183732.178134-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 912ebe37-2159-4a69-e113-08d715e62e12
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 18:37:45.8034
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2201MB1750
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+In kdb when you do 'btc' (back trace on CPU) it doesn't necessarily
+give you the right info.  Specifically on many architectures
+(including arm64, where I tested) you can't dump the stack of a
+"running" process that isn't the process running on the current CPU.
+This can be seen by this:
 
-Firoz Khan wrote:
-> The __SYSCALL macro's arguments are system call number,
-> system call entry name and number of arguments for the
-> system call.
->=20
-> Argument- nargs in __SYSCALL(nr, entry, nargs) is neither
-> calculated nor used anywhere. So it would be better to
-> keep the implementaion as  __SYSCALL(nr, entry). This will
-> unifies the implementation with some other architetures
-> too.
->=20
-> Signed-off-by: Firoz Khan <firoz.khan@linaro.org>
+ echo SOFTLOCKUP > /sys/kernel/debug/provoke-crash/DIRECT
+ # wait 2 seconds
+ <sysrq>g
 
-Applied to mips-next.
+Here's what I see now on rk3399-gru-kevin.  I see the stack crawl for
+the CPU that handled the sysrq but everything else just shows me stuck
+in __switch_to() which is bogus:
 
-Thanks,
-    Paul
+======
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+[0]kdb> btc
+btc: cpu status: Currently on cpu 0
+Available cpus: 0, 1-3(I), 4, 5(I)
+Stack traceback for pid 0
+0xffffff801101a9c0        0        0  1    0   R  0xffffff801101b3b0 *swapper/0
+Call trace:
+ dump_backtrace+0x0/0x138
+ ...
+ kgdb_compiled_brk_fn+0x34/0x44
+ ...
+ sysrq_handle_dbg+0x34/0x5c
+Stack traceback for pid 0
+0xffffffc0f175a040        0        0  1    1   I  0xffffffc0f175aa30  swapper/1
+Call trace:
+ __switch_to+0x1e4/0x240
+ 0xffffffc0f65616c0
+Stack traceback for pid 0
+0xffffffc0f175d040        0        0  1    2   I  0xffffffc0f175da30  swapper/2
+Call trace:
+ __switch_to+0x1e4/0x240
+ 0xffffffc0f65806c0
+Stack traceback for pid 0
+0xffffffc0f175b040        0        0  1    3   I  0xffffffc0f175ba30  swapper/3
+Call trace:
+ __switch_to+0x1e4/0x240
+ 0xffffffc0f659f6c0
+Stack traceback for pid 1474
+0xffffffc0dde8b040     1474      727  1    4   R  0xffffffc0dde8ba30  bash
+Call trace:
+ __switch_to+0x1e4/0x240
+ __schedule+0x464/0x618
+ 0xffffffc0dde8b040
+Stack traceback for pid 0
+0xffffffc0f17b0040        0        0  1    5   I  0xffffffc0f17b0a30  swapper/5
+Call trace:
+ __switch_to+0x1e4/0x240
+ 0xffffffc0f65dd6c0
+
+===
+
+The problem is that 'btc' eventually boils down to
+  show_stack(task_struct, NULL);
+
+...and show_stack() doesn't work for "running" CPUs because their
+registers haven't been stashed.
+
+On x86 things might work better (I haven't tested) because kdb has a
+special case for x86 in kdb_show_stack() where it passes the stack
+pointer to show_stack().  This wouldn't work on arm64 where the stack
+crawling function seems needs the "fp" and "pc", not the "sp" which is
+presumably why arm64's show_stack() function totally ignores the "sp"
+parameter.
+
+NOTE: we _can_ get a good stack dump for all the cpus if we manually
+switch each one to the kdb master and do a back trace.  AKA:
+  cpu 4
+  bt
+...will give the expected trace.  That's because now arm64's
+dump_backtrace will now see that "tsk == current" and go through a
+different path.
+
+In this patch I fix the problems by catching a request to stack crawl
+a task that's running on a CPU and then I ask that CPU to do the stack
+crawl.
+
+NOTE: this will (presumably) change what stack crawls are printed for
+x86 machines.  Now kdb functions will show up in the stack crawl.
+Presumably this is OK but if it's not we can go back and add a special
+case for x86 again.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+Changes in v2:
+- Totally new approach; now arch agnostic.
+
+ kernel/debug/debug_core.c |  5 +++++
+ kernel/debug/debug_core.h |  1 +
+ kernel/debug/kdb/kdb_bt.c | 44 ++++++++++++++++++++++++++++++---------
+ 3 files changed, 40 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 5cc608de6883..a89c72714fe6 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -92,6 +92,8 @@ static int kgdb_use_con;
+ bool dbg_is_early = true;
+ /* Next cpu to become the master debug core */
+ int dbg_switch_cpu;
++/* cpu number of slave we request a stack crawl of */
++int dbg_slave_dumpstack_cpu = -1;
+ 
+ /* Use kdb or gdbserver mode */
+ int dbg_kdb_mode = 1;
+@@ -580,6 +582,9 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 				atomic_xchg(&kgdb_active, cpu);
+ 				break;
+ 			}
++		} else if (dbg_slave_dumpstack_cpu == cpu) {
++			dump_stack();
++			dbg_slave_dumpstack_cpu = -1;
+ 		} else if (kgdb_info[cpu].exception_state & DCPU_IS_SLAVE) {
+ 			if (!raw_spin_is_locked(&dbg_slave_lock))
+ 				goto return_normal;
+diff --git a/kernel/debug/debug_core.h b/kernel/debug/debug_core.h
+index b4a7c326d546..dca74d5caef2 100644
+--- a/kernel/debug/debug_core.h
++++ b/kernel/debug/debug_core.h
+@@ -62,6 +62,7 @@ extern int dbg_io_get_char(void);
+ /* Switch from one cpu to another */
+ #define DBG_SWITCH_CPU_EVENT -123456
+ extern int dbg_switch_cpu;
++extern int dbg_slave_dumpstack_cpu;
+ 
+ /* gdbstub interface functions */
+ extern int gdb_serial_stub(struct kgdb_state *ks);
+diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
+index 7e2379aa0a1e..10095ae05826 100644
+--- a/kernel/debug/kdb/kdb_bt.c
++++ b/kernel/debug/kdb/kdb_bt.c
+@@ -10,6 +10,7 @@
+  */
+ 
+ #include <linux/ctype.h>
++#include <linux/delay.h>
+ #include <linux/string.h>
+ #include <linux/kernel.h>
+ #include <linux/sched/signal.h>
+@@ -22,20 +23,43 @@
+ static void kdb_show_stack(struct task_struct *p, void *addr)
+ {
+ 	int old_lvl = console_loglevel;
++	int time_left;
++	int cpu;
++
+ 	console_loglevel = CONSOLE_LOGLEVEL_MOTORMOUTH;
+ 	kdb_trap_printk++;
+-	kdb_set_current_task(p);
+-	if (addr) {
+-		show_stack((struct task_struct *)p, addr);
+-	} else if (kdb_current_regs) {
+-#ifdef CONFIG_X86
+-		show_stack(p, &kdb_current_regs->sp);
+-#else
+-		show_stack(p, NULL);
+-#endif
++
++	if (!addr && kdb_task_has_cpu(p)) {
++		cpu = kdb_process_cpu(p);
++
++		if (cpu == raw_smp_processor_id()) {
++			dump_stack();
++			goto exit;
++		}
++
++		/*
++		 * In general architectures don't support dumping the stack
++		 * of a "running" process that's not the current one so if
++		 * we want to dump the stack of a running process that's not
++		 * the master then we'll set a global letting the slave
++		 * (which should be looping) know to dump its own stack.
++		 */
++		dbg_slave_dumpstack_cpu = cpu;
++		for (time_left = MSEC_PER_SEC; time_left; time_left--) {
++			udelay(1000);
++			if (dbg_slave_dumpstack_cpu == -1)
++				break;
++		}
++		if (dbg_slave_dumpstack_cpu != -1) {
++			kdb_printf("ERROR: Timeout dumping CPU %d stack\n",
++				   cpu);
++			dbg_slave_dumpstack_cpu = -1;
++		}
+ 	} else {
+-		show_stack(p, NULL);
++		show_stack(p, addr);
+ 	}
++
++exit:
+ 	console_loglevel = old_lvl;
+ 	kdb_trap_printk--;
+ }
+-- 
+2.22.0.770.g0f2c4a37fd-goog
+
