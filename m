@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C064C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A654C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2C3208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BF4208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:59:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730305AbfGaP65 (ORCPT
+        id S1730319AbfGaP67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:58:57 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3282 "EHLO huawei.com"
+        Wed, 31 Jul 2019 11:58:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3677 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730197AbfGaP6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:58:44 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 29F3BCCE9FC9DC948DDA;
-        Wed, 31 Jul 2019 23:58:41 +0800 (CST)
+        id S1730160AbfGaP6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:58:47 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 05361B6CA6CE3CFB7D0E;
+        Wed, 31 Jul 2019 23:58:36 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 23:58:32 +0800
+ 2019 23:58:28 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Chao Yu <yuchao0@huawei.com>, <devel@driverdev.osuosl.org>
@@ -33,9 +33,9 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2 20/22] staging: erofs: tidy up utils.c
-Date:   Wed, 31 Jul 2019 23:57:50 +0800
-Message-ID: <20190731155752.210602-21-gaoxiang25@huawei.com>
+Subject: [PATCH v2 16/22] staging: erofs: remove redundant braces in inode.c
+Date:   Wed, 31 Jul 2019 23:57:46 +0800
+Message-ID: <20190731155752.210602-17-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190731155752.210602-1-gaoxiang25@huawei.com>
 References: <20190731155752.210602-1-gaoxiang25@huawei.com>
@@ -48,88 +48,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Keep in line with erofs-outofstaging patchset:
- - Update comments in erofs_try_to_release_workgroup;
- - code style cleanup.
+Remove redundant braces in inode.c
+since these are all single statements.
 
 Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/utils.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ drivers/staging/erofs/inode.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/staging/erofs/utils.c b/drivers/staging/erofs/utils.c
-index 0e6308b15717..814c2ee037ae 100644
---- a/drivers/staging/erofs/utils.c
-+++ b/drivers/staging/erofs/utils.c
-@@ -114,8 +114,7 @@ int erofs_register_workgroup(struct super_block *sb,
- 	 */
- 	__erofs_workgroup_get(grp);
+diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+index c13d66ccc74a..286729143365 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -35,16 +35,15 @@ static int read_inode(struct inode *inode, void *data)
  
--	err = radix_tree_insert(&sbi->workstn_tree,
--				grp->index, grp);
-+	err = radix_tree_insert(&sbi->workstn_tree, grp->index, grp);
- 	if (unlikely(err))
- 		/*
- 		 * it's safe to decrease since the workgroup isn't visible
-@@ -156,18 +155,18 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
- 					   bool cleanup)
- {
- 	/*
--	 * for managed cache enabled, the refcount of workgroups
--	 * themselves could be < 0 (freezed). So there is no guarantee
--	 * that all refcount > 0 if managed cache is enabled.
-+	 * If managed cache is on, refcount of workgroups
-+	 * themselves could be < 0 (freezed). In other words,
-+	 * there is no guarantee that all refcounts > 0.
- 	 */
- 	if (!erofs_workgroup_try_to_freeze(grp, 1))
- 		return false;
+ 		inode->i_mode = le16_to_cpu(v2->i_mode);
+ 		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+-		    S_ISLNK(inode->i_mode)) {
++		    S_ISLNK(inode->i_mode))
+ 			vi->raw_blkaddr = le32_to_cpu(v2->i_u.raw_blkaddr);
+-		} else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode)) {
++		else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode))
+ 			inode->i_rdev =
+ 				new_decode_dev(le32_to_cpu(v2->i_u.rdev));
+-		} else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
++		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
+ 			inode->i_rdev = 0;
+-		} else {
++		else
+ 			return -EIO;
+-		}
  
- 	/*
--	 * note that all cached pages should be unlinked
--	 * before delete it from the radix tree.
--	 * Otherwise some cached pages of an orphan old workgroup
--	 * could be still linked after the new one is available.
-+	 * Note that all cached pages should be unattached
-+	 * before deleted from the radix tree. Otherwise some
-+	 * cached pages could be still attached to the orphan
-+	 * old workgroup when the new one is available in the tree.
- 	 */
- 	if (erofs_try_to_free_all_cached_pages(sbi, grp)) {
- 		erofs_workgroup_unfreeze(grp, 1);
-@@ -175,7 +174,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
- 	}
+ 		i_uid_write(inode, le32_to_cpu(v2->i_uid));
+ 		i_gid_write(inode, le32_to_cpu(v2->i_gid));
+@@ -69,16 +68,15 @@ static int read_inode(struct inode *inode, void *data)
  
- 	/*
--	 * it is impossible to fail after the workgroup is freezed,
-+	 * It's impossible to fail after the workgroup is freezed,
- 	 * however in order to avoid some race conditions, add a
- 	 * DBG_BUGON to observe this in advance.
- 	 */
-@@ -183,8 +182,8 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
- 						     grp->index)) != grp);
+ 		inode->i_mode = le16_to_cpu(v1->i_mode);
+ 		if (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode) ||
+-		    S_ISLNK(inode->i_mode)) {
++		    S_ISLNK(inode->i_mode))
+ 			vi->raw_blkaddr = le32_to_cpu(v1->i_u.raw_blkaddr);
+-		} else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode)) {
++		else if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode))
+ 			inode->i_rdev =
+ 				new_decode_dev(le32_to_cpu(v1->i_u.rdev));
+-		} else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode)) {
++		else if (S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
+ 			inode->i_rdev = 0;
+-		} else {
++		else
+ 			return -EIO;
+-		}
  
- 	/*
--	 * if managed cache is enable, the last refcount
--	 * should indicate the related workstation.
-+	 * If managed cache is on, last refcount should indicate
-+	 * the related workstation.
- 	 */
- 	erofs_workgroup_unfreeze_final(grp);
- 	return true;
-@@ -273,9 +272,9 @@ static unsigned long erofs_shrink_scan(struct shrinker *shrink,
- 	unsigned long freed = 0;
- 
- 	spin_lock(&erofs_sb_list_lock);
--	do
-+	do {
- 		run_no = ++shrinker_run_no;
--	while (run_no == 0);
-+	} while (run_no == 0);
- 
- 	/* Iterate over all mounted superblocks and try to shrink them */
- 	p = erofs_sb_list.next;
+ 		i_uid_write(inode, le16_to_cpu(v1->i_uid));
+ 		i_gid_write(inode, le16_to_cpu(v1->i_gid));
 -- 
 2.17.1
 
