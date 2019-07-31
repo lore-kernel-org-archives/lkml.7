@@ -2,132 +2,152 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BBAC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC94DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E25217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nhwHsvp/"
+	by mail.kernel.org (Postfix) with ESMTP id C8233206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730301AbfGaUZL (ORCPT
+        id S1730381AbfGaUZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:25:11 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41438 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730165AbfGaUZL (ORCPT
+        Wed, 31 Jul 2019 16:25:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35312 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730343AbfGaUZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:25:11 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m30so32506051pff.8
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0pLvL4XoGYF6/S/bO4KhBdgKs6/M0DxlhP6T+btdb0E=;
-        b=nhwHsvp/32LnkrUUYeFQVJf6a5XG0VbCeyqdOhNKuGjJPAEI+E8IajZXhfy7iku3Nt
-         GXQW8AaA5AJ6NNU8XIXmhoOriXYI/zGZfxRpnj3GAYC0ps7JvrlOec9TzP8ptbdIwQYv
-         DKXypv6Fq73h5SZxLpblvCN/RVEvKIWxs0yCY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0pLvL4XoGYF6/S/bO4KhBdgKs6/M0DxlhP6T+btdb0E=;
-        b=DQnEDz2U+7+ksD5FQX2sNUYfWb3ltLSlWTCpuDYAUjg7jVFhnJ9XurdU/WWJ2FnG5O
-         fw4nmluU6krwIilEmyN/89/J7s67G3wYk79534hM7BrK8tR9Wb9i7ZjOkeowMqH4JYzr
-         hlUyCfdV03q3bxEPNQpi/k4U+1Bk+6u+TCivy44G/NUHIgsU5z3A/519WkjsOq409JPo
-         O/Ocdj1nzOHpQwSzc63rftHq6o0nSEheqRMl4WRk5oF5UA3VfJhmrNRgO8sT/DcJk+vF
-         pVDlKfjtYERkEiUnzD/vdf4sn9BzFsijlJ8E+1hEd5JPEnXFIhu3vCbw3zOqz406DXoO
-         oeEw==
-X-Gm-Message-State: APjAAAV1lhhCZt9+8knHZYMaqMKmYwyrh0YJCz9yxAmahkkfvEZO8bPq
-        8DUxdf0MlK+spW+hoMP74Tba7g==
-X-Google-Smtp-Source: APXvYqwwz4QXBj6X4jmRiK5RdWk3VtwUDMP0wQe48ogv57D0i040spqUEUMSR5b2sInVDU1XTItkNg==
-X-Received: by 2002:a62:ce8e:: with SMTP id y136mr49994255pfg.29.1564604710841;
-        Wed, 31 Jul 2019 13:25:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p23sm74797789pfn.10.2019.07.31.13.25.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 31 Jul 2019 13:25:09 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 13:25:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Isaac J. Manjarres" <isaacm@codeaurora.org>, crecklin@redhat.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, psodagud@codeaurora.org,
-        tsoni@codeaurora.org, eberman@codeaurora.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] mm/usercopy: Use memory range to be accessed for
- wraparound check
-Message-ID: <201907311323.2C991F08@keescook>
-References: <1564509253-23287-1-git-send-email-isaacm@codeaurora.org>
+        Wed, 31 Jul 2019 16:25:23 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VKMKEV000714
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 16:25:22 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u3hqagsqt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 16:25:22 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 31 Jul 2019 21:25:21 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 31 Jul 2019 21:25:16 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6VKPFVW52756816
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Jul 2019 20:25:15 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2BFA1B2064;
+        Wed, 31 Jul 2019 20:25:15 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0CEB2B205F;
+        Wed, 31 Jul 2019 20:25:14 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 31 Jul 2019 20:25:14 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9874316C99FD; Wed, 31 Jul 2019 13:25:17 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 13:25:17 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        SeongJae Park <sj38.park@gmail.com>, linux-arch@vger.kernel.org
+Subject: Re: [PATCH] tools: memory-model: add it to the Documentation body
+Reply-To: paulmck@linux.ibm.com
+References: <Pine.LNX.4.44L0.1907310947340.1497-100000@iolanthe.rowland.org>
+ <cb9785b7-ed43-b91a-7392-e50216bd5771@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1564509253-23287-1-git-send-email-isaacm@codeaurora.org>
+In-Reply-To: <cb9785b7-ed43-b91a-7392-e50216bd5771@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19073120-0052-0000-0000-000003E70E3E
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011530; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01240217; UDB=6.00653980; IPR=6.01021637;
+ MB=3.00027984; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-31 20:25:20
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19073120-0053-0000-0000-000061EAB294
+Message-Id: <20190731202517.GF5913@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907310203
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 10:54:13AM -0700, Isaac J. Manjarres wrote:
-> Currently, when checking to see if accessing n bytes starting at
-> address "ptr" will cause a wraparound in the memory addresses,
-> the check in check_bogus_address() adds an extra byte, which is
-> incorrect, as the range of addresses that will be accessed is
-> [ptr, ptr + (n - 1)].
+On Thu, Aug 01, 2019 at 12:19:25AM +0900, Akira Yokosawa wrote:
+> On Wed, 31 Jul 2019 09:52:05 -0400, Alan Stern wrote:
+> > On Tue, 30 Jul 2019, Mauro Carvalho Chehab wrote:
+> > 
+> >> Em Tue, 30 Jul 2019 18:17:01 -0400
+> >> Joel Fernandes <joel@joelfernandes.org> escreveu:
+> > 
+> >>>>> (4) I would argue that every occurence of
+> >>>>> A ->(some dependency) B should be replaced with fixed size font in the HTML
+> >>>>> results.  
+> >>>>
+> >>>> Just place those with ``A -> (some dependency)``. This will make them use
+> >>>> a fixed size font.  
+> >>>
+> >>> Ok, understood all these. I guess my point was all of these will need to be
+> >>> done to make this document useful from a ReST conversion standpoint. Until
+> >>> then it is probably just better off being plain text - since there are so
+> >>> many of those ``A -> (dep) B`` things.
+> > 
+> >> On a very quick look, it seems that, if we replace:
+> >>
+> >> 	(\S+\s->\S*\s\w+)
+> >>
+> >> by:
+> >> 	``\1``
+> >>
+> >>
+> >> On an editor that would allow to manually replace the regex (like kate),
+> >> most of those can be get.
+> >>
+> >> See patch enclosed.
+> > 
+> > Some time ago I considered the problem of converting this file to ReST 
+> > format.  But I gave up on the idea, because the necessary changes were 
+> > so widespread and the resulting text file would not be easily readable.
+> > 
+> > Replacing things of the form "A ->dep B" just scratches the surface.  
+> > That document teems with variable names, formulas, code extracts, and
+> > other things which would all need to be rendered in a different font
+> > style.  The density of the markup required to do this would be
+> > phenomenally high.
+> > 
+> > In my opinion it simply was not worthwhile.
 > 
-> This can lead to incorrectly detecting a wraparound in the
-> memory address, when trying to read 4 KB from memory that is
-> mapped to the the last possible page in the virtual address
-> space, when in fact, accessing that range of memory would not
-> cause a wraparound to occur.
-> 
-> Use the memory range that will actually be accessed when
-> considering if accessing a certain amount of bytes will cause
-> the memory address to wrap around.
-> 
-> Fixes: f5509cc18daa ("mm: Hardened usercopy")
-> Co-developed-by: Prasad Sodagudi <psodagud@codeaurora.org>
-> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-> Cc: stable@vger.kernel.org
-> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-> Acked-by: Kees Cook <keescook@chromium.org>
+> +1 on keeping this and the other .txt files of LKMM intact.
 
-Ah, thanks for the reminder! (I got surprised by seeing my Ack in this
-email -- next time please use "v2" or "RESEND" to jog my memory.) This
-got lost last year; my bad.
+Looks like a pretty clear consensus thus far.  Any objections to keeping
+these .txt for the time being?
 
-Andrew, can you take this or should I send it directly to Linus?
+							Thanx, Paul
 
--Kees
-
-> ---
->  mm/usercopy.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/usercopy.c b/mm/usercopy.c
-> index 2a09796..98e92486 100644
-> --- a/mm/usercopy.c
-> +++ b/mm/usercopy.c
-> @@ -147,7 +147,7 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
->  				       bool to_user)
->  {
->  	/* Reject if object wraps past end of memory. */
-> -	if (ptr + n < ptr)
-> +	if (ptr + (n - 1) < ptr)
->  		usercopy_abort("wrapped address", NULL, to_user, 0, ptr + n);
->  
->  	/* Reject if NULL or ZERO-allocation. */
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
-
--- 
-Kees Cook
