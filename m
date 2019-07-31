@@ -2,197 +2,202 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 074A0C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12611C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA49A206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:15:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m7LSUnp2"
+	by mail.kernel.org (Postfix) with ESMTP id DD455206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387495AbfGaLPi (ORCPT
+        id S1727869AbfGaLQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:15:38 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37201 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728739AbfGaLPh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:15:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z28so10956383ljn.4;
-        Wed, 31 Jul 2019 04:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6z0jtE10XtL+WjLPVGjCGsdJe3oZV5LH8j0ivYKyCt4=;
-        b=m7LSUnp2AKhEQPzsHUvNhCfeivbslGOTTAPSQoRg7tdq7CIrz5928vLy3BEFklBZKb
-         RYXkVnRMp23ntLIEhvMtMZrcd/Ce4fPXS+ynw8gQenwGm1bTumBxKI/MaJRzgyPLMDxX
-         u/0yC8NkQzIM6IV3dmzlwhP9GZsu84ErcUZxqyWcMd8CzgAspDM5apcrk5bzLXUI9leu
-         cqC0VYHrqkQiV3hO4/Dw39WZxwWK6kbUnkO47TgCjcOmMaU7eAdCeNd7Fi9GnaRZVU0H
-         SRjohnKlGTx2VRYURDVWQZlhXaigAHCcPhkwf6bCvE4hOiWyKDVYNMPHGL+xXjfSjj9g
-         tjcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6z0jtE10XtL+WjLPVGjCGsdJe3oZV5LH8j0ivYKyCt4=;
-        b=GWCIqVk3pL8IRuqKBpLcDQ2SATFIzRIlP/lOjE32iIGcjNsGyI43X3eEFE0rWUvaEa
-         H6uqkIDHlPnwYReJ6/Aq0YW0jRzzzY56gL09aH0VpyFXS/OTnruwfcCnbSIzzgBtwCik
-         /9BKHl5477kxculrCWOiS4vUmaYC9N9hz098I5oU32WAGhhiWqetel85g0p9xdZdc2GX
-         TQ7iCObrj30Uy5tpWK2b0DjTTmvjC8OmuJAG93cZX9d6RRZq70q7+y+OayUEEOkX+tnJ
-         qLqmOdgV2+GJYBpEQ08JdGq7jnPBCMotrpYGtL+Vc4wlT6LavWNo4SRFjnP9m4C6mlYP
-         oCvw==
-X-Gm-Message-State: APjAAAWZh4slE8mObPkZGxL8B1xR5zz2U862jFhOsbpnKQVZBQhAs8H6
-        5geiKXDp0GlAd6d4wMzUO/SXciu7
-X-Google-Smtp-Source: APXvYqw91V/d9X1aLzic6f0zRJ0w1EuOIfqVFc+gfTo/wK4IYGv/9BDAISF90iCiwdueJAcscGgXWQ==
-X-Received: by 2002:a2e:9643:: with SMTP id z3mr65172467ljh.43.1564571734209;
-        Wed, 31 Jul 2019 04:15:34 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id s20sm11611282lfb.95.2019.07.31.04.15.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 04:15:33 -0700 (PDT)
-Subject: Re: [PATCH v7 11/20] cpufreq: tegra124: Add suspend and resume
- support
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-12-git-send-email-skomatineni@nvidia.com>
- <98aae4b7-d95a-90ba-0d55-7512b3712f54@gmail.com>
-Message-ID: <505bbdc0-c48a-8583-3838-ec5c128f375f@gmail.com>
-Date:   Wed, 31 Jul 2019 14:14:37 +0300
+        Wed, 31 Jul 2019 07:16:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42124 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbfGaLQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 07:16:40 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8FC1C308FC4B;
+        Wed, 31 Jul 2019 11:16:39 +0000 (UTC)
+Received: from thuth.remote.csb (dhcp-200-228.str.redhat.com [10.33.200.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 063D65D6A7;
+        Wed, 31 Jul 2019 11:16:32 +0000 (UTC)
+Subject: Re: [PATCH 1/2] KVM: selftests: Implement ucall() for s390x
+To:     Andrew Jones <drjones@redhat.com>
+Cc:     kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
+References: <20190730100112.18205-1-thuth@redhat.com>
+ <20190730100112.18205-2-thuth@redhat.com>
+ <20190730104807.7uzuvd52foybakgu@kamzik.brq.redhat.com>
+ <d9cb3c86-6390-3803-f2c6-d47f5c24139f@redhat.com>
+ <20190731102849.x26rdan7cddmpvhe@kamzik.brq.redhat.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=thuth@redhat.com; keydata=
+ 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
+Organization: Red Hat
+Message-ID: <0c38beb7-7383-a7ac-13d4-9d4bde4a21bb@redhat.com>
+Date:   Wed, 31 Jul 2019 13:16:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <98aae4b7-d95a-90ba-0d55-7512b3712f54@gmail.com>
+In-Reply-To: <20190731102849.x26rdan7cddmpvhe@kamzik.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 31 Jul 2019 11:16:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.07.2019 13:23, Dmitry Osipenko пишет:
-> 31.07.2019 3:20, Sowjanya Komatineni пишет:
->> This patch adds suspend and resume pm ops for cpufreq driver.
+On 31/07/2019 12.28, Andrew Jones wrote:
+> On Wed, Jul 31, 2019 at 11:43:16AM +0200, Thomas Huth wrote:
+>> On 30/07/2019 12.48, Andrew Jones wrote:
+>>> On Tue, Jul 30, 2019 at 12:01:11PM +0200, Thomas Huth wrote:
+>>>> On s390x, we can neither exit via PIO nor MMIO, but have to use
+>>>> an instruction like DIAGNOSE. While we're at it, rename UCALL_PIO
+>>>> to UCALL_DEFAULT, since PIO only works on x86 anyway, and this
+>>>> way we can re-use the "default" type for the DIAGNOSE exit on s390x.
+>>>>
+>>>> Now that ucall() is implemented, we can use it in the sync_reg_test
+>>>> on s390x, too.
+>>>>
+>>>> Signed-off-by: Thomas Huth <thuth@redhat.com>
+>>>> ---
+>>>>  .../testing/selftests/kvm/include/kvm_util.h  |  2 +-
+>>>>  tools/testing/selftests/kvm/lib/ucall.c       | 34 +++++++++++++++----
+>>>>  .../selftests/kvm/s390x/sync_regs_test.c      |  6 ++--
+>>>>  3 files changed, 32 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+>>>> index e0e66b115ef2..c37aea2e33e5 100644
+>>>> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+>>>> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+>>>> @@ -167,7 +167,7 @@ int vm_create_device(struct kvm_vm *vm, struct kvm_create_device *cd);
+>>>>  
+>>>>  /* ucall implementation types */
+>>>>  typedef enum {
+>>>> -	UCALL_PIO,
+>>>> +	UCALL_DEFAULT,
+>>>
+>>> I'd rather we keep explicit types defined; keep PIO and add DIAG. Then
+>>> we can have
+>>>
+>>> /*  Set default ucall types */
+>>> #if defined(__x86_64__)
+>>>   ucall_type = UCALL_PIO;
+>>> #elif defined(__aarch64__)
+>>>   ucall_type = UCALL_MMIO;
+>>>   ucall_requires_init = true;
+>>> #elif defined(__s390x__)
+>>>   ucall_type = UCALL_DIAG;
+>>> #endif
+>>>
+>>> And add an assert in get_ucall()
+>>>
+>>>  assert(!ucall_requires_init || ucall_initialized);
 >>
->> PLLP is the safe clock source for CPU during system suspend and
->> resume as PLLP rate is below the CPU Fmax at Vmin.
+>> I'm not sure whether I really like that. It's yet another additional
+>> #ifdef block, and yet another variable ...
 >>
->> CPUFreq driver suspend switches the CPU clock source to PLLP and
->> disables the DFLL clock.
+>> What do you think about removing the enum completely and simply code it
+>> directly, without the ucall_type indirection, i.e.:
 >>
->> During system resume, warmboot code powers up the CPU with PLLP
->> clock source. So CPUFreq driver resume enabled DFLL clock and
->> switches CPU back to DFLL clock source.
+>> void ucall(uint64_t cmd, int nargs, ...)
+>> {
+>> 	struct ucall uc = {
+>> 		.cmd = cmd,
+>> 	};
+>> 	va_list va;
+>> 	int i;
 >>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/cpufreq/tegra124-cpufreq.c | 60 ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 60 insertions(+)
+>> 	nargs = nargs <= UCALL_MAX_ARGS ? nargs : UCALL_MAX_ARGS;
 >>
->> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
->> index 4f0c637b3b49..e979a3370988 100644
->> --- a/drivers/cpufreq/tegra124-cpufreq.c
->> +++ b/drivers/cpufreq/tegra124-cpufreq.c
->> @@ -6,6 +6,7 @@
->>  #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
->>  
->>  #include <linux/clk.h>
->> +#include <linux/cpufreq.h>
->>  #include <linux/err.h>
->>  #include <linux/init.h>
->>  #include <linux/kernel.h>
->> @@ -128,8 +129,67 @@ static int tegra124_cpufreq_probe(struct platform_device *pdev)
->>  	return ret;
->>  }
->>  
->> +static int __maybe_unused tegra124_cpufreq_suspend(struct device *dev)
->> +{
->> +	struct tegra124_cpufreq_priv *priv = dev_get_drvdata(dev);
->> +	int err;
->> +
->> +	/*
->> +	 * PLLP rate 408Mhz is below the CPU Fmax at Vmin and is safe to
->> +	 * use during suspend and resume. So, switch the CPU clock source
->> +	 * to PLLP and disable DFLL.
->> +	 */
->> +	err = clk_set_parent(priv->cpu_clk, priv->pllp_clk);
->> +	if (err < 0) {
->> +		dev_err(dev, "failed to reparent to PLLP: %d\n", err);
->> +		return err;
->> +	}
->> +
->> +	/* disable DFLL clock */
->> +	clk_disable_unprepare(priv->dfll_clk);
->> +
->> +	return 0;
->> +}
->> +
->> +static int __maybe_unused tegra124_cpufreq_resume(struct device *dev)
->> +{
->> +	struct tegra124_cpufreq_priv *priv = dev_get_drvdata(dev);
->> +	int err;
->> +
->> +	/*
->> +	 * Warmboot code powers up the CPU with PLLP clock source.
->> +	 * Enable DFLL clock and switch CPU clock source back to DFLL.
->> +	 */
->> +	err = clk_prepare_enable(priv->dfll_clk);
->> +	if (err < 0) {
->> +		dev_err(dev, "failed to enable DFLL clock for CPU: %d\n", err);
->> +		goto disable_cpufreq;
->> +	}
->> +
->> +	err = clk_set_parent(priv->cpu_clk, priv->dfll_clk);
->> +	if (err < 0) {
->> +		dev_err(dev, "failed to reparent to DFLL clock: %d\n", err);
->> +		goto disable_dfll;
->> +	}
->> +
->> +	return 0;
->> +
->> +disable_dfll:
->> +	clk_disable_unprepare(priv->dfll_clk);
->> +disable_cpufreq:
->> +	disable_cpufreq();
->> +
->> +	return err;
->> +}
->> +
->> +static const struct dev_pm_ops tegra124_cpufreq_pm_ops = {
->> +	SET_SYSTEM_SLEEP_PM_OPS(tegra124_cpufreq_suspend,
->> +				tegra124_cpufreq_resume)
->> +};
->> +
->>  static struct platform_driver tegra124_cpufreq_platdrv = {
->>  	.driver.name	= "cpufreq-tegra124",
->> +	.driver.pm	= &tegra124_cpufreq_pm_ops,
->>  	.probe		= tegra124_cpufreq_probe,
->>  };
->>  
+>> 	va_start(va, nargs);
+>> 	for (i = 0; i < nargs; ++i)
+>> 		uc.args[i] = va_arg(va, uint64_t);
+>> 	va_end(va);
+>>
+>> #if defined(__x86_64__)
+>>
+>> 	/* Exit via PIO */
+>> 	asm volatile("in %[port], %%al"
+>> 		: : [port] "d" (UCALL_PIO_PORT), "D" (&uc) : "rax");
+>>
+>> #elif defined(__aarch64__)
+>>
+>> 	*ucall_exit_mmio_addr = (vm_vaddr_t)&uc;
+>>
+>> #elif defined(__s390x__)
+>>
+>> 	/* Exit via DIAGNOSE 0x501 (normally used for breakpoints) */
+>> 	asm volatile ("diag 0,%0,0x501" : : "a"(&uc) : "memory");
+>>
+>> #endif
+>> }
+>>
+>> I think that's way less confusing than having to understand the meaning
+>> of ucall_type etc. before...?
 >>
 > 
-> Looks good,
-> 
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> 
+> Sounds good to me.
 
-BTW, you should also CC the CPUFreq maintainers because this patch can't
-be applied without theirs ACK.
+Or maybe even better: Let's move this file into lib/x86_64/ and
+lib/aarch64/ instead, since there is more different code between the
+architectures here than common code.
+
+ Thomas
