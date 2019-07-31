@@ -2,97 +2,108 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3948EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58641C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06D6A208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 292B620C01
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:40:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="VlfQ+jaB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yxYgPtcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfGaFkT (ORCPT
+        id S1727129AbfGaFkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 01:40:19 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:48516 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfGaFkP (ORCPT
+        Wed, 31 Jul 2019 01:40:17 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:36211 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726989AbfGaFkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 01:40:15 -0400
-Received: from localhost.localdomain (10.28.8.29) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 31 Jul 2019
- 13:40:48 +0800
-From:   chunguo feng <chunguo.feng@amlogic.com>
-To:     <lgirdwood@gmail.com>
-CC:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <RyanS.Lee@maximintegrated.com>, <bleung@chromium.org>,
-        <pierre-louis.bossart@linux.intel.com>, <grundler@chromium.org>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <chunguo.feng@amlogic.com>
-Subject: [PATCH] ASoC: max98383: add  88200 and 96000 sampling rate support
-Date:   Wed, 31 Jul 2019 13:40:03 +0800
-Message-ID: <20190731054003.16076-1-chunguo.feng@amlogic.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 31 Jul 2019 01:40:11 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 5F2C82D4C;
+        Wed, 31 Jul 2019 01:40:10 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 31 Jul 2019 01:40:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=gbLCW5fm9NgGd
+        7NHSQsOKrpG0gqK4d9GLmhDrnziGJs=; b=VlfQ+jaBx6M1eNbpsmY9c7XoFMwP1
+        5iExP5LSTZ/+R2f7B488M+OtC1opnjEMBx/poItkTpP6FtPY1ClROIyFvRHHdUef
+        LVgvqY/k7LJnW52DsTtX38pnAzOLMh6HYqvwNHkiZ5XvAnaHijeK2hG1lHSsZtch
+        4GVnAFeR7nNHZyrH917dPmWTl+vJGCy8woOYj3MIUrkZm3AjeBrzQbg4/Dn9PVTJ
+        QJz9K80Miastnfs5pMgE8/tauF/wOwVEV5m0TZqr2Ip7X/vMdvivhaP+Mig8hqBv
+        5caGt2iYNBGAKw8FYb9D3B2atK1n8/bgCvQW7U5d2rxNmyLoOo4ETb4eQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=gbLCW5fm9NgGd7NHSQsOKrpG0gqK4d9GLmhDrnziGJs=; b=yxYgPtcM
+        rqeEijTvAgpyROeVysMp5lUdI8iwsmWj60tFvhL8AZBfuMu/A7GaT5tLBg5UU+ep
+        TTquIN4tv68bCy7LneQRjTDjb89Iue4IBr5S4fZ3LaaWNlAnNFsoq1GpsyAzu6iK
+        eGhaG+HLYn9xZUHJZc/FFpXjwaHc38Boi23fe3mQS4bQaIgNpmziNJkxxeHAYoKD
+        EHyBZ1L/j7Z512JukWokYQJM0E3JhhTmyMHS3rIxurrwT1EGa8V4N1h6spQiaiCp
+        UUAKojLEo+iWuiuaMJr3recWLzs09o9saECTBrXoRgJQSmzJvsdApmE54upwfwMH
+        OGMmMJaDJq2+Hg==
+X-ME-Sender: <xms:uilBXbe6YnMmqo2bvXPRVM49tzeY7xaees9Lr-bB_pIzhCmTB-AlVQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleeggdelkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
+    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
+    rdhiugdrrghuqeenucfkphepvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
+    ud
+X-ME-Proxy: <xmx:uilBXeD5KwrEpmb7kKRGYNIdxbEkJ9ifuNAFDqEj2OtBAT3fFsEV-g>
+    <xmx:uilBXYspYjrGPLI-NWjiffNVdRe-fgTdCULKIuGyB5WbxShrrzC5AQ>
+    <xmx:uilBXbH74Q90FmAehzDptAdn_seNLkNzDdDfcaglWRRUbf3CfY2z_g>
+    <xmx:uilBXXDO62O3BrkRI80kvynlh83Pzok8exg_49HvtyTQjcfBHIqtFg>
+Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E1CC780059;
+        Wed, 31 Jul 2019 01:40:05 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     netdev@vger.kernel.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
+        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 4/4] net: ftgmac100: Select ASPEED MDIO driver for the AST2600
+Date:   Wed, 31 Jul 2019 15:09:59 +0930
+Message-Id: <20190731053959.16293-5-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190731053959.16293-1-andrew@aj.id.au>
+References: <20190731053959.16293-1-andrew@aj.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.28.8.29]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: fengchunguo <chunguo.feng@amlogic.com>
+Ensures we can talk to a PHY via MDIO on the AST2600, as the MDIO
+controller is now separate from the MAC.
 
-88200 and 96000 sampling rate was not enabled on driver, so can't be played.
-
-The error information:
-max98373 3-0031：rate 96000 not supported
-max98373 3-0031：ASoC: can't set max98373-aif1 hw params: -22
-
-Signed-off-by: fengchunguo <chunguo.feng@amlogic.com>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- sound/soc/codecs/max98373.c | 6 ++++++
- sound/soc/codecs/max98373.h | 2 ++
- 2 files changed, 8 insertions(+)
- mode change 100644 => 100755 sound/soc/codecs/max98373.c
- mode change 100644 => 100755 sound/soc/codecs/max98373.h
+ drivers/net/ethernet/faraday/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/max98373.c b/sound/soc/codecs/max98373.c
-old mode 100644
-new mode 100755
-index 528695cd6a1c..8c601a3ebc27
---- a/sound/soc/codecs/max98373.c
-+++ b/sound/soc/codecs/max98373.c
-@@ -267,6 +267,12 @@ static int max98373_dai_hw_params(struct snd_pcm_substream *substream,
- 	case 48000:
- 		sampling_rate = MAX98373_PCM_SR_SET1_SR_48000;
- 		break;
-+	case 88200:
-+		sampling_rate = MAX98373_PCM_SR_SET1_SR_88200;
-+		break;
-+	case 96000:
-+		sampling_rate = MAX98373_PCM_SR_SET1_SR_96000;
-+		break;
- 	default:
- 		dev_err(component->dev, "rate %d not supported\n",
- 			params_rate(params));
-diff --git a/sound/soc/codecs/max98373.h b/sound/soc/codecs/max98373.h
-old mode 100644
-new mode 100755
-index f6a37aa02f26..a59e51355a84
---- a/sound/soc/codecs/max98373.h
-+++ b/sound/soc/codecs/max98373.h
-@@ -130,6 +130,8 @@
- #define MAX98373_PCM_SR_SET1_SR_32000 (0x6 << 0)
- #define MAX98373_PCM_SR_SET1_SR_44100 (0x7 << 0)
- #define MAX98373_PCM_SR_SET1_SR_48000 (0x8 << 0)
-+#define MAX98373_PCM_SR_SET1_SR_88200 (0x9 << 0)
-+#define MAX98373_PCM_SR_SET1_SR_96000 (0xA << 0)
- 
- /* MAX98373_R2028_PCM_SR_SETUP_2 */
- #define MAX98373_PCM_SR_SET2_SR_MASK (0xF << 4)
+diff --git a/drivers/net/ethernet/faraday/Kconfig b/drivers/net/ethernet/faraday/Kconfig
+index a9b105803fb7..73e4f2648e49 100644
+--- a/drivers/net/ethernet/faraday/Kconfig
++++ b/drivers/net/ethernet/faraday/Kconfig
+@@ -32,6 +32,7 @@ config FTGMAC100
+ 	depends on ARM || NDS32 || COMPILE_TEST
+ 	depends on !64BIT || BROKEN
+ 	select PHYLIB
++	select MDIO_ASPEED if MACH_ASPEED_G6
+ 	---help---
+ 	  This driver supports the FTGMAC100 Gigabit Ethernet controller
+ 	  from Faraday. It is used on Faraday A369, Andes AG102 and some
 -- 
-2.22.0
+2.20.1
 
