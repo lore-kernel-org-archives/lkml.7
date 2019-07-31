@@ -2,105 +2,197 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E03C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074A0C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6400C206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA49A206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:15:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m7LSUnp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbfGaLPc (ORCPT
+        id S2387495AbfGaLPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:15:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64010 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726607AbfGaLPa (ORCPT
+        Wed, 31 Jul 2019 07:15:38 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37201 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728739AbfGaLPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:15:30 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VBCtbp191772
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:15:29 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u39q98tj3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:15:28 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Wed, 31 Jul 2019 12:15:26 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 31 Jul 2019 12:15:23 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6VBF56l33554876
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 Jul 2019 11:15:05 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C7BCB11C05E;
-        Wed, 31 Jul 2019 11:15:21 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8DFEB11C050;
-        Wed, 31 Jul 2019 11:15:21 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.134])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 31 Jul 2019 11:15:21 +0000 (GMT)
-Date:   Wed, 31 Jul 2019 13:15:20 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>
-Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
-References: <20190731163915.3fdfcb14@canb.auug.org.au>
- <20190731085819.GA3488@osiris>
- <20190731110816.GA20753@gondor.apana.org.au>
+        Wed, 31 Jul 2019 07:15:37 -0400
+Received: by mail-lj1-f194.google.com with SMTP id z28so10956383ljn.4;
+        Wed, 31 Jul 2019 04:15:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6z0jtE10XtL+WjLPVGjCGsdJe3oZV5LH8j0ivYKyCt4=;
+        b=m7LSUnp2AKhEQPzsHUvNhCfeivbslGOTTAPSQoRg7tdq7CIrz5928vLy3BEFklBZKb
+         RYXkVnRMp23ntLIEhvMtMZrcd/Ce4fPXS+ynw8gQenwGm1bTumBxKI/MaJRzgyPLMDxX
+         u/0yC8NkQzIM6IV3dmzlwhP9GZsu84ErcUZxqyWcMd8CzgAspDM5apcrk5bzLXUI9leu
+         cqC0VYHrqkQiV3hO4/Dw39WZxwWK6kbUnkO47TgCjcOmMaU7eAdCeNd7Fi9GnaRZVU0H
+         SRjohnKlGTx2VRYURDVWQZlhXaigAHCcPhkwf6bCvE4hOiWyKDVYNMPHGL+xXjfSjj9g
+         tjcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6z0jtE10XtL+WjLPVGjCGsdJe3oZV5LH8j0ivYKyCt4=;
+        b=GWCIqVk3pL8IRuqKBpLcDQ2SATFIzRIlP/lOjE32iIGcjNsGyI43X3eEFE0rWUvaEa
+         H6uqkIDHlPnwYReJ6/Aq0YW0jRzzzY56gL09aH0VpyFXS/OTnruwfcCnbSIzzgBtwCik
+         /9BKHl5477kxculrCWOiS4vUmaYC9N9hz098I5oU32WAGhhiWqetel85g0p9xdZdc2GX
+         TQ7iCObrj30Uy5tpWK2b0DjTTmvjC8OmuJAG93cZX9d6RRZq70q7+y+OayUEEOkX+tnJ
+         qLqmOdgV2+GJYBpEQ08JdGq7jnPBCMotrpYGtL+Vc4wlT6LavWNo4SRFjnP9m4C6mlYP
+         oCvw==
+X-Gm-Message-State: APjAAAWZh4slE8mObPkZGxL8B1xR5zz2U862jFhOsbpnKQVZBQhAs8H6
+        5geiKXDp0GlAd6d4wMzUO/SXciu7
+X-Google-Smtp-Source: APXvYqw91V/d9X1aLzic6f0zRJ0w1EuOIfqVFc+gfTo/wK4IYGv/9BDAISF90iCiwdueJAcscGgXWQ==
+X-Received: by 2002:a2e:9643:: with SMTP id z3mr65172467ljh.43.1564571734209;
+        Wed, 31 Jul 2019 04:15:34 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id s20sm11611282lfb.95.2019.07.31.04.15.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 04:15:33 -0700 (PDT)
+Subject: Re: [PATCH v7 11/20] cpufreq: tegra124: Add suspend and resume
+ support
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-12-git-send-email-skomatineni@nvidia.com>
+ <98aae4b7-d95a-90ba-0d55-7512b3712f54@gmail.com>
+Message-ID: <505bbdc0-c48a-8583-3838-ec5c128f375f@gmail.com>
+Date:   Wed, 31 Jul 2019 14:14:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731110816.GA20753@gondor.apana.org.au>
-X-TM-AS-GCONF: 00
-x-cbid: 19073111-0012-0000-0000-00000337F6EE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19073111-0013-0000-0000-000021719FB9
-Message-Id: <20190731111520.GC3488@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907310117
+In-Reply-To: <98aae4b7-d95a-90ba-0d55-7512b3712f54@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 09:08:17PM +1000, Herbert Xu wrote:
-> On Wed, Jul 31, 2019 at 10:58:20AM +0200, Heiko Carstens wrote:
-> > On Wed, Jul 31, 2019 at 04:39:15PM +1000, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Changes since 20190730:
-> > 
-> > Hello Ard,
-> > 
-> > two of your patches in the crypto tree cause build breakage on s390:
-> > 
-> > The patch ("crypto: aes - create AES library based on the fixed time AES code")
-> > causes this:
+31.07.2019 13:23, Dmitry Osipenko пишет:
+> 31.07.2019 3:20, Sowjanya Komatineni пишет:
+>> This patch adds suspend and resume pm ops for cpufreq driver.
+>>
+>> PLLP is the safe clock source for CPU during system suspend and
+>> resume as PLLP rate is below the CPU Fmax at Vmin.
+>>
+>> CPUFreq driver suspend switches the CPU clock source to PLLP and
+>> disables the DFLL clock.
+>>
+>> During system resume, warmboot code powers up the CPU with PLLP
+>> clock source. So CPUFreq driver resume enabled DFLL clock and
+>> switches CPU back to DFLL clock source.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  drivers/cpufreq/tegra124-cpufreq.c | 60 ++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 60 insertions(+)
+>>
+>> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
+>> index 4f0c637b3b49..e979a3370988 100644
+>> --- a/drivers/cpufreq/tegra124-cpufreq.c
+>> +++ b/drivers/cpufreq/tegra124-cpufreq.c
+>> @@ -6,6 +6,7 @@
+>>  #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+>>  
+>>  #include <linux/clk.h>
+>> +#include <linux/cpufreq.h>
+>>  #include <linux/err.h>
+>>  #include <linux/init.h>
+>>  #include <linux/kernel.h>
+>> @@ -128,8 +129,67 @@ static int tegra124_cpufreq_probe(struct platform_device *pdev)
+>>  	return ret;
+>>  }
+>>  
+>> +static int __maybe_unused tegra124_cpufreq_suspend(struct device *dev)
+>> +{
+>> +	struct tegra124_cpufreq_priv *priv = dev_get_drvdata(dev);
+>> +	int err;
+>> +
+>> +	/*
+>> +	 * PLLP rate 408Mhz is below the CPU Fmax at Vmin and is safe to
+>> +	 * use during suspend and resume. So, switch the CPU clock source
+>> +	 * to PLLP and disable DFLL.
+>> +	 */
+>> +	err = clk_set_parent(priv->cpu_clk, priv->pllp_clk);
+>> +	if (err < 0) {
+>> +		dev_err(dev, "failed to reparent to PLLP: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	/* disable DFLL clock */
+>> +	clk_disable_unprepare(priv->dfll_clk);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int __maybe_unused tegra124_cpufreq_resume(struct device *dev)
+>> +{
+>> +	struct tegra124_cpufreq_priv *priv = dev_get_drvdata(dev);
+>> +	int err;
+>> +
+>> +	/*
+>> +	 * Warmboot code powers up the CPU with PLLP clock source.
+>> +	 * Enable DFLL clock and switch CPU clock source back to DFLL.
+>> +	 */
+>> +	err = clk_prepare_enable(priv->dfll_clk);
+>> +	if (err < 0) {
+>> +		dev_err(dev, "failed to enable DFLL clock for CPU: %d\n", err);
+>> +		goto disable_cpufreq;
+>> +	}
+>> +
+>> +	err = clk_set_parent(priv->cpu_clk, priv->dfll_clk);
+>> +	if (err < 0) {
+>> +		dev_err(dev, "failed to reparent to DFLL clock: %d\n", err);
+>> +		goto disable_dfll;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +disable_dfll:
+>> +	clk_disable_unprepare(priv->dfll_clk);
+>> +disable_cpufreq:
+>> +	disable_cpufreq();
+>> +
+>> +	return err;
+>> +}
+>> +
+>> +static const struct dev_pm_ops tegra124_cpufreq_pm_ops = {
+>> +	SET_SYSTEM_SLEEP_PM_OPS(tegra124_cpufreq_suspend,
+>> +				tegra124_cpufreq_resume)
+>> +};
+>> +
+>>  static struct platform_driver tegra124_cpufreq_platdrv = {
+>>  	.driver.name	= "cpufreq-tegra124",
+>> +	.driver.pm	= &tegra124_cpufreq_pm_ops,
+>>  	.probe		= tegra124_cpufreq_probe,
+>>  };
+>>  
+>>
 > 
-> Ard already sent a patch for this which I've just pushed out.
+> Looks good,
+> 
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> 
 
-Ok, thanks!
-
-However that doesn't fix the simd.h header file breakage with the
-second patch :)
-
+BTW, you should also CC the CPUFreq maintainers because this patch can't
+be applied without theirs ACK.
