@@ -2,150 +2,564 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C9EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F75DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB2F2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16ED7206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="aN40XLti"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N3SbqJzx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbfGaEki (ORCPT
+        id S1728798AbfGaEnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 00:40:38 -0400
-Received: from sender-pp-o92.zoho.com ([135.84.80.237]:25439 "EHLO
-        sender-pp-o92.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728477AbfGaEki (ORCPT
+        Wed, 31 Jul 2019 00:43:14 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39482 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbfGaEnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 00:40:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1564547992; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=m4avGWKs1SABe+PRjhmFRG0Mu+M4XbK/DqFrIpsXVfrLcBfz8jqojT8ZU1nKdlb19v8QOHK3fGZm+0ZHs7L7ZNa+/XTJR4GfLJQWfL0PbTmi+sAzrik+x8q9G+Ch54nhxdqQ8Bf44/5jKLntRonAJsTqy1Cj0xrlSQ+HEh0O7SQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1564547992; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=JaAydh1T9WDrn0zFAYMF2wyL7O0jE513KdDgoPdGaaM=; 
-        b=PgrUr8ZjzHgyNYHcbyffxSdh/2kfLbgocUl5sToahV1ptYEsvdqhIXuuc9W4JS7y/hkMIwJak6OvBSrJV/y1GnFcfKqgD1ksAQM1BuEExWG7L2F6p1tnS3ZHrZtOBL30dTY1xz6QCe+RaVKadpzDCJ5lpZtrAxJOAiu7ySTdq6o=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=hBwB8uJngsoSXGOZzIxI3JPXAVXxjulZV7UBqljex3k6bK68OfAy1xzF2Ta0h6JTJRPJcHMVwIzO
-    x+5SwzOws7mitbJ6qFKRUhpqLMR41aIDd5/6VDcjaZC6cOzu1GbE  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1564547992;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=2635; bh=JaAydh1T9WDrn0zFAYMF2wyL7O0jE513KdDgoPdGaaM=;
-        b=aN40XLtiJhePB+q6NE/cgkpP5DIXGTDAjo9xRe/5Cv1s/807IIf5ErLKK4xj4zK/
-        amqEBqhGIkTgaqw6lu2j5dEHpJ7etcH3IVftnXN02b8PM/WbYK/2N2X5Gi/vhvgVCHF
-        LeIut5SJpYuokajaQqosmCUhcWbDt4CcOj7LgLM8=
-Received: from localhost.localdomain (171.221.113.137 [171.221.113.137]) by mx.zohomail.com
-        with SMTPS id 156454799072489.93408510051506; Tue, 30 Jul 2019 21:39:50 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        paul@crapouillou.net, paul.burton@mips.com, jhogan@kernel.org,
-        malat@debian.org, chenhc@lemote.com, tglx@linutronix.de,
-        allison@lohutok.net, syq@debian.org, jiaxun.yang@flygoat.com
-Subject: [PATCH v2] MIPS: Ingenic: Fix bugs when detecting X1000's parameters.
-Date:   Wed, 31 Jul 2019 12:39:03 +0800
-Message-Id: <1564547943-27505-2-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564547943-27505-1-git-send-email-zhouyanjie@zoho.com>
-References: <1564498510-3751-1-git-send-email-zhouyanjie@zoho.com>
- <1564547943-27505-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Wed, 31 Jul 2019 00:43:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id f17so27108811pfn.6;
+        Tue, 30 Jul 2019 21:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NT98VIoYpANGTOi3G99Wti5lUccwF0Ttf26smVgQ9tA=;
+        b=N3SbqJzxtiB74GY+AyihEEcJ51Vkajx3eUAmpaWfSDFdMZ5vYocCcnDgeP0A4WV/eO
+         6ecq5xTl02Q7BqUmyuh516533PRiCKi3Tn9IKI51hvZ6gj5ZW94M8rCDv2e34QkjokTs
+         Vm1U8CBk73P6BBvbqXbEQJmqpjlMluNvs9ePseJ22cq71YD7Rlxa9ZLzENb6WFBMAAe0
+         SG8xj6nFL9n9P54DvzC/EwnXJ1eHANMx9puHfHyU3dWtv+2IbvYC1OIopz/1gwCrBxGK
+         BFcBxd4tlwyX3I3Mth7BXV4g+IUZyaZsM9b4xAISkkS/f3kxKZ4pesb0scoB2zf8riUM
+         WhTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NT98VIoYpANGTOi3G99Wti5lUccwF0Ttf26smVgQ9tA=;
+        b=UIjvVEpGoNWN0/Os6azpPpdyb789arhSCKnfrFSdLWU4O6s8pV2fTAS/6bdG8vmIb0
+         /qFxSUzkFwOWpE7refwR/rB7qkKh0sBeGo/55PMeJD3ZK2AwVIzPI/JvkqKjlUs5mjPM
+         A5lE9B5AGL6yjEfiyatyBqK5WV6p1CiCoIEN2FVemVdp17YAEoIUe8mHPQ4UC6zCV2Rw
+         Ij1fuuJsYLPPgM8KKBL6S259cyBzLbVW0tBxfy/bcfBy/YpYPeAGbNdA7O4fFly9pJep
+         vjzQyNHYNVRL+XhrIzeyfYyZhKDHyvClD2GROy6JIhEe5QlKEMh9tP7N3+jrXUJz+ian
+         JTJw==
+X-Gm-Message-State: APjAAAV6+YeXLkh/k20TVNu1e0tR37rZ1fvDplrSEuHh2USWUnbUkFau
+        kHHQNBp6fP1B3mS2eu6HGac=
+X-Google-Smtp-Source: APXvYqw1bkwRMPfiKnf6U5WNKF/lapV8vqKOm8U0gDkm3jczJ/GIsI/KxJZnXDoKgxop70YBKHEx7A==
+X-Received: by 2002:a63:510e:: with SMTP id f14mr32069460pgb.422.1564548193112;
+        Tue, 30 Jul 2019 21:43:13 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 10sm73417226pfb.30.2019.07.30.21.43.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 21:43:11 -0700 (PDT)
+Subject: Re: [PATCH] watchdog: pc87413: Rewriting of pc87413_wdt driver to use
+ watchdog subsystem
+To:     Mark Balantzyan <mbalant3@gmail.com>
+Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, andrianov@ispras.ru
+References: <20190731032204.78951-1-mbalant3@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <59b298ec-028b-7585-3477-ff4eabb27b80@roeck-us.net>
+Date:   Tue, 30 Jul 2019 21:43:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190731032204.78951-1-mbalant3@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.fix bugs when detecting L2 cache sets value.
-2.fix bugs when detecting L2 cache ways value.
-3.fix bugs when calculate bogoMips and loops_per_jiffy.
+On 7/30/19 8:22 PM, Mark Balantzyan wrote:
+> This patch rewrites the pc87413_wdt driver to use the watchdog subsystem. In
+> doing so, it also addresses a potential race condition owing from the
+> swc_base_addr variable being used before being set.
+> 
+> Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
+> 
+> ---
+>   drivers/watchdog/Kconfig       |   1 +
+>   drivers/watchdog/pc87413_wdt.c | 323 ++++-----------------------------
+>   2 files changed, 40 insertions(+), 284 deletions(-)
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 9af07fd9..84a7326d 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -1166,6 +1166,7 @@ config SCx200_WDT
+>   
+>   config PC87413_WDT
+>   	tristate "NS PC87413 watchdog"
+> +	select WATCHDOG_CORE
+>   	depends on X86
+>   	---help---
+>   	  This is the driver for the hardware watchdog on the PC87413 chipset
+> diff --git a/drivers/watchdog/pc87413_wdt.c b/drivers/watchdog/pc87413_wdt.c
+> index 06a892e3..60e3cda6 100644
+> --- a/drivers/watchdog/pc87413_wdt.c
+> +++ b/drivers/watchdog/pc87413_wdt.c
+> @@ -22,15 +22,9 @@
+>   
+>   #include <linux/module.h>
+>   #include <linux/types.h>
+> -#include <linux/miscdevice.h>
+>   #include <linux/watchdog.h>
+>   #include <linux/ioport.h>
+>   #include <linux/delay.h>
+> -#include <linux/notifier.h>
+> -#include <linux/fs.h>
+> -#include <linux/reboot.h>
+> -#include <linux/init.h>
+> -#include <linux/spinlock.h>
+>   #include <linux/moduleparam.h>
+>   #include <linux/io.h>
+>   #include <linux/uaccess.h>
+> @@ -60,13 +54,9 @@ static int swc_base_addr = -1;
+>   
+>   static int timeout = DEFAULT_TIMEOUT;	/* timeout value */
+>   static unsigned long timer_enabled;	/* is the timer enabled? */
+> -
+> -static char expect_close;		/* is the close expected? */
+> -
+> -static DEFINE_SPINLOCK(io_lock);	/* to guard us from io races */
+> -
+>   static bool nowayout = WATCHDOG_NOWAYOUT;
+>   
+> +
+>   /* -- Low level function ----------------------------------------*/
+>   
+>   /* Select pins for Watchdog output */
+> @@ -151,13 +141,15 @@ static inline void pc87413_swc_bank3(void)
+>   
+>   /* Set watchdog timeout to x minutes */
+>   
+> -static inline void pc87413_programm_wdto(char pc87413_time)
+> +static int pc87413_set_timeout(struct watchdog_device *wdd, unsigned int t)
+>   {
+> -	/* Step 5: Programm WDTO, Twd. */
+> -	outb_p(pc87413_time, swc_base_addr + WDTO);
+> -#ifdef DEBUG
+> -	pr_info(DPFX "Set WDTO to %d minutes\n", pc87413_time);
+> -#endif
+> +	/* Step 5: Programm watchdog timeout */
+> +
+> +	if ((t < 1) || ( t > 60))    /* arbitrary upper limit */
+> +	return -EINVAL;
+> +	
+> +	timeout = t;
+> +	return 0;
+>   }
+>   
+>   /* Enable WDEN */
+> @@ -216,281 +208,61 @@ static inline void pc87413_disable_sw_wd_trg(void)
+>   
+>   /* -- Higher level functions ------------------------------------*/
+>   
+> -/* Enable the watchdog */
+> +/* Enable/start the watchdog */
+>   
+> -static void pc87413_enable(void)
+> +static int pc87413_start(struct watchdog_device *wdd)
+>   {
+> -	spin_lock(&io_lock);
+> -
+>   	pc87413_swc_bank3();
+> -	pc87413_programm_wdto(timeout);
+> +	pc87413_set_timeout(wdd,timeout);
+>   	pc87413_enable_wden();
+>   	pc87413_enable_sw_wd_tren();
+>   	pc87413_enable_sw_wd_trg();
+> -
+> -	spin_unlock(&io_lock);
+> +	return 0;
+>   }
+>   
+> -/* Disable the watchdog */
+> +/* Disable/stop the watchdog */
+>   
+> -static void pc87413_disable(void)
+> +static int pc87413_stop(struct watchdog_device *wdd)
+>   {
+> -	spin_lock(&io_lock);
+> -
+>   	pc87413_swc_bank3();
+>   	pc87413_disable_sw_wd_tren();
+>   	pc87413_disable_sw_wd_trg();
+> -	pc87413_programm_wdto(0);
+> -
+> -	spin_unlock(&io_lock);
+> +	pc87413_set_timeout(wdd,0);
+> +	return 0;
+>   }
+>   
+> -/* Refresh the watchdog */
+> +/* Refresh/keepalive the watchdog */
+>   
+> -static void pc87413_refresh(void)
+> +static int pc87413_keepalive(struct watchdog_device *wdd)
+>   {
+> -	spin_lock(&io_lock);
+> -
+>   	pc87413_swc_bank3();
+>   	pc87413_disable_sw_wd_tren();
+>   	pc87413_disable_sw_wd_trg();
+> -	pc87413_programm_wdto(timeout);
+> +	pc87413_set_timeout(wdd,timeout);
+>   	pc87413_enable_wden();
+>   	pc87413_enable_sw_wd_tren();
+>   	pc87413_enable_sw_wd_trg();
+> -
+> -	spin_unlock(&io_lock);
+> -}
+> -
+> -/* -- File operations -------------------------------------------*/
+> -
+> -/**
+> - *	pc87413_open:
+> - *	@inode: inode of device
+> - *	@file: file handle to device
+> - *
+> - */
+> -
+> -static int pc87413_open(struct inode *inode, struct file *file)
+> -{
+> -	/* /dev/watchdog can only be opened once */
+> -
+> -	if (test_and_set_bit(0, &timer_enabled))
+> -		return -EBUSY;
+> -
+> -	if (nowayout)
+> -		__module_get(THIS_MODULE);
+> -
+> -	/* Reload and activate timer */
+> -	pc87413_refresh();
+> -
+> -	pr_info("Watchdog enabled. Timeout set to %d minute(s).\n", timeout);
+> -
+> -	return nonseekable_open(inode, file);
+> -}
+> -
+> -/**
+> - *	pc87413_release:
+> - *	@inode: inode to board
+> - *	@file: file handle to board
+> - *
+> - *	The watchdog has a configurable API. There is a religious dispute
+> - *	between people who want their watchdog to be able to shut down and
+> - *	those who want to be sure if the watchdog manager dies the machine
+> - *	reboots. In the former case we disable the counters, in the latter
+> - *	case you have to open it again very soon.
+> - */
+> -
+> -static int pc87413_release(struct inode *inode, struct file *file)
+> -{
+> -	/* Shut off the timer. */
+> -
+> -	if (expect_close == 42) {
+> -		pc87413_disable();
+> -		pr_info("Watchdog disabled, sleeping again...\n");
+> -	} else {
+> -		pr_crit("Unexpected close, not stopping watchdog!\n");
+> -		pc87413_refresh();
+> -	}
+> -	clear_bit(0, &timer_enabled);
+> -	expect_close = 0;
+>   	return 0;
+>   }
+>   
+> -/**
+> - *	pc87413_status:
+> - *
+> - *      return, if the watchdog is enabled (timeout is set...)
+> - */
+> -
+> -
+> -static int pc87413_status(void)
+> -{
+> -	  return 0; /* currently not supported */
+> -}
+> -
+> -/**
+> - *	pc87413_write:
+> - *	@file: file handle to the watchdog
+> - *	@data: data buffer to write
+> - *	@len: length in bytes
+> - *	@ppos: pointer to the position to write. No seeks allowed
+> - *
+> - *	A write to a watchdog device is defined as a keepalive signal. Any
+> - *	write of data will do, as we we don't define content meaning.
+> - */
+> -
+> -static ssize_t pc87413_write(struct file *file, const char __user *data,
+> -			     size_t len, loff_t *ppos)
+> -{
+> -	/* See if we got the magic character 'V' and reload the timer */
+> -	if (len) {
+> -		if (!nowayout) {
+> -			size_t i;
+> -
+> -			/* reset expect flag */
+> -			expect_close = 0;
+> -
+> -			/* scan to see whether or not we got the
+> -			   magic character */
+> -			for (i = 0; i != len; i++) {
+> -				char c;
+> -				if (get_user(c, data + i))
+> -					return -EFAULT;
+> -				if (c == 'V')
+> -					expect_close = 42;
+> -			}
+> -		}
+> -
+> -		/* someone wrote to us, we should reload the timer */
+> -		pc87413_refresh();
+> -	}
+> -	return len;
+> -}
+> -
+> -/**
+> - *	pc87413_ioctl:
+> - *	@file: file handle to the device
+> - *	@cmd: watchdog command
+> - *	@arg: argument pointer
+> - *
+> - *	The watchdog API defines a common set of functions for all watchdogs
+> - *	according to their available features. We only actually usefully support
+> - *	querying capabilities and current status.
+> - */
+> -
+> -static long pc87413_ioctl(struct file *file, unsigned int cmd,
+> -						unsigned long arg)
+> -{
+> -	int new_timeout;
+> -
+> -	union {
+> -		struct watchdog_info __user *ident;
+> -		int __user *i;
+> -	} uarg;
+> -
+> -	static const struct watchdog_info ident = {
+> -		.options          = WDIOF_KEEPALIVEPING |
+> -				    WDIOF_SETTIMEOUT |
+> -				    WDIOF_MAGICCLOSE,
+> -		.firmware_version = 1,
+> -		.identity         = "PC87413(HF/F) watchdog",
+> -	};
+> -
+> -	uarg.i = (int __user *)arg;
+> -
+> -	switch (cmd) {
+> -	case WDIOC_GETSUPPORT:
+> -		return copy_to_user(uarg.ident, &ident,
+> -					sizeof(ident)) ? -EFAULT : 0;
+> -	case WDIOC_GETSTATUS:
+> -		return put_user(pc87413_status(), uarg.i);
+> -	case WDIOC_GETBOOTSTATUS:
+> -		return put_user(0, uarg.i);
+> -	case WDIOC_SETOPTIONS:
+> -	{
+> -		int options, retval = -EINVAL;
+> -		if (get_user(options, uarg.i))
+> -			return -EFAULT;
+> -		if (options & WDIOS_DISABLECARD) {
+> -			pc87413_disable();
+> -			retval = 0;
+> -		}
+> -		if (options & WDIOS_ENABLECARD) {
+> -			pc87413_enable();
+> -			retval = 0;
+> -		}
+> -		return retval;
+> -	}
+> -	case WDIOC_KEEPALIVE:
+> -		pc87413_refresh();
+> -#ifdef DEBUG
+> -		pr_info(DPFX "keepalive\n");
+> -#endif
+> -		return 0;
+> -	case WDIOC_SETTIMEOUT:
+> -		if (get_user(new_timeout, uarg.i))
+> -			return -EFAULT;
+> -		/* the API states this is given in secs */
+> -		new_timeout /= 60;
+> -		if (new_timeout < 0 || new_timeout > MAX_TIMEOUT)
+> -			return -EINVAL;
+> -		timeout = new_timeout;
+> -		pc87413_refresh();
+> -		/* fall through and return the new timeout... */
+> -	case WDIOC_GETTIMEOUT:
+> -		new_timeout = timeout * 60;
+> -		return put_user(new_timeout, uarg.i);
+> -	default:
+> -		return -ENOTTY;
+> -	}
+> -}
+> -
+> -/* -- Notifier funtions -----------------------------------------*/
+> -
+> -/**
+> - *	notify_sys:
+> - *	@this: our notifier block
+> - *	@code: the event being reported
+> - *	@unused: unused
+> - *
+> - *	Our notifier is called on system shutdowns. We want to turn the card
+> - *	off at reboot otherwise the machine will reboot again during memory
+> - *	test or worse yet during the following fsck. This would suck, in fact
+> - *	trust me - if it happens it does suck.
+> - */
+> -
+> -static int pc87413_notify_sys(struct notifier_block *this,
+> -			      unsigned long code,
+> -			      void *unused)
+> -{
+> -	if (code == SYS_DOWN || code == SYS_HALT)
+> -		/* Turn the card off */
+> -		pc87413_disable();
+> -	return NOTIFY_DONE;
+> -}
+>   
+>   /* -- Module's structures ---------------------------------------*/
+>   
+> -static const struct file_operations pc87413_fops = {
+> -	.owner		= THIS_MODULE,
+> -	.llseek		= no_llseek,
+> -	.write		= pc87413_write,
+> -	.unlocked_ioctl	= pc87413_ioctl,
+> -	.open		= pc87413_open,
+> -	.release	= pc87413_release,
+> -};
+>   
+> -static struct notifier_block pc87413_notifier = {
+> -	.notifier_call  = pc87413_notify_sys,
+> +static struct watchdog_ops pc87413wdt_ops = {
+> +       	.owner = THIS_MODULE,
+> +       	.start = pc87413_start,
+> +       	.stop = pc87413_stop,
+> +       	.ping = pc87413_keepalive,
+> +	.set_timeout = pc87413_set_timeout,
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
- arch/mips/include/asm/mipsregs.h |  1 +
- arch/mips/kernel/cpu-probe.c     |  7 +++++++
- arch/mips/mm/sc-mips.c           | 18 +++++++++++++++---
- 3 files changed, 23 insertions(+), 3 deletions(-)
+Indentation is off.
 
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index 1e6966e..01e0fcb 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -2813,6 +2813,7 @@ __BUILD_SET_C0(status)
- __BUILD_SET_C0(cause)
- __BUILD_SET_C0(config)
- __BUILD_SET_C0(config5)
-+__BUILD_SET_C0(config7)
- __BUILD_SET_C0(intcontrol)
- __BUILD_SET_C0(intctl)
- __BUILD_SET_C0(srsmap)
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index eb527a1..547c9a0 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -1964,6 +1964,13 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
- 		c->cputype = CPU_XBURST;
- 		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
- 		__cpu_name[cpu] = "Ingenic XBurst";
-+		/*
-+		 * config7 bit 4 is used to control a low-power mode in
-+		 * XBurst architecture. This mode may cause errors in the
-+		 * calculation of bogomips and loops_per_jiffy, set config7
-+		 * bit 4 to disable this feature to prevent that.
-+		 */
-+		set_c0_config7(BIT(4));
- 		break;
- 	default:
- 		panic("Unknown Ingenic Processor ID!");
-diff --git a/arch/mips/mm/sc-mips.c b/arch/mips/mm/sc-mips.c
-index 9385ddb..ed953d4 100644
---- a/arch/mips/mm/sc-mips.c
-+++ b/arch/mips/mm/sc-mips.c
-@@ -215,6 +215,14 @@ static inline int __init mips_sc_probe(void)
- 	else
- 		return 0;
- 
-+	/*
-+	 * According to config2 it would be 512-sets, but that is contradicted
-+	 * by all documentation.
-+	 */
-+	if (current_cpu_type() == CPU_XBURST &&
-+				mips_machtype == MACH_INGENIC_X1000)
-+		c->scache.sets = 256;
-+
- 	tmp = (config2 >> 0) & 0x0f;
- 	if (tmp <= 7)
- 		c->scache.ways = tmp + 1;
-@@ -225,9 +233,13 @@ static inline int __init mips_sc_probe(void)
- 	 * According to config2 it would be 5-ways, but that is contradicted
- 	 * by all documentation.
- 	 */
--	if (current_cpu_type() == CPU_XBURST &&
--				mips_machtype == MACH_INGENIC_JZ4770)
--		c->scache.ways = 4;
-+	if (current_cpu_type() == CPU_XBURST) {
-+		switch (mips_machtype) {
-+		case MACH_INGENIC_JZ4770:
-+		case MACH_INGENIC_X1000:
-+			c->scache.ways = 4;
-+		}
-+	}
- 
- 	c->scache.waysize = c->scache.sets * c->scache.linesz;
- 	c->scache.waybit = __ffs(c->scache.waysize);
--- 
-2.7.4
+>   };
+>   
+> -static struct miscdevice pc87413_miscdev = {
+> -	.minor          = WATCHDOG_MINOR,
+> -	.name           = "watchdog",
+> -	.fops           = &pc87413_fops,
+> +static struct watchdog_device pc87413wdt_wdd = {
+> +       	.ops = &pc87413wdt_ops,
+> +	.status = WATCHDOG_NOWAYOUT_INIT_STATUS,
 
+Indentation is off.
+
+>   };
+>   
+> +
+>   /* -- Module init functions -------------------------------------*/
+>   
+>   /**
+> @@ -498,7 +270,6 @@ static struct miscdevice pc87413_miscdev = {
+>    *
+>    *	Set up the WDT watchdog board. All we have to do is grab the
+>    *	resources we require and bitch if anyone beat us to them.
+> - *	The open() function will actually kick the board off.
+>    */
+>   
+>   static int __init pc87413_init(void)
+> @@ -508,20 +279,16 @@ static int __init pc87413_init(void)
+>   	pr_info("Version " VERSION " at io 0x%X\n",
+>   							WDT_INDEX_IO_PORT);
+>   
+> +	watchdog_set_nowayout(&pc87413wdt_wdd,nowayout);
+> +
+Should be called right befor4e registering the watchdog.
+
+>   	if (!request_muxed_region(io, 2, MODNAME))
+>   		return -EBUSY;
+>   
+> -	ret = register_reboot_notifier(&pc87413_notifier);
+> -	if (ret != 0)
+> -		pr_err("cannot register reboot notifier (err=%d)\n", ret);
+> -
+> -	ret = misc_register(&pc87413_miscdev);
+> +	watchdog_stop_on_reboot(&pc87413wdt_wdd);
+> +	ret = watchdog_register_device(&pc87413wdt_wdd);
+>   	if (ret != 0) {
+> -		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
+> -		       WATCHDOG_MINOR, ret);
+>   		goto reboot_unreg;
+> -	}
+> -	pr_info("initialized. timeout=%d min\n", timeout);
+> +	}	pr_info("initialized. timeout=%d min\n", timeout);
+
+Really bad formatting.
+
+>   
+>   	pc87413_select_wdt_out();
+>   	pc87413_enable_swc();
+> @@ -530,20 +297,16 @@ static int __init pc87413_init(void)
+>   	if (!request_region(swc_base_addr, 0x20, MODNAME)) {
+>   		pr_err("cannot request SWC region at 0x%x\n", swc_base_addr);
+>   		ret = -EBUSY;
+> -		goto misc_unreg;
+> +		goto watchdog_unreg;
+>   	}
+
+The point of the original problem was that the misc device was registered before
+this region was requested, which caused the race condition. That problem still
+exists = the watchdog is registered, and thus may be opened, before this region
+is requested.
+
+>   
+> -	pc87413_enable();
+> -
+>   	release_region(io, 2);
+>   	return 0;
+> -
+> -misc_unreg:
+> -	misc_deregister(&pc87413_miscdev);
+>   reboot_unreg:
+> -	unregister_reboot_notifier(&pc87413_notifier);
+>   	release_region(io, 2);
+>   	return ret;
+> +watchdog_unreg:
+> +	watchdog_unregister_device(&pc87413wdt_wdd);
+
+Return value missing. Doesn't the compile complain about that ?
+
+>   }
+>   
+>   /**
+> @@ -558,14 +321,7 @@ reboot_unreg:
+>   
+>   static void __exit pc87413_exit(void)
+>   {
+> -	/* Stop the timer before we leave */
+> -	if (!nowayout) {
+> -		pc87413_disable();
+> -		pr_info("Watchdog disabled\n");
+> -	}
+> -
+> -	misc_deregister(&pc87413_miscdev);
+> -	unregister_reboot_notifier(&pc87413_notifier);
+> +	watchdog_unregister_device(&pc87413wdt_wdd);
+>   	release_region(swc_base_addr, 0x20);
+>   
+>   	pr_info("watchdog component driver removed\n");
+> @@ -592,4 +348,3 @@ module_param(nowayout, bool, 0);
+>   MODULE_PARM_DESC(nowayout,
+>   		"Watchdog cannot be stopped once started (default="
+>   				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> -
+> 
 
