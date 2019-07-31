@@ -4,40 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3A3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D794C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850CB2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339E62064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388355AbfGaNWw (ORCPT
+        id S1729125AbfGaNWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:22:52 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:50878 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729474AbfGaNWV (ORCPT
+        Wed, 31 Jul 2019 09:22:55 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:41764 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729469AbfGaNWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 09:22:21 -0400
 Received: from ramsan ([84.194.98.4])
-        by albert.telenet-ops.be with bizsmtp
-        id jRNK2000F05gfCL06RNKRD; Wed, 31 Jul 2019 15:22:19 +0200
+        by laurent.telenet-ops.be with bizsmtp
+        id jRNK2000905gfCL01RNKlo; Wed, 31 Jul 2019 15:22:19 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hsoYd-000187-90; Wed, 31 Jul 2019 15:22:19 +0200
+        id 1hsoYd-00017v-5U; Wed, 31 Jul 2019 15:22:19 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hsoYd-0004UV-7y; Wed, 31 Jul 2019 15:22:19 +0200
+        id 1hsoYd-0004UJ-4T; Wed, 31 Jul 2019 15:22:19 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     "David S . Miller" <davem@davemloft.net>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 7/8] net: packetengines: Fix manufacturer spelling and capitalization
-Date:   Wed, 31 Jul 2019 15:22:15 +0200
-Message-Id: <20190731132216.17194-8-geert+renesas@glider.be>
+Subject: [PATCH 3/8] net: apple: Fix manufacturer name in Kconfig help text
+Date:   Wed, 31 Jul 2019 15:22:11 +0200
+Message-Id: <20190731132216.17194-4-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190731132216.17194-1-geert+renesas@glider.be>
 References: <20190731132216.17194-1-geert+renesas@glider.be>
@@ -46,52 +45,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use "Packet Engines" consistently.
+The help text refers to IBM instead of Apple, presumably because it was
+copied from the former.
 
+Fixes: 8fb6b0908176704a ("bmac/mace/macmace/mac89x0/cs89x0: Move the Macintosh (Apple) drivers")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/net/ethernet/packetengines/Kconfig  | 6 +++---
- drivers/net/ethernet/packetengines/Makefile | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/apple/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/packetengines/Kconfig b/drivers/net/ethernet/packetengines/Kconfig
-index 8161e308e64b0f16..ead3750b4489d1bf 100644
---- a/drivers/net/ethernet/packetengines/Kconfig
-+++ b/drivers/net/ethernet/packetengines/Kconfig
-@@ -1,10 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
--# Packet engine device configuration
-+# Packet Engines device configuration
- #
- 
- config NET_VENDOR_PACKET_ENGINES
--	bool "Packet Engine devices"
-+	bool "Packet Engines devices"
- 	default y
- 	depends on PCI
- 	---help---
-@@ -12,7 +12,7 @@ config NET_VENDOR_PACKET_ENGINES
+diff --git a/drivers/net/ethernet/apple/Kconfig b/drivers/net/ethernet/apple/Kconfig
+index fde7ae33e302b6bc..f78b9c841296c94b 100644
+--- a/drivers/net/ethernet/apple/Kconfig
++++ b/drivers/net/ethernet/apple/Kconfig
+@@ -11,8 +11,8 @@ config NET_VENDOR_APPLE
+ 	  If you have a network (Ethernet) card belonging to this class, say Y.
  
  	  Note that the answer to this question doesn't directly affect the
- 	  kernel: saying N will just cause the configurator to skip all
--	  the questions about packet engine devices. If you say Y, you will
-+	  the questions about Packet Engines devices. If you say Y, you will
- 	  be asked for your specific card in the following questions.
+-	  kernel: saying N will just cause the configurator to skip all
+-	  the questions about IBM devices. If you say Y, you will be asked for
++	  kernel: saying N will just cause the configurator to skip all the
++	  questions about Apple devices. If you say Y, you will be asked for
+ 	  your specific card in the following questions.
  
- if NET_VENDOR_PACKET_ENGINES
-diff --git a/drivers/net/ethernet/packetengines/Makefile b/drivers/net/ethernet/packetengines/Makefile
-index 1553c9cfc254d6f8..cf054b796d111231 100644
---- a/drivers/net/ethernet/packetengines/Makefile
-+++ b/drivers/net/ethernet/packetengines/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
--# Makefile for the Packet Engine network device drivers.
-+# Makefile for the Packet Engines network device drivers.
- #
- 
- obj-$(CONFIG_HAMACHI) += hamachi.o
+ if NET_VENDOR_APPLE
 -- 
 2.17.1
 
