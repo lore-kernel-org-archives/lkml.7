@@ -2,142 +2,225 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AD1C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA0AC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6002206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D0EF206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmWnxkSG"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jn8chFsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387984AbfGaM4B (ORCPT
+        id S1728903AbfGaM4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:56:01 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37724 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbfGaM4B (ORCPT
+        Wed, 31 Jul 2019 08:56:43 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50015 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727090AbfGaM4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:56:01 -0400
-Received: by mail-lj1-f195.google.com with SMTP id z28so11254673ljn.4;
-        Wed, 31 Jul 2019 05:55:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ibb9l9pCzIPRO+qO4A9wjd4O5BSt2O3HIIkOx8g91QE=;
-        b=dmWnxkSGqzJLdXtRSEMnp2346Q5fNymYmV9Q0cYScy4XLd+85hWOnQNs75lW0PNdwi
-         s+cUZbR31z+McMivRqz/ET13p8j7d13H8ixyBqYdGa01zT7PikehyrI8kfDVPwYS9GZ/
-         zFYiAbkT8SEDQlepklQsZJlRWxVOuLPB7aeZRY6sJxRIzVWQ7zcOtuyLdPKG3zUh5RlI
-         0oHbwEACO5U76xqu+E+N3nQGmLmWb6O01Gt+vggt6F6esPtXtzRZImt6fDQjjfjF62J1
-         6jJc7IZ/vQE8pseqlqw2VdpZc531GTaaqylI1C2FXgwhnUbssJN4Uo7PRIKmetfxruYE
-         /qsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ibb9l9pCzIPRO+qO4A9wjd4O5BSt2O3HIIkOx8g91QE=;
-        b=ZaPzxSs2b5LTnk8cPbJS1quD7HJ0gk9a2mm+dNi5r6p8p8GC2pBPrHeSaoNFVAr55W
-         u/0kCy3W4B6n6PXQ/aHllwOIl49PLXZgS0E/bUy4o33ByDewXWOVy5Ufz7Ql1zS1vrFT
-         nEu7k9hbD9IdLgQmPs+62TDW32rIS6VNnirLxbklG2Fpti2ckc1YwKtrhWw147h7ZXjL
-         e8AGZiLIItyK6azyNfSQcNk8MPOwNwZsfmxW9xOcJ20Joagzk9NANkHb2WEFk2HOCtVb
-         RPtrUPq0cGA7unVtDhtnVcc0xKmm+6ROO+Fjr8vivB+BRvm2VzO2gypts88OCXAiZFNV
-         0R3Q==
-X-Gm-Message-State: APjAAAWLHPDli1mBZqXdqYelsgb6V1acuv4ptux80tQilxrFm1fdPIfv
-        YzErF+UASpNgb+5aGhHvT8a0I2mZ0WxlwhfGPAWNqB+y
-X-Google-Smtp-Source: APXvYqwHLa09vrCGuEjsqB9Bo/QP8nZztRJ5LvWsIK2qv5mAo9aSVSVVIUILsK+mjb1tTQ98idf29i7lGxgDBiL/LM8=
-X-Received: by 2002:a2e:4e12:: with SMTP id c18mr14146346ljb.211.1564577759040;
- Wed, 31 Jul 2019 05:55:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190731123750.25670-1-philippe.schenker@toradex.com> <20190731123750.25670-8-philippe.schenker@toradex.com>
-In-Reply-To: <20190731123750.25670-8-philippe.schenker@toradex.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 31 Jul 2019 09:56:05 -0300
-Message-ID: <CAOMZO5B5HnqpLrDjyGtqSQpVXmcoZuGLvCzKVUhwLb-_ZO_Xog@mail.gmail.com>
-Subject: Re: [PATCH v2 07/20] ARM: dts: imx7-colibri: fix 1.8V/UHS support
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Wed, 31 Jul 2019 08:56:43 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VCr7uL026490;
+        Wed, 31 Jul 2019 14:56:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=XIOcvogBjeCYx69E1hVuZzDFWgsxfeUEGBiLYqR1/tc=;
+ b=jn8chFsqGAsR50o8OfHvjpxYFlfuoRoH+EHMxSgS1073F75QpYBEydpR/S5Rh0n0hTQ1
+ xzQSp4z184jVtVcMUrO/Z58akHcGhwyciHIwJmV9YPuF3/K//yaVkL2qokn6ZUngAKGq
+ hKkh5O5Y+tWu/k6GUJ/LpZFB+VJK8FDg9hQJVJg1RECSgp5oK3vZ4Tb33oVoQUJwLk3Q
+ ALbgIronZamiDnQRWFaYpG2nah+8ZDaS06BDJ0nMUZUfetoaj2IzZ1sZ4c8dnspTvi2w
+ G3/z4NGZhzTvKsPy9IGVmzidixfxjZ3YyHGr7v1Yzs4qr+A18iCT040O4sKwY+x5j2Ep fw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2u0ccwrdbj-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 31 Jul 2019 14:56:29 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 56F9731;
+        Wed, 31 Jul 2019 12:56:28 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 48CA2CB313;
+        Wed, 31 Jul 2019 14:56:28 +0200 (CEST)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
+ 2019 14:56:28 +0200
+Received: from localhost (10.201.23.19) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul 2019 14:56:28
+ +0200
+From:   Hugues Fruchet <hugues.fruchet@st.com>
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     <linux-media@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        "Hugues Fruchet" <hugues.fruchet@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+Subject: [PATCH v4 2/3] media: stm32-dcmi: add media controller support
+Date:   Wed, 31 Jul 2019 14:56:22 +0200
+Message-ID: <1564577783-18627-3-git-send-email-hugues.fruchet@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
+References: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.19]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 9:38 AM Philippe Schenker
-<philippe.schenker@toradex.com> wrote:
->
-> From: Stefan Agner <stefan.agner@toradex.com>
->
-> Add pinmuxing and do not specify voltage restrictions in the
-> module level device tree.
+Add media controller support to dcmi in order
+to walk within remote subdevices pipeline.
 
-It would be nice to explain the reason for doing this.
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Change-Id: Id6280c58ea3c6f3d03da2027ac45df9f0e7a1da9
+---
+ drivers/media/platform/Kconfig            |  2 +-
+ drivers/media/platform/stm32/stm32-dcmi.c | 52 ++++++++++++++++++++++++-------
+ 2 files changed, 41 insertions(+), 13 deletions(-)
 
-> Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> ---
->
-> Changes in v2: None
->
->  arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-> index 16d1a1ed1aff..67f5e0c87fdc 100644
-> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-> @@ -326,7 +326,6 @@
->  &usdhc1 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
-> -       no-1-8-v;
->         cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
->         disable-wp;
->         vqmmc-supply = <&reg_LDO2>;
-> @@ -671,6 +670,28 @@
->                 >;
->         };
->
-> +       pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
-> +               fsl,pins = <
-> +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5a
-> +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1a
-> +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5a
-> +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5a
-> +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5a
-> +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5a
-> +               >;
-> +       };
-> +
-> +       pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
-> +               fsl,pins = <
-> +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5b
-> +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1b
-> +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5b
-> +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5b
-> +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5b
-> +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5b
-> +               >;
-> +       };
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index 8a19654..de7e21f 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -121,7 +121,7 @@ config VIDEO_S3C_CAMIF
+ 
+ config VIDEO_STM32_DCMI
+ 	tristate "STM32 Digital Camera Memory Interface (DCMI) support"
+-	depends on VIDEO_V4L2 && OF
++	depends on VIDEO_V4L2 && OF && MEDIA_CONTROLLER
+ 	depends on ARCH_STM32 || COMPILE_TEST
+ 	select VIDEOBUF2_DMA_CONTIG
+ 	select V4L2_FWNODE
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index b462f71..6f37617 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -169,6 +169,9 @@ struct stm32_dcmi {
+ 
+ 	/* Ensure DMA operations atomicity */
+ 	struct mutex			dma_lock;
++
++	struct media_device		mdev;
++	struct media_pad		vid_cap_pad;
+ };
+ 
+ static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
+@@ -1551,14 +1554,6 @@ static int dcmi_graph_notify_complete(struct v4l2_async_notifier *notifier)
+ 		return ret;
+ 	}
+ 
+-	ret = video_register_device(dcmi->vdev, VFL_TYPE_GRABBER, -1);
+-	if (ret) {
+-		dev_err(dcmi->dev, "Failed to register video device\n");
+-		return ret;
+-	}
+-
+-	dev_dbg(dcmi->dev, "Device registered as %s\n",
+-		video_device_node_name(dcmi->vdev));
+ 	return 0;
+ }
+ 
+@@ -1751,10 +1746,19 @@ static int dcmi_probe(struct platform_device *pdev)
+ 
+ 	q = &dcmi->queue;
+ 
++	dcmi->v4l2_dev.mdev = &dcmi->mdev;
++
++	/* Initialize media device */
++	strscpy(dcmi->mdev.model, DRV_NAME, sizeof(dcmi->mdev.model));
++	snprintf(dcmi->mdev.bus_info, sizeof(dcmi->mdev.bus_info),
++		 "platform:%s", DRV_NAME);
++	dcmi->mdev.dev = &pdev->dev;
++	media_device_init(&dcmi->mdev);
++
+ 	/* Initialize the top-level structure */
+ 	ret = v4l2_device_register(&pdev->dev, &dcmi->v4l2_dev);
+ 	if (ret)
+-		goto err_dma_release;
++		goto err_media_device_cleanup;
+ 
+ 	dcmi->vdev = video_device_alloc();
+ 	if (!dcmi->vdev) {
+@@ -1774,6 +1778,25 @@ static int dcmi_probe(struct platform_device *pdev)
+ 				  V4L2_CAP_READWRITE;
+ 	video_set_drvdata(dcmi->vdev, dcmi);
+ 
++	/* Media entity pads */
++	dcmi->vid_cap_pad.flags = MEDIA_PAD_FL_SINK;
++	ret = media_entity_pads_init(&dcmi->vdev->entity,
++				     1, &dcmi->vid_cap_pad);
++	if (ret) {
++		dev_err(dcmi->dev, "Failed to init media entity pad\n");
++		goto err_device_release;
++	}
++	dcmi->vdev->entity.flags |= MEDIA_ENT_FL_DEFAULT;
++
++	ret = video_register_device(dcmi->vdev, VFL_TYPE_GRABBER, -1);
++	if (ret) {
++		dev_err(dcmi->dev, "Failed to register video device\n");
++		goto err_media_entity_cleanup;
++	}
++
++	dev_dbg(dcmi->dev, "Device registered as %s\n",
++		video_device_node_name(dcmi->vdev));
++
+ 	/* Buffer queue */
+ 	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+ 	q->io_modes = VB2_MMAP | VB2_READ | VB2_DMABUF;
+@@ -1789,12 +1812,12 @@ static int dcmi_probe(struct platform_device *pdev)
+ 	ret = vb2_queue_init(q);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to initialize vb2 queue\n");
+-		goto err_device_release;
++		goto err_media_entity_cleanup;
+ 	}
+ 
+ 	ret = dcmi_graph_init(dcmi);
+ 	if (ret < 0)
+-		goto err_device_release;
++		goto err_media_entity_cleanup;
+ 
+ 	/* Reset device */
+ 	ret = reset_control_assert(dcmi->rstc);
+@@ -1821,11 +1844,14 @@ static int dcmi_probe(struct platform_device *pdev)
+ 
+ err_cleanup:
+ 	v4l2_async_notifier_cleanup(&dcmi->notifier);
++err_media_entity_cleanup:
++	media_entity_cleanup(&dcmi->vdev->entity);
+ err_device_release:
+ 	video_device_release(dcmi->vdev);
+ err_device_unregister:
+ 	v4l2_device_unregister(&dcmi->v4l2_dev);
+-err_dma_release:
++err_media_device_cleanup:
++	media_device_cleanup(&dcmi->mdev);
+ 	dma_release_channel(dcmi->dma_chan);
+ 
+ 	return ret;
+@@ -1839,7 +1865,9 @@ static int dcmi_remove(struct platform_device *pdev)
+ 
+ 	v4l2_async_notifier_unregister(&dcmi->notifier);
+ 	v4l2_async_notifier_cleanup(&dcmi->notifier);
++	media_entity_cleanup(&dcmi->vdev->entity);
+ 	v4l2_device_unregister(&dcmi->v4l2_dev);
++	media_device_cleanup(&dcmi->mdev);
+ 
+ 	dma_release_channel(dcmi->dma_chan);
+ 
+-- 
+2.7.4
 
-You add the entries for 100MHz and 200MHz, but I don't see them being
-referenced anywhere.
