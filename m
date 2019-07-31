@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFF7C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E0BC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F35206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB1D20C01
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F2cmNKe8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H77GUufa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387666AbfGaKAz (ORCPT
+        id S2387680AbfGaKA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:00:55 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43724 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387644AbfGaKAy (ORCPT
+        Wed, 31 Jul 2019 06:00:58 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42731 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387668AbfGaKA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:00:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i189so31588857pfg.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:00:53 -0700 (PDT)
+        Wed, 31 Jul 2019 06:00:56 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay6so30306301plb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:00:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=MmBOwwNeN+W1dC0nmIPZG6LtIHwgJLZWSo5QrSMSqcg=;
-        b=F2cmNKe82FILmNf5yBHDnTc0fv/W9P8ElxWyX9nD9eNEddHhrjcVcMripReHGh+S0v
-         tSNdYbOTYj5QQBmbdLKklAfAnbsGhNRFF8O/+LB3M71Jf26oCbFHGBxBwHSsBhGdqxyA
-         +KxTVK8klRgp4/pNwu9f2ux4WWomzu+suJyXaCfOMITmKuJ2rNjMgyJNtefNtQk/6Ced
-         +G4XQdEfuvog8fX/p/pcnavzvF0fv3pGjJxnKPAJzsT26oHgPzE1HZaAb08cu8XimFcy
-         Ot89rgQl1jDKVtz6fQ/61d+80sPzURiNrw0u2ctVaFEOZ6aLQg8LP6zliTaQ5zR/CcnX
-         jBig==
+        bh=i+zcdOKM4uEsoBGbIg99q0zdIYp2a4lDHZin2ZyV6Ts=;
+        b=H77GUufatg+2unukyfaUu5mIxtf9dK45weuozY3ifgIb2dgL2u+aeUCplrl82Pq2sP
+         b2RX+7J/p/p2zmCozRuWIf8QArtB5MJKTKSI2W5+wf5MGGRL9fquoTMXWRZQeETW5oNG
+         9AyOc2po9ajcww/AZ4Gk49nuuQezsh8pG3bp8pmqo6iV+urV4s2bkTAOF5lSjIztR9Cu
+         qZOES5sOtvdtqd4j4eaANh/hLCDVHh9kULIB9iwNmy8npgfW4MWuOq18H202bivWBtxy
+         ONuRYh2HtoahAfiLP7XBvyHSsMKGMpLWD+kd5UMYrtfkNLBu6fIixasyARHKZFxhCrrX
+         zrUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=MmBOwwNeN+W1dC0nmIPZG6LtIHwgJLZWSo5QrSMSqcg=;
-        b=oJJgog/3Nl65Yhhtrn3VADu/DS59/JHmDVQG9IqFv2Ko7sPycdxLeT4AztUmFeh5wC
-         U/Hu8WQZT68Rx/g9w8mqKmFUDnDyLwpmqS6h94s7OGlmENtLfk1E84uBvHda920rB8NY
-         j3n7pZAmLCHNgCd2KTY9jGIqow1d6dnPb3vhDBi6aJPCBDyN4NzNTZCUmz/3HFmd7e0V
-         CiLWPfpHDi0Frd7lUs5oxg3FyUNSxk3I2XSyj07n93J+tEe0zHHaEyIG0+JD7FeSHqvk
-         MClYsNpVP6hXbXKzpUw3mJm+G7rRoCRZ2WT/SG5JP1Xsht9gCSwnWaAmvcvrKUY5x55w
-         VH/A==
-X-Gm-Message-State: APjAAAWdMCrLHr3t/2UQaVTkDpFcSjYCAOVcXcyVOtdfqmQm6c1qBh9m
-        XckZapi0b2fIHqBxT5QvCcMl8Q==
-X-Google-Smtp-Source: APXvYqwtDG50+CDnx8yHTX0XWjamhJQ0wzyuOwxWwmAtlyxz5NNOSYgypMSGVytueAL/Ooa0yoUJyA==
-X-Received: by 2002:a63:d555:: with SMTP id v21mr90143798pgi.179.1564567253116;
-        Wed, 31 Jul 2019 03:00:53 -0700 (PDT)
+        bh=i+zcdOKM4uEsoBGbIg99q0zdIYp2a4lDHZin2ZyV6Ts=;
+        b=Et4jQxKHUAf2I83SRjq5Im+G2zNztOhUOg0TNz0mp4CSU6Qu0ctmU7C50/JuayBik/
+         GKvGUPreuGGXSWu4Zfi0S6PC12dX6cggU74h7hEEaxm1/y6XkfTwEo/caGaT7pywZvC2
+         BLZUvIjapPAdXxzlWbuzR9K0cg33qnWIQRlwW8xeFMwof7fuiX/+i5EFrJU0HMWRU4NO
+         RIFNjJjYe7DwdDJP4mbwVbJmIX91M51KxP6N8icDmWizJhEy5i82KG7B+ILJLPlcLu9g
+         PQPWrIzEIyQQ/egm5f5PPwhiMZoIy5CvwSTwfa7sozKsAit9LLUB/gGmmfEci9f8d52i
+         5HQg==
+X-Gm-Message-State: APjAAAUDjeaCIGGzideARV/CRzsrZ3YvPOht/mW/oanTutT/OGpyqz0y
+        lYPjqZZchByvAPL5c8JpIqtf8Q==
+X-Google-Smtp-Source: APXvYqz0L0q/H6Aaq2C1hNAQC/UTqvaSD7TJO7dRD0vFgnlVqXzm0SKiN+S5lJQxC+3inAVkr70i1g==
+X-Received: by 2002:a17:902:4401:: with SMTP id k1mr96016005pld.193.1564567255904;
+        Wed, 31 Jul 2019 03:00:55 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id m6sm68611352pfb.151.2019.07.31.03.00.50
+        by smtp.gmail.com with ESMTPSA id m6sm68611352pfb.151.2019.07.31.03.00.53
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 31 Jul 2019 03:00:52 -0700 (PDT)
+        Wed, 31 Jul 2019 03:00:55 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     sre@kernel.org
 Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, yuanjiang.yu@unisoc.com,
         baolin.wang@linaro.org, vincent.guittot@linaro.org,
         linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] power: supply: sc27xx: Add POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN attribute
-Date:   Wed, 31 Jul 2019 18:00:23 +0800
-Message-Id: <a48b8acd5111120e3effe71e05d5f8166470f725.1564566425.git.baolin.wang@linaro.org>
+Subject: [PATCH 2/6] power: supply: sc27xx: Fix conditon to enable the FGU interrupt
+Date:   Wed, 31 Jul 2019 18:00:24 +0800
+Message-Id: <84abc5a002dcc29e51bf6525aee0ca2aace8e30a.1564566425.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1564566425.git.baolin.wang@linaro.org>
 References: <cover.1564566425.git.baolin.wang@linaro.org>
@@ -76,38 +76,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
 
-Add POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN attribute to provide the battery's
-design capacity for charger manager to calculate the charging counter.
+We should allow to enable FGU interrupt to adjust the battery capacity,
+when charging status is POWER_SUPPLY_STATUS_DISCHARGING.
 
 Signed-off-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/power/supply/sc27xx_fuel_gauge.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/power/supply/sc27xx_fuel_gauge.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/power/supply/sc27xx_fuel_gauge.c b/drivers/power/supply/sc27xx_fuel_gauge.c
-index 24895cc..2fe97ae 100644
+index 2fe97ae..ca7b73e 100644
 --- a/drivers/power/supply/sc27xx_fuel_gauge.c
 +++ b/drivers/power/supply/sc27xx_fuel_gauge.c
-@@ -587,6 +587,10 @@ static int sc27xx_fgu_get_property(struct power_supply *psy,
- 		val->intval = value * 1000;
- 		break;
+@@ -1098,7 +1098,8 @@ static int sc27xx_fgu_suspend(struct device *dev)
+ 	 * If we are charging, then no need to enable the FGU interrupts to
+ 	 * adjust the battery capacity.
+ 	 */
+-	if (status != POWER_SUPPLY_STATUS_NOT_CHARGING)
++	if (status != POWER_SUPPLY_STATUS_NOT_CHARGING &&
++	    status != POWER_SUPPLY_STATUS_DISCHARGING)
+ 		return 0;
  
-+	case POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN:
-+		val->intval = data->total_cap * 1000;
-+		break;
-+
- 	default:
- 		ret = -EINVAL;
- 		break;
-@@ -644,6 +648,7 @@ static int sc27xx_fgu_property_is_writeable(struct power_supply *psy,
- 	POWER_SUPPLY_PROP_CURRENT_NOW,
- 	POWER_SUPPLY_PROP_CURRENT_AVG,
- 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
-+	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
- };
- 
- static const struct power_supply_desc sc27xx_fgu_desc = {
+ 	ret = regmap_update_bits(data->regmap, data->base + SC27XX_FGU_INT_EN,
 -- 
 1.7.9.5
 
