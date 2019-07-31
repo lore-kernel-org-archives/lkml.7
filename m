@@ -2,95 +2,167 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD0CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED04C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE81C208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46B720665
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AH5IGp3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfGaAYD (ORCPT
+        id S1726552AbfGaAeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 20:24:03 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63877 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbfGaAYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 20:24:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 17:24:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,327,1559545200"; 
-   d="scan'208";a="172255508"
-Received: from jinglin-desk2.sc.intel.com (HELO jinglin-desk2.amr.corp.intel.com) ([10.3.52.162])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Jul 2019 17:24:02 -0700
-Subject: Re: [PATCH] x86/asm: Add support for MOVDIR64B instruction
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     x86@kernel.org, "Luck, Tony" <tony.luck@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20190730230554.8291-1-kirill.shutemov@linux.intel.com>
-From:   jinglin <jing.lin@intel.com>
-Message-ID: <3175cedf-b00b-c87c-1b52-4c9a993a7797@intel.com>
-Date:   Tue, 30 Jul 2019 17:24:02 -0700
+        Tue, 30 Jul 2019 20:34:24 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:35467 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfGaAeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 20:34:24 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190731003421epoutp023afc0b0ce85b9d6adeb63f336a248756~2VrZBaW1l1445814458epoutp024
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 00:34:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190731003421epoutp023afc0b0ce85b9d6adeb63f336a248756~2VrZBaW1l1445814458epoutp024
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1564533261;
+        bh=F0On2VFtNL7VtPY1YN1nH3TXqp5VSvLootW9EB7fx6U=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=AH5IGp3KejScICxPB9xtBdNfR+XwoZ2fIzhrs3cAZ+Evoq3NnG5O0k01D0rPWFeVF
+         RVzTPXTfDSamsS33m8+yt6rOkZyMqtq695uHDV6rakcM53ykcTzt3eR3sJNhtaTmtK
+         L2zhsFCazXUastToUch91jTAFNHTqSOwBs4lehRU=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190731003420epcas1p3159b8e9560fe6ca0074c7e41ed938a39~2VrYfwBlf3134031340epcas1p35;
+        Wed, 31 Jul 2019 00:34:20 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 45yvZ247QjzMqYkj; Wed, 31 Jul
+        2019 00:34:18 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        16.07.04088.EF1E04D5; Wed, 31 Jul 2019 09:34:06 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190731003406epcas1p47a71a46359f0aad93bdc6826ef5a2d2c~2VrKw-2Pk1059210592epcas1p4e;
+        Wed, 31 Jul 2019 00:34:06 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190731003405epsmtrp2e15eef8316f423bff9db01687dcc4b14~2VrKufL6H0436704367epsmtrp2L;
+        Wed, 31 Jul 2019 00:34:05 +0000 (GMT)
+X-AuditID: b6c32a35-845ff70000000ff8-c7-5d40e1fe0d5c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D6.90.03638.DF1E04D5; Wed, 31 Jul 2019 09:34:05 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190731003405epsmtip114c112b8c030d7aff9a2002065625621~2VrKlgFbd0149301493epsmtip1I;
+        Wed, 31 Jul 2019 00:34:05 +0000 (GMT)
+Subject: Re: [PATCH v5 18/20] PM / devfreq: tegra30: Define
+ ACTMON_DEV_CTRL_STOP
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <033a342c-ffd6-fa51-a9a2-daac36b195f9@samsung.com>
+Date:   Wed, 31 Jul 2019 09:37:15 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190730230554.8291-1-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190730162236.6063-19-digetx@gmail.com>
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURT10enQotXpCHJtUOuoiWAKHbA4KiBRYhoxkagfomlwApOCdEun
+        GMBoQHCpESNxpa6guMaoCEpRxJQmikZEUaKSxg13xLCmYIK2HY38nXvPue+8896ViMjruEKS
+        Y7JxVhNroPAQ7GZzpEo1+i5Zp777Yy5zufcDYkodVRjzeHt3MNPecBxn+svciLEPOHCms/gC
+        zgw3nMSYfVee4clSbb3nLNI6HZ5gbVlJD67dV3sJaftrpqeJ1+cmZHNsFmdVcqZMc1aOSZ9I
+        pa7JWJahiVfTKnohs4BSmlgjl0ilrExTLc8x+C5EKTezhjxfK43leSomKcFqzrNxymwzb0uk
+        OEuWwbLQEs2zRj7PpI/ONBsX0Wp1rMYn3Jib3VF9S2TpHJ///dkjrAi9lu5BUgkQ88F75LZ4
+        DwqRkEQ9gsYDpSKh6EOwc3gACcUQgicdx0X/RtoePv1LNCIoLXcFC8VPBHb7Mdyvmkyshl2d
+        Q7ifCCVGfcRwSYAQEenQ7Lwc5Mc4EQVNX14G+pOImfDC+wH5sYxIAvfg8wDGiDnQXuMOWIcR
+        66DvbbNY0MihpaIL82MpEQ+fBiox4fxweN11KkjAM6Ck7lggEBC/cWg+V4cJGVLgmvdekIAn
+        w7f7tcECVkB/TyMu4C1wscWNC8O7EdQ2tYkFIg6aqg/4hiU+h0i42hAjtGeC89cJJBhPhJ7B
+        vWK/BAgZ7N5JCpJZ0P7W89d2KpzZZcf3I8oxJo5jTATHmAiO/2anEXYJTeEsvFHP8bSFHvvf
+        NSiwrlGaenSwdaULERJETZA90CXrSDG7mS8wuhBIRFSo7Ez4Eh0py2ILCjmrOcOaZ+B4F9L4
+        XrtcpAjLNPuW32TLoDWxcXFxzHw6XkPTVLis0svoSELP2rhcjrNw1n9zQRKpogiRbSbPcLih
+        5vD7ylLPq4sRr9avTV29aZX8UFlOxZvzhe31ZJczUj5iD4uVj86j04t3PEodt3/RbDOZHH94
+        ynP116P5i1uHNpBJSy3K0I8RW/umVcll7ofVIfdDy6NXdSeuuHEn4XPMyMuw3m2db7xrWtrI
+        9Aj9iJOYW6Goq8p3qVopjM9m6SiRlWf/AJ715ZrEAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSnO7fhw6xBnsnWFms/viY0aJl1iIW
+        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZ/Nw1j8Wib+0lNgdOjx13lzB67Jx1l92jt/kd
+        m0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBlXFu6nbngNnfF60unWRoYb3F2MXJySAiYSFw4
+        dZGxi5GLQ0hgN6NEz4Ql7BAJSYlpF48ydzFyANnCEocPF0PUvGWU2Ni1E6xGWCBIov32NzaQ
+        hIhAE5PEpt4LYAlmgUiJnrlb2CA6tjBKXOucC5ZgE9CS2P/iBhuIzS+gKHH1x2NGEJtXwE7i
+        yNcrYDaLgKrE5U1HmEFsUYEIicM7ZkHVCEqcnPmEBcTmFDCTePZlIQvEMnWJP/MuMUPY4hK3
+        nsxngrDlJZq3zmaewCg8C0n7LCQts5C0zELSsoCRZRWjZGpBcW56brFhgVFearlecWJucWle
+        ul5yfu4mRnCUaWntYDxxIv4QowAHoxIP74lYh1gh1sSy4srcQ4wSHMxKIryLxe1jhXhTEiur
+        Uovy44tKc1KLDzFKc7AoifPK5x+LFBJITyxJzU5NLUgtgskycXBKNTDODs51Pb7YduPkpc4X
+        G1W/sqiE7wryvH13+4tV/o+D5u24LZP7TZT3Ym3ODxWlBceuvWOZ3z0v0anliZXBhsYFLyZ9
+        /S0x71FSlFbDn9/iHDukHn1rnVTu2JxjvrmT54c5z+Z1AaUn1XIunT/JxOr1p9Q3+YCo3kv7
+        ljW3RViPsX8zvLZJ7txnJZbijERDLeai4kQA72AXK64CAAA=
+X-CMS-MailID: 20190731003406epcas1p47a71a46359f0aad93bdc6826ef5a2d2c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190730163331epcas4p2fabd7ccf1b24c0cb95bf3994a289e13b
+References: <20190730162236.6063-1-digetx@gmail.com>
+        <CGME20190730163331epcas4p2fabd7ccf1b24c0cb95bf3994a289e13b@epcas4p2.samsung.com>
+        <20190730162236.6063-19-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/30/19 4:05 PM, Kirill A. Shutemov wrote:
-> Add support for a new instruction MOVDIR64B. The instruction moves
-> 64-bytes as direct-store with 64-byte write atomicity from source memory
-> address to destination memory address.
->
-> MOVDIR64B requires the destination address to be 64-byte aligned. No
-> alignment restriction is enforced for source operand.
->
-> See Intel Software Developer’s Manual for more information on the
-> instruction.
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Jing Lin <jing.lin@intel.com>
+On 19. 7. 31. 오전 1:22, Dmitry Osipenko wrote:
+> Add verbose definition for the client's device control register value that
+> makes ACTMON to stop monitoring of the device.
+> 
+> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->
-> Several upcoming patchsets will make use of the helper.
->
-> ---
->   arch/x86/include/asm/special_insns.h | 7 +++++++
->   1 file changed, 7 insertions(+)
->
-> diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-> index 219be88a59d2..059e7bd331d2 100644
-> --- a/arch/x86/include/asm/special_insns.h
-> +++ b/arch/x86/include/asm/special_insns.h
-> @@ -248,6 +248,13 @@ static inline void clwb(volatile void *__p)
->   
->   #define nop() asm volatile ("nop")
->   
-> +static inline void movdir64b(void *dst, const void *src)
-> +{
-> +	/* movdir64b [rdx], rax */
-> +	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
-> +			: "=m" (*(char *)dst)
-> +			: "d" (src), "a" (dst));
-> +}
->   
->   #endif /* __KERNEL__ */
->   
+>  drivers/devfreq/tegra30-devfreq.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index 3543fba74b52..8adc0ff48b45 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -35,6 +35,8 @@
+>  #define ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN		BIT(30)
+>  #define ACTMON_DEV_CTRL_ENB					BIT(31)
+>  
+> +#define ACTMON_DEV_CTRL_STOP					0x00000000
+> +
+>  #define ACTMON_DEV_UPPER_WMARK					0x4
+>  #define ACTMON_DEV_LOWER_WMARK					0x8
+>  #define ACTMON_DEV_INIT_AVG					0xc
+> @@ -714,7 +716,7 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
+>  
+>  static void tegra_actmon_stop_device(struct tegra_devfreq_device *dev)
+>  {
+> -	device_writel(dev, 0x00000000, ACTMON_DEV_CTRL);
+> +	device_writel(dev, ACTMON_DEV_CTRL_STOP, ACTMON_DEV_CTRL);
+>  	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
+>  }
+>  
+> 
 
+I think that you can combine it to patch11.
+When combining it to patch11, don't need to add the suggested-by tag.
+Thanks.
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
