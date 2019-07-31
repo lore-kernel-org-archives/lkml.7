@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04929C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A02FC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B3620C01
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D5C20C01
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwPcVakH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gksKLwTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbfGaRcF (ORCPT
+        id S1730717AbfGaRbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:32:05 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32882 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730758AbfGaRbk (ORCPT
+        Wed, 31 Jul 2019 13:31:32 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40915 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730697AbfGaRb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:31:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n190so944525pgn.0;
-        Wed, 31 Jul 2019 10:31:39 -0700 (PDT)
+        Wed, 31 Jul 2019 13:31:29 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p184so32253317pfp.7;
+        Wed, 31 Jul 2019 10:31:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IHCaBoLQ/yEzfjkL6qf+EG0j5RyMmpKI4hNpa2fZRjM=;
-        b=jwPcVakH0loQdnIvLgvlBrPNezeyb+fXZ2qcVlNfH9cgRcH08+8YAC8t8IACDi2Yjj
-         ELgvJwZR+Q9kn66LvX+Jha8cIVUIngD2p1dFqRvey6Clfg6OjWI6Geb28+Q0Wq9K1v3m
-         /3gsjRxUrX6knT+HhNvY0thYRGWSHu+hRT++9FbEWQtnPCH6TcY+b19Sl6j4hrS8ZiOw
-         4ey/VJod75a4igyfJ/G7QBKDUQyVmjQvf5Zwoum6PzvcYXaNwOJHX2ylES4qA7r4i6x1
-         uis02o8KsoHaf/ncYFVoI5SugUTXINYJ41XxU5jfAvfEjgzLA2HY9lZFzg/r1gmQN6Lm
-         KYLA==
+        bh=D+sTc8dGavXtiikWaqtiaNPd8S2TK4bk6dd25zLrAH8=;
+        b=gksKLwTKLggIYe6QFOSAS3Qy/8+ZVZZ56mvMhQEiDxlzKqoTPU0XSW82evO0JJYElE
+         rIVwhNfHGMHCgAhjfcFnS9krklB9vMX1dQOLiiw6EajEBYAvGgvtMYTcnSKQjEp3eaRS
+         Mi6R/wqTYsY8XGWuMj4iwZWqheIGWIeaJdbf5yBGmU36BBAe05LPP8lpuKuMgQocRWOg
+         auAWH1WVjA9BBbNE1geHTL1ZAcuU4gSThW6zNQivMhaWnZTaIMbJPR6GTvD4pRztZKZO
+         DZs/in0WGeq73itpaxrOkJSWloj8Afc1E9Ib0PYKLQ9Nfm16Y2QPDrhC8pcfJJhcsawF
+         Dbgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IHCaBoLQ/yEzfjkL6qf+EG0j5RyMmpKI4hNpa2fZRjM=;
-        b=OAWTa4dZ3PRa60AbAp4gEgR7+ZrFVJzgICPVHugHgcs/WmgI9vC8Do0vZZyF+foFXI
-         3WDMm3GMUfO6tbpp816IkpGlUHcBeqw16Dxkg4h+7I7+mp4tRraKBSW9ERJUiEXLqhWr
-         9pO73I3sPA8wCXorJwYFns+/1IRdgET+k/S0/eTIaqcBaKN3wZ1QFSGdVBMdij3gJ+SX
-         mUgLvPMWV6sS7Nr3kg4I04PyIYsVIVD4pmFFLpFixIFWITgFvqrP77gyWhJXaCMMk5PR
-         eVGVAR0iqzjkK7PJE1N5pIy5tqgPLEmfElYWZvLx331AKLE/3MnEeH46A58yv40MwLdR
-         nuew==
-X-Gm-Message-State: APjAAAUN8BZ1gNJ0LiUVYIjNRz1g1y/GT0Qg2ChfKbK4RFKGju4+HBJS
-        a+JBFqRx3U7Qtf8jSjK7f2g6vAZWazc=
-X-Google-Smtp-Source: APXvYqz1tS2++AtZggozZDiqrf02IEYPnCcjpEcblaxZ+rsOeQlPyB4sYX4fCco/UKnTPX9DCWta+A==
-X-Received: by 2002:a63:7e55:: with SMTP id o21mr102563678pgn.200.1564594298777;
-        Wed, 31 Jul 2019 10:31:38 -0700 (PDT)
+        bh=D+sTc8dGavXtiikWaqtiaNPd8S2TK4bk6dd25zLrAH8=;
+        b=AfpQMlEDFdN1U4jB/tb1H0738L/XQfbRiJNGvPdAIiRn0VaWifznOBjvR7LTfUdmu3
+         bUmYtPAcPD2qqot6Yv72yVlI0lS4bw1TYtMhMYQCeNYGMPBFuKF/ZK03HqCPm67EEKM1
+         oE0wqs4rz5WBySRJt8apd2RGFtPzZqY67qZ/Eh1sV4pcVZ4wYDJnB5rhxQgS50tqdX6v
+         ZPJj3VMYsKrl8scUPVHI58+R0PrnrudGM+sz2353ZkKWMQArOZhR/DaNFFYSI73G2VNP
+         uGNKNDEaUZd8iKb8darEX1+K7J2WVjQdwlwbH3GBh/Wxs0gJnf1dcQ0+ocQcnmDfMvlH
+         vhOQ==
+X-Gm-Message-State: APjAAAWFidCxJzOplvOfv0YhCMQocdvhhTXkls2Fd3yKkLhtMFpDkjlA
+        jp/kLlZRlyHcyImEa/1lOi/o0/axn+8=
+X-Google-Smtp-Source: APXvYqwrKdYOAJsyD954TQ1hnihsZ7LKrKC7m/Y7iWnpHVNp0qUyjlkdkJAtZmpAbfsb85KVO6tqbA==
+X-Received: by 2002:a17:90a:2ec1:: with SMTP id h1mr4050102pjs.119.1564594287954;
+        Wed, 31 Jul 2019 10:31:27 -0700 (PDT)
 Received: from localhost.localdomain ([2607:fb90:4ad:5a0b:2aff:6e0f:8973:5a26])
-        by smtp.gmail.com with ESMTPSA id bo20sm2089617pjb.23.2019.07.31.10.31.36
+        by smtp.gmail.com with ESMTPSA id bo20sm2089617pjb.23.2019.07.31.10.31.25
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 10:31:38 -0700 (PDT)
+        Wed, 31 Jul 2019 10:31:27 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-serial@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -67,9 +67,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 15/23] tty: serial: fsl_lpuart: Introduce lpuart_stopped_or_empty()
-Date:   Wed, 31 Jul 2019 10:30:37 -0700
-Message-Id: <20190731173045.11718-16-andrew.smirnov@gmail.com>
+Subject: [PATCH v2 10/23] tty: serial: fsl_lpuart: Drop unnecessary extra parenthesis
+Date:   Wed, 31 Jul 2019 10:30:32 -0700
+Message-Id: <20190731173045.11718-11-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731173045.11718-1-andrew.smirnov@gmail.com>
 References: <20190731173045.11718-1-andrew.smirnov@gmail.com>
@@ -80,12 +80,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The check for
-
-    uart_circ_empty(xmit) || uart_tx_stopped(&sport->port)
-
-appears in multiple places in the driver. Move it into a helper
-function.
+Drop unnecessary extra parenthesis in the driver.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Stefan Agner <stefan@agner.ch>
@@ -98,81 +93,103 @@ Cc: linux-imx@nxp.com
 Cc: linux-serial@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/fsl_lpuart.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 58043e01a242..e59dd90fc34c 100644
+index b3cc44548b34..79922f179b08 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -452,6 +452,11 @@ static void lpuart_dma_tx(struct lpuart_port *sport)
- 	dma_async_issue_pending(sport->dma_tx_chan);
- }
+@@ -1443,7 +1443,7 @@ static int lpuart_startup(struct uart_port *port)
+ 	lpuart_setup_watermark(sport);
  
-+static bool lpuart_stopped_or_empty(struct uart_port *port)
-+{
-+	return uart_circ_empty(&port->state->xmit) || uart_tx_stopped(port);
-+}
-+
- static void lpuart_dma_tx_complete(void *arg)
- {
- 	struct lpuart_port *sport = arg;
-@@ -479,7 +484,7 @@ static void lpuart_dma_tx_complete(void *arg)
+ 	temp = readb(sport->port.membase + UARTCR2);
+-	temp |= (UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE);
++	temp |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
+ 	writeb(temp, sport->port.membase + UARTCR2);
  
- 	spin_lock_irqsave(&sport->port.lock, flags);
+ 	if (sport->dma_rx_chan && !lpuart_start_rx_dma(sport)) {
+@@ -1651,7 +1651,7 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		termios->c_cflag &= ~CRTSCTS;
  
--	if (!uart_circ_empty(xmit) && !uart_tx_stopped(&sport->port))
-+	if (!lpuart_stopped_or_empty(&sport->port))
- 		lpuart_dma_tx(sport);
+ 	if (termios->c_cflag & CRTSCTS)
+-		modem |= (UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
++		modem |= UARTMODEM_RXRTSE | UARTMODEM_TXCTSE;
+ 	else
+ 		modem &= ~(UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
  
- 	spin_unlock_irqrestore(&sport->port.lock, flags);
-@@ -680,7 +685,7 @@ static inline void lpuart_transmit_buffer(struct lpuart_port *sport)
- 		return;
+@@ -1662,7 +1662,7 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	if ((termios->c_cflag & CSIZE) == CS7)
+ 		termios->c_cflag |= PARENB;
+ 
+-	if ((termios->c_cflag & PARENB)) {
++	if (termios->c_cflag & PARENB) {
+ 		if (termios->c_cflag & CMSPAR) {
+ 			cr1 &= ~UARTCR1_PE;
+ 			if (termios->c_cflag & PARODD)
+@@ -1701,7 +1701,7 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
+ 
+ 	sport->port.read_status_mask = 0;
+ 	if (termios->c_iflag & INPCK)
+-		sport->port.read_status_mask |=	(UARTSR1_FE | UARTSR1_PE);
++		sport->port.read_status_mask |= UARTSR1_FE | UARTSR1_PE;
+ 	if (termios->c_iflag & (IGNBRK | BRKINT | PARMRK))
+ 		sport->port.read_status_mask |= UARTSR1_FE;
+ 
+@@ -1815,7 +1815,7 @@ lpuart32_serial_setbrg(struct lpuart_port *sport, unsigned int baudrate)
+ 		tmp |= UARTBAUD_BOTHEDGE;
+ 
+ 	tmp &= ~(UARTBAUD_OSR_MASK << UARTBAUD_OSR_SHIFT);
+-	tmp |= (((osr-1) & UARTBAUD_OSR_MASK) << UARTBAUD_OSR_SHIFT);
++	tmp |= ((osr-1) & UARTBAUD_OSR_MASK) << UARTBAUD_OSR_SHIFT;
+ 
+ 	tmp &= ~UARTBAUD_SBR_MASK;
+ 	tmp |= sbr & UARTBAUD_SBR_MASK;
+@@ -1868,7 +1868,7 @@ lpuart32_set_termios(struct uart_port *port, struct ktermios *termios,
  	}
  
--	if (uart_circ_empty(xmit) || uart_tx_stopped(&sport->port)) {
-+	if (lpuart_stopped_or_empty(&sport->port)) {
- 		lpuart_stop_tx(&sport->port);
- 		return;
- 	}
-@@ -711,7 +716,7 @@ static inline void lpuart32_transmit_buffer(struct lpuart_port *sport)
- 		return;
- 	}
- 
--	if (uart_circ_empty(xmit) || uart_tx_stopped(&sport->port)) {
-+	if (lpuart_stopped_or_empty(&sport->port)) {
- 		lpuart32_stop_tx(&sport->port);
- 		return;
- 	}
-@@ -739,14 +744,13 @@ static void lpuart_start_tx(struct uart_port *port)
- {
- 	struct lpuart_port *sport = container_of(port,
- 			struct lpuart_port, port);
--	struct circ_buf *xmit = &sport->port.state->xmit;
- 	unsigned char temp;
- 
- 	temp = readb(port->membase + UARTCR2);
- 	writeb(temp | UARTCR2_TIE, port->membase + UARTCR2);
- 
- 	if (sport->lpuart_dma_tx_use) {
--		if (!uart_circ_empty(xmit) && !uart_tx_stopped(port))
-+		if (!lpuart_stopped_or_empty(port))
- 			lpuart_dma_tx(sport);
+ 	if (termios->c_cflag & CRTSCTS) {
+-		modem |= (UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
++		modem |= UARTMODEM_RXRTSE | UARTMODEM_TXCTSE;
  	} else {
- 		if (readb(port->membase + UARTSR1) & UARTSR1_TDRE)
-@@ -757,11 +761,10 @@ static void lpuart_start_tx(struct uart_port *port)
- static void lpuart32_start_tx(struct uart_port *port)
- {
- 	struct lpuart_port *sport = container_of(port, struct lpuart_port, port);
--	struct circ_buf *xmit = &sport->port.state->xmit;
- 	unsigned long temp;
+ 		termios->c_cflag &= ~CRTSCTS;
+ 		modem &= ~(UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
+@@ -1917,7 +1917,7 @@ lpuart32_set_termios(struct uart_port *port, struct ktermios *termios,
  
- 	if (sport->lpuart_dma_tx_use) {
--		if (!uart_circ_empty(xmit) && !uart_tx_stopped(port))
-+		if (!lpuart_stopped_or_empty(port))
- 			lpuart_dma_tx(sport);
+ 	sport->port.read_status_mask = 0;
+ 	if (termios->c_iflag & INPCK)
+-		sport->port.read_status_mask |=	(UARTSTAT_FE | UARTSTAT_PE);
++		sport->port.read_status_mask |= UARTSTAT_FE | UARTSTAT_PE;
+ 	if (termios->c_iflag & (IGNBRK | BRKINT | PARMRK))
+ 		sport->port.read_status_mask |= UARTSTAT_FE;
+ 
+@@ -2084,7 +2084,7 @@ lpuart_console_write(struct console *co, const char *s, unsigned int count)
+ 
+ 	/* first save CR2 and then disable interrupts */
+ 	cr2 = old_cr2 = readb(sport->port.membase + UARTCR2);
+-	cr2 |= (UARTCR2_TE |  UARTCR2_RE);
++	cr2 |= UARTCR2_TE | UARTCR2_RE;
+ 	cr2 &= ~(UARTCR2_TIE | UARTCR2_TCIE | UARTCR2_RIE);
+ 	writeb(cr2, sport->port.membase + UARTCR2);
+ 
+@@ -2115,7 +2115,7 @@ lpuart32_console_write(struct console *co, const char *s, unsigned int count)
+ 
+ 	/* first save CR2 and then disable interrupts */
+ 	cr = old_cr = lpuart32_read(&sport->port, UARTCTRL);
+-	cr |= (UARTCTRL_TE |  UARTCTRL_RE);
++	cr |= UARTCTRL_TE | UARTCTRL_RE;
+ 	cr &= ~(UARTCTRL_TIE | UARTCTRL_TCIE | UARTCTRL_RIE);
+ 	lpuart32_write(&sport->port, cr, UARTCTRL);
+ 
+@@ -2572,7 +2572,7 @@ static int lpuart_resume(struct device *dev)
  	} else {
- 		temp = lpuart32_read(port, UARTCTRL);
+ 		lpuart_setup_watermark(sport);
+ 		temp = readb(sport->port.membase + UARTCR2);
+-		temp |= (UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE);
++		temp |= UARTCR2_RIE | UARTCR2_TIE | UARTCR2_RE | UARTCR2_TE;
+ 		writeb(temp, sport->port.membase + UARTCR2);
+ 	}
+ 
 -- 
 2.21.0
 
