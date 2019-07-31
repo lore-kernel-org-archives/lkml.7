@@ -2,110 +2,110 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B93C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CE9C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9370E2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564595417;
-	bh=sXeNaRjTVOLrGCPtcQjJUIQeddouKntQ/oheDEB8pG4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Qrm4Bn5XviLoeKISI1/ccj/5EA77gJZAWrsWtrp46T+sdc7NGE+P0GKCoZw3nDxzc
-	 lXjkebeQlxdyrHqQ+Ut6H70yFLnNj8a3WdcTHPwb97n8TmBKxTKeOEmCrsR20/cJph
-	 QPYpx/45ajUTHV8GCLO3Iv2A6yS6/J3xtl6onze0=
+	by mail.kernel.org (Postfix) with ESMTP id 946DA2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbfGaRuQ (ORCPT
+        id S1729102AbfGaRvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:50:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:52780 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726708AbfGaRuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:50:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4DE7169E;
-        Wed, 31 Jul 2019 10:50:15 -0700 (PDT)
-Received: from big-swifty.lan (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 252333F71F;
-        Wed, 31 Jul 2019 10:50:12 -0700 (PDT)
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Nianyao Tang <tangnianyao@huawei.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Jason Cooper <jason@lakedaemon.net>,
+        Wed, 31 Jul 2019 13:51:45 -0400
+Received: from smtprelay0084.hostedemail.com ([216.40.44.84]:47545 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726708AbfGaRvp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 13:51:45 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 6FD1983777ED;
+        Wed, 31 Jul 2019 17:51:43 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: play80_48dac36c2b030
+X-Filterd-Recvd-Size: 3029
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 31 Jul 2019 17:51:40 +0000 (UTC)
+Message-ID: <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
+Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
+ keyword for switch/case use
+From:   Joe Perches <joe@perches.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [GIT PULL] irqchip updates for 5.3-rc3
-Date:   Wed, 31 Jul 2019 18:50:00 +0100
-Message-Id: <20190731175000.12948-1-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
+Date:   Wed, 31 Jul 2019 10:51:37 -0700
+In-Reply-To: <20190731171429.GA24222@amd>
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+         <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
+         <20190731171429.GA24222@amd>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Wed, 2019-07-31 at 19:14 +0200, Pavel Machek wrote:
+> On Tue 2019-07-30 22:35:18, Joe Perches wrote:
+> > Reserve the pseudo keyword 'fallthrough' for the ability to convert the
+> > various case block /* fallthrough */ style comments to appear to be an
+> > actual reserved word with the same gcc case block missing fallthrough
+> > warning capability.
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> > +/*
+> > + * Add the pseudo keyword 'fallthrough' so case statement blocks
+> > + * must end with any of these keywords:
+> > + *   break;
+> > + *   fallthrough;
+> > + *   goto <label>;
+> > + *   return [expression];
+> > + *
+> > + *  gcc: https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html#Statement-Attributes
+> > + */
+> > +#if __has_attribute(__fallthrough__)
+> > +# define fallthrough                    __attribute__((__fallthrough__))
+> > +#else
+> > +# define fallthrough                    do {} while (0)  /* fallthrough */
+> > +#endif
+> > +
+> 
+> Will various checkers (and gcc) recognize, that comment in a macro,
+> and disable the warning accordingly?
 
-Here's a small bunch of fixes from the irqchip department. Nothing
-major, just a number of fixes for error paths, a GPCv2 irq_set_type()
-fix, and a bunch of /* fall-though */ annotation to keep the build
-quiet.
+Current non-gcc tools:  I doubt it.
 
-Please pull.
+And that's unlikely as the comments are supposed to be stripped
+before the macro expansion phase.
 
-	M.
+gcc 7+, which by now probably most developers actually use, will
+though
+and likely that's sufficient.
 
-The following changes since commit 3dae67ce600caaa92c9af6e0cb6cad2db2632a0a:
+> Explanation that the comment is "magic" might not be a bad idea.
 
-  irqchip/gic-pm: Remove PM_CLK dependency (2019-07-03 09:33:01 +0100)
+The comment was more for the reader.
 
-are available in the Git repository at:
+cheers, Joe
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git tags/irqchip-fixes-5.3
-
-for you to fetch changes up to b5fa9fc9e809f84bb20439730162eccfed906a76:
-
-  irqchip/renesas-rza1: Fix an use-after-free in rza1_irqc_probe() (2019-07-26 14:40:01 +0100)
-
-----------------------------------------------------------------
-irqchip fixes for 5.3
-
-- Fix a couple of UAF on error paths (RZA1, GICv3 ITS)
-- Fix iMX GPCv2 trigger setting
-- Add missing of_node_put on error path in MBIGEN
-- Add another bunch of /* fall-through */ to silence warnings
-
-----------------------------------------------------------------
-Anders Roxell (1):
-      irqchip/gic-v3: Mark expected switch fall-through
-
-Lucas Stach (1):
-      irqchip/irq-imx-gpcv2: Forward irq type to parent
-
-Nianyao Tang (1):
-      irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
-
-Nishka Dasgupta (1):
-      irqchip/irq-mbigen: Add of_node_put() before return
-
-Wen Yang (1):
-      irqchip/renesas-rza1: Fix an use-after-free in rza1_irqc_probe()
-
- drivers/irqchip/irq-gic-v3-its.c   |  2 +-
- drivers/irqchip/irq-gic-v3.c       |  4 ++++
- drivers/irqchip/irq-imx-gpcv2.c    |  1 +
- drivers/irqchip/irq-mbigen.c       |  9 +++++++--
- drivers/irqchip/irq-renesas-rza1.c | 15 ++++++++-------
- 5 files changed, 21 insertions(+), 10 deletions(-)
