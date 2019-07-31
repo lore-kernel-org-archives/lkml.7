@@ -2,211 +2,272 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDB8C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 06:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E788C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 06:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB15206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 06:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D57206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 06:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JC3wUTM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfGaGIi (ORCPT
+        id S1726979AbfGaGIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 02:08:38 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48429 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725209AbfGaGIi (ORCPT
+        Wed, 31 Jul 2019 02:08:44 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43041 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725209AbfGaGIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 02:08:38 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hshlD-0001W1-99; Wed, 31 Jul 2019 08:06:51 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hshl6-0004Dx-RL; Wed, 31 Jul 2019 08:06:44 +0200
-Date:   Wed, 31 Jul 2019 08:06:44 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Thomas Preston <thomas.preston@codethink.co.uk>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Nate Case <ncase@tesla.com>, Rob Duncan <rduncan@tesla.com>,
-        Patrick Glaser <pglaser@tesla.com>,
-        linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [alsa-devel] [PATCH v2 2/3] ASoC: Add codec driver for ST TDA7802
-Message-ID: <20190731060644.yrewu2kvrlootyyl@pengutronix.de>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-3-thomas.preston@codethink.co.uk>
- <20190730145844.GI4264@sirena.org.uk>
- <fe11c806-2285-558c-e35c-d8f61de00784@codethink.co.uk>
+        Wed, 31 Jul 2019 02:08:43 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r22so3781210pgk.10
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 23:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JDEeV/Y6EACfYNrIRxXQKYDfgmcSELMlyvb7H8H7iY8=;
+        b=JC3wUTM3UMEYP6qFYXxkpp2C8k6UmEVIvsNyg1B+fd9yBNv453+JhHdCNvnB/lvSan
+         Kcm2u+BIu8oZ1blUwPpY5stGVYpHaGvHrvJsNn5wJPhneQJsNCsAz/h1hbHEkfXMFFcd
+         egCfboeEaCZ+snTSo9qQKDWrx+xOO+qlouvaU3UbIVQfOMeC2Hn7Dr90j5SGWrdkiyN1
+         ovXCjZLDIlyZT385Y+VWJbikI+p3SfmR5/tKVB/lUM0H3S8ZVJCrednIFRUZfUtKYfVl
+         s71JdJXuqemP7t+A8JTsBDYvZakuvJLkcTMVcLtJoq1c9BbhpGsYpWn+THmZ2sFwG9c5
+         1KAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JDEeV/Y6EACfYNrIRxXQKYDfgmcSELMlyvb7H8H7iY8=;
+        b=bl+LTgqeKZjkUQoNvcH+DuK1yr6dnWmTyz8yakO3lxpIxb8LFN7t73SpxEA53H4trc
+         A8w365kvtalTGLIjHbynK10ntBf3sUhwJuTthfxcSwyIK5c8a2S5jHeY8X6NGRjJ2fVi
+         vNolvrxORGM93CVOZhzeMJntlEb0nqSQn9aiLv0GiX1u53fEckae79xMzRu6XU2avLXM
+         uTHmVKd4tZDjozQKMRB2Tg0gSqbg27cJbT1RYY9eCuHNhUYZAgt58vbBGSMmpVURblgT
+         nCbclN0NAM9W4oMqupqg50ZX0Yy/40Zym/cWsThdxYw0EYnB7M8HblplQA9n/2jNyK7V
+         hkpA==
+X-Gm-Message-State: APjAAAXYOa+VmyqbDX6NeiKBjRYK+2uVSwK9olSxMthXat0xsVjGF7xN
+        vk/c1DWT0a+rJfcuNekpOVA=
+X-Google-Smtp-Source: APXvYqx68QMWRBroWoeuy/KXgACCfbMnSXDiXOdTRVPQaOrRtnwBt4j+EpeCjf8quVodZ63GDfx0wg==
+X-Received: by 2002:a17:90a:30aa:: with SMTP id h39mr1195348pjb.32.1564553323116;
+        Tue, 30 Jul 2019 23:08:43 -0700 (PDT)
+Received: from localhost ([110.70.57.12])
+        by smtp.gmail.com with ESMTPSA id g2sm83146412pfb.95.2019.07.30.23.08.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 30 Jul 2019 23:08:42 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 15:08:39 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Konstantin Khlebnikov <koct9i@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        John Ogness <john.ogness@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] printk/panic: Access the main printk log in panic()
+ only when safe
+Message-ID: <20190731060839.GA1756@jagdpanzerIV>
+References: <20190716072805.22445-1-pmladek@suse.com>
+ <20190716072805.22445-2-pmladek@suse.com>
+ <20190717095615.GD3664@jagdpanzerIV>
+ <20190718083629.nso3vwbvmankqgks@pathway.suse.cz>
+ <20190718094934.GA10041@jagdpanzerIV>
+ <20190719125753.miniwfq4nhicy76n@pathway.suse.cz>
+ <20190723031340.GA19463@jagdpanzerIV>
+ <20190724122711.qquevkcuge24bhdd@pathway.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fe11c806-2285-558c-e35c-d8f61de00784@codethink.co.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:04:35 up 74 days, 12:22, 46 users,  load average: 0.05, 0.07,
- 0.03
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190724122711.qquevkcuge24bhdd@pathway.suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Sorry for the delayed response.
 
-again sorry for jumping in..
+On (07/24/19 14:27), Petr Mladek wrote:
+[..]
+> > And this is where the idea of "disconnecting" those CPUs from main
+> > logbuf come from.
+> > 
+> > So what we can do:
+> > - smp_send_stop()
+> > - disconnect all-but-self from logbuf (via printk-safe)
+> 
+> printk_safe is not really necessary. As you wrote, nobody
+> is interested into messages from CPUs that are supposed
+> to be stopped.
 
-On 19-07-30 18:26, Thomas Preston wrote:
-> On 30/07/2019 15:58, Mark Brown wrote:
-> > On Tue, Jul 30, 2019 at 01:09:36PM +0100, Thomas Preston wrote:
-> > 
-> >> index 000000000000..0f82a88bc1a4
-> >> --- /dev/null
-> >> +++ b/sound/soc/codecs/tda7802.c
-> >> @@ -0,0 +1,509 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * tda7802.c  --  codec driver for ST TDA7802
-> > 
-> > Please make the entire comment a C++ one so this looks intentional.
-> > 
-> 
-> Ok thanks.
-> 
-> >> +static int tda7802_digital_mute(struct snd_soc_dai *dai, int mute)
-> >> +{
-> >> +	const u8 mute_disabled = mute ? 0 : IB2_DIGITAL_MUTE_DISABLED;
-> > 
-> > Please write normal conditional statements to make the code easier to
-> > read.
-> > 
-> 
-> On it.
-> 
-> >> +	case SND_SOC_BIAS_STANDBY:
-> >> +		err = regulator_enable(tda7802->enable_reg);
-> >> +		if (err < 0) {
-> >> +			dev_err(component->dev, "Could not enable.\n");
-> >> +			return err;
-> >> +		}
-> >> +		dev_dbg(component->dev, "Regulator enabled\n");
-> >> +		msleep(ENABLE_DELAY_MS);
-> > 
-> > Is this delay needed by the device or is it for the regulator to ramp?
-> > If it's for the regulator to ramp then the regulator should be doing it.
-> > 
-> 
-> According to the datasheet the device itself takes 10ms to rise from 0V
-> after PLLen is enabled. There are additional rise times but they are
-> negligible with default capacitor configuration (which we have).
-> 
-> Good to know about the regulator rising configuration though. Thanks.
+OK.
+Doing it in printk.c makes it easier to handle console_owner/waiter,
+which are not exported.
 
-Isn't it the regulator we mentioned to not use that because it is a
-GPIO?
+> It might be enough to set some global variable, for example,
+> with the CPU number that is calling panic() and is the only
+> one allowed to print messages from this point on.
 
-Regards,
-  Marco
+Sounds good.
 
-> >> +	case SND_SOC_BIAS_OFF:
-> >> +		regcache_mark_dirty(component->regmap);
-> > 
-> > If the regulator is going off you should really be marking the device as
-> > cache only.
-> > 
-> 
-> Got it, thanks.
-> 
-> >> +		err = regulator_disable(tda7802->enable_reg);
-> >> +		if (err < 0)
-> >> +			dev_err(component->dev, "Could not disable.\n");
-> > 
-> > Any non-zero value from regulator_disable() is an error, there's similar
-> > error checking issues in other places.
-> > 
-> 
-> I return the error at the end of the function, but I'll bring it back here
-> for consistency.
-> 
-> >> +static const struct snd_kcontrol_new tda7802_snd_controls[] = {
-> >> +	SOC_SINGLE("Channel 4 Tristate", TDA7802_IB0, 7, 1, 0),
-> >> +	SOC_SINGLE("Channel 3 Tristate", TDA7802_IB0, 6, 1, 0),
-> >> +	SOC_SINGLE("Channel 2 Tristate", TDA7802_IB0, 5, 1, 0),
-> >> +	SOC_SINGLE("Channel 1 Tristate", TDA7802_IB0, 4, 1, 0),
-> > 
-> > These look like simple on/off switches so should have Switch at the end
-> > of the control name.  It's also not clear to me why this is exported to
-> > userspace - why would this change at runtime and won't any changes need
-> > to be coordinated with whatever else is connected to the signal?
-> > 
-> >> +	SOC_ENUM("Mute time", mute_time),
-> >> +	SOC_SINGLE("Unmute channels 1 & 3", TDA7802_IB2, 4, 1, 0),
-> >> +	SOC_SINGLE("Unmute channels 2 & 4", TDA7802_IB2, 3, 1, 0),
-> > 
-> > These are also Switch controls.  There are *lots* of problems with
-> > control names, see control-names.rst.
-> > 
-> 
-> Ok thanks, I didn't know about the "Switch" suffix, I will read
-> control-names.rst.
-> 
-> I will move Tristate to DT properties. I was also unsure about the
-> Impedance Efficiency Optimiser but the datasheet doesn't go into much
-> detail about this so I left it exposed.
-> 
-> They both seemed like user configurable options in the context of a
-> test rig, but I agree - who knows what this output might be connected
-> to in other systems. I will lock them down in DT. Thanks.
-> 
-> >> +static const struct snd_soc_component_driver tda7802_component_driver = {
-> >> +	.set_bias_level = tda7802_set_bias_level,
-> >> +	.idle_bias_on = 1,
-> > 
-> > Any reason to keep the device powered up?  It looks like the power on
-> > process is just powering things up and writing the register cache out
-> > and there's not that many registers so the delay is trivial.
-> > 
-> 
-> Ah no, I think that's a mistake. I want the PLLen to switch off in
-> idle/suspend and the device should restore on wake.
-> 
-> >> +	tda7802->enable_reg = devm_regulator_get(dev, "enable");
-> >> +	if (IS_ERR(tda7802->enable_reg)) {
-> >> +		dev_err(dev, "Failed to get enable regulator\n");
-> > 
-> > It's better to print error codes if you have them and are printing a
-> > diagnostic so people have more to go on when debugging problems.
-> 
-> Yep on it.
-> 
-> Many thanks, I appreciate the feedback.
-> 
+> It might even be used to force console lock owner to leave
+> the cycle immediately.
 
+Yes, makes sense.
+
+[..]
+> > So, shall we try one more time with the "disconnect" misbehaving CPUs
+> > approach? I can send an RFC patch.
+> 
+> IMHO, it will be acceptable only when it is reasonably simple and
+> straightforward. The panic() code is full of special hacks and
+> it is already complicated to follow all the twists.
+
+When you have a chance, mind to take a look at the patch below?
+Doesn't look very difficult (half of it are white-spaces and
+comments, I believe).
+
+> Especially because this scenario came up from a theoretical
+> discussion. Note that my original, real bug report, was
+> with logbuf_lock NMI, enabled kdump notifiers, ...
+
+I understand. The idea is that this patch should handle your real
+scenario + theoretical scenario.
+
+---
+ include/linux/printk.h |  2 ++
+ kernel/panic.c         |  9 ++++++-
+ kernel/printk/printk.c | 53 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 63 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 57c9473f4a81..016f5ba06e94 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -322,6 +322,8 @@ static inline void printk_safe_flush_on_panic(void)
+ }
+ #endif
+ 
++void printk_enter_panic_mode(int cpu);
++
+ extern int kptr_restrict;
+ 
+ #ifndef pr_fmt
+diff --git a/kernel/panic.c b/kernel/panic.c
+index d1ece4c363b9..85fac975a90f 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -254,13 +254,20 @@ void panic(const char *fmt, ...)
+ 		crash_smp_send_stop();
+ 	}
+ 
++	/* Misbehaving secondary CPUs cannot printk() to the main logbuf now */
++	printk_enter_panic_mode(this_cpu);
++
+ 	/*
+ 	 * Run any panic handlers, including those that might need to
+ 	 * add information to the kmsg dump output.
+ 	 */
+ 	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+ 
+-	/* Call flush even twice. It tries harder with a single online CPU */
++	/*
++	 * Call flush even twice. It tries harder with a single online CPU.
++	 * Even if we failed to stop some of secondary CPUs we have printk
++	 * locks re-initialized and keep secondary CPUs off printk().
++	 */
+ 	printk_safe_flush_on_panic();
+ 	kmsg_dump(KMSG_DUMP_PANIC);
+ 
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index f0bc37a511a7..750f83c3b589 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -87,6 +87,8 @@ static DEFINE_SEMAPHORE(console_sem);
+ struct console *console_drivers;
+ EXPORT_SYMBOL_GPL(console_drivers);
+ 
++static atomic_t __read_mostly printk_panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
++
+ /*
+  * System may need to suppress printk message under certain
+  * circumstances, like after kernel panic happens.
+@@ -1644,6 +1646,49 @@ static void console_lock_spinning_enable(void)
+ 	spin_acquire(&console_owner_dep_map, 0, 0, _THIS_IP_);
+ }
+ 
++static int panic_in_progress_on_other_cpu(void)
++{
++	int cpu = atomic_read(&printk_panic_cpu);
++
++	return cpu != PANIC_CPU_INVALID && cpu != smp_processor_id();
++}
++
++void printk_enter_panic_mode(int cpu)
++{
++	unsigned long timeout;
++
++	cpu = atomic_cmpxchg(&printk_panic_cpu, PANIC_CPU_INVALID, cpu);
++	/* printk can enter panic mode only once */
++	if (cpu != PANIC_CPU_INVALID)
++		return;
++	/*
++	 * Wait for active secondary CPUs (if there are any) to leave
++	 * console_unlock() printing loop (for up to one second).
++	 */
++	if (num_online_cpus() > 1) {
++		timeout = USEC_PER_SEC;
++		while (num_online_cpus() > 1 && timeout--)
++			udelay(1);
++	}
++
++	debug_locks_off();
++	/*
++	 * On some platforms crash_smp_send_stop() can kill CPUs via NMI
++	 * vector. Re-init printk() locks just in case if any of those killed
++	 * CPUs held any of printk() locks. On platforms which don't support
++	 * NMI stop, misbehaving secondary CPUs will be handled by
++	 * panic_in_progress_on_other_cpu() test.
++	 *
++	 * We re-init only printk() locks here. oops_in_progress is expected
++	 * to be set by now, so good console drivers are in lockless mode,
++	 * bad console drivers, however, can deadlock.
++	 */
++	raw_spin_lock_init(&logbuf_lock);
++	sema_init(&console_sem, 1);
++	WRITE_ONCE(console_waiter, false);
++	raw_spin_lock_init(&console_owner_lock);
++}
++
+ /**
+  * console_lock_spinning_disable_and_check - mark end of code where another
+  *	thread was able to busy wait and check if there is a waiter
+@@ -1900,6 +1945,9 @@ int vprintk_store(int facility, int level,
+ 	size_t text_len;
+ 	enum log_flags lflags = 0;
+ 
++	if (panic_in_progress_on_other_cpu())
++		return 0;
++
+ 	/*
+ 	 * The printf needs to come first; we need the syslog
+ 	 * prefix which might be passed-in as a parameter.
+@@ -2468,6 +2516,11 @@ void console_unlock(void)
+ 			return;
+ 		}
+ 
++		if (panic_in_progress_on_other_cpu()) {
++			printk_safe_exit_irqrestore(flags);
++			return;
++		}
++
+ 		printk_safe_exit_irqrestore(flags);
+ 
+ 		if (do_cond_resched)
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.22.0
+
