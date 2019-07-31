@@ -2,72 +2,105 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DC7C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAD9C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD90B2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C81E2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564612415;
+	bh=6RNLK1EnvXMTC/HY84N6KnVd7oUHr/U3UFROChHmaSk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=u9m/kww0bfaMXUkj/0gMNyajCXGxbthy/AFRXiHFcc20GIg15h4W6ckoNvYz8YBtp
+	 aaeoH2FP5KeOCvH1VeElPR3VH6GA3Q/IT8pTP7qTVHvPNQLpjV2q5tsSkxZDkCLZMl
+	 svvCK3/O++fdcimkGQzg92j4ZtPTH9+HxVfdZU7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbfGaWdD (ORCPT
+        id S1728404AbfGaWde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:33:03 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54925 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfGaWdD (ORCPT
+        Wed, 31 Jul 2019 18:33:34 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41006 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfGaWde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:33:03 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hsx98-0008H1-UL; Wed, 31 Jul 2019 22:32:35 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: zx-tdm: remove redundant assignment to ts_width on error return path
-Date:   Wed, 31 Jul 2019 23:32:34 +0100
-Message-Id: <20190731223234.16153-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 31 Jul 2019 18:33:34 -0400
+Received: by mail-oi1-f196.google.com with SMTP id g7so52028763oia.8;
+        Wed, 31 Jul 2019 15:33:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VaXwfXqQ6zKWmX/DQNzZhY9vhSL25uLPNg24lm+Z3A8=;
+        b=qqP7ZFZtQ6JT3+hg8eNhjVot7m2hsHFL3UZ/+bnuky4q/W6XmrH7Qjty/NOLBCjEsf
+         G0FT3CfVc49impsdoBb7pyG5KdiuU/8/VbXYf1q/GRw+1g61wzIrngXiS0cUdBxVqPy3
+         mIARvZG65jB4a1P00lnUxgGI3A86ODkmrl/MfFfd34FdNQH56ShowCSHUnBGUOWNdirQ
+         Qyt7XKvqyPrlWmwHRTDPRvG3lDC1FBLQ/VjLV4ZzA7dByvRrN1DDb9miOJHqxQtxQDcM
+         G53++U4k0/DLCxZ1ULVlxi6QSva5kbkYq1lK+4Hr9tEKKNyYbRBcsXVmtVgQ8HxauX8l
+         4pcQ==
+X-Gm-Message-State: APjAAAU8Q+RYSfJkG/LSlSMbJGpzPoXiKStyrtiHL/eo2Nqy7kGwAXo8
+        X5ljywLlEq9U7WmKSdYhDynU3RXTQoChRGGZISo=
+X-Google-Smtp-Source: APXvYqy8K7rZdrHVIEm+dsJBeW1kcKphsprmEu9CobF2YPMA7ZXivzELY8vw8GCI9RouGZeDmDxamMQKdzwozZVARMY=
+X-Received: by 2002:aca:5a41:: with SMTP id o62mr60704040oib.110.1564612412985;
+ Wed, 31 Jul 2019 15:33:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
+ <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+ <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+ <20190731221956.GB15795@localhost.localdomain>
+In-Reply-To: <20190731221956.GB15795@localhost.localdomain>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 1 Aug 2019 00:33:20 +0200
+Message-ID: <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
+Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Thu, Aug 1, 2019 at 12:22 AM Keith Busch <kbusch@kernel.org> wrote:
+>
+> On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
+> >
+> > A couple of remarks if you will.
+> >
+> > First, we don't know which case is the majority at this point.  For
+> > now, there is one example of each, but it may very well turn out that
+> > the SK Hynix BC501 above needs to be quirked.
+> >
+> > Second, the reference here really is 5.2, so if there are any systems
+> > that are not better off with 5.3-rc than they were with 5.2, well, we
+> > have not made progress.  However, if there are systems that are worse
+> > off with 5.3, that's bad.  In the face of the latest findings the only
+> > way to avoid that is to be backwards compatible with 5.2 and that's
+> > where my patch is going.  That cannot be achieved by quirking all
+> > cases that are reported as "bad", because there still may be
+> > unreported ones.
+>
+> I have to agree. I think your proposal may allow PCI D3cold,
 
-The value assigned to ts_width is never read on the error return path
-so the assignment is redundant and can be removed.  Remove it.
+Yes, it may.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- sound/soc/zte/zx-tdm.c | 1 -
- 1 file changed, 1 deletion(-)
+> In which case we do need to reintroduce the HMB handling.
 
-diff --git a/sound/soc/zte/zx-tdm.c b/sound/soc/zte/zx-tdm.c
-index 5e877fe9ba7b..0e5a05b25a77 100644
---- a/sound/soc/zte/zx-tdm.c
-+++ b/sound/soc/zte/zx-tdm.c
-@@ -211,7 +211,6 @@ static int zx_tdm_hw_params(struct snd_pcm_substream *substream,
- 		ts_width = 1;
- 		break;
- 	default:
--		ts_width = 0;
- 		dev_err(socdai->dev, "Unknown data format\n");
- 		return -EINVAL;
- 	}
--- 
-2.20.1
-
+Right.
