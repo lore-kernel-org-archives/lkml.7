@@ -4,102 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36C4C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03114C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B892C214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBA3206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nqaTxhRo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vsBNHav/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbfGaWRx (ORCPT
+        id S1731471AbfGaWSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:17:53 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:46107 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730164AbfGaWRu (ORCPT
+        Wed, 31 Jul 2019 18:18:02 -0400
+Received: from mail-vs1-f73.google.com ([209.85.217.73]:52555 "EHLO
+        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731441AbfGaWRl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:17:50 -0400
-Received: by mail-pg1-f202.google.com with SMTP id u1so43742969pgr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:17:50 -0700 (PDT)
+        Wed, 31 Jul 2019 18:17:41 -0400
+Received: by mail-vs1-f73.google.com with SMTP id g189so18238749vsc.19
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Fle61vPJ2CgF1ZWEm2BgqpUqqKQrrfp1g/3hZXhBAk8=;
-        b=nqaTxhRofcFBWxS5KV3bTh0/mFTwJ6GGQRRbYUnLgbrgS2BvuZuu1R0kLCjqJIwl+V
-         opGYrKeXTGaIg4Um9sH2UJO0gWCV/TEuf6DMTJxXn3JtsRxNtMkQnYHwV94Fm+1RM3CS
-         BQlgsKPTdD21JVzX5zxSkKOX5bPQQN4M1rdBO1H2uXGXuqe1TU3wiqIAwYpjzdVdio0b
-         quWjsq8T85BYZJjirNpZNUDNLw88c02LJhb/6cGFnSecYnUy2nGQtVBqRQibDvdMBF4U
-         YFGzGsc5ibxxJOQ4TK5ChE9OKUSrM8vOHOHZ58ouC0NblMJixvRlLQi7b2Bdyp3skAev
-         +jZQ==
+        bh=QAOtO6nDHkYJ9N49TmHslQT3rCi9zyycpSkmU2B1+ww=;
+        b=vsBNHav/9gjDzuC/p4k/ehf5+i2a6WpWSYUinwPcIuMUWwom487dxrSyQaeEFjlILD
+         GuWeQYzRIr7AcvrVQ6N9OjJnHtUFW82QbCHblLe/DE5ZDgEbMkl9yz0XaBQlkK3hIrhE
+         CRaE81+xyV8pKZV+03bT3FOuVQrkl25+woHlOuMHJqrrquF/lkqyUH+uVl4t0zaG1fPI
+         pRfyY6anyqwruTQIYELP/0HE2XyrhE4MuNhGIKY4Yp9/6ptTxjVu3BL6dZdyvYJLtW+2
+         iV2zl7xFM87zPbJFwuFGcMhESUot7F/OBzXyBtK/6fgmn8xSe1xZhY/BGloJWxbrUgS/
+         jeyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Fle61vPJ2CgF1ZWEm2BgqpUqqKQrrfp1g/3hZXhBAk8=;
-        b=JkddeQXBN/V//+9ffbQkBQqfMSV8ylrAiOLjX+OjabGEsTpScaqYQ9IpS3MeJpQn3g
-         J0zkKkgWQwM+DllmAliw5idlpG0MD3LB883yyFsN394muJ5u2lTvRM1nPaeslHyz+9fo
-         5Fh0Q58y0wDRa1OCXdGvXKmYw/U4PIuRyLL217+1cA0U0hT2tjz7vnktjakjXVre7khM
-         ePnaJf5nx0OrRayEmZQ+QTihBR4n3mzxT+z5KPmXxqurk6xmT9NpsSGxm5JxdswMV63c
-         VwfhJpNoRn4JeMfn5slRTN763AGPve6CiKgCpCuf+hqfnT4oFAzMvgLau+ur8TC6p1VP
-         2Hlw==
-X-Gm-Message-State: APjAAAXoK+9NnsjUE1Rpl6M5sjjX4cg8ZjsMk8YjRFI8gGdVEBTGLsm7
-        Y0ODS2w7tZ+nxgM4lUGE9W6DPzoTCY4yZuw=
-X-Google-Smtp-Source: APXvYqxNTYEUITyUwn6GDLByMZFsij2bVHdtvK1JPN4+FWR688CFRK3H0bgrIM/X0wWVsRmHxcak7Y1MsgFhBiI=
-X-Received: by 2002:a65:5a8c:: with SMTP id c12mr4729150pgt.73.1564611469231;
- Wed, 31 Jul 2019 15:17:49 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 15:17:20 -0700
-In-Reply-To: <20190731221721.187713-1-saravanak@google.com>
-Message-Id: <20190731221721.187713-8-saravanak@google.com>
+        bh=QAOtO6nDHkYJ9N49TmHslQT3rCi9zyycpSkmU2B1+ww=;
+        b=Vdv/OF1w21zucpUZcEXcc4syPqHcPDsaj3Soy58j9gF+k2aVKNoqekfEPSsdBTL+og
+         MxBp+wZF40+4pbFXdEu31eMNR2/0dlu5pMBDcxcThUaP1jmjs82GFSzzsgyEf5Tz3zbr
+         s3+sNQIvYLJ1QmddpqPYA5L/r2PXUKgkYSCO8tBNvltALAHRi+Ij99kMvh/e+SdZF9+/
+         h6xy7BeI02zhzthEHHkACIObn3LpAyc6Gad+TrDeNsTP4A1ptp4aL1Pc3dwrDCQjVTQH
+         pgNtqahzdz89Y1jovwVSSwcwiItO+oLUwjciLOfsF6Tb/EjDg8pZX1XmPK4RkDaS0VPs
+         hqLw==
+X-Gm-Message-State: APjAAAW1zthox033wQ0gVbIEmuIwjJSm4Q1oOoUTYL8Ul8vSo3jdgC86
+        vQeYnWmYG8cu+M9mxwEch80ThzBBQ6dk2gfWAY0ZjQ==
+X-Google-Smtp-Source: APXvYqxUkdmcNxJs0oiJsLLUnAtxrUaESFBqxq+3RtL2nKYerZv5EnzIdcZz6oLV9x/tGowxt8hi1N3I0JS7+k+vkc4ihw==
+X-Received: by 2002:ac5:c4cc:: with SMTP id a12mr27573495vkl.28.1564611460638;
+ Wed, 31 Jul 2019 15:17:40 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 15:16:17 -0700
+In-Reply-To: <20190731221617.234725-1-matthewgarrett@google.com>
+Message-Id: <20190731221617.234725-30-matthewgarrett@google.com>
 Mime-Version: 1.0
-References: <20190731221721.187713-1-saravanak@google.com>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v9 7/7] of/platform: Don't create device links for default busses
-From:   Saravana Kannan <saravanak@google.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        David Collins <collinsd@codeaurora.org>,
-        kernel-team@android.com
+References: <20190731221617.234725-1-matthewgarrett@google.com>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+Subject: [PATCH V37 29/29] lockdown: Print current->comm in restriction messages
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Default busses also have devices created for them. But there's no point
-in creating device links for them. It's especially wasteful as it'll
-cause the traversal of the entire device tree and also spend a lot of
-time checking and figuring out that creating those links isn't allowed.
-So check for default busses and skip trying to create device links for
-them.
+Print the content of current->comm in messages generated by lockdown to
+indicate a restriction that was hit.  This makes it a bit easier to find
+out what caused the message.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+The message now patterned something like:
+
+        Lockdown: <comm>: <what> is restricted; see man kernel_lockdown.7
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/of/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/proc/kcore.c              | 5 +++--
+ security/lockdown/lockdown.c | 8 ++++++--
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 36e25136e807..33cac801e50b 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -682,6 +682,8 @@ static int of_link_to_suppliers(struct device *dev)
- 		return 0;
- 	if (unlikely(!dev->of_node))
- 		return 0;
-+	if (of_match_node(of_default_bus_match_table, dev->of_node))
-+		return 0;
+diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+index ee2c576cc94e..e2ed8e08cc7a 100644
+--- a/fs/proc/kcore.c
++++ b/fs/proc/kcore.c
+@@ -548,11 +548,12 @@ static int open_kcore(struct inode *inode, struct file *filp)
+ {
+ 	int ret = security_locked_down(LOCKDOWN_KCORE);
  
- 	return __of_link_to_suppliers(dev, dev->of_node);
- }
+-	if (ret)
+-		return ret;
+ 	if (!capable(CAP_SYS_RAWIO))
+ 		return -EPERM;
+ 
++	if (ret)
++		return ret;
++
+ 	filp->private_data = kmalloc(PAGE_SIZE, GFP_KERNEL);
+ 	if (!filp->private_data)
+ 		return -ENOMEM;
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 173191562047..f6c74cf6a798 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -81,10 +81,14 @@ early_param("lockdown", lockdown_param);
+  */
+ static int lockdown_is_locked_down(enum lockdown_reason what)
+ {
++	if (WARN(what >= LOCKDOWN_CONFIDENTIALITY_MAX,
++		 "Invalid lockdown reason"))
++		return -EPERM;
++
+ 	if (kernel_locked_down >= what) {
+ 		if (lockdown_reasons[what])
+-			pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
+-				  lockdown_reasons[what]);
++			pr_notice("Lockdown: %s: %s is restricted; see man kernel_lockdown.7\n",
++				  current->comm, lockdown_reasons[what]);
+ 		return -EPERM;
+ 	}
+ 
 -- 
-2.22.0.709.g102302147b-goog
+2.22.0.770.g0f2c4a37fd-goog
 
