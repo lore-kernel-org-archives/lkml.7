@@ -2,119 +2,102 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97277C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C35C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F91420693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83772067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:40:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ke0qwDJQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEGiqtvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfGaRhK (ORCPT
+        id S1727866AbfGaRks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:37:10 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33361 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbfGaRhI (ORCPT
+        Wed, 31 Jul 2019 13:40:48 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44552 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725209AbfGaRks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:37:08 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n190so952698pgn.0;
-        Wed, 31 Jul 2019 10:37:07 -0700 (PDT)
+        Wed, 31 Jul 2019 13:40:48 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so66430600ljc.11;
+        Wed, 31 Jul 2019 10:40:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fovcjXjS+SQSLt0zbH4OXuaUHccPIpQLVLIxfCRGuVc=;
-        b=ke0qwDJQa094m996Q4z4dCyY4CkF9zHTkSsGFzV93mRB/QdgfGqaggV303riaya25p
-         6hnS4MZx3y7S00BG7aF06PmLDxyWuMRT9MGiFQ6KNtLaqojfXWaSb6vXjGgVujriuyP6
-         h2v/5O+w5oDtnBekoQmRqTJFR7youuKrvVN+DMmTp5HORKPHUiM/F4gL9XMB/ykRVayg
-         QpErOpILmBGoPAOKzJ4SdX8roh8Rz1AM/unP1s4jRvmGbsLP+JJyv9i5wRcK0y1kCyEa
-         REW5BqKNatt2SwQc462R0KxymeZthCMmyj2BxK/fMTM+7pgRFXu5N8DYdvmK9k80Ikrg
-         5d4g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=q4EnWjuoFwvcg+PQNQKDl7SJ3NRTDjvZysMShIcjoKI=;
+        b=EEGiqtvzdTGgq8ThRpTRzSRRTP6VrSrlPO4IYYXSqpYLJ1pWHT/smy+zbIF9spBxdG
+         OPhZlUiy86fYmMqsbJ+fR75XB09QgUuke4Bs8aa9PYGkrTqbahFJVfjl93nk0Q3ff36o
+         4CNAKmIBe5E32PDAW7yKpvLxNuV1lPeTQUHA7iJHMdqmLX+3nLVkm0utsFCM5H/+5JXa
+         cBmKEid218rblPtIjLKPhBu5EWKqEkzkwF5vunTY0SixI56msLOoXv2XPukyyoSH7Ve0
+         1euc7zpXBnh6gBCuZ/uLrqxkrgPUuqlZAXL7Q36Q29fJ3is4HY3M9XrjfIGJL1jp8j8S
+         2l7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fovcjXjS+SQSLt0zbH4OXuaUHccPIpQLVLIxfCRGuVc=;
-        b=AVWpJpl/DBp8zgjgLg5obr1wLcFAemm7W3HZAZtr9AhryYy/1fLIG+LoxzwDxdQQ05
-         iKAkv+aGuyevJDm5M+hIzODsSXpc3eoYHfRmm/5G/uWx5rUbnSTXHeKfJrF/rET7GTTC
-         t/jyOtRKJsFQ7ahNK476vPj/5Bz+oq+4VNiCoYHoC0vysTxoZy1vdieAExqHlhEnV+Zx
-         8MLG6G1sD4gJZ3NSaKgdDUWs/1nyZ3WnHe/RzcTLFqqkPLRchjT+zEhEPrfsdnm5nJgb
-         ZpfUHY/dOCM+tl+j5gaY1AkQo7r3CuLNi+9l3/E9XrV/7vG/Jnq/fm0jORKmyPZjEM2n
-         +ZMg==
-X-Gm-Message-State: APjAAAV0cafhrxylfkHrQ7m4xWWyUs049+eVqk1OU71RfC6VSGLiZtHi
-        VPb3yEyU3+//bvwV9nHIuuZcPdqL
-X-Google-Smtp-Source: APXvYqwhkZAw1wHXUM+vQnAK/0pT3Y6tucx5LyNYOTnCNBw9j94JVIkDCIfPVuFOK92tiA7MAXDV7g==
-X-Received: by 2002:aa7:9a01:: with SMTP id w1mr47003873pfj.262.1564594626662;
-        Wed, 31 Jul 2019 10:37:06 -0700 (PDT)
-Received: from localhost.localdomain ([2607:fb90:4ad:5a0b:2aff:6e0f:8973:5a26])
-        by smtp.gmail.com with ESMTPSA id r2sm87106926pfl.67.2019.07.31.10.37.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 10:37:06 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     dmaengine@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Chris Healy <cphealy@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: fsl-edma: implement .device_synchronize callback
-Date:   Wed, 31 Jul 2019 10:36:59 -0700
-Message-Id: <20190731173659.14778-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=q4EnWjuoFwvcg+PQNQKDl7SJ3NRTDjvZysMShIcjoKI=;
+        b=lHI7WHibR0009/4BWqf3s/zWvZdTBUAcanS6bTBr471xcc4fsxCfk+6ooKZg4/oWv+
+         EgJmABvk7vsY+dOsIUYydSFnq2ALeb5uk2wM+wFvUH7/ALYUH8fvtcWkDoXgRyel1Mja
+         jtdxiR8/29/n12VIpGFWrdbXiwW8Vynq31chPnKKJ9/RN8EeqEYCovLN1/QeyB0aep8S
+         9e9OF04d9m7bvaqtDOKV1GeFgeA/vRIbUNfnfynlqsB7qIAi8hdYaVNntBvNZ3pz0IBb
+         eCN31MXUth4FPrZvEOQB0vAqulbHOkC6mWI2WpMKGxux6DDYx2G2z6P5JY4kZi52EIBt
+         Fl4w==
+X-Gm-Message-State: APjAAAWdlzrVSvUfh1KHaqGkuSL2l8mRasuBuby/Gbu94TOGmdmZuMk5
+        OiRh40Lx5bA2DKJ8A9D5RsTKfTgN6RrcnQYhWsQ=
+X-Google-Smtp-Source: APXvYqyt0Od36zT0596GjCdSHptbQnUWvWqMyOnVl/5FQep+ssyLLf+KxKKOId+xoiOrQ+OT9NTjMGldgO9EObJPhWk=
+X-Received: by 2002:a2e:4e12:: with SMTP id c18mr14933002ljb.211.1564594845880;
+ Wed, 31 Jul 2019 10:40:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1563983037.git.agx@sigxcpu.org> <20190731143532.GA1935@bogon.m.sigxcpu.org>
+ <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com> <13373313.BzCyiC4ED7@jernej-laptop>
+In-Reply-To: <13373313.BzCyiC4ED7@jernej-laptop>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 31 Jul 2019 14:40:57 -0300
+Message-ID: <CAOMZO5Ak7QFzEM8Qt5XAZBa1CB602fygK+FBDK2iTvxWA4y+oA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
+To:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Lee Jones <lee.jones@linaro.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Chris Healy <cphealy@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement .device_synchronize callback in order to be able to use
-dmaengine_terminate_sync() and other primitives relying on said
-callback.
+On Wed, Jul 31, 2019 at 1:40 PM Jernej =C5=A0krabec <jernej.skrabec@siol.ne=
+t> wrote:
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: linux-imx@nxp.com
-Cc: dmaengine@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/dma/fsl-edma.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> > Yes, I understood the idea, but this would print:
+> >
+> > ensabling or dissabling :-)
+>
+> No, it wouldn't. That extra "s" is part of "%s", e.g. part of format spec=
+ifier.
 
-diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
-index fcbad6ae954a..191fa71f67a3 100644
---- a/drivers/dma/fsl-edma.c
-+++ b/drivers/dma/fsl-edma.c
-@@ -20,6 +20,13 @@
- 
- #include "fsl-edma-common.h"
- 
-+static void fsl_edma_synchronize(struct dma_chan *chan)
-+{
-+	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
-+
-+	vchan_synchronize(&fsl_chan->vchan);
-+}
-+
- static irqreturn_t fsl_edma_tx_handler(int irq, void *dev_id)
- {
- 	struct fsl_edma_engine *fsl_edma = dev_id;
-@@ -302,6 +309,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
- 	fsl_edma->dma_dev.device_pause = fsl_edma_pause;
- 	fsl_edma->dma_dev.device_resume = fsl_edma_resume;
- 	fsl_edma->dma_dev.device_terminate_all = fsl_edma_terminate_all;
-+	fsl_edma->dma_dev.device_synchronize = fsl_edma_synchronize;
- 	fsl_edma->dma_dev.device_issue_pending = fsl_edma_issue_pending;
- 
- 	fsl_edma->dma_dev.src_addr_widths = FSL_EDMA_BUSWIDTHS;
--- 
-2.21.0
-
+Ops, you are right. Sorry about that!
