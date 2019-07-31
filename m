@@ -1,151 +1,169 @@
-Return-Path: <SRS0=Iew4=V3=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557C5C32750
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F474C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA9E2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jul 2019 23:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12952089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 00:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgoRjWXY"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="cAMAwlX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfG3X7X (ORCPT
+        id S1728124AbfGaACB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 19:59:23 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35460 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfG3X7X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 19:59:23 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w20so64023046edd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 16:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m6L07MYm2XUREWdGGxm/q3wDS0RhzZLGHAZkdnpAJv0=;
-        b=UgoRjWXYlcZIgPmz9GDErbiOBm3M9jhIFl9wjh+Dc2ZlNE/L6VSVht0anlDxUG9UVu
-         gb6hEZgc0N+p+UpQGFv34suB0UnrI0mhggxyBth8Xw35Uf9L1TZDS25N0DLJeI9qQvpF
-         24a5+ulOqpD4mdk6/DBaFTR5ttxB7qwMTP7v1qMY4RxK/Xw3d5i4iD1N9gHf1G1YqWj5
-         K8uWQvPYDlxPjIijdnoyLAiF7unrjLDI0ANrpXfDj1/3v+gTv1QSobwf6UJkHw8H+gdV
-         pz1pQX4vpuFheYB0xJxgL7BLyqo0HnXZI6rfwpF1fIU5iFjOQC7OmqpN6gN1rkJM+NzR
-         eRyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m6L07MYm2XUREWdGGxm/q3wDS0RhzZLGHAZkdnpAJv0=;
-        b=lUzwHj6d269omDsU9xp+d/Ujw+Xp+0YT1rHNjxZ7GJL+zLASvBUrw84IGbq4wP5Gos
-         M0q/VkjAiRhCV7BtGLVUvkff12aPRXy2DYVYwU8kEGn3CdKxQkETNjau8OafpIn0b950
-         /zJUIzrzG2urGfYh4/lxdLyZ2j1Hq92dMWwWpoCOGPlL9j7EcHYd5xvkocbd/gVxBAK1
-         jeAOBj/PXIHcTbbHN/nAy+rbHn+s4ySau8JjpwrIkXhuIXntZaCDVp0/mOoLe7NqLKZK
-         6iL69z20FrhYG+tcs+gFDr/A7fexxHq3Rwrcl3LIuRy/KMq9Heq0/tn1j8x1z1pE42UD
-         kLyQ==
-X-Gm-Message-State: APjAAAWEmPQRgW+0NpTKjK6xvgD5mjJRj1S0Qu4rztTbX1Ktrw4VUwPf
-        cblJpT/weRKWJJRXqlJRfQjy6o93/Kmpp9T0eC0=
-X-Google-Smtp-Source: APXvYqx4PX+CqhLKT8Fr6q2Ml2NHtV/F3E2eYjRMIvt5WgPWUpc5t44qvE7khZiUJJWtb50UqV+XTKXefqw+cMeXC74=
-X-Received: by 2002:a17:906:6bc4:: with SMTP id t4mr94346685ejs.256.1564531161620;
- Tue, 30 Jul 2019 16:59:21 -0700 (PDT)
+        Tue, 30 Jul 2019 20:02:01 -0400
+Received: from mail-eopbgr1320128.outbound.protection.outlook.com ([40.107.132.128]:24116
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725963AbfGaACB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 20:02:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VNQnq5yeMLfm+hN8HwryihXl9rdd4gF44fs4CssJc1XsJuAklIt7D2mX94ljb/l//qxTtGS2TTUtWaCIFEgD2THsFrP460Mam/sPM3Fv7AFUEWKMi5GcMrUDfC+PyeFfzRPNJrPjjgG2uK5kYC+nSmobEmIE6kThxVwiXp9A/G//TqLUDeXeVQvJ82hWJrwwZpoXU22dgunfddK24fb7LGA7Ke0i9Gb9yNoRwY8/nzhPGvHjGFHVmyfF3XsieN9tSI3UclSBhPXsFu5lzhm53Vo/wABX1wQOSXQXArqkzhlC4kkiRrYVwJIKK49FgKpZQpo1P2BcwuVge9NITmAGIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jzz95LBFIJrL6xBzkE+B76DFnho7C3P9aVmv+L7IsMI=;
+ b=juWXnnQ3++xibZ0w0UD31u/ZP3G6qOrKo58P7+qa2TaSxr8UulJXpapR41//RrRl+AYG8Pk6tPJWTk/m16dUY35q2Xwz+cB0dgAq/Nnve1f5IdRqITAFNZqoGUGgS5nZeI6r4hZxLfKn406ozdj1adg+uSCtErp/CsGPGIurmmLFCZJVr6KpI3lRbBapHG7OL9GLJpg/YJ08bcV7RJq9/17bMiVBPteWBBRXwLNQuVXoiXxYhaATAtLhS6EBb43pJ9L9Vy79g5c/5MZYzyJd+tGAWa5YDcS3H0i9LBnQTykJx7JOvvOc4p9htGxd3Hnx0zyOLkZamwlOjEE9W3hNYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jzz95LBFIJrL6xBzkE+B76DFnho7C3P9aVmv+L7IsMI=;
+ b=cAMAwlX9qSeQw2DKGrxFMBPlVd8jga8HcYeH3mJT6fx+RfEW/r74j2DmneZ/WeB9cGVi2GFBp2rzJsjjT/X4gA46KPY4iEbZcnfDSzwdg2aNtpmrFZ7qjaPnybecSdceT112QAvB3SPNSW5E7h7mQ1YLlVmk7keZB+NNlbDBDlw=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0123.APCP153.PROD.OUTLOOK.COM (10.170.188.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.2; Wed, 31 Jul 2019 00:01:53 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c%8]) with mapi id 15.20.2157.001; Wed, 31 Jul 2019
+ 00:01:53 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 5/7] Drivers: hv: vmbus: Ignore the offers when resuming
+ from hibernation
+Thread-Topic: [PATCH 5/7] Drivers: hv: vmbus: Ignore the offers when resuming
+ from hibernation
+Thread-Index: AQHVNhdI4fE4dJaaXUuVBeGHWvZQDqbj5/pQgAANYeA=
+Date:   Wed, 31 Jul 2019 00:01:53 +0000
+Message-ID: <PU1P153MB01699A21E81D9E8E872A190ABFDF0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1562650084-99874-1-git-send-email-decui@microsoft.com>
+ <1562650084-99874-6-git-send-email-decui@microsoft.com>
+ <MWHPR21MB078481A7C7F65E0297135D41D7DC0@MWHPR21MB0784.namprd21.prod.outlook.com>
+In-Reply-To: <MWHPR21MB078481A7C7F65E0297135D41D7DC0@MWHPR21MB0784.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-30T23:07:07.0047554Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a8409ba6-e20e-47d4-80bf-1229879e616a;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:1:c0f7:3271:ccd8:4d01]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 11eef7c6-cb65-4008-badf-08d7154a4b90
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0123;
+x-ms-traffictypediagnostic: PU1P153MB0123:|PU1P153MB0123:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB01233313ADFB0D85218D101EBFDF0@PU1P153MB0123.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 011579F31F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(396003)(39860400002)(376002)(136003)(199004)(189003)(4326008)(68736007)(52536014)(10090500001)(64756008)(10290500003)(25786009)(8990500004)(6436002)(99286004)(14454004)(7696005)(66446008)(86362001)(446003)(66946007)(76116006)(478600001)(186003)(66476007)(2501003)(229853002)(66556008)(476003)(11346002)(9686003)(6246003)(8936002)(22452003)(53936002)(2201001)(316002)(55016002)(1511001)(256004)(7736002)(14444005)(486006)(46003)(76176011)(5660300002)(74316002)(2906002)(102836004)(71190400001)(305945005)(71200400001)(110136005)(6506007)(8676002)(81166006)(81156014)(33656002)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0123;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LPT8J8WC3AkcrVMPry0pIkneh/nQ+7lks2BjSbrSbpMDndFY5o11fKvLC9IZlWeIfs6GN0tJK14Z+ZZ7vHIkpcpGT+7CZxaZf4h7msRCz2WC8p7qy3SfgoPheNbpno835FpV0AZs/bdsXQqXg7usFv00UCntbD6Rx+QCCRdj6Fm09YE0v7TUt19haSQxC7lnV36Zwc88LQWrmgzWTJsBPFQUfPmbclkrdkvj7avYIJApYQ7/Ip++V4MPRX9xk3WVo4x15OC9ygio3zpz6IEfAGgI3SojRURGiLrE3LLbh9ONTMQ1mo/7GYAAxmYmknmJOzyTXmab3g4H0be1YknlGrXMUUMfq8/9XOzp0kuZPK3hM499a2U46N2XpZe5Mlh3SqnJxKCxkIYClXLGfrsmU2oOw2+Ps9WwT9pLt6vdL7k=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190730225852.30319-1-robdclark@gmail.com>
-In-Reply-To: <20190730225852.30319-1-robdclark@gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 30 Jul 2019 16:59:10 -0700
-Message-ID: <CAF6AEGvLTbTQjH+-Gbk4Vr1Cp8aL5e+3XD=XoTabzX2YoRoBCw@mail.gmail.com>
-Subject: Re: [PATCH] drm: add cache support for arm64
-To:     dri-devel <dri-devel@lists.freedesktop.org>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11eef7c6-cb65-4008-badf-08d7154a4b90
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 00:01:53.1366
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4O/d0Dk5M908t3Yx1eX3diin7U29f2NUL3OkLE1wwrJ3wOuVunJj/bnGojYfIHDUztz1f4M7ubFYep32sjvRhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 4:01 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> From: Rob Clark <robdclark@chromium.org>
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
-> Not sure about 32b arm, but at least for aarch64 this is relatively
-> easy.  So lets at least enable for arm64.
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Tuesday, July 30, 2019 4:07 PM
+> > +
+> > +	if (oldchannel !=3D NULL) {
+> > +		atomic_dec(&vmbus_connection.offer_in_progress);
+> > +
+> > +		/*
+> > +		 * We're resuming from hibernation: we expect the host to send
+> > +		 * exactly the same offers that we had before the hibernation.
+> > +		 */
+> > +		offer_sz =3D sizeof(*offer);
+> > +		if (memcmp(offer, &oldchannel->offermsg, offer_sz) =3D=3D 0)
+> > +			return;
+>=20
+> The offermsg contains "reserved" and "padding" fields.  Does Hyper-V
+> guarantee that all these fields are the same in the new offer after resum=
+ing
+> from hibernation?=20
 
-hmm, bleh, I thought this was too easy.. I hadn't noticed that (even
-though driver was =m) CONFIG_DRM was =y
+Yes. I confirmed this with Hyper-V team. The reserved/padding fields don't =
+change
+across hiberantion. BTW, the fields are filled with zeros since they're not=
+ used.
 
-Can we make drm_cache.o built-in even if the rest of drm is a module?
+>  Or should a less stringent check be made?  For example,
+> I could imagine a newer version of Hyper-V allowing a VM that was
+> hibernated on an older version to be resumed.  But one of the reserved fi=
+elds
+> might be used in the newer version, and the comparison could fail
+> unnecessarily.
 
-BR,
--R
+Upon resume, Linux VM always uses the same version, which was used when the
+VM firstly booted up before suspend, to re-negotiate with the host.
+=20
+> > +
+> > +		pr_err("Mismatched offer from the host (relid=3D%d)!\n",
+> > +		       offer->child_relid);
+> > +
+> > +		print_hex_dump_debug("Old vmbus offer: ", DUMP_PREFIX_OFFSET,
+> 4,
+> > +				     4, &oldchannel->offermsg, offer_sz, false);
+> > +		print_hex_dump_debug("New vmbus offer: ",
+> DUMP_PREFIX_OFFSET, 4,
+> > +				     4, offer, offer_sz, false);
+>=20
+> The third argument to print_hex_dump() is the rowsize and is specified as=
+ must
+> be 16 or 32.
 
->
->  drivers/gpu/drm/drm_cache.c | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
-> index 3bd76e918b5d..90105c637797 100644
-> --- a/drivers/gpu/drm/drm_cache.c
-> +++ b/drivers/gpu/drm/drm_cache.c
-> @@ -69,6 +69,14 @@ static void drm_cache_flush_clflush(struct page *pages[],
->  }
->  #endif
->
-> +#if defined(__powerpc__)
-> +static void __flush_dcache_area(void *addr, size_t len)
-> +{
-> +       flush_dcache_range((unsigned long)addr,
-> +                          (unsigned long)addr + PAGE_SIZE);
-> +}
-> +#endif
-> +
->  /**
->   * drm_clflush_pages - Flush dcache lines of a set of pages.
->   * @pages: List of pages to be flushed.
-> @@ -90,7 +98,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
->         if (wbinvd_on_all_cpus())
->                 pr_err("Timed out waiting for cache flush\n");
->
-> -#elif defined(__powerpc__)
-> +#elif defined(__powerpc__) || defined(CONFIG_ARM64)
->         unsigned long i;
->         for (i = 0; i < num_pages; i++) {
->                 struct page *page = pages[i];
-> @@ -100,8 +108,7 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
->                         continue;
->
->                 page_virtual = kmap_atomic(page);
-> -               flush_dcache_range((unsigned long)page_virtual,
-> -                                  (unsigned long)page_virtual + PAGE_SIZE);
-> +               __flush_dcache_area(page_virtual, PAGE_SIZE);
->                 kunmap_atomic(page_virtual);
->         }
->  #else
-> @@ -135,6 +142,13 @@ drm_clflush_sg(struct sg_table *st)
->
->         if (wbinvd_on_all_cpus())
->                 pr_err("Timed out waiting for cache flush\n");
-> +#elif defined(CONFIG_ARM64)
-> +       struct sg_page_iter sg_iter;
-> +
-> +       for_each_sg_page(st->sgl, &sg_iter, st->nents, 0) {
-> +               struct page *p = sg_page_iter_page(&sg_iter);
-> +               drm_clflush_pages(&p, 1);
-> +       }
->  #else
->         pr_err("Architecture has no drm_cache.c support\n");
->         WARN_ON_ONCE(1);
-> --
-> 2.21.0
->
+Thanks! I misunderstood the argument. I'll change it to 16.
+
+Thanks,
+-- Dexuan
