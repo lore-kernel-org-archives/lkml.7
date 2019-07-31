@@ -2,122 +2,132 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520A6C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4ACC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2843520679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJERArzD"
+	by mail.kernel.org (Postfix) with ESMTP id 6DCCC20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbfGaRc1 (ORCPT
+        id S1730846AbfGaRcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:32:27 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38849 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730646AbfGaRbU (ORCPT
+        Wed, 31 Jul 2019 13:32:32 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45086 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728943AbfGaRc2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:31:20 -0400
-Received: by mail-pl1-f194.google.com with SMTP id az7so30770019plb.5;
-        Wed, 31 Jul 2019 10:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/3pXFPCtwTUjw2uGuelbq+/hzvDc+xgZT4R+g9ZoYY8=;
-        b=cJERArzD5sWX5PnWwDZBrI7ud4sX6fwusZ4Qx0YrOurXzZM27KWZ6m4uxQUQdI1AtJ
-         kc7dbmwyIXr9cKKS8pfWMArzHwksSR4z9joeZgTzFKOsY9IjYpAFhjHCcayTvAaRlL5R
-         MjFD1TRAv8/xj7BwARlU2P1BDCcIy2UFaop1kVn+5AJtuCOj6F2mhaGy4sYLgVqwFnQT
-         zYh87m974o5fHeGORtGHaD073CDpxULwpsUBfgNx3/FJZ3iAZmnE2GKk/4FQS8NCPrAC
-         59JmNtTd7BmZDkBVcUo8NFiM9L1iwWOA2ADBJm3l5WVhg7NjyYdXR+KIKCnq2iMQNvCJ
-         mWHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/3pXFPCtwTUjw2uGuelbq+/hzvDc+xgZT4R+g9ZoYY8=;
-        b=YMRocBAJhbelXqzqBryBi9UGwgo8OzIrjPWZIiirRaGlHn6syejZkOBE3BsOcFkIVJ
-         WcTVCHylQUcbr4MISVFzxvPAKGwKN7fLWUoBaZDtwzu8xzzIqpN74dptnpiJsxG5/Y/a
-         e16CVFBEoOeluTMOhWxqtaMWsTVUkfQpjPUgjZn0OjqGLTphmFy5XebwEe3GQeaICilF
-         4wtW42sA1KHphcvjgSElmctE/GwN+seMd23zZOU3bsyOhdU1q5DF1BLXA5/3H3sR+mcO
-         XstdOzz/TgLV54Fb96vPHN2cnoomY8nbK/D63mAeoZbpTQ78rk3pv5IlNxcFNx+u4bjB
-         J0sw==
-X-Gm-Message-State: APjAAAU+f844psxMH/UpBkE1JHHxehsE0QOXzILO4YWIkYAGLpVsFfGV
-        SOoMKXt1zlBR0yk3bwfsSAmtPdaU06M=
-X-Google-Smtp-Source: APXvYqzEUzrdqa7pHYE3CknrSP5TL2hRjFZlU6yZ6+r4GpMvybuXjKUl4A2oiYi2BihRoFXMMunRsA==
-X-Received: by 2002:a17:902:6a88:: with SMTP id n8mr121748346plk.70.1564594279289;
-        Wed, 31 Jul 2019 10:31:19 -0700 (PDT)
-Received: from localhost.localdomain ([2607:fb90:4ad:5a0b:2aff:6e0f:8973:5a26])
-        by smtp.gmail.com with ESMTPSA id bo20sm2089617pjb.23.2019.07.31.10.31.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 10:31:18 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-serial@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/23] tty: serial: fsl_lpuart: Drop unnecessary uart_write_wakeup()
-Date:   Wed, 31 Jul 2019 10:30:28 -0700
-Message-Id: <20190731173045.11718-7-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190731173045.11718-1-andrew.smirnov@gmail.com>
-References: <20190731173045.11718-1-andrew.smirnov@gmail.com>
+        Wed, 31 Jul 2019 13:32:28 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id BCF558031F; Wed, 31 Jul 2019 19:32:14 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 19:32:26 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Parth Shah <parth@linux.ibm.com>
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        patrick.bellasi@arm.com, dietmar.eggemann@arm.com,
+        daniel.lezcano@linaro.org, subhra.mazumdar@oracle.com
+Subject: Re: [RFC v4 0/8] TurboSched: A scheduler for sustaining Turbo
+ Frequencies for longer durations
+Message-ID: <20190731173225.GB24222@amd>
+References: <20190725070857.6639-1-parth@linux.ibm.com>
+ <20190728133102.GD8718@xo-6d-61-c0.localdomain>
+ <4fcd3488-6ba0-bc22-a08d-ceebbce1c120@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
+Content-Disposition: inline
+In-Reply-To: <4fcd3488-6ba0-bc22-a08d-ceebbce1c120@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uart_write_wakeup() will already be called as a part of
-lpuart*_transmit_buffer() call, so there doesn't seem to be a reason
-to call it again right after.
 
-It also appears that second uart_write_wakeup() might potentially
-cause unwanted write wakeup when transmitting an x_char. See commit
-5e42e9a30cda ("serial: imx: Fix x_char handling and tx flow control")
-where this problem was fixed in a very similarly structured i.MX UART
-driver.
+--IrhDeMKUP4DT/M7F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-imx@nxp.com
-Cc: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/tty/serial/fsl_lpuart.c | 3 ---
- 1 file changed, 3 deletions(-)
+Hi!
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 57c5825f5de7..c35f81df0cff 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -798,9 +798,6 @@ static void lpuart_txint(struct lpuart_port *sport)
- 	else
- 		lpuart_transmit_buffer(sport);
- 
--	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
--		uart_write_wakeup(&sport->port);
--
- out:
- 	spin_unlock_irqrestore(&sport->port.lock, flags);
- }
--- 
-2.21.0
+> >> Abstract
+> >> =3D=3D=3D=3D=3D=3D=3D=3D
+> >>
+> >> The modern servers allows multiple cores to run at range of frequencies
+> >> higher than rated range of frequencies. But the power budget of the sy=
+stem
+> >> inhibits sustaining these higher frequencies for longer durations.
+> >=20
+> > Thermal budget?
+>=20
+> Right, it is a good point, and there can be possibility of Thermal thrott=
+ling
+> which is not covered here.
+> But the thermal throttling is less often seen in the servers than the thr=
+ottling
+> due to the Power budget constraints. Also one can change the power cap wh=
+ich leads
+> to increase in the throttling and task packing can handle in such
+> cases.
 
+Ok. I thought you are doing this due to thermals. If I understand
+things correctly, you can go over thermal limits for a few seconds
+before the silicon heats up. What is the timescale for power budget?
+
+> BTW, Task packing allows few more cores to remain idle for longer time, so
+> shouldn't this decrease thermal throttles upto certain extent?
+
+I guess so, yes.
+
+> > >> These numbers are w.r.t. `turbo_bench.c` multi-threaded test benchma=
+rk
+> >> which can create two kinds of tasks: CPU bound (High Utilization) and
+> >> Jitters (Low Utilization). N in X-axis represents N-CPU bound and N-Ji=
+tter
+> >> tasks spawned.
+> >=20
+> > Ok, so you have description how it causes 13% improvements. Do you also=
+ have metrics how
+> > it harms performance.. how much delay is added to unimportant tasks etc=
+=2E..?
+> >=20
+>=20
+> Yes, if we try to pack the tasks despite of no frequency throttling, we s=
+ee a regression
+> around 5%. For instance, in the synthetic benchmark I used to show perfor=
+mance benefit,
+> for lower count of CPU intensive threads (N=3D2) there is -5% performance=
+ drop.
+>=20
+> Talking about the delay added to an unimportant tasks, the result can be =
+lower throughput
+> or higher latency for such tasks.
+
+Thanks. I believe it would be good to mention disadvantages in the
+documentation, too.
+
+Best regards,
+							Pavel
+						=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--IrhDeMKUP4DT/M7F
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1B0KkACgkQMOfwapXb+vK/SQCdEakOOhPJoZSXw6d1ALOX3ZWx
+knYAn2U5kHCHmxOCvozd/2HU6N2RxX4Z
+=4uGg
+-----END PGP SIGNATURE-----
+
+--IrhDeMKUP4DT/M7F--
