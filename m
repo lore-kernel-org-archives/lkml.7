@@ -5,70 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A50BC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C732C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48419208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 275542089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTVQalGP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XNTkFfQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbfGaI0B (ORCPT
+        id S1727905AbfGaIZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:26:01 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55575 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727946AbfGaIZx (ORCPT
+        Wed, 31 Jul 2019 04:25:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45384 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727733AbfGaIZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:25:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a15so59786993wmj.5;
-        Wed, 31 Jul 2019 01:25:51 -0700 (PDT)
+        Wed, 31 Jul 2019 04:25:47 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so68616796wre.12;
+        Wed, 31 Jul 2019 01:25:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ivGcJv42u9xsKXcWxc1pwTe15jdiFq07eZU/Ce/ZJDg=;
-        b=TTVQalGPI/gXVk9TBMwBE7O7E07KJdxhVNfqiZUNQvkVAJrEua5Dk0oadr3RlwiqOg
-         Nm6OMlbF9cV7HJhjSDwFt++12poRJEjTgOgBSiVkrH78sdE082zopKmnAMAEAnxJBzr6
-         48PboFTVeQAJsgl8pYpKMiuYY/FGIkMu3Vqaqhdi8oC3vR6ZLIfLW/uWId9XNAvFVQ6c
-         fYzOQ42jmO3i1uhpB1niVJFJvJa0xlk9ZbJ3bWwrk8xC4ZJfOXEwpc2/gMYAr/0N/Fau
-         zmiZ/x6uzz8WJH1UvwwiocCvrwPGC+mNwDdaX5WcBGQfN5fsJpK5d2oVf5Gv+8MZH6+f
-         BXKQ==
+        bh=24bkq8J7wgwVnYVCp6wxwpRgDGNMlXKQR1CYDUXv7oI=;
+        b=XNTkFfQei7YLePpH1ZaW2jxiGH3/mx0yT9HaUAOHmWRT9E+XnuZmhbkWHbOJYURbP0
+         jiI9xLhEwZBM+VsgHcpyjtexnPTo3tjR/Mq0WRDTOOgYlA8rX2QQGtr4y1SmRfPxoAee
+         5Oh3ca+kONCyKQXaT4tPrPfCKf2mdE/0eDxQsQ2YtVxBCEa7nkELjbLwdX3zT2qCgN68
+         wAhrJW2ySeXmgMSGB+jeyoAbTACnUDuzle6fV4CmVZPxhjVO9bZjBTWnOnFju0HXzoe3
+         0ADWelffY/1GPrnU56huQt39Kn2XAb43ZW+Hu/JZwNHmjRhQAjGnKqCu9zSfjqLx+JTI
+         YxwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ivGcJv42u9xsKXcWxc1pwTe15jdiFq07eZU/Ce/ZJDg=;
-        b=dhPkiPdevULyPQ7uswQjr8hMjzoJklXJ0AxDET1hiyDU4gqINWJSebRtIdRjUyycZo
-         7/MWMMrXiFiou/MVtxi1RmcHdkc5WTEvTPS/T25qMXyDma4/2vdjy3jIf2BnSAgUyC2x
-         hQFmgtyVzZh7JFC2bQ6QYDRaibjLsetNaDFm/rsumKT2tcoTkVfcRd8EBbjv7lmFq5H3
-         SHmck6jNRPY8DeVXFImuZnNdraxZ3iEciwrh0jnN8iRfGgHCndNva8O6IQBWjlxXxWsp
-         OB9phagjaoc6UKjqCDItAODvsEPNcgJGu6REkLTjWmy3ujnsK9Plnn3WqFkROoo215C7
-         kZ5A==
-X-Gm-Message-State: APjAAAV6OKCxP9mN4JTEtfnqiJzgBDKv8AOAB3BsMmENvhF9c+ZUbWDR
-        Ff52l/TuuffaKvt32X1VXlA9hEnpJoU=
-X-Google-Smtp-Source: APXvYqwz+yc8zkVNN/feyEHRqL/AEMz13uLWrgyHp+IJT1Xc7OxDf7XKEhueMoWf61mpNG6w9dIfAA==
-X-Received: by 2002:a05:600c:214c:: with SMTP id v12mr109623683wml.28.1564561550263;
-        Wed, 31 Jul 2019 01:25:50 -0700 (PDT)
+        bh=24bkq8J7wgwVnYVCp6wxwpRgDGNMlXKQR1CYDUXv7oI=;
+        b=YjhpXLN9gbT3a+fI6JR/gc8ZbzlQIeDHIQ2c0oNbUOsQ9e69t8uOB2436fHtnPnR60
+         4Tcdz3kaDQ4uG2B5GI3bXRZFHq957wl9KKNhBbygolQ6JQz3lbppWX9lWzWw+Uf1avea
+         DSiQBocv85z4De/FV07IQOWD4xkKp3P9riOQiibEBsPr4j4zBRpUQBQZtgPFS6nvWkGr
+         ZotdbTCnkXwrdkq3y6JrUK3cJmIN1eF1VgTyHoSDlvDj4wYalTns8R+pfaNDYZgmZpXf
+         DbWoWy/jZTYlnb4Doz5zjMCOOEJUfaTHYNQh63DOAj7ffoT1Tshg7EFUOR5VbeaKh9NB
+         pD3g==
+X-Gm-Message-State: APjAAAU+T3sJ2aXGKyVKu4pRCgX1AihidmVtjGCyatFKVnLgtTuYQBT4
+        AmjnUQiKM/wdgphJWBuEvWl1E7VLp0k=
+X-Google-Smtp-Source: APXvYqw/MqF3OE/vhSTw8Pae16d+zJOtPyiRNcBSv54zzuFrLLiZggKDIqdjS0+EiD8n0rPw+UYH/A==
+X-Received: by 2002:adf:c508:: with SMTP id q8mr550542wrf.148.1564561544629;
+        Wed, 31 Jul 2019 01:25:44 -0700 (PDT)
 Received: from vd-lxpc-hfe.ad.vahle.at ([80.110.31.209])
-        by smtp.gmail.com with ESMTPSA id c78sm93223959wmd.16.2019.07.31.01.25.49
+        by smtp.gmail.com with ESMTPSA id c78sm93223959wmd.16.2019.07.31.01.25.43
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 01:25:49 -0700 (PDT)
+        Wed, 31 Jul 2019 01:25:44 -0700 (PDT)
 From:   Hubert Feurstein <h.feurstein@gmail.com>
 To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Hubert Feurstein <h.feurstein@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
         Andrew Lunn <andrew@lunn.ch>,
         Vivien Didelot <vivien.didelot@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH net-next v2 6/6] net: dsa: mv88e6xxx: add PTP support for MV88E6250 family
-Date:   Wed, 31 Jul 2019 10:23:51 +0200
-Message-Id: <20190731082351.3157-7-h.feurstein@gmail.com>
+Subject: [PATCH net-next v2 1/6] net: dsa: mv88e6xxx: add support for MV88E6220
+Date:   Wed, 31 Jul 2019 10:23:46 +0200
+Message-Id: <20190731082351.3157-2-h.feurstein@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190731082351.3157-1-h.feurstein@gmail.com>
 References: <20190731082351.3157-1-h.feurstein@gmail.com>
@@ -79,220 +78,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds PTP support for the MV88E6250 family.
+The MV88E6220 is almost the same as MV88E6250 except that the ports 2-4 are
+not routed to pins. So the usable ports are 0, 1, 5 and 6.
 
 Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c |  4 ++
- drivers/net/dsa/mv88e6xxx/chip.h |  4 ++
- drivers/net/dsa/mv88e6xxx/ptp.c  | 79 +++++++++++++++++++++++++++-----
- drivers/net/dsa/mv88e6xxx/ptp.h  |  2 +
- 4 files changed, 78 insertions(+), 11 deletions(-)
+ drivers/net/dsa/mv88e6xxx/chip.c | 25 +++++++++++++++++++++++++
+ drivers/net/dsa/mv88e6xxx/chip.h |  3 ++-
+ drivers/net/dsa/mv88e6xxx/port.h |  1 +
+ 3 files changed, 28 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 75cfa1f2060b..4a79e389eb8b 100644
+index 6b17cd961d06..c8c176da0f1c 100644
 --- a/drivers/net/dsa/mv88e6xxx/chip.c
 +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -3522,6 +3522,8 @@ static const struct mv88e6xxx_ops mv88e6250_ops = {
- 	.reset = mv88e6250_g1_reset,
- 	.vtu_getnext = mv88e6250_g1_vtu_getnext,
- 	.vtu_loadpurge = mv88e6250_g1_vtu_loadpurge,
-+	.avb_ops = &mv88e6352_avb_ops,
-+	.ptp_ops = &mv88e6250_ptp_ops,
- 	.phylink_validate = mv88e6065_phylink_validate,
- };
- 
-@@ -4318,6 +4320,7 @@ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
- 		.atu_move_port_mask = 0xf,
- 		.dual_chip = true,
- 		.tag_protocol = DSA_TAG_PROTO_DSA,
-+		.ptp_support = true,
- 		.ops = &mv88e6250_ops,
+@@ -4259,6 +4259,31 @@ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
+ 		.ops = &mv88e6191_ops,
  	},
  
-@@ -4363,6 +4366,7 @@ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
- 		.atu_move_port_mask = 0xf,
- 		.dual_chip = true,
- 		.tag_protocol = DSA_TAG_PROTO_DSA,
-+		.ptp_support = true,
- 		.ops = &mv88e6250_ops,
- 	},
- 
++	[MV88E6220] = {
++		.prod_num = MV88E6XXX_PORT_SWITCH_ID_PROD_6220,
++		.family = MV88E6XXX_FAMILY_6250,
++		.name = "Marvell 88E6220",
++		.num_databases = 64,
++
++		/* Ports 2-4 are not routed to pins
++		 * => usable ports 0, 1, 5, 6
++		 */
++		.num_ports = 7,
++		.num_internal_phys = 2,
++		.max_vid = 4095,
++		.port_base_addr = 0x08,
++		.phy_base_addr = 0x00,
++		.global1_addr = 0x0f,
++		.global2_addr = 0x07,
++		.age_time_coeff = 15000,
++		.g1_irqs = 9,
++		.g2_irqs = 10,
++		.atu_move_port_mask = 0xf,
++		.dual_chip = true,
++		.tag_protocol = DSA_TAG_PROTO_DSA,
++		.ops = &mv88e6250_ops,
++	},
++
+ 	[MV88E6240] = {
+ 		.prod_num = MV88E6XXX_PORT_SWITCH_ID_PROD_6240,
+ 		.family = MV88E6XXX_FAMILY_6352,
 diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
-index e7b88e9643b9..8c6d3c906197 100644
+index 4646e46d47f2..2cc508a1cc32 100644
 --- a/drivers/net/dsa/mv88e6xxx/chip.h
 +++ b/drivers/net/dsa/mv88e6xxx/chip.h
-@@ -539,6 +539,10 @@ struct mv88e6xxx_ptp_ops {
- 	int arr1_sts_reg;
- 	int dep_sts_reg;
- 	u32 rx_filters;
-+	u32 cc_shift;
-+	u32 cc_mult;
-+	u32 cc_mult_num;
-+	u32 cc_mult_dem;
- };
- 
- #define STATS_TYPE_PORT		BIT(0)
-diff --git a/drivers/net/dsa/mv88e6xxx/ptp.c b/drivers/net/dsa/mv88e6xxx/ptp.c
-index a1ff182c8737..073cbd0bb91b 100644
---- a/drivers/net/dsa/mv88e6xxx/ptp.c
-+++ b/drivers/net/dsa/mv88e6xxx/ptp.c
-@@ -15,11 +15,31 @@
- #include "hwtstamp.h"
- #include "ptp.h"
- 
--/* Raw timestamps are in units of 8-ns clock periods. */
--#define CC_SHIFT	28
--#define CC_MULT		(8 << CC_SHIFT)
--#define CC_MULT_NUM	(1 << 9)
--#define CC_MULT_DEM	15625ULL
-+#define MV88E6XXX_MAX_ADJ_PPB	1000000
-+
-+/* Family MV88E6250:
-+ * Raw timestamps are in units of 10-ns clock periods.
-+ *
-+ * clkadj = scaled_ppm * 10*2^28 / (10^6 * 2^16)
-+ * simplifies to
-+ * clkadj = scaled_ppm * 2^7 / 5^5
-+ */
-+#define MV88E6250_CC_SHIFT	28
-+#define MV88E6250_CC_MULT	(10 << MV88E6250_CC_SHIFT)
-+#define MV88E6250_CC_MULT_NUM	(1 << 7)
-+#define MV88E6250_CC_MULT_DEM	3125ULL
-+
-+/* Other families:
-+ * Raw timestamps are in units of 8-ns clock periods.
-+ *
-+ * clkadj = scaled_ppm * 8*2^28 / (10^6 * 2^16)
-+ * simplifies to
-+ * clkadj = scaled_ppm * 2^9 / 5^6
-+ */
-+#define MV88E6XXX_CC_SHIFT	28
-+#define MV88E6XXX_CC_MULT	(8 << MV88E6XXX_CC_SHIFT)
-+#define MV88E6XXX_CC_MULT_NUM	(1 << 9)
-+#define MV88E6XXX_CC_MULT_DEM	15625ULL
- 
- #define TAI_EVENT_WORK_INTERVAL msecs_to_jiffies(100)
- 
-@@ -179,6 +199,7 @@ static void mv88e6352_tai_event_work(struct work_struct *ugly)
- static int mv88e6xxx_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
- {
- 	struct mv88e6xxx_chip *chip = ptp_to_chip(ptp);
-+	const struct mv88e6xxx_ptp_ops *ptp_ops = chip->info->ops->ptp_ops;
- 	int neg_adj = 0;
- 	u32 diff, mult;
- 	u64 adj;
-@@ -187,10 +208,11 @@ static int mv88e6xxx_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
- 		neg_adj = 1;
- 		scaled_ppm = -scaled_ppm;
- 	}
--	mult = CC_MULT;
--	adj = CC_MULT_NUM;
-+
-+	mult = ptp_ops->cc_mult;
-+	adj = ptp_ops->cc_mult_num;
- 	adj *= scaled_ppm;
--	diff = div_u64(adj, CC_MULT_DEM);
-+	diff = div_u64(adj, ptp_ops->cc_mult_dem);
- 
- 	mv88e6xxx_reg_lock(chip);
- 
-@@ -324,6 +346,37 @@ const struct mv88e6xxx_ptp_ops mv88e6165_ptp_ops = {
- 		(1 << HWTSTAMP_FILTER_PTP_V2_EVENT) |
- 		(1 << HWTSTAMP_FILTER_PTP_V2_SYNC) |
- 		(1 << HWTSTAMP_FILTER_PTP_V2_DELAY_REQ),
-+	.cc_shift = MV88E6XXX_CC_SHIFT,
-+	.cc_mult = MV88E6XXX_CC_MULT,
-+	.cc_mult_num = MV88E6XXX_CC_MULT_NUM,
-+	.cc_mult_dem = MV88E6XXX_CC_MULT_DEM,
-+};
-+
-+const struct mv88e6xxx_ptp_ops mv88e6250_ptp_ops = {
-+	.clock_read = mv88e6352_ptp_clock_read,
-+	.ptp_enable = mv88e6352_ptp_enable,
-+	.ptp_verify = mv88e6352_ptp_verify,
-+	.event_work = mv88e6352_tai_event_work,
-+	.port_enable = mv88e6352_hwtstamp_port_enable,
-+	.port_disable = mv88e6352_hwtstamp_port_disable,
-+	.n_ext_ts = 1,
-+	.arr0_sts_reg = MV88E6XXX_PORT_PTP_ARR0_STS,
-+	.arr1_sts_reg = MV88E6XXX_PORT_PTP_ARR1_STS,
-+	.dep_sts_reg = MV88E6XXX_PORT_PTP_DEP_STS,
-+	.rx_filters = (1 << HWTSTAMP_FILTER_NONE) |
-+		(1 << HWTSTAMP_FILTER_PTP_V2_L4_EVENT) |
-+		(1 << HWTSTAMP_FILTER_PTP_V2_L4_SYNC) |
-+		(1 << HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ) |
-+		(1 << HWTSTAMP_FILTER_PTP_V2_L2_EVENT) |
-+		(1 << HWTSTAMP_FILTER_PTP_V2_L2_SYNC) |
-+		(1 << HWTSTAMP_FILTER_PTP_V2_L2_DELAY_REQ) |
-+		(1 << HWTSTAMP_FILTER_PTP_V2_EVENT) |
-+		(1 << HWTSTAMP_FILTER_PTP_V2_SYNC) |
-+		(1 << HWTSTAMP_FILTER_PTP_V2_DELAY_REQ),
-+	.cc_shift = MV88E6250_CC_SHIFT,
-+	.cc_mult = MV88E6250_CC_MULT,
-+	.cc_mult_num = MV88E6250_CC_MULT_NUM,
-+	.cc_mult_dem = MV88E6250_CC_MULT_DEM,
- };
- 
- const struct mv88e6xxx_ptp_ops mv88e6352_ptp_ops = {
-@@ -347,6 +400,10 @@ const struct mv88e6xxx_ptp_ops mv88e6352_ptp_ops = {
- 		(1 << HWTSTAMP_FILTER_PTP_V2_EVENT) |
- 		(1 << HWTSTAMP_FILTER_PTP_V2_SYNC) |
- 		(1 << HWTSTAMP_FILTER_PTP_V2_DELAY_REQ),
-+	.cc_shift = MV88E6XXX_CC_SHIFT,
-+	.cc_mult = MV88E6XXX_CC_MULT,
-+	.cc_mult_num = MV88E6XXX_CC_MULT_NUM,
-+	.cc_mult_dem = MV88E6XXX_CC_MULT_DEM,
- };
- 
- static u64 mv88e6xxx_ptp_clock_read(const struct cyclecounter *cc)
-@@ -384,8 +441,8 @@ int mv88e6xxx_ptp_setup(struct mv88e6xxx_chip *chip)
- 	memset(&chip->tstamp_cc, 0, sizeof(chip->tstamp_cc));
- 	chip->tstamp_cc.read	= mv88e6xxx_ptp_clock_read;
- 	chip->tstamp_cc.mask	= CYCLECOUNTER_MASK(32);
--	chip->tstamp_cc.mult	= CC_MULT;
--	chip->tstamp_cc.shift	= CC_SHIFT;
-+	chip->tstamp_cc.mult	= ptp_ops->cc_mult;
-+	chip->tstamp_cc.shift	= ptp_ops->cc_shift;
- 
- 	timecounter_init(&chip->tstamp_tc, &chip->tstamp_cc,
- 			 ktime_to_ns(ktime_get_real()));
-@@ -397,7 +454,6 @@ int mv88e6xxx_ptp_setup(struct mv88e6xxx_chip *chip)
- 	chip->ptp_clock_info.owner = THIS_MODULE;
- 	snprintf(chip->ptp_clock_info.name, sizeof(chip->ptp_clock_info.name),
- 		 "%s", dev_name(chip->dev));
--	chip->ptp_clock_info.max_adj	= 1000000;
- 
- 	chip->ptp_clock_info.n_ext_ts	= ptp_ops->n_ext_ts;
- 	chip->ptp_clock_info.n_per_out	= 0;
-@@ -413,6 +469,7 @@ int mv88e6xxx_ptp_setup(struct mv88e6xxx_chip *chip)
- 	}
- 	chip->ptp_clock_info.pin_config = chip->pin_config;
- 
-+	chip->ptp_clock_info.max_adj    = MV88E6XXX_MAX_ADJ_PPB;
- 	chip->ptp_clock_info.adjfine	= mv88e6xxx_ptp_adjfine;
- 	chip->ptp_clock_info.adjtime	= mv88e6xxx_ptp_adjtime;
- 	chip->ptp_clock_info.gettime64	= mv88e6xxx_ptp_gettime;
-diff --git a/drivers/net/dsa/mv88e6xxx/ptp.h b/drivers/net/dsa/mv88e6xxx/ptp.h
-index 58cbd21d58f6..269d5d16a466 100644
---- a/drivers/net/dsa/mv88e6xxx/ptp.h
-+++ b/drivers/net/dsa/mv88e6xxx/ptp.h
-@@ -149,6 +149,7 @@ void mv88e6xxx_ptp_free(struct mv88e6xxx_chip *chip);
- 				      ptp_clock_info)
- 
- extern const struct mv88e6xxx_ptp_ops mv88e6165_ptp_ops;
-+extern const struct mv88e6xxx_ptp_ops mv88e6250_ptp_ops;
- extern const struct mv88e6xxx_ptp_ops mv88e6352_ptp_ops;
- 
- #else /* !CONFIG_NET_DSA_MV88E6XXX_PTP */
-@@ -168,6 +169,7 @@ static inline void mv88e6xxx_ptp_free(struct mv88e6xxx_chip *chip)
- }
- 
- static const struct mv88e6xxx_ptp_ops mv88e6165_ptp_ops = {};
-+static const struct mv88e6xxx_ptp_ops mv88e6250_ptp_ops = {};
- static const struct mv88e6xxx_ptp_ops mv88e6352_ptp_ops = {};
- 
- #endif /* CONFIG_NET_DSA_MV88E6XXX_PTP */
+@@ -57,6 +57,7 @@ enum mv88e6xxx_model {
+ 	MV88E6190,
+ 	MV88E6190X,
+ 	MV88E6191,
++	MV88E6220,
+ 	MV88E6240,
+ 	MV88E6250,
+ 	MV88E6290,
+@@ -77,7 +78,7 @@ enum mv88e6xxx_family {
+ 	MV88E6XXX_FAMILY_6097,	/* 6046 6085 6096 6097 */
+ 	MV88E6XXX_FAMILY_6165,	/* 6123 6161 6165 */
+ 	MV88E6XXX_FAMILY_6185,	/* 6108 6121 6122 6131 6152 6155 6182 6185 */
+-	MV88E6XXX_FAMILY_6250,	/* 6250 */
++	MV88E6XXX_FAMILY_6250,	/* 6220 6250 */
+ 	MV88E6XXX_FAMILY_6320,	/* 6320 6321 */
+ 	MV88E6XXX_FAMILY_6341,	/* 6141 6341 */
+ 	MV88E6XXX_FAMILY_6351,	/* 6171 6175 6350 6351 */
+diff --git a/drivers/net/dsa/mv88e6xxx/port.h b/drivers/net/dsa/mv88e6xxx/port.h
+index 8d5a6cd6fb19..ceec771f8bfc 100644
+--- a/drivers/net/dsa/mv88e6xxx/port.h
++++ b/drivers/net/dsa/mv88e6xxx/port.h
+@@ -117,6 +117,7 @@
+ #define MV88E6XXX_PORT_SWITCH_ID_PROD_6190	0x1900
+ #define MV88E6XXX_PORT_SWITCH_ID_PROD_6191	0x1910
+ #define MV88E6XXX_PORT_SWITCH_ID_PROD_6185	0x1a70
++#define MV88E6XXX_PORT_SWITCH_ID_PROD_6220	0x2200
+ #define MV88E6XXX_PORT_SWITCH_ID_PROD_6240	0x2400
+ #define MV88E6XXX_PORT_SWITCH_ID_PROD_6250	0x2500
+ #define MV88E6XXX_PORT_SWITCH_ID_PROD_6290	0x2900
 -- 
 2.22.0
 
