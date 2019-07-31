@@ -2,105 +2,158 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E97C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F749C32754
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7942067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 639B62067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:38:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ufN57qAL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730915AbfGaXhd (ORCPT
+        id S1730932AbfGaXij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:37:33 -0400
-Received: from mga07.intel.com ([134.134.136.100]:54398 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729275AbfGaXhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:37:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 16:37:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,332,1559545200"; 
-   d="scan'208";a="256368246"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga001.jf.intel.com with ESMTP; 31 Jul 2019 16:37:31 -0700
-Date:   Wed, 31 Jul 2019 16:37:31 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH RFC 3/5] x86: KVM: svm: clear interrupt shadow on all
- paths in skip_emulated_instruction()
-Message-ID: <20190731233731.GA2845@linux.intel.com>
-References: <20190620110240.25799-1-vkuznets@redhat.com>
- <20190620110240.25799-4-vkuznets@redhat.com>
- <CALMp9eQ85h58NMDh-yOYvHN6_2f2T-wu63f+yLnNbwuG+p3Uvw@mail.gmail.com>
- <87ftmm71p3.fsf@vitty.brq.redhat.com>
- <36a9f411-f90c-3ffa-9ee3-6ebee13a763f@redhat.com>
- <CALMp9eQLCEzfdNzdhPtCf3bD-5c6HrSvJqP7idyoo4Gf3i5O1w@mail.gmail.com>
+        Wed, 31 Jul 2019 19:38:39 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:55316 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfGaXii (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 19:38:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1564616317; x=1596152317;
+  h=subject:to:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=Kd98BXsBmYyhXF8NQI/xoh/VfpCf36zrcpwwmqSjLZQ=;
+  b=ufN57qAL04haOgigzx7ujX7uLOeeVw20tdenmE5/Jm25qxWK/TH+hRc2
+   2hdKSO8FFTr41LSy+pKxclrhdTbw3CSTyWuzOxPzm/ZWq6Q1cA5TsrALo
+   Hv5OTAO/Bnx0OZP88BJHDXRBaf7VGxMH0k2mxiFxZLGRH4zBabUYIDQb/
+   Q=;
+X-IronPort-AV: E=Sophos;i="5.64,332,1559520000"; 
+   d="scan'208";a="413325993"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 31 Jul 2019 23:38:35 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id 73F2CA1E0F;
+        Wed, 31 Jul 2019 23:38:34 +0000 (UTC)
+Received: from EX13D10UWB004.ant.amazon.com (10.43.161.121) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 31 Jul 2019 23:38:34 +0000
+Received: from [10.63.178.84] (10.43.160.160) by EX13D10UWB004.ant.amazon.com
+ (10.43.161.121) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 31 Jul
+ 2019 23:38:33 +0000
+Subject: Re: [PATCH v2] nbd: replace kill_bdev() with __invalidate_device()
+ again
+To:     SunKe <sunke32@huawei.com>, <josef@toxicpanda.com>,
+        <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
+        <nbd@other.debian.org>, <linux-kernel@vger.kernel.org>,
+        <manoj.br@gmail.com>, <stable@vger.kernel.org>, <dwmw@amazon.com>
+References: <1564575190-132357-1-git-send-email-sunke32@huawei.com>
+From:   Munehisa Kamata <kamatam@amazon.com>
+Message-ID: <98ac17cf-c658-9e80-8505-4309805fc1f0@amazon.com>
+Date:   Wed, 31 Jul 2019 16:38:33 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eQLCEzfdNzdhPtCf3bD-5c6HrSvJqP7idyoo4Gf3i5O1w@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1564575190-132357-1-git-send-email-sunke32@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.160.160]
+X-ClientProxiedBy: EX13D15UWB004.ant.amazon.com (10.43.161.61) To
+ EX13D10UWB004.ant.amazon.com (10.43.161.121)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 01:27:53PM -0700, Jim Mattson wrote:
-> On Wed, Jul 31, 2019 at 9:37 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >
-> > On 31/07/19 15:50, Vitaly Kuznetsov wrote:
-> > > Jim Mattson <jmattson@google.com> writes:
-> > >
-> > >> On Thu, Jun 20, 2019 at 4:02 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> > >>>
-> > >>> Regardless of the way how we skip instruction, interrupt shadow needs to be
-> > >>> cleared.
-> > >>
-> > >> This change is definitely an improvement, but the existing code seems
-> > >> to assume that we never call skip_emulated_instruction on a
-> > >> POP-SS/MOV-to-SS/STI. Is that enforced anywhere?
-> > >
-> > > (before I send v1 of the series) I looked at the current code and I
-> > > don't think it is enforced, however, VMX version does the same and
-> > > honestly I can't think of a situation when we would be doing 'skip' for
-> > > such an instruction.... and there's nothing we can easily enforce from
-> > > skip_emulated_instruction() as we have no idea what the instruction
-> > > is...
+On 7/31/2019 5:13 AM, SunKe wrote:
+> From: Munehisa Kamata <kamatam@amazon.com>
 > 
-> Can't we still coerce kvm into emulating any instruction by leveraging
-> a stale ITLB entry? The 'emulator' kvm-unit-test did this before the
-> KVM forced emulation prefix was introduced, but I haven't checked to
-> see if the original (admittedly fragile) approach still works. Also,
-> for POP-SS, you could always force emulation by mapping the %rsp
-> address beyond guest physical memory. The hypervisor would then have
-> to emulate the instruction to provide bus-error semantics.
+> Commit abbbdf12497d ("replace kill_bdev() with __invalidate_device()")
+> once did this, but 29eaadc03649 ("nbd: stop using the bdev everywhere")
+> resurrected kill_bdev() and it has been there since then. So buffer_head
+> mappings still get killed on a server disconnection, and we can still
+> hit the BUG_ON on a filesystem on the top of the nbd device.
 > 
-> > I agree, I think a comment is worthwhile but we can live with the
-> > limitation.
+>   EXT4-fs (nbd0): mounted filesystem with ordered data mode. Opts: (null)
+>   block nbd0: Receive control failed (result -32)
+>   block nbd0: shutting down sockets
+>   print_req_error: I/O error, dev nbd0, sector 66264 flags 3000
+>   EXT4-fs warning (device nbd0): htree_dirblock_to_tree:979: inode #2: lblock 0: comm ls: error -5 reading directory block
+>   print_req_error: I/O error, dev nbd0, sector 2264 flags 3000
+>   EXT4-fs error (device nbd0): __ext4_get_inode_loc:4690: inode #2: block 283: comm ls: unable to read itable block
+>   EXT4-fs error (device nbd0) in ext4_reserve_inode_write:5894: IO failure
+>   ------------[ cut here ]------------
+>   kernel BUG at fs/buffer.c:3057!
+>   invalid opcode: 0000 [#1] SMP PTI
+>   CPU: 7 PID: 40045 Comm: jbd2/nbd0-8 Not tainted 5.1.0-rc3+ #4
+>   Hardware name: Amazon EC2 m5.12xlarge/, BIOS 1.0 10/16/2017
+>   RIP: 0010:submit_bh_wbc+0x18b/0x190
+>   ...
+>   Call Trace:
+>    jbd2_write_superblock+0xf1/0x230 [jbd2]
+>    ? account_entity_enqueue+0xc5/0xf0
+>    jbd2_journal_update_sb_log_tail+0x94/0xe0 [jbd2]
+>    jbd2_journal_commit_transaction+0x12f/0x1d20 [jbd2]
+>    ? __switch_to_asm+0x40/0x70
+>    ...
+>    ? lock_timer_base+0x67/0x80
+>    kjournald2+0x121/0x360 [jbd2]
+>    ? remove_wait_queue+0x60/0x60
+>    kthread+0xf8/0x130
+>    ? commit_timeout+0x10/0x10 [jbd2]
+>    ? kthread_bind+0x10/0x10
+>    ret_from_fork+0x35/0x40
 > 
-> I think we can live with the limitation, but I'd really prefer to see
-> a KVM exit with KVM_INTERNAL_ERROR_EMULATION for an instruction that
-> kvm doesn't emulate properly. That seems better than just a comment
-> that the virtual CPU doesn't behave as architected. (I realize that I
-> am probably in the minority here.)
+> With __invalidate_device(), I no longer hit the BUG_ON with sync or
+> unmount on the disconnected device.
+> 
+> Fixes: 29eaadc03649 ("nbd: stop using the bdev everywhere")
+> Cc: linux-block@vger.kernel.org
+> Cc: Ratna Manoj Bolla <manoj.br@gmail.com>
+> Cc: nbd@other.debian.org
+> Cc: stable@vger.kernel.org
+> Cc: David Woodhouse <dwmw@amazon.com>
+> Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
+> 
+> ---
+> I reproduced this phenomenon on the fat file system.
+> reproduce steps :
+> 1.Establish a nbd connection.
+> 2.Run two threads:one do mount and umount,anther one do clear_sock ioctl
+> 3.Then hit the BUG_ON.
+> 
+> v2: Delete a link.
+> 
+> Signed-off-by: SunKe <sunke32@huawei.com>
+> 
+>  drivers/block/nbd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index 9bcde23..e21d2de 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -1231,7 +1231,7 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
+>  				 struct block_device *bdev)
+>  {
+>  	sock_shutdown(nbd);
+> -	kill_bdev(bdev);
+> +	__invalidate_device(bdev, true);
+>  	nbd_bdev_reset(bdev);
+>  	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
+>  			       &nbd->config->runtime_flags))
+> 
 
-At a glance, the full emulator models behavior correctly, e.g. see
-toggle_interruptibility() and setters of ctxt->interruptibility.
+Hi SunKe,
 
-I'm pretty sure that leaves the EPT misconfig MMIO and APIC access EOI
-fast paths as the only (VMX) path that would incorrectly handle a
-MOV/POP SS.  Reading the guest's instruction stream to detect MOV/POP SS
-would defeat the whole "fast path" thing, not to mention both paths aren't
-exactly architecturally compliant in the first place.
+I accidentally included the link in the original one. Sorry about that and thanks
+for picking this up.
+
+Regards,
+Munehsia
