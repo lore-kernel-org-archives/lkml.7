@@ -2,238 +2,118 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67DFC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D10DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83E88217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564579062;
-	bh=/fJuh2BrCm/YkwllLX3B/FXV1b9lACjnAv5WC6FPK+c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JsXb44QzPlf995jPFZP+DGfpJ2xFpnaRBl5yP6g7ke3o/Pc5NweOHohviUIlq9iL/
-	 ITm4RUsBRIPylN24JYeShoBKZxMTeFAmcv6W/gdAICpW3Ne3Z0sraj/lxmWXzJG337
-	 KVQch171kA+J1nZus/Pj9yisw0KNweaE9V4Mmr6I=
+	by mail.kernel.org (Postfix) with ESMTP id 191D1208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbfGaNRl (ORCPT
+        id S1728045AbfGaNRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:17:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49352 "EHLO mail.kernel.org"
+        Wed, 31 Jul 2019 09:17:44 -0400
+Received: from mga02.intel.com ([134.134.136.20]:63732 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbfGaNRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:17:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66BBF208E4;
-        Wed, 31 Jul 2019 13:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564579057;
-        bh=/fJuh2BrCm/YkwllLX3B/FXV1b9lACjnAv5WC6FPK+c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b9bLULyIq0w4zRzwoxokLmLMtFCUbQqTppHGARqd5WmRlXJMZxHnw3Hrq2u9QO3rI
-         8mVV0M0FQVsIsib1EBQLDF6JDhRmWEjalOXaZyYTdmkLYNnecT/112VTrNtt509wF+
-         fhsT4y4utwlZrasPf3Y8AxQh8JYhVzP7OQcrarFI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
-Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH v2 3/3] ASoC: SOF: no need to check return value of debugfs_create functions
-Date:   Wed, 31 Jul 2019 15:17:16 +0200
-Message-Id: <20190731131716.9764-3-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190731131716.9764-1-gregkh@linuxfoundation.org>
-References: <20190731131716.9764-1-gregkh@linuxfoundation.org>
+        id S1729371AbfGaNRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:17:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 06:17:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,330,1559545200"; 
+   d="scan'208";a="191241302"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 31 Jul 2019 06:17:36 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        mm-commits@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>, mhocko@suse.cz,
+        linux-mm@kvack.org, Mark Brown <broonie@kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: mmotm 2019-07-04-15-01 uploaded (gpu/drm/i915/oa/)
+In-Reply-To: <CAK7LNATF+D5TgTZijG3EPBVON5NmN+JcwmCBvnvkMFyR+3wF2A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org> <80bf2204-558a-6d3f-c493-bf17b891fc8a@infradead.org> <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com> <CAK7LNASLfyreDPvNuL1svvHPC0woKnXO_bsNku4DMK6UNn4oHw@mail.gmail.com> <5e5353e2-bfab-5360-26b2-bf8c72ac7e70@infradead.org> <CAK7LNATF+D5TgTZijG3EPBVON5NmN+JcwmCBvnvkMFyR+3wF2A@mail.gmail.com>
+Date:   Wed, 31 Jul 2019 16:21:58 +0300
+Message-ID: <87v9vimj9l.fsf@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+On Fri, 05 Jul 2019, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> On Fri, Jul 5, 2019 at 12:23 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> On 7/4/19 8:09 PM, Masahiro Yamada wrote:
+>> > On Fri, Jul 5, 2019 at 12:05 PM Masahiro Yamada
+>> > <yamada.masahiro@socionext.com> wrote:
+>> >>
+>> >> On Fri, Jul 5, 2019 at 10:09 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>> >>>
+>> >>> On 7/4/19 3:01 PM, akpm@linux-foundation.org wrote:
+>> >>>> The mm-of-the-moment snapshot 2019-07-04-15-01 has been uploaded to
+>> >>>>
+>> >>>>    http://www.ozlabs.org/~akpm/mmotm/
+>> >>>>
+>> >>>> mmotm-readme.txt says
+>> >>>>
+>> >>>> README for mm-of-the-moment:
+>> >>>>
+>> >>>> http://www.ozlabs.org/~akpm/mmotm/
+>> >>>
+>> >>> I get a lot of these but don't see/know what causes them:
+>> >>>
+>> >>> ../scripts/Makefile.build:42: ../drivers/gpu/drm/i915/oa/Makefile: No such file or directory
+>> >>> make[6]: *** No rule to make target '../drivers/gpu/drm/i915/oa/Makefile'.  Stop.
+>> >>> ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915/oa' failed
+>> >>> make[5]: *** [drivers/gpu/drm/i915/oa] Error 2
+>> >>> ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915' failed
+>> >>>
+>> >>
+>> >> I checked next-20190704 tag.
+>> >>
+>> >> I see the empty file
+>> >> drivers/gpu/drm/i915/oa/Makefile
+>> >>
+>> >> Did someone delete it?
+>> >>
+>> >
+>> >
+>> > I think "obj-y += oa/"
+>> > in drivers/gpu/drm/i915/Makefile
+>> > is redundant.
+>>
+>> Thanks.  It seems to be working after deleting that line.
+>
+>
+> Could you check whether or not
+> drivers/gpu/drm/i915/oa/Makefile exists in your source tree?
+>
+> Your build log says it was missing.
+>
+> But, commit 5ed7a0cf3394 ("drm/i915: Move OA files to separate folder")
+> added it.  (It is just an empty file)
+>
+> I am just wondering why.
 
-Also, if a debugfs call fails, userspace is notified with an error in
-the log, so no need to log the error again.
+I've sent patches adding some content, and they'll make their way
+upstream eventually. I am not sure why the empty file was added
+originally. Perhaps as a placeholder, seemed benign enough.
 
-Because we no longer need to check the return value, there's no need to
-save the dentry returned by debugfs.  Just use the dentry in the file
-pointer if we really need to figure out the "name" of the file being
-opened.
+BR,
+Jani.
 
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: alsa-devel@alsa-project.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-v2: rebase on 5.3-rc1
-    change Subject line to match the subsystem better
-    rework based on debugfs core now reporting errors.
 
- sound/soc/sof/debug.c    | 49 +++++++++++++++-------------------------
- sound/soc/sof/sof-priv.h |  1 -
- sound/soc/sof/trace.c    |  9 ++------
- 3 files changed, 20 insertions(+), 39 deletions(-)
-
-diff --git a/sound/soc/sof/debug.c b/sound/soc/sof/debug.c
-index 2388477a965e..40940b2fe9d5 100644
---- a/sound/soc/sof/debug.c
-+++ b/sound/soc/sof/debug.c
-@@ -128,6 +128,7 @@ static ssize_t sof_dfsentry_write(struct file *file, const char __user *buffer,
- 	unsigned long ipc_duration_ms = 0;
- 	bool flood_duration_test = false;
- 	unsigned long ipc_count = 0;
-+	struct dentry *dentry;
- 	int err;
- #endif
- 	size_t size;
-@@ -149,11 +150,12 @@ static ssize_t sof_dfsentry_write(struct file *file, const char __user *buffer,
- 	 * ipc_duration_ms test floods the DSP for the time specified
- 	 * in the debugfs entry.
- 	 */
--	if (strcmp(dfse->dfsentry->d_name.name, "ipc_flood_count") &&
--	    strcmp(dfse->dfsentry->d_name.name, "ipc_flood_duration_ms"))
-+	dentry = file->f_path.dentry;
-+	if (strcmp(dentry->d_name.name, "ipc_flood_count") &&
-+	    strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
- 		return -EINVAL;
- 
--	if (!strcmp(dfse->dfsentry->d_name.name, "ipc_flood_duration_ms"))
-+	if (!strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
- 		flood_duration_test = true;
- 
- 	/* test completion criterion */
-@@ -219,6 +221,7 @@ static ssize_t sof_dfsentry_read(struct file *file, char __user *buffer,
- {
- 	struct snd_sof_dfsentry *dfse = file->private_data;
- 	struct snd_sof_dev *sdev = dfse->sdev;
-+	struct dentry *dentry;
- 	loff_t pos = *ppos;
- 	size_t size_ret;
- 	int skip = 0;
-@@ -226,8 +229,9 @@ static ssize_t sof_dfsentry_read(struct file *file, char __user *buffer,
- 	u8 *buf;
- 
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_DEBUG_IPC_FLOOD_TEST)
--	if ((!strcmp(dfse->dfsentry->d_name.name, "ipc_flood_count") ||
--	     !strcmp(dfse->dfsentry->d_name.name, "ipc_flood_duration_ms")) &&
-+	dentry = file->f_path.dentry;
-+	if ((!strcmp(dentry->d_name.name, "ipc_flood_count") ||
-+	     !strcmp(dentry->d_name.name, "ipc_flood_duration_ms")) &&
- 	    dfse->cache_buf) {
- 		if (*ppos)
- 			return 0;
-@@ -290,8 +294,7 @@ static ssize_t sof_dfsentry_read(struct file *file, char __user *buffer,
- 		if (!pm_runtime_active(sdev->dev) &&
- 		    dfse->access_type == SOF_DEBUGFS_ACCESS_D0_ONLY) {
- 			dev_err(sdev->dev,
--				"error: debugfs entry %s cannot be read in DSP D3\n",
--				dfse->dfsentry->d_name.name);
-+				"error: debugfs entry cannot be read in DSP D3\n");
- 			kfree(buf);
- 			return -EINVAL;
- 		}
-@@ -356,17 +359,11 @@ int snd_sof_debugfs_io_item(struct snd_sof_dev *sdev,
- 	}
- #endif
- 
--	dfse->dfsentry = debugfs_create_file(name, 0444, sdev->debugfs_root,
--					     dfse, &sof_dfs_fops);
--	if (!dfse->dfsentry) {
--		/* can't rely on debugfs, only log error and keep going */
--		dev_err(sdev->dev, "error: cannot create debugfs entry %s\n",
--			name);
--	} else {
--		/* add to dfsentry list */
--		list_add(&dfse->list, &sdev->dfsentry_list);
-+	debugfs_create_file(name, 0444, sdev->debugfs_root, dfse,
-+			    &sof_dfs_fops);
- 
--	}
-+	/* add to dfsentry list */
-+	list_add(&dfse->list, &sdev->dfsentry_list);
- 
- 	return 0;
- }
-@@ -402,16 +399,10 @@ int snd_sof_debugfs_buf_item(struct snd_sof_dev *sdev,
- 		return -ENOMEM;
- #endif
- 
--	dfse->dfsentry = debugfs_create_file(name, mode, sdev->debugfs_root,
--					     dfse, &sof_dfs_fops);
--	if (!dfse->dfsentry) {
--		/* can't rely on debugfs, only log error and keep going */
--		dev_err(sdev->dev, "error: cannot create debugfs entry %s\n",
--			name);
--	} else {
--		/* add to dfsentry list */
--		list_add(&dfse->list, &sdev->dfsentry_list);
--	}
-+	debugfs_create_file(name, mode, sdev->debugfs_root, dfse,
-+			    &sof_dfs_fops);
-+	/* add to dfsentry list */
-+	list_add(&dfse->list, &sdev->dfsentry_list);
- 
- 	return 0;
- }
-@@ -426,10 +417,6 @@ int snd_sof_dbg_init(struct snd_sof_dev *sdev)
- 
- 	/* use "sof" as top level debugFS dir */
- 	sdev->debugfs_root = debugfs_create_dir("sof", NULL);
--	if (IS_ERR_OR_NULL(sdev->debugfs_root)) {
--		dev_err(sdev->dev, "error: failed to create debugfs directory\n");
--		return 0;
--	}
- 
- 	/* init dfsentry list */
- 	INIT_LIST_HEAD(&sdev->dfsentry_list);
-diff --git a/sound/soc/sof/sof-priv.h b/sound/soc/sof/sof-priv.h
-index b8c0b2a22684..79b6709d1874 100644
---- a/sound/soc/sof/sof-priv.h
-+++ b/sound/soc/sof/sof-priv.h
-@@ -228,7 +228,6 @@ enum sof_debugfs_access_type {
- 
- /* FS entry for debug files that can expose DSP memories, registers */
- struct snd_sof_dfsentry {
--	struct dentry *dfsentry;
- 	size_t size;
- 	enum sof_dfsentry_type type;
- 	/*
-diff --git a/sound/soc/sof/trace.c b/sound/soc/sof/trace.c
-index befed975161c..4c3cff031fd6 100644
---- a/sound/soc/sof/trace.c
-+++ b/sound/soc/sof/trace.c
-@@ -148,13 +148,8 @@ static int trace_debugfs_create(struct snd_sof_dev *sdev)
- 	dfse->size = sdev->dmatb.bytes;
- 	dfse->sdev = sdev;
- 
--	dfse->dfsentry = debugfs_create_file("trace", 0444, sdev->debugfs_root,
--					     dfse, &sof_dfs_trace_fops);
--	if (!dfse->dfsentry) {
--		/* can't rely on debugfs, only log error and keep going */
--		dev_err(sdev->dev,
--			"error: cannot create debugfs entry for trace\n");
--	}
-+	debugfs_create_file("trace", 0444, sdev->debugfs_root, dfse,
-+			    &sof_dfs_trace_fops);
- 
- 	return 0;
- }
 -- 
-2.22.0
-
+Jani Nikula, Intel Open Source Graphics Center
