@@ -4,71 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14EDC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC8EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6AD206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F34F2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbfGaJrm (ORCPT
+        id S1728770AbfGaJsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:47:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36495 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfGaJrl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:47:41 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hslCr-0006P6-2g; Wed, 31 Jul 2019 09:47:37 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8188eu: remove redundant assignment to variable rtstatus
-Date:   Wed, 31 Jul 2019 10:47:36 +0100
-Message-Id: <20190731094736.28637-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Wed, 31 Jul 2019 05:48:00 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:50352 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726559AbfGaJr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:47:59 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A8A561A0950;
+        Wed, 31 Jul 2019 11:47:57 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 294661A0453;
+        Wed, 31 Jul 2019 11:47:54 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7301840296;
+        Wed, 31 Jul 2019 17:47:49 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biwen Li <biwen.li@nxp.com>
+Subject: [v2,1/3] arm64: dts: ls1028a: Add ftm_alarm0 DT node
+Date:   Wed, 31 Jul 2019 17:38:24 +0800
+Message-Id: <20190731093826.49046-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+The patch adds ftm_alarm0 DT node for LS1028ARDB board
+FlexTimer1 module is used to wakeup the system
 
-Variable rtstatus is being initialized with a value that is never read
-and rtstatus is being re-assigned a little later on. The assignment is
-redundant and hence can be removed.  Also, make rtstatus a bool to
-match the function return type.
-
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
- drivers/staging/rtl8188eu/hal/bb_cfg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Change in v2:
+	- None
 
-diff --git a/drivers/staging/rtl8188eu/hal/bb_cfg.c b/drivers/staging/rtl8188eu/hal/bb_cfg.c
-index 11e0bb9c67d7..51882858fcf0 100644
---- a/drivers/staging/rtl8188eu/hal/bb_cfg.c
-+++ b/drivers/staging/rtl8188eu/hal/bb_cfg.c
-@@ -653,7 +653,7 @@ static bool config_parafile(struct adapter *adapt)
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 7975519b4f56..3c66d1e1d196 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -17,6 +17,10 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
  
- bool rtl88eu_phy_bb_config(struct adapter *adapt)
- {
--	int rtstatus = true;
-+	bool rtstatus;
- 	u32 regval;
- 	u8 crystal_cap;
++	aliases {
++		rtc1 = &ftm_alarm0;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -543,6 +547,19 @@
+ 				little-endian;
+ 			};
+ 		};
++
++		rcpm: rcpm@1e34040 {
++			compatible = "fsl,ls1028a-rcpm", "fsl,qoriq-rcpm-2.1+";
++			reg = <0x0 0x1e34040 0x0 0x1c>;
++			#fsl,rcpm-wakeup-cells = <7>;
++		};
++
++		ftm_alarm0: timer@2800000 {
++			compatible = "fsl,ls1028a-ftm-alarm";
++			reg = <0x0 0x2800000 0x0 0x10000>;
++			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0 0x0>;
++			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		};
+ 	};
  
+ 	malidp0: display@f080000 {
 -- 
-2.20.1
+2.17.1
 
