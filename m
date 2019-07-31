@@ -2,45 +2,43 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A33C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B24C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFDE2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338112064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbfGaTvz (ORCPT
+        id S1730169AbfGaTwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:51:55 -0400
-Received: from sauhun.de ([88.99.104.3]:44688 "EHLO pokefinder.org"
+        Wed, 31 Jul 2019 15:52:04 -0400
+Received: from sauhun.de ([88.99.104.3]:44698 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfGaTvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:51:54 -0400
+        id S1726232AbfGaTwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 15:52:03 -0400
 Received: from localhost (p54B33080.dip0.t-ipconnect.de [84.179.48.128])
-        by pokefinder.org (Postfix) with ESMTPSA id 886182C270A;
-        Wed, 31 Jul 2019 21:51:52 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 21:51:52 +0200
+        by pokefinder.org (Postfix) with ESMTPSA id 92D132C270A;
+        Wed, 31 Jul 2019 21:52:01 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 21:52:01 +0200
 From:   Wolfram Sang <wsa@the-dreams.de>
 To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 Cc:     linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
+        linux-renesas-soc@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/6] media: i2c: s5c73m3: Convert to new i2c device
- probe()
-Message-ID: <20190731195152.GF4084@kunai>
+Subject: Re: [PATCH 5/6] media: i2c: et8ek8: Convert to new i2c device probe()
+Message-ID: <20190731195201.GG4084@kunai>
 References: <20190710215149.9208-1-kieran.bingham+renesas@ideasonboard.com>
- <20190710215149.9208-5-kieran.bingham+renesas@ideasonboard.com>
+ <20190710215149.9208-6-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nYySOmuH/HDX6pKp"
+        protocol="application/pgp-signature"; boundary="nhYGnrYv1PEJ5gA2"
 Content-Disposition: inline
-In-Reply-To: <20190710215149.9208-5-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <20190710215149.9208-6-kieran.bingham+renesas@ideasonboard.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -48,12 +46,12 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---nYySOmuH/HDX6pKp
+--nhYGnrYv1PEJ5gA2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2019 at 10:51:47PM +0100, Kieran Bingham wrote:
+On Wed, Jul 10, 2019 at 10:51:48PM +0100, Kieran Bingham wrote:
 > The I2C core framework provides a simplified probe framework from commit
 > b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new() call-back type").
 >=20
@@ -66,24 +64,24 @@ can
 Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 
---nYySOmuH/HDX6pKp
+--nhYGnrYv1PEJ5gA2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1B8VgACgkQFA3kzBSg
-KbYkjBAApm8A1oTmg0zcZeR+bR6F/u5a0Gx5GjCOwpA/2F5cxcJ7KmycAb0Q4Aif
-bwH9aWb3mINhKfwVjVl4/WnUeL+CiLbfONh2iVURAMXgRarPKGeDkEHpTA8W0fra
-PJdJ0XgaotEyVrY3kUyOHtkMfVz6UUrWErfx3fNK2vtwVSB1Yn12xwraHspdX8h6
-2FYRpvlcY+nSU9UJ8a9IJpf4W/O4xLGiZ9uj0LSFZk3bC/UOuCIEHz5u8+Lnz7+f
-aPJDCsis5mGEVOYDt9+VmP0F1TDJVuJGL7+jjb3EVxBJv6Z7tJdjHkttZnx+CxQh
-VCR4fq2a98Fjgb1NtSrwJQXv8gKBBeE8nL2Q6xZw+jQPvlg3wq0RdVBZ//Tj1HEc
-rmdFOdRhbSZC7JxRZj0YADuJjx+GcvbC+4PVnWa6ag4vACiXQxR3xgYA4Qnw+GfO
-IF+A/bm5HF6Z18ZJrwsaNcHbt6TroASRB4gnnNN3x90MUjNHwhctF+c/ckKWTOXr
-S4ee9VBoKrbkwzi/Q2laSBGy+lO9dP3f4Hasl4taypQpnQUeXU2j6cBR0mgcTxby
-Vm+m5ZVATNZ/NiKAy6TAOO3fk3jfdIXNdheOjy8dBwfOlkvZP1Kp9edFTWxyZWEs
-RMBcpTBP6Noe7hDlf0eDeXFsbpfaIk4TWbIYMUEFqeCClkQlS/8=
-=1BnI
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1B8WAACgkQFA3kzBSg
+KbZUMg/6ApPbOXJgDgIRASqwrwy9gszjWtFGNPvfSId63qWlww4WvLxGqgmSmKdX
+49vFU4v0VrT9/Kb6vUENQPLc0l4le6u8wXfTEERusn6uvvn4BIRrwt3KenFiVi4J
+z9TbdJ8V2R+vLFEHxUOS50tyQ/lEIbggL4YXZz9Wiv+37UwSaPZffFHFYjBOgmtC
+rSLxbWGqmsJEX2WowwGupsfjQ7yOjV0CHjXt2AYCXbcDxze5hQzgHQiINg+I2yPb
+00K1uPhQLiKVmcVdfmNOcKG07t6lVIpREh7a+PjNaSlGfs+JR4GYA1cX6vldyhka
+JAQOALPUJTavxKUndw9H6RWsjtIvGgwAXcWMyo34uKrqqBMlGGL+dkzCf389XsSy
+dKyGew9Up6DEpT1ETKbkg0vvRPyzUqhCDlQwFk0DIstdHaeBSfim2aZ9GOrqK0oI
+2ucajuGTFIPfostJpPnWtJ1OTDPQwNW9KvPeDy5SxUopTER0F65VUvV2CTRL1z0d
+kJpd2wEeQwMIRlEYTObts8q8qicvcXiOcC6ASAnY6NhLXFET98hRh/vtGG/8xQhU
+/sUG8OH4SPCkBclRGucBmdb49GBhd7DzEscr4rCc9Nx6M8pz2nTqnXFAaIEKSqwg
+Pm0WmWwKJ+VkrLIAia8uW14A+GTwy1tdV+dAo5Gk4wEw69SJeoM=
+=MzYO
 -----END PGP SIGNATURE-----
 
---nYySOmuH/HDX6pKp--
+--nhYGnrYv1PEJ5gA2--
