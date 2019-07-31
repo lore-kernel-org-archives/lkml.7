@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C1BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55887C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0831D206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192C1216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:56:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PKSxHw7k"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SONtbAmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388138AbfGaM4v (ORCPT
+        id S2388151AbfGaM4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:56:51 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:9330 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728933AbfGaM4s (ORCPT
+        Wed, 31 Jul 2019 08:56:55 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:32544 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728928AbfGaM4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:56:48 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VCqTT8007982;
-        Wed, 31 Jul 2019 14:56:27 +0200
+        Wed, 31 Jul 2019 08:56:49 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VCpVPr016879;
+        Wed, 31 Jul 2019 14:56:30 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=81SO5cQN/Vk/Wp509G8RTV/IPzucLq/XsCbMheDBFkk=;
- b=PKSxHw7kWGVflSmu5AoVEPuNJ3Wn7ndmY49EBveQtGgXdA54ZUfgd6KJKLc7L8uowS9W
- zfsOXrA+5zeb1dTWQNiSOVoGVIG6aNGU1zKDazG2BU/UkWL4kGEzJOamuVMkCKTE8dis
- DgLXzaSmJFTv+YucMpllCjXnJqEWOD1gfQcm39ipbsTgt+brcc81XPNO8sJ3aWW5yvs5
- coWh4t8sPnQidnJOBSFP4HqQn5I4OUACgMvR0O+b3dRlmcihPhN7qIqf/qC4ADfPb2Jr
- pJ0eaSqpUmIpxbvp/cjF4bcZ6TM/wd3FXq3EAfuiIpooFNcH8tNiDXoyv1mEVQBYade3 ig== 
+ bh=l4zw4V4w7qNu66n2QrAKlPhl+SZ7Dhkjeg1kI5fKuLM=;
+ b=SONtbAmQvSK3nIGgRd81+EKpWp2KU4bjM08kIb4n3FTUn4/as67wkpHHrnODiE8ICv5q
+ pw1UnzeWpmsA56GsAoxOdVmnBE7SifNCIVuVFOMorGLdsyOiiR+doVCIF0DToHaUyOL9
+ bQ9y5TDIagG5VP4Higl/8JHzia+kIVmNDhHPRL+7GLgWm1iMHFjxsSc5kAWgrn18BXGe
+ 2RQflI0WEcVrOTlmHUXkpOOSCjpyoxvzyE8lBgFZ9i439eEJKC8PzSWqdvynHacY+KZ3
+ FO+F69j0fwqqKTfyhffnoRfekN2R3lSaTRM0xDROcr1Ws3wGf786okd4a9dyVZbePHKF tA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2u0c2yggc6-1
+        by mx08-00178001.pphosted.com with ESMTP id 2u0bra4m22-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 31 Jul 2019 14:56:27 +0200
+        Wed, 31 Jul 2019 14:56:30 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3E6E734;
-        Wed, 31 Jul 2019 12:56:27 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2C334CB312;
-        Wed, 31 Jul 2019 14:56:27 +0200 (CEST)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 14:56:27 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 87C0834;
+        Wed, 31 Jul 2019 12:56:29 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7B650CB312;
+        Wed, 31 Jul 2019 14:56:29 +0200 (CEST)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
+ 2019 14:56:29 +0200
 Received: from localhost (10.201.23.19) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul 2019 14:56:26
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul 2019 14:56:29
  +0200
 From:   Hugues Fruchet <hugues.fruchet@st.com>
 To:     Alexandre Torgue <alexandre.torgue@st.com>,
@@ -65,9 +65,9 @@ CC:     <linux-media@vger.kernel.org>,
         Philippe CORNU <philippe.cornu@st.com>,
         "Hugues Fruchet" <hugues.fruchet@st.com>,
         Mickael GUENE <mickael.guene@st.com>
-Subject: [PATCH v4 1/3] media: stm32-dcmi: improve sensor subdev naming
-Date:   Wed, 31 Jul 2019 14:56:21 +0200
-Message-ID: <1564577783-18627-2-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH v4 3/3] media: stm32-dcmi: add support of several sub-devices
+Date:   Wed, 31 Jul 2019 14:56:23 +0200
+Message-ID: <1564577783-18627-4-git-send-email-hugues.fruchet@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
 References: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
@@ -81,214 +81,287 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename "subdev" entity struct field to "source"
-to prepare for several subdev support.
-Move asd field on top of entity struct.
+Add support of several sub-devices within pipeline instead
+of a single one.
+This allows to support a CSI-2 camera sensor connected
+through a CSI-2 to parallel bridge.
 
 Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-Change-Id: I1545a1a29a8061ee67cc6e4b799e9a69071911e7
 ---
- drivers/media/platform/stm32/stm32-dcmi.c | 46 +++++++++++++++----------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ drivers/media/platform/stm32/stm32-dcmi.c | 195 +++++++++++++++++++++++++++---
+ 1 file changed, 177 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index b9dad0a..b462f71 100644
+index 6f37617..7c21805 100644
 --- a/drivers/media/platform/stm32/stm32-dcmi.c
 +++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -100,10 +100,10 @@ enum state {
- #define OVERRUN_ERROR_THRESHOLD	3
+@@ -172,6 +172,7 @@ struct stm32_dcmi {
  
- struct dcmi_graph_entity {
--	struct device_node *node;
--
- 	struct v4l2_async_subdev asd;
--	struct v4l2_subdev *subdev;
-+
-+	struct device_node *remote_node;
-+	struct v4l2_subdev *source;
+ 	struct media_device		mdev;
+ 	struct media_pad		vid_cap_pad;
++	struct media_pipeline		pipeline;
  };
  
- struct dcmi_format {
-@@ -595,7 +595,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
+@@ -583,6 +584,131 @@ static void dcmi_buf_queue(struct vb2_buffer *vb)
+ 	spin_unlock_irq(&dcmi->irqlock);
+ }
+ 
++static struct media_entity *dcmi_find_source(struct stm32_dcmi *dcmi)
++{
++	struct media_entity *entity = &dcmi->vdev->entity;
++	struct media_pad *pad;
++
++	/* Walk searching for entity having no sink */
++	while (1) {
++		pad = &entity->pads[0];
++		if (!(pad->flags & MEDIA_PAD_FL_SINK))
++			break;
++
++		pad = media_entity_remote_pad(pad);
++		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
++			break;
++
++		entity = pad->entity;
++	}
++
++	return entity;
++}
++
++static int dcmi_pipeline_s_fmt(struct stm32_dcmi *dcmi,
++			       struct v4l2_subdev_pad_config *pad_cfg,
++			       struct v4l2_subdev_format *format)
++{
++	struct media_entity *entity = &dcmi->entity.source->entity;
++	struct v4l2_subdev *subdev;
++	struct media_pad *sink_pad = NULL;
++	struct media_pad *src_pad = NULL;
++	struct media_pad *pad = NULL;
++	struct v4l2_subdev_format fmt = *format;
++	bool found = false;
++	int ret;
++
++	/*
++	 * Starting from sensor subdevice, walk within
++	 * pipeline and set format on each subdevice
++	 */
++	while (1) {
++		unsigned int i;
++
++		/* Search if current entity has a source pad */
++		for (i = 0; i < entity->num_pads; i++) {
++			pad = &entity->pads[i];
++			if (pad->flags & MEDIA_PAD_FL_SOURCE) {
++				src_pad = pad;
++				found = true;
++				break;
++			}
++		}
++		if (!found)
++			break;
++
++		subdev = media_entity_to_v4l2_subdev(entity);
++
++		/* Propagate format on sink pad if any, otherwise source pad */
++		if (sink_pad)
++			pad = sink_pad;
++
++		dev_dbg(dcmi->dev, "%s[%d] pad format set to 0x%x %ux%u\n",
++			subdev->name, pad->index, format->format.code,
++			format->format.width, format->format.height);
++
++		fmt.pad = pad->index;
++		ret = v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
++		if (ret < 0)
++			return ret;
++
++		/* Walk to next entity */
++		sink_pad = media_entity_remote_pad(src_pad);
++		if (!sink_pad || !is_media_entity_v4l2_subdev(sink_pad->entity))
++			break;
++
++		entity = sink_pad->entity;
++	}
++	*format = fmt;
++
++	return 0;
++}
++
++static int dcmi_pipeline_s_stream(struct stm32_dcmi *dcmi, int state)
++{
++	struct media_entity *entity = &dcmi->vdev->entity;
++	struct v4l2_subdev *subdev;
++	struct media_pad *pad;
++	int ret;
++
++	/* Start/stop all entities within pipeline */
++	while (1) {
++		pad = &entity->pads[0];
++		if (!(pad->flags & MEDIA_PAD_FL_SINK))
++			break;
++
++		pad = media_entity_remote_pad(pad);
++		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
++			break;
++
++		entity = pad->entity;
++		subdev = media_entity_to_v4l2_subdev(entity);
++
++		ret = v4l2_subdev_call(subdev, video, s_stream, state);
++		if (ret < 0 && ret != -ENOIOCTLCMD) {
++			dev_err(dcmi->dev, "%s: %s failed to %s streaming (%d)\n",
++				__func__, subdev->name,
++				state ? "start" : "stop", ret);
++			return ret;
++		}
++
++		dev_dbg(dcmi->dev, "%s is %s\n",
++			subdev->name, state ? "started" : "stopped");
++	}
++
++	return 0;
++}
++
++static int dcmi_pipeline_start(struct stm32_dcmi *dcmi)
++{
++	return dcmi_pipeline_s_stream(dcmi, 1);
++}
++
++static void dcmi_pipeline_stop(struct stm32_dcmi *dcmi)
++{
++	dcmi_pipeline_s_stream(dcmi, 0);
++}
++
+ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ {
+ 	struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
+@@ -597,14 +723,17 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 		goto err_release_buffers;
  	}
  
- 	/* Enable stream on the sub device */
--	ret = v4l2_subdev_call(dcmi->entity.subdev, video, s_stream, 1);
-+	ret = v4l2_subdev_call(dcmi->entity.source, video, s_stream, 1);
- 	if (ret && ret != -ENOIOCTLCMD) {
- 		dev_err(dcmi->dev, "%s: Failed to start streaming, subdev streamon error",
+-	/* Enable stream on the sub device */
+-	ret = v4l2_subdev_call(dcmi->entity.source, video, s_stream, 1);
+-	if (ret && ret != -ENOIOCTLCMD) {
+-		dev_err(dcmi->dev, "%s: Failed to start streaming, subdev streamon error",
+-			__func__);
++	ret = media_pipeline_start(&dcmi->vdev->entity, &dcmi->pipeline);
++	if (ret < 0) {
++		dev_err(dcmi->dev, "%s: Failed to start streaming, media pipeline start error (%d)\n",
++			__func__, ret);
+ 		goto err_pm_put;
+ 	}
+ 
++	ret = dcmi_pipeline_start(dcmi);
++	if (ret)
++		goto err_media_pipeline_stop;
++
+ 	spin_lock_irq(&dcmi->irqlock);
+ 
+ 	/* Set bus width */
+@@ -676,7 +805,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	if (ret) {
+ 		dev_err(dcmi->dev, "%s: Start streaming failed, cannot start capture\n",
  			__func__);
-@@ -685,7 +685,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+-		goto err_subdev_streamoff;
++		goto err_pipeline_stop;
+ 	}
+ 
+ 	/* Enable interruptions */
+@@ -687,8 +816,11 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 
  	return 0;
  
- err_subdev_streamoff:
--	v4l2_subdev_call(dcmi->entity.subdev, video, s_stream, 0);
-+	v4l2_subdev_call(dcmi->entity.source, video, s_stream, 0);
+-err_subdev_streamoff:
+-	v4l2_subdev_call(dcmi->entity.source, video, s_stream, 0);
++err_pipeline_stop:
++	dcmi_pipeline_stop(dcmi);
++
++err_media_pipeline_stop:
++	media_pipeline_stop(&dcmi->vdev->entity);
  
  err_pm_put:
  	pm_runtime_put(dcmi->dev);
-@@ -713,7 +713,7 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
- 	int ret;
+@@ -713,13 +845,10 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
+ {
+ 	struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
+ 	struct dcmi_buf *buf, *node;
+-	int ret;
  
- 	/* Disable stream on the sub device */
--	ret = v4l2_subdev_call(dcmi->entity.subdev, video, s_stream, 0);
-+	ret = v4l2_subdev_call(dcmi->entity.source, video, s_stream, 0);
- 	if (ret && ret != -ENOIOCTLCMD)
- 		dev_err(dcmi->dev, "%s: Failed to stop streaming, subdev streamoff error (%d)\n",
- 			__func__, ret);
-@@ -857,7 +857,7 @@ static int dcmi_try_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f,
- 	}
+-	/* Disable stream on the sub device */
+-	ret = v4l2_subdev_call(dcmi->entity.source, video, s_stream, 0);
+-	if (ret && ret != -ENOIOCTLCMD)
+-		dev_err(dcmi->dev, "%s: Failed to stop streaming, subdev streamoff error (%d)\n",
+-			__func__, ret);
++	dcmi_pipeline_stop(dcmi);
++
++	media_pipeline_stop(&dcmi->vdev->entity);
  
- 	v4l2_fill_mbus_format(&format.format, pix, sd_fmt->mbus_code);
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, set_fmt,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad, set_fmt,
- 			       &pad_cfg, &format);
- 	if (ret < 0)
- 		return ret;
-@@ -934,7 +934,7 @@ static int dcmi_set_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f)
+ 	spin_lock_irq(&dcmi->irqlock);
+ 
+@@ -937,8 +1066,7 @@ static int dcmi_set_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f)
  	mf->width = sd_framesize.width;
  	mf->height = sd_framesize.height;
  
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad,
- 			       set_fmt, NULL, &format);
+-	ret = v4l2_subdev_call(dcmi->entity.source, pad,
+-			       set_fmt, NULL, &format);
++	ret = dcmi_pipeline_s_fmt(dcmi, NULL, &format);
  	if (ret < 0)
  		return ret;
-@@ -991,7 +991,7 @@ static int dcmi_get_sensor_format(struct stm32_dcmi *dcmi,
- 	};
- 	int ret;
  
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, get_fmt, NULL, &fmt);
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad, get_fmt, NULL, &fmt);
- 	if (ret)
- 		return ret;
- 
-@@ -1020,7 +1020,7 @@ static int dcmi_set_sensor_format(struct stm32_dcmi *dcmi,
- 	}
- 
- 	v4l2_fill_mbus_format(&format.format, pix, sd_fmt->mbus_code);
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, set_fmt,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad, set_fmt,
- 			       &pad_cfg, &format);
- 	if (ret < 0)
- 		return ret;
-@@ -1043,7 +1043,7 @@ static int dcmi_get_sensor_bounds(struct stm32_dcmi *dcmi,
- 	/*
- 	 * Get sensor bounds first
- 	 */
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, get_selection,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad, get_selection,
- 			       NULL, &bounds);
- 	if (!ret)
- 		*r = bounds.r;
-@@ -1224,7 +1224,7 @@ static int dcmi_enum_framesizes(struct file *file, void *fh,
- 
- 	fse.code = sd_fmt->mbus_code;
- 
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, enum_frame_size,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad, enum_frame_size,
- 			       NULL, &fse);
- 	if (ret)
- 		return ret;
-@@ -1241,7 +1241,7 @@ static int dcmi_g_parm(struct file *file, void *priv,
- {
- 	struct stm32_dcmi *dcmi = video_drvdata(file);
- 
--	return v4l2_g_parm_cap(video_devdata(file), dcmi->entity.subdev, p);
-+	return v4l2_g_parm_cap(video_devdata(file), dcmi->entity.source, p);
- }
- 
- static int dcmi_s_parm(struct file *file, void *priv,
-@@ -1249,7 +1249,7 @@ static int dcmi_s_parm(struct file *file, void *priv,
- {
- 	struct stm32_dcmi *dcmi = video_drvdata(file);
- 
--	return v4l2_s_parm_cap(video_devdata(file), dcmi->entity.subdev, p);
-+	return v4l2_s_parm_cap(video_devdata(file), dcmi->entity.source, p);
- }
- 
- static int dcmi_enum_frameintervals(struct file *file, void *fh,
-@@ -1271,7 +1271,7 @@ static int dcmi_enum_frameintervals(struct file *file, void *fh,
- 
- 	fie.code = sd_fmt->mbus_code;
- 
--	ret = v4l2_subdev_call(dcmi->entity.subdev, pad,
-+	ret = v4l2_subdev_call(dcmi->entity.source, pad,
- 			       enum_frame_interval, NULL, &fie);
- 	if (ret)
- 		return ret;
-@@ -1291,7 +1291,7 @@ MODULE_DEVICE_TABLE(of, stm32_dcmi_of_match);
- static int dcmi_open(struct file *file)
- {
- 	struct stm32_dcmi *dcmi = video_drvdata(file);
--	struct v4l2_subdev *sd = dcmi->entity.subdev;
-+	struct v4l2_subdev *sd = dcmi->entity.source;
- 	int ret;
- 
- 	if (mutex_lock_interruptible(&dcmi->lock))
-@@ -1322,7 +1322,7 @@ static int dcmi_open(struct file *file)
- static int dcmi_release(struct file *file)
- {
- 	struct stm32_dcmi *dcmi = video_drvdata(file);
--	struct v4l2_subdev *sd = dcmi->entity.subdev;
-+	struct v4l2_subdev *sd = dcmi->entity.source;
- 	bool fh_singular;
- 	int ret;
- 
-@@ -1433,7 +1433,7 @@ static int dcmi_formats_init(struct stm32_dcmi *dcmi)
- {
- 	const struct dcmi_format *sd_fmts[ARRAY_SIZE(dcmi_formats)];
- 	unsigned int num_fmts = 0, i, j;
--	struct v4l2_subdev *subdev = dcmi->entity.subdev;
-+	struct v4l2_subdev *subdev = dcmi->entity.source;
- 	struct v4l2_subdev_mbus_code_enum mbus_code = {
- 		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
- 	};
-@@ -1479,7 +1479,7 @@ static int dcmi_formats_init(struct stm32_dcmi *dcmi)
- static int dcmi_framesizes_init(struct stm32_dcmi *dcmi)
- {
- 	unsigned int num_fsize = 0;
--	struct v4l2_subdev *subdev = dcmi->entity.subdev;
-+	struct v4l2_subdev *subdev = dcmi->entity.source;
- 	struct v4l2_subdev_frame_size_enum fse = {
- 		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
- 		.code = dcmi->sd_format->mbus_code,
-@@ -1526,7 +1526,7 @@ static int dcmi_graph_notify_complete(struct v4l2_async_notifier *notifier)
+@@ -1529,7 +1657,20 @@ static int dcmi_graph_notify_complete(struct v4l2_async_notifier *notifier)
  	struct stm32_dcmi *dcmi = notifier_to_dcmi(notifier);
  	int ret;
  
--	dcmi->vdev->ctrl_handler = dcmi->entity.subdev->ctrl_handler;
-+	dcmi->vdev->ctrl_handler = dcmi->entity.source->ctrl_handler;
++	/*
++	 * Now that the graph is complete,
++	 * we search for the source subdevice
++	 * in order to expose it through V4L2 interface
++	 */
++	dcmi->entity.source =
++		media_entity_to_v4l2_subdev(dcmi_find_source(dcmi));
++	if (!dcmi->entity.source) {
++		dev_err(dcmi->dev, "Source subdevice not found\n");
++		return -ENODEV;
++	}
++
+ 	dcmi->vdev->ctrl_handler = dcmi->entity.source->ctrl_handler;
++
  	ret = dcmi_formats_init(dcmi);
  	if (ret) {
  		dev_err(dcmi->dev, "No supported mediabus format found\n");
-@@ -1582,7 +1582,7 @@ static int dcmi_graph_notify_bound(struct v4l2_async_notifier *notifier,
+@@ -1574,12 +1715,30 @@ static int dcmi_graph_notify_bound(struct v4l2_async_notifier *notifier,
+ 				   struct v4l2_async_subdev *asd)
+ {
+ 	struct stm32_dcmi *dcmi = notifier_to_dcmi(notifier);
++	unsigned int ret;
++	int src_pad;
  
  	dev_dbg(dcmi->dev, "Subdev %s bound\n", subdev->name);
  
--	dcmi->entity.subdev = subdev;
-+	dcmi->entity.source = subdev;
+-	dcmi->entity.source = subdev;
++	/*
++	 * Link this sub-device to DCMI, it could be
++	 * a parallel camera sensor or a bridge
++	 */
++	src_pad = media_entity_get_fwnode_pad(&subdev->entity,
++					      subdev->fwnode,
++					      MEDIA_PAD_FL_SOURCE);
++
++	ret = media_create_pad_link(&subdev->entity, src_pad,
++				    &dcmi->vdev->entity, 0,
++				    MEDIA_LNK_FL_IMMUTABLE |
++				    MEDIA_LNK_FL_ENABLED);
++	if (ret)
++		dev_err(dcmi->dev, "Failed to create media pad link with subdev %s\n",
++			subdev->name);
++	else
++		dev_dbg(dcmi->dev, "DCMI is now linked to %s\n", subdev->name);
  
- 	return 0;
+-	return 0;
++	return ret;
  }
-@@ -1608,7 +1608,7 @@ static int dcmi_graph_parse(struct stm32_dcmi *dcmi, struct device_node *node)
- 		return -EINVAL;
  
- 	/* Remote node to connect */
--	dcmi->entity.node = remote;
-+	dcmi->entity.remote_node = remote;
- 	dcmi->entity.asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
- 	dcmi->entity.asd.match.fwnode = of_fwnode_handle(remote);
- 	return 0;
-@@ -1631,7 +1631,7 @@ static int dcmi_graph_init(struct stm32_dcmi *dcmi)
- 					     &dcmi->entity.asd);
- 	if (ret) {
- 		dev_err(dcmi->dev, "Failed to add subdev notifier\n");
--		of_node_put(dcmi->entity.node);
-+		of_node_put(dcmi->entity.remote_node);
- 		return ret;
- 	}
- 
+ static const struct v4l2_async_notifier_operations dcmi_graph_notify_ops = {
 -- 
 2.7.4
 
