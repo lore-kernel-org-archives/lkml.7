@@ -2,237 +2,133 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB102C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B35C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF0F1206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF4C208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:43:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564577037;
+	bh=qdKt8xMkWx3WVKyGM6p4kgZa2A5bUHnif0uObDGpacs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Dbel7FAc2CWGyJ3/Phi9F5sp6VygBfTtlw2cOJj92siRvmM7la9bTB4BWxV2APEtu
+	 XgfxMrtPjKd2OvtBDQLIR5IPUU2ytVmzCvVJrHhbDCdqKhn+OZJnEWPjAwaMVRvM5J
+	 os4HImDdo7TrBMVYg/wJaRN9zOKTmIwQQYiJEj0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbfGaMnI (ORCPT
+        id S1728791AbfGaMn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:43:08 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:48965 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfGaMnI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:43:08 -0400
-Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id CCA5910000A;
-        Wed, 31 Jul 2019 12:43:01 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 14:43:01 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v7 0/4] HEVC/H.265 stateless support for V4L2 and Cedrus
-Message-ID: <20190731124301.GA18205@aptenodytes>
-References: <20190725185602.22522-1-paul.kocialkowski@bootlin.com>
- <7fa38a2c-8e16-5e88-d073-1d04e9feaa84@xs4all.nl>
- <20190727095729.GD16618@aptenodytes>
- <91a028b6-7f25-1a38-24e4-7dac02f34039@xs4all.nl>
+        Wed, 31 Jul 2019 08:43:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbfGaMn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:43:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94935206B8;
+        Wed, 31 Jul 2019 12:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564577035;
+        bh=qdKt8xMkWx3WVKyGM6p4kgZa2A5bUHnif0uObDGpacs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=2PNMPi2HyAUo2pq0bnVlLzISd0g9zVsRAilNinPTip5E5cYDt4EuxnIXHElkwTvJH
+         dPcH2fxP7sNNLV5xbJKld4HmAQXtZsA0TJ9OOL2zD56aMvLQcivlBKx2iiQgNAw2U7
+         SBbEoWYOMqoaclJc4+S40fQvW5IGe6rMUuYu8HzU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        x86@kernel.org
+Subject: [PATCH v2 00/10] drivers, provide a way to add sysfs groups easily
+Date:   Wed, 31 Jul 2019 14:43:39 +0200
+Message-Id: <20190731124349.4474-1-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
-Content-Disposition: inline
-In-Reply-To: <91a028b6-7f25-1a38-24e4-7dac02f34039@xs4all.nl>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch originally started out just as a way for platform drivers to
+easily add a sysfs group in a race-free way, but thanks to Dmitry's
+patch, this series now is for all drivers in the kernel (hey, a unified
+driver model works!!!)
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've only converted a few platform drivers here in this series to show
+how it works, but other busses can be converted after the first patch
+goes into the tree.
 
-Hi,
+Here's the original 00 message, for people to get an idea of what is
+going on here:
 
-On Tue 30 Jul 19, 09:27, Hans Verkuil wrote:
-> On 7/27/19 11:57 AM, Paul Kocialkowski wrote:
-> > Hi Hans,
-> >=20
-> > On Fri 26 Jul 19, 10:33, Hans Verkuil wrote:
-> >> On 7/25/19 8:55 PM, Paul Kocialkowski wrote:
-> >>> HEVC/H.265 stateless support for V4L2 and Cedrus
-> >>>
-> >>> This is early support for HEVC/H.265 stateless decoding in V4L2,
-> >>> including both definitions and driver support for the Cedrus VPU
-> >>> driver, which concerns Allwinner devices.
-> >>>
-> >>> A specific pixel format is introduced for the HEVC slice format and
-> >>> controls are provided to pass the bitstream metadata to the decoder.
-> >>> Some bitstream extensions are intentionally not supported at this poi=
-nt.
-> >>>
-> >>> Since this is the first proposal for stateless HEVC/H.265 support in
-> >>> V4L2, reviews and comments about the controls definitions are
-> >>> particularly welcome.
-> >>>
-> >>> On the Cedrus side, the H.265 implementation covers frame pictures
-> >>> with both uni-directional and bi-direction prediction modes (P/B
-> >>> slices). Field pictures (interleaved), scaling lists and 10-bit output
-> >>> are not supported at this point.
-> >>>
-> >>> Changes since v6:
-> >>> * Rebased on latest media tree from Hans;
-> >>
-> >> Which tree is that? Or are you just referring our media_tree master
-> >> branch? (which isn't 'my' tree :-) )
-> >=20
-> > I'm usually rebasing on the tree you use to send PRs to Mauro, at:
-> > https://git.linuxtv.org/hverkuil/media_tree.git/
->=20
-> There are lots of branches there, and none are stable branches.
->=20
-> Just base it on the master branch of git://linuxtv.org/media_tree.git.
+If a platform driver wants to add a sysfs group, it has to do so in a
+racy way, adding it after the driver is bound.  To resolve this issue,
+have the platform driver core do this for the driver, making the
+individual drivers logic smaller and simpler, and solving the race at
+the same time.
 
-Understood, I will do that from now on.
+All of these patches depend on the first patch.  I'll take the first one
+through my driver-core tree, and any subsystem maintainer can either ack
+their individul patch and I will be glad to also merge it, or they can
+wait until after 5.4-rc1 when the core patch hits Linus's tree and then
+take it, it's up to them.
 
-Either way, the series applies and builds as-is (with the initial patch out=
- of
-the way, as it was merged already) on top of the common media tree.
+Thank to Richard Gong for the idea and the testing of the platform
+driver patch and to Dmitry Torokhov for rewriting the first patch to
+work well for all busses.
 
-I just retested everything and it's good to go as far as I'm concerned!
+-----
 
-Cheers,
+V2 - work for all busses and not just platform drivers.
 
-Paul
 
-> Regards,
->=20
-> 	Hans
->=20
-> >=20
-> > which is usually the best up-to-date stateless codec support tree :)
-> >=20
-> > Cheers,
-> >=20
-> > Paul
-> >=20
-> >> Regards,
-> >>
-> >> 	Hans
-> >>
-> >>> * Reordered some fields to avoid holes and multi-padding;
-> >>> * Updated the documentation.
-> >>>
-> >>> Changes since v5:
-> >>> * Rebased atop latest next media tree;
-> >>> * Moved to flags instead of u8 fields;
-> >>> * Added padding to ensure 64-bit alignment
-> >>>   (tested with GDB on 32 and 64-bit architectures);
-> >>> * Reworked cedrus H.265 driver support a bit for flags;
-> >>> * Split off codec-specific control validation and init;
-> >>> * Added HEVC controls fields cleanup at std_validate to allow reliable
-> >>>   control comparison with memcmp;
-> >>> * Fixed various misc reported mistakes.
-> >>>
-> >>> Changes since v4:
-> >>> * Rebased atop latest H.254 series.
-> >>>
-> >>> Changes since v3:
-> >>> * Updated commit messages;
-> >>> * Updated CID base to avoid conflicts;
-> >>> * Used cpu_to_le32 for packed le32 data;
-> >>> * Fixed misc minor issues in the drive code;
-> >>> * Made it clear in the docs that the API will evolve;
-> >>> * Made the pixfmt private and split commits about it.
-> >>>
-> >>> Changes since v2:
-> >>> * Moved headers to non-public API;
-> >>> * Added H265 capability for A64 and H5;
-> >>> * Moved docs to ext-ctrls-codec.rst;
-> >>> * Mentionned sections of the spec in the docs;
-> >>> * Added padding to control structures for 32-bit alignment;
-> >>> * Made write function use void/size in bytes;
-> >>> * Reduced the number of arguments to helpers when possible;
-> >>> * Removed PHYS_OFFSET since we already set PFN_OFFSET;
-> >>> * Added comments where suggested;
-> >>> * Moved to timestamp for references instead of index;
-> >>> * Fixed some style issues reported by checkpatch.
-> >>>
-> >>> Changes since v1:
-> >>> * Added a H.265 capability to whitelist relevant platforms;
-> >>> * Switched over to tags instead of buffer indices in the DPB
-> >>> * Declared variable in their reduced scope as suggested;
-> >>> * Added the H.265/HEVC spec to the biblio;
-> >>> * Used in-doc references to the spec and the required APIs;
-> >>> * Removed debugging leftovers.
-> >>>
-> >>> Cheers!
-> >>>
-> >>> Paul Kocialkowski (4):
-> >>>   media: v4l2-ctrl: Add a comment on why we zero out compound controls
-> >>>     fields
-> >>>   media: v4l: Add definitions for the HEVC slice controls
-> >>>   media: pixfmt: Document the HEVC slice pixel format
-> >>>   media: cedrus: Add HEVC/H.265 decoding support
-> >>>
-> >>>  Documentation/media/uapi/v4l/biblio.rst       |   9 +
-> >>>  .../media/uapi/v4l/ext-ctrls-codec.rst        | 486 +++++++++++++-
-> >>>  .../media/uapi/v4l/pixfmt-compressed.rst      |  21 +
-> >>>  .../media/uapi/v4l/vidioc-queryctrl.rst       |  18 +
-> >>>  .../media/videodev2.h.rst.exceptions          |   3 +
-> >>>  drivers/media/v4l2-core/v4l2-ctrls.c          |  93 +++
-> >>>  drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
-> >>>  drivers/staging/media/sunxi/cedrus/Makefile   |   2 +-
-> >>>  drivers/staging/media/sunxi/cedrus/cedrus.c   |  31 +-
-> >>>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  18 +
-> >>>  .../staging/media/sunxi/cedrus/cedrus_dec.c   |   9 +
-> >>>  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 616 ++++++++++++++++=
-++
-> >>>  .../staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +
-> >>>  .../staging/media/sunxi/cedrus/cedrus_regs.h  | 271 ++++++++
-> >>>  .../staging/media/sunxi/cedrus/cedrus_video.c |  10 +
-> >>>  include/media/hevc-ctrls.h                    | 198 ++++++
-> >>>  include/media/v4l2-ctrls.h                    |   7 +
-> >>>  17 files changed, 1789 insertions(+), 8 deletions(-)
-> >>>  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> >>>  create mode 100644 include/media/hevc-ctrls.h
-> >>>
-> >>
-> >=20
->=20
+Dmitry Torokhov (1):
+  driver core: add dev_groups to all drivers
 
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Greg Kroah-Hartman (9):
+  uio: uio_fsl_elbc_gpcm: convert platform driver to use dev_groups
+  input: keyboard: gpio_keys: convert platform driver to use dev_groups
+  input: axp20x-pek: convert platform driver to use dev_groups
+  firmware: arm_scpi: convert platform driver to use dev_groups
+  olpc: x01: convert platform driver to use dev_groups
+  platform: x86: hp-wmi: convert platform driver to use dev_groups
+  video: fbdev: wm8505fb: convert platform driver to use dev_groups
+  video: fbdev: w100fb: convert platform driver to use dev_groups
+  video: fbdev: sm501fb: convert platform driver to use dev_groups
 
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature; name="signature.asc"
+ arch/x86/platform/olpc/olpc-xo1-sci.c | 17 ++++------
+ drivers/base/dd.c                     | 14 ++++++++
+ drivers/firmware/arm_scpi.c           |  5 +--
+ drivers/input/keyboard/gpio_keys.c    | 13 ++------
+ drivers/input/misc/axp20x-pek.c       | 15 ++-------
+ drivers/platform/x86/hp-wmi.c         | 47 +++++++--------------------
+ drivers/uio/uio_fsl_elbc_gpcm.c       | 23 +++++--------
+ drivers/video/fbdev/sm501fb.c         | 37 +++++----------------
+ drivers/video/fbdev/w100fb.c          | 23 ++++++-------
+ drivers/video/fbdev/wm8505fb.c        | 13 ++++----
+ include/linux/device.h                |  3 ++
+ 11 files changed, 76 insertions(+), 134 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.22.0
 
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl1BjNUACgkQ3cLmz3+f
-v9FjuAf/aL5i4AOg3ogqc6Uz7f2hvSX1pHj2oFKXBRtcq0iz/tC2U02b7b8w6sQ7
-DHowvN5AwbEyiXgiwOWTzPDi4TGkEZSNCORwkD08m7DA6MzRrKA78SLRaHW9WYSc
-PjVrpSncMMuxJ4SHqekk9sX5dFJzxpYdor+ggQdd6YgU4NFnlQKjKHRjeI+r4Qcz
-jzXwwQ07ugPsHDROaQOE8VyCSZXFs8JKs5SMiRcQs7fRIwvJimaPLvng3N8qNX27
-XOHH6DLl0Q22X1CXgasgX+OeMk+8oN7ie4ZecTyDIBKW6h2sSfGxufcr1dUo1ABm
-IA52WkzBa+IMEwDEqgqfmWgHaApu1A==
-=3hPJ
------END PGP SIGNATURE-----
-
---vtzGhvizbBRQ85DL--
