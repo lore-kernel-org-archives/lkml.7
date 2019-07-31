@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AA4C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0B8C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BFB2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F64206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:56:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="vxSpLiSY"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JoBGD1Z4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbfGaR4Q (ORCPT
+        id S1727009AbfGaR4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:56:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:32893 "EHLO
+        Wed, 31 Jul 2019 13:56:42 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:33799 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbfGaR4O (ORCPT
+        with ESMTP id S1726224AbfGaR4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:56:14 -0400
+        Wed, 31 Jul 2019 13:56:41 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6VHtL5x3777215
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6VHu6Mm3777279
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 31 Jul 2019 10:55:21 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6VHtL5x3777215
+        Wed, 31 Jul 2019 10:56:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6VHu6Mm3777279
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564595721;
-        bh=T1ILyo/EzeOcsHSxBCqrjuJ/2yciUWatAK4ngKfQAd0=;
+        s=2019071901; t=1564595766;
+        bh=kKmJDvHrIvqktLBPMUlU3D1J4ekTJDl3Zwave7tFyAA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=vxSpLiSYmnZTgDSsBrfFPKQNhfPY28EYp94ECFx9PxKLC1VPnjJouOLgAhKCJPaVv
-         PgHxXovxiy5mVFn4+HcCWHZpR9kyEAz9QOZ9Mdb5DGnr67igg+hggRvHltdoq62vlu
-         t34U3n4FDl0q0Fqo+vWYAVmvo89vdXzbBMT/+XMUG5s454Pmzs97r3Ek5LE7QH3w0P
-         JR3Q54eLEm1giru/0xByQxxr4ZGiPHEk8JYZj7DfNZ/Zs6yGtRNaTgYTuO8Rlc1n+k
-         ymPPD6j7TShU4v5MlWgE0Bhio83rlJChPtro/JYOCwBSvSvFXs5mVxGr7A0++2h4TA
-         J7bjX/3PjSd8w==
+        b=JoBGD1Z4Gwg+KmGnm7x03SUPAWfPPs9WkVBblwlKFWkyfAaFwMnSC1fWLM03BxxiW
+         e0I2P/UrRmUonacfyj3y+L6SUZpwYAxe6pWaUL/Kon/Y1EpXnFTOP4YwdHS2CuMoql
+         gQr/+eVp4UYc35i0rY0fdCrMmb5pLiFF9DPKZc1+/xSYRGv0LEmnQAT0T8BCn1FiRL
+         9Os42BcyNNP2KTgYRarg+abIR7dalvuiaQc+LRGu65TYrElGZrfaE/Djgcj3BMUpy3
+         qr8mIa2/+tx7tt+yjG8I0hrrVYyxhtScUJ8qC863jv/4P846rRid+n9yzYUZqZZbW8
+         KugbCr6/y06wg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6VHtKia3777212;
-        Wed, 31 Jul 2019 10:55:20 -0700
-Date:   Wed, 31 Jul 2019 10:55:20 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6VHu6kX3777276;
+        Wed, 31 Jul 2019 10:56:06 -0700
+Date:   Wed, 31 Jul 2019 10:56:06 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-c1a280b68d4e6b6db4a65aa7865c22d8789ddf09@git.kernel.org>
-Cc:     tglx@linutronix.de, pbonzini@redhat.com, peterz@infradead.org,
-        mingo@kernel.org, torvalds@linux-foundation.org,
-        mhiramat@kernel.org, rostedt@goodmis.org,
-        linux-kernel@vger.kernel.org, paulmck@linux.ibm.com, hpa@zytor.com
-Reply-To: torvalds@linux-foundation.org, rostedt@goodmis.org,
-          mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-          paulmck@linux.ibm.com, hpa@zytor.com, tglx@linutronix.de,
-          pbonzini@redhat.com, peterz@infradead.org, mingo@kernel.org
-In-Reply-To: <20190726212124.117528401@linutronix.de>
-References: <20190726212124.117528401@linutronix.de>
+Message-ID: <tip-01b1d88b09824bea1a75b0bac04dcf50d9893875@git.kernel.org>
+Cc:     torvalds@linux-foundation.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@kernel.org, tglx@linutronix.de,
+        pbonzini@redhat.com, hpa@zytor.com, paulmck@linux.ibm.com
+Reply-To: pbonzini@redhat.com, hpa@zytor.com, paulmck@linux.ibm.com,
+          mhiramat@kernel.org, rostedt@goodmis.org,
+          torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+          peterz@infradead.org, mingo@kernel.org, tglx@linutronix.de
+In-Reply-To: <20190726212124.210156346@linutronix.de>
+References: <20190726212124.210156346@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/rt] sched/preempt: Use CONFIG_PREEMPTION where
- appropriate
-Git-Commit-ID: c1a280b68d4e6b6db4a65aa7865c22d8789ddf09
+Subject: [tip:sched/rt] rcu: Use CONFIG_PREEMPTION
+Git-Commit-ID: 01b1d88b09824bea1a75b0bac04dcf50d9893875
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,24 +71,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c1a280b68d4e6b6db4a65aa7865c22d8789ddf09
-Gitweb:     https://git.kernel.org/tip/c1a280b68d4e6b6db4a65aa7865c22d8789ddf09
+Commit-ID:  01b1d88b09824bea1a75b0bac04dcf50d9893875
+Gitweb:     https://git.kernel.org/tip/01b1d88b09824bea1a75b0bac04dcf50d9893875
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 23:19:37 +0200
+AuthorDate: Fri, 26 Jul 2019 23:19:38 +0200
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 31 Jul 2019 19:03:34 +0200
+CommitDate: Wed, 31 Jul 2019 19:03:35 +0200
 
-sched/preempt: Use CONFIG_PREEMPTION where appropriate
+rcu: Use CONFIG_PREEMPTION
 
 CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by
 CONFIG_PREEMPT_RT. Both PREEMPT and PREEMPT_RT require the same
 functionality which today depends on CONFIG_PREEMPT.
 
-Switch the preemption code, scheduler and init task over to use
-CONFIG_PREEMPTION.
+Switch the conditionals in RCU to use CONFIG_PREEMPTION.
 
-That's the first step towards RT in that area. The more complex changes are
-coming separately.
+That's the first step towards RCU on RT. The further tweaks are work in
+progress. This neither touches the selftest bits which need a closer look
+by Paul.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -99,221 +98,183 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Paul E. McKenney <paulmck@linux.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20190726212124.117528401@linutronix.de
+Link: http://lkml.kernel.org/r/20190726212124.210156346@linutronix.de
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/asm-generic/preempt.h |  4 ++--
- include/linux/preempt.h       |  6 +++---
- include/linux/sched.h         |  6 +++---
- init/init_task.c              |  2 +-
- init/main.c                   |  2 +-
- kernel/sched/core.c           | 14 +++++++-------
- kernel/sched/fair.c           |  2 +-
- kernel/sched/sched.h          |  4 ++--
- 8 files changed, 20 insertions(+), 20 deletions(-)
+ arch/Kconfig             | 2 +-
+ include/linux/rcupdate.h | 2 +-
+ include/linux/rcutree.h  | 2 +-
+ include/linux/torture.h  | 2 +-
+ kernel/rcu/Kconfig       | 8 ++++----
+ kernel/rcu/tree.c        | 6 +++---
+ kernel/rcu/tree_stall.h  | 6 +++---
+ kernel/trace/Kconfig     | 2 +-
+ 8 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/include/asm-generic/preempt.h b/include/asm-generic/preempt.h
-index c3046c920063..d683f5e6d791 100644
---- a/include/asm-generic/preempt.h
-+++ b/include/asm-generic/preempt.h
-@@ -78,11 +78,11 @@ static __always_inline bool should_resched(int preempt_offset)
- 			tif_need_resched());
- }
+diff --git a/arch/Kconfig b/arch/Kconfig
+index a7b57dd42c26..c7efbc018f4f 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -103,7 +103,7 @@ config STATIC_KEYS_SELFTEST
+ config OPTPROBES
+ 	def_bool y
+ 	depends on KPROBES && HAVE_OPTPROBES
+-	select TASKS_RCU if PREEMPT
++	select TASKS_RCU if PREEMPTION
  
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- extern asmlinkage void preempt_schedule(void);
- #define __preempt_schedule() preempt_schedule()
- extern asmlinkage void preempt_schedule_notrace(void);
- #define __preempt_schedule_notrace() preempt_schedule_notrace()
--#endif /* CONFIG_PREEMPT */
-+#endif /* CONFIG_PREEMPTION */
- 
- #endif /* __ASM_PREEMPT_H */
-diff --git a/include/linux/preempt.h b/include/linux/preempt.h
-index dd92b1a93919..bbb68dba37cc 100644
---- a/include/linux/preempt.h
-+++ b/include/linux/preempt.h
-@@ -182,7 +182,7 @@ do { \
- 
- #define preemptible()	(preempt_count() == 0 && !irqs_disabled())
- 
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- #define preempt_enable() \
- do { \
- 	barrier(); \
-@@ -203,7 +203,7 @@ do { \
- 		__preempt_schedule(); \
- } while (0)
- 
--#else /* !CONFIG_PREEMPT */
-+#else /* !CONFIG_PREEMPTION */
- #define preempt_enable() \
- do { \
- 	barrier(); \
-@@ -217,7 +217,7 @@ do { \
- } while (0)
- 
- #define preempt_check_resched() do { } while (0)
--#endif /* CONFIG_PREEMPT */
-+#endif /* CONFIG_PREEMPTION */
- 
- #define preempt_disable_notrace() \
- do { \
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 9f51932bd543..6947516a2d3e 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1767,7 +1767,7 @@ static inline int test_tsk_need_resched(struct task_struct *tsk)
-  * value indicates whether a reschedule was done in fact.
-  * cond_resched_lock() will drop the spinlock before scheduling,
-  */
+ config KPROBES_ON_FTRACE
+ 	def_bool y
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 8f7167478c1d..c4f76a310443 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -578,7 +578,7 @@ do {									      \
+  *
+  * In non-preemptible RCU implementations (TREE_RCU and TINY_RCU),
+  * it is illegal to block while in an RCU read-side critical section.
+- * In preemptible RCU implementations (PREEMPT_RCU) in CONFIG_PREEMPT
++ * In preemptible RCU implementations (PREEMPT_RCU) in CONFIG_PREEMPTION
+  * kernel builds, RCU read-side critical sections may be preempted,
+  * but explicit blocking is illegal.  Finally, in preemptible RCU
+  * implementations in real-time (with -rt patchset) kernel builds, RCU
+diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
+index 735601ac27d3..18b1ed9864b0 100644
+--- a/include/linux/rcutree.h
++++ b/include/linux/rcutree.h
+@@ -53,7 +53,7 @@ void rcu_scheduler_starting(void);
+ extern int rcu_scheduler_active __read_mostly;
+ void rcu_end_inkernel_boot(void);
+ bool rcu_is_watching(void);
 -#ifndef CONFIG_PREEMPT
 +#ifndef CONFIG_PREEMPTION
- extern int _cond_resched(void);
+ void rcu_all_qs(void);
+ #endif
+ 
+diff --git a/include/linux/torture.h b/include/linux/torture.h
+index a620118385bb..6241f59e2d6f 100644
+--- a/include/linux/torture.h
++++ b/include/linux/torture.h
+@@ -86,7 +86,7 @@ void _torture_stop_kthread(char *m, struct task_struct **tp);
+ #define torture_stop_kthread(n, tp) \
+ 	_torture_stop_kthread("Stopping " #n " task", &(tp))
+ 
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ #define torture_preempt_schedule() preempt_schedule()
  #else
- static inline int _cond_resched(void) { return 0; }
-@@ -1796,12 +1796,12 @@ static inline void cond_resched_rcu(void)
+ #define torture_preempt_schedule()
+diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+index 480edf328b51..7644eda17d62 100644
+--- a/kernel/rcu/Kconfig
++++ b/kernel/rcu/Kconfig
+@@ -7,7 +7,7 @@ menu "RCU Subsystem"
  
- /*
-  * Does a critical section need to be broken due to another
-- * task waiting?: (technically does not depend on CONFIG_PREEMPT,
-+ * task waiting?: (technically does not depend on CONFIG_PREEMPTION,
-  * but a general need for low latency)
-  */
- static inline int spin_needbreak(spinlock_t *lock)
+ config TREE_RCU
+ 	bool
+-	default y if !PREEMPT && SMP
++	default y if !PREEMPTION && SMP
+ 	help
+ 	  This option selects the RCU implementation that is
+ 	  designed for very large SMP system with hundreds or
+@@ -16,7 +16,7 @@ config TREE_RCU
+ 
+ config PREEMPT_RCU
+ 	bool
+-	default y if PREEMPT
++	default y if PREEMPTION
+ 	help
+ 	  This option selects the RCU implementation that is
+ 	  designed for very large SMP systems with hundreds or
+@@ -28,7 +28,7 @@ config PREEMPT_RCU
+ 
+ config TINY_RCU
+ 	bool
+-	default y if !PREEMPT && !SMP
++	default y if !PREEMPTION && !SMP
+ 	help
+ 	  This option selects the RCU implementation that is
+ 	  designed for UP systems from which real-time response
+@@ -70,7 +70,7 @@ config TREE_SRCU
+ 	  This option selects the full-fledged version of SRCU.
+ 
+ config TASKS_RCU
+-	def_bool PREEMPT
++	def_bool PREEMPTION
+ 	select SRCU
+ 	help
+ 	  This option enables a task-based RCU implementation that uses
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index a14e5fbbea46..5962636502bc 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1881,7 +1881,7 @@ rcu_report_unblock_qs_rnp(struct rcu_node *rnp, unsigned long flags)
+ 	struct rcu_node *rnp_p;
+ 
+ 	raw_lockdep_assert_held_rcu_node(rnp);
+-	if (WARN_ON_ONCE(!IS_ENABLED(CONFIG_PREEMPT)) ||
++	if (WARN_ON_ONCE(!IS_ENABLED(CONFIG_PREEMPTION)) ||
+ 	    WARN_ON_ONCE(rcu_preempt_blocked_readers_cgp(rnp)) ||
+ 	    rnp->qsmask != 0) {
+ 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+@@ -2205,7 +2205,7 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
+ 		mask = 0;
+ 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 		if (rnp->qsmask == 0) {
+-			if (!IS_ENABLED(CONFIG_PREEMPT) ||
++			if (!IS_ENABLED(CONFIG_PREEMPTION) ||
+ 			    rcu_preempt_blocked_readers_cgp(rnp)) {
+ 				/*
+ 				 * No point in scanning bits because they
+@@ -2622,7 +2622,7 @@ static int rcu_blocking_is_gp(void)
  {
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 	return spin_is_contended(lock);
- #else
- 	return 0;
-diff --git a/init/init_task.c b/init/init_task.c
-index 7ab773b9b3cd..bfe06c53b14e 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -174,7 +174,7 @@ struct task_struct init_task
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	.ret_stack	= NULL,
- #endif
--#if defined(CONFIG_TRACING) && defined(CONFIG_PREEMPT)
-+#if defined(CONFIG_TRACING) && defined(CONFIG_PREEMPTION)
- 	.trace_recursion = 0,
- #endif
- #ifdef CONFIG_LIVEPATCH
-diff --git a/init/main.c b/init/main.c
-index 96f8d5af52d6..653693da8da6 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -433,7 +433,7 @@ noinline void __ref rest_init(void)
+ 	int ret;
  
- 	/*
- 	 * Enable might_sleep() and smp_processor_id() checks.
--	 * They cannot be enabled earlier because with CONFIG_PREEMPT=y
-+	 * They cannot be enabled earlier because with CONFIG_PREEMPTION=y
- 	 * kernel_thread() would trigger might_sleep() splats. With
- 	 * CONFIG_PREEMPT_VOLUNTARY=y the init task might have scheduled
- 	 * already, but it's stuck on the kthreadd_done completion.
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2b037f195473..604a5e137efe 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3581,7 +3581,7 @@ static inline void sched_tick_start(int cpu) { }
- static inline void sched_tick_stop(int cpu) { }
- #endif
- 
--#if defined(CONFIG_PREEMPT) && (defined(CONFIG_DEBUG_PREEMPT) || \
-+#if defined(CONFIG_PREEMPTION) && (defined(CONFIG_DEBUG_PREEMPT) || \
- 				defined(CONFIG_TRACE_PREEMPT_TOGGLE))
- /*
-  * If the value passed in is equal to the current preempt count
-@@ -3782,7 +3782,7 @@ again:
-  *      task, then the wakeup sets TIF_NEED_RESCHED and schedule() gets
-  *      called on the nearest possible occasion:
-  *
-- *       - If the kernel is preemptible (CONFIG_PREEMPT=y):
-+ *       - If the kernel is preemptible (CONFIG_PREEMPTION=y):
-  *
-  *         - in syscall or exception context, at the next outmost
-  *           preempt_enable(). (this might be as soon as the wake_up()'s
-@@ -3791,7 +3791,7 @@ again:
-  *         - in IRQ context, return from interrupt-handler to
-  *           preemptible context
-  *
-- *       - If the kernel is not preemptible (CONFIG_PREEMPT is not set)
-+ *       - If the kernel is not preemptible (CONFIG_PREEMPTION is not set)
-  *         then at the next:
-  *
-  *          - cond_resched() call
-@@ -4033,7 +4033,7 @@ static void __sched notrace preempt_schedule_common(void)
- 	} while (need_resched());
- }
+-	if (IS_ENABLED(CONFIG_PREEMPT))
++	if (IS_ENABLED(CONFIG_PREEMPTION))
+ 		return rcu_scheduler_active == RCU_SCHEDULER_INACTIVE;
+ 	might_sleep();  /* Check for RCU read-side critical section. */
+ 	preempt_disable();
+diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+index 065183391f75..9b92bf18b737 100644
+--- a/kernel/rcu/tree_stall.h
++++ b/kernel/rcu/tree_stall.h
+@@ -163,7 +163,7 @@ static void rcu_iw_handler(struct irq_work *iwp)
+ //
+ // Printing RCU CPU stall warnings
  
 -#ifdef CONFIG_PREEMPT
 +#ifdef CONFIG_PREEMPTION
- /*
-  * this is the entry point to schedule() from in-kernel preemption
-  * off of preempt_enable. Kernel preemptions off return from interrupt
-@@ -4105,7 +4105,7 @@ asmlinkage __visible void __sched notrace preempt_schedule_notrace(void)
- }
- EXPORT_SYMBOL_GPL(preempt_schedule_notrace);
- 
--#endif /* CONFIG_PREEMPT */
-+#endif /* CONFIG_PREEMPTION */
  
  /*
-  * this is the entry point to schedule() from kernel preemption
-@@ -5416,7 +5416,7 @@ SYSCALL_DEFINE0(sched_yield)
- 	return 0;
+  * Dump detailed information for all tasks blocking the current RCU
+@@ -215,7 +215,7 @@ static int rcu_print_task_stall(struct rcu_node *rnp)
+ 	return ndetected;
  }
  
--#ifndef CONFIG_PREEMPT
-+#ifndef CONFIG_PREEMPTION
- int __sched _cond_resched(void)
+-#else /* #ifdef CONFIG_PREEMPT */
++#else /* #ifdef CONFIG_PREEMPTION */
+ 
+ /*
+  * Because preemptible RCU does not exist, we never have to check for
+@@ -233,7 +233,7 @@ static int rcu_print_task_stall(struct rcu_node *rnp)
  {
- 	if (should_resched(0)) {
-@@ -5433,7 +5433,7 @@ EXPORT_SYMBOL(_cond_resched);
-  * __cond_resched_lock() - if a reschedule is pending, drop the given lock,
-  * call schedule, and on return reacquire the lock.
-  *
-- * This works OK both with and without CONFIG_PREEMPT. We do strange low-level
-+ * This works OK both with and without CONFIG_PREEMPTION. We do strange low-level
-  * operations here to prevent schedule() from being called twice (once via
-  * spin_unlock(), once by hand).
-  */
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index bc9cfeaac8bd..aff9d76d8d65 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7430,7 +7430,7 @@ static int detach_tasks(struct lb_env *env)
- 		detached++;
- 		env->imbalance -= load;
- 
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 		/*
- 		 * NEWIDLE balancing is a source of latency, so preemptible
- 		 * kernels will stop after the first task is detached to minimize
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 802b1f3405f2..f2ce6ba1c5d5 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1943,7 +1943,7 @@ unsigned long arch_scale_freq_capacity(int cpu)
- #endif
- 
- #ifdef CONFIG_SMP
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 
- static inline void double_rq_lock(struct rq *rq1, struct rq *rq2);
- 
-@@ -1995,7 +1995,7 @@ static inline int _double_lock_balance(struct rq *this_rq, struct rq *busiest)
- 	return ret;
+ 	return 0;
  }
- 
--#endif /* CONFIG_PREEMPT */
-+#endif /* CONFIG_PREEMPTION */
+-#endif /* #else #ifdef CONFIG_PREEMPT */
++#endif /* #else #ifdef CONFIG_PREEMPTION */
  
  /*
-  * double_lock_balance - lock the busiest runqueue, this_rq is locked already.
+  * Dump stacks of all tasks running on stalled CPUs.  First try using
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 98da8998c25c..d2c1fe0b451d 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -146,7 +146,7 @@ config FUNCTION_TRACER
+ 	select GENERIC_TRACER
+ 	select CONTEXT_SWITCH_TRACER
+ 	select GLOB
+-	select TASKS_RCU if PREEMPT
++	select TASKS_RCU if PREEMPTION
+ 	help
+ 	  Enable the kernel to trace every kernel function. This is done
+ 	  by using a compiler feature to insert a small, 5-byte No-Operation
