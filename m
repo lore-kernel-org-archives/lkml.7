@@ -2,121 +2,116 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A440C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA1BC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57FEC206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A6E206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:27:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rR8nivXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387537AbfGaLUO (ORCPT
+        id S1728079AbfGaL1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:20:14 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:38667 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfGaLUN (ORCPT
+        Wed, 31 Jul 2019 07:27:24 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42696 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaL1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:20:13 -0400
-Received: from cpe-2606-a000-111b-6140-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:6140::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hsmeG-0001W9-GP; Wed, 31 Jul 2019 07:20:05 -0400
-Date:   Wed, 31 Jul 2019 07:19:32 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Vlad Yasevich <vyasevich@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: sctp: Rename fallthrough label to unhandled
-Message-ID: <20190731111932.GA9823@hmswarspite.think-freely.org>
-References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+        Wed, 31 Jul 2019 07:27:23 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ay6so30399978plb.9;
+        Wed, 31 Jul 2019 04:27:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jyl7Q+fNfa4JowIqcItEgbQqxdMDKkuTAtedoCYt2UY=;
+        b=rR8nivXt3VGb0fDD2orZENlGfFMWpJdAptZe46xvNyKt1xFErw1szWcxJ5+3aqK4e0
+         FbinTes/wrEWvPX+g8ruWPjaFdy7hJVis8gDjaktFCvKPS+cnLdyUjBKWhBgf6TWv5yb
+         fYprXUDjTROH2nXfaPvqXGX3y1nSZj3EP9U7LxQLsKcAs6/XnSJh1n1qxlBr4H/ag72f
+         wmMG/bxWT5qb1P2gpjJFqxojI7LjW1GVjrfx+q/lz1CA9JWwLZySeCmEb5NDuKZ5xdL+
+         oEE+KhfmBHswKTfz3M6PmnBaj8ZJ/2KOmDwpgjTY+olfhFVXSOleIa998TGVl2FZkdwG
+         Xr+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jyl7Q+fNfa4JowIqcItEgbQqxdMDKkuTAtedoCYt2UY=;
+        b=Y2kO5SA1lP7LcKoCvwLHC6q3Glo9+6xe09mGPebq9cguoVVFujB+8bmQMU8+oHRrpR
+         xqPapRGxbW0iCexdR8Efj5kvJQd7H9fZAPBoaseD1Vwp5X/9KY9bS8E80hxC270gnQJP
+         eKLP6exJpzrw2rXGkYQljhY7/mJToZTbyibhITviFhN4LoGk9J1AB58cQ6KUckxJX6r3
+         U7SdhycvjNeCxDP8BSsnfc7VkM3ccRD2hpPjMo9Y80dU51/E2XUYQRq68RoOYw5Gjkdt
+         S8Vm5Fhod3C8yR51AHIGP37LZ1bapQ6VytwvLCcwynKA7ACVaLmtXVKOLTfnMEFXm3Ak
+         Pmyg==
+X-Gm-Message-State: APjAAAUoYKqdkNCv1n3yVndtz4fckvEOx4qFyM0isWtlWBn/5ThtNo0B
+        AzRgCEDpM+7x+LeIBbGOwbfFJV22AVU=
+X-Google-Smtp-Source: APXvYqwYkfllzMYOfWgLQxB4pcShgB0fDQyELULrcRsAQRTCKlJ0kbPsYGxBPYDbNJ5BjxSACyTiwA==
+X-Received: by 2002:a17:902:f216:: with SMTP id gn22mr117209690plb.118.1564572442981;
+        Wed, 31 Jul 2019 04:27:22 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id e3sm1211441pgm.64.2019.07.31.04.27.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 31 Jul 2019 04:27:22 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH 1/3] KVM: Don't need to wakeup vCPU twice afer timer fire
+Date:   Wed, 31 Jul 2019 19:27:16 +0800
+Message-Id: <1564572438-15518-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 10:04:37PM -0700, Joe Perches wrote:
-> fallthrough may become a pseudo reserved keyword so this only use of
-> fallthrough is better renamed to allow it.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-Are you referring to the __attribute__((fallthrough)) statement that gcc
-supports?  If so the compiler should by all rights be able to differentiate
-between a null statement attribute and a explicit goto and label without the
-need for renaming here.  Or are you referring to something else?
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Neil
+kvm_set_pending_timer() will take care to wake up the sleeping vCPU which 
+has pending timer, don't need to check this in apic_timer_expired() again.
 
-> ---
->  net/sctp/sm_make_chunk.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
-> index 36bd8a6e82df..3fdcaa2fbf12 100644
-> --- a/net/sctp/sm_make_chunk.c
-> +++ b/net/sctp/sm_make_chunk.c
-> @@ -2152,7 +2152,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  	case SCTP_PARAM_SET_PRIMARY:
->  		if (net->sctp.addip_enable)
->  			break;
-> -		goto fallthrough;
-> +		goto unhandled;
->  
->  	case SCTP_PARAM_HOST_NAME_ADDRESS:
->  		/* Tell the peer, we won't support this param.  */
-> @@ -2163,11 +2163,11 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  	case SCTP_PARAM_FWD_TSN_SUPPORT:
->  		if (ep->prsctp_enable)
->  			break;
-> -		goto fallthrough;
-> +		goto unhandled;
->  
->  	case SCTP_PARAM_RANDOM:
->  		if (!ep->auth_enable)
-> -			goto fallthrough;
-> +			goto unhandled;
->  
->  		/* SCTP-AUTH: Secion 6.1
->  		 * If the random number is not 32 byte long the association
-> @@ -2184,7 +2184,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  
->  	case SCTP_PARAM_CHUNKS:
->  		if (!ep->auth_enable)
-> -			goto fallthrough;
-> +			goto unhandled;
->  
->  		/* SCTP-AUTH: Section 3.2
->  		 * The CHUNKS parameter MUST be included once in the INIT or
-> @@ -2200,7 +2200,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  
->  	case SCTP_PARAM_HMAC_ALGO:
->  		if (!ep->auth_enable)
-> -			goto fallthrough;
-> +			goto unhandled;
->  
->  		hmacs = (struct sctp_hmac_algo_param *)param.p;
->  		n_elt = (ntohs(param.p->length) -
-> @@ -2223,7 +2223,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  			retval = SCTP_IERROR_ABORT;
->  		}
->  		break;
-> -fallthrough:
-> +unhandled:
->  	default:
->  		pr_debug("%s: unrecognized param:%d for chunk:%d\n",
->  			 __func__, ntohs(param.p->type), cid);
-> -- 
-> 2.15.0
-> 
-> 
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 0aa1586..685d17c 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1548,7 +1548,6 @@ static void kvm_apic_inject_pending_timer_irqs(struct kvm_lapic *apic)
+ static void apic_timer_expired(struct kvm_lapic *apic)
+ {
+ 	struct kvm_vcpu *vcpu = apic->vcpu;
+-	struct swait_queue_head *q = &vcpu->wq;
+ 	struct kvm_timer *ktimer = &apic->lapic_timer;
+ 
+ 	if (atomic_read(&apic->lapic_timer.pending))
+@@ -1566,13 +1565,6 @@ static void apic_timer_expired(struct kvm_lapic *apic)
+ 
+ 	atomic_inc(&apic->lapic_timer.pending);
+ 	kvm_set_pending_timer(vcpu);
+-
+-	/*
+-	 * For x86, the atomic_inc() is serialized, thus
+-	 * using swait_active() is safe.
+-	 */
+-	if (swait_active(q))
+-		swake_up_one(q);
+ }
+ 
+ static void start_sw_tscdeadline(struct kvm_lapic *apic)
+-- 
+2.7.4
+
