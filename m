@@ -2,133 +2,104 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B60C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57895C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C499206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:50:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYqDm0aj"
+	by mail.kernel.org (Postfix) with ESMTP id 34CCF208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbfGaQuD (ORCPT
+        id S1730422AbfGaQuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:50:03 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34966 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbfGaQuC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:50:02 -0400
-Received: by mail-wm1-f67.google.com with SMTP id l2so60437226wmg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 09:50:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qrmVYgiFrygAbwYOEEMHH0NYuDdaUguNNXX83FQoVys=;
-        b=WYqDm0aj2GA8Xeog244Z1cJSk2l3lK+xS2hBabX+bWJE1ZeUqVA0fdZm4T6gkbi1Zj
-         CsIUDE68jDvaiRfBXFjz+iIFNoJVjrIAYCaXOSvk9tKYhShUsKeHU/+pnV1G3OXpHhJB
-         2mAnSJAsyAKPUmN6CdHJ9IO8qkrYLjaFkyGJSqPaxNRiMLxcI1WtGzKqI/0tmOhEFSok
-         QVjOLAbuhLnJAHz/7Wb+9wOVb8srhRnUPwdY8YhYugqfvGTeJ415KTcZ4Ba4TNCXKlnP
-         OGkpmlzsb7FHhANKAGtsqDxAcbOl9MjAOTgPCt1NpSMM/wiQouobjXgxCbcB2ne25Ozu
-         YKNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qrmVYgiFrygAbwYOEEMHH0NYuDdaUguNNXX83FQoVys=;
-        b=tdCIOIMkrPzZpLWrHvCVNGTE4q8td7+dGbMEHrQxl8thsYRCfIgTv8txGq3qAW/QOn
-         OEfRLOi5UBWV8Z/NdYFuUR1a3jz0B2gcWWylZlkiRD+Kxo33K76Jk1ukTMifwaxNhApt
-         +xbCpDE/Zi2y3WBhcXPczkN0qU4t6EHhRq4xLzfmg7TqrNykz0ikyHVa7Z8ZYUj8lt76
-         VYJetf+zusyI6VoiFWdEvXvupH2XwKBcVlsq1wsmqheTuJwpjzdozioGQ+BIXwCis2ts
-         9fQacx86uwPmPssno+oOO50VHDtQ4oj4c4DqsjPi2x1q6oqqo6v46SjoK6Og7j1Y3a3C
-         JtZg==
-X-Gm-Message-State: APjAAAWFVuBOEq03S535T/tvDVfIQlBhuMFIGZSkXe0lEs6z2SdA4/jh
-        5c3MNI9+QQCyYIWyVdSm42g=
-X-Google-Smtp-Source: APXvYqxXOY2kQLEEBz9nadMPska92wDSOdumqLNuk06JoZgp8slSW6e0aPINzdcqOepkHpK1FkEubQ==
-X-Received: by 2002:a1c:4803:: with SMTP id v3mr113366670wma.49.1564591800571;
-        Wed, 31 Jul 2019 09:50:00 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id x185sm63607355wmg.46.2019.07.31.09.49.59
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 09:49:59 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] fork: extend clone3() to support CLONE_SET_TID
-To:     Adrian Reber <areber@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-References: <20190731161223.2928-1-areber@redhat.com>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <417a9682-c7fc-fec4-3510-81a8aa7cd0af@gmail.com>
-Date:   Wed, 31 Jul 2019 17:49:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 31 Jul 2019 12:50:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:51590 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727041AbfGaQuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:50:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EEE3337;
+        Wed, 31 Jul 2019 09:50:12 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D8EA3F71F;
+        Wed, 31 Jul 2019 09:50:09 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 17:50:07 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>
+Subject: Re: [RFC v2 0/8] arm64: MMU enabled kexec relocation
+Message-ID: <20190731165007.GJ39768@lakrids.cambridge.arm.com>
+References: <20190731153857.4045-1-pasha.tatashin@soleen.com>
+ <20190731163258.GH39768@lakrids.cambridge.arm.com>
+ <CA+CK2bAYUFBBGo-LHBK4UWRK1tpx3AZ4Z9NkDxiDK0UYEDozaQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190731161223.2928-1-areber@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+CK2bAYUFBBGo-LHBK4UWRK1tpx3AZ4Z9NkDxiDK0UYEDozaQ@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+On Wed, Jul 31, 2019 at 12:40:51PM -0400, Pavel Tatashin wrote:
+> On Wed, Jul 31, 2019 at 12:33 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > Hi Pavel,
+> >
+> > Generally, the cover letter should state up-front what the goal is (or
+> > what problem you're trying to solve). It would be really helpful to have
+> > that so that we understand what you're trying to achieve, and why.
 
-On 7/31/19 5:12 PM, Adrian Reber wrote:
-[..]
-> @@ -2530,14 +2530,12 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
->  					      struct clone_args __user *uargs,
->  					      size_t size)
->  {
-> +	struct pid_namespace *pid_ns = task_active_pid_ns(current);
->  	struct clone_args args;
->  
->  	if (unlikely(size > PAGE_SIZE))
->  		return -E2BIG;
->  
-> -	if (unlikely(size < sizeof(struct clone_args)))
-> -		return -EINVAL;
-> -
+[...]
 
-It might be better to validate it still somehow, but I don't insist.
+> > > Here is the current data from the real hardware:
+> > > (because of bug, I forced EL1 mode by setting el2_switch always to zero in
+> > > cpu_soft_restart()):
+> > >
+> > > For this experiment, the size of kernel plus initramfs is 25M. If initramfs
+> > > was larger, than the improvements would be even greater, as time spent in
+> > > relocation is proportional to the size of relocation.
+> > >
+> > > Previously:
+> > > kernel shutdown       0.022131328s
+> > > relocation    0.440510736s
+> > > kernel startup        0.294706768s
+> >
+> > In total this takes ~0.76s...
+> >
+> > >
+> > > Relocation was taking: 58.2% of reboot time
+> > >
+> > > Now:
+> > > kernel shutdown       0.032066576s
+> > > relocation    0.022158152s
+> > > kernel startup        0.296055880s
+> >
+> > ... and this takes ~0.35s
+> >
+> > So do we really need this complexity for a few blinks of an eye?
+> 
+> Yes, we have an extremely tight reboot budget, 0.35s is not an acceptable waste.
 
-[..]
-> @@ -2578,11 +2580,16 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
->  
->  static bool clone3_args_valid(const struct kernel_clone_args *kargs)
->  {
-> -	/*
-> -	 * All lower bits of the flag word are taken.
-> -	 * Verify that no other unknown flags are passed along.
-> -	 */
-> -	if (kargs->flags & ~CLONE_LEGACY_FLAGS)
-> +	/* Verify that no other unknown flags are passed along. */
-> +	if (kargs->flags & ~(CLONE_LEGACY_FLAGS | CLONE_SET_TID))
-> +		return false;
-> +
-> +	/* Fail if set_tid is set without CLONE_SET_TID */
-> +	if (kargs->set_tid && !(kargs->flags & CLONE_SET_TID))
-> +		return false;
-> +
-> +	/* Also fail if set_tid is invalid */
-> +	if ((kargs->set_tid <= 0) && (kargs->flags & CLONE_SET_TID))
->  		return false;
+Could you please elaborate on your use-case?
 
-Sorry for not mentioning it on v1, but I've noticed it only now:
-you check kargs->set_tid even with the legacy-sized kernel_clone_args,
-which is probably some random value on a task's stack?
+Understanfin what you're trying to achieve would help us to understand
+which solutions make sense.
 
-[..]
-
-Thanks much,
-          Dmitry
+Thanks,
+Mark.
