@@ -2,125 +2,105 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BC0C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BDFC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B256520693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF2120693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:46:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnp1qCHc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfGaCmU (ORCPT
+        id S1728027AbfGaCqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 22:42:20 -0400
-Received: from mga05.intel.com ([192.55.52.43]:7466 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727714AbfGaCmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 22:42:20 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 19:42:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,328,1559545200"; 
-   d="scan'208";a="180086832"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Jul 2019 19:42:16 -0700
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>
-Cc:     Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190531210816.GA24027@sinkpad> <20190606152637.GA5703@sinkpad>
- <20190612163345.GB26997@sinkpad>
- <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
- <20190613032246.GA17752@sinkpad>
- <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
- <20190619183302.GA6775@sinkpad> <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu> <20190726152101.GA27884@sinkpad>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
-Date:   Wed, 31 Jul 2019 10:42:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.1.1
-MIME-Version: 1.0
-In-Reply-To: <20190726152101.GA27884@sinkpad>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 30 Jul 2019 22:46:00 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42514 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfGaCqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 22:46:00 -0400
+Received: by mail-pl1-f195.google.com with SMTP id ay6so29800316plb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jul 2019 19:46:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=w5cOyOxhAUID1tCPC1X8j3Oj8XkaYtpNz6fVEgap7bY=;
+        b=rnp1qCHcYJAwRdiabKV6cNpufFzp/A6Vxrprvi6fx4IJ8mS+WV2U6/yDr6/9+8xoY0
+         VF5vHB0iDUOSz1JdcfyQVrrrpjJZjDPNUt/gTa59VrBZ+1PzA2n1Ulwyz4vqPPSyJljk
+         i/MNLD59hZ+Tl+aC1fziE60Tdsxe7YvKmO88pQaQAoNIfEgYf5iHGvOBabPbUHhQuCNo
+         ZEkAan+pqyvT5kmtZqR+0Bnx7DMNkzsAIBBRfGmPUUTlsZyeecKeCOT+qpxj6aVXJxGc
+         QReanCXCCqmRJV3MFvkQBMu3pgnqs+aDI0rFoLyCe3OXABJ4+W1/BBgIAI0ko56UEtxM
+         vDWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=w5cOyOxhAUID1tCPC1X8j3Oj8XkaYtpNz6fVEgap7bY=;
+        b=FY31TQ14u0gc4kJwbIj/VuSRo8UzooDK6lA7tHZ56dDoip0K5q5mkBXohW2GH2rKKW
+         vO8AVtNSzy3+5dOpwWru/eLoFNjkS6bzXGA20+HtfWF5AkVQpDAmPRNRa0l/m52It9jS
+         8o5aJ74IiYNjWnKmsyRAXkSBmHlK+/DoydMMmwmfnCzCT/rfTFWDTg+/JW+nQSGD5SoM
+         GWswxHWSMEjQslw66QueOa8xv1hySychSxN2VAVCGW3YIYBsDCa7j49RUHh6SbrG37rB
+         Isuyuafdi3ztmDtcXYGlzHMiDA3aBfHa3nP5jhJsGzn3Jfu4q2bvMr7GUjrAIbDueA1l
+         b2pg==
+X-Gm-Message-State: APjAAAUjaDBUgFyqlcgIrx4YTjryxfX4vnAmTpsUryBVDc/cmqhSNPnS
+        UFemyYbGoLnnW4rrFb8x4pVDn3khfpY=
+X-Google-Smtp-Source: APXvYqxTJb5eodj2ckVumlL+0RDRIYaiUcKFGf7ihkxXWYXlVSjbmj8L5fzvw20rUBnlycwjnBJWyQ==
+X-Received: by 2002:a17:902:106:: with SMTP id 6mr120329921plb.64.1564541159865;
+        Tue, 30 Jul 2019 19:45:59 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id q69sm230530pjb.0.2019.07.30.19.45.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jul 2019 19:45:57 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH] drm: use trace_printk rather than printk in drm_dbg.
+Date:   Wed, 31 Jul 2019 10:45:33 +0800
+Message-Id: <20190731024533.22264-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/26 23:21, Julien Desfossez wrote:
-> On 25-Jul-2019 10:30:03 PM, Aaron Lu wrote:
->>
->> I tried a different approach based on vruntime with 3 patches following.
-> [...]
-> 
-> We have experimented with this new patchset and indeed the fairness is
-> now much better. Interactive tasks with v3 were complete starving when
-> there were cpu-intensive tasks running, now they can run consistently.
+In drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c,
+amdgpu_ih_process calls DRM_DEBUG which calls drm_dbg and
+finally calls printk.
+As amdgpu_ih_process is called from an interrupt handler,
+and interrupt handler should be short as possible.
 
-Yeah, the fairness is much better now.
+As printk may lead to bogging down the system or can even
+create a live lock. printk should not be used in IRQ context.
+Instead, trace_printk is recommended.
+Link: https://lwn.net/Articles/365835
 
-For two cgroups created, I limited the cpuset to be one core(two siblings)
-of these two cgroups, I still run gemmbench and sysbench-mysql, and here
-is the mysql result:
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ drivers/gpu/drm/drm_print.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Latency:
-.----------------------------------------------------------------------------------------------.
-|NA/AVX	vanilla-SMT	[std% / sem%]	  cpu% |coresched-SMT	[std% / sem%]	  +/-	  cpu% |
-|----------------------------------------------------------------------------------------------|
-|  1/1	        6.7	[13.8%/ 1.4%]	  2.1% |          6.4	[14.6%/ 1.5%]	  4.0%	  2.0% |
-|  2/2	        9.1	[ 5.0%/ 0.5%]	  4.0% |         11.4	[ 6.8%/ 0.7%]	-24.9%	  3.9% |
-'----------------------------------------------------------------------------------------------'
+diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
+index a17c8a14dba4..90cded140146 100644
+--- a/drivers/gpu/drm/drm_print.c
++++ b/drivers/gpu/drm/drm_print.c
+@@ -236,7 +236,7 @@ void drm_dbg(unsigned int category, const char *format, ...)
+ 	vaf.fmt = format;
+ 	vaf.va = &args;
+ 
+-	printk(KERN_DEBUG "[" DRM_NAME ":%ps] %pV",
++	trace_printk(KERN_DEBUG "[" DRM_NAME ":%ps] %pV",
+ 	       __builtin_return_address(0), &vaf);
+ 
+ 	va_end(args);
+-- 
+2.11.0
 
-Throughput:
-.----------------------------------------------------------------------------------------------.
-|NA/AVX	vanilla-SMT	[std% / sem%]	  cpu% |coresched-SMT	[std% / sem%]	  +/-	  cpu% |
-|----------------------------------------------------------------------------------------------|
-|  1/1	      310.2	[ 4.1%/ 0.4%]	  2.1% |        296.2	[ 5.0%/ 0.5%]	 -4.5%	  2.0% | 
-|  2/2	      547.7	[ 3.6%/ 0.4%]	  4.0% |        368.3	[ 4.8%/ 0.5%]	-32.8%	  3.9% | 
-'----------------------------------------------------------------------------------------------'
-
-Note: 2/2 case means 4 threads run on one core, which is overloaded.(cpu% is overall system report)
-
-Though the latency/throughput has regressions, but standard deviation is much better now.
-
-> With my initial test of TPC-C running in large VMs with a lot of
-> background noise VMs, the results are pretty similar to v3, I will run
-> more thorough tests and report the results back here.
-
-I see something similar. I guess task placement could be another problem.
-We don't check cookie matching in load balance and task wakeup, so
-- if tasks with different cookie happen to be dispatched onto different cores,
-The result should be good
-- if tasks with different cookie are unfortunately dispatched onto the same
-core, the result should be bad.
-
-This problem is bypassed in my testing setup above, but may be one cause
-of my other scenarios, need a while to sort out.
-
-Thanks,
--Aubrey
