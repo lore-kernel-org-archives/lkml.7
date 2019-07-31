@@ -4,39 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5EAC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3A3C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F89A2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850CB2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387983AbfGaNWX (ORCPT
+        id S2388355AbfGaNWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:22:23 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:58518 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729472AbfGaNWU (ORCPT
+        Wed, 31 Jul 2019 09:22:52 -0400
+Received: from albert.telenet-ops.be ([195.130.137.90]:50878 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729474AbfGaNWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:22:20 -0400
+        Wed, 31 Jul 2019 09:22:21 -0400
 Received: from ramsan ([84.194.98.4])
-        by michel.telenet-ops.be with bizsmtp
-        id jRNK2000D05gfCL06RNKmu; Wed, 31 Jul 2019 15:22:19 +0200
+        by albert.telenet-ops.be with bizsmtp
+        id jRNK2000F05gfCL06RNKRD; Wed, 31 Jul 2019 15:22:19 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hsoYd-000181-7D; Wed, 31 Jul 2019 15:22:19 +0200
+        id 1hsoYd-000187-90; Wed, 31 Jul 2019 15:22:19 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hsoYd-0004UP-6A; Wed, 31 Jul 2019 15:22:19 +0200
+        id 1hsoYd-0004UV-7y; Wed, 31 Jul 2019 15:22:19 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     "David S . Miller" <davem@davemloft.net>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 5/8] net: ixp4xx: Spelling s/XSacle/XScale/
-Date:   Wed, 31 Jul 2019 15:22:13 +0200
-Message-Id: <20190731132216.17194-6-geert+renesas@glider.be>
+Subject: [PATCH 7/8] net: packetengines: Fix manufacturer spelling and capitalization
+Date:   Wed, 31 Jul 2019 15:22:15 +0200
+Message-Id: <20190731132216.17194-8-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190731132216.17194-1-geert+renesas@glider.be>
 References: <20190731132216.17194-1-geert+renesas@glider.be>
@@ -45,24 +46,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use "Packet Engines" consistently.
+
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/net/ethernet/xscale/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/packetengines/Kconfig  | 6 +++---
+ drivers/net/ethernet/packetengines/Makefile | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/xscale/Kconfig b/drivers/net/ethernet/xscale/Kconfig
-index 2f354ba029a61491..cd0a8f46e7c6c143 100644
---- a/drivers/net/ethernet/xscale/Kconfig
-+++ b/drivers/net/ethernet/xscale/Kconfig
-@@ -13,7 +13,7 @@ config NET_VENDOR_XSCALE
+diff --git a/drivers/net/ethernet/packetengines/Kconfig b/drivers/net/ethernet/packetengines/Kconfig
+index 8161e308e64b0f16..ead3750b4489d1bf 100644
+--- a/drivers/net/ethernet/packetengines/Kconfig
++++ b/drivers/net/ethernet/packetengines/Kconfig
+@@ -1,10 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+-# Packet engine device configuration
++# Packet Engines device configuration
+ #
  
- 	  Note that the answer to this question does not directly affect the
+ config NET_VENDOR_PACKET_ENGINES
+-	bool "Packet Engine devices"
++	bool "Packet Engines devices"
+ 	default y
+ 	depends on PCI
+ 	---help---
+@@ -12,7 +12,7 @@ config NET_VENDOR_PACKET_ENGINES
+ 
+ 	  Note that the answer to this question doesn't directly affect the
  	  kernel: saying N will just cause the configurator to skip all
--	  the questions about XSacle IXP devices. If you say Y, you will be
-+	  the questions about XScale IXP devices. If you say Y, you will be
- 	  asked for your specific card in the following questions.
+-	  the questions about packet engine devices. If you say Y, you will
++	  the questions about Packet Engines devices. If you say Y, you will
+ 	  be asked for your specific card in the following questions.
  
- if NET_VENDOR_XSCALE
+ if NET_VENDOR_PACKET_ENGINES
+diff --git a/drivers/net/ethernet/packetengines/Makefile b/drivers/net/ethernet/packetengines/Makefile
+index 1553c9cfc254d6f8..cf054b796d111231 100644
+--- a/drivers/net/ethernet/packetengines/Makefile
++++ b/drivers/net/ethernet/packetengines/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+-# Makefile for the Packet Engine network device drivers.
++# Makefile for the Packet Engines network device drivers.
+ #
+ 
+ obj-$(CONFIG_HAMACHI) += hamachi.o
 -- 
 2.17.1
 
