@@ -2,240 +2,228 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D16C32750
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 01:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56ADC32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 01:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5875208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 01:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8839D206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 01:25:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="l4jleZRs"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="NuBjPQ/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387396AbfGaBYz (ORCPT
+        id S1727885AbfGaBZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 21:24:55 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:64336 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727546AbfGaBYh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 21:24:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1564536278; x=1596072278;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Y6AGFaAE1PMVJZ6+rsgH3B7LWIELYj+tSokwx8q21Gg=;
-  b=l4jleZRsaJIbGEfj3mFadKVH5mMjg/N1ne21us47ctjojIxpWMnx4XFn
-   BblS7SO5YbUQ8oOhcF2ZpYiJrV6wvvR+CYsiXJkkMqDmhm9F+Dh5gEfVj
-   lQUinq79xK7McuDdDhcDVHaetxcUggYuSX1OAX6kXmRLr8tye/Uatl9db
-   X25B/hFuzwJ0ddTxe0FSEP4A6qzreNLvyMy9qJx7ZDUyj3VDD7K/iIblL
-   y8AeM+3UXf4jPkPXwg0bEdu/hVDZo3yanYyctSf/A4N4TgWgFMzbk24em
-   yRAs5D/xsWom61wqpvXnFR0a7u1/t9GoyvM3khfPlYAnGtIB814ojfXjE
-   Q==;
-IronPort-SDR: 25hWv9ODF9g8VJuyqK4JMsLyFaq5BrJNkz52uRiAql5obTfu3/NGBqyEUcehywuOd68juSQ0eB
- MX0Gw+H+Vq3hS2gTo7HlYBsT5j0inrB2f1/tEOpDk1t8Hb0Vfor8oifii/6Wiyu/X3n+YIMT7c
- NdLDWNaMBFPD0jyjspTkDpI1L9WWoJfFha+JGnE9tKEaxTEw1/CWhvqwTktMvKSQfLIc1BgCGF
- MG6l1eXGMeTd0XMKIPtv+DeO36AiWf/7Hh963Nq5Seh9pOPQ3bLZ0PfiqJd0cAZVonBdxajdTp
- rBM=
-X-IronPort-AV: E=Sophos;i="5.64,328,1559491200"; 
-   d="scan'208";a="115555804"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 31 Jul 2019 09:24:37 +0800
-IronPort-SDR: OnXp1I4YrGwbZzZrYhLfFdrrNt29tGwdpQq/pjlwyET40k+roOJ5P+Q1o0OKFLO9tvuCjTekt1
- 2Le/KE/+IGzxoSXOadLWAW5jqgWXa6A3eJvsVESslh7tOu8oRLuI4uTRFMjU16MxNdcoiX+vWZ
- zPKVRLV+M1JYSPmZKqmAfStNNOFeR6Qe092GhNmVAKWu7My641ZHKncEn0um454/Ek3uSUd2gg
- FGHuovvTRhvy8dMi3gkDzzTwPzlUvYvF7I5zDzga4bWFoq1zb6qBFcFkiR/9j5ae4TP1Z1n2JH
- Gz3wME/1y38v6yKo1/OJ9EwW
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP; 30 Jul 2019 18:22:38 -0700
-IronPort-SDR: xNRp1O/Qr49vPg3S7RUEcytEJKT39eWC7sCIQ7RAoaIdl7XdAMDHcJjQWkNq/0hzCNZ5Pxx5Ya
- +Dei7WHbONIUPCU3+tcv2mPcLWV/ImofiPdDOCzmrnJogrIKQ0AuLV7t53N5WAZCo6aDHVU8Xz
- Z2j42T5y75hWW3MbvHeD2pQ5m2D/SDpGts+NhkqcGUM6cegK/g/YhRdf6ZggHyrEpZOTbEgNM0
- fo21GU7bpdxwwJz0tJIG/0cQ5j/6tzgbsSr+O3lgGjo7HYeKTP0Ju8lxAzjmD7UiXHE2cFfO3F
- MEg=
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip02.wdc.com with ESMTP; 30 Jul 2019 18:24:37 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 2/5] RISC-V: Add riscv_isa reprensenting ISA features common across CPUs
-Date:   Tue, 30 Jul 2019 18:24:15 -0700
-Message-Id: <20190731012418.24565-3-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190731012418.24565-1-atish.patra@wdc.com>
-References: <20190731012418.24565-1-atish.patra@wdc.com>
+        Tue, 30 Jul 2019 21:25:56 -0400
+Received: from mail-eopbgr1320101.outbound.protection.outlook.com ([40.107.132.101]:35882
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725911AbfGaBZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 21:25:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bEH6c27w+PM3nfGYEpFiDEjzn9DUnEK7N6WZVBUP5F5/sD+Rcnzo5eFlDNm2kAQC7LzcltmUOnO1YtV3B/jGTuN02ewPPFYQ0JunWwwhd9HF2F617yVIfB0tAZ2fJJZ+UVhDGlhRaTBShgA9npgkBUNODWzvLpyDLA7s56oqj/228su8G5nqshcLSQcSsWnyMHg0j9mhcbMtgdSYaw46xmjRMbFDwFNhJHLqYiP5CVWlfIIkar2vUAdI8ghtTC0jrloGvUWiWVw7LCxFLtkKtFqIHmu3xwYybgvF9F/80YZeBNYa9HkeRMLpSOQIamtNMTU+ltd/88boTqy6qiEncg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=thm68vWJDTJqC+ZV40mX//nMUgdYsUcdxVCjvVDMtbc=;
+ b=nxJrgKhWQIU27ktpOPGKu2QM/NuyOZ63kdJto5b0kIxSU8tdNISRItvwcByJnQRxAxhaUcjNG1Z8UIGICBXiq+qO+A/2nwb3Mp57awybsw6LVUJu/XY4OorvzeksZJ5Tu+oMjhTFEblCVtgKhrZbktb2Ogki2Gfv/UGFM5wzGnhQTj6kpHhTZOY/ASu73/ivNnWjUOL997FA2iRFN7cG7SsqKUYSZ4TxBIzAkldbJkHHhok9nRd0V5/q/mDiWKN9Lwv/ynbZcxWn3+aZQeXnZ8dYdwf4QFlnlQL7zFJtB5cJYk9b/zFpRR1x6L2I+v+CMRgYpwnR9Uzn3sZrdJqMKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=thm68vWJDTJqC+ZV40mX//nMUgdYsUcdxVCjvVDMtbc=;
+ b=NuBjPQ/K+EyRrVqp7BoHyqCVmVxRcpZd/fV8iGcBHlGZyPjPPs0TJxnVcqpW1V5/GetRg4BQufZeoX/HUvoAZz2lHexgZqJ4ekjH5GDWibQA5CPULwzPQQiIUmWbojfO7iTu+Xh65nUmHhlqpmf2jHsx5ERM47IKow5BRYCOJoc=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0139.APCP153.PROD.OUTLOOK.COM (10.170.188.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.3; Wed, 31 Jul 2019 01:25:46 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c%8]) with mapi id 15.20.2157.001; Wed, 31 Jul 2019
+ 01:25:46 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        David Miller <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: [PATCH v2 net] hv_sock: Fix hang when a connection is closed
+Thread-Topic: [PATCH v2 net] hv_sock: Fix hang when a connection is closed
+Thread-Index: AdVHPmu2nCw89Ds2Tx6HccJLUcFnXg==
+Date:   Wed, 31 Jul 2019 01:25:45 +0000
+Message-ID: <PU1P153MB01696DDD3A3F601370701DD2BFDF0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-31T01:25:42.9249599Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5fb33ce5-3f70-4230-92d8-446001a362ef;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:1:c0f7:3271:ccd8:4d01]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f875bf19-0189-4eb7-6107-08d71556034c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0139;
+x-ms-traffictypediagnostic: PU1P153MB0139:|PU1P153MB0139:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB01399350552811B6F45317E1BFDF0@PU1P153MB0139.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 011579F31F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(366004)(39860400002)(136003)(376002)(54534003)(51234002)(199004)(189003)(52536014)(316002)(486006)(7416002)(10090500001)(10290500003)(25786009)(81166006)(81156014)(305945005)(4326008)(5660300002)(110136005)(68736007)(186003)(8676002)(2906002)(66446008)(64756008)(66556008)(2501003)(74316002)(1511001)(6116002)(33656002)(66946007)(54906003)(6506007)(66476007)(22452003)(71200400001)(14444005)(71190400001)(76116006)(6436002)(478600001)(7736002)(53936002)(8990500004)(86362001)(256004)(14454004)(99286004)(476003)(7696005)(55016002)(9686003)(8936002)(102836004)(46003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0139;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: rO7CYCcEHk8JKSQf/pzsEjaHBDT4Rxf1IvOjsj0WZevs9Lz1yJ3+GVYI+Tu5W03bCpoh0zz+1zMD4lPYOlPNsAmrXzuBAoHNOiRNF3ljIMGzcZ1cy/MDbJt8EGk3Z3J/GSCDEskyJNPItPPCW2vbLFC024Xp0Cz+9UgY5+Wk++TP2sIzKOf+tZkI62KCSLuA2MhEqDByBcg3G3EaFu8m+swxbM+pO9NPOx8r2CH0r8g2n1DgmI/cHNLiVDpPcV9LSEBsLbbNmA74n0GiDicJRFPCDC4vg/59W4mvB4jHnqnYv6HnuoKOdNUjoLBgShMAAQsvSEjR8EnPP2S8Bm0rJD3QfCtd383glmEWbuIc0hO94WB006bAOc1LQqqrZqeZ6WQbh7R2IJlcYh0+TWw2rKBvs+oFCckTIXXV492PsUc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f875bf19-0189-4eb7-6107-08d71556034c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 01:25:45.8275
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: E6dZU1lHIMdHnIGLvTcVfBDnvb22Pth1kbvGOcvZBs3K+6BbWfKZyk0h031jxQiTeCST3xLK2MQfXEBfzsKAVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anup Patel <anup.patel@wdc.com>
 
-This patch adds riscv_isa integer to represent ISA features common
-across all CPUs. The riscv_isa is not same as elf_hwcap because
-elf_hwcap will only have ISA features relevant for user-space apps
-whereas riscv_isa will have ISA features relevant to both kernel
-and user-space apps.
+There is a race condition for an established connection that is being close=
+d
+by the guest: the refcnt is 4 at the end of hvs_release() (Note: here the
+'remove_sock' is false):
 
-One of the use case is KVM hypervisor where riscv_isa will be used
-to do following operations:
+1 for the initial value;
+1 for the sk being in the bound list;
+1 for the sk being in the connected list;
+1 for the delayed close_work.
 
-1. Check whether hypervisor extension is available
-2. Find ISA features that need to be virtualized (e.g. floating
-   point support, vector extension, etc.)
+After hvs_release() finishes, __vsock_release() -> sock_put(sk) *may*
+decrease the refcnt to 3.
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Concurrently, hvs_close_connection() runs in another thread:
+  calls vsock_remove_sock() to decrease the refcnt by 2;
+  call sock_put() to decrease the refcnt to 0, and free the sk;
+  next, the "release_sock(sk)" may hang due to use-after-free.
+
+In the above, after hvs_release() finishes, if hvs_close_connection() runs
+faster than "__vsock_release() -> sock_put(sk)", then there is not any issu=
+e,
+because at the beginning of hvs_close_connection(), the refcnt is still 4.
+
+The issue can be resolved if an extra reference is taken when the
+connection is established.
+
+Fixes: a9eeb998c28d ("hv_sock: Add support for delayed close")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Cc: stable@vger.kernel.org
+
 ---
- arch/riscv/include/asm/hwcap.h | 25 +++++++++++++++++++++
- arch/riscv/kernel/cpufeature.c | 41 +++++++++++++++++++++++++++++++---
- 2 files changed, 63 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-index 7ecb7c6a57b1..e069f60ad5d2 100644
---- a/arch/riscv/include/asm/hwcap.h
-+++ b/arch/riscv/include/asm/hwcap.h
-@@ -22,5 +22,30 @@ enum {
- };
- 
- extern unsigned long elf_hwcap;
+Changes in v2:=20
+  Changed the location of the sock_hold() call.=20
+  Updated the changelog accordingly.
+ =20
+  Thanks Sunil for the suggestion!
+
+
+With the proper kernel debugging options enabled, first a warning can
+appear:
+
+kworker/1:0/4467 is freeing memory ..., with a lock still held there!
+stack backtrace:
+Workqueue: events vmbus_onmessage_work [hv_vmbus]
+Call Trace:
+ dump_stack+0x67/0x90
+ debug_check_no_locks_freed.cold.52+0x78/0x7d
+ slab_free_freelist_hook+0x85/0x140
+ kmem_cache_free+0xa5/0x380
+ __sk_destruct+0x150/0x260
+ hvs_close_connection+0x24/0x30 [hv_sock]
+ vmbus_onmessage_work+0x1d/0x30 [hv_vmbus]
+ process_one_work+0x241/0x600
+ worker_thread+0x3c/0x390
+ kthread+0x11b/0x140
+ ret_from_fork+0x24/0x30
+
+and then the following release_sock(sk) can hang:
+
+watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [kworker/1:0:4467]
+...
+irq event stamp: 62890
+CPU: 1 PID: 4467 Comm: kworker/1:0 Tainted: G        W         5.2.0+ #39
+Workqueue: events vmbus_onmessage_work [hv_vmbus]
+RIP: 0010:queued_spin_lock_slowpath+0x2b/0x1e0
+...
+Call Trace:
+ do_raw_spin_lock+0xab/0xb0
+ release_sock+0x19/0xb0
+ vmbus_onmessage_work+0x1d/0x30 [hv_vmbus]
+ process_one_work+0x241/0x600
+ worker_thread+0x3c/0x390
+ kthread+0x11b/0x140
+ ret_from_fork+0x24/0x30
+
+ net/vmw_vsock/hyperv_transport.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
+ort.c
+index f2084e3f7aa4..9d864ebeb7b3 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -312,6 +312,11 @@ static void hvs_close_connection(struct vmbus_channel =
+*chan)
+ 	lock_sock(sk);
+ 	hvs_do_close_lock_held(vsock_sk(sk), true);
+ 	release_sock(sk);
 +
-+#define RISCV_ISA_EXT_A		(1UL << ('A' - 'A'))
-+#define RISCV_ISA_EXT_a		RISCV_ISA_EXT_A
-+#define RISCV_ISA_EXT_C		(1UL << ('C' - 'A'))
-+#define RISCV_ISA_EXT_c		RISCV_ISA_EXT_C
-+#define RISCV_ISA_EXT_D		(1UL << ('D' - 'A'))
-+#define RISCV_ISA_EXT_d		RISCV_ISA_EXT_D
-+#define RISCV_ISA_EXT_F		(1UL << ('F' - 'A'))
-+#define RISCV_ISA_EXT_f		RISCV_ISA_EXT_F
-+#define RISCV_ISA_EXT_H		(1UL << ('H' - 'A'))
-+#define RISCV_ISA_EXT_h		RISCV_ISA_EXT_H
-+#define RISCV_ISA_EXT_I		(1UL << ('I' - 'A'))
-+#define RISCV_ISA_EXT_i		RISCV_ISA_EXT_I
-+#define RISCV_ISA_EXT_M		(1UL << ('M' - 'A'))
-+#define RISCV_ISA_EXT_m		RISCV_ISA_EXT_M
-+#define RISCV_ISA_EXT_S		(1UL << ('S' - 'A'))
-+#define RISCV_ISA_EXT_s		RISCV_ISA_EXT_S
-+#define RISCV_ISA_EXT_U		(1UL << ('U' - 'A'))
-+#define RISCV_ISA_EXT_u		RISCV_ISA_EXT_U
-+
-+extern unsigned long riscv_isa;
-+
-+#define riscv_isa_extension_available(ext_char)	\
-+		(riscv_isa & RISCV_ISA_EXT_##ext_char)
-+
- #endif
- #endif
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index b1ade9a49347..177529d48d87 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -12,6 +12,9 @@
- #include <asm/smp.h>
- 
- unsigned long elf_hwcap __read_mostly;
-+unsigned long riscv_isa __read_mostly;
-+EXPORT_SYMBOL_GPL(riscv_isa);
-+
- #ifdef CONFIG_FPU
- bool has_fpu __read_mostly;
- #endif
-@@ -20,7 +23,8 @@ void riscv_fill_hwcap(void)
- {
- 	struct device_node *node;
- 	const char *isa;
--	size_t i;
-+	char print_str[BITS_PER_LONG+1];
-+	size_t i, j, isa_len;
- 	static unsigned long isa2hwcap[256] = {0};
- 
- 	isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
-@@ -31,9 +35,11 @@ void riscv_fill_hwcap(void)
- 	isa2hwcap['c'] = isa2hwcap['C'] = COMPAT_HWCAP_ISA_C;
- 
- 	elf_hwcap = 0;
-+	riscv_isa = 0;
- 
- 	for_each_of_cpu_node(node) {
- 		unsigned long this_hwcap = 0;
-+		unsigned long this_isa = 0;
- 
- 		if (riscv_of_processor_hartid(node) < 0)
- 			continue;
-@@ -43,8 +49,22 @@ void riscv_fill_hwcap(void)
- 			continue;
- 		}
- 
--		for (i = 0; i < strlen(isa); ++i)
-+		i = 0;
-+		isa_len = strlen(isa);
-+#if defined(CONFIG_32BIT)
-+		if (strncasecmp(isa, "rv32", 4) != 0)
-+			i += 4;
-+#elif defined(CONFIG_64BIT)
-+		if (strncasecmp(isa, "rv64", 4) != 0)
-+			i += 4;
-+#endif
-+		for (; i < isa_len; ++i) {
- 			this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
-+			if ('a' <= isa[i] && isa[i] <= 'z')
-+				this_isa |= (1UL << (isa[i] - 'a'));
-+			if ('A' <= isa[i] && isa[i] <= 'Z')
-+				this_isa |= (1UL << (isa[i] - 'A'));
-+		}
- 
- 		/*
- 		 * All "okay" hart should have same isa. Set HWCAP based on
-@@ -55,6 +75,11 @@ void riscv_fill_hwcap(void)
- 			elf_hwcap &= this_hwcap;
- 		else
- 			elf_hwcap = this_hwcap;
-+
-+		if (riscv_isa)
-+			riscv_isa &= this_isa;
-+		else
-+			riscv_isa = this_isa;
++	/* Release the refcnt for the channel that's opened in
++	 * hvs_open_connection().
++	 */
++	sock_put(sk);
+ }
+=20
+ static void hvs_open_connection(struct vmbus_channel *chan)
+@@ -407,6 +412,9 @@ static void hvs_open_connection(struct vmbus_channel *c=
+han)
  	}
- 
- 	/* We don't support systems with F but without D, so mask those out
-@@ -64,7 +89,17 @@ void riscv_fill_hwcap(void)
- 		elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
- 	}
- 
--	pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
-+	memset(print_str, 0, sizeof(print_str));
-+	for (i = 0, j = 0; i < BITS_PER_LONG; i++)
-+		if (riscv_isa & (1UL << i))
-+			print_str[j++] = (char)('A' + i);
-+	pr_info("riscv: ISA extensions %s\n", print_str);
+=20
+ 	set_per_channel_state(chan, conn_from_host ? new : sk);
 +
-+	memset(print_str, 0, sizeof(print_str));
-+	for (i = 0, j = 0; i < BITS_PER_LONG; i++)
-+		if (elf_hwcap & (1UL << i))
-+			print_str[j++] = (char)('A' + i);
-+	pr_info("riscv: ELF capabilities %s\n", print_str);
- 
- #ifdef CONFIG_FPU
- 	if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
--- 
-2.21.0
++	/* This reference will be dropped by hvs_close_connection(). */
++	sock_hold(conn_from_host ? new : sk);
+ 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
+=20
+ 	/* Set the pending send size to max packet size to always get
+--=20
+2.19.1
 
