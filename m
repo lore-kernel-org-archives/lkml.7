@@ -2,118 +2,136 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC374C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8556C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E86820679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F85A20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564608468;
+	bh=7eXmTgsfYzdQB/da8h/btuCwwBwTnk2EjWb/KNrq6mU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SUk14p8f8kX0017O3M6qajRp6wgRanH6+Dev0jaFNUg9b69K96On95ZyDQVo0KTgn
+	 XNLRZsGBF1VY9r5fZ8R7cZhXcX5eNu7PW/8ITGz8j3UTXg7Xa058xkfu2RXY6d9WUJ
+	 ApeTQic1wmemFsxxjrNjlhGQbxTyHvUR/mPJqC30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbfGaV0v (ORCPT
+        id S1730661AbfGaV1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:26:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:32798 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730439AbfGaV0v (ORCPT
+        Wed, 31 Jul 2019 17:27:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42512 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfGaV1q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:26:51 -0400
-Received: by mail-io1-f68.google.com with SMTP id z3so20708937iog.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 14:26:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tIGma61wLHtzNprRff+9TEgirnDHGnLDSLV4ZUKzd0A=;
-        b=lanLuKcthDT11oc0RMkGBwHg6SZ7Sl1NcUvD3kuQpSPKgOJ5dbnNzein5OSLnBeyEe
-         e1gLLXmVN9lRav9MK8ThH5/qmGHbB44cAH2ZJy3xJFXh8DwKBAJbVLyz436Dg+hFmwh0
-         Kgo/YoMrkYAfavEZUjzBzCUpgmfjLDdR37JNan4wJfLZUEWuK+T++Bvik40eubnBrkPp
-         s65550GdJCglreBet3ja+Lm8pG3x+OHDJ7Ei3YVGA9JzqN/IQeLzNbi9VIhvMKR35Rcz
-         oFrntxBRQKeg8pAAK8ugYCA/Sx1R+aTILFgomA2kqzP1T/8DgUUsed5xEgDikTQ7xC6t
-         VHgQ==
-X-Gm-Message-State: APjAAAUkiDGG+PSbnSxA7r8+p9jXjtxsNr/1+s4CXELOAaYMS8WyjRU8
-        cB5nn4YeNUoWsD2UpaYZlVpGyjjQIzCOOKd6C0EB7A==
-X-Google-Smtp-Source: APXvYqzESQ6j/S2FQ4K/46lCRs2V5bZ+p/HVw7BDuXGgow808D74rbDC31pUP/jqnm5XyBJWHTuU22rvCZ1LzMnu6TU=
-X-Received: by 2002:a02:230a:: with SMTP id u10mr46030961jau.117.1564608410139;
- Wed, 31 Jul 2019 14:26:50 -0700 (PDT)
+        Wed, 31 Jul 2019 17:27:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ojbkQD1a7MQMcAHB0nbk0TNEefbMHs3972JP2NcjJME=; b=g83i6fG6pLz5k+ubFSnN8EkA5
+        UONDm7X0pnk+aEXdmFccZHoiA/MwLcT3bciBvO1P/EPjm9w8DWxTy97HZrc+BdRKb+EgxEQ2sotEY
+        MsEte0kaui9SJBYnpz2cVbQjTQfjElvMKIWI6V5wqmkV+8dU6kjbQ/91+vlvuSzIz08B81Pm1tR53
+        Hvm/XYnYMcHDHQYcvFC6f8pqy/unIZORk47M8Lmo1dFfIdsORd+7CHhf8lrV4waeQjIwLfl27lujE
+        JiRPbITNDfNg+OgMhYM3B51EPP6j7Bw+mnUM0iyfG5dpLSulcXgKe3UHGtWtHkzcxSQw4+I3NKq51
+        irVg2nqrA==;
+Received: from [191.33.152.89] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hsw8I-0001T3-HP; Wed, 31 Jul 2019 21:27:38 +0000
+Date:   Wed, 31 Jul 2019 18:27:29 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        samba-technical@lists.samba.org, devicetree@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Evgeniy Dushistov <dushistov@mail.ru>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve French <sfrench@samba.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-cifs@vger.kernel.org, Dave Kleikamp <shaggy@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        jfs-discussion@lists.sourceforge.net,
+        linux-arm-kernel@lists.infradead.org,
+        Hartmut Knaack <knaack.h@gmx.de>, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 0/6] ReST conversion patches not applied yet
+Message-ID: <20190731182729.01c98cd3@coco.lan>
+In-Reply-To: <20190731203712.GJ4369@sirena.org.uk>
+References: <cover.1564603513.git.mchehab+samsung@kernel.org>
+        <20190731141734.1fa9ce64@lwn.net>
+        <20190731202007.GI4369@sirena.org.uk>
+        <20190731172613.32d65ad8@coco.lan>
+        <20190731203712.GJ4369@sirena.org.uk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190731201927.22054-1-lyude@redhat.com> <20190731211842.befvpoyudrm2subf@wunner.de>
-In-Reply-To: <20190731211842.befvpoyudrm2subf@wunner.de>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Wed, 31 Jul 2019 23:26:39 +0200
-Message-ID: <CACO55tu=9ZBzGkwdXPOwWARy1UTspFv+v=nrmLFoOKiSGU+E5Q@mail.gmail.com>
-Subject: Re: [PATCH] Revert "PCI: Enable NVIDIA HDA controllers"
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Lyude Paul <lyude@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Maik Freudenberg <hhfeuer@gmx.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 11:18 PM Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Wed, Jul 31, 2019 at 04:19:27PM -0400, Lyude Paul wrote:
-> > While this fixes audio for a number of users, this commit has the
-> > sideaffect of breaking the BIOS workaround that's required to make the
-> > GPU on the nvidia P50 work, by causing the GPU's PCI device function to
-> > stop working after it's been set to multifunction mode.
->
-> This is missing a reference to the commit introducing the P50 quirk,
-> which is e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot
-> if necessary").
->
-> Please describe in more detail how the GPU's PCI function stops working.
-> Does it respond with "all ones" when accessing MMIO?
-> Do MMIO accesses cause the system to hang?
->
-> Could you provide lspci -vvxx output for the GPU and its associated
-> HDA controller with and without b516ea586d71?
->
-> Does this machine have external display connectors via which audio
-> can be streamed?
->
->
-> > I'm not really holding my breath on this patch to being accepted:
-> > there's a good chance there's a better solution for this (and I'm going
-> > to continue investigating for one after sending this patch), this is
-> > more just to start a conversation on what the proper way to fix this is.
->
-> Posting as an RFC might have been more appropriate then.
->
+Em Wed, 31 Jul 2019 21:37:12 +0100
+Mark Brown <broonie@kernel.org> escreveu:
 
-no, a revert is actually appropriate.  If a commit fixes something,
-but breaks something else, it gets either reverted or fixed. If nobody
-fixes it, then revert it is.
+> On Wed, Jul 31, 2019 at 05:26:13PM -0300, Mauro Carvalho Chehab wrote:
+> > Mark Brown <broonie@kernel.org> escreveu:  
+> 
+> > > There were outstanding questions about where it was going to get moved
+> > > to but if I read the diff correctly it looks like it didn't actually get
+> > > moved in the end?  
+> 
+> > Yeah, it doesn't have the move. My understanding from our discussions
+> > is that we didn't reach a conclusion.  
+> 
+> Yes, that was my understanding too which was why I was surprised to see
+> this going in.  This is OK then, I'd have acked it.
+> 
+> > In any case, I can send a separate patch with the move part once
+> > we reach an agreement about what's the best way to proceed (or you
+> > can do it directly, if you prefer so).  
+> 
+> I'm not likely to do anything without someone sending patches, I'm not
+> clear on the utility of the move with the current division of the
+> manuals.
 
->
-> > So, I'm kind of confused about why exactly this was implemented as an
-> > early boot quirk in the first place. If we're seeing the GPU's PCI
-> > device, we already know the GPU is there. Shouldn't we be able to check
-> > for the existence of the HDA device once we probe the GPU in nouveau?
->
-> I think a motivation to keep this generic was to make it work with
-> other drivers besides nouveau, specifically Nvidia's proprietary driver.
-> nouveau might not even be enabled.
->
->
-> > that still doesn't explain why this was implemented as an early quirk
->
-> This isn't an early quirk.  Those live in arch/x86/kernel/early-quirks.c.
-> This is just a PCI quirk executed on device enumeration and on resume.
-> Devices aren't necessarily enumerated only on boot, e.g. think Thunderbolt.
->
-> Thanks,
->
-> Lukas
+Same here: I do see value on having docs focused on their audience.
+
+Yet, I'm not so sure how worth is to break some subsystem documentation 
+into books, as, on some cases, this would mean huge efforts.
+
+I'd prefer to see the big picture first, finishing the conversion and
+then looking at the resulting docs.
+
+Meanwhile, if someone needs something that it is at the wrong book, he
+can just use some search tool to seek what he needs, no matter on
+what book the relevant information is stored.
+
+> I don't know if it makes sense to have an embedded developer's
+> manual as well?
+
+Yeah, that's a good question. 
+
+Jon is planning todo a documentation track at LPC. One of the things
+that should be discussed, IMO, is how we'll organize the books.
+
+I suspect that, once we finish the conversion of the remaining ~300
+files to ReST, the next logical step is to check what are the gaps
+and have a list of pending tasks.
+
+Thanks,
+Mauro
