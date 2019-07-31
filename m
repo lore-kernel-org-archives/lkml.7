@@ -2,151 +2,137 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6EFC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17985C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89241206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD48D206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:40:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="IoyDJh6C"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KJZc4a+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbfGaMjn (ORCPT
+        id S1728951AbfGaMkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:39:43 -0400
-Received: from mail-eopbgr00121.outbound.protection.outlook.com ([40.107.0.121]:56484
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387663AbfGaMiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:38:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OmsgyayGIKutLZZOTdBeGaBixzL6YTI7rMowgzbyQ+5QeK/yEDPGqvI1ZYaTLxefAyp6YjwABrQ3FLBKsnKQ9kQ00CCCVLjdXGpgJo/hX102t1q3MPIk+7B35t8/M421y3wcaZ9amdZKHK/72IvbAss7k5Sslopx/EYIqqwaW61i3HwyfTGHSK38nOQN3yw1qQbzxBQxtKjhZL0HPN6+vgyp0NOku3TTfVGNf99VmgHPsdT0uBdCCqb0dm8DRzm6sdCBbUnuRPt1yC+SdpNkvhsiB0gJdlKoiP2+Ye3aQMjnBg/dhgwRM1XeYP1w5u3KGTKS40Qi+cjE/O3flD4hmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PB0vKYFbbdUeb19EeNeDiYIfwhKA7fkP3O+tYQyTnlU=;
- b=OMxhSAG2tBndNN7S6pOzVqnDEOiBvo5mHEvWvG2a11pyI295ExU7MWGhkexw+9XxJYWKsf1UHTLNYeTqX2QvyE+0KfbEuGs7HMFMEs7QpjlucU3k5zLqmFq8uzh9uH+iWUydxCjb3kSDW0yyaMyxhNU3PCOuf99MGgNKXKzDNFNw2t8LdD2Hna7Zhp1IZntuz5Fy1denVPSHm7R+U4wLJLr5ouKycpXtiz1x5JBXURhBq67J4/Cs2pGnWgipGHoA1GH0c3VZcIpaP5NkvBJ+XWR3XaA/yuzKN/tDEufJ1tg7mKBvQIgOLSJ0bg8hdWiSBEh11atF4O0/9AnehO53Eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=toradex.com;dmarc=pass action=none
- header.from=toradex.com;dkim=pass header.d=toradex.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PB0vKYFbbdUeb19EeNeDiYIfwhKA7fkP3O+tYQyTnlU=;
- b=IoyDJh6CB5ZGegdnbNxRXjHuCbxQg8RtxwnmXLHFGgVBYiMDtSkL635Lv1Yq76+XbPgWZwb6baZgOUx+pc95MQ7Sv73c6CtO2fP0P+wHh6IeraWuiLgH8UI0JAfeQ9qHe/eteTehAtH6v9mqSj4hnEcyd14rwK4dhxx2HaGEIeY=
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
- VI1PR0502MB3615.eurprd05.prod.outlook.com (52.134.7.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Wed, 31 Jul 2019 12:38:01 +0000
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::8405:5b51:b25d:39a2]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::8405:5b51:b25d:39a2%6]) with mapi id 15.20.2115.005; Wed, 31 Jul 2019
- 12:38:01 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>,
-        Fabio Estevam <festevam@gmail.com>
-CC:     Philippe Schenker <philippe.schenker@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v2 01/20] ARM: dts: imx7-colibri: make sure module supplies
- are always on
-Thread-Topic: [PATCH v2 01/20] ARM: dts: imx7-colibri: make sure module
- supplies are always on
-Thread-Index: AQHVR5zKtbFqHRg9tECU9zfITiqrSw==
-Date:   Wed, 31 Jul 2019 12:38:01 +0000
-Message-ID: <20190731123750.25670-2-philippe.schenker@toradex.com>
-References: <20190731123750.25670-1-philippe.schenker@toradex.com>
-In-Reply-To: <20190731123750.25670-1-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR02CA0012.eurprd02.prod.outlook.com
- (2603:10a6:208:3e::25) To VI1PR0502MB3965.eurprd05.prod.outlook.com
- (2603:10a6:803:23::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.22.0
-x-originating-ip: [46.140.72.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0ade3b61-8280-4817-1531-08d715b3ecde
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB3615;
-x-ms-traffictypediagnostic: VI1PR0502MB3615:
-x-microsoft-antispam-prvs: <VI1PR0502MB361586B912B38A5F875AD83CF4DF0@VI1PR0502MB3615.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-forefront-prvs: 011579F31F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(39850400004)(376002)(136003)(396003)(366004)(346002)(199004)(189003)(66946007)(52116002)(66446008)(64756008)(66556008)(66476007)(76176011)(4744005)(99286004)(53936002)(6512007)(6436002)(5660300002)(4326008)(7416002)(66066001)(6486002)(25786009)(478600001)(14454004)(7736002)(305945005)(71190400001)(71200400001)(3846002)(6116002)(36756003)(2501003)(68736007)(2906002)(2201001)(44832011)(486006)(476003)(86362001)(446003)(2616005)(11346002)(256004)(186003)(81166006)(81156014)(26005)(102836004)(50226002)(8936002)(8676002)(6506007)(386003)(316002)(54906003)(110136005)(1076003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3615;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GW5L58SC0Pk+UEbS/G14HjKLB2T1hfYgO3jVmz89Si7x5Qo2c3TmiHbkcSJybnpTchlGbi0LKSMqIlmPa5eGuxEtAVCfMCmJaTfPGoCRLZk6hHE1O0PtV9dewDWMfCrMD4AZyT2PPETBFlnKw1JIlj+KranOftAkifASU0nM2VY+nVPUrv8VJpNgua4o9sZ0He5895+NVLjCuvarGoFvuVaCCaf9lwIISrhAuVrl/k7dAGWuNcg3C4bbSGVVzU50Hho721LNMtKsopoYaUb0I2Iutbv1qpX/opBx2H8qm3YrZfGRzMPOy9mf596z1np5TYCmzBkD2J/FPdzsvydFhRlewsL3BoKTNXxy2Rfm37DZVoATdKgNsQE0AT8fVngq0C102GG9MWxP6qxo/Mdj2Ye2vp1Tu1Arwo7ZK97iqsc=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 31 Jul 2019 08:40:06 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54018 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbfGaMkG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:40:06 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x15so60679159wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:40:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EWI8GcxEz+8gc9lvCcOoQING9GchM8UZJzjKufeSqmc=;
+        b=KJZc4a+DmVn+4+DGSWDg3GlzhLG6glcKG0j5wUAHME+JibRtdrXRNjSx+a7MyRFDuI
+         hd9NV9MqzrJ/yfhsVmI9FywxsVr8GndD0kH+2ROkya1T14Jp7p2MDg0M9asAFCeTsBOp
+         6xgrnxr12N5wi8/DD0EsAOL4YSdL51rXYOv4g3mJ+5yoqYlFDs9cZ5oz9Gp32hG3cL2l
+         Kqamv6Q1+LgceZ1bIeqvgoTi0+iVmCw4OHvf9OwuAMQBQOXO/8BSoIHiC6NcngAl40Hv
+         QBl3FZ8ix9alal5rJIZ0/1oOJ+GxtrSvzwFXNioZ0F2lX78iYTH1+d8jz2zSAL/GpAnb
+         YnKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EWI8GcxEz+8gc9lvCcOoQING9GchM8UZJzjKufeSqmc=;
+        b=RWvRZWodHtYXF/LQUEgs4QZpuHGgORQB8xUQYpzDVGpVJd91uUTYNsLiGrx2OxvSF8
+         o1mMYFoOU9MIWf9N1FGfLbG4Ay34FPSAWa8MRHhkQdAY1RoOCwa9CpjCitEIG5NHhC8+
+         1SAiNKZB8QAstFLXVRCfh1FxjsTxZXBT7IJ8skxyqYKpigJXwmSJUQLK+8MDmmGB+/0q
+         haRZbU1EXqC9rgouoeUYIXgOIOWGcmWMsaA5CPMSbrWdFHlbZSFDVThyeZgR7Utb2pb/
+         gN0PjGpctlx2lbflIIM36LxFs6hLt0xznlAmloNBg/GAsd2usu/63sDADuzFfVXsRYZ1
+         OzAw==
+X-Gm-Message-State: APjAAAXJUvLS228fa7dtWr0FGsaMJJClBraXXorXJxhPJ+RBwLJl6cqF
+        ASfk/c+JvQtc+F+HNmOowzbfDhl+7ic=
+X-Google-Smtp-Source: APXvYqy978uWNvioeZ+pGIg+DyWJ20pUO7ItCJsalId7cA/5/FSwIaSFd8Ad245l+bIIqRqGxzP6Aw==
+X-Received: by 2002:a1c:1d4f:: with SMTP id d76mr15481312wmd.127.1564576803831;
+        Wed, 31 Jul 2019 05:40:03 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id x185sm62504271wmg.46.2019.07.31.05.40.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 05:40:03 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        christianshewitt@gmail.com
+Subject: [PATCH 0/6] arm64: add support for the Khadas VIM3
+Date:   Wed, 31 Jul 2019 14:39:54 +0200
+Message-Id: <20190731124000.22072-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ade3b61-8280-4817-1531-08d715b3ecde
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 12:38:01.5480
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: philippe.schenker@toradex.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3615
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+The Khadas VIM3 uses the Amlogic S922X or A311S SoC, both based on the
+Amlogic G12B SoC family, on a board with the same form factor as the
+VIM/VIM2 models. It ships in two variants; basic and
+pro which differ in RAM and eMMC size:
 
-Prevent regulators from being switched off.
+- 2GB (basic) or 4GB (pro) LPDDR4 RAM
+- 16GB (basic) or 32GB (pro) eMMC 5.1 storage
+- 16MB SPI flash
+- 10/100/1000 Base-T Ethernet
+- AP6398S Wireless (802.11 a/b/g/n/ac, BT5.0)
+- HDMI 2.1 video
+- 1x USB 2.0 + 1x USB 3.0 ports
+- 1x USB-C (power) with USB 2.0 OTG
+- 3x LED's (1x red, 1x blue, 1x white)
+- 3x buttons (power, function, reset)
+- IR receiver
+- M2 socket with PCIe, USB, ADC & I2C
+- 40pin GPIO Header
+- 1x micro SD card slot
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
----
+First of all, the S922X and A311D are now specified since they differ
+by some HW features and the capable operating points.
 
-Changes in v2: None
+A common meson-g12b-khadas-vim3.dtsi is added to support both S922X and
+A311D SoCs supported by two variants of the board.
 
- arch/arm/boot/dts/imx7-colibri.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Odroid-N2 is changed to use the s922x.dtsi include.
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
-olibri.dtsi
-index 895fbde4d433..f1c1971f2160 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -54,6 +54,7 @@
- 		regulator-name =3D "+V3.3";
- 		regulator-min-microvolt =3D <3300000>;
- 		regulator-max-microvolt =3D <3300000>;
-+		regulator-always-on;
- 	};
-=20
- 	reg_module_3v3_avdd: regulator-module-3v3-avdd {
-@@ -61,6 +62,7 @@
- 		regulator-name =3D "+V3.3_AVDD_AUDIO";
- 		regulator-min-microvolt =3D <3300000>;
- 		regulator-max-microvolt =3D <3300000>;
-+		regulator-always-on;
- 	};
-=20
- 	sound {
---=20
+Dependencies:
+- patch 5 & 6: "arm64: g12a: add support for DVFS" at [1]
+
+[1] https://patchwork.kernel.org/cover/11063837/
+
+Christian Hewitt (4):
+  soc: amlogic: meson-gx-socinfo: add A311D id
+  dt-bindings: arm: amlogic: add support for the Khadas VIM3
+  arm64: dts: meson-g12b: support a311d and s922x cpu operating points
+  arm64: dts: meson-g12b-khadas-vim3: add initial device-tree
+
+Neil Armstrong (2):
+  dt-bindings: arm: amlogic: add bindings for G12B based S922X SoC
+  dt-bindings: arm: amlogic: add bindings for the Amlogic G12B based
+    A311D SoC
+
+ .../devicetree/bindings/arm/amlogic.yaml      |   9 +
+ arch/arm64/boot/dts/amlogic/Makefile          |   2 +
+ .../amlogic/meson-g12b-a311d-khadas-vim3.dts  |  15 +
+ .../boot/dts/amlogic/meson-g12b-a311d.dtsi    | 149 +++++
+ .../dts/amlogic/meson-g12b-khadas-vim3.dtsi   | 542 ++++++++++++++++++
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |   2 +-
+ .../amlogic/meson-g12b-s922x-khadas-vim3.dts  |  15 +
+ .../boot/dts/amlogic/meson-g12b-s922x.dtsi    | 124 ++++
+ arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   | 115 ----
+ drivers/soc/amlogic/meson-gx-socinfo.c        |   1 +
+ 10 files changed, 858 insertions(+), 116 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+
+-- 
 2.22.0
 
