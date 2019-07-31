@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CDBC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0160C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72B7214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851F6214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+5s0UTQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlrDk3S9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbfGaRbh (ORCPT
+        id S1730768AbfGaRbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:31:37 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:47044 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730740AbfGaRbg (ORCPT
+        Wed, 31 Jul 2019 13:31:42 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44102 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730740AbfGaRbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:31:36 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c3so9117558pfa.13;
-        Wed, 31 Jul 2019 10:31:35 -0700 (PDT)
+        Wed, 31 Jul 2019 13:31:37 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so32383702pgl.11;
+        Wed, 31 Jul 2019 10:31:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3py4SL+FEb0M5NjbK3Ciwljlgw2tqU0mcz+OYfcvKhA=;
-        b=k+5s0UTQZ2YvHkzXPVTh55yj5pKx4Z0duMTLQGvi4lS9zWBz3NJ+zMwve+nN3ekTob
-         gTZb5huwQX6exjWFvJCAdBd5OJlBliPLHsyczffG8sPM952UTGcsDIwfoo984YP9iT8t
-         +jBPPIqwP2m82oz0ei+JS/rRQUgdG1AN4YUVJ4GkDpefGWPtYi0pOKmXc5vdUhUk/3L/
-         RKZS15d8m7AwT0RpAez6ecw76LL4EtCxTkk5RoBJprBiGjhxBxH9dWxHNqgWOJXnezuw
-         5F4F8uOF/Wp7cf0httZTNNDUPJBrH23gwB32fNLrPte+1S430xBR/ozGFSOKQZYcFHNb
-         6C0Q==
+        bh=qV6Busv6K6PZcOPCNp9BVszEaNH5iQz+7fpeXLC5Mlw=;
+        b=BlrDk3S9CzohBJMWhD4N1C5ISGUaJMH3qZBuh4ClRHvjooDE87Io+uU3De7AY9Gy8K
+         037vTg2QkUyjV6ftnL+UZ+QyY+E/5mlYTxETZ80D9bMd6GEn3HwXT9av1Vzj3bBxnQ0M
+         sToHZmgmgx6BaXw2LEE98uSarHlvSB4PPMdecFiafQYdS/Y4MfbiKxamyuiN2ipqXB3c
+         oTHbTNajX2UGZ9g0zODii5lGSxigkJz9Kx015cwUsF1Z4H31WvElCVwCHAGwA3BBgohR
+         gvQUsdsyql6Cxeji2XZOuX2Crns4rnOHeVkn7pPsPZq4Fe8GyJhdivXVsKckLXG3MQ5B
+         o4IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3py4SL+FEb0M5NjbK3Ciwljlgw2tqU0mcz+OYfcvKhA=;
-        b=ema8DYK3m63oNQuvm/ecgXN2nlI7y4IQ92l6LTTEed02JlCzhy/myHpjTrKGDmMJL5
-         XFwJFuXs+qTUe6WfAOwDXFgXvZlYe7wJqXxXdXRr4UO+KGooJNaWvWOGoFyW9loiPE3P
-         g2eCEPgv4OnSV26VUukoxINS92xDJKzSYVym7QSVai11IT+Vj8rxPREl10Ysq22GqNj7
-         vQqeJggpL4K+DLytjpocOMZTLrtpibtvVPlWbYo6E1LJ6kK12fPcZ74xRciDPiNeGb5N
-         o3DrFLclJ1Be43h8jFVLLeWJU4L0g9KZK/kFJmvm1jQjaCCMCnd+HmAm7oskDSUxzGzI
-         h1wg==
-X-Gm-Message-State: APjAAAV6RYTO6tLpTZyOWdWGbOrFp8DlCPohO80OlCqepQglOEIZgnW/
-        oFg9g0/X0cpNDDjD74FlqY2aGYqrJAU=
-X-Google-Smtp-Source: APXvYqy4IbqSybl4W+hR1KUdFiOAvkVPbqukT1mKctk829FyXpa1SU/TI1OB4hKmRCn89e2fo3d7Ug==
-X-Received: by 2002:aa7:8b52:: with SMTP id i18mr49378249pfd.194.1564594294497;
-        Wed, 31 Jul 2019 10:31:34 -0700 (PDT)
+        bh=qV6Busv6K6PZcOPCNp9BVszEaNH5iQz+7fpeXLC5Mlw=;
+        b=miBx60hS5mR0CvI+c/rT7CzahY9Nd6P7jOdr2dfGW3rm6usAoshREwe6m98LjWI+o2
+         XIP0pUPmt3M71S4UouAtiI+b4u/pwPPwT512GdAOA9GmAEjyIUh0MENLmIKO9Y1DUczF
+         DAH4Nl24XaC4a36w/HAH6JjOnGxiK2z+APl8x1GgHZMBLOd4EYFhD6wVofvNU22KFq8e
+         wTtdbcfAshTD1Bmu25HdO6HtM8az7pxMiBoBDMVnKhwzuVCxuzdG4x17t80N3HM+rEj4
+         1319PcE7raF9h/6b/cekBbTcEjoB121B2+nCJs0uaHTRHJOEJOMWJLAZpGfZXBYgIy4N
+         6p4w==
+X-Gm-Message-State: APjAAAVQhYWR4i7fJKMlRkubkQbDaWb69T92kEQtMVWvGPJXQsW7Vcn+
+        Cv6opywQt852WvnfeEy/2Tg5THvmNzs=
+X-Google-Smtp-Source: APXvYqwpKDngBhEeRb7Atr0Q/m65KimWIhobbvb859KvmFlySjMQGiN6LaJPKw2392Ldjdu3Rl7/zg==
+X-Received: by 2002:aa7:9531:: with SMTP id c17mr50336275pfp.130.1564594296678;
+        Wed, 31 Jul 2019 10:31:36 -0700 (PDT)
 Received: from localhost.localdomain ([2607:fb90:4ad:5a0b:2aff:6e0f:8973:5a26])
-        by smtp.gmail.com with ESMTPSA id bo20sm2089617pjb.23.2019.07.31.10.31.32
+        by smtp.gmail.com with ESMTPSA id bo20sm2089617pjb.23.2019.07.31.10.31.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 10:31:33 -0700 (PDT)
+        Wed, 31 Jul 2019 10:31:36 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-serial@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -67,9 +67,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/23] tty: serial: fsl_lpuart: Introduce lpuart_wait_bit_set()
-Date:   Wed, 31 Jul 2019 10:30:35 -0700
-Message-Id: <20190731173045.11718-14-andrew.smirnov@gmail.com>
+Subject: [PATCH v2 14/23] tty: serial: fsl_lpuart: Use cpu_relax() instead of barrier()
+Date:   Wed, 31 Jul 2019 10:30:36 -0700
+Message-Id: <20190731173045.11718-15-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731173045.11718-1-andrew.smirnov@gmail.com>
 References: <20190731173045.11718-1-andrew.smirnov@gmail.com>
@@ -80,8 +80,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Busy polling on a bit in a register is used in multiple places in the
-driver. Move it into a shared function.
+Use cpu_relax() instead of barrier() in a tight polling loops to make
+them a bit more idiomatic. Should also improve things on ARM64 a bit
+since cpu_relax() will expand into "yield" instruction there.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Stefan Agner <stefan@agner.ch>
@@ -94,116 +95,30 @@ Cc: linux-imx@nxp.com
 Cc: linux-serial@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/fsl_lpuart.c | 42 +++++++++++++++++----------------
- 1 file changed, 22 insertions(+), 20 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 395df8c7e1d5..eb748ef85da7 100644
+index eb748ef85da7..58043e01a242 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -549,6 +549,20 @@ static void lpuart_flush_buffer(struct uart_port *port)
- 	}
+@@ -553,14 +553,14 @@ static void lpuart_wait_bit_set(struct uart_port *port, unsigned int offset,
+ 				u8 bit)
+ {
+ 	while (!(readb(port->membase + offset) & bit))
+-		barrier();
++		cpu_relax();
  }
  
-+static void lpuart_wait_bit_set(struct uart_port *port, unsigned int offset,
-+				u8 bit)
-+{
-+	while (!(readb(port->membase + offset) & bit))
-+		barrier();
-+}
-+
-+static void lpuart32_wait_bit_set(struct uart_port *port, unsigned int offset,
-+				  u32 bit)
-+{
-+	while (!(lpuart32_read(port, offset) & bit))
-+		barrier();
-+}
-+
+ static void lpuart32_wait_bit_set(struct uart_port *port, unsigned int offset,
+ 				  u32 bit)
+ {
+ 	while (!(lpuart32_read(port, offset) & bit))
+-		barrier();
++		cpu_relax();
+ }
+ 
  #if defined(CONFIG_CONSOLE_POLL)
- 
- static int lpuart_poll_init(struct uart_port *port)
-@@ -592,9 +606,7 @@ static int lpuart_poll_init(struct uart_port *port)
- static void lpuart_poll_put_char(struct uart_port *port, unsigned char c)
- {
- 	/* drain */
--	while (!(readb(port->membase + UARTSR1) & UARTSR1_TDRE))
--		barrier();
--
-+	lpuart_wait_bit_set(port, UARTSR1, UARTSR1_TDRE);
- 	writeb(c, port->membase + UARTDR);
- }
- 
-@@ -644,9 +656,7 @@ static int lpuart32_poll_init(struct uart_port *port)
- 
- static void lpuart32_poll_put_char(struct uart_port *port, unsigned char c)
- {
--	while (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_TDRE))
--		barrier();
--
-+	lpuart32_wait_bit_set(port, UARTSTAT, UARTSTAT_TDRE);
- 	lpuart32_write(port, UARTDATA, c);
- }
- 
-@@ -1722,8 +1732,7 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
- 	uart_update_timeout(port, termios->c_cflag, baud);
- 
- 	/* wait transmit engin complete */
--	while (!(readb(sport->port.membase + UARTSR1) & UARTSR1_TC))
--		barrier();
-+	lpuart_wait_bit_set(&sport->port, UARTSR1, UARTSR1_TC);
- 
- 	/* disable transmit and receive */
- 	writeb(old_cr2 & ~(UARTCR2_TE | UARTCR2_RE),
-@@ -1938,8 +1947,7 @@ lpuart32_set_termios(struct uart_port *port, struct ktermios *termios,
- 	uart_update_timeout(port, termios->c_cflag, baud);
- 
- 	/* wait transmit engin complete */
--	while (!(lpuart32_read(&sport->port, UARTSTAT) & UARTSTAT_TC))
--		barrier();
-+	lpuart32_wait_bit_set(&sport->port, UARTSTAT, UARTSTAT_TC);
- 
- 	/* disable transmit and receive */
- 	lpuart32_write(&sport->port, old_ctrl & ~(UARTCTRL_TE | UARTCTRL_RE),
-@@ -2054,17 +2062,13 @@ static struct lpuart_port *lpuart_ports[UART_NR];
- #ifdef CONFIG_SERIAL_FSL_LPUART_CONSOLE
- static void lpuart_console_putchar(struct uart_port *port, int ch)
- {
--	while (!(readb(port->membase + UARTSR1) & UARTSR1_TDRE))
--		barrier();
--
-+	lpuart_wait_bit_set(port, UARTSR1, UARTSR1_TDRE);
- 	writeb(ch, port->membase + UARTDR);
- }
- 
- static void lpuart32_console_putchar(struct uart_port *port, int ch)
- {
--	while (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_TDRE))
--		barrier();
--
-+	lpuart32_wait_bit_set(port, UARTSTAT, UARTSTAT_TDRE);
- 	lpuart32_write(port, ch, UARTDATA);
- }
- 
-@@ -2090,8 +2094,7 @@ lpuart_console_write(struct console *co, const char *s, unsigned int count)
- 	uart_console_write(&sport->port, s, count, lpuart_console_putchar);
- 
- 	/* wait for transmitter finish complete and restore CR2 */
--	while (!(readb(sport->port.membase + UARTSR1) & UARTSR1_TC))
--		barrier();
-+	lpuart_wait_bit_set(&sport->port, UARTSR1, UARTSR1_TC);
- 
- 	writeb(old_cr2, sport->port.membase + UARTCR2);
- 
-@@ -2121,8 +2124,7 @@ lpuart32_console_write(struct console *co, const char *s, unsigned int count)
- 	uart_console_write(&sport->port, s, count, lpuart32_console_putchar);
- 
- 	/* wait for transmitter finish complete and restore CR2 */
--	while (!(lpuart32_read(&sport->port, UARTSTAT) & UARTSTAT_TC))
--		barrier();
-+	lpuart32_wait_bit_set(&sport->port, UARTSTAT, UARTSTAT_TC);
- 
- 	lpuart32_write(&sport->port, old_cr, UARTCTRL);
- 
 -- 
 2.21.0
 
