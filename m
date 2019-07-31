@@ -2,80 +2,89 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208A4C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D25C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92F92067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564606642;
-	bh=2YLpoS+5A5mch8La7KxqgPn9U1A/T0ZKT5pVtOtQM0I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cxP0F9YVEs05PGAno8jonwEnWaFNXz5ETref3K2d9gnRd1xEO6UJqSutMimTUTs3M
-	 ZNyGKop1PJWcvaavQ/zxLCXCToL5tfLznQAkGWJa4Ijg0uhuiJdXCYpSEw6KFGeGlT
-	 Kw//K2OoV4YGcSEOTQtsePJCvXjRe7krQHHdEBrE=
+	by mail.kernel.org (Postfix) with ESMTP id E83A421773
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbfGaU5U (ORCPT
+        id S1730739AbfGaU6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:57:20 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:59504 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbfGaU5T (ORCPT
+        Wed, 31 Jul 2019 16:58:46 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:45646 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfGaU6p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:57:19 -0400
-Received: from X1 (unknown [76.191.170.112])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id BC89239AE;
-        Wed, 31 Jul 2019 20:57:17 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 13:57:15 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1] drivers/base/memory.c: Don't store end_section_nr in
- memory blocks
-Message-Id: <20190731135715.ddb4fccb5c4ee2f14f84a34a@linux-foundation.org>
-In-Reply-To: <20190731122213.13392-1-david@redhat.com>
-References: <20190731122213.13392-1-david@redhat.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 31 Jul 2019 16:58:45 -0400
+Received: from cpe-2606-a000-111b-6140-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:6140::162e] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hsvg9-0007ME-TG; Wed, 31 Jul 2019 16:58:40 -0400
+Date:   Wed, 31 Jul 2019 16:58:04 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Vlad Yasevich <vyasevich@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: sctp: Rename fallthrough label to unhandled
+Message-ID: <20190731205804.GE9823@hmswarspite.think-freely.org>
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+ <20190731111932.GA9823@hmswarspite.think-freely.org>
+ <eac3fe457d553a2b366e1c1898d47ae8c048087c.camel@perches.com>
+ <20190731121646.GD9823@hmswarspite.think-freely.org>
+ <b93bbb17b407e27bb1dc196af84e4f289d9dfd93.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b93bbb17b407e27bb1dc196af84e4f289d9dfd93.camel@perches.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 14:22:13 +0200 David Hildenbrand <david@redhat.com> wrote:
-
-> Each memory block spans the same amount of sections/pages/bytes. The size
-> is determined before the first memory block is created. No need to store
-> what we can easily calculate - and the calculations even look simpler now.
+On Wed, Jul 31, 2019 at 09:35:31AM -0700, Joe Perches wrote:
+> On Wed, 2019-07-31 at 08:16 -0400, Neil Horman wrote:
+> > On Wed, Jul 31, 2019 at 04:32:43AM -0700, Joe Perches wrote:
+> > > On Wed, 2019-07-31 at 07:19 -0400, Neil Horman wrote:
+> > > > On Tue, Jul 30, 2019 at 10:04:37PM -0700, Joe Perches wrote:
+> > > > > fallthrough may become a pseudo reserved keyword so this only use of
+> > > > > fallthrough is better renamed to allow it.
+> > > > > 
+> > > > > Signed-off-by: Joe Perches <joe@perches.com>
+> > > > Are you referring to the __attribute__((fallthrough)) statement that gcc
+> > > > supports?  If so the compiler should by all rights be able to differentiate
+> > > > between a null statement attribute and a explicit goto and label without the
+> > > > need for renaming here.  Or are you referring to something else?
+> > > 
+> > > Hi.
+> > > 
+> > > I sent after this a patch that adds
+> > > 
+> > > # define fallthrough                    __attribute__((__fallthrough__))
+> > > 
+> > > https://lore.kernel.org/patchwork/patch/1108577/
+> > > 
+> > > So this rename is a prerequisite to adding this #define.
+> > > 
+> > why not just define __fallthrough instead, like we do for all the other
+> > attributes we alias (i.e. __read_mostly, __protected_by, __unused, __exception,
+> > etc)
 > 
-> While at it, fix the variable naming in register_mem_sect_under_node() -
-> we no longer talk about a single section.
+> Because it's not as intelligible when used as a statement.
+I think thats somewhat debatable.  __fallthrough to me looks like an internal
+macro, whereas fallthrough looks like a comment someone forgot to /* */
+
+Neil
+
 > 
-> ...
->
-> --- a/include/linux/memory.h
-> +++ b/include/linux/memory.h
-> @@ -40,6 +39,8 @@ int arch_get_memory_phys_device(unsigned long start_pfn);
->  unsigned long memory_block_size_bytes(void);
->  int set_memory_block_size_order(unsigned int order);
->  
-> +#define PAGES_PER_MEMORY_BLOCK (memory_block_size_bytes() / PAGE_SIZE)
-
-Please let's not hide function calls inside macros which look like
-compile-time constants!  Adding "()" to the macro would be a bit
-better.  Making it a regular old inline C function would be better
-still.  But I'd suggest just open-coding this at the macro's single
-callsite.
-
+> 
+> 
+> 
