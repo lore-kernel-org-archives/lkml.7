@@ -2,131 +2,97 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25135C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9332CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04576204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2872067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbfGaW0z convert rfc822-to-8bit (ORCPT
+        id S1729086AbfGaW1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:26:55 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56913 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfGaW0z (ORCPT
+        Wed, 31 Jul 2019 18:27:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33328 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfGaW1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:26:55 -0400
-Received: from 79.184.255.110.ipv4.supernova.orange.pl (79.184.255.110) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 0f4f0307dd885295; Thu, 1 Aug 2019 00:26:52 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>
-Subject: Re: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur in special cases"
-Date:   Thu, 01 Aug 2019 00:26:51 +0200
-Message-ID: <6494680.N7F1gMbocb@kreacher>
-In-Reply-To: <20190731213001.GC151852@google.com>
-References: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com> <20190731213001.GC151852@google.com>
+        Wed, 31 Jul 2019 18:27:42 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hsx3t-00009A-6X; Thu, 01 Aug 2019 00:27:09 +0200
+Date:   Thu, 1 Aug 2019 00:27:08 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jan Kara <jack@suse.cz>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Theodore Tso <tytso@mit.edu>, Julia Cartwright <julia@ni.com>,
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [patch 2/4] fs/buffer: Move BH_Uptodate_Lock locking into wrapper
+ functions
+In-Reply-To: <20190731144639.GG15806@quack2.suse.cz>
+Message-ID: <alpine.DEB.2.21.1908010022180.1788@nanos.tec.linutronix.de>
+References: <20190730112452.871257694@linutronix.de> <20190730120321.285095769@linutronix.de> <20190731144639.GG15806@quack2.suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, July 31, 2019 11:30:01 PM CEST Bjorn Helgaas wrote:
-> [+cc Thunderbolt folks, see
-> https://lore.kernel.org/r/578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com
-> for beginning of thread]
-> 
-> On Thu, Aug 01, 2019 at 12:04:29AM +0800, Kai-Heng Feng wrote:
-> > Hi,
+On Wed, 31 Jul 2019, Jan Kara wrote:
+> On Tue 30-07-19 13:24:54, Thomas Gleixner wrote:
+> > Bit spinlocks are problematic if PREEMPT_RT is enabled, because they
+> > disable preemption, which is undesired for latency reasons and breaks when
+> > regular spinlocks are taken within the bit_spinlock locked region because
+> > regular spinlocks are converted to 'sleeping spinlocks' on RT. So RT
+> > replaces the bit spinlocks with regular spinlocks to avoid this problem.
 > > 
-> > After commit "ACPI: PM: Allow transitions to D0 to occur in special cases”,
+> > To avoid ifdeffery at the source level, wrap all BH_Uptodate_Lock bitlock
+> > operations with inline functions, so the spinlock substitution can be done
+> > at one place.
+> > 
+> > Using regular spinlocks can also be enabled for lock debugging purposes so
+> > the lock operations become visible to lockdep.
+> > 
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: "Theodore Ts'o" <tytso@mit.edu>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> > Cc: linux-fsdevel@vger.kernel.org
 > 
-> This is f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in
-> special cases").
+> Looks good to me. You can add:
 > 
-> > Thunderbolt on XPS 9380 spews the following when it runtime resumes:
-> > [   36.136554] pci_raw_set_power_state: 25 callbacks suppressed
-> > [   36.136558] pcieport 0000:03:00.0: Refused to change power state,
-> > currently in D3
+> Reviewed-by: Jan Kara <jack@suse.cz>
 > 
-> We really should be smarter about what we print here, maybe something
-> like the patch below?
-> 
-> pci_raw_set_power_state() prints "Refused to change power state" if
-> (in this case) the value of (PCI_PM_CTRL & PCI_PM_CTRL_STATE_MASK) is
-> 0x3.  Most likely we got 0xffff from PCI_PM_CTRL because the device is
-> in D3cold.  If the device is in D3cold, pci_raw_set_power_state() has
-> no hope of doing anything because it only uses PCI PM config
-> registers, and they're inaccessible in D3cold.
-> 
-> Presumably there's some platform PM method that is supposed to take
-> the device out of D3cold, and maybe we're missing that somehow?
+> BTW, it should be possible to get rid of BH_Uptodate_Lock altogether using
+> bio chaining (which was non-existent when this bh code was written) to make
+> sure IO completion function gets called only once all bios used to fill in
+> / write out the page are done. It would be also more efficient. But I guess
+> that's an interesting cleanup project for some other time...
 
-Yes, there is.
+While 'possible cleanup' is something which triggers a certain nerve, that
+particular project certainly goes beyond my basic understanding of that
+whole fs/block conglomerate. I rather leave that to people who actually
+have a clue. :)
 
-> Based on an lspci I found at [1], I suspect 03:00.0 is a Thunderbolt
-> switch leading to [bus 04-6d].  From your log, it looks like these
-> devices don't work:
-> 
->   03:00.0 Thunderbolt Upstream Port
->   04:00.0 Thunderbolt Downstream Port
->   04:01.0 Thunderbolt Downstream Port (Slot 1)
->   04:02.0 Thunderbolt Downstream Port
->   04:04.0 Thunderbolt Downstream Port (Slot 4)
->   05:00.0 Thunderbolt NHI
->   39:00.0 XHCI USB
-> 
-> If 03:00.0 is stuck in D3cold, that would explain why none of these
-> things work.
-> 
-> [1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1826125
-> 
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 29ed5ec1ac27..63ca963ebff9 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -851,6 +852,11 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
->  		return -EIO;
->  
->  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> +	if (pmcsr == (u16) ~0) {
+Thanks,
 
-Is the "device not accessible" the only case in which we can get all ones from this?
-
-If so, the change will be fine by me.
-
-> +		pci_err(dev, "device not responding; can't change to power state D%d\n",
-> +			state);
-
-But I wouldn't break this line.
-
-> +		return -EIO;
-> +	}
->  
->  	/*
->  	 * If we're (effectively) in D3, force entire word to 0.
-> 
-
-Thanks!
-
+	tglx
 
 
