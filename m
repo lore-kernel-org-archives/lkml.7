@@ -2,76 +2,93 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D84C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1029BC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A892D208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3E6208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387955AbfGaN3d (ORCPT
+        id S2388331AbfGaN3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:29:33 -0400
-Received: from andre.telenet-ops.be ([195.130.132.53]:33476 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729255AbfGaN3a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:29:30 -0400
-Received: from ramsan ([84.194.98.4])
-        by andre.telenet-ops.be with bizsmtp
-        id jRVU2000Q05gfCL01RVVon; Wed, 31 Jul 2019 15:29:29 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hsofY-0001Am-TI; Wed, 31 Jul 2019 15:29:28 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hsofY-0004au-SP; Wed, 31 Jul 2019 15:29:28 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/3] pinctrl: lantiq: Use kasprintf() instead of fixed buffer formatting
-Date:   Wed, 31 Jul 2019 15:29:16 +0200
-Message-Id: <20190731132917.17607-3-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190731132917.17607-1-geert+renesas@glider.be>
-References: <20190731132917.17607-1-geert+renesas@glider.be>
+        Wed, 31 Jul 2019 09:29:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38660 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388237AbfGaN3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:29:37 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F304781F13;
+        Wed, 31 Jul 2019 13:29:36 +0000 (UTC)
+Received: from [10.72.12.118] (ovpn-12-118.pek2.redhat.com [10.72.12.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B5E35C1B5;
+        Wed, 31 Jul 2019 13:29:29 +0000 (UTC)
+Subject: Re: [PATCH V2 4/9] vhost: reset invalidate_count in
+ vhost_set_vring_num_addr()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20190731084655.7024-1-jasowang@redhat.com>
+ <20190731084655.7024-5-jasowang@redhat.com> <20190731124124.GD3946@ziepe.ca>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <31ef9ed4-d74a-3454-a57d-fa843a3a802b@redhat.com>
+Date:   Wed, 31 Jul 2019 21:29:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190731124124.GD3946@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 31 Jul 2019 13:29:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Improve readability and maintainability by replacing a hardcoded string
-allocation and formatting by the use of the kasprintf() helper.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/pinctrl/pinctrl-falcon.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+On 2019/7/31 下午8:41, Jason Gunthorpe wrote:
+> On Wed, Jul 31, 2019 at 04:46:50AM -0400, Jason Wang wrote:
+>> The vhost_set_vring_num_addr() could be called in the middle of
+>> invalidate_range_start() and invalidate_range_end(). If we don't reset
+>> invalidate_count after the un-registering of MMU notifier, the
+>> invalidate_cont will run out of sync (e.g never reach zero). This will
+>> in fact disable the fast accessor path. Fixing by reset the count to
+>> zero.
+>>
+>> Reported-by: Michael S. Tsirkin <mst@redhat.com>
+> Did Michael report this as well?
 
-diff --git a/drivers/pinctrl/pinctrl-falcon.c b/drivers/pinctrl/pinctrl-falcon.c
-index ef133a82e612544a..4a3b8d2677fd498f 100644
---- a/drivers/pinctrl/pinctrl-falcon.c
-+++ b/drivers/pinctrl/pinctrl-falcon.c
-@@ -96,12 +96,8 @@ static void lantiq_load_pin_desc(struct pinctrl_pin_desc *d, int bank, int len)
- 	int i;
- 
- 	for (i = 0; i < len; i++) {
--		/* strlen("ioXYZ") + 1 = 6 */
--		char *name = kzalloc(6, GFP_KERNEL);
--
--		snprintf(name, 6, "io%d", base + i);
- 		d[i].number = base + i;
--		d[i].name = name;
-+		d[i].name = kasprintf(GFP_KERNEL, "io%d", base + i);
- 	}
- 	pad_count[bank] = len;
- }
--- 
-2.17.1
 
+Correct me if I was wrong. I think it's point 4 described in 
+https://lkml.org/lkml/2019/7/21/25.
+
+Thanks
+
+
+>
+>> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>>   drivers/vhost/vhost.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>> index 2a3154976277..2a7217c33668 100644
+>> +++ b/drivers/vhost/vhost.c
+>> @@ -2073,6 +2073,10 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
+>>   		d->has_notifier = false;
+>>   	}
+>>   
+>> +	/* reset invalidate_count in case we are in the middle of
+>> +	 * invalidate_start() and invalidate_end().
+>> +	 */
+>> +	vq->invalidate_count = 0;
+>>   	vhost_uninit_vq_maps(vq);
+>>   #endif
+>>   
