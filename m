@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B889BC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01307C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCE7208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9AEB20C01
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564572734;
-	bh=F5BLzSMMpJuJS5NV5LaxEXaoUeflIs6HfNLH+Cq8FlY=;
+	s=default; t=1564572740;
+	bh=yfv48Ovl2s4qDw7wKCMmtUe59rk8iSQiZUN7i//QTDA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=JeTd6Yh9pn04D8HjzekuamSGk4KSf5effobQ5/b6AAseKs5dzZlqIdyV4EtuF6P/j
-	 +6BaOS1c8iJ8iViuaNVM9JOaFE1T44fdJJZnAe28NODuhSMnaVZTsbt8HAK5JAikL6
-	 IE3rbsii06Dgs8zJnb0M4hB4afl30fRR4QcKCDko=
+	b=IJfz0hgSAlIhDwfp1U47qFBOCe47ULg8Yz3+4SDbvq0a+CoK3USloUk6EohAQGkT9
+	 2sdKr7s+0aakIT5/Gkk92UNCadRkdZd4H+eCyfcRZEia0KfyDqWHqeLaJ2W9ucXse9
+	 GViNckHd+LbpmBXZWQNworR8g9TfXBjLIWZNKJpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfGaLb7 (ORCPT
+        id S1728476AbfGaLcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:31:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35652 "EHLO
+        Wed, 31 Jul 2019 07:32:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35684 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbfGaLaS (ORCPT
+        with ESMTP id S1728108AbfGaLaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:30:18 -0400
+        Wed, 31 Jul 2019 07:30:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=LYS2TWunl0umuUPSWvasAE0nCSO1RPXL/p7pwlJsc88=; b=farXO/9rKhTS
-        cKMbTDlBxhygDYHcV5Lj97j9kZD1E3UV4IB7QL9B7Zc5ijvZLWJBxW45P8kC/ucfrye/4srKBloWR
-        4MtIThC2SA3hq1CE01ny8rwqdi38PZLL+DCjNT9DRPATvjBYn+zp5jw64XvbiXoFxyUocv5u4L7rW
-        gXvOA=;
+        List-Archive; bh=7hJLG8//Tyf0+YxtxJyuLHs8MXWPYgyM07amw97SLrg=; b=i2BWEjRhpNHA
+        S1r9VB/U6dLlM1ZuubWWNziSURl6gTrcxx9GGoUYd4G+VcIn/2RNuPKJs6HbZNO9xeHSgJW2/hSMz
+        dWZu9dchxJnaWQTd3RIICNLF8eA661/DFLwyE3INaKB4XWHaZzu/ubb/M4gb95CsAI+4aE+A7fKsn
+        z3cB8=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hsmne-0001lQ-BP; Wed, 31 Jul 2019 11:29:42 +0000
+        id 1hsmnf-0001le-PJ; Wed, 31 Jul 2019 11:29:43 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D8C9D2742C99; Wed, 31 Jul 2019 12:29:41 +0100 (BST)
+        id 514542742C99; Wed, 31 Jul 2019 12:29:43 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     YueHaibing <yuehaibing@huawei.com>
 Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
@@ -71,11 +71,11 @@ Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
         thierry.reding@gmail.com, timur@kernel.org, tiwai@suse.com,
         wahrenst@gmx.net, wens@csie.org, Xiubo.Lee@gmail.com,
         yamada.masahiro@socionext.com
-Subject: Applied "ASoC: codecs: jz4725b: use devm_platform_ioremap_resource() to simplify code" to the asoc tree
-In-Reply-To: <20190727150738.54764-18-yuehaibing@huawei.com>
+Subject: Applied "ASoC: sunxi: sun50i-codec-analog: use devm_platform_ioremap_resource() to simplify code" to the asoc tree
+In-Reply-To: <20190727150738.54764-34-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190731112941.D8C9D2742C99@ypsilon.sirena.org.uk>
-Date:   Wed, 31 Jul 2019 12:29:41 +0100 (BST)
+Message-Id: <20190731112943.514542742C99@ypsilon.sirena.org.uk>
+Date:   Wed, 31 Jul 2019 12:29:43 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -83,7 +83,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: codecs: jz4725b: use devm_platform_ioremap_resource() to simplify code
+   ASoC: sunxi: sun50i-codec-analog: use devm_platform_ioremap_resource() to simplify code
 
 has been applied to the asoc tree at
 
@@ -108,44 +108,41 @@ to this mail.
 Thanks,
 Mark
 
-From 94db63761576a98279e19f51173dec85f803bad4 Mon Sep 17 00:00:00 2001
+From 54dd39e4aca8edb231e13349ac3a3a44ef28d3d4 Mon Sep 17 00:00:00 2001
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Sat, 27 Jul 2019 23:07:21 +0800
-Subject: [PATCH] ASoC: codecs: jz4725b: use devm_platform_ioremap_resource()
- to simplify code
+Date: Sat, 27 Jul 2019 23:07:37 +0800
+Subject: [PATCH] ASoC: sunxi: sun50i-codec-analog: use
+ devm_platform_ioremap_resource() to simplify code
 
 Use devm_platform_ioremap_resource() to simplify the code a bit.
 This is detected by coccinelle.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190727150738.54764-18-yuehaibing@huawei.com
+Link: https://lore.kernel.org/r/20190727150738.54764-34-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/jz4725b.c | 4 +---
+ sound/soc/sunxi/sun50i-codec-analog.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/jz4725b.c b/sound/soc/codecs/jz4725b.c
-index 766354c73076..2567a5d15b55 100644
---- a/sound/soc/codecs/jz4725b.c
-+++ b/sound/soc/codecs/jz4725b.c
-@@ -545,15 +545,13 @@ static int jz4725b_codec_probe(struct platform_device *pdev)
+diff --git a/sound/soc/sunxi/sun50i-codec-analog.c b/sound/soc/sunxi/sun50i-codec-analog.c
+index 6d1de565350e..f5b7069bcca2 100644
+--- a/sound/soc/sunxi/sun50i-codec-analog.c
++++ b/sound/soc/sunxi/sun50i-codec-analog.c
+@@ -459,12 +459,10 @@ MODULE_DEVICE_TABLE(of, sun50i_codec_analog_of_match);
+ 
+ static int sun50i_codec_analog_probe(struct platform_device *pdev)
  {
- 	struct device *dev = &pdev->dev;
- 	struct jz_icdc *icdc;
--	struct resource *mem;
- 	int ret;
+-	struct resource *res;
+ 	struct regmap *regmap;
+ 	void __iomem *base;
  
- 	icdc = devm_kzalloc(dev, sizeof(*icdc), GFP_KERNEL);
- 	if (!icdc)
- 		return -ENOMEM;
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	icdc->base = devm_ioremap_resource(dev, mem);
-+	icdc->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(icdc->base))
- 		return PTR_ERR(icdc->base);
- 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base)) {
+ 		dev_err(&pdev->dev, "Failed to map the registers\n");
+ 		return PTR_ERR(base);
 -- 
 2.20.1
 
