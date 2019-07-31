@@ -2,117 +2,144 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A2DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48B8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78D6206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3FE8206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388371AbfGaPBm (ORCPT
+        id S2388392AbfGaPDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:01:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:48530 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387946AbfGaPBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:01:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 496FD344;
-        Wed, 31 Jul 2019 08:01:41 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BC443F694;
-        Wed, 31 Jul 2019 08:01:40 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 16:01:38 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: Move TIF_* documentation to individual definitions
-Message-ID: <20190731150137.GE39768@lakrids.cambridge.arm.com>
-References: <20190731133520.17939-1-geert+renesas@glider.be>
+        Wed, 31 Jul 2019 11:03:15 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:45606 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388176AbfGaPDP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:03:15 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hsq85-0001Nv-Pn; Wed, 31 Jul 2019 11:03:01 -0400
+Message-ID: <461f14cafabb7e6f78556f138b6aa619eff12dee.camel@surriel.com>
+Subject: Re: [PATCH 09/14] sched,fair: refactor enqueue/dequeue_entity
+From:   Rik van Riel <riel@surriel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, pjt@google.com,
+        dietmar.eggemann@arm.com, mingo@redhat.com,
+        morten.rasmussen@arm.com, tglx@linutronix.de,
+        mgorman@techsingularity.net, vincent.guittot@linaro.org
+Date:   Wed, 31 Jul 2019 11:03:01 -0400
+In-Reply-To: <20190731093525.GH31425@hirez.programming.kicks-ass.net>
+References: <20190722173348.9241-1-riel@surriel.com>
+         <20190722173348.9241-10-riel@surriel.com>
+         <20190730093617.GV31398@hirez.programming.kicks-ass.net>
+         <20190731093525.GH31425@hirez.programming.kicks-ass.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-oXa4WWI8f1hjsu/vRrww"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731133520.17939-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 03:35:20PM +0200, Geert Uytterhoeven wrote:
-> Some TIF_* flags are documented in the comment block at the top, some
-> next to their definitions, some in both places.
-> 
-> Move all documentation to the individual definitions for consistency,
-> and for easy lookup.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> The alternative is to move all of them to the comment block, and using
-> linuxdoc style.
-> 
->  arch/arm64/include/asm/thread_info.h | 24 ++++++++----------------
->  1 file changed, 8 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
-> index 180b34ec59650a9b..cb3eb1ccccc4116b 100644
-> --- a/arch/arm64/include/asm/thread_info.h
-> +++ b/arch/arm64/include/asm/thread_info.h
-> @@ -60,28 +60,20 @@ void arch_release_task_struct(struct task_struct *tsk);
->  #endif
->  
->  /*
-> - * thread information flags:
-> - *  TIF_SYSCALL_TRACE	- syscall trace active
-> - *  TIF_SYSCALL_TRACEPOINT - syscall tracepoint for ftrace
-> - *  TIF_SYSCALL_AUDIT	- syscall auditing
-> - *  TIF_SECCOMP		- syscall secure computing
-> - *  TIF_SYSCALL_EMU     - syscall emulation active
-> - *  TIF_SIGPENDING	- signal pending
-> - *  TIF_NEED_RESCHED	- rescheduling necessary
-> - *  TIF_NOTIFY_RESUME	- callback before returning to user
-> + * thread information flags
->   */
 
-We can probably just get rid of the this comment block at this point. :)
+--=-oXa4WWI8f1hjsu/vRrww
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> -#define TIF_SIGPENDING		0
-> -#define TIF_NEED_RESCHED	1
-> +#define TIF_SIGPENDING		0	/* signal pending */
-> +#define TIF_NEED_RESCHED	1	/* rescheduling necessary */
->  #define TIF_NOTIFY_RESUME	2	/* callback before returning to user */
->  #define TIF_FOREIGN_FPSTATE	3	/* CPU's FP state is not current's */
->  #define TIF_UPROBE		4	/* uprobe breakpoint or singlestep */
->  #define TIF_FSCHECK		5	/* Check FS is USER_DS on return */
->  #define TIF_NOHZ		7
-> -#define TIF_SYSCALL_TRACE	8
-> -#define TIF_SYSCALL_AUDIT	9
-> -#define TIF_SYSCALL_TRACEPOINT	10
-> -#define TIF_SECCOMP		11
-> -#define TIF_SYSCALL_EMU		12
-> +#define TIF_SYSCALL_TRACE	8	/* syscall trace active */
-> +#define TIF_SYSCALL_AUDIT	9	/* syscall auditing */
-> +#define TIF_SYSCALL_TRACEPOINT	10	/* syscall tracepoint for ftrace */
-> +#define TIF_SECCOMP		11	/* syscall secure computing */
-> +#define TIF_SYSCALL_EMU		12	/* syscall emulation active */
->  #define TIF_MEMDIE		18	/* is terminating due to OOM killer */
->  #define TIF_FREEZE		19
->  #define TIF_RESTORE_SIGMASK	20
+On Wed, 2019-07-31 at 11:35 +0200, Peter Zijlstra wrote:
+> On Tue, Jul 30, 2019 at 11:36:17AM +0200, Peter Zijlstra wrote:
+> > On Mon, Jul 22, 2019 at 01:33:43PM -0400, Rik van Riel wrote:
+> > > +static bool
+> > > +enqueue_entity_groups(struct cfs_rq *cfs_rq, struct sched_entity
+> > > *se, int flags)
+> > > +{
+> > > +	/*
+> > > +	 * When enqueuing a sched_entity, we must:
+> > > +	 *   - Update loads to have both entity and cfs_rq synced with
+> > > now.
+> > > +	 *   - Add its load to cfs_rq->runnable_avg
+> > > +	 *   - For group_entity, update its weight to reflect the new
+> > > share of
+> > > +	 *     its group cfs_rq
+> > > +	 *   - Add its new weight to cfs_rq->load.weight
+> > > +	 */
+> > > +	if (!update_load_avg(cfs_rq, se, UPDATE_TG | DO_ATTACH))
+> > > +		return false;
+> > > +
+> > > +	update_cfs_group(se);
+> > > +	return true;
+> > > +}
+> > No functional, but you did make update_cfs_group() conditional. Now
+> > that
+> > looks OK, but maybe you can do that part in a separate patch with a
+> > little justification of its own.
+>=20
+> To record (and extend) our discussion from IRC yesterday; I now do
+> think
+> the above is in fact a problem.
+>=20
+> The thing is that update_cfs_group() does not soly rely on the tg
+> state;
+> it also contains magic to deal with ramp up; for which you later
+> introduce that max_h_load thing.
+>=20
+> Specifically (re)read the second part of the comment describing
+> calc_group_shares() where it explains the ramp up:
+>=20
+>  * The problem with it is that because the average is slow -- it was
+> designed
+>  * to be exactly that of course -- this leads to transients in
+> boundary
+>  * conditions. In specific, the case where the group was idle and we
+> start the
+>  * one task. It takes time for our CPU's grq->avg.load_avg to build
+> up,
+>  * yielding bad latency etc..
+>=20
+>  (and further)
+>=20
+> So by not always calling this (and not updating h_load) you fail to
+> take
+> advantage of this.
+>=20
+> So I would suggest keeping update_cfs_group() unconditional, and
+> recomputing the h_load for the entire hierarchy on enqueue.
 
-FWIW this looks sane to me, so:
+I think I understand the problem you are pointing
+out, but if update_load_avg() keeps the load average
+for the runqueue unchanged (because that is rate limited
+to once a jiffy, and has been like that for a while),
+why would calc_group_shares() result in a different value
+than what it returned the last time?
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+What am I overlooking?
 
-Mark.
+--=20
+All Rights Reversed.
 
-> -- 
-> 2.17.1
-> 
+--=-oXa4WWI8f1hjsu/vRrww
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl1BraUACgkQznnekoTE
+3oOxoAgAwFOZGyaVohHl1N71K7Sxs/txPqDCXWskwEsXf2FP2a74KXGMDifkyUR9
+otdJ/c+UvL5e3rXRdLEjoJMvvuMRSITTY8Y95bysxnFpiChBBfmEfkR0+UWzqmmH
+rl+crbatn0Kh6HdENMtGfP2A2lyNApY2q42o1MB2oC0ktYFvIgtqR2z/WXpLMwEl
+ltg3zt35OaMAYQZ1JbpU2aHQdqW1IAqUwbwBWdp2w+hq3fNehLMhzazTGM2OvQp5
++nChB75ZAHHJcW0Dfs9WSU1HFT3q9nlEgS7/zTvhss6nh366eww5YRIjKxrAZqxQ
+Ks33MF8l9r9OXxlmjdxvygwxEvJe7g==
+=l4Jy
+-----END PGP SIGNATURE-----
+
+--=-oXa4WWI8f1hjsu/vRrww--
+
