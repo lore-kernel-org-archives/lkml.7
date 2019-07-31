@@ -2,102 +2,91 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8821C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A98DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3904206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:49:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qyvp3QZB"
+	by mail.kernel.org (Postfix) with ESMTP id 7F4692064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbfGaTta (ORCPT
+        id S1729503AbfGaTv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:49:30 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:55684 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbfGaTta (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:49:30 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6VJnQoD054130;
-        Wed, 31 Jul 2019 14:49:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564602566;
-        bh=90qhXSlmHXE2mbrpuN9h3XFGjfZAIqDGl2c4Qk/xiJ4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qyvp3QZBPi2dl7InlHaHt7M4L83Cktnov0SsQ4bPIbdEJJGxDrU6Pgd2enU1ciyBT
-         Tm0V+cznRgePDnUZb8RcclnnfHEWSr6FTHU+MHjwsX9EKZktuz4sWBHo4Ms9nlUSr0
-         olmPsdgfS2zV7jFoux9Z0+P7v3hkL6pAoCoTmRts=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6VJnQpa129497
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 31 Jul 2019 14:49:26 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 31
- Jul 2019 14:49:25 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 31 Jul 2019 14:49:25 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6VJnPxj090663;
-        Wed, 31 Jul 2019 14:49:25 -0500
-Subject: Re: [PATCH v4 9/9] leds: Update the lp55xx to use the multi color
- framework
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190725182818.29556-1-dmurphy@ti.com>
- <20190725182818.29556-10-dmurphy@ti.com>
- <fe3bbfbe-5b15-d87a-f4a1-28167081046b@gmail.com>
- <486308e9-e3e1-5f34-5af7-217527f2f1f9@ti.com>
- <310ce737-df38-766c-b24a-17c26c5f9ab6@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <06c65f10-26d9-42aa-3dfa-19f2b8b1e413@ti.com>
-Date:   Wed, 31 Jul 2019 14:49:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 31 Jul 2019 15:51:29 -0400
+Received: from sauhun.de ([88.99.104.3]:44636 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbfGaTv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 15:51:29 -0400
+Received: from localhost (p54B33080.dip0.t-ipconnect.de [84.179.48.128])
+        by pokefinder.org (Postfix) with ESMTPSA id 6CB462C270A;
+        Wed, 31 Jul 2019 21:51:26 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 21:51:26 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/6] media: radio: si4713: Convert to new i2c device
+ probe()
+Message-ID: <20190731195125.GC4084@kunai>
+References: <20190710215149.9208-1-kieran.bingham+renesas@ideasonboard.com>
+ <20190710215149.9208-2-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <310ce737-df38-766c-b24a-17c26c5f9ab6@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VywGB/WGlW4DM4P8"
+Content-Disposition: inline
+In-Reply-To: <20190710215149.9208-2-kieran.bingham+renesas@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
 
-On 7/31/19 2:45 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 7/31/19 8:55 PM, Dan Murphy wrote:
->> Jacek
->>
->> Thanks for looking
-> You're welcome.
-> [...}
+--VywGB/WGlW4DM4P8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I don't see any parsing for color here but I suppose that I can add that
-> now
-> I thought about that occurrence in lp5xx_parse_channel_child().
+On Wed, Jul 10, 2019 at 10:51:44PM +0100, Kieran Bingham wrote:
+> The I2C core framework provides a simplified probe framework from commit
+> b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new() call-back type").
+>=20
+> This driver does not utilise the i2c_device_id table in the probe, so we =
+can
+> easily convert it to utilise the simplfied i2c driver registration.
+>=20
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-No that is color of the child subnode.  These will be the actual color.
-
-But we can check the color of the child node to the parent node and if 
-that is MULTI_ID
-
-then process it as a multi color interface.
-
-Dan
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 
-> [...]
->
+--VywGB/WGlW4DM4P8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1B8T0ACgkQFA3kzBSg
+Kbb4ow//ZyIbTtU3Gr7nelWX2UfX2+F1vwzZbtgIYAS2iyewaz4oPj8VXZcbblWy
+zRtRkoQDziaj2SmU/3t+lxEc3Hr+j4359IrunnTW31Tcgd6vxM26AHya+UTSbIFy
+sEG64k0/FuMxkGqkR8NoL2oS+o++SzLeV371TJh1M9e36vsHU/HdwFPqiolbtNX2
+lkpUt/o4CWtie0kKlCpzmNzO0HpQo8GA1DCJChtmaofs2bDiPVDzNNYzHkkwIgoj
+Zhg49yc4625/EBSmESYatT/liiWaIJqAzsNnrQH1opjjT8Gh7O7QUfbZmjjlf9ju
+phCvn3vJ1wSKJgOjG7gmJXfDFZ/hwsUWP7fLjuPpHVOVjBdRaghdvc1XPYtJZBst
+Mg80LJNgrskkwVOOO4GefcikHcfodZyFkvxvYxC0tMUIXY8yy/FLacL+2oYMjudU
+o6lyb8x+jlJ1/fjuCBtWXNuC9Yi47/4kSzCL6glfHmrr59rVv0NeXALQI0Z61C0S
+IdUXAbiwNq7OlfPw/utZyPDeqxpTVutjL612vvvo6fQVIzLvjZ93TyGa0sjuVaM1
+INmhbTwatAvb5If3oavyKkOeffxOt0Fwc35H06nnDp9k1fEbqHmOp2J2NhEjZykf
+skIIX4vClxrNKFLKe+aRZHu0jpj3fkR1lNv3BNlagmcjLnePhE0=
+=sfK1
+-----END PGP SIGNATURE-----
+
+--VywGB/WGlW4DM4P8--
