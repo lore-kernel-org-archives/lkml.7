@@ -2,118 +2,394 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247A6C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EEFC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06207216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A191620C01
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbfGaPrQ (ORCPT
+        id S1730228AbfGaPrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:47:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:8701 "EHLO mx1.redhat.com"
+        Wed, 31 Jul 2019 11:47:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:50138 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730177AbfGaPrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:47:12 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 318DE2D1CE;
-        Wed, 31 Jul 2019 15:47:12 +0000 (UTC)
-Received: from gondolin (dhcp-192-232.str.redhat.com [10.33.192.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F6E55C1B5;
-        Wed, 31 Jul 2019 15:47:11 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 17:47:09 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vfio: re-arrange vfio region definitions
-Message-ID: <20190731174709.471126e6.cohuck@redhat.com>
-In-Reply-To: <20190717114956.16263-1-cohuck@redhat.com>
-References: <20190717114956.16263-1-cohuck@redhat.com>
-Organization: Red Hat GmbH
+        id S1730193AbfGaPrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:47:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADABC344;
+        Wed, 31 Jul 2019 08:47:12 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 244843F694;
+        Wed, 31 Jul 2019 08:47:10 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v10 21/22] arm64: mm: Convert mm/dump.c to use walk_page_range()
+Date:   Wed, 31 Jul 2019 16:46:02 +0100
+Message-Id: <20190731154603.41797-22-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190731154603.41797-1-steven.price@arm.com>
+References: <20190731154603.41797-1-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 31 Jul 2019 15:47:12 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jul 2019 13:49:56 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
+Now walk_page_range() can walk kernel page tables, we can switch the
+arm64 ptdump code over to using it, simplifying the code.
 
-> It is easy to miss already defined region types. Let's re-arrange
-> the definitions a bit and add more comments to make it hopefully
-> a bit clearer.
-> 
-> No functional change.
-> 
-> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-> ---
->  include/uapi/linux/vfio.h | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ arch/arm64/Kconfig                 |   1 +
+ arch/arm64/Kconfig.debug           |  19 +----
+ arch/arm64/include/asm/ptdump.h    |   8 +-
+ arch/arm64/mm/Makefile             |   4 +-
+ arch/arm64/mm/dump.c               | 117 ++++++++++-------------------
+ arch/arm64/mm/mmu.c                |   4 +-
+ arch/arm64/mm/ptdump_debugfs.c     |   2 +-
+ drivers/firmware/efi/arm-runtime.c |   2 +-
+ 8 files changed, 50 insertions(+), 107 deletions(-)
 
-Friendly ping :)
-
-> 
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 8f10748dac79..d9bcf40240be 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -295,15 +295,23 @@ struct vfio_region_info_cap_type {
->  	__u32 subtype;	/* type specific */
->  };
->  
-> +/*
-> + * List of region types, global per bus driver.
-> + * If you introduce a new type, please add it here.
-> + */
-> +
-> +/* PCI region type containing a PCI vendor part */
->  #define VFIO_REGION_TYPE_PCI_VENDOR_TYPE	(1 << 31)
->  #define VFIO_REGION_TYPE_PCI_VENDOR_MASK	(0xffff)
-> +#define VFIO_REGION_TYPE_GFX                    (1)
-> +#define VFIO_REGION_TYPE_CCW			(2)
->  
-> -/* 8086 Vendor sub-types */
-> +/* 8086 vendor PCI sub-types */
->  #define VFIO_REGION_SUBTYPE_INTEL_IGD_OPREGION	(1)
->  #define VFIO_REGION_SUBTYPE_INTEL_IGD_HOST_CFG	(2)
->  #define VFIO_REGION_SUBTYPE_INTEL_IGD_LPC_CFG	(3)
->  
-> -#define VFIO_REGION_TYPE_GFX                    (1)
-> +/* GFX sub-types */
->  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
->  
->  /**
-> @@ -353,20 +361,17 @@ struct vfio_region_gfx_edid {
->  #define VFIO_DEVICE_GFX_LINK_STATE_DOWN  2
->  };
->  
-> -#define VFIO_REGION_TYPE_CCW			(2)
->  /* ccw sub-types */
->  #define VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD	(1)
->  
-> +/* 10de vendor PCI sub-types */
->  /*
-> - * 10de vendor sub-type
-> - *
->   * NVIDIA GPU NVlink2 RAM is coherent RAM mapped onto the host address space.
->   */
->  #define VFIO_REGION_SUBTYPE_NVIDIA_NVLINK2_RAM	(1)
->  
-> +/* 1014 vendor PCI sub-types*/
->  /*
-> - * 1014 vendor sub-type
-> - *
->   * IBM NPU NVlink2 ATSD (Address Translation Shootdown) register of NPU
->   * to do TLB invalidation on a GPU.
->   */
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 3adcec05b1f6..5a32c87f37c6 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -105,6 +105,7 @@ config ARM64
+ 	select GENERIC_IRQ_SHOW
+ 	select GENERIC_IRQ_SHOW_LEVEL
+ 	select GENERIC_PCI_IOMAP
++	select GENERIC_PTDUMP
+ 	select GENERIC_SCHED_CLOCK
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_STRNCPY_FROM_USER
+diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
+index cf09010d825f..1c906d932d6b 100644
+--- a/arch/arm64/Kconfig.debug
++++ b/arch/arm64/Kconfig.debug
+@@ -1,22 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-config ARM64_PTDUMP_CORE
+-	def_bool n
+-
+-config ARM64_PTDUMP_DEBUGFS
+-	bool "Export kernel pagetable layout to userspace via debugfs"
+-	depends on DEBUG_KERNEL
+-	select ARM64_PTDUMP_CORE
+-	select DEBUG_FS
+-        help
+-	  Say Y here if you want to show the kernel pagetable layout in a
+-	  debugfs file. This information is only useful for kernel developers
+-	  who are working in architecture specific areas of the kernel.
+-	  It is probably not a good idea to enable this feature in a production
+-	  kernel.
+-
+-	  If in doubt, say N.
+-
+ config PID_IN_CONTEXTIDR
+ 	bool "Write the current PID to the CONTEXTIDR register"
+ 	help
+@@ -42,7 +25,7 @@ config ARM64_RANDOMIZE_TEXT_OFFSET
+ 
+ config DEBUG_WX
+ 	bool "Warn on W+X mappings at boot"
+-	select ARM64_PTDUMP_CORE
++	select PTDUMP_CORE
+ 	---help---
+ 	  Generate a warning if any W+X mappings are found at boot.
+ 
+diff --git a/arch/arm64/include/asm/ptdump.h b/arch/arm64/include/asm/ptdump.h
+index 0b8e7269ec82..38187f74e089 100644
+--- a/arch/arm64/include/asm/ptdump.h
++++ b/arch/arm64/include/asm/ptdump.h
+@@ -5,7 +5,7 @@
+ #ifndef __ASM_PTDUMP_H
+ #define __ASM_PTDUMP_H
+ 
+-#ifdef CONFIG_ARM64_PTDUMP_CORE
++#ifdef CONFIG_PTDUMP_CORE
+ 
+ #include <linux/mm_types.h>
+ #include <linux/seq_file.h>
+@@ -21,15 +21,15 @@ struct ptdump_info {
+ 	unsigned long			base_addr;
+ };
+ 
+-void ptdump_walk_pgd(struct seq_file *s, struct ptdump_info *info);
+-#ifdef CONFIG_ARM64_PTDUMP_DEBUGFS
++void ptdump_walk(struct seq_file *s, struct ptdump_info *info);
++#ifdef CONFIG_PTDUMP_DEBUGFS
+ void ptdump_debugfs_register(struct ptdump_info *info, const char *name);
+ #else
+ static inline void ptdump_debugfs_register(struct ptdump_info *info,
+ 					   const char *name) { }
+ #endif
+ void ptdump_check_wx(void);
+-#endif /* CONFIG_ARM64_PTDUMP_CORE */
++#endif /* CONFIG_PTDUMP_CORE */
+ 
+ #ifdef CONFIG_DEBUG_WX
+ #define debug_checkwx()	ptdump_check_wx()
+diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
+index 849c1df3d214..d91030f0ffee 100644
+--- a/arch/arm64/mm/Makefile
++++ b/arch/arm64/mm/Makefile
+@@ -4,8 +4,8 @@ obj-y				:= dma-mapping.o extable.o fault.o init.o \
+ 				   ioremap.o mmap.o pgd.o mmu.o \
+ 				   context.o proc.o pageattr.o
+ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+-obj-$(CONFIG_ARM64_PTDUMP_CORE)	+= dump.o
+-obj-$(CONFIG_ARM64_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
++obj-$(CONFIG_PTDUMP_CORE)	+= dump.o
++obj-$(CONFIG_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
+ obj-$(CONFIG_NUMA)		+= numa.o
+ obj-$(CONFIG_DEBUG_VIRTUAL)	+= physaddr.o
+ KASAN_SANITIZE_physaddr.o	+= n
+diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
+index 82b3a7fdb4a6..5cc71ad567b4 100644
+--- a/arch/arm64/mm/dump.c
++++ b/arch/arm64/mm/dump.c
+@@ -15,6 +15,7 @@
+ #include <linux/io.h>
+ #include <linux/init.h>
+ #include <linux/mm.h>
++#include <linux/ptdump.h>
+ #include <linux/sched.h>
+ #include <linux/seq_file.h>
+ 
+@@ -65,10 +66,11 @@ static const struct addr_marker address_markers[] = {
+  * dumps out a description of the range.
+  */
+ struct pg_state {
++	struct ptdump_state ptdump;
+ 	struct seq_file *seq;
+ 	const struct addr_marker *marker;
+ 	unsigned long start_address;
+-	unsigned level;
++	int level;
+ 	u64 current_prot;
+ 	bool check_wx;
+ 	unsigned long wx_pages;
+@@ -168,6 +170,10 @@ static struct pg_level pg_level[] = {
+ 		.name	= "PGD",
+ 		.bits	= pte_bits,
+ 		.num	= ARRAY_SIZE(pte_bits),
++	}, { /* p4d */
++		.name	= "P4D",
++		.bits	= pte_bits,
++		.num	= ARRAY_SIZE(pte_bits),
+ 	}, { /* pud */
+ 		.name	= (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
+ 		.bits	= pte_bits,
+@@ -230,11 +236,15 @@ static void note_prot_wx(struct pg_state *st, unsigned long addr)
+ 	st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
+ }
+ 
+-static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
+-				u64 val)
++static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
++				unsigned long val)
+ {
++	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
+ 	static const char units[] = "KMGTPE";
+-	u64 prot = val & pg_level[level].mask;
++	u64 prot = 0;
++
++	if (level >= 0)
++		prot = val & pg_level[level].mask;
+ 
+ 	if (!st->level) {
+ 		st->level = level;
+@@ -282,85 +292,27 @@ static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
+ 
+ }
+ 
+-static void walk_pte(struct pg_state *st, pmd_t *pmdp, unsigned long start,
+-		     unsigned long end)
+-{
+-	unsigned long addr = start;
+-	pte_t *ptep = pte_offset_kernel(pmdp, start);
+-
+-	do {
+-		note_page(st, addr, 4, READ_ONCE(pte_val(*ptep)));
+-	} while (ptep++, addr += PAGE_SIZE, addr != end);
+-}
+-
+-static void walk_pmd(struct pg_state *st, pud_t *pudp, unsigned long start,
+-		     unsigned long end)
+-{
+-	unsigned long next, addr = start;
+-	pmd_t *pmdp = pmd_offset(pudp, start);
+-
+-	do {
+-		pmd_t pmd = READ_ONCE(*pmdp);
+-		next = pmd_addr_end(addr, end);
+-
+-		if (pmd_none(pmd) || pmd_sect(pmd)) {
+-			note_page(st, addr, 3, pmd_val(pmd));
+-		} else {
+-			BUG_ON(pmd_bad(pmd));
+-			walk_pte(st, pmdp, addr, next);
+-		}
+-	} while (pmdp++, addr = next, addr != end);
+-}
+-
+-static void walk_pud(struct pg_state *st, pgd_t *pgdp, unsigned long start,
+-		     unsigned long end)
++void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
+ {
+-	unsigned long next, addr = start;
+-	pud_t *pudp = pud_offset(pgdp, start);
+-
+-	do {
+-		pud_t pud = READ_ONCE(*pudp);
+-		next = pud_addr_end(addr, end);
+-
+-		if (pud_none(pud) || pud_sect(pud)) {
+-			note_page(st, addr, 2, pud_val(pud));
+-		} else {
+-			BUG_ON(pud_bad(pud));
+-			walk_pmd(st, pudp, addr, next);
+-		}
+-	} while (pudp++, addr = next, addr != end);
+-}
++	unsigned long end = ~0UL;
++	struct pg_state st;
+ 
+-static void walk_pgd(struct pg_state *st, struct mm_struct *mm,
+-		     unsigned long start)
+-{
+-	unsigned long end = (start < TASK_SIZE_64) ? TASK_SIZE_64 : 0;
+-	unsigned long next, addr = start;
+-	pgd_t *pgdp = pgd_offset(mm, start);
+-
+-	do {
+-		pgd_t pgd = READ_ONCE(*pgdp);
+-		next = pgd_addr_end(addr, end);
+-
+-		if (pgd_none(pgd)) {
+-			note_page(st, addr, 1, pgd_val(pgd));
+-		} else {
+-			BUG_ON(pgd_bad(pgd));
+-			walk_pud(st, pgdp, addr, next);
+-		}
+-	} while (pgdp++, addr = next, addr != end);
+-}
++	if (info->base_addr < TASK_SIZE_64)
++		end = TASK_SIZE_64;
+ 
+-void ptdump_walk_pgd(struct seq_file *m, struct ptdump_info *info)
+-{
+-	struct pg_state st = {
+-		.seq = m,
++	st = (struct pg_state){
++		.seq = s,
+ 		.marker = info->markers,
++		.ptdump = {
++			.note_page = note_page,
++			.range = (struct ptdump_range[]){
++				{info->base_addr, end},
++				{0, 0}
++			}
++		}
+ 	};
+ 
+-	walk_pgd(&st, info->mm, info->base_addr);
+-
+-	note_page(&st, 0, 0, 0);
++	ptdump_walk_pgd(&st.ptdump, info->mm);
+ }
+ 
+ static void ptdump_initialize(void)
+@@ -388,10 +340,17 @@ void ptdump_check_wx(void)
+ 			{ -1, NULL},
+ 		},
+ 		.check_wx = true,
++		.ptdump = {
++			.note_page = note_page,
++			.range = (struct ptdump_range[]) {
++				{VA_START, ~0UL},
++				{0, 0}
++			}
++		}
+ 	};
+ 
+-	walk_pgd(&st, &init_mm, VA_START);
+-	note_page(&st, 0, 0, 0);
++	ptdump_walk_pgd(&st.ptdump, &init_mm);
++
+ 	if (st.wx_pages || st.uxn_pages)
+ 		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found, %lu non-UXN pages found\n",
+ 			st.wx_pages, st.uxn_pages);
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 750a69dde39b..ff612579ca75 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -954,13 +954,13 @@ int __init arch_ioremap_pud_supported(void)
+ 	 * SW table walks can't handle removal of intermediate entries.
+ 	 */
+ 	return IS_ENABLED(CONFIG_ARM64_4K_PAGES) &&
+-	       !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
++	       !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+ }
+ 
+ int __init arch_ioremap_pmd_supported(void)
+ {
+ 	/* See arch_ioremap_pud_supported() */
+-	return !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
++	return !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+ }
+ 
+ int pud_set_huge(pud_t *pudp, phys_addr_t phys, pgprot_t prot)
+diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
+index 064163f25592..1f2eae3e988b 100644
+--- a/arch/arm64/mm/ptdump_debugfs.c
++++ b/arch/arm64/mm/ptdump_debugfs.c
+@@ -7,7 +7,7 @@
+ static int ptdump_show(struct seq_file *m, void *v)
+ {
+ 	struct ptdump_info *info = m->private;
+-	ptdump_walk_pgd(m, info);
++	ptdump_walk(m, info);
+ 	return 0;
+ }
+ DEFINE_SHOW_ATTRIBUTE(ptdump);
+diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
+index e2ac5fa5531b..1283685f9c20 100644
+--- a/drivers/firmware/efi/arm-runtime.c
++++ b/drivers/firmware/efi/arm-runtime.c
+@@ -27,7 +27,7 @@
+ 
+ extern u64 efi_system_table;
+ 
+-#ifdef CONFIG_ARM64_PTDUMP_DEBUGFS
++#if defined(CONFIG_PTDUMP_DEBUGFS) && defined(CONFIG_ARM64)
+ #include <asm/ptdump.h>
+ 
+ static struct ptdump_info efi_ptdump_info = {
+-- 
+2.20.1
 
