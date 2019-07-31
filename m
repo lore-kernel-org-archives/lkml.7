@@ -2,113 +2,130 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1198C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4796C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841F420651
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA462206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 10:56:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WNMsbmyz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GOtNIbIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfGaKzt (ORCPT
+        id S1728705AbfGaK4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 06:55:49 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52221 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfGaKzt (ORCPT
+        Wed, 31 Jul 2019 06:56:21 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44078 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfGaK4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:55:49 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so60329118wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 03:55:47 -0700 (PDT)
+        Wed, 31 Jul 2019 06:56:21 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k18so65107852ljc.11;
+        Wed, 31 Jul 2019 03:56:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=TDzD4mVy0JnW8wivYuq40NvZrehE5P3+AXFL+h905R8=;
-        b=WNMsbmyz6D6vL9V6DopwuW1s80Gg6oqYGLlA0GJ8RnDqXKSMBuyTYqRBqfhzj9Vffq
-         wl9a5rf74ruxe3IlxypYN4x9BVxL7mlQPHncZ0jmz8pBEGtUAlq88DV0+PNuEQokidbI
-         01jJzGXYdAnjNlSgmwuOLPLupEQt93/+w7eji2TzrzBQG4t/JWkd3GctA3MGZbpVADTA
-         6B1ItYcMYe+vJZQmPWGongPZrKj1kDGsrDGbxHDk0PuAb1ZzpGWQQimPQogwr2ESvDcR
-         JzQuXGQUq4oyde/xmWLagYhdQLfu2Nvi6w80bNdvcg/Dv+8UtAmQOMIILMuZdUy9HJdN
-         Um1A==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8ruV96eR8x0/hUsLVlDy8Q+NkUQzpxpxvSxroyPzqzk=;
+        b=GOtNIbIF+FwSdoSSuqOdCRwipjuBAkt61ISft9SuLdF/xve2q68EEQIwfK3wzwRnrm
+         5msw0ky7aRIFGdGG4LAzlEO8Cg1ptWrW4WaThsPDhDS3gXEEziSU4FbslxwFS9srU4iI
+         e6+SeP6PfFELBL43QMoabxOvZymfYo7FbCY/XHJE84+sSvjJJfI4EbjLMQP44HpB29mV
+         8sE7DBb4AdsCXJlvlXfVSDgxwTHsIUAvISuoY/bPDk1PQa2dzYsS2lpJ0Rygk+GQpD2q
+         5Lqt7xoW8oZ+ks1o4sEpFlOXtBD/bumkcw3OH+7ROp7dQ2J/VsBj+Il1SaxnmRoyjoEH
+         PYAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TDzD4mVy0JnW8wivYuq40NvZrehE5P3+AXFL+h905R8=;
-        b=E1c/KwIxeHwpiVX7mPtQ6MbBtaNyBr/0BUOa4fPdFMWNqURmQBtfp6AbZ6aynZnNTo
-         atpUuQy4WCllcry5sEvfxPVbBApS6vZnvTETktw0A/WDed+jWylLlB76cPoDPaXlMxOO
-         C3wHCpFBZEPjaZPDa41QmgpzZQVXRTviDLzOkfQ1SYcDOPbToR0sBWRixC7y06ST8DLh
-         I73rhiwsFsD2pcNkDAlJomYNiC55MYifTDXjA5uG/lXyFtC9SNB8ppyUe/vgRJKY8gE6
-         S4fXqTepDvn7ZO5rleBFrXqQr6DovVcsqROUsQLWCu59xyRsXpLxt/b3xkC+aVLhcgB9
-         pMUg==
-X-Gm-Message-State: APjAAAWs1yeThAG4cSweSjFb8GqGDd9I4u/RFYq0/H3JczE7LKWJhDR8
-        5ip2/iMUqGIuSrwkincbSPQPvA==
-X-Google-Smtp-Source: APXvYqzdekKZMBfdaKCjtzUencNZJvkLCqiIWA5u9hwHKpwmTeSFcpzTl4f4+JaBlbZ+1xTy2sL1sQ==
-X-Received: by 2002:a1c:7d08:: with SMTP id y8mr93262568wmc.50.1564570546683;
-        Wed, 31 Jul 2019 03:55:46 -0700 (PDT)
-Received: from hackbox2.linaro.org ([81.128.185.34])
-        by smtp.gmail.com with ESMTPSA id a84sm85426114wmf.29.2019.07.31.03.55.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 03:55:45 -0700 (PDT)
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-To:     linux-kselftest@vger.kernel.org, kvm@vger.kernel.org
-Cc:     pbonzini@redhat.com, linux-kernel@vger.kernel.org,
-        drjones@redhat.com, sean.j.christopherson@intel.com,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: [PATCH] selftests: kvm: Adding config fragments
-Date:   Wed, 31 Jul 2019 11:55:40 +0100
-Message-Id: <20190731105540.28962-1-naresh.kamboju@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8ruV96eR8x0/hUsLVlDy8Q+NkUQzpxpxvSxroyPzqzk=;
+        b=pE/py7v58zQQCj2BB9rJBuohwipnY8FHMjpOV0I0mKovUHGy9qI7y3fI8p5LFceyLQ
+         4EGEmqlMpzLZtLDxRvmoZiSFBYH39CL/8vsQ48qijy1nlpwowpX3FF3nE2EWKrX7Usbe
+         sV2M1D0jPd5YsrWEoinV6qBCM5ql/QL7fUVcY20CRvuYpV37jBw9CBt7wyGBhByyQr6r
+         yl9fBG5cc319pinjteZbmYSqzzf+MojBpQtIN3+67l8nOwDKdHDvC73rviX6TIW3ldP2
+         VUfA8sw8iO+eDRUcwZmWk4BrqHT/+5gPcqAkVVR7DbsbmPQiV54shzUsS/pLuPkog4W8
+         brOg==
+X-Gm-Message-State: APjAAAWIgu3CHAvi1KlULrO4yrX8xH21Niq83pebTfH3uIWHu7huKJv0
+        Whz7HmMS95GpVhXdURuE2rI+I0gE
+X-Google-Smtp-Source: APXvYqztGOoSbQR9A0xUiUIAyr0EBR8VhfVjH4uIj9PMb0cZ21qTlLVNsqEx7+YL2IiAPD4R1nsaKg==
+X-Received: by 2002:a2e:968f:: with SMTP id q15mr21909669lji.30.1564570578578;
+        Wed, 31 Jul 2019 03:56:18 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id e87sm15987690ljf.54.2019.07.31.03.56.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 03:56:18 -0700 (PDT)
+Subject: Re: [PATCH v5 18/20] PM / devfreq: tegra30: Define
+ ACTMON_DEV_CTRL_STOP
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190730162236.6063-1-digetx@gmail.com>
+ <CGME20190730163331epcas4p2fabd7ccf1b24c0cb95bf3994a289e13b@epcas4p2.samsung.com>
+ <20190730162236.6063-19-digetx@gmail.com>
+ <033a342c-ffd6-fa51-a9a2-daac36b195f9@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <682c7b5d-eace-8c6a-6117-4b9b6d4e82f8@gmail.com>
+Date:   Wed, 31 Jul 2019 13:55:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <033a342c-ffd6-fa51-a9a2-daac36b195f9@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-selftests kvm test cases need pre-required kernel configs for the test
-to get pass.
+31.07.2019 3:37, Chanwoo Choi пишет:
+> On 19. 7. 31. 오전 1:22, Dmitry Osipenko wrote:
+>> Add verbose definition for the client's device control register value that
+>> makes ACTMON to stop monitoring of the device.
+>>
+>> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/tegra30-devfreq.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+>> index 3543fba74b52..8adc0ff48b45 100644
+>> --- a/drivers/devfreq/tegra30-devfreq.c
+>> +++ b/drivers/devfreq/tegra30-devfreq.c
+>> @@ -35,6 +35,8 @@
+>>  #define ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN		BIT(30)
+>>  #define ACTMON_DEV_CTRL_ENB					BIT(31)
+>>  
+>> +#define ACTMON_DEV_CTRL_STOP					0x00000000
+>> +
+>>  #define ACTMON_DEV_UPPER_WMARK					0x4
+>>  #define ACTMON_DEV_LOWER_WMARK					0x8
+>>  #define ACTMON_DEV_INIT_AVG					0xc
+>> @@ -714,7 +716,7 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
+>>  
+>>  static void tegra_actmon_stop_device(struct tegra_devfreq_device *dev)
+>>  {
+>> -	device_writel(dev, 0x00000000, ACTMON_DEV_CTRL);
+>> +	device_writel(dev, ACTMON_DEV_CTRL_STOP, ACTMON_DEV_CTRL);
+>>  	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
+>>  }
+>>  
+>>
+> 
+> I think that you can combine it to patch11.
+> When combining it to patch11, don't need to add the suggested-by tag.
+> Thanks.
+> 
 
-Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
----
- tools/testing/selftests/kvm/config | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/config
-
-diff --git a/tools/testing/selftests/kvm/config b/tools/testing/selftests/kvm/config
-new file mode 100644
-index 000000000000..3b1cbd726af6
---- /dev/null
-+++ b/tools/testing/selftests/kvm/config
-@@ -0,0 +1,26 @@
-+CONFIG_ARCH_ENABLE_THP_MIGRATION=y
-+CONFIG_HAVE_KVM_IRQCHIP=y
-+CONFIG_HAVE_KVM_IRQFD=y
-+CONFIG_HAVE_KVM_IRQ_ROUTING=y
-+CONFIG_HAVE_KVM_EVENTFD=y
-+CONFIG_KVM_MMIO=y
-+CONFIG_KVM_ASYNC_PF=y
-+CONFIG_HAVE_KVM_MSI=y
-+CONFIG_HAVE_KVM_CPU_RELAX_INTERCEPT=y
-+CONFIG_KVM_VFIO=y
-+CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y
-+CONFIG_KVM_COMPAT=y
-+CONFIG_HAVE_KVM_IRQ_BYPASS=y
-+CONFIG_HAVE_KVM_NO_POLL=y
-+CONFIG_KVM=y
-+CONFIG_VHOST_NET=y
-+CONFIG_VHOST=y
-+CONFIG_VHOST_CROSS_ENDIAN_LEGACY=y
-+CONFIG_USER_RETURN_NOTIFIER=y
-+CONFIG_PREEMPT_NOTIFIERS=y
-+CONFIG_TRANSPARENT_HUGEPAGE=y
-+CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
-+CONFIG_THP_SWAP=y
-+CONFIG_TRANSPARENT_HUGE_PAGECACHE=y
-+CONFIG_IRQ_BYPASS_MANAGER=y
-+CONFIG_XARRAY_MULTI=y
--- 
-2.17.1
-
+Alright, will combine them in the next revision which I'll make once the
+rest of the patches will be reviewed.
