@@ -2,122 +2,300 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603F0C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24A4C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37AAB208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564586246;
-	bh=QLtbVtyJYSI7n5fVnkziSsOezk9bUyYirENwCfguXxI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vrpaUoebQemGAQMBA++5HTPrJCxB9KNxA9hf5or8N47X9e6yF9emLlV0eGFzXUGKx
-	 i6Y3rD/K8gCdIWdZOY7Sc2WzEOu/EasmEBtiI5cIXh5ICzTpWm6dn+7q9qXk8yRaRA
-	 QlOq/0YPH9xMElOvB9rZIx0FDkcW00jNBYmM2OvE=
+	by mail.kernel.org (Postfix) with ESMTP id 811E0206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbfGaPRZ (ORCPT
+        id S1727854AbfGaPSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:17:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbfGaPRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:17:25 -0400
-Received: from localhost (unknown [171.76.116.36])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 043D5206A2;
-        Wed, 31 Jul 2019 15:17:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564586244;
-        bh=QLtbVtyJYSI7n5fVnkziSsOezk9bUyYirENwCfguXxI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lbzuLgqb5ns6zxuRild0zWDqNUDFQPIZGJ7Fb4av46TQnhuG4/wrb4hZprvP0cT8C
-         KU54V3L8FjH2uk6USMAu/AM6/lP3w++MBb24XnXqobPpgHMhRa9xX9wl//+hHhJmL9
-         UwPz49l5flgfdOFWG4taG3u0nQVUH5cC37Tngm5M=
-Date:   Wed, 31 Jul 2019 20:46:10 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Sameer Pujar <spujar@nvidia.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dan.j.williams@intel.com, tiwai@suse.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
-        mkumard@nvidia.com
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-Message-ID: <20190731151610.GT12733@vkoul-mobl.Dlink>
-References: <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
- <20190618043308.GJ2962@vkoul-mobl>
- <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
- <20190624062609.GV2962@vkoul-mobl>
- <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
- <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
- <20190719050459.GM12733@vkoul-mobl.Dlink>
- <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
- <20190729061010.GC12733@vkoul-mobl.Dlink>
- <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
+        Wed, 31 Jul 2019 11:18:22 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:63362 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726859AbfGaPSV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:18:21 -0400
+X-UUID: fec258378a214b9681d644dcc4839ef7-20190731
+X-UUID: fec258378a214b9681d644dcc4839ef7-20190731
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 11032262; Wed, 31 Jul 2019 23:13:11 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 31 Jul 2019 23:13:10 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 31 Jul 2019 23:13:10 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH v3] checkpatch: add several Kconfig default value tests
+Date:   Wed, 31 Jul 2019 23:13:09 +0800
+Message-ID: <20190731151309.1167-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31-07-19, 10:48, Jon Hunter wrote:
-> 
-> On 29/07/2019 07:10, Vinod Koul wrote:
-> > On 23-07-19, 11:24, Sameer Pujar wrote:
-> >>
-> >> On 7/19/2019 10:34 AM, Vinod Koul wrote:
-> >>> On 05-07-19, 11:45, Sameer Pujar wrote:
-> >>>> Hi Vinod,
-> >>>>
-> >>>> What are your final thoughts regarding this?
-> >>> Hi sameer,
-> >>>
-> >>> Sorry for the delay in replying
-> >>>
-> >>> On this, I am inclined to think that dma driver should not be involved.
-> >>> The ADMAIF needs this configuration and we should take the path of
-> >>> dma_router for this piece and add features like this to it
-> >>
-> >> Hi Vinod,
-> >>
-> >> The configuration is needed by both ADMA and ADMAIF. The size is
-> >> configurable
-> >> on ADMAIF side. ADMA needs to know this info and program accordingly.
-> > 
-> > Well I would say client decides the settings for both DMA, DMAIF and
-> > sets the peripheral accordingly as well, so client communicates the two
-> > sets of info to two set of drivers
-> 
-> That maybe, but I still don't see how the information is passed from the
-> client in the first place. The current problem is that there is no means
-> to pass both a max-burst size and fifo-size to the DMA driver from the
-> client.
+This change adds 3 Kconfig default value tests.
+Repost patch v3 (Follow Joe's suggestion in v2)
 
-So one thing not clear to me is why ADMA needs fifo-size, I thought it
-was to program ADMAIF and if we have client programme the max-burst
-size to ADMA and fifo-size to ADMAIF we wont need that. Can you please
-confirm if my assumption is valid?
+1. discourage default n cases:
+e.g.,
+default n
 
-> IMO there needs to be a way to pass vendor specific DMA configuration
-> (if this information is not common) otherwise we just end up in a
-> scenario like there is for the xilinx DMA driver
-> (include/linux/dma/xilinx_dma.h) that has a custom API for passing this
-> information.
-> 
-> Cheers
-> Jon
-> 
-> -- 
-> nvpublic
+2. discourage default "[ynm]" cases:
+e.g.,
+arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
+arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
+arch/powerpc/Kconfig:   default "n"
+drivers/auxdisplay/Kconfig:     default "n"
+drivers/crypto/Kconfig: default "m"
+drivers/rapidio/devices/Kconfig:        default "n"
 
+3. discourage default EXPERT or default !EXPERT cases:
+e.g.,
+drivers/hid/Kconfig:    default !EXPERT
+
+tested cases:
+default m
+default n if ALPHA_EV5 || ALPHA_EV56 || (ALPHA_EV4 && !ALPHA_LCA)
+default y if ALPHA_QEMU
+default n if PPC_POWERNV
+default n
+default EXPERT
+default !EXPERT
+default "m"
+default "n"
+default "y" if EXPERT
+default "y" if PPC_POWERNV
+
+test result:
+WARNING: 'default n' is the default value, no need to write it explicitly
++       default n
+
+WARNING: Avoid using default EXPERT
++       default EXPERT
+
+WARNING: Avoid using default EXPERT
++       default !EXPERT
+
+WARNING: Use 'default m' not 'default "m"'
++       default "m"
+
+WARNING: Use 'default n' not 'default "n"'
++       default "n"
+
+WARNING: Use 'default y' not 'default "y"'
++       default "y" if EXPERT
+
+WARNING: Use 'default y' not 'default "y"'
++       default "y" if PPC_POWERNV
+
+test --fix capability:
+default n => delete line
+default "m" => default m
+default "n" => default n
+default "y" if EXPERT => default y if EXPERT
+default "y" if PPC_POWERNV => default y if PPC_POWERNV
+default !EXPERT => no change
+default EXPERT => no change
+
+Change since v1:
+discourage default n$
+discourage default "[ynm]"
+discourage default \!?EXPERT
+
+Change since v2:
+test Kconfig in a single block
+print precise message such as 'default "m"', not 'default "[ynm]"'
+provide --fix capability
+
+Cc: Joe Perches <joe@perches.com>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+---
+ scripts/checkpatch.pl | 139 ++++++++++++++++++++++++++----------------
+ 1 file changed, 85 insertions(+), 54 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 93a7edfe0f05..b080eea68cf6 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2932,60 +2932,98 @@ sub process {
+ 				      "Do not include the paragraph about writing to the Free Software Foundation's mailing address from the sample GPL notice. The FSF has changed addresses in the past, and may do so again. Linux already includes a copy of the GPL.\n" . $herevet)
+ 		}
+ 
+-# check for Kconfig help text having a real description
+-# Only applies when adding the entry originally, after that we do not have
+-# sufficient context to determine whether it is indeed long enough.
+-		if ($realfile =~ /Kconfig/ &&
+-		    # 'choice' is usually the last thing on the line (though
+-		    # Kconfig supports named choices), so use a word boundary
+-		    # (\b) rather than a whitespace character (\s)
+-		    $line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
+-			my $length = 0;
+-			my $cnt = $realcnt;
+-			my $ln = $linenr + 1;
+-			my $f;
+-			my $is_start = 0;
+-			my $is_end = 0;
+-			for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
+-				$f = $lines[$ln - 1];
+-				$cnt-- if ($lines[$ln - 1] !~ /^-/);
+-				$is_end = $lines[$ln - 1] =~ /^\+/;
+-
+-				next if ($f =~ /^-/);
+-				last if (!$file && $f =~ /^\@\@/);
+-
+-				if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
+-					$is_start = 1;
+-				} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
+-					if ($lines[$ln - 1] =~ "---help---") {
+-						WARN("CONFIG_DESCRIPTION",
+-						     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
++# Kconfig tests
++		if ($realfile =~ /Kconfig/) {
++			# check for Kconfig help text having a real description
++			# Only applies when adding the entry originally, after
++			# that we do not have sufficient context to determine
++			# whether it is indeed long enough.
++			# 'choice' is usually the last thing on the line (though
++			# Kconfig supports named choices), so use a word
++			# boundary (\b) rather than a whitespace character (\s)
++			if ($line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
++				my $length = 0;
++				my $cnt = $realcnt;
++				my $ln = $linenr + 1;
++				my $f;
++				my $is_start = 0;
++				my $is_end = 0;
++				for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
++					$f = $lines[$ln - 1];
++					$cnt-- if ($lines[$ln - 1] !~ /^-/);
++					$is_end = $lines[$ln - 1] =~ /^\+/;
++
++					next if ($f =~ /^-/);
++					last if (!$file && $f =~ /^\@\@/);
++
++					if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
++						$is_start = 1;
++					} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
++						if ($lines[$ln - 1] =~ "---help---") {
++							WARN("CONFIG_DESCRIPTION",
++							     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
++						}
++						$length = -1;
++					}
++
++					$f =~ s/^.//;
++					$f =~ s/#.*//;
++					$f =~ s/^\s+//;
++					next if ($f =~ /^$/);
++
++					# This only checks context lines in the patch
++					# and so hopefully shouldn't trigger false
++					# positives, even though some of these are
++					# common words in help texts
++					if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
++							   if|endif|menu|endmenu|source)\b/x) {
++						$is_end = 1;
++						last;
+ 					}
+-					$length = -1;
++					$length++;
++				}
++				if ($is_start && $is_end && $length < $min_conf_desc_length) {
++					WARN("CONFIG_DESCRIPTION",
++					     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
+ 				}
++				#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
++			}
+ 
+-				$f =~ s/^.//;
+-				$f =~ s/#.*//;
+-				$f =~ s/^\s+//;
+-				next if ($f =~ /^$/);
+-
+-				# This only checks context lines in the patch
+-				# and so hopefully shouldn't trigger false
+-				# positives, even though some of these are
+-				# common words in help texts
+-				if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
+-						  if|endif|menu|endmenu|source)\b/x) {
+-					$is_end = 1;
+-					last;
++# discourage the use of boolean for type definition attributes
++			if ($line =~ /^\+\s*\bboolean\b/) {
++				if (WARN("CONFIG_TYPE_BOOLEAN",
++					 "Use of boolean is deprecated, please use bool instead\n" . $herecurr) &&
++				    $fix) {
++					$fixed[$fixlinenr] =~ s/\bboolean\b/bool/;
++				}
++			}
++
++# Kconfig: discourage redundant 'default n'
++			if ($line =~ /^\+\s*default\s+n$/) {
++				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
++					 "'default n' is the default value, no need to write it explicitly\n" . $herecurr) &&
++				    $fix) {
++					fix_delete_line($fixlinenr, $rawline);
+ 				}
+-				$length++;
+ 			}
+-			if ($is_start && $is_end && $length < $min_conf_desc_length) {
+-				WARN("CONFIG_DESCRIPTION",
+-				     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
++
++# Kconfig: discourage quoted defaults: use default [ynm], not default "[ynm]"
++			if ($rawline =~ /^\+\s*default\s+"([ynm])"/) {
++				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
++					 "Use 'default $1' not 'default \"$1\"'\n" . $herecurr) &&
++				    $fix) {
++					$fixed[$fixlinenr] =~ s/\b(default\s+)"(.)"/$1$2/;
++				}
++			}
++
++# Kconfig: discourage using default EXPERT or !EXPERT
++			if ($line =~ /^\+\s*default\s+\!?\s*EXPERT\b/) {
++				WARN("CONFIG_DEFAULT_VALUE_STYLE",
++				     "Avoid using default EXPERT\n" . $herecurr);
+ 			}
+-			#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
+ 		}
++# End of Kconfig tests
++
+ 
+ # check for MAINTAINERS entries that don't have the right form
+ 		if ($realfile =~ /^MAINTAINERS$/ &&
+@@ -2998,13 +3036,6 @@ sub process {
+ 			}
+ 		}
+ 
+-# discourage the use of boolean for type definition attributes of Kconfig options
+-		if ($realfile =~ /Kconfig/ &&
+-		    $line =~ /^\+\s*\bboolean\b/) {
+-			WARN("CONFIG_TYPE_BOOLEAN",
+-			     "Use of boolean is deprecated, please use bool instead.\n" . $herecurr);
+-		}
+-
+ 		if (($realfile =~ /Makefile.*/ || $realfile =~ /Kbuild.*/) &&
+ 		    ($line =~ /\+(EXTRA_[A-Z]+FLAGS).*/)) {
+ 			my $flag = $1;
 -- 
-~Vinod
+2.18.0
+
