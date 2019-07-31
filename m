@@ -2,125 +2,139 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807F9C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9ACC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E681206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:53:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gW1xlxN4"
+	by mail.kernel.org (Postfix) with ESMTP id E3C63214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729707AbfGaTxg (ORCPT
+        id S1730037AbfGaTxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:53:36 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35084 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfGaTxg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:53:36 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y4so70989809wrm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=DebYcibpFlX9HWHSEI2N/34iRm3HFDnu/1MahZ1ImJE=;
-        b=gW1xlxN4FGKnPnwokH6ImBm/2zHuAaIx5QLGZexzg+jqwNo2DRmxv3BJJOTF4QJzJO
-         fS+ZEueC2a6T5bg49fh2tOpkJY2Th8AK/ilf2SVfuEiQbjby6BZ427lm0N1+kcr29gN4
-         K6oFp3NZgoZqafToayZ+xoQ4KNp+1ZTq39319D7tMIjeVLrtpVAt8lib6sE7UtVnUHET
-         sEWiAJssnj66BuGKgYiBbwp0f6fzUR9F6so/Bv4ugffrYnjWbbOcwHryuE+dY168XHg2
-         o36pSlSOtXZ/Yzlja5yiBJuLMsipb1dBRj+UE3N04NA9h2UDquyd2PU4X10HSHJmpOyA
-         QtBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=DebYcibpFlX9HWHSEI2N/34iRm3HFDnu/1MahZ1ImJE=;
-        b=Enh7E4CvxbD7lq67NKzAGTpxQMDnboWxHPh8oQj979RT++KUOMqrEDJOBreIT9lBA1
-         9sbDippafq5JJxJSJAaM9PAsQTKt60Gj6Rpg5ifJJPDWA9EsNIQVvHXnhBbzMkiIT0J6
-         K5GYIckbO1jUVGiRaQEHvzrKNQJjJWMe1NZkLvpEPqd2UXofzMyYz5yVNi6Kv/jUKSpf
-         dJdXFvY/1T9GeaS3WdWGX3CbE9W+8veMP4IOdviVeZPL4QfrwNdqurzAcFEW8REhYDrH
-         ydzMIBSWNJYU414HUFL1OVajadcnan2ofAMC5duJtaez3Pj33L2ppjDMPFpMpcxjpjO6
-         lDXA==
-X-Gm-Message-State: APjAAAV8fYlNoYOLmH71DqBT0agbz2LiyCujaG9iq23de17L3Svnv+yB
-        85fShkG8XX6iEC6D/nwHH3ybwg==
-X-Google-Smtp-Source: APXvYqyR3nZH8cS1o8duJ2kRVS3erqv31+gYqTrLlWnwZm0aIho44x9EJcFrKxxUCYkahKIWeudLQg==
-X-Received: by 2002:a5d:6182:: with SMTP id j2mr87769889wru.275.1564602813671;
-        Wed, 31 Jul 2019 12:53:33 -0700 (PDT)
-Received: from [192.168.1.77] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id f3sm51237858wrt.56.2019.07.31.12.53.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 12:53:33 -0700 (PDT)
-Subject: Re: [PATCH 3/9] clk: meson: axg-audio: Don't reference clk_init_data
- after registration
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-References: <20190731193517.237136-1-sboyd@kernel.org>
- <20190731193517.237136-4-sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Jerome Brunet <jbrunet@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Message-ID: <c81ead7e-3e29-2a7e-aa8e-79cc0a711fb2@baylibre.com>
-Date:   Wed, 31 Jul 2019 21:53:31 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:45.0)
- Gecko/20100101 Thunderbird/45.8.0
+        Wed, 31 Jul 2019 15:53:49 -0400
+Received: from sauhun.de ([88.99.104.3]:44750 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfGaTxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 15:53:49 -0400
+Received: from localhost (p54B33080.dip0.t-ipconnect.de [84.179.48.128])
+        by pokefinder.org (Postfix) with ESMTPSA id 6C4152C270A;
+        Wed, 31 Jul 2019 21:53:46 +0200 (CEST)
+Date:   Wed, 31 Jul 2019 21:53:46 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Leon Luo <leonl@leopardimaging.com>,
+        Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Luis Oliveira <lolivei@synopsys.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Wenyou Yang <wenyou.yang@microchip.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Mats Randgaard <matrandg@cisco.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Enrico Scholz <enrico.scholz@sigma-chemnitz.de>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/6] media: i2c: Convert to new i2c device probe()
+Message-ID: <20190731195346.GH4084@kunai>
+References: <20190710215149.9208-1-kieran.bingham+renesas@ideasonboard.com>
+ <20190710215149.9208-7-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20190731193517.237136-4-sboyd@kernel.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pfTAc8Cvt8L6I27a"
+Content-Disposition: inline
+In-Reply-To: <20190710215149.9208-7-kieran.bingham+renesas@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
 
-Le 31/07/2019 à 21:35, Stephen Boyd a écrit :
-> A future patch is going to change semantics of clk_register() so that
-> clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-> referencing this member here so that we don't run into NULL pointer
-> exceptions.
-> 
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+--pfTAc8Cvt8L6I27a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jul 10, 2019 at 10:51:49PM +0100, Kieran Bingham wrote:
+> The I2C core framework provides a simplified probe framework from commit
+> b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new() call-back type").
+>=20
+> These drivers do not utilise the i2c_device_id table in the probe, so we
+> can easily convert them to utilise the simplfied i2c driver
+> registration.
+>=20
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 > ---
-> 
-> Please ack so I can take this through clk tree
-> 
->  drivers/clk/meson/axg-audio.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
-> index 8028ff6f6610..db0b73d53551 100644
-> --- a/drivers/clk/meson/axg-audio.c
-> +++ b/drivers/clk/meson/axg-audio.c
-> @@ -992,15 +992,18 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
->  
->  	/* Take care to skip the registered input clocks */
->  	for (i = AUD_CLKID_DDR_ARB; i < data->hw_onecell_data->num; i++) {
-> +		const char *name;
-> +
->  		hw = data->hw_onecell_data->hws[i];
->  		/* array might be sparse */
->  		if (!hw)
->  			continue;
->  
-> +		name = hw->init->name;
-> +
->  		ret = devm_clk_hw_register(dev, hw);
->  		if (ret) {
-> -			dev_err(dev, "failed to register clock %s\n",
-> -				hw->init->name);
-> +			dev_err(dev, "failed to register clock %s\n", name);
->  			return ret;
->  		}
->  	}
-> 
+>  drivers/media/i2c/adv7343.c  | 5 ++---
+>  drivers/media/i2c/imx274.c   | 5 ++---
+>  drivers/media/i2c/max2175.c  | 5 ++---
+>  drivers/media/i2c/mt9m001.c  | 5 ++---
+>  drivers/media/i2c/mt9m111.c  | 5 ++---
+>  drivers/media/i2c/ov2640.c   | 5 ++---
+>  drivers/media/i2c/ov2659.c   | 5 ++---
+>  drivers/media/i2c/ov5640.c   | 5 ++---
+>  drivers/media/i2c/ov5645.c   | 5 ++---
+>  drivers/media/i2c/ov5647.c   | 5 ++---
+>  drivers/media/i2c/ov772x.c   | 5 ++---
+>  drivers/media/i2c/ov7740.c   | 5 ++---
+>  drivers/media/i2c/ov9650.c   | 5 ++---
+>  drivers/media/i2c/s5k5baf.c  | 5 ++---
+>  drivers/media/i2c/s5k6a3.c   | 5 ++---
+>  drivers/media/i2c/tc358743.c | 5 ++---
+>  drivers/media/i2c/ths8200.c  | 5 ++---
+>  drivers/media/i2c/tvp5150.c  | 5 ++---
+>  drivers/media/i2c/tvp7002.c  | 4 ++--
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+These drivers, I did not review visually but build tested them and
+verified they didn't show any build warnings or failures. Glimpsed
+through the conversion pattern. Looks all good.
+
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+
+--pfTAc8Cvt8L6I27a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1B8ckACgkQFA3kzBSg
+KbYEMRAAhmwhczAhbJim7z/RwnJLFoLsdVmxLuFphdE5tArR1CVlmSnLmePsb+SV
+oUHKtP20MJqd0JG5BQPthFD14pLhhgPSqEfx5wuEZ8D6JVHIVnj1Xghr+eg7B3/2
++3o9zhbn57geSAmR56Mqm23SR9Je9WeggL8jtQll/JScKzyMo672s8U6sX5fJhy6
+tQ87t59yQ6QhMX1uu4yCPLwlbryhoFYwB8zeYtDsMJdgyg9AbMCLT7XePRmZdR6B
+BDmzajGEOrRYtW48Nl0xI7lyO79iLuD8JvqiqMPmM5sbz0GntdItUMgwbLFHgaAN
+tWLRMJlg/WffwWP7HEzPctBR1EMgfoCBDbPTdbckYuzhbtXnUn2bZe4yJalo73U2
+aoAnO4/LUqPkheQSrZklOhc6IdAuYCVvRs5DfryTubv7UcHpFVwTAZpVqWvU4mN+
+O351GpW8QdkBqCwu7M2J/dbCF2Xbz9kRuDdD1v+gS4eaMoVy68CB2IcYUgh52EnW
+aWqLKnIn1Vkz02N9sM35OvIYZKBaX5/EXjJSGkjltV65bSC20CqFBMFwRfuE+4vB
+SfkxTnwTI5beAn2ouZope7AanpO08QHCSb46JC86fMTt+3M9lzw0ehBw8cPv1A1j
+VPldElHq9IVpVRUyy4gZMJmvDzWtR8LCXFG3lsQ6rYTLa8dlI54=
+=FykV
+-----END PGP SIGNATURE-----
+
+--pfTAc8Cvt8L6I27a--
