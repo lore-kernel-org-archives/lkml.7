@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E94DC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B11FC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7654D2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85682064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="MLb+AaSc"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="UeQPYBDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfGaPJF (ORCPT
+        id S1729288AbfGaPJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:09:05 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33641 "EHLO
+        Wed, 31 Jul 2019 11:09:12 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44809 "EHLO
         mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388614AbfGaPIc (ORCPT
+        with ESMTP id S2388609AbfGaPIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 11:08:32 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i11so2524968edq.0
+Received: by mail-ed1-f65.google.com with SMTP id k8so65978361edr.11
         for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zVlcJDBaDTqmSz97nQxl4DvHh1B1aL9m42IztWqYpgk=;
-        b=MLb+AaScf0hGsrpPSDd87+yWF18Ne5YphyrJDosl5qgEGBpjx5dqprcz8D6TDurakx
-         v7dksS8vdyH98KwRfDrtg/ZbAe6E5vhUhxog7UiBo5/z7ZxDluJryzZrq7ii40mFem3i
-         jMx9cmbPY8ZVw9geHuaHGUyOzRRTLmVrMwDlEzypgFsoq1OKR/Xmb+uMJ6IghodwNO1n
-         RZiP1ftmR0Lj/uf8ewWim1E6GUd1B5u7cpUbveVRjMCNi8uIaEVIr/L9O6TQUka6NeYB
-         zDwBJBoONjQlX/jht6jQVRNO6og/Cy7j8akyt5hXZpmDzorFoOnlfMMXa/CagiuWGoH+
-         adxA==
+        bh=p3ZdWpQd4xgv1kA6jDtn8atrxpLedHc/tVwU2ev+R3g=;
+        b=UeQPYBDUV35JfXNrT+d/+kITJnfTYOBQ1jtvX2JvqFbwVh/IeIZ2iI0ZXO91FPn9Ce
+         GW/w3MO7sHLXXgtgE2TaPrzyGuhNw243bGm6o/iGuQwYW66FhRrCIaqTdHAHoNMlPwIJ
+         eWN5hgS1key/lsY2Gpyw1STp4427doI388pSYFCLVQEjOIiGXT+TkZloJYN6tjzrbOyJ
+         vcQMkjiEs7M6OXH8+Lpe0TAD2Ou/D+uu+KPrBcug6Q74tQXQEJs+TqHWk3omP9QV64d8
+         7zAhZGz4EvgStlF3Md21t/Dhxvi9IqnlZrJdrf/4i/NIcNvgXhFuAzIO3cs7qe9OAhQP
+         jyqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zVlcJDBaDTqmSz97nQxl4DvHh1B1aL9m42IztWqYpgk=;
-        b=O9PYY0aUhDPKAWYPoC+iYTjNIzI7yaNjWqHoRViOt8EY7Yb5z+yQaXxgdidSt7MjUE
-         23q9baJseTJUBBTm0E07VhdzYYPFVZ6oUKOhnLMTi5s6Q/RYtTm6LRqtVbU1vz70nWC2
-         jLuuRdcKE7GvUgwjUcvjawbiYd83ogDQg7Rr63/+YSPfDHDGZxcBvBPe+khBkRW9h0qc
-         MvKB47Y8Xc6cCtMzPyIcWPSqpX6K0duGRAkN7CSjngPa7JGCBecvCFncmoTDHM4qt0TC
-         nobAZt1LLaj3he6bDo9PGmJaSQbfyN41TZrfC/qyzECpsEWVIdRCo5elHn7cI702p/m4
-         1aCw==
-X-Gm-Message-State: APjAAAUSn1qH6+EgmmLUqjF5pjQL2QsLcZRrrzIJ9j4m5irsjibJQrDT
-        Dujb5mMCszPDp3U+NM1GqmMC5plb
-X-Google-Smtp-Source: APXvYqyr56BhZiXrSd8f2fq+Z375JbAoHMRws8MKCqxmheMr9Uoh5vHG5eCnsq/pE6efizao1axriw==
-X-Received: by 2002:a05:6402:3d5:: with SMTP id t21mr107048118edw.13.1564585710210;
-        Wed, 31 Jul 2019 08:08:30 -0700 (PDT)
+        bh=p3ZdWpQd4xgv1kA6jDtn8atrxpLedHc/tVwU2ev+R3g=;
+        b=EpIOZEvgsWBTSJCgTo8OTnAX7WaYrj0S6vXrhWPu+LgNw3hoEuJHk+iGsyTjCoL26e
+         xZggXYjQk24ZuvAj8QUA8YU4mCrJGhzyhjHw/yTsaFEOQWuBuOZfVUoIx1jMcPkChGxw
+         KL9MJqmxI5sqD7LpYTLNo4EcZlpj/3wyD8dSsMc1Iz/+LH4F8PDQiMztJmIHK+lrqGuY
+         Ig+0OdYKqH16d23bF+D4/FBQLKYrJ7DYPtb2/OtFIBtTBuZkjVDwOMdppq6Kupj7seam
+         QfLnqnbbpP52f9Ri4KkGpB5GC2ogQYLWFVMX1pW4/MAmGCjRNMPpboP0UodGpM0R9O9p
+         A6oQ==
+X-Gm-Message-State: APjAAAUgIwPTa2vfiunLuNAbHMhcAxy3vxWKuYYBsNRyacMmfH/pquvi
+        He5NhymbcMXXkA5jz825jKg=
+X-Google-Smtp-Source: APXvYqwkQSn37lZ2YK2K4kR+zMFHwX+ELvbrlQTI82djGKjlx/y1EvYEwBEFV4qd/VWbyn8Xl7msnw==
+X-Received: by 2002:a50:a943:: with SMTP id m3mr105292611edc.190.1564585709728;
+        Wed, 31 Jul 2019 08:08:29 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id s2sm5403001ejf.11.2019.07.31.08.08.24
+        by smtp.gmail.com with ESMTPSA id y11sm12444539ejb.54.2019.07.31.08.08.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Wed, 31 Jul 2019 08:08:28 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id E8A5B1045FA; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+        id 9EFEC1030C0; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,9 +75,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 36/59] keys/mktme: Require ACPI HMAT to register the MKTME Key Service
-Date:   Wed, 31 Jul 2019 18:07:50 +0300
-Message-Id: <20190731150813.26289-37-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 25/59] keys/mktme: Preparse the MKTME key payload
+Date:   Wed, 31 Jul 2019 18:07:39 +0300
+Message-Id: <20190731150813.26289-26-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -90,48 +90,215 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-The ACPI HMAT will be used by the MKTME key service to identify
-topologies that support the safe programming of encryption keys.
-Those decisions will happen at key creation time and during
-hotplug events.
+It is a requirement of the Kernel Keys subsystem to provide a
+preparse method that validates payloads before key instantiate
+methods are called.
 
-To enable this, we at least need to have the ACPI HMAT present
-at init time. If it's not present, do not register the type.
+Verify that userspace provides valid MKTME options and prepare
+the payload for use at key instantiate time.
 
-If the HMAT is not present, failure looks like this:
-[ ] MKTME: Registration failed. ACPI HMAT not present.
+Create a method to free the preparsed payload. The Kernel Key
+subsystem will that to clean up after the key is instantiated.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- security/keys/mktme_keys.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ include/keys/mktme-type.h  |  31 +++++++++
+ security/keys/mktme_keys.c | 134 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 165 insertions(+)
+ create mode 100644 include/keys/mktme-type.h
 
+diff --git a/include/keys/mktme-type.h b/include/keys/mktme-type.h
+new file mode 100644
+index 000000000000..9dad92f17179
+--- /dev/null
++++ b/include/keys/mktme-type.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Key service for Multi-KEY Total Memory Encryption */
++
++#ifndef _KEYS_MKTME_TYPE_H
++#define _KEYS_MKTME_TYPE_H
++
++#include <linux/key.h>
++
++enum mktme_alg {
++	MKTME_ALG_AES_XTS_128,
++};
++
++const char *const mktme_alg_names[] = {
++	[MKTME_ALG_AES_XTS_128]	= "aes-xts-128",
++};
++
++enum mktme_type {
++	MKTME_TYPE_ERROR = -1,
++	MKTME_TYPE_CPU,
++	MKTME_TYPE_NO_ENCRYPT,
++};
++
++const char *const mktme_type_names[] = {
++	[MKTME_TYPE_CPU]	= "cpu",
++	[MKTME_TYPE_NO_ENCRYPT]	= "no-encrypt",
++};
++
++extern struct key_type key_type_mktme;
++
++#endif /* _KEYS_MKTME_TYPE_H */
 diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
-index 2d90cc83e5ce..6265b62801e9 100644
+index d262e0f348e4..fe119a155235 100644
 --- a/security/keys/mktme_keys.c
 +++ b/security/keys/mktme_keys.c
-@@ -2,6 +2,7 @@
+@@ -6,6 +6,10 @@
+ #include <linux/key.h>
+ #include <linux/key-type.h>
+ #include <linux/mm.h>
++#include <linux/parser.h>
++#include <linux/string.h>
++#include <asm/intel_pconfig.h>
++#include <keys/mktme-type.h>
+ #include <keys/user-type.h>
  
- /* Documentation/x86/mktme/ */
+ #include "internal.h"
+@@ -27,8 +31,138 @@ struct mktme_mapping {
  
-+#include <linux/acpi.h>
- #include <linux/cred.h>
- #include <linux/cpu.h>
- #include <linux/init.h>
-@@ -445,6 +446,12 @@ static int __init init_mktme(void)
+ static struct mktme_mapping *mktme_map;
  
- 	mktme_available_keyids = mktme_nr_keyids();
- 
-+	/* Require an ACPI HMAT to identify MKTME safe topologies */
-+	if (!acpi_hmat_present()) {
-+		pr_warn("MKTME: Registration failed. ACPI HMAT not present.\n");
++enum mktme_opt_id {
++	OPT_ERROR,
++	OPT_TYPE,
++	OPT_ALGORITHM,
++};
++
++static const match_table_t mktme_token = {
++	{OPT_TYPE, "type=%s"},
++	{OPT_ALGORITHM, "algorithm=%s"},
++	{OPT_ERROR, NULL}
++};
++
++/* Make sure arguments are correct for the TYPE of key requested */
++static int mktme_check_options(u32 *payload, unsigned long token_mask,
++			       enum mktme_type type, enum mktme_alg alg)
++{
++	if (!token_mask)
++		return -EINVAL;
++
++	switch (type) {
++	case MKTME_TYPE_CPU:
++		if (test_bit(OPT_ALGORITHM, &token_mask))
++			*payload |= (1 << alg) << 8;
++		else
++			return -EINVAL;
++
++		*payload |= MKTME_KEYID_SET_KEY_RANDOM;
++		break;
++
++	case MKTME_TYPE_NO_ENCRYPT:
++		*payload |= MKTME_KEYID_NO_ENCRYPT;
++		break;
++
++	default:
 +		return -EINVAL;
 +	}
++	return 0;
++}
 +
- 	/* Mapping of Userspace Keys to Hardware KeyIDs */
- 	mktme_map = kvzalloc((sizeof(*mktme_map) * (mktme_nr_keyids() + 1)),
- 			     GFP_KERNEL);
++/* Parse the options and store the key programming data in the payload. */
++static int mktme_get_options(char *options, u32 *payload)
++{
++	enum mktme_alg alg = MKTME_ALG_AES_XTS_128;
++	enum mktme_type type = MKTME_TYPE_ERROR;
++	substring_t args[MAX_OPT_ARGS];
++	unsigned long token_mask = 0;
++	char *p = options;
++	int token;
++
++	while ((p = strsep(&options, " \t"))) {
++		if (*p == '\0' || *p == ' ' || *p == '\t')
++			continue;
++		token = match_token(p, mktme_token, args);
++		if (token == OPT_ERROR)
++			return -EINVAL;
++		if (test_and_set_bit(token, &token_mask))
++			return -EINVAL;
++
++		switch (token) {
++		case OPT_TYPE:
++			type = match_string(mktme_type_names,
++					    ARRAY_SIZE(mktme_type_names),
++					    args[0].from);
++			if (type < 0)
++				return -EINVAL;
++			break;
++
++		case OPT_ALGORITHM:
++			/* Algorithm must be generally supported */
++			alg = match_string(mktme_alg_names,
++					   ARRAY_SIZE(mktme_alg_names),
++					   args[0].from);
++			if (alg < 0)
++				return -EINVAL;
++
++			/* Algorithm must be activated on this platform */
++			if (!(mktme_algs & (1 << alg)))
++				return -EINVAL;
++			break;
++
++		default:
++			return -EINVAL;
++		}
++	}
++	return mktme_check_options(payload, token_mask, type, alg);
++}
++
++void mktme_free_preparsed_payload(struct key_preparsed_payload *prep)
++{
++	kzfree(prep->payload.data[0]);
++}
++
++/*
++ * Key Service Method to preparse a payload before a key is created.
++ * Check permissions and the options. Load the proposed key field
++ * data into the payload for use by the instantiate method.
++ */
++int mktme_preparse_payload(struct key_preparsed_payload *prep)
++{
++	size_t datalen = prep->datalen;
++	u32 *mktme_payload;
++	char *options;
++	int ret;
++
++	if (datalen <= 0 || datalen > 1024 || !prep->data)
++		return -EINVAL;
++
++	options = kmemdup_nul(prep->data, datalen, GFP_KERNEL);
++	if (!options)
++		return -ENOMEM;
++
++	mktme_payload = kzalloc(sizeof(*mktme_payload), GFP_KERNEL);
++	if (!mktme_payload) {
++		ret = -ENOMEM;
++		goto out;
++	}
++	ret = mktme_get_options(options, mktme_payload);
++	if (ret < 0) {
++		kzfree(mktme_payload);
++		goto out;
++	}
++	prep->quotalen = sizeof(mktme_payload);
++	prep->payload.data[0] = mktme_payload;
++out:
++	kzfree(options);
++	return ret;
++}
++
+ struct key_type key_type_mktme = {
+ 	.name		= "mktme",
++	.preparse	= mktme_preparse_payload,
++	.free_preparse	= mktme_free_preparsed_payload,
+ 	.describe	= user_describe,
+ };
+ 
 -- 
 2.21.0
 
