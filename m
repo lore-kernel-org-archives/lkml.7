@@ -2,71 +2,250 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEBFC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E428C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76C8206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C3F208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:09:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x+bCxoBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbfGaHJG (ORCPT
+        id S1727817AbfGaHJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 31 Jul 2019 03:09:06 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3260 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725866AbfGaHJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45220 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfGaHJF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 03:09:05 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 29B0120612329D04C2D0;
-        Wed, 31 Jul 2019 15:09:04 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 15:08:58 +0800
-Subject: Re: [PATCH 07/22] staging: erofs: remove redundant #include
- "internal.h"
-To:     Chao Yu <yuchao0@huawei.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>, <weidu.du@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190729065159.62378-1-gaoxiang25@huawei.com>
- <20190729065159.62378-8-gaoxiang25@huawei.com>
- <bae5fc5b-b2e1-0d74-6374-b1ae5835cbb9@huawei.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <52072867-a9ae-5730-0ce4-47dd8dcb2d8c@huawei.com>
-Date:   Wed, 31 Jul 2019 15:08:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6V78sxq030249;
+        Wed, 31 Jul 2019 02:08:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564556934;
+        bh=OXRPco0H+M6BtRHCZ/uCJmdX+3Y0ZD38e+j0CYwOW/4=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=x+bCxoBzUEmjWDi5dJ5gZ048rj3GnuOCbTn8TJwRt5K00ivO48aPKA03uYEofGgZr
+         41DzITZbnimOVzJXwKAd+2RrgN5IMzE19eD9VxDTrvL3+TOWZfISSmTWeGSqHtUwlH
+         U42KJdSkOFqRdv+mC0NgBBv5G4xA90vHFQ07lv3U=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6V78spU127476
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 31 Jul 2019 02:08:54 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 31
+ Jul 2019 02:08:53 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 31 Jul 2019 02:08:53 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6V78jkm050418;
+        Wed, 31 Jul 2019 02:08:46 -0500
+Subject: Re: [PATCH v2 00/14] dmaengine/soc: Add Texas Instruments UDMA
+ support
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
+Message-ID: <7f684b2d-a43a-79f2-4b29-878f02abc060@ti.com>
+Date:   Wed, 31 Jul 2019 10:08:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <bae5fc5b-b2e1-0d74-6374-b1ae5835cbb9@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190730093450.12664-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+Rob,
 
-On 2019/7/31 15:03, Chao Yu wrote:
-> On 2019/7/29 14:51, Gao Xiang wrote:
->> Because #include "internal.h" is included in xattr.h
+On 30/07/2019 12.34, Peter Ujfalusi wrote:
+> Changes since v1
+> (https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105&state=*)
+> - Added support for j721e
+> - Based on 5.3-rc2
+> - dropped ti_sci API patch for RM management as it is already upstream
+> - dropped dmadev_get_slave_channel() patch, using __dma_request_channel()
+> - Added Rob's Reviewed-by to ringacc DT binding document patch
+> - DT bindings changes:
+>  - linux,udma-mode is gone, I have a simple lookup table in the driver to flag
+>    TR channels.
+>  - Support for j721e
+
+I have also made smaller adjustment of some property names within the
+psi-l config nodes to make it uniform and more readable.
+
+> - Fix bug in of_node_put() handling in xlate function
 > 
-> I think it would be better to remove "internal.h" in xattr.h, and include them
-> both in .c file in where we need xattr definition.
-
-It seems that all xattr related source files needing internal.h,
-and we need "EROFS_V(inode)", "struct erofs_sb_info", ... stuffs in xattr.h,
-which is defined in internal.h...
-
-Thanks,
-Gao Xiang
-
+> Changes since RFC (https://patchwork.kernel.org/cover/10612465/):
+> - Based on linux-next (20190506) which now have the ti_sci interrupt support
+> - The series can be applied and the UDMA via DMAengine API will be functional
+> - Included in the series: ti_sci Resource management API, cppi5 header and
+>   driver for the ring accelerator.
+> - The DMAengine core patches have been updated as per the review comments for
+>   earlier submittion.
+> - The DMAengine driver patch is artificially split up to 6 smaller patches
 > 
-> Thanks,
+> The k3-udma driver implements the Data Movement Architecture described in
+> AM65x TRM (http://www.ti.com/lit/pdf/spruid7) and
+> j721e TRM (http://www.ti.com/lit/pdf/spruil1)
 > 
+> This DMA architecture is a big departure from 'traditional' architecture where
+> we had either EDMA or sDMA as system DMA.
+> 
+> Packet DMAs were used as dedicated DMAs to service only networking (Kesytone2)
+> or USB (am335x) while other peripherals were serviced by EDMA.
+> 
+> In AM65x/j721e the UDMA (Unified DMA) is used for all data movment within the
+> SoC, tasked to service all peripherals (UART, McSPI, McASP, networking, etc). 
+> 
+> The NAVSS/UDMA is built around CPPI5 (Communications Port Programming Interface)
+> and it supports Packet mode (similar to CPPI4.1 in Keystone2 for networking) and
+> TR mode (similar to EDMA descriptor).
+> The data movement is done within a PSI-L fabric, peripherals (including the
+> UDMA-P) are not addressed by their I/O register as with traditional DMAs but
+> with their PSI-L thread ID.
+> 
+> In AM65x/j721e we have two main type of peripherals:
+> Legacy: McASP, McSPI, UART, etc.
+>  to provide connectivity they are serviced by PDMA (Peripheral DMA)
+>  PDMA threads are locked to service a given peripheral, for example PSI-L thread
+>  0x4400/0xc400 is to service McASP0 rx/tx.
+>  The PDMa configuration can be done via the UDMA Real Time Peer registers.
+> Native: Networking, security accelerator
+>  these peripherals have native support for PSI-L.
+> 
+> To be able to use the DMA the following generic steps need to be taken:
+> - configure a DMA channel (tchan for TX, rchan for RX)
+>  - channel mode: Packet or TR mode
+>  - for memcpy a tchan and rchan pair is used.
+>  - for packet mode RX we also need to configure a receive flow to configure the
+>    packet receiption
+> - the source and destination threads must be paired
+> - at minimum one pair of rings need to be configured:
+>  - tx: transfer ring and transfer completion ring
+>  - rx: free descriptor ring and receive ring
+> - two interrupts: UDMA-P channel interrupt and ring interrupt for tc_ring/r_ring
+>  - If the channel is in packet mode or configured to memcpy then we only need
+>    one interrupt from the ring, events from UDMAP is not used.
+> 
+> When the channel setup is completed we only interract with the rings:
+> - TX: push a descriptor to t_ring and wait for it to be pushed to the tc_ring by
+>   the UDMA-P
+> - RX: push a descriptor to the fd_ring and waith for UDMA-P to push it back to
+>   the r_ring.
+> 
+> Since we have FIFOs in the DMA fabric (UDMA-P, PSI-L and PDMA) which was not the
+> case in previous DMAs we need to report the amount of data held in these FIFOs
+> to clients (delay calculation for ALSA, UART FIFO flush support).
+> 
+> Metadata support:
+> DMAengine user driver was posted upstream based/tested on the v1 of the UDMA
+> series: https://lkml.org/lkml/2019/6/28/20
+> SA2UL is using the metadata DMAengine API.
+> 
+> Note on the last patch:
+> In Keystone2 the networking had dedicated DMA (packet DMA) which is not the case
+> anymore and the DMAengine API currently missing support for the features we
+> would need to support networking, things like
+> - support for receive descriptor 'classification'
+>  - we need to support several receive queues for a channel.
+>  - the queues are used for packet priority handling for example, but they can be
+>    used to have pools of descriptors for different sizes.
+> - out of order completion of descriptors on a channel
+>  - when we have several queues to handle different priority packets the
+>    descriptors will be completed 'out-of-order'
+> - NAPI type of operation (polling instead of interrupt driven transfer)
+>  - without this we can not sustain gigabit speeds and we need to support NAPI
+>  - not to limit this to networking, but other high performance operations
+> 
+> It is my intention to work on these to be able to remove the 'glue' layer and
+> switch to DMAengine API - or have an API aside of DMAengine to have generic way
+> to support networking, but given how controversial and not trivial these changes
+> are we need something to support networking.
+> 
+> The series (+DT patch to enabled UDMA/PDMA on AM65x) on top of 5.3-rc2 is
+> available:
+> https://github.com/omap-audio/linux-audio.git peter/udma/series_v2-5.3-rc2
+> 
+> Regards,
+> Peter
+> ---
+> Grygorii Strashko (3):
+>   bindings: soc: ti: add documentation for k3 ringacc
+>   soc: ti: k3: add navss ringacc driver
+>   dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
+> 
+> Peter Ujfalusi (11):
+>   dmaengine: doc: Add sections for per descriptor metadata support
+>   dmaengine: Add metadata_ops for dma_async_tx_descriptor
+>   dmaengine: Add support for reporting DMA cached data amount
+>   dmaengine: ti: Add cppi5 header for UDMA
+>   dt-bindings: dma: ti: Add document for K3 UDMA
+>   dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io
+>     func
+>   dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate
+>     and filter_fn
+>   dmaengine: ti: New driver for K3 UDMA - split#3: alloc/free
+>     chan_resources
+>   dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks
+>     1
+>   dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks
+>     2
+>   dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
+> 
+>  .../devicetree/bindings/dma/ti/k3-udma.txt    |  170 +
+>  .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
+>  Documentation/driver-api/dmaengine/client.rst |   75 +
+>  .../driver-api/dmaengine/provider.rst         |   46 +
+>  drivers/dma/dmaengine.c                       |   73 +
+>  drivers/dma/dmaengine.h                       |    8 +
+>  drivers/dma/ti/Kconfig                        |   22 +
+>  drivers/dma/ti/Makefile                       |    2 +
+>  drivers/dma/ti/k3-udma-glue.c                 | 1039 +++++
+>  drivers/dma/ti/k3-udma-private.c              |  124 +
+>  drivers/dma/ti/k3-udma.c                      | 3479 +++++++++++++++++
+>  drivers/dma/ti/k3-udma.h                      |  160 +
+>  drivers/soc/ti/Kconfig                        |   17 +
+>  drivers/soc/ti/Makefile                       |    1 +
+>  drivers/soc/ti/k3-ringacc.c                   | 1191 ++++++
+>  include/dt-bindings/dma/k3-udma.h             |   10 +
+>  include/linux/dma/k3-udma-glue.h              |  125 +
+>  include/linux/dma/ti-cppi5.h                  |  996 +++++
+>  include/linux/dmaengine.h                     |  110 +
+>  include/linux/soc/ti/k3-ringacc.h             |  262 ++
+>  20 files changed, 7969 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+>  create mode 100644 drivers/dma/ti/k3-udma-glue.c
+>  create mode 100644 drivers/dma/ti/k3-udma-private.c
+>  create mode 100644 drivers/dma/ti/k3-udma.c
+>  create mode 100644 drivers/dma/ti/k3-udma.h
+>  create mode 100644 drivers/soc/ti/k3-ringacc.c
+>  create mode 100644 include/dt-bindings/dma/k3-udma.h
+>  create mode 100644 include/linux/dma/k3-udma-glue.h
+>  create mode 100644 include/linux/dma/ti-cppi5.h
+>  create mode 100644 include/linux/soc/ti/k3-ringacc.h
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
