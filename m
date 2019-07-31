@@ -2,376 +2,112 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EC6C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0044EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E413C208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E72206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:19:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Qkkh4TXG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWc+Afyt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbfGaSSF (ORCPT
+        id S1729364AbfGaSTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:18:05 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:43418 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfGaSSF (ORCPT
+        Wed, 31 Jul 2019 14:19:07 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34044 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfGaSTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:18:05 -0400
-Received: by mail-vs1-f67.google.com with SMTP id j26so46876147vsn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:18:04 -0700 (PDT)
+        Wed, 31 Jul 2019 14:19:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b13so32329762pfo.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xq7asWV9enZYyP/JFrfdHu/SisztJs8JYG8FHXUKQkA=;
-        b=Qkkh4TXGHzfBtf7FqHuQlOAynXRwYeZv0+8dSUorDXYIv780ZV8+oQJmzUkuJjdEmd
-         4KjnaawL6OfiOq4FwPg+4iCxjwMQ3Zh31cdUkbQB3h5ByUdy5sWV+pLM/JckQo+FCgZR
-         hllZ9MNtRZzfGczBp+D3SEoy2AFC79z3twAB0hxuY8Wa9x6A11bdWpGIYWcMfSQ76K5f
-         WK+BkNE+ADdBUuPhxNrrKzHs+7EBLQ89YazbtFrHXExKHphO+jcY5/IilYa9+YccQs3l
-         GyOF6bQGtgvxc+WQul4J4Vj8Dtd/KJiwQBFs+5xr9Np4PLtwT1GIvfZ63aF4Zznp3uBG
-         Hb6g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=e0gVq6uy00cY6V3t0O5fCn9fm+ZnY+YHyPLBNweEeig=;
+        b=EWc+AfytrePtRJmEbBdd1N1YdQb0s26K0I8f3iwJU8tRvHSw1+z/FjCaGin2jzyAez
+         8uXcOmsUUV/nl/gZczxf6yUeh+1DqpyqaihJUa+srT4ZMKiV2B/5yxDznsfNFcMGp7op
+         thkoFXnGxyZPalFv9iHZ2ai2C32G2SK5k5eXtapW+S7cvQBJ0+hOp7BEL6wZycHv+BHE
+         FqQruUo4fSHHp7hQV8yGiYtK/XRbshryulJNMDl8htn1UJJ8zlXtoKGfonLlYYpGDZ+Z
+         DPV8LZtNCZMKbXX0tOuBHvgQYn/KjlTbHb1e6KRHN7z9r/gcdLu66urKNLyaavw8Fk3p
+         LvwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xq7asWV9enZYyP/JFrfdHu/SisztJs8JYG8FHXUKQkA=;
-        b=kweadUXbVT71HU2obODiaFzRkzjlKke0hE/NI46W2hOcdZ1DEeGuuSrNz/TmWWMO4a
-         hPk16lAM8blm4ibh15LMRpG63qAkeMLLuvi1SPVX9fAgpR/F4gQ0mBPPmIiEQwFAbxwC
-         5IIaHhdekEMIYtHnyLIsL4s5cyIz4bU9nnl+kSWk+fmX+HiqWobyLgZCjjmV5x1qvl7r
-         ZQtNasG/bqF2U3nyfGfSKtWc8zbnjUWki+Uu/1f4Arvpn6b4Q83Mv4VntZ2MUvop0Ylv
-         XLgE3OS2GAJn2nBszkt86WAa+Cmgz3AzW9fVsGdnQNSITfD2RKoE/gsaqA4eLyavxyUx
-         RwKA==
-X-Gm-Message-State: APjAAAV7vaf8pcgYS9jlPuKCIImapRgZKCSrClVIlZYRD8cn7T8wgJyu
-        Zr3LBY/PZuwhgHfFTVCAMjIAvQ==
-X-Google-Smtp-Source: APXvYqxp0+gSxtQwZIg+q52kd8Ws3epzfVnOJ4HD7nQQMO76nyBiwXdLT7+uxAJrvbSRX/G3lmZ3wA==
-X-Received: by 2002:a67:e9d9:: with SMTP id q25mr15661344vso.74.1564597083359;
-        Wed, 31 Jul 2019 11:18:03 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id g66sm18115319vkh.7.2019.07.31.11.18.01
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=e0gVq6uy00cY6V3t0O5fCn9fm+ZnY+YHyPLBNweEeig=;
+        b=Wbmr3yDYtwlaDXZ3oI9U7+bNSHQ9zZD8sLxqObiNHeNXUXW4jf2ylCisvMmQ1dd00g
+         Ztix8RUUxZ860NmLujBk9V0J0B3IOZbzIZaX3xZ42ZNDztlv70MR6dKAgRto16BzB9ab
+         GoSAV4ZN2w9QRj+vca8fGKVnoHsgaD98sf2ADOos9JzQ8WwMndQ/G9onDBMFKoP+bj8U
+         CFljl2SsOS2wV4YGMchnTaiJab7SmT5HOezUEyLQxQ3G7qpiHmK/Q0dR+kdfE4XGjCtB
+         SoDDGR8eE8lr5qwI8qpvpSbY5co0MWwY5ED/I3R+dZDWd+Qf32QOzS+6w9CwxxhDkRXk
+         /o/A==
+X-Gm-Message-State: APjAAAU6sEaR0rW4NVctqywJ0qaS+xcweMs8xpxVbMHTkiCZjlqnCIko
+        HKgShRlxIO5T0AY0ckk2GiM=
+X-Google-Smtp-Source: APXvYqx9+Ao6DKAXKMVrhBtgZRmkqziTJWZ3wkHgIlFSCp2BGCIzyU5oU3YbeUH35XPlNymmENDeww==
+X-Received: by 2002:a17:90a:cf8f:: with SMTP id i15mr4095141pju.110.1564597146552;
+        Wed, 31 Jul 2019 11:19:06 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id s66sm73305597pfs.8.2019.07.31.11.19.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 11:18:02 -0700 (PDT)
-Message-ID: <1564597080.11067.40.camel@lca.pw>
-Subject: Re: "mm: account nr_isolated_xxx in [isolate|putback]_lru_page"
- breaks OOM with swap
-From:   Qian Cai <cai@lca.pw>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 31 Jul 2019 14:18:00 -0400
-In-Reply-To: <1564589346.11067.38.camel@lca.pw>
-References: <1564503928.11067.32.camel@lca.pw>
-         <20190731053444.GA155569@google.com> <1564589346.11067.38.camel@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 31 Jul 2019 11:19:06 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 23:49:00 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        hdegoede@redhat.com, Larry.Finger@lwfinger.net
+Subject: [Patch v2 06/10] staging: rtl8723bs: os_dep: Remove unused defines
+ related to combo scan
+Message-ID: <20190731181900.GA9503@hari-Inspiron-1545>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-31 at 12:09 -0400, Qian Cai wrote:
-> On Wed, 2019-07-31 at 14:34 +0900, Minchan Kim wrote:
-> > On Tue, Jul 30, 2019 at 12:25:28PM -0400, Qian Cai wrote:
-> > > OOM workloads with swapping is unable to recover with linux-next since
-> > > next-
-> > > 20190729 due to the commit "mm: account nr_isolated_xxx in
-> > > [isolate|putback]_lru_page" breaks OOM with swap" [1]
-> > > 
-> > > [1] https://lore.kernel.org/linux-mm/20190726023435.214162-4-minchan@kerne
-> > > l.
-> > > org/
-> > > T/#mdcd03bcb4746f2f23e6f508c205943726aee8355
-> > > 
-> > > For example, LTP oom01 test case is stuck for hours, while it finishes in
-> > > a
-> > > few
-> > > minutes here after reverted the above commit. Sometimes, it prints those
-> > > message
-> > > while hanging.
-> > > 
-> > > [  509.983393][  T711] INFO: task oom01:5331 blocked for more than 122
-> > > seconds.
-> > > [  509.983431][  T711]       Not tainted 5.3.0-rc2-next-20190730 #7
-> > > [  509.983447][  T711] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-> > > disables this message.
-> > > [  509.983477][  T711] oom01           D24656  5331   5157 0x00040000
-> > > [  509.983513][  T711] Call Trace:
-> > > [  509.983538][  T711] [c00020037d00f880] [0000000000000008] 0x8
-> > > (unreliable)
-> > > [  509.983583][  T711] [c00020037d00fa60] [c000000000023724]
-> > > __switch_to+0x3a4/0x520
-> > > [  509.983615][  T711] [c00020037d00fad0] [c0000000008d17bc]
-> > > __schedule+0x2fc/0x950
-> > > [  509.983647][  T711] [c00020037d00fba0] [c0000000008d1e68]
-> > > schedule+0x58/0x150
-> > > [  509.983684][  T711] [c00020037d00fbd0] [c0000000008d7614]
-> > > rwsem_down_read_slowpath+0x4b4/0x630
-> > > [  509.983727][  T711] [c00020037d00fc90] [c0000000008d7dfc]
-> > > down_read+0x12c/0x240
-> > > [  509.983758][  T711] [c00020037d00fd20] [c00000000005fb28]
-> > > __do_page_fault+0x6f8/0xee0
-> > > [  509.983801][  T711] [c00020037d00fe20] [c00000000000a364]
-> > > handle_page_fault+0x18/0x38
-> > 
-> > Thanks for the testing! No surprise the patch make some bugs because
-> > it's rather tricky.
-> > 
-> > Could you test this patch?
-> 
-> It does help the situation a bit, but the recover speed is still way slower
-> than
-> just reverting the commit "mm: account nr_isolated_xxx in
-> [isolate|putback]_lru_page". For example, on this powerpc system, it used to
-> take 4-min to finish oom01 while now still take 13-min.
-> 
-> The oom02 (testing NUMA mempolicy) takes even longer and I gave up after 26-
-> min
-> with several hang tasks below.
+Remove below defines WEXT_CSCAN_AMOUNT WEXT_CSCAN_BUF_LEN
+WEXT_CSCAN_NPROBE_SECTION
 
-Also, oom02 is stuck on an x86 machine.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+v2 - Add patch number
 
-[10327.974285][  T197] INFO: task oom02:29546 can't die for more than 122
-seconds.
-[10327.981654][  T197] oom02           D22576 29546  29536 0x00004006
-[10327.987928][  T197] Call Trace:
-[10327.991237][  T197]  __schedule+0x495/0xb50
-[10327.995481][  T197]  ? __sched_text_start+0x8/0x8
-[10328.000230][  T197]  ? __debug_check_no_obj_freed+0x250/0x250
-[10328.006036][  T197]  schedule+0x5d/0x140
-[10328.009994][  T197]  schedule_timeout+0x23f/0x380
-[10328.014752][  T197]  ? mem_cgroup_uncharge+0x110/0x110
-[10328.020103][  T197]  ? usleep_range+0x100/0x100
-[10328.024691][  T197]  ? del_timer_sync+0xa0/0xa0
-[10328.029257][  T197]  ? shrink_active_list+0x825/0x9d0
-[10328.034362][  T197]  ? msleep+0x23/0x70
-[10328.038228][  T197]  msleep+0x58/0x70
-[10328.042090][  T197]  shrink_inactive_list+0x5cf/0x730
-[10328.047197][  T197]  ? move_pages_to_lru+0xc70/0xc70
-[10328.052205][  T197]  ? cpumask_next+0x35/0x40
-[10328.056611][  T197]  ? lruvec_lru_size+0x12d/0x3a0
-[10328.061445][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.066530][  T197]  ? inactive_list_is_low+0x2b9/0x410
-[10328.071796][  T197]  shrink_node_memcg+0x4ff/0x1560
-[10328.076740][  T197]  ? shrink_active_list+0x9d0/0x9d0
-[10328.081834][  T197]  ? f_getown+0x70/0x70
-[10328.085900][  T197]  ? mem_cgroup_iter+0x135/0x840
-[10328.090874][  T197]  ? mem_cgroup_iter+0x18e/0x840
-[10328.095726][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.100641][  T197]  ? mem_cgroup_protected+0x215/0x260
-[10328.105929][  T197]  shrink_node+0x1d3/0xa30
-[10328.110233][  T197]  ? shrink_node_memcg+0x1560/0x1560
-[10328.115671][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.120586][  T197]  do_try_to_free_pages+0x22f/0x820
-[10328.125693][  T197]  ? shrink_node+0xa30/0xa30
-[10328.130173][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.135113][  T197]  ? check_chain_key+0x1df/0x2e0
-[10328.139942][  T197]  try_to_free_pages+0x242/0x4d0
-[10328.144938][  T197]  ? do_try_to_free_pages+0x820/0x820
-[10328.150209][  T197]  __alloc_pages_nodemask+0x9ce/0x1bc0
-[10328.155589][  T197]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
-[10328.160853][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.166007][  T197]  ? check_chain_key+0x1df/0x2e0
-[10328.170839][  T197]  ? do_anonymous_page+0x33c/0xde0
-[10328.175869][  T197]  alloc_pages_vma+0x89/0x2c0
-[10328.180439][  T197]  do_anonymous_page+0x3d8/0xde0
-[10328.185288][  T197]  ? finish_fault+0x120/0x120
-[10328.189857][  T197]  ? alloc_pages_vma+0x9a/0x2c0
-[10328.194746][  T197]  handle_pte_fault+0x457/0x12c0
-[10328.199577][  T197]  __handle_mm_fault+0x79a/0xa50
-[10328.204431][  T197]  ? vmf_insert_mixed_mkwrite+0x20/0x20
-[10328.209876][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.214816][  T197]  ? __count_memcg_events+0x56/0x1d0
-[10328.220201][  T197]  handle_mm_fault+0x17f/0x370
-[10328.224881][  T197]  __do_page_fault+0x25b/0x5d0
-[10328.229538][  T197]  do_page_fault+0x50/0x2d3
-[10328.233957][  T197]  page_fault+0x2c/0x40
-[10328.238004][  T197] RIP: 0033:0x410c50
-[10328.241951][  T197] Code: Bad RIP value.
-[10328.245927][  T197] RSP: 002b:00007f27f0afcec0 EFLAGS: 00010206
-[10328.251892][  T197] RAX: 0000000000001000 RBX: 00000000c0000000 RCX:
-00007f2d34bfd497
-[10328.259792][  T197] RDX: 00000000224ed000 RSI: 00000000c0000000 RDI:
-0000000000000000
-[10328.267845][  T197] RBP: 00007f266fafc000 R08: 00000000ffffffff R09:
-0000000000000000
-[10328.275752][  T197] R10: 0000000000000022 R11: 0000000000000246 R12:
-0000000000000001
-[10328.283635][  T197] R13: 00007fff5d124f9f R14: 0000000000000000 R15:
-00007f27f0afcfc0
-[10328.291696][  T197] INFO: task oom02:29554 can't die for more than 123
-seconds.
-[10328.299088][  T197] oom02           D22576 29554  29536 0x00004006
-[10328.305348][  T197] Call Trace:
-[10328.308519][  T197]  __schedule+0x495/0xb50
-[10328.312737][  T197]  ? __sched_text_start+0x8/0x8
-[10328.317706][  T197]  ? __debug_check_no_obj_freed+0x250/0x250
-[10328.323497][  T197]  schedule+0x5d/0x140
-[10328.327475][  T197]  schedule_timeout+0x23f/0x380
-[10328.332217][  T197]  ? mem_cgroup_uncharge+0x110/0x110
-[10328.337421][  T197]  ? usleep_range+0x100/0x100
-[10328.342184][  T197]  ? del_timer_sync+0xa0/0xa0
-[10328.346778][  T197]  ? shrink_active_list+0x825/0x9d0
-[10328.351874][  T197]  ? msleep+0x23/0x70
-[10328.355766][  T197]  msleep+0x58/0x70
-[10328.359460][  T197]  shrink_inactive_list+0x5cf/0x730
-[10328.364576][  T197]  ? move_pages_to_lru+0xc70/0xc70
-[10328.369748][  T197]  ? cpumask_next+0x35/0x40
-[10328.374158][  T197]  ? lruvec_lru_size+0x12d/0x3a0
-[10328.378986][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.383927][  T197]  ? inactive_list_is_low+0x2b9/0x410
-[10328.389195][  T197]  shrink_node_memcg+0x4ff/0x1560
-[10328.394309][  T197]  ? shrink_active_list+0x9d0/0x9d0
-[10328.399400][  T197]  ? f_getown+0x70/0x70
-[10328.403445][  T197]  ? mem_cgroup_iter+0x135/0x840
-[10328.408298][  T197]  ? mem_cgroup_iter+0x18e/0x840
-[10328.413127][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.418306][  T197]  ? mem_cgroup_protected+0x215/0x260
-[10328.423572][  T197]  shrink_node+0x1d3/0xa30
-[10328.427899][  T197]  ? shrink_node_memcg+0x1560/0x1560
-[10328.433080][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.438019][  T197]  do_try_to_free_pages+0x22f/0x820
-[10328.443233][  T197]  ? shrink_node+0xa30/0xa30
-[10328.447739][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.452655][  T197]  ? check_chain_key+0x1df/0x2e0
-[10328.457507][  T197]  try_to_free_pages+0x242/0x4d0
-[10328.462334][  T197]  ? do_try_to_free_pages+0x820/0x820
-[10328.467848][  T197]  __alloc_pages_nodemask+0x9ce/0x1bc0
-[10328.473205][  T197]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
-[10328.478494][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.483410][  T197]  ? check_chain_key+0x1df/0x2e0
-[10328.488266][  T197]  ? do_anonymous_page+0x33c/0xde0
-[10328.493409][  T197]  alloc_pages_vma+0x89/0x2c0
-[10328.498004][  T197]  do_anonymous_page+0x3d8/0xde0
-[10328.502834][  T197]  ? finish_fault+0x120/0x120
-[10328.507424][  T197]  ? alloc_pages_vma+0x9a/0x2c0
-[10328.512167][  T197]  handle_pte_fault+0x457/0x12c0
-[10328.517261][  T197]  __handle_mm_fault+0x79a/0xa50
-[10328.522093][  T197]  ? vmf_insert_mixed_mkwrite+0x20/0x20
-[10328.527556][  T197]  ? __kasan_check_read+0x11/0x20
-[10328.532473][  T197]  ? __count_memcg_events+0x56/0x1d0
-[10328.537678][  T197]  handle_mm_fault+0x17f/0x370
-[10328.542484][  T197]  __do_page_fault+0x25b/0x5d0
-[10328.547164][  T197]  do_page_fault+0x50/0x2d3
-[10328.551557][  T197]  page_fault+0x2c/0x40
-[10328.555624][  T197] RIP: 0033:0x410c50
-[10328.559405][  T197] Code: Bad RIP value.
-[10328.563358][  T197] RSP: 002b:00007f21ecaf4ec0 EFLAGS: 00010206
-[10328.569438][  T197] RAX: 0000000000001000 RBX: 00000000c0000000 RCX:
-00007f2d34bfd497
-[10328.577349][  T197] RDX: 000000001aeb4000 RSI: 00000000c0000000 RDI:
-0000000000000000
-[10328.585253][  T197] RBP: 00007f206baf4000 R08: 00000000ffffffff R09:
-0000000000000000
-[10328.593292][  T197] R10: 0000000000000022 R11: 0000000000000246 R12:
-0000000000000001
-[10328.601201][  T197] R13: 00007fff5d124f9f R14: 0000000000000000 R15:
-00007f21ecaf4fc0
-[10328.609120][  T197] 
-[10328.609120][  T197] Showing all locks held in the system:
-[10328.617052][  T197] 1 lock held by khungtaskd/197:
-[10328.621878][  T197]  #0: 000000002d9f974d (rcu_read_lock){....}, at:
-debug_show_all_locks+0x33/0x165
-[10328.631211][  T197] 2 locks held by oom02/29546:
-[10328.635888][  T197]  #0: 0000000031e5d1a8 (&mm->mmap_sem#2){....}, at:
-__do_page_fault+0x166/0x5d0
-[10328.645093][  T197]  #1: 00000000e060a0f6 (fs_reclaim){....}, at:
-fs_reclaim_acquire.part.15+0x5/0x30
-[10328.654418][  T197] 2 locks held by oom02/29554:
-[10328.659070][  T197]  #0: 0000000031e5d1a8 (&mm->mmap_sem#2){....}, at:
-__do_page_fault+0x166/0x5d0
-[10328.668286][  T197]  #1: 00000000e060a0f6 (fs_reclaim){....}, at:
-fs_reclaim_acquire.part.15+0x5/0x30
-[10328.677608][  T197] 
-[10328.679812][  T197] =============================================
-[10328.679812][  T197] 
-[10450.864064][  T197] INFO: task oom02:29546 can't die for more than 245
-seconds.
-[10450.871642][  T197] oom02           D22576 29546  29536 0x00004006
-[10450.877912][  T197] Call Trace:
-[10450.881087][  T197]  __schedule+0x495/0xb50
-[10450.885330][  T197]  ? __sched_text_start+0x8/0x8
-[10450.890072][  T197]  ? __debug_check_no_obj_freed+0x250/0x250
-[10450.896031][  T197]  schedule+0x5d/0x140
-[10450.899989][  T197]  schedule_timeout+0x23f/0x380
-[10450.904753][  T197]  ? mem_cgroup_uncharge+0x110/0x110
-[10450.909936][  T197]  ? usleep_range+0x100/0x100
-[10450.914526][  T197]  ? del_timer_sync+0xa0/0xa0
-[10450.919314][  T197]  ? shrink_active_list+0x825/0x9d0
-[10450.924428][  T197]  ? msleep+0x23/0x70
-[10450.928296][  T197]  msleep+0x58/0x70
-[10450.931991][  T197]  shrink_inactive_list+0x5cf/0x730
-[10450.937103][  T197]  ? move_pages_to_lru+0xc70/0xc70
-[10450.942254][  T197]  ? cpumask_next+0x35/0x40
-[10450.946678][  T197]  ? lruvec_lru_size+0x12d/0x3a0
-[10450.951512][  T197]  ? __kasan_check_read+0x11/0x20
-[10450.956444][  T197]  ? inactive_list_is_low+0x2b9/0x410
-[10450.961711][  T197]  shrink_node_memcg+0x4ff/0x1560
-[10450.966650][  T197]  ? shrink_active_list+0x9d0/0x9d0
-[10450.971929][  T197]  ? f_getown+0x70/0x70
-[10450.975988][  T197]  ? mem_cgroup_iter+0x135/0x840
-[10450.980821][  T197]  ? mem_cgroup_iter+0x18e/0x840
-[10450.985672][  T197]  ? __kasan_check_read+0x11/0x20
-[10450.990591][  T197]  ? mem_cgroup_protected+0x215/0x260
-[10450.996050][  T197]  shrink_node+0x1d3/0xa30
-[10451.000361][  T197]  ? shrink_node_memcg+0x1560/0x1560
-[10451.005561][  T197]  ? __kasan_check_read+0x11/0x20
-[10451.010477][  T197]  do_try_to_free_pages+0x22f/0x820
-[10451.015589][  T197]  ? shrink_node+0xa30/0xa30
-[10451.020293][  T197]  ? __kasan_check_read+0x11/0x20
-[10451.025232][  T197]  ? check_chain_key+0x1df/0x2e0
-[10451.030059][  T197]  try_to_free_pages+0x242/0x4d0
-[10451.034910][  T197]  ? do_try_to_free_pages+0x820/0x820
-[10451.040180][  T197]  __alloc_pages_nodemask+0x9ce/0x1bc0
-[10451.045732][  T197]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
-[10451.050999][  T197]  ? __kasan_check_read+0x11/0x20
-[10451.055936][  T197]  ? check_chain_key+0x1df/0x2e0
-[10451.060767][  T197]  ? do_anonymous_page+0x33c/0xde0
-[10451.065796][  T197]  alloc_pages_vma+0x89/0x2c0
-[10451.070521][  T197]  do_anonymous_page+0x3d8/0xde0
-[10451.075372][  T197]  ? finish_fault+0x120/0x120
-[10451.079941][  T197]  ? alloc_pages_vma+0x9a/0x2c0
-[10451.084703][  T197]  handle_pte_fault+0x457/0x12c0
-[10451.089536][  T197]  __handle_mm_fault+0x79a/0xa50
-[10451.094557][  T197]  ? vmf_insert_mixed_mkwrite+0x20/0x20
-[10451.100001][  T197]  ? __kasan_check_read+0x11/0x20
-[10451.104938][  T197]  ? __count_memcg_events+0x56/0x1d0
-[10451.110118][  T197]  handle_mm_fault+0x17f/0x370
-[10451.114789][  T197]  __do_page_fault+0x25b/0x5d0
-[10451.119661][  T197]  do_page_fault+0x50/0x2d3
-[10451.124077][  T197]  page_fault+0x2c/0x40
-[10451.128118][  T197] RIP: 0033:0x410c50
-[10451.131901][  T197] Code: Bad RIP value.
-[10451.135871][  T197] RSP: 002b:00007f27f0afcec0 EFLAGS: 00010206
-[10451.141979][  T197] RAX: 0000000000001000 RBX: 00000000c0000000 RCX:
-00007f2d34bfd497
-[10451.149881][  T197] RDX: 00000000224ed000 RSI: 00000000c0000000 RDI:
-0000000000000000
-[10451.157786][  T197] RBP: 00007f266fafc000 R08: 00000000ffffffff R09:
-0000000000000000
-[10451.165694][  T197] R10: 0000000000000022 R11: 0000000000000246 R12:
-0000000000000001
-[10451.173741][  T197] R13: 00007fff5d124f9f R14: 0000000000000000 R15:
-00007f27f0afcfc0
-[10451.181656][  T197] 
-[10451.181656][  T197] Showing all locks held in the system:
-[10451.189350][  T197] 1 lock held by khungtaskd/197:
-[10451.194369][  T197]  #0: 000000002d9f974d (rcu_read_lock){....}, at:
-debug_show_all_locks+0x33/0x165
-[10451.203670][  T197] 2 locks held by oom02/29546:
-[10451.208344][  T197]  #0: 0000000031e5d1a8 (&mm->mmap_sem#2){....}, at:
-__do_page_fault+0x166/0x5d0
-[10451.217583][  T197]  #1: 00000000e060a0f6 (fs_reclaim){....}, at:
-fs_reclaim_acquire.part.15+0x5/0x30
-[10451.226908][  T197] 
-[10451.229112][  T197] =============================================
-[10451.229112][  T197] 
-[10758.054022][T29393] kworker/dying (29393) used greatest stack depth: 16928
-bytes left
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+index 99e6b10..73b412e 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -21,13 +21,10 @@
+ #define RATE_COUNT 4
+ 
+ /*  combo scan */
+-#define WEXT_CSCAN_AMOUNT 9
+-#define WEXT_CSCAN_BUF_LEN		360
+ #define WEXT_CSCAN_HEADER		"CSCAN S\x01\x00\x00S\x00"
+ #define WEXT_CSCAN_HEADER_SIZE		12
+ #define WEXT_CSCAN_SSID_SECTION		'S'
+ #define WEXT_CSCAN_CHANNEL_SECTION	'C'
+-#define WEXT_CSCAN_NPROBE_SECTION	'N'
+ #define WEXT_CSCAN_ACTV_DWELL_SECTION	'A'
+ #define WEXT_CSCAN_PASV_DWELL_SECTION	'P'
+ #define WEXT_CSCAN_HOME_DWELL_SECTION	'H'
+-- 
+2.7.4
+
