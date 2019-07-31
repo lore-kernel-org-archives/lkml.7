@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3593FC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCF8C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D5A206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFC7206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="vfdW7e5V"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="a8D1IY8W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbfGaPUG (ORCPT
+        id S1729806AbfGaPUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:20:06 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38318 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729695AbfGaPUE (ORCPT
+        Wed, 31 Jul 2019 11:20:03 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39586 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729527AbfGaPUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:20:04 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r12so31256842edo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:20:03 -0700 (PDT)
+        Wed, 31 Jul 2019 11:20:00 -0400
+Received: by mail-ed1-f66.google.com with SMTP id m10so66045556edv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:19:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uIXZ0F8v9y0X5Vlr65FlBUe43ILwGFJ310V1qk1n87Y=;
-        b=vfdW7e5VZM1NTRsW9Qj9s3ymywg9Z9eZf0L8H23FhduBuIwBKrkUvK2YDh7+VgvO2z
-         3q9p0yQ2/EX6CTrY+uDCaCJl6TyJDc+BnE2CZKywXpecMsM8Q5tNHXv9bcx8OOj8tnBm
-         QH3O/qxckPbmTmy4X1F0rKZmU1UXd0VSYVNKsK+ChAul5R8pVMmYFyXbEmcIU9HHfUbN
-         frKzsjweIKsQ0mnZrk/2o3FUXu9XTU+CZ3leIN6sTXmycUuVIoqiQg6NFsv1CV7J2zOR
-         MHvIFNk9NC4quOBkwU2rhdIHH54BaXnZovl+oi4BNME3i/u2OjU/uJHdK2YV59LnCg7W
-         X1VQ==
+        bh=igF6rwOO/MpHXaPOW5M5V10Q4NOXV533wOmvObyjS78=;
+        b=a8D1IY8WQS/+pFXxx/c79xwSarq0iBdwCWmWCulUgzml4ker2LJSZneHrbBGRc9GCv
+         H11X9TMhet9vbmINgjsTxzpQhGw8LclboXWyHT3C8sP81/lKyUEJb80FNr1Z3YxssR1s
+         IN4FXExlSdSk1vWQd4N5Kkg511vrNfyls4pDcgm+WDjrht72CCqQslx6rnLT6w1nFhR7
+         qav+PNWqOr+wWtQ7MgYg1Knk12t/pP9iRkjhwnvEbWBJH7+WHTJWnfHK0vZdejGeflRe
+         +np9WYVRO4AAyNwU58oVH7WDmV4bh3Re5u+csPI0Y37Za/tH7uxoXCEETZ2CG6GG8fvP
+         xGJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uIXZ0F8v9y0X5Vlr65FlBUe43ILwGFJ310V1qk1n87Y=;
-        b=KuPIYKxm60FVeLsrciDMA/K2JhrmMZY0tq7snA5JnaB5FJ75CpC8Er4KwJyhtNuTvM
-         1a4ezv58ithG+ZqAoXhkoMcX61EEc6GLDKOcEL7SMAUDFBI8L4VeiHa5mxlvArjd/d8J
-         OeTUuPmDSajsmJKuKFgrGmpSox70p/d05gtwnTsrcdXmM4WI1tEK+GII/PYDdVn6zCwY
-         t/XZP4SuXUfV6Y4Ipij2z+wH4Qkli5keoHoR54Z5RxEGv/ujBAIWD2glaYIgV94prJbM
-         ZC/W8zcGasg7nMf7YUUAPPm9SZtZ5FhzgGxQd+8o4PVys48VuXX1qPboDHHrlx6zvi4e
-         pGcA==
-X-Gm-Message-State: APjAAAU6I1RIQYEEDxmYYj54dwxiGaVZEJ3ejVAIJ+Sgq9obASqY6970
-        cxFn62TxOkLI9dKz4szQawg=
-X-Google-Smtp-Source: APXvYqwYeWMLltpEBPBckLNCM+g7S+IY4Us955LLaX0vHxxronyzv/ZLKgeH3uRrChjLLmvrEg+r8g==
-X-Received: by 2002:a50:c28a:: with SMTP id o10mr105376291edf.182.1564586029913;
-        Wed, 31 Jul 2019 08:13:49 -0700 (PDT)
+        bh=igF6rwOO/MpHXaPOW5M5V10Q4NOXV533wOmvObyjS78=;
+        b=DzxKx1y7xowmkR5p5BALYYQ7BtP/Ns1ApQAgyzPKWsQAo0AOCxftAgTuo/IMWs/bV6
+         +mgQxxRhNl0IvrDTmAOOfVRF+77WytGFRWuv7NcoJD286j/oARU/KVplsbPfKGpHUWSc
+         mqL9J/TRf/crxB4zs+pqtRktjwQ3qaF6qP1GwJtVg1pwavVQwkuQyLaKKLbJrgcFR0jM
+         oyjE5D58cOZIHwy9nxmCJQxSiFmwaRfmty/ydk2c91HoRs4yoUkbw+YPdyAoDK7j+Js0
+         uR67j90c370AVBt5tRGzodIVnxRUnjU60G6sAuQMAK9wIePNBVL0LBkhQSAdg+2VZ/1L
+         4gqg==
+X-Gm-Message-State: APjAAAU4kKyzv1UlUg0WRwXjd4kcImjGrlvuE54qFwTZFWWkbyk1FXg0
+        ZMSOdj2OOXfAc/Gmrs82WCc=
+X-Google-Smtp-Source: APXvYqwV5kCyMozU4z2zmBu0uFZ9eCcpeUARTXuEcmuWXOI+wPOLh76dszK/1zlrOgtlJNxL8DEMmg==
+X-Received: by 2002:a17:906:784:: with SMTP id l4mr80515472ejc.19.1564586033595;
+        Wed, 31 Jul 2019 08:13:53 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id j10sm12539092ejk.23.2019.07.31.08.13.47
+        by smtp.gmail.com with ESMTPSA id c16sm17311766edc.58.2019.07.31.08.13.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:13:47 -0700 (PDT)
+        Wed, 31 Jul 2019 08:13:51 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 095281045FD; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
+        id 79BFF1048A7; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,13 +75,14 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 39/59] keys/mktme: Support CPU hotplug for MKTME key service
-Date:   Wed, 31 Jul 2019 18:07:53 +0300
-Message-Id: <20190731150813.26289-40-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 55/59] x86/mktme: Document the MKTME provided security mitigations
+Date:   Wed, 31 Jul 2019 18:08:09 +0300
+Message-Id: <20190731150813.26289-56-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -90,117 +91,183 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-The MKTME encryption hardware resides on each physical package.
-The encryption hardware includes 'Key Tables' that must be
-programmed identically across all physical packages in the
-platform. Although every CPU in a package can program its key
-table, the kernel uses one lead CPU per package for programming.
-
-CPU Hotplug Teardown
---------------------
-MKTME manages CPU hotplug teardown to make sure the ability to
-program all packages is preserved when MKTME keys are present.
-
-When MKTME keys are not currently programmed, simply allow
-the teardown, and set "mktme_allow_keys" to false. This will
-force a re-evaluation of the platform topology before the next
-key creation. If this CPU teardown mattered, MKTME key service
-will report an error and fail to create the key. (User can
-online that CPU and try again)
-
-When MKTME keys are currently programmed, allow teardowns
-of non 'lead CPU's' and of CPUs where another, core sibling
-CPU, can take over as lead. Do not allow teardown of any
-lead CPU that would render a hardware key table unreachable!
-
-CPU Hotplug Startup
--------------------
-CPUs coming online are of interest to the key service, but since
-the service never needs to block a CPU startup event, nor does it
-need to prepare for an onlining CPU, a callback is not implemented.
-
-MKTME will catch the availability of the new CPU, if it is
-needed, at the next key creation time. If keys are not allowed,
-that new CPU will be part of the topology evaluation to determine
-if keys should now be allowed.
+Describe the security benefits of Multi-Key Total Memory
+Encryption (MKTME) over Total Memory Encryption (TME) alone.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- security/keys/mktme_keys.c | 47 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
+ Documentation/x86/mktme/index.rst             |   1 +
+ Documentation/x86/mktme/mktme_mitigations.rst | 151 ++++++++++++++++++
+ 2 files changed, 152 insertions(+)
+ create mode 100644 Documentation/x86/mktme/mktme_mitigations.rst
 
-diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
-index 70662e882674..b042df73899d 100644
---- a/security/keys/mktme_keys.c
-+++ b/security/keys/mktme_keys.c
-@@ -460,9 +460,46 @@ static int mktme_alloc_pconfig_targets(void)
- 	return 0;
- }
+diff --git a/Documentation/x86/mktme/index.rst b/Documentation/x86/mktme/index.rst
+index 1614b52dd3e9..a3a29577b013 100644
+--- a/Documentation/x86/mktme/index.rst
++++ b/Documentation/x86/mktme/index.rst
+@@ -6,3 +6,4 @@ Multi-Key Total Memory Encryption (MKTME)
+ .. toctree::
  
-+static int mktme_cpu_teardown(unsigned int cpu)
-+{
-+	int new_leadcpu, ret = 0;
-+	unsigned long flags;
+    mktme_overview
++   mktme_mitigations
+diff --git a/Documentation/x86/mktme/mktme_mitigations.rst b/Documentation/x86/mktme/mktme_mitigations.rst
+new file mode 100644
+index 000000000000..c593784851fb
+--- /dev/null
++++ b/Documentation/x86/mktme/mktme_mitigations.rst
+@@ -0,0 +1,151 @@
++MKTME-Provided Mitigations
++==========================
++:Author: Dave Hansen <dave.hansen@intel.com>
 +
-+	/* Do not allow key programming during cpu hotplug event */
-+	spin_lock_irqsave(&mktme_lock, flags);
++MKTME adds a few mitigations against attacks that are not
++mitigated when using TME alone.  The first set are mitigations
++against software attacks that are familiar today:
 +
-+	/*
-+	 * When no keys are in use, allow the teardown, and set
-+	 * mktme_allow_keys to FALSE. That forces an evaluation
-+	 * of the topology before the next key creation.
-+	 */
-+	if (mktme_available_keyids == mktme_nr_keyids()) {
-+		mktme_allow_keys = false;
-+		goto out;
-+	}
-+	/* Teardown CPU is not a lead CPU. Allow teardown. */
-+	if (!cpumask_test_cpu(cpu, mktme_leadcpus))
-+		goto out;
++ * Kernel Mapping Attacks: information disclosures that leverage
++   the kernel direct map are mitigated against disclosing user
++   data.
++ * Freed Data Leak Attacks: removing an encryption key from the
++   hardware mitigates future user information disclosure.
 +
-+	/* Teardown CPU is a lead CPU. Look for a new lead CPU. */
-+	new_leadcpu = cpumask_any_but(topology_core_cpumask(cpu), cpu);
++The next set are attacks that depend on specialized hardware,
++such as an “evil DIMM” or a DDR interposer:
 +
-+	if (new_leadcpu < nr_cpumask_bits) {
-+		/* New lead CPU found. Update the programming mask */
-+		__cpumask_clear_cpu(cpu, mktme_leadcpus);
-+		__cpumask_set_cpu(new_leadcpu, mktme_leadcpus);
-+	} else {
-+		/* New lead CPU not found. Do not allow CPU teardown */
-+		ret = -1;
-+	}
-+out:
-+	spin_unlock_irqrestore(&mktme_lock, flags);
-+	return ret;
-+}
++ * Cross-Domain Replay Attack: data is captured from one domain
++(guest) and replayed to another at a later time.
++ * Cross-Domain Capture and Delayed Compare Attack: data is
++   captured and later analyzed to discover secrets.
++ * Key Wear-out Attack: data is captured and analyzed in order
++   to Weaken the AES encryption itself.
 +
- static int __init init_mktme(void)
- {
--	int ret;
-+	int ret, cpuhp;
- 
- 	/* Verify keys are present */
- 	if (mktme_nr_keyids() < 1)
-@@ -500,10 +537,18 @@ static int __init init_mktme(void)
- 	if (!encrypt_count)
- 		goto free_targets;
- 
-+	cpuhp = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-+					  "keys/mktme_keys:online",
-+					  NULL, mktme_cpu_teardown);
-+	if (cpuhp < 0)
-+		goto free_encrypt;
++More details on these attacks are below.
 +
- 	ret = register_key_type(&key_type_mktme);
- 	if (!ret)
- 		return ret;			/* SUCCESS */
- 
-+	cpuhp_remove_state_nocalls(cpuhp);
-+free_encrypt:
- 	kvfree(encrypt_count);
- free_targets:
- 	free_cpumask_var(mktme_leadcpus);
++Kernel Mapping Attacks
++----------------------
++Information disclosure vulnerabilities leverage the kernel direct
++map because many vulnerabilities involve manipulation of kernel
++data structures (examples: CVE-2017-7277, CVE-2017-9605).  We
++normally think of these bugs as leaking valuable *kernel* data,
++but they can leak application data when application pages are
++recycled for kernel use.
++
++With this MKTME implementation, there is a direct map created for
++each MKTME KeyID which is used whenever the kernel needs to
++access plaintext.  But, all kernel data structures are accessed
++via the direct map for KeyID-0.  Thus, memory reads which are not
++coordinated with the KeyID get garbage (for example, accessing
++KeyID-4 data with the KeyID-0 mapping).
++
++This means that if sensitive data encrypted using MKTME is leaked
++via the KeyID-0 direct map, ciphertext decrypted with the wrong
++key will be disclosed.  To disclose plaintext, an attacker must
++“pivot” to the correct direct mapping, which is non-trivial
++because there are no kernel data structures in the KeyID!=0
++direct mapping.
++
++Freed Data Leak Attack
++----------------------
++The kernel has a history of bugs around uninitialized data.
++Usually, we think of these bugs as leaking sensitive kernel data,
++but they can also be used to leak application secrets.
++
++MKTME can help mitigate the case where application secrets are
++leaked:
++
++ * App (or VM) places a secret in a page * App exits or frees
++memory to kernel allocator * Page added to allocator free list *
++Attacker reallocates page to a purpose where it can read the page
++
++Now, imagine MKTME was in use on the memory being leaked.  The
++data can only be leaked as long as the key is programmed in the
++hardware.  If the key is de-programmed, like after all pages are
++freed after a guest is shut down, any future reads will just see
++ciphertext.
++
++Basically, the key is a convenient choke-point: you can be more
++confident that data encrypted with it is inaccessible once the
++key is removed.
++
++Cross-Domain Replay Attack
++--------------------------
++MKTME mitigates cross-domain replay attacks where an attacker
++replaces an encrypted block owned by one domain with a block
++owned by another domain.  MKTME does not prevent this replacement
++from occurring, but it does mitigate plaintext from being
++disclosed if the domains use different keys.
++
++With TME, the attack could be executed by:
++ * A victim places secret in memory, at a given physical address.
++   Note: AES-XTS is what restricts the attack to being performed
++   at a single physical address instead of across different
++   physical addresses
++ * Attacker captures victim secret’s ciphertext * Later on, after
++   victim frees the physical address, attacker gains ownership 
++ * Attacker puts the ciphertext at the address and get the secret
++   plaintext
++
++But, due to the presumably different keys used by the attacker
++and the victim, the attacker can not successfully decrypt old
++ciphertext.
++
++Cross-Domain Capture and Delayed Compare Attack
++-----------------------------------------------
++This is also referred to as a kind of dictionary attack.
++
++Similarly, MKTME protects against cross-domain capture-and-compare
++attacks.  Consider the following scenario:
++ * A victim places a secret in memory, at a known physical address
++ * Attacker captures victim’s ciphertext
++ * Attacker gains control of the target physical address, perhaps
++   after the victim’s VM is shut down or its memory reclaimed.
++ * Attacker computes and writes many possible plaintexts until new
++   ciphertext matches content captured previously.
++
++Secrets which have low (plaintext) entropy are more vulnerable to
++this attack because they reduce the number of possible plaintexts
++an attacker has to compute and write.
++
++The attack will not work if attacker and victim uses different
++keys.
++
++Key Wear-out Attack
++-------------------
++Repeated use of an encryption key might be used by an attacker to
++infer information about the key or the plaintext, weakening the
++encryption.  The higher the bandwidth of the encryption engine,
++the more vulnerable the key is to wear-out.  The MKTME memory
++encryption hardware works at the speed of the memory bus, which
++has high bandwidth.
++
++Such a weakness has been demonstrated[1] on a theoretical cipher
++with similar properties as AES-XTS.
++
++An attack would take the following steps:
++ * Victim system is using TME with AES-XTS-128
++ * Attacker repeatedly captures ciphertext/plaintext pairs (can
++   be Performed with online hardware attack like an interposer).
++ * Attacker compels repeated use of the key under attack for a
++   sustained time period without a system reboot[2].
++ * Attacker discovers a cipertext collision (two plaintexts
++   translating to the same ciphertext)
++ * Attacker can induce controlled modifications to the targeted
++   plaintext by modifying the colliding ciphertext
++
++MKTME mitigates key wear-out in two ways:
++ * Keys can be rotated periodically to mitigate wear-out.  Since
++   TME keys are generated at boot, rotation of TME keys requires a
++   reboot.  In contrast, MKTME allows rotation while the system is
++   booted.  An application could implement a policy to rotate keys
++   at a frequency which is not feasible to attack.
++ * In the case that MKTME is used to encrypt two guests’ memory
++   with two different keys, an attack on one guest’s key would not
++   weaken the key used in the second guest.
++
++--
++1. http://web.cs.ucdavis.edu/~rogaway/papers/offsets.pdf
++2. This sustained time required for an attack could vary from days
++   to years depending on the attacker’s goals.
 -- 
 2.21.0
 
