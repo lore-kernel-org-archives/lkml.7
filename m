@@ -2,109 +2,168 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F55C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C42C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD042067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:37:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V8afb33w"
+	by mail.kernel.org (Postfix) with ESMTP id 6AB2920665
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfGaJhE (ORCPT
+        id S1726953AbfGaJjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:37:04 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19132 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfGaJhE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:37:04 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4161470000>; Wed, 31 Jul 2019 02:37:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 31 Jul 2019 02:37:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 02:37:03 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
- 2019 09:37:00 +0000
-Subject: Re: [PATCH 5.2 000/215] 5.2.5-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190729190739.971253303@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <5247e345-d0b9-3b8e-9828-e45d0981a367@nvidia.com>
-Date:   Wed, 31 Jul 2019 10:36:58 +0100
+        Wed, 31 Jul 2019 05:39:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49236 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbfGaJjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:39:22 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BAFEC30917AC;
+        Wed, 31 Jul 2019 09:39:21 +0000 (UTC)
+Received: from [10.36.117.32] (ovpn-117-32.ams2.redhat.com [10.36.117.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E8825D9C5;
+        Wed, 31 Jul 2019 09:39:19 +0000 (UTC)
+Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
+To:     Rashmica Gupta <rashmica.g@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        dan.j.williams@intel.com, pasha.tatashin@soleen.com,
+        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
+        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20190625075227.15193-1-osalvador@suse.de>
+ <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
+ <20190626080249.GA30863@linux>
+ <2750c11a-524d-b248-060c-49e6b3eb8975@redhat.com>
+ <20190626081516.GC30863@linux>
+ <887b902e-063d-a857-d472-f6f69d954378@redhat.com>
+ <9143f64391d11aa0f1988e78be9de7ff56e4b30b.camel@gmail.com>
+ <0cd2c142-66ba-5b6d-bc9d-fe68c1c65c77@redhat.com>
+ <b7de7d9d84e9dd47358a254d36f6a24dd48da963.camel@gmail.com>
+ <b3fd1177-45ef-fd9e-78c8-d05138c647da@redhat.com>
+ <7c49e493510ce04371d8d6cd6c436c347b1f8469.camel@gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <5454a6b8-4abc-0922-63a4-a7c0e9d44fcf@redhat.com>
+Date:   Wed, 31 Jul 2019 11:39:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190729190739.971253303@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <7c49e493510ce04371d8d6cd6c436c347b1f8469.camel@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564565832; bh=jTPy0aCOxhG6dUN6vO5OAeDHWckmefHMj85hYrrVPNI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=V8afb33ws/ysWffCx5FpBBUyGddHxh+pqgX6/YtZGR9s/g/C2mZ3WEkftJBh2+sV6
-         E/lBARXyeuwrCCcw8SD7CwqzEPxIt39va7Aq0DRxPGSaNBkU3pVu5lKcxrDaI6hR0v
-         SJnW/WOj89JDgdijqHMiP9DeAfRNzveSiGmIzz0SlqdIbOh6pMXwqJ5SXiPgHx3o5O
-         4OjPEUoh7J1SnXH4r9k0iQ4YyCnOcJDYvJx3ENm3z/mMeJsw6j9oUwme3uqGvRLLRK
-         XCNciJXQxfhgdsCJF5rLyNd6AGmQqfR+4ZVmBrBm53yeB7rs9SGO5zHdybEkRNCpNg
-         93TqK2Hk9cELA==
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 31 Jul 2019 09:39:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 29/07/2019 20:19, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.5 release.
-> There are 215 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 31.07.19 04:21, Rashmica Gupta wrote:
+> On Mon, 2019-07-29 at 10:06 +0200, David Hildenbrand wrote:
+>>>> Of course, other interfaces might make sense.
+>>>>
+>>>> You can then start using these memory blocks and hinder them from
+>>>> getting onlined (as a safety net) via memory notifiers.
+>>>>
+>>>> That would at least avoid you having to call
+>>>> add_memory/remove_memory/offline_pages/device_online/modifying
+>>>> memblock
+>>>> states manually.
+>>>
+>>> I see what you're saying and that definitely sounds safer.
+>>>
+>>> We would still need to call remove_memory and add_memory from
+>>> memtrace
+>>> as
+>>> just offlining memory doesn't remove it from the linear page tables
+>>> (if 
+>>> it's still in the page tables then hardware can prefetch it and if
+>>> hardware tracing is using it then the box checkstops).
+>>
+>> That prefetching part is interesting (and nasty as well). If we could
+>> at
+>> least get rid of the manual onlining/offlining, I would be able to
+>> sleep
+>> better at night ;) One step at a time.
+>>
 > 
-> Responses should be made by Wed 31 Jul 2019 07:05:01 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.5-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> What are your thoughts on adding remove to state_store in
+> drivers/base/memory.c? And an accompanying add? So then userspace could
+> do "echo remove > memory34/state"? 
 
-All tests passing for Tegra ...
+I consider such an interface dangerous (removing random memory you don't
+own, especially in the context of Oscars work some blocks would suddenly
+not be removable again) and only of limited used. The requirement of
+memtrace is really special, and it only works somewhat reliably with
+boot memory.
 
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
+FWIW, we do have a "probe" interface on some architectures but decided
+that a "remove" interface belongs into a debug/test kernel module. The
+memory block device API is already messed up enough (e.g., "removable"
+property which doesn't indicate at all if memory can be removed, only if
+it could be offlined) - we decided to keep changes at a minimum for now
+- rather clean up than add new stuff.
 
-Linux version:	5.2.5-rc1-g0c4d120e771a
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+> Then most of the memtrace code could be moved to a userspace tool. The
+> only bit that we would need to keep in the kernel is setting up debugfs
+> files in memtrace_init_debugfs.
 
-Cheers
-Jon
+The nice thing is, with remove_memory() you will now get an error in
+case all memory blocks are not offline yet. So it only boils down to
+calling add_memory()/remove_memory() without even checking the state of
+the blocks. (only nids have to be handled manually correctly)
 
 -- 
-nvpublic
+
+Thanks,
+
+David / dhildenb
