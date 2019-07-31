@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFC3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C4AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A66217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709C22171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kJBbacS2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hyDo5hAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbfGaU3r (ORCPT
+        id S1730902AbfGaUa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:29:47 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41681 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730634AbfGaU3p (ORCPT
+        Wed, 31 Jul 2019 16:30:26 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40348 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730709AbfGaU3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:29:45 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c2so67860700wrm.8
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:29:44 -0700 (PDT)
+        Wed, 31 Jul 2019 16:29:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r1so71053954wrl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:29:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Cw8s/YHZ7PvnoGSE9VFOJmJ7OcBZMxXJRhzFX2CFS/0=;
-        b=kJBbacS2TtjQjea5DOSAjsJqE9hdo66q0l+7PzEll27w7q2r/d3YlPmTw2TF+R9F50
-         nxMbp/GkwT9xXklzWopx3j9i4mqwpQ4GrczTIW0U0b2rSs6PQLQaMXx4zxRC2ynE3XR2
-         IAwl84EixvDnxH2WjroG/fnGDRU0MzvSiDsWpWVFqHjp+ZaOIEfUIlqFdgo6sMYm3CAH
-         9mHO9XkRvHiBorUPFRfV8XrECgEXQ8+dMwzjSK/dU41Vu0Q/I0VZwYvPchiZgVo0In0R
-         bUIWldv0tSwXUyewOppqEFoqvdnS6RhWIrFJeeZslX4mTf+w6DSTCBaC9FAFYqpMo0+U
-         BkqQ==
+        bh=onetUiZPcKYw43ltVy2pax5WwMNPrRMe/eAwSVGynt4=;
+        b=hyDo5hAhRc4QzuIX2tUpIKbH3IelBuPVusXpwSvSNMh9tzz94z/m8CQjhd4r5uATJ5
+         IwiBzZESkY4K2MTQFADxZhMygATszMtZhDOOdYS00mhRA+Ghk8oOiibymHRGzOU+Rq5B
+         0kSFzaZLM6YrI5Dg311b3EyUCJyOYsL8cp3ImiXtGIQ86tI+ob9HD3LLh8VJqvSWbF1q
+         djifVGZBkToBzRoVMRMciAwyXobYowv0eANNZz6d1ZX7+rOu96bPEEgOcSbZQbWbvbU7
+         0LI+p7KwSWs2S6a7C2EvLNXer9Mdq7XrKPpzat4dc6i5iig7t30hKa+U+utmJxSzVKpY
+         0D0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Cw8s/YHZ7PvnoGSE9VFOJmJ7OcBZMxXJRhzFX2CFS/0=;
-        b=H8Xf+c/OQoWMkwsUs8gZ4LZZK1wFmD8BafdVoF6XozrsArhsZReFrg7lLTkhebq9VG
-         HkzUeC1kYCrhORlAEk1uj3h2l/hBxVsxRUd7YdFgmcDFbejjF1E2dlHMWNoCPyjhJw4E
-         Hl5DUhrF71+2yTTYrp1w4d3jPjMZQKhw1MvjSiYsHw4qIhLrVSMHna6iu+HyEQCG9lQl
-         zqxl3ryp7CwIj7UnVqwYOEo8NfujKFdjxiRXMNatZAx+HblTj2uU3h1FeiNgQTCmeef6
-         HJOhXTu3xsNrFRZkyuEV/qyZ3lx3OuRrR5RvgL8Mxns8T/s1cnBIr5sG6mLgox06Z9bM
-         sKSw==
-X-Gm-Message-State: APjAAAUNzYHLM1u5PdgOWJ4qSI6zpqdgS0sv1rHIPf6YoQ4KYLp7b90s
-        vqRUynt4V/ClkUn1PjRC2kxI3A==
-X-Google-Smtp-Source: APXvYqx10k6TjwYatpu3cCVLUnhdgjJNvE7OCa5YN6Of8Egub/YPYUA9PsSTP5VawlX3jxQ1+t8rTA==
-X-Received: by 2002:adf:ef49:: with SMTP id c9mr7935008wrp.188.1564604983627;
-        Wed, 31 Jul 2019 13:29:43 -0700 (PDT)
+        bh=onetUiZPcKYw43ltVy2pax5WwMNPrRMe/eAwSVGynt4=;
+        b=GFEuJ9LLSASynpwL8LNW36G30pNQJPoT8NsAG36NbaWdYjtynjLJPB89jncdq+r1Ow
+         21hKQIc8Kfp5d5LIgKiOT6JpH/uNOQhUhwjTqQv9wg2i+IKbwxfSajTWiomrFOiB96c+
+         OnPWNrtLat0c0KFoo4xDTrSh9GDb1i5uEJkgEOxIcCqPFAeNcHb0N5JbN2YSMMtWJPpF
+         mHMmevCJE/R19ozm3pk+xhX/ucyTblm8Rm/+Y02rcV964YpUbQ2wf/VnIR6oSVM5Fs6J
+         3jAhS8E5eABNuWWikoBMX/8e6zV6f0arSS26hbIDEarumLNs7UU3iolqMGJefjJJJ3ra
+         QEWQ==
+X-Gm-Message-State: APjAAAV6n/IH51JWpaLWmJJafg57HB9rZDGMYVBBHuBHAGyDdFsUbVoC
+        4MLrbDDKezyHdawL8X6cyIRu4A==
+X-Google-Smtp-Source: APXvYqy6YgTYQC3Fho4PDvDZwRFPnMUj0vZ+AbVsH4vJvPB20hp2gbPmVYNLKolRigmcbxZyhR8AIA==
+X-Received: by 2002:adf:f046:: with SMTP id t6mr19884717wro.307.1564604987154;
+        Wed, 31 Jul 2019 13:29:47 -0700 (PDT)
 Received: from localhost.localdomain (19.red-176-86-136.dynamicip.rima-tde.net. [176.86.136.19])
-        by smtp.gmail.com with ESMTPSA id i18sm91905591wrp.91.2019.07.31.13.29.41
+        by smtp.gmail.com with ESMTPSA id i18sm91905591wrp.91.2019.07.31.13.29.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 31 Jul 2019 13:29:43 -0700 (PDT)
+        Wed, 31 Jul 2019 13:29:46 -0700 (PDT)
 From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 To:     jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org,
         sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com,
@@ -69,9 +69,9 @@ Cc:     vkoul@kernel.org, niklas.cassel@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
-Subject: [PATCH v4 05/13] clk: qcom: apcs-msm8916: get parent clock names from DT
-Date:   Wed, 31 Jul 2019 22:29:21 +0200
-Message-Id: <20190731202929.16443-6-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v4 07/13] clk: qcom: hfpll: register as clock provider
+Date:   Wed, 31 Jul 2019 22:29:23 +0200
+Message-Id: <20190731202929.16443-8-jorge.ramirez-ortiz@linaro.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
 References: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
@@ -82,100 +82,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow accessing the parent clock names required for the driver
-operation by using the device tree node.
-
-This permits extending the driver to other platforms without having to
-modify its source code.
-
-For backwards compatibility leave previous values as default.
+Make the output of the high frequency pll a clock provider.
+On the QCS404 this PLL controls cpu frequency scaling.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/qcom/apcs-msm8916.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ drivers/clk/qcom/hfpll.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/apcs-msm8916.c b/drivers/clk/qcom/apcs-msm8916.c
-index a6c89a310b18..dd82eb1e5202 100644
---- a/drivers/clk/qcom/apcs-msm8916.c
-+++ b/drivers/clk/qcom/apcs-msm8916.c
-@@ -19,7 +19,7 @@
- 
- static const u32 gpll0_a53cc_map[] = { 4, 5 };
- 
--static const char * const gpll0_a53cc[] = {
-+static const char *gpll0_a53cc[] = {
- 	"gpll0_vote",
- 	"a53pll",
- };
-@@ -50,6 +50,8 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
+diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
+index 87b7f46d27e0..0ffed0d41c50 100644
+--- a/drivers/clk/qcom/hfpll.c
++++ b/drivers/clk/qcom/hfpll.c
+@@ -53,6 +53,7 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
  	struct regmap *regmap;
- 	struct clk_init_data init = { };
- 	int ret = -ENODEV;
-+	const char *parents[2];
-+	int pll_index = 0;
+ 	struct clk_hfpll *h;
+ 	struct clk *pclk;
++	int ret;
+ 	struct clk_init_data init = {
+ 		.parent_names = (const char *[]){ "xo" },
+ 		.num_parents = 1,
+@@ -87,7 +88,14 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
+ 	h->clkr.hw.init = &init;
+ 	spin_lock_init(&h->lock);
  
- 	regmap = dev_get_regmap(parent, NULL);
- 	if (!regmap) {
-@@ -61,6 +63,16 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
- 	if (!a53cc)
- 		return -ENOMEM;
- 
-+	/* legacy bindings only defined the pll parent clock (index = 0) with no
-+	 * name; when both of the parents are specified in the bindings, the
-+	 * pll is the second one (index = 1).
-+	 */
-+	if (of_clk_parent_fill(parent->of_node, parents, 2) == 2) {
-+		gpll0_a53cc[0] = parents[0];
-+		gpll0_a53cc[1] = parents[1];
-+		pll_index = 1;
+-	return devm_clk_register_regmap(&pdev->dev, &h->clkr);
++	ret = devm_clk_register_regmap(dev, &h->clkr);
++	if (ret) {
++		dev_err(dev, "failed to register regmap clock: %d\n", ret);
++		return ret;
 +	}
 +
- 	init.name = "a53mux";
- 	init.parent_names = gpll0_a53cc;
- 	init.num_parents = ARRAY_SIZE(gpll0_a53cc);
-@@ -76,10 +88,11 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
- 	a53cc->src_shift = 8;
- 	a53cc->parent_map = gpll0_a53cc_map;
- 
--	a53cc->pclk = devm_clk_get(parent, NULL);
-+	a53cc->pclk = of_clk_get(parent->of_node, pll_index);
- 	if (IS_ERR(a53cc->pclk)) {
- 		ret = PTR_ERR(a53cc->pclk);
--		dev_err(dev, "failed to get clk: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get clk: %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -87,6 +100,7 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
- 	ret = clk_notifier_register(a53cc->pclk, &a53cc->clk_nb);
- 	if (ret) {
- 		dev_err(dev, "failed to register clock notifier: %d\n", ret);
-+		clk_put(a53cc->pclk);
- 		return ret;
- 	}
- 
-@@ -109,6 +123,8 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
- 
- err:
- 	clk_notifier_unregister(a53cc->pclk, &a53cc->clk_nb);
-+	clk_put(a53cc->pclk);
-+
- 	return ret;
++	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
++					   &h->clkr.hw);
  }
  
-@@ -117,6 +133,7 @@ static int qcom_apcs_msm8916_clk_remove(struct platform_device *pdev)
- 	struct clk_regmap_mux_div *a53cc = platform_get_drvdata(pdev);
- 
- 	clk_notifier_unregister(a53cc->pclk, &a53cc->clk_nb);
-+	clk_put(a53cc->pclk);
- 
- 	return 0;
- }
+ static struct platform_driver qcom_hfpll_driver = {
 -- 
 2.22.0
 
