@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62030C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB86C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3567B208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A59D206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="wnJQX8mA"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="ZzxPi2vB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbfGaPWC (ORCPT
+        id S1730102AbfGaPWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:22:02 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39860 "EHLO
+        Wed, 31 Jul 2019 11:22:01 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46313 "EHLO
         mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbfGaPV7 (ORCPT
+        with ESMTP id S1729095AbfGaPWA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:21:59 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m10so66051557edv.6
+        Wed, 31 Jul 2019 11:22:00 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d4so66101740edr.13
         for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:21:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Eu+g52fZa4bEGKyIAIp4EBxePC6msthuJH3Uu+nPhTw=;
-        b=wnJQX8mAznJJYoCaujK7jTh3QOUX6PWjjuHiLLJcqeV5ss0Z+2QOjKE/V/f7i2iOiK
-         nWVMBrRzOEuvD50CqQeMSrlLn2yn9nza0e9HYNf9Ci+gZHXztuPcnXQO8Dv/jueUicfh
-         7x8hxn+DoCcOemE+5xb8GVrcsoOF21pEeWL359gwrBqCcOEFkYVISmg99A9v32xeC8nY
-         K1fXvjaKfAQ0uf1yUKgRc0FXE0a1c8GjVdeZkh9RF4YCM+ZniD98ehoTPZKfBwPrhyWd
-         vT4LGzn8l+GiV/PrV8efZhSU7sLAmcDsKabNfPrtzDTZJ+6VtoCaBOiq1M24C/XlfUJi
-         ySJg==
+        bh=xZCrLs3XD8OGAT3ycWjyC35TQ10BuGZLp4dKCEJJsRg=;
+        b=ZzxPi2vB6H9up8THEqzUbCNwa2E1YZmLUp1GoionKsfBr1KQUEhgprj6heyI63fXrw
+         H+vh1QV4vFyU7pFE4ViKBgvENglga5fVeNfWMRPCrZCi98qsi+r5zk6N62pl/svz4DjD
+         WnRM8TC+Pj61sbunfqi5fGW98WW6DAYki4QW6kO4N7z8wCx7WTMte/S7jP4fuei7n7eq
+         Hftvw0iaa2a1kXT25K4D3+dXvLj2vwBC0o2P1NCeJjiYQsXP0Nqqds5A7BCA5ZOq7vv9
+         366A7NPLtjGoulNRAC6+0JGz6sJc40LnEY1OPEQYpV1Yi42ZVQe4Pz+slBHXGt07SvXV
+         N3yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Eu+g52fZa4bEGKyIAIp4EBxePC6msthuJH3Uu+nPhTw=;
-        b=mY7hQfJoWiEWuj+Y6VGuv0osK/yywFEGqokEkvIaMvtm9bgaFJHmFF4OyFrjOgy/kl
-         nkneycoT0JB+rnSK+zUHAR1rTA4rbv/GbUnmEJ2ryV8c7SajeD/ILf16/sanNyP6CEMV
-         EMqLrLD91rtNK9e7Qc+20qNyrkQ/J42JE3IsqINtesR527Qy3l+BYOMe9Dc4wgcsz2l1
-         aqohRRVBa4jiTctsdOBnF4u/to2Ll03kjOnym2J/8NMLarYyo7zFOMlwQ0JA9PFXMSvz
-         SY1+zuNpkkYrYZcQi3ys0PVi89WdAxgMA5U/3jLOQgr54NEDfyYech6ABxjgcJfG6nWL
-         YBBw==
-X-Gm-Message-State: APjAAAVQVursjuP7J15WvfFnGuFmMsDR5z35b57w4rGCHDvmnKxKJkLQ
-        RA3HiJwNPG1xkgBHggavH50=
-X-Google-Smtp-Source: APXvYqxAI13PpDAJZQellLR+hBXyuxC6IRUxmch2g01/3TCjBtlaolRAKh1msonh8wE/v8SwQy/t/w==
-X-Received: by 2002:a50:addc:: with SMTP id b28mr108191573edd.174.1564586031854;
-        Wed, 31 Jul 2019 08:13:51 -0700 (PDT)
+        bh=xZCrLs3XD8OGAT3ycWjyC35TQ10BuGZLp4dKCEJJsRg=;
+        b=mMhK2ysK/n3ZyB6+ykiofUgOg+DNftztYzpWOb/tDZw6I6RxrVis4sFexcrA9VXw+R
+         znhxGhcP832a5q84c/UfPMUl65cB7zvgG0Q+/8qe4IzZybc/ozdgHv+lNSp18gW93cX1
+         shSrvo0v4uC/GYlFNmTJK/6uWso/0/WYJ6DoSrvXOfgs+GlrczEn3DJVFhb6aPoympvw
+         yLXDTboyNL9GCUC0g+T2UPN4ivSN1oNIFP+7awmVZ04woHTEe6JSxftarVg+Vrb4vVpP
+         DccTQQM/UhBCLbVxZXADF8j/mFa+SYBPzF9YdH2huBFBf8yHbivmOVASNjeOOPbf5L7P
+         iG+Q==
+X-Gm-Message-State: APjAAAU3vUnuGfGchah74nJiI37CrpmBIx6fTpWj+fxcCLM2xkXhSdj5
+        OvXKYlBqTHroz64s+Re9L5A=
+X-Google-Smtp-Source: APXvYqzi+h2CEkJox27TxBwILuSunR6853S6mGlis2VdUPScZU2xczXssICyuyck991q2MnJokM4kQ==
+X-Received: by 2002:a17:906:1dd5:: with SMTP id v21mr65219317ejh.112.1564586040695;
+        Wed, 31 Jul 2019 08:14:00 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id l2sm16613746edn.59.2019.07.31.08.13.49
+        by smtp.gmail.com with ESMTPSA id h10sm16374181edn.86.2019.07.31.08.13.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:13:50 -0700 (PDT)
+        Wed, 31 Jul 2019 08:13:57 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 7A1691030BB; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+        id 4FE39104831; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,10 +74,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 20/59] x86/mm: Handle encrypted memory in page_to_virt() and __pa()
-Date:   Wed, 31 Jul 2019 18:07:34 +0300
-Message-Id: <20190731150813.26289-21-kirill.shutemov@linux.intel.com>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 49/59] x86/mm: introduce common code for mem encryption
+Date:   Wed, 31 Jul 2019 18:08:03 +0300
+Message-Id: <20190731150813.26289-50-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,45 +88,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per-KeyID direct mappings require changes into how we find the right
-virtual address for a page and virt-to-phys address translations.
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-page_to_virt() definition overwrites default macros provided by
-<linux/mm.h>.
+Both Intel MKTME and AMD SME have needs to support DMA address
+translation with encryption related bits. Common functions are
+introduced in this patch to keep DMA generic code abstracted.
 
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/include/asm/page.h    | 3 +++
- arch/x86/include/asm/page_64.h | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/Kconfig                 |  8 +++--
+ arch/x86/mm/Makefile             |  1 +
+ arch/x86/mm/mem_encrypt.c        | 30 ------------------
+ arch/x86/mm/mem_encrypt_common.c | 52 ++++++++++++++++++++++++++++++++
+ 4 files changed, 59 insertions(+), 32 deletions(-)
+ create mode 100644 arch/x86/mm/mem_encrypt_common.c
 
-diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
-index 39af59487d5f..aff30554f38e 100644
---- a/arch/x86/include/asm/page.h
-+++ b/arch/x86/include/asm/page.h
-@@ -72,6 +72,9 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
- extern bool __virt_addr_valid(unsigned long kaddr);
- #define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long) (kaddr))
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 2eb2867db5fa..f2cc88fe8ada 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1521,12 +1521,16 @@ config X86_CPA_STATISTICS
+ config ARCH_HAS_MEM_ENCRYPT
+ 	def_bool y
  
-+#define page_to_virt(x) \
-+	(__va(PFN_PHYS(page_to_pfn(x))) + page_keyid(x) * direct_mapping_size)
++config X86_MEM_ENCRYPT_COMMON
++	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
++	select DYNAMIC_PHYSICAL_MASK
++	def_bool n
 +
- #endif	/* __ASSEMBLY__ */
+ config AMD_MEM_ENCRYPT
+ 	bool "AMD Secure Memory Encryption (SME) support"
+ 	depends on X86_64 && CPU_SUP_AMD
+-	select DYNAMIC_PHYSICAL_MASK
+ 	select ARCH_USE_MEMREMAP_PROT
+-	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
++	select X86_MEM_ENCRYPT_COMMON
+ 	---help---
+ 	  Say yes to enable support for the encryption of system memory.
+ 	  This requires an AMD processor that supports Secure Memory
+diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
+index 600d18691876..608e57cda784 100644
+--- a/arch/x86/mm/Makefile
++++ b/arch/x86/mm/Makefile
+@@ -55,3 +55,4 @@ obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt_identity.o
+ obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt_boot.o
  
- #include <asm-generic/memory_model.h>
-diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
-index f57fc3cc2246..a4f394e3471d 100644
---- a/arch/x86/include/asm/page_64.h
-+++ b/arch/x86/include/asm/page_64.h
-@@ -24,7 +24,7 @@ static inline unsigned long __phys_addr_nodebug(unsigned long x)
- 	/* use the carry flag to determine if x was < __START_KERNEL_map */
- 	x = y + ((x > y) ? phys_base : (__START_KERNEL_map - PAGE_OFFSET));
+ obj-$(CONFIG_X86_INTEL_MKTME)	+= mktme.o
++obj-$(CONFIG_X86_MEM_ENCRYPT_COMMON)	+= mem_encrypt_common.o
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index fece30ca8b0c..e94e0a62ba92 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -15,10 +15,6 @@
+ #include <linux/dma-direct.h>
+ #include <linux/swiotlb.h>
+ #include <linux/mem_encrypt.h>
+-#include <linux/device.h>
+-#include <linux/kernel.h>
+-#include <linux/bitops.h>
+-#include <linux/dma-mapping.h>
  
--	return x;
-+	return x & direct_mapping_mask;
+ #include <asm/tlbflush.h>
+ #include <asm/fixmap.h>
+@@ -352,32 +348,6 @@ bool sev_active(void)
  }
+ EXPORT_SYMBOL(sev_active);
  
- #ifdef CONFIG_DEBUG_VIRTUAL
+-/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+-bool force_dma_unencrypted(struct device *dev)
+-{
+-	/*
+-	 * For SEV, all DMA must be to unencrypted addresses.
+-	 */
+-	if (sev_active())
+-		return true;
+-
+-	/*
+-	 * For SME, all DMA must be to unencrypted addresses if the
+-	 * device does not support DMA to addresses that include the
+-	 * encryption mask.
+-	 */
+-	if (sme_active()) {
+-		u64 dma_enc_mask = DMA_BIT_MASK(__ffs64(sme_me_mask));
+-		u64 dma_dev_mask = min_not_zero(dev->coherent_dma_mask,
+-						dev->bus_dma_mask);
+-
+-		if (dma_dev_mask <= dma_enc_mask)
+-			return true;
+-	}
+-
+-	return false;
+-}
+-
+ /* Architecture __weak replacement functions */
+ void __init mem_encrypt_free_decrypted_mem(void)
+ {
+diff --git a/arch/x86/mm/mem_encrypt_common.c b/arch/x86/mm/mem_encrypt_common.c
+new file mode 100644
+index 000000000000..c11d70151735
+--- /dev/null
++++ b/arch/x86/mm/mem_encrypt_common.c
+@@ -0,0 +1,52 @@
++#include <linux/mm.h>
++#include <linux/mem_encrypt.h>
++#include <linux/dma-mapping.h>
++#include <asm/mktme.h>
++
++/*
++ * Encryption bits need to be set and cleared for both Intel MKTME and
++ * AMD SME when converting between DMA address and physical address.
++ */
++dma_addr_t __mem_encrypt_dma_set(dma_addr_t daddr, phys_addr_t paddr)
++{
++	unsigned long keyid;
++
++	if (sme_active())
++		return __sme_set(daddr);
++	keyid = page_keyid(pfn_to_page(__phys_to_pfn(paddr)));
++
++	return (daddr & ~mktme_keyid_mask()) | (keyid << mktme_keyid_shift());
++}
++
++phys_addr_t __mem_encrypt_dma_clear(phys_addr_t paddr)
++{
++	if (sme_active())
++		return __sme_clr(paddr);
++
++	return paddr & ~mktme_keyid_mask();
++}
++
++/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
++bool force_dma_unencrypted(struct device *dev)
++{
++	u64 dma_enc_mask, dma_dev_mask;
++
++	/*
++	 * For SEV, all DMA must be to unencrypted addresses.
++	 */
++	if (sev_active())
++		return true;
++
++	/*
++	 * For SME and MKTME, all DMA must be to unencrypted addresses if the
++	 * device does not support DMA to addresses that include the encryption
++	 * mask.
++	 */
++	if (!sme_active() && !mktme_enabled())
++		return false;
++
++	dma_enc_mask = sme_me_mask | mktme_keyid_mask();
++	dma_dev_mask = min_not_zero(dev->coherent_dma_mask, dev->bus_dma_mask);
++
++	return (dma_dev_mask & dma_enc_mask) != dma_enc_mask;
++}
 -- 
 2.21.0
 
