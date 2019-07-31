@@ -2,118 +2,119 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8626C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CA3C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA74A206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8D9206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387504AbfGaE2D (ORCPT
+        id S1728076AbfGaE3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 00:28:03 -0400
-Received: from mga05.intel.com ([192.55.52.43]:6051 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387473AbfGaE2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 00:28:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jul 2019 21:28:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,328,1559545200"; 
-   d="scan'208";a="371952775"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Jul 2019 21:28:02 -0700
-Date:   Tue, 30 Jul 2019 21:28:01 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Tony Luck <tony.luck@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] IB/core: Add mitigation for Spectre V1
-Message-ID: <20190731042801.GA2179@iweiny-DESK2.sc.intel.com>
-References: <20190730202407.31046-1-tony.luck@intel.com>
- <95f5cf70-1a1d-f48c-efac-f389360f585e@embeddedor.com>
+        Wed, 31 Jul 2019 00:29:55 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:29038 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726601AbfGaE3y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 00:29:54 -0400
+X-UUID: 38377396d15048a38b8c9f2a230bc541-20190731
+X-UUID: 38377396d15048a38b8c9f2a230bc541-20190731
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <gtk_ruiwang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 534942347; Wed, 31 Jul 2019 12:29:48 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 31 Jul 2019 12:29:42 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 31 Jul 2019 12:29:41 +0800
+From:   <gtk_ruiwang@mediatek.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Tiffany Lin <tiffany.lin@mediatek.com>
+CC:     Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Rui Wang <gtk_ruiwang@mediatek.com>
+Subject: [v2] media: mtk-vcodec: Handle H264 error bitstreams
+Date:   Wed, 31 Jul 2019 12:29:39 +0800
+Message-ID: <20190731042939.5339-1-gtk_ruiwang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <95f5cf70-1a1d-f48c-efac-f389360f585e@embeddedor.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 06:52:12PM -0500, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 7/30/19 3:24 PM, Tony Luck wrote:
-> > Some processors may mispredict an array bounds check and
-> > speculatively access memory that they should not. With
-> > a user supplied array index we like to play things safe
-> > by masking the value with the array size before it is
-> > used as an index.
-> > 
-> > Signed-off-by: Tony Luck <tony.luck@intel.com>
-> > ---
-> > 
-> > [I don't have h/w, so just compile tested]
-> > 
-> >  drivers/infiniband/core/user_mad.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
-> > index 9f8a48016b41..fdce254e4f65 100644
-> > --- a/drivers/infiniband/core/user_mad.c
-> > +++ b/drivers/infiniband/core/user_mad.c
-> > @@ -49,6 +49,7 @@
-> >  #include <linux/sched.h>
-> >  #include <linux/semaphore.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/nospec.h>
-> >  
-> >  #include <linux/uaccess.h>
-> >  
-> > @@ -888,6 +889,7 @@ static int ib_umad_unreg_agent(struct ib_umad_file *file, u32 __user *arg)
-> >  	mutex_lock(&file->port->file_mutex);
-> >  	mutex_lock(&file->mutex);
-> >  
-> > +	id = array_index_nospec(id, IB_UMAD_MAX_AGENTS);
-> 
-> This is wrong. This prevents the below condition id >= IB_UMAD_MAX_AGENTS
-> from ever being true. And I don't think this is what you want.
+From: Rui Wang <gtk_ruiwang@mediatek.com>
 
-Ah Yea...  FWIW this would probably never be hit.
+Error h264 bitstreams which picture info are out range of
+decoder hardware specification, and no nal start code at the
+beginning of the buffer, stop decoding and exit.
 
-Tony; split the check?
+Signed-off-by: Rui Wang <gtk_ruiwang@mediatek.com>
+---
+Change note:
+Updata commint message with Mauro's comment: use real name on SOB and From.
+---
+ .../platform/mtk-vcodec/vdec/vdec_h264_if.c      | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-	if (id >= IB_UMAD_MAX_AGENTS) {
-		ret = -EINVAL;
-		goto out;
-	}
+diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+index c5f8f1fca44c..49aa85a9bb5a 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+@@ -29,6 +29,9 @@
+ #define H264_MAX_FB_NUM				17
+ #define HDR_PARSING_BUF_SZ			1024
+ 
++#define DEC_ERR_RET(ret)			((ret) >> 16)
++#define H264_ERR_NOT_VALID			3
++
+ /**
+  * struct h264_fb - h264 decode frame buffer information
+  * @vdec_fb_va  : virtual address of struct vdec_fb
+@@ -357,8 +360,11 @@ static int vdec_h264_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
+ 	buf = (unsigned char *)bs->va;
+ 	buf_sz = bs->size;
+ 	nal_start_idx = find_start_code(buf, buf_sz);
+-	if (nal_start_idx < 0)
++	if (nal_start_idx < 0) {
++		mtk_vcodec_err(inst, "invalid nal start code");
++		err = -EIO;
+ 		goto err_free_fb_out;
++	}
+ 
+ 	nal_start = buf[nal_start_idx];
+ 	nal_type = NAL_TYPE(buf[nal_start_idx]);
+@@ -382,8 +388,14 @@ static int vdec_h264_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
+ 	data[0] = buf_sz;
+ 	data[1] = nal_start;
+ 	err = vpu_dec_start(vpu, data, 2);
+-	if (err)
++	if (err) {
++		if (err > 0 && (DEC_ERR_RET(err) == H264_ERR_NOT_VALID)) {
++			mtk_vcodec_err(inst, "- error bitstream - err = %d -",
++				       err);
++			err = -EIO;
++		}
+ 		goto err_free_fb_out;
++	}
+ 
+ 	*res_chg = inst->vsi->dec.resolution_changed;
+ 	if (*res_chg) {
+-- 
+2.18.0
 
-	id = array_index_nospec(id, IB_UMAD_MAX_AGENTS);
-
-	if (!__get_agent(file, id)) {
-		ret = -EINVAL;
-		goto out;
-	}
-
-Ira
-
-> 
-> >  	if (id >= IB_UMAD_MAX_AGENTS || !__get_agent(file, id)) {
-> >  		ret = -EINVAL;
-> >  		goto out;
-> > 
-> 
-> --
-> Gustavo
