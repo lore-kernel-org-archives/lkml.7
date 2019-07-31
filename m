@@ -2,132 +2,144 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DE0C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9594C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03B7206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE806206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 19:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="HATQcLFP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kkBGZvTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730695AbfGaTDN (ORCPT
+        id S1730701AbfGaTEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 15:03:13 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:43151 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfGaTDN (ORCPT
+        Wed, 31 Jul 2019 15:04:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42898 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaTEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 15:03:13 -0400
-Received: by mail-ua1-f68.google.com with SMTP id o2so27409936uae.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:03:12 -0700 (PDT)
+        Wed, 31 Jul 2019 15:04:34 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t28so66710039lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:04:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=J5/+IUoPptMz/YeYl61+AP3g0++j4c3MOC/Y5yEL2qE=;
-        b=HATQcLFPHZEzIoIUXwWPccuYHMZ+4nnFAzajfaPcfN3EwltBjedf8FD0RE8hmYFRx7
-         4RGOTw6JRUJ5Mntnm6Ze+biSI6fsEgWFeqc6SDP0j0x6NYKDUyZRfFR4M96N3rG5k9DT
-         CfCXnfwNC8vEsHbYhyL+ArGfhqYOct/UYpZ7B68hSo99HGyW6s/0pSTf72e90DB0EIye
-         7xBUW681oTpYSdaUj0WP13i6xRzsmtwGcGa108EiAPvIcThJXXF0+Vlm5v317dHnFTTY
-         zrHO1D8r8g9hz+xjDiVoBECYGmdREzVqWjuAI80aqnsg9bzo3tBqd1Pz/1lp1shFI1Di
-         Y+4A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4R4JIwEkzgPRY5Q32Ye/hIHj7mVNSnkxupaRXo12Q0E=;
+        b=kkBGZvTrTWC/DUxOXrHA/63lm2j9IOD3LkoZaj4y4bkYZ5MdV9QojNfcHFJ5naC45N
+         iCZ3g6IEaY+9tpEczjQwvrjqTsmgLbDnvMJJMFjdmO+069GFzkKpm/BKNn3TwcD5ts5h
+         8RxqKsB5YRN6v1OV8QE+klWU9EvEF0tZ/wcL+H8Mp7tVKNHwSHJEsYIo1p1EnI2PEsK/
+         SnaXkxSLbBsd/2qmJxe6JYqEFsWpce036GSFP7GyyBqcDQmwfz63FKdIQJ9YLrIvxxB5
+         CnUpWYpqCh0QEViaV7vubMxG/jGg0q4y/c+meFfbyZWXMWO72D35XPoxKJiDePFm8HWA
+         Ax3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=J5/+IUoPptMz/YeYl61+AP3g0++j4c3MOC/Y5yEL2qE=;
-        b=SzzbakNKi2mHNj/wBkx4gYnRhPzMGB8pmFNxfuYflKjx8Fs69NYVD8XWUVLJ5akauW
-         /y5VhjOOql45mo272vylejwhtPAU+345EF6jCiX8EEgAC7RYT7viyVewczRvz3ttPUQ6
-         fSjI3OkXpSSJcFJcgOWfpuwuUoFB1n3QWHcTWQE7Jpe+lWCUDGuOf8nA0tHksTCj75eg
-         lfVkuB76RIjHml8Jcp1I8wxgoG1HHcs7E2xXr0YleM8BFLHlYIRRsPz5njijzinHKq4i
-         7oAHjEyjEqT2f2rbO0XTDGA8pO/RIO0T60UAs9nrEIl7AELBeCXVR4x2CqMqlL2j89Wv
-         VsvA==
-X-Gm-Message-State: APjAAAWSeQq2Fr8DJINIGDN50Ps66nkv3JB2No3p6n7dj7WCVpWBhDIC
-        ct9CPI7Lg1H+y73Mes8CSt5LIw==
-X-Google-Smtp-Source: APXvYqxLrPoBT6tozNTlLxfWSGNpbXIDJEQxqIF21mwBqXnn9Ziv/BwZfVt42oSoyl9MpzGphibvWg==
-X-Received: by 2002:ab0:3007:: with SMTP id f7mr30759872ual.12.1564599791912;
-        Wed, 31 Jul 2019 12:03:11 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id n187sm69530779vkd.9.2019.07.31.12.03.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 12:03:11 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     saeedm@mellanox.com, tariqt@mellanox.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] net/mlx5e: always initialize frag->last_in_page
-Date:   Wed, 31 Jul 2019 15:02:53 -0400
-Message-Id: <1564599773-9474-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4R4JIwEkzgPRY5Q32Ye/hIHj7mVNSnkxupaRXo12Q0E=;
+        b=qFaJ65StEQc5/FUVO4T2fK0pansrK0cEDBUaLJ9TL8UhI5a4YAELA6F7ptcjk6tkd2
+         eGT9ZCUVoDBzv8FhmOPdDSo/fjecJ4hvZpGtF+Gf/Lt7UBH5nOK4gmQYVQz0lPbDF3vg
+         SUGAOvgTXzoSzlxwn3fllElpnZ75XWwnnjcz/lpzOxh/wiic5LzKcNB4cxWQCnFR9r0d
+         oY8UQ+jX41Tlka7V2fEDwKl5Mxo1mMopICgGY+Cz4HvmF+/NcqQTQtGIWd6IPad8YBRT
+         RGNpB8d2Ak4Nyo4Cvl7pV3LgpmU1vNcsPT3P7qQ58flj2ppNVTWbtRrfstuQzI1fB2OL
+         bTuw==
+X-Gm-Message-State: APjAAAXHRALDxq9XNXEexJT3mtr1WbMUzhqMwJCnKR7yuApuVptZL5WX
+        AWDpbzn72LQE3BvJnsIe/zs=
+X-Google-Smtp-Source: APXvYqw/Cjh2E7fsvlMZpS7STQ2YeZhCs8omtYrwn8xdwq4b3RiOWQrxufWqSDN8CR/gzTaybStKsQ==
+X-Received: by 2002:a2e:9d8a:: with SMTP id c10mr41108845ljj.147.1564599872221;
+        Wed, 31 Jul 2019 12:04:32 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-186-115.NA.cust.bahnhof.se. [158.174.186.115])
+        by smtp.gmail.com with ESMTPSA id i23sm14138025ljb.7.2019.07.31.12.04.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 12:04:31 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     joe@perches.com
+Cc:     akpm@linux-foundation.org, johannes@sipsolutions.net,
+        linux-kernel@vger.kernel.org, rikard.falkeborn@gmail.com,
+        yamada.masahiro@socionext.com
+Subject: [PATCH] linux/bits.h: Add compile time sanity check of GENMASK inputs
+Date:   Wed, 31 Jul 2019 21:03:09 +0200
+Message-Id: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <0306bec0ec270b01b09441da3200252396abed27.camel@perches.com>
+References: <0306bec0ec270b01b09441da3200252396abed27.camel@perches.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 069d11465a80 ("net/mlx5e: RX, Enhance legacy Receive Queue
-memory scheme") introduced an undefined behaviour below due to
-"frag->last_in_page" is only initialized in
-mlx5e_init_frags_partition() when,
+GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+as the first argument and the low bit as the second argument. Mixing
+them will return a mask with zero bits set.
 
-if (next_frag.offset + frag_info[f].frag_stride > PAGE_SIZE)
+Recent commits show getting this wrong is not uncommon, see e.g.
+commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+macro").
 
-or after bailed out the loop,
+To prevent such mistakes from appearing again, add compile time sanity
+checking to the arguments of GENMASK() and GENMASK_ULL(). If both the
+arguments are known at compile time, and the low bit is higher than the
+high bit, break the build to detect the mistake immediately.
 
-for (i = 0; i < mlx5_wq_cyc_get_size(&rq->wqe.wq); i++)
+Since GENMASK() is used in declarations, BUILD_BUG_OR_ZERO() must be
+used instead of BUILD_BUG_ON(), and __is_constexpr() must be used instead
+of __builtin_constant_p().
 
-As the result, there could be some "frag" have uninitialized
-value of "last_in_page".
+Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+available in assembly") made the macros in linux/bits.h available in
+assembly. Since neither BUILD_BUG_OR_ZERO() or __is_constexpr() are asm
+compatible, disable the checks if the file is included in an asm file.
 
-Later, get_frag() obtains those "frag" and check "rag->last_in_page" in
-mlx5e_put_rx_frag() and triggers the error during boot. Fix it by always
-initializing "frag->last_in_page" to "false" in
-mlx5e_init_frags_partition().
-
-UBSAN: Undefined behaviour in
-drivers/net/ethernet/mellanox/mlx5/core/en_rx.c:325:12
-load of value 170 is not a valid value for type 'bool' (aka '_Bool')
-Call trace:
- dump_backtrace+0x0/0x264
- show_stack+0x20/0x2c
- dump_stack+0xb0/0x104
- __ubsan_handle_load_invalid_value+0x104/0x128
- mlx5e_handle_rx_cqe+0x8e8/0x12cc [mlx5_core]
- mlx5e_poll_rx_cq+0xca8/0x1a94 [mlx5_core]
- mlx5e_napi_poll+0x17c/0xa30 [mlx5_core]
- net_rx_action+0x248/0x940
- __do_softirq+0x350/0x7b8
- irq_exit+0x200/0x26c
- __handle_domain_irq+0xc8/0x128
- gic_handle_irq+0x138/0x228
- el1_irq+0xb8/0x140
- arch_cpu_idle+0x1a4/0x348
- do_idle+0x114/0x1b0
- cpu_startup_entry+0x24/0x28
- rest_init+0x1ac/0x1dc
- arch_call_rest_init+0x10/0x18
- start_kernel+0x4d4/0x57c
-
-Fixes: 069d11465a80 ("net/mlx5e: RX, Enhance legacy Receive Queue memory scheme")
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 1 +
- 1 file changed, 1 insertion(+)
+Joe Perches sent a series to fix the existing misuses of GENMASK() that
+needs to be merged before this to avoid build failures. Currently, 7 of
+the patches were not in Linus tree, and 2 were not in linux-next.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 47eea6b3a1c3..96f5110a9b43 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -336,6 +336,7 @@ static void mlx5e_init_frags_partition(struct mlx5e_rq *rq)
+Also, there's currently no asm users of bits.h, but since it was made
+asm-compatible just two weeks ago it would be a shame to break it right
+away...
+
+ include/linux/bits.h | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 669d69441a62..73489579eef9 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -18,12 +18,22 @@
+  * position @h. For example
+  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+  */
++#ifndef __ASSEMBLY__
++#include <linux/build_bug.h>
++#define GENMASK_INPUT_CHECK(h, l)  BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
++		__is_constexpr(h) && __is_constexpr(l), (l) > (h), 0))
++#else
++#define GENMASK_INPUT_CHECK(h, l) 0
++#endif
++
+ #define GENMASK(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + \
+ 	(((~UL(0)) - (UL(1) << (l)) + 1) & \
+-	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
++	 (~UL(0) >> (BITS_PER_LONG - 1 - (h)))))
  
- 	next_frag.di = &rq->wqe.di[0];
- 	next_frag.offset = 0;
-+	next_frag.last_in_page = false;
- 	prev = NULL;
+ #define GENMASK_ULL(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + \
+ 	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+-	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
++	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h)))))
  
- 	for (i = 0; i < mlx5_wq_cyc_get_size(&rq->wqe.wq); i++) {
+ #endif	/* __LINUX_BITS_H */
 -- 
-1.8.3.1
+2.22.0
 
