@@ -2,194 +2,94 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F090C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3716CC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABAD2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E642067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M6YnSuUh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5N5XV/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbfGaVFw (ORCPT
+        id S1729813AbfGaVHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:05:52 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10225 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfGaVFv (ORCPT
+        Wed, 31 Jul 2019 17:07:55 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43215 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfGaVHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:05:51 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4202ae0002>; Wed, 31 Jul 2019 14:05:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 31 Jul 2019 14:05:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 31 Jul 2019 14:05:49 -0700
-Received: from [10.110.102.167] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
- 2019 21:05:48 +0000
-Subject: Re: [PATCH v7 11/20] cpufreq: tegra124: Add suspend and resume
- support
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-12-git-send-email-skomatineni@nvidia.com>
- <98aae4b7-d95a-90ba-0d55-7512b3712f54@gmail.com>
- <505bbdc0-c48a-8583-3838-ec5c128f375f@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <99c76e3a-6f7b-ef9a-2fd7-03744da650c4@nvidia.com>
-Date:   Wed, 31 Jul 2019 14:05:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 31 Jul 2019 17:07:55 -0400
+Received: by mail-qt1-f194.google.com with SMTP id w17so23646508qto.10;
+        Wed, 31 Jul 2019 14:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CVs/vyQ7FGVG4RTAjLbBzwKgO6T77q0zizvqZWReG4U=;
+        b=h5N5XV/6OzpHcXrprkzwKaYmJNAD9E8RdEvB+YK0FrlqjphI8KIf7oYowR11IArgLk
+         88GJaOD/tMG54niEk7uFAUi66JZCPn+OJkRq3zPNN/KYAmb0rsZ2FpMe6vk+5EoCmN4O
+         1mUcGpSPVxXH68CKu+HAhTRbBso352YVX3klLp+TdTF2bV5QNFdIddc8hpz9Bh6ljy+M
+         y8I2BKGTyIIxhGXzv/Lx5gt+riMvMtc2cTzhU3sqkrQwRS5ZlO8F2CLlDiP+F2FCiBpo
+         PGUJBB+NTy/FuqG/6vALo6kpveZd09LjDljEeXZxaOGN293ojUIRuCxnAzlrO24slLk0
+         6EPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CVs/vyQ7FGVG4RTAjLbBzwKgO6T77q0zizvqZWReG4U=;
+        b=fFDmTA0qwLdKjWIQyhLE0Rprxo0X2k+a81ppzjlM5DsXivlrdKH+1vCs7A4w7xXdTm
+         ofqMAceptasUVAxu/DCbzbezWQVFTF0Xm1a+2bHsSMVBttOSm5F7LwAwpS+qa+wym88Y
+         2WYW+ktMUuDchcg3T2/YymqRyJxZ9xPdhzqqH1H6ioJTK3OHjxM+KELX8/b/26gMavpN
+         E9Z5YynzqkkmKhNLLAv+hbcUegp7nmYHsvRNE6HcWxjNMGSVPCTbrOLTfl8nty1PJm/3
+         H7m3dA4+sP+Z2UZ4lq8dbMErJqrX0om/oImqxO3LSZZRTSN5zAJ84Eq0qTORJSSX6I/g
+         6zpw==
+X-Gm-Message-State: APjAAAXukP71F4/AiFBIrcB2uq9vC+WF8Kz1GCJF8wSFVjSSPgW0exWE
+        k3sEpiYbTq+gAIMHCulE1JmV7d5ZUmnKoHv/5pY=
+X-Google-Smtp-Source: APXvYqy4QvtrszYJsHl599Ic3SuR88R8Eufu4CdNo+IYoKhGrYyNtuaYcaEFwl3crNQGDCHIWfL5uXK87UIOeU0HklE=
+X-Received: by 2002:ac8:25e7:: with SMTP id f36mr87328163qtf.139.1564607274505;
+ Wed, 31 Jul 2019 14:07:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <505bbdc0-c48a-8583-3838-ec5c128f375f@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564607150; bh=4ss5BdcQAOvitxtbxBPqIK9JEL2xO0nwN7rV6ddprU4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=M6YnSuUhW47djEmIyUpR2avcGF2cq37se9MZVvgDVA/FRCa2RNJgbkEixUa+xTtSx
-         mfBpVJVioCM7QeHaDsiLTdNLPhzV0PFb8RdtqnpZgSwRVRgYfDJRtUShX4q9lZluSs
-         T1DeZ+zvbIhDbBy+rtbfuo6TBUlMhpy/tRDOP/AYOd2m8qSNZdRBfLts3WaYOYNj+F
-         /34RuaUsJa8y7Ig1z5quQLsL1fjTRHHvbSZgT66OY4CFDH0i02GnzXy+FVjYM3kRX0
-         M9A9NhbrLiCKq1Asj3Cm6wrLsRJnFNexm06TRHwYRMeGy4U6ldUkxXn1cTyNw88UFU
-         Y9ej8g/Hu7nMA==
+References: <20190702132918.114818-1-houtao1@huawei.com> <CAPhsuW6yH7np1=+e5Rgutp3m1VA0TPvtANeX=0ZdpJaRKEvBkQ@mail.gmail.com>
+ <b047c187-e4a6-a82a-3177-3da7fef2f6b8@huawei.com>
+In-Reply-To: <b047c187-e4a6-a82a-3177-3da7fef2f6b8@huawei.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Wed, 31 Jul 2019 14:07:43 -0700
+Message-ID: <CAPhsuW5c96vQDiwbPhDvKOG8_XkPapW62bkthPAHFOum2N2VhQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] md: export internal stats through debugfs
+To:     Hou Tao <houtao1@huawei.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>, NeilBrown <neilb@suse.com>,
+        linux-block@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>,
+        agk@redhat.com, dm-devel@redhat.com,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 26, 2019 at 10:48 PM Hou Tao <houtao1@huawei.com> wrote:
+>
+> Hi,
+>
+[...]
+> >
+> > Hi,
+> >
+> > Sorry for the late reply.
+> >
+> > I think these information are really debug information that we should not
+> > show in /sys. Once we expose them in /sys, we need to support them
+> > because some use space may start searching data from them.
+> So debugfs is used to place these debug information instead of sysfs.
 
-On 7/31/19 4:14 AM, Dmitry Osipenko wrote:
-> 31.07.2019 13:23, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> This patch adds suspend and resume pm ops for cpufreq driver.
->>>
->>> PLLP is the safe clock source for CPU during system suspend and
->>> resume as PLLP rate is below the CPU Fmax at Vmin.
->>>
->>> CPUFreq driver suspend switches the CPU clock source to PLLP and
->>> disables the DFLL clock.
->>>
->>> During system resume, warmboot code powers up the CPU with PLLP
->>> clock source. So CPUFreq driver resume enabled DFLL clock and
->>> switches CPU back to DFLL clock source.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/cpufreq/tegra124-cpufreq.c | 60 +++++++++++++++++++++++++++++=
-+++++++++
->>>   1 file changed, 60 insertions(+)
->>>
->>> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra=
-124-cpufreq.c
->>> index 4f0c637b3b49..e979a3370988 100644
->>> --- a/drivers/cpufreq/tegra124-cpufreq.c
->>> +++ b/drivers/cpufreq/tegra124-cpufreq.c
->>> @@ -6,6 +6,7 @@
->>>   #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
->>>  =20
->>>   #include <linux/clk.h>
->>> +#include <linux/cpufreq.h>
->>>   #include <linux/err.h>
->>>   #include <linux/init.h>
->>>   #include <linux/kernel.h>
->>> @@ -128,8 +129,67 @@ static int tegra124_cpufreq_probe(struct platform_=
-device *pdev)
->>>   	return ret;
->>>   }
->>>  =20
->>> +static int __maybe_unused tegra124_cpufreq_suspend(struct device *dev)
->>> +{
->>> +	struct tegra124_cpufreq_priv *priv =3D dev_get_drvdata(dev);
->>> +	int err;
->>> +
->>> +	/*
->>> +	 * PLLP rate 408Mhz is below the CPU Fmax at Vmin and is safe to
->>> +	 * use during suspend and resume. So, switch the CPU clock source
->>> +	 * to PLLP and disable DFLL.
->>> +	 */
->>> +	err =3D clk_set_parent(priv->cpu_clk, priv->pllp_clk);
->>> +	if (err < 0) {
->>> +		dev_err(dev, "failed to reparent to PLLP: %d\n", err);
->>> +		return err;
->>> +	}
->>> +
->>> +	/* disable DFLL clock */
->>> +	clk_disable_unprepare(priv->dfll_clk);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int __maybe_unused tegra124_cpufreq_resume(struct device *dev)
->>> +{
->>> +	struct tegra124_cpufreq_priv *priv =3D dev_get_drvdata(dev);
->>> +	int err;
->>> +
->>> +	/*
->>> +	 * Warmboot code powers up the CPU with PLLP clock source.
->>> +	 * Enable DFLL clock and switch CPU clock source back to DFLL.
->>> +	 */
->>> +	err =3D clk_prepare_enable(priv->dfll_clk);
->>> +	if (err < 0) {
->>> +		dev_err(dev, "failed to enable DFLL clock for CPU: %d\n", err);
->>> +		goto disable_cpufreq;
->>> +	}
->>> +
->>> +	err =3D clk_set_parent(priv->cpu_clk, priv->dfll_clk);
->>> +	if (err < 0) {
->>> +		dev_err(dev, "failed to reparent to DFLL clock: %d\n", err);
->>> +		goto disable_dfll;
->>> +	}
->>> +
->>> +	return 0;
->>> +
->>> +disable_dfll:
->>> +	clk_disable_unprepare(priv->dfll_clk);
->>> +disable_cpufreq:
->>> +	disable_cpufreq();
->>> +
->>> +	return err;
->>> +}
->>> +
->>> +static const struct dev_pm_ops tegra124_cpufreq_pm_ops =3D {
->>> +	SET_SYSTEM_SLEEP_PM_OPS(tegra124_cpufreq_suspend,
->>> +				tegra124_cpufreq_resume)
->>> +};
->>> +
->>>   static struct platform_driver tegra124_cpufreq_platdrv =3D {
->>>   	.driver.name	=3D "cpufreq-tegra124",
->>> +	.driver.pm	=3D &tegra124_cpufreq_pm_ops,
->>>   	.probe		=3D tegra124_cpufreq_probe,
->>>   };
->>>  =20
->>>
->> Looks good,
->>
->> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>
-> BTW, you should also CC the CPUFreq maintainers because this patch can't
-> be applied without theirs ACK.
-MIssed them. Will resend v7 series with CPUFreq maintainers...
+I don't think we should dump random information into debugfs. It is common
+for the developers to carry some local patches that dumps information for
+debug. We cannot get these patches upstream.
+
+Thanks,
+Song
