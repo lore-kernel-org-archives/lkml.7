@@ -2,87 +2,71 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BA2C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94437C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A07420679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7261120679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfGaOaN (ORCPT
+        id S1729282AbfGaOa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:30:13 -0400
-Received: from sauhun.de ([88.99.104.3]:42046 "EHLO pokefinder.org"
+        Wed, 31 Jul 2019 10:30:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50112 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfGaOaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:30:13 -0400
-Received: from localhost (p54B33080.dip0.t-ipconnect.de [84.179.48.128])
-        by pokefinder.org (Postfix) with ESMTPSA id 96AAC2C270A;
-        Wed, 31 Jul 2019 16:30:11 +0200 (CEST)
-Date:   Wed, 31 Jul 2019 16:30:11 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 18/57] i2c: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190731143011.GB1680@kunai>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-19-swboyd@chromium.org>
+        id S1727089AbfGaOa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:30:57 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5DECD81F22;
+        Wed, 31 Jul 2019 14:30:57 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A16501001B07;
+        Wed, 31 Jul 2019 14:30:55 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com>
+References: <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com> <0000000000004c2416058c594b30@google.com> <24282.1562074644@warthog.procyon.org.uk>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     dhowells@redhat.com,
+        syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: kernel BUG at net/rxrpc/local_object.c:LINE!
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cvVnyQ+4j833TQvp"
-Content-Disposition: inline
-In-Reply-To: <20190730181557.90391-19-swboyd@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <20329.1564583454.1@warthog.procyon.org.uk>
+Date:   Wed, 31 Jul 2019 15:30:54 +0100
+Message-ID: <20330.1564583454@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 31 Jul 2019 14:30:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dmitry Vyukov <dvyukov@google.com> wrote:
 
---cvVnyQ+4j833TQvp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Re bisection, I don't know if there are some more subtle things as
+> play (you are in the better position to judge that), but bisection log
+> looks good, it tracked the target crash throughout and wasn't
+> distracted by any unrelated bugs, etc. So I don't see any obvious
+> reasons to not trust it.
 
-> -dev_err(...);
+Can you turn on:
 
-What about pr_err, ...?
+	echo 1 > /sys/kernel/debug/tracing/events/rxrpc/rxrpc_local/enable
 
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
+and capture the trace log at the point it crashes?
 
-You can let cocci do this for you, too. From the top of my head:
-
-if (...)
-- {
- S
-- }
-
-with S being a statement and this rule depending on the matching rule.
-
-
---cvVnyQ+4j833TQvp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1BpfMACgkQFA3kzBSg
-KbYd2xAAq3Fa3pEk4zsTqHw98EaB/Ko5iBApFcFnoiPINoT9hj6CiXIaRsRygAKY
-tVMDFDymLmplNlXU+lrc0NVQQ6irFzHeTTYt/BSkFjh30rhJOW1JnfJrRmfqrCpt
-N/+2dH+5j3qGZW22NCQUOmEZTZuGKqSwqeyyqJMfcAUokzHCWuFibmN6yXm9QoJY
-veOJuSqabB2H9dLHLwYFQ3Yiy+6S3s/puMnvZd4qMqsmjxVgO1E0Xg6CeLsqTKyc
-mu/Lo0Qm9FSRLeO+2YgaYt8JGJBS9Vm2eXoNYXYorrIJXZ/yglKixt0DeJbvbyvw
-bga7P09n9H0bmk4kYJbIQpM30MHFrAa63y6vpsteyC/zeEVLyPDOaokx6QVZxOuJ
-gLHZK/oUnvBS97S2xxJjX0cuejLPjNt1zhx1AJvB29jaPl1J2RLkKyV1hLB/um3S
-R1SjHBsqVREHaLGAlgd4fGHF6IiEfOIJWBXB8FXhQ5WcAkF8Rj4Vg9KV/FrQYpE0
-OeW8VW43BhPSmjphOJNAc7pg5Jcl+z2JiX0ABjUtEon4HjscaRpDQ99oYDz9dZJ5
-0EB0Xcni9EO7gO0nH400BfGwpszheOVpQxfsQj1BQxFFr6nogjEQYI1k5MmM/REt
-y2Wo3RiI6i3yRtCaeFjtzVAOYGTrVexGjgNzuMKwa61m9Ox32TU=
-=LV2u
------END PGP SIGNATURE-----
-
---cvVnyQ+4j833TQvp--
+David
