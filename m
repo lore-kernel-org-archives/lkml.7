@@ -2,215 +2,157 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B676FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECE1C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFDE208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8666D208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:12:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOtKsrBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfGaLIt (ORCPT
+        id S1728417AbfGaLMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:08:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43142 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725793AbfGaLIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:08:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C72B0AF1B;
-        Wed, 31 Jul 2019 11:08:45 +0000 (UTC)
-Subject: Re: [RFC PATCH 1/3] mm, reclaim: make should_continue_reclaim perform
- dryrun detection
-To:     Hillf Danton <hdanton@sina.com>, Mel Gorman <mgorman@suse.de>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190724175014.9935-1-mike.kravetz@oracle.com>
- <20190724175014.9935-2-mike.kravetz@oracle.com>
- <20190725080551.GB2708@suse.de>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <295a37b1-8257-9b4a-b586-9a4990cc9d35@suse.cz>
-Date:   Wed, 31 Jul 2019 13:08:44 +0200
+        Wed, 31 Jul 2019 07:12:02 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45420 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727856AbfGaLMC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 07:12:02 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u10so8394611lfm.12;
+        Wed, 31 Jul 2019 04:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+w/2TLh8qinXibKhyDRY1xBp+hIL8MQpeIp4scQJ6Ng=;
+        b=eOtKsrBEBeBphhib0MLB/GmoYHdEeE61JvIBZr1Fa3SafCIifEm9Kmbt82k11+jrER
+         IRBNAFjggI84gBe4T5ujcdX2fS5/Y8kDybbG5xGTZQcym5wBIOWCRAyA4U6Xp3xKhO1A
+         IFzJQVUrLUj0zzoPk+yxhF7vtCv7BxYW0jNFEBzmqwsKJbb9BbAlZJyYKvsf0ukeua/K
+         vtamnuZIoY897T30rRJxs9+D3U/l+s186MZ7vnTurMLWSUq9Sx8EoxOfVgup45SJhw1F
+         k13yh3JqCIpiztOnzZF7Idsp0PJSO8M2kFxIVjCnvUuSBWf/wn4u0thId1D5olEzD9HR
+         /z6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+w/2TLh8qinXibKhyDRY1xBp+hIL8MQpeIp4scQJ6Ng=;
+        b=F0sL0YjBHv218BuxwpVabw8U9szYZlGCjdiWjS1AWU5GvlW3mRUoBS1wHuymrBiSnM
+         w8uBMTKAnUHiP7H2kPOMiDKT8rW0lSbLdu56rWFsqSTYAILQSWRCQZxJf3dZabEPU7CM
+         +fu+eVAU0yLxDXw77pI4TcOGzKuYa/L6VJchWnNTThWgDjyclGOwvZ7DwF+ZIs6PkpSL
+         suH2pqBzgkaszauSdU1/f6XiDgGdePnCCz02WrhpNzXvCXybKi6ipyOBc9trRLqUUx3K
+         SLuKKJihFCkU+wbfgMmReQmzWm2ub1RuQueIxFZCXnv7k+IGpwq//l28fX8GA41qcyaX
+         XTlw==
+X-Gm-Message-State: APjAAAVz1RMBaFrUgVjIFUjFKO+e68T8v5TK51h1FmyF5jRzMeOYY6RO
+        QYlu+7SraSJc2+EkFY11rP6URTzg
+X-Google-Smtp-Source: APXvYqx7NJcpgs7mJjsWCoJeUt5yeaoTz27c0fmrOQxCKBUXEhKqaVwQeMeE2dYuXU2cA7a83TIh2g==
+X-Received: by 2002:a19:ca1e:: with SMTP id a30mr56516415lfg.163.1564571519249;
+        Wed, 31 Jul 2019 04:11:59 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id u15sm13892639lji.61.2019.07.31.04.11.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 04:11:58 -0700 (PDT)
+Subject: Re: [PATCH v7 06/20] clk: tegra: Support for OSC context save and
+ restore
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <16cca6aa-1034-f38a-49d1-d87b37fb6bbb@gmail.com>
+Date:   Wed, 31 Jul 2019 14:11:02 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190725080551.GB2708@suse.de>
-Content-Type: text/plain; charset=iso-8859-15
+In-Reply-To: <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/26/19 9:40 AM, Hillf Danton wrote:
+31.07.2019 3:20, Sowjanya Komatineni пишет:
+> This patch adds support for saving OSC clock frequency and the
+> drive-strength during OSC clock init and creates an API to restore
+> OSC control register value from the saved context.
 > 
-> On Thu, 25 Jul 2019 08:05:55 +0000 (UTC) Mel Gorman wrote:
->>
->> Agreed that the description could do with improvement. However, it
->> makes sense that if compaction reports it can make progress that it is
->> unnecessary to continue reclaiming.
+> This API is invoked by Tegra210 clock driver during system resume
+> to restore the  OSC clock settings.
 > 
-> Thanks Mike and Mel.
-> 
-> Hillf
-> ---8<---
-> From: Hillf Danton <hdanton@sina.com>
-> Subject: [RFC PATCH 1/3] mm, reclaim: make should_continue_reclaim perform dryrun detection
-> 
-> Address the issue of should_continue_reclaim continuing true too often
-> for __GFP_RETRY_MAYFAIL attempts when !nr_reclaimed and nr_scanned.
-> This could happen during hugetlb page allocation causing stalls for
-> minutes or hours.
-> 
-> We can stop reclaiming pages if compaction reports it can make a progress.
-> A code reshuffle is needed to do that. And it has side-effects, however,
-> with allocation latencies in other cases but that would come at the cost
-> of potential premature reclaim which has consequences of itself.
-
-I don't really understand that paragraph, did Mel meant it like this?
-
-> We can also bail out of reclaiming pages if we know that there are not
-> enough inactive lru pages left to satisfy the costly allocation.
-> 
-> We can give up reclaiming pages too if we see dryrun occur, with the
-> certainty of plenty of inactive pages. IOW with dryrun detected, we are
-> sure we have reclaimed as many pages as we could.
-> 
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
-
-I agree this is an improvement overall, but perhaps the patch does too
-many things at once. The reshuffle is one thing and makes sense. The
-change of the last return condition could perhaps be separate. Also
-AFAICS the ultimate result is that when nr_reclaimed == 0, the function
-will now always return false. Which makes the initial test for
-__GFP_RETRY_MAYFAIL and the comments there misleading. There will no
-longer be a full LRU scan guaranteed - as long as the scanned LRU chunk
-yields no reclaimed page, we abort.
-
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  mm/vmscan.c | 28 +++++++++++++++-------------
->  1 file changed, 15 insertions(+), 13 deletions(-)
+>  drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
+>  drivers/clk/tegra/clk.h             |  1 +
+>  2 files changed, 16 insertions(+)
 > 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index f4fd02a..484b6b1 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2673,18 +2673,6 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
->  			return false;
->  	}
+> diff --git a/drivers/clk/tegra/clk-tegra-fixed.c b/drivers/clk/tegra/clk-tegra-fixed.c
+> index 8d91b2b191cf..7c6c8abfcde6 100644
+> --- a/drivers/clk/tegra/clk-tegra-fixed.c
+> +++ b/drivers/clk/tegra/clk-tegra-fixed.c
+> @@ -17,6 +17,10 @@
+>  #define OSC_CTRL			0x50
+>  #define OSC_CTRL_OSC_FREQ_SHIFT		28
+>  #define OSC_CTRL_PLL_REF_DIV_SHIFT	26
+> +#define OSC_CTRL_MASK			(0x3f2 |	\
+> +					(0xf << OSC_CTRL_OSC_FREQ_SHIFT))
+> +
+> +static u32 osc_ctrl_ctx;
 >  
-> -	/*
-> -	 * If we have not reclaimed enough pages for compaction and the
-> -	 * inactive lists are large enough, continue reclaiming
-> -	 */
-> -	pages_for_compaction = compact_gap(sc->order);
-> -	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
-> -	if (get_nr_swap_pages() > 0)
-> -		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
-> -	if (sc->nr_reclaimed < pages_for_compaction &&
-> -			inactive_lru_pages > pages_for_compaction)
-> -		return true;
-> -
->  	/* If compaction would go ahead or the allocation would succeed, stop */
->  	for (z = 0; z <= sc->reclaim_idx; z++) {
->  		struct zone *zone = &pgdat->node_zones[z];
-> @@ -2700,7 +2688,21 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
->  			;
->  		}
+>  int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
+>  			      unsigned long *input_freqs, unsigned int num,
+> @@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
+>  	unsigned osc_idx;
+>  
+>  	val = readl_relaxed(clk_base + OSC_CTRL);
+> +	osc_ctrl_ctx = val & OSC_CTRL_MASK;
+>  	osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
+>  
+>  	if (osc_idx < num)
+> @@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk *tegra_clks)
+>  		*dt_clk = clk;
 >  	}
-> -	return true;
-> +
-> +	/*
-> +	 * If we have not reclaimed enough pages for compaction and the
-> +	 * inactive lists are large enough, continue reclaiming
-> +	 */
-> +	pages_for_compaction = compact_gap(sc->order);
-> +	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
-> +	if (get_nr_swap_pages() > 0)
-> +		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
-> +
-> +	return inactive_lru_pages > pages_for_compaction &&
-> +		/*
-> +		 * avoid dryrun with plenty of inactive pages
-> +		 */
-> +		nr_scanned && nr_reclaimed;
 >  }
+> +
+> +void tegra_clk_osc_resume(void __iomem *clk_base)
+> +{
+> +	u32 val;
+> +
+> +	val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
+> +	val |= osc_ctrl_ctx;
+> +	writel_relaxed(val, clk_base + OSC_CTRL);
+
+Why a full raw u32 OSC_CTRL value couldn't be simply saved and restored?
+
+> +	fence_udelay(2, clk_base);
+> +}
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index f1ef6ae8c979..abba6d8a04cd 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -842,6 +842,7 @@ u16 tegra_pll_get_fixed_mdiv(struct clk_hw *hw, unsigned long input_rate);
+>  int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
+>  int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+>  		 u8 frac_width, u8 flags);
+> +void tegra_clk_osc_resume(void __iomem *clk_base);
 >  
->  static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
-> --
+>  
+>  /* Combined read fence with delay */
 > 
 
