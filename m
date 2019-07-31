@@ -2,137 +2,112 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2761C32754
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C360BC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C952A2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 04:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935582067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387560AbfGaEza (ORCPT
+        id S1728848AbfGaFEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 00:55:30 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:44049 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725970AbfGaEza (ORCPT
+        Wed, 31 Jul 2019 01:04:42 -0400
+Received: from smtprelay0097.hostedemail.com ([216.40.44.97]:52574 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728822AbfGaFEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 00:55:30 -0400
-Received: from [IPv6:2001:983:e9a7:1:a003:9a19:9f18:5372] ([IPv6:2001:983:e9a7:1:a003:9a19:9f18:5372])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id sge6h2adHur8Tsge7hB9Hs; Wed, 31 Jul 2019 06:55:28 +0200
-Subject: Re: [PATCH v8 00/14] Rockchip ISP1 Driver
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-To:     Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, jeffy.chen@rock-chips.com,
-        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
-        kernel@collabora.com, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        zhengsq@rock-chips.com
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <dbdfed3e-7bb6-bf1f-64b9-ab7298193e2d@xs4all.nl>
- <41e7e574-2708-eb4c-ea30-e6a1ac9c073e@collabora.com>
- <8ce532de-6c26-f8db-8754-c8dd1eb0764b@collabora.com>
- <74bb0ba1-2859-39ff-d946-129a440ba150@xs4all.nl>
- <fb1327fb-0903-ce62-4eea-94b81f599b62@xs4all.nl>
-Message-ID: <13d89676-ae84-5904-7606-935501cb2d89@xs4all.nl>
-Date:   Wed, 31 Jul 2019 06:55:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <fb1327fb-0903-ce62-4eea-94b81f599b62@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfP/q3EnArJxBpSF7A97Y6c/kJMiNjcY8zTy1HJDi56O4eVd8ArhL5LDpNvq47gai47NHfK3L/be0dDM8KvqGTek5mSMdQdRExvMPD+eKajxit+ZkID0N
- MAdRENuetD+cl+lty3C1NbyjzQw0VJwr+5++KWyNiJuCIcI6RMa0rCtwptR0Ad0cEM9CGiWNY8QqF0YzI+q+VO71GOui9E0B3/UhGbf8ZxlHIFzWqMfeI4i6
- hLWvaxKefJkS7bfuinmY8GOR76RBltnftT/YDcbRHO3qY7dvkTgmMOerg/xHF4Ij2Lq5th5LvovVHJuW5klfK2VsG0uTjJ6ZMBUZ4rbnf37GxY6WaXSJ6XJB
- FhTW2BEfW4VenQAPOHaIkm3hQn1X7ekj6x6EV1LIa/wquo48Rh09wt2Xq8y1NyOOI4iC/ErXScmxv/DACce1qOh++h573A7rEbb4f3KNnXNQV2JUXvOpZ0NL
- R61GhuJ8xT3kvjNlLgnB+0moQokpBHWbKMXSau7N1DoSrliH0OBM/4GORn82wfr7VHmHPEQRSkKHVGmfZFPUbuBCXbMGG3I23gBpV7sBLP6dzVKCzNuMaw61
- RrgOQZUI+bQH/UZEBHlCzF4GKdncBvitwaF30Na1rgM6pcQSbbbfkf61ugGvnfVCCYyYXt86cWVGQ8tH5Ps1N/DDRZpc77DoSW0FJI9iQGpgDjg8sG9q+8F7
- Q5HDIJMyGkIOgfynRe+Xcqdd3Exjaahm0TAimUwjNUkCZF3A4ORSifmE687wkIo2quw33fguQ9xP4A518Nbq1//AXAtlFAMbJlJ5vUkCGx2voDSE58lM7oit
- VOKxNY5RXCVnLXHu5YPk9eJe9BPGdStm/Orc3ckITathFVYxO1SwlrSYbgdXwMmn7/Oj2wdFLxCXkn20eCOXGdtEmbKK7PKMMnHZaj3y
+        Wed, 31 Jul 2019 01:04:42 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 2C7AB18010BC8;
+        Wed, 31 Jul 2019 05:04:40 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: straw28_45b1536d17222
+X-Filterd-Recvd-Size: 2733
+Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 31 Jul 2019 05:04:38 +0000 (UTC)
+From:   Joe Perches <joe@perches.com>
+To:     Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: sctp: Rename fallthrough label to unhandled
+Date:   Tue, 30 Jul 2019 22:04:37 -0700
+Message-Id: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+X-Mailer: git-send-email 2.15.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/19 6:33 AM, Hans Verkuil wrote:
-> On 7/31/19 6:29 AM, Hans Verkuil wrote:
->> On 7/31/19 2:08 AM, Helen Koike wrote:
->>>
->>>
->>> On 7/30/19 5:50 PM, Helen Koike wrote:
->>>>
->>>>
->>>> On 7/30/19 5:15 PM, Hans Verkuil wrote:
->>>>> On 7/30/19 8:42 PM, Helen Koike wrote:
->>>>>> Hello,
->>>>>>
->>>>>> I'm re-sending a new version of ISP(Camera) v4l2 driver for rockchip
->>>>>> rk3399 SoC.
->>>>>>
->>>>>> I didn't change much from the last version, just applying the
->>>>>> suggestions made in the previous one.
->>>>>>
->>>>>> This patchset is also available at:
->>>>>> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v8
->>>>>>
->>>>>> Libcamera patched to work with this version:
->>>>>> https://gitlab.collabora.com/koike/libcamera
->>>>>> (also sent to the mailing list)
->>>>>>
->>>>>> I tested on the rockpi 4 with a rpi v1.3 sensor and also with the
->>>>>> Scarlet Chromebook.
->>>>>>
->>>>>> Known issues (same as in v7):
->>>>>> -------------
->>>>>> - Reloading the module doesn't work (there is some missing cleanup when
->>>>>> unloading)
->>>>>> - When capturing in bayer format, changing the size doesn't seem to
->>>>>> affect the image.
->>>>>> - crop needs more tests
->>>>>> - v4l2-compliance error:
->>>>>>         fail: v4l2-test-controls.cpp(824): subscribe event for control 'Image Processing Controls' failed
->>>>>> test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
->>>>>
->>>>> Can you mail me the full v4l2-compliance output?
->>>>
->>>> Sure, please check here: http://ix.io/1Q5u
->>>> I updated v4l-utils with the latest version and I re-ran bootstrap/configure/make,
->>>> but for some reason the hash from the link above is not the latest commit, probably some
->>>> old configuration somewhere. I'll resend this log as soon as I get v4l2-compliance
->>>> properly updated.
->>>
->>> Please see the output of v4l2-compliance here with an updated v4l-utils: http://ix.io/1Q6A
->>
->> So this FAIL is for /dev/v4l-subdev0 (rkisp1-isp-subdev).
->>
->> What is weird that this subdev does not appear to have controls at all.
->>
->> What is the output of 'v4l2-ctl -d /dev/v4l-subdev0 -l'? And if it lists
->> controls, then why?
->>
->> If you run 'v4l2-compliance -u /dev/v4l-subdev0', do you get a fail as
->> well?
-> 
-> I see the same issue with v4l-subdev1, but I see no "Media Driver Info"
-> in the v4l2-compliance output for that subdev. That's strange. It would
-> be good to know why that's happening.
+fallthrough may become a pseudo reserved keyword so this only use of
+fallthrough is better renamed to allow it.
 
-It looks to be some parenting issue: v4l2-compliance expects to find
-a mediaX directory in /sys/dev/char/81\:Y/device/ where 81:Y is the major/minor
-of /dev/v4l-subdev1.
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ net/sctp/sm_make_chunk.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Because is this mi_get_media_fd() cannot find the media device for the subdev
-in v4l2-compliance.
+diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
+index 36bd8a6e82df..3fdcaa2fbf12 100644
+--- a/net/sctp/sm_make_chunk.c
++++ b/net/sctp/sm_make_chunk.c
+@@ -2152,7 +2152,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+ 	case SCTP_PARAM_SET_PRIMARY:
+ 		if (net->sctp.addip_enable)
+ 			break;
+-		goto fallthrough;
++		goto unhandled;
+ 
+ 	case SCTP_PARAM_HOST_NAME_ADDRESS:
+ 		/* Tell the peer, we won't support this param.  */
+@@ -2163,11 +2163,11 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+ 	case SCTP_PARAM_FWD_TSN_SUPPORT:
+ 		if (ep->prsctp_enable)
+ 			break;
+-		goto fallthrough;
++		goto unhandled;
+ 
+ 	case SCTP_PARAM_RANDOM:
+ 		if (!ep->auth_enable)
+-			goto fallthrough;
++			goto unhandled;
+ 
+ 		/* SCTP-AUTH: Secion 6.1
+ 		 * If the random number is not 32 byte long the association
+@@ -2184,7 +2184,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+ 
+ 	case SCTP_PARAM_CHUNKS:
+ 		if (!ep->auth_enable)
+-			goto fallthrough;
++			goto unhandled;
+ 
+ 		/* SCTP-AUTH: Section 3.2
+ 		 * The CHUNKS parameter MUST be included once in the INIT or
+@@ -2200,7 +2200,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+ 
+ 	case SCTP_PARAM_HMAC_ALGO:
+ 		if (!ep->auth_enable)
+-			goto fallthrough;
++			goto unhandled;
+ 
+ 		hmacs = (struct sctp_hmac_algo_param *)param.p;
+ 		n_elt = (ntohs(param.p->length) -
+@@ -2223,7 +2223,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
+ 			retval = SCTP_IERROR_ABORT;
+ 		}
+ 		break;
+-fallthrough:
++unhandled:
+ 	default:
+ 		pr_debug("%s: unrecognized param:%d for chunk:%d\n",
+ 			 __func__, ntohs(param.p->type), cid);
+-- 
+2.15.0
 
-Regards,
-
-	Hans
