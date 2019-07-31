@@ -2,141 +2,105 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5C7C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEE5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 907FD20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE9221726
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:19:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="LCGpVOoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbfGaXRX (ORCPT
+        id S1730332AbfGaXTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:17:23 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35073 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfGaXRX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:17:23 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j19so33552435otq.2;
-        Wed, 31 Jul 2019 16:17:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kSejrbwgUdMQ99bQrxJUA8zIPWxPSd8aucGAjk9aCgY=;
-        b=bH+8O8VJFaTCmEBvljLo0b/Qv1bkCQxEdcJeke7+zSZYcmJ4Krfc4rsOKoruhvMIwY
-         ybvjRmTUUkzTlrhhNp/bVgTMpxy3NgITtJ5qvYriP5gEbIw9byPMqHi/Q7scRSIlQ8W2
-         rzUJFPAzFtSPfImPz5/lK6uAtayQ6Z0NSXx4JRrL5r1uSzKr2V9SfshmQ+wssK9xBHUN
-         OLZJSh9XY95OxiiQTlGmJyJ5f22nt5cVjois1GLoHzDSWhsBMHYeBJ3Faw1e0szHMNTp
-         UK9+vqeFqERvOAVO9v2loIcjrEyrPCIofTQm0x4/WpfjWbYH7Ra8xEd05jWSSKlh8noC
-         6ZRg==
-X-Gm-Message-State: APjAAAUjd3eGjRG0pXjQv/z6iyaaW4s5PMfLZ3/xmiVWLFwQTLSrogR2
-        6B3N9ehhBT8osIUvOAVqTiXftsimwCs=
-X-Google-Smtp-Source: APXvYqxyTX07lvKBrxanly5ckKsAan9H+TZlg2y5CpeD3cgEC5Jcn0c5YUdLZNDVSjDTfUkOd6URYA==
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr10360425oto.118.1564615041816;
-        Wed, 31 Jul 2019 16:17:21 -0700 (PDT)
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
-        by smtp.gmail.com with ESMTPSA id e78sm24753741oib.50.2019.07.31.16.17.20
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 16:17:21 -0700 (PDT)
-Received: by mail-ot1-f51.google.com with SMTP id o101so72017209ota.8;
-        Wed, 31 Jul 2019 16:17:20 -0700 (PDT)
-X-Received: by 2002:a9d:6d0e:: with SMTP id o14mr55638119otp.205.1564615040807;
- Wed, 31 Jul 2019 16:17:20 -0700 (PDT)
+        Wed, 31 Jul 2019 19:19:17 -0400
+Received: from cmta18.telus.net ([209.171.16.91]:33571 "EHLO cmta18.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729992AbfGaXTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 19:19:17 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id sxsFhbpqL7TgTsxsHhHHOJ; Wed, 31 Jul 2019 17:19:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1564615155; bh=3rzn4hYxIH9EzUzyImMhDAPA+7iJOX/pi/weI4QgB7I=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=LCGpVOoLu+jUaCaWp4KfyFBqxs6GqHCqsPXIwiHTEQ10xLHufMpdzEUcs9ropvfqB
+         M3ZzYGtKNcNwUY2TVJAMDtkqLicOH8ABlw6QxXUGgoiDBHgLDBh8snRb9fKj8/BlGq
+         SZbJDRdXu+HRCqYqFEBzClPzC2vL2On+QLervLD7pdOPl0zrE+dq372fbXnjq57Rzl
+         z2FBWsTsjLPO08neKVrW+Ulhzu+33XNRM5U2ypwOMqEykTrtH0Uwwg0A1j2/UuvYVi
+         3xQg8n6IwZxm8Ua3YqJrlsfvTWTWCzdjiO/LwSsFCeFEAxwCpg4lZ7+SeH9hUdNRMV
+         5LIolfiJLjKLA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=e6N4tph/ c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8
+ a=gu6fZOg2AAAA:8 a=fGXEpK-jy_bYTHPgIHoA:9 a=CjuIK1q_8ugA:10 a=-FEs8UIgK8oA:10
+ a=NWVoK91CQyQA:10 a=AjGcO6oz07-iQ99wixmX:22 a=cvBusfyB2V15izCimMoJ:22
+ a=2RSlZUUhi9gRBrsHwhhZ:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Rafael Wysocki'" <rjw@rjwysocki.net>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>
+Cc:     <linux-pm@vger.kernel.org>,
+        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
+        "'v4 . 18+'" <stable@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <04ff2be6ef108585d57aa2462aa7a4c676b6d1cd.1564541875.git.viresh.kumar@linaro.org>
+In-Reply-To: <04ff2be6ef108585d57aa2462aa7a4c676b6d1cd.1564541875.git.viresh.kumar@linaro.org>
+Subject: RE: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
+Date:   Wed, 31 Jul 2019 16:19:10 -0700
+Message-ID: <000701d547f6$5e4254f0$1ac6fed0$@net>
 MIME-Version: 1.0
-References: <20190718094902.15562-1-hui.song_1@nxp.com>
-In-Reply-To: <20190718094902.15562-1-hui.song_1@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 31 Jul 2019 18:17:09 -0500
-X-Gmail-Original-Message-ID: <CADRPPNT3A_1apr3FNjRbQhCHWLqvAQC0Oz8cGbOjNetAF8zghw@mail.gmail.com>
-Message-ID: <CADRPPNT3A_1apr3FNjRbQhCHWLqvAQC0Oz8cGbOjNetAF8zghw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: ls1028a: Fix GPIO work fail.
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdVHS+4YI9BnHjPrQbmpxp6l6KKevwApiyrA
+X-CMAE-Envelope: MS4wfGh9dvqKE8TMltwZiw0xfBDEnZROYYG2ebYYPQEoBjk9gSYuUsYTGBgldRZnlNwe8tfA/CPF2gKNKkKLNXT7Vgmsm8SkvXihyBqtFFxQsLncZoziYcFi
+ 1LVOpox3Z+Wc4Y2YyKQUs0tz9X1AwODr9TV6Jn6tSBbkVfbOgxUkjLHjvhwt8EpNUVObY6g3GdgxnBZ0xor0g958P9+8yTCkyJudLwSp8qnt8IHIjxmaMlhN
+ GpUy4UZzOSTftTdYLrLO8Ljbo1J02QkFqEoTj5Q8AIOE+IuJOTPAXcEtHHRPLq1MqoMg3UrEPCEDT5jXoeXFr8E5lZ7J7MjgnitmwXNeMejCPhztfkIYYHrh
+ iwdNYKfLcE7KTWKTPtf5t0H7jDHCfS2KnNMNl3NA9EDXv2iI4Rw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 4:59 AM Hui Song <hui.song_1@nxp.com> wrote:
+On 2019.07.31 Viresh Kumar wrote:
+> To avoid reducing the frequency of a CPU prematurely, we skip reducing
+> the frequency if the CPU had been busy recently.
 >
-
-Change the title to be something like:
-arm64: dts: ls1028a: fix gpio nodes
-
-> From: Song Hui <hui.song_1@nxp.com>
->
-> Add ls1028a device specify compatible.
-
-Please submit a separate patch to update the device tree binding too.
-
-> Make gpio as little-endian deal.
-
-"Update the nodes to include little-endian property to be consistent
-with the hardware."
-
->
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> This should not be done when the limits of the policy are changed, for
+> example due to thermal throttling. We should always get the frequency
+> within the new limits as soon as possible.
+> 
+> Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
+> Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
+> Reported-by: Doug Smythies <doug.smythies@gmail.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+> @Doug: Can you please provide your Tested-by for this commit, as it
+> already fixed the issue around acpi-cpufreq driver.
 >
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 7975519..488602b 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -277,33 +277,36 @@
->                 };
->
->                 gpio1: gpio@2300000 {
-> -                       compatible = "fsl,qoriq-gpio";
-> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
->                         reg = <0x0 0x2300000 0x0 0x10000>;
->                         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
->                         #interrupt-cells = <2>;
-> +                       little-endian;
->                 };
->
->                 gpio2: gpio@2310000 {
-> -                       compatible = "fsl,qoriq-gpio";
-> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
->                         reg = <0x0 0x2310000 0x0 0x10000>;
->                         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
->                         #interrupt-cells = <2>;
-> +                       little-endian;
->                 };
->
->                 gpio3: gpio@2320000 {
-> -                       compatible = "fsl,qoriq-gpio";
-> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
->                         reg = <0x0 0x2320000 0x0 0x10000>;
->                         interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
->                         #interrupt-cells = <2>;
-> +                       little-endian;
->                 };
->
->                 usb0: usb@3100000 {
-> --
-> 2.9.5
->
+> We will continue to see what's wrong with intel-pstate though.
+
+Please give me a few more hours.
+I'll reply to another thread with new information at that time.
+
+My recommendation will be to scrap this "patch2" and go back
+to "patch1" [1], with a couple of modifications. The logic
+of patch1 is sound.
+Teaser: it is working for intel_cpufreq/schedutil, but I
+have yet to test acpi-cpufreq/schedutil.
+
+[1] https://marc.info/?l=linux-pm&m=156377832225470&w=2
+
+... Doug
+
+
