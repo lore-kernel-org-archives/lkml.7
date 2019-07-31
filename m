@@ -5,39 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B4AC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58042C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D73A2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295FF2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Njl7EV4K"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H3CkQlgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbfGaVLM (ORCPT
+        id S1730883AbfGaVLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:11:12 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:9184 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729296AbfGaVLI (ORCPT
+        Wed, 31 Jul 2019 17:11:43 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10606 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730559AbfGaVLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:11:08 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4203f40001>; Wed, 31 Jul 2019 14:11:16 -0700
+        Wed, 31 Jul 2019 17:11:11 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4203ef0000>; Wed, 31 Jul 2019 14:11:11 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 31 Jul 2019 14:11:07 -0700
+  Wed, 31 Jul 2019 14:11:10 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:11:07 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
- 2019 21:11:07 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 31 Jul 2019 21:11:07 +0000
+        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:11:10 -0700
+Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:11:10 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL102.nvidia.com
+ (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:11:10 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 31 Jul 2019 21:11:10 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.167]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d4203ea0003>; Wed, 31 Jul 2019 14:11:06 -0700
+        id <B5d4203ed0003>; Wed, 31 Jul 2019 14:11:09 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -52,9 +55,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>,
         <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
         <linux-pm@vger.kernel.org>
-Subject: [PATCH v7 06/20] clk: tegra: Support for OSC context save and restore
-Date:   Wed, 31 Jul 2019 14:10:49 -0700
-Message-ID: <1564607463-28802-7-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v7 19/20] arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
+Date:   Wed, 31 Jul 2019 14:11:02 -0700
+Message-ID: <1564607463-28802-20-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
 References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
@@ -62,84 +65,47 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564607476; bh=xkj1s2KNWS1ox6olDiffSIxLRDDA825BMM0uyEpGVbk=;
+        t=1564607471; bh=3ikE8x0cNN1fPtdTTddMKObVTKhfyEJPwIrj8ksa4Wg=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=Njl7EV4KX2DkO4ib86vzdx37CzsFdZToTi2Is30z05PegDpQdXKlxaeQ7hhs+DO4W
-         GN+SM7sywh08elCC4wnw6t6OFHzrjKOL5u6YQjF3MC/rX+KMjtgpomcffdiykDyU33
-         DxpuBpneliQOKAsLeF+E0PfmE3Y3Q7GLW20nvgGHvjOjwT2KOBlik6P1QXiOb3p2da
-         8QF27TU9UE+lctME5JOuWDPqtBgarzd7QtFryznNddc7xvICxvOEl8CG5QMLYNJDpk
-         4QnW9exB7ScLbDGwgR2C7YKL7Pz0ec9nEu9rEebSIi8O+ayFBL0KAF7+9AscOHbERY
-         PyZaIxcJPqC3w==
+        b=H3CkQlgSguKlDWrFmycX88umBlnRsUk7Za9zKkK+kAdhAXmdx4MStI0O8REmnEWn6
+         u2uUwPHCF+Gz5afN//jf8UZwkmQAhBm/3vWzRi+xc45y9OQnhMN3NxRqqQpAA/o3uk
+         dZmU+K4XN+wrp77kODLZIFWSkeMVazhS2xLnm9k5/mo0wqa1lZBy31NMqlBxCbDag+
+         yilmQa+88CjtlhnD4IlWr9B3sJMXbn2QBTM+phqO64/p91UtKICw3iIpWAb+AbblZv
+         fAhXgvOGOWe3If/L1V0VfDQHWg72DKZ3FElITo1AfZq+h72xW4/UxVZWF0Olc7TTIi
+         2F6IqwDBRvgUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for saving OSC clock frequency and the
-drive-strength during OSC clock init and creates an API to restore
-OSC control register value from the saved context.
+This patch has Jetson TX1 platform specific SC7 timing configuration
+in device tree.
 
-This API is invoked by Tegra210 clock driver during system resume
-to restore the  OSC clock settings.
-
-Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
- drivers/clk/tegra/clk.h             |  1 +
- 2 files changed, 16 insertions(+)
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/clk/tegra/clk-tegra-fixed.c b/drivers/clk/tegra/clk-tegra-fixed.c
-index 8d91b2b191cf..7c6c8abfcde6 100644
---- a/drivers/clk/tegra/clk-tegra-fixed.c
-+++ b/drivers/clk/tegra/clk-tegra-fixed.c
-@@ -17,6 +17,10 @@
- #define OSC_CTRL			0x50
- #define OSC_CTRL_OSC_FREQ_SHIFT		28
- #define OSC_CTRL_PLL_REF_DIV_SHIFT	26
-+#define OSC_CTRL_MASK			(0x3f2 |	\
-+					(0xf << OSC_CTRL_OSC_FREQ_SHIFT))
-+
-+static u32 osc_ctrl_ctx;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+index 27723829d033..cb58f79deb48 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+@@ -279,6 +279,13 @@
  
- int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
- 			      unsigned long *input_freqs, unsigned int num,
-@@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
- 	unsigned osc_idx;
+ 	pmc@7000e400 {
+ 		nvidia,invert-interrupt;
++		nvidia,suspend-mode = <0>;
++		nvidia,cpu-pwr-good-time = <0>;
++		nvidia,cpu-pwr-off-time = <0>;
++		nvidia,core-pwr-good-time = <4587 3876>;
++		nvidia,core-pwr-off-time = <39065>;
++		nvidia,core-power-req-active-high;
++		nvidia,sys-clock-req-active-high;
+ 	};
  
- 	val = readl_relaxed(clk_base + OSC_CTRL);
-+	osc_ctrl_ctx = val & OSC_CTRL_MASK;
- 	osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
- 
- 	if (osc_idx < num)
-@@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk *tegra_clks)
- 		*dt_clk = clk;
- 	}
- }
-+
-+void tegra_clk_osc_resume(void __iomem *clk_base)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
-+	val |= osc_ctrl_ctx;
-+	writel_relaxed(val, clk_base + OSC_CTRL);
-+	fence_udelay(2, clk_base);
-+}
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index f1ef6ae8c979..abba6d8a04cd 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -842,6 +842,7 @@ u16 tegra_pll_get_fixed_mdiv(struct clk_hw *hw, unsigned long input_rate);
- int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
- int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
- 		 u8 frac_width, u8 flags);
-+void tegra_clk_osc_resume(void __iomem *clk_base);
- 
- 
- /* Combined read fence with delay */
+ 	/* eMMC */
 -- 
 2.7.4
 
