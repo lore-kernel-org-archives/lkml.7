@@ -2,186 +2,120 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C2CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236F6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2DA20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE6F206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 02:08:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OeaMkMEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbfGaCHJ (ORCPT
+        id S1728129AbfGaCIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 22:07:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3660 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727300AbfGaCHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 22:07:09 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8E1B96ADE25FEEF3F3FE;
-        Wed, 31 Jul 2019 10:07:06 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
- 10:06:56 +0800
-Subject: Re: [PATCH v2 07/10] powerpc/fsl_booke/32: randomize the kernel image
- offset
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>
-References: <20190730074225.39544-1-yanaijie@huawei.com>
- <20190730074225.39544-8-yanaijie@huawei.com>
- <b41c4650-ef30-6f02-d5b3-bc95c5ad3ce0@c-s.fr>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <ab36084e-6cce-89d6-52a7-5c5fe06642b8@huawei.com>
-Date:   Wed, 31 Jul 2019 10:06:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Tue, 30 Jul 2019 22:08:47 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43404 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727300AbfGaCIq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 22:08:46 -0400
+Received: by mail-io1-f68.google.com with SMTP id k20so132782644ios.10;
+        Tue, 30 Jul 2019 19:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DVKzHn3AiDgjL2TSg70JGryYa6JNjz51534bP69c4bo=;
+        b=OeaMkMEsI0c0wtZUN+ae2Xn9kjhZ9iycRduxtwit3OvqnZ7+66zbECfBpwh9M5583+
+         5YSqKnM4g351WOoqyE5uJr+IgWqaSgSRAOlY6wG13/K2Z9sAC1Tq3ODYJU9WYDuaJ+AP
+         4R0PzIW1WVCOiX/6mm2LjHL9uDhwWOAnheTwmJK9sQjRsK35ohqiccygKWdkMYRc9N6M
+         Oqp34wdkpLCiQiFGICLfACjNLAD/h2tu3JAzUI07NigSijAHzYHj968PXbLngpTRd5BG
+         222nfDSZoFysH3qAdwjghAMXz6eeaDNJQYuehGiATicDemBv1HbnS/ykAEI9zSGLRjhl
+         bjqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DVKzHn3AiDgjL2TSg70JGryYa6JNjz51534bP69c4bo=;
+        b=b5i//Az+jubxFqihP8RfUzrfAY7lrJOzwwf9itz8f7v2v4vQvU+NZlw+F9O2iDa8ud
+         Bul4vMq4HMSJIv86mzfFgx8OSfuH41zG/PATDTlwtpZ4ep4aFbJGdZ1iPoffbdZcZ555
+         1EXzZGSADkeL/B+tKIR+jdkJtwoKt+j/cvOA/NmIlmrfQMGpfLd0Lvtqv/3ntjhZvivZ
+         kcQDs6M97k4ukF4AqNceaASgtehIo0aeBcb6HcPgAFewIcf6pQBanUnXNpwbhZkTOg2y
+         2B2lX3gWZtwK3fL0A28JXoqv05xukWNieFonjHuiz/7h54uY4gZ59nFUZAYKAZC2uERI
+         HxWw==
+X-Gm-Message-State: APjAAAUAArcIkeOZpC/Db8rQn5Ss+ifcLrLUQxmXQToc31BsFCP3DCPw
+        6FqPu9DGZZqb5hRcjDVR1Vr8OvfDd0KLcX6vFOY=
+X-Google-Smtp-Source: APXvYqwzQGth7oDH1CzaOi1cJBfASBrA30/A2aXvOg9sbA1+0FSzmDX0r4QTTBczMvKibOuiCz07Lx32jw0WvFyrjbM=
+X-Received: by 2002:a02:3b62:: with SMTP id i34mr126559340jaf.91.1564538925626;
+ Tue, 30 Jul 2019 19:08:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b41c4650-ef30-6f02-d5b3-bc95c5ad3ce0@c-s.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+References: <20190729195226.8862-1-andrew.smirnov@gmail.com>
+ <20190729195226.8862-7-andrew.smirnov@gmail.com> <20190730155112.GA11837@kroah.com>
+In-Reply-To: <20190730155112.GA11837@kroah.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Tue, 30 Jul 2019 19:08:34 -0700
+Message-ID: <CAHQ1cqHhjj5UO=J1YahN8T0uav7BQ05Wsqr1esHR8nhZhsygeA@mail.gmail.com>
+Subject: Re: [PATCH 06/24] tty: serial: fsl_lpuart: Drop unnecessary
+ sg_set_buf() call
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-serial@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Jiri Slaby <jslaby@suse.com>, dl-linux-imx <linux-imx@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 30, 2019 at 8:51 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jul 29, 2019 at 12:52:08PM -0700, Andrey Smirnov wrote:
+> > Sg_init_one() will already call sg_set_buf(), so another explicit call
+> > right after it is unnecessary. Drop it.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Stefan Agner <stefan@agner.ch>
+> > Cc: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Cory Tusar <cory.tusar@zii.aero>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Jiri Slaby <jslaby@suse.com>
+> > Cc: linux-imx@nxp.com
+> > Cc: linux-serial@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  drivers/tty/serial/fsl_lpuart.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+> > index 1b3f2a87e558..b600f591c8c2 100644
+> > --- a/drivers/tty/serial/fsl_lpuart.c
+> > +++ b/drivers/tty/serial/fsl_lpuart.c
+> > @@ -1144,7 +1144,6 @@ static inline int lpuart_start_rx_dma(struct lpuart_port *sport)
+> >               return -ENOMEM;
+> >
+> >       sg_init_one(&sport->rx_sgl, ring->buf, sport->rx_dma_rng_buf_len);
+> > -     sg_set_buf(&sport->rx_sgl, ring->buf, sport->rx_dma_rng_buf_len);
+> >       nent = dma_map_sg(sport->port.dev, &sport->rx_sgl, 1, DMA_FROM_DEVICE);
+> >
+> >       if (!nent) {
+>
+> This patch doesn't apply, is it already in the tree from someone else?
+>
 
+Yeah, looks like d9aa9ab4fe6b5c43b9ccb8a0811dadcfe40ea27f from your
+tty tree already covered this and I didn't have it in my tree. Will
+drop in v2.
 
-On 2019/7/30 17:44, Christophe Leroy wrote:
-> 
-> 
-> Le 30/07/2019 à 09:42, Jason Yan a écrit :
->> After we have the basic support of relocate the kernel in some
->> appropriate place, we can start to randomize the offset now.
->>
->> Entropy is derived from the banner and timer, which will change every
->> build and boot. This not so much safe so additionally the bootloader may
->> pass entropy via the /chosen/kaslr-seed node in device tree.
->>
->> We will use the first 512M of the low memory to randomize the kernel
->> image. The memory will be split in 64M zones. We will use the lower 8
->> bit of the entropy to decide the index of the 64M zone. Then we chose a
->> 16K aligned offset inside the 64M zone to put the kernel in.
->>
->>      KERNELBASE
->>
->>          |-->   64M   <--|
->>          |               |
->>          +---------------+    +----------------+---------------+
->>          |               |....|    |kernel|    |               |
->>          +---------------+    +----------------+---------------+
->>          |                         |
->>          |----->   offset    <-----|
->>
->>                                kimage_vaddr
->>
->> We also check if we will overlap with some areas like the dtb area, the
->> initrd area or the crashkernel area. If we cannot find a proper area,
->> kaslr will be disabled and boot from the original kernel.
->>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> Cc: Diana Craciun <diana.craciun@nxp.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Kees Cook <keescook@chromium.org>
->> ---
->>   arch/powerpc/kernel/kaslr_booke.c | 334 +++++++++++++++++++++++++++++-
->>   1 file changed, 332 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/powerpc/kernel/kaslr_booke.c 
->> b/arch/powerpc/kernel/kaslr_booke.c
->> index 960bce4aa8b9..0bb02e45b928 100644
->> --- a/arch/powerpc/kernel/kaslr_booke.c
->> +++ b/arch/powerpc/kernel/kaslr_booke.c
->> @@ -23,6 +23,8 @@
->>   #include <linux/delay.h>
->>   #include <linux/highmem.h>
->>   #include <linux/memblock.h>
->> +#include <linux/libfdt.h>
->> +#include <linux/crash_core.h>
->>   #include <asm/pgalloc.h>
->>   #include <asm/prom.h>
->>   #include <asm/io.h>
->> @@ -34,15 +36,341 @@
->>   #include <asm/machdep.h>
->>   #include <asm/setup.h>
->>   #include <asm/paca.h>
->> +#include <asm/kdump.h>
->>   #include <mm/mmu_decl.h>
->> +#include <generated/compile.h>
->> +#include <generated/utsrelease.h>
->> +
->> +#ifdef DEBUG
->> +#define DBG(fmt...) printk(KERN_ERR fmt)
->> +#else
->> +#define DBG(fmt...)
->> +#endif
->> +
->> +struct regions {
->> +    unsigned long pa_start;
->> +    unsigned long pa_end;
->> +    unsigned long kernel_size;
->> +    unsigned long dtb_start;
->> +    unsigned long dtb_end;
->> +    unsigned long initrd_start;
->> +    unsigned long initrd_end;
->> +    unsigned long crash_start;
->> +    unsigned long crash_end;
->> +    int reserved_mem;
->> +    int reserved_mem_addr_cells;
->> +    int reserved_mem_size_cells;
->> +};
->>   extern int is_second_reloc;
->> +/* Simplified build-specific string for starting entropy. */
->> +static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
->> +        LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
->> +
->> +static __init void kaslr_get_cmdline(void *fdt)
->> +{
->> +    const char *cmdline = CONFIG_CMDLINE;
->> +    if (!IS_ENABLED(CONFIG_CMDLINE_FORCE)) {
->> +        int node;
->> +        const u8 *prop;
->> +        node = fdt_path_offset(fdt, "/chosen");
->> +        if (node < 0)
->> +            goto out;
->> +
->> +        prop = fdt_getprop(fdt, node, "bootargs", NULL);
->> +        if (!prop)
->> +            goto out;
->> +        cmdline = prop;
->> +    }
->> +out:
->> +    strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
-> 
-> boot_command_line is set by early_init_devtree() in 
-> arch/powerpc/kernel/prom.c
-> Is that too late for you ?
-> 
-
-Yes, it's too late.
-
-> If so, what about calling early_init_dt_scan_chosen() instead of recoding ?
-> 
-
-Good suggestion. I will have a try.
-
-> Christophe
-> 
-> .
-> 
-
+Thanks,
+Andrey Smirnov
