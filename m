@@ -2,255 +2,189 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA76C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05957C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D4A206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A04206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:52:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JSWiVQtt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="egTdSfJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbfGaRwb (ORCPT
+        id S1729889AbfGaRwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:52:31 -0400
-Received: from mail-eopbgr710125.outbound.protection.outlook.com ([40.107.71.125]:44032
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729476AbfGaRwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:52:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OBMqAoTuj/o2lOgaTnKg7iOskpKZgNL36a/k3r7GYPKLNZ/DPnprX1y3O0lCsJRNcalewg0oN8gal95eynWR6oc1BoJJbqpOV2beRBiQ2K4fBp+mClPPLbeDnIUAkehHi0ZJQI5KNSnZ26qVlUlWbEIggsKkCd3eRO6h4TTjAcLRfnLswXnBlJTCSC/CaEKIFzi/erVltHncP2gmS9+qKarPcHYQLjpM5PRp1kR0HQGe88RPyfzWZpXw/4yZJ+JyTZ8r+fB2U/nG7BIKYYnLI0HjcmOh+1zsX+1M9A5AOr8HpUe1RyFN3rGkVAM3cVlejjXaxL0ge8foQsTcDHzIJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lxdFs5z+MZY4K2rne8fcNfqU0IKDavY5HGuQiTmLdNs=;
- b=klujcoP3rDDM6cT0LIPgcdZPgxy/RnJOD+0qmVQVN95KEI2VTH+8Sxpm4ukbPz9MycE/WSBy2xsDR9jMmhbg4c+iEjSNrAEAXUndVXMvqGW6cMG06ilvY/87xWUCiDTAmPzqA+lYvmWZnx8un4kg2ZxJaVrUYaPrr5zG+OLxYnIsMeiynkrvHKb/9h1STmmuuwfmk+cUaksjR3HWPYxcdA8pFeqKCk8AvS1vCmXj6H2iBz9SyRfiN5vxIrBxOTekzqhGXHV3iyzKXGcGaLLQ5hf+/aA7zEtOx/pE7jwQgPTVb3/gM6pP4ESKLRbCQDGadICL8o//BIqO4NhmceM/mQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lxdFs5z+MZY4K2rne8fcNfqU0IKDavY5HGuQiTmLdNs=;
- b=JSWiVQtt1p3bUVatbMStWRH9ILWH8KLrh+SSV0RN2KA3Mn15r31XwSTEZ/mKDthkRNxMFE5AhXjnILbIBjMaS9KPLsHp+1q3OKvQLELWYQUe8gaGG14qmVouYrO/FB9jKPHNdFNZ3UNrFv6w82WYP5kkrA644ty2vgu+4JIA0dY=
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
- SN6PR2101MB1120.namprd21.prod.outlook.com (52.132.117.161) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Wed, 31 Jul 2019 17:52:04 +0000
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::d0c3:ba8d:dfe7:12f9]) by SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::d0c3:ba8d:dfe7:12f9%7]) with mapi id 15.20.2157.001; Wed, 31 Jul 2019
- 17:52:04 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v2 3/7] Drivers: hv: vmbus: Break out synic enable and disable
- operations
-Thread-Topic: [PATCH v2 3/7] Drivers: hv: vmbus: Break out synic enable and
- disable operations
-Thread-Index: AQHVR8ip8baDygktDEW+MgiAj+nQyA==
-Date:   Wed, 31 Jul 2019 17:52:03 +0000
-Message-ID: <1564595464-56520-4-git-send-email-decui@microsoft.com>
-References: <1564595464-56520-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1564595464-56520-1-git-send-email-decui@microsoft.com>
-Reply-To: Dexuan Cui <decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1301CA0011.namprd13.prod.outlook.com
- (2603:10b6:301:29::24) To SN6PR2101MB0942.namprd21.prod.outlook.com
- (2603:10b6:805:4::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1fe9bdba-9af5-4f49-af0c-08d715dfcbc3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1120;
-x-ms-traffictypediagnostic: SN6PR2101MB1120:|SN6PR2101MB1120:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR2101MB11209BBA069D9833F50634DFBFDF0@SN6PR2101MB1120.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 011579F31F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(346002)(136003)(39860400002)(396003)(199004)(189003)(68736007)(10090500001)(36756003)(76176011)(53936002)(6512007)(54906003)(3846002)(305945005)(52116002)(4720700003)(8676002)(3450700001)(14454004)(6436002)(6486002)(99286004)(8936002)(107886003)(25786009)(81156014)(71200400001)(81166006)(71190400001)(6116002)(446003)(66946007)(10290500003)(22452003)(486006)(7736002)(86362001)(11346002)(476003)(1511001)(50226002)(316002)(102836004)(478600001)(66446008)(66556008)(66476007)(64756008)(256004)(4326008)(2616005)(186003)(110136005)(66066001)(6506007)(43066004)(26005)(386003)(2501003)(5660300002)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1120;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KfnPKsM7TwbfaJNdo0Cz8JJuUuSGrFgCvQS8FWkP3POZC7xyYpCx4b9cx3UR4TuPFlR9CUCVIzt/KgdQL58acDO+tWFz2WRT31skyBpu1t68qhhwfIrSFZyptP4Ij/LRm9e2sPuLLdbpqbLvlpe0nCAAQdi3mK8xhJxe/1m4Bfb1IWPQyElxww2V+h/+u0mn1f1sbmIDhZ8muH9vQcY+6OzvQtxYQx50A6fuwysVafBW0vYr16Lr6+wNdJhFlIqDMLKIY0gwZqd4uvA/PoEyMZmek9rR5YLwVe1NOdhI3+valtmxly51ju0hLfwtR/5rz441ryznZE/XKdzWLXkxNo8n8jdxxjMJfKeXyE++QKq/soCzBQtubUT/4wZ/mekoFUbJCLvfZUacakRUUEL91RDJsQ61yv733GaYLKzTsKk=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 31 Jul 2019 13:52:37 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.210]:12635 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729823AbfGaRwg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 13:52:36 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 18AB4400D596B
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 12:52:35 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id ssmBhDPfx3Qi0ssmBhxr7O; Wed, 31 Jul 2019 12:52:35 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hFchKMiyDhYootubyiqttytIhZ2Edx773yhaOnhyt4Y=; b=egTdSfJyPTDGZP+Na86VroAVCR
+        2Lsuae0nFeN9LH1fgfBiG+b1aDdqyCVCmtNDmHpq9w26oE4Qmgf2Wwo9XIqGgxqQ2Jc058+oB8BSq
+        rBljmDkkbw4xGhpZ+cQxVChE9RYn4srsWFo5tVaAMRvAgHLOLR6P8l6s3H26FCx0yCy5MHgmvKSD5
+        iopQAQXGBtCiF7fNjA/kpKFq9Cxqy1V4TA10NIYHpTGCDHLu+xlIN3dXjWfnzm30JyaF3Xc27/Sla
+        L4rvt9iIvq4cRNwFqvpMrK2tF2gGflf2CDFrdRJKxJYt8IkT1fQy+bMlom0c7zMhdK5a0nbP0odt9
+        x1NYiRQA==;
+Received: from [187.192.11.120] (port=42806 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hssmA-003PXu-Kq; Wed, 31 Jul 2019 12:52:34 -0500
+To:     Doug Ledford <dledford@redhat.com>,
+        "Luck, Tony" <tony.luck@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190730202407.31046-1-tony.luck@intel.com>
+ <95f5cf70-1a1d-f48c-efac-f389360f585e@embeddedor.com>
+ <20190731042801.GA2179@iweiny-DESK2.sc.intel.com>
+ <20190731043957.GA1600@agluck-desk2.amr.corp.intel.com>
+ <09a994054e43c8bd6ee49b7d1087c9c4e793058f.camel@redhat.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH V2] IB/core: Add mitigation for Spectre V1
+Message-ID: <1fc90610-7189-c99b-2af1-ae516faa20b4@embeddedor.com>
+Date:   Wed, 31 Jul 2019 12:52:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1fe9bdba-9af5-4f49-af0c-08d715dfcbc3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 17:52:03.8822
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0L7sC6RdCIAatmuLbVzK7zU65PgewRi8KT0d2llgyKwZmX9IxkrLpV3URNAm1wyfjBdnKGcvl1o8awbmTU0paw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1120
+In-Reply-To: <09a994054e43c8bd6ee49b7d1087c9c4e793058f.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hssmA-003PXu-Kq
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:42806
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Break out synic enable and disable operations into separate
-hv_synic_disable_regs() and hv_synic_enable_regs() functions for use by a
-later patch to support hibernation.
 
-There is no functional change except the unnecessary check
-"if (sctrl.enable !=3D 1) return -EFAULT;" which is removed, because when
-we're in hv_synic_cleanup(), we're absolutely sure sctrl.enable must be 1.
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/hv/hv.c           | 66 ++++++++++++++++++++++++++-----------------=
-----
- drivers/hv/hyperv_vmbus.h |  2 ++
- 2 files changed, 39 insertions(+), 29 deletions(-)
+On 7/31/19 9:52 AM, Doug Ledford wrote:
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 6188fb7..fcc5279 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -154,7 +154,7 @@ void hv_synic_free(void)
-  * retrieve the initialized message and event pages.  Otherwise, we create=
- and
-  * initialize the message and event pages.
-  */
--int hv_synic_init(unsigned int cpu)
-+void hv_synic_enable_regs(unsigned int cpu)
- {
- 	struct hv_per_cpu_context *hv_cpu
- 		=3D per_cpu_ptr(hv_context.cpu_context, cpu);
-@@ -196,6 +196,11 @@ int hv_synic_init(unsigned int cpu)
- 	sctrl.enable =3D 1;
-=20
- 	hv_set_synic_state(sctrl.as_uint64);
-+}
-+
-+int hv_synic_init(unsigned int cpu)
-+{
-+	hv_synic_enable_regs(cpu);
-=20
- 	hv_stimer_init(cpu);
-=20
-@@ -205,20 +210,45 @@ int hv_synic_init(unsigned int cpu)
- /*
-  * hv_synic_cleanup - Cleanup routine for hv_synic_init().
-  */
--int hv_synic_cleanup(unsigned int cpu)
-+void hv_synic_disable_regs(unsigned int cpu)
- {
- 	union hv_synic_sint shared_sint;
- 	union hv_synic_simp simp;
- 	union hv_synic_siefp siefp;
- 	union hv_synic_scontrol sctrl;
-+
-+	hv_get_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
-+
-+	shared_sint.masked =3D 1;
-+
-+	/* Need to correctly cleanup in the case of SMP!!! */
-+	/* Disable the interrupt */
-+	hv_set_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
-+
-+	hv_get_simp(simp.as_uint64);
-+	simp.simp_enabled =3D 0;
-+	simp.base_simp_gpa =3D 0;
-+
-+	hv_set_simp(simp.as_uint64);
-+
-+	hv_get_siefp(siefp.as_uint64);
-+	siefp.siefp_enabled =3D 0;
-+	siefp.base_siefp_gpa =3D 0;
-+
-+	hv_set_siefp(siefp.as_uint64);
-+
-+	/* Disable the global synic bit */
-+	hv_get_synic_state(sctrl.as_uint64);
-+	sctrl.enable =3D 0;
-+	hv_set_synic_state(sctrl.as_uint64);
-+}
-+
-+int hv_synic_cleanup(unsigned int cpu)
-+{
- 	struct vmbus_channel *channel, *sc;
- 	bool channel_found =3D false;
- 	unsigned long flags;
-=20
--	hv_get_synic_state(sctrl.as_uint64);
--	if (sctrl.enable !=3D 1)
--		return -EFAULT;
--
- 	/*
- 	 * Search for channels which are bound to the CPU we're about to
- 	 * cleanup. In case we find one and vmbus is still connected we need to
-@@ -249,29 +279,7 @@ int hv_synic_cleanup(unsigned int cpu)
-=20
- 	hv_stimer_cleanup(cpu);
-=20
--	hv_get_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
--
--	shared_sint.masked =3D 1;
--
--	/* Need to correctly cleanup in the case of SMP!!! */
--	/* Disable the interrupt */
--	hv_set_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
--
--	hv_get_simp(simp.as_uint64);
--	simp.simp_enabled =3D 0;
--	simp.base_simp_gpa =3D 0;
--
--	hv_set_simp(simp.as_uint64);
--
--	hv_get_siefp(siefp.as_uint64);
--	siefp.siefp_enabled =3D 0;
--	siefp.base_siefp_gpa =3D 0;
--
--	hv_set_siefp(siefp.as_uint64);
--
--	/* Disable the global synic bit */
--	sctrl.enable =3D 0;
--	hv_set_synic_state(sctrl.as_uint64);
-+	hv_synic_disable_regs(cpu);
-=20
- 	return 0;
- }
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 362e70e..26ea161 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -171,8 +171,10 @@ extern int hv_post_message(union hv_connection_id conn=
-ection_id,
-=20
- extern void hv_synic_free(void);
-=20
-+extern void hv_synic_enable_regs(unsigned int cpu);
- extern int hv_synic_init(unsigned int cpu);
-=20
-+extern void hv_synic_disable_regs(unsigned int cpu);
- extern int hv_synic_cleanup(unsigned int cpu);
-=20
- /* Interface */
---=20
-1.8.3.1
+> 
+> I'm not sure this is the best fix for this.  However, here is where I
+> get to admit that I largely ignored the whole Spectre V1 thing, so I'm
+> not sure I completely understand the vulnerability and the limits to
+> that.  But, looking at the function, it seems we can do an early return
+> without ever taking any of the mutexes in the function in the case of id
+>> = IB_UMAD_MAX_AGENTS, so if we did that, would that separate the
+> checking of id far enough from the usage of it as an array index that we
+> wouldn't need the clamp to prevent speculative prefetch?  About how far,
+> in code terms, does this speculative prefetch occur?
+> 
+> This is the patch I was thinking of:
+> 
 
+>  
+> @@ -884,11 +885,18 @@ static int ib_umad_unreg_agent(struct ib_umad_file *file, u32 __user *arg)
+>  
+>         if (get_user(id, arg))
+>                 return -EFAULT;
+> +       if (id >= IB_UMAD_MAX_AGENTS)
+> +               return -EINVAL;
+>  
+>         mutex_lock(&file->port->file_mutex);
+>         mutex_lock(&file->mutex);
+>  
+> -       if (id >= IB_UMAD_MAX_AGENTS || !__get_agent(file, id)) {
+> +       /*
+> +        * Is our check of id far enough away, code wise, to prevent
+> +        * speculative prefetch?
+> +        */
+> +       id = array_index_nospec(id, IB_UMAD_MAX_AGENTS);
+> +       if (!__get_agent(file, id)) {
+>                 ret = -EINVAL;
+>                 goto out;
+>         }
+> 
+
+This is insufficient. The speculation windows are large:
+
+"Speculative  execution  on  modern  CPUs  can  run  several
+hundred  instructions  ahead." [1]
+
+[1] https://spectreattack.com/spectre.pdf
+
+--
+Gustavo
+
+
+
+--
+Gustavo
