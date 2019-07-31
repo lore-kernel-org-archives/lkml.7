@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA9EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E6DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53AC3206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6A02206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfGaNcd (ORCPT
+        id S1729598AbfGaNch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:32:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34540 "EHLO mx1.redhat.com"
+        Wed, 31 Jul 2019 09:32:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35176 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729538AbfGaNca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:32:30 -0400
+        id S1729548AbfGaNc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:32:27 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 61BEC308FC4E;
-        Wed, 31 Jul 2019 13:32:29 +0000 (UTC)
-Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A7C460852;
+        by mx1.redhat.com (Postfix) with ESMTPS id 4870FC0022E4;
         Wed, 31 Jul 2019 13:32:27 +0000 (UTC)
+Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6EE6960852;
+        Wed, 31 Jul 2019 13:32:25 +0000 (UTC)
 From:   Thomas Huth <thuth@redhat.com>
 To:     kvm@vger.kernel.org,
         Christian Borntraeger <borntraeger@de.ibm.com>,
@@ -35,181 +35,125 @@ Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Peter Xu <peterx@redhat.com>, Andrew Jones <drjones@redhat.com>
-Subject: [PATCH v2 3/3] KVM: selftests: Enable dirty_log_test on s390x
-Date:   Wed, 31 Jul 2019 15:32:16 +0200
-Message-Id: <20190731133216.5620-4-thuth@redhat.com>
+Subject: [PATCH v2 2/3] KVM: selftests: Implement ucall() for s390x
+Date:   Wed, 31 Jul 2019 15:32:15 +0200
+Message-Id: <20190731133216.5620-3-thuth@redhat.com>
 In-Reply-To: <20190731133216.5620-1-thuth@redhat.com>
 References: <20190731133216.5620-1-thuth@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 31 Jul 2019 13:32:29 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 31 Jul 2019 13:32:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To run the dirty_log_test on s390x, we have to make sure that we
-access the dirty log bitmap with little endian byte ordering and
-we have to properly align the memslot of the guest.
-Also all dirty bits of a segment are set once on s390x when one
-of the pages of a segment are written to for the first time, so
-we have to make sure that we touch all pages during the first
-iteration to keep the test in sync here.
-DEFAULT_GUEST_TEST_MEM needs an adjustment, too. On some s390x
-distributions, the ELF binary is linked to address 0x80000000,
-so we have to avoid that our test region overlaps into this area.
-0xc0000000 seems to be a good alternative that should work on x86
-and aarch64, too.
+On s390x, we can neither exit via PIO nor MMIO, but have to use an
+instruction like DIAGNOSE. Now that ucall() is implemented, we can
+use it in the sync_reg_test on s390x, too.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Thomas Huth <thuth@redhat.com>
 ---
- tools/testing/selftests/kvm/Makefile         |  1 +
- tools/testing/selftests/kvm/dirty_log_test.c | 59 +++++++++++++++++---
- 2 files changed, 53 insertions(+), 7 deletions(-)
+ tools/testing/selftests/kvm/Makefile          |  2 +-
+ tools/testing/selftests/kvm/lib/s390x/ucall.c | 56 +++++++++++++++++++
+ .../selftests/kvm/s390x/sync_regs_test.c      |  6 +-
+ 3 files changed, 61 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/lib/s390x/ucall.c
 
 diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 75ea1ecbf85a..1b48a94b4350 100644
+index a51e3b83df40..75ea1ecbf85a 100644
 --- a/tools/testing/selftests/kvm/Makefile
 +++ b/tools/testing/selftests/kvm/Makefile
-@@ -33,6 +33,7 @@ TEST_GEN_PROGS_aarch64 += dirty_log_test
- TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
+@@ -10,7 +10,7 @@ UNAME_M := $(shell uname -m)
+ LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
+ LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/ucall.c
+ LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
+-LIBKVM_s390x = lib/s390x/processor.c
++LIBKVM_s390x = lib/s390x/processor.c lib/s390x/ucall.c
  
- TEST_GEN_PROGS_s390x += s390x/sync_regs_test
-+TEST_GEN_PROGS_s390x += dirty_log_test
- TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
- 
- TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
-diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-index 5d5ae1be4984..dc3346e090f5 100644
---- a/tools/testing/selftests/kvm/dirty_log_test.c
-+++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -26,8 +26,8 @@
- /* The memory slot index to track dirty pages */
- #define TEST_MEM_SLOT_INDEX		1
- 
--/* Default guest test memory offset, 1G */
--#define DEFAULT_GUEST_TEST_MEM		0x40000000
-+/* Default guest test virtual memory offset */
-+#define DEFAULT_GUEST_TEST_MEM		0xc0000000
- 
- /* How many pages to dirty for each guest loop */
- #define TEST_PAGES_PER_LOOP		1024
-@@ -38,6 +38,27 @@
- /* Interval for each host loop (ms) */
- #define TEST_HOST_LOOP_INTERVAL		10UL
- 
-+/* Dirty bitmaps are always little endian, so we need to swap on big endian */
-+#if defined(__s390x__)
-+# define BITOP_LE_SWIZZLE	((BITS_PER_LONG-1) & ~0x7)
-+# define test_bit_le(nr, addr) \
-+	test_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-+# define set_bit_le(nr, addr) \
-+	set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-+# define clear_bit_le(nr, addr) \
-+	clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-+# define test_and_set_bit_le(nr, addr) \
-+	test_and_set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-+# define test_and_clear_bit_le(nr, addr) \
-+	test_and_clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-+#else
-+# define test_bit_le		test_bit
-+# define set_bit_le		set_bit
-+# define clear_bit_le		clear_bit
-+# define test_and_set_bit_le	test_and_set_bit
-+# define test_and_clear_bit_le	test_and_clear_bit
-+#endif
+ TEST_GEN_PROGS_x86_64 = x86_64/cr4_cpuid_sync_test
+ TEST_GEN_PROGS_x86_64 += x86_64/evmcs_test
+diff --git a/tools/testing/selftests/kvm/lib/s390x/ucall.c b/tools/testing/selftests/kvm/lib/s390x/ucall.c
+new file mode 100644
+index 000000000000..fd589dc9bfab
+--- /dev/null
++++ b/tools/testing/selftests/kvm/lib/s390x/ucall.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ucall support. A ucall is a "hypercall to userspace".
++ *
++ * Copyright (C) 2019 Red Hat, Inc.
++ */
++#include "kvm_util.h"
 +
- /*
-  * Guest/Host shared variables. Ensure addr_gva2hva() and/or
-  * sync_global_to/from_guest() are used when accessing from
-@@ -69,11 +90,23 @@ static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
-  */
- static void guest_code(void)
- {
-+	uint64_t addr;
- 	int i;
- 
-+	/*
-+	 * On s390x, all pages of a 1M segment are initially marked as dirty
-+	 * when a page of the segment is written to for the very first time.
-+	 * To compensate this specialty in this test, we need to touch all
-+	 * pages during the first iteration.
-+	 */
-+	for (i = 0; i < guest_num_pages; i++) {
-+		addr = guest_test_virt_mem + i * guest_page_size;
-+		*(uint64_t *)addr = READ_ONCE(iteration);
++void ucall_init(struct kvm_vm *vm, void *arg)
++{
++}
++
++void ucall_uninit(struct kvm_vm *vm)
++{
++}
++
++void ucall(uint64_t cmd, int nargs, ...)
++{
++	struct ucall uc = {
++		.cmd = cmd,
++	};
++	va_list va;
++	int i;
++
++	nargs = nargs <= UCALL_MAX_ARGS ? nargs : UCALL_MAX_ARGS;
++
++	va_start(va, nargs);
++	for (i = 0; i < nargs; ++i)
++		uc.args[i] = va_arg(va, uint64_t);
++	va_end(va);
++
++	/* Exit via DIAGNOSE 0x501 (normally used for breakpoints) */
++	asm volatile ("diag 0,%0,0x501" : : "a"(&uc) : "memory");
++}
++
++uint64_t get_ucall(struct kvm_vm *vm, uint32_t vcpu_id, struct ucall *uc)
++{
++	struct kvm_run *run = vcpu_state(vm, vcpu_id);
++	struct ucall ucall = {};
++
++	if (run->exit_reason == KVM_EXIT_S390_SIEIC &&
++	    run->s390_sieic.icptcode == 4 &&
++	    (run->s390_sieic.ipa >> 8) == 0x83 &&    /* 0x83 means DIAGNOSE */
++	    (run->s390_sieic.ipb >> 16) == 0x501) {
++		int reg = run->s390_sieic.ipa & 0xf;
++
++		memcpy(&ucall, addr_gva2hva(vm, run->s.regs.gprs[reg]),
++		       sizeof(ucall));
++
++		vcpu_run_complete_io(vm, vcpu_id);
++		if (uc)
++			memcpy(uc, &ucall, sizeof(ucall));
 +	}
 +
- 	while (true) {
- 		for (i = 0; i < TEST_PAGES_PER_LOOP; i++) {
--			uint64_t addr = guest_test_virt_mem;
-+			addr = guest_test_virt_mem;
- 			addr += (READ_ONCE(random_array[i]) % guest_num_pages)
- 				* guest_page_size;
- 			addr &= ~(host_page_size - 1);
-@@ -158,15 +191,15 @@ static void vm_dirty_log_verify(unsigned long *bmap)
- 		value_ptr = host_test_mem + page * host_page_size;
++	return ucall.cmd;
++}
+diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+index e85ff0d69548..bbc93094519b 100644
+--- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
++++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+@@ -25,9 +25,11 @@
  
- 		/* If this is a special page that we were tracking... */
--		if (test_and_clear_bit(page, host_bmap_track)) {
-+		if (test_and_clear_bit_le(page, host_bmap_track)) {
- 			host_track_next_count++;
--			TEST_ASSERT(test_bit(page, bmap),
-+			TEST_ASSERT(test_bit_le(page, bmap),
- 				    "Page %"PRIu64" should have its dirty bit "
- 				    "set in this iteration but it is missing",
- 				    page);
- 		}
- 
--		if (test_bit(page, bmap)) {
-+		if (test_bit_le(page, bmap)) {
- 			host_dirty_count++;
- 			/*
- 			 * If the bit is set, the value written onto
-@@ -209,7 +242,7 @@ static void vm_dirty_log_verify(unsigned long *bmap)
- 				 * should report its dirtyness in the
- 				 * next run
- 				 */
--				set_bit(page, host_bmap_track);
-+				set_bit_le(page, host_bmap_track);
- 			}
- 		}
- 	}
-@@ -293,6 +326,10 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
- 	 * case where the size is not aligned to 64 pages.
- 	 */
- 	guest_num_pages = (1ul << (30 - guest_page_shift)) + 16;
-+#ifdef __s390x__
-+	/* Round up to multiple of 1M (segment size) */
-+	guest_num_pages = (guest_num_pages + 0xff) & ~0xffUL;
-+#endif
- 	host_page_size = getpagesize();
- 	host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
- 			 !!((guest_num_pages * guest_page_size) % host_page_size);
-@@ -304,6 +341,11 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
- 		guest_test_phys_mem = phys_offset;
- 	}
- 
-+#ifdef __s390x__
-+	/* Align to 1M (segment size) */
-+	guest_test_phys_mem &= ~((1 << 20) - 1);
-+#endif
+ static void guest_code(void)
+ {
++	register u64 stage asm("11") = 0;
 +
- 	DEBUG("guest physical test memory offset: 0x%lx\n", guest_test_phys_mem);
- 
- 	bmap = bitmap_alloc(host_num_pages);
-@@ -454,6 +496,9 @@ int main(int argc, char *argv[])
- 		vm_guest_mode_params_init(VM_MODE_P48V48_64K, true, true);
+ 	for (;;) {
+-		asm volatile ("diag 0,0,0x501");
+-		asm volatile ("ahi 11,1");
++		GUEST_SYNC(0);
++		asm volatile ("ahi %0,1" : : "r"(stage));
  	}
- #endif
-+#ifdef __s390x__
-+	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
-+#endif
+ }
  
- 	while ((opt = getopt(argc, argv, "hi:I:p:m:")) != -1) {
- 		switch (opt) {
 -- 
 2.21.0
 
