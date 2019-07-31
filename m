@@ -2,98 +2,228 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F778C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64300C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66A9206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BCC208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:32:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lz/OoRSB"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aF22qCf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbfGaPb7 (ORCPT
+        id S1728771AbfGaPci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:31:59 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44578 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbfGaPb7 (ORCPT
+        Wed, 31 Jul 2019 11:32:38 -0400
+Received: from mail-wm1-f48.google.com ([209.85.128.48]:55196 "EHLO
+        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728197AbfGaPch (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:31:59 -0400
-Received: by mail-io1-f65.google.com with SMTP id s7so137029417iob.11
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:31:59 -0700 (PDT)
+        Wed, 31 Jul 2019 11:32:37 -0400
+Received: by mail-wm1-f48.google.com with SMTP id p74so61261247wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:32:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mUN1pvMl8svBUjCaR0OxnSiYPVvf6+NNwTE7JqyHeGo=;
-        b=Lz/OoRSBQngNq7qk2Ls23OczsyfF+YccBluCPWG7IS7H2uuPnlh1HSGyfgXfwgGlES
-         cVL2dXXA7Fhc4epnBjF0cO1zMIQ5f3Pn6flq9z88B6QJPH6EbMIx9wTNvpq5yRvjWqyc
-         wpgsnb5DDxaigNDWgbA/vmbkhmMOF4JBZU/4Bk11OUt1nDfwbNY7SsZF72Nc5/nmMCwE
-         yGTwQfUViPaZ0//I4K21aNpX+U9cFpehlX+JN5PI558d9qtExMGTbAv2ZgVVWRAmkWt8
-         YF0aPFQ5DNHkEGfwmEvmJanvVR26ZoEuPjy7iKpYk84Ya/KQh+EsPapOIbwr+r7TguNI
-         uNVg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=f/hNdz0qX9ihYQK8skLrxEItTeCBiCN+CMcmJWDZmZ8=;
+        b=aF22qCf2+80nfULt45GEqs6RMQa7hWf/lxvZC8YZQyD1qUazIqf48Mb4Da7QzAaQCI
+         Wts4VUoSHfVqp9yjTdbtGMLJavglnjyumhxEsIhFyAtts0kGh/6m9YtXjs/lryMsQFfH
+         8QSzz5KwKVOuFd8FSIY0R417Lvq5kDRr1QAVO+NYoKExLx9wXxqdRcJmovRjfPY2fW96
+         9R3LstiXLKMtZ60NZKY4Sy+JPNtZ6GpKp5BqLseM76Q4vDfdW4bdDWIL9kpVaBDMtbIX
+         ze5jBIrokDIh7PqkyKmSrRg5ZYC/H2bsZoKA2DQj57NLAiybqDpzIHHBNBIxmvqEHRQp
+         j0MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mUN1pvMl8svBUjCaR0OxnSiYPVvf6+NNwTE7JqyHeGo=;
-        b=eCG/2yZ1Ct6qMpD9JEFRfT6gluhXgsDH4ECixZ7Sn7yXahpzFreil+72nR/D0zKNyh
-         ut+haCLNVZm6RJ0+Qeu+ur8JSkEJrIZguZYmEUCDut4Xz0h50jiFzLs2Acsw1XJNFyc6
-         /rizqvFwjIV7foBPWcf1Z+RHgLJ/aQdU6Dr2rx4pdl+Hd17EuGmfwNVvwR6rMzyYRsSm
-         pCB0OCSA/XDEu6C9SQvl0C8eRJtYe/GhW8Uoy0ye+pjblEZnInn+2RtMh4zcvGw51BXz
-         4ffBLfmQ7oqDlN4nneD+qaMZV+JPHuo/jksNclnYG+gOum3sUVruH2rVHSZN1UOtaOxK
-         yK9w==
-X-Gm-Message-State: APjAAAUQ+xDNSJm5CNnRiqV8hdPqKntw3V9hg83LTw0a50D9a4TTDCgV
-        dbm+RErloIuUJ1Dn+MtEpJGYzSmykglxuj2FvEiKCg==
-X-Google-Smtp-Source: APXvYqw2UXK6ZDLM4RK1EtyppjWajVOjmU7VeSiTcfg7vyOElSybY1Vr7ei0QqNz3/vdV59RExuEHrI8732XCga8lek=
-X-Received: by 2002:a5e:c241:: with SMTP id w1mr106076388iop.58.1564587118129;
- Wed, 31 Jul 2019 08:31:58 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=f/hNdz0qX9ihYQK8skLrxEItTeCBiCN+CMcmJWDZmZ8=;
+        b=Dqfex8+Ikq2wsIyq575im0HP4IqHHwBjow3YygpVJkOIqf91rewUiE7nXYnCe0GHC6
+         BgdrFt4v+ReT9MCY4kxf5t4jWlclKOFIrNQiKrmHSiobEtIzD6Z7w+uikV8w5v6ZO7vd
+         ambb+o+dPqCzdfjZlxG9ZfvRtqUno3o/utzNcLnQATRyNPcKmeawhrumZowTX0QvS+m/
+         dIKF9x/LS1x54wCiC+5L8gmk8wIRMzoRS0ghq5EuxBcK1wRfOREY4/qd08hebxQ4Ic5J
+         v81higqdDKOppMLDrlFzRoFJEusMBj9rS4UecGHQVa1Tabi7PUyTGN+MI1xgs/1b/E5A
+         dJnQ==
+X-Gm-Message-State: APjAAAWzdxotJ9IhSIcgI8DyWv5QMiux9AxXiWzScwEgQEazW+JmhAng
+        lXUVWso97VLps0GM9N99Iy+cpg==
+X-Google-Smtp-Source: APXvYqxaviW4fEOrpmx/4Evy7yl+eOLL4PdevLrhHZKw3/QB5/lABaiB1v26yFpmsB6ArUS1wMPchg==
+X-Received: by 2002:a7b:ce8a:: with SMTP id q10mr105816482wmj.109.1564587154590;
+        Wed, 31 Jul 2019 08:32:34 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id r123sm61555981wme.7.2019.07.31.08.32.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 08:32:33 -0700 (PDT)
+Subject: Re: Review required [Was: Associate ddc adapters with connectors]
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Airlie <airlied@linux.ie>, Liviu Dudau <liviu.dudau@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Shawn Guo <shawnguo@kernel.org>, kernel@collabora.com,
+        linux-samsung-soc@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-arm-msm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        amd-gfx@lists.freedesktop.org,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        freedreno@lists.freedesktop.org,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+References: <cover.1564161140.git.andrzej.p@collabora.com>
+ <20190726183520.GA22572@ravnborg.org> <20190726185538.GD14981@ravnborg.org>
+ <6560f93c-a48f-2a8c-afeb-d5e8e200480d@baylibre.com>
+ <20190731104007.GA23138@ravnborg.org>
+ <959cf323-c6b9-895b-592c-81c52aacae6e@collabora.com>
+ <ce68a0df-1719-7b53-b0ed-89caa9afc4a0@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <65481afa-1104-4ee9-e53d-f2732a10d4b9@baylibre.com>
+Date:   Wed, 31 Jul 2019 17:32:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <0000000000004c2416058c594b30@google.com> <24282.1562074644@warthog.procyon.org.uk>
- <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com>
- <20330.1564583454@warthog.procyon.org.uk> <CACT4Y+Y4cRgaRPJ_gz_53k85inDKq+X+bWmOTv1gPLo=Yod1=A@mail.gmail.com>
- <22318.1564586386@warthog.procyon.org.uk>
-In-Reply-To: <22318.1564586386@warthog.procyon.org.uk>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 31 Jul 2019 17:31:45 +0200
-Message-ID: <CACT4Y+bjLBwVK_6fz2H8fXm0baAVX+vRJ4UbVWG_7yNUO-SOUg@mail.gmail.com>
-Subject: Re: kernel BUG at net/rxrpc/local_object.c:LINE!
-To:     David Howells <dhowells@redhat.com>
-Cc:     syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ce68a0df-1719-7b53-b0ed-89caa9afc4a0@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 5:19 PM David Howells <dhowells@redhat.com> wrote:
->
-> Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> > Please send a patch for testing that enables this tracing
-> > unconditionally. This should have the same effect. There is no way to
-> > hook into a middle of the automated process and arbitrary tune things.
->
-> I don't know how to do that off hand.  Do you have an example?
+Hi Andrzej,
 
-Few messages above I asked it to test:
-https://groups.google.com/d/msg/syzkaller-bugs/gEnZkmEWf1s/r2_X_KVQAQAJ
+On 31/07/2019 16:22, Neil Armstrong wrote:
+> On 31/07/2019 15:10, Andrzej Pietrasiewicz wrote:
+>> W dniu 31.07.2019 o 12:40, Sam Ravnborg pisze:
+>>> Hi Neil.
+>>>
+>>> On Wed, Jul 31, 2019 at 10:00:14AM +0200, Neil Armstrong wrote:
+>>>> Hi Sam,
+>>>>
+>>>> On 26/07/2019 20:55, Sam Ravnborg wrote:
+>>>>> Hi all.
+>>>>>
+>>>>> Andrzej have done a good job following up on feedback and this series is
+>>>>> now ready.
+>>>>>
+>>>>> We need ack on the patches touching the individual drivers before we can
+>>>>> proceed.
+>>>>> Please check your drivers and get back.
+>>>>
+>>>> I can apply all core and maintainer-acked patches for now :
+>>>> 1, 2, 7, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23
+>>>>
+>>>> and Andrzej can resend not applied patches with Yours and Emil's Reviewed-by,
+>>>> so we can wait a few more days to apply them.
+>>>
+>>> Sounds like a good plan.
+>>> Thanks for thaking care of this.
+>>
+>> When is it good time to resend patches 3, 4, 5, 6, 8, 9, 12, 13, 14, 15, 24 as a
+>> new series?
+> 
+> I'll ping you when everything is applied, build-tested and pushed on drm-misc-next
 
-Basically, git repo + branch + patch. Here are the docs:
-https://github.com/google/syzkaller/blob/master/docs/syzbot.md#testing-patches
+I pushed 1, 2, 7, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23 :
+bed7a2182de6 drm/radeon: Provide ddc symlink in connector sysfs directory
+5b50fa2b35a4 drm/amdgpu: Provide ddc symlink in connector sysfs directory
+cfb444552926 drm/bridge: ti-tfp410: Provide ddc symlink in connector sysfs directory
+9ebc4d2140ad drm/bridge: dw-hdmi: Provide ddc symlink in connector sysfs directory
+a4f9087e85de drm/bridge: dumb-vga-dac: Provide ddc symlink in connector sysfs directory
+350fd554ee44 drm/ast: Provide ddc symlink in connector sysfs directory
+9572ae176a10 drm/mgag200: Provide ddc symlink in connector sysfs directory
+7058e76682d7 drm: sti: Provide ddc symlink in hdmi connector sysfs directory
+2ae7eb372ed4 drm/imx: imx-tve: Provide ddc symlink in connector's sysfs
+be0ec35940bc drm/imx: imx-ldb: Provide ddc symlink in connector's sysfs
+1e8f17855ff8 drm/sun4i: hdmi: Provide ddc symlink in sun4i hdmi connector sysfs directory
+100163df4203 drm: Add drm_connector_init() variant with ddc
+e1a29c6c5955 drm: Add ddc link in sysfs created by drm_connector
 
+Neil
 
-> Anyway, I think rxrpc_local_processor() is broken with respect to refcounting
-> as it gets scheduled when usage==0, but that doesn't stop it being rescheduled
-> again by a network packet before it manages to close the UDP socket.
->
-> David
+> 
+> Neil
+> 
+>>
+>> Andrzej
+> 
+
