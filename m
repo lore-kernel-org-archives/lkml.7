@@ -2,137 +2,122 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E6EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE20BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C37208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:46:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBtfxVJW"
+	by mail.kernel.org (Postfix) with ESMTP id AAB43206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388353AbfGaNqn (ORCPT
+        id S1728956AbfGaNsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:46:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39001 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfGaNqm (ORCPT
+        Wed, 31 Jul 2019 09:48:13 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:45470 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbfGaNsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:46:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f17so27914272pfn.6;
-        Wed, 31 Jul 2019 06:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RYIopWVWcpN8sf8fn3WkAJoSebITP0aCuEJMOu9tUgo=;
-        b=mBtfxVJW9PnBRKrB+uQBu32BkJW1DpQZK21apuGw6xkdbEf29gIZyyKKBNKsyyZm7T
-         Ga8GPsjvU27IBLreAzB7a7JBLV3nGCHxyflt8fC1EwA6VwdBfXDpx/LNS41rsT+kQ8Iy
-         zDWh6KkJWPSgwX3Ly9uADX1D/I/alhwGVlE8+MoaV6yis/Nx0NxQzD8Vasx70JUoBQLl
-         gFz9JRgRRM3XSE5pOVNr5yNywlr8SvsPxy3La4y8RJkVKMTT6V7kF44Efel3pU/5L+0q
-         wvIeY52cfH5D1V9uo9EVXnVAONdv7VVM9tng9EvnE42YXqooX738ht5TCdp+HtDTUlBG
-         PDkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RYIopWVWcpN8sf8fn3WkAJoSebITP0aCuEJMOu9tUgo=;
-        b=is3VUeFa+ROoe1ueeviahILRpGoR2vt0g0fmSFXpjKlk7pyQO2hKunV0EzJ0Cn4jZH
-         KO5Xhtdimwz8r8oj5JZoAT0d16sSx7n7MSVIHTF9zESJMjZzxQNpU3I8vBqbVVRAHyIo
-         Nodqm2o0ie0JZ61W8raZ+wTtWArG3leOmnk0rsl3JsaEwbWdBMWJ1wwnfoBJA1UcMPbC
-         pULnCulVKKosWPKe9oDozhic5MRbvTPJicRlLRlYfqF3aY4gHpGhzd39zRSEDHoQQHFo
-         EVPveuC2N97DngTTi+dwvM6EwTBrqrOxmSbPC3NKg0faCaLWEsbgo1nFrzhgzNGv8bIS
-         3nFA==
-X-Gm-Message-State: APjAAAWlji+V5KrzSYI7u2VRYI9OU/QiP1/JCRrZdnSWYZmfj3Xgr8Ky
-        EZAAeiIbq2Z/ixgXhHNT+FI=
-X-Google-Smtp-Source: APXvYqyJ632HMr8qTa4ZHPJ7wJMKy+mNNR1MgRTMRnjyHAyoRP9i2yT3EBmczwD7Wk7y+Y9PJWFOLg==
-X-Received: by 2002:a63:cb4f:: with SMTP id m15mr38212861pgi.100.1564580801437;
-        Wed, 31 Jul 2019 06:46:41 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id u134sm66894809pfc.19.2019.07.31.06.46.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 06:46:40 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 06:46:38 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Richard Gong <richard.gong@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups
- easily
-Message-ID: <20190731134638.GD147138@dtor-ws>
-References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
- <20190731131045.GB147138@dtor-ws>
- <20190731133840.GN23480@smile.fi.intel.com>
+        Wed, 31 Jul 2019 09:48:13 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hsoxZ-0000KL-F1; Wed, 31 Jul 2019 09:48:05 -0400
+Message-ID: <c91e6104acaef118ae09e4b4b0c70232c4583293.camel@surriel.com>
+Subject: Re: [PATCH v3] sched/core: Don't use dying mm as active_mm of
+ kthreads
+From:   Rik van Riel <riel@surriel.com>
+To:     Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Phil Auld <pauld@redhat.com>, Michal Hocko <mhocko@kernel.org>
+Date:   Wed, 31 Jul 2019 09:48:04 -0400
+In-Reply-To: <b5a462b8-8ef6-6d2c-89aa-b5009c194000@redhat.com>
+References: <20190729210728.21634-1-longman@redhat.com>
+         <ec9effc07a94b28ecf364de40dee183bcfb146fc.camel@surriel.com>
+         <3e2ff4c9-c51f-8512-5051-5841131f4acb@redhat.com>
+         <8021be4426fdafdce83517194112f43009fb9f6d.camel@surriel.com>
+         <b5a462b8-8ef6-6d2c-89aa-b5009c194000@redhat.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-xAvz8PAt4EpYAA5Kq7uu"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731133840.GN23480@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 04:38:40PM +0300, Andy Shevchenko wrote:
-> On Wed, Jul 31, 2019 at 06:10:45AM -0700, Dmitry Torokhov wrote:
-> > On Wed, Jul 31, 2019 at 02:43:39PM +0200, Greg Kroah-Hartman wrote:
-> > > This patch originally started out just as a way for platform drivers to
-> > > easily add a sysfs group in a race-free way, but thanks to Dmitry's
-> > > patch, this series now is for all drivers in the kernel (hey, a unified
-> > > driver model works!!!)
-> > > 
-> > > I've only converted a few platform drivers here in this series to show
-> > > how it works, but other busses can be converted after the first patch
-> > > goes into the tree.
-> > > 
-> > > Here's the original 00 message, for people to get an idea of what is
-> > > going on here:
-> > > 
-> > > If a platform driver wants to add a sysfs group, it has to do so in a
-> > > racy way, adding it after the driver is bound.  To resolve this issue,
-> > > have the platform driver core do this for the driver, making the
-> > > individual drivers logic smaller and simpler, and solving the race at
-> > > the same time.
-> > > 
-> > > All of these patches depend on the first patch.  I'll take the first one
-> > > through my driver-core tree, and any subsystem maintainer can either ack
-> > > their individul patch and I will be glad to also merge it, or they can
-> > > wait until after 5.4-rc1 when the core patch hits Linus's tree and then
-> > > take it, it's up to them.
-> > 
-> > Maybe make an immutable branch off 5.2 with just patch 1/10 so that
-> > subsystems (and the driver core tree itself) could pull it in at their
-> > leisure into their "*-next" branches and did not have to wait till 5.4
-> > or risk merge clashes?
-> 
-> Isn't cherry-pick enough for one patch?
 
-With cherry-picking you run into potential merge conflicts if Greg
-changes more code in the same area. Plus, once everything is merged into
-Linus' tree, there will be N git commits adding the same thing.
+--=-xAvz8PAt4EpYAA5Kq7uu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With immutable branch there is a single git commit, so merges are
-guaranteed to be clean, with no conflicts.
+On Tue, 2019-07-30 at 17:01 -0400, Waiman Long wrote:
+> On 7/29/19 8:26 PM, Rik van Riel wrote:
+> > On Mon, 2019-07-29 at 17:42 -0400, Waiman Long wrote:
+> >=20
+> > > What I have found is that a long running process on a mostly idle
+> > > system
+> > > with many CPUs is likely to cycle through a lot of the CPUs
+> > > during
+> > > its
+> > > lifetime and leave behind its mm in the active_mm of those
+> > > CPUs.  My
+> > > 2-socket test system have 96 logical CPUs. After running the test
+> > > program for a minute or so, it leaves behind its mm in about half
+> > > of
+> > > the
+> > > CPUs with a mm_count of 45 after exit. So the dying mm will stay
+> > > until
+> > > all those 45 CPUs get new user tasks to run.
+> > OK. On what kernel are you seeing this?
+> >=20
+> > On current upstream, the code in native_flush_tlb_others()
+> > will send a TLB flush to every CPU in mm_cpumask() if page
+> > table pages have been freed.
+> >=20
+> > That should cause the lazy TLB CPUs to switch to init_mm
+> > when the exit->zap_page_range path gets to the point where
+> > it frees page tables.
+> >=20
+> I was using the latest upstream 5.3-rc2 kernel. It may be the case
+> that
+> the mm has been switched, but the mm_count field of the active_mm of
+> the
+> kthread is not being decremented until a user task runs on a CPU.
 
-Thanks.
+Is that something we could fix from the TLB flushing
+code?
 
--- 
-Dmitry
+When switching to init_mm, drop the refcount on the
+lazy mm?
+
+That way that overhead is not added to the context
+switching code.
+
+--=20
+All Rights Reversed.
+
+--=-xAvz8PAt4EpYAA5Kq7uu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl1BnBUACgkQznnekoTE
+3oP8LggAs4XburHZ+HTI3IJjkgfu6S82BUog14l4Iqg4Pk4/KMkf5dPrftjy8atc
+BcB98mXDlfQCjyPd3gj8JZVlxmpwcendnEKgh1ErkLh5cDDTUnhil7dSQjCVLCBi
+KRxakwewtyuK1MwCtcDM0fd1GhNJS/VWfGzDh5BxSLFbQSNlhGZyxR92xMMe9ra0
+xIaIzzSdYJ9B9Uno9ZlaJdZwenrS/zEpE4iet6MSFaf/yy0gU0Bk07/x2IYNwsOB
+0diPL3V6VWTPG7k0fjfiaBoDjSdBaogMAPWEO+0fG2g4KQMsxyPg1Kgfrayw2NW7
+RSzLXBmZNFvkqJZMnErK1bmn937QQg==
+=14CR
+-----END PGP SIGNATURE-----
+
+--=-xAvz8PAt4EpYAA5Kq7uu--
+
