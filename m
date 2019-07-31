@@ -2,122 +2,128 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776DAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEFCC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5159F2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C482067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UenDJ17y"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KsY1PHc+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbfGaVIk (ORCPT
+        id S1730685AbfGaVLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:08:40 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10353 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfGaVIk (ORCPT
+        Wed, 31 Jul 2019 17:11:13 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17157 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730210AbfGaVLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:08:40 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4203570002>; Wed, 31 Jul 2019 14:08:39 -0700
+        Wed, 31 Jul 2019 17:11:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4203ee0000>; Wed, 31 Jul 2019 14:11:10 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 31 Jul 2019 14:08:39 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 31 Jul 2019 14:11:08 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:08:39 -0700
-Received: from [10.110.102.167] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
- 2019 21:08:38 +0000
-Subject: Re: [PATCH v7 16/20] arm64: tegra: Enable wake from deep sleep on RTC
- alarm
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
+        by hqpgpgate101.nvidia.com on Wed, 31 Jul 2019 14:11:08 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:11:08 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 31 Jul 2019 21:11:08 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.167]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d4203ec0000>; Wed, 31 Jul 2019 14:11:08 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>
 CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
         <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-17-git-send-email-skomatineni@nvidia.com>
- <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <d4709085-f705-2608-08a8-65b238ae8844@nvidia.com>
-Date:   Wed, 31 Jul 2019 14:08:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        <digetx@gmail.com>, <devicetree@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <linux-pm@vger.kernel.org>
+Subject: [PATCH v7 12/20] clk: tegra210: Use fence_udelay during PLLU init
+Date:   Wed, 31 Jul 2019 14:10:55 -0700
+Message-ID: <1564607463-28802-13-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564607319; bh=XlHpdHbtbxW+pGHBpUV41umA2n21IWFw4wGwv1QIPi0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=UenDJ17yUxeK7zkDG7Pkq2W+yM57LLyemW5S81Fdy6R8p1oyT8DorQkbzRjPJ+VA3
-         kKqSdsHynICnxC9SZFU/RdKJ2+k1jt6h9n6o5u6++a8qBAt/CREyG2MPWJk0bAb+tI
-         VYK9AhlG1WWjcSqm4R3MwvZIsZujMkJ4GJJoGq6AMxb6KJQtBge9+wtn3i4PVVIIf7
-         EqsGODGKqpsIEQ/Z7xC6x5E5eN1ityGNdtlNxIUJlXtGBRfyUvYDs5pHAKB9FdtD/o
-         nZToRjbS8WQjxumSeWJ6w2iiWEO2vv/bggrSyR1n3KmP9s3+e3F6kcOvS4BcyNWrd9
-         ub4d3Q9hL4vAg==
+        t=1564607470; bh=RJjtD/wR8zo8cV5BUXlwlwAAOA63IpXqmMNKlX37eJo=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=KsY1PHc+gsCUrg2LpeKJzk/XGLcoS1weMDaHKPj4digJhhLahZU9XBiLDP9Ci28H+
+         Pd91b+UrAbxM6jBzlTFcpnwKua0n1Z16L3MDLZXvPGi1TfAWrsE7Nj0Id6GJPuKqkq
+         SSub7J/+LNkBg/q9DY3PdXJzHPXq3wFA7hHVQxXU5b/0QhKbBNcX4CROERJPAG4eFl
+         MMnocmiAXESPPeE39NaD/2fuNQv16+xl191Py247fcia001+m3ZapNxGr89F6bSC8F
+         qH7RaknQJxXeC4f49Sv7bIkyp8Yb4pEA323LmbS9Xe0lnWJuUvVFaD1MRqdVjtHnsX
+         qDQ6oibpexHQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch uses fence_udelay rather than udelay during PLLU
+initialization to ensure writes to clock registers happens before
+waiting for specified delay.
 
-On 7/31/19 4:04 AM, Dmitry Osipenko wrote:
-> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> This patch updates device tree for RTC and PMC to allow system wake
->> from deep sleep on RTC alarm.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/=
-dts/nvidia/tegra210.dtsi
->> index 659753118e96..30a7c48385a2 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->> @@ -768,7 +768,8 @@
->>   	rtc@7000e000 {
->>   		compatible =3D "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
->>   		reg =3D <0x0 0x7000e000 0x0 0x100>;
->> -		interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
->> +		interrupts =3D <16 IRQ_TYPE_LEVEL_HIGH>;
->> +		interrupt-parent =3D <&pmc>;
->>   		clocks =3D <&tegra_car TEGRA210_CLK_RTC>;
->>   		clock-names =3D "rtc";
->>   	};
->> @@ -778,6 +779,8 @@
->>   		reg =3D <0x0 0x7000e400 0x0 0x400>;
->>   		clocks =3D <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
->>   		clock-names =3D "pclk", "clk32k_in";
->> +		#interrupt-cells =3D <2>;
->> +		interrupt-controller;
->>  =20
->>   		powergates {
->>   			pd_audio: aud {
->>
-> Is this a backwards-compatible change? Or it's not really worth to care
-> about the compatibility with older kernel versions, I'm not sure about
-> overall state of T210 in the upstream kernel.
-I don't think its required to be backwards-compatible as SC7 entry/exit=20
-implementation for T210 is with this patch series onwards..
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/clk/tegra/clk-tegra210.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index 4721ee030d1c..998bf60b219a 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -2841,7 +2841,7 @@ static int tegra210_enable_pllu(void)
+ 	reg = readl_relaxed(clk_base + pllu.params->ext_misc_reg[0]);
+ 	reg &= ~BIT(pllu.params->iddq_bit_idx);
+ 	writel_relaxed(reg, clk_base + pllu.params->ext_misc_reg[0]);
+-	udelay(5);
++	fence_udelay(5, clk_base);
+ 
+ 	reg = readl_relaxed(clk_base + PLLU_BASE);
+ 	reg &= ~GENMASK(20, 0);
+@@ -2849,7 +2849,7 @@ static int tegra210_enable_pllu(void)
+ 	reg |= fentry->n << 8;
+ 	reg |= fentry->p << 16;
+ 	writel(reg, clk_base + PLLU_BASE);
+-	udelay(1);
++	fence_udelay(1, clk_base);
+ 	reg |= PLL_ENABLE;
+ 	writel(reg, clk_base + PLLU_BASE);
+ 
+@@ -2895,12 +2895,12 @@ static int tegra210_init_pllu(void)
+ 		reg = readl_relaxed(clk_base + XUSB_PLL_CFG0);
+ 		reg &= ~XUSB_PLL_CFG0_PLLU_LOCK_DLY_MASK;
+ 		writel_relaxed(reg, clk_base + XUSB_PLL_CFG0);
+-		udelay(1);
++		fence_udelay(1, clk_base);
+ 
+ 		reg = readl_relaxed(clk_base + PLLU_HW_PWRDN_CFG0);
+ 		reg |= PLLU_HW_PWRDN_CFG0_SEQ_ENABLE;
+ 		writel_relaxed(reg, clk_base + PLLU_HW_PWRDN_CFG0);
+-		udelay(1);
++		fence_udelay(1, clk_base);
+ 
+ 		reg = readl_relaxed(clk_base + PLLU_BASE);
+ 		reg &= ~PLLU_BASE_CLKENABLE_USB;
+-- 
+2.7.4
+
