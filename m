@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05149C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB3AC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8940206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890B72067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:11:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Fg/b9b9z"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iR0+d/KC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbfGaVLq (ORCPT
+        id S1730936AbfGaVLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:11:46 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:9201 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730392AbfGaVLL (ORCPT
+        Wed, 31 Jul 2019 17:11:49 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17184 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730532AbfGaVLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 17:11:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4203f50001>; Wed, 31 Jul 2019 14:11:17 -0700
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4203ee0002>; Wed, 31 Jul 2019 14:11:10 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 31 Jul 2019 14:11:08 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 31 Jul 2019 14:11:09 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 31 Jul 2019 14:11:08 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
- 2019 21:11:08 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 31 Jul 2019 21:11:08 +0000
+        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:11:09 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:11:09 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 31 Jul 2019 21:11:09 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.167]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d4203eb0009>; Wed, 31 Jul 2019 14:11:07 -0700
+        id <B5d4203ec0003>; Wed, 31 Jul 2019 14:11:08 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -52,9 +52,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>,
         <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
         <linux-pm@vger.kernel.org>
-Subject: [PATCH v7 10/20] clk: tegra: clk-dfll: Add suspend and resume support
-Date:   Wed, 31 Jul 2019 14:10:53 -0700
-Message-ID: <1564607463-28802-11-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v7 15/20] soc/tegra: pmc: Add pmc wake support for tegra210
+Date:   Wed, 31 Jul 2019 14:10:58 -0700
+Message-ID: <1564607463-28802-16-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
 References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
@@ -62,130 +62,177 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564607477; bh=4G70xSSFBdn+ucK5NYBOMsVuSgfy5Xwx34Mlryu6Q1o=;
+        t=1564607470; bh=YC2WyHhKcxO32X94/1fVg0egtzrRq/QXLMfSSFFNqSI=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=Fg/b9b9zEK6Pv8eQv26SvC/nR0E+00q/ba6owdHS34Z7ahAFik3goW6LgqEV0JUL/
-         E/SE7YBY33DhqySjAY1LW4dQd2je4xitS+/qAc9fbE0mDhcF1pGiL6VpjHmMmtoMUP
-         boh0aRe4+afG9/Tuj9nHfchHwsoWLonfOmKk2/bJmKs29jJiirVEkR+L7kKGQhpCGK
-         CO0kUXtQ3dzxjRzqz4Oouwgb2ahsMq3lCzyxyFJwDjVPzyw01m7Cn2LX12DCQHSRaE
-         x2khlvUcJRgiLahsQGPpUnc9q8wN3mEh3sIEtbxGQyrdMKk60SL0biwdH2L26SobqH
-         oUwSVhh3Nnjpg==
+        b=iR0+d/KCEyKPtaLCZKVJ8l2QbbKkL9bzhctXlg5QNPt9smLpgOhhe6KIlV/1JVVRv
+         0NntgQLBqOAmyxXi2iax6j7tJdAhfMNoUzMNYa1iYUU46z9v51UbRcXl0/g+WLAGDh
+         3uyV/vTgGNfibesojHepk81E2/9/NYO57n1W/bLRYjqUjSqSzQf/EKyh6oygBhZ5Ai
+         cYxq/ViY3IRqvr6pjnSNIuF4J9jE0iGH2Oq4kMnIqqHum/c4X2r196WntxtvOnmCSn
+         605a9FnEgDhbIITXLvp+1kmyllrUwoKbwH/KxXcwjY/rsQRkyOW+wDKssBMv09WRit
+         uCjFSMP/XcryA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements DFLL suspend and resume operation.
-
-During system suspend entry, CPU clock will switch CPU to safe
-clock source of PLLP and disables DFLL clock output.
-
-DFLL driver suspend confirms DFLL disable state and errors out on
-being active.
-
-DFLL is re-initialized during the DFLL driver resume as it goes
-through complete reset during suspend entry.
+This patch implements PMC wakeup sequence for Tegra210 and defines
+common used RTC alarm wake event.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-dfll.c               | 56 ++++++++++++++++++++++++++++++
- drivers/clk/tegra/clk-dfll.h               |  2 ++
- drivers/clk/tegra/clk-tegra124-dfll-fcpu.c |  1 +
- 3 files changed, 59 insertions(+)
+ drivers/soc/tegra/pmc.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
-diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
-index f8688c2ddf1a..9900097ec2aa 100644
---- a/drivers/clk/tegra/clk-dfll.c
-+++ b/drivers/clk/tegra/clk-dfll.c
-@@ -1513,6 +1513,62 @@ static int dfll_init(struct tegra_dfll *td)
- 	return ret;
- }
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 91c84d0e66ae..3aa71c28a10a 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -58,6 +58,11 @@
+ #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
+ #define  PMC_CNTRL_MAIN_RST		BIT(4)
  
-+/**
-+ * tegra_dfll_suspend - check DFLL is disabled
-+ * @dev: DFLL device *
-+ *
-+ * DFLL clock should be disabled by the CPUFreq driver. So, make
-+ * sure it is disabled and disable all clocks needed by the DFLL.
-+ */
-+int tegra_dfll_suspend(struct device *dev)
-+{
-+	struct tegra_dfll *td = dev_get_drvdata(dev);
++#define PMC_WAKE_MASK			0x0c
++#define PMC_WAKE_LEVEL			0x10
++#define PMC_WAKE_STATUS			0x14
++#define PMC_SW_WAKE_STATUS		0x18
 +
-+	if (dfll_is_running(td)) {
-+		dev_err(td->dev, "dfll is enabled while shouldn't be\n");
-+		return -EBUSY;
-+	}
-+
-+	reset_control_assert(td->dvco_rst);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(tegra_dfll_suspend);
-+
-+/**
-+ * tegra_dfll_resume - reinitialize DFLL on resume
-+ * @dev: DFLL instance
-+ *
-+ * DFLL is disabled and reset during suspend and resume.
-+ * So, reinitialize the DFLL IP block back for use.
-+ * DFLL clock is enabled later in closed loop mode by CPUFreq
-+ * driver before switching its clock source to DFLL output.
-+ */
-+int tegra_dfll_resume(struct device *dev)
-+{
-+	struct tegra_dfll *td = dev_get_drvdata(dev);
-+
-+	reset_control_deassert(td->dvco_rst);
-+
-+	pm_runtime_irq_safe(td->dev);
-+	pm_runtime_get_sync(td->dev);
-+
-+	dfll_set_mode(td, DFLL_DISABLED);
-+	dfll_set_default_params(td);
-+
-+	if (td->soc->init_clock_trimmers)
-+		td->soc->init_clock_trimmers();
-+
-+	dfll_set_open_loop_config(td);
-+
-+	dfll_init_out_if(td);
-+
-+	pm_runtime_put_sync(td->dev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(tegra_dfll_resume);
-+
- /*
-  * DT data fetch
-  */
-diff --git a/drivers/clk/tegra/clk-dfll.h b/drivers/clk/tegra/clk-dfll.h
-index 1b14ebe7268b..fb209eb5f365 100644
---- a/drivers/clk/tegra/clk-dfll.h
-+++ b/drivers/clk/tegra/clk-dfll.h
-@@ -42,5 +42,7 @@ int tegra_dfll_register(struct platform_device *pdev,
- struct tegra_dfll_soc_data *tegra_dfll_unregister(struct platform_device *pdev);
- int tegra_dfll_runtime_suspend(struct device *dev);
- int tegra_dfll_runtime_resume(struct device *dev);
-+int tegra_dfll_suspend(struct device *dev);
-+int tegra_dfll_resume(struct device *dev);
+ #define DPD_SAMPLE			0x020
+ #define  DPD_SAMPLE_ENABLE		BIT(0)
+ #define  DPD_SAMPLE_DISABLE		(0 << 0)
+@@ -87,6 +92,11 @@
  
- #endif /* __DRIVERS_CLK_TEGRA_CLK_DFLL_H */
-diff --git a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-index e84b6d52cbbd..2ac2679d696d 100644
---- a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-+++ b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
-@@ -631,6 +631,7 @@ static int tegra124_dfll_fcpu_remove(struct platform_device *pdev)
- static const struct dev_pm_ops tegra124_dfll_pm_ops = {
- 	SET_RUNTIME_PM_OPS(tegra_dfll_runtime_suspend,
- 			   tegra_dfll_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(tegra_dfll_suspend, tegra_dfll_resume)
+ #define PMC_SCRATCH41			0x140
+ 
++#define PMC_WAKE2_MASK			0x160
++#define PMC_WAKE2_LEVEL			0x164
++#define PMC_WAKE2_STATUS		0x168
++#define PMC_SW_WAKE2_STATUS		0x16c
++
+ #define PMC_SENSOR_CTRL			0x1b0
+ #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
+ #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
+@@ -1922,6 +1932,43 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
+ 	.alloc = tegra_pmc_irq_alloc,
  };
  
- static struct platform_driver tegra124_dfll_fcpu_driver = {
++static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
++{
++	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
++	unsigned int offset, bit;
++	u32 value;
++
++	if (data->hwirq == ULONG_MAX)
++		return 0;
++
++	offset = data->hwirq / 32;
++	bit = data->hwirq % 32;
++
++	/* clear wake status */
++	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
++	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
++
++	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
++	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
++
++	/* enable PMC wake */
++	if (data->hwirq >= 32)
++		offset = PMC_WAKE2_MASK;
++	else
++		offset = PMC_WAKE_MASK;
++
++	value = tegra_pmc_readl(pmc, offset);
++
++	if (on)
++		value |= 1 << bit;
++	else
++		value &= ~(1 << bit);
++
++	tegra_pmc_writel(pmc, value, offset);
++
++	return 0;
++}
++
+ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+ {
+ 	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+@@ -1954,6 +2001,49 @@ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+ 	return 0;
+ }
+ 
++static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
++	unsigned int offset, bit;
++	u32 value;
++
++	if (data->hwirq == ULONG_MAX)
++		return 0;
++
++	offset = data->hwirq / 32;
++	bit = data->hwirq % 32;
++
++	if (data->hwirq >= 32)
++		offset = PMC_WAKE2_LEVEL;
++	else
++		offset = PMC_WAKE_LEVEL;
++
++	value = tegra_pmc_readl(pmc, offset);
++
++	switch (type) {
++	case IRQ_TYPE_EDGE_RISING:
++	case IRQ_TYPE_LEVEL_HIGH:
++		value |= 1 << bit;
++		break;
++
++	case IRQ_TYPE_EDGE_FALLING:
++	case IRQ_TYPE_LEVEL_LOW:
++		value &= ~(1 << bit);
++		break;
++
++	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
++		value ^= 1 << bit;
++		break;
++
++	default:
++		return -EINVAL;
++	}
++
++	tegra_pmc_writel(pmc, value, offset);
++
++	return 0;
++}
++
+ static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+ {
+ 	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+@@ -2540,6 +2630,10 @@ static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
+ 	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
+ };
+ 
++static const struct tegra_wake_event tegra210_wake_events[] = {
++	TEGRA_WAKE_IRQ("rtc", 16, 2),
++};
++
+ static const struct tegra_pmc_soc tegra210_pmc_soc = {
+ 	.num_powergates = ARRAY_SIZE(tegra210_powergates),
+ 	.powergates = tegra210_powergates,
+@@ -2557,10 +2651,14 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
+ 	.regs = &tegra20_pmc_regs,
+ 	.init = tegra20_pmc_init,
+ 	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
++	.irq_set_wake = tegra210_pmc_irq_set_wake,
++	.irq_set_type = tegra210_pmc_irq_set_type,
+ 	.reset_sources = tegra210_reset_sources,
+ 	.num_reset_sources = ARRAY_SIZE(tegra210_reset_sources),
+ 	.reset_levels = NULL,
+ 	.num_reset_levels = 0,
++	.num_wake_events = ARRAY_SIZE(tegra210_wake_events),
++	.wake_events = tegra210_wake_events,
+ };
+ 
+ #define TEGRA186_IO_PAD_TABLE(_pad)					     \
 -- 
 2.7.4
 
