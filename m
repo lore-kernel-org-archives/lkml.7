@@ -7,120 +7,115 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47F7C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A45AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798D120693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC74D20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gs78//H7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q6Dq1OLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388293AbfGaNKu (ORCPT
+        id S2388339AbfGaNLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:10:50 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38618 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387696AbfGaNKu (ORCPT
+        Wed, 31 Jul 2019 09:11:08 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33057 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387668AbfGaNLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:10:50 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y15so31861676pfn.5;
-        Wed, 31 Jul 2019 06:10:49 -0700 (PDT)
+        Wed, 31 Jul 2019 09:11:08 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c14so30411650plo.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 06:11:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rt+guMwNhJRHRn5IfYwFQ/sgOXInz6KxTo8lw7aiy5o=;
-        b=gs78//H7LNShCsnjSw8NmM/oTXR89tctjqExwGarNFR1HPDda39C7FVxzEan5zMHdK
-         6cB24JjcjAbQy8XtUkZodo4u6df686F71Mv/q7oDld/FoFf/tUwpH8Ya396ePXCTfD0o
-         Dvgu62a6MeZYYZInpUcG3Fb+JTJxaZenxvpq3gvsy/xll4qitJKWbPeGlVPtgYnCNQLR
-         EPlshKNhjkQhbqyB0pQFFls299RawuFj12qdOUx2n+J0Ko7JvNfb1x0RR0EIG+LYodIQ
-         anMWP0EuZVFFnYgh1OC+Xwui/N0TFC1OY/jUToGF5CcotzxoYJGX807D8jgfAJdSfeIG
-         A3ug==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2rZrJCGFsWrzuSEZciTMArw8lIiKnfHQz1EQDThbtOA=;
+        b=Q6Dq1OLMF0b7XkgEjjeAgXn3NEsQO13lCdg/a6K3v7SPn/wnEh+OafAD0hXR3mam4X
+         2igueCKsJV2IaoUjuUL85zdguu/pBBj6as304rfdsvzWE4P16kaTP3LK26I0l9T76Q97
+         g5f7/zsshj6RfO3HDm5TMgE42Xd3+tw+bRx66S1O6zg+0K031ViUjaT3thxZPCS3h0r2
+         XPiYuf0GMF56wJ9PRR+zxLKjAEJG+7WIAe3wrN1bScqOPy5x1y7u4Vp4alfnl3LHEsFN
+         cyKemdZocIu9irP8rWWy5E3GHGKPgdxA9bvJLhMFb+5uUBjavBZ+pJnfnScMhR7bfzKI
+         Metg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rt+guMwNhJRHRn5IfYwFQ/sgOXInz6KxTo8lw7aiy5o=;
-        b=AKNGKz1NtvTBgOAbu8I2A5LswhiiCsbRGQo1k0WuPz+zduq/1J1WGhxG+qAQ2JUqR2
-         MXI+EiUVYJo62eLJ1gc1oJECx1+16LeD+WaUc/JV5bETsTRQiawmw6J2wt5GihJI/7gf
-         R2UaYKegKDa9K6jkhHx2HwJX+1J7X/9+Wzg6XCSdWDXWGYx+pbO/ji+2P4hMRIDTe8QS
-         8bCoRqhdfVzhnxipUpOCv7davMDbPNEmYNxKTzJ4UBaPS0vVvye8IDwgNGcImndr8RsU
-         SETIypH1VSr0BMQ9lS1oRaaoyFVSMJVub8rhkKdW/39EZb7jjLmy49rWZpzAVCU08CXz
-         0/DQ==
-X-Gm-Message-State: APjAAAWSYtsBZ7sJmtWhURZmTWbNtCJf6wkbjZybXoEHSsXcze9ImAfQ
-        IhWEXnlpSBiAuY4+qBC5fTQ=
-X-Google-Smtp-Source: APXvYqw6zrs3C36FlP+BQfVYwpgNJ/uT+OXNK7FouVI0RYpGcs21O7mEWzL/gYHEOWg9kiuYl3v9Hg==
-X-Received: by 2002:a17:90a:b908:: with SMTP id p8mr2967626pjr.94.1564578649195;
-        Wed, 31 Jul 2019 06:10:49 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id r12sm47427239pgb.73.2019.07.31.06.10.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 06:10:48 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 06:10:45 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Richard Gong <richard.gong@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups
- easily
-Message-ID: <20190731131045.GB147138@dtor-ws>
-References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2rZrJCGFsWrzuSEZciTMArw8lIiKnfHQz1EQDThbtOA=;
+        b=JmRlrAjUk0PMNBiAso9ugLgpAUDuJCUYdRop4dj7zGV84q3mI4bg8gZNV/030KgdsQ
+         uRLOGeSsRueN6v3iJQ66YU/bohYMmDBWh9Ae7ViiQP/tcn3NFgHXAsPX1WtuF2uLSSnX
+         peCypT4HNyNWMeDbxf8+L4n9AG5vm01qkiyV96TkIyS93zTDw+n7Q27ZgmtRJheaWVyT
+         iuWz8fNNwzevbox9mbxm2Cvoun28A42EK5L7DB6FEZdpDdlgEXj860btFBPP8czwaP7I
+         ip2d9Dsufnl9xCHwEdbDbFxmVNOYR3Y1jW0Aa+4iQwbM2JXrWiou82p6O/mmXoXDXTZS
+         eNTw==
+X-Gm-Message-State: APjAAAWz3dHFMGVC1jDb21gearnTbNw7Khss2PJsF6Dl1yQA4xCvqQwT
+        IvFZjHlxb9COlcXb/Z28ZklIcUJ5
+X-Google-Smtp-Source: APXvYqwXJUhj2umABhcmVd6JyxgmsYysctIxTWNMxwg5vZbZtBVP+LPtAUVc4SOac1SsyFH9a47o5g==
+X-Received: by 2002:a17:902:4124:: with SMTP id e33mr114157876pld.6.1564578667113;
+        Wed, 31 Jul 2019 06:11:07 -0700 (PDT)
+Received: from [10.0.2.15] ([122.163.105.8])
+        by smtp.gmail.com with ESMTPSA id s185sm101228500pgs.67.2019.07.31.06.11.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 06:11:06 -0700 (PDT)
+Subject: Re: [PATCH] regulator: of: Add of_node_put() before return in
+ function
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+References: <20190724083231.10276-1-nishkadg.linux@gmail.com>
+ <20190724154701.GA4524@sirena.org.uk>
+ <af559a36-c926-e2a5-a401-aae0f6867a6e@gmail.com>
+ <20190726104547.GA4902@sirena.org.uk>
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+Message-ID: <8a1fa50a-3d1f-427d-c319-be2c6f5ccb6b@gmail.com>
+Date:   Wed, 31 Jul 2019 18:41:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731124349.4474-1-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190726104547.GA4902@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 02:43:39PM +0200, Greg Kroah-Hartman wrote:
-> This patch originally started out just as a way for platform drivers to
-> easily add a sysfs group in a race-free way, but thanks to Dmitry's
-> patch, this series now is for all drivers in the kernel (hey, a unified
-> driver model works!!!)
+On 26/07/19 4:15 PM, Mark Brown wrote:
+> On Fri, Jul 26, 2019 at 01:02:52PM +0530, Nishka Dasgupta wrote:
+>> On 24/07/19 9:17 PM, Mark Brown wrote:
+>>> On Wed, Jul 24, 2019 at 02:02:31PM +0530, Nishka Dasgupta wrote:
 > 
-> I've only converted a few platform drivers here in this series to show
-> how it works, but other busses can be converted after the first patch
-> goes into the tree.
+>>>> The local variable search in regulator_of_get_init_node takes the value
+>>>> returned by either of_get_child_by_name or of_node_get, both of which
+>>>> get a node. If this node is not put before returning, it could cause a
+>>>> memory leak. Hence put search before a mid-loop return statement.
+>>>> Issue found with Coccinelle.
 > 
-> Here's the original 00 message, for people to get an idea of what is
-> going on here:
+>>>> -		if (!strcmp(desc->of_match, name))
+>>>> +		if (!strcmp(desc->of_match, name)) {
+>>>> +			of_node_put(search);
+>>>>    			return of_node_get(child);
+>>>> +		}
 > 
-> If a platform driver wants to add a sysfs group, it has to do so in a
-> racy way, adding it after the driver is bound.  To resolve this issue,
-> have the platform driver core do this for the driver, making the
-> individual drivers logic smaller and simpler, and solving the race at
-> the same time.
+>>> Why not just remove the extra of_node_get() and a comment explaining why
+>>> it's not needed?
 > 
-> All of these patches depend on the first patch.  I'll take the first one
-> through my driver-core tree, and any subsystem maintainer can either ack
-> their individul patch and I will be glad to also merge it, or they can
-> wait until after 5.4-rc1 when the core patch hits Linus's tree and then
-> take it, it's up to them.
+>> I'm sorry, I don't think I understand. I'm putting search in this patch; the
+>> program was already getting child. Should I also return child directly
+>> instead of getting it again, and continue to put search?
+> 
+> Your new code is dropping a reference then immediately reacquiring one
+> to return it (introducing a race condition along the way).  Why not just
+> return the already held reference and not call any functions at all?
+> 
+I still don't understand.
+Previously the function was acquiring a reference to child with 
+of_node_get().
+My added code is dropping a reference to search, using of_node_put().
+I'm probably misunderstanding this at some point, but I thought search 
+and child are two different nodes? Or am I completely misunderstanding 
+what you're explaining?
+Apologies for the confusion.
 
-Maybe make an immutable branch off 5.2 with just patch 1/10 so that
-subsystems (and the driver core tree itself) could pull it in at their
-leisure into their "*-next" branches and did not have to wait till 5.4
-or risk merge clashes?
-
-Thanks.
-
--- 
-Dmitry
+Thanking you,
+Nishka
