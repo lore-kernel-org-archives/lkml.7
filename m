@@ -2,124 +2,300 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95540C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83380C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2F3208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564579538;
-	bh=M3Lc1QkF5wR2TF7GuhcWC1aRi3S9OZRyyxj+KuwdLfg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PlO1W5FNpIR1SL19hpw7FF7nKM1M6e37KqhL+TLA9F3bS+ifv1N6tMT8hQoIJKeqS
-	 owkiMIbLsHm5c9GLwLG/A8Ia9J9IwHb/mzW6T3bfgLLPZJ5qnW8p3c0Ym4rqLDyw3P
-	 N7G3vchpBe4cutNbyzg1ba5j1qyDSqF5U/UERNvE=
+	by mail.kernel.org (Postfix) with ESMTP id 5133420659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388187AbfGaNZh (ORCPT
+        id S1729502AbfGaN22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:25:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33532 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726096AbfGaNZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:25:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AD6DAAE21;
-        Wed, 31 Jul 2019 13:25:34 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 15:25:34 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1] drivers/base/memory.c: Don't store end_section_nr in
- memory blocks
-Message-ID: <20190731132534.GQ9330@dhcp22.suse.cz>
-References: <20190731122213.13392-1-david@redhat.com>
- <20190731124356.GL9330@dhcp22.suse.cz>
- <f0894c30-105a-2241-a505-7436bc15b864@redhat.com>
+        Wed, 31 Jul 2019 09:28:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38126 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726096AbfGaN21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:28:27 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CB32081F18;
+        Wed, 31 Jul 2019 13:28:26 +0000 (UTC)
+Received: from [10.72.12.118] (ovpn-12-118.pek2.redhat.com [10.72.12.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C57C560BEC;
+        Wed, 31 Jul 2019 13:28:21 +0000 (UTC)
+Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
+ with worker
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20190731084655.7024-1-jasowang@redhat.com>
+ <20190731084655.7024-8-jasowang@redhat.com> <20190731123935.GC3946@ziepe.ca>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
+Date:   Wed, 31 Jul 2019 21:28:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f0894c30-105a-2241-a505-7436bc15b864@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190731123935.GC3946@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 31 Jul 2019 13:28:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 31-07-19 15:12:12, David Hildenbrand wrote:
-> On 31.07.19 14:43, Michal Hocko wrote:
-> > On Wed 31-07-19 14:22:13, David Hildenbrand wrote:
-> >> Each memory block spans the same amount of sections/pages/bytes. The size
-> >> is determined before the first memory block is created. No need to store
-> >> what we can easily calculate - and the calculations even look simpler now.
-> > 
-> > While this cleanup helps a bit, I am not sure this is really worth
-> > bothering. I guess we can agree when I say that the memblock interface
-> > is suboptimal (to put it mildly).  Shouldn't we strive for making it
-> > a real hotplug API in the future? What do I mean by that? Why should
-> > be any memblock fixed in size? Shouldn't we have use hotplugable units
-> > instead (aka pfn range that userspace can work with sensibly)? Do we
-> > know of any existing userspace that would depend on the current single
-> > section res. 2GB sized memblocks?
-> 
-> Short story: It is already ABI (e.g.,
-> /sys/devices/system/memory/block_size_bytes) - around since 2005 (!) -
-> since we had memory block devices.
-> 
-> I suspect that it is mainly manually used. But I might be wrong.
 
-Any pointer to the real userspace depending on it? Most usecases I am
-aware of rely on udev events and either onlining or offlining the memory
-in the handler.
+On 2019/7/31 下午8:39, Jason Gunthorpe wrote:
+> On Wed, Jul 31, 2019 at 04:46:53AM -0400, Jason Wang wrote:
+>> We used to use RCU to synchronize MMU notifier with worker. This leads
+>> calling synchronize_rcu() in invalidate_range_start(). But on a busy
+>> system, there would be many factors that may slow down the
+>> synchronize_rcu() which makes it unsuitable to be called in MMU
+>> notifier.
+>>
+>> A solution is SRCU but its overhead is obvious with the expensive full
+>> memory barrier. Another choice is to use seqlock, but it doesn't
+>> provide a synchronization method between readers and writers. The last
+>> choice is to use vq mutex, but it need to deal with the worst case
+>> that MMU notifier must be blocked and wait for the finish of swap in.
+>>
+>> So this patch switches use a counter to track whether or not the map
+>> was used. The counter was increased when vq try to start or finish
+>> uses the map. This means, when it was even, we're sure there's no
+>> readers and MMU notifier is synchronized. When it was odd, it means
+>> there's a reader we need to wait it to be even again then we are
+>> synchronized.
+> You just described a seqlock.
 
-I know we have documented this as an ABI and it is really _sad_ that
-this ABI didn't get through normal scrutiny any user visible interface
-should go through but these are sins of the past...
 
-> Long story:
-> 
-> How would you want to number memory blocks? At least no longer by phys
-> index. For now, memory blocks are ordered and numbered by their block id.
+Kind of, see my explanation below.
 
-memory_${mem_section_nr_of_start_pfn}
 
-> Admins might want to online parts of a DIMM MOVABLE/NORMAL, to more
-> reliably use huge pages but still have enough space for kernel memory
-> (e.g., page tables). They might like that a DIMM is actually a set of
-> memory blocks instead of one big chunk.
+>
+> We've been talking about providing this as some core service from mmu
+> notifiers because nearly every use of this API needs it.
 
-They might. Do they though? There are many theoretical usecases but
-let's face it, there is a cost given to the current state. E.g. the
-number of memblock directories is already quite large on machines with a
-lot of memory even though they use large blocks. That has negative
-implications already (e.g. the number of events you get, any iteration
-on the /sys etc.). Also 2G memblocks are quite arbitrary and they
-already limit the above usecase some, right?
 
-> IOW: You can consider it a restriction to add e.g., DIMMs only in one
-> bigger chunks.
-> 
-> > 
-> > All that being said, I do not oppose to the patch but can we start
-> > thinking about the underlying memblock limitations rather than micro
-> > cleanups?
-> 
-> I am pro cleaning up what we have right now, not expect it to eventually
-> change some-when in the future. (btw, I highly doubt it will change)
+That would be very helpful.
 
-I do agree, but having the memblock fixed size doesn't really go along
-with variable memblock size if we ever go there. But as I've said I am
-not really against the patch.
--- 
-Michal Hocko
-SUSE Labs
+
+>
+> IMHO this gets the whole thing backwards, the common pattern is to
+> protect the 'shadow pte' data with a seqlock (usually open coded),
+> such that the mmu notififer side has the write side of that lock and
+> the read side is consumed by the thread accessing or updating the SPTE.
+
+
+Yes, I've considered something like that. But the problem is, mmu 
+notifier (writer) need to wait for the vhost worker to finish the read 
+before it can do things like setting dirty pages and unmapping page.  It 
+looks to me seqlock doesn't provide things like this.  Or are you 
+suggesting that taking writer seq lock in vhost worker and busy wait for 
+seqcount to be even in MMU notifier (something similar to what this 
+patch did)? I don't do this because e.g:
+
+
+write_seqcount_begin()
+
+map = vq->map[X]
+
+write or read through map->addr directly
+
+write_seqcount_end()
+
+
+There's no rmb() in write_seqcount_begin(), so map could be read before 
+write_seqcount_begin(), but it looks to me now that this doesn't harm at 
+all, maybe we can try this way.
+
+
+>
+>
+>> Reported-by: Michael S. Tsirkin <mst@redhat.com>
+>> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>>   drivers/vhost/vhost.c | 145 ++++++++++++++++++++++++++----------------
+>>   drivers/vhost/vhost.h |   7 +-
+>>   2 files changed, 94 insertions(+), 58 deletions(-)
+>>
+>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>> index cfc11f9ed9c9..db2c81cb1e90 100644
+>> +++ b/drivers/vhost/vhost.c
+>> @@ -324,17 +324,16 @@ static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
+>>   
+>>   	spin_lock(&vq->mmu_lock);
+>>   	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
+>> -		map[i] = rcu_dereference_protected(vq->maps[i],
+>> -				  lockdep_is_held(&vq->mmu_lock));
+>> +		map[i] = vq->maps[i];
+>>   		if (map[i]) {
+>>   			vhost_set_map_dirty(vq, map[i], i);
+>> -			rcu_assign_pointer(vq->maps[i], NULL);
+>> +			vq->maps[i] = NULL;
+>>   		}
+>>   	}
+>>   	spin_unlock(&vq->mmu_lock);
+>>   
+>> -	/* No need for synchronize_rcu() or kfree_rcu() since we are
+>> -	 * serialized with memory accessors (e.g vq mutex held).
+>> +	/* No need for synchronization since we are serialized with
+>> +	 * memory accessors (e.g vq mutex held).
+>>   	 */
+>>   
+>>   	for (i = 0; i < VHOST_NUM_ADDRS; i++)
+>> @@ -362,6 +361,44 @@ static bool vhost_map_range_overlap(struct vhost_uaddr *uaddr,
+>>   	return !(end < uaddr->uaddr || start > uaddr->uaddr - 1 + uaddr->size);
+>>   }
+>>   
+>> +static void inline vhost_vq_access_map_begin(struct vhost_virtqueue *vq)
+>> +{
+>> +	int ref = READ_ONCE(vq->ref);
+> Is a lock/single threaded supposed to be held for this?
+
+
+Yes, only vhost worker kthread can accept this.
+
+
+>
+>> +
+>> +	smp_store_release(&vq->ref, ref + 1);
+>> +	/* Make sure ref counter is visible before accessing the map */
+>> +	smp_load_acquire(&vq->ref);
+> release/acquire semantics are intended to protect blocks of related
+> data, so reading something with acquire and throwing away the result
+> is nonsense.
+
+
+Actually I want to use smp_mb() here, so I admit it's a trick that even 
+won't work. But now I think I can just use write_seqcount_begin() here.
+
+
+>
+>> +}
+>> +
+>> +static void inline vhost_vq_access_map_end(struct vhost_virtqueue *vq)
+>> +{
+>> +	int ref = READ_ONCE(vq->ref);
+> If the write to vq->ref is not locked this algorithm won't work, if it
+> is locked the READ_ONCE is not needed.
+
+
+Yes.
+
+
+>
+>> +	/* Make sure vq access is done before increasing ref counter */
+>> +	smp_store_release(&vq->ref, ref + 1);
+>> +}
+>> +
+>> +static void inline vhost_vq_sync_access(struct vhost_virtqueue *vq)
+>> +{
+>> +	int ref;
+>> +
+>> +	/* Make sure map change was done before checking ref counter */
+>> +	smp_mb();
+> This is probably smp_rmb after reading ref, and if you are setting ref
+> with smp_store_release then this should be smp_load_acquire() without
+> an explicit mb.
+
+
+We had something like:
+
+spin_lock();
+
+vq->maps[index] = NULL;
+
+spin_unlock();
+
+vhost_vq_sync_access(vq);
+
+we need to make sure the read of ref is done after setting 
+vq->maps[index] to NULL. It looks to me neither smp_load_acquire() nor 
+smp_store_release() can help in this case.
+
+
+>
+>> +	ref = READ_ONCE(vq->ref);
+>> +	if (ref & 0x1) {
+>> +		/* When ref change, we are sure no reader can see
+>> +		 * previous map */
+>> +		while (READ_ONCE(vq->ref) == ref) {
+>> +			set_current_state(TASK_RUNNING);
+>> +			schedule();
+>> +		}
+>> +	}
+> This is basically read_seqcount_begin()' with a schedule instead of
+> cpu_relax
+
+
+Yes it is.
+
+
+>
+>
+>> +	/* Make sure ref counter was checked before any other
+>> +	 * operations that was dene on map. */
+>> +	smp_mb();
+> should be in a smp_load_acquire()
+
+
+Right, if we use smp_load_acquire() to load the counter.
+
+
+>
+>> +}
+>> +
+>>   static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+>>   				      int index,
+>>   				      unsigned long start,
+>> @@ -376,16 +413,15 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+>>   	spin_lock(&vq->mmu_lock);
+>>   	++vq->invalidate_count;
+>>   
+>> -	map = rcu_dereference_protected(vq->maps[index],
+>> -					lockdep_is_held(&vq->mmu_lock));
+>> +	map = vq->maps[index];
+>>   	if (map) {
+>>   		vhost_set_map_dirty(vq, map, index);
+>> -		rcu_assign_pointer(vq->maps[index], NULL);
+>> +		vq->maps[index] = NULL;
+>>   	}
+>>   	spin_unlock(&vq->mmu_lock);
+>>   
+>>   	if (map) {
+>> -		synchronize_rcu();
+>> +		vhost_vq_sync_access(vq);
+> What prevents racing with vhost_vq_access_map_end here?
+
+
+vhost_vq_access_map_end() uses smp_store_release() for the counter. Is 
+this not sufficient?
+
+
+>
+>>   		vhost_map_unprefetch(map);
+>>   	}
+>>   }
+> Overall I don't like it.
+>
+> We are trying to get rid of these botique mmu notifier patterns in
+> drivers.
+
+
+I agree, so do you think we can take write lock in vhost worker then 
+wait for the counter to be even in MMU notifier? It looks much cleaner 
+than this patch.
+
+Thanks
+
+
+>
+> Jason
