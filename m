@@ -2,146 +2,98 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8107FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35E5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554A620693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:55:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pgdq/SN9"
+	by mail.kernel.org (Postfix) with ESMTP id 789A120693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfGaIzY (ORCPT
+        id S1727349AbfGaI5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:55:24 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:64931 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfGaIzX (ORCPT
+        Wed, 31 Jul 2019 04:57:31 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:38038 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfGaI5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:55:23 -0400
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x6V8svpa012390;
-        Wed, 31 Jul 2019 17:54:59 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6V8svpa012390
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564563299;
-        bh=+6VnkpjvIjwaRHB0EeFGcKCol1oBBgahP6+w4Ilp5Ew=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pgdq/SN9RbWGSQz3b8aGMAR8L2MbVAlrkSAAgdgTJa3jfQWnkDJwSrrLJYF8zpSCs
-         EmdSBg6XovFX19J8SuDfbc/mXjJ9DTPsw+qXzf2QNpvLishtsNZC3aUgfac9JrBo6b
-         uuV32vyCE0jJ0Ikqu95O/e1C4U8A06iPML4Z8Y7sMY8R3Pmv4CCTB523c9ZjmH043Y
-         Z+yVaEgpIHFoAPMVSlEOenQMhVmXpRhbvlA3zcZDWIiq1sDVlzWO1jgvhqU9XrrMIp
-         6e703X87sTezCQuKtNOOm7M1U3fmnNQg/B+WoZdwb3oE3WQfaxa2z1GYd30Egr2O+M
-         DaRYXo/+xHZ5A==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id v129so45633200vsb.11;
-        Wed, 31 Jul 2019 01:54:59 -0700 (PDT)
-X-Gm-Message-State: APjAAAUPliwwn6t0H1+Ugi0v1r0I0DBQA8jNx4zueVbn7PZe42XXN1mX
-        2gmot+pqpZRDjPmvPxoUm/3PLfq5r8jRfVXjWco=
-X-Google-Smtp-Source: APXvYqzNOUYxH3dkGmr5NVvz1LQM4uZuveEacwZhA0iB2msRv4KMUeu7A2oJHRpRDrWs9bSGwiKRG4QieuuK5VNqiPo=
-X-Received: by 2002:a67:fc45:: with SMTP id p5mr14825701vsq.179.1564563296511;
- Wed, 31 Jul 2019 01:54:56 -0700 (PDT)
+        Wed, 31 Jul 2019 04:57:31 -0400
+Received: from [167.98.27.226] (helo=[10.35.6.253])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1hskQ5-0003o4-QJ; Wed, 31 Jul 2019 09:57:13 +0100
+Subject: Re: [alsa-devel] [PATCH v2 2/3] ASoC: Add codec driver for ST TDA7802
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Kirill Marinushkin <kmarinushkin@birdec.tech>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Annaliese McDermond <nh6z@nh6z.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Patrick Glaser <pglaser@tesla.com>,
+        Rob Duncan <rduncan@tesla.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Nate Case <ncase@tesla.com>,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
+ <20190730120937.16271-3-thomas.preston@codethink.co.uk>
+ <20190730145844.GI4264@sirena.org.uk>
+ <fe11c806-2285-558c-e35c-d8f61de00784@codethink.co.uk>
+ <20190731060644.yrewu2kvrlootyyl@pengutronix.de>
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+Message-ID: <820e2ea9-14a2-795c-9b78-e8f2a30afdb1@codethink.co.uk>
+Date:   Wed, 31 Jul 2019 09:57:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190714152817.24693-1-efremov@linux.com> <20190730181146.6507-1-efremov@linux.com>
-In-Reply-To: <20190730181146.6507-1-efremov@linux.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 31 Jul 2019 17:54:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASW87=sWqEdPChiwxzS3Wwmtr7kO_=XLToLHYO6mDjotw@mail.gmail.com>
-Message-ID: <CAK7LNASW87=sWqEdPChiwxzS3Wwmtr7kO_=XLToLHYO6mDjotw@mail.gmail.com>
-Subject: Re: [PATCH v4] modpost: check for static EXPORT_SYMBOL* functions
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190731060644.yrewu2kvrlootyyl@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On 31/07/2019 07:06, Marco Felsch wrote:
+> Hi Thomas,
+> 
+> again sorry for jumping in..
+> 
 
+Np!
 
+> On 19-07-30 18:26, Thomas Preston wrote:
+>> On 30/07/2019 15:58, Mark Brown wrote:
+>>> On Tue, Jul 30, 2019 at 01:09:36PM +0100, Thomas Preston wrote:
+>>>> +	case SND_SOC_BIAS_STANDBY:
+>>>> +		err = regulator_enable(tda7802->enable_reg);
+>>>> +		if (err < 0) {
+>>>> +			dev_err(component->dev, "Could not enable.\n");
+>>>> +			return err;
+>>>> +		}
+>>>> +		dev_dbg(component->dev, "Regulator enabled\n");
+>>>> +		msleep(ENABLE_DELAY_MS);
+>>>
+>>> Is this delay needed by the device or is it for the regulator to ramp?
+>>> If it's for the regulator to ramp then the regulator should be doing it.
+>>>
+>>
+>> According to the datasheet the device itself takes 10ms to rise from 0V
+>> after PLLen is enabled. There are additional rise times but they are
+>> negligible with default capacitor configuration (which we have).
+>>
+>> Good to know about the regulator rising configuration though. Thanks.
+> 
+> Isn't it the regulator we mentioned to not use that because it is a
+> GPIO?
+> 
 
-On Wed, Jul 31, 2019 at 3:12 AM Denis Efremov <efremov@linux.com> wrote:
->
-> This patch adds a check to warn about static EXPORT_SYMBOL* functions
-> during the modpost. In most of the cases, a static symbol marked for
-> exporting is an odd combination that should be fixed either by deleting
-> the exporting mark or by removing the static attribute and adding the
-> appropriate declaration to headers.
->
-> This check could help to detect the following problems:
-> 1. 550113d4e9f5 ("i2c: add newly exported functions to the header, too")
-> 2. 54638c6eaf44 ("net: phy: make exported variables non-static")
-> 3. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
-> 4. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
-> 5. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
-> 6. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
-> 7. 14b4c48bb1ce ("gve: Remove the exporting of gve_probe")
-> 8. 9b79ee9773a8 ("scsi: libsas: remove the exporting of sas_wait_eh")
-> 9. ...
->
-> Build time impact, allmodconfig, Dell XPS 15 9570 (measurements 3x):
-> $ make mrproper; make allmodconfig; time make -j12; \
->   git checkout HEAD~1; \
->   make mrproper; make allmodconfig; time make -j12
-> 1.
->    (with patch) 17635,94s user 1895,54s system 1085% cpu 29:59,22 total
->    (w/o  patch) 17275,42s user 1803,87s system 1112% cpu 28:35,66 total
-> 2.
->    (with patch) 17369,51s user 1763,28s system 1111% cpu 28:41,47 total
->    (w/o  patch) 16880,50s user 1670,93s system 1113% cpu 27:46,56 total
-> 3.
->    (with patch) 17937,88s user 1842,53s system 1109% cpu 29:42,26 total
->    (w/o  patch) 17267,55s user 1725,09s system 1111% cpu 28:28,17 total
->
-> The check adds less than a minute to a usual build.
-
-
-I am not convinced with this analysis.
-
-Since commit  b7dca6dd1e591ad19,
-scripts/mod/modpost is only invoked from scripts/Makefile.modpost.
-
-So, it is much easier to to measure the elapsed time
-of modpost directly.
-
-
-
-I applied your patch on top next-20190731,
-and the following:
-
-
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index 92ed02d7cd5e..e0db1a626e50 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -98,7 +98,7 @@ MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS)))
--s -T - $(wildcard vmlinux)
-
- # We can go over command line length here, so be careful.
- quiet_cmd_modpost = MODPOST $(words $(modules)) modules
--      cmd_modpost = sed 's/ko$$/o/' $(modorder) | $(MODPOST)
-+      cmd_modpost = sed 's/ko$$/o/' $(modorder) | time -o
-modpost-time.txt $(MODPOST)
-
- PHONY += modules-modpost
- modules-modpost:
-
-
-
-
-
-The difference is less than 1 sec (not 1 min!) even for allmodconfig.
-So, the performance regression is almost unnoticeable level.
-
-
--- 
-Best Regards
-Masahiro Yamada
+Yeah it is - I intend to switch PLLen to gpio API.
