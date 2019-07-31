@@ -2,174 +2,185 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1159FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819F5C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC27206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:00:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564578044;
-	bh=zoIRst2d/rHOO7yD+GTdLQaccMIcZnxeq7ufqk3i/ao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZOrY34PLQJmb5ycdMuqq9A6DI9XJtpNixGFw90kq5H/Dx2USAJGPSMwGhFdFMCunx
-	 nzGHzLlbJGPL35RbUmvfyRqnwqsoce5NgtoYFeuf/gSuYSV8wQK3r25h40VFMBlPqx
-	 BLOGmWO4x2z9dnR1LfDmJoVNkHDjn6D0zzcB5OOU=
+	by mail.kernel.org (Postfix) with ESMTP id 4EC10206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="O81N3EBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbfGaNAo (ORCPT
+        id S1729304AbfGaNAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 31 Jul 2019 09:00:47 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:38325 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728307AbfGaNAo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 09:00:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54362 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726259AbfGaNAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:00:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CB714AEF3;
-        Wed, 31 Jul 2019 13:00:40 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 15:00:37 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Hoan Tran OS <hoan@os.amperecomputing.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Open Source Submission <patches@amperecomputing.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "willy@infradead.org" <willy@infradead.org>
-Subject: microblaze HAVE_MEMBLOCK_NODE_MAP dependency (was Re: [PATCH v2 0/5]
- mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA)
-Message-ID: <20190731130037.GN9330@dhcp22.suse.cz>
-References: <20190712121223.GR29483@dhcp22.suse.cz>
- <20190712143730.au3662g4ua2tjudu@willie-the-truck>
- <20190712150007.GU29483@dhcp22.suse.cz>
- <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
- <20190730081415.GN9330@dhcp22.suse.cz>
- <20190731062420.GC21422@rapoport-lnx>
- <20190731080309.GZ9330@dhcp22.suse.cz>
- <20190731111422.GA14538@rapoport-lnx>
- <20190731114016.GI9330@dhcp22.suse.cz>
- <20190731122631.GB14538@rapoport-lnx>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731122631.GB14538@rapoport-lnx>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190731130041euoutp023afe036e41c5bb2517a8c8b01f5274f4~2f3COPh6l1508815088euoutp02C
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:00:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190731130041euoutp023afe036e41c5bb2517a8c8b01f5274f4~2f3COPh6l1508815088euoutp02C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1564578041;
+        bh=JsNx/ZHEmr3Y2W5flkOZT9mCwHMMMBpVVzqBmYmdqj4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=O81N3EBanXKhvrBiNL3HGbRPygFqWv+/GNOjmSI1LWSKREZgWXY+5Wfn2h5vAwWHh
+         eShQVuIDr6YgXvdSZxAlZqVji8Mh5Em5vCvq5Nxb0ix8kCQg8+r0wd9y4IC1vVj+Fx
+         mXmhrNUx2dG7MZIvlhW8iH9MD8qoNOnMAW3TwdGA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190731130041eucas1p19e84a77affa1a2061579443d5423efb3~2f3BbLg3y1122111221eucas1p1o;
+        Wed, 31 Jul 2019 13:00:41 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 71.D1.04298.8F0914D5; Wed, 31
+        Jul 2019 14:00:40 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190731130040eucas1p2859eec7357e99337050852d040001a4c~2f3AvP8YZ3273932739eucas1p2o;
+        Wed, 31 Jul 2019 13:00:40 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190731130040eusmtrp2eadfe3c7214c3ff3e30fd51299504523~2f3AululZ0511305113eusmtrp2v;
+        Wed, 31 Jul 2019 13:00:40 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-4f-5d4190f80d53
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id F0.1A.04146.8F0914D5; Wed, 31
+        Jul 2019 14:00:40 +0100 (BST)
+Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20190731130039eusmtip1d0339c5e75c212b63d4c8db640cbc5eb~2f3AFK48M2353623536eusmtip1P;
+        Wed, 31 Jul 2019 13:00:39 +0000 (GMT)
+Message-ID: <bda10bcc66aae96355e74c4739229d72bcc95b0d.camel@partner.samsung.com>
+Subject: Re: [RFC PATCH 01/11] devfreq: exynos-bus: Extract
+ exynos_bus_profile_init()
+From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, m.szyprowski@samsung.com,
+        =?UTF-8?Q?Bart=C5=82omiej_?= =?UTF-8?Q?=C5=BBo=C5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>
+Date:   Wed, 31 Jul 2019 15:00:38 +0200
+In-Reply-To: <20190724190741.GD14346@kozik-lap>
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMKsWRmVeSWpSXmKPExsWy7djP87o/JjjGGpzfZGyxccZ6VovrX56z
+        Wsw/co7V4srX92wW0/duYrOYdH8Ci8X58xvYLTY9vsZqcXnXHDaLz71HGC1mnN/HZLH2yF12
+        i9uNK9gsZkx+yebA57FpVSebx51re9g87ncfZ/LYvKTeo2/LKkaPz5vkAtiiuGxSUnMyy1KL
+        9O0SuDKeLO5kK9gvWLH9cgtbA2MTXxcjJ4eEgInE1r4mpi5GLg4hgRWMEmcOfmCBcL4wStz8
+        sIMNwvnMKLHg+gxGmJYn35aygthCAssZJWbfEIQoesYosbLtBQtIglcgQOLE6U5mEFtYIFzi
+        5bIvbCA2m4C7xL/nV8CaRQQ0Ja7//c4K0swscIBZ4uDeqewgCRYBVYlNP6aAFXEK6EvsWPaK
+        GWKzjsTbU31ACziAFghK/N0hDBJmFpCXaN46mxlkjoTALXaJQ493sUDUu0jMu30FqldY4tXx
+        LewQtozE/53zmSDsYomnO++zQjQ3MEpsWnYEqsFa4vDxi6wgy5iBLl2/Sx8i7Chx5PcpZpCw
+        hACfxI23ghA38ElM2jYdKswr0dEmBGFqSSz4HQ3RKCHRtPoa1GwPif371jFNYFSchfDLLCS/
+        zELYuoCReRWjeGppcW56arFhXmq5XnFibnFpXrpecn7uJkZg0jr97/inHYxfLyUdYhTgYFTi
+        4T3R6RgrxJpYVlyZe4hRgoNZSYR3sbh9rBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeaoYH0UIC
+        6YklqdmpqQWpRTBZJg5OqQZGDvkp3oLrF+0/eXO718nG2qsRn+w66mxT5rPaXmtr4O2vMtuY
+        m3vTJuVe+8qr/8/aWfm5/EvdN/VxxqSEXZtCgmNuex3aWdmfoWz5Z+/yksj/2oeOFNgpMLv2
+        uq2YET57/wSjVy3/Te5Ixf/oefXyDfuuCGfxjKn5j+t1Fe6XbXcJ8vefN/GZEktxRqKhFnNR
+        cSIAKDdUblYDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsVy+t/xu7o/JjjGGtw5wW+xccZ6VovrX56z
+        Wsw/co7V4srX92wW0/duYrOYdH8Ci8X58xvYLTY9vsZqcXnXHDaLz71HGC1mnN/HZLH2yF12
+        i9uNK9gsZkx+yebA57FpVSebx51re9g87ncfZ/LYvKTeo2/LKkaPz5vkAtii9GyK8ktLUhUy
+        8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DKeLO5kK9gvWLH9cgtb
+        A2MTXxcjJ4eEgInEk29LWbsYuTiEBJYySuxsv84OkZCQ+Lj+BiuELSzx51oXG0TRE0aJyZM2
+        M4IkeAUCJE6c7mQGsYUFwiVeLvvCBmKzCbhL/Ht+BaxZREBT4vrf72AbmAUOMUusO9ANlmAR
+        UJXY9GMKmM0poC+xY9krZogNXxklLj9sApvKDNTduv031Ek6Em9P9bF0MXIAbRaU+LtDGKJE
+        XqJ562zmCYyCs5B0zEKomoWkagEj8ypGkdTS4tz03GJDveLE3OLSvHS95PzcTYzAmNx27Ofm
+        HYyXNgYfYhTgYFTi4T3R6RgrxJpYVlyZe4hRgoNZSYR3sbh9rBBvSmJlVWpRfnxRaU5q8SFG
+        U6B/JjJLiSbnA9NFXkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkG
+        RkOLbx4M2RXmzson/N3W898OXPj/o/9UvSNr3Yy74iLeuqzKMbMXTaxcvdMytLXz4d4rMftj
+        uAXCUgp/3Mq+KFsR26VdUfKhm0UsQvvC3yr1EH/GGq8FT34dX+MpEddfwZLc8UK/U4G7Kj3a
+        yt/x5S5L16qP2yoOzoi+fXlS/durvOd+r1RWYinOSDTUYi4qTgQAuqR9dt8CAAA=
+X-CMS-MailID: 20190731130040eucas1p2859eec7357e99337050852d040001a4c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190723122022eucas1p1266d90873d564894bd852c20140f8474
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190723122022eucas1p1266d90873d564894bd852c20140f8474
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+        <CGME20190723122022eucas1p1266d90873d564894bd852c20140f8474@eucas1p1.samsung.com>
+        <20190723122016.30279-2-a.swigon@partner.samsung.com>
+        <20190724190741.GD14346@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 31-07-19 15:26:32, Mike Rapoport wrote:
-> On Wed, Jul 31, 2019 at 01:40:16PM +0200, Michal Hocko wrote:
-> > On Wed 31-07-19 14:14:22, Mike Rapoport wrote:
-> > > On Wed, Jul 31, 2019 at 10:03:09AM +0200, Michal Hocko wrote:
-> > > > On Wed 31-07-19 09:24:21, Mike Rapoport wrote:
-> > > > > [ sorry for a late reply too, somehow I missed this thread before ]
-> > > > > 
-> > > > > On Tue, Jul 30, 2019 at 10:14:15AM +0200, Michal Hocko wrote:
-> > > > > > [Sorry for a late reply]
-> > > > > > 
-> > > > > > On Mon 15-07-19 17:55:07, Hoan Tran OS wrote:
-> > > > > > > Hi,
-> > > > > > > 
-> > > > > > > On 7/12/19 10:00 PM, Michal Hocko wrote:
-> > > > > > [...]
-> > > > > > > > Hmm, I thought this was selectable. But I am obviously wrong here.
-> > > > > > > > Looking more closely, it seems that this is indeed only about
-> > > > > > > > __early_pfn_to_nid and as such not something that should add a config
-> > > > > > > > symbol. This should have been called out in the changelog though.
-> > > > > > > 
-> > > > > > > Yes, do you have any other comments about my patch?
-> > > > > > 
-> > > > > > Not really. Just make sure to explicitly state that
-> > > > > > CONFIG_NODES_SPAN_OTHER_NODES is only about __early_pfn_to_nid and that
-> > > > > > doesn't really deserve it's own config and can be pulled under NUMA.
-> > > > > > 
-> > > > > > > > Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
-> > > > > > > > bucket? Do we have any NUMA architecture that doesn't enable it?
-> > > > > > > > 
-> > > > > 
-> > > > > HAVE_MEMBLOCK_NODE_MAP makes huge difference in node/zone initialization
-> > > > > sequence so it's not only about a singe function.
-> > > > 
-> > > > The question is whether we want to have this a config option or enable
-> > > > it unconditionally for each NUMA system.
-> > > 
-> > > We can make it 'default NUMA', but we can't drop it completely because
-> > > microblaze uses sparse_memory_present_with_active_regions() which is
-> > > unavailable when HAVE_MEMBLOCK_NODE_MAP=n.
+Hi,
+
+On Wed, 2019-07-24 at 21:07 +0200, Krzysztof Kozlowski wrote:
+> On Tue, Jul 23, 2019 at 02:20:06PM +0200, Artur Świgoń wrote:
+> > This patch adds a new static function, exynos_bus_profile_init(), extracted
+> > from exynos_bus_probe().
 > > 
-> > I suppose you mean that microblaze is using
-> > sparse_memory_present_with_active_regions even without CONFIG_NUMA,
-> > right?
+> > Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> > ---
+> >  drivers/devfreq/exynos-bus.c | 106 ++++++++++++++++++++---------------
+> >  1 file changed, 60 insertions(+), 46 deletions(-)
+> > 
+> > diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> > index d9f377912c10..d8f1efaf2d49 100644
+> > --- a/drivers/devfreq/exynos-bus.c
+> > +++ b/drivers/devfreq/exynos-bus.c
+> > @@ -372,12 +372,69 @@ static int exynos_bus_parse_of(struct device_node *np,
+> >  	return ret;
+> >  }
+> >  
+> > +static int exynos_bus_profile_init(struct exynos_bus *bus,
+> > +				   struct devfreq_dev_profile *profile)
+> > +{
+> > +	struct device *dev = bus->dev;
+> > +	struct devfreq_simple_ondemand_data *ondemand_data;
+> > +	int ret;
+> > +
+> > +	/* Initialize the struct profile and governor data for parent device */
+> > +	profile->polling_ms = 50;
+> > +	profile->target = exynos_bus_target;
+> > +	profile->get_dev_status = exynos_bus_get_dev_status;
+> > +	profile->exit = exynos_bus_exit;
+> > +
+> > +	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
+> > +	if (!ondemand_data) {
+> > +		ret = -ENOMEM;
+> > +		goto err;
 > 
-> Yes.
-> 
-> > I have to confess I do not understand that code. What is the deal
-> > with setting node id there?
-> 
-> The sparse_memory_present_with_active_regions() iterates over
-> memblock.memory regions and uses the node id of each region as the
-> parameter to memory_present(). The assumption here is that sometime before
-> each region was assigned a proper non-negative node id. 
-> 
-> microblaze uses device tree for memory enumeration and the current FDT code
-> does memblock_add() that implicitly sets nid in memblock.memory regions to -1.
-> 
-> So in order to have proper node id passed to memory_present() microblaze
-> has to call memblock_set_node() before it can use
-> sparse_memory_present_with_active_regions().
+> Just return proper error code. Less lines, obvious code since you do not
+> have any cleanup in error path.
 
-I am sorry, but I still do not follow. Who is consuming that node id
-information when NUMA=n. In other words why cannot we simply do
+I was advised to avoid modifying code being moved (in one patch). I do make
+changes in these places in patch 04/11, i.e. change the original label 'err' to
+'out'. What's your opinion on making the proposed changes to patches 01 and 02
+(s/goto err/return ret/) in patch 04 instead?
 
-diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
-index a015a951c8b7..3a47e8db8d1c 100644
---- a/arch/microblaze/mm/init.c
-+++ b/arch/microblaze/mm/init.c
-@@ -175,14 +175,9 @@ void __init setup_memory(void)
- 
- 		start_pfn = memblock_region_memory_base_pfn(reg);
- 		end_pfn = memblock_region_memory_end_pfn(reg);
--		memblock_set_node(start_pfn << PAGE_SHIFT,
--				  (end_pfn - start_pfn) << PAGE_SHIFT,
--				  &memblock.memory, 0);
-+		memory_present(0, start_pfn << PAGE_SHIFT, end_pfn << PAGE_SHIFT);
- 	}
- 
--	/* XXX need to clip this if using highmem? */
--	sparse_memory_present_with_active_regions(0);
--
- 	paging_init();
- }
- 
+> > +
+> > +	/* Register opp_notifier to catch the change of OPP  */
+> > +	ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "failed to register opp notifier\n");
+> > +		goto err;
+> 
+> The same - return err.
+> 
+> Best regards,
+> Krzysztof
+
+Best regards,
 -- 
-Michal Hocko
-SUSE Labs
+Artur Świgoń
+Samsung R&D Institute Poland
+Samsung Electronics
+
+
