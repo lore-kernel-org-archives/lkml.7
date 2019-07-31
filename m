@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6D9C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA9AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9830E206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3552A2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="m2QKooR2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lEk8qay1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388099AbfGaMo7 (ORCPT
+        id S1728800AbfGaMpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:44:59 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55156 "EHLO
+        Wed, 31 Jul 2019 08:45:30 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37252 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbfGaMo6 (ORCPT
+        with ESMTP id S1726276AbfGaMp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:44:58 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p74so60635869wme.4
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:44:56 -0700 (PDT)
+        Wed, 31 Jul 2019 08:45:29 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f17so59683669wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:45:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=7mt2h6TJa2tJyjVFqv69XhMDe2kw6CuHo61d12HPmuc=;
-        b=m2QKooR2tt0xs4/kKyzBSjWdRW1VsZeWqigC8+aYl5KQjBfjjb//wgizvryrTGG1FT
-         xoCvgMx/SqnTjre+a33Snap1t4UKoRR4DAYdIzBq8RI9yFDGMatV5qQwv3061Tj47ay/
-         TnPsXNlTnMWqk4xULJWX6vHWDRpZiwqELrlFR4lWyQX39D7gY6qeQpPsEdhu/pnWJf3k
-         hBQR/ztLbaOjvSWo51SzUpgUqzV7tnCL3XZX8Na9Fry+O7Xzin0zLy8mcpw1c8kBa3jA
-         GFbGPhc+1D307VHHa7ZfbSHp+SSFSlZ5acQKAqoUjhHhoSB8YuwV6BXfwCWWg7IS6IaJ
-         b2tQ==
+        bh=im1469T156dntKp5/+bQUeAPFF2wgw/70oAIwHeLpSQ=;
+        b=lEk8qay1a5W0q/UUMtnA+PLrlZzsevUJ6TPvQsWEymVJ5/Y3v9/Lggoz+Sj/JkK/7u
+         p4XRn4X3ALPoOyD0GL0kRMG3i1h7REN3khgdtfIuwchxL4ikWYvGPzcCSyMxG1+tLufb
+         fUq1gz/9zftXt2reD8beHDKFjdADtYsEyWtUUNym3KGGNVV33/L2nZHgJ2n63NwvxTEF
+         DVUbJZ6aIqWGk8AwR/bCrpjTQRfOtY8qJu0x3Z2+eSHq64Yt3SEzf656XtBSwsQYGLzb
+         zcIFQBJmWKmGOx2MJ/vBw0Z05ebK3rU47PKoBmAGuHpkOm7C/H2s0lAQjMd98ZGX5zTW
+         VXDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=7mt2h6TJa2tJyjVFqv69XhMDe2kw6CuHo61d12HPmuc=;
-        b=Du9ncJHttaa213DNQtkc1dg5EKHoT70w9417FO83okaVtEHMXbulKS3NxQfGmZViBQ
-         D9cZ8AyPStnD8KIq+rcJ0GOWYeGRBuG9SGsXP/bvZ+lX0nkMfKbWI7zR5yDeEQPlDu4u
-         +6hLs/CCLAg67EZ5XHryFJ8z+IMrhKD3ydt8S4NUVoLaYgiBZGDajASEy/x3vlxgzsEj
-         4CZK3iQWieeRyHTeYYHGds5wVMBNAgyFNfUuIQzy9oCDy6+pRhhKTGvj4WIjn53YXR5e
-         UbwSTSGCjGP1i1TzVWgsD3dbu8DtlJftVX8M/1+9e1CDVCwThpI+6CPs/JU6XLeSvcph
-         ztYA==
-X-Gm-Message-State: APjAAAUsUZifzweCRL71qA6DNZtrzCeuOboNo/GgBzEWprpR5a1I0UWj
-        xLx57Lt/yErQUOlhAbdCToaaOg==
-X-Google-Smtp-Source: APXvYqyrrw69rzUE6tnhPfAHq5LYhygyUFBJA+UlSk5xO1scAyXZwVtu7Yp8ryv3zIx11Ea9osaZ6Q==
-X-Received: by 2002:a1c:e341:: with SMTP id a62mr53611973wmh.165.1564577095619;
-        Wed, 31 Jul 2019 05:44:55 -0700 (PDT)
+        bh=im1469T156dntKp5/+bQUeAPFF2wgw/70oAIwHeLpSQ=;
+        b=dzx7RRe9eQ2aKgyhYetAQISujSOPvaqn6e0SvIs20AIUndLZHIRDBZIoojhFUJWVuV
+         yzAguyXmnIxT0YrKa3bZ//9auRim2wqp1hdhOP36/pKjJddLr2Dc0BgoinKP+V744azY
+         U6DjTPsZepwFaKZ776rFGtMb5PnaF5xE1pk8KTKjIf7T/vLl0389x5LtJ5nh57Ee5VFI
+         lzyZx0IJjhNbwBlIUgODwX8RYCYDe9qwtAesipvhrJxyYCHbCo+3z9QTTjQIeWF01F7H
+         xoOYeLOwViJGS2IUKKIuWgAnP3+W60klIK6cCw4WPdVVkaYiV/yPaCjEWr0zpKfwShxC
+         OVeA==
+X-Gm-Message-State: APjAAAUaNghA2hTLqj9xb0Qu6Bl9UtgBaKDDDWAUcNGcNPWPEOfKqCoE
+        PR00ZViM9XyR3Mwz1V8HMUA/dA==
+X-Google-Smtp-Source: APXvYqwkzGnmM+KfSOuisc2h+2I9auq9xTN3s+0VkkfRFxYcKZLCSV8JwG7w2KFtu8l6NGkZ7hsAhw==
+X-Received: by 2002:a1c:d107:: with SMTP id i7mr116745807wmg.92.1564577126622;
+        Wed, 31 Jul 2019 05:45:26 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l8sm137623869wrg.40.2019.07.31.05.44.54
+        by smtp.gmail.com with ESMTPSA id a8sm54706869wma.31.2019.07.31.05.45.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 05:44:55 -0700 (PDT)
-Subject: Re: [PATCH 1/6] dt-bindings: thermal: Add DT bindings documentation
- for Amlogic Thermal
+        Wed, 31 Jul 2019 05:45:26 -0700 (PDT)
+Subject: Re: [PATCH 2/6] thermal: amlogic: Add thermal driver to support G12
+ SoCs
 To:     Guillaume La Roque <glaroque@baylibre.com>,
         daniel.lezcano@linaro.org, khilman@baylibre.com
 Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-pm@vger.kernel.org
 References: <20190731121409.17285-1-glaroque@baylibre.com>
- <20190731121409.17285-2-glaroque@baylibre.com>
+ <20190731121409.17285-3-glaroque@baylibre.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -119,12 +119,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <f0f0dfe5-0cd3-5275-53ff-cfc4bb44f7e6@baylibre.com>
-Date:   Wed, 31 Jul 2019 14:44:54 +0200
+Message-ID: <abd22b63-3da2-602a-8fc3-09085706343c@baylibre.com>
+Date:   Wed, 31 Jul 2019 14:45:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190731121409.17285-2-glaroque@baylibre.com>
+In-Reply-To: <20190731121409.17285-3-glaroque@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -134,92 +134,43 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 31/07/2019 14:14, Guillaume La Roque wrote:
-> Adding the devicetree binding documentation for the Amlogic temperature
-> sensor found in the Amlogic Meson G12 SoCs.
-> the G12A  and G12B SoCs are supported.
-> 
 > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > ---
->  .../bindings/thermal/amlogic,thermal.yaml     | 58 +++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+>  drivers/thermal/Kconfig           |  12 +-
+>  drivers/thermal/Makefile          |   1 +
+>  drivers/thermal/amlogic_thermal.c | 335 ++++++++++++++++++++++++++++++
+>  3 files changed, 347 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/thermal/amlogic_thermal.c
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-> new file mode 100644
-> index 000000000000..1e2fe84da13d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/amlogic,thermal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Amlogic Thermal Driver
-> +
-> +maintainers:
-> +  - Guillaume La Roque <glaroque@baylibre.com>
-> +
-> +description: Amlogic Thermal driver
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - amlogic,g12-cpu-thermal
-> +              - amlogic,g12-ddr-thermal
-> +          - enum:
-> +              - amlogic,g12-thermal
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 9966364a6deb..2332ef1bfafc 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -1,4 +1,3 @@
+> -# SPDX-License-Identifier: GPL-2.0-only
 
-Shouldn't be :
-    compatible:
-	items:
-          - enum:
-              - amlogic,g12-cpu-thermal
-	      - amlogic,g12-ddr-thermal
-          - const:
-              - amlogic,g12-thermal
+|\ typo ?
 
-instead ?
+>  #
+>  # Generic thermal sysfs drivers configuration
+>  #
+> @@ -348,6 +347,17 @@ config MTK_THERMAL
+>  	  Enable this option if you want to have support for thermal management
+>  	  controller present in Mediatek SoCs
+>  
+> +config AMLOGIC_THERMAL
+> +	tristate "Amlogic Thermal Support"
+> +	default ARCH_MESON
+> +	depends on OF && ARCH_MESON
+> +	help
+> +	  If you say yes here you get support for Amlogic Thermal
+> +	  for G12 SoC Family.
+> +
+> +	  This driver can also be built as a module. If so, the module will
+> +	  be called amlogic_thermal.
+> +
+>  menu "Intel thermal drivers"
+>  depends on X86 || X86_INTEL_QUARK || COMPILE_TEST
+>  source "drivers/thermal/intel/Kconfig"
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  amlogic,ao-secure:
-> +    description: phandle to the ao-secure syscon
-> +    allOf:
-> +     - $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - amlogic,ao-secure
-> +
-> +examples:
-> +  - |
-> +        cpu_temp: temperature-sensor@ff634800 {
-> +                compatible = "amlogic,g12-cpu-thermal",
-> +                             "amlogic,g12-thermal";
-> +                reg = <0x0 0xff634800 0x0 0x50>;
-> +                interrupts = <0x0 0x24 0x0>;
-> +                clocks = <&clk 164>;
-> +                status = "okay";
-> +                #thermal-sensor-cells = <1>;
-> +                amlogic,ao-secure = <&sec_AO>;
-> +        };
-> +...
-> \ No newline at end of file
-> 
-
+[...]
