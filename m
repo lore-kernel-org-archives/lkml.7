@@ -2,107 +2,94 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28642C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EA9C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35B9208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81042208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:23:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2F2EXpU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfIAcnKR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbfGaSWj (ORCPT
+        id S1729557AbfGaSXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:22:39 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44813 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfGaSWj (ORCPT
+        Wed, 31 Jul 2019 14:23:25 -0400
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:34314 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726469AbfGaSXY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:22:39 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so32301966pfe.11
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 11:22:39 -0700 (PDT)
+        Wed, 31 Jul 2019 14:23:24 -0400
+Received: by mail-pf1-f173.google.com with SMTP id b13so32335453pfo.1;
+        Wed, 31 Jul 2019 11:23:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=42JWHwYF6z9j3TvaHmVrJBlG7DPxjQN9Be0ZUa3qbmg=;
-        b=R2F2EXpUAMh7XS98+4i+ms4XMAGWEvWnEmnfc/YngAEPMUHJ1W1UxHEgJjfmreodRa
-         ROi1q98tUEzE/WqSKH17NAd+Vtk5RABmT2JgucXCC7oVhBFqGovVeH/FIbKcsTbtssBM
-         ZEGm1XX3rO78/RwGGZ2sUtHfGzy4o0GvcxNKbrNU3qlnWmEiRjEOhNNgwR2VcNr1KkZD
-         VEKIqM9pq3PsQDjdRUasKfL/I8xvGI7I0RsFsggpWeFhWOQC2v86obyQ0IINBIaMVRCg
-         NyDfE0wA0Pm6sLaijcTkRTFC9+dlYv9urtBcC3FKXBvI0DpTKpDiooAwBQfij4YiB6zw
-         cIKQ==
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=BWZwOQmIlvQQZPTLSVK9bZ5Ei0Nf8UiNBXPd+xlQOoY=;
+        b=FfIAcnKRdIi6rtG53El20ZCUws7qaP9vZPrPBGlRLXjeITOt003OaZ3s18rBPL8qSt
+         MdNYS4F2uSdmABmVNlUgMNrVeE+5YH2d/2AXTifL10DXJUYGo2gxs0oGJMHOHXPpMYSD
+         VKQzmbzeSm0TH6NRukgGnajCTlVkt2rIZbnHZzMdBTuBgVv/4873YxayOP4xh94iqi9t
+         SOmJEJV7z4LmDiwJt1I/dmjUgr3ZJpA+nZxsncwMHkSgs7qb2SmYQc6wrDXbgtCtf9Aw
+         /s949qQJfQLGIJ3x46aT5ErBQakEZCyTLQ/G9Yngw3bml2C0kfXmeZXecaHh8pcRTr18
+         uaBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=42JWHwYF6z9j3TvaHmVrJBlG7DPxjQN9Be0ZUa3qbmg=;
-        b=HTU4kVH2eIJ2j0kwS87ePckzYKmIJzYuYv5Q4uW1VcvFr7EAqRzpbzblCqBQaHXbOW
-         x7HPzxIwoYBKfFmaPgiwDrZ97E2lg+Aps6DTkQ7RWKxtNdz6FA/ppddJfDjsxhSTlyoI
-         eNeAu3+UM3GEEgMjPi6qnlnQ9z11xR3jIJ+a3p6t8cBQtsN0PzowUGRJQfXQNsfiFQJH
-         zIBzKrqxsRh+TqonB9Py5pxZb1gfpjsJ/LHgPTLvec5EXC5kVLtU8Q+wJWio8FJvaBZG
-         Zf9rsFmh9+19SeYF/JTGIXL/v4v3qJ9bIMld4GSu9CcUlleIP4B7xVje7152H/+rGvhz
-         afQg==
-X-Gm-Message-State: APjAAAXnAO/cAXJVjcPa6eKN2w8AfE6f0WsE+qLwHLiA5qo3yumRIprU
-        3jp4P5+S8RF3s1gaF+vOdZI=
-X-Google-Smtp-Source: APXvYqx1ecLNRIsJBPPbf0M4/qluK0H6x8/0Y5NtcjCLCADGkSQ82Io8Ra/zGXzZ1j9nUZkchKX9og==
-X-Received: by 2002:a65:5188:: with SMTP id h8mr4221297pgq.294.1564597358645;
-        Wed, 31 Jul 2019 11:22:38 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id r2sm87175611pfl.67.2019.07.31.11.22.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 11:22:38 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 23:52:32 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Kimberly Brown <kimbrownkd@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Shobhit Kukreti <shobhitkukreti@gmail.com>,
-        Anirudh Rayabharam <anirudh.rayabharam@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, Larry.Finger@lwfinger.net
-Subject: [Patch v2 08/10] staging: rtl8723bs: core: Remove unneeded extern
- WFD_OUI
-Message-ID: <20190731182232.GA9713@hari-Inspiron-1545>
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=BWZwOQmIlvQQZPTLSVK9bZ5Ei0Nf8UiNBXPd+xlQOoY=;
+        b=uRL6BkYDZmmIf7E1AwbT6bGl1w8x/zhM6WggUX7Gt0RzjZ5HwGFV9DCQmm5t/iQW9J
+         6+RywIRRwCW6B8DwgUUvfc9oGOpXyo+OHwEEfjSbJuOi4UtU+aldSJIRIFoDzAu8nsqM
+         f/ew4lpjwFlQVarrSBItE/pnwLFyElvC/YCVnHubyms2oUEydt1Fjo78Hfos5QQOI5w+
+         GLMOmkpqb7P32FzXm1g1CROEikMZBuenGy9/TEXHUPdh8rtVFuZhZrUGBt8dxBqBTXKB
+         kYdVwNNU+aV/gYf5viFHP4EhLokJnhctI18Xg/PUgS+7QTs1H/j7nOS6u7iT52YyPWTW
+         mAUQ==
+X-Gm-Message-State: APjAAAVN0xeJKTa7wSDaq/+UnzYf9n2wc+eDSAjIl4w2ov4YB9DCrVRu
+        YeGJs/40bMFsEbUb72pRtzs=
+X-Google-Smtp-Source: APXvYqxEcSgRuzNYju1Q8vsuYy3bCwSHmCfSrAbkUTfuKfYKaKdnBs2AGvvaR5Cy7pw6AIEs/lVNAw==
+X-Received: by 2002:a62:16:: with SMTP id 22mr50519637pfa.151.1564597403910;
+        Wed, 31 Jul 2019 11:23:23 -0700 (PDT)
+Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id 65sm68854515pff.148.2019.07.31.11.23.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 11:23:23 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
+Date:   Wed, 31 Jul 2019 11:23:19 -0700 (PDT)
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     Mark Balantzyan <mbalant3@gmail.com>, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pavel Andrianov <andrianov@ispras.ru>
+Subject: Re: [PATCH] watchdog:alim1535_wdt: Fix data race in ali_settimer()
+ concerning ali_timeout_bits variable.
+In-Reply-To: <20190731164337.GA13646@roeck-us.net>
+Message-ID: <alpine.DEB.2.21.1907311118190.81695@mbalantz-desktop>
+References: <20190718155238.3066-1-mbalant3@gmail.com> <20190718163458.GA18125@roeck-us.net> <alpine.DEB.2.21.1907310911120.29703@mbalantz-desktop> <20190731164337.GA13646@roeck-us.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded extern variable "extern unsigned char WFD_OUI"
+Hi Guenter, all,
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
-v2 - Add patch number
+It's alright if you still don't wish to review my patch on alim1535_wdt, 
+but my employer and I, using our race condition analysis tool, detected it 
+to contain a race condition warning. I believe any possible issues could 
+be resolved if it were rewritten to use the watchdog subsystem as you've 
+previously stated.
 
- drivers/staging/rtl8723bs/core/rtw_ap.c | 1 -
- 1 file changed, 1 deletion(-)
+Now, I don't wish to bother you too much, but it seems I forgot to work 
+mainly with my assigned mentor prior to submitting patches..sorry. So, 
+after I have worked on rewriting the alim1535 driver into common watchdog 
+subsystem with my mentor, may I submit it to you then?
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index 7bd5c61..2bb20762 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -13,7 +13,6 @@ extern unsigned char RTW_WPA_OUI[];
- extern unsigned char WMM_OUI[];
- extern unsigned char WPS_OUI[];
- extern unsigned char P2P_OUI[];
--extern unsigned char WFD_OUI[];
- 
- void init_mlme_ap_info(struct adapter *padapter)
- {
--- 
-2.7.4
+Thank you,
+Mark
 
