@@ -2,147 +2,164 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1007C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF79BC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F6A214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D24120693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:20:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="b+pstyLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbfGaNSp (ORCPT
+        id S1729351AbfGaNUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:18:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36190 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbfGaNSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:18:45 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 729AE81F22;
-        Wed, 31 Jul 2019 13:18:44 +0000 (UTC)
-Received: from [10.36.117.240] (ovpn-117-240.ams2.redhat.com [10.36.117.240])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E90A05D9C5;
-        Wed, 31 Jul 2019 13:18:42 +0000 (UTC)
-Subject: Re: [PATCH v1] drivers/acpi/scan.c: Fixup "acquire
- device_hotplug_lock in acpi_scan_init()"
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-acpi@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190731123201.13893-1-david@redhat.com>
- <20190731125334.GM9330@dhcp22.suse.cz>
- <d3cc595d-7e6f-ef6f-044c-b20bd1de3fb0@redhat.com>
- <20190731131408.GP9330@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <23f28590-7765-bcd9-15f2-94e985b64218@redhat.com>
-Date:   Wed, 31 Jul 2019 15:18:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190731131408.GP9330@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
+        Wed, 31 Jul 2019 09:20:10 -0400
+Received: from mail-eopbgr130082.outbound.protection.outlook.com ([40.107.13.82]:7678
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728082AbfGaNUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:20:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VYUENCu4qrwThoMPAd+n4dyJPsIPhu0x4VDZyHiIkBOtqgZ1WnezgMXNjNLQ7CIgDdZWFBKYs3PG7Et8BkIB7psEGqq+oqOi66wN7wvKrhuo8Zxt5/SfJHKhvJ5VmsCGCMVN3XLAIifEL48LT6jdGQfoaHPiTQSnPMAGDJ8KJnQ8ePR4pXWHS8hShcn4Ai+vino6PsJhPhGCmCIxCZW4Wg6wAKbJZcaMrmDGcr+VQ8uAtoV609wZK2gUMPHxo+tn2Q8uKg2nKALXhTHCCsIMVBxVLUKussHtepP7PfI5z84Mp5331W3HObg88TX7XBlxX9NaU2LSb2pBEP/2Yev3KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WuSkLlpTjoAAw3ygeWNyh42L9mDiLoQVEwylkEU2t3Y=;
+ b=NKqJaOFd/pehwRte4gPoO0sogMWCGtuwLMWUEBHJQy0EF4B43/a/muVgLALk4YNBlJooQ4qIAexim0YWhAM62V7c8wqpPKeCNfHGo39MtlCE5lBR0BGxgv7o6RW/Yr92e3bV70yCR52whiginkxgQkUbb6kCIjBsC5Sk2LeZ3P+zIvY2YLzWQ3WTTPq7bMRBB1DDRrCe04DnSpMJDBv1y0hMfbPENk3X87qpYqjYOe05vwBOqSA8PE1mLb6fFRd7I2HuWAy94UyBwzLhNgIuGVKKpvk6lhdTADyQgfA77Ff3MxoXuNyGlVXPFrZCirn9OqGQ61OP7Un8V6mPH2XJWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=arm.com;dmarc=pass action=none header.from=arm.com;dkim=pass
+ header.d=arm.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WuSkLlpTjoAAw3ygeWNyh42L9mDiLoQVEwylkEU2t3Y=;
+ b=b+pstyLyDIC6x5SQD1k0FPbHyu94QySZtunMP7iQjVMkcfT8hQKXOaYz0F3T5xVNQUyVAIAp1dogOqTlxyTQ+vrQAtheWog4BfXrziOL79C2ZAZ+zyJqhMsK9IkdtFFtWRyqoKlB97hW+gRiRdwSumqyrBVGw+g6MiRE4XPxBK0=
+Received: from VI1PR08MB3696.eurprd08.prod.outlook.com (20.178.13.156) by
+ VI1PR08MB3662.eurprd08.prod.outlook.com (20.177.61.89) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.14; Wed, 31 Jul 2019 13:20:04 +0000
+Received: from VI1PR08MB3696.eurprd08.prod.outlook.com
+ ([fe80::6d04:e478:d795:5d80]) by VI1PR08MB3696.eurprd08.prod.outlook.com
+ ([fe80::6d04:e478:d795:5d80%4]) with mapi id 15.20.2136.010; Wed, 31 Jul 2019
+ 13:20:05 +0000
+From:   Brian Starkey <Brian.Starkey@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "eric@anholt.net" <eric@anholt.net>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>, nd <nd@arm.com>
+Subject: Re: [PATCH v1 2/2] drm: Clear the fence pointer when writeback job
+ signaled
+Thread-Topic: [PATCH v1 2/2] drm: Clear the fence pointer when writeback job
+ signaled
+Thread-Index: AQHVR4/KbU4UCRFzvkaBT5qon3yv66bktjIA
+Date:   Wed, 31 Jul 2019 13:20:04 +0000
+Message-ID: <20190731132002.dut5mdsqgh7b75iv@DESKTOP-E1NTVVP.localdomain>
+References: <1564571048-15029-1-git-send-email-lowry.li@arm.com>
+ <1564571048-15029-3-git-send-email-lowry.li@arm.com>
+In-Reply-To: <1564571048-15029-3-git-send-email-lowry.li@arm.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 31 Jul 2019 13:18:44 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: NeoMutt/20180716-849-147d51-dirty
+x-originating-ip: [217.140.106.52]
+x-clientproxiedby: LO2P265CA0441.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:e::21) To VI1PR08MB3696.eurprd08.prod.outlook.com
+ (2603:10a6:803:b6::28)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Brian.Starkey@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8cfb4053-22b1-4a38-2cc8-08d715b9ccad
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR08MB3662;
+x-ms-traffictypediagnostic: VI1PR08MB3662:
+x-microsoft-antispam-prvs: <VI1PR08MB3662CD7184680ED022D69040F0DF0@VI1PR08MB3662.eurprd08.prod.outlook.com>
+nodisclaimer: True
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 011579F31F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(199004)(189003)(2906002)(71190400001)(386003)(86362001)(5660300002)(14454004)(6862004)(9686003)(102836004)(6116002)(99286004)(71200400001)(6512007)(76176011)(6246003)(6506007)(3846002)(478600001)(7736002)(53936002)(1076003)(305945005)(66476007)(25786009)(256004)(66556008)(52116002)(58126008)(4326008)(66946007)(81166006)(186003)(446003)(6436002)(316002)(476003)(11346002)(486006)(81156014)(26005)(6636002)(8676002)(8936002)(54906003)(7416002)(64756008)(66066001)(66446008)(68736007)(44832011)(6486002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3662;H:VI1PR08MB3696.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Sf77PoeWBWTi5+b8IEhz9XsbqluOZ6jcxWEbbm3K2/SBqe5YxzCxWPjBz1bQx8nk1wIDnUUg9BNMYl5wDTKLxu76j3mf7lvqb/R+ECl0XUWULzpYS1lsjKytljrFOs/XHd+x3w/XtwmQOOtZkcfprZgEYCA9sBszZwMQqnUA5b/cYYkyej7Hxx2nX3Q8qKYWiVl1Ugsoe2UKOHavO/2XNRb+Z1/Rr1ZMfvBdHVkTaN/i3ODZ+DjVWK+CwKV/x0ZDJCKFFYlFTTPRRXIZmh7Bb53cm28gL+0f7AkIdc0NYzkyJKsDTaCZHAPm0S7cMs1+L1jN2RNSr4WL3N1t7DjGkpp4a0n2wCNivBWE9rVltQw/Wnx0jQpQJeOpxc5xShmL6e13CKxVWYtQQqyebDjSFeCFG5HOHeb3zexnVcqrpug=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <30B2B0A32DF9114B91949B555FBBCC60@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cfb4053-22b1-4a38-2cc8-08d715b9ccad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 13:20:04.5237
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Brian.Starkey@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3662
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.07.19 15:14, Michal Hocko wrote:
-> On Wed 31-07-19 15:02:49, David Hildenbrand wrote:
->> On 31.07.19 14:53, Michal Hocko wrote:
->>> On Wed 31-07-19 14:32:01, David Hildenbrand wrote:
->>>> Let's document why we take the lock here. If we're going to overhaul
->>>> memory hotplug locking, we'll have to touch many places - this comment
->>>> will help to clairfy why it was added here.
->>>
->>> And how exactly is "lock for consistency" comment going to help the poor
->>> soul touching that code? How do people know that it is safe to remove it?
->>> I am not going to repeat my arguments how/why I hate "locking for
->>> consistency" (or fun or whatever but a real synchronization reasons)
->>> but if you want to help then just explicitly state what should done to
->>> remove this lock.
->>>
->>
->> I know that you have a different opinion here. To remove the lock,
->> add_memory() locking has to be changed *completely* to the point where
->> we can drop the lock from the documentation of the function (*whoever
->> knows what we have to exactly change* - and I don't have time to do that
->> *right now*).
-> 
-> Not really. To remove a lock in this particular path it would be
-> sufficient to add
-> 	/*
-> 	 * Although __add_memory used down the road is documented to
-> 	 * require lock_device_hotplug, it is not necessary here because
-> 	 * this is an early code when userspace or any other code path
-> 	 * cannot trigger hotplug operations.
-> 	 */
+Hi Lowry,
 
-Okay, let me phrase it like this: Are you 100% (!) sure that we don't
-need the lock here. I am not -  I only know what I documented back then
-and what I found out - could be that we are forgetting something else
-the lock protects.
+Thanks for this cleanup.
 
-As I already said, I am fine with adding such a comment instead. But I
-am not convinced that the absence of the lock is 100% safe. (I am 99.99%
-sure ;) ).
+On Wed, Jul 31, 2019 at 11:04:45AM +0000, Lowry Li (Arm Technology China) w=
+rote:
+> During it signals the completion of a writeback job, after releasing
+> the out_fence, we'd clear the pointer.
+>=20
+> Check if fence left over in drm_writeback_cleanup_job(), release it.
+>=20
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  drivers/gpu/drm/drm_writeback.c | 23 +++++++++++++++--------
+>  1 file changed, 15 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeb=
+ack.c
+> index ff138b6..43d9e3b 100644
+> --- a/drivers/gpu/drm/drm_writeback.c
+> +++ b/drivers/gpu/drm/drm_writeback.c
+> @@ -324,6 +324,9 @@ void drm_writeback_cleanup_job(struct drm_writeback_j=
+ob *job)
+>  	if (job->fb)
+>  		drm_framebuffer_put(job->fb);
+> =20
+> +	if (job->out_fence)
 
--- 
+I'm thinking it might be a good idea to signal the fence with an error
+here, if it's not already signaled. Otherwise, if there's someone
+waiting (which there shouldn't be), they're going to be waiting a very
+long time :-)
 
 Thanks,
+-Brian
 
-David / dhildenb
+> +		dma_fence_put(job->out_fence);
+> +
+>  	kfree(job);
+>  }
