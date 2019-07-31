@@ -2,78 +2,149 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1FBC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6BDC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A721F206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A584E206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pn45YGzO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbfGaOKL (ORCPT
+        id S2387710AbfGaOLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:10:11 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3273 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728483AbfGaOKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:10:10 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9470678DF8958BF8C5F0;
-        Wed, 31 Jul 2019 22:10:08 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
- 22:10:01 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <nishkadg.linux@gmail.com>,
-        <bhanusreemahesh@gmail.com>, <payal.s.kshirsagar.98@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] staging: rtl8723bs: remove set but not used variable 'FirstConnect'
-Date:   Wed, 31 Jul 2019 22:09:03 +0800
-Message-ID: <20190731140903.304-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 31 Jul 2019 10:11:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40067 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729129AbfGaOLF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:11:05 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so60002804wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DaSfQVSBloP6ituQwd3gN2sNQYfvnC2s71RqutisBq0=;
+        b=Pn45YGzOCoqVPj5ruMllJckodlhVBmgzWrH3x/e0USvGBmmg4/Ju4GVTO3/dRSpBTY
+         576PmDDVUKYSxfaA1m94qhQ8UbmUNa4NfL1mXsG4Cq5I/yz4KkQozkzA+tTJ5oyrS9a5
+         wahvQMETUJkBFk2+TS9+O3vcsd4sB1rUI5rgIBWJvS6kGoYyzNBRtoOh/brUuKjLVgqb
+         lJkOws6k7U0nPUeGV0XD+Cc9eDsiWdIXbue+NdiSajyLETAOv5J2/b38B0MNu0VMg1ss
+         pRO70fcoPMvX0eHH4aQKvcl9z9u4yPd3QOFBhz23Zxc8o6UX+WAxo7JKNb4ZvLBDrnWr
+         m9Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DaSfQVSBloP6ituQwd3gN2sNQYfvnC2s71RqutisBq0=;
+        b=AkRG6o+H4OjljjmXr+st4vBjKsVCyJBZCAP48jMlx7FJrzwyBEyFtcHbEaDdprOXzu
+         urGPzO+z8GFfoMn3jiwqeFgiIPZsIxoOQH2C+FZmHTeZ5R2F2yxGEa388YhmG/S0i4iL
+         UsPQLYSSzkqjcYFSzPxMtidNn1M1KHzMMa3MUvGUWxrqM7/Bh0TYt0StfsoyyisUIpY/
+         wVklidpR81MHWzrdl/JItOOcQsBXVq/5vYi+/+ORDHIIMOm1MpnTodDOFFDhANkjBl2T
+         Lalpen7+LyNiZKYrLSwfdaBVTBxi3sXpWA6gyihoJv7VtzikMSKfwdWUNv0kX12aP+J9
+         PTNg==
+X-Gm-Message-State: APjAAAUKK1d3crI6MTETtAoaNMemcgX8s4E/pKwWVCF9JH5OVW8/Pkwx
+        CeIHnd0cGngPwz0Fx215fX0F9Q==
+X-Google-Smtp-Source: APXvYqw/pUX7GShISMzCbUQtESxSOCGVNvngtydQFUT3NN7ACbQtiRIRf1AbgIrVwpXKDn1FZaNSkQ==
+X-Received: by 2002:a05:600c:34d:: with SMTP id u13mr85321496wmd.48.1564582262533;
+        Wed, 31 Jul 2019 07:11:02 -0700 (PDT)
+Received: from [192.168.1.6] (19.red-176-86-136.dynamicip.rima-tde.net. [176.86.136.19])
+        by smtp.gmail.com with ESMTPSA id a81sm71773684wmh.3.2019.07.31.07.11.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 07:11:01 -0700 (PDT)
+Subject: Re: [PATCH v3 02/14] mbox: qcom: add APCS child device for QCS404
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com,
+        mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org,
+        will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au,
+        heiko@sntech.de, sibis@codeaurora.org,
+        enric.balletbo@collabora.com, jagan@amarulasolutions.com,
+        olof@lixom.net, vkoul@kernel.org, niklas.cassel@linaro.org,
+        georgi.djakov@linaro.org, amit.kucheria@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
+ <20190625164733.11091-3-jorge.ramirez-ortiz@linaro.org>
+ <20190711144424.GD7234@tuxbook-pro>
+From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Message-ID: <5111bc6e-4155-e99e-71b2-1aac3610b71e@linaro.org>
+Date:   Wed, 31 Jul 2019 16:10:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190711144424.GD7234@tuxbook-pro>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On 7/11/19 16:44, Bjorn Andersson wrote:
+> On Tue 25 Jun 09:47 PDT 2019, Jorge Ramirez-Ortiz wrote:
+> 
+>> There is clock controller functionality in the APCS hardware block of
+>> qcs404 devices similar to msm8916.
+>>
+>> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+>> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+>> ---
+>>  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 18 ++++++++++--------
+>>  1 file changed, 10 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+>> index 705e17a5479c..a05dc3aabac7 100644
+>> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+>> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+>> @@ -89,16 +89,18 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+>>  		return ret;
+>>  	}
+>>  
+>> -	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
+>> -		apcs->clk = platform_device_register_data(&pdev->dev,
+>> -							  "qcom-apcs-msm8916-clk",
+>> -							  -1, NULL, 0);
+>> -		if (IS_ERR(apcs->clk))
+>> -			dev_err(&pdev->dev, "failed to register APCS clk\n");
+>> -	}
+>> -
+>>  	platform_set_drvdata(pdev, apcs);
+>>  
+>> +	if (!of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global") &&
+>> +	    !of_device_is_compatible(np, "qcom,qcs404-apcs-apps-global"))
+> 
+> If the remainder of the function was a long snippet I think this would
+> motivate the somewhat unusual early return. But I think it would be
+> cleaner to just add to the existing conditional.
 
-drivers/staging/rtl8723bs/hal/odm.c: In function 'odm_RSSIMonitorCheckCE':
-drivers/staging/rtl8723bs/hal/odm.c:1258:7: warning:
- variable 'FirstConnect' set but not used [-Wunused-but-set-variable]
+sure can do that. I dont agree (I wouldnt have bothered otherwise :))
+but will do
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/rtl8723bs/hal/odm.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/hal/odm.c b/drivers/staging/rtl8723bs/hal/odm.c
-index dd9a16f..aa6631e 100644
---- a/drivers/staging/rtl8723bs/hal/odm.c
-+++ b/drivers/staging/rtl8723bs/hal/odm.c
-@@ -1255,13 +1255,11 @@ void odm_RSSIMonitorCheckCE(PDM_ODM_T pDM_Odm)
- 	int tmpEntryMaxPWDB = 0, tmpEntryMinPWDB = 0xff;
- 	u8 sta_cnt = 0;
- 	u32 PWDB_rssi[NUM_STA] = {0};/* 0~15]:MACID, [16~31]:PWDB_rssi */
--	bool FirstConnect = false;
- 	pRA_T pRA_Table = &pDM_Odm->DM_RA_Table;
- 
- 	if (pDM_Odm->bLinked != true)
- 		return;
- 
--	FirstConnect = (pDM_Odm->bLinked) && (pRA_Table->firstconnect == false);
- 	pRA_Table->firstconnect = pDM_Odm->bLinked;
- 
- 	/* if (check_fwstate(&Adapter->mlmepriv, WIFI_AP_STATE|WIFI_ADHOC_STATE|WIFI_ADHOC_MASTER_STATE) == true) */
--- 
-2.7.4
-
+> 
+> Regards,
+> Bjorn
+> 
+>> +		return 0;
+>> +
+>> +	apcs->clk = platform_device_register_data(&pdev->dev,
+>> +						  "qcom-apcs-msm8916-clk",
+>> +						  -1, NULL, 0);
+>> +	if (IS_ERR(apcs->clk))
+>> +		dev_err(&pdev->dev, "failed to register APCS clk\n");
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> -- 
+>> 2.21.0
+>>
+> 
 
