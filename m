@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DB9C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E316CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5DA21874
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3703D21874
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:08:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="kpoM7/cz"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="RoXYiUX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388674AbfGaPIf (ORCPT
+        id S2388664AbfGaPIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:08:35 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38800 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388589AbfGaPI3 (ORCPT
+        Wed, 31 Jul 2019 11:08:38 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35939 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388625AbfGaPIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:08:29 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r12so31220669edo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:28 -0700 (PDT)
+        Wed, 31 Jul 2019 11:08:32 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k21so66033351edq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=h0//8b8JhmDYiWR+Ncdp81M8YpF3RR/HYJneA6rLbBE=;
-        b=kpoM7/czG2vuCwsXq98nirdJYBOwr8KtzxM9+afNHenqhKIfVEFjDG3vbbM89v9hU6
-         YMAzAAX30FdCqCWqUZzuyEQfYHEZ5SGXYXGaTc/RfM7vFtD/yULcwWNLageDoX/8krFH
-         n4QKoyHVqCbs14roQ7VJaujfaJiV2Mk09sz0OeErJzlvISCfVQW2kNTXy8w9Gxm3/IwU
-         dcejxnmJWBrLcdeNajBBaL1AUmO1liY5yMiINB1/ytr9VKZzK36rf3vWWCycIhQ15tIE
-         DSLnTwriWXZKdOs1A4sQUyGiM4P5PvUWt23VhEqgSeYDF0Ha/yNAfcCo2u0r6R6Yiip8
-         wAXQ==
+        bh=IPsK2XRosHpKRDn42pkA1hocZnIJH8axKf5oqIqvF+0=;
+        b=RoXYiUX1XnPhAzuEc/754GCS7jv20HjdtnuA0D6/z6EQWRYWWlJYLUmYCp5A9gF6t0
+         xmdTvGf/RDPJGsWdvfduqJSiPxD1iQy03XbdfaIQyAILVGsn2EfooQl1HvX68XEmvKvE
+         YLVQ2+mjfACH42lwtOVvTBDcZBjRVOCatWgbntGFkKnEMI7/phw5FB2FZk9Pt9J7I72/
+         XSOCXiRLBenu+N9P+C9H7h3JIHVw5uD4w9ATyXvDePOwu1HaCpJlCNydaVH+dgiEvjFc
+         icfbQU69vCZT3uQOtoM3gTX73RLNevnI2i7LMnV1I9DzMb0PsfE3TEa5CJMzEo4Nvk/X
+         DA6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=h0//8b8JhmDYiWR+Ncdp81M8YpF3RR/HYJneA6rLbBE=;
-        b=gQg0wwi7M3JLUkFE1slQqbM97bpKM+B2sCynQoojsyX6XlRALvHYh26OCFGDYyTpGI
-         3WSLHZN2YE1MDxHKENLyIZvjbAWZ6EKemueE6Ldagtvt4s9r5iYvo3/BGvEZzfnNJzP+
-         gkDuBB6zw5P4Hm++4mDArYFbgn5fagT55If8iVT34zUk6v7ui0m//SoJX4x+8brLgSvE
-         zfyTyPAIZYfj2mkO7MEZp0JVjxchBkpq18LiNkJ7D6eqsdHeILR6vXatGPQ/CpAI+R+W
-         ipGzbPRYueHCSxgZZextjq/yOjnyiQLlgqLdfh5Ku5KHCucsLfjYHCnjt1BGN2pdEM+k
-         VuGA==
-X-Gm-Message-State: APjAAAXWwIwAnux6dzBld9ECRM5Gn2F0MKTqtGLsBmZzO5+nC7euHcKm
-        60VpXFqhkFmlyn+xh0xwMqY=
-X-Google-Smtp-Source: APXvYqxzkJr6sogcwi+BoQU+16q789SLZB/aHhQhjukCfnhAW3wOEpwRSp2oNCYJ50Xj+teIukdhFg==
-X-Received: by 2002:a17:906:c315:: with SMTP id s21mr93121050ejz.238.1564585708018;
-        Wed, 31 Jul 2019 08:08:28 -0700 (PDT)
+        bh=IPsK2XRosHpKRDn42pkA1hocZnIJH8axKf5oqIqvF+0=;
+        b=BUB2DXA2Q1aw2GIxGUlGJoN7GxEyMYWDArNYw0977OJ+aFkEFgfCxEfu8NkVjcmm8R
+         /xSTVnOZoMHVNJegw9EfiGu2Xhzt7cU2ZyDn+hnAW4g2qJanW9AhqDFDBwcVuGT3wTc3
+         ie8fxcjbVbrNh2mn/kitlA6loCuPlfDWNRGxj40mDpWM9nf6IiuwRqyqOg1DcVhOPUKs
+         W+Pczc8bpMFwKe4lWX+zjin2JGB7zdY5Hk/ubhXK+v2MFnPA/kkGO/oGUESJLtlsnPF5
+         O7jkjWS61MEOUWUMuMdvKcA6fKzJ9W5/Jy5HzkI/j086LXpXtcU87S6D9E8MVvhgSasO
+         SYTQ==
+X-Gm-Message-State: APjAAAXZdVuHt3FAUtQI/qhRrZDZqunsNmhWBjo/rjZzkAoUMh6SX+9D
+        2b7bdU4Ab8/BjRffNPs0nTo=
+X-Google-Smtp-Source: APXvYqw++kl/s7OZc/atZ5tqKoJq5up6RoggcbrTF/G7ZR/ZGQU8Rbyr5OdWAhG3JNmHVdhx6GXBWA==
+X-Received: by 2002:a17:906:914:: with SMTP id i20mr28046601ejd.213.1564585710645;
+        Wed, 31 Jul 2019 08:08:30 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id q56sm17019541eda.28.2019.07.31.08.08.20
+        by smtp.gmail.com with ESMTPSA id uz27sm12533468ejb.24.2019.07.31.08.08.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:08:22 -0700 (PDT)
+        Wed, 31 Jul 2019 08:08:28 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 5DF9E102772; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+        id 1E0E2104600; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,10 +74,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 16/59] x86/mm: Rename CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING
-Date:   Wed, 31 Jul 2019 18:07:30 +0300
-Message-Id: <20190731150813.26289-17-kirill.shutemov@linux.intel.com>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 42/59] syscall/x86: Wire up a system call for MKTME encryption keys
+Date:   Wed, 31 Jul 2019 18:07:56 +0300
+Message-Id: <20190731150813.26289-43-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,41 +88,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the option to CONFIG_MEMORY_PHYSICAL_PADDING. It will be used
-not only for KASLR.
+From: Alison Schofield <alison.schofield@intel.com>
 
+encrypt_mprotect() is a new system call to support memory encryption.
+
+It takes the same parameters as legacy mprotect, plus an additional
+key serial number that is mapped to an encryption keyid.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/Kconfig    | 2 +-
- arch/x86/mm/kaslr.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/entry/syscalls/syscall_32.tbl | 1 +
+ arch/x86/entry/syscalls/syscall_64.tbl | 1 +
+ include/linux/syscalls.h               | 2 ++
+ include/uapi/asm-generic/unistd.h      | 4 +++-
+ kernel/sys_ni.c                        | 2 ++
+ 5 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 222855cc0158..2eb2867db5fa 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2214,7 +2214,7 @@ config RANDOMIZE_MEMORY
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index c00019abd076..1b30cd007a6a 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -440,3 +440,4 @@
+ 433	i386	fspick			sys_fspick			__ia32_sys_fspick
+ 434	i386	pidfd_open		sys_pidfd_open			__ia32_sys_pidfd_open
+ 435	i386	clone3			sys_clone3			__ia32_sys_clone3
++436	i386	encrypt_mprotect	sys_encrypt_mprotect		__ia32_sys_encrypt_mprotect
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index c29976eca4a8..716d8a89159b 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -357,6 +357,7 @@
+ 433	common	fspick			__x64_sys_fspick
+ 434	common	pidfd_open		__x64_sys_pidfd_open
+ 435	common	clone3			__x64_sys_clone3/ptregs
++436	common	encrypt_mprotect	__x64_sys_encrypt_mprotect
  
- 	   If unsure, say Y.
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 88145da7d140..4494b1d9c85a 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1000,6 +1000,8 @@ asmlinkage long sys_fspick(int dfd, const char __user *path, unsigned int flags)
+ asmlinkage long sys_pidfd_send_signal(int pidfd, int sig,
+ 				       siginfo_t __user *info,
+ 				       unsigned int flags);
++asmlinkage long sys_encrypt_mprotect(unsigned long start, size_t len,
++				     unsigned long prot, key_serial_t serial);
  
--config RANDOMIZE_MEMORY_PHYSICAL_PADDING
-+config MEMORY_PHYSICAL_PADDING
- 	hex "Physical memory mapping padding" if EXPERT
- 	depends on RANDOMIZE_MEMORY
- 	default "0xa" if MEMORY_HOTPLUG
-diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-index dc6182eecefa..580b82c2621b 100644
---- a/arch/x86/mm/kaslr.c
-+++ b/arch/x86/mm/kaslr.c
-@@ -104,7 +104,7 @@ void __init kernel_randomize_memory(void)
- 	 */
- 	BUG_ON(kaslr_regions[0].base != &page_offset_base);
- 	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
--		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
-+		CONFIG_MEMORY_PHYSICAL_PADDING;
+ /*
+  * Architecture-specific system calls
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index 1be0e798e362..7c1cd13f6aaf 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -850,9 +850,11 @@ __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
+ #define __NR_clone3 435
+ __SYSCALL(__NR_clone3, sys_clone3)
+ #endif
++#define __NR_encrypt_mprotect 436
++__SYSCALL(__NR_encrypt_mprotect, sys_encrypt_mprotect)
  
- 	/* Adapt phyiscal memory region size based on available memory */
- 	if (memory_tb < kaslr_regions[0].size_tb)
+ #undef __NR_syscalls
+-#define __NR_syscalls 436
++#define __NR_syscalls 437
+ 
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index 34b76895b81e..84c8c47cf9d6 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -349,6 +349,8 @@ COND_SYSCALL(pkey_mprotect);
+ COND_SYSCALL(pkey_alloc);
+ COND_SYSCALL(pkey_free);
+ 
++/* multi-key total memory encryption keys */
++COND_SYSCALL(encrypt_mprotect);
+ 
+ /*
+  * Architecture specific weak syscall entries.
 -- 
 2.21.0
 
