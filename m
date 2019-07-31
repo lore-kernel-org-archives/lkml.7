@@ -2,173 +2,140 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914F6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FED5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA47206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03BA5206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nt6cMM8c"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdK5mbve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbfGaNyY (ORCPT
+        id S1729724AbfGaNzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:54:24 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42204 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727708AbfGaNyV (ORCPT
+        Wed, 31 Jul 2019 09:55:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35809 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbfGaNzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:54:21 -0400
-Received: by mail-pl1-f194.google.com with SMTP id ay6so30568515plb.9;
-        Wed, 31 Jul 2019 06:54:21 -0700 (PDT)
+        Wed, 31 Jul 2019 09:55:09 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u14so31938381pfn.2;
+        Wed, 31 Jul 2019 06:55:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NMHoNMkwZIjttRoQclv/No/h1YkPwIfxBhh7UosFrCo=;
-        b=nt6cMM8cKfDQBR7KEsqpXraXr/TS7TxUrSquIpxxKJEIQU/KrSZUh1EdWzsGrk6M9Z
-         xQHfyseFfzYpJygezf4x6ys1Foun2MhQdR0j/UG+BJHeP7ihcP9xWSw4UJ/2m+98+Pkx
-         q2MRvvu50jo+0CEoRqs8pfOrR9gH+6VbkMo5BqqByA6lxd7IevLy9F2PozH7xUokVBhk
-         jzTYBCP7dycssJ1lTBvgu6sbJ/sD47t7TeSjrW6RO6LdOuXBzeYj3eHJ1E27Ejj45ek8
-         c20ZhFSw1OBvL7qhzRERIMgFJxNZanhNQkxtsTje9/xWqFngP+B8s+UaOEAynPlfjdZl
-         Rlrg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AUehYmAmHAFKhA+UzW4C2Ny1DOn2u7scNPtafjv+ab8=;
+        b=NdK5mbveYV0uJ0PdbLG7vKVErAQFSXqF/0JnQIkBqPeipAS/JkeXYG9CuFvlN6HnaL
+         bXjjeSelPvaJn4fztI1kJ3oS3D8XXYM3TckWfdWAFGY6zMVDxOjABXddMthXWLtHdKLo
+         ObFkyssGmRMkkquXN3+fUt9C0L8qfsGj55hpSSmSHD0bEnwfiRu+CbWBurS/aQ5afOXa
+         bY9srq/AafGT18BmsdCXFfgycTswNfGl7MYWLWwqPeknVb0l08oJZnyST/cUYCMJFy+p
+         jIDQNNNfBWq8x+tkY2V/pa8qYVHDP/1bf/lgS95j+6BYdq70NL3pFSQVrSKIdjJaMYbJ
+         nraA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NMHoNMkwZIjttRoQclv/No/h1YkPwIfxBhh7UosFrCo=;
-        b=ukcfTaMR7xZ+iWfKIKtlOKSUONn625e7LRgZ8OJP+BE/73/2QdsU6ZGFriHnTHQXOD
-         tB6dtwJ5FaBQvhuHHaLapZPcEqy6zGWoI8TPaB+P4qq5SFezNYCWTcGDO3f3U/BihBaa
-         FVK7Xu4oE3FVMz+oRFJLDjbkUUVtdY8/ygICkFPhuZFLww1hSBXbh444vfqVVOO2SpSX
-         OkZtG0Ir/xVVIWCL1nA1TqfYzbYZOnOw2zR/S/KwHUf8wK+IM25WMUo+4c/UoypH1D2G
-         UV82x24EevI0ljez0ulJsbYvIxY05c3oHh3cnvPNxE4NAgVpDwOkSyDHWCGmajJ72ZD+
-         iJhA==
-X-Gm-Message-State: APjAAAUIqAZj6pFKvj2CSWms29P0kRvBKs/OYX4LYupkLAhnUwTxYfS2
-        hmslX+xWG16o4KZRFGhtlJg=
-X-Google-Smtp-Source: APXvYqwf7iFI8IPFMwE49BO1MBfggFyFXdCWGnl/9js+QXKFf0Hyn4QBBo0ttQZmr3aN8bfyhXQ08A==
-X-Received: by 2002:a17:902:8d92:: with SMTP id v18mr122418654plo.211.1564581260564;
-        Wed, 31 Jul 2019 06:54:20 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id u6sm2133736pjx.23.2019.07.31.06.54.18
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AUehYmAmHAFKhA+UzW4C2Ny1DOn2u7scNPtafjv+ab8=;
+        b=M1OTx5SljeTV9LBy6LrOIKifAVGqsDSGZoCPA+HR3uwzXLEnIZ7VNTWQKG+SanjN/F
+         EtK8ljPE4ZyxKNkJRNbjyPZagWENRQzblBegEd9JxkDEu6w6oBe0u220YQSIXgrD+0KX
+         NHkZ/rDTRDocFSyJeoLIIKotdNolKGVY3DFSwBnjU1x0Yyr43ur7GnoAiwqgx43gEHqu
+         W0qNHflEjv2PX16MN9s3AAbe5vIY7AsGRYZHDLbfjdl/CqUM/sX4MKV9cVM1w577ZlXY
+         dSKWT3d5bPYCXrB39g4Tm04ym2kZLWxvqnsWKZhU02PVEeR4s7SvKw/LeazKW5n3K774
+         2/Pw==
+X-Gm-Message-State: APjAAAXUeHzZUQRAUhtCjl9d4p3l06a9+ek8/dkvT7my+o/V2I6KM9/R
+        BtniH6zE0GiDEKEkUkCXzU4vp1mxdho=
+X-Google-Smtp-Source: APXvYqx6o1XtWxx/iWZ6cjAFiJaEFfAkKOAWjV3cMtn4W7y4t4eDJqA/4NpyUabZhQjlo2JzrHHoqg==
+X-Received: by 2002:a17:90a:9f4a:: with SMTP id q10mr3102467pjv.95.1564581308426;
+        Wed, 31 Jul 2019 06:55:08 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id y11sm71143156pfb.119.2019.07.31.06.55.05
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 06:54:19 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 06:54:17 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] drivers: base: swnode: link devices to software nodes
-Message-ID: <20190731135417.GF147138@dtor-ws>
-References: <20190713075259.243565-1-dmitry.torokhov@gmail.com>
- <20190713075259.243565-2-dmitry.torokhov@gmail.com>
- <20190729120715.GA28600@kuha.fi.intel.com>
- <20190729131532.GA1201@penguin>
- <20190730115247.GK28600@kuha.fi.intel.com>
- <e36fb47b-2969-5f53-97d4-8e94b4c98283@intel.com>
+        Wed, 31 Jul 2019 06:55:07 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Vishal Kulkarni <vishal@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH 1/2] cxgb4: sched: Use refcount_t for refcount
+Date:   Wed, 31 Jul 2019 21:55:02 +0800
+Message-Id: <20190731135502.26485-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e36fb47b-2969-5f53-97d4-8e94b4c98283@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 04:49:50PM +0200, Rafael J. Wysocki wrote:
-> On 7/30/2019 1:52 PM, Heikki Krogerus wrote:
-> > On Mon, Jul 29, 2019 at 03:15:32PM +0200, Dmitry Torokhov wrote:
-> > > On Mon, Jul 29, 2019 at 03:07:15PM +0300, Heikki Krogerus wrote:
-> > > > On Sat, Jul 13, 2019 at 12:52:58AM -0700, Dmitry Torokhov wrote:
-> > > > > It is helpful to know what device, if any, a software node is tied to, so
-> > > > > let's store a pointer to the device in software node structure. Note that
-> > > > > children software nodes will inherit their parent's device pointer, so we
-> > > > > do not have to traverse hierarchy to see what device the [sub]tree belongs
-> > > > > to.
-> > > > > 
-> > > > > We will be using the device pointer to locate GPIO lookup tables for
-> > > > > devices with static properties.
-> > > > > 
-> > > > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > > > ---
-> > > > >   drivers/base/property.c  |  1 +
-> > > > >   drivers/base/swnode.c    | 35 ++++++++++++++++++++++++++++++++++-
-> > > > >   include/linux/property.h |  5 +++++
-> > > > >   3 files changed, 40 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/drivers/base/property.c b/drivers/base/property.c
-> > > > > index 348b37e64944..3bc93d4b35c4 100644
-> > > > > --- a/drivers/base/property.c
-> > > > > +++ b/drivers/base/property.c
-> > > > > @@ -527,6 +527,7 @@ int device_add_properties(struct device *dev,
-> > > > >   	if (IS_ERR(fwnode))
-> > > > >   		return PTR_ERR(fwnode);
-> > > > > +	software_node_link_device(fwnode, dev);
-> > > > >   	set_secondary_fwnode(dev, fwnode);
-> > > > >   	return 0;
-> > > > >   }
-> > > > > diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> > > > > index 7fc5a18e02ad..fd12eea539b6 100644
-> > > > > --- a/drivers/base/swnode.c
-> > > > > +++ b/drivers/base/swnode.c
-> > > > > @@ -24,6 +24,9 @@ struct software_node {
-> > > > >   	/* properties */
-> > > > >   	const struct property_entry *properties;
-> > > > > +
-> > > > > +	/* device this node is associated with */
-> > > > > +	struct device *dev;
-> > > > >   };
-> > > > Let's not do that! The nodes can be, and in many cases are, associated
-> > > > with multiple devices.
-> > > They do? Where? I see that set of properties can be shared between
-> > > several devices, but when we instantiate SW node we create a new
-> > > instance for device. This is also how ACPI and OF properties work; they
-> > > not shared between devices (or, rather, the kernel creates distinct _and
-> > > single_ devices for instance of ACPI or OF node). I do not think we want
-> > > swnodes work differently from the other firmware nodes.
-> > Having multiple devices linked to a single node is quite normal. Most
-> > multifunctional devices will share a single node. The USB port devices
-> > will share their node (if they have one) with any device that is
-> > attached to them. Etc.
-> > 
-> > If you want to check how this works with ACPI, then find
-> > "physical_node" named files from sysfs. The ACPI node folders in sysfs
-> > have symlinks named "physical_node<n>" for every device they are bind
-> > to. The first one is named just "physical_node", the second
-> > "physical_node1", the third "physical_node2", and so on.
-> > 
-> > > > Every device is already linked with the software node kobject, so
-> > > > isn't it possible to simply walk trough those links in order to check
-> > > > the devices associated with the node?
-> > > No, we need to know the exact instance of a device, not a set of
-> > > devices, because even though some properties can be shared, others can
-> > > not. For example, even if 2 exactly same touch controllers in the system
-> > > have "reset-gpios" property, they won't be the same GPIO for the both of
-> > > them.
-> > I don't think I completely understand the use case you had in mind for
-> > this API, but since you planned to use it with the GPIO lookup tables,
-> > I'm going to assume it's not needed after all. Let's replace those
-> > with the references instead like I proposed in my reply to the 2/2
-> > patch.
-> > 
-> > Linking a single device with a node like that is in any case not
-> > acceptable nor possible.
-> > 
-> I think I need to withdraw my ACK here at this point.
+refcount_t is better for reference counters since its
+implementation can prevent overflows.
+So convert atomic_t ref counters to refcount_t.
 
-OK, fair enough, I'll see if I can make the references that Heikki
-mentioned work for me.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/net/ethernet/chelsio/cxgb4/sched.c | 8 ++++----
+ drivers/net/ethernet/chelsio/cxgb4/sched.h | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Thanks.
-
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sched.c b/drivers/net/ethernet/chelsio/cxgb4/sched.c
+index 60218dc676a8..2d04ffb31528 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sched.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sched.c
+@@ -173,7 +173,7 @@ static int t4_sched_queue_unbind(struct port_info *pi, struct ch_sched_queue *p)
+ 
+ 		list_del(&qe->list);
+ 		kvfree(qe);
+-		if (atomic_dec_and_test(&e->refcnt)) {
++		if (refcount_dec_and_test(&e->refcnt)) {
+ 			e->state = SCHED_STATE_UNUSED;
+ 			memset(&e->info, 0, sizeof(e->info));
+ 		}
+@@ -216,7 +216,7 @@ static int t4_sched_queue_bind(struct port_info *pi, struct ch_sched_queue *p)
+ 		goto out_err;
+ 
+ 	list_add_tail(&qe->list, &e->queue_list);
+-	atomic_inc(&e->refcnt);
++	refcount_inc(&e->refcnt);
+ 	return err;
+ 
+ out_err:
+@@ -434,7 +434,7 @@ static struct sched_class *t4_sched_class_alloc(struct port_info *pi,
+ 		if (err)
+ 			return NULL;
+ 		memcpy(&e->info, &np, sizeof(e->info));
+-		atomic_set(&e->refcnt, 0);
++		refcount_set(&e->refcnt, 0);
+ 		e->state = SCHED_STATE_ACTIVE;
+ 	}
+ 
+@@ -488,7 +488,7 @@ struct sched_table *t4_init_sched(unsigned int sched_size)
+ 		s->tab[i].idx = i;
+ 		s->tab[i].state = SCHED_STATE_UNUSED;
+ 		INIT_LIST_HEAD(&s->tab[i].queue_list);
+-		atomic_set(&s->tab[i].refcnt, 0);
++		refcount_set(&s->tab[i].refcnt, 0);
+ 	}
+ 	return s;
+ }
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sched.h b/drivers/net/ethernet/chelsio/cxgb4/sched.h
+index 168fb4ce3759..23a6ca1e6d3e 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sched.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/sched.h
+@@ -69,7 +69,7 @@ struct sched_class {
+ 	u8 idx;
+ 	struct ch_sched_params info;
+ 	struct list_head queue_list;
+-	atomic_t refcnt;
++	refcount_t refcnt;
+ };
+ 
+ struct sched_table {      /* per port scheduling table */
 -- 
-Dmitry
+2.20.1
+
