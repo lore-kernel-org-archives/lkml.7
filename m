@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4BAC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDCFC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D00720C01
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC03920C01
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="uMkV7dlR"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="GgMDYljg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbfGaPUi (ORCPT
+        id S1728483AbfGaPUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:20:38 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37386 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730047AbfGaPUe (ORCPT
+        Wed, 31 Jul 2019 11:20:42 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37394 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbfGaPUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:20:34 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w13so66097488eds.4
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:20:33 -0700 (PDT)
+        Wed, 31 Jul 2019 11:20:37 -0400
+Received: by mail-ed1-f68.google.com with SMTP id w13so66097631eds.4
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6dcOutisXa7w0OA/k2AObJgMHjT+CIuNqnczE3/DBrQ=;
-        b=uMkV7dlRYvyMPJSqXwVLQaxh1SbMKWA/rm406Ydz9eGRvi8Ft4SJy+9nN22gWE9nDd
-         ukzSoH56vPyqxpbLxjXEVQdYrRICJ3eXKLrgBvRFBms4X0n7IZ+ZkDfkegruHN6WvVvT
-         VYHq1kwbDORHQTBggf4gpsC2HkGEb8Xme0eLM5kcOMkZ+Lj0L0oK5rV1zYjDMJNxRWjh
-         kE59Netr4gNuDmfTCZsRVwCmyv9aL6liFd+uDsoGPs3jxtHmkwXPkxqd+N1WdLw441rw
-         xLD919fxfFbemgAuXp6p/VFQr+63k3I4lodcy1I8OZYnfLHOvaaxOAO79aSd/92Ov9k0
-         Pn/A==
+        bh=c5WMXVoIZssEiK4OS2ZsI14EAD5bwwEyXB7tLs9S9Os=;
+        b=GgMDYljgt69NuT2KJuOpsbtMf2bZflY04jkdcsb64J58gp3TxiHEEkOrT1ozLhakGl
+         94A0Aqkr8JolguUGlRobFPi57btYrwT3g8MYH4q5fgBYWQAov6IpM5yec8GdWQhRD5tC
+         0Ax6JsB0ooIwmT4n5nblwvmWo7thAMBxnFrHSP9RfZBW9LLERr65CaaolDQ48tv/CAKX
+         l2OBdufhK2nJeUB9MMPZPdYfYOqpvH6oRpIZCUxqhsrsgYyEegj1/UXzCzFcS0ucxo4Z
+         EdcRyeDiAndnOaS1LNOs83hgApICxD3lTMqnXM53LXOsfL7gbP+s6/BUFBXV4t3iCpQw
+         uzGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6dcOutisXa7w0OA/k2AObJgMHjT+CIuNqnczE3/DBrQ=;
-        b=kFnBMLQKi4fSxH56oYomSzatUwcyhPsKf9x+vTnFB7iDfeoKS8XvyKvvM+VOSpN6fu
-         ivoJcGxTWjxlPLfShDO+M9GL4zD/fPX7KkuIcHhCuCAGaC+dD6Uhvg4IHkvyNPkOvtn7
-         EW2omCIMcYzAejRBVPyeiImSdYs17X6P9L2T0DsLzpXTTlWY6gDjPjA4FvoJQQ2zBkuk
-         OkRVC21fVYH91MGBfr7hlJtA4ZhlkyUMnKXDBsMeXS5/5QA1eIfPs6xymThwqBRx2Qk5
-         GUHyq23LJq1FTmf1k8UNPPcSw6sgADoF66EnkNoI0wVaAANqO5DFYJcfAkhPJiz8jE9+
-         NVXQ==
-X-Gm-Message-State: APjAAAU6HduJ8p2gMzvmC5vrYa5BNqrvzK9iLnn4PL4Xx+TvsRL8ODvU
-        OUnUZrnY3KaL7i5P9yXVsw4=
-X-Google-Smtp-Source: APXvYqzT/aiiyEFc/2CsYYWiqLLTpjVrXs9HBollStS9amsquCg5LbgKvTyLrvlJSZnlDsAlK0g/mw==
-X-Received: by 2002:a50:90c5:: with SMTP id d5mr109797190eda.28.1564586032900;
-        Wed, 31 Jul 2019 08:13:52 -0700 (PDT)
+        bh=c5WMXVoIZssEiK4OS2ZsI14EAD5bwwEyXB7tLs9S9Os=;
+        b=VnbhGlJR3MVDalRybDRBfhBFwhm64Zfi6KCzrUfk/gIGCBHdgoh0r7E5MXGl99Mwj+
+         hmypdgJ2OMYmXSoHFbaVyLhAXa/7M8JxdSWNEAItnofUZX3bxG5xgo3AVGhCskWCjhBz
+         Byk2DbaOH0eLGfCM88UKrbGcJGe8y5rlqKcHKE+z8jdeXzpYSmmX31rsdgteLIhuP6Zv
+         b0yVDBaYGfOOBXobLy8W3zVWCYfDjem0A4sN7WVze/OGeGe7Ikdtd7gJvCIEOO78UkOd
+         fQ1KZVIA8eC6EmY6KhIeZ+rhGikvTwEOK1MXci0sMuMT2k/58Gm5beCeV0RQK+xoKRhP
+         L10w==
+X-Gm-Message-State: APjAAAUGBSnJtCPXzShVbK82vACiqXGWajLExWCCEqnN2L3RhytZSrGA
+        46vEyRx8hLGiJWGpaX8d8qs=
+X-Google-Smtp-Source: APXvYqwYMqulY0Xx64lB5aqfOhV4++kQN1Oobfks3JeYhOF1doEtw6JzyLb48pAr8c5dYOSv/qswsA==
+X-Received: by 2002:a17:906:e204:: with SMTP id gf4mr92542915ejb.302.1564586036461;
+        Wed, 31 Jul 2019 08:13:56 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id g7sm16945082eda.52.2019.07.31.08.13.49
+        by smtp.gmail.com with ESMTPSA id d7sm16507912edr.39.2019.07.31.08.13.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:13:50 -0700 (PDT)
+        Wed, 31 Jul 2019 08:13:53 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 733161030BA; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+        id AA55A1030C2; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,10 +74,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 19/59] x86/mm: Implement syncing per-KeyID direct mappings
-Date:   Wed, 31 Jul 2019 18:07:33 +0300
-Message-Id: <20190731150813.26289-20-kirill.shutemov@linux.intel.com>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 27/59] keys/mktme: Destroy MKTME keys
+Date:   Wed, 31 Jul 2019 18:07:41 +0300
+Message-Id: <20190731150813.26289-28-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,590 +88,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For MKTME we use per-KeyID direct mappings. This allows kernel to have
-access to encrypted memory.
+From: Alison Schofield <alison.schofield@intel.com>
 
-sync_direct_mapping() sync per-KeyID direct mappings with a canonical
-one -- KeyID-0.
+Destroy is a method invoked by the kernel key service when a
+userspace key is being removed. (invalidate, revoke, timeout).
 
-The function tracks changes in the canonical mapping:
- - creating or removing chunks of the translation tree;
- - changes in mapping flags (i.e. protection bits);
- - splitting huge page mapping into a page table;
- - replacing page table with a huge page mapping;
+During destroy, MKTME wil returned the hardware KeyID to the pool
+of available keyids.
 
-The function need to be called on every change to the direct mapping:
-hotplug, hotremove, changes in permissions bits, etc.
-
-The function is nop until MKTME is enabled.
-
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/include/asm/mktme.h |   6 +
- arch/x86/mm/init_64.c        |   7 +
- arch/x86/mm/mktme.c          | 439 +++++++++++++++++++++++++++++++++++
- arch/x86/mm/pageattr.c       |  27 +++
- 4 files changed, 479 insertions(+)
+ security/keys/mktme_keys.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
-index 3fc246acc279..d26ada6b65f7 100644
---- a/arch/x86/include/asm/mktme.h
-+++ b/arch/x86/include/asm/mktme.h
-@@ -62,6 +62,8 @@ static inline void arch_free_page(struct page *page, int order)
- 		free_encrypted_page(page, order);
+diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
+index beca852db01a..10fcdbf5a08f 100644
+--- a/security/keys/mktme_keys.c
++++ b/security/keys/mktme_keys.c
+@@ -50,6 +50,23 @@ int mktme_reserve_keyid(struct key *key)
+ 	return 0;
  }
  
-+int sync_direct_mapping(unsigned long start, unsigned long end);
-+
- #else
- #define mktme_keyid_mask()	((phys_addr_t)0)
- #define mktme_nr_keyids()	0
-@@ -76,6 +78,10 @@ static inline bool mktme_enabled(void)
- 
- static inline void mktme_disable(void) {}
- 
-+static inline int sync_direct_mapping(unsigned long start, unsigned long end)
++static void mktme_release_keyid(int keyid)
 +{
-+	return 0;
++	 mktme_map[keyid].state = KEYID_AVAILABLE;
++	 mktme_available_keyids++;
 +}
- #endif
- 
- #endif
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 4c1f93df47a5..6769650ad18d 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -726,6 +726,7 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
- {
- 	bool pgd_changed = false;
- 	unsigned long vaddr, vaddr_start, vaddr_end, vaddr_next, paddr_last;
-+	int ret;
- 
- 	paddr_last = paddr_end;
- 	vaddr = (unsigned long)__va(paddr_start);
-@@ -762,6 +763,9 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
- 		pgd_changed = true;
- 	}
- 
-+	ret = sync_direct_mapping(vaddr_start, vaddr_end);
-+	WARN_ON(ret);
 +
- 	if (pgd_changed)
- 		sync_global_pgds(vaddr_start, vaddr_end - 1);
- 
-@@ -1201,10 +1205,13 @@ void __ref vmemmap_free(unsigned long start, unsigned long end,
- static void __meminit
- kernel_physical_mapping_remove(unsigned long start, unsigned long end)
- {
-+	int ret;
- 	start = (unsigned long)__va(start);
- 	end = (unsigned long)__va(end);
- 
- 	remove_pagetable(start, end, true, NULL);
-+	ret = sync_direct_mapping(start, end);
-+	WARN_ON(ret);
- }
- 
- void __ref arch_remove_memory(int nid, u64 start, u64 size,
-diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-index 1e8d662e5bff..ed13967bb543 100644
---- a/arch/x86/mm/mktme.c
-+++ b/arch/x86/mm/mktme.c
-@@ -1,6 +1,8 @@
- #include <linux/mm.h>
- #include <linux/highmem.h>
- #include <asm/mktme.h>
-+#include <asm/pgalloc.h>
-+#include <asm/tlbflush.h>
- 
- /* Mask to extract KeyID from physical address. */
- phys_addr_t __mktme_keyid_mask;
-@@ -54,6 +56,8 @@ static bool need_page_mktme(void)
- static void init_page_mktme(void)
- {
- 	static_branch_enable(&mktme_enabled_key);
-+
-+	sync_direct_mapping(PAGE_OFFSET, PAGE_OFFSET + direct_mapping_size);
- }
- 
- struct page_ext_operations page_mktme_ops = {
-@@ -148,3 +152,438 @@ void free_encrypted_page(struct page *page, int order)
- 		page++;
- 	}
- }
-+
-+static int sync_direct_mapping_pte(unsigned long keyid,
-+		pmd_t *dst_pmd, pmd_t *src_pmd,
-+		unsigned long addr, unsigned long end)
++int mktme_keyid_from_key(struct key *key)
 +{
-+	pte_t *src_pte, *dst_pte;
-+	pte_t *new_pte = NULL;
-+	bool remove_pte;
++	int i;
 +
-+	/*
-+	 * We want to unmap and free the page table if the source is empty and
-+	 * the range covers whole page table.
-+	 */
-+	remove_pte = !src_pmd && PAGE_ALIGNED(addr) && PAGE_ALIGNED(end);
-+
-+	/*
-+	 * PMD page got split into page table.
-+	 * Clear PMD mapping. Page table will be established instead.
-+	 */
-+	if (pmd_large(*dst_pmd)) {
-+		spin_lock(&init_mm.page_table_lock);
-+		pmd_clear(dst_pmd);
-+		spin_unlock(&init_mm.page_table_lock);
++	for (i = 1; i <= mktme_nr_keyids(); i++) {
++		if (mktme_map[i].key == key)
++			return i;
 +	}
-+
-+	/* Allocate a new page table if needed. */
-+	if (pmd_none(*dst_pmd)) {
-+		new_pte = (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!new_pte)
-+			return -ENOMEM;
-+		dst_pte = new_pte + pte_index(addr + keyid * direct_mapping_size);
-+	} else {
-+		dst_pte = pte_offset_map(dst_pmd, addr + keyid * direct_mapping_size);
-+	}
-+	src_pte = src_pmd ? pte_offset_map(src_pmd, addr) : NULL;
-+
-+	spin_lock(&init_mm.page_table_lock);
-+
-+	do {
-+		pteval_t val;
-+
-+		if (!src_pte || pte_none(*src_pte)) {
-+			set_pte(dst_pte, __pte(0));
-+			goto next;
-+		}
-+
-+		if (!pte_none(*dst_pte)) {
-+			/*
-+			 * Sanity check: PFNs must match between source
-+			 * and destination even if the rest doesn't.
-+			 */
-+			BUG_ON(pte_pfn(*dst_pte) != pte_pfn(*src_pte));
-+		}
-+
-+		/* Copy entry, but set KeyID. */
-+		val = pte_val(*src_pte) | keyid << mktme_keyid_shift();
-+		val &= __supported_pte_mask;
-+		set_pte(dst_pte, __pte(val));
-+next:
-+		addr += PAGE_SIZE;
-+		dst_pte++;
-+		if (src_pte)
-+			src_pte++;
-+	} while (addr != end);
-+
-+	if (new_pte)
-+		pmd_populate_kernel(&init_mm, dst_pmd, new_pte);
-+
-+	if (remove_pte) {
-+		__free_page(pmd_page(*dst_pmd));
-+		pmd_clear(dst_pmd);
-+	}
-+
-+	spin_unlock(&init_mm.page_table_lock);
-+
 +	return 0;
 +}
 +
-+static int sync_direct_mapping_pmd(unsigned long keyid,
-+		pud_t *dst_pud, pud_t *src_pud,
-+		unsigned long addr, unsigned long end)
-+{
-+	pmd_t *src_pmd, *dst_pmd;
-+	pmd_t *new_pmd = NULL;
-+	bool remove_pmd = false;
-+	unsigned long next;
-+	int ret = 0;
-+
-+	/*
-+	 * We want to unmap and free the page table if the source is empty and
-+	 * the range covers whole page table.
-+	 */
-+	remove_pmd = !src_pud && IS_ALIGNED(addr, PUD_SIZE) && IS_ALIGNED(end, PUD_SIZE);
-+
-+	/*
-+	 * PUD page got split into page table.
-+	 * Clear PUD mapping. Page table will be established instead.
-+	 */
-+	if (pud_large(*dst_pud)) {
-+		spin_lock(&init_mm.page_table_lock);
-+		pud_clear(dst_pud);
-+		spin_unlock(&init_mm.page_table_lock);
-+	}
-+
-+	/* Allocate a new page table if needed. */
-+	if (pud_none(*dst_pud)) {
-+		new_pmd = (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!new_pmd)
-+			return -ENOMEM;
-+		dst_pmd = new_pmd + pmd_index(addr + keyid * direct_mapping_size);
-+	} else {
-+		dst_pmd = pmd_offset(dst_pud, addr + keyid * direct_mapping_size);
-+	}
-+	src_pmd = src_pud ? pmd_offset(src_pud, addr) : NULL;
-+
-+	do {
-+		pmd_t *__src_pmd = src_pmd;
-+
-+		next = pmd_addr_end(addr, end);
-+		if (!__src_pmd || pmd_none(*__src_pmd)) {
-+			if (pmd_none(*dst_pmd))
-+				goto next;
-+			if (pmd_large(*dst_pmd)) {
-+				spin_lock(&init_mm.page_table_lock);
-+				set_pmd(dst_pmd, __pmd(0));
-+				spin_unlock(&init_mm.page_table_lock);
-+				goto next;
-+			}
-+			__src_pmd = NULL;
-+		}
-+
-+		if (__src_pmd && pmd_large(*__src_pmd)) {
-+			pmdval_t val;
-+
-+			if (pmd_large(*dst_pmd)) {
-+				/*
-+				 * Sanity check: PFNs must match between source
-+				 * and destination even if the rest doesn't.
-+				 */
-+				BUG_ON(pmd_pfn(*dst_pmd) != pmd_pfn(*__src_pmd));
-+			} else if (!pmd_none(*dst_pmd)) {
-+				/*
-+				 * Page table is replaced with a PMD page.
-+				 * Free and unmap the page table.
-+				 */
-+				__free_page(pmd_page(*dst_pmd));
-+				spin_lock(&init_mm.page_table_lock);
-+				pmd_clear(dst_pmd);
-+				spin_unlock(&init_mm.page_table_lock);
-+			}
-+
-+			/* Copy entry, but set KeyID. */
-+			val = pmd_val(*__src_pmd) | keyid << mktme_keyid_shift();
-+			val &= __supported_pte_mask;
-+			spin_lock(&init_mm.page_table_lock);
-+			set_pmd(dst_pmd, __pmd(val));
-+			spin_unlock(&init_mm.page_table_lock);
-+			goto next;
-+		}
-+
-+		ret = sync_direct_mapping_pte(keyid, dst_pmd, __src_pmd,
-+				addr, next);
-+next:
-+		addr = next;
-+		dst_pmd++;
-+		if (src_pmd)
-+			src_pmd++;
-+	} while (addr != end && !ret);
-+
-+	if (new_pmd) {
-+		spin_lock(&init_mm.page_table_lock);
-+		pud_populate(&init_mm, dst_pud, new_pmd);
-+		spin_unlock(&init_mm.page_table_lock);
-+	}
-+
-+	if (remove_pmd) {
-+		spin_lock(&init_mm.page_table_lock);
-+		__free_page(pud_page(*dst_pud));
-+		pud_clear(dst_pud);
-+		spin_unlock(&init_mm.page_table_lock);
-+	}
-+
-+	return ret;
-+}
-+
-+static int sync_direct_mapping_pud(unsigned long keyid,
-+		p4d_t *dst_p4d, p4d_t *src_p4d,
-+		unsigned long addr, unsigned long end)
-+{
-+	pud_t *src_pud, *dst_pud;
-+	pud_t *new_pud = NULL;
-+	bool remove_pud = false;
-+	unsigned long next;
-+	int ret = 0;
-+
-+	/*
-+	 * We want to unmap and free the page table if the source is empty and
-+	 * the range covers whole page table.
-+	 */
-+	remove_pud = !src_p4d && IS_ALIGNED(addr, P4D_SIZE) && IS_ALIGNED(end, P4D_SIZE);
-+
-+	/*
-+	 * P4D page got split into page table.
-+	 * Clear P4D mapping. Page table will be established instead.
-+	 */
-+	if (p4d_large(*dst_p4d)) {
-+		spin_lock(&init_mm.page_table_lock);
-+		p4d_clear(dst_p4d);
-+		spin_unlock(&init_mm.page_table_lock);
-+	}
-+
-+	/* Allocate a new page table if needed. */
-+	if (p4d_none(*dst_p4d)) {
-+		new_pud = (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!new_pud)
-+			return -ENOMEM;
-+		dst_pud = new_pud + pud_index(addr + keyid * direct_mapping_size);
-+	} else {
-+		dst_pud = pud_offset(dst_p4d, addr + keyid * direct_mapping_size);
-+	}
-+	src_pud = src_p4d ? pud_offset(src_p4d, addr) : NULL;
-+
-+	do {
-+		pud_t *__src_pud = src_pud;
-+
-+		next = pud_addr_end(addr, end);
-+		if (!__src_pud || pud_none(*__src_pud)) {
-+			if (pud_none(*dst_pud))
-+				goto next;
-+			if (pud_large(*dst_pud)) {
-+				spin_lock(&init_mm.page_table_lock);
-+				set_pud(dst_pud, __pud(0));
-+				spin_unlock(&init_mm.page_table_lock);
-+				goto next;
-+			}
-+			__src_pud = NULL;
-+		}
-+
-+		if (__src_pud && pud_large(*__src_pud)) {
-+			pudval_t val;
-+
-+			if (pud_large(*dst_pud)) {
-+				/*
-+				 * Sanity check: PFNs must match between source
-+				 * and destination even if the rest doesn't.
-+				 */
-+				BUG_ON(pud_pfn(*dst_pud) != pud_pfn(*__src_pud));
-+			} else if (!pud_none(*dst_pud)) {
-+				/*
-+				 * Page table is replaced with a pud page.
-+				 * Free and unmap the page table.
-+				 */
-+				__free_page(pud_page(*dst_pud));
-+				spin_lock(&init_mm.page_table_lock);
-+				pud_clear(dst_pud);
-+				spin_unlock(&init_mm.page_table_lock);
-+			}
-+
-+			/* Copy entry, but set KeyID. */
-+			val = pud_val(*__src_pud) | keyid << mktme_keyid_shift();
-+			val &= __supported_pte_mask;
-+			spin_lock(&init_mm.page_table_lock);
-+			set_pud(dst_pud, __pud(val));
-+			spin_unlock(&init_mm.page_table_lock);
-+			goto next;
-+		}
-+
-+		ret = sync_direct_mapping_pmd(keyid, dst_pud, __src_pud,
-+				addr, next);
-+next:
-+		addr = next;
-+		dst_pud++;
-+		if (src_pud)
-+			src_pud++;
-+	} while (addr != end && !ret);
-+
-+	if (new_pud) {
-+		spin_lock(&init_mm.page_table_lock);
-+		p4d_populate(&init_mm, dst_p4d, new_pud);
-+		spin_unlock(&init_mm.page_table_lock);
-+	}
-+
-+	if (remove_pud) {
-+		spin_lock(&init_mm.page_table_lock);
-+		__free_page(p4d_page(*dst_p4d));
-+		p4d_clear(dst_p4d);
-+		spin_unlock(&init_mm.page_table_lock);
-+	}
-+
-+	return ret;
-+}
-+
-+static int sync_direct_mapping_p4d(unsigned long keyid,
-+		pgd_t *dst_pgd, pgd_t *src_pgd,
-+		unsigned long addr, unsigned long end)
-+{
-+	p4d_t *src_p4d, *dst_p4d;
-+	p4d_t *new_p4d_1 = NULL, *new_p4d_2 = NULL;
-+	bool remove_p4d = false;
-+	unsigned long next;
-+	int ret = 0;
-+
-+	/*
-+	 * We want to unmap and free the page table if the source is empty and
-+	 * the range covers whole page table.
-+	 */
-+	remove_p4d = !src_pgd && IS_ALIGNED(addr, PGDIR_SIZE) && IS_ALIGNED(end, PGDIR_SIZE);
-+
-+	/* Allocate a new page table if needed. */
-+	if (pgd_none(*dst_pgd)) {
-+		new_p4d_1 = (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!new_p4d_1)
-+			return -ENOMEM;
-+		dst_p4d = new_p4d_1 + p4d_index(addr + keyid * direct_mapping_size);
-+	} else {
-+		dst_p4d = p4d_offset(dst_pgd, addr + keyid * direct_mapping_size);
-+	}
-+	src_p4d = src_pgd ? p4d_offset(src_pgd, addr) : NULL;
-+
-+	do {
-+		p4d_t *__src_p4d = src_p4d;
-+
-+		next = p4d_addr_end(addr, end);
-+		if (!__src_p4d || p4d_none(*__src_p4d)) {
-+			if (p4d_none(*dst_p4d))
-+				goto next;
-+			__src_p4d = NULL;
-+		}
-+
-+		ret = sync_direct_mapping_pud(keyid, dst_p4d, __src_p4d,
-+				addr, next);
-+next:
-+		addr = next;
-+		dst_p4d++;
-+
-+		/*
-+		 * Direct mappings are 1TiB-aligned. With 5-level paging it
-+		 * means that on PGD level there can be misalignment between
-+		 * source and distiantion.
-+		 *
-+		 * Allocate the new page table if dst_p4d crosses page table
-+		 * boundary.
-+		 */
-+		if (!((unsigned long)dst_p4d & ~PAGE_MASK) && addr != end) {
-+			if (pgd_none(dst_pgd[1])) {
-+				new_p4d_2 = (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-+				if (!new_p4d_2)
-+					ret = -ENOMEM;
-+				dst_p4d = new_p4d_2;
-+			} else {
-+				dst_p4d = p4d_offset(dst_pgd + 1, 0);
-+			}
-+		}
-+		if (src_p4d)
-+			src_p4d++;
-+	} while (addr != end && !ret);
-+
-+	if (new_p4d_1 || new_p4d_2) {
-+		spin_lock(&init_mm.page_table_lock);
-+		if (new_p4d_1)
-+			pgd_populate(&init_mm, dst_pgd, new_p4d_1);
-+		if (new_p4d_2)
-+			pgd_populate(&init_mm, dst_pgd + 1, new_p4d_2);
-+		spin_unlock(&init_mm.page_table_lock);
-+	}
-+
-+	if (remove_p4d) {
-+		spin_lock(&init_mm.page_table_lock);
-+		__free_page(pgd_page(*dst_pgd));
-+		pgd_clear(dst_pgd);
-+		spin_unlock(&init_mm.page_table_lock);
-+	}
-+
-+	return ret;
-+}
-+
-+static int sync_direct_mapping_keyid(unsigned long keyid,
-+		unsigned long addr, unsigned long end)
-+{
-+	pgd_t *src_pgd, *dst_pgd;
-+	unsigned long next;
-+	int ret = 0;
-+
-+	dst_pgd = pgd_offset_k(addr + keyid * direct_mapping_size);
-+	src_pgd = pgd_offset_k(addr);
-+
-+	do {
-+		pgd_t *__src_pgd = src_pgd;
-+
-+		next = pgd_addr_end(addr, end);
-+		if (pgd_none(*__src_pgd)) {
-+			if (pgd_none(*dst_pgd))
-+				continue;
-+			__src_pgd = NULL;
-+		}
-+
-+		ret = sync_direct_mapping_p4d(keyid, dst_pgd, __src_pgd,
-+				addr, next);
-+	} while (dst_pgd++, src_pgd++, addr = next, addr != end && !ret);
-+
-+	return ret;
-+}
-+
-+/*
-+ * For MKTME we maintain per-KeyID direct mappings. This allows kernel to have
-+ * access to encrypted memory.
-+ *
-+ * sync_direct_mapping() sync per-KeyID direct mappings with a canonical
-+ * one -- KeyID-0.
-+ *
-+ * The function tracks changes in the canonical mapping:
-+ *  - creating or removing chunks of the translation tree;
-+ *  - changes in mapping flags (i.e. protection bits);
-+ *  - splitting huge page mapping into a page table;
-+ *  - replacing page table with a huge page mapping;
-+ *
-+ * The function need to be called on every change to the direct mapping:
-+ * hotplug, hotremove, changes in permissions bits, etc.
-+ *
-+ * The function is nop until MKTME is enabled.
-+ */
-+int sync_direct_mapping(unsigned long start, unsigned long end)
-+{
-+	int i, ret = 0;
-+
-+	if (!mktme_enabled())
-+		return 0;
-+
-+	for (i = 1; !ret && i <= mktme_nr_keyids(); i++)
-+		ret = sync_direct_mapping_keyid(i, start, end);
-+
-+	flush_tlb_all();
-+
-+	return ret;
-+}
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 6a9a77a403c9..f4e3205d2cdd 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -347,6 +347,33 @@ static void cpa_flush(struct cpa_data *data, int cache)
+ enum mktme_opt_id {
+ 	OPT_ERROR,
+ 	OPT_TYPE,
+@@ -62,6 +79,17 @@ static const match_table_t mktme_token = {
+ 	{OPT_ERROR, NULL}
+ };
  
- 	BUG_ON(irqs_disabled() && !early_boot_irqs_disabled);
++/* Key Service Method called when a Userspace Key is garbage collected. */
++static void mktme_destroy_key(struct key *key)
++{
++	int keyid = mktme_keyid_from_key(key);
++	unsigned long flags;
++
++	spin_lock_irqsave(&mktme_lock, flags);
++	mktme_release_keyid(keyid);
++	spin_unlock_irqrestore(&mktme_lock, flags);
++}
++
+ /* Key Service Method to create a new key. Payload is preparsed. */
+ int mktme_instantiate_key(struct key *key, struct key_preparsed_payload *prep)
+ {
+@@ -198,6 +226,7 @@ struct key_type key_type_mktme = {
+ 	.free_preparse	= mktme_free_preparsed_payload,
+ 	.instantiate	= mktme_instantiate_key,
+ 	.describe	= user_describe,
++	.destroy	= mktme_destroy_key,
+ };
  
-+	if (mktme_enabled()) {
-+		unsigned long start, end;
-+
-+		start = PAGE_OFFSET + (cpa->pfn << PAGE_SHIFT);
-+		end = start + cpa->numpages * PAGE_SIZE;
-+
-+		/* Round to cover huge page possibly split by the change */
-+		start = round_down(start, direct_gbpages ? PUD_SIZE : PMD_SIZE);
-+		end = round_up(end, direct_gbpages ? PUD_SIZE : PMD_SIZE);
-+
-+		/* Sync all direct mapping for an array */
-+		if (cpa->flags & CPA_ARRAY) {
-+			start = PAGE_OFFSET;
-+			end = PAGE_OFFSET + direct_mapping_size;
-+		}
-+
-+		/*
-+		 * Sync per-KeyID direct mappings with the canonical one
-+		 * (KeyID-0).
-+		 *
-+		 * sync_direct_mapping() does full TLB flush.
-+		 */
-+		sync_direct_mapping(start, end);
-+		if (!cache)
-+			return;
-+	}
-+
- 	if (cache && !static_cpu_has(X86_FEATURE_CLFLUSH)) {
- 		cpa_flush_all(cache);
- 		return;
+ static int __init init_mktme(void)
 -- 
 2.21.0
 
