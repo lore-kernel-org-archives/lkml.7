@@ -2,158 +2,175 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6ACC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFD7C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61E9206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D762067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sX/iidQk"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="K5bYlTKi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfGaR5y (ORCPT
+        id S1727979AbfGaR6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:57:54 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36155 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfGaR5y (ORCPT
+        Wed, 31 Jul 2019 13:58:08 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38079 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfGaR6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:57:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g67so56530850wme.1;
-        Wed, 31 Jul 2019 10:57:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=T31WwXYsxgU8fO97C5XG4W+sh6cfy84Mun+fk+tA2/o=;
-        b=sX/iidQk0dUvgAG6y3YxYqtNQUGhiSU4kesR+IvEkmGd43zb5yH6iziI4AciHJLuB8
-         jq27iR560vhwkgZCmbqw2Je1yW+Glpfp0dKwf5KLywXz2ZSn8Li2tBGqOqePW+xGWTT9
-         9zRVLdAq1jm2GwIvZDS6GGhcZ4E66o84q9qvMCvAkS7epxWPvj9ObnL1irGDJ5nSAuSD
-         b/ugzxNL8zkMW5ROxvQLKq3Ijn6bhJJUPFv/M3qXMItq8ZqEPNdPSP05qYSRkm46NAXH
-         ZbgOwyH25TbHMsHaiGcmUGz54DBcaBKXGptYzB76c6vs524bh+5aO3gkpwluOh9QpN6/
-         b7qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T31WwXYsxgU8fO97C5XG4W+sh6cfy84Mun+fk+tA2/o=;
-        b=mJBidjI7Z7nO54tn1mF0Kg7WpBVcA6AKE08EliHXVHB6dRdF313sNTV3OKLbVSObXy
-         6Yc3v5f2X2rYwNqo4Cxb+FLdKDXg0AKDuBDOmpujdlsJZnsPMiqaW8OizX/rW9Oej0cT
-         pbfIRqAsG4OGcsm+4+MZoKOT/WAc4oJHOteaH2ngultyY97CaHYFB9KjcpdaaY5O1SAn
-         XL+F6Ac/4Ny8X0j3biEvauuchPpg60qbVVjDMphQWK36h8MpJjCP+AJNstnRVevnlcYR
-         mbA5k9my3XTLMTNjR+yy9xHIGsQRCfM1zvoIP6ooDIrLkS9BHgQ7rT6V7QnHH8/BM7Kt
-         bhRg==
-X-Gm-Message-State: APjAAAV/cGj0oPYBqcqb/ABv0L7Nqq21AQmrN6+a7a4WH4s4nHi9vLM3
-        6uFcqI/zJjb5GeebBodnr2A=
-X-Google-Smtp-Source: APXvYqws+uruLILu52nsmChy6L/7Y5vDVpAORnwVLHjBO84u5ZfNuvY1CLOr83vx9GkjBUtLI/QOlw==
-X-Received: by 2002:a7b:c081:: with SMTP id r1mr62622176wmh.76.1564595871090;
-        Wed, 31 Jul 2019 10:57:51 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id c6sm70486993wma.25.2019.07.31.10.57.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 10:57:50 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 10:57:48 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v4 3/3] f2fs: Support case-insensitive file name lookups
-Message-ID: <20190731175748.GA48637@archlinux-threadripper>
-References: <20190723230529.251659-1-drosen@google.com>
- <20190723230529.251659-4-drosen@google.com>
+        Wed, 31 Jul 2019 13:58:07 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6VHva7h3777692
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 31 Jul 2019 10:57:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6VHva7h3777692
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564595857;
+        bh=cR1BkJ0GbpUK+Xsakva9+nE2ErJTB2ZsdHvnGlx+lPU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=K5bYlTKizR3B+0L1YsSKvdnnDc2nh43YdZSIqJTVVAbYmgB3quk9Fk1C/r2rtbZjx
+         Px4eCQ+ui95vZVozG1bh0RuKyHYQm2g7tlCfpU+IVW5XWBno2ioQDvFBnCg+Lwdp/5
+         eBHXi3Akh1K7phU5oQQJVDvCkj8UzYYqRD+KvCk+E6q4Iy/SLHZ3FMHT/Rc2a9Gmi+
+         hju+w1JrUEi6A+KyfN2jW9iBnZnGrsz49Vi+CgmlJtoXF0jv7tiq97pg5fkyU4InYI
+         C21S3btXfagtEQBWmBYmpdM/h/9cn0eHg0T5UfWi4Hmt8HOEpTYpupvNIJ5/DxmZeL
+         4SNR7+MlUuIGQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6VHvZbL3777689;
+        Wed, 31 Jul 2019 10:57:35 -0700
+Date:   Wed, 31 Jul 2019 10:57:35 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-30c937043b2db09ae3408f5534824f9ececdb581@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, paulmck@linux.ibm.com,
+        tglx@linutronix.de, mhiramat@kernel.org, mingo@kernel.org,
+        peterz@infradead.org, hpa@zytor.com, torvalds@linux-foundation.org,
+        rostedt@goodmis.org, pbonzini@redhat.com
+Reply-To: rostedt@goodmis.org, pbonzini@redhat.com, mingo@kernel.org,
+          peterz@infradead.org, hpa@zytor.com,
+          torvalds@linux-foundation.org, tglx@linutronix.de,
+          paulmck@linux.ibm.com, mhiramat@kernel.org,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190726212124.409766323@linutronix.de>
+References: <20190726212124.409766323@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/rt] tracing: Use CONFIG_PREEMPTION
+Git-Commit-ID: 30c937043b2db09ae3408f5534824f9ececdb581
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190723230529.251659-4-drosen@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Commit-ID:  30c937043b2db09ae3408f5534824f9ececdb581
+Gitweb:     https://git.kernel.org/tip/30c937043b2db09ae3408f5534824f9ececdb581
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Fri, 26 Jul 2019 23:19:40 +0200
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 31 Jul 2019 19:03:35 +0200
 
-<snip>
+tracing: Use CONFIG_PREEMPTION
 
-> diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
-> index cc82f142f811f..99e79934f5088 100644
-> --- a/fs/f2fs/hash.c
-> +++ b/fs/f2fs/hash.c
-> @@ -14,6 +14,7 @@
->  #include <linux/f2fs_fs.h>
->  #include <linux/cryptohash.h>
->  #include <linux/pagemap.h>
-> +#include <linux/unicode.h>
->  
->  #include "f2fs.h"
->  
-> @@ -67,7 +68,7 @@ static void str2hashbuf(const unsigned char *msg, size_t len,
->  		*buf++ = pad;
->  }
->  
-> -f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
-> +static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
->  				struct fscrypt_name *fname)
->  {
->  	__u32 hash;
-> @@ -103,3 +104,35 @@ f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
->  	f2fs_hash = cpu_to_le32(hash & ~F2FS_HASH_COL_BIT);
->  	return f2fs_hash;
->  }
-> +
-> +f2fs_hash_t f2fs_dentry_hash(const struct inode *dir,
-> +		const struct qstr *name_info, struct fscrypt_name *fname)
-> +{
-> +#ifdef CONFIG_UNICODE
-> +	struct f2fs_sb_info *sbi = F2FS_SB(dir->i_sb);
-> +	const struct unicode_map *um = sbi->s_encoding;
-> +	int r, dlen;
-> +	unsigned char *buff;
-> +	struct qstr *folded;
-> +
-> +	if (name_info->len && IS_CASEFOLDED(dir)) {
-> +		buff = f2fs_kzalloc(sbi, sizeof(char) * PATH_MAX, GFP_KERNEL);
-> +		if (!buff)
-> +			return -ENOMEM;
-> +
-> +		dlen = utf8_casefold(um, name_info, buff, PATH_MAX);
-> +		if (dlen < 0) {
-> +			kvfree(buff);
-> +			goto opaque_seq;
-> +		}
-> +		folded->name = buff;
-> +		folded->len = dlen;
-> +		r = __f2fs_dentry_hash(folded, fname);
-> +
-> +		kvfree(buff);
-> +		return r;
-> +	}
-> +opaque_seq:
-> +#endif
-> +	return __f2fs_dentry_hash(name_info, fname);
-> +}
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by
+CONFIG_PREEMPT_RT. Both PREEMPT and PREEMPT_RT require the same
+functionality which today depends on CONFIG_PREEMPT.
 
-Clang now warns:
+Switch the conditionals in the tracer over to CONFIG_PREEMPTION.
 
-fs/f2fs/hash.c:128:3: warning: variable 'folded' is uninitialized when used here [-Wuninitialized]
-                folded->name = buff;
-                ^~~~~~
-fs/f2fs/hash.c:116:21: note: initialize the variable 'folded' to silence this warning
-        struct qstr *folded;
-                           ^
-                            = NULL
-1 warning generated.
+This is the first step to make the tracer work on RT. The other small
+tweaks are submitted separately.
 
-I assume that it wants to be initialized with f2fs_kzalloc as well but
-I am not familiar with this code and what it expects to do.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20190726212124.409766323@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/trace/Kconfig                 | 4 ++--
+ kernel/trace/ftrace.c                | 2 +-
+ kernel/trace/ring_buffer_benchmark.c | 2 +-
+ kernel/trace/trace_events.c          | 4 ++--
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
-Please look into this when you get a chance!
-Nathan
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index d2c1fe0b451d..6a64d7772870 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -179,7 +179,7 @@ config TRACE_PREEMPT_TOGGLE
+ config PREEMPTIRQ_EVENTS
+ 	bool "Enable trace events for preempt and irq disable/enable"
+ 	select TRACE_IRQFLAGS
+-	select TRACE_PREEMPT_TOGGLE if PREEMPT
++	select TRACE_PREEMPT_TOGGLE if PREEMPTION
+ 	select GENERIC_TRACER
+ 	default n
+ 	help
+@@ -214,7 +214,7 @@ config PREEMPT_TRACER
+ 	bool "Preemption-off Latency Tracer"
+ 	default n
+ 	depends on !ARCH_USES_GETTIMEOFFSET
+-	depends on PREEMPT
++	depends on PREEMPTION
+ 	select GENERIC_TRACER
+ 	select TRACER_MAX_TRACE
+ 	select RING_BUFFER_ALLOW_SWAP
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index eca34503f178..a800e867c1a3 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -2814,7 +2814,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
+ 		 * synchornize_rcu_tasks() will wait for those tasks to
+ 		 * execute and either schedule voluntarily or enter user space.
+ 		 */
+-		if (IS_ENABLED(CONFIG_PREEMPT))
++		if (IS_ENABLED(CONFIG_PREEMPTION))
+ 			synchronize_rcu_tasks();
+ 
+  free_ops:
+diff --git a/kernel/trace/ring_buffer_benchmark.c b/kernel/trace/ring_buffer_benchmark.c
+index 0564f6db0561..09b0b49f346e 100644
+--- a/kernel/trace/ring_buffer_benchmark.c
++++ b/kernel/trace/ring_buffer_benchmark.c
+@@ -267,7 +267,7 @@ static void ring_buffer_producer(void)
+ 		if (consumer && !(cnt % wakeup_interval))
+ 			wake_up_process(consumer);
+ 
+-#ifndef CONFIG_PREEMPT
++#ifndef CONFIG_PREEMPTION
+ 		/*
+ 		 * If we are a non preempt kernel, the 10 second run will
+ 		 * stop everything while it runs. Instead, we will call
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c7506bc81b75..5a189fb8ec23 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -255,12 +255,12 @@ void *trace_event_buffer_reserve(struct trace_event_buffer *fbuffer,
+ 	local_save_flags(fbuffer->flags);
+ 	fbuffer->pc = preempt_count();
+ 	/*
+-	 * If CONFIG_PREEMPT is enabled, then the tracepoint itself disables
++	 * If CONFIG_PREEMPTION is enabled, then the tracepoint itself disables
+ 	 * preemption (adding one to the preempt_count). Since we are
+ 	 * interested in the preempt_count at the time the tracepoint was
+ 	 * hit, we need to subtract one to offset the increment.
+ 	 */
+-	if (IS_ENABLED(CONFIG_PREEMPT))
++	if (IS_ENABLED(CONFIG_PREEMPTION))
+ 		fbuffer->pc--;
+ 	fbuffer->trace_file = trace_file;
+ 
