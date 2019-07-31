@@ -2,136 +2,138 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD7EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD80C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B384206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD262208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rilh8BWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbfGaQdE (ORCPT
+        id S1729377AbfGaQfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:33:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:51206 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729444AbfGaQdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:33:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E9B6337;
-        Wed, 31 Jul 2019 09:33:03 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AE8B3F71F;
-        Wed, 31 Jul 2019 09:33:00 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 17:32:58 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
-        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com,
-        matthias.bgg@gmail.com, bhsharma@redhat.com
-Subject: Re: [RFC v2 0/8] arm64: MMU enabled kexec relocation
-Message-ID: <20190731163258.GH39768@lakrids.cambridge.arm.com>
-References: <20190731153857.4045-1-pasha.tatashin@soleen.com>
+        Wed, 31 Jul 2019 12:35:33 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35838 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfGaQfd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:35:33 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6VGZKlT008471;
+        Wed, 31 Jul 2019 11:35:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564590920;
+        bh=/frXQ4KOaIB5wlfnm3bIFpuw4RJxR6iAeoBpUdEjJNk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Rilh8BWbZ/+l5TBDpm11NM07/fO1kW/j9UZbET7VD4xAYd2fm73ZTz/gGdsfy6oeO
+         yd2Ps56ie9I7ICEtrMu702nYrxUVhBBDGK5XBKxAc4tUpcIGG2ZCDC/jGNbvPoUC7Q
+         mSccOg1j90bPH/QHJiqOP83ij2QHbIzGExCTiYkA=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6VGZKqP093095
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 31 Jul 2019 11:35:20 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 31
+ Jul 2019 11:35:19 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 31 Jul 2019 11:35:19 -0500
+Received: from [10.250.133.139] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6VGZFVL083599;
+        Wed, 31 Jul 2019 11:35:16 -0500
+Subject: Re: [PATCH] scsi: ufs: Additional clock initialization in Cadence UFS
+To:     Anil Varughese <aniljoy@cadence.com>, <alim.akhtar@samsung.com>,
+        <avri.altman@wdc.com>, <pedrom.sousa@synopsys.com>
+CC:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>, <hare@suse.de>,
+        <rafalc@cadence.com>, <mparab@cadence.com>, <jank@cadence.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190731083614.25926-1-aniljoy@cadence.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <77210067-ee65-4c12-9c7e-2b78260acdef@ti.com>
+Date:   Wed, 31 Jul 2019 22:05:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731153857.4045-1-pasha.tatashin@soleen.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190731083614.25926-1-aniljoy@cadence.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+Hi,
 
-Generally, the cover letter should state up-front what the goal is (or
-what problem you're trying to solve). It would be really helpful to have
-that so that we understand what you're trying to achieve, and why.
+On 31-Jul-19 2:06 PM, Anil Varughese wrote:
+> Configure CDNS_UFS_REG_HCLKDIV in .hce_enable_notify()
+> because if UFSHCD resets the controller ip because of
+> phy or device related errors then CDNS_UFS_REG_HCLKDIV
+> is reset to default value and .setup_clock() is not
+> called later in the sequence whereas hce_enable_notify
+> will be called everytime controller is reenabled.
+>
+So, now that CDNS_UFS_REG_HCLKDIV is configured in .hce_enable_notify(),
+is it still required to have the same code in .setup_clock() as well?
+Isn't setting up CDNS_UFS_REG_HCLKDIV in .hce_enable_notify() alone not
+sufficient?
 
-Messing with the MMU is often fraught with danger (and very painful to
-debug, as you are now aware), and so far we've tried to minimize the
-number of places where we have to do so.
+Regards
+Vignesh
 
-On Wed, Jul 31, 2019 at 11:38:49AM -0400, Pavel Tatashin wrote:
-> Changelog from previous RFC:
-> - Added trans_table support for both hibernate and kexec.
-> - Fixed performance issue, where enabling MMU did not yield the
->   actual performance improvement.
+> Signed-off-by: Anil Varughese <aniljoy@cadence.com>
+> ---
+>  drivers/scsi/ufs/cdns-pltfrm.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
-> Bug:
-> With the current state, this patch series works on kernels booted with EL1
-> mode, but for some reason, when elevated to EL2 mode reboot freezes in
-> both QEMU and on real hardware.
+> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
+> index 86dbb723f..15ee54d28 100644
+> --- a/drivers/scsi/ufs/cdns-pltfrm.c
+> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
+> @@ -78,6 +78,22 @@ static int cdns_ufs_setup_clocks(struct ufs_hba *hba, bool on,
+>  	return cdns_ufs_set_hclkdiv(hba);
+>  }
+>  
+> +/**
+> + * Called before and after HCE enable bit is set.
+> + * @hba: host controller instance
+> + * @status: notify stage (pre, post change)
+> + *
+> + * Return zero for success and non-zero for failure
+> + */
+> +static int cdns_ufs_hce_enable_notify(struct ufs_hba *hba,
+> +				      enum ufs_notify_change_status status)
+> +{
+> +	if (status != PRE_CHANGE)
+> +		return 0;
+> +
+> +	return cdns_ufs_set_hclkdiv(hba);
+> +}
+> +
+>  /**
+>   * cdns_ufs_init - performs additional ufs initialization
+>   * @hba: host controller instance
+> @@ -115,12 +131,14 @@ static int cdns_ufs_m31_16nm_phy_initialization(struct ufs_hba *hba)
+>  static const struct ufs_hba_variant_ops cdns_ufs_pltfm_hba_vops = {
+>  	.name = "cdns-ufs-pltfm",
+>  	.setup_clocks = cdns_ufs_setup_clocks,
+> +	.hce_enable_notify = cdns_ufs_hce_enable_notify,
+>  };
+>  
+>  static const struct ufs_hba_variant_ops cdns_ufs_m31_16nm_pltfm_hba_vops = {
+>  	.name = "cdns-ufs-pltfm",
+>  	.init = cdns_ufs_init,
+>  	.setup_clocks = cdns_ufs_setup_clocks,
+> +	.hce_enable_notify = cdns_ufs_hce_enable_notify,
+>  	.phy_initialization = cdns_ufs_m31_16nm_phy_initialization,
+>  };
+>  
 > 
-> The freeze happens in:
-> 
-> arch/arm64/kernel/relocate_kernel.S
-> 	turn_on_mmu()
-> 
-> Right after sctlr_el2 is written (MMU on EL2 is enabled)
-> 
-> 	msr     sctlr_el2, \tmp1
-> 
-> I've been studying all the relevant control registers for EL2, but do not
-> see what might be causing this hang:
-> 
-> MAIR_EL2 is set to be exactly the same as MAIR_EL1 0xbbff440c0400
-> 
-> TCR_EL2        0x80843510
-> Enabled bits:
-> PS      Physical Address Size. (0b100   44 bits, 16TB.)
-> SH0     Shareability    11 Inner Shareable
-> ORGN0   Normal memory, Outer Write-Back Read-Allocate Write-Allocate Cach.
-> IRGN0   Normal memory, Inner Write-Back Read-Allocate Write-Allocate Cach.
-> T0SZ    01 0000
-> 
-> SCTLR_EL2	0x30e5183f
-> RES1    : Reserve ones
-> M       : MMU enabled
-> A       : Align check
-> C       : Cacheability control
-> SA      : SP Alignment check enable
-> IESB    : Implicit Error Synchronization event
-> I       : Instruction access Cacheability
-> 
-> TTBR0_EL2      0x1b3069000 (address of trans_table)
-> 
-> Any suggestion of what else might be missing that causes this freeze when
-> MMU is enabled in EL2?
-> 
-> =====
-
-> Here is the current data from the real hardware:
-> (because of bug, I forced EL1 mode by setting el2_switch always to zero in
-> cpu_soft_restart()):
-> 
-> For this experiment, the size of kernel plus initramfs is 25M. If initramfs
-> was larger, than the improvements would be even greater, as time spent in
-> relocation is proportional to the size of relocation.
-> 
-> Previously:
-> kernel shutdown	0.022131328s
-> relocation	0.440510736s
-> kernel startup	0.294706768s
-
-In total this takes ~0.76s...
-
-> 
-> Relocation was taking: 58.2% of reboot time
-> 
-> Now:
-> kernel shutdown	0.032066576s
-> relocation	0.022158152s
-> kernel startup	0.296055880s
-
-... and this takes ~0.35s
-
-So do we really need this complexity for a few blinks of an eye?
-
-Thanks,
-Mark.
