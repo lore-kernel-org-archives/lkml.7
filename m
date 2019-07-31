@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063CDC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1310C32753
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C62E720C01
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6153B20C01
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Z+QZrz8R"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="gbgwfZZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388661AbfGaPIe (ORCPT
+        id S2388693AbfGaPIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:08:34 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43836 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388560AbfGaPI2 (ORCPT
+        Wed, 31 Jul 2019 11:08:46 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35756 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388643AbfGaPIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:08:28 -0400
-Received: by mail-ed1-f66.google.com with SMTP id e3so66031035edr.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:27 -0700 (PDT)
+        Wed, 31 Jul 2019 11:08:34 -0400
+Received: by mail-ed1-f68.google.com with SMTP id w20so65995824edd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BL5Bv5lW/jYayEJoRe2+9QezMkCC+60ESskc5jI43rc=;
-        b=Z+QZrz8RxaQVkEmqQR+P3He1RAcsz276GYydPQCrBvVFzTQKhJYu7NE41afsSGcW6+
-         PEkJHs8N+UZO3AYfKlsxwVJLTOvBwiOb7PnAjByNuwdd5U2faK6XX8qM7PxvuCxO/mbu
-         tGAo18iJgYPJ1Ot5DSRbXJIlTHuucTq2ZxCKM1dP5WZHTSE1FnneQRwt/g0J7LAxwo9y
-         1kEtDf3Gtz6f8i1Dcl7z5jwv2Di5k2T62pCpUzzd1Hc8x6HKFWlkGzFRwJd9NLtmsaB8
-         eZcrNUzOtJQwWsRlLRsolI/HegBB7F8KhoBR5T1awdNiOE/MGBOV2CCucAo20gDECZFx
-         G0pA==
+        bh=WXT2KCVQy2E86WIHV388gpcH/h/cqapkcTgzB8ITRTY=;
+        b=gbgwfZZpKF7Zw4y/Cy0+El8MhN5OgIgEsj0rN2nkj9PakelkWIC/N62lsNpt78P51H
+         jvP8xx7Juipvx0RgC4SB4vNCw1P4PSVg2b2+doiEir7dfWiW3vsGXqpbQGM6KNexQSTP
+         r3fNkw3L7doZwwJenk62AM3aDDoLUPKu0t7NkU1I3mRXbo3XJ9NXobg93l8rusAKYuRo
+         dypVLFF2TyUrUJhBYMTvoExAgOrk1M4x1MfzcZx90KOF0LZV+HC3Q1R85RN5+Yd5tXFt
+         ULtpKhZLGf3u8jhLzjctfNyP1AJ1tjB1U+mn3PJugnraGtaxozLw2DlDsbKDrENsFSdN
+         bcCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BL5Bv5lW/jYayEJoRe2+9QezMkCC+60ESskc5jI43rc=;
-        b=jgPUjp+eVet0dKYhHMeyCuEMCkvXHqiQ7VKVz4vAeXfiEybxTWHKUsly9AelzAaDVW
-         R9TFT/h4FmlKdLe3Pt4S1rcveHIPzHh7ezGCe9VOz0jcjtylSFiwMG9evbwRtO9kJo5d
-         uObtShnVXbUMl1uo3B8rUmqTifhxjz3qkEx3eu3xHYx7RUOaDFxtAScxK42y1zigym2J
-         3x11MkAc660k0GMFv4x6R6TPrCbB2ZWwv9SNLLwmMwc2tcKp9SC8XOywfNxAvsgfiKyP
-         Nf9Nn7taYx7HzMDsOswPZ4CkrdHpJAjNrXjIEcfuKPZ9vqu78Y+FAjiyi2mrTTdzBk7u
-         UbZg==
-X-Gm-Message-State: APjAAAX+apOcvlk0O1HuziVaaxdVCz8tGEApNaAFICWUFDms2Pzyxiom
-        RsMyd6yrCB1BqutYFujLLBs=
-X-Google-Smtp-Source: APXvYqznZSrsxmfkB4pexMYFvT9i/MDUnejlA2skN/Nit1TPuevFqcmrEwStP937D+YpXbOTCbclHw==
-X-Received: by 2002:a17:906:604c:: with SMTP id p12mr94494193ejj.26.1564585706687;
-        Wed, 31 Jul 2019 08:08:26 -0700 (PDT)
+        bh=WXT2KCVQy2E86WIHV388gpcH/h/cqapkcTgzB8ITRTY=;
+        b=J2Pt9bqTrS0Pi/u46w864KUWtHO5pzabWfxMC1JxtDTmCnH2WQxCvFeHmLfA3afYmm
+         ULqmoLFNXA6b6HIcC+wo1bvKQEmymQ6nERx5QRcEWp0xU7zSQYzPBtomJ8xIvUzfOkRt
+         mEltQDGqp7CUeDAm7McanqYHhVKDffY+4srBM1bvcFIBvMSAotmLTxGBXBN2ucgpKlBX
+         SgIn1pnrQvDumIeVt9HGXQi0HMqAAxuxcUEPZqynoGf08ZeOL1XPXODmYd4rkuVBQWgO
+         pC+Own4jGm6lw/LrsfLtqjV2FQ0XRH2bm9r1jQdAt9Ye0tJCANGOn9RQvVb0MHvEUF0x
+         Z93Q==
+X-Gm-Message-State: APjAAAVcaPfOS9ClYtARRIvs9DIi4/UXYp+5aXCl2TeGoS69r1WFf05k
+        FWrDbS56kYDQaihOpSiVWWw=
+X-Google-Smtp-Source: APXvYqwiaqlBMCu7NWbE38q/iVndeTnZvf7qpo+nZ6NbB+Pm6uXYyVJ+okRcWjQSuw2bxKJtzce2+A==
+X-Received: by 2002:a50:f70c:: with SMTP id g12mr108973248edn.139.1564585712069;
+        Wed, 31 Jul 2019 08:08:32 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id t16sm8546953ejr.83.2019.07.31.08.08.20
+        by smtp.gmail.com with ESMTPSA id b15sm5578799ejj.5.2019.07.31.08.08.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:08:22 -0700 (PDT)
+        Wed, 31 Jul 2019 08:08:30 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 5011C101C44; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+        id 2C437104602; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,10 +74,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 14/59] x86/mm: Add hooks to allocate and free encrypted pages
-Date:   Wed, 31 Jul 2019 18:07:28 +0300
-Message-Id: <20190731150813.26289-15-kirill.shutemov@linux.intel.com>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 44/59] mm: Add the encrypt_mprotect() system call for MKTME
+Date:   Wed, 31 Jul 2019 18:07:58 +0300
+Message-Id: <20190731150813.26289-45-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,153 +88,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hook up into page allocator to allocate and free encrypted page
-properly.
+From: Alison Schofield <alison.schofield@intel.com>
 
-The hardware/CPU does not enforce coherency between mappings of the same
-physical page with different KeyIDs or encryption keys.
-We are responsible for cache management.
+Implement memory encryption for MKTME (Multi-Key Total Memory
+Encryption) with a new system call that is an extension of the
+legacy mprotect() system call.
 
-Flush cache on allocating encrypted page and on returning the page to
-the free pool.
+In encrypt_mprotect the caller must pass a handle to a previously
+allocated and programmed MKTME encryption key. The key can be
+obtained through the kernel key service type "mktme". The caller
+must have KEY_NEED_VIEW permission on the key.
 
-prep_encrypted_page() also takes care about zeroing the page. We have to
-do this after KeyID is set for the page.
+MKTME places an additional restriction on the protected data:
+The length of the data must be page aligned. This is in addition
+to the existing mprotect restriction that the addr must be page
+aligned.
 
-The patch relies on page_address() to return virtual address of the page
-mapping with the current KeyID. It will be implemented later in the
-patchset.
+encrypt_mprotect() will lookup the hardware keyid for the given
+userspace key. It will use previously defined helpers to insert
+that keyid in the VMAs during legacy mprotect() execution.
 
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/include/asm/mktme.h | 17 ++++++++
- arch/x86/mm/mktme.c          | 83 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
+ fs/exec.c          |  4 +--
+ include/linux/mm.h |  3 +-
+ mm/mprotect.c      | 68 +++++++++++++++++++++++++++++++++++++++++-----
+ 3 files changed, 65 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
-index 52b115b30a42..a61b45fca4b1 100644
---- a/arch/x86/include/asm/mktme.h
-+++ b/arch/x86/include/asm/mktme.h
-@@ -43,6 +43,23 @@ static inline int vma_keyid(struct vm_area_struct *vma)
- 	return __vma_keyid(vma);
+diff --git a/fs/exec.c b/fs/exec.c
+index c71cbfe6826a..261e81b7e3a4 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -756,8 +756,8 @@ int setup_arg_pages(struct linux_binprm *bprm,
+ 	vm_flags |= mm->def_flags;
+ 	vm_flags |= VM_STACK_INCOMPLETE_SETUP;
+ 
+-	ret = mprotect_fixup(vma, &prev, vma->vm_start, vma->vm_end,
+-			vm_flags);
++	ret = mprotect_fixup(vma, &prev, vma->vm_start, vma->vm_end, vm_flags,
++			     -1);
+ 	if (ret)
+ 		goto out_unlock;
+ 	BUG_ON(prev != vma);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 98a6d2bd66a6..8551b5ebdedf 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1660,7 +1660,8 @@ extern unsigned long change_protection(struct vm_area_struct *vma, unsigned long
+ 			      int dirty_accountable, int prot_numa);
+ extern int mprotect_fixup(struct vm_area_struct *vma,
+ 			  struct vm_area_struct **pprev, unsigned long start,
+-			  unsigned long end, unsigned long newflags);
++			  unsigned long end, unsigned long newflags,
++			  int newkeyid);
+ 
+ /*
+  * doesn't attempt to fault and will return short.
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 4d55725228e3..518d75582e7b 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -28,6 +28,7 @@
+ #include <linux/ksm.h>
+ #include <linux/uaccess.h>
+ #include <linux/mm_inline.h>
++#include <linux/key.h>
+ #include <asm/pgtable.h>
+ #include <asm/cacheflush.h>
+ #include <asm/mmu_context.h>
+@@ -348,7 +349,8 @@ static int prot_none_walk(struct vm_area_struct *vma, unsigned long start,
+ 
+ int
+ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
+-	unsigned long start, unsigned long end, unsigned long newflags)
++	       unsigned long start, unsigned long end, unsigned long newflags,
++	       int newkeyid)
+ {
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	unsigned long oldflags = vma->vm_flags;
+@@ -358,7 +360,14 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
+ 	int error;
+ 	int dirty_accountable = 0;
+ 
+-	if (newflags == oldflags) {
++	/*
++	 * Flags match and Keyids match or we have NO_KEY.
++	 * This _fixup is usually called from do_mprotect_ext() except
++	 * for one special case: caller fs/exec.c/setup_arg_pages()
++	 * In that case, newkeyid is passed as -1 (NO_KEY).
++	 */
++	if (newflags == oldflags &&
++	    (newkeyid == vma_keyid(vma) || newkeyid == NO_KEY)) {
+ 		*pprev = vma;
+ 		return 0;
+ 	}
+@@ -424,6 +433,8 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
+ 	}
+ 
+ success:
++	if (newkeyid != NO_KEY)
++		mprotect_set_encrypt(vma, newkeyid, start, end);
+ 	/*
+ 	 * vm_flags and vm_page_prot are protected by the mmap_sem
+ 	 * held in write mode.
+@@ -455,10 +466,15 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
  }
  
-+#define prep_encrypted_page prep_encrypted_page
-+void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero);
-+static inline void prep_encrypted_page(struct page *page, int order,
-+		int keyid, bool zero)
-+{
-+	if (keyid)
-+		__prep_encrypted_page(page, order, keyid, zero);
-+}
-+
-+#define HAVE_ARCH_FREE_PAGE
-+void free_encrypted_page(struct page *page, int order);
-+static inline void arch_free_page(struct page *page, int order)
-+{
-+	if (page_keyid(page))
-+		free_encrypted_page(page, order);
-+}
-+
- #else
- #define mktme_keyid_mask()	((phys_addr_t)0)
- #define mktme_nr_keyids()	0
-diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-index d02867212e33..8015e7822c9b 100644
---- a/arch/x86/mm/mktme.c
-+++ b/arch/x86/mm/mktme.c
-@@ -1,4 +1,5 @@
- #include <linux/mm.h>
-+#include <linux/highmem.h>
- #include <asm/mktme.h>
- 
- /* Mask to extract KeyID from physical address. */
-@@ -55,3 +56,85 @@ int __vma_keyid(struct vm_area_struct *vma)
- 	pgprotval_t prot = pgprot_val(vma->vm_page_prot);
- 	return (prot & mktme_keyid_mask()) >> mktme_keyid_shift();
+ /*
+- * When pkey==NO_KEY we get legacy mprotect behavior here.
++ * do_mprotect_ext() supports the legacy mprotect behavior plus extensions
++ * for Protection Keys and Memory Encryption Keys. These extensions are
++ * mutually exclusive and the behavior is:
++ *	(pkey==NO_KEY && keyid==NO_KEY) ==> legacy mprotect
++ *	(pkey is valid)  ==> legacy mprotect plus Protection Key extensions
++ *	(keyid is valid) ==> legacy mprotect plus Encryption Key extensions
+  */
+ static int do_mprotect_ext(unsigned long start, size_t len,
+-		unsigned long prot, int pkey)
++			   unsigned long prot, int pkey, int keyid)
+ {
+ 	unsigned long nstart, end, tmp, reqprot;
+ 	struct vm_area_struct *vma, *prev;
+@@ -556,7 +572,8 @@ static int do_mprotect_ext(unsigned long start, size_t len,
+ 		tmp = vma->vm_end;
+ 		if (tmp > end)
+ 			tmp = end;
+-		error = mprotect_fixup(vma, &prev, nstart, tmp, newflags);
++		error = mprotect_fixup(vma, &prev, nstart, tmp, newflags,
++				       keyid);
+ 		if (error)
+ 			goto out;
+ 		nstart = tmp;
+@@ -581,7 +598,7 @@ static int do_mprotect_ext(unsigned long start, size_t len,
+ SYSCALL_DEFINE3(mprotect, unsigned long, start, size_t, len,
+ 		unsigned long, prot)
+ {
+-	return do_mprotect_ext(start, len, prot, NO_KEY);
++	return do_mprotect_ext(start, len, prot, NO_KEY, NO_KEY);
  }
+ 
+ #ifdef CONFIG_ARCH_HAS_PKEYS
+@@ -589,7 +606,7 @@ SYSCALL_DEFINE3(mprotect, unsigned long, start, size_t, len,
+ SYSCALL_DEFINE4(pkey_mprotect, unsigned long, start, size_t, len,
+ 		unsigned long, prot, int, pkey)
+ {
+-	return do_mprotect_ext(start, len, prot, pkey);
++	return do_mprotect_ext(start, len, prot, pkey, NO_KEY);
+ }
+ 
+ SYSCALL_DEFINE2(pkey_alloc, unsigned long, flags, unsigned long, init_val)
+@@ -638,3 +655,40 @@ SYSCALL_DEFINE1(pkey_free, int, pkey)
+ }
+ 
+ #endif /* CONFIG_ARCH_HAS_PKEYS */
 +
-+/* Prepare page to be used for encryption. Called from page allocator. */
-+void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
++#ifdef CONFIG_X86_INTEL_MKTME
++
++extern int mktme_keyid_from_key(struct key *key);
++
++SYSCALL_DEFINE4(encrypt_mprotect, unsigned long, start, size_t, len,
++		unsigned long, prot, key_serial_t, serial)
 +{
-+	int i;
++	key_ref_t key_ref;
++	struct key *key;
++	int ret, keyid;
++
++	/* MKTME restriction */
++	if (!PAGE_ALIGNED(len))
++		return -EINVAL;
 +
 +	/*
-+	 * The hardware/CPU does not enforce coherency between mappings
-+	 * of the same physical page with different KeyIDs or
-+	 * encryption keys. We are responsible for cache management.
-+	 *
-+	 * Flush cache lines with KeyID-0. page_address() returns virtual
-+	 * address of the page mapping with the current (zero) KeyID.
++	 * key_ref prevents the destruction of the key
++	 * while the memory encryption is being set up.
 +	 */
-+	clflush_cache_range(page_address(page), PAGE_SIZE * (1UL << order));
 +
-+	for (i = 0; i < (1 << order); i++) {
-+		/* All pages coming out of the allocator should have KeyID 0 */
-+		WARN_ON_ONCE(lookup_page_ext(page)->keyid);
++	key_ref = lookup_user_key(serial, 0, KEY_NEED_VIEW);
++	if (IS_ERR(key_ref))
++		return PTR_ERR(key_ref);
 +
-+		/*
-+		 * Change KeyID. From now on page_address() will return address
-+		 * of the page mapping with the new KeyID.
-+		 *
-+		 * We don't need barrier() before the KeyID change because
-+		 * clflush_cache_range() above stops compiler from reordring
-+		 * past the point with mb().
-+		 *
-+		 * And we don't need a barrier() after the assignment because
-+		 * any future reference of KeyID (i.e. from page_address())
-+		 * will create address dependency and compiler is not allow to
-+		 * mess with this.
-+		 */
-+		lookup_page_ext(page)->keyid = keyid;
-+
-+		/* Clear the page after the KeyID is set. */
-+		if (zero)
-+			clear_highpage(page);
-+
-+		page++;
++	key = key_ref_to_ptr(key_ref);
++	keyid = mktme_keyid_from_key(key);
++	if (!keyid) {
++		key_ref_put(key_ref);
++		return -EINVAL;
 +	}
++	ret = do_mprotect_ext(start, len, prot, NO_KEY, keyid);
++	key_ref_put(key_ref);
++	return ret;
 +}
 +
-+/*
-+ * Handles freeing of encrypted page.
-+ * Called from page allocator on freeing encrypted page.
-+ */
-+void free_encrypted_page(struct page *page, int order)
-+{
-+	int i;
-+
-+	/*
-+	 * The hardware/CPU does not enforce coherency between mappings
-+	 * of the same physical page with different KeyIDs or
-+	 * encryption keys. We are responsible for cache management.
-+	 *
-+	 * Flush cache lines with non-0 KeyID. page_address() returns virtual
-+	 * address of the page mapping with the current (non-zero) KeyID.
-+	 */
-+	clflush_cache_range(page_address(page), PAGE_SIZE * (1UL << order));
-+
-+	for (i = 0; i < (1 << order); i++) {
-+		/* Check if the page has reasonable KeyID */
-+		WARN_ON_ONCE(!lookup_page_ext(page)->keyid);
-+		WARN_ON_ONCE(lookup_page_ext(page)->keyid > mktme_nr_keyids());
-+
-+		/*
-+		 * Switch the page back to zero KeyID.
-+		 *
-+		 * We don't need barrier() before the KeyID change because
-+		 * clflush_cache_range() above stops compiler from reordring
-+		 * past the point with mb().
-+		 *
-+		 * And we don't need a barrier() after the assignment because
-+		 * any future reference of KeyID (i.e. from page_address())
-+		 * will create address dependency and compiler is not allow to
-+		 * mess with this.
-+		 */
-+		lookup_page_ext(page)->keyid = 0;
-+		page++;
-+	}
-+}
++#endif /* CONFIG_X86_INTEL_MKTME */
 -- 
 2.21.0
 
