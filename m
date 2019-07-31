@@ -2,100 +2,110 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F21C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B93C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF60208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:48:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="EyxO5+OX"
+	by mail.kernel.org (Postfix) with ESMTP id 9370E2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564595417;
+	bh=sXeNaRjTVOLrGCPtcQjJUIQeddouKntQ/oheDEB8pG4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Qrm4Bn5XviLoeKISI1/ccj/5EA77gJZAWrsWtrp46T+sdc7NGE+P0GKCoZw3nDxzc
+	 lXjkebeQlxdyrHqQ+Ut6H70yFLnNj8a3WdcTHPwb97n8TmBKxTKeOEmCrsR20/cJph
+	 QPYpx/45ajUTHV8GCLO3Iv2A6yS6/J3xtl6onze0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbfGaRsl (ORCPT
+        id S1728233AbfGaRuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:48:41 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:33886 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfGaRsk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:48:40 -0400
-Received: by mail-yb1-f195.google.com with SMTP id q5so12585390ybp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 10:48:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=97bUgywrkt2JLU+RvFdPEdGzMFShn8org1G3e5S/uHM=;
-        b=EyxO5+OX8TZl1lHQ7ArUfTEeg/B9wHPTVkLsGhzJstlJnK1W+6N48SSdYdzrlE27RQ
-         M/zfJM0+YSC1HLuF70QQJgla+28Eowzm+UsAUW3STgo+9yjifAssY2lyPVq2e+Q5FyKM
-         7SRhz9QqWLBiqNj5ktR/p1w1Gs/rtjbfM1HLg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=97bUgywrkt2JLU+RvFdPEdGzMFShn8org1G3e5S/uHM=;
-        b=gY6foJ0UtdS9Y7bcH/dRbFdFAPLiSuKkRIZoW8NABGbnli0pSrVKSeZwSm34hhySXi
-         yPgvBcznOGAHMMItsQjnusIwZ2J/ZCMKOHvTvqe9IuW+mTC1nlOKjpb/rPKqKflylTSA
-         SMZkTpxFUrtijKpt5kV7m5bEHTFOwXmFTblrFQtfTQtVLryO5DBEkYoorSdgZSPEpogp
-         +KjSP0XE7Vjy7D9ZWg+esc6JgWZn4tfhjGatxs7dbvctt7tsTRhI8bNQhc8NNDQuXBzL
-         xDBlkQgsliSygvfLwfkVxziW7w+9CF61nFDT3kUwbL95vGmEWd5+ToHlo4SzG7fgRR2X
-         JL8Q==
-X-Gm-Message-State: APjAAAVENlzaQdTxMhplwzFeIhkCabHMOnhQpwGKjJY9F/4kiCMtq+4Z
-        vNCx8X3nTGSGMuhF6QJAaYqVnmViVtXpSSnvJDgUJNaY
-X-Google-Smtp-Source: APXvYqzXQczZLX2Bew/J2kuvcDgEfm2FR0tf65spj5enhPfjl43a39qr0JeVMwR/j0CztxWLiO38boqycs9qZsTXKo8=
-X-Received: by 2002:a25:7782:: with SMTP id s124mr38432904ybc.80.1564595319728;
- Wed, 31 Jul 2019 10:48:39 -0700 (PDT)
+        Wed, 31 Jul 2019 13:50:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:52780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726708AbfGaRuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 13:50:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4DE7169E;
+        Wed, 31 Jul 2019 10:50:15 -0700 (PDT)
+Received: from big-swifty.lan (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 252333F71F;
+        Wed, 31 Jul 2019 10:50:12 -0700 (PDT)
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Nianyao Tang <tangnianyao@huawei.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] irqchip updates for 5.3-rc3
+Date:   Wed, 31 Jul 2019 18:50:00 +0100
+Message-Id: <20190731175000.12948-1-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190731122203.948-1-hslester96@gmail.com> <CA+FuTScqD4bMpm6n13ETFVEvSKnk_rRUzspzs9HB6B5Un101Dw@mail.gmail.com>
-In-Reply-To: <CA+FuTScqD4bMpm6n13ETFVEvSKnk_rRUzspzs9HB6B5Un101Dw@mail.gmail.com>
-From:   Michael Chan <michael.chan@broadcom.com>
-Date:   Wed, 31 Jul 2019 10:48:28 -0700
-Message-ID: <CACKFLin6kXeHrCR_U8R+CYDWCW2c=N5m_0SNupO7rqZmaL3SGQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] bnxt_en: Use refcount_t for refcount
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 9:06 AM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
->
-> On Wed, Jul 31, 2019 at 8:22 AM Chuhong Yuan <hslester96@gmail.com> wrote:
-> >
-> > refcount_t is better for reference counters since its
-> > implementation can prevent overflows.
-> > So convert atomic_t ref counters to refcount_t.
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> >  drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c | 8 ++++----
-> >  drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.h | 2 +-
-> >  2 files changed, 5 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-> > index fc77caf0a076..eb7ed34639e2 100644
-> > --- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-> > +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-> > @@ -49,7 +49,7 @@ static int bnxt_register_dev(struct bnxt_en_dev *edev, int ulp_id,
-> >                         return -ENOMEM;
-> >         }
-> >
-> > -       atomic_set(&ulp->ref_count, 0);
-> > +       refcount_set(&ulp->ref_count, 0);
->
-> One feature of refcount_t is that it warns on refcount_inc from 0 to
-> detect possible use-after_free. It appears that that can trigger here?
->
+Hi Thomas,
 
-I think that's right.  We need to change the driver to start counting
-from 1 instead of 0 if we convert to refcount.
+Here's a small bunch of fixes from the irqchip department. Nothing
+major, just a number of fixes for error paths, a GPCv2 irq_set_type()
+fix, and a bunch of /* fall-though */ annotation to keep the build
+quiet.
+
+Please pull.
+
+	M.
+
+The following changes since commit 3dae67ce600caaa92c9af6e0cb6cad2db2632a0a:
+
+  irqchip/gic-pm: Remove PM_CLK dependency (2019-07-03 09:33:01 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git tags/irqchip-fixes-5.3
+
+for you to fetch changes up to b5fa9fc9e809f84bb20439730162eccfed906a76:
+
+  irqchip/renesas-rza1: Fix an use-after-free in rza1_irqc_probe() (2019-07-26 14:40:01 +0100)
+
+----------------------------------------------------------------
+irqchip fixes for 5.3
+
+- Fix a couple of UAF on error paths (RZA1, GICv3 ITS)
+- Fix iMX GPCv2 trigger setting
+- Add missing of_node_put on error path in MBIGEN
+- Add another bunch of /* fall-through */ to silence warnings
+
+----------------------------------------------------------------
+Anders Roxell (1):
+      irqchip/gic-v3: Mark expected switch fall-through
+
+Lucas Stach (1):
+      irqchip/irq-imx-gpcv2: Forward irq type to parent
+
+Nianyao Tang (1):
+      irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
+
+Nishka Dasgupta (1):
+      irqchip/irq-mbigen: Add of_node_put() before return
+
+Wen Yang (1):
+      irqchip/renesas-rza1: Fix an use-after-free in rza1_irqc_probe()
+
+ drivers/irqchip/irq-gic-v3-its.c   |  2 +-
+ drivers/irqchip/irq-gic-v3.c       |  4 ++++
+ drivers/irqchip/irq-imx-gpcv2.c    |  1 +
+ drivers/irqchip/irq-mbigen.c       |  9 +++++++--
+ drivers/irqchip/irq-renesas-rza1.c | 15 ++++++++-------
+ 5 files changed, 21 insertions(+), 10 deletions(-)
