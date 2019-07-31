@@ -2,221 +2,256 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5994C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6597C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3172208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpTCqN38"
+	by mail.kernel.org (Postfix) with ESMTP id B9280217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbfGaNUX (ORCPT
+        id S1729426AbfGaNUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:20:23 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36527 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbfGaNUX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:20:23 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l21so31997774pgm.3;
-        Wed, 31 Jul 2019 06:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SuGziHCZaqdGOaxnWifTyczH00jv+Hf3/wqgot98H2A=;
-        b=KpTCqN385YEbwb/+5SOdVN47wgdelZs/dBwlZ2vQz98vrvv3jEcae1NLpsOMN/iUSd
-         jczkybTqK5j4un38yeDcIBsiGFkIb5fZ7ijL8vKxlvYuZLjekozCse8RMkD/fZORak+q
-         GrWXj1Lr2s7u+HciKcnuVDxFFc7le+BCik3HBMlTb4P7MVi83y2BQNQo5xy6YYWDEFuQ
-         spKwl1TZhxomzM9nIgt419VvJ4i8Zi4aeAnr1oRvG9aFY6A9AWIKkf/7idI0RUiXwR+o
-         c2ywz3oJ74Uzdo/LPDwOV/BWIV+NyxnbfYKpSVfxkRJAGkBjH2BH+mB2iize9+031LSv
-         tZVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SuGziHCZaqdGOaxnWifTyczH00jv+Hf3/wqgot98H2A=;
-        b=LdLjZ5zchubhaDGTp8U4XK5m8e0QvbkifuDraX1Nsm9Dntyz7V19NbzERp/pgyrnwN
-         gR3Adc8PHVUyyunp0Ob1f3NTUC1XRZpGsm+ALVL4imZfU2kTWRHAwoX90osikuw7kdlZ
-         QjUQveNbQT36nyq5ldmQW9Nu6ukd4yk16HB9opd8lds4Kj8pz3lKNHZPc6ictEAj6JP0
-         wi9eO3UmoH/Fq1JA9jxfPbpk0qKlJ3vHVHhtR6ErhTcehKORxe+c2mNoyuwFGWsrQeLw
-         UC/FqTSmZHHpDylh+zcIzisDigiDiK6UfMRIcxsi61k5gnC0ZbGE2bSbSvaMNWx1QA8z
-         daOQ==
-X-Gm-Message-State: APjAAAWvNFACSNI4Z/LjIM8APZ3SZdTXq8w1solWNpNQqvIHkOocspgR
-        Ts8uLQDPKJerLEn6xn8bUlQ=
-X-Google-Smtp-Source: APXvYqz1iQAkX9vyi4RK4ygqUGxesbUw8qQgEHooIGFUqZjupA4wSSRcWbh6/1KykczoQbUI6cfVEA==
-X-Received: by 2002:a63:61c6:: with SMTP id v189mr106442381pgb.36.1564579222288;
-        Wed, 31 Jul 2019 06:20:22 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 131sm2029774pge.37.2019.07.31.06.20.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 06:20:21 -0700 (PDT)
-Subject: Re: [PATCH] bfq: Check if bfqq is NULL in bfq_insert_request
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Hsin-Yi Wang <hsinyi@google.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
-References: <1563816648-12057-1-git-send-email-linux@roeck-us.net>
- <20190728151931.GA29181@roeck-us.net>
- <0BCD5EDA-6D08-4023-9EEA-087F0AB99D47@linaro.org>
- <23890163-facd-3838-ddee-770b7c2f32ea@roeck-us.net>
- <5162CB3B-39B1-4348-AEBD-2197330A3BA3@linaro.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <ed9d530d-a5d5-44fb-1e9d-1c9f562f0ce3@roeck-us.net>
-Date:   Wed, 31 Jul 2019 06:20:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 09:20:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3271 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728082AbfGaNUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:20:39 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 768AAB759E180569B93C;
+        Wed, 31 Jul 2019 21:20:36 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
+ 2019 21:20:28 +0800
+Subject: Re: [PATCH v5 12/24] erofs: introduce tagged pointer
+To:     Jan Kara <jack@suse.cz>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "David Sterba" <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+References: <20190730071413.11871-1-gaoxiang25@huawei.com>
+ <20190730071413.11871-13-gaoxiang25@huawei.com>
+ <20190731130148.GE15806@quack2.suse.cz>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <204b7fcc-a54b-ebd6-ff4c-2d5e2e6d4a8c@huawei.com>
+Date:   Wed, 31 Jul 2019 21:20:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-In-Reply-To: <5162CB3B-39B1-4348-AEBD-2197330A3BA3@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190731130148.GE15806@quack2.suse.cz>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/19 3:11 AM, Paolo Valente wrote:
-> 
-> 
->> Il giorno 30 lug 2019, alle ore 15:35, Guenter Roeck <linux@roeck-us.net> ha scritto:
->>
->> On 7/30/19 1:55 AM, Paolo Valente wrote:
->>> Hi Guenter,
->>> sorry for the delay (Dolomiti's fault).
->>> I didn't consider that rq->elv-icq might have been NULL also
->>> because of OOM.  Thanks for spotting this issue.
->>> As for the other places where the return value of bfq_init_rq is used,
->>> unfortunately I think they matter too.  Those other places are related
->>> to request merging, which is the alternative destiny of requests
->>> (instead of being just inserted).  But, regardless of whether a
->>> request is to be merged or inserted, that request may be destined to a
->>> bfq_queue (possibly merged with a request already in a bfq_queue), and
->>> a NULL return value by bfq_init_rq leads to a crash.  I guess you can
->>> reproduce your failure also for the merge case, by generating
->>> sequential, direct I/O with queue depth > 1, and of course by enabling
->>> failslab.
->> My assumption was that requests would only be merged if they are associated
->> with the same io context. In that case, that IO context isn't reallocated
->> with ioc_create_icq() but reused, and icq would thus never be NULL.
->> I guess that assumption was wrong.
-> 
-> I don't remember such a filtering.  I had a look again, but didn't
-> find anything relevant.  However, more competent people see these
+Hi Jan,
 
-Me not either, when I had a closer look yesterday. My conclusion was
-that your analysis is correct.
+On 2019/7/31 21:01, Jan Kara wrote:
+> On Tue 30-07-19 15:14:01, Gao Xiang wrote:
+>> Currently kernel has scattered tagged pointer usages
+>> hacked by hand in plain code, without a unique and
+>> portable functionset to highlight the tagged pointer
+>> itself and wrap these hacked code in order to clean up
+>> all over meaningless magic masks.
+>>
+>> This patch introduces simple generic methods to fold
+>> tags into a pointer integer. Currently it supports
+>> the last n bits of the pointer for tags, which can be
+>> selected by users.
+>>
+>> In addition, it will also be used for the upcoming EROFS
+>> filesystem, which heavily uses tagged pointer pproach
+>>  to reduce extra memory allocation.
+>>
+>> Link: https://en.wikipedia.org/wiki/Tagged_pointer
+>>
+>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> 
+> I'm not sure the generic approach you take is really needed here... You can
+> rely on getting at most two unused bits in the pointer anyway (and on mk68
+> architecture I've heard even that is not true but I guess you don't care).
+
+Yes, and currently erofs uses 1-bit tags at most...
+
+> So why not just define a single pointer type representing pointer with as
+> many tags as you can get?
+I think the primary use is to decide if the tag is beyond the bit boundary,
+such as use tag 2, 3 on tagptr1_t, we can BUG_ON or check it at compile time....
+
+BTW, my first patch is the only one fixed tagged pointer type(2-bit even if m64k) as below:
+https://lore.kernel.org/lkml/1530176789-107541-1-git-send-email-gaoxiang25@huawei.com/
+
+and Willy raised another problem is about static variable, therefore I decided to leave
+multiple tagptr types for users to decide for specific situations...
+https://lore.kernel.org/lkml/20180628092303.GD7646@bombadil.infradead.org/
+
+
+> Also what I find bad about your tagptr approach
+> is that the way you've implemented it you loose the information about the
+> original pointer type.
+Yes, I think that is about coding style, but the legacy way we have to do
+type cast as well, I think...
+
+   struct b *ptr = tagptr_unfold_tags(tptr);
+vs
+   struct b *ptr = (struct b *)((unsigned long)tptr & ~2);
+
+
+> So overall I'm not sure the benefits outweight the
+> downsides but I guess that's a matter of taste and ultimately your call as
+> a maintainer of this code.
+
+I think I wouldn't generalize this implementations in this series...
+It will be used for EROFS only for now :)
+
 
 Thanks,
-Guenter
+Gao Xiang
 
-> emails.  Maybe someone can give us better advice.  Otherwise, to stay
-> on the safe side, I'd propose to handle any possible NULL return.
 > 
-> And I'll manage it, as per your request.
+> 								Honza
 > 
-> Thanks,
-> Paolo
-> 
+>> ---
+>>  fs/erofs/tagptr.h | 110 ++++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 110 insertions(+)
+>>  create mode 100644 fs/erofs/tagptr.h
 >>
->>> If my considerations above are correct, do you want to propose a
->>> complete fix yourself?
+>> diff --git a/fs/erofs/tagptr.h b/fs/erofs/tagptr.h
+>> new file mode 100644
+>> index 000000000000..a72897c86744
+>> --- /dev/null
+>> +++ b/fs/erofs/tagptr.h
+>> @@ -0,0 +1,110 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * A tagged pointer implementation
+>> + *
+>> + * Copyright (C) 2018 Gao Xiang <gaoxiang25@huawei.com>
+>> + */
+>> +#ifndef __EROFS_FS_TAGPTR_H
+>> +#define __EROFS_FS_TAGPTR_H
+>> +
+>> +#include <linux/types.h>
+>> +#include <linux/build_bug.h>
+>> +
+>> +/*
+>> + * the name of tagged pointer types are tagptr{1, 2, 3...}_t
+>> + * avoid directly using the internal structs __tagptr{1, 2, 3...}
+>> + */
+>> +#define __MAKE_TAGPTR(n) \
+>> +typedef struct __tagptr##n {	\
+>> +	uintptr_t v;	\
+>> +} tagptr##n##_t;
+>> +
+>> +__MAKE_TAGPTR(1)
+>> +__MAKE_TAGPTR(2)
+>> +__MAKE_TAGPTR(3)
+>> +__MAKE_TAGPTR(4)
+>> +
+>> +#undef __MAKE_TAGPTR
+>> +
+>> +extern void __compiletime_error("bad tagptr tags")
+>> +	__bad_tagptr_tags(void);
+>> +
+>> +extern void __compiletime_error("bad tagptr type")
+>> +	__bad_tagptr_type(void);
+>> +
+>> +/* fix the broken usage of "#define tagptr2_t tagptr3_t" by users */
+>> +#define __tagptr_mask_1(ptr, n)	\
+>> +	__builtin_types_compatible_p(typeof(ptr), struct __tagptr##n) ? \
+>> +		(1UL << (n)) - 1 :
+>> +
+>> +#define __tagptr_mask(ptr)	(\
+>> +	__tagptr_mask_1(ptr, 1) ( \
+>> +	__tagptr_mask_1(ptr, 2) ( \
+>> +	__tagptr_mask_1(ptr, 3) ( \
+>> +	__tagptr_mask_1(ptr, 4) ( \
+>> +	__bad_tagptr_type(), 0)))))
+>> +
+>> +/* generate a tagged pointer from a raw value */
+>> +#define tagptr_init(type, val) \
+>> +	((typeof(type)){ .v = (uintptr_t)(val) })
+>> +
+>> +/*
+>> + * directly cast a tagged pointer to the native pointer type, which
+>> + * could be used for backward compatibility of existing code.
+>> + */
+>> +#define tagptr_cast_ptr(tptr) ((void *)(tptr).v)
+>> +
+>> +/* encode tagged pointers */
+>> +#define tagptr_fold(type, ptr, _tags) ({ \
+>> +	const typeof(_tags) tags = (_tags); \
+>> +	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(type))) \
+>> +		__bad_tagptr_tags(); \
+>> +tagptr_init(type, (uintptr_t)(ptr) | tags); })
+>> +
+>> +/* decode tagged pointers */
+>> +#define tagptr_unfold_ptr(tptr) \
+>> +	((void *)((tptr).v & ~__tagptr_mask(tptr)))
+>> +
+>> +#define tagptr_unfold_tags(tptr) \
+>> +	((tptr).v & __tagptr_mask(tptr))
+>> +
+>> +/* operations for the tagger pointer */
+>> +#define tagptr_eq(_tptr1, _tptr2) ({ \
+>> +	typeof(_tptr1) tptr1 = (_tptr1); \
+>> +	typeof(_tptr2) tptr2 = (_tptr2); \
+>> +	(void)(&tptr1 == &tptr2); \
+>> +(tptr1).v == (tptr2).v; })
+>> +
+>> +/* lock-free CAS operation */
+>> +#define tagptr_cmpxchg(_ptptr, _o, _n) ({ \
+>> +	typeof(_ptptr) ptptr = (_ptptr); \
+>> +	typeof(_o) o = (_o); \
+>> +	typeof(_n) n = (_n); \
+>> +	(void)(&o == &n); \
+>> +	(void)(&o == ptptr); \
+>> +tagptr_init(o, cmpxchg(&ptptr->v, o.v, n.v)); })
+>> +
+>> +/* wrap WRITE_ONCE if atomic update is needed */
+>> +#define tagptr_replace_tags(_ptptr, tags) ({ \
+>> +	typeof(_ptptr) ptptr = (_ptptr); \
+>> +	*ptptr = tagptr_fold(*ptptr, tagptr_unfold_ptr(*ptptr), tags); \
+>> +*ptptr; })
+>> +
+>> +#define tagptr_set_tags(_ptptr, _tags) ({ \
+>> +	typeof(_ptptr) ptptr = (_ptptr); \
+>> +	const typeof(_tags) tags = (_tags); \
+>> +	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
+>> +		__bad_tagptr_tags(); \
+>> +	ptptr->v |= tags; \
+>> +*ptptr; })
+>> +
+>> +#define tagptr_clear_tags(_ptptr, _tags) ({ \
+>> +	typeof(_ptptr) ptptr = (_ptptr); \
+>> +	const typeof(_tags) tags = (_tags); \
+>> +	if (__builtin_constant_p(tags) && (tags & ~__tagptr_mask(*ptptr))) \
+>> +		__bad_tagptr_tags(); \
+>> +	ptptr->v &= ~tags; \
+>> +*ptptr; })
+>> +
+>> +#endif	/* __EROFS_FS_TAGPTR_H */
+>> +
+>> -- 
+>> 2.17.1
 >>
->> Sure, I'll send an updated patch.
->>
->> Thanks,
->> Guenter
->>
->>> Thanks,
->>> Paolo
->>>> Il giorno 28 lug 2019, alle ore 17:19, Guenter Roeck <linux@roeck-us.net> ha scritto:
->>>>
->>>> ping ... just in case this patch got lost in Paolo's queue.
->>>>
->>>> Guenter
->>>>
->>>> On Mon, Jul 22, 2019 at 10:30:48AM -0700, Guenter Roeck wrote:
->>>>> In bfq_insert_request(), bfqq is initialized with:
->>>>> 	bfqq = bfq_init_rq(rq);
->>>>> In bfq_init_rq(), we find:
->>>>> 	if (unlikely(!rq->elv.icq))
->>>>> 		return NULL;
->>>>> Indeed, rq->elv.icq can be NULL if the memory allocation in
->>>>> create_task_io_context() failed.
->>>>>
->>>>> A comment in bfq_insert_request() suggests that bfqq is supposed to be
->>>>> non-NULL if 'at_head || blk_rq_is_passthrough(rq)' is false. Yet, as
->>>>> debugging and practical experience shows, this is not the case in the
->>>>> above situation.
->>>>>
->>>>> This results in the following crash.
->>>>>
->>>>> Unable to handle kernel NULL pointer dereference
->>>>> 	at virtual address 00000000000001b0
->>>>> ...
->>>>> Call trace:
->>>>> bfq_setup_cooperator+0x44/0x134
->>>>> bfq_insert_requests+0x10c/0x630
->>>>> blk_mq_sched_insert_requests+0x60/0xb4
->>>>> blk_mq_flush_plug_list+0x290/0x2d4
->>>>> blk_flush_plug_list+0xe0/0x230
->>>>> blk_finish_plug+0x30/0x40
->>>>> generic_writepages+0x60/0x94
->>>>> blkdev_writepages+0x24/0x30
->>>>> do_writepages+0x74/0xac
->>>>> __filemap_fdatawrite_range+0x94/0xc8
->>>>> file_write_and_wait_range+0x44/0xa0
->>>>> blkdev_fsync+0x38/0x68
->>>>> vfs_fsync_range+0x68/0x80
->>>>> do_fsync+0x44/0x80
->>>>>
->>>>> The problem is relatively easy to reproduce by running an image with
->>>>> failslab enabled, such as with:
->>>>>
->>>>> cd /sys/kernel/debug/failslab
->>>>> echo 10 > probability
->>>>> echo 300 > times
->>>>>
->>>>> Avoid the problem by checking if bfqq is NULL before using it. With the
->>>>> NULL check in place, requests with missing io context are queued
->>>>> immediately, and the crash is no longer seen.
->>>>>
->>>>> Fixes: 18e5a57d79878 ("block, bfq: postpone rq preparation to insert or merge")
->>>>> Reported-by: Hsin-Yi Wang  <hsinyi@google.com>
->>>>> Cc: Hsin-Yi Wang <hsinyi@google.com>
->>>>> Cc: Nicolas Boichat <drinkcat@chromium.org>
->>>>> Cc: Doug Anderson <dianders@chromium.org>
->>>>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->>>>> ---
->>>>> block/bfq-iosched.c | 2 +-
->>>>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
->>>>> index 72860325245a..56f3f4227010 100644
->>>>> --- a/block/bfq-iosched.c
->>>>> +++ b/block/bfq-iosched.c
->>>>> @@ -5417,7 +5417,7 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
->>>>>
->>>>> 	spin_lock_irq(&bfqd->lock);
->>>>> 	bfqq = bfq_init_rq(rq);
->>>>> -	if (at_head || blk_rq_is_passthrough(rq)) {
->>>>> +	if (!bfqq || at_head || blk_rq_is_passthrough(rq)) {
->>>>> 		if (at_head)
->>>>> 			list_add(&rq->queuelist, &bfqd->dispatch);
->>>>> 		else
->>>>> -- 
->>>>> 2.7.4
->>>>>
->>
-> 
-> 
-
