@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9805AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000C7C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72995208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7E7208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 18:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbfGaSZG (ORCPT
+        id S1729989AbfGaSZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 14:25:06 -0400
+        Wed, 31 Jul 2019 14:25:09 -0400
 Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:50223 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729721AbfGaSYn (ORCPT
+        by vger.kernel.org with ESMTP id S1729686AbfGaSYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 14:24:43 -0400
+        Wed, 31 Jul 2019 14:24:41 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Wed, 31 Jul 2019 11:24:36 -0700
+ 15.0.1156.6; Wed, 31 Jul 2019 11:24:35 -0700
 Received: from rlwimi.localdomain (unknown [10.166.66.112])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id C5F42B2859;
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 75EAAB284F;
         Wed, 31 Jul 2019 14:24:39 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 CC:     Ingo Molnar <mingo@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [PATCH v4 8/8] recordmcount: Clarify what cleanup() does
-Date:   Wed, 31 Jul 2019 11:24:16 -0700
-Message-ID: <2a387ac86d133d22c68f57b9933c32bab1d09a2d.1564596289.git.mhelsley@vmware.com>
+Subject: [PATCH v4 7/8] recordmcount: Remove redundant cleanup() calls
+Date:   Wed, 31 Jul 2019 11:24:15 -0700
+Message-ID: <de197e17fc5426623a847ea7cf3a1560a7402a4b.1564596289.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1564596289.git.mhelsley@vmware.com>
 References: <cover.1564596289.git.mhelsley@vmware.com>
@@ -47,249 +47,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cleanup() mostly frees/unmaps the malloc'd/privately-mapped
-copy of the ELF file recordmcount is working on, which is
-set up in mmap_file(). It also deals with positioning within
-the pseduo prive-mapping of the file and appending to the ELF
-file.
+Redundant cleanup calls were introduced when transitioning from
+the old error/success handling via setjmp/longjmp -- the longjmp
+ensured the cleanup() call only happened once but replacing
+the success_file()/fail_file() calls with cleanup() meant that
+multiple cleanup() calls can happen as we return from function
+calls.
 
-Split into two steps:
-	mmap_cleanup() for the mapping itself
-	file_append_cleanup() for allocations storing the
-		appended ELF data.
+In do_file(), looking just before and after the "goto out" jumps we
+can see that multiple cleanups() are being performed. We remove
+cleanup() calls from the nested functions because it makes the code
+easier to review -- the resources being cleaned up are generally
+allocated and initialized in the callers so freeing them there
+makes more sense.
 
-Also, move the global variable initializations out of the main,
-per-object-file loop and nearer to the alloc/init (mmap_file())
-and two cleanup functions so we can more clearly see how they're
-related.
+Other redundant cleanup() calls:
+
+mmap_file() is only called from do_file() and, if mmap_file() fails,
+then we goto out and do cleanup() there too.
+
+write_file() is only called from do_file() and do_file()
+calls cleanup() unconditionally after returning from write_file()
+therefore the cleanup() calls in write_file() are not necessary.
+
+find_secsym_ndx(), called from do_func()'s for-loop, when we are
+cleaning up here it's obvious that we break out of the loop and
+do another cleanup().
+
+__has_rel_mcount() is called from two parts of do_func()
+and calls cleanup(). In theory we move them into do_func(), however
+these in turn prove redundant so another simplification step
+removes them as well.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- scripts/recordmcount.c | 151 ++++++++++++++++++++++-------------------
- 1 file changed, 81 insertions(+), 70 deletions(-)
+ scripts/recordmcount.c | 13 -------------
+ scripts/recordmcount.h |  2 --
+ 2 files changed, 15 deletions(-)
 
 diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 5677fcc88a72..612268eabef4 100644
+index 273ca8b42b20..5677fcc88a72 100644
 --- a/scripts/recordmcount.c
 +++ b/scripts/recordmcount.c
-@@ -48,21 +48,26 @@ static void *file_map;	/* pointer of the mapped file */
- static void *file_end;	/* pointer to the end of the mapped file */
- static int file_updated; /* flag to state file was changed */
- static void *file_ptr;	/* current file pointer location */
-+
- static void *file_append; /* added to the end of the file */
- static size_t file_append_size; /* how much is added to end of file */
- 
- /* Per-file resource cleanup when multiple files. */
--static void cleanup(void)
-+static void file_append_cleanup(void)
-+{
-+	free(file_append);
-+	file_append = NULL;
-+	file_append_size = 0;
-+	file_updated = 0;
-+}
-+
-+static void mmap_cleanup(void)
- {
- 	if (!mmap_failed)
- 		munmap(file_map, sb.st_size);
- 	else
- 		free(file_map);
- 	file_map = NULL;
--	free(file_append);
--	file_append = NULL;
--	file_append_size = 0;
--	file_updated = 0;
- }
- 
- /* ulseek, uwrite, ...:  Check return value for errors. */
-@@ -103,7 +108,8 @@ static ssize_t uwrite(void const *const buf, size_t const count)
- 		}
- 		if (!file_append) {
- 			perror("write");
--			cleanup();
-+			file_append_cleanup();
-+			mmap_cleanup();
- 			return -1;
- 		}
- 		if (file_ptr < file_end) {
-@@ -129,12 +135,76 @@ static void * umalloc(size_t size)
- 	void *const addr = malloc(size);
- 	if (addr == 0) {
- 		fprintf(stderr, "malloc failed: %zu bytes\n", size);
+@@ -258,17 +258,14 @@ static void *mmap_file(char const *fname)
+ 	fd_map = open(fname, O_RDONLY);
+ 	if (fd_map < 0) {
+ 		perror(fname);
 -		cleanup();
-+		file_append_cleanup();
-+		mmap_cleanup();
  		return NULL;
  	}
- 	return addr;
- }
- 
-+/*
-+ * Get the whole file as a programming convenience in order to avoid
-+ * malloc+lseek+read+free of many pieces.  If successful, then mmap
-+ * avoids copying unused pieces; else just read the whole file.
-+ * Open for both read and write; new info will be appended to the file.
-+ * Use MAP_PRIVATE so that a few changes to the in-memory ElfXX_Ehdr
-+ * do not propagate to the file until an explicit overwrite at the last.
-+ * This preserves most aspects of consistency (all except .st_size)
-+ * for simultaneous readers of the file while we are appending to it.
-+ * However, multiple writers still are bad.  We choose not to use
-+ * locking because it is expensive and the use case of kernel build
-+ * makes multiple writers unlikely.
-+ */
-+static void *mmap_file(char const *fname)
-+{
-+	/* Avoid problems if early cleanup() */
-+	fd_map = -1;
-+	mmap_failed = 1;
-+	file_map = NULL;
-+	file_ptr = NULL;
-+	file_updated = 0;
-+	sb.st_size = 0;
-+
-+	fd_map = open(fname, O_RDONLY);
-+	if (fd_map < 0) {
-+		perror(fname);
-+		return NULL;
-+	}
-+	if (fstat(fd_map, &sb) < 0) {
-+		perror(fname);
-+		goto out;
-+	}
-+	if (!S_ISREG(sb.st_mode)) {
-+		fprintf(stderr, "not a regular file: %s\n", fname);
-+		goto out;
-+	}
-+	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
-+			fd_map, 0);
-+	if (file_map == MAP_FAILED) {
-+		mmap_failed = 1;
-+		file_map = umalloc(sb.st_size);
-+		if (!file_map) {
-+			perror(fname);
-+			goto out;
-+		}
-+		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
-+			perror(fname);
-+			free(file_map);
-+			file_map = NULL;
-+			goto out;
-+		}
-+	} else
-+		mmap_failed = 0;
-+out:
-+	close(fd_map);
-+	fd_map = -1;
-+
-+	file_end = file_map + sb.st_size;
-+
-+	return file_map;
-+}
-+
-+
- static unsigned char ideal_nop5_x86_64[5] = { 0x0f, 0x1f, 0x44, 0x00, 0x00 };
- static unsigned char ideal_nop5_x86_32[5] = { 0x3e, 0x8d, 0x74, 0x26, 0x00 };
- static unsigned char *ideal_nop;
-@@ -238,61 +308,6 @@ static int make_nop_arm64(void *map, size_t const offset)
- 	return 0;
- }
- 
--/*
-- * Get the whole file as a programming convenience in order to avoid
-- * malloc+lseek+read+free of many pieces.  If successful, then mmap
-- * avoids copying unused pieces; else just read the whole file.
-- * Open for both read and write; new info will be appended to the file.
-- * Use MAP_PRIVATE so that a few changes to the in-memory ElfXX_Ehdr
-- * do not propagate to the file until an explicit overwrite at the last.
-- * This preserves most aspects of consistency (all except .st_size)
-- * for simultaneous readers of the file while we are appending to it.
-- * However, multiple writers still are bad.  We choose not to use
-- * locking because it is expensive and the use case of kernel build
-- * makes multiple writers unlikely.
-- */
--static void *mmap_file(char const *fname)
--{
--	file_map = NULL;
--	sb.st_size = 0;
--	fd_map = open(fname, O_RDONLY);
--	if (fd_map < 0) {
--		perror(fname);
--		return NULL;
--	}
--	if (fstat(fd_map, &sb) < 0) {
--		perror(fname);
--		goto out;
--	}
--	if (!S_ISREG(sb.st_mode)) {
--		fprintf(stderr, "not a regular file: %s\n", fname);
--		goto out;
--	}
--	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
--			fd_map, 0);
--	mmap_failed = 0;
--	if (file_map == MAP_FAILED) {
--		mmap_failed = 1;
--		file_map = umalloc(sb.st_size);
--		if (!file_map) {
--			perror(fname);
--			goto out;
--		}
--		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
--			perror(fname);
--			free(file_map);
--			file_map = NULL;
--			goto out;
--		}
--	}
--out:
--	close(fd_map);
--
--	file_end = file_map + sb.st_size;
--
--	return file_map;
--}
--
- static int write_file(const char *fname)
- {
- 	char tmp_file[strlen(fname) + 4];
-@@ -438,10 +453,11 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
- 
- static int do_file(char const *const fname)
- {
--	Elf32_Ehdr *const ehdr = mmap_file(fname);
- 	unsigned int reltype = 0;
-+	Elf32_Ehdr *ehdr;
- 	int rc = -1;
- 
-+	ehdr = mmap_file(fname);
- 	if (!ehdr)
+ 	if (fstat(fd_map, &sb) < 0) {
+ 		perror(fname);
+-		cleanup();
  		goto out;
+ 	}
+ 	if (!S_ISREG(sb.st_mode)) {
+ 		fprintf(stderr, "not a regular file: %s\n", fname);
+-		cleanup();
+ 		goto out;
+ 	}
+ 	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
+@@ -314,13 +311,11 @@ static int write_file(const char *fname)
+ 	fd_map = open(tmp_file, O_WRONLY | O_TRUNC | O_CREAT, sb.st_mode);
+ 	if (fd_map < 0) {
+ 		perror(fname);
+-		cleanup();
+ 		return -1;
+ 	}
+ 	n = write(fd_map, file_map, sb.st_size);
+ 	if (n != sb.st_size) {
+ 		perror("write");
+-		cleanup();
+ 		close(fd_map);
+ 		return -1;
+ 	}
+@@ -328,7 +323,6 @@ static int write_file(const char *fname)
+ 		n = write(fd_map, file_append, file_append_size);
+ 		if (n != file_append_size) {
+ 			perror("write");
+-			cleanup();
+ 			close(fd_map);
+ 			return -1;
+ 		}
+@@ -336,7 +330,6 @@ static int write_file(const char *fname)
+ 	close(fd_map);
+ 	if (rename(tmp_file, fname) < 0) {
+ 		perror(fname);
+-		cleanup();
+ 		return -1;
+ 	}
+ 	return 0;
+@@ -460,7 +453,6 @@ static int do_file(char const *const fname)
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+ 			ehdr->e_ident[EI_DATA], fname);
+-		cleanup();
+ 		goto out;
+ 	case ELFDATA2LSB:
+ 		if (*(unsigned char const *)&endian != 1) {
+@@ -493,7 +485,6 @@ static int do_file(char const *const fname)
+ 	    w2(ehdr->e_type) != ET_REL ||
+ 	    ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
+ 		fprintf(stderr, "unrecognized ET_REL file %s\n", fname);
+-		cleanup();
+ 		goto out;
+ 	}
  
-@@ -577,7 +593,8 @@ static int do_file(char const *const fname)
- 
- 	rc = write_file(fname);
- out:
+@@ -502,7 +493,6 @@ static int do_file(char const *const fname)
+ 	default:
+ 		fprintf(stderr, "unrecognized e_machine %u %s\n",
+ 			w2(ehdr->e_machine), fname);
+-		cleanup();
+ 		goto out;
+ 	case EM_386:
+ 		reltype = R_386_32;
+@@ -546,14 +536,12 @@ static int do_file(char const *const fname)
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF class %d %s\n",
+ 			ehdr->e_ident[EI_CLASS], fname);
+-		cleanup();
+ 		goto out;
+ 	case ELFCLASS32:
+ 		if (w2(ehdr->e_ehsize) != sizeof(Elf32_Ehdr)
+ 		||  w2(ehdr->e_shentsize) != sizeof(Elf32_Shdr)) {
+ 			fprintf(stderr,
+ 				"unrecognized ET_REL file: %s\n", fname);
+-			cleanup();
+ 			goto out;
+ 		}
+ 		if (w2(ehdr->e_machine) == EM_MIPS) {
+@@ -569,7 +557,6 @@ static int do_file(char const *const fname)
+ 		||  w2(ghdr->e_shentsize) != sizeof(Elf64_Shdr)) {
+ 			fprintf(stderr,
+ 				"unrecognized ET_REL file: %s\n", fname);
+-			cleanup();
+ 			goto out;
+ 		}
+ 		if (w2(ghdr->e_machine) == EM_S390) {
+diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
+index ca9aaac89bfb..8f0a278ce0af 100644
+--- a/scripts/recordmcount.h
++++ b/scripts/recordmcount.h
+@@ -463,7 +463,6 @@ static int find_secsym_ndx(unsigned const txtndx,
+ 	}
+ 	fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
+ 		txtndx, txtname);
 -	cleanup();
-+	file_append_cleanup();
-+	mmap_cleanup();
- 	return rc;
+ 	return -1;
  }
  
-@@ -620,12 +637,6 @@ int main(int argc, char *argv[])
- 		    strcmp(file + (len - ftrace_size), ftrace) == 0)
- 			continue;
- 
--		/* Avoid problems if early cleanup() */
--		fd_map = -1;
--		mmap_failed = 1;
--		file_map = NULL;
--		file_ptr = NULL;
--		file_updated = 0;
- 		if (do_file(file)) {
- 			fprintf(stderr, "%s: failed\n", file);
- 			++n_error;
+@@ -480,7 +479,6 @@ static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
+ 	if (strcmp("__mcount_loc", txtname) == 0) {
+ 		fprintf(stderr, "warning: __mcount_loc already exists: %s\n",
+ 			fname);
+-		cleanup();
+ 		return already_has_rel_mcount;
+ 	}
+ 	if (w(txthdr->sh_type) != SHT_PROGBITS ||
 -- 
 2.20.1
 
