@@ -2,165 +2,473 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD17C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FD5C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489D1206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:50:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bc7NcOiJ"
+	by mail.kernel.org (Postfix) with ESMTP id 27BEF206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfGaIuZ (ORCPT
+        id S1727903AbfGaIvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:50:25 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40792 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfGaIuY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:50:24 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r1so68708061wrl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 01:50:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NwsVvn8wa45bBL0kmpXm8dE+dK3L/asxmBE1PcKU6TI=;
-        b=Bc7NcOiJ5ur5yWb8Vm1EekyHADoSSZ4yQYMor9UK1cjaU5nrLpgp0SmtmLXSWoCPEN
-         oiRopDXzheg2qnqg1lVm22qMA/cI2erdJbrdYbrVe17W0y9dIu+Ih2t/Ld1BE+guR+Ki
-         aIz8ZqRujPKICvzrT05iXLF7sRshRT+8Oc+BH25l24EKgl1B7WN8uDQuGsaoEWzbHBsI
-         gFimbd+shhkf9k9zlgB6v/lUSa4eYsxuPTXBSu6uP3mcrG8UOYtWrUvbmSkr/TRMBDtq
-         hAeJNzNuvqslO+6Od+YCCQSnMgShnD95JykVdPMvoRy075nos6fgDhqcH7qQxQKrmNWL
-         sipg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NwsVvn8wa45bBL0kmpXm8dE+dK3L/asxmBE1PcKU6TI=;
-        b=iX0CWRdObfH87oYKSmNGupREp/ztcTz1+T0xZBnxBrAdHTA0U6VC1xKcAhnnLm6qQY
-         KNI2iCZ4t5NDIE31dCTd53c1Mwepb6dSIsLR0JMF9FGXRbv+NtBlRx9uaXEaIzPLU7XR
-         6MMN4dE+TXQ+ryJtDfeZSCw9KXDP78xlmiI/fa+YYrYyTC0wpUe1GJa999LTJD+TkAUi
-         h1FMCN8I/tZEH5L+av7aejWpcl8kKcVynnQpZBsHqLwG6x/Cp4sK6TN3anYVLomjdK+U
-         5xgRkksyXvrD2jYiswa+LWGGEOCyfBlDUs3Q/CBp6Do+g4GyWgzZhkQXrq9Qad13dwAt
-         VNPw==
-X-Gm-Message-State: APjAAAXcUEOJ/7/hmeKNY/oybuBlun94GlYerrqzM5ATPuYmewSDUeFZ
-        nG7r6C3+1/Tgmdti2wVtNNhpNL3JhEuI3+BOhaHuWA==
-X-Google-Smtp-Source: APXvYqzdMl1kziBM4CxJXiGSgYq/6b+CB7ylpvJ4dhXM4kEs2n2F5RQ+y+S2b/osFdyjAZvY3q7a+1Pd5rp4RjJGFwE=
-X-Received: by 2002:a5d:46cf:: with SMTP id g15mr137884595wrs.93.1564563022820;
- Wed, 31 Jul 2019 01:50:22 -0700 (PDT)
+        Wed, 31 Jul 2019 04:51:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58824 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726444AbfGaIvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 04:51:02 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CF17C3084025;
+        Wed, 31 Jul 2019 08:51:01 +0000 (UTC)
+Received: from [10.72.12.51] (ovpn-12-51.pek2.redhat.com [10.72.12.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F03B85D6A7;
+        Wed, 31 Jul 2019 08:50:55 +0000 (UTC)
+Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
+ with worker
+To:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgg@ziepe.ca
+References: <20190731084655.7024-1-jasowang@redhat.com>
+ <20190731084655.7024-8-jasowang@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <cab99dc3-962e-57a2-70f3-73e9f64f3a49@redhat.com>
+Date:   Wed, 31 Jul 2019 16:50:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1564482824-26581-1-git-send-email-iuliana.prodan@nxp.com>
- <1564482824-26581-3-git-send-email-iuliana.prodan@nxp.com>
- <CAKv+Gu_VEEZFPpJfv2JbB02vhmc_1_wpxNDBHf__pv-t7BvN0A@mail.gmail.com> <VI1PR04MB4445AABC9062673BD4FA3CEF8CDF0@VI1PR04MB4445.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB4445AABC9062673BD4FA3CEF8CDF0@VI1PR04MB4445.eurprd04.prod.outlook.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 31 Jul 2019 11:50:11 +0300
-Message-ID: <CAKv+Gu8KcL_Q_C+euZ9DOT7VEX68CJZJLrT8hxeCiiiEkxQ=jQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] crypto: aes - helper function to validate key
- length for AES algorithms
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190731084655.7024-8-jasowang@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 31 Jul 2019 08:51:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 at 11:35, Iuliana Prodan <iuliana.prodan@nxp.com> wrote:
+
+On 2019/7/31 下午4:46, Jason Wang wrote:
+> We used to use RCU to synchronize MMU notifier with worker. This leads
+> calling synchronize_rcu() in invalidate_range_start(). But on a busy
+> system, there would be many factors that may slow down the
+> synchronize_rcu() which makes it unsuitable to be called in MMU
+> notifier.
 >
-> On 7/31/2019 8:33 AM, Ard Biesheuvel wrote:
-> > On Tue, 30 Jul 2019 at 13:33, Iuliana Prodan <iuliana.prodan@nxp.com> wrote:
-> >>
-> >> Add inline helper function to check key length for AES algorithms.
-> >> The key can be 128, 192 or 256 bits size.
-> >> This function is used in the generic aes implementation.
-> >>
-> >> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> >> ---
-> >>   include/crypto/aes.h | 17 +++++++++++++++++
-> >>   lib/crypto/aes.c     |  8 ++++----
-> >>   2 files changed, 21 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/include/crypto/aes.h b/include/crypto/aes.h
-> >> index 8e0f4cf..8ee07a8 100644
-> >> --- a/include/crypto/aes.h
-> >> +++ b/include/crypto/aes.h
-> >> @@ -31,6 +31,23 @@ struct crypto_aes_ctx {
-> >>   extern const u32 crypto_ft_tab[4][256] ____cacheline_aligned;
-> >>   extern const u32 crypto_it_tab[4][256] ____cacheline_aligned;
-> >>
-> >> +/*
-> >> + * validate key length for AES algorithms
-> >> + */
-> >> +static inline int crypto_aes_check_keylen(unsigned int keylen)
-> >
-> > Please rename this to aes_check_keylen()
-> >
-> I just renamed it to crypto_, the first version was check_aes_keylen
-> - see https://patchwork.kernel.org/patch/11058869/.
-> I think is better to keep the helper functions with crypto_, as most of
-> these type of functions, in crypto, have this prefix.
+> A solution is SRCU but its overhead is obvious with the expensive full
+> memory barrier. Another choice is to use seqlock, but it doesn't
+> provide a synchronization method between readers and writers. The last
+> choice is to use vq mutex, but it need to deal with the worst case
+> that MMU notifier must be blocked and wait for the finish of swap in.
 >
-
-The AES library consists of
-
-aes_encrypt
-aes_decrypt
-aes_expandkey
-
-and has no dependencies on the crypto API, which is why I omitted the
-crypto_ prefix from the identifiers. Please do the same for this
-function.
-.
+> So this patch switches use a counter to track whether or not the map
+> was used. The counter was increased when vq try to start or finish
+> uses the map. This means, when it was even, we're sure there's no
+> readers and MMU notifier is synchronized. When it was odd, it means
+> there's a reader we need to wait it to be even again then we are
+> synchronized. To avoid full memory barrier, store_release +
+> load_acquire on the counter is used.
 
 
-> >> +{
-> >> +       switch (keylen) {
-> >> +       case AES_KEYSIZE_128:
-> >> +       case AES_KEYSIZE_192:
-> >> +       case AES_KEYSIZE_256:
-> >> +               break;
-> >> +       default:
-> >> +               return -EINVAL;
-> >> +       }
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >>   int crypto_aes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
-> >>                  unsigned int key_len);
-> >>
-> >> diff --git a/lib/crypto/aes.c b/lib/crypto/aes.c
-> >> index 4e100af..3407b01 100644
-> >> --- a/lib/crypto/aes.c
-> >> +++ b/lib/crypto/aes.c
-> >> @@ -187,11 +187,11 @@ int aes_expandkey(struct crypto_aes_ctx *ctx, const u8 *in_key,
-> >>   {
-> >>          u32 kwords = key_len / sizeof(u32);
-> >>          u32 rc, i, j;
-> >> +       int err;
-> >>
-> >> -       if (key_len != AES_KEYSIZE_128 &&
-> >> -           key_len != AES_KEYSIZE_192 &&
-> >> -           key_len != AES_KEYSIZE_256)
-> >> -               return -EINVAL;
-> >> +       err = crypto_aes_check_keylen(key_len);
-> >> +       if (err)
-> >> +               return err;
-> >>
-> >>          ctx->key_length = key_len;
-> >>
-> >> --
-> >> 2.1.0
-> >>
-> >
+For reviewers, I try hard to avoid e.g smp_mb(), please double check 
+whether or not this trick work.
+
+Thanks
+
+
 >
+> Consider the read critical section is pretty small the synchronization
+> should be done very fast.
+>
+> Note the patch lead about 3% PPS dropping.
+>
+> Reported-by: Michael S. Tsirkin <mst@redhat.com>
+> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>   drivers/vhost/vhost.c | 145 ++++++++++++++++++++++++++----------------
+>   drivers/vhost/vhost.h |   7 +-
+>   2 files changed, 94 insertions(+), 58 deletions(-)
+>
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index cfc11f9ed9c9..db2c81cb1e90 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -324,17 +324,16 @@ static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
+>   
+>   	spin_lock(&vq->mmu_lock);
+>   	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
+> -		map[i] = rcu_dereference_protected(vq->maps[i],
+> -				  lockdep_is_held(&vq->mmu_lock));
+> +		map[i] = vq->maps[i];
+>   		if (map[i]) {
+>   			vhost_set_map_dirty(vq, map[i], i);
+> -			rcu_assign_pointer(vq->maps[i], NULL);
+> +			vq->maps[i] = NULL;
+>   		}
+>   	}
+>   	spin_unlock(&vq->mmu_lock);
+>   
+> -	/* No need for synchronize_rcu() or kfree_rcu() since we are
+> -	 * serialized with memory accessors (e.g vq mutex held).
+> +	/* No need for synchronization since we are serialized with
+> +	 * memory accessors (e.g vq mutex held).
+>   	 */
+>   
+>   	for (i = 0; i < VHOST_NUM_ADDRS; i++)
+> @@ -362,6 +361,44 @@ static bool vhost_map_range_overlap(struct vhost_uaddr *uaddr,
+>   	return !(end < uaddr->uaddr || start > uaddr->uaddr - 1 + uaddr->size);
+>   }
+>   
+> +static void inline vhost_vq_access_map_begin(struct vhost_virtqueue *vq)
+> +{
+> +	int ref = READ_ONCE(vq->ref);
+> +
+> +	smp_store_release(&vq->ref, ref + 1);
+> +	/* Make sure ref counter is visible before accessing the map */
+> +	smp_load_acquire(&vq->ref);
+> +}
+> +
+> +static void inline vhost_vq_access_map_end(struct vhost_virtqueue *vq)
+> +{
+> +	int ref = READ_ONCE(vq->ref);
+> +
+> +	/* Make sure vq access is done before increasing ref counter */
+> +	smp_store_release(&vq->ref, ref + 1);
+> +}
+> +
+> +static void inline vhost_vq_sync_access(struct vhost_virtqueue *vq)
+> +{
+> +	int ref;
+> +
+> +	/* Make sure map change was done before checking ref counter */
+> +	smp_mb();
+> +
+> +	ref = READ_ONCE(vq->ref);
+> +	if (ref & 0x1) {
+> +		/* When ref change, we are sure no reader can see
+> +		 * previous map */
+> +		while (READ_ONCE(vq->ref) == ref) {
+> +			set_current_state(TASK_RUNNING);
+> +			schedule();
+> +		}
+> +	}
+> +	/* Make sure ref counter was checked before any other
+> +	 * operations that was dene on map. */
+> +	smp_mb();
+> +}
+> +
+>   static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+>   				      int index,
+>   				      unsigned long start,
+> @@ -376,16 +413,15 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+>   	spin_lock(&vq->mmu_lock);
+>   	++vq->invalidate_count;
+>   
+> -	map = rcu_dereference_protected(vq->maps[index],
+> -					lockdep_is_held(&vq->mmu_lock));
+> +	map = vq->maps[index];
+>   	if (map) {
+>   		vhost_set_map_dirty(vq, map, index);
+> -		rcu_assign_pointer(vq->maps[index], NULL);
+> +		vq->maps[index] = NULL;
+>   	}
+>   	spin_unlock(&vq->mmu_lock);
+>   
+>   	if (map) {
+> -		synchronize_rcu();
+> +		vhost_vq_sync_access(vq);
+>   		vhost_map_unprefetch(map);
+>   	}
+>   }
+> @@ -457,7 +493,7 @@ static void vhost_init_maps(struct vhost_dev *dev)
+>   	for (i = 0; i < dev->nvqs; ++i) {
+>   		vq = dev->vqs[i];
+>   		for (j = 0; j < VHOST_NUM_ADDRS; j++)
+> -			RCU_INIT_POINTER(vq->maps[j], NULL);
+> +			vq->maps[j] = NULL;
+>   	}
+>   }
+>   #endif
+> @@ -655,6 +691,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+>   		vq->indirect = NULL;
+>   		vq->heads = NULL;
+>   		vq->dev = dev;
+> +		vq->ref = 0;
+>   		mutex_init(&vq->mutex);
+>   		spin_lock_init(&vq->mmu_lock);
+>   		vhost_vq_reset(dev, vq);
+> @@ -921,7 +958,7 @@ static int vhost_map_prefetch(struct vhost_virtqueue *vq,
+>   	map->npages = npages;
+>   	map->pages = pages;
+>   
+> -	rcu_assign_pointer(vq->maps[index], map);
+> +	vq->maps[index] = map;
+>   	/* No need for a synchronize_rcu(). This function should be
+>   	 * called by dev->worker so we are serialized with all
+>   	 * readers.
+> @@ -1216,18 +1253,18 @@ static inline int vhost_put_avail_event(struct vhost_virtqueue *vq)
+>   	struct vring_used *used;
+>   
+>   	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>   
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+> +		map = vq->maps[VHOST_ADDR_USED];
+>   		if (likely(map)) {
+>   			used = map->addr;
+>   			*((__virtio16 *)&used->ring[vq->num]) =
+>   				cpu_to_vhost16(vq, vq->avail_idx);
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>   			return 0;
+>   		}
+>   
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>   	}
+>   #endif
+>   
+> @@ -1245,18 +1282,18 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
+>   	size_t size;
+>   
+>   	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>   
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+> +		map = vq->maps[VHOST_ADDR_USED];
+>   		if (likely(map)) {
+>   			used = map->addr;
+>   			size = count * sizeof(*head);
+>   			memcpy(used->ring + idx, head, size);
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>   			return 0;
+>   		}
+>   
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>   	}
+>   #endif
+>   
+> @@ -1272,17 +1309,17 @@ static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
+>   	struct vring_used *used;
+>   
+>   	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>   
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+> +		map = vq->maps[VHOST_ADDR_USED];
+>   		if (likely(map)) {
+>   			used = map->addr;
+>   			used->flags = cpu_to_vhost16(vq, vq->used_flags);
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>   			return 0;
+>   		}
+>   
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>   	}
+>   #endif
+>   
+> @@ -1298,17 +1335,17 @@ static inline int vhost_put_used_idx(struct vhost_virtqueue *vq)
+>   	struct vring_used *used;
+>   
+>   	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>   
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+> +		map = vq->maps[VHOST_ADDR_USED];
+>   		if (likely(map)) {
+>   			used = map->addr;
+>   			used->idx = cpu_to_vhost16(vq, vq->last_used_idx);
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>   			return 0;
+>   		}
+>   
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>   	}
+>   #endif
+>   
+> @@ -1362,17 +1399,17 @@ static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
+>   	struct vring_avail *avail;
+>   
+>   	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>   
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>   		if (likely(map)) {
+>   			avail = map->addr;
+>   			*idx = avail->idx;
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>   			return 0;
+>   		}
+>   
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>   	}
+>   #endif
+>   
+> @@ -1387,17 +1424,17 @@ static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
+>   	struct vring_avail *avail;
+>   
+>   	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>   
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>   		if (likely(map)) {
+>   			avail = map->addr;
+>   			*head = avail->ring[idx & (vq->num - 1)];
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>   			return 0;
+>   		}
+>   
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>   	}
+>   #endif
+>   
+> @@ -1413,17 +1450,17 @@ static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
+>   	struct vring_avail *avail;
+>   
+>   	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>   
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>   		if (likely(map)) {
+>   			avail = map->addr;
+>   			*flags = avail->flags;
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>   			return 0;
+>   		}
+>   
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>   	}
+>   #endif
+>   
+> @@ -1438,15 +1475,15 @@ static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
+>   	struct vring_avail *avail;
+>   
+>   	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_AVAIL]);
+> +		vhost_vq_access_map_begin(vq);
+> +		map = vq->maps[VHOST_ADDR_AVAIL];
+>   		if (likely(map)) {
+>   			avail = map->addr;
+>   			*event = (__virtio16)avail->ring[vq->num];
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>   			return 0;
+>   		}
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>   	}
+>   #endif
+>   
+> @@ -1461,17 +1498,17 @@ static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
+>   	struct vring_used *used;
+>   
+>   	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>   
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_USED]);
+> +		map = vq->maps[VHOST_ADDR_USED];
+>   		if (likely(map)) {
+>   			used = map->addr;
+>   			*idx = used->idx;
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>   			return 0;
+>   		}
+>   
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>   	}
+>   #endif
+>   
+> @@ -1486,17 +1523,17 @@ static inline int vhost_get_desc(struct vhost_virtqueue *vq,
+>   	struct vring_desc *d;
+>   
+>   	if (!vq->iotlb) {
+> -		rcu_read_lock();
+> +		vhost_vq_access_map_begin(vq);
+>   
+> -		map = rcu_dereference(vq->maps[VHOST_ADDR_DESC]);
+> +		map = vq->maps[VHOST_ADDR_DESC];
+>   		if (likely(map)) {
+>   			d = map->addr;
+>   			*desc = *(d + idx);
+> -			rcu_read_unlock();
+> +			vhost_vq_access_map_end(vq);
+>   			return 0;
+>   		}
+>   
+> -		rcu_read_unlock();
+> +		vhost_vq_access_map_end(vq);
+>   	}
+>   #endif
+>   
+> @@ -1843,13 +1880,11 @@ static bool iotlb_access_ok(struct vhost_virtqueue *vq,
+>   #if VHOST_ARCH_CAN_ACCEL_UACCESS
+>   static void vhost_vq_map_prefetch(struct vhost_virtqueue *vq)
+>   {
+> -	struct vhost_map __rcu *map;
+> +	struct vhost_map *map;
+>   	int i;
+>   
+>   	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
+> -		rcu_read_lock();
+> -		map = rcu_dereference(vq->maps[i]);
+> -		rcu_read_unlock();
+> +		map = vq->maps[i];
+>   		if (unlikely(!map))
+>   			vhost_map_prefetch(vq, i);
+>   	}
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index a9a2a93857d2..f9e9558a529d 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -115,16 +115,17 @@ struct vhost_virtqueue {
+>   #if VHOST_ARCH_CAN_ACCEL_UACCESS
+>   	/* Read by memory accessors, modified by meta data
+>   	 * prefetching, MMU notifier and vring ioctl().
+> -	 * Synchonrized through mmu_lock (writers) and RCU (writers
+> -	 * and readers).
+> +	 * Synchonrized through mmu_lock (writers) and ref counters,
+> +	 * see vhost_vq_access_map_begin()/vhost_vq_access_map_end().
+>   	 */
+> -	struct vhost_map __rcu *maps[VHOST_NUM_ADDRS];
+> +	struct vhost_map *maps[VHOST_NUM_ADDRS];
+>   	/* Read by MMU notifier, modified by vring ioctl(),
+>   	 * synchronized through MMU notifier
+>   	 * registering/unregistering.
+>   	 */
+>   	struct vhost_uaddr uaddrs[VHOST_NUM_ADDRS];
+>   #endif
+> +	int ref;
+>   	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
+>   
+>   	struct file *kick;
