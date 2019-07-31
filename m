@@ -2,144 +2,93 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51278C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D860C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2996620659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C8B20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:46:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pjfmT0kN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbfGaOoC (ORCPT
+        id S1730005AbfGaOq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:44:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56606 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfGaOoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:44:01 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0072F882F5;
-        Wed, 31 Jul 2019 14:44:01 +0000 (UTC)
-Received: from [10.36.117.240] (ovpn-117-240.ams2.redhat.com [10.36.117.240])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 22FAE5C1B5;
-        Wed, 31 Jul 2019 14:43:58 +0000 (UTC)
-Subject: Re: [PATCH v1] drivers/base/memory.c: Don't store end_section_nr in
- memory blocks
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Oscar Salvador <osalvador@suse.de>
-References: <20190731122213.13392-1-david@redhat.com>
- <20190731124356.GL9330@dhcp22.suse.cz>
- <f0894c30-105a-2241-a505-7436bc15b864@redhat.com>
- <20190731132534.GQ9330@dhcp22.suse.cz>
- <58bd9479-051b-a13b-b6d0-c93aac2ed1b3@redhat.com>
- <20190731141411.GU9330@dhcp22.suse.cz>
- <c92a4d6f-b0f2-e080-5157-b90ab61a8c49@redhat.com>
- <20190731143714.GX9330@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <d9db33a5-ca83-13bd-5fcb-5f7d5b3c1bfb@redhat.com>
-Date:   Wed, 31 Jul 2019 16:43:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 31 Jul 2019 10:46:29 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38109 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728482AbfGaOq3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:46:29 -0400
+Received: by mail-io1-f65.google.com with SMTP id j6so17034051ioa.5
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:46:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OVbM3ywHXnfaXLqBHLumDjTwvKiP2anaixILYvBn/ng=;
+        b=pjfmT0kNj6Uqy/h+8/WX0HU1oAXn2oRKXIdhUHe4IZ2y9tFHrZED/lweo1b/cRpzAu
+         idCTfvQdx0X4j4gAoaTIvdCkse0FKv2ZP/nMGpEvdjB4FCdpbtSCe7YbbbrA7NfG4kgB
+         6tJs0JHORDFcqF9yUmWvwGlkVZTf7lFPuxi+OM100xLlwRDiOvY1zGtyXxJrNqMVKjTy
+         Sh4mX2HBTdxSw3G64Fi/PnSesG7Yz22B9o3S2QcDXBAfMDAbKi3fjQPg1HKM266NKtz7
+         DeKvT6dr4cOE1OkPu2qnqj8vl+krkBY8nCeb8pXZk+CMIp6EboJyNNksTUyTgnwSJOU3
+         d+WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OVbM3ywHXnfaXLqBHLumDjTwvKiP2anaixILYvBn/ng=;
+        b=AlyrD1vcmavKPPOXFADFHb5aTYbzY9KlJmPIeMvPb+hRFtsnImVa0g0YPQB8JmJYdM
+         w6Hm/mqt7cCAMeyrwmAaVxbfrb2F5tKp36/DcRaAwA1qKAfGWSaUz0M1MjQDgiuzQOSS
+         JYdAgdwftSITSMdq6AvOtkc6aa5el1KrKkTF1zpq1kuy8HAK0DN3LOMsNQjFi4KNfTfu
+         9VgzbMBwZu08c2lHGRyZ1tEkNPCfT6aLxy2/PydWBOxx76vAqlrMBrl6ecDocUuXoF1a
+         Jc0WZuQsRqYLgEwikxbwGZi8PhGSpoPba6b25wVksEUlp3CYiTYQekPM2Z/GhWvdrtX4
+         o0rA==
+X-Gm-Message-State: APjAAAV6aQ2FBNE406XH+KIZAXlrM6sRmrEA6IZTDYbwEOBK1SXRcqPY
+        cL/7+LGR1PgC2y+htWJ7ECdWqWpUxgxi8F/NmMIMow==
+X-Google-Smtp-Source: APXvYqxKYf0QIDVpvcoBYAjITw+kwzxhvEER2l33yz1T4bLAIqIHkcdAsy647W1OXK8CZ55vRav7zMW5fa7eD+/0o2c=
+X-Received: by 2002:a6b:4101:: with SMTP id n1mr87736036ioa.138.1564584387977;
+ Wed, 31 Jul 2019 07:46:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190731143714.GX9330@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 31 Jul 2019 14:44:01 +0000 (UTC)
+References: <0000000000004c2416058c594b30@google.com> <24282.1562074644@warthog.procyon.org.uk>
+ <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com> <20330.1564583454@warthog.procyon.org.uk>
+In-Reply-To: <20330.1564583454@warthog.procyon.org.uk>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 31 Jul 2019 16:46:15 +0200
+Message-ID: <CACT4Y+Y4cRgaRPJ_gz_53k85inDKq+X+bWmOTv1gPLo=Yod1=A@mail.gmail.com>
+Subject: Re: kernel BUG at net/rxrpc/local_object.c:LINE!
+To:     David Howells <dhowells@redhat.com>
+Cc:     syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.07.19 16:37, Michal Hocko wrote:
-> On Wed 31-07-19 16:21:46, David Hildenbrand wrote:
-> [...]
->>> Thinking about it some more, I believe that we can reasonably provide
->>> both APIs controlable by a command line parameter for backwards
->>> compatibility. It is the hotplug code to control sysfs APIs.  E.g.
->>> create one sysfs entry per add_memory_resource for the new semantic.
->>
->> Yeah, but the real question is: who needs it. I can only think about
->> some DIMM scenarios (some, not all). I would be interested in more use
->> cases. Of course, to provide and maintain two APIs we need a good reason.
-> 
-> Well, my 3TB machine that has 7 movable nodes could really go with less
-> than
-> $ find /sys/devices/system/memory -name "memory*" | wc -l
-> 1729>
+On Wed, Jul 31, 2019 at 4:30 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> > Re bisection, I don't know if there are some more subtle things as
+> > play (you are in the better position to judge that), but bisection log
+> > looks good, it tracked the target crash throughout and wasn't
+> > distracted by any unrelated bugs, etc. So I don't see any obvious
+> > reasons to not trust it.
+>
+> Can you turn on:
+>
+>         echo 1 > /sys/kernel/debug/tracing/events/rxrpc/rxrpc_local/enable
+>
+> and capture the trace log at the point it crashes?
 
-The question is if it would be sufficient to increase the memory block
-size even further for these kinds of systems (e.g., via a boot parameter
-- I think we have that on uv systems) instead of having blocks of
-different sizes. Say, 128GB blocks because you're not going to hotplug
-128MB DIMMs into such a system - at least that's my guess ;)
-
-> when it doesn't really make any sense to offline less than a
-> hotremovable entity which is the whole node effectivelly. I have seen
-> reports where a similarly large machine chocked on boot just because of
-> too many udev events...>
-> In other words allowing smaller granularity is a nice toy but real
-> usecases usually work with the whole hotplugable entity (e.g. the whole
-> ACPI container).
-
--- 
-
-Thanks,
-
-David / dhildenb
+Please send a patch for testing that enables this tracing
+unconditionally. This should have the same effect. There is no way to
+hook into a middle of the automated process and arbitrary tune things.
