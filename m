@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88534C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B802DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F84F2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCAC2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="kM1i0F40"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="V5rpp3X2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388580AbfGaPJv (ORCPT
+        id S2388541AbfGaPI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:09:51 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34512 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388543AbfGaPI1 (ORCPT
+        Wed, 31 Jul 2019 11:08:26 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37825 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388451AbfGaPIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:08:27 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s49so31197576edb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:26 -0700 (PDT)
+        Wed, 31 Jul 2019 11:08:24 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w13so66060787eds.4
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:08:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=D3iLJ7KF8Vm9odDmu+BTFZ/KOQRQtwHyPsHUVXUW2iI=;
-        b=kM1i0F40FYXfEMcdQiR9VUZLV2aBUr0DIlco9iB3hlWgYlqGoH3YhFqThyiuG3GlhU
-         MICJOrT8oqR+53hRqgv3cF8csRqL1xVpyX6tD/ZJaUBHXHN9slodEDUAQFc2ndeYmsWR
-         WW3A0qapPQ7CP1xULEMwz3e4zS5z/Rmun6q/0nEmdJiaXIJHY6yN81AnytapRernvBrE
-         raTbz2gJS/FTTNoeLLnIs+MXpv+7iucyiiIu1zFPo09iRbaEfSGAfhH+M11KFAhMEC6e
-         NwTMUxuK0IGQ7DtfynJRVOV/piQIKxKjIlGe+MhgETY+7kSa+fXty72q0sWznKXB/EmX
-         L2Jw==
+        bh=L4ZEjLjovYwhlc3sfcyK0re0l8xj15Oya4gREJZsXus=;
+        b=V5rpp3X2+p+VVm7FssSRodlU6DS9SwQLhXjimNRTkFMkTWsFbd7HkizFtVyE1zIrzy
+         fPAuOPVVJeqlsLEhPRbCqOeRCbvW4JadhbicVgcow8yaygfiy6y17rqCfH03Rty6YhXj
+         6s+mjRzfpE3alGhAXjgL2hhfWjPdDRz/hcRhXF1/iJC59vgvEz7fzn3mLdZt0saq8R+2
+         YGro+1SRX76SodqfwZnA/6i9jWHWw9pBsAVy22+H2tRm7Z7bX/jkLZMKy9nrKbtBjbdn
+         RE6jWJDgv80mFQO3CN2q3IrNNli2rX+pB/Xw9tJK/WnQpL2UfFVX1jHzcoNvANMfNeEh
+         hhxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=D3iLJ7KF8Vm9odDmu+BTFZ/KOQRQtwHyPsHUVXUW2iI=;
-        b=hyLowOD1tUbDItItNnD49O0qoYTB+ttGLrXK7vXD3WrsAfGoZ7JuE0rS/Whap/LCOk
-         XaANUv4deZyYN2Hq+eDQtkbnfLopIoYlcYB5r0YTUJ2Ri+7EMackJBWz36dXc8/AD2X4
-         E3gBWws0u3+t14s8soUSnO2NVl1C6f1FSCxEtcFuwaZ+UlSIgJjNz16McUsdliMgOGGh
-         R0xWX6edKZVSjpxTWUtp4FckkkLCaxYw3FdbfFZryBtgzYCBtnb095rcyOqPj+ZaPVkG
-         4N8Ak3iftHzOsyJKOT0zvyz5mL5gykt1aA8XYEbuFGSFbHSXvo2K4dY5PIHb8h9rDbWy
-         oLjQ==
-X-Gm-Message-State: APjAAAXofnuXWD25idALbkgaPtUilwGgg6p9MUJIu52OckAwx28ezXN/
-        zBi1ixaBA285KWrcNHGF8K0=
-X-Google-Smtp-Source: APXvYqzHXFkffBxAenDjJHEoVzdmjQiN5+u8mCxxAUf8k5rkMpqzlIwg7G5dir5Kcyl0q83T3wGkPw==
-X-Received: by 2002:a17:906:1496:: with SMTP id x22mr96005472ejc.191.1564585705643;
-        Wed, 31 Jul 2019 08:08:25 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id u7sm12521820ejm.48.2019.07.31.08.08.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=L4ZEjLjovYwhlc3sfcyK0re0l8xj15Oya4gREJZsXus=;
+        b=iK3+6rdLDWFcU4Y+9Ldgfx86dRbLn0Vu8MUoy84fWyBdxw023Y7mnUGUFlYXvhuYvM
+         zdAJdFMi7Ckn/2UymgiDMxCwoXWSoQ49GUDTv8/qkgXwbpN9InJsWOEgD0SJ99u6F8X2
+         ye3p4qqIsgHmlxJ9qnckj7n1LBzk0h5RNMtjYYTvz0tsDC5OVa0aaEdluxxJjGuAhB7K
+         mxVzvIGl1stQK1XhYoy9ObDa0VKB5WDffA4bJnfUqcbe2NTOpZdk+UiMtU0tW+epS41a
+         E1gbbGSNOVUYT3osCGe8rSaMo3C8+k8kWP863NmltPvWoNnwTdN6Bj/fie7oihvlhFtR
+         i/Cw==
+X-Gm-Message-State: APjAAAXAygn1CHm3966E+NNd5aHJT/Ngl4Nbuwx79sFv+EpLDqBBMTn/
+        9G3+w2ViGPgTrck8Vj6HBCU=
+X-Google-Smtp-Source: APXvYqxJ9S0tGP2IpyXLxIjktlIQlFGvLsty4aUseBEocKbxQZsdfbX5PxHe1B3ZlzdQoz5XJNRh9g==
+X-Received: by 2002:a17:906:4d88:: with SMTP id s8mr92464687eju.225.1564585702235;
         Wed, 31 Jul 2019 08:08:22 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id q11sm268380ejt.74.2019.07.31.08.08.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 08:08:19 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 3A8CF101322; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+        id 2CA2A101320; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,9 +75,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 11/59] x86/mm: Detect MKTME early
-Date:   Wed, 31 Jul 2019 18:07:25 +0300
-Message-Id: <20190731150813.26289-12-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 09/59] x86/mm: Store bitmask of the encryption algorithms supported by MKTME
+Date:   Wed, 31 Jul 2019 18:07:23 +0300
+Message-Id: <20190731150813.26289-10-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,51 +88,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to know the number of KeyIDs before page_ext is initialized.
-We are going to use page_ext to store KeyID and it would be handly to
-avoid page_ext allocation if there's no MKMTE in the system.
-
-page_ext initialization happens before full CPU initizliation is complete.
-Move detect_tme() call to early_init_intel().
+Store bitmask of the supported encryption algorithms in 'mktme_algs'.
+This will be used by key management service.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/kernel/cpu/intel.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/mktme.h | 2 ++
+ arch/x86/kernel/cpu/intel.c  | 6 +++++-
+ arch/x86/mm/mktme.c          | 2 ++
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
+index b9ba2ea5b600..42a3b1b44669 100644
+--- a/arch/x86/include/asm/mktme.h
++++ b/arch/x86/include/asm/mktme.h
+@@ -10,6 +10,8 @@ extern int __mktme_keyid_shift;
+ extern int mktme_keyid_shift(void);
+ extern int __mktme_nr_keyids;
+ extern int mktme_nr_keyids(void);
++extern unsigned int mktme_algs;
++
+ #else
+ #define mktme_keyid_mask()	((phys_addr_t)0)
+ #define mktme_nr_keyids()	0
 diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 991bdcb2a55a..4c2d70287eb4 100644
+index 7ba44825be42..991bdcb2a55a 100644
 --- a/arch/x86/kernel/cpu/intel.c
 +++ b/arch/x86/kernel/cpu/intel.c
-@@ -187,6 +187,8 @@ static bool bad_spectre_microcode(struct cpuinfo_x86 *c)
- 	return false;
- }
+@@ -553,6 +553,8 @@ static void detect_vmx_virtcap(struct cpuinfo_x86 *c)
+ #define TME_ACTIVATE_CRYPTO_ALGS(x)	((x >> 48) & 0xffff)	/* Bits 63:48 */
+ #define TME_ACTIVATE_CRYPTO_AES_XTS_128	1
  
-+static void detect_tme(struct cpuinfo_x86 *c);
++#define TME_ACTIVATE_CRYPTO_KNOWN_ALGS	TME_ACTIVATE_CRYPTO_AES_XTS_128
 +
- static void early_init_intel(struct cpuinfo_x86 *c)
+ /* Values for mktme_status (SW only construct) */
+ #define MKTME_ENABLED			0
+ #define MKTME_DISABLED			1
+@@ -596,7 +598,7 @@ static void detect_tme(struct cpuinfo_x86 *c)
+ 		pr_warn("x86/tme: Unknown policy is active: %#llx\n", tme_policy);
+ 
+ 	tme_crypto_algs = TME_ACTIVATE_CRYPTO_ALGS(tme_activate);
+-	if (!(tme_crypto_algs & TME_ACTIVATE_CRYPTO_AES_XTS_128)) {
++	if (!(tme_crypto_algs & TME_ACTIVATE_CRYPTO_KNOWN_ALGS)) {
+ 		pr_err("x86/mktme: No known encryption algorithm is supported: %#llx\n",
+ 				tme_crypto_algs);
+ 		mktme_status = MKTME_DISABLED;
+@@ -631,6 +633,8 @@ static void detect_tme(struct cpuinfo_x86 *c)
+ 		__mktme_keyid_mask = GENMASK_ULL(c->x86_phys_bits - 1, mktme_keyid_shift());
+ 		physical_mask &= ~mktme_keyid_mask();
+ 
++		tme_crypto_algs = TME_ACTIVATE_CRYPTO_ALGS(tme_activate);
++		mktme_algs = tme_crypto_algs & TME_ACTIVATE_CRYPTO_KNOWN_ALGS;
+ 	} else {
+ 		/*
+ 		 * Reset __PHYSICAL_MASK.
+diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
+index 0f48ef2720cc..755afc6935b5 100644
+--- a/arch/x86/mm/mktme.c
++++ b/arch/x86/mm/mktme.c
+@@ -25,3 +25,5 @@ int mktme_nr_keyids(void)
  {
- 	u64 misc_enable;
-@@ -338,6 +340,9 @@ static void early_init_intel(struct cpuinfo_x86 *c)
- 	 */
- 	if (detect_extended_topology_early(c) < 0)
- 		detect_ht_early(c);
+ 	return __mktme_nr_keyids;
+ }
 +
-+	if (cpu_has(c, X86_FEATURE_TME))
-+		detect_tme(c);
- }
- 
- #ifdef CONFIG_X86_32
-@@ -793,9 +798,6 @@ static void init_intel(struct cpuinfo_x86 *c)
- 	if (cpu_has(c, X86_FEATURE_VMX))
- 		detect_vmx_virtcap(c);
- 
--	if (cpu_has(c, X86_FEATURE_TME))
--		detect_tme(c);
--
- 	init_intel_misc_features(c);
- }
- 
++unsigned int mktme_algs;
 -- 
 2.21.0
 
