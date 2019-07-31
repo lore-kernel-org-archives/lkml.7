@@ -2,191 +2,165 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C001C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD17C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76212206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489D1206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 08:50:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bc7NcOiJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387447AbfGaIts (ORCPT
+        id S1727702AbfGaIuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 04:49:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54276 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725209AbfGaItr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:49:47 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7ED5D81DF1;
-        Wed, 31 Jul 2019 08:49:46 +0000 (UTC)
-Received: from [10.72.12.51] (ovpn-12-51.pek2.redhat.com [10.72.12.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DEDA5D9C5;
-        Wed, 31 Jul 2019 08:49:34 +0000 (UTC)
-Subject: Re: WARNING in __mmdrop
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-References: <5cc94f15-b229-a290-55f3-8295266edb2b@redhat.com>
- <20190726082837-mutt-send-email-mst@kernel.org>
- <ada10dc9-6cab-e189-5289-6f9d3ff8fed2@redhat.com>
- <aaefa93e-a0de-1c55-feb0-509c87aae1f3@redhat.com>
- <20190726094756-mutt-send-email-mst@kernel.org>
- <0792ee09-b4b7-673c-2251-e5e0ce0fbe32@redhat.com>
- <20190729045127-mutt-send-email-mst@kernel.org>
- <4d43c094-44ed-dbac-b863-48fc3d754378@redhat.com>
- <20190729104028-mutt-send-email-mst@kernel.org>
- <96b1d67c-3a8d-1224-e9f0-5f7725a3dc10@redhat.com>
- <20190730110633-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <421a1af6-df06-e4a6-b34f-526ac123bc4a@redhat.com>
-Date:   Wed, 31 Jul 2019 16:49:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 04:50:25 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40792 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfGaIuY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 04:50:24 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r1so68708061wrl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 01:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NwsVvn8wa45bBL0kmpXm8dE+dK3L/asxmBE1PcKU6TI=;
+        b=Bc7NcOiJ5ur5yWb8Vm1EekyHADoSSZ4yQYMor9UK1cjaU5nrLpgp0SmtmLXSWoCPEN
+         oiRopDXzheg2qnqg1lVm22qMA/cI2erdJbrdYbrVe17W0y9dIu+Ih2t/Ld1BE+guR+Ki
+         aIz8ZqRujPKICvzrT05iXLF7sRshRT+8Oc+BH25l24EKgl1B7WN8uDQuGsaoEWzbHBsI
+         gFimbd+shhkf9k9zlgB6v/lUSa4eYsxuPTXBSu6uP3mcrG8UOYtWrUvbmSkr/TRMBDtq
+         hAeJNzNuvqslO+6Od+YCCQSnMgShnD95JykVdPMvoRy075nos6fgDhqcH7qQxQKrmNWL
+         sipg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NwsVvn8wa45bBL0kmpXm8dE+dK3L/asxmBE1PcKU6TI=;
+        b=iX0CWRdObfH87oYKSmNGupREp/ztcTz1+T0xZBnxBrAdHTA0U6VC1xKcAhnnLm6qQY
+         KNI2iCZ4t5NDIE31dCTd53c1Mwepb6dSIsLR0JMF9FGXRbv+NtBlRx9uaXEaIzPLU7XR
+         6MMN4dE+TXQ+ryJtDfeZSCw9KXDP78xlmiI/fa+YYrYyTC0wpUe1GJa999LTJD+TkAUi
+         h1FMCN8I/tZEH5L+av7aejWpcl8kKcVynnQpZBsHqLwG6x/Cp4sK6TN3anYVLomjdK+U
+         5xgRkksyXvrD2jYiswa+LWGGEOCyfBlDUs3Q/CBp6Do+g4GyWgzZhkQXrq9Qad13dwAt
+         VNPw==
+X-Gm-Message-State: APjAAAXcUEOJ/7/hmeKNY/oybuBlun94GlYerrqzM5ATPuYmewSDUeFZ
+        nG7r6C3+1/Tgmdti2wVtNNhpNL3JhEuI3+BOhaHuWA==
+X-Google-Smtp-Source: APXvYqzdMl1kziBM4CxJXiGSgYq/6b+CB7ylpvJ4dhXM4kEs2n2F5RQ+y+S2b/osFdyjAZvY3q7a+1Pd5rp4RjJGFwE=
+X-Received: by 2002:a5d:46cf:: with SMTP id g15mr137884595wrs.93.1564563022820;
+ Wed, 31 Jul 2019 01:50:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190730110633-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 31 Jul 2019 08:49:47 +0000 (UTC)
+References: <1564482824-26581-1-git-send-email-iuliana.prodan@nxp.com>
+ <1564482824-26581-3-git-send-email-iuliana.prodan@nxp.com>
+ <CAKv+Gu_VEEZFPpJfv2JbB02vhmc_1_wpxNDBHf__pv-t7BvN0A@mail.gmail.com> <VI1PR04MB4445AABC9062673BD4FA3CEF8CDF0@VI1PR04MB4445.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB4445AABC9062673BD4FA3CEF8CDF0@VI1PR04MB4445.eurprd04.prod.outlook.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 31 Jul 2019 11:50:11 +0300
+Message-ID: <CAKv+Gu8KcL_Q_C+euZ9DOT7VEX68CJZJLrT8hxeCiiiEkxQ=jQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] crypto: aes - helper function to validate key
+ length for AES algorithms
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/7/30 下午11:08, Michael S. Tsirkin wrote:
-> On Tue, Jul 30, 2019 at 03:44:47PM +0800, Jason Wang wrote:
->> On 2019/7/29 下午10:44, Michael S. Tsirkin wrote:
->>> On Mon, Jul 29, 2019 at 10:24:43PM +0800, Jason Wang wrote:
->>>> On 2019/7/29 下午4:59, Michael S. Tsirkin wrote:
->>>>> On Mon, Jul 29, 2019 at 01:54:49PM +0800, Jason Wang wrote:
->>>>>> On 2019/7/26 下午9:49, Michael S. Tsirkin wrote:
->>>>>>>>> Ok, let me retry if necessary (but I do remember I end up with deadlocks
->>>>>>>>> last try).
->>>>>>>> Ok, I play a little with this. And it works so far. Will do more testing
->>>>>>>> tomorrow.
->>>>>>>>
->>>>>>>> One reason could be I switch to use get_user_pages_fast() to
->>>>>>>> __get_user_pages_fast() which doesn't need mmap_sem.
->>>>>>>>
->>>>>>>> Thanks
->>>>>>> OK that sounds good. If we also set a flag to make
->>>>>>> vhost_exceeds_weight exit, then I think it will be all good.
->>>>>> After some experiments, I came up two methods:
->>>>>>
->>>>>> 1) switch to use vq->mutex, then we must take the vq lock during range
->>>>>> checking (but I don't see obvious slowdown for 16vcpus + 16queues). Setting
->>>>>> flags during weight check should work but it still can't address the worst
->>>>>> case: wait for the page to be swapped in. Is this acceptable?
->>>>>>
->>>>>> 2) using current RCU but replace synchronize_rcu() with vhost_work_flush().
->>>>>> The worst case is the same as 1) but we can check range without holding any
->>>>>> locks.
->>>>>>
->>>>>> Which one did you prefer?
->>>>>>
->>>>>> Thanks
->>>>> I would rather we start with 1 and switch to 2 after we
->>>>> can show some gain.
->>>>>
->>>>> But the worst case needs to be addressed.
->>>> Yes.
->>>>
->>>>
->>>>> How about sending a signal to
->>>>> the vhost thread?  We will need to fix up error handling (I think that
->>>>> at the moment it will error out in that case, handling this as EFAULT -
->>>>> and we don't want to drop packets if we can help it, and surely not
->>>>> enter any error states.  In particular it might be especially tricky if
->>>>> we wrote into userspace memory and are now trying to log the write.
->>>>> I guess we can disable the optimization if log is enabled?).
->>>> This may work but requires a lot of changes.
->>> I agree.
->>>
->>>> And actually it's the price of
->>>> using vq mutex.
->>> Not sure what's meant here.
->>
->> I mean if we use vq mutex, it means the critical section was increased and
->> we need to deal with swapping then.
->>
->>
->>>> Actually, the critical section should be rather small, e.g
->>>> just inside memory accessors.
->>> Also true.
->>>
->>>> I wonder whether or not just do synchronize our self like:
->>>>
->>>> static void inline vhost_inc_vq_ref(struct vhost_virtqueue *vq)
->>>> {
->>>>           int ref = READ_ONCE(vq->ref);
->>>>
->>>>           WRITE_ONCE(vq->ref, ref + 1);
->>>> smp_rmb();
->>>> }
->>>>
->>>> static void inline vhost_dec_vq_ref(struct vhost_virtqueue *vq)
->>>> {
->>>>           int ref = READ_ONCE(vq->ref);
->>>>
->>>> smp_wmb();
->>>>           WRITE_ONCE(vq->ref, ref - 1);
->>>> }
->>>>
->>>> static void inline vhost_wait_for_ref(struct vhost_virtqueue *vq)
->>>> {
->>>>           while (READ_ONCE(vq->ref));
->>>> mb();
->>>> }
->>> Looks good but I'd like to think of a strategy/existing lock that let us
->>> block properly as opposed to spinning, that would be more friendly to
->>> e.g. the realtime patch.
->>
->> Does it make sense to disable preemption in the critical section? Then we
->> don't need to block and we have a deterministic time spent on memory
->> accssors?
-> Hmm maybe. I'm getting really nervious at this point - we
-> seem to be using every trick in the book.
+On Wed, 31 Jul 2019 at 11:35, Iuliana Prodan <iuliana.prodan@nxp.com> wrote:
+>
+> On 7/31/2019 8:33 AM, Ard Biesheuvel wrote:
+> > On Tue, 30 Jul 2019 at 13:33, Iuliana Prodan <iuliana.prodan@nxp.com> wrote:
+> >>
+> >> Add inline helper function to check key length for AES algorithms.
+> >> The key can be 128, 192 or 256 bits size.
+> >> This function is used in the generic aes implementation.
+> >>
+> >> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+> >> ---
+> >>   include/crypto/aes.h | 17 +++++++++++++++++
+> >>   lib/crypto/aes.c     |  8 ++++----
+> >>   2 files changed, 21 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/include/crypto/aes.h b/include/crypto/aes.h
+> >> index 8e0f4cf..8ee07a8 100644
+> >> --- a/include/crypto/aes.h
+> >> +++ b/include/crypto/aes.h
+> >> @@ -31,6 +31,23 @@ struct crypto_aes_ctx {
+> >>   extern const u32 crypto_ft_tab[4][256] ____cacheline_aligned;
+> >>   extern const u32 crypto_it_tab[4][256] ____cacheline_aligned;
+> >>
+> >> +/*
+> >> + * validate key length for AES algorithms
+> >> + */
+> >> +static inline int crypto_aes_check_keylen(unsigned int keylen)
+> >
+> > Please rename this to aes_check_keylen()
+> >
+> I just renamed it to crypto_, the first version was check_aes_keylen
+> - see https://patchwork.kernel.org/patch/11058869/.
+> I think is better to keep the helper functions with crypto_, as most of
+> these type of functions, in crypto, have this prefix.
 >
 
-Yes, looking at the synchronization implemented by other MMU notifiers. 
-Vhost is even the simplest.
+The AES library consists of
+
+aes_encrypt
+aes_decrypt
+aes_expandkey
+
+and has no dependencies on the crypto API, which is why I omitted the
+crypto_ prefix from the identifiers. Please do the same for this
+function.
+.
 
 
->>>> Or using smp_load_acquire()/smp_store_release() instead?
->>>>
->>>> Thanks
->>> These are cheaper on x86, yes.
->>
->> Will use this.
->>
->> Thanks
->>
->>
-> This looks suspiciously like a seqlock though.
-> Can that be used somehow?
+> >> +{
+> >> +       switch (keylen) {
+> >> +       case AES_KEYSIZE_128:
+> >> +       case AES_KEYSIZE_192:
+> >> +       case AES_KEYSIZE_256:
+> >> +               break;
+> >> +       default:
+> >> +               return -EINVAL;
+> >> +       }
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >>   int crypto_aes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+> >>                  unsigned int key_len);
+> >>
+> >> diff --git a/lib/crypto/aes.c b/lib/crypto/aes.c
+> >> index 4e100af..3407b01 100644
+> >> --- a/lib/crypto/aes.c
+> >> +++ b/lib/crypto/aes.c
+> >> @@ -187,11 +187,11 @@ int aes_expandkey(struct crypto_aes_ctx *ctx, const u8 *in_key,
+> >>   {
+> >>          u32 kwords = key_len / sizeof(u32);
+> >>          u32 rc, i, j;
+> >> +       int err;
+> >>
+> >> -       if (key_len != AES_KEYSIZE_128 &&
+> >> -           key_len != AES_KEYSIZE_192 &&
+> >> -           key_len != AES_KEYSIZE_256)
+> >> -               return -EINVAL;
+> >> +       err = crypto_aes_check_keylen(key_len);
+> >> +       if (err)
+> >> +               return err;
+> >>
+> >>          ctx->key_length = key_len;
+> >>
+> >> --
+> >> 2.1.0
+> >>
+> >
 >
-
-seqlock does not provide a way to synchronize with readers. But I did 
-borrow some ideas from seqlock and post a new version.
-
-Please review.
-
-Thanks
-
