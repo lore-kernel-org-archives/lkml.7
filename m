@@ -2,137 +2,97 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A108BC32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0841C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7702620659
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BB2216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n3A6uLsc"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FBICxLxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbfGaV7f (ORCPT
+        id S1731102AbfGaWGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:59:35 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33798 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfGaV7f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:59:35 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b13so32614971pfo.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 14:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:from:to:subject:user-agent:date;
-        bh=IlRwSSoXPkPO8ZlfGQyrA2PVh0oI2jbeG8M+xqYWNuc=;
-        b=n3A6uLscWmFreF939tyOlPubPIYDf44Y3GSbMd5VGwmGbOLz9PMLsYyy6hnO/F5hv7
-         HRy2Eq8dQckDsTk18S0fC9yE3YBQk2EeHDpNnOb5HFGvC/FFwabnJ4NyZjZOxhGFbpDJ
-         KsRbZRE0bAvaZy7+ZMWdBaHcQQyv7phuAIuXk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
-         :user-agent:date;
-        bh=IlRwSSoXPkPO8ZlfGQyrA2PVh0oI2jbeG8M+xqYWNuc=;
-        b=MqVZmCoTgEkOS24ymSAHjbVy2qastS011OG5/gbyu3vXBtbHG4PwLYEYlbtsqpPnA4
-         f+kkmbCXE1tfaBjwJz7lx9HVYVNF9yf39Cxg2/bp1NEnAi9nAX9ufirRmGutnN4bYyUO
-         7H2UC7sfwnA/vuFhmV+d6wVlECiO2qUN4Z66uI9SLDcYEKuD/g7AI/rjgUCR1+nfk7kz
-         1h5LzfOjc/cKolQ2cpa17D6gz5Hff6AgbyVCE96BaxEyfJSE5J74e2bBl1heyd7mBKs7
-         Bjn5i77CmuvCF+CG64jHpRJC4AFm04xxfByveQFthOiPSLuli36fDhDb7VS0S5asKCTZ
-         yy/A==
-X-Gm-Message-State: APjAAAV1wwBOiSaodE/gi4qR93gXThfJNi1BjP2DNYNYnhyOjyn+Bd4Y
-        pC7HFsa1Zwa1OKF8CDYETf3oJA==
-X-Google-Smtp-Source: APXvYqxRyvbUZhJsewElOw/jGc81nEj+n2gFMTff3FnLVzjQbJ+uJcjTMouUatne6W5Kncq5F9kkXQ==
-X-Received: by 2002:a63:184b:: with SMTP id 11mr55358650pgy.112.1564610374310;
-        Wed, 31 Jul 2019 14:59:34 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i14sm108093300pfk.0.2019.07.31.14.59.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 14:59:33 -0700 (PDT)
-Message-ID: <5d420f45.1c69fb81.35877.3d86@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 31 Jul 2019 18:06:44 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60545 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728843AbfGaWGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 18:06:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zSFF52Pfz9s3Z;
+        Thu,  1 Aug 2019 08:06:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564610801;
+        bh=oOJoFJxl13f9yQkTvDJjcuS7iKTNs2x5YbEE9xHPpzw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FBICxLxNpPHy2xAOd72h3JQ+oyelUwrlBZYK1gYG3TM2YOyf6yf0kv8ePJBRZEghS
+         Tfn8HLsJuL2bv8XhR+9zeDUaQk19vioEfEAIMLjlu4fXuxeJ694CjuJ+3hBaNZ4Wxl
+         qe4z4wskPPoGUvmZfdjXg/R8oLy28Dfh1jOpSD8+JlGekxZ+b3a2zX4DHTNZIqy07n
+         mJ8B1r9FdjjrFZGkNvpcLQrfowxGWmnD5n0Aqnw7SJjDq76BgA2WQATdklNuwrOcX1
+         uziBCsQjeLuhyIeYSS3LwXCxxNL9vS06Krr8Hbv4bG/SaSYES8TGdkluL3ekYlV+41
+         zp4r2edWTsY1w==
+Date:   Thu, 1 Aug 2019 08:06:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the arm64-fixes tree
+Message-ID: <20190801080621.18868050@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190731215514.212215-1-trong@android.com>
-References: <20190731215514.212215-1-trong@android.com>
-Cc:     rafael@kernel.org, hridya@google.com, sspatil@google.com,
-        kaleshsingh@google.com, ravisadineni@chromium.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        kernel-team@android.com, Tri Vo <trong@android.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Tri Vo <trong@android.com>, gregkh@linuxfoundation.org,
-        rjw@rjwysocki.net, viresh.kumar@linaro.org
-Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-User-Agent: alot/0.8.1
-Date:   Wed, 31 Jul 2019 14:59:32 -0700
+Content-Type: multipart/signed; boundary="Sig_/bNGeYCDyOY0W9=mFDxre+bP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Tri Vo (2019-07-31 14:55:14)
-> +/**
-> + * wakeup_source_sysfs_add - Add wakeup_source attributes to sysfs.
-> + * @parent: Device given wakeup source is associated with (or NULL if vi=
-rtual).
-> + * @ws: Wakeup source to be added in sysfs.
-> + */
-> +int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source =
-*ws)
-> +{
-> +       struct device *dev;
-> +       int id;
-> +
-> +       id =3D ida_alloc(&wakeup_ida, GFP_KERNEL);
-> +       if (id < 0)
-> +               return id;
-> +       ws->id =3D id;
-> +
-> +       dev =3D device_create_with_groups(wakeup_class, parent, MKDEV(0, =
-0), ws,
-> +                                       wakeup_source_groups, "ws%d",
+--Sig_/bNGeYCDyOY0W9=mFDxre+bP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I thought the name was going to still be 'wakeupN'?
+Hi all,
 
-> +                                       ws->id);
-> +       if (IS_ERR(dev)) {
-> +               ida_free(&wakeup_ida, ws->id);
-> +               return PTR_ERR(dev);
-> +       }
-> +
-> +       ws->dev =3D dev;
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_source_sysfs_add);
-> +
-> +/**
-> + * wakeup_source_sysfs_remove - Remove wakeup_source attributes from sys=
-fs.
-> + * @ws: Wakeup source to be removed from sysfs.
-> + */
-> +void wakeup_source_sysfs_remove(struct wakeup_source *ws)
-> +{
-> +       device_unregister(ws->dev);
-> +       ida_simple_remove(&wakeup_ida, ws->id);
+In commit
 
-Should be ida_free()?
+  97d5db366224 ("arm64: Lower priority mask for GIC_PRIO_IRQON")
 
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_source_sysfs_remove);
-> +
-> +static int __init wakeup_sources_sysfs_init(void)
-> +{
-> +       wakeup_class =3D class_create(THIS_MODULE, "wakeup");
-> +
-> +       return PTR_ERR_OR_ZERO(wakeup_class);
-> +}
-> +
-> +postcore_initcall(wakeup_sources_sysfs_init);
+Fixes tag
 
-Style nitpick: Stick the initcall to the function it calls by dropping
-the extra newline between them.
+  Fixes: bd82d4bd21880b7c ("arm64: Fix incorrect irqflag restore for
 
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/bNGeYCDyOY0W9=mFDxre+bP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1CEN0ACgkQAVBC80lX
+0GyIOwf8DQXnq1ik65qSHmCxITMfmtJUEi95+ulWnDajaBJYWBVRYVy4hf55GYoi
+aZSONjZ2idKiHOJBwBmexaT5Qa2oJiAZ0F5468wgHpL22iX7Zfxrw/psJcl6lJkZ
+Cdl5mJC1T29tscH+/LW5KuJqllR/dVWgcKnBaympe36IWGFrD10R6FuYShHGFHe2
+aWKPi7mqC/t2IrWbaVH28PBWbEJy962H3X2MHaj38Urw+253pe8lQgC3dN7XomKC
+B0eDsJLBONUZDNjspgRnsrYt/9RzKoHos5XbOFTsCerKbaiYx4bVkknZNi0hgJAW
+/iVjjW9zBH/GDeQnyhjvtRRHAhp2Aw==
+=gjiu
+-----END PGP SIGNATURE-----
+
+--Sig_/bNGeYCDyOY0W9=mFDxre+bP--
