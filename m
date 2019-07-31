@@ -2,133 +2,220 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A25C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03264C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FA2206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D75208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8cVLqui"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="oLYDLyPe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbfGaPSs (ORCPT
+        id S1729137AbfGaPS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:18:48 -0400
-Received: from mail-io1-f41.google.com ([209.85.166.41]:33702 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728226AbfGaPSp (ORCPT
+        Wed, 31 Jul 2019 11:18:59 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37152 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728916AbfGaPSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:18:45 -0400
-Received: by mail-io1-f41.google.com with SMTP id z3so18215577iog.0;
-        Wed, 31 Jul 2019 08:18:45 -0700 (PDT)
+        Wed, 31 Jul 2019 11:18:55 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w13so66092487eds.4
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:18:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=xuzQG46X17DsEpMfhQGwH6+7cSvNDOWNUULAqRblVrE=;
-        b=G8cVLquixj9RJ5F5DWhx6mOs8B+caqB1IGByYL8abw/1gBpACEU5BpYF8+NgotXC0c
-         kKFV0rfirAAyP1gXl5HsIPjwuIAgD6W3pwYE37ceM86I+WBcmmGB6FALWXa2pbTFhsAI
-         j9dMpX123uZAoJktmdulPiM/Im15dZjEJR/gEkbqmrdlYkk/cNQXSuvH79gDb63wb7jC
-         DR10MLq6Q44IP34Qg1k00FENeVQ374/hDv78ASzDgvMq4m6w4lZL1yBwTpb4b0IS0pbT
-         AGIOY0ljrVqg9Wpfg2MptFcrVEB9coViK9KJnyEEB7gI5WHMvEzhmUNPCPqQnOxL+dVB
-         h/9A==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=PzedmcWsRc3DhudY/wiWcVyq0AAagaASN0DGAs1EUfk=;
+        b=oLYDLyPe+JzY2m1J7wjX7AgBe2E4rUQv0fXNMOTxiG0nu3Kabo9U15Ufg7K6WUQgmi
+         RNNtxu0DlWJ+voFj2zV59ecQN7UXfIGdJz6l2QQg7hl1DF1htbBcFoFM/zAI2mPjcI1U
+         l3fEHvv0/1gka708wHD2qXwLZrc051+nm/YjhW0tIhCa72L/Tien3Zer+cqAIsJMVqNK
+         L0WPnYRQdIixCyrAGbQRcVHhSuhtXWLR41Rx6IQOFrIz+x0hmONqrQ/gZtqcXxab8960
+         yeuaFiFWFODRPxwK1POFLi1ZUqFHAQQefGlgCb9xVI6pv/BL6bFoNByecBEofA/OdSSY
+         7nrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xuzQG46X17DsEpMfhQGwH6+7cSvNDOWNUULAqRblVrE=;
-        b=YWerkMsG+rUekFLSvsTPMqcF7iX/uuG9UrH9Dgb3i2S2CYx8/5ujPxYyJUSZGWZ6PV
-         AuBoePJ8aPJ9MKiUofPKpuRHdOt0bl8KRClmeZdVPtm5jk9XuADbdjIRYew5xCyFR7kH
-         /Al+KffoqSVPrYxm3wXnQ00qVUoi5dLW753h1PB4Fmuy5TBkMU8XHO2GRMrPIVA/03/a
-         Gwy8xZFGPJZUGaIG362Jo/2fmK2+UmPkjHiUqdmRxjVJWjBIAzKpNP6NSpAwq8txLx0O
-         +wOoD1bFvn0e0Xol2O/hnXpQd+RebdZOlxgtBAMLxSDqoSmsnWBVN5lPuVNPR9exN771
-         mqTw==
-X-Gm-Message-State: APjAAAXPGnj5wXpfXiGBxXwLu4wQRS6I9nVE5KlRYwftqmsB4vf1Z48b
-        PvWqJzwMKE1G3GdG7UY49N0QrcDK
-X-Google-Smtp-Source: APXvYqxOFT93yS6bZ+rjOjuZjbsCKjPMDY24dDZN+q//o80Gi+2JowsiHkq+n8GrBvsuD0LMbsA7dg==
-X-Received: by 2002:a5d:8d12:: with SMTP id p18mr1923906ioj.251.1564585996161;
-        Wed, 31 Jul 2019 08:13:16 -0700 (PDT)
-Received: from ?IPv6:2601:284:8200:5cfb:d4eb:7c00:40f8:97e? ([2601:284:8200:5cfb:d4eb:7c00:40f8:97e])
-        by smtp.googlemail.com with ESMTPSA id t4sm51695019iop.0.2019.07.31.08.13.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=PzedmcWsRc3DhudY/wiWcVyq0AAagaASN0DGAs1EUfk=;
+        b=p0CXCasruWizUdMv+j6eMqDBdIWcRG+VfumnMHMiXAO/eWjr50m6UZZN7IjL5TS4Bh
+         zYegihgeCrFPmfYITjzBkz49Mxir0s4aF8kxnXFL25aaU5t7fYL9wrYv2q2XSo8gOaWH
+         rzmv2TI2W6gaJ5RLBBE3dCTw2MIZ/oo0TEKZh6Q3HaAMK+Q3Bsq4+YhHDbo706v+9J2g
+         4hsexTz7GEGxH3R5oPRyg7tSMnEWrOsBPqtAP9b7mj3NQzTGXWHTo5W/25ON89EgNyHU
+         7F8EJXWkherIRWzZ2coMn6kIUghExYs2Ayrtp1NL2g04cvQwbrJSTy/ASuu1KuPtRSzy
+         u+fg==
+X-Gm-Message-State: APjAAAVspRjG2TV5G1Zeo6692ZCRWD6RhmMNUeIcDIUtnD6CH0wN9xC5
+        sK9ZaqUy/LBhMQ9YnrkHkMw=
+X-Google-Smtp-Source: APXvYqzcJGczjYcDRUjZLltV4/L8von3YErmNZFFERlXjz5jyiPEJ/PtKIEf2ACHSo4AM9+ctzEY3w==
+X-Received: by 2002:a17:906:c2c9:: with SMTP id ch9mr2839424ejb.167.1564586028666;
+        Wed, 31 Jul 2019 08:13:48 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id a18sm9661518ejp.2.2019.07.31.08.13.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 08:13:15 -0700 (PDT)
-Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        David Miller <davem@davemloft.net>, dvyukov@google.com,
-        netdev@vger.kernel.org, fw@strlen.de, i.maximets@samsung.com,
-        edumazet@google.com, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <20190724163014.GC673@sol.localdomain>
- <20190724.111225.2257475150626507655.davem@davemloft.net>
- <20190724183710.GF213255@gmail.com>
- <20190724.130928.1854327585456756387.davem@davemloft.net>
- <20190724210950.GH213255@gmail.com>
- <1e07462d-61e2-9885-edd0-97a82dd7883e@gmail.com>
- <20190731025722.GE687@sol.localdomain>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <5b38eb74-43d0-c7d7-88e1-103a4f82333f@gmail.com>
-Date:   Wed, 31 Jul 2019 09:13:11 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Wed, 31 Jul 2019 08:13:47 -0700 (PDT)
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Received: by box.localdomain (Postfix, from userid 1000)
+        id BF3F9103FDC; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
+To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 30/59] keys/mktme: Program MKTME keys into the platform hardware
+Date:   Wed, 31 Jul 2019 18:07:44 +0300
+Message-Id: <20190731150813.26289-31-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
+References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190731025722.GE687@sol.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/19 8:57 PM, Eric Biggers wrote:
-> syzbot finds a lot of security bugs, and security bugs are important.  And the
-> bugs are still there regardless of whether they're reported by human or bot.
-> 
-> Also, there *are* bugs being fixed because of these reminders; some subsystem
-> maintainers have even fixed all the bugs in their subsystem.  But I can
-> understand that for subsystems with a lot of open bug reports it's overwhelming.
-> 
-> What I'll try doing next time (if there *is* a next time; it isn't actually my
-> job to do any of this, I just care about the security and reliability of
-> Linux...) is for subsystems with lots of open bug reports, only listing the ones
-> actually seen in the last week or so, and perhaps also spending some more time
-> manually checking those bugs.  That should cut down the noise a lot.
+From: Alison Schofield <alison.schofield@intel.com>
 
-I don't think anyone questions the overall value of syzbot. It's the
-maintenance of bug reports that needs refining.
+Finally, the keys are programmed into the hardware via each
+lead CPU. Every package has to be programmed successfully.
+There is no partial success allowed here.
 
-As an example, this one:
+Here a retry scheme is included for two errors that may succeed
+on retry: MKTME_DEVICE_BUSY and MKTME_ENTROPY_ERROR.
+However, it's not clear if even those errors should be retried
+at this level. Perhaps they too, should be returned to user space
+for handling.
 
-https://syzkaller.appspot.com/bug?id=079bd8408abd95b492f127edf0df44ddc09d9405
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ security/keys/mktme_keys.c | 92 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 91 insertions(+), 1 deletion(-)
 
-was in reality a very short-lived bug in net-next but because bpf-next
-managed to merge net-next in the small time window, the bug life seems
-more extended that it apparently was (fuzzy words since we do not know
-which commit fixed it).
+diff --git a/security/keys/mktme_keys.c b/security/keys/mktme_keys.c
+index 272bff8591b7..3c641f3ee794 100644
+--- a/security/keys/mktme_keys.c
++++ b/security/keys/mktme_keys.c
+@@ -83,6 +83,96 @@ static const match_table_t mktme_token = {
+ 	{OPT_ERROR, NULL}
+ };
+ 
++struct mktme_hw_program_info {
++	struct mktme_key_program *key_program;
++	int *status;
++};
++
++struct mktme_err_table {
++	const char *msg;
++	bool retry;
++};
++
++static const struct mktme_err_table mktme_error[] = {
++/* MKTME_PROG_SUCCESS     */ {"KeyID was successfully programmed",   false},
++/* MKTME_INVALID_PROG_CMD */ {"Invalid KeyID programming command",   false},
++/* MKTME_ENTROPY_ERROR    */ {"Insufficient entropy",		      true},
++/* MKTME_INVALID_KEYID    */ {"KeyID not valid",		     false},
++/* MKTME_INVALID_ENC_ALG  */ {"Invalid encryption algorithm chosen", false},
++/* MKTME_DEVICE_BUSY      */ {"Failure to access key table",	      true},
++};
++
++static int mktme_parse_program_status(int status[])
++{
++	int cpu, sum = 0;
++
++	/* Success: all CPU(s) programmed all key table(s) */
++	for_each_cpu(cpu, mktme_leadcpus)
++		sum += status[cpu];
++	if (!sum)
++		return MKTME_PROG_SUCCESS;
++
++	/* Invalid Parameters: log the error and return the error. */
++	for_each_cpu(cpu, mktme_leadcpus) {
++		switch (status[cpu]) {
++		case MKTME_INVALID_KEYID:
++		case MKTME_INVALID_PROG_CMD:
++		case MKTME_INVALID_ENC_ALG:
++			pr_err("mktme: %s\n", mktme_error[status[cpu]].msg);
++			return status[cpu];
++
++		default:
++			break;
++		}
++	}
++	/*
++	 * Device Busy or Insufficient Entropy: do not log the
++	 * error. These will be retried and if retries (time or
++	 * count runs out) caller will log the error.
++	 */
++	for_each_cpu(cpu, mktme_leadcpus) {
++		if (status[cpu] == MKTME_DEVICE_BUSY)
++			return status[cpu];
++	}
++	return MKTME_ENTROPY_ERROR;
++}
++
++/* Program a single key using one CPU. */
++static void mktme_do_program(void *hw_program_info)
++{
++	struct mktme_hw_program_info *info = hw_program_info;
++	int cpu;
++
++	cpu = smp_processor_id();
++	info->status[cpu] = mktme_key_program(info->key_program);
++}
++
++static int mktme_program_all_keytables(struct mktme_key_program *key_program)
++{
++	struct mktme_hw_program_info info;
++	int err, retries = 10; /* Maybe users should handle retries */
++
++	info.key_program = key_program;
++	info.status = kcalloc(num_possible_cpus(), sizeof(info.status[0]),
++			      GFP_KERNEL);
++
++	while (retries--) {
++		get_online_cpus();
++		on_each_cpu_mask(mktme_leadcpus, mktme_do_program,
++				 &info, 1);
++		put_online_cpus();
++
++		err = mktme_parse_program_status(info.status);
++		if (!err)			   /* Success */
++			return err;
++		else if (!mktme_error[err].retry)  /* Error no retry */
++			return -ENOKEY;
++	}
++	/* Ran out of retries */
++	pr_err("mktme: %s\n", mktme_error[err].msg);
++	return err;
++}
++
+ /* Copy the payload to the HW programming structure and program this KeyID */
+ static int mktme_program_keyid(int keyid, u32 payload)
+ {
+@@ -97,7 +187,7 @@ static int mktme_program_keyid(int keyid, u32 payload)
+ 	kprog->keyid = keyid;
+ 	kprog->keyid_ctrl = payload;
+ 
+-	ret = MKTME_PROG_SUCCESS;	/* Future programming call */
++	ret = mktme_program_all_keytables(kprog);
+ 	kmem_cache_free(mktme_prog_cache, kprog);
+ 	return ret;
+ }
+-- 
+2.21.0
 
-Also, there is inconsistency with the report. It shows a bisected commit of:
-
-commit f40b6ae2b612446dc970d7b51eeec47bd1619f82
-Author: David Ahern <dsahern@gmail.com>
-Date: Thu May 23 03:27:55 2019 +0000
-
-  ipv6: Move pcpu cached routes to fib6_nh
-
-yet the report shows an entry in net tree on April 27. Even the net
-instance on June 14 is questionable given that the above commit is only
-in net-next on June 14.
-
-Taking all of those references out and there are 2 'real', unique
-reports - the linux-next on May 31 and the net-next on June 5.
-
-Given that nothing has appeared in the last 8 weeks it seems clear to me
-that this bug has been fixed we just don't know by which commit.
-
-If there is a way to reduce to some of that information or even to have
-a button on that console that says 'apparently fixed' and close it would
-be a help.
