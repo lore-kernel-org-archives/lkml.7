@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E390C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD96C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E71620449
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A09920449
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730896AbfGaXfw (ORCPT
+        id S1730877AbfGaXft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:35:52 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:39878 "EHLO ale.deltatee.com"
+        Wed, 31 Jul 2019 19:35:49 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39856 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730835AbfGaXfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:35:45 -0400
+        id S1730826AbfGaXfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 19:35:44 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hsy8B-0003W7-Ki; Wed, 31 Jul 2019 17:35:44 -0600
+        id 1hsy8B-0003W4-Ki; Wed, 31 Jul 2019 17:35:42 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hsy89-0001H2-Uh; Wed, 31 Jul 2019 17:35:37 -0600
+        id 1hsy89-0001Gt-M3; Wed, 31 Jul 2019 17:35:37 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
@@ -34,8 +34,8 @@ Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 31 Jul 2019 17:35:34 -0600
-Message-Id: <20190731233534.4841-5-logang@deltatee.com>
+Date:   Wed, 31 Jul 2019 17:35:31 -0600
+Message-Id: <20190731233534.4841-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190731233534.4841-1-logang@deltatee.com>
 References: <20190731233534.4841-1-logang@deltatee.com>
@@ -44,7 +44,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me, chaitanya.kulkarni@wdc.com, maxg@mellanox.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v3 4/4] nvme-core: Fix extra device_put() call on error path
+Subject: [PATCH v3 1/4] nvmet: Fix use-after-free bug when a port is removed
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,138 +52,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the error path for nvme_init_subsystem(), nvme_put_subsystem()
-will call device_put(), but it will get called again after the
-mutex_unlock().
+When a port is removed through configfs, any connected controllers
+are still active and can still send commands. This causes a
+use-after-free bug which is detected by KASAN for any admin command
+that dereferences req->port (like in nvmet_execute_identify_ctrl).
 
-The device_put() only needs to be called if device_add() fails.
+To fix this, disconnect all active controllers when a subsystem is
+removed from a port. This ensures there are no active controllers
+when the port is eventually removed.
 
-This bug caused a KASAN use-after-free error when adding and
-removing subsytems in a loop:
-
-  BUG: KASAN: use-after-free in device_del+0x8d9/0x9a0
-  Read of size 8 at addr ffff8883cdaf7120 by task multipathd/329
-
-  CPU: 0 PID: 329 Comm: multipathd Not tainted 5.2.0-rc6-vmlocalyes-00019-g70a2b39005fd-dirty #314
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-  Call Trace:
-   dump_stack+0x7b/0xb5
-   print_address_description+0x6f/0x280
-   ? device_del+0x8d9/0x9a0
-   __kasan_report+0x148/0x199
-   ? device_del+0x8d9/0x9a0
-   ? class_release+0x100/0x130
-   ? device_del+0x8d9/0x9a0
-   kasan_report+0x12/0x20
-   __asan_report_load8_noabort+0x14/0x20
-   device_del+0x8d9/0x9a0
-   ? device_platform_notify+0x70/0x70
-   nvme_destroy_subsystem+0xf9/0x150
-   nvme_free_ctrl+0x280/0x3a0
-   device_release+0x72/0x1d0
-   kobject_put+0x144/0x410
-   put_device+0x13/0x20
-   nvme_free_ns+0xc4/0x100
-   nvme_release+0xb3/0xe0
-   __blkdev_put+0x549/0x6e0
-   ? kasan_check_write+0x14/0x20
-   ? bd_set_size+0xb0/0xb0
-   ? kasan_check_write+0x14/0x20
-   ? mutex_lock+0x8f/0xe0
-   ? __mutex_lock_slowpath+0x20/0x20
-   ? locks_remove_file+0x239/0x370
-   blkdev_put+0x72/0x2c0
-   blkdev_close+0x8d/0xd0
-   __fput+0x256/0x770
-   ? _raw_read_lock_irq+0x40/0x40
-   ____fput+0xe/0x10
-   task_work_run+0x10c/0x180
-   ? filp_close+0xf7/0x140
-   exit_to_usermode_loop+0x151/0x170
-   do_syscall_64+0x240/0x2e0
-   ? prepare_exit_to_usermode+0xd5/0x190
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f5a79af05d7
-  Code: 00 00 0f 05 48 3d 00 f0 ff ff 77 3f c3 66 0f 1f 44 00 00 53 89 fb 48 83 ec 10 e8 c4 fb ff ff 89 df 89 c2 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 2b 89 d7 89 44 24 0c e8 06 fc ff ff 8b 44 24
-  RSP: 002b:00007f5a7799c810 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-  RAX: 0000000000000000 RBX: 0000000000000008 RCX: 00007f5a79af05d7
-  RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000008
-  RBP: 00007f5a58000f98 R08: 0000000000000002 R09: 00007f5a7935ee80
-  R10: 0000000000000000 R11: 0000000000000293 R12: 000055e432447240
-  R13: 0000000000000000 R14: 0000000000000001 R15: 000055e4324a9cf0
-
-  Allocated by task 1236:
-   save_stack+0x21/0x80
-   __kasan_kmalloc.constprop.6+0xab/0xe0
-   kasan_kmalloc+0x9/0x10
-   kmem_cache_alloc_trace+0x102/0x210
-   nvme_init_identify+0x13c3/0x3820
-   nvme_loop_configure_admin_queue+0x4fa/0x5e0
-   nvme_loop_create_ctrl+0x469/0xf40
-   nvmf_dev_write+0x19a3/0x21ab
-   __vfs_write+0x66/0x120
-   vfs_write+0x154/0x490
-   ksys_write+0x104/0x240
-   __x64_sys_write+0x73/0xb0
-   do_syscall_64+0xa5/0x2e0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  Freed by task 329:
-   save_stack+0x21/0x80
-   __kasan_slab_free+0x129/0x190
-   kasan_slab_free+0xe/0x10
-   kfree+0xa7/0x200
-   nvme_release_subsystem+0x49/0x60
-   device_release+0x72/0x1d0
-   kobject_put+0x144/0x410
-   put_device+0x13/0x20
-   klist_class_dev_put+0x31/0x40
-   klist_put+0x8f/0xf0
-   klist_del+0xe/0x10
-   device_del+0x3a7/0x9a0
-   nvme_destroy_subsystem+0xf9/0x150
-   nvme_free_ctrl+0x280/0x3a0
-   device_release+0x72/0x1d0
-   kobject_put+0x144/0x410
-   put_device+0x13/0x20
-   nvme_free_ns+0xc4/0x100
-   nvme_release+0xb3/0xe0
-   __blkdev_put+0x549/0x6e0
-   blkdev_put+0x72/0x2c0
-   blkdev_close+0x8d/0xd0
-   __fput+0x256/0x770
-   ____fput+0xe/0x10
-   task_work_run+0x10c/0x180
-   exit_to_usermode_loop+0x151/0x170
-   do_syscall_64+0x240/0x2e0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 32fd90c40768 ("nvme: change locking for the per-subsystem controller list")
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 ---
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/target/configfs.c |  1 +
+ drivers/nvme/target/core.c     | 12 ++++++++++++
+ drivers/nvme/target/nvmet.h    |  3 +++
+ 3 files changed, 16 insertions(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 80c7a7ee240b..e35f16b60fc9 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2488,6 +2488,7 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 		if (ret) {
- 			dev_err(ctrl->device,
- 				"failed to register subsystem device.\n");
-+			put_device(&subsys->dev);
- 			goto out_unlock;
- 		}
- 		ida_init(&subsys->ns_ida);
-@@ -2510,7 +2511,6 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 	nvme_put_subsystem(subsys);
- out_unlock:
- 	mutex_unlock(&nvme_subsystems_lock);
--	put_device(&subsys->dev);
- 	return ret;
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
+index cd52b9f15376..98613a45bd3b 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -675,6 +675,7 @@ static void nvmet_port_subsys_drop_link(struct config_item *parent,
+ 
+ found:
+ 	list_del(&p->entry);
++	nvmet_port_del_ctrls(port, subsys);
+ 	nvmet_port_disc_changed(port, subsys);
+ 
+ 	if (list_empty(&port->subsystems))
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index dad0243c7c96..b86a23aa9020 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -280,6 +280,18 @@ void nvmet_unregister_transport(const struct nvmet_fabrics_ops *ops)
  }
+ EXPORT_SYMBOL_GPL(nvmet_unregister_transport);
+ 
++void nvmet_port_del_ctrls(struct nvmet_port *port, struct nvmet_subsys *subsys)
++{
++	struct nvmet_ctrl *ctrl;
++
++	mutex_lock(&subsys->lock);
++	list_for_each_entry(ctrl, &subsys->ctrls, subsys_entry) {
++		if (ctrl->port == port)
++			ctrl->ops->delete_ctrl(ctrl);
++	}
++	mutex_unlock(&subsys->lock);
++}
++
+ int nvmet_enable_port(struct nvmet_port *port)
+ {
+ 	const struct nvmet_fabrics_ops *ops;
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index 6ee66c610739..c51f8dd01dc4 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -418,6 +418,9 @@ void nvmet_port_send_ana_event(struct nvmet_port *port);
+ int nvmet_register_transport(const struct nvmet_fabrics_ops *ops);
+ void nvmet_unregister_transport(const struct nvmet_fabrics_ops *ops);
+ 
++void nvmet_port_del_ctrls(struct nvmet_port *port,
++			  struct nvmet_subsys *subsys);
++
+ int nvmet_enable_port(struct nvmet_port *port);
+ void nvmet_disable_port(struct nvmet_port *port);
  
 -- 
 2.20.1
