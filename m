@@ -2,234 +2,102 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D463FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AFCC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBAA206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49041206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:00:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvVGLBSF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pC9hx7AH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388216AbfGaOzb (ORCPT
+        id S2388274AbfGaPAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:55:31 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36649 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388075AbfGaOza (ORCPT
+        Wed, 31 Jul 2019 11:00:50 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45538 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387639AbfGaPAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:55:30 -0400
-Received: by mail-lj1-f194.google.com with SMTP id i21so65928634ljj.3;
-        Wed, 31 Jul 2019 07:55:28 -0700 (PDT)
+        Wed, 31 Jul 2019 11:00:49 -0400
+Received: by mail-ot1-f66.google.com with SMTP id x21so5004868otq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:00:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Z+hRd98x5TV3xKbm4IgKfN0HNypL+IKEJ8fZRsTiix0=;
-        b=fvVGLBSFsBeCBbnAFgMoGV4TPLTvo+6xoI2Hvax7N4ReE4xjlKMrgKGz/x44aYgJQQ
-         HBNms7NhIT17yeS954cS+log+VeGl0T5OgofXv+MgCMI9r/lh97ZlpjO+jFKm4GgcrF1
-         V4+FyBD0eB6oDNjWK+lgsjszwZmt55x092LDcZDdD/623SJ8sHXp8gJlV++eXfeMpOqA
-         XmbQ+VwXFzzI8oxD4BzLq0znoqzisSSm9SNpO4BhfF5E/00R0O42uJN++S5kC0Ylb7P/
-         lMTBwWCtQWrDxWdSurU1DYP4dDm3sonbWhsk0L6UA26lsQkqA9yfxlNIn97JfVqY9/JM
-         htVg==
+        h=sender:date:from:to:cc:subject:message-id:reply-to:mime-version
+         :content-disposition:user-agent;
+        bh=Ps9PpaSBIXq7Ne9E/d4KaHrc8XM/iSj4meBqG2KoY1I=;
+        b=pC9hx7AHwKxWSDeiwxkq4gwqFcrs1NirWZa0eTpXuOngP+6AhmJ+xX6tzgJ2ujDo40
+         8RU6/zZA/xhpEE6KJ8PuKci/KlfYs4yQrK8Mf3ycmM4mHP17fT67y6jCFDYUC31iXTwD
+         YbkP2Fa0i9YY379Ot5ZUPwR7iMJReIQ+eK/HQ7X0HjMWV5WSqRFP2YiIo37WfM6vTbU6
+         h95msVloAP3Nt/VYZHASJsVIMpd5SBtvq3NTTqaKwuf5kVFlTfYrANyDUjEvFRxocZeO
+         1N4uWec5q8nODJTwNuoHnzIhy1QcM70UZM9kauci6W0hYXq4U3sfzsCoo1w28mIUIfB6
+         f9aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Z+hRd98x5TV3xKbm4IgKfN0HNypL+IKEJ8fZRsTiix0=;
-        b=M7ICN+Gc6Sxh/EzO5+UuPT9f61eRN8APndwAE+zBPdSyGjG1krqh3JrRWGGcdDL5zl
-         N7tHO9ll4RNXJP7nPbBFrXFUuZavtVbYShkicwxVnQOkmXdK9muLecZZyzmtLQOI2eTB
-         n8hJmnAUrwexkDc6C9MJXesFXX2r3N5K6GLd/tN6IPKj1y4dTNlM1fcFOu4p5JnsGWHA
-         BXY1XkTzEnTY8tFWt1Ja7P02bYBsfERVwovkBH+1PT+JUJpw3Xl+Oo7uifX1Hz/NFsU3
-         8RC/vvWwmh5KSmjSQ6a2sB/ds3G3hnO7AQ0S9KxMILOuPuwD/+3uYPc4k1Jjuz4hlNnK
-         lIWw==
-X-Gm-Message-State: APjAAAXxe5P3UNPbnje8HivpzTKhRDREk0XqYQSJStIQhyi5jLV/v1q2
-        c33lDZn+ZtbGHtmh/ge+KQY=
-X-Google-Smtp-Source: APXvYqzykQOfJKE2+s8Z9PdCeuLmIeuPmPCh8PdDa326fgulb9QTYSesVp7dRtsjEFi6EP9kH+9kIw==
-X-Received: by 2002:a2e:8849:: with SMTP id z9mr25234956ljj.203.1564584927631;
-        Wed, 31 Jul 2019 07:55:27 -0700 (PDT)
-Received: from localhost.localdomain (77.241.141.68.bredband.3.dk. [77.241.141.68])
-        by smtp.gmail.com with ESMTPSA id j7sm15647799lji.27.2019.07.31.07.55.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 07:55:27 -0700 (PDT)
-From:   Tomas Bortoli <tomasbortoli@gmail.com>
-To:     wg@grandegger.com, mkl@pengutronix.de, linux-can@vger.kernel.org
-Cc:     davem@davemloft.net, gregkh@linuxfoundation.org,
-        alexios.zavras@intel.com, tglx@linutronix.de, allison@lohutok.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller@googlegroups.com, Tomas Bortoli <tomasbortoli@gmail.com>
-Subject: [PATCH] peak_usb: Fix info-leaks to USB devices
-Date:   Wed, 31 Jul 2019 10:54:47 -0400
-Message-Id: <20190731145447.29270-1-tomasbortoli@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:mime-version:content-disposition:user-agent;
+        bh=Ps9PpaSBIXq7Ne9E/d4KaHrc8XM/iSj4meBqG2KoY1I=;
+        b=hFRe4TmURGD/ZdidoK/KGFAuGHgXTbD89GMC+id+xXKlJ7NI8LlmP3kdRSnx0IFXRx
+         4mN1/GNGVo4Os3cVrDFFBbWEPBTnWkkqeohx7en5FfO8Z1FBkzjMeVt+5tcUumDF3IgX
+         UwKq9enJGpQdaoN50IHv2lZBd38hP0cediZqIttTrpvZwDr4cMn0WQkSvJvZZDLN4wFc
+         ayfIW5psaJ4kTZygFF1Pc2VxU2XuOlJ2NP4+bhTqj1/7DUNlZxU9/e6Uz8tsawBEgxlM
+         0YUB+SAZv+B9/F2piwpnKi1z5fm0hQlONkjZRSEDur05RM9kQEGCGCsOyKA/WCqFF7/v
+         y2CA==
+X-Gm-Message-State: APjAAAXNpAQUs/1ImZS/IRmZZrYKatMdihgysvd8FBR3U9XK4bbhUPLH
+        IjTr9tuCJn4r3ZRFRsMH5RLswQg=
+X-Google-Smtp-Source: APXvYqw/Jh5IF7kfPSNLapJLn1m2Wst4sJnrhOAENuq/iPtlYO3+8t9V35oUUVXbIRFrJM4Khtyl5w==
+X-Received: by 2002:a9d:618a:: with SMTP id g10mr21452912otk.217.1564585248491;
+        Wed, 31 Jul 2019 08:00:48 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.134.43])
+        by smtp.gmail.com with ESMTPSA id b2sm23363929otf.48.2019.07.31.08.00.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 08:00:47 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:e83a:d1d4:543d:69b])
+        by serve.minyard.net (Postfix) with ESMTPSA id 67711180039;
+        Wed, 31 Jul 2019 15:00:47 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 10:00:46 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net
+Subject: [GIT PULL] More IPMI bug fixes for 5.3
+Message-ID: <20190731150046.GB5001@minyard.net>
+Reply-To: minyard@acm.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uninitialized Kernel memory can leak to USB devices.
+Keep Geert from nagging me :-)
 
-Fix by using kzalloc() instead of kmalloc() on the affected buffers.
+The following changes since commit fec88ab0af9706b2201e5daf377c5031c62d11f7:
 
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com
-Reported-by: syzbot+513e4d0985298538bf9b@syzkaller.appspotmail.com
----
-Crash logs:
-1.
-BUG: KMSAN: kernel-usb-infoleak in usb_submit_urb+0x7ef/0x1f50 drivers/usb/core/urb.c:405
-CPU: 0 PID: 3359 Comm: kworker/0:2 Not tainted 5.2.0-rc4+ #7
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x191/0x1f0 lib/dump_stack.c:113
- kmsan_report+0x162/0x2d0 mm/kmsan/kmsan.c:611
- kmsan_internal_check_memory+0x974/0xa80 mm/kmsan/kmsan.c:705
- kmsan_handle_urb+0x28/0x40 mm/kmsan/kmsan_hooks.c:617
- usb_submit_urb+0x7ef/0x1f50 drivers/usb/core/urb.c:405
- usb_start_wait_urb+0x143/0x410 drivers/usb/core/message.c:58
- usb_internal_control_msg drivers/usb/core/message.c:102 [inline]
- usb_control_msg+0x49f/0x7f0 drivers/usb/core/message.c:156
- pcan_usb_pro_send_req+0x26b/0x3e0 drivers/net/can/usb/peak_usb/pcan_usb_pro.c:336
- pcan_usb_fd_drv_loaded drivers/net/can/usb/peak_usb/pcan_usb_fd.c:460 [inline]
- pcan_usb_fd_init+0x16ee/0x1900 drivers/net/can/usb/peak_usb/pcan_usb_fd.c:885
- peak_usb_create_dev drivers/net/can/usb/peak_usb/pcan_usb_core.c:809 [inline]
- peak_usb_probe+0x1416/0x1b20 drivers/net/can/usb/peak_usb/pcan_usb_core.c:907
- usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
- really_probe+0x1344/0x1d90 drivers/base/dd.c:513
- driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
- __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
- bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
- __device_attach+0x489/0x750 drivers/base/dd.c:843
- device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
-2.
-BUG: KMSAN: kernel-usb-infoleak in usb_submit_urb+0x7ef/0x1f50 /drivers/usb/core/urb.c:405
-CPU: 1 PID: 3814 Comm: kworker/1:2 Not tainted 5.2.0+ #15
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- __dump_stack /lib/dump_stack.c:77 [inline]
- dump_stack+0x191/0x1f0 /lib/dump_stack.c:113
- kmsan_report+0x162/0x2d0 /mm/kmsan/kmsan_report.c:109
- kmsan_internal_check_memory+0x974/0xa80 /mm/kmsan/kmsan.c:551
- kmsan_handle_urb+0x28/0x40 /mm/kmsan/kmsan_hooks.c:621
- usb_submit_urb+0x7ef/0x1f50 /drivers/usb/core/urb.c:405
- usb_start_wait_urb+0x143/0x410 /drivers/usb/core/message.c:58
- usb_internal_control_msg /drivers/usb/core/message.c:102 [inline]
- usb_control_msg+0x49f/0x7f0 /drivers/usb/core/message.c:156
- pcan_usb_pro_send_req /drivers/net/can/usb/peak_usb/pcan_usb_pro.c:336 [inline]
- pcan_usb_pro_drv_loaded /drivers/net/can/usb/peak_usb/pcan_usb_pro.c:504 [inline]
- pcan_usb_pro_init+0x1319/0x1720 /drivers/net/can/usb/peak_usb/pcan_usb_pro.c:894
- peak_usb_create_dev /drivers/net/can/usb/peak_usb/pcan_usb_core.c:809 [inline]
- peak_usb_probe+0x1416/0x1b20 /drivers/net/can/usb/peak_usb/pcan_usb_core.c:907
- usb_probe_interface+0xd19/0x1310 /drivers/usb/core/driver.c:361
- really_probe+0x1344/0x1d90 /drivers/base/dd.c:513
- driver_probe_device+0x1ba/0x510 /drivers/base/dd.c:670
- __device_attach_driver+0x5b8/0x790 /drivers/base/dd.c:777
- bus_for_each_drv+0x28e/0x3b0 /drivers/base/bus.c:454
- __device_attach+0x489/0x750 /drivers/base/dd.c:843
- device_initial_probe+0x4a/0x60 /drivers/base/dd.c:890
- bus_probe_device+0x131/0x390 /drivers/base/bus.c:514
- device_add+0x25b5/0x2df0 /drivers/base/core.c:2111
- usb_set_configuration+0x309f/0x3710 /drivers/usb/core/message.c:2027
- generic_probe+0xe7/0x280 /drivers/usb/core/generic.c:210
- usb_probe_device+0x146/0x200 /drivers/usb/core/driver.c:266
- really_probe+0x1344/0x1d90 /drivers/base/dd.c:513
- driver_probe_device+0x1ba/0x510 /drivers/base/dd.c:670
- __device_attach_driver+0x5b8/0x790 /drivers/base/dd.c:777
- bus_for_each_drv+0x28e/0x3b0 /drivers/base/bus.c:454
- __device_attach+0x489/0x750 /drivers/base/dd.c:843
- device_initial_probe+0x4a/0x60 /drivers/base/dd.c:890
- bus_probe_device+0x131/0x390 /drivers/base/bus.c:514
- device_add+0x25b5/0x2df0 /drivers/base/core.c:2111
- usb_new_device+0x23e5/0x2fb0 /drivers/usb/core/hub.c:2534
- hub_port_connect /drivers/usb/core/hub.c:5089 [inline]
- hub_port_connect_change /drivers/usb/core/hub.c:5204 [inline]
- port_event /drivers/usb/core/hub.c:5350 [inline]
- hub_event+0x5853/0x7320 /drivers/usb/core/hub.c:5432
- process_one_work+0x1572/0x1f00 /kernel/workqueue.c:2269
- worker_thread+0x111b/0x2460 /kernel/workqueue.c:2415
- kthread+0x4b5/0x4f0 /kernel/kthread.c:256
- ret_from_fork+0x35/0x40 /arch/x86/entry/entry_64.S:355
-Uninit was created at:
- kmsan_save_stack_with_flags /mm/kmsan/kmsan.c:187 [inline]
- kmsan_internal_poison_shadow+0x53/0xa0 /mm/kmsan/kmsan.c:146
- kmsan_slab_alloc+0xaa/0x120 /mm/kmsan/kmsan_hooks.c:175
- slab_alloc_node /mm/slub.c:2771 [inline]
- slab_alloc /mm/slub.c:2780 [inline]
- kmem_cache_alloc_trace+0x873/0xa50 /mm/slub.c:2797
- kmalloc /./include/linux/slab.h:547 [inline]
- pcan_usb_pro_drv_loaded /drivers/net/can/usb/peak_usb/pcan_usb_pro.c:497 [inline]
- pcan_usb_pro_init+0xe96/0x1720 /drivers/net/can/usb/peak_usb/pcan_usb_pro.c:894
- peak_usb_create_dev /drivers/net/can/usb/peak_usb/pcan_usb_core.c:809 [inline]
- peak_usb_probe+0x1416/0x1b20 /drivers/net/can/usb/peak_usb/pcan_usb_core.c:907
- usb_probe_interface+0xd19/0x1310 /drivers/usb/core/driver.c:361
- really_probe+0x1344/0x1d90 /drivers/base/dd.c:513
- driver_probe_device+0x1ba/0x510 /drivers/base/dd.c:670
- __device_attach_driver+0x5b8/0x790 /drivers/base/dd.c:777
- bus_for_each_drv+0x28e/0x3b0 /drivers/base/bus.c:454
- __device_attach+0x489/0x750 /drivers/base/dd.c:843
- device_initial_probe+0x4a/0x60 /drivers/base/dd.c:890
- bus_probe_device+0x131/0x390 /drivers/base/bus.c:514
- device_add+0x25b5/0x2df0 /drivers/base/core.c:2111
- usb_set_configuration+0x309f/0x3710 /drivers/usb/core/message.c:2027
- generic_probe+0xe7/0x280 /drivers/usb/core/generic.c:210
- usb_probe_device+0x146/0x200 /drivers/usb/core/driver.c:266
- really_probe+0x1344/0x1d90 /drivers/base/dd.c:513
- driver_probe_device+0x1ba/0x510 /drivers/base/dd.c:670
- __device_attach_driver+0x5b8/0x790 /drivers/base/dd.c:777
- bus_for_each_drv+0x28e/0x3b0 /drivers/base/bus.c:454
- __device_attach+0x489/0x750 /drivers/base/dd.c:843
- device_initial_probe+0x4a/0x60 /drivers/base/dd.c:890
- bus_probe_device+0x131/0x390 /drivers/base/bus.c:514
- device_add+0x25b5/0x2df0 /drivers/base/core.c:2111
- usb_new_device+0x23e5/0x2fb0 /drivers/usb/core/hub.c:2534
- hub_port_connect /drivers/usb/core/hub.c:5089 [inline]
- hub_port_connect_change /drivers/usb/core/hub.c:5204 [inline]
- port_event /drivers/usb/core/hub.c:5350 [inline]
- hub_event+0x5853/0x7320 /drivers/usb/core/hub.c:5432
- process_one_work+0x1572/0x1f00 /kernel/workqueue.c:2269
- worker_thread+0x111b/0x2460 /kernel/workqueue.c:2415
- kthread+0x4b5/0x4f0 /kernel/kthread.c:256
- ret_from_fork+0x35/0x40 /arch/x86/entry/entry_64.S:355
-Bytes 2-15 of 16 are uninitialized
-Memory access of size 16 starts at ffff8881030286e0
-==================================================================
+  Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2019-07-14 19:42:11 -0700)
 
- drivers/net/can/usb/peak_usb/pcan_usb_fd.c  | 2 +-
- drivers/net/can/usb/peak_usb/pcan_usb_pro.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+are available in the Git repository at:
 
-diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_fd.c b/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
-index 34761c3a6286..47cc1ff5b88e 100644
---- a/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
-@@ -841,7 +841,7 @@ static int pcan_usb_fd_init(struct peak_usb_device *dev)
- 			goto err_out;
- 
- 		/* allocate command buffer once for all for the interface */
--		pdev->cmd_buffer_addr = kmalloc(PCAN_UFD_CMD_BUFFER_SIZE,
-+		pdev->cmd_buffer_addr = kzalloc(PCAN_UFD_CMD_BUFFER_SIZE,
- 						GFP_KERNEL);
- 		if (!pdev->cmd_buffer_addr)
- 			goto err_out_1;
-diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
-index 178bb7cff0c1..53cb2f72bdd0 100644
---- a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
-@@ -494,7 +494,7 @@ static int pcan_usb_pro_drv_loaded(struct peak_usb_device *dev, int loaded)
- 	u8 *buffer;
- 	int err;
- 
--	buffer = kmalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
-+	buffer = kzalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
- 	if (!buffer)
- 		return -ENOMEM;
- 
--- 
-2.11.0
+  https://github.com/cminyard/linux-ipmi.git tags/for-linus-5.3-2
+
+for you to fetch changes up to 71be7b0e7d4069822c89146daed800686db8f147:
+
+  Fix uninitialized variable in ipmb_dev_int.c (2019-07-24 15:53:21 -0500)
+
+----------------------------------------------------------------
+One necessary fix for an uninitialized variable in the new IPMB driver.
+Nothing else has come in besides things that need to wait until later.
+
+----------------------------------------------------------------
+Asmaa Mnebhi (1):
+      Fix uninitialized variable in ipmb_dev_int.c
+
+ drivers/char/ipmi/ipmb_dev_int.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
