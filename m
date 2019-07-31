@@ -2,108 +2,68 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B151BC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA56FC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84EDB20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GodJ1SH7"
+	by mail.kernel.org (Postfix) with ESMTP id 889B120693
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:24:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbfGaJXt (ORCPT
+        id S1728662AbfGaJYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:23:49 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:31934 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727209AbfGaJXs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:23:48 -0400
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x6V9NcLb007060
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 18:23:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6V9NcLb007060
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564565021;
-        bh=9tUjIz1fGxhObB1pzGXilSS2tawCCVGtMhdl2p7YMLk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GodJ1SH7hNvqP7xGg69guLxpiLMGWb3rywHUqjcAVoz7wR7ex+3WjOR/CY+MwQUfj
-         lfDKiXselUh5g3ayzOuj5fjC4rB/UpHJwULkXQIP463z95v857AETvrjaC99YVdJDV
-         Fei7d91XEhEpQgN61VhP0qqsaY4+r7TrzG8Z8EddqqW1AIKXcNJJYyzP6QHBhWdQeH
-         b10ZcDfm9cRMhVdmCV7qeFi12G6Ekj1eLcu//+ccbcFDOFg0S1Rz2EqGVoSaPZmDJJ
-         rvbkyMuU9tb1zPjj54G8ulcweOA8to2/wlJMgB8t0KCX32hMQ0az1SOqmQ4uuIOFsc
-         WPgIGtIDPBhpg==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id v6so45733896vsq.4
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 02:23:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAVOTCqvsmHB8sit0y2lyqGSpNHJCPJrky4yWGELtRzllsSPHv1w
-        1qrIZTGHBebYLb0geqB0i1v6/UrvyRYTFrc3Dog=
-X-Google-Smtp-Source: APXvYqy+cQDUqYKvKJzVt1ni/ykoG5y018qK8bIlFDYIVOu3Yq3WGfpMKJUdrHac6HYyrQbW6Lb4sLZh9BZlSP9pseQ=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr53229263vsd.215.1564565017600;
- Wed, 31 Jul 2019 02:23:37 -0700 (PDT)
+        Wed, 31 Jul 2019 05:24:08 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40056 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727077AbfGaJYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:24:08 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7B3BBD6D3775D669C5E5;
+        Wed, 31 Jul 2019 17:24:05 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
+ 2019 17:23:58 +0800
+Subject: Re: [PATCH 18/22] staging: erofs: turn cache strategies into mount
+ options
+To:     Gao Xiang <gaoxiang25@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     <linux-erofs@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>, <weidu.du@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>
+References: <20190729065159.62378-1-gaoxiang25@huawei.com>
+ <20190729065159.62378-19-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <b5186ece-53c4-a1c9-98c1-f3b39d9bc607@huawei.com>
+Date:   Wed, 31 Jul 2019 17:23:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190728154728.11126-1-yamada.masahiro@socionext.com> <20190730125249.b899526e44608371fb11e03c@linux-foundation.org>
-In-Reply-To: <20190730125249.b899526e44608371fb11e03c@linux-foundation.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 31 Jul 2019 18:23:01 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATSaZVdFm4=mODoAUnjwf3QKS5Fx5drkZ-yGDHTabfPsQ@mail.gmail.com>
-Message-ID: <CAK7LNATSaZVdFm4=mODoAUnjwf3QKS5Fx5drkZ-yGDHTabfPsQ@mail.gmail.com>
-Subject: Re: [PATCH] linux/coff.h: add include guard
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190729065159.62378-19-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On 2019/7/29 14:51, Gao Xiang wrote:
+> Kill all kconfig cache strategies and turn them into mount options
+> "cache_strategy={disable|readahead|readaround}".
+> 
+> As the first step, cached pages can still be usable after cache
+> is disabled by remounting, and these pages will be fallen out
+> over time, which can be refined in the later version if some
+> requirement is needed. Update related document as well.
+> 
+> Suggested-by: Theodore Ts'o <tytso@mit.edu>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-On Wed, Jul 31, 2019 at 4:52 AM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Mon, 29 Jul 2019 00:47:28 +0900 Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->
-> > Add a header include guard just in case.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> > Looks like this file is unused at least in the kernel tree,
-> > but I am not it is OK to delete it.
->
-> arch/alpha/boot/tools/objstrip.c includes it but I don't think it's
-> actually needed.  Yes, it would be nice to kill coff.h.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-After some consideration, I think it is better to keep it
-until we dump the alpha support entirely.
-
-The following line in arch/alpha/boot/tools/objstrip.c
-references a macro in <linux/coff.h>:
-
-        if (!(aout->fh.f_flags & COFF_F_EXEC)) {
-
-
-I was not able to build objstrip.c anyway,
-but I think it is better to keep the can of worms closed for now.
-
-
-Could you apply this as-is please?
-
-
-My motivation is to allow Kbuild to detect missing include guard:
-
-https://patchwork.kernel.org/patch/11063011/
-
-
-Before I enable this checker,
-I want to fix as many headers as possible.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Thanks,
