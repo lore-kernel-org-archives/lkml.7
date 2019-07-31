@@ -2,186 +2,132 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2778C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BBAC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8164621726
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E25217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 20:25:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nhwHsvp/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbfGaUYx (ORCPT
+        id S1730301AbfGaUZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 16:24:53 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:36750 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727201AbfGaUYx (ORCPT
+        Wed, 31 Jul 2019 16:25:11 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41438 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730165AbfGaUZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 16:24:53 -0400
-Received: by mail-vs1-f68.google.com with SMTP id y16so47168381vsc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:24:52 -0700 (PDT)
+        Wed, 31 Jul 2019 16:25:11 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m30so32506051pff.8
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 13:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0pLvL4XoGYF6/S/bO4KhBdgKs6/M0DxlhP6T+btdb0E=;
+        b=nhwHsvp/32LnkrUUYeFQVJf6a5XG0VbCeyqdOhNKuGjJPAEI+E8IajZXhfy7iku3Nt
+         GXQW8AaA5AJ6NNU8XIXmhoOriXYI/zGZfxRpnj3GAYC0ps7JvrlOec9TzP8ptbdIwQYv
+         DKXypv6Fq73h5SZxLpblvCN/RVEvKIWxs0yCY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=brhDJm8w6pxaZeYVZLm98h3iEBl7Bhtzzw7A5+iUByY=;
-        b=mC2F3TwTrUK88Tw+33qO2MKlpFurD8ERgGC/0Dh1m8Fo3QwYSvW3fEjN6xyw9ZNZgN
-         BS2fSr/4YRQg9vvI3cJFbDifCSteSOMpTEiLgvyURIjr2HCjDQJ/gIbaCAQ1IIwJ3/z8
-         gjUhXD459gPnxRV3hdOE201q2TeIDJuvfLIYJ/28eSxZvzbfKQCNQVMNX+ruqm7Jrg/o
-         67ge8oWkXua3lj1gyX97PegdWt+dI96kihQgOmT6iQ0JWXvnaog9HGUSKu1V8Phw8UZY
-         3+FlBFvoUjh8HTDqIfW70pFPVxf/UGLKIz5tRaLfXpH77uriIgh1jDKsHhk9/rBPh67X
-         by+w==
-X-Gm-Message-State: APjAAAUySC6DZ0krONyU6yGZ5sNiu9T6cARkmOSqS9sVxoVZ1k9wVWbW
-        UDl8xJRYq/heyQszwjp4vDqvVg==
-X-Google-Smtp-Source: APXvYqy5SiyDvXQocVKK2k23IjBNC1TH0Eb4RBltqxJPOco0p+P1EplPzMaNifSDSFUm9PDXE9NlwQ==
-X-Received: by 2002:a67:bb18:: with SMTP id m24mr79486260vsn.201.1564604691027;
-        Wed, 31 Jul 2019 13:24:51 -0700 (PDT)
-Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id w73sm31196428vkh.14.2019.07.31.13.24.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 13:24:50 -0700 (PDT)
-Message-ID: <66cc7713b2d28551eee26f5dfcf8b009ace67c1a.camel@redhat.com>
-Subject: Re: [PATCH] Revert "PCI: Enable NVIDIA HDA controllers"
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org
-Cc:     Lukas Wunner <lukas@wunner.de>, Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Karol Herbst <kherbst@redhat.com>,
-        Maik Freudenberg <hhfeuer@gmx.de>, linux-kernel@vger.kernel.org
-Date:   Wed, 31 Jul 2019 16:24:49 -0400
-In-Reply-To: <20190731201927.22054-1-lyude@redhat.com>
-References: <20190731201927.22054-1-lyude@redhat.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0pLvL4XoGYF6/S/bO4KhBdgKs6/M0DxlhP6T+btdb0E=;
+        b=DQnEDz2U+7+ksD5FQX2sNUYfWb3ltLSlWTCpuDYAUjg7jVFhnJ9XurdU/WWJ2FnG5O
+         fw4nmluU6krwIilEmyN/89/J7s67G3wYk79534hM7BrK8tR9Wb9i7ZjOkeowMqH4JYzr
+         hlUyCfdV03q3bxEPNQpi/k4U+1Bk+6u+TCivy44G/NUHIgsU5z3A/519WkjsOq409JPo
+         O/Ocdj1nzOHpQwSzc63rftHq6o0nSEheqRMl4WRk5oF5UA3VfJhmrNRgO8sT/DcJk+vF
+         pVDlKfjtYERkEiUnzD/vdf4sn9BzFsijlJ8E+1hEd5JPEnXFIhu3vCbw3zOqz406DXoO
+         oeEw==
+X-Gm-Message-State: APjAAAV1lhhCZt9+8knHZYMaqMKmYwyrh0YJCz9yxAmahkkfvEZO8bPq
+        8DUxdf0MlK+spW+hoMP74Tba7g==
+X-Google-Smtp-Source: APXvYqwwz4QXBj6X4jmRiK5RdWk3VtwUDMP0wQe48ogv57D0i040spqUEUMSR5b2sInVDU1XTItkNg==
+X-Received: by 2002:a62:ce8e:: with SMTP id y136mr49994255pfg.29.1564604710841;
+        Wed, 31 Jul 2019 13:25:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p23sm74797789pfn.10.2019.07.31.13.25.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 31 Jul 2019 13:25:09 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 13:25:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Isaac J. Manjarres" <isaacm@codeaurora.org>, crecklin@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, psodagud@codeaurora.org,
+        tsoni@codeaurora.org, eberman@codeaurora.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] mm/usercopy: Use memory range to be accessed for
+ wraparound check
+Message-ID: <201907311323.2C991F08@keescook>
+References: <1564509253-23287-1-git-send-email-isaacm@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564509253-23287-1-git-send-email-isaacm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also, I realized after sending this that I should clarify something so there
-isn't any confusion.
-
-A bunch of people on the bug that was mentioned in b516ea586d71 ("PCI: Enable
-NVIDIA HDA controllers") said that this worked perfectly for their P50
-laptops. While I don't doubt that at all, it should be noted that the P50
-quirk there is only present on a _very specific_ subset of P50 SKUs, so it's
-quite likely that the people in that bug report just didn't have a P50 that
-hits this issue. The relevant model numbers of the P50 with the flakey bioses
-that require this quirk should be mentioned here:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=203003
-
-
-
-On Wed, 2019-07-31 at 16:19 -0400, Lyude Paul wrote:
-> This reverts commit b516ea586d717472178e6ef1c152e85608b0ce32.
+On Tue, Jul 30, 2019 at 10:54:13AM -0700, Isaac J. Manjarres wrote:
+> Currently, when checking to see if accessing n bytes starting at
+> address "ptr" will cause a wraparound in the memory addresses,
+> the check in check_bogus_address() adds an extra byte, which is
+> incorrect, as the range of addresses that will be accessed is
+> [ptr, ptr + (n - 1)].
 > 
-> While this fixes audio for a number of users, this commit has the
-> sideaffect of breaking the BIOS workaround that's required to make the
-> GPU on the nvidia P50 work, by causing the GPU's PCI device function to
-> stop working after it's been set to multifunction mode.
+> This can lead to incorrectly detecting a wraparound in the
+> memory address, when trying to read 4 KB from memory that is
+> mapped to the the last possible page in the virtual address
+> space, when in fact, accessing that range of memory would not
+> cause a wraparound to occur.
 > 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Daniel Drake <drake@endlessm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Aaron Plattner <aplattner@nvidia.com>
-> Cc: Peter Wu <peter@lekensteyn.nl>
-> Cc: Ilia Mirkin <imirkin@alum.mit.edu>
-> Cc: Karol Herbst <kherbst@redhat.com>
-> Cc: Maik Freudenberg <hhfeuer@gmx.de>
-> Cc: linux-pci@vger.kernel.org
+> Use the memory range that will actually be accessed when
+> considering if accessing a certain amount of bytes will cause
+> the memory address to wrap around.
+> 
+> Fixes: f5509cc18daa ("mm: Hardened usercopy")
+> Co-developed-by: Prasad Sodagudi <psodagud@codeaurora.org>
+> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+> Cc: stable@vger.kernel.org
+> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+> Acked-by: Kees Cook <keescook@chromium.org>
+
+Ah, thanks for the reminder! (I got surprised by seeing my Ack in this
+email -- next time please use "v2" or "RESEND" to jog my memory.) This
+got lost last year; my bad.
+
+Andrew, can you take this or should I send it directly to Linus?
+
+-Kees
+
 > ---
+>  mm/usercopy.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I'm not really holding my breath on this patch to being accepted:
-> there's a good chance there's a better solution for this (and I'm going
-> to continue investigating for one after sending this patch), this is
-> more just to start a conversation on what the proper way to fix this is.
-> 
-> So, I'm kind of confused about why exactly this was implemented as an
-> early boot quirk in the first place. If we're seeing the GPU's PCI
-> device, we already know the GPU is there. Shouldn't we be able to check
-> for the existence of the HDA device once we probe the GPU in nouveau?
-> This would make a lot more sense and be a lot less troublesome. I can
-> see that in the discussion on
-> 
-> https://bugs.freedesktop.org/show_bug.cgi?id=75985
-> 
-> That people mentioned that unloading nouveau then trying to reprobe for
-> the audio device didn't work, but that still doesn't explain why this
-> was implemented as an early quirk and not as something we just do before
-> nouveau is setup. Can we maybe move this somewhere a little more
-> sensible?
-> 
->  drivers/pci/quirks.c    | 30 ------------------------------
->  include/linux/pci_ids.h |  1 -
->  2 files changed, 31 deletions(-)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 208aacf39329..c66c0ca446c4 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5011,36 +5011,6 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA,
-> PCI_ANY_ID,
->  			      PCI_CLASS_SERIAL_UNKNOWN, 8,
->  			      quirk_gpu_usb_typec_ucsi);
+> diff --git a/mm/usercopy.c b/mm/usercopy.c
+> index 2a09796..98e92486 100644
+> --- a/mm/usercopy.c
+> +++ b/mm/usercopy.c
+> @@ -147,7 +147,7 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
+>  				       bool to_user)
+>  {
+>  	/* Reject if object wraps past end of memory. */
+> -	if (ptr + n < ptr)
+> +	if (ptr + (n - 1) < ptr)
+>  		usercopy_abort("wrapped address", NULL, to_user, 0, ptr + n);
 >  
-> -/*
-> - * Enable the NVIDIA GPU integrated HDA controller if the BIOS left it
-> - * disabled.  https://devtalk.nvidia.com/default/topic/1024022
-> - */
-> -static void quirk_nvidia_hda(struct pci_dev *gpu)
-> -{
-> -	u8 hdr_type;
-> -	u32 val;
-> -
-> -	/* There was no integrated HDA controller before MCP89 */
-> -	if (gpu->device < PCI_DEVICE_ID_NVIDIA_GEFORCE_320M)
-> -		return;
-> -
-> -	/* Bit 25 at offset 0x488 enables the HDA controller */
-> -	pci_read_config_dword(gpu, 0x488, &val);
-> -	if (val & BIT(25))
-> -		return;
-> -
-> -	pci_info(gpu, "Enabling HDA controller\n");
-> -	pci_write_config_dword(gpu, 0x488, val | BIT(25));
-> -
-> -	/* The GPU becomes a multi-function device when the HDA is enabled */
-> -	pci_read_config_byte(gpu, PCI_HEADER_TYPE, &hdr_type);
-> -	gpu->multifunction = !!(hdr_type & 0x80);
-> -}
-> -DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-> -			       PCI_BASE_CLASS_DISPLAY, 16, quirk_nvidia_hda);
-> -DECLARE_PCI_FIXUP_CLASS_RESUME_EARLY(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-> -			       PCI_BASE_CLASS_DISPLAY, 16, quirk_nvidia_hda);
-> -
->  /*
->   * Some IDT switches incorrectly flag an ACS Source Validation error on
->   * completions for config read requests even though PCIe r4.0, sec
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index c842735a4f45..f496fb619287 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -1336,7 +1336,6 @@
->  #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP78S_SMBUS    0x0752
->  #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP77_IDE       0x0759
->  #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP73_SMBUS     0x07D8
-> -#define PCI_DEVICE_ID_NVIDIA_GEFORCE_320M           0x08A0
->  #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP79_SMBUS     0x0AA2
->  #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP89_SATA	    0x0D85
->  
--- 
-Cheers,
-	Lyude Paul
+>  	/* Reject if NULL or ZERO-allocation. */
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
 
+-- 
+Kees Cook
