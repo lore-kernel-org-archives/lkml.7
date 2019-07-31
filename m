@@ -2,67 +2,192 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E952CC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FA5C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5ABE206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BD2206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="BFh46z1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387789AbfGaMid (ORCPT
+        id S1728650AbfGaMjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:38:33 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51376 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbfGaMi2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:38:28 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7BFEF2853E3;
-        Wed, 31 Jul 2019 13:38:26 +0100 (BST)
-Date:   Wed, 31 Jul 2019 14:38:22 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Naga Sureshkumar Relli <nagasure@xilinx.com>
-Cc:     "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "richard@nod.at" <richard@nod.at>,
+        Wed, 31 Jul 2019 08:39:20 -0400
+Received: from mail-eopbgr50127.outbound.protection.outlook.com ([40.107.5.127]:9865
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387760AbfGaMiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 08:38:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MGk2njyUuYKVOz6sw2PuaN+TmGfIV9owQQ0YDBcX5xwPrPvAuiKug7pilfwuPiLgBG4b5lSCf5iCTWhysBE0al/DVzCJUKehzk9OVPFXeIHv1Y/4uOJKhCq6WpVObybFHzwnIQ4SHPS2h6wWsHbLc5foLJ3QH1/qBaF+JYWE3XSJYe1DrCkMlKUwW/BhXklDMjEx2WvRPXs3GaLFMFF73bak0Bdjj5h8r76NBBFq4rpL45zxK1wMDKetJbhnPN5koMC1ApUfJhWJpThkPy8MxWS8mqaHGikk27/dQn40oA1lpWsfqzYX2dgc3RUF9Rg2qXeuN2uE2iIx5xz6h5XW3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SDEeuRYvVXNVLTS06fbORFF5P9I0aNmxQURvScbNM4g=;
+ b=F+oNqhhP1BA1TnkLtb6VGEnB1EXREt/JuZJHJb80hDpkVd6Wblk9ItC369FONMWQOltjpPAkl/N16jOFdpVVspDILaTfVsiJVBkaEHs/AQ7PsjoTKsisLbaFHMN3NLnSS3SjsXHUjp3VecGhljZtl2SKgzq2QIJ5JJEt+gJkbhHJg5riOvwziLieayqe7cw4kjpgK3/4gwYIHJzGsdiHFXOVvsVnUZGVfWuV/Ivph6N+RxtArjvzZ5onoKJ+5mVPafP3OHGGrw/7CPRsJnifQF1LOo5wAQUSolxcINsjeExvHYfZ0BAh1pIJy1wraVaJSXc7FycHm51mhL3HwaT4/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=toradex.com;dmarc=pass action=none
+ header.from=toradex.com;dkim=pass header.d=toradex.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SDEeuRYvVXNVLTS06fbORFF5P9I0aNmxQURvScbNM4g=;
+ b=BFh46z1cv0LMGZWj/rTgdjGOJSpYscctOKv/ng/MA1Ds5N1lfPrBYwHzdBcogk1YHuZjqtgRKjzBjnKK2BvP9lpuhmGpaFO+PtPaUpp062ocgLrCW9enNqWsmcbd0dDAFNCVjZpP+joTG4hN7KtdvLXVySnx/gExqTffocJsCpI=
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
+ VI1PR0502MB3615.eurprd05.prod.outlook.com (52.134.7.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.15; Wed, 31 Jul 2019 12:38:20 +0000
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::8405:5b51:b25d:39a2]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::8405:5b51:b25d:39a2%6]) with mapi id 15.20.2115.005; Wed, 31 Jul 2019
+ 12:38:20 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>,
+        Fabio Estevam <festevam@gmail.com>
+CC:     Philippe Schenker <philippe.schenker@toradex.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>
-Subject: Re: [PATCH 5/6] mtd: spi-nor: Add s3an_post_sfdp_fixups()
-Message-ID: <20190731143822.79fa7c82@collabora.com>
-In-Reply-To: <MN2PR02MB5727FF8617B1A2FC89739601AFDF0@MN2PR02MB5727.namprd02.prod.outlook.com>
-References: <20190731091145.27374-1-tudor.ambarus@microchip.com>
-        <20190731091145.27374-6-tudor.ambarus@microchip.com>
-        <MN2PR02MB5727FF8617B1A2FC89739601AFDF0@MN2PR02MB5727.namprd02.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH v2 11/20] ARM: dts: imx6qdl-apalis: Add sleep state to can
+ interfaces
+Thread-Topic: [PATCH v2 11/20] ARM: dts: imx6qdl-apalis: Add sleep state to
+ can interfaces
+Thread-Index: AQHVR5zVGQZsOPv+o068E1JvmF98HA==
+Date:   Wed, 31 Jul 2019 12:38:20 +0000
+Message-ID: <20190731123750.25670-12-philippe.schenker@toradex.com>
+References: <20190731123750.25670-1-philippe.schenker@toradex.com>
+In-Reply-To: <20190731123750.25670-1-philippe.schenker@toradex.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR02CA0012.eurprd02.prod.outlook.com
+ (2603:10a6:208:3e::25) To VI1PR0502MB3965.eurprd05.prod.outlook.com
+ (2603:10a6:803:23::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.22.0
+x-originating-ip: [46.140.72.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0bc001bf-3565-4e3a-7846-08d715b3f7de
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB3615;
+x-ms-traffictypediagnostic: VI1PR0502MB3615:
+x-microsoft-antispam-prvs: <VI1PR0502MB3615FA3EE87C9109579501E3F4DF0@VI1PR0502MB3615.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:758;
+x-forefront-prvs: 011579F31F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(376002)(136003)(396003)(366004)(346002)(199004)(189003)(66946007)(52116002)(66446008)(64756008)(66556008)(66476007)(76176011)(99286004)(53936002)(6512007)(6436002)(5660300002)(4326008)(7416002)(66066001)(6486002)(25786009)(478600001)(14454004)(7736002)(305945005)(71190400001)(71200400001)(3846002)(6116002)(36756003)(2501003)(68736007)(2906002)(2201001)(44832011)(486006)(476003)(86362001)(446003)(2616005)(14444005)(11346002)(256004)(186003)(81166006)(81156014)(26005)(102836004)(50226002)(8936002)(8676002)(6506007)(386003)(316002)(54906003)(110136005)(1076003)(32563001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3615;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jM4H0qoPPSRSra6N17MTRqRWuiEVHS2m0KvhAGbcYxt03c+O1FJQ+bp76VONgbEeBgIX9MFgrGyQVDsCYaVb2Y7kWY6dnSEXh75o6OsohZ3dn7IEJI+LNj/izjguknvdpaaRgSq6dWJAEcdpsGbg88W2Vxx/5ykQy9R6+Q3QWMkIF46BzcMraCHkJFWuTw1ec6h8GHxB4jXJUKJV+WEDrwgILt/Re8Bs/lUz4TQlJ+nr7N/12WATUJNaOv8Yodwi72spI40om7n4CRTkTeR/Bp2PrX1cAAyhv4gxUiUL2pA8A7MF+nY9EPrv9efeuUYcUFLhJyh0wJDePXQEFiTVWRwCU16iaUus/7wzDoPtRVocpen6bBAJvsx8+6veNKt5a9GEnTw0KM74wL3LkClWBDEog8vKoyPiLsYSaym329U=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bc001bf-3565-4e3a-7846-08d715b3f7de
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 12:38:20.0484
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: philippe.schenker@toradex.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3615
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 12:31:19 +0000
-Naga Sureshkumar Relli <nagasure@xilinx.com> wrote:
+This patch prepares the devicetree for the new Ixora V1.2 where we are
+able to turn off the supply of the can transceiver. This implies to use
+a sleep state on transmission pins in order to prevent backfeeding.
 
-> Hi Tudor,
-> 
-> Thanks for the updates. With these kind of updates, we can add Vendor specific
-> Code easily, like Xilinx Dual parallel and stacked modes.
-> In these configurations we need to tweak the nor parameters like page_size, sectors etc.
-> So with the help of these patches. we can easily update these parameters.
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
-Absolutely not. This is just a solution to recover from broken SFDP
-tables.
+---
+
+Changes in v2:
+- Changed commit title to '...imx6qdl-apalis:...'
+
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi | 27 +++++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6=
+qdl-apalis.dtsi
+index 7c4ad541c3f5..59ed2e4a1fd1 100644
+--- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+@@ -148,14 +148,16 @@
+ };
+=20
+ &can1 {
+-	pinctrl-names =3D "default";
+-	pinctrl-0 =3D <&pinctrl_flexcan1>;
++	pinctrl-names =3D "default", "sleep";
++	pinctrl-0 =3D <&pinctrl_flexcan1_default>;
++	pinctrl-1 =3D <&pinctrl_flexcan1_sleep>;
+ 	status =3D "disabled";
+ };
+=20
+ &can2 {
+-	pinctrl-names =3D "default";
+-	pinctrl-0 =3D <&pinctrl_flexcan2>;
++	pinctrl-names =3D "default", "sleep";
++	pinctrl-0 =3D <&pinctrl_flexcan2_default>;
++	pinctrl-1 =3D <&pinctrl_flexcan2_sleep>;
+ 	status =3D "disabled";
+ };
+=20
+@@ -599,19 +601,32 @@
+ 		>;
+ 	};
+=20
+-	pinctrl_flexcan1: flexcan1grp {
++	pinctrl_flexcan1_default: flexcan1defgrp {
+ 		fsl,pins =3D <
+ 			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX 0x1b0b0
+ 			MX6QDL_PAD_GPIO_8__FLEXCAN1_RX 0x1b0b0
+ 		>;
+ 	};
+=20
+-	pinctrl_flexcan2: flexcan2grp {
++	pinctrl_flexcan1_sleep: flexcan1slpgrp {
++		fsl,pins =3D <
++			MX6QDL_PAD_GPIO_7__GPIO1_IO07 0x0
++			MX6QDL_PAD_GPIO_8__GPIO1_IO08 0x0
++		>;
++	};
++
++	pinctrl_flexcan2_default: flexcan2defgrp {
+ 		fsl,pins =3D <
+ 			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x1b0b0
+ 			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x1b0b0
+ 		>;
+ 	};
++	pinctrl_flexcan2_sleep: flexcan2slpgrp {
++		fsl,pins =3D <
++			MX6QDL_PAD_KEY_COL4__GPIO4_IO14 0x0
++			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15 0x0
++		>;
++	};
+=20
+ 	pinctrl_gpio_bl_on: gpioblon {
+ 		fsl,pins =3D <
+--=20
+2.22.0
+
