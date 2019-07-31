@@ -2,92 +2,134 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039BFC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC48C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC46E204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:22:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564611760;
-	bh=eRxijePWptzEnqpWtysxuSDWbhdaWYF+Lnq6TrTL2G8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0OHv9BR1d0szRdk72yRt502MeCdfzzBSiMHyzzMPz2/sgqrr3e0TlrkAbgJz+o8/y
-	 /IeKwtLNWwTsyWo0ykIxzppsHRFdzEfAT3Nyde4ciugYxLsQ0j6CMh2qyggJ8ncVoo
-	 tu+7gISOueNkUMX5LfcgG370jKaDsUpyivkN2gio=
+	by mail.kernel.org (Postfix) with ESMTP id 83E1A204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbfGaWWj (ORCPT
+        id S1729162AbfGaWXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:22:39 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38707 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbfGaWWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:22:38 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 15:22:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,331,1559545200"; 
-   d="scan'208";a="371719160"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga005.fm.intel.com with ESMTP; 31 Jul 2019 15:22:36 -0700
-Date:   Wed, 31 Jul 2019 16:19:56 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-Message-ID: <20190731221956.GB15795@localhost.localdomain>
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
- <47415939.KV5G6iaeJG@kreacher>
- <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
- <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
- <20190730213114.GK13948@localhost.localdomain>
- <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+        Wed, 31 Jul 2019 18:23:51 -0400
+Received: from smtprelay0206.hostedemail.com ([216.40.44.206]:33503 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726073AbfGaWXu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 18:23:50 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id E4277100E806B;
+        Wed, 31 Jul 2019 22:23:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: arm44_786e4d119b04f
+X-Filterd-Recvd-Size: 3426
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 31 Jul 2019 22:23:47 +0000 (UTC)
+Message-ID: <d68403ce9f7e8a68fff09d6b17e5d1327eb1e12d.camel@perches.com>
+Subject: Re: [PATCH] net: sctp: Rename fallthrough label to unhandled
+From:   Joe Perches <joe@perches.com>
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     Vlad Yasevich <vyasevich@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 31 Jul 2019 15:23:46 -0700
+In-Reply-To: <20190731205804.GE9823@hmswarspite.think-freely.org>
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+         <20190731111932.GA9823@hmswarspite.think-freely.org>
+         <eac3fe457d553a2b366e1c1898d47ae8c048087c.camel@perches.com>
+         <20190731121646.GD9823@hmswarspite.think-freely.org>
+         <b93bbb17b407e27bb1dc196af84e4f289d9dfd93.camel@perches.com>
+         <20190731205804.GE9823@hmswarspite.think-freely.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
-> 
-> A couple of remarks if you will.
-> 
-> First, we don't know which case is the majority at this point.  For
-> now, there is one example of each, but it may very well turn out that
-> the SK Hynix BC501 above needs to be quirked.
-> 
-> Second, the reference here really is 5.2, so if there are any systems
-> that are not better off with 5.3-rc than they were with 5.2, well, we
-> have not made progress.  However, if there are systems that are worse
-> off with 5.3, that's bad.  In the face of the latest findings the only
-> way to avoid that is to be backwards compatible with 5.2 and that's
-> where my patch is going.  That cannot be achieved by quirking all
-> cases that are reported as "bad", because there still may be
-> unreported ones.
+On Wed, 2019-07-31 at 16:58 -0400, Neil Horman wrote:
+> On Wed, Jul 31, 2019 at 09:35:31AM -0700, Joe Perches wrote:
+> > On Wed, 2019-07-31 at 08:16 -0400, Neil Horman wrote:
+> > > On Wed, Jul 31, 2019 at 04:32:43AM -0700, Joe Perches wrote:
+> > > > On Wed, 2019-07-31 at 07:19 -0400, Neil Horman wrote:
+> > > > > On Tue, Jul 30, 2019 at 10:04:37PM -0700, Joe Perches wrote:
+> > > > > > fallthrough may become a pseudo reserved keyword so this only use of
+> > > > > > fallthrough is better renamed to allow it.
+> > > > > > 
+> > > > > > Signed-off-by: Joe Perches <joe@perches.com>
+> > > > > Are you referring to the __attribute__((fallthrough)) statement that gcc
+> > > > > supports?  If so the compiler should by all rights be able to differentiate
+> > > > > between a null statement attribute and a explicit goto and label without the
+> > > > > need for renaming here.  Or are you referring to something else?
+> > > > 
+> > > > Hi.
+> > > > 
+> > > > I sent after this a patch that adds
+> > > > 
+> > > > # define fallthrough                    __attribute__((__fallthrough__))
+> > > > 
+> > > > https://lore.kernel.org/patchwork/patch/1108577/
+> > > > 
+> > > > So this rename is a prerequisite to adding this #define.
+> > > > 
+> > > why not just define __fallthrough instead, like we do for all the other
+> > > attributes we alias (i.e. __read_mostly, __protected_by, __unused, __exception,
+> > > etc)
+> > 
+> > Because it's not as intelligible when used as a statement.
+> I think thats somewhat debatable.  __fallthrough to me looks like an internal
+> macro, whereas fallthrough looks like a comment someone forgot to /* */
 
-I have to agree. I think your proposal may allow PCI D3cold, in which
-case we do need to reintroduce the HMB handling.
+
+I'd rather see:
+
+	switch (foo) {
+	case FOO:
+		bar |= baz;
+		fallthrough;
+	case BAR:
+		bar |= qux;
+		break;
+	default:
+		error();
+	}
+
+than
+
+	switch (foo) {
+	case FOO:
+		bar |= baz;
+		__fallthrough;
+	case BAR:
+		bar |= qux;
+		break;
+	default:
+		error();
+	}
+
+or esoecially
+
+	switch (foo) {
+	case FOO:
+		bar |= baz;
+		/* fallthrough
+*/;
+	case BAR:
+		bar |= qux;
+		break;
+	default:
+		error();
+	}
+
+but <shrug>, bikeshed ahoy!...
+
+
