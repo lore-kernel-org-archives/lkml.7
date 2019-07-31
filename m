@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F73EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62030C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62338208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3567B208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:22:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="yNcUiWdQ"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="wnJQX8mA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbfGaPV4 (ORCPT
+        id S1730124AbfGaPWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:21:56 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35522 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfGaPVz (ORCPT
+        Wed, 31 Jul 2019 11:22:02 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39860 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbfGaPV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:21:55 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w20so66035915edd.2
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:21:54 -0700 (PDT)
+        Wed, 31 Jul 2019 11:21:59 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m10so66051557edv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 08:21:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZkftAsGdSxojE0fJOOOF/MZdp7LK73Cocd1bOG6H+X8=;
-        b=yNcUiWdQFKls9CJ+s1kmqNYTq4HAt/+z4PQnyTb2R/O/QG4HejvHYbZEnDpZkx4u6m
-         rYryPmrZZw5X0yVl9cqTObJ/vAbi3N2kcWUJTn/nS5m7u0j1NeO76bPx86u5y6/FFXzG
-         GwvkGwtp3dVrAmLGNQwceerYEf8lbhe3A3hpQ9jH6pM/+5oR2hB1poc9BJZ/qpFk3lFg
-         AVoV+a8D/wx7gKubBM5x0ly/CpnY4m7riIc5gECoUZ1ttMWB61O3sn/gxcaUYdZYR3rm
-         riJBLh8bckwgmhvRhWjFVk43K9z3429hxlIIgWZDxIvHcCVj0zmgN7kgBdEg+aubIbZF
-         aYoA==
+        bh=Eu+g52fZa4bEGKyIAIp4EBxePC6msthuJH3Uu+nPhTw=;
+        b=wnJQX8mAznJJYoCaujK7jTh3QOUX6PWjjuHiLLJcqeV5ss0Z+2QOjKE/V/f7i2iOiK
+         nWVMBrRzOEuvD50CqQeMSrlLn2yn9nza0e9HYNf9Ci+gZHXztuPcnXQO8Dv/jueUicfh
+         7x8hxn+DoCcOemE+5xb8GVrcsoOF21pEeWL359gwrBqCcOEFkYVISmg99A9v32xeC8nY
+         K1fXvjaKfAQ0uf1yUKgRc0FXE0a1c8GjVdeZkh9RF4YCM+ZniD98ehoTPZKfBwPrhyWd
+         vT4LGzn8l+GiV/PrV8efZhSU7sLAmcDsKabNfPrtzDTZJ+6VtoCaBOiq1M24C/XlfUJi
+         ySJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZkftAsGdSxojE0fJOOOF/MZdp7LK73Cocd1bOG6H+X8=;
-        b=K7hBRWwavWIs3HybuIHsCsbuq9c+VR7xGY0NvGKKSQnSv5/PYekxqvvwRC1hDQMOCH
-         EGtHfOdF0qhlo5lJpp+2SUA8kshX+0clWRtSs1nXFCTJA/feTRzJUtXUJDSPatYGlqOV
-         nFRjuSgebPRemNuSiCt8pF99Fp70dSq2raXg9DXfbWmzGikzMCQ9Yu8P/q/RdB9UqIxc
-         nzwJxDrvTw9gmX0NMO8JYLViV5Kb7A5lhEnYjKBa6aQ8nM+/K+l91iOMnJwXpyvE3dfM
-         +8WyAbv4AnRV2+CB1nBbP4C+n61PVW8HQSizGG0IEvoDxoNPNk5fBbnuBInWVMurSeWw
-         9Y7g==
-X-Gm-Message-State: APjAAAXpJ9xfpiWENk2T7y9AVTVKh3ZbuP8/SZUAIveOCNmJVeyDE7tO
-        bVZwZS720/iSxDaA6aRwvMg=
-X-Google-Smtp-Source: APXvYqxlBWhD79QJcY6LnrhxwdW4BCeLIylkUAMRGP9j6V32DYMCll5/WusJdm6IK3xrXEoHhQo02A==
-X-Received: by 2002:a17:906:94ce:: with SMTP id d14mr97075606ejy.251.1564586031480;
+        bh=Eu+g52fZa4bEGKyIAIp4EBxePC6msthuJH3Uu+nPhTw=;
+        b=mY7hQfJoWiEWuj+Y6VGuv0osK/yywFEGqokEkvIaMvtm9bgaFJHmFF4OyFrjOgy/kl
+         nkneycoT0JB+rnSK+zUHAR1rTA4rbv/GbUnmEJ2ryV8c7SajeD/ILf16/sanNyP6CEMV
+         EMqLrLD91rtNK9e7Qc+20qNyrkQ/J42JE3IsqINtesR527Qy3l+BYOMe9Dc4wgcsz2l1
+         aqohRRVBa4jiTctsdOBnF4u/to2Ll03kjOnym2J/8NMLarYyo7zFOMlwQ0JA9PFXMSvz
+         SY1+zuNpkkYrYZcQi3ys0PVi89WdAxgMA5U/3jLOQgr54NEDfyYech6ABxjgcJfG6nWL
+         YBBw==
+X-Gm-Message-State: APjAAAVQVursjuP7J15WvfFnGuFmMsDR5z35b57w4rGCHDvmnKxKJkLQ
+        RA3HiJwNPG1xkgBHggavH50=
+X-Google-Smtp-Source: APXvYqxAI13PpDAJZQellLR+hBXyuxC6IRUxmch2g01/3TCjBtlaolRAKh1msonh8wE/v8SwQy/t/w==
+X-Received: by 2002:a50:addc:: with SMTP id b28mr108191573edd.174.1564586031854;
         Wed, 31 Jul 2019 08:13:51 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id j37sm17791942ede.23.2019.07.31.08.13.49
+        by smtp.gmail.com with ESMTPSA id l2sm16613746edn.59.2019.07.31.08.13.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Wed, 31 Jul 2019 08:13:50 -0700 (PDT)
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 251F0104601; Wed, 31 Jul 2019 18:08:17 +0300 (+03)
+        id 7A1691030BB; Wed, 31 Jul 2019 18:08:16 +0300 (+03)
 To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,10 +74,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alison Schofield <alison.schofield@intel.com>,
         linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 43/59] x86/mm: Set KeyIDs in encrypted VMAs for MKTME
-Date:   Wed, 31 Jul 2019 18:07:57 +0300
-Message-Id: <20190731150813.26289-44-kirill.shutemov@linux.intel.com>
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 20/59] x86/mm: Handle encrypted memory in page_to_virt() and __pa()
+Date:   Wed, 31 Jul 2019 18:07:34 +0300
+Message-Id: <20190731150813.26289-21-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
 References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
@@ -88,100 +88,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+Per-KeyID direct mappings require changes into how we find the right
+virtual address for a page and virt-to-phys address translations.
 
-MKTME architecture requires the KeyID to be placed in PTE bits 51:46.
-To create an encrypted VMA, place the KeyID in the upper bits of
-vm_page_prot that matches the position of those PTE bits.
+page_to_virt() definition overwrites default macros provided by
+<linux/mm.h>.
 
-When the VMA is assigned a KeyID it is always considered a KeyID
-change. The VMA is either going from not encrypted to encrypted,
-or from encrypted with any KeyID to encrypted with any other KeyID.
-To make the change safely, remove the user pages held by the VMA
-and unlink the VMA's anonymous chain.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/include/asm/mktme.h |  4 ++++
- arch/x86/mm/mktme.c          | 26 ++++++++++++++++++++++++++
- include/linux/mm.h           |  6 ++++++
- 3 files changed, 36 insertions(+)
+ arch/x86/include/asm/page.h    | 3 +++
+ arch/x86/include/asm/page_64.h | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
-index d26ada6b65f7..e8f7f80bb013 100644
---- a/arch/x86/include/asm/mktme.h
-+++ b/arch/x86/include/asm/mktme.h
-@@ -16,6 +16,10 @@ extern int __mktme_nr_keyids;
- extern int mktme_nr_keyids(void);
- extern unsigned int mktme_algs;
+diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
+index 39af59487d5f..aff30554f38e 100644
+--- a/arch/x86/include/asm/page.h
++++ b/arch/x86/include/asm/page.h
+@@ -72,6 +72,9 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
+ extern bool __virt_addr_valid(unsigned long kaddr);
+ #define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long) (kaddr))
  
-+/* Set the encryption keyid bits in a VMA */
-+extern void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
-+				unsigned long start, unsigned long end);
++#define page_to_virt(x) \
++	(__va(PFN_PHYS(page_to_pfn(x))) + page_keyid(x) * direct_mapping_size)
 +
- DECLARE_STATIC_KEY_FALSE(mktme_enabled_key);
- static inline bool mktme_enabled(void)
- {
-diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-index ed13967bb543..05bbf5058ade 100644
---- a/arch/x86/mm/mktme.c
-+++ b/arch/x86/mm/mktme.c
-@@ -1,5 +1,6 @@
- #include <linux/mm.h>
- #include <linux/highmem.h>
-+#include <linux/rmap.h>
- #include <asm/mktme.h>
- #include <asm/pgalloc.h>
- #include <asm/tlbflush.h>
-@@ -71,6 +72,31 @@ int __vma_keyid(struct vm_area_struct *vma)
- 	return (prot & mktme_keyid_mask()) >> mktme_keyid_shift();
+ #endif	/* __ASSEMBLY__ */
+ 
+ #include <asm-generic/memory_model.h>
+diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
+index f57fc3cc2246..a4f394e3471d 100644
+--- a/arch/x86/include/asm/page_64.h
++++ b/arch/x86/include/asm/page_64.h
+@@ -24,7 +24,7 @@ static inline unsigned long __phys_addr_nodebug(unsigned long x)
+ 	/* use the carry flag to determine if x was < __START_KERNEL_map */
+ 	x = y + ((x > y) ? phys_base : (__START_KERNEL_map - PAGE_OFFSET));
+ 
+-	return x;
++	return x & direct_mapping_mask;
  }
  
-+/* Set the encryption keyid bits in a VMA */
-+void mprotect_set_encrypt(struct vm_area_struct *vma, int newkeyid,
-+			  unsigned long start, unsigned long end)
-+{
-+	int oldkeyid = vma_keyid(vma);
-+	pgprotval_t newprot;
-+
-+	/* Unmap pages with old KeyID if there's any. */
-+	zap_page_range(vma, start, end - start);
-+
-+	if (oldkeyid == newkeyid)
-+		return;
-+
-+	newprot = pgprot_val(vma->vm_page_prot);
-+	newprot &= ~mktme_keyid_mask();
-+	newprot |= (unsigned long)newkeyid << mktme_keyid_shift();
-+	vma->vm_page_prot = __pgprot(newprot);
-+
-+	/*
-+	 * The VMA doesn't have any inherited pages.
-+	 * Start anon VMA tree from scratch.
-+	 */
-+	unlink_anon_vmas(vma);
-+}
-+
- /* Prepare page to be used for encryption. Called from page allocator. */
- void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
- {
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 3f9640f388ac..98a6d2bd66a6 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2905,5 +2905,11 @@ void __init setup_nr_node_ids(void);
- static inline void setup_nr_node_ids(void) {}
- #endif
- 
-+#ifndef CONFIG_X86_INTEL_MKTME
-+static inline void mprotect_set_encrypt(struct vm_area_struct *vma,
-+					int newkeyid,
-+					unsigned long start,
-+					unsigned long end) {}
-+#endif /* CONFIG_X86_INTEL_MKTME */
- #endif /* __KERNEL__ */
- #endif /* _LINUX_MM_H */
+ #ifdef CONFIG_DEBUG_VIRTUAL
 -- 
 2.21.0
 
