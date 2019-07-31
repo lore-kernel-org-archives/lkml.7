@@ -2,121 +2,114 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348DBC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB338C32750
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1600920693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DB320651
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 03:11:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="cSMoutok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfGaDKI (ORCPT
+        id S1728400AbfGaDLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jul 2019 23:10:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3256 "EHLO huawei.com"
+        Tue, 30 Jul 2019 23:11:39 -0400
+Received: from mail-eopbgr730079.outbound.protection.outlook.com ([40.107.73.79]:54624
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727137AbfGaDKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jul 2019 23:10:08 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CEE4DA57303E09839F76;
-        Wed, 31 Jul 2019 11:10:05 +0800 (CST)
-Received: from RH5885H-V3.huawei.com (10.90.53.225) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 31 Jul 2019 11:09:55 +0800
-From:   SunKe <sunke32@huawei.com>
-To:     <sunke32@huawei.com>, <josef@toxicpanda.com>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
-        <linux-kernel@vger.kernel.org>, <kamatam@amazon.com>,
-        <manoj.br@gmail.com>, <stable@vger.kernel.org>, <dwmw@amazon.com>
-Subject: [PATCH] nbd: replace kill_bdev() with __invalidate_device() again
-Date:   Wed, 31 Jul 2019 11:15:46 +0800
-Message-ID: <1564542946-26255-1-git-send-email-sunke32@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726440AbfGaDLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jul 2019 23:11:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xs4Je3Hc7cZIvYt0PqdgnYWqvhC6HJnVDIw25dWVUrH2GNof7LsM49+kHPxUVW+67RbJ0fQ4j8kayYOGFlygSf3S3io5XBL8xxIfQha42ymusfCMNiRRQ4w1X3gxQSM/JadeBzifG+hyafF9MeYMojF6LrSSKUYhWEA5olKg/Zd0Ijoi8FHQ+b1tzBlmE2rd7MnGoJubW90nGJoosIqyO+QLPEwUaCkgCd+GMsAOHPP353kKtU4fCnAu5249dGj6ALTKhm/4mpts88QFVqgm1y6+/Ovb01Ta1WoANnZEnUTwYVP1m7McWiOrKArWTZ3i6isE7k9WGvu4rY78h/z9bA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FmJYGmV0qLv58hqz/iliLhuK3tG4t82A5INmNCLp+co=;
+ b=MJMkaAlitsnGg25UBFopXTu/RTJy0Gz5yJ3huN+4/dHw2LbshdloXTqDU7+o+ALLeg/tEMBOPRuVyInpzigmkK8H7wqB9An+d4//cqH5H4WJ+9GE+IAp2A7xquAMa+zzfQ0UUGECY1/37lYw/ITbRUWX433iX4rdp/TDkE6ynYoI5FccFxsFfvHRoRQx4ajSTEH7Q/hWDBg4qmPyWjX3fGIASZ9Fnp73R1GqnTQPOH9G67WYd8A/IFav+iSTGRaZYvnSItv/UFXeRie9awm7hdV0j+OtyEaM0CN99j8PHs/JfAELKxfGPrqC7BjvSmNmtiK8DsJb1J0pdCdtuS9vKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FmJYGmV0qLv58hqz/iliLhuK3tG4t82A5INmNCLp+co=;
+ b=cSMoutokwLBacwph0HOl8Td9NaV+yCnkpyA42koG0hWkwLFOjylC63RFIHH+jfqFisPsZV6ISIAmMxIoNu1+P4jZCunNhw/eFLGhdw17baVqs5LkkKcPnN5kxG2m+QHTJlKGkUQSXfqSoQYNRtsu/BWDBC4NnkGRQRw9z4fwMcI=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5223.namprd05.prod.outlook.com (20.177.231.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.10; Wed, 31 Jul 2019 03:11:33 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718%2]) with mapi id 15.20.2136.009; Wed, 31 Jul 2019
+ 03:11:33 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Mike Travis <mike.travis@hpe.com>
+CC:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v3 8/9] x86/mm/tlb: Remove UV special case
+Thread-Topic: [PATCH v3 8/9] x86/mm/tlb: Remove UV special case
+Thread-Index: AQHVPc0usbowTTFECki3EVK5pK8NM6bRNtyAgBLo1wA=
+Date:   Wed, 31 Jul 2019 03:11:33 +0000
+Message-ID: <9A6DA70B-F73E-454B-834E-08B36E0B7550@vmware.com>
+References: <20190719005837.4150-1-namit@vmware.com>
+ <20190719005837.4150-9-namit@vmware.com>
+ <54c082c5-ebee-8fd7-cf69-b8c15b60a329@hpe.com>
+In-Reply-To: <54c082c5-ebee-8fd7-cf69-b8c15b60a329@hpe.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6080a0ef-ae8a-451f-39ab-08d71564caa5
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5223;
+x-ms-traffictypediagnostic: BYAPR05MB5223:
+x-microsoft-antispam-prvs: <BYAPR05MB52230DCFA5C1E490AF7E689FD0DF0@BYAPR05MB5223.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 011579F31F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(199004)(189003)(81166006)(102836004)(186003)(2906002)(26005)(3846002)(71190400001)(6116002)(6246003)(66446008)(71200400001)(66556008)(66476007)(64756008)(7736002)(53546011)(66946007)(446003)(478600001)(25786009)(316002)(68736007)(86362001)(36756003)(6916009)(6436002)(53936002)(11346002)(476003)(54906003)(2616005)(76116006)(486006)(66066001)(296002)(8936002)(4326008)(6486002)(33656002)(4744005)(81156014)(14454004)(229853002)(305945005)(76176011)(6512007)(5660300002)(8676002)(256004)(99286004)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5223;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: e9/yRFtEDcYwhR75GGKHrNJZM+aPAXXShY6knRRtubjTk3uSoubr28u5HjACYwFV0BCTZITzYVDec+0AWdP62jJUCMbfHBJ8ieuHPvI7PCd3sAevV7je+PIt+AskGaH0eo+agvp7iZhumJdnEqWp4eEEar6I32oc+xPfz6uIgHpSsfqojjEf8q1O4MBN/3LT1vqyLIxa2xLnPVyOrpstJjB54SZka9l4mhRACXp+LAhE+Q8AQrZJIKX8swO4UYhZhKdZSCIk70ZXA2N79mCziwAVvNZa07jZWNsFp10p5ENXzuUUNAKhADo+XGesYYs2sbYZun3M9fq8u4xoXrIHIhTvLgWxnKqrrvClRVrgUbLSFBEsNFRkRuJqsqv076O6axiL5yDB11iCrdnb94KHnRw9Qn/TfbZwSJ0wibSx1n8=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F10D7596CE124A41B89CB66868B1A980@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6080a0ef-ae8a-451f-39ab-08d71564caa5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 03:11:33.4284
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Munehisa Kamata <kamatam@amazon.com>
+> On Jul 18, 2019, at 7:25 PM, Mike Travis <mike.travis@hpe.com> wrote:
+>=20
+> It is a fact that the UV is still the UV and SGI is now part of HPE. The
+> current external product is known as SuperDome Flex. It is both up to dat=
+e
+> as well as very well maintained. The ACK I provided was an okay to change
+> the code, but please make the description accurate.
 
-Commit abbbdf12497d ("replace kill_bdev() with __invalidate_device()")
-once did this, but 29eaadc03649 ("nbd: stop using the bdev everywhere")
-resurrected kill_bdev() and it has been there since then. So buffer_head
-mappings still get killed on a server disconnection, and we can still
-hit the BUG_ON on a filesystem on the top of the nbd device.
-
-  EXT4-fs (nbd0): mounted filesystem with ordered data mode. Opts: (null)
-  block nbd0: Receive control failed (result -32)
-  block nbd0: shutting down sockets
-  print_req_error: I/O error, dev nbd0, sector 66264 flags 3000
-  EXT4-fs warning (device nbd0): htree_dirblock_to_tree:979: inode #2: lblock 0: comm ls: error -5 reading directory block
-  print_req_error: I/O error, dev nbd0, sector 2264 flags 3000
-  EXT4-fs error (device nbd0): __ext4_get_inode_loc:4690: inode #2: block 283: comm ls: unable to read itable block
-  EXT4-fs error (device nbd0) in ext4_reserve_inode_write:5894: IO failure
-  ------------[ cut here ]------------
-  kernel BUG at fs/buffer.c:3057!
-  invalid opcode: 0000 [#1] SMP PTI
-  CPU: 7 PID: 40045 Comm: jbd2/nbd0-8 Not tainted 5.1.0-rc3+ #4
-  Hardware name: Amazon EC2 m5.12xlarge/, BIOS 1.0 10/16/2017
-  RIP: 0010:submit_bh_wbc+0x18b/0x190
-  ...
-  Call Trace:
-   jbd2_write_superblock+0xf1/0x230 [jbd2]
-   ? account_entity_enqueue+0xc5/0xf0
-   jbd2_journal_update_sb_log_tail+0x94/0xe0 [jbd2]
-   jbd2_journal_commit_transaction+0x12f/0x1d20 [jbd2]
-   ? __switch_to_asm+0x40/0x70
-   ...
-   ? lock_timer_base+0x67/0x80
-   kjournald2+0x121/0x360 [jbd2]
-   ? remove_wait_queue+0x60/0x60
-   kthread+0xf8/0x130
-   ? commit_timeout+0x10/0x10 [jbd2]
-   ? kthread_bind+0x10/0x10
-   ret_from_fork+0x35/0x40
-
-With __invalidate_device(), I no longer hit the BUG_ON with sync or
-unmount on the disconnected device.
-
-Fixes: 29eaadc03649 ("nbd: stop using the bdev everywhere")
-Cc: linux-block@vger.kernel.org
-Cc: Ratna Manoj Bolla <manoj.br@gmail.com>
-Cc: nbd@other.debian.org
-Cc: stable@vger.kernel.org
-Cc: David Woodhouse <dwmw@amazon.com>
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
-
-CR: https://code.amazon.com/reviews/CR-7629288
----
-I reproduced this phenomenon on the fat file system.
-reproduce steps :
-1.Establish a nbd connection.
-2.Run two threads:one do mount and umount,anther one do clear_sock ioctl
-3.Then hit the BUG_ON.
-
-
- drivers/block/nbd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 9bcde23..e21d2de 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1231,7 +1231,7 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
- 				 struct block_device *bdev)
- {
- 	sock_shutdown(nbd);
--	kill_bdev(bdev);
-+	__invalidate_device(bdev, true);
- 	nbd_bdev_reset(bdev);
- 	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
- 			       &nbd->config->runtime_flags))
--- 
-2.7.4
+Looking at the code again, if I remove the call to uv_flush_tlb_others(), i=
+s
+there any use for tlb_uv.c?
 
