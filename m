@@ -2,148 +2,234 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED10C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D463FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1DC206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CBAA206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:55:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jj/3Q/u2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvVGLBSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388140AbfGaOyH (ORCPT
+        id S2388216AbfGaOzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:54:07 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35376 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388075AbfGaOyH (ORCPT
+        Wed, 31 Jul 2019 10:55:31 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36649 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388075AbfGaOza (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:54:07 -0400
-Received: by mail-qk1-f193.google.com with SMTP id r21so49499553qke.2
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:54:06 -0700 (PDT)
+        Wed, 31 Jul 2019 10:55:30 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i21so65928634ljj.3;
+        Wed, 31 Jul 2019 07:55:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SBLkQ5l7iqgRc/LZwzrYfujT+xXRrB58EoMCQ+Ui3VI=;
-        b=jj/3Q/u2Xs29S6NlOoXNsCj1Bdc9Lbm5pq/+4qEzjuzz6zrOeGZvCnVobVV48T76Yt
-         lhP6QIqCfTSMgdyUuA8id7soMBu8FVTcgqq9tZkC8bybvzKhlT1/O1NoAvtkmqU+uHA/
-         lN1qKLKZH/ymKs8cGGKkcqZ3FoyRQ/dIjGPYuLoFcTfL5+v5B/AA0IQmqZYwaGdHN0ae
-         QltUoH5udPdvBV4l2P47Aa9/cHVXXNY3jkrKsbxvYm5v9s3yN8pZAKC4v+LvOm3Nksx3
-         DjtDb18xe32fUbpBwV9L8znF6djoInMDHvfKACmRHmqQuRp0qh6rvxjwq3ppdlNuSADi
-         NdzA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Z+hRd98x5TV3xKbm4IgKfN0HNypL+IKEJ8fZRsTiix0=;
+        b=fvVGLBSFsBeCBbnAFgMoGV4TPLTvo+6xoI2Hvax7N4ReE4xjlKMrgKGz/x44aYgJQQ
+         HBNms7NhIT17yeS954cS+log+VeGl0T5OgofXv+MgCMI9r/lh97ZlpjO+jFKm4GgcrF1
+         V4+FyBD0eB6oDNjWK+lgsjszwZmt55x092LDcZDdD/623SJ8sHXp8gJlV++eXfeMpOqA
+         XmbQ+VwXFzzI8oxD4BzLq0znoqzisSSm9SNpO4BhfF5E/00R0O42uJN++S5kC0Ylb7P/
+         lMTBwWCtQWrDxWdSurU1DYP4dDm3sonbWhsk0L6UA26lsQkqA9yfxlNIn97JfVqY9/JM
+         htVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SBLkQ5l7iqgRc/LZwzrYfujT+xXRrB58EoMCQ+Ui3VI=;
-        b=Gtiwm75oOarZfroUv9PGMMMW+uMJj52HvtFwr9Axp07ALfHAJqwOhUJp5UASY8sGRr
-         Ealg6g57BIT+Y9JqLGar9aRKNIOY4J/RrqilWIIkO21PBjxEi0EUSKTOrBzqtRcrP3Un
-         tKVP7wliHXeRNmX6OFnrkekFgVpEpe3eptw7EFInZOcVB0l15prdN63smRPAv5gIoeNB
-         TTygeq060drY6AwaYs6zv+0uHKGJyZ7Tt4b43N/g6KuCDexQYe9dM5GpWS8KE+aQZkMp
-         FFrLBDBkbYb28iRi/nAHnMgqnyOmQwkg7wGZfsuIqrUCGXC8F3HkqDbD4+1pr0gDgjVh
-         W1Ng==
-X-Gm-Message-State: APjAAAUyvBUusHqkJX08hd8439lPBgWJTzAUnmYPYTiY2BBeDzUETHja
-        m/q6amX87n2ZB/dXjQNMDyouEw==
-X-Google-Smtp-Source: APXvYqx+aQWLkT4Ece9S/qLSNvLPSnE6+9CTFSY4EuJdjy+FS1QE9EH891iVIapc59W/IB+tXlTypA==
-X-Received: by 2002:ae9:ebc3:: with SMTP id b186mr82269098qkg.222.1564584845939;
-        Wed, 31 Jul 2019 07:54:05 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id n27sm23088492qkk.35.2019.07.31.07.54.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Z+hRd98x5TV3xKbm4IgKfN0HNypL+IKEJ8fZRsTiix0=;
+        b=M7ICN+Gc6Sxh/EzO5+UuPT9f61eRN8APndwAE+zBPdSyGjG1krqh3JrRWGGcdDL5zl
+         N7tHO9ll4RNXJP7nPbBFrXFUuZavtVbYShkicwxVnQOkmXdK9muLecZZyzmtLQOI2eTB
+         n8hJmnAUrwexkDc6C9MJXesFXX2r3N5K6GLd/tN6IPKj1y4dTNlM1fcFOu4p5JnsGWHA
+         BXY1XkTzEnTY8tFWt1Ja7P02bYBsfERVwovkBH+1PT+JUJpw3Xl+Oo7uifX1Hz/NFsU3
+         8RC/vvWwmh5KSmjSQ6a2sB/ds3G3hnO7AQ0S9KxMILOuPuwD/+3uYPc4k1Jjuz4hlNnK
+         lIWw==
+X-Gm-Message-State: APjAAAXxe5P3UNPbnje8HivpzTKhRDREk0XqYQSJStIQhyi5jLV/v1q2
+        c33lDZn+ZtbGHtmh/ge+KQY=
+X-Google-Smtp-Source: APXvYqzykQOfJKE2+s8Z9PdCeuLmIeuPmPCh8PdDa326fgulb9QTYSesVp7dRtsjEFi6EP9kH+9kIw==
+X-Received: by 2002:a2e:8849:: with SMTP id z9mr25234956ljj.203.1564584927631;
+        Wed, 31 Jul 2019 07:55:27 -0700 (PDT)
+Received: from localhost.localdomain (77.241.141.68.bredband.3.dk. [77.241.141.68])
+        by smtp.gmail.com with ESMTPSA id j7sm15647799lji.27.2019.07.31.07.55.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 07:54:05 -0700 (PDT)
-Message-ID: <1564584843.11067.36.camel@lca.pw>
-Subject: Re: [PATCH v2] mm: kmemleak: Use mempool allocations for kmemleak
- objects
-From:   Qian Cai <cai@lca.pw>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Date:   Wed, 31 Jul 2019 10:54:03 -0400
-In-Reply-To: <20190731144839.GA17773@arrakis.emea.arm.com>
-References: <20190727132334.9184-1-catalin.marinas@arm.com>
-         <20190730125743.113e59a9c449847d7f6ae7c3@linux-foundation.org>
-         <1564518157.11067.34.camel@lca.pw>
-         <20190731095355.GC63307@arrakis.emea.arm.com>
-         <C8EF1660-78FF-49E4-B5D7-6B27400F7306@lca.pw>
-         <20190731144839.GA17773@arrakis.emea.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 31 Jul 2019 07:55:27 -0700 (PDT)
+From:   Tomas Bortoli <tomasbortoli@gmail.com>
+To:     wg@grandegger.com, mkl@pengutronix.de, linux-can@vger.kernel.org
+Cc:     davem@davemloft.net, gregkh@linuxfoundation.org,
+        alexios.zavras@intel.com, tglx@linutronix.de, allison@lohutok.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller@googlegroups.com, Tomas Bortoli <tomasbortoli@gmail.com>
+Subject: [PATCH] peak_usb: Fix info-leaks to USB devices
+Date:   Wed, 31 Jul 2019 10:54:47 -0400
+Message-Id: <20190731145447.29270-1-tomasbortoli@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-31 at 15:48 +0100, Catalin Marinas wrote:
-> On Wed, Jul 31, 2019 at 08:02:30AM -0400, Qian Cai wrote:
-> > On Jul 31, 2019, at 5:53 AM, Catalin Marinas <catalin.marinas@arm.com>
-> > wrote:
-> > > On Tue, Jul 30, 2019 at 04:22:37PM -0400, Qian Cai wrote:
-> > > > On Tue, 2019-07-30 at 12:57 -0700, Andrew Morton wrote:
-> > > > > On Sat, 27 Jul 2019 14:23:33 +0100 Catalin Marinas <catalin.marinas@ar
-> > > > > m.com>
-> > > > > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > > > > @@ -2011,6 +2011,12 @@
-> > > > > >  			Built with
-> > > > > > CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF=y,
-> > > > > >  			the default is off.
-> > > > > >  
-> > > > > > +	kmemleak.mempool=
-> > > > > > +			[KNL] Boot-time tuning of the minimum
-> > > > > > kmemleak
-> > > > > > +			metadata pool size.
-> > > > > > +			Format: <int>
-> > > > > > +			Default: NR_CPUS * 4
-> > > > > > +
-> > > > 
-> > > > Catalin, BTW, it is right now unable to handle a large size. I tried to
-> > > > reserve
-> > > > 64M (kmemleak.mempool=67108864),
-> 
-> [...]
-> > > It looks like the mempool cannot be created. 64M objects means a
-> > > kmalloc(512MB) for the pool array in mempool_init_node(), so that hits
-> > > the MAX_ORDER warning in __alloc_pages_nodemask().
-> > > 
-> > > Maybe the mempool tunable won't help much for your case if you need so
-> > > many objects. It's still worth having a mempool for kmemleak but we
-> > > could look into changing the refill logic while keeping the original
-> > > size constant (say 1024 objects).
-> > 
-> > Actually, kmemleak.mempool=524288 works quite well on systems I have here.
-> > This
-> > is more of making the code robust by error-handling a large value without
-> > the
-> > NULL-ptr-deref below. Maybe simply just validate the value by adding upper
-> > bound
-> > to not trigger that warning with MAX_ORDER.
-> 
-> Would it work for you with a Kconfig option, similar to
-> DEBUG_KMEMLEAK_EARLY_LOG_SIZE?
+Uninitialized Kernel memory can leak to USB devices.
 
-Yes, it should be fine.
+Fix by using kzalloc() instead of kmalloc() on the affected buffers.
 
-> 
-> > > > [   16.192449][    T1] BUG: Unable to handle kernel data access at
-> > > > 0xffffffffffffb2aa
-> > > 
-> > > This doesn't seem kmemleak related from the trace.
-> > 
-> > This only happens when passing a large kmemleak.mempool, e.g., 64M
-> > 
-> > [   16.193126][    T1] NIP [c000000000b2a2fc] log_early+0x8/0x160
-> > [   16.193153][    T1] LR [c0000000003e6e48] kmem_cache_free+0x428/0x740
-> 
-> Ah, I missed the log_early() call here. It's a kmemleak bug where it
-> isn't disabled properly in case of an error and log_early() is still
-> called after the .text.init section was freed. I'll send a patch.
-> 
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com
+Reported-by: syzbot+513e4d0985298538bf9b@syzkaller.appspotmail.com
+---
+Crash logs:
+1.
+BUG: KMSAN: kernel-usb-infoleak in usb_submit_urb+0x7ef/0x1f50 drivers/usb/core/urb.c:405
+CPU: 0 PID: 3359 Comm: kworker/0:2 Not tainted 5.2.0-rc4+ #7
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+ kmsan_report+0x162/0x2d0 mm/kmsan/kmsan.c:611
+ kmsan_internal_check_memory+0x974/0xa80 mm/kmsan/kmsan.c:705
+ kmsan_handle_urb+0x28/0x40 mm/kmsan/kmsan_hooks.c:617
+ usb_submit_urb+0x7ef/0x1f50 drivers/usb/core/urb.c:405
+ usb_start_wait_urb+0x143/0x410 drivers/usb/core/message.c:58
+ usb_internal_control_msg drivers/usb/core/message.c:102 [inline]
+ usb_control_msg+0x49f/0x7f0 drivers/usb/core/message.c:156
+ pcan_usb_pro_send_req+0x26b/0x3e0 drivers/net/can/usb/peak_usb/pcan_usb_pro.c:336
+ pcan_usb_fd_drv_loaded drivers/net/can/usb/peak_usb/pcan_usb_fd.c:460 [inline]
+ pcan_usb_fd_init+0x16ee/0x1900 drivers/net/can/usb/peak_usb/pcan_usb_fd.c:885
+ peak_usb_create_dev drivers/net/can/usb/peak_usb/pcan_usb_core.c:809 [inline]
+ peak_usb_probe+0x1416/0x1b20 drivers/net/can/usb/peak_usb/pcan_usb_core.c:907
+ usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+ really_probe+0x1344/0x1d90 drivers/base/dd.c:513
+ driver_probe_device+0x1ba/0x510 drivers/base/dd.c:670
+ __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:777
+ bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+ __device_attach+0x489/0x750 drivers/base/dd.c:843
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:890
+2.
+BUG: KMSAN: kernel-usb-infoleak in usb_submit_urb+0x7ef/0x1f50 /drivers/usb/core/urb.c:405
+CPU: 1 PID: 3814 Comm: kworker/1:2 Not tainted 5.2.0+ #15
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack /lib/dump_stack.c:77 [inline]
+ dump_stack+0x191/0x1f0 /lib/dump_stack.c:113
+ kmsan_report+0x162/0x2d0 /mm/kmsan/kmsan_report.c:109
+ kmsan_internal_check_memory+0x974/0xa80 /mm/kmsan/kmsan.c:551
+ kmsan_handle_urb+0x28/0x40 /mm/kmsan/kmsan_hooks.c:621
+ usb_submit_urb+0x7ef/0x1f50 /drivers/usb/core/urb.c:405
+ usb_start_wait_urb+0x143/0x410 /drivers/usb/core/message.c:58
+ usb_internal_control_msg /drivers/usb/core/message.c:102 [inline]
+ usb_control_msg+0x49f/0x7f0 /drivers/usb/core/message.c:156
+ pcan_usb_pro_send_req /drivers/net/can/usb/peak_usb/pcan_usb_pro.c:336 [inline]
+ pcan_usb_pro_drv_loaded /drivers/net/can/usb/peak_usb/pcan_usb_pro.c:504 [inline]
+ pcan_usb_pro_init+0x1319/0x1720 /drivers/net/can/usb/peak_usb/pcan_usb_pro.c:894
+ peak_usb_create_dev /drivers/net/can/usb/peak_usb/pcan_usb_core.c:809 [inline]
+ peak_usb_probe+0x1416/0x1b20 /drivers/net/can/usb/peak_usb/pcan_usb_core.c:907
+ usb_probe_interface+0xd19/0x1310 /drivers/usb/core/driver.c:361
+ really_probe+0x1344/0x1d90 /drivers/base/dd.c:513
+ driver_probe_device+0x1ba/0x510 /drivers/base/dd.c:670
+ __device_attach_driver+0x5b8/0x790 /drivers/base/dd.c:777
+ bus_for_each_drv+0x28e/0x3b0 /drivers/base/bus.c:454
+ __device_attach+0x489/0x750 /drivers/base/dd.c:843
+ device_initial_probe+0x4a/0x60 /drivers/base/dd.c:890
+ bus_probe_device+0x131/0x390 /drivers/base/bus.c:514
+ device_add+0x25b5/0x2df0 /drivers/base/core.c:2111
+ usb_set_configuration+0x309f/0x3710 /drivers/usb/core/message.c:2027
+ generic_probe+0xe7/0x280 /drivers/usb/core/generic.c:210
+ usb_probe_device+0x146/0x200 /drivers/usb/core/driver.c:266
+ really_probe+0x1344/0x1d90 /drivers/base/dd.c:513
+ driver_probe_device+0x1ba/0x510 /drivers/base/dd.c:670
+ __device_attach_driver+0x5b8/0x790 /drivers/base/dd.c:777
+ bus_for_each_drv+0x28e/0x3b0 /drivers/base/bus.c:454
+ __device_attach+0x489/0x750 /drivers/base/dd.c:843
+ device_initial_probe+0x4a/0x60 /drivers/base/dd.c:890
+ bus_probe_device+0x131/0x390 /drivers/base/bus.c:514
+ device_add+0x25b5/0x2df0 /drivers/base/core.c:2111
+ usb_new_device+0x23e5/0x2fb0 /drivers/usb/core/hub.c:2534
+ hub_port_connect /drivers/usb/core/hub.c:5089 [inline]
+ hub_port_connect_change /drivers/usb/core/hub.c:5204 [inline]
+ port_event /drivers/usb/core/hub.c:5350 [inline]
+ hub_event+0x5853/0x7320 /drivers/usb/core/hub.c:5432
+ process_one_work+0x1572/0x1f00 /kernel/workqueue.c:2269
+ worker_thread+0x111b/0x2460 /kernel/workqueue.c:2415
+ kthread+0x4b5/0x4f0 /kernel/kthread.c:256
+ ret_from_fork+0x35/0x40 /arch/x86/entry/entry_64.S:355
+Uninit was created at:
+ kmsan_save_stack_with_flags /mm/kmsan/kmsan.c:187 [inline]
+ kmsan_internal_poison_shadow+0x53/0xa0 /mm/kmsan/kmsan.c:146
+ kmsan_slab_alloc+0xaa/0x120 /mm/kmsan/kmsan_hooks.c:175
+ slab_alloc_node /mm/slub.c:2771 [inline]
+ slab_alloc /mm/slub.c:2780 [inline]
+ kmem_cache_alloc_trace+0x873/0xa50 /mm/slub.c:2797
+ kmalloc /./include/linux/slab.h:547 [inline]
+ pcan_usb_pro_drv_loaded /drivers/net/can/usb/peak_usb/pcan_usb_pro.c:497 [inline]
+ pcan_usb_pro_init+0xe96/0x1720 /drivers/net/can/usb/peak_usb/pcan_usb_pro.c:894
+ peak_usb_create_dev /drivers/net/can/usb/peak_usb/pcan_usb_core.c:809 [inline]
+ peak_usb_probe+0x1416/0x1b20 /drivers/net/can/usb/peak_usb/pcan_usb_core.c:907
+ usb_probe_interface+0xd19/0x1310 /drivers/usb/core/driver.c:361
+ really_probe+0x1344/0x1d90 /drivers/base/dd.c:513
+ driver_probe_device+0x1ba/0x510 /drivers/base/dd.c:670
+ __device_attach_driver+0x5b8/0x790 /drivers/base/dd.c:777
+ bus_for_each_drv+0x28e/0x3b0 /drivers/base/bus.c:454
+ __device_attach+0x489/0x750 /drivers/base/dd.c:843
+ device_initial_probe+0x4a/0x60 /drivers/base/dd.c:890
+ bus_probe_device+0x131/0x390 /drivers/base/bus.c:514
+ device_add+0x25b5/0x2df0 /drivers/base/core.c:2111
+ usb_set_configuration+0x309f/0x3710 /drivers/usb/core/message.c:2027
+ generic_probe+0xe7/0x280 /drivers/usb/core/generic.c:210
+ usb_probe_device+0x146/0x200 /drivers/usb/core/driver.c:266
+ really_probe+0x1344/0x1d90 /drivers/base/dd.c:513
+ driver_probe_device+0x1ba/0x510 /drivers/base/dd.c:670
+ __device_attach_driver+0x5b8/0x790 /drivers/base/dd.c:777
+ bus_for_each_drv+0x28e/0x3b0 /drivers/base/bus.c:454
+ __device_attach+0x489/0x750 /drivers/base/dd.c:843
+ device_initial_probe+0x4a/0x60 /drivers/base/dd.c:890
+ bus_probe_device+0x131/0x390 /drivers/base/bus.c:514
+ device_add+0x25b5/0x2df0 /drivers/base/core.c:2111
+ usb_new_device+0x23e5/0x2fb0 /drivers/usb/core/hub.c:2534
+ hub_port_connect /drivers/usb/core/hub.c:5089 [inline]
+ hub_port_connect_change /drivers/usb/core/hub.c:5204 [inline]
+ port_event /drivers/usb/core/hub.c:5350 [inline]
+ hub_event+0x5853/0x7320 /drivers/usb/core/hub.c:5432
+ process_one_work+0x1572/0x1f00 /kernel/workqueue.c:2269
+ worker_thread+0x111b/0x2460 /kernel/workqueue.c:2415
+ kthread+0x4b5/0x4f0 /kernel/kthread.c:256
+ ret_from_fork+0x35/0x40 /arch/x86/entry/entry_64.S:355
+Bytes 2-15 of 16 are uninitialized
+Memory access of size 16 starts at ffff8881030286e0
+==================================================================
+
+ drivers/net/can/usb/peak_usb/pcan_usb_fd.c  | 2 +-
+ drivers/net/can/usb/peak_usb/pcan_usb_pro.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_fd.c b/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
+index 34761c3a6286..47cc1ff5b88e 100644
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
+@@ -841,7 +841,7 @@ static int pcan_usb_fd_init(struct peak_usb_device *dev)
+ 			goto err_out;
+ 
+ 		/* allocate command buffer once for all for the interface */
+-		pdev->cmd_buffer_addr = kmalloc(PCAN_UFD_CMD_BUFFER_SIZE,
++		pdev->cmd_buffer_addr = kzalloc(PCAN_UFD_CMD_BUFFER_SIZE,
+ 						GFP_KERNEL);
+ 		if (!pdev->cmd_buffer_addr)
+ 			goto err_out_1;
+diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
+index 178bb7cff0c1..53cb2f72bdd0 100644
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
+@@ -494,7 +494,7 @@ static int pcan_usb_pro_drv_loaded(struct peak_usb_device *dev, int loaded)
+ 	u8 *buffer;
+ 	int err;
+ 
+-	buffer = kmalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
++	buffer = kzalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
+ 	if (!buffer)
+ 		return -ENOMEM;
+ 
+-- 
+2.11.0
+
