@@ -2,65 +2,117 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5573C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A2DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF74208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78D6206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388276AbfGaPAy (ORCPT
+        id S2388371AbfGaPBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:00:54 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:17436 "EHLO 1wt.eu"
+        Wed, 31 Jul 2019 11:01:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:48530 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388219AbfGaPAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:00:51 -0400
-X-Greylist: delayed 372 seconds by postgrey-1.27 at vger.kernel.org; Wed, 31 Jul 2019 11:00:50 EDT
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x6VEsMGX011945;
-        Wed, 31 Jul 2019 16:54:22 +0200
-Date:   Wed, 31 Jul 2019 16:54:22 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>, Greg KH <greg@kroah.com>,
-        Alexander Popov <alex.popov@linux.com>, efremov@ispras.ru,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: floppy: take over maintainership
-Message-ID: <20190731145422.GB11884@1wt.eu>
-References: <20190712185523.7208-1-efremov@ispras.ru>
- <20190713080726.GA19611@1wt.eu>
- <ec0a6c5e-bdee-3c26-f5d2-31b883c0de5d@ispras.ru>
- <CAHk-=wi=fHuiQg1fMzqAP9cuykBQSN_feD=eALDwRPmw27UwEg@mail.gmail.com>
- <nycvar.YFH.7.76.1907172355020.5899@cbobk.fhfr.pm>
- <57af5f3e-9cfe-b6d8-314c-f59855408cd5@linux.com>
+        id S2387946AbfGaPBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:01:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 496FD344;
+        Wed, 31 Jul 2019 08:01:41 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BC443F694;
+        Wed, 31 Jul 2019 08:01:40 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 16:01:38 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: Move TIF_* documentation to individual definitions
+Message-ID: <20190731150137.GE39768@lakrids.cambridge.arm.com>
+References: <20190731133520.17939-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <57af5f3e-9cfe-b6d8-314c-f59855408cd5@linux.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <20190731133520.17939-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Denis,
+On Wed, Jul 31, 2019 at 03:35:20PM +0200, Geert Uytterhoeven wrote:
+> Some TIF_* flags are documented in the comment block at the top, some
+> next to their definitions, some in both places.
+> 
+> Move all documentation to the individual definitions for consistency,
+> and for easy lookup.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> The alternative is to move all of them to the comment block, and using
+> linuxdoc style.
+> 
+>  arch/arm64/include/asm/thread_info.h | 24 ++++++++----------------
+>  1 file changed, 8 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+> index 180b34ec59650a9b..cb3eb1ccccc4116b 100644
+> --- a/arch/arm64/include/asm/thread_info.h
+> +++ b/arch/arm64/include/asm/thread_info.h
+> @@ -60,28 +60,20 @@ void arch_release_task_struct(struct task_struct *tsk);
+>  #endif
+>  
+>  /*
+> - * thread information flags:
+> - *  TIF_SYSCALL_TRACE	- syscall trace active
+> - *  TIF_SYSCALL_TRACEPOINT - syscall tracepoint for ftrace
+> - *  TIF_SYSCALL_AUDIT	- syscall auditing
+> - *  TIF_SECCOMP		- syscall secure computing
+> - *  TIF_SYSCALL_EMU     - syscall emulation active
+> - *  TIF_SIGPENDING	- signal pending
+> - *  TIF_NEED_RESCHED	- rescheduling necessary
+> - *  TIF_NOTIFY_RESUME	- callback before returning to user
+> + * thread information flags
+>   */
 
-On Wed, Jul 31, 2019 at 05:47:40PM +0300, Denis Efremov wrote:
-> Well, without jokes about Thunderdome, I've got time, hardware and
-> would like to maintain the floppy. Except the for recent fixes,
-> I described floppy ioctls in syzkaller. I've already spent quite
-> a lot of time with this code. Thus, if nobody minds
+We can probably just get rid of the this comment block at this point. :)
 
-There's no reason for jokes around this, I think you stepping up on
-this one will be much welcome. There are still a lot of floppies in
-the wild and we'd better make sure they continue to work well. Thanks
-for doing this.
+> -#define TIF_SIGPENDING		0
+> -#define TIF_NEED_RESCHED	1
+> +#define TIF_SIGPENDING		0	/* signal pending */
+> +#define TIF_NEED_RESCHED	1	/* rescheduling necessary */
+>  #define TIF_NOTIFY_RESUME	2	/* callback before returning to user */
+>  #define TIF_FOREIGN_FPSTATE	3	/* CPU's FP state is not current's */
+>  #define TIF_UPROBE		4	/* uprobe breakpoint or singlestep */
+>  #define TIF_FSCHECK		5	/* Check FS is USER_DS on return */
+>  #define TIF_NOHZ		7
+> -#define TIF_SYSCALL_TRACE	8
+> -#define TIF_SYSCALL_AUDIT	9
+> -#define TIF_SYSCALL_TRACEPOINT	10
+> -#define TIF_SECCOMP		11
+> -#define TIF_SYSCALL_EMU		12
+> +#define TIF_SYSCALL_TRACE	8	/* syscall trace active */
+> +#define TIF_SYSCALL_AUDIT	9	/* syscall auditing */
+> +#define TIF_SYSCALL_TRACEPOINT	10	/* syscall tracepoint for ftrace */
+> +#define TIF_SECCOMP		11	/* syscall secure computing */
+> +#define TIF_SYSCALL_EMU		12	/* syscall emulation active */
+>  #define TIF_MEMDIE		18	/* is terminating due to OOM killer */
+>  #define TIF_FREEZE		19
+>  #define TIF_RESTORE_SIGMASK	20
 
-Willy
+FWIW this looks sane to me, so:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> -- 
+> 2.17.1
+> 
