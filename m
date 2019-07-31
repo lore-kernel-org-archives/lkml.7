@@ -2,125 +2,146 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46577C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3973DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D16F2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F93AdRHq"
+	by mail.kernel.org (Postfix) with ESMTP id 080772089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 11:06:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfGaLF7 (ORCPT
+        id S1727853AbfGaLGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 07:05:59 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45986 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfGaLF6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:05:58 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u10so8382066lfm.12;
-        Wed, 31 Jul 2019 04:05:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xh7+I44XODvrUm1AKTaY/tJPp16IcuiRq+in3m/gPS4=;
-        b=F93AdRHqbB5EptGT0gQxz+8oWrHkHoHjBeUkvDYCWOpIPKGTPON9CQzxrMmyEQAMoK
-         HM3+Q9YBo3+UCaGadNzlWVQqW/F3dk83D4KJH5Iw33AFikYeyqaHcou9J6b9Pl5H54LT
-         Jk8/TN5s0I1dQQ7xWphcSBup8AETRtnGceOD/dV6ACyvG76s4CYhgp744cWZI8aV1RRP
-         A8DHdjNXSEomhh6XdSnAHlS0UMIuw0O3j4eLg97/pnRgWczItQCegDA2QkiEe+luMcod
-         NFSrDMRfoeVT3XKhQI0t4MTN88C2PVYYTpBybnp/5G0CBUYFMjylBhf9StwlCQtCr4MN
-         9iUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xh7+I44XODvrUm1AKTaY/tJPp16IcuiRq+in3m/gPS4=;
-        b=F1lEowywH8u0wjCVAWzbC1u27JhvV+zae7pOOAYOOeyKt0fu1k/3CFMiUy3pKpQNhh
-         eg1Y49yb0M6VDs+aLQGgZXkL8ZLkvWLFssNAifhzteXZX/KQIrDFeCo3BWE8AZbSw5Xy
-         Z4RTcPy9NIUHa8tg+LUSPTyYdSh3DQruxuZjmc56T1PK3Sf8wXj5rgmfP0ORtl7xkiga
-         abZrVnFxBH46aofvwvvsu5N8LxV92eG8YUDXyXzgDK+Rt1un5Jlmm4cJliI6lpaiAhdZ
-         CnwaRjZNrop5qXSLDUWdD/hWe69x+N5SGeH8sLbWIqxJUskpkBgDA4/bQ+0cPAh+hnBf
-         Ngdw==
-X-Gm-Message-State: APjAAAW74nVgDRMDbQ/IUBwfj6y16xHGqmWQwdorPgLbiwrJMuHGOgq1
-        VKX7imqS1k3pqCDuMPsoqApkd4GD
-X-Google-Smtp-Source: APXvYqynuGcdQPROENyCIRVih3PE0AUm8mzGeoaa84M8GEyZeYcPwyZxT5TFcsJZuLj6lJndCe/mAg==
-X-Received: by 2002:ac2:4a78:: with SMTP id q24mr14580853lfp.59.1564571155523;
-        Wed, 31 Jul 2019 04:05:55 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id z30sm13214645lfj.63.2019.07.31.04.05.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 04:05:54 -0700 (PDT)
-Subject: Re: [PATCH v7 16/20] arm64: tegra: Enable wake from deep sleep on RTC
- alarm
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-17-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
-Date:   Wed, 31 Jul 2019 14:04:58 +0300
+        Wed, 31 Jul 2019 07:06:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35504 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbfGaLGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 07:06:10 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E901B4E93D;
+        Wed, 31 Jul 2019 11:06:09 +0000 (UTC)
+Received: from [10.36.117.240] (ovpn-117-240.ams2.redhat.com [10.36.117.240])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A0E0100032A;
+        Wed, 31 Jul 2019 11:06:04 +0000 (UTC)
+Subject: Re: [PATCH 2/2] KVM: selftests: Enable dirty_log_test on s390x
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        Janosch Frank <frankja@linux.ibm.com>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
+References: <20190730100112.18205-1-thuth@redhat.com>
+ <20190730100112.18205-3-thuth@redhat.com>
+ <d48ac43b-c960-54af-a145-360a67b4a3d9@de.ibm.com>
+ <02c5c7b4-c45e-4573-d2c3-ebfa2cd2c9d1@redhat.com>
+ <341c3705-c2cb-9e87-cc03-42e0cefba308@de.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <03e7f73e-2b21-688b-83c6-c10eaafdebd5@redhat.com>
+Date:   Wed, 31 Jul 2019 13:06:03 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <1564532424-10449-17-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <341c3705-c2cb-9e87-cc03-42e0cefba308@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 31 Jul 2019 11:06:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.07.2019 3:20, Sowjanya Komatineni пишет:
-> This patch updates device tree for RTC and PMC to allow system wake
-> from deep sleep on RTC alarm.
+On 30.07.19 20:04, Christian Borntraeger wrote:
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> index 659753118e96..30a7c48385a2 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> @@ -768,7 +768,8 @@
->  	rtc@7000e000 {
->  		compatible = "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
->  		reg = <0x0 0x7000e000 0x0 0x100>;
-> -		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-parent = <&pmc>;
->  		clocks = <&tegra_car TEGRA210_CLK_RTC>;
->  		clock-names = "rtc";
->  	};
-> @@ -778,6 +779,8 @@
->  		reg = <0x0 0x7000e400 0x0 0x400>;
->  		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
->  		clock-names = "pclk", "clk32k_in";
-> +		#interrupt-cells = <2>;
-> +		interrupt-controller;
->  
->  		powergates {
->  			pd_audio: aud {
+> On 30.07.19 19:11, Thomas Huth wrote:
+>> On 30/07/2019 16.57, Christian Borntraeger wrote:
+>>>
+>>>
+>>> On 30.07.19 12:01, Thomas Huth wrote:
+>>>> To run the dirty_log_test on s390x, we have to make sure that we
+>>>> access the dirty log bitmap with little endian byte ordering and
+>>>> we have to properly align the memslot of the guest.
+>>>> Also all dirty bits of a segment are set once on s390x when one
+>>>> of the pages of a segment are written to for the first time, so
+>>>> we have to make sure that we touch all pages during the first
+>>>> iteration to keep the test in sync here.
+>>>
+>>> While this fixes the test (and the migration does work fine), it still
+>>> means that s390x overindicates the dirty bit for sparsely populated
+>>> 1M segments. It is just a performance issue, but maybe we should try 
+>>> to get this fixed.
+>>
+>> I hope you don't expect me to fix this - the gmap code is really not my
+>> turf...
 > 
+> No, this is clearly on our turf. 
 
-Is this a backwards-compatible change? Or it's not really worth to care
-about the compatibility with older kernel versions, I'm not sure about
-overall state of T210 in the upstream kernel.
+FWIW, we share the pagetables with the userspace process. We mark a page
+as dirty (PGSTE_UC_BIT) when
+- We modify the storage key
+- We map a PTE as RW (pgste_set_pte())
+
+I assume all PTEs of the segment are mapped RW (for example, if user
+space wrote to such a PTE), that is why we have the PGSTE_UC_BIT bit set.
+
+As PGSTE_UC_BIT also tracks what userspace did, not only KVM via the
+GMAP, this might indeed be correct.
+
+-- 
+
+Thanks,
+
+David / dhildenb
