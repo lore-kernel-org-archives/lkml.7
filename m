@@ -2,176 +2,205 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E26C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0822C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970EF20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA96206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="oL1OUoYb"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="l2hYYDt1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfGaOV7 (ORCPT
+        id S1728691AbfGaOWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:21:59 -0400
-Received: from mail-eopbgr810055.outbound.protection.outlook.com ([40.107.81.55]:55760
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726762AbfGaOV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:21:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P9w0DR6kbQZw7o6vhQCCkezcXTByJkyvzmpzNb00InnMrPtOV/3pjhj6p0qkreMDTXtoB1a+n6Fj2CVLDAjfN4C42bOvDJEgvaZ7auW6JhZBMLvsMU8KQFpO+PZFM+/4sudNOBydwt+vJ82+qGdGzdoy6jM6JbxTk1+Ci//faedDfAlAB13bU0zMp5mSGILaYw8PzdXPpSTxmTaC7fOw+wFYaUUDHVzc1isWnAq7barBE/4+DJIDj3AAyEjc5aOTOkKUxgIjaQ17l4z+cDUyT/lviMY7fIDG/rdibLsDAD5BZu+a54Vjn/bnuBnpH/a3y3z4KlgeglYepYroVTcTlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xuc7nMtsOHKN1fSsmKu6JYkIM6fxecETTtn6dneZuT4=;
- b=fwXOBfeMwW1/fN7BPd3/p2wKNsdFDdzVrvOdIygBVm3T7ssTFhX7kIXoci1hw9gnWBGeTKHiIYiFvSj9mTan53jFTkPtlQj+ynJb0TTW2psmc4xfHj0nbFB81no+/S4h/8EaBHirZ/j1wCXNBHyUX/dtLqQw0w0YLdZKn7uj9blPv9aN07OqLf0vwElJAUpgBrB+Ql3y4vlnlAGVYab8DXoo1rDnQB+Nwc9zyD7PL1v+M8vx1JUpU1XB0FxPLTEQiJUbSPUzxjmDqBo3uJN4lMTswbTql0CAjeKDEw6a/3P1195nBQqPrSEPRzgMgBn2gc+W4y2DA3OAw1NAohzhNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=gmail.com
- smtp.mailfrom=xilinx.com;dmarc=bestguesspass action=none
- header.from=xilinx.com;dkim=none (message not signed);arc=none
+        Wed, 31 Jul 2019 10:22:38 -0400
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:37712 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbfGaOWh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:22:37 -0400
+Received: by mail-wr1-f42.google.com with SMTP id n9so44829901wrr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:22:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xuc7nMtsOHKN1fSsmKu6JYkIM6fxecETTtn6dneZuT4=;
- b=oL1OUoYbJEbTSNwGQbkOmCTPk8GQrV86T3ALDZeLoi0GfEosnfxxS5mwdlVVuGDIwMfpAQvZVJplDgJFuXXqnvIR6AssCMgDEm2G6Jz2jBgwlVX3vLLblRAn3AHopDi683AW3EX/nm216YnGf4i6eVuA9lRhTeNv3qd+sxtxXN4=
-Received: from DM6PR02CA0020.namprd02.prod.outlook.com (2603:10b6:5:1c::33) by
- SN6PR02MB4768.namprd02.prod.outlook.com (2603:10b6:805:90::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Wed, 31 Jul 2019 14:21:54 +0000
-Received: from BL2NAM02FT008.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::202) by DM6PR02CA0020.outlook.office365.com
- (2603:10b6:5:1c::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.16 via Frontend
- Transport; Wed, 31 Jul 2019 14:21:54 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT008.mail.protection.outlook.com (10.152.76.162) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2115.10
- via Frontend Transport; Wed, 31 Jul 2019 14:21:53 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hspUF-00007h-QE; Wed, 31 Jul 2019 07:21:51 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hspUA-0001nF-O8; Wed, 31 Jul 2019 07:21:46 -0700
-Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x6VELatv030283;
-        Wed, 31 Jul 2019 07:21:36 -0700
-Received: from [172.30.17.116]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1hspTz-0001mf-US; Wed, 31 Jul 2019 07:21:36 -0700
-Subject: Re: [PATCH] mailbox: zynqmp-ipi-mailbox: Add of_node_put() before
- goto
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        jassisinghbrar@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190709172841.13769-1-nishkadg.linux@gmail.com>
- <eaf1fcbe-615e-0fec-d330-ae94e8f3c102@xilinx.com>
- <6a5306bd-946d-383f-0b42-f17675c24218@gmail.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <c0be80c9-16ef-fe03-ae3b-a7d3d1a2ede8@xilinx.com>
-Date:   Wed, 31 Jul 2019 16:21:34 +0200
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DgMcA6v/fzoyZ+8GMbMaZ4k0twZj3qquTJmJP5k3IO8=;
+        b=l2hYYDt1ojhHhFewG4ODETJ0VwWUU/aoP1bXxKUHQQZLywJg6T1krxJdArKTDUzPRn
+         qU9cbkvBt2yh1SpuAKfIUVk77hFycwF9T9aX63MTRCPatlNDj6rE6rqYG08Y05mQ83V6
+         uUp1FaqYQmOn11+Uj30lmAdBEYfrOweqrbG3g/ezcvvUBIibjUqadseUFjgkClfwTo9L
+         3O4m0TwBb7NsDkhGn+Y/Q1qgOfEoQluGQz+GmbCFs7CEpupCaUEqey5d3jpjZtCW9O8b
+         Er9U9ll0vpNxo95Y8dCk3Le9VP5lofbAnCJbwe+iGTugwc96hoywJLUhBR0perWhXl9b
+         T08w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DgMcA6v/fzoyZ+8GMbMaZ4k0twZj3qquTJmJP5k3IO8=;
+        b=cODT1r1PDAnRnUL+VU7xCR/vucW+eEUea7kIoeR92XpZTtYYHCOon8p0dc+BoxekkL
+         T0HDnG8GaQTFIoAv+vaINXDevNBfC391If2Ly6K3peWiuSS05lilTHoCn3B03dCHsO+6
+         nMcnzcpo6vLVrQFDwNUdlR8Bdjj+jocNA/t3ggpB9OL2M8h9J5ul5tzrtEgBVxQeZo2H
+         pneZW4kja4Zs/Catm60TRuJ19mozSP4q1vGtEwVj4yB25m0IC1/IMIBk8m/Q6SW07ZPK
+         pFtNDQf6jenCKq1Tlok2PDA7+lQC9mL9Z+/ewfAH24KSgijxwY+O+amS8wBId8m0VgYQ
+         qR8w==
+X-Gm-Message-State: APjAAAXFz3iGwcXDEiqMjXVfwkWM2ZQgmvs7hGFQvOQq8EqHzvAHn0GE
+        b8p9YckncS/BpysUFmmsAlkOEQ==
+X-Google-Smtp-Source: APXvYqwSxDEav9/aVCpWxzYL7ljaCBlICL3RUZGxhvk2wEbRC7Iy9uxTFCR7vbDqYs9uXZoYUfDOLQ==
+X-Received: by 2002:adf:e541:: with SMTP id z1mr43294553wrm.48.1564582954231;
+        Wed, 31 Jul 2019 07:22:34 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c7sm62001218wro.70.2019.07.31.07.22.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 07:22:33 -0700 (PDT)
+Subject: Re: Review required [Was: Associate ddc adapters with connectors]
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Airlie <airlied@linux.ie>, Liviu Dudau <liviu.dudau@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Shawn Guo <shawnguo@kernel.org>, kernel@collabora.com,
+        linux-samsung-soc@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-arm-msm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        amd-gfx@lists.freedesktop.org,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        freedreno@lists.freedesktop.org,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+References: <cover.1564161140.git.andrzej.p@collabora.com>
+ <20190726183520.GA22572@ravnborg.org> <20190726185538.GD14981@ravnborg.org>
+ <6560f93c-a48f-2a8c-afeb-d5e8e200480d@baylibre.com>
+ <20190731104007.GA23138@ravnborg.org>
+ <959cf323-c6b9-895b-592c-81c52aacae6e@collabora.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <ce68a0df-1719-7b53-b0ed-89caa9afc4a0@baylibre.com>
+Date:   Wed, 31 Jul 2019 16:22:30 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <6a5306bd-946d-383f-0b42-f17675c24218@gmail.com>
+In-Reply-To: <959cf323-c6b9-895b-592c-81c52aacae6e@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(39860400002)(396003)(2980300002)(189003)(199004)(8936002)(70586007)(31696002)(36756003)(229853002)(446003)(14444005)(426003)(65826007)(11346002)(478600001)(47776003)(336012)(305945005)(50466002)(44832011)(126002)(476003)(486006)(2616005)(58126008)(110136005)(65806001)(316002)(65956001)(356004)(36386004)(106002)(81166006)(5660300002)(26005)(63266004)(53546011)(64126003)(52146003)(8676002)(186003)(81156014)(23676004)(2486003)(6246003)(2870700001)(9786002)(70206006)(15650500001)(31686004)(76176011)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4768;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ac43783c-3db8-4527-2639-08d715c26f57
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:SN6PR02MB4768;
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4768:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB47686428574BF7EABCB9D935C6DF0@SN6PR02MB4768.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 011579F31F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: 4gjmQrn0k49pBxD/QGYhwjP9BlEc0nrK9lx3N/rmSgrqCue81ml9lDCCm2Oiy1BPkZQaYACUaoZz56cxLuwgcTihxrURZgYHrK9Dh79JBMWYtBCwB1iKzquH9V5hs21XTko9qm/Tc+NFweL7jEfEhHR/X3oETghvNlUdfUHiedl0oGw3sjAOeR0RuNj4jy8HDuzcF7ACVBI3LdSmVAHUK6oFeDZNUpGg7Hj7d+zwHLWqB+sC7HdLltq4Smvi2JfcgImAYRx3kfloU6i6XLs6okFMLnNVJNl0C1exAyJFX2tVaWZFgas1z7No2k2eve/9ppsZPQ0r9xIo1Yis3F+HtAe/oHArY92RhLXyG2TU3O0KaPj5uFfIq8Avof3ZxkUKgOyK6DB16B9mnDoYwj/owpwsdEkeK7NyfPMqKp4wkKs=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2019 14:21:53.0224
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac43783c-3db8-4527-2639-08d715c26f57
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4768
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31. 07. 19 15:06, Nishka Dasgupta wrote:
-> On 31/07/19 2:01 PM, Michal Simek wrote:
->> On 09. 07. 19 19:28, Nishka Dasgupta wrote:
->>> Each iteration of for_each_available_child_of_node puts the previous
->>> node, but in the case of a goto from the middle of the loop, there is
->>> no put, thus causing a memory leak. Hence add an of_node_put before the
->>> goto.
->>> Issue found with Coccinelle.
->>>
->>> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
->>> ---
->>>   drivers/mailbox/zynqmp-ipi-mailbox.c | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/mailbox/zynqmp-ipi-mailbox.c
->>> b/drivers/mailbox/zynqmp-ipi-mailbox.c
->>> index 86887c9a349a..bd80d4c10ec2 100644
->>> --- a/drivers/mailbox/zynqmp-ipi-mailbox.c
->>> +++ b/drivers/mailbox/zynqmp-ipi-mailbox.c
->>> @@ -661,6 +661,7 @@ static int zynqmp_ipi_probe(struct
->>> platform_device *pdev)
->>>           if (ret) {
->>>               dev_err(dev, "failed to probe subdev.\n");
->>>               ret = -EINVAL;
->>> +            of_node_put(nc);
->>>               goto free_mbox_dev;
->>>           }
->>>           mbox++;
->>>
+On 31/07/2019 15:10, Andrzej Pietrasiewicz wrote:
+> W dniu 31.07.2019 o 12:40, Sam Ravnborg pisze:
+>> Hi Neil.
 >>
->> Patch is good but when you are saying that this was found by Coccinelle
->> then it should be added as script to kernel to detect it.
+>> On Wed, Jul 31, 2019 at 10:00:14AM +0200, Neil Armstrong wrote:
+>>> Hi Sam,
+>>>
+>>> On 26/07/2019 20:55, Sam Ravnborg wrote:
+>>>> Hi all.
+>>>>
+>>>> Andrzej have done a good job following up on feedback and this series is
+>>>> now ready.
+>>>>
+>>>> We need ack on the patches touching the individual drivers before we can
+>>>> proceed.
+>>>> Please check your drivers and get back.
+>>>
+>>> I can apply all core and maintainer-acked patches for now :
+>>> 1, 2, 7, 10, 11, 16, 17, 18, 19, 20, 21, 22, 23
+>>>
+>>> and Andrzej can resend not applied patches with Yours and Emil's Reviewed-by,
+>>> so we can wait a few more days to apply them.
+>>
+>> Sounds like a good plan.
+>> Thanks for thaking care of this.
 > 
-> This particular patch was suggested by a script I did not write myself;
-> someone else wrote it and sent it to me. How should I proceed in this case?
+> When is it good time to resend patches 3, 4, 5, 6, 8, 9, 12, 13, 14, 15, 24 as a
+> new series?
 
-You can ask him to submit it to kernel.
-Or you can take it, keep his authorship and send it to:
+I'll ping you when everything is applied, build-tested and pushed on drm-misc-next
 
-./scripts/get_maintainer.pl -f scripts/coccinelle/
-Julia Lawall <Julia.Lawall@lip6.fr> (supporter:COCCINELLE/Semantic
-Patches (SmPL))
-Gilles Muller <Gilles.Muller@lip6.fr> (supporter:COCCINELLE/Semantic
-Patches (SmPL))
-Nicolas Palix <nicolas.palix@imag.fr> (supporter:COCCINELLE/Semantic
-Patches (SmPL))
-Michal Marek <michal.lkml@markovi.net> (supporter:COCCINELLE/Semantic
-Patches (SmPL))
-cocci@systeme.lip6.fr (moderated list:COCCINELLE/Semantic Patches (SmPL))
-linux-kernel@vger.kernel.org (open list)
+Neil
 
-Thanks,
-Michal
+> 
+> Andrzej
+
