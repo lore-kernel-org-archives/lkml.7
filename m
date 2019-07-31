@@ -2,127 +2,114 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0D3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0236EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA25206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B74208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 05:39:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="g7MN1DY1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i5xBkoT3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfGaFf0 (ORCPT
+        id S1726808AbfGaFj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 01:35:26 -0400
-Received: from smtprelay0125.hostedemail.com ([216.40.44.125]:40647 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726767AbfGaFfZ (ORCPT
+        Wed, 31 Jul 2019 01:39:56 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:35953 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725866AbfGaFjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 01:35:25 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id D4EF0181D33FB;
-        Wed, 31 Jul 2019 05:35:23 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: baby82_2eaba44e31115
-X-Filterd-Recvd-Size: 3569
-Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 31 Jul 2019 05:35:20 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo keyword for switch/case use
-Date:   Tue, 30 Jul 2019 22:35:18 -0700
-Message-Id: <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
-References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+        Wed, 31 Jul 2019 01:39:55 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 0E6642D4F;
+        Wed, 31 Jul 2019 01:39:54 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 31 Jul 2019 01:39:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=f6SwHiquskKyzal6BVgx/Zrb83
+        M7d3YW34Dxd8xOi/I=; b=g7MN1DY1j9rZdpYORY8nL/SkjVPP9amQQ6Ol+aXOL1
+        75Cgfy18cKd6+ssH0oOz3n7yYP+nlnPSqod16gcxdXcMx9pE14K2SFSf6/luls5u
+        JphFHxcZh/ovi/Q4uGC7Og/ct+1NnN9zCnNk3sa1m+ocS2693kgbjimy3t4qegds
+        hZII0pm/H8nklvVIkOOQ3JrwKtCZ7u4DGygNFPhNSA7lKtbH5vxxCsmkOGl7YT5W
+        RBbJSRWOqsaK2lK1GMWmf9PMZnZxHagbU29IJaGEtPyserJhpVEoRXthPev7LbGi
+        eXngVDCjC0WBidytA0t07ccGFSO9lGSFuVCl8wBYw8uA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=f6SwHiquskKyzal6B
+        Vgx/Zrb83M7d3YW34Dxd8xOi/I=; b=i5xBkoT3kOfJ7Fozu8U1x3mCDqVDbaGJi
+        hW5j7MVRghRgV4UUqd7BsH+FN1J5Ffey9ZReBvuVB51o9kaDcNQ/tJGbJ1cdw3m1
+        jFJcbTap/SsQj4NW7jmsyhcVwGAcN5fwekb6ohoymp4NjfnNCOdtccLepKOo/169
+        /7jgkGAWQzcX1gMu3UdiGLLpMnuzOhghv6uqG+KqRdnPzp0drOrRM3cvb70dUcUl
+        mveg0t1PJ+C4DvGiVpbFo0iwbQWzvxeGJb0rRUAmglkQwwqpfRBYBFkoEqRUkdNi
+        NI2P0sJCs3ehdBaCR0St9p7NktQyf5qW/iv9aPQ7xRgqeACnHvtUg==
+X-ME-Sender: <xms:qClBXZXWhe-ZQDDEHt39xzZJV1vT5Nk1WP4T8AYQICf5aoyLv9SzqA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleeggdelkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhi
+    ugdrrghuqeenucffohhmrghinhepohiilhgrsghsrdhorhhgnecukfhppedvtddvrdekud
+    drudekrdeftdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgu
+    rdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:qClBXTpGDNuSmIbPncJh21n4Sf0ss0RejHuzWA4hv3rAOLNcRuRxMw>
+    <xmx:qClBXaVOdGKEcDyq-7JxJ0S_ajEy6NdCoqsQTywn439lc82Dng4C5w>
+    <xmx:qClBXUGdN3rrLeLl3XtvCSrNpwfDySjv8adf7tD_SwRNJ9jE38lxGw>
+    <xmx:qilBXVZcJHTBJAO8KEKpy2dp-GtEoJUAEkilKJiKZf9U4ox-z_TfPQ>
+Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 05C728005C;
+        Wed, 31 Jul 2019 01:39:47 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     netdev@vger.kernel.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
+        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 0/4] net: phy: Add AST2600 MDIO support
+Date:   Wed, 31 Jul 2019 15:09:55 +0930
+Message-Id: <20190731053959.16293-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reserve the pseudo keyword 'fallthrough' for the ability to convert the
-various case block /* fallthrough */ style comments to appear to be an
-actual reserved word with the same gcc case block missing fallthrough
-warning capability.
+Hello,
 
-All switch/case blocks now must end in one of:
+v2 of the ASPEED MDIO series addresses comments from Rob on the devicetree
+bindings and Andrew on the driver itself.
 
-	break;
-	fallthrough;
-	goto <label>;
-	return [expression];
+v1 of the series can be found here:
 
-fallthough is gcc's __attribute__((__fallthrough__)) which was introduced
-in gcc version 7..
+http://patchwork.ozlabs.org/cover/1138140/
 
-fallthrough devolves to an empty "do {} while (0)" if the compiler version
-(any version less than gcc 7) does not support the attribute.
+Please review!
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
+Andrew
 
-For allow compilation of a kernel that includes net/sctp, this patch
-also requires a rename of the use of fallthrough as a label in
-net/sctp/sm_make_chunk.c that was submitted as:
+Andrew Jeffery (4):
+  dt-bindings: net: Add aspeed,ast2600-mdio binding
+  net: phy: Add mdio-aspeed
+  net: ftgmac100: Add support for DT phy-handle property
+  net: ftgmac100: Select ASPEED MDIO driver for the AST2600
 
-https://lore.kernel.org/lkml/e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com/
+ .../bindings/net/aspeed,ast2600-mdio.yaml     |  45 +++++
+ drivers/net/ethernet/faraday/Kconfig          |   1 +
+ drivers/net/ethernet/faraday/ftgmac100.c      |  37 ++++-
+ drivers/net/phy/Kconfig                       |  13 ++
+ drivers/net/phy/Makefile                      |   1 +
+ drivers/net/phy/mdio-aspeed.c                 | 157 ++++++++++++++++++
+ 6 files changed, 250 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/aspeed,ast2600-mdio.yaml
+ create mode 100644 drivers/net/phy/mdio-aspeed.c
 
- include/linux/compiler_attributes.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index 6b318efd8a74..cdf016596659 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -40,6 +40,7 @@
- # define __GCC4_has_attribute___noclone__             1
- # define __GCC4_has_attribute___nonstring__           0
- # define __GCC4_has_attribute___no_sanitize_address__ (__GNUC_MINOR__ >= 8)
-+# define __GCC4_has_attribute___fallthrough__         0
- #endif
- 
- /*
-@@ -185,6 +186,22 @@
- # define __noclone
- #endif
- 
-+/*
-+ * Add the pseudo keyword 'fallthrough' so case statement blocks
-+ * must end with any of these keywords:
-+ *   break;
-+ *   fallthrough;
-+ *   goto <label>;
-+ *   return [expression];
-+ *
-+ *  gcc: https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html#Statement-Attributes
-+ */
-+#if __has_attribute(__fallthrough__)
-+# define fallthrough                    __attribute__((__fallthrough__))
-+#else
-+# define fallthrough                    do {} while (0)  /* fallthrough */
-+#endif
-+
- /*
-  * Note the missing underscores.
-  *
 -- 
-2.15.0
+2.20.1
 
