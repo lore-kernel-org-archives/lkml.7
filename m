@@ -2,97 +2,148 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33219C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC926C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F044F206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:05:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QS83uU5z";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jn353ww6"
+	by mail.kernel.org (Postfix) with ESMTP id CD3382064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388434AbfGaPF1 (ORCPT
+        id S2388259AbfGaPH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:05:27 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33200 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388412AbfGaPFX (ORCPT
+        Wed, 31 Jul 2019 11:07:28 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:45634 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387662AbfGaPH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:05:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 531A56083C; Wed, 31 Jul 2019 15:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564585522;
-        bh=4h7hzmrRHwRmGDBSz2gyZ3IitaxH8rSJcLUs5VAWXfM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QS83uU5zFThZ0xBy8hnm9PAZKXyxtwWwH0d05QUuGcHPHZDO6zJTshqwwa5/4Et9Z
-         Px1j0WHqnQtKZ7LLfypFXx37RWornHROAmVuILzZog0oKT6PLqezikiFwjCH6UOz7c
-         DaCPYjhQ+PCh89AqeSYfV/ePhEwv0BPiKKxO2mbs=
-Received: from mojha-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7A260602F1;
-        Wed, 31 Jul 2019 15:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564585521;
-        bh=4h7hzmrRHwRmGDBSz2gyZ3IitaxH8rSJcLUs5VAWXfM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jn353ww6Sh0VROubihZ6x6P20BK7LuY1NXOFhpfvn3I0ssni/6/SdBSMfsCpgxsHM
-         KuEA7iR6urRIUK5/mbtgErdNsP9qAqD8O/oYWMxoNGVQrASBWrP8SPp8d9X2GpcKTq
-         lvku32mAtYRFTrYxl9Ui5rAD8BpjLeQqAQebBUVE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7A260602F1
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-From:   Mukesh Ojha <mojha@codeaurora.org>
-To:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mukesh Ojha <mojha@codeaurora.org>
-Subject: [PATCH 2/2 v3] locking/mutex: Use mutex flags macro instead of hard code
-Date:   Wed, 31 Jul 2019 20:35:04 +0530
-Message-Id: <1564585504-3543-2-git-send-email-mojha@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1564585504-3543-1-git-send-email-mojha@codeaurora.org>
-References: <1564585504-3543-1-git-send-email-mojha@codeaurora.org>
+        Wed, 31 Jul 2019 11:07:28 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hsqCM-0001Qa-NS; Wed, 31 Jul 2019 11:07:26 -0400
+Message-ID: <76dbc397e21d64da75cd07d90b3ca15ca50d6fbb.camel@surriel.com>
+Subject: Re: [PATCH v3] sched/core: Don't use dying mm as active_mm of
+ kthreads
+From:   Rik van Riel <riel@surriel.com>
+To:     Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Phil Auld <pauld@redhat.com>, Michal Hocko <mhocko@kernel.org>
+Date:   Wed, 31 Jul 2019 11:07:26 -0400
+In-Reply-To: <01125822-c883-18ce-42e4-942a4f28c128@redhat.com>
+References: <20190729210728.21634-1-longman@redhat.com>
+         <ec9effc07a94b28ecf364de40dee183bcfb146fc.camel@surriel.com>
+         <3e2ff4c9-c51f-8512-5051-5841131f4acb@redhat.com>
+         <8021be4426fdafdce83517194112f43009fb9f6d.camel@surriel.com>
+         <b5a462b8-8ef6-6d2c-89aa-b5009c194000@redhat.com>
+         <c91e6104acaef118ae09e4b4b0c70232c4583293.camel@surriel.com>
+         <01125822-c883-18ce-42e4-942a4f28c128@redhat.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-LA3XQyUFN0DfKhuFWUzC"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the mutex flag macro instead of hard code value inside
-__mutex_owner().
 
-Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
----
-Changes in v3:
- - no change.
+--=-LA3XQyUFN0DfKhuFWUzC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v2:
- - Framed the commit according the changes done in 1/2 of
-   the patchset.
+On Wed, 2019-07-31 at 10:15 -0400, Waiman Long wrote:
+> On 7/31/19 9:48 AM, Rik van Riel wrote:
+> > On Tue, 2019-07-30 at 17:01 -0400, Waiman Long wrote:
+> > > On 7/29/19 8:26 PM, Rik van Riel wrote:
+> > > > On Mon, 2019-07-29 at 17:42 -0400, Waiman Long wrote:
+> > > >=20
+> > > > > What I have found is that a long running process on a mostly
+> > > > > idle
+> > > > > system
+> > > > > with many CPUs is likely to cycle through a lot of the CPUs
+> > > > > during
+> > > > > its
+> > > > > lifetime and leave behind its mm in the active_mm of those
+> > > > > CPUs.  My
+> > > > > 2-socket test system have 96 logical CPUs. After running the
+> > > > > test
+> > > > > program for a minute or so, it leaves behind its mm in about
+> > > > > half
+> > > > > of
+> > > > > the
+> > > > > CPUs with a mm_count of 45 after exit. So the dying mm will
+> > > > > stay
+> > > > > until
+> > > > > all those 45 CPUs get new user tasks to run.
+> > > > OK. On what kernel are you seeing this?
+> > > >=20
+> > > > On current upstream, the code in native_flush_tlb_others()
+> > > > will send a TLB flush to every CPU in mm_cpumask() if page
+> > > > table pages have been freed.
+> > > >=20
+> > > > That should cause the lazy TLB CPUs to switch to init_mm
+> > > > when the exit->zap_page_range path gets to the point where
+> > > > it frees page tables.
+> > > >=20
+> > > I was using the latest upstream 5.3-rc2 kernel. It may be the
+> > > case
+> > > that
+> > > the mm has been switched, but the mm_count field of the active_mm
+> > > of
+> > > the
+> > > kthread is not being decremented until a user task runs on a CPU.
+> > Is that something we could fix from the TLB flushing
+> > code?
+> >=20
+> > When switching to init_mm, drop the refcount on the
+> > lazy mm?
+> >=20
+> > That way that overhead is not added to the context
+> > switching code.
+>=20
+> I have thought about that. That will require changing the active_mm
+> of
+> the current task to point to init_mm, for example. Since TLB flush is
+> done in interrupt context, proper coordination between interrupt and
+> process context will require some atomic instruction which will
+> defect
+> the purpose.
 
- kernel/locking/mutex.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Would it be possible to work around that by scheduling
+a work item that drops the active_mm?
 
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index ac4929f..b4bcb02 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -85,7 +85,7 @@ struct mutex_waiter {
-  */
- static inline struct task_struct *__mutex_owner(struct mutex *lock)
- {
--	return (struct task_struct *)(atomic_long_read(&lock->owner) & ~0x07);
-+	return (struct task_struct *)(atomic_long_read(&lock->owner) & ~MUTEX_FLAGS);
- }
- 
- static inline struct task_struct *__owner_task(unsigned long owner)
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+After all, a work item runs in a kernel thread, so by
+the time the work item is run, either the kernel will
+still be running the mm you want to get rid of as
+active_mm, or it will have already gotten rid of it
+earlier.
+
+--=20
+All Rights Reversed.
+
+--=-LA3XQyUFN0DfKhuFWUzC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl1Brq4ACgkQznnekoTE
+3oO3eQf5AccmrRMXxWm78tqusxi+4qeoJTYk0e55qTe9ICxJJM1GjyKCEok1mcRz
+MKCKG1Gf6OMsZSp76dqQ3/WhbveHGMM7q+TBRqS3uKi2T+1kn3iPju0X66OYJ3jV
+GCxf3mhuBwgbMAlJ/orHvbX0TUwE7yHnVWQOLU0PdivEvfA9FBU7LsnnDHhm8EzL
+BSPJ1Qugfn7o9PrrFTGAARfEYQ2/ZHIhL3c1SZOfF6psCDIJaNJJbzCrUG12OVZU
+eWZgt8mtpmozWRxZ+7s1UkYSXfIDOJQkRtHNcRtikonqBO3Tt/e8RFJBP5Rp0ond
+HvpD66RQSO4zrn91S5EaUfnGmos7Zg==
+=yJHK
+-----END PGP SIGNATURE-----
+
+--=-LA3XQyUFN0DfKhuFWUzC--
 
