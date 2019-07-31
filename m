@@ -8,59 +8,59 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC42C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2969C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D71C206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DFAF206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j4MKFnGU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vEIr33UI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbfGaWRC (ORCPT
+        id S1731302AbfGaWRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:17:02 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:46430 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731272AbfGaWQ5 (ORCPT
+        Wed, 31 Jul 2019 18:17:07 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:45512 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731288AbfGaWRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:16:57 -0400
-Received: by mail-vk1-f202.google.com with SMTP id j63so29955956vkc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:16:57 -0700 (PDT)
+        Wed, 31 Jul 2019 18:17:02 -0400
+Received: by mail-pl1-f202.google.com with SMTP id y9so38342476plp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=+lxhGCdajZtpWA+WbiP8jppyBQ25CBPRuMFm1CLt5nU=;
-        b=j4MKFnGU7X99YI5wLcfXrhbOFDvuZvPJ8DeJhyJvAsxAIFQzgYt+EFTnWPv0qMmkqR
-         RG0mjKzeZVlqOwakSykYJYD4KlJ6ZRROwgtz1cp0jWXaki3qCH9YM8h6Kql3AgjbTz3t
-         7UnMOKbyWLe96otjDVG+dPr1R4wuC89qSfNHZvEltYLDw8qpgwmXL88G1rNcHSh8Ucbo
-         ch/Jb5eC737kJjy3xmYpy0cGNVYHfTX0wvJfVwGTLzHiYfpNJAZHSMZhxoPG3QCTu+0+
-         AAWnCM2SF0ibefGRIEsGmypEVjUHwxuhFVw1+MxxB9icrlIFugrsv66o4wI0DPZ0k6yJ
-         OJ7A==
+        bh=HYGYby6crp40dCLBmhgwCvdnfCZZwxit6AHkXOrrVgc=;
+        b=vEIr33UIHvwt3NqWIeZrb/59ulOIkcz7rfoXwf/T7Bm7ES4NLBQqA6eXizkSfE5vv3
+         FVEAfneKoLgNu2aaC4bzbB6LYw3f5NFnjVqP9s+oObZTrYzSawiE4g5T+5pK9LWkPzUl
+         7xNScG5swOXfYyB94pVc7cUTPklTEBfex/kk3GW9Dg8+hjfhm1+QG3rYI58FWSo1tnd4
+         UeCcXHE0/5Ni3ftiD+G+C/RFLw00Rz2lckGBrmAO/B7jRyjVzhQxOkSNAX9TQgQB3NmR
+         7rl0+tiA/WMA9OSfgrZdMhc7qhOUYeikze2HYm/uZdry/tyxh+9xAwJQvnLL40YFd70T
+         P3sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=+lxhGCdajZtpWA+WbiP8jppyBQ25CBPRuMFm1CLt5nU=;
-        b=dTzB0M/qETRkBAE0TMVbJC0+aiNrExtHHfxWQQk3qNjIwy0RWYXZLEIrnjVpi8tSRJ
-         AfWTPNuHtn3fo921B1E7CKbO8zjHaMqC2tMT+8kPnE8pD0T8ypXNgPYlxm0mtmyjyCao
-         aKNskVoM0bpqpd6THaK8ATet+SpSs+diXdZdS2vnwqL3ZSMNFSrD8Ax4Fwa9u/l8Lbbk
-         I4G517V80G5Reyb3EPcliBYndqUSDBcXjze14Ob/ENRZxcSFaaevbUJSSsCWisIaamnE
-         oPBFpnkUMzpMkwpTL1YFBR8LgLbTJpcKAfCnpcM4w3Qz3OgFE/Hb+R6oqSkVQW71surQ
-         qYSg==
-X-Gm-Message-State: APjAAAWqKkkZP4FInUkyGb+5wwx1BEUQ2IE8FBXh6/uCYPhuAMo5k0yn
-        cgZk3ENJ4r1uhIt4/dvZH5cJKu5PnW/3FmQ3keLeLQ==
-X-Google-Smtp-Source: APXvYqxwKJQQ8ekyXiq1k3fR6hTec9hMbAJGRiOniCHDcosaUUyGqhUT6qBrA15i3/RsTk4jytW4bKpkShWzY+8vWDLwpA==
-X-Received: by 2002:a1f:3692:: with SMTP id d140mr49563787vka.88.1564611416854;
- Wed, 31 Jul 2019 15:16:56 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 15:16:00 -0700
+        bh=HYGYby6crp40dCLBmhgwCvdnfCZZwxit6AHkXOrrVgc=;
+        b=EgQR8oZQdebWHq9TOu8wZLhmvjpIVof5QXUkxZ/kAHpXICEKkZ0WL52FwLsVZqwDw/
+         MMHxxd4LLjL47W8LwcR3VNRwaz/WqplNx98T69hrfCJzTVoCbQ4zAYYWm4t32HV5/4of
+         saHEoFhlSvFtJij3dMwB6xzurZQqFmn8tb3ZBHVU2/NlhFDCJ0HrMOWnhrrJM/6QYhTt
+         Y8Lajbh1xY4Elk6n26OQwb2RUqqhahvm11i1G1btZ1isV+FGzOuPsRNm2ya7JF8paunL
+         pTOrkZPvxSAAH86keP3BMuguBD28qOEM1d//xonAYQ83vxtApQmJtzOwVLDfTkhXdtUe
+         afKw==
+X-Gm-Message-State: APjAAAV0i+m8+fqZZ6lAp3sGwWiSwN7lUgSFZmPlgkK1QkBxWbpsxBQM
+        HJAAy7x0/PbsMnvZj9d4GPc81k30Wk2tjnEDoi7plQ==
+X-Google-Smtp-Source: APXvYqyQZy9xxO83dP4iiWV5yfSeSzijFuI+zHtpaDtjdJ7UzaPhV7163QoMF0NcR4Ie34IrDesajYUwC/D45vF1v4y3aQ==
+X-Received: by 2002:a65:458d:: with SMTP id o13mr114131617pgq.34.1564611421758;
+ Wed, 31 Jul 2019 15:17:01 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 15:16:02 -0700
 In-Reply-To: <20190731221617.234725-1-matthewgarrett@google.com>
-Message-Id: <20190731221617.234725-13-matthewgarrett@google.com>
+Message-Id: <20190731221617.234725-15-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190731221617.234725-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-Subject: [PATCH V37 12/29] x86: Lock down IO port access when the kernel is
- locked down
+Subject: [PATCH V37 14/29] ACPI: Limit access to custom_method when the kernel
+ is locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
@@ -68,7 +68,7 @@ Cc:     linux-security-module@vger.kernel.org,
         Matthew Garrett <mjg59@srcf.ucam.org>,
         Matthew Garrett <mjg59@google.com>,
         David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>, x86@kernel.org
+        Kees Cook <keescook@chromium.org>, linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -77,77 +77,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-IO port access would permit users to gain access to PCI configuration
-registers, which in turn (on a lot of hardware) give access to MMIO
-register space. This would potentially permit root to trigger arbitrary
-DMA, so lock it down by default.
-
-This also implicitly locks down the KDADDIO, KDDELIO, KDENABIO and
-KDDISABIO console ioctls.
+custom_method effectively allows arbitrary access to system memory, making
+it possible for an attacker to circumvent restrictions on module loading.
+Disable it if the kernel is locked down.
 
 Signed-off-by: Matthew Garrett <mjg59@google.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
-cc: x86@kernel.org
+cc: linux-acpi@vger.kernel.org
 ---
- arch/x86/kernel/ioport.c     | 7 +++++--
+ drivers/acpi/custom_method.c | 6 ++++++
  include/linux/security.h     | 1 +
  security/lockdown/lockdown.c | 1 +
- 3 files changed, 7 insertions(+), 2 deletions(-)
+ 3 files changed, 8 insertions(+)
 
-diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
-index 0fe1c8782208..61a89d3c0382 100644
---- a/arch/x86/kernel/ioport.c
-+++ b/arch/x86/kernel/ioport.c
-@@ -11,6 +11,7 @@
- #include <linux/errno.h>
- #include <linux/types.h>
- #include <linux/ioport.h>
+diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+index b2ef4c2ec955..7031307becd7 100644
+--- a/drivers/acpi/custom_method.c
++++ b/drivers/acpi/custom_method.c
+@@ -9,6 +9,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/debugfs.h>
+ #include <linux/acpi.h>
 +#include <linux/security.h>
- #include <linux/smp.h>
- #include <linux/stddef.h>
- #include <linux/slab.h>
-@@ -31,7 +32,8 @@ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
  
- 	if ((from + num <= from) || (from + num > IO_BITMAP_BITS))
- 		return -EINVAL;
--	if (turn_on && !capable(CAP_SYS_RAWIO))
-+	if (turn_on && (!capable(CAP_SYS_RAWIO) ||
-+			security_locked_down(LOCKDOWN_IOPORT)))
- 		return -EPERM;
+ #include "internal.h"
  
- 	/*
-@@ -126,7 +128,8 @@ SYSCALL_DEFINE1(iopl, unsigned int, level)
- 		return -EINVAL;
- 	/* Trying to gain more privileges? */
- 	if (level > old) {
--		if (!capable(CAP_SYS_RAWIO))
-+		if (!capable(CAP_SYS_RAWIO) ||
-+		    security_locked_down(LOCKDOWN_IOPORT))
- 			return -EPERM;
- 	}
- 	regs->flags = (regs->flags & ~X86_EFLAGS_IOPL) |
+@@ -29,6 +30,11 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 
+ 	struct acpi_table_header table;
+ 	acpi_status status;
++	int ret;
++
++	ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
++	if (ret)
++		return ret;
+ 
+ 	if (!(*ppos)) {
+ 		/* parse the table header to get the table length */
 diff --git a/include/linux/security.h b/include/linux/security.h
-index 8adbd62b7669..79250b2ffb8f 100644
+index 155ff026eca4..1c32522b3c5a 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -108,6 +108,7 @@ enum lockdown_reason {
- 	LOCKDOWN_KEXEC,
- 	LOCKDOWN_HIBERNATION,
+@@ -110,6 +110,7 @@ enum lockdown_reason {
  	LOCKDOWN_PCI_ACCESS,
-+	LOCKDOWN_IOPORT,
+ 	LOCKDOWN_IOPORT,
+ 	LOCKDOWN_MSR,
++	LOCKDOWN_ACPI_TABLES,
  	LOCKDOWN_INTEGRITY_MAX,
  	LOCKDOWN_CONFIDENTIALITY_MAX,
  };
 diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 655fe388e615..316f7cf4e996 100644
+index d99c0bee739d..ecb51b1a5c03 100644
 --- a/security/lockdown/lockdown.c
 +++ b/security/lockdown/lockdown.c
-@@ -23,6 +23,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_KEXEC] = "kexec of unsigned images",
- 	[LOCKDOWN_HIBERNATION] = "hibernation",
+@@ -25,6 +25,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
  	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
-+	[LOCKDOWN_IOPORT] = "raw io port access",
+ 	[LOCKDOWN_IOPORT] = "raw io port access",
+ 	[LOCKDOWN_MSR] = "raw MSR access",
++	[LOCKDOWN_ACPI_TABLES] = "modifying ACPI tables",
  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
  };
