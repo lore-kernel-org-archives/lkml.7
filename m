@@ -2,184 +2,244 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B4FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D55C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB11B206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:41:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="gyHso0ps"
+	by mail.kernel.org (Postfix) with ESMTP id 8FD11206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 16:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbfGaQlE (ORCPT
+        id S1730290AbfGaQmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 12:41:04 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37669 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729199AbfGaQlD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 12:41:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w13so66322642eds.4
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 09:41:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9n08u3GJ3TkoLk8dAtSDxOBDU0rwKbPL2XSn71rR3Sw=;
-        b=gyHso0psXZxIRwfoQB7/1x9EDd4ieIp7DfCBq0vQDlRLPKc83Ith5HUc27tIj39PbC
-         Gx4ky8SttACB4JG6B7TQjhow6V22FEUz5uSXJP1/qvA6H3w4pmgNHe++Ase6vjR4ymUq
-         d5TuYCkbYbkOjqQGaMvUxuarmKyyt1BNfIgWn7f3wMQEew7+sYqDbPlO3VZ4/v6QLcE8
-         Rx5YvjwzS4nmQjfs+mg7tHD2+7INbG9VJnKRDWfnM/TGSHEKhpF1DW91yWc+2THEDai+
-         2ocwzsL+0lxh3ZUjZKVTeeAw/Xqw5jHT6j2N3eZkRTvUtFbcxMeucRezrF/sa/pHfxUe
-         gIGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9n08u3GJ3TkoLk8dAtSDxOBDU0rwKbPL2XSn71rR3Sw=;
-        b=bg8SXwShdSbrCpyOeM/xx39542pLPdq1OsqijX41jhnKHLs/gao6AHwxxFlHlWcHww
-         iHhlPfGSFFhspqEIy1V1nmwiopY30uXXGNYL2vxnpCR8PM+KZL7N86WYWTwP53olfeKP
-         oj9uBC9ePmQmHHUMB8/KQqDenuZQnA2IFnCjWkCqW7gjzIGSObga0iTetjX7b0RByiXv
-         /WNOhiWQxsgA+aUQ0g5arX+yKwJVdInr4rtwxyfj0x0b3atGKMk9rPidavEw7YzwY71y
-         cK+4O/XPBFPI1qou9cs8AEJUnQpHehUzJYAzCZPKUbo4UJ8s5U9IOPs7TdopSjchu5FJ
-         CEtQ==
-X-Gm-Message-State: APjAAAUEEa04OpxqFXRAEDBHio1951PCua+NiB8Nc8LJXdpiQDwitMGf
-        R83Ks2svzPo9wFdyiSyCwGISmtYT++gCc8Loa3w=
-X-Google-Smtp-Source: APXvYqxF+hy+jYmVua6SeP9iGGLWPE7SNYmJPpSCp47g0V8pOMefhRmMSdxqadCgF+tst3HOjgiapc7sIfKcI7O/FwM=
-X-Received: by 2002:a17:906:b203:: with SMTP id p3mr94874464ejz.223.1564591261970;
- Wed, 31 Jul 2019 09:41:01 -0700 (PDT)
+        Wed, 31 Jul 2019 12:42:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35038 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729199AbfGaQmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 12:42:08 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 56AFB3092666;
+        Wed, 31 Jul 2019 16:42:07 +0000 (UTC)
+Received: from dcbz.redhat.com (ovpn-116-74.ams2.redhat.com [10.36.116.74])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A36E910016EB;
+        Wed, 31 Jul 2019 16:42:02 +0000 (UTC)
+From:   Adrian Reber <areber@redhat.com>
+To:     Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelianov <xemul@virtuozzo.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Adrian Reber <areber@redhat.com>
+Subject: [PATCH v2 1/2] fork: extend clone3() to support CLONE_SET_TID
+Date:   Wed, 31 Jul 2019 18:12:22 +0200
+Message-Id: <20190731161223.2928-1-areber@redhat.com>
 MIME-Version: 1.0
-References: <20190731153857.4045-1-pasha.tatashin@soleen.com> <20190731163258.GH39768@lakrids.cambridge.arm.com>
-In-Reply-To: <20190731163258.GH39768@lakrids.cambridge.arm.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 31 Jul 2019 12:40:51 -0400
-Message-ID: <CA+CK2bAYUFBBGo-LHBK4UWRK1tpx3AZ4Z9NkDxiDK0UYEDozaQ@mail.gmail.com>
-Subject: Re: [RFC v2 0/8] arm64: MMU enabled kexec relocation
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 31 Jul 2019 16:42:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 12:33 PM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> Hi Pavel,
->
-> Generally, the cover letter should state up-front what the goal is (or
-> what problem you're trying to solve). It would be really helpful to have
-> that so that we understand what you're trying to achieve, and why.
->
-> Messing with the MMU is often fraught with danger (and very painful to
-> debug, as you are now aware), and so far we've tried to minimize the
-> number of places where we have to do so.
+The main motivation to add CLONE_SET_TID to clone3() is CRIU.
 
-Hi Mark,
+To restore a process with the same PID/TID CRIU currently uses
+/proc/sys/kernel/ns_last_pid. It writes the desired (PID - 1) to
+ns_last_pid and then (quickly) does a clone(). This works most of the
+time, but it is racy. It is also slow as it requires multiple syscalls.
 
-I understand, this is why I first went another route of solving this
-problem: pre-reserving contiguous memory, and avoid relocation
-entirely (the same as what happens during crash reboot). But, that
-solution was not accepted because it introduces a change to the common
-code to solve ARM specific problem. So, James Morse, and other
-suggested that I take a look at the root of the problem, and enable
-MMU during relocation by doing what is already done during hibernate
-restore.
+Extending clone3() to support CLONE_SET_TID makes it possible restore a
+process using CRIU without accessing /proc/sys/kernel/ns_last_pid and
+race free (as long as the desired PID/TID is available).
 
->
-> On Wed, Jul 31, 2019 at 11:38:49AM -0400, Pavel Tatashin wrote:
-> > Changelog from previous RFC:
-> > - Added trans_table support for both hibernate and kexec.
-> > - Fixed performance issue, where enabling MMU did not yield the
-> >   actual performance improvement.
-> >
-> > Bug:
-> > With the current state, this patch series works on kernels booted with EL1
-> > mode, but for some reason, when elevated to EL2 mode reboot freezes in
-> > both QEMU and on real hardware.
-> >
-> > The freeze happens in:
-> >
-> > arch/arm64/kernel/relocate_kernel.S
-> >       turn_on_mmu()
-> >
-> > Right after sctlr_el2 is written (MMU on EL2 is enabled)
-> >
-> >       msr     sctlr_el2, \tmp1
-> >
-> > I've been studying all the relevant control registers for EL2, but do not
-> > see what might be causing this hang:
-> >
-> > MAIR_EL2 is set to be exactly the same as MAIR_EL1 0xbbff440c0400
-> >
-> > TCR_EL2        0x80843510
-> > Enabled bits:
-> > PS      Physical Address Size. (0b100   44 bits, 16TB.)
-> > SH0     Shareability    11 Inner Shareable
-> > ORGN0   Normal memory, Outer Write-Back Read-Allocate Write-Allocate Cach.
-> > IRGN0   Normal memory, Inner Write-Back Read-Allocate Write-Allocate Cach.
-> > T0SZ    01 0000
-> >
-> > SCTLR_EL2     0x30e5183f
-> > RES1    : Reserve ones
-> > M       : MMU enabled
-> > A       : Align check
-> > C       : Cacheability control
-> > SA      : SP Alignment check enable
-> > IESB    : Implicit Error Synchronization event
-> > I       : Instruction access Cacheability
-> >
-> > TTBR0_EL2      0x1b3069000 (address of trans_table)
-> >
-> > Any suggestion of what else might be missing that causes this freeze when
-> > MMU is enabled in EL2?
-> >
-> > =====
->
-> > Here is the current data from the real hardware:
-> > (because of bug, I forced EL1 mode by setting el2_switch always to zero in
-> > cpu_soft_restart()):
-> >
-> > For this experiment, the size of kernel plus initramfs is 25M. If initramfs
-> > was larger, than the improvements would be even greater, as time spent in
-> > relocation is proportional to the size of relocation.
-> >
-> > Previously:
-> > kernel shutdown       0.022131328s
-> > relocation    0.440510736s
-> > kernel startup        0.294706768s
->
-> In total this takes ~0.76s...
->
-> >
-> > Relocation was taking: 58.2% of reboot time
-> >
-> > Now:
-> > kernel shutdown       0.032066576s
-> > relocation    0.022158152s
-> > kernel startup        0.296055880s
->
-> ... and this takes ~0.35s
->
-> So do we really need this complexity for a few blinks of an eye?
+This clone3() extension places the same restrictions (CAP_SYS_ADMIN)
+on clone3() with set_tid as they are currently in place for ns_last_pid.
 
-Yes, we have an extremely tight reboot budget, 0.35s is not an acceptable waste.
+v2:
+ - Removed (size < sizeof(struct clone_args)) as discussed with
+   Christian and Dmitry
+ - Added comment to ((set_tid != 1) && idr_get_cursor() <= 1) (Oleg)
+ - Use idr_alloc() instead of idr_alloc_cyclic() (Oleg)
 
->
-> Thanks,
-> Mark.
+Signed-off-by: Adrian Reber <areber@redhat.com>
+---
+ include/linux/pid.h        |  2 +-
+ include/linux/sched/task.h |  1 +
+ include/uapi/linux/sched.h |  2 ++
+ kernel/fork.c              | 25 ++++++++++++++++---------
+ kernel/pid.c               | 30 +++++++++++++++++++++++-------
+ 5 files changed, 43 insertions(+), 17 deletions(-)
+
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index 2a83e434db9d..052000db0ced 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -116,7 +116,7 @@ extern struct pid *find_vpid(int nr);
+ extern struct pid *find_get_pid(int nr);
+ extern struct pid *find_ge_pid(int nr, struct pid_namespace *);
+ 
+-extern struct pid *alloc_pid(struct pid_namespace *ns);
++extern struct pid *alloc_pid(struct pid_namespace *ns, pid_t set_tid);
+ extern void free_pid(struct pid *pid);
+ extern void disable_pid_allocation(struct pid_namespace *ns);
+ 
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 0497091e40c1..4f2a80564332 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -26,6 +26,7 @@ struct kernel_clone_args {
+ 	unsigned long stack;
+ 	unsigned long stack_size;
+ 	unsigned long tls;
++	pid_t set_tid;
+ };
+ 
+ /*
+diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+index b3105ac1381a..8c4e803e8147 100644
+--- a/include/uapi/linux/sched.h
++++ b/include/uapi/linux/sched.h
+@@ -32,6 +32,7 @@
+ #define CLONE_NEWPID		0x20000000	/* New pid namespace */
+ #define CLONE_NEWNET		0x40000000	/* New network namespace */
+ #define CLONE_IO		0x80000000	/* Clone io context */
++#define CLONE_SET_TID		0x100000000ULL	/* set if the desired TID is set in set_tid */
+ 
+ /*
+  * Arguments for the clone3 syscall
+@@ -45,6 +46,7 @@ struct clone_args {
+ 	__aligned_u64 stack;
+ 	__aligned_u64 stack_size;
+ 	__aligned_u64 tls;
++	__aligned_u64 set_tid;
+ };
+ 
+ /*
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 2852d0e76ea3..405f98ce4c83 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2031,7 +2031,7 @@ static __latent_entropy struct task_struct *copy_process(
+ 	stackleak_task_init(p);
+ 
+ 	if (pid != &init_struct_pid) {
+-		pid = alloc_pid(p->nsproxy->pid_ns_for_children);
++		pid = alloc_pid(p->nsproxy->pid_ns_for_children, args->set_tid);
+ 		if (IS_ERR(pid)) {
+ 			retval = PTR_ERR(pid);
+ 			goto bad_fork_cleanup_thread;
+@@ -2530,14 +2530,12 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 					      struct clone_args __user *uargs,
+ 					      size_t size)
+ {
++	struct pid_namespace *pid_ns = task_active_pid_ns(current);
+ 	struct clone_args args;
+ 
+ 	if (unlikely(size > PAGE_SIZE))
+ 		return -E2BIG;
+ 
+-	if (unlikely(size < sizeof(struct clone_args)))
+-		return -EINVAL;
+-
+ 	if (unlikely(!access_ok(uargs, size)))
+ 		return -EFAULT;
+ 
+@@ -2562,6 +2560,9 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 	if (copy_from_user(&args, uargs, size))
+ 		return -EFAULT;
+ 
++	if ((args.flags & CLONE_SET_TID) && !ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
++		return -EPERM;
++
+ 	*kargs = (struct kernel_clone_args){
+ 		.flags		= args.flags,
+ 		.pidfd		= u64_to_user_ptr(args.pidfd),
+@@ -2571,6 +2572,7 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 		.stack		= args.stack,
+ 		.stack_size	= args.stack_size,
+ 		.tls		= args.tls,
++		.set_tid	= args.set_tid,
+ 	};
+ 
+ 	return 0;
+@@ -2578,11 +2580,16 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 
+ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
+ {
+-	/*
+-	 * All lower bits of the flag word are taken.
+-	 * Verify that no other unknown flags are passed along.
+-	 */
+-	if (kargs->flags & ~CLONE_LEGACY_FLAGS)
++	/* Verify that no other unknown flags are passed along. */
++	if (kargs->flags & ~(CLONE_LEGACY_FLAGS | CLONE_SET_TID))
++		return false;
++
++	/* Fail if set_tid is set without CLONE_SET_TID */
++	if (kargs->set_tid && !(kargs->flags & CLONE_SET_TID))
++		return false;
++
++	/* Also fail if set_tid is invalid */
++	if ((kargs->set_tid <= 0) && (kargs->flags & CLONE_SET_TID))
+ 		return false;
+ 
+ 	/*
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 0a9f2e437217..977f3ac39d7f 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -157,7 +157,7 @@ void free_pid(struct pid *pid)
+ 	call_rcu(&pid->rcu, delayed_put_pid);
+ }
+ 
+-struct pid *alloc_pid(struct pid_namespace *ns)
++struct pid *alloc_pid(struct pid_namespace *ns, int set_tid)
+ {
+ 	struct pid *pid;
+ 	enum pid_type type;
+@@ -186,12 +186,28 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+ 		if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+ 			pid_min = RESERVED_PIDS;
+ 
+-		/*
+-		 * Store a null pointer so find_pid_ns does not find
+-		 * a partially initialized PID (see below).
+-		 */
+-		nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+-				      pid_max, GFP_ATOMIC);
++		if (set_tid) {
++			/*
++			 * Also fail if a PID != 1 is requested
++			 * and no PID 1 exists.
++			 */
++			if ((set_tid >= pid_max) || ((set_tid != 1) &&
++				(idr_get_cursor(&tmp->idr) <= 1))) {
++				spin_unlock_irq(&pidmap_lock);
++				retval = -EINVAL;
++				goto out_free;
++			}
++			nr = idr_alloc(&tmp->idr, NULL, set_tid,
++				       set_tid + 1, GFP_ATOMIC);
++			set_tid = 0;
++		} else {
++			/*
++			 * Store a null pointer so find_pid_ns does not find
++			 * a partially initialized PID (see below).
++			 */
++			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
++					      pid_max, GFP_ATOMIC);
++		}
+ 		spin_unlock_irq(&pidmap_lock);
+ 		idr_preload_end();
+ 
+-- 
+2.21.0
+
