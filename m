@@ -2,151 +2,123 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE00C32753
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A355C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F028420449
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD4A208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 09:27:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=duncanthrax.net header.i=@duncanthrax.net header.b="VWmBZSuU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbfGaJ0U (ORCPT
+        id S1728862AbfGaJ1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 05:26:20 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3265 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728558AbfGaJ0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 05:26:20 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 717A3CC1765D4EE3150F;
-        Wed, 31 Jul 2019 17:26:18 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 31 Jul 2019
- 17:26:09 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v3 01/10] powerpc: unify definition of M_IF_NEEDED
-Date:   Wed, 31 Jul 2019 17:43:09 +0800
-Message-ID: <20190731094318.26538-2-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190731094318.26538-1-yanaijie@huawei.com>
-References: <20190731094318.26538-1-yanaijie@huawei.com>
+        Wed, 31 Jul 2019 05:27:16 -0400
+Received: from smtp.duncanthrax.net ([89.31.1.170]:40094 "EHLO
+        smtp.duncanthrax.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728170AbfGaJ1Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 05:27:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=duncanthrax.net; s=dkim; h=In-Reply-To:Content-Type:MIME-Version:References
+        :Message-ID:Subject:Cc:To:From:Date;
+        bh=tys11WF7FiBbva0mPM06RvxVHoTJLCHaJFi1kgHKOlY=; b=VWmBZSuU83JjDnf9gMTaxrmzwn
+        L9+fc/xpWeDeXZSEI/yzPMyWYCcv0q+KeV8O2qeIlc0spZPwS8zCive5J22gcI0xvRa6BgxYG0eT8
+        ty5Kg3Pq+IeY2sPwZwChlunbSVDEXqnQBnphMnW8RDTnsCCyKFs/eIxGSi6de0U8qTQw=;
+Received: from frobwit.duncanthrax.net ([89.31.1.178] helo=t470p.stackframe.org)
+        by smtp.eurescom.eu with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.86_2)
+        (envelope-from <svens@stackframe.org>)
+        id 1hsksy-0002wy-IF; Wed, 31 Jul 2019 11:27:04 +0200
+Date:   Wed, 31 Jul 2019 11:27:03 +0200
+From:   Sven Schnelle <svens@stackframe.org>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Helge Deller <deller@gmx.de>,
+        Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v9 00/21] Generic page walk and ptdump
+Message-ID: <20190731092703.GA31316@t470p.stackframe.org>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <794fb469-00c8-af10-92a8-cb7c0c83378b@arm.com>
+ <270ce719-49f9-7c61-8b25-bc9548a2f478@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <270ce719-49f9-7c61-8b25-bc9548a2f478@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-M_IF_NEEDED is defined too many times. Move it to a common place.
+Hi Steven,
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Cc: Diana Craciun <diana.craciun@nxp.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/include/asm/nohash/mmu-book3e.h  | 10 ++++++++++
- arch/powerpc/kernel/exceptions-64e.S          | 10 ----------
- arch/powerpc/kernel/fsl_booke_entry_mapping.S | 10 ----------
- arch/powerpc/kernel/misc_64.S                 |  5 -----
- 4 files changed, 10 insertions(+), 25 deletions(-)
+On Mon, Jul 29, 2019 at 12:32:25PM +0100, Steven Price wrote:
+> 
+> parisc is more interesting and I'm not sure if this is necessarily
+> correct. I originally proposed a patch with the line "For parisc, we
+> don't support large pages, so add stubs returning 0" which got Acked by
+> Helge Deller. However going back to look at that again I see there was a
+> follow up thread[2] which possibly suggests I was wrong?
 
-diff --git a/arch/powerpc/include/asm/nohash/mmu-book3e.h b/arch/powerpc/include/asm/nohash/mmu-book3e.h
-index 4c9777d256fb..0877362e48fa 100644
---- a/arch/powerpc/include/asm/nohash/mmu-book3e.h
-+++ b/arch/powerpc/include/asm/nohash/mmu-book3e.h
-@@ -221,6 +221,16 @@
- #define TLBILX_T_CLASS2			6
- #define TLBILX_T_CLASS3			7
- 
-+/*
-+ * The mapping only needs to be cache-coherent on SMP, except on
-+ * Freescale e500mc derivatives where it's also needed for coherent DMA.
-+ */
-+#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
-+#define M_IF_NEEDED	MAS2_M
-+#else
-+#define M_IF_NEEDED	0
-+#endif
-+
- #ifndef __ASSEMBLY__
- #include <asm/bug.h>
- 
-diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
-index 1cfb3da4a84a..fd49ec07ce4a 100644
---- a/arch/powerpc/kernel/exceptions-64e.S
-+++ b/arch/powerpc/kernel/exceptions-64e.S
-@@ -1342,16 +1342,6 @@ skpinv:	addi	r6,r6,1				/* Increment */
- 	sync
- 	isync
- 
--/*
-- * The mapping only needs to be cache-coherent on SMP, except on
-- * Freescale e500mc derivatives where it's also needed for coherent DMA.
-- */
--#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
--#define M_IF_NEEDED	MAS2_M
--#else
--#define M_IF_NEEDED	0
--#endif
--
- /* 6. Setup KERNELBASE mapping in TLB[0]
-  *
-  * r3 = MAS0 w/TLBSEL & ESEL for the entry we started in
-diff --git a/arch/powerpc/kernel/fsl_booke_entry_mapping.S b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
-index ea065282b303..de0980945510 100644
---- a/arch/powerpc/kernel/fsl_booke_entry_mapping.S
-+++ b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
-@@ -153,16 +153,6 @@ skpinv:	addi	r6,r6,1				/* Increment */
- 	tlbivax 0,r9
- 	TLBSYNC
- 
--/*
-- * The mapping only needs to be cache-coherent on SMP, except on
-- * Freescale e500mc derivatives where it's also needed for coherent DMA.
-- */
--#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
--#define M_IF_NEEDED	MAS2_M
--#else
--#define M_IF_NEEDED	0
--#endif
--
- #if defined(ENTRY_MAPPING_BOOT_SETUP)
- 
- /* 6. Setup KERNELBASE mapping in TLB1[0] */
-diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
-index b55a7b4cb543..26074f92d4bc 100644
---- a/arch/powerpc/kernel/misc_64.S
-+++ b/arch/powerpc/kernel/misc_64.S
-@@ -432,11 +432,6 @@ kexec_create_tlb:
- 	rlwimi	r9,r10,16,4,15		/* Setup MAS0 = TLBSEL | ESEL(r9) */
- 
- /* Set up a temp identity mapping v:0 to p:0 and return to it. */
--#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
--#define M_IF_NEEDED	MAS2_M
--#else
--#define M_IF_NEEDED	0
--#endif
- 	mtspr	SPRN_MAS0,r9
- 
- 	lis	r9,(MAS1_VALID|MAS1_IPROT)@h
--- 
-2.17.2
+I just started a week ago implementing ptdump for PA-RISC. Didn't notice that
+you're working on making it generic, which is nice. I'll adjust my code
+to use the infrastructure you're currently developing.
 
+> Can anyone shed some light on whether parisc does support leaf entries
+> of the page table tree at a higher than the normal depth?
+> 
+> [1] https://lkml.org/lkml/2019/2/27/572
+> [2] https://lkml.org/lkml/2019/3/5/610
+
+My understanding is that PA-RISC only has leaf entries on PTE level.
+
+> The intention is that the page table walker would be available for all
+> architectures so that it can be used in any generic code - PTDUMP simply
+> seemed like a good place to start.
+> 
+> > Now that pmd_leaf() and pud_leaf() are getting used in walk_page_range() these
+> > functions need to be defined on all arch irrespective if they use PTDUMP or not
+> > or otherwise just define it for archs which need them now for sure i.e x86 and
+> > arm64 (which are moving to new generic PTDUMP framework). Other archs can
+> > implement these later.
+
+I'll take care of the PA-RISC part - for 32 bit your generic code works, for 64Bit
+i need to learn a bit more about the following hack:
+
+arch/parisc/include/asm/pgalloc.h:15
+/* Allocate the top level pgd (page directory)
+ *
+ * Here (for 64 bit kernels) we implement a Hybrid L2/L3 scheme: we
+ * allocate the first pmd adjacent to the pgd.  This means that we can
+ * subtract a constant offset to get to it.  The pmd and pgd sizes are
+ * arranged so that a single pmd covers 4GB (giving a full 64-bit
+ * process access to 8TB) so our lookups are effectively L2 for the
+ * first 4GB of the kernel (i.e. for all ILP32 processes and all the
+ * kernel for machines with under 4GB of memory)
+ */
+
+I see that your change clear P?D entries when p?d_bad() returns true, which - i think -
+would be the case with the PA-RISC implementation.
+
+Regards
+Sven
