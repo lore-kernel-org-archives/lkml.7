@@ -2,140 +2,99 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7B7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F6FC32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 200DD21851
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BEE21851
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="aOi9HiQR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dIae7+Ig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbfGaREX (ORCPT
+        id S1730487AbfGaREd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:04:23 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45615 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfGaREW (ORCPT
+        Wed, 31 Jul 2019 13:04:33 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37442 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfGaREc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:04:22 -0400
-Received: by mail-ed1-f66.google.com with SMTP id x19so60438860eda.12
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 10:04:20 -0700 (PDT)
+        Wed, 31 Jul 2019 13:04:32 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so30785135plr.4;
+        Wed, 31 Jul 2019 10:04:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w3v6TLclWYCTjAr1Tti2BDVXfhzMXBqkZT8bGQWpyYs=;
-        b=aOi9HiQRPHO4FOr23H0QJg5L4BRnfgz+Y7QvXWhB/ngiIQaEGHpBRMnl1OxzoXIBD2
-         k43GqRNVGXw98UkWEJOgJJ2uCTXIijl6XMElm2r6cO8ZxA6p+VeKe0q36fAAh9KHjGXh
-         YSgHNRaRuPZ5vFNks3rQ7KnUpdHhj099KPD3D99ZDMOC90fiBIPstXZKeDLSEGq6tymT
-         9ON4RFhkvi6jSB8/Oj5Xi0cdIYetxeUWiifFJKWczZ8hgQpqdsJUnl9/Uwx6rJkeFEJj
-         58AJWNsYbe4cmO3e3vyV70t0uKsb/DXhqgr2SLW8GdW3LoqfK74WF1+J9TrqIxeltae+
-         yGYA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=02uZUKd556myZ+F9DbZFuNYIVZOabJKu9/VOGEOym5U=;
+        b=dIae7+Igo3ltQMb7FnEbyeio8IyM1uNgubphIg4B+0bi4A7FXCd+qPbZuPLFUcVnqZ
+         Tqyb69AUklajqvqq9g8fyvbVW05oBVhwtoIraiBzfXQAqm2XWQvZv41Q5E900YSWSKuh
+         Bw2rdB02zsc4MT9LtcYUw4AJB+DCF6NovXIZuudmV/z7JKKXNMc6PwVlmKl3XYGKhkU6
+         b3bgtIdJhdNow0Va46Tpd5TcjTDh+ptQ0OWDXMRMOL/kU5U4JWMCfeJ50p1Jl5xI+J2L
+         sHq1INFZgEyJyTN81rp2+3VFuqlgkqjI7JxMTYD4DEqyjbVJIl9N/kfiQjxq7/COaMcC
+         kZgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w3v6TLclWYCTjAr1Tti2BDVXfhzMXBqkZT8bGQWpyYs=;
-        b=d9hGXP8oDm+VfpMR7hqwRIUqf01zEbjIoT1Ujtxhk0heh6ddU0WFA/kzUVi2Rf08hg
-         uGNq8nxXkPA34nBv5ZOHPU32SNumFYV+XVFkaNuQnvemoO04ODAq1GpJ0B1tLGyx+r8A
-         WTFKRqxTxCI0J8DNh3wHHtjX6Ytsx8XK7JPqEM4ojhibEBtExMpIYuq3Q8sgZlfkZRac
-         Sf9rpp7KqRCwjOxcBWv6dwVS20HFlWs9T9Ewv8hVLQ1aeIWkAJUrdwl4Dqh1Qu20jPqG
-         U/4bKgXGaxouAmlechcIE85a0UdLX/AiUuCcqOzK2MPH9Gg93cPX35UybtBJTPV/Mi6F
-         ZJXQ==
-X-Gm-Message-State: APjAAAWRFS0DSvXP7bNZB6Bb8d/IHJuE5sK8SIHeUDpNiv6vExbtonji
-        j+9FQeZ3ywJrQzmL9nhnqpIE1RwptgFbyVl7ouQ=
-X-Google-Smtp-Source: APXvYqyW5t23CPvCpiYNBbUwB050BijLjhKoZGvCCP6vJyE4voxLk8m00zN6oc8wm1lTBdkVRCt4NjssIfYO0PsdD3Y=
-X-Received: by 2002:a17:906:9447:: with SMTP id z7mr30023478ejx.165.1564592659700;
- Wed, 31 Jul 2019 10:04:19 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=02uZUKd556myZ+F9DbZFuNYIVZOabJKu9/VOGEOym5U=;
+        b=BAkPj9302L9uYkBjytOaeFebzOgqHjbaVfiaBqO1RoEd+NkoLOaZ+6Dstwi1OLq4MH
+         402jDQx+1JPlHI94ZuPzymbB0/FlF0P2UX89B2Ltgc4h0ASP364rH1F5ihgAjhsWQ4zx
+         1DYL138OVsXeDTO5TqCENdLxeT9fVTGXdkBd+EYP33fzqygC59/Gk+4l3gcPlRLfN5AZ
+         Cxb6vv+uLTxyRC3gQRDybCFF0TLSyQmA6mTtjWE9D14z1qnAYp+raKqki6B1MGDQK/Sv
+         q2hh9xZVrUYNjEs2Ps3SpF59JiLHXG2XJ8SwaBSnBcl+DIAwlzySGBejXPFGT1r7v8IK
+         e1KQ==
+X-Gm-Message-State: APjAAAXI/DHm9uW61gjZ+M9OoPNClsJeR1x6ScQhAdBl5X7gJMkbvmiN
+        yTi96P/dIKLDVDVTTyZc0jU=
+X-Google-Smtp-Source: APXvYqwGsj0ZGlniKBN07CjFyqECjuTrRu/I0JtIHH8wCdnVnF2MiO69+EFwTXNWPSE7NiazPmCDbA==
+X-Received: by 2002:a17:902:112c:: with SMTP id d41mr110771356pla.33.1564592671257;
+        Wed, 31 Jul 2019 10:04:31 -0700 (PDT)
+Received: from mbalantz-desktop (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id x7sm4800350pga.0.2019.07.31.10.04.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 10:04:30 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+X-Google-Original-From: Mark Balantzyan <mbalantz@mbalantz-desktop>
+Date:   Wed, 31 Jul 2019 10:04:26 -0700 (PDT)
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     Mark Balantzyan <mbalant3@gmail.com>, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pavel Andrianov <andrianov@ispras.ru>
+Subject: Re: [PATCH] watchdog:alim1535_wdt: Fix data race in ali_settimer()
+ concerning ali_timeout_bits variable.
+In-Reply-To: <20190731164337.GA13646@roeck-us.net>
+Message-ID: <alpine.DEB.2.21.1907310949440.37824@mbalantz-desktop>
+References: <20190718155238.3066-1-mbalant3@gmail.com> <20190718163458.GA18125@roeck-us.net> <alpine.DEB.2.21.1907310911120.29703@mbalantz-desktop> <20190731164337.GA13646@roeck-us.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190731153857.4045-1-pasha.tatashin@soleen.com>
- <20190731163258.GH39768@lakrids.cambridge.arm.com> <CA+CK2bAYUFBBGo-LHBK4UWRK1tpx3AZ4Z9NkDxiDK0UYEDozaQ@mail.gmail.com>
- <20190731165007.GJ39768@lakrids.cambridge.arm.com>
-In-Reply-To: <20190731165007.GJ39768@lakrids.cambridge.arm.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 31 Jul 2019 13:04:08 -0400
-Message-ID: <CA+CK2bBOSC0iYjq_A18DNaNCYskTTJJTkM4N-WAqssoxpxuNPg@mail.gmail.com>
-Subject: Re: [RFC v2 0/8] arm64: MMU enabled kexec relocation
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 12:50 PM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Wed, Jul 31, 2019 at 12:40:51PM -0400, Pavel Tatashin wrote:
-> > On Wed, Jul 31, 2019 at 12:33 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > >
-> > > Hi Pavel,
-> > >
-> > > Generally, the cover letter should state up-front what the goal is (or
-> > > what problem you're trying to solve). It would be really helpful to have
-> > > that so that we understand what you're trying to achieve, and why.
->
-> [...]
->
-> > > > Here is the current data from the real hardware:
-> > > > (because of bug, I forced EL1 mode by setting el2_switch always to zero in
-> > > > cpu_soft_restart()):
-> > > >
-> > > > For this experiment, the size of kernel plus initramfs is 25M. If initramfs
-> > > > was larger, than the improvements would be even greater, as time spent in
-> > > > relocation is proportional to the size of relocation.
-> > > >
-> > > > Previously:
-> > > > kernel shutdown       0.022131328s
-> > > > relocation    0.440510736s
-> > > > kernel startup        0.294706768s
-> > >
-> > > In total this takes ~0.76s...
-> > >
-> > > >
-> > > > Relocation was taking: 58.2% of reboot time
-> > > >
-> > > > Now:
-> > > > kernel shutdown       0.032066576s
-> > > > relocation    0.022158152s
-> > > > kernel startup        0.296055880s
-> > >
-> > > ... and this takes ~0.35s
-> > >
-> > > So do we really need this complexity for a few blinks of an eye?
-> >
-> > Yes, we have an extremely tight reboot budget, 0.35s is not an acceptable waste.
->
-> Could you please elaborate on your use-case?
->
-> Understanfin what you're trying to achieve would help us to understand
-> which solutions make sense.
+My employer (and yes, I am working for the Linux Foundation) has me 
+working on analysing race condition warnings in the Linux kernel. They 
+have a driver verification project running under the umbrella of the ELISA 
+project involved in the research, investigation, experimentation, and 
+establishment of linux kernel verification measures and tools.
 
-An extremely high availability device with an update story utilizing
-kexec functionality for a faster kernel update and also for being able
-to preserve some state in memory without wasting the time of copying
-it to and from a backing storage. We at Microsoft will be using a
-fleet of these devices. The total reboot budget is less than half a
-second, out of which 0.44s is currently spent in kexec relocation.
+I actually do have assigned to me coaches and/or mentors that I have been 
+corresponding with. They are aware of what is going on and are being cc'd 
+to (most of) our emails.
 
-Pasha
+pc87413_wdt was detected by our race condition analysis tool as having 
+warning. Even outside this work we've been doing, I've been trying to apply
+the reasoning of the race condition analysis tool to different kernel modules,
+as part of my menteeship.
 
->
-> Thanks,
-> Mark.
+I hope you can respect that this is a process primarily for learning and 
+experimentation. I'm sorry if I'm creating too much work for you at once. 
+If so, let me know and I'll try to spread it out.
+
+Thank you,
+Mark
