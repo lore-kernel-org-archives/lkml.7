@@ -2,167 +2,305 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6007C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB622C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9772D206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83DFA206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 07:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="A75tXU1o"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1FSzN5/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbfGaHYI (ORCPT
+        id S1727312AbfGaH2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 03:24:08 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33705 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728123AbfGaHYH (ORCPT
+        Wed, 31 Jul 2019 03:28:55 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40630 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfGaH2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 03:24:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so68538758wru.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 00:24:06 -0700 (PDT)
+        Wed, 31 Jul 2019 03:28:54 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l15so11921431oth.7
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 00:28:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2evDZYZurYJQbFSuSciK2TUoh0fXPuEDQACEld/aYOg=;
-        b=A75tXU1odVHd2oqqipCCjQrkrK+gkBSiyV5g3p2eGuJLxhvTDMB7LZfPS25FJ6rxLw
-         K1sYCoBGplsoVDFyP5m/AaR0wQqHdkVoqTeF5PUjJzkpUev3f1V8KC+teaciof3/4q9J
-         eC2eHJreipGNgoQzyt5J7mNVbNZCfLP+l45JPeHfTCHIsJyOyOuys8lmOCwU1BqwwhpL
-         1fZdUQY4APgMTlNqWvRv+FmO+1ElL6PQjEj3xbRidCfT3XQ43w+eP9KrFFE6NATFJmKF
-         VhZCjgGmvz7G05AZ5fqiXLZyzHQrs45lgMF7sx7oy69fRDwtk9wFLndZeVUDw5JU6+CK
-         bIoQ==
+         :cc:content-transfer-encoding;
+        bh=TmYkszd4hw4EUMOJlisQyoGCI5lj99eO1lyXFc/HvcQ=;
+        b=1FSzN5/m+2ZZrpqyW9/he10E9ViMT2xLFVUnIVYVmP85JCy+nnGQYXFObI6VdG7Tty
+         LzE9lj3YiaA0P7dNENQmTZWunnDdx3gF571XI9yNqSlXkeBK8ETZdYs4hBZYKuKsOnNu
+         JbrdkiVaVpuyFo5k7UD9vGIqCdN6hF5lqMlkT0MozS2hosU3jPnv/3irVmt5k7Shb/GE
+         HkrbhaX0m6tEfJNYB6fZR41tdcazkWYXihVhnfaQcMgV3N6Du67XPTszejJ/sNqhqicp
+         QHAdbUYQm3J0LqkUzIxRXJ5UMUjFyN9qYwr1TWIi0rPIYvO1ovG+lyQIZhSqC1vx7Q1i
+         xcTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2evDZYZurYJQbFSuSciK2TUoh0fXPuEDQACEld/aYOg=;
-        b=j1ci8nWrKY68/wVY+GVlppcaGE/6sf2i55SkCJpzOZNrkaAybQ4ynNbj/3vznY1u/e
-         8aWyzM24KHkWIU/E2WLWm7iMKKEtWZ2EOGQIRj293/E6UfmE54QqmszBk2uNvy8nTPpQ
-         RtI+fKmQ5CAtPVSsNRDEN6WKNxBESDT3CSalJEYOFkPaJNPL3YxA+mD4J4UmYih3ZdSx
-         w3NAVc5VZLQNdNY2d3JFWwmdvCwSnskQvB0plxDWTQ5Tv9/gq8NJpYaoDFCAOVdL+dRx
-         Xop42LjtqbySpueajqKhyZJWQPn3aJUZGMOi9EyfgyHjMtUklz9tzUqJ8khAwRkxfQRV
-         VfUQ==
-X-Gm-Message-State: APjAAAWvqrkuSDBXU0/YGVbYohqDBZ5NGBu020a6swuwwS9z/T0kPHNX
-        7w5ydOlo+aAcQc4mGFwfChTkTx6KsRlCr7gc+/A=
-X-Google-Smtp-Source: APXvYqwuN6IBm0tVgx0DbJMkVlA5+z7xdtFRwEmr06AoaLDh/qCzFrlo7pERQF4wqinABZXnPNRDN2ZbRxDtrHkTMz4=
-X-Received: by 2002:a5d:5448:: with SMTP id w8mr131770724wrv.180.1564557845356;
- Wed, 31 Jul 2019 00:24:05 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TmYkszd4hw4EUMOJlisQyoGCI5lj99eO1lyXFc/HvcQ=;
+        b=DFLV/XOal+l4E3sybVj6/fnFopjJSbFTAsb7hn6e1YwVOyMloxmWJre6AjU/sN2OFg
+         xdA9UfA9l7fPlykL9PwAcg65lDCXV5OlLVRc5pQkwUMshXIAxVrKTOGBEnUf+TftVure
+         Xs9kLnNyQ06L9K877ScqNy+axMyDXljZKjKbKeHPee/FzZDiZc9nYhp3OZ3hsb3lPQnd
+         Vhg7yndmkiqZoujYoDeUnqYbpLIGSUmLqNg/r4Rs0eU8D5gZagtdtye1tNuTyg/7YTcl
+         A2ALjlN9qKfGzzkbKjRL16S9bSKU5Sl85edOwPVG5a9J18xVjRkLpxAxvTDJAOSOjB0O
+         aFGQ==
+X-Gm-Message-State: APjAAAWi+Iza15gpqsdjEfxHz2oMZ7qktu/7BDcV34OK8VLHyb8bAOfH
+        xDbDlKRmjeK8P2Uh+ime76AGABujec5z0tWzgS7ctg==
+X-Google-Smtp-Source: APXvYqxULIyQ0mxCElZagcHFTYO3mQulX+y5C1eb2SRJ1AuFJHGnA10tuT8TVOlBFiyFytouhpSp5TkaYMN7QKtwteU=
+X-Received: by 2002:a05:6830:1681:: with SMTP id k1mr7287623otr.256.1564558133564;
+ Wed, 31 Jul 2019 00:28:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190729115544.17895-1-anup.patel@wdc.com> <20190729115544.17895-9-anup.patel@wdc.com>
- <05d41219-6c0c-8851-dab6-24f9c76aed57@redhat.com>
-In-Reply-To: <05d41219-6c0c-8851-dab6-24f9c76aed57@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 31 Jul 2019 12:53:54 +0530
-Message-ID: <CAAhSdy2ZiYYbg0oaNW_bnbdaHw+up9Ah0faoE5T+qr=-CTA3pw@mail.gmail.com>
-Subject: Re: [RFC PATCH 08/16] RISC-V: KVM: Handle MMIO exits for VCPU
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-16-swboyd@chromium.org>
+In-Reply-To: <20190730181557.90391-16-swboyd@chromium.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 31 Jul 2019 09:28:41 +0200
+Message-ID: <CAMpxmJWEsuFcNqCJpM2Xc-n3Dz45u_O+V5jtXHHUJG5_cCZdbQ@mail.gmail.com>
+Subject: Re: [PATCH v6 15/57] gpio: Remove dev_err() usage after platform_get_irq()
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 4:50 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+wt., 30 lip 2019 o 20:16 Stephen Boyd <swboyd@chromium.org> napisa=C5=82(a)=
+:
 >
-> On 29/07/19 13:57, Anup Patel wrote:
-> > +static ulong get_insn(struct kvm_vcpu *vcpu)
-> > +{
-> > +     ulong __sepc = vcpu->arch.guest_context.sepc;
-> > +     ulong __hstatus, __sstatus, __vsstatus;
-> > +#ifdef CONFIG_RISCV_ISA_C
-> > +     ulong rvc_mask = 3, tmp;
-> > +#endif
-> > +     ulong flags, val;
-> > +
-> > +     local_irq_save(flags);
-> > +
-> > +     __vsstatus = csr_read(CSR_VSSTATUS);
-> > +     __sstatus = csr_read(CSR_SSTATUS);
-> > +     __hstatus = csr_read(CSR_HSTATUS);
-> > +
-> > +     csr_write(CSR_VSSTATUS, __vsstatus | SR_MXR);
-> > +     csr_write(CSR_SSTATUS, vcpu->arch.guest_context.sstatus | SR_MXR);
-> > +     csr_write(CSR_HSTATUS, vcpu->arch.guest_context.hstatus | HSTATUS_SPRV);
-> > +
-> > +#ifndef CONFIG_RISCV_ISA_C
-> > +     asm ("\n"
-> > +#ifdef CONFIG_64BIT
-> > +             STR(LWU) " %[insn], (%[addr])\n"
-> > +#else
-> > +             STR(LW) " %[insn], (%[addr])\n"
-> > +#endif
-> > +             : [insn] "=&r" (val) : [addr] "r" (__sepc));
-> > +#else
-> > +     asm ("and %[tmp], %[addr], 2\n"
-> > +             "bnez %[tmp], 1f\n"
-> > +#ifdef CONFIG_64BIT
-> > +             STR(LWU) " %[insn], (%[addr])\n"
-> > +#else
-> > +             STR(LW) " %[insn], (%[addr])\n"
-> > +#endif
-> > +             "and %[tmp], %[insn], %[rvc_mask]\n"
-> > +             "beq %[tmp], %[rvc_mask], 2f\n"
-> > +             "sll %[insn], %[insn], %[xlen_minus_16]\n"
-> > +             "srl %[insn], %[insn], %[xlen_minus_16]\n"
-> > +             "j 2f\n"
-> > +             "1:\n"
-> > +             "lhu %[insn], (%[addr])\n"
-> > +             "and %[tmp], %[insn], %[rvc_mask]\n"
-> > +             "bne %[tmp], %[rvc_mask], 2f\n"
-> > +             "lhu %[tmp], 2(%[addr])\n"
-> > +             "sll %[tmp], %[tmp], 16\n"
-> > +             "add %[insn], %[insn], %[tmp]\n"
-> > +             "2:"
-> > +     : [vsstatus] "+&r" (__vsstatus), [insn] "=&r" (val),
-> > +       [tmp] "=&r" (tmp)
-> > +     : [addr] "r" (__sepc), [rvc_mask] "r" (rvc_mask),
-> > +       [xlen_minus_16] "i" (__riscv_xlen - 16));
-> > +#endif
-> > +
-> > +     csr_write(CSR_HSTATUS, __hstatus);
-> > +     csr_write(CSR_SSTATUS, __sstatus);
-> > +     csr_write(CSR_VSSTATUS, __vsstatus);
-> > +
-> > +     local_irq_restore(flags);
-> > +
-> > +     return val;
-> > +}
-> > +
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
 >
-> This also needs fixups for exceptions, because the guest can race
-> against the host and modify its page tables concurrently with the
-> vmexit.  (How effective this is, of course, depends on how the TLB is
-> implemented in hardware, but you need to do the safe thing anyway).
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
+>
+> ret =3D
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
+>
+> if ( \( ret < 0 \| ret <=3D 0 \) )
+> {
+> (
+> -if (ret !=3D -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
+>
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>
+> Please apply directly to subsystem trees
+>
+>  drivers/gpio/gpio-brcmstb.c       | 4 +---
+>  drivers/gpio/gpio-eic-sprd.c      | 4 +---
+>  drivers/gpio/gpio-grgpio.c        | 2 --
+>  drivers/gpio/gpio-max77620.c      | 4 +---
+>  drivers/gpio/gpio-pmic-eic-sprd.c | 4 +---
+>  drivers/gpio/gpio-sprd.c          | 4 +---
+>  drivers/gpio/gpio-tb10x.c         | 4 +---
+>  drivers/gpio/gpio-tegra.c         | 4 +---
+>  drivers/gpio/gpio-zx.c            | 1 -
+>  drivers/gpio/gpio-zynq.c          | 4 +---
+>  10 files changed, 8 insertions(+), 27 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+> index af936dcca659..05e3f99ae59c 100644
+> --- a/drivers/gpio/gpio-brcmstb.c
+> +++ b/drivers/gpio/gpio-brcmstb.c
+> @@ -636,10 +636,8 @@ static int brcmstb_gpio_probe(struct platform_device=
+ *pdev)
+>
+>         if (of_property_read_bool(np, "interrupt-controller")) {
+>                 priv->parent_irq =3D platform_get_irq(pdev, 0);
+> -               if (priv->parent_irq <=3D 0) {
+> -                       dev_err(dev, "Couldn't get IRQ");
+> +               if (priv->parent_irq <=3D 0)
+>                         return -ENOENT;
+> -               }
+>         } else {
+>                 priv->parent_irq =3D -ENOENT;
+>         }
+> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+> index 7b9ac4a12c20..fe7a73f52329 100644
+> --- a/drivers/gpio/gpio-eic-sprd.c
+> +++ b/drivers/gpio/gpio-eic-sprd.c
+> @@ -584,10 +584,8 @@ static int sprd_eic_probe(struct platform_device *pd=
+ev)
+>         sprd_eic->type =3D pdata->type;
+>
+>         sprd_eic->irq =3D platform_get_irq(pdev, 0);
+> -       if (sprd_eic->irq < 0) {
+> -               dev_err(&pdev->dev, "Failed to get EIC interrupt.\n");
+> +       if (sprd_eic->irq < 0)
+>                 return sprd_eic->irq;
+> -       }
+>
+>         for (i =3D 0; i < SPRD_EIC_MAX_BANK; i++) {
+>                 /*
+> diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
+> index 0937b605e134..08234e64993a 100644
+> --- a/drivers/gpio/gpio-grgpio.c
+> +++ b/drivers/gpio/gpio-grgpio.c
+> @@ -408,8 +408,6 @@ static int grgpio_probe(struct platform_device *ofdev=
+)
+>                                  * Continue without irq functionality for=
+ that
+>                                  * gpio line
+>                                  */
+> -                               dev_err(priv->dev,
+> -                                       "Failed to get irq for offset %d\=
+n", i);
+>                                 continue;
+>                         }
+>                         priv->uirqs[lirq->index].uirq =3D ret;
+> diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+> index b7d89e30131e..47d05e357e61 100644
+> --- a/drivers/gpio/gpio-max77620.c
+> +++ b/drivers/gpio/gpio-max77620.c
+> @@ -270,10 +270,8 @@ static int max77620_gpio_probe(struct platform_devic=
+e *pdev)
+>         int ret;
+>
+>         gpio_irq =3D platform_get_irq(pdev, 0);
+> -       if (gpio_irq <=3D 0) {
+> -               dev_err(&pdev->dev, "GPIO irq not available %d\n", gpio_i=
+rq);
+> +       if (gpio_irq <=3D 0)
+>                 return -ENODEV;
+> -       }
+>
+>         mgpio =3D devm_kzalloc(&pdev->dev, sizeof(*mgpio), GFP_KERNEL);
+>         if (!mgpio)
+> diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-e=
+ic-sprd.c
+> index 24228cf79afc..05000cace9b2 100644
+> --- a/drivers/gpio/gpio-pmic-eic-sprd.c
+> +++ b/drivers/gpio/gpio-pmic-eic-sprd.c
+> @@ -305,10 +305,8 @@ static int sprd_pmic_eic_probe(struct platform_devic=
+e *pdev)
+>         mutex_init(&pmic_eic->buslock);
+>
+>         pmic_eic->irq =3D platform_get_irq(pdev, 0);
+> -       if (pmic_eic->irq < 0) {
+> -               dev_err(&pdev->dev, "Failed to get PMIC EIC interrupt.\n"=
+);
+> +       if (pmic_eic->irq < 0)
+>                 return pmic_eic->irq;
+> -       }
+>
+>         pmic_eic->map =3D dev_get_regmap(pdev->dev.parent, NULL);
+>         if (!pmic_eic->map)
+> diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+> index f5c8b3a351d5..d7314d39ab65 100644
+> --- a/drivers/gpio/gpio-sprd.c
+> +++ b/drivers/gpio/gpio-sprd.c
+> @@ -226,10 +226,8 @@ static int sprd_gpio_probe(struct platform_device *p=
+dev)
+>                 return -ENOMEM;
+>
+>         sprd_gpio->irq =3D platform_get_irq(pdev, 0);
+> -       if (sprd_gpio->irq < 0) {
+> -               dev_err(&pdev->dev, "Failed to get GPIO interrupt.\n");
+> +       if (sprd_gpio->irq < 0)
+>                 return sprd_gpio->irq;
+> -       }
+>
+>         sprd_gpio->base =3D devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(sprd_gpio->base))
+> diff --git a/drivers/gpio/gpio-tb10x.c b/drivers/gpio/gpio-tb10x.c
+> index bd1f3f775ce9..5e375186f90e 100644
+> --- a/drivers/gpio/gpio-tb10x.c
+> +++ b/drivers/gpio/gpio-tb10x.c
+> @@ -171,10 +171,8 @@ static int tb10x_gpio_probe(struct platform_device *=
+pdev)
+>                 struct irq_chip_generic *gc;
+>
+>                 ret =3D platform_get_irq(pdev, 0);
+> -               if (ret < 0) {
+> -                       dev_err(dev, "No interrupt specified.\n");
+> +               if (ret < 0)
+>                         return ret;
+> -               }
+>
+>                 tb10x_gpio->gc.to_irq   =3D tb10x_gpio_to_irq;
+>                 tb10x_gpio->irq         =3D ret;
+> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+> index 0f59161a4701..8a01d3694b28 100644
+> --- a/drivers/gpio/gpio-tegra.c
+> +++ b/drivers/gpio/gpio-tegra.c
+> @@ -624,10 +624,8 @@ static int tegra_gpio_probe(struct platform_device *=
+pdev)
+>
+>         for (i =3D 0; i < tgi->bank_count; i++) {
+>                 ret =3D platform_get_irq(pdev, i);
+> -               if (ret < 0) {
+> -                       dev_err(&pdev->dev, "Missing IRQ resource: %d\n",=
+ ret);
+> +               if (ret < 0)
+>                         return ret;
+> -               }
+>
+>                 bank =3D &tgi->bank_info[i];
+>                 bank->bank =3D i;
+> diff --git a/drivers/gpio/gpio-zx.c b/drivers/gpio/gpio-zx.c
+> index 8637adb6bc20..8d9b9bf8510a 100644
+> --- a/drivers/gpio/gpio-zx.c
+> +++ b/drivers/gpio/gpio-zx.c
+> @@ -253,7 +253,6 @@ static int zx_gpio_probe(struct platform_device *pdev=
+)
+>         writew_relaxed(0, chip->base + ZX_GPIO_IE);
+>         irq =3D platform_get_irq(pdev, 0);
+>         if (irq < 0) {
+> -               dev_err(dev, "invalid IRQ\n");
+>                 gpiochip_remove(&chip->gc);
+>                 return -ENODEV;
+>         }
+> diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+> index f241b6c13dbe..86b0bd256c13 100644
+> --- a/drivers/gpio/gpio-zynq.c
+> +++ b/drivers/gpio/gpio-zynq.c
+> @@ -849,10 +849,8 @@ static int zynq_gpio_probe(struct platform_device *p=
+dev)
+>                 return PTR_ERR(gpio->base_addr);
+>
+>         gpio->irq =3D platform_get_irq(pdev, 0);
+> -       if (gpio->irq < 0) {
+> -               dev_err(&pdev->dev, "invalid IRQ\n");
+> +       if (gpio->irq < 0)
+>                 return gpio->irq;
+> -       }
+>
+>         /* configure the gpio chip */
+>         chip =3D &gpio->chip;
+> --
+> Sent by a computer through tubes
+>
 
-For Guest with single VCPU, we won't see any issue but we might
-get an exception for Guest with multiple VCPUs. We have added this
-in our TODO list.
-
-In this context, I have proposed to have separate CSR holding trapped
-instruction value so that we don't need to use unpriv load/store for figuring
-out trapped instruction.
-
-Refer, https://github.com/riscv/riscv-isa-manual/issues/394
-
-The above Github issue and missing time delta CSR will be last
-two unaddressed Github issues from RISC-V spec perspective.
-
-Regards,
-Anup
+Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
