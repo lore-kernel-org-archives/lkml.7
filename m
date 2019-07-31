@@ -2,133 +2,93 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4218EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066F9C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16FC920679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564608612;
-	bh=oGnVpX4dVrD+Qozo8zDA1ZPwnhAHqFMVwK0fzQ1mFIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ilg08Z55VPzJGc66Pgpxt3titRHw4Q21shMXhpOCrbypyLJ9O8nQZdb1jlb2HgTzp
-	 p2MZxhM/oUTBALIvMWf/Co18KQ3Ro7MfnLQRkZr4i0zSYSF7TgsPlR8O5bNnXHMT4S
-	 o52FuIK6x5Ir7/jUCqe0bhCUXKfALUgVtM+9PFA4=
+	by mail.kernel.org (Postfix) with ESMTP id C8904206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y+XYLq1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbfGaVaL (ORCPT
+        id S1730788AbfGaVal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:30:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfGaVaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:30:09 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EF1E20679;
-        Wed, 31 Jul 2019 21:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564608608;
-        bh=oGnVpX4dVrD+Qozo8zDA1ZPwnhAHqFMVwK0fzQ1mFIQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GsHIIfWm8iROi366bFleIDVx8TuDAQ/JvQk8TqpznFLhj3NbKvFq927w/uQR2pA3g
-         sANKPraFKMDiKLp4beYs+dKfgz8KDH+fTcPkhcND/J2vzdUQvyjMX5aDm7P7yyi6M5
-         RwsVnvuqMelMzMi9+Y4CwkZO5lIAcdnIF+lCJBfY=
-Date:   Wed, 31 Jul 2019 16:30:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>
-Subject: Re: [Regression] Commit "ACPI: PM: Allow transitions to D0 to occur
- in special cases"
-Message-ID: <20190731213001.GC151852@google.com>
-References: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
+        Wed, 31 Jul 2019 17:30:41 -0400
+Received: from mail-io1-f42.google.com ([209.85.166.42]:42433 "EHLO
+        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfGaVal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 17:30:41 -0400
+Received: by mail-io1-f42.google.com with SMTP id e20so6660452iob.9
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 14:30:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=LorXcbFrkDiur0GwKhOS0WtYPlhd7m6A9hFg1D5qG4Q=;
+        b=Y+XYLq1GfpFsLdBp2odvBbnfZzGEE/EAyXfNcZDp6CRNDfB+xJ/SwxMyaaLKVBYn0N
+         +jVpn09a5mkEl8XQG4Gi6OnmJ+6QOZEPwBvzaziIVbZuLdM4Gx+hUxXTHsBnrpA+F6ko
+         W245s6uNCJby+pvNSQ7bsI9RWFURyKTIwAN9M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=LorXcbFrkDiur0GwKhOS0WtYPlhd7m6A9hFg1D5qG4Q=;
+        b=VD0v7A9W7ouDl3PRtytbWqxLoLr9PrISFlvsHZsuU/W51P8ArIFKc366FL2C32FOEz
+         Mkr6IMP3DTr+LpMVKXw2CMAZigrsATpHYy0o4KR5dy+9wlFAOe3kGdxBnmRcruZ68CKv
+         cOBPZCjcWSuIKNFdF8hc7FCsGnyp13R5pUeBAaKWuQmTnhgGMsdMww2/6adS4GFpczuo
+         aKVUe4R8HxDL2PqHotVOXNBuwjNfFwcA1IzRN+IDkFKaQC0E9NyGzpLRSxfpwQJH//Wt
+         Y332MwPjAplDW18LJGqibZIOp4NWHuQZLmWKYHRUbF6a7Hs1bXvoKIcw89RTd3Q0Ekfz
+         n80w==
+X-Gm-Message-State: APjAAAXjT8Px2t3fstpmhpMl+5bK84ZgF4qqGLzy8BCRMJfRd83X0kda
+        NhDLm4NLvD4I8oeyXr1PvXI5XSKWmJ0uf4fo+mpiwQ==
+X-Google-Smtp-Source: APXvYqy3BKFTmjWzotYFCuzp4BPjn1MMaYy70Rlzz2fRaa9EbCnLYGgLAER+4pJYzAzQGEaU/wQqEBNu6KjKMF9N374=
+X-Received: by 2002:a02:710f:: with SMTP id n15mr87971397jac.119.1564608640491;
+ Wed, 31 Jul 2019 14:30:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Micah Morton <mortonm@chromium.org>
+Date:   Wed, 31 Jul 2019 14:30:29 -0700
+Message-ID: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
+Subject: [GIT PULL] SafeSetID MAINTAINERS file update for v5.3
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Thunderbolt folks, see
-https://lore.kernel.org/r/578BD3F1-B185-471B-A3EB-FF71BA34B822@canonical.com
-for beginning of thread]
+Hi Linus,
 
-On Thu, Aug 01, 2019 at 12:04:29AM +0800, Kai-Heng Feng wrote:
-> Hi,
-> 
-> After commit "ACPI: PM: Allow transitions to D0 to occur in special cases”,
+You mentioned a couple weeks ago it would be good if I added myself to
+the MAINTAINERS file for the SafeSetID LSM. Here's the pull request
+for v5.3.
 
-This is f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in
-special cases").
+Thanks!
+--
+The following changes since commit 179757afbef5f64b9bd25e6161f72fc1a52a8f2e:
 
-> Thunderbolt on XPS 9380 spews the following when it runtime resumes:
-> [   36.136554] pci_raw_set_power_state: 25 callbacks suppressed
-> [   36.136558] pcieport 0000:03:00.0: Refused to change power state,
-> currently in D3
+  Merge commit 'v5.3-rc2^0' (2019-07-31 13:45:16 -0700)
 
-We really should be smarter about what we print here, maybe something
-like the patch below?
+are available in the Git repository at:
 
-pci_raw_set_power_state() prints "Refused to change power state" if
-(in this case) the value of (PCI_PM_CTRL & PCI_PM_CTRL_STATE_MASK) is
-0x3.  Most likely we got 0xffff from PCI_PM_CTRL because the device is
-in D3cold.  If the device is in D3cold, pci_raw_set_power_state() has
-no hope of doing anything because it only uses PCI PM config
-registers, and they're inaccessible in D3cold.
+  https://github.com/micah-morton/linux.git tags/safesetid-maintainers-5.3-rc2
 
-Presumably there's some platform PM method that is supposed to take
-the device out of D3cold, and maybe we're missing that somehow?
+for you to fetch changes up to 7e20e910eabdf0af90fd10e712f15b413be8e135:
 
-Based on an lspci I found at [1], I suspect 03:00.0 is a Thunderbolt
-switch leading to [bus 04-6d].  From your log, it looks like these
-devices don't work:
+  Add entry in MAINTAINERS file for SafeSetID LSM (2019-07-31 13:58:11 -0700)
 
-  03:00.0 Thunderbolt Upstream Port
-  04:00.0 Thunderbolt Downstream Port
-  04:01.0 Thunderbolt Downstream Port (Slot 1)
-  04:02.0 Thunderbolt Downstream Port
-  04:04.0 Thunderbolt Downstream Port (Slot 4)
-  05:00.0 Thunderbolt NHI
-  39:00.0 XHCI USB
+----------------------------------------------------------------
+Add entry in MAINTAINERS file for SafeSetID LSM.
 
-If 03:00.0 is stuck in D3cold, that would explain why none of these
-things work.
+Has not had any bake time or testing, since its just changes to a text file.
 
-[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1826125
+----------------------------------------------------------------
+Micah Morton (1):
+      Add entry in MAINTAINERS file for SafeSetID LSM
 
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 29ed5ec1ac27..63ca963ebff9 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -851,6 +852,11 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 		return -EIO;
- 
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-+	if (pmcsr == (u16) ~0) {
-+		pci_err(dev, "device not responding; can't change to power state D%d\n",
-+			state);
-+		return -EIO;
-+	}
- 
- 	/*
- 	 * If we're (effectively) in D3, force entire word to 0.
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
