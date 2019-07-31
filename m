@@ -5,39 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BC6C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25919C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5624F2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFACC217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TpXfYas1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EbSeosDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731036AbfGaVMR (ORCPT
+        id S1730281AbfGaVLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:12:17 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:9198 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730184AbfGaVLK (ORCPT
+        Wed, 31 Jul 2019 17:11:09 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10547 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfGaVLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:11:10 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4203f50002>; Wed, 31 Jul 2019 14:11:17 -0700
+        Wed, 31 Jul 2019 17:11:07 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4203eb0000>; Wed, 31 Jul 2019 14:11:07 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 31 Jul 2019 14:11:08 -0700
+  Wed, 31 Jul 2019 14:11:06 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:11:08 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
- 2019 21:11:08 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 31 Jul 2019 21:11:08 +0000
+        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:11:06 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:11:06 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:11:06 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 31 Jul 2019 21:11:06 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.167]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d4203eb000c>; Wed, 31 Jul 2019 14:11:08 -0700
+        id <B5d4203e90004>; Wed, 31 Jul 2019 14:11:05 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -52,9 +55,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>,
         <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
         <linux-pm@vger.kernel.org>
-Subject: [PATCH v7 11/20] cpufreq: tegra124: Add suspend and resume support
-Date:   Wed, 31 Jul 2019 14:10:54 -0700
-Message-ID: <1564607463-28802-12-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v7 02/20] pinctrl: tegra210: Add Tegra210 pinctrl pm ops
+Date:   Wed, 31 Jul 2019 14:10:45 -0700
+Message-ID: <1564607463-28802-3-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
 References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
@@ -62,118 +65,40 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564607477; bh=DlH5zne7afUgvFVw41nMXdKzqNL2H6Ti9hK3hgmeweE=;
+        t=1564607467; bh=BHwK3WCEUlQoYgNYri15m7IvYYDcUcYtnB4LBFhxM5w=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=TpXfYas1/NZmHok+0jyolcmYnCO/Np11LlxeZJGrjzymjbFR50F1o17o/IaszP5Jq
-         fMm08KqsGMkoA4ZYs0wv758n3eilTy8eXjo5FWHu8ZPzUwQ5iMHWV69nffZ2j+bqXX
-         xSZ6sc4VXFfx1ViZ7keuMafx1QJzFhYCDRAcLBnqAfI93tY+vTZC2VGChsl90pDzl0
-         q7VXeU3jTdAH/ud/uv29GXdUJFzBJizEZb3eaFt9pJbP3bboqFFUEqKWfwnLXYWbC+
-         7RIzyoJEabNfgk/p9HX80MuXv9wcoNSXkMAMUUQVIDK1gpXhhs75w8ZZ+4WusHCTb8
-         kz7LmmARqC0TA==
+        b=EbSeosDOiy+x3+UkQRwXee49ff/V3EdOWzmDO3A4nmkn46Xrfk+a1DT0v6mrcU37o
+         PB6+z1b6VV+iDRWhNa+ioT2GMHIfUzlL7Ubp+jCRDVFsBsnO/dDm6jtrfGvNsPwASp
+         uAbL89T01aKcJe15skFgBfBc685V2pXIpSKWQv2gVOu+M5a+KeuECyfD4jfF74ka24
+         vPedxCUywNcy++lRSP19iNiefTTfNE9UluMKGjJpuhWfsmTxtHZkSTBdKXBYlAD4I5
+         MkQHFtWnaLTYxtbbtlJ6OXXRlKufdu0to/VSQOX9FBdwUEz5HGCAErrBwSUDK0R21I
+         vV6ZQ3decjH4Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds suspend and resume pm ops for cpufreq driver.
-
-PLLP is the safe clock source for CPU during system suspend and
-resume as PLLP rate is below the CPU Fmax at Vmin.
-
-CPUFreq driver suspend switches the CPU clock source to PLLP and
-disables the DFLL clock.
-
-During system resume, warmboot code powers up the CPU with PLLP
-clock source. So CPUFreq driver resume enabled DFLL clock and
-switches CPU back to DFLL clock source.
+This patch adds suspend and resume functionality to Tegra210 pinctrl.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/cpufreq/tegra124-cpufreq.c | 60 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ drivers/pinctrl/tegra/pinctrl-tegra210.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
-index 4f0c637b3b49..e979a3370988 100644
---- a/drivers/cpufreq/tegra124-cpufreq.c
-+++ b/drivers/cpufreq/tegra124-cpufreq.c
-@@ -6,6 +6,7 @@
- #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
- 
- #include <linux/clk.h>
-+#include <linux/cpufreq.h>
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-@@ -128,8 +129,67 @@ static int tegra124_cpufreq_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int __maybe_unused tegra124_cpufreq_suspend(struct device *dev)
-+{
-+	struct tegra124_cpufreq_priv *priv = dev_get_drvdata(dev);
-+	int err;
-+
-+	/*
-+	 * PLLP rate 408Mhz is below the CPU Fmax at Vmin and is safe to
-+	 * use during suspend and resume. So, switch the CPU clock source
-+	 * to PLLP and disable DFLL.
-+	 */
-+	err = clk_set_parent(priv->cpu_clk, priv->pllp_clk);
-+	if (err < 0) {
-+		dev_err(dev, "failed to reparent to PLLP: %d\n", err);
-+		return err;
-+	}
-+
-+	/* disable DFLL clock */
-+	clk_disable_unprepare(priv->dfll_clk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused tegra124_cpufreq_resume(struct device *dev)
-+{
-+	struct tegra124_cpufreq_priv *priv = dev_get_drvdata(dev);
-+	int err;
-+
-+	/*
-+	 * Warmboot code powers up the CPU with PLLP clock source.
-+	 * Enable DFLL clock and switch CPU clock source back to DFLL.
-+	 */
-+	err = clk_prepare_enable(priv->dfll_clk);
-+	if (err < 0) {
-+		dev_err(dev, "failed to enable DFLL clock for CPU: %d\n", err);
-+		goto disable_cpufreq;
-+	}
-+
-+	err = clk_set_parent(priv->cpu_clk, priv->dfll_clk);
-+	if (err < 0) {
-+		dev_err(dev, "failed to reparent to DFLL clock: %d\n", err);
-+		goto disable_dfll;
-+	}
-+
-+	return 0;
-+
-+disable_dfll:
-+	clk_disable_unprepare(priv->dfll_clk);
-+disable_cpufreq:
-+	disable_cpufreq();
-+
-+	return err;
-+}
-+
-+static const struct dev_pm_ops tegra124_cpufreq_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(tegra124_cpufreq_suspend,
-+				tegra124_cpufreq_resume)
-+};
-+
- static struct platform_driver tegra124_cpufreq_platdrv = {
- 	.driver.name	= "cpufreq-tegra124",
-+	.driver.pm	= &tegra124_cpufreq_pm_ops,
- 	.probe		= tegra124_cpufreq_probe,
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+index 39ab6480a941..fc072a36deb3 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
+@@ -1571,6 +1571,7 @@ static struct platform_driver tegra210_pinctrl_driver = {
+ 	.driver = {
+ 		.name = "tegra210-pinctrl",
+ 		.of_match_table = tegra210_pinctrl_of_match,
++		.pm = &tegra_pinctrl_pm,
+ 	},
+ 	.probe = tegra210_pinctrl_probe,
  };
- 
 -- 
 2.7.4
 
