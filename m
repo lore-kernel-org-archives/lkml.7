@@ -2,189 +2,160 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BA7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD64C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC13D20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE201208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 13:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388193AbfGaNO6 (ORCPT
+        id S1729272AbfGaNP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 09:14:58 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45898 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbfGaNO6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 09:14:58 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f9so69619921wre.12
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 06:14:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2qO4ZtAFEjGbhKpZYZIrICeNvO6yrVyniiCc6Rw+4tA=;
-        b=P/JlJYxkGeW01Z1V5SvK27bI41mup6lk3WBSHzqHnkXTFj3IELuE2JZuO/oCjEaqzs
-         piQ81RVzR6qyAfdHZk5w0+AWApaslUzVEm1P1JkUiu8d0uRb6W7g95yLNSFipBGWFxq2
-         LVRudFJsRVirdIGUUjaOOawgZHxenSzxYDNKzaez8tsQTNmBnmxeO29HXaLrplJgkHO0
-         VkdnEk9klCa56GTDOJGB2VbZFog72erA9wYxLLcMgdfZ/l09TqCd5ig+GY3LL4Y/OxpM
-         9Qojq5dEji/8pGoYFXWD0CEAMHcHWOOZ1ifz3q7CA4mtamIVymcnkxaFmi4vS52WOZez
-         i32A==
-X-Gm-Message-State: APjAAAXxyZ2gIPoHHvk5WhWofctrq9ehMKGivYpI4ZPX+Fzh0Q0+h2+Y
-        mqZ3HwaW+NBvSuRrOVhd5FRvYQ==
-X-Google-Smtp-Source: APXvYqxYCllhTfncAoR1iIV4Cdz6EoShZ6pM0+LLTCU1P8Ot61fd3+4nd92y4hrwUv/3eSz8q1Pp5g==
-X-Received: by 2002:a5d:680d:: with SMTP id w13mr136812839wru.141.1564578895964;
-        Wed, 31 Jul 2019 06:14:55 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:91e7:65e:d8cd:fdb3? ([2001:b07:6468:f312:91e7:65e:d8cd:fdb3])
-        by smtp.gmail.com with ESMTPSA id t63sm61935053wmt.6.2019.07.31.06.14.54
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 06:14:55 -0700 (PDT)
-Subject: Re: [PATCH RFC 4/5] x86: KVM: add xsetbv to the emulator
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-References: <20190620110240.25799-1-vkuznets@redhat.com>
- <20190620110240.25799-5-vkuznets@redhat.com>
- <a86ca8b7-0333-398b-7bf6-90cb79366226@redhat.com>
- <87lfwe73oz.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <73e6ddee-5ca9-64ea-d8d3-fabe046691fd@redhat.com>
-Date:   Wed, 31 Jul 2019 15:14:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 09:15:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:47038 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbfGaNP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 09:15:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B068C344;
+        Wed, 31 Jul 2019 06:15:26 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B5E03F575;
+        Wed, 31 Jul 2019 06:15:26 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 2D5EC680205; Wed, 31 Jul 2019 14:15:25 +0100 (BST)
+Date:   Wed, 31 Jul 2019 14:15:25 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "eric@anholt.net" <eric@anholt.net>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>, nd <nd@arm.com>
+Subject: Re: [PATCH v1 2/2] drm: Clear the fence pointer when writeback job
+ signaled
+Message-ID: <20190731131525.vjnkbnbatb5tbuzh@e110455-lin.cambridge.arm.com>
+References: <1564571048-15029-1-git-send-email-lowry.li@arm.com>
+ <1564571048-15029-3-git-send-email-lowry.li@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <87lfwe73oz.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1564571048-15029-3-git-send-email-lowry.li@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/07/19 15:07, Vitaly Kuznetsov wrote:
-> Paolo Bonzini <pbonzini@redhat.com> writes:
-> 
->> On 20/06/19 13:02, Vitaly Kuznetsov wrote:
->>> To avoid hardcoding xsetbv length to '3' we need to support decoding it in
->>> the emulator.
->>>
->>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->>
->> Can you also emulate it properly?  The code from QEMU's
->> target/i386/fpu_helper.c can help. :)
->>
-> 
-> (Had a chance to get back to this just now, sorry)
-> 
-> Assuming __kvm_set_xcr() is also a correct implementation, would the
-> code below do the job? (Just trying to figure out why you suggested
-> me to take a look at QEMU's variant):
-> 
+Hi Lowry,
 
-Yes, I didn't remember __kvm_set_xcr.
-
-Paolo
-
-> diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
-> index feab24cac610..77cf6c11f66b 100644
-> --- a/arch/x86/include/asm/kvm_emulate.h
-> +++ b/arch/x86/include/asm/kvm_emulate.h
-> @@ -229,7 +229,7 @@ struct x86_emulate_ops {
->  	int (*pre_leave_smm)(struct x86_emulate_ctxt *ctxt,
->  			     const char *smstate);
->  	void (*post_leave_smm)(struct x86_emulate_ctxt *ctxt);
-> -
-> +	int (*set_xcr)(struct x86_emulate_ctxt *ctxt, u32 index, u64 xcr);
->  };
+On Wed, Jul 31, 2019 at 11:04:45AM +0000, Lowry Li (Arm Technology China) wrote:
+> During it signals the completion of a writeback job, after releasing
+> the out_fence, we'd clear the pointer.
+> 
+> Check if fence left over in drm_writeback_cleanup_job(), release it.
+> 
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  drivers/gpu/drm/drm_writeback.c | 23 +++++++++++++++--------
+>  1 file changed, 15 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
+> index ff138b6..43d9e3b 100644
+> --- a/drivers/gpu/drm/drm_writeback.c
+> +++ b/drivers/gpu/drm/drm_writeback.c
+> @@ -324,6 +324,9 @@ void drm_writeback_cleanup_job(struct drm_writeback_job *job)
+>  	if (job->fb)
+>  		drm_framebuffer_put(job->fb);
 >  
->  typedef u32 __attribute__((vector_size(16))) sse128_t;
-> @@ -429,6 +429,7 @@ enum x86_intercept {
->  	x86_intercept_ins,
->  	x86_intercept_out,
->  	x86_intercept_outs,
-> +	x86_intercept_xsetbv,
->  
->  	nr_x86_intercepts
->  };
-> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-> index 718f7d9afedc..f9e843dd992a 100644
-> --- a/arch/x86/kvm/emulate.c
-> +++ b/arch/x86/kvm/emulate.c
-> @@ -4156,6 +4156,20 @@ static int em_fxrstor(struct x86_emulate_ctxt *ctxt)
->  	return rc;
+> +	if (job->out_fence)
+> +		dma_fence_put(job->out_fence);
+> +
+>  	kfree(job);
 >  }
->  
-> +static int em_xsetbv(struct x86_emulate_ctxt *ctxt)
-> +{
-> +	u32 eax, ecx, edx;
-> +
-> +	eax = reg_read(ctxt, VCPU_REGS_RAX);
-> +	edx = reg_read(ctxt, VCPU_REGS_RDX);
-> +	ecx = reg_read(ctxt, VCPU_REGS_RCX);
-> +
-> +	if (ctxt->ops->set_xcr(ctxt, ecx, ((u64)edx << 32) | eax))
-> +		return emulate_gp(ctxt, 0);
-> +
-> +	return X86EMUL_CONTINUE;
-> +}
-> +
->  static bool valid_cr(int nr)
+
+This change looks good.
+
+>  EXPORT_SYMBOL(drm_writeback_cleanup_job);
+> @@ -366,25 +369,29 @@ static void cleanup_work(struct work_struct *work)
 >  {
->  	switch (nr) {
-> @@ -4409,6 +4423,12 @@ static const struct opcode group7_rm1[] = {
->  	N, N, N, N, N, N,
->  };
+>  	unsigned long flags;
+>  	struct drm_writeback_job *job;
+> +	struct dma_fence *out_fence;
 >  
-> +static const struct opcode group7_rm2[] = {
-> +	N,
-> +	II(ImplicitOps | Priv,			em_xsetbv,	xsetbv),
-> +	N, N, N, N, N, N,
-> +};
+>  	spin_lock_irqsave(&wb_connector->job_lock, flags);
+>  	job = list_first_entry_or_null(&wb_connector->job_queue,
+>  				       struct drm_writeback_job,
+>  				       list_entry);
+> -	if (job) {
+> +	if (job)
+>  		list_del(&job->list_entry);
+> -		if (job->out_fence) {
+> -			if (status)
+> -				dma_fence_set_error(job->out_fence, status);
+> -			dma_fence_signal(job->out_fence);
+> -			dma_fence_put(job->out_fence);
+
+*Here*
+
+> -		}
+> -	}
 > +
->  static const struct opcode group7_rm3[] = {
->  	DIP(SrcNone | Prot | Priv,		vmrun,		check_svme_pa),
->  	II(SrcNone  | Prot | EmulateOnUD,	em_hypercall,	vmmcall),
-> @@ -4498,7 +4518,8 @@ static const struct group_dual group7 = { {
->  }, {
->  	EXT(0, group7_rm0),
->  	EXT(0, group7_rm1),
-> -	N, EXT(0, group7_rm3),
-> +	EXT(0, group7_rm2),
-> +	EXT(0, group7_rm3),
->  	II(SrcNone | DstMem | Mov,		em_smsw, smsw), N,
->  	II(SrcMem16 | Mov | Priv,		em_lmsw, lmsw),
->  	EXT(0, group7_rm7),
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index c6d951cbd76c..9512cc38dfe9 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6068,6 +6068,11 @@ static void emulator_post_leave_smm(struct x86_emulate_ctxt *ctxt)
->  	kvm_smm_changed(emul_to_vcpu(ctxt));
+>  	spin_unlock_irqrestore(&wb_connector->job_lock, flags);
+>  
+>  	if (WARN_ON(!job))
+>  		return;
+>  
+> +	out_fence = job->out_fence;
+> +	if (out_fence) {
+> +		if (status)
+> +			dma_fence_set_error(out_fence, status);
+> +		dma_fence_signal(out_fence);
+> +		dma_fence_put(out_fence);
+> +		job->out_fence = NULL;
+> +	}
+> +
+
+I don't get the point of this change. Why not just add job->out_fence = NULL
+where *Here* is?
+
+Best regards,
+Liviu 
+
+>  	INIT_WORK(&job->cleanup_work, cleanup_work);
+>  	queue_work(system_long_wq, &job->cleanup_work);
 >  }
->  
-> +static int emulator_set_xcr(struct x86_emulate_ctxt *ctxt, u32 index, u64 xcr)
-> +{
-> +	return __kvm_set_xcr(emul_to_vcpu(ctxt), index, xcr);
-> +}
-> +
->  static const struct x86_emulate_ops emulate_ops = {
->  	.read_gpr            = emulator_read_gpr,
->  	.write_gpr           = emulator_write_gpr,
-> @@ -6109,6 +6114,7 @@ static const struct x86_emulate_ops emulate_ops = {
->  	.set_hflags          = emulator_set_hflags,
->  	.pre_leave_smm       = emulator_pre_leave_smm,
->  	.post_leave_smm      = emulator_post_leave_smm,
-> +	.set_xcr             = emulator_set_xcr,
->  };
->  
->  static void toggle_interruptibility(struct kvm_vcpu *vcpu, u32 mask)
+> -- 
+> 1.9.1
 > 
 
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
