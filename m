@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CB3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354F2C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8853208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B05A208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 12:59:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m/32zJbD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LtiCQNDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbfGaM7P (ORCPT
+        id S1729301AbfGaM7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 08:59:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37654 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbfGaM7M (ORCPT
+        Wed, 31 Jul 2019 08:59:32 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37645 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727392AbfGaM7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:59:12 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so44506450wrr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:59:10 -0700 (PDT)
+        Wed, 31 Jul 2019 08:59:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so44506287wrr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 05:59:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=ANM4/Zd8QIP1dzOfHKiDuUC79smC88C4XTPFEhIROxM=;
-        b=m/32zJbDqe/cP10c0PX2hhFYAA0xcR3ngSECPGvo78KqvBGNzmjaR+Iq5hsQBE0y0u
-         UByXnfHGnl2J2DZ2BHrAATZN+lEvXMzbD3Umznq6WzO4Z0yP9R5Cp8oETCsYtp5o3s2y
-         LARYVP6InDvM02b1F6mjUA1ppEL1+M4T5Wk/P0OQdZASdgcY/KZ16HzJo9MkEYCEJVeC
-         OiIBRRFs7GOcVwNCP8fjgKZM+xEGIoMkeycTxvAwszGPDHeCslr0z40wH7s6loWgyhd8
-         bXCjWJnTYN6rXy8I9drvVnJWnn84cDmLuAYik+LNUA621qHyJ42A0DWQEVqFTaaWDdTh
-         4+xg==
+        bh=Gih1EHsgebwcACWtUzGv18Oquo6aqYMiENTGnfIBkgI=;
+        b=LtiCQNDf3XqQntRVYhrjKLZBmtPGkBmv4pF392Hsw6PuaEqnaamfR5oOceZHDeBZGQ
+         5qS1VC7fAaOijVLe14MTdBxfrJUoRWYUOYy6EmXq0TyBO8cLVh90mjB1IhQGQfX2dFYD
+         Am4q++8/527zDMnOR7UL0LrYIC5IoGVTqTI01H2N/mIZ3F6TplZ/HfKjSRArKZrJs7J4
+         KUvyzcTZKZokG62n5Od8iL8PW9PMd0fBB6EdtAiS9gGm4uMC14fM+bx6Z68mL88GU6eE
+         oanx7SElfoQ1NXHiW2o1grMOMzPilXrdDjNaABSIjugJFuaf74RIO9PFFgh+HIM/QXkT
+         oUxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=ANM4/Zd8QIP1dzOfHKiDuUC79smC88C4XTPFEhIROxM=;
-        b=tWcWjgyhgumBBXagpzbUW89C9QMu1K4Uk//NWH8mbsKP5eZHovFCOwflLqWkDVPxEC
-         zAK4PtDVirOMyR0/izwpPvziJ4FyqNSWE4yqXxLeEVVeh8hjtYuQPR2AUX1+K/rj217p
-         LXHg2uySIrWsNeZDRBelEtmQXej57GNa6zhRtpgYUoa6mBszy/OCQyRESHAyky0wmcji
-         s1+UDxXzdWFT8fm8gfipu95ugmG9Mw38dbOo9d+JDeYf1B9HI3wAQYF6WcgLXWm6Mv2U
-         YKi8eMu5TQJOhO+NG1e6PVXQmXT8PiJyZgf52kiJ0lts6S/Hc2gZSP5m4FB2B+B+NKyT
-         bjsg==
-X-Gm-Message-State: APjAAAVqXKv840N3wh5pXwfRXVXc8jZyZeV6WzO6EAOveZcXkuWJGt0K
-        Oi9+ZFQAaWvEdVhGuMv7aLG6weVguRE=
-X-Google-Smtp-Source: APXvYqwd8Bw+HfvOdDzpxVRb84W4X57uTyByZfL4/oHHGazW6ggHo9Mn7+jrtJFLkiwDhMbyTsX3hA==
-X-Received: by 2002:adf:d4c6:: with SMTP id w6mr5874721wrk.98.1564577949128;
-        Wed, 31 Jul 2019 05:59:09 -0700 (PDT)
+        bh=Gih1EHsgebwcACWtUzGv18Oquo6aqYMiENTGnfIBkgI=;
+        b=oXFnPpFsjQ2t2tSXXqfnbyL+zv04vZTmOQ1rIPjVEerrd2XAYKmA2LgoBfp3PxAzD1
+         HlvkmwXufQqWGCTwaHatTOlfz7iP5+blC9+BXSdFWiIgG40IYYAKa9t/CqSyfysD1I6x
+         zfU3FgPKPHt1uC0mtJfTCDhBC7r13Kn2Aa1C5eE+CRqPtdiqgi8tQXkH5OUw10XeDc7g
+         UibNvo9obgIRveMJ12cVWP3frSdY/avQTlpaDrWOii6GcshodwPFBqP46jc9B6H/bRa0
+         /T7x6qZB8dZ+RRhFgMvGMd4IS9mhu5nOTzZma1VTLrvOPAjKbMNSE7+B7bWx2HIY4CvP
+         N6rw==
+X-Gm-Message-State: APjAAAVBOK6ePKRNvmNqWAAADnxtryC0xA+3MIHq3lCovpV8N/Py3mU5
+        AbgCyhTlDEpnfMDgUOBuHs/5FiCJZko=
+X-Google-Smtp-Source: APXvYqyjTGpRAAn6SemJ1c3xw/Nj7lAbc9xN1xDMRv2BvYyHHQXVgwZCiNkHUo2qCNJnjlaGoVZczw==
+X-Received: by 2002:a5d:498a:: with SMTP id r10mr46360226wrq.28.1564577946621;
+        Wed, 31 Jul 2019 05:59:06 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id c6sm69247800wma.25.2019.07.31.05.59.07
+        by smtp.gmail.com with ESMTPSA id c6sm69247800wma.25.2019.07.31.05.59.05
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 05:59:08 -0700 (PDT)
+        Wed, 31 Jul 2019 05:59:06 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
         ttayar@habana.ai, gregkh@linuxfoundation.org
-Subject: [PATCH v3 4/7] habanalabs: rename user_ctx as compute_ctx
-Date:   Wed, 31 Jul 2019 15:58:58 +0300
-Message-Id: <20190731125901.20709-5-oded.gabbay@gmail.com>
+Subject: [PATCH v3 2/7] habanalabs: kill user process after CS rollback
+Date:   Wed, 31 Jul 2019 15:58:56 +0300
+Message-Id: <20190731125901.20709-3-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190731125901.20709-1-oded.gabbay@gmail.com>
 References: <20190731125901.20709-1-oded.gabbay@gmail.com>
@@ -70,173 +70,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch renames the "user_ctx" field in the device structure to
-"compute_ctx". This better reflects the meaning of this context.
-
-In addition, we also check in the ctx_fini() that the debug mode should be
-disabled only if the context being destroyed is the compute context. This
-has no effect right now as we only have a single process and a single
-context, but this makes the code more ready for multiple process support.
+This patch calls the kill user process function after we rollback the
+in-flight CSs. This is because the user process can't be closed while
+there are open CSs. Therefore, there is no point of sending it a SIGKILL
+before we do the rollback CS part.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/context.c    | 13 ++++++++-----
- drivers/misc/habanalabs/debugfs.c    |  4 ++--
- drivers/misc/habanalabs/device.c     | 14 +++++++-------
- drivers/misc/habanalabs/habanalabs.h |  9 ++++-----
- 4 files changed, 21 insertions(+), 19 deletions(-)
+ drivers/misc/habanalabs/device.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
-index 1d8390418234..bc0dec57a983 100644
---- a/drivers/misc/habanalabs/context.c
-+++ b/drivers/misc/habanalabs/context.c
-@@ -26,12 +26,13 @@ static void hl_ctx_fini(struct hl_ctx *ctx)
- 		dma_fence_put(ctx->cs_pending[i]);
- 
- 	if (ctx->asid != HL_KERNEL_ASID_ID) {
--		/*
--		 * The engines are stopped as there is no executing CS, but the
-+		/* The engines are stopped as there is no executing CS, but the
- 		 * Coresight might be still working by accessing addresses
- 		 * related to the stopped engines. Hence stop it explicitly.
-+		 * Stop only if this is the compute context, as there can be
-+		 * only one compute context
- 		 */
--		if (hdev->in_debug)
-+		if ((hdev->in_debug) && (hdev->compute_ctx == ctx))
- 			hl_device_set_debug_mode(hdev, false);
- 
- 		hl_vm_ctx_fini(ctx);
-@@ -85,9 +86,11 @@ int hl_ctx_create(struct hl_device *hdev, struct hl_fpriv *hpriv)
- 	hl_hpriv_get(hpriv);
- 	ctx->hpriv = hpriv;
- 
--	/* TODO: remove for multiple contexts */
-+	/* TODO: remove for multiple contexts per process */
- 	hpriv->ctx = ctx;
--	hdev->user_ctx = ctx;
-+
-+	/* TODO: remove the following line for multiple process support */
-+	hdev->compute_ctx = ctx;
- 
- 	return 0;
- 
-diff --git a/drivers/misc/habanalabs/debugfs.c b/drivers/misc/habanalabs/debugfs.c
-index 18e499c900c7..2b9bc1c41d40 100644
---- a/drivers/misc/habanalabs/debugfs.c
-+++ b/drivers/misc/habanalabs/debugfs.c
-@@ -370,7 +370,7 @@ static int mmu_show(struct seq_file *s, void *data)
- 	if (dev_entry->mmu_asid == HL_KERNEL_ASID_ID)
- 		ctx = hdev->kernel_ctx;
- 	else
--		ctx = hdev->user_ctx;
-+		ctx = hdev->compute_ctx;
- 
- 	if (!ctx) {
- 		dev_err(hdev->dev, "no ctx available\n");
-@@ -533,7 +533,7 @@ static bool hl_is_device_va(struct hl_device *hdev, u64 addr)
- static int device_va_to_pa(struct hl_device *hdev, u64 virt_addr,
- 				u64 *phys_addr)
- {
--	struct hl_ctx *ctx = hdev->user_ctx;
-+	struct hl_ctx *ctx = hdev->compute_ctx;
- 	u64 hop_addr, hop_pte_addr, hop_pte;
- 	u64 offset_mask = HOP4_MASK | OFFSET_MASK;
- 	int rc = 0;
 diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index d1bc8f4ed5bb..ca166abee7b5 100644
+index 0c4894dd9c02..d1bc8f4ed5bb 100644
 --- a/drivers/misc/habanalabs/device.c
 +++ b/drivers/misc/habanalabs/device.c
-@@ -59,7 +59,7 @@ static void hpriv_release(struct kref *ref)
- 	atomic_dec(&hdev->fd_open_cnt);
+@@ -630,8 +630,6 @@ static void device_hard_reset_pending(struct work_struct *work)
+ 		container_of(work, struct hl_device_reset_work, reset_work);
+ 	struct hl_device *hdev = device_reset_work->hdev;
  
- 	/* This allows a new user context to open the device */
--	hdev->user_ctx = NULL;
-+	hdev->compute_ctx = NULL;
- }
+-	device_kill_open_processes(hdev);
+-
+ 	hl_device_reset(hdev, true, true);
  
- void hl_hpriv_get(struct hl_fpriv *hpriv)
-@@ -590,7 +590,7 @@ static void device_kill_open_processes(struct hl_device *hdev)
- 	}
+ 	kfree(device_reset_work);
+@@ -736,6 +734,13 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
+ 	/* Go over all the queues, release all CS and their jobs */
+ 	hl_cs_rollback_all(hdev);
  
- 	if (atomic_read(&hdev->fd_open_cnt)) {
--		task = get_pid_task(hdev->user_ctx->hpriv->taskpid,
-+		task = get_pid_task(hdev->compute_ctx->hpriv->taskpid,
- 					PIDTYPE_PID);
- 		if (task) {
- 			dev_info(hdev->dev, "Killing user processes\n");
-@@ -760,9 +760,9 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
- 		hl_cq_reset(hdev, &hdev->completion_queue[i]);
++	/* Kill processes here after CS rollback. This is because the process
++	 * can't really exit until all its CSs are done, which is what we
++	 * do in cs rollback
++	 */
++	if (from_hard_reset_thread)
++		device_kill_open_processes(hdev);
++
+ 	/* Release kernel context */
+ 	if ((hard_reset) && (hl_ctx_put(hdev->kernel_ctx) == 1))
+ 		hdev->kernel_ctx = NULL;
+@@ -1130,8 +1135,6 @@ void hl_device_fini(struct hl_device *hdev)
  
- 	/* Make sure the context switch phase will run again */
--	if (hdev->user_ctx) {
--		atomic_set(&hdev->user_ctx->thread_ctx_switch_token, 1);
--		hdev->user_ctx->thread_ctx_switch_wait_token = 0;
-+	if (hdev->compute_ctx) {
-+		atomic_set(&hdev->compute_ctx->thread_ctx_switch_token, 1);
-+		hdev->compute_ctx->thread_ctx_switch_wait_token = 0;
- 	}
+ 	hdev->hard_reset_pending = true;
  
- 	/* Finished tear-down, starting to re-initialize */
-@@ -793,7 +793,7 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
- 			goto out_err;
- 		}
+-	device_kill_open_processes(hdev);
+-
+ 	hl_hwmon_fini(hdev);
  
--		hdev->user_ctx = NULL;
-+		hdev->compute_ctx = NULL;
+ 	device_late_fini(hdev);
+@@ -1150,6 +1153,12 @@ void hl_device_fini(struct hl_device *hdev)
+ 	/* Go over all the queues, release all CS and their jobs */
+ 	hl_cs_rollback_all(hdev);
  
- 		rc = hl_ctx_init(hdev, hdev->kernel_ctx, true);
- 		if (rc) {
-@@ -970,7 +970,7 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
- 		goto mmu_fini;
- 	}
++	/* Kill processes here after CS rollback. This is because the process
++	 * can't really exit until all its CSs are done, which is what we
++	 * do in cs rollback
++	 */
++	device_kill_open_processes(hdev);
++
+ 	hl_cb_pool_fini(hdev);
  
--	hdev->user_ctx = NULL;
-+	hdev->compute_ctx = NULL;
- 
- 	rc = hl_ctx_init(hdev, hdev->kernel_ctx, true);
- 	if (rc) {
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index e41800e68578..53f6b238e6f2 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -905,7 +905,7 @@ struct hl_debug_params {
-  * @hdev: habanalabs device structure.
-  * @filp: pointer to the given file structure.
-  * @taskpid: current process ID.
-- * @ctx: current executing context.
-+ * @ctx: current executing context. TODO: remove for multiple ctx per process
-  * @ctx_mgr: context manager to handle multiple context for this FD.
-  * @cb_mgr: command buffer manager to handle multiple buffers for this FD.
-  * @debugfs_list: list of relevant ASIC debugfs.
-@@ -916,7 +916,7 @@ struct hl_fpriv {
- 	struct hl_device	*hdev;
- 	struct file		*filp;
- 	struct pid		*taskpid;
--	struct hl_ctx		*ctx; /* TODO: remove for multiple ctx */
-+	struct hl_ctx		*ctx;
- 	struct hl_ctx_mgr	ctx_mgr;
- 	struct hl_cb_mgr	cb_mgr;
- 	struct list_head	debugfs_list;
-@@ -1182,7 +1182,7 @@ struct hl_device_reset_work {
-  * @hl_debugfs: device's debugfs manager.
-  * @cb_pool: list of preallocated CBs.
-  * @cb_pool_lock: protects the CB pool.
-- * @user_ctx: current user context executing.
-+ * @compute_ctx: current compute context executing.
-  * @dram_used_mem: current DRAM memory consumption.
-  * @timeout_jiffies: device CS timeout value.
-  * @max_power: the max power of the device, as configured by the sysadmin. This
-@@ -1259,8 +1259,7 @@ struct hl_device {
- 	struct list_head		cb_pool;
- 	spinlock_t			cb_pool_lock;
- 
--	/* TODO: remove user_ctx for multiple process support */
--	struct hl_ctx			*user_ctx;
-+	struct hl_ctx			*compute_ctx;
- 
- 	atomic64_t			dram_used_mem;
- 	u64				timeout_jiffies;
+ 	/* Release kernel context */
 -- 
 2.17.1
 
