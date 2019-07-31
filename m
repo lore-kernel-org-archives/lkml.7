@@ -2,94 +2,122 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3716CC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776DAC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E642067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5159F2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5N5XV/6"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UenDJ17y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbfGaVHz (ORCPT
+        id S1729962AbfGaVIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 17:07:55 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43215 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfGaVHz (ORCPT
+        Wed, 31 Jul 2019 17:08:40 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10353 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfGaVIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 17:07:55 -0400
-Received: by mail-qt1-f194.google.com with SMTP id w17so23646508qto.10;
-        Wed, 31 Jul 2019 14:07:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CVs/vyQ7FGVG4RTAjLbBzwKgO6T77q0zizvqZWReG4U=;
-        b=h5N5XV/6OzpHcXrprkzwKaYmJNAD9E8RdEvB+YK0FrlqjphI8KIf7oYowR11IArgLk
-         88GJaOD/tMG54niEk7uFAUi66JZCPn+OJkRq3zPNN/KYAmb0rsZ2FpMe6vk+5EoCmN4O
-         1mUcGpSPVxXH68CKu+HAhTRbBso352YVX3klLp+TdTF2bV5QNFdIddc8hpz9Bh6ljy+M
-         y8I2BKGTyIIxhGXzv/Lx5gt+riMvMtc2cTzhU3sqkrQwRS5ZlO8F2CLlDiP+F2FCiBpo
-         PGUJBB+NTy/FuqG/6vALo6kpveZd09LjDljEeXZxaOGN293ojUIRuCxnAzlrO24slLk0
-         6EPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CVs/vyQ7FGVG4RTAjLbBzwKgO6T77q0zizvqZWReG4U=;
-        b=fFDmTA0qwLdKjWIQyhLE0Rprxo0X2k+a81ppzjlM5DsXivlrdKH+1vCs7A4w7xXdTm
-         ofqMAceptasUVAxu/DCbzbezWQVFTF0Xm1a+2bHsSMVBttOSm5F7LwAwpS+qa+wym88Y
-         2WYW+ktMUuDchcg3T2/YymqRyJxZ9xPdhzqqH1H6ioJTK3OHjxM+KELX8/b/26gMavpN
-         E9Z5YynzqkkmKhNLLAv+hbcUegp7nmYHsvRNE6HcWxjNMGSVPCTbrOLTfl8nty1PJm/3
-         H7m3dA4+sP+Z2UZ4lq8dbMErJqrX0om/oImqxO3LSZZRTSN5zAJ84Eq0qTORJSSX6I/g
-         6zpw==
-X-Gm-Message-State: APjAAAXukP71F4/AiFBIrcB2uq9vC+WF8Kz1GCJF8wSFVjSSPgW0exWE
-        k3sEpiYbTq+gAIMHCulE1JmV7d5ZUmnKoHv/5pY=
-X-Google-Smtp-Source: APXvYqy4QvtrszYJsHl599Ic3SuR88R8Eufu4CdNo+IYoKhGrYyNtuaYcaEFwl3crNQGDCHIWfL5uXK87UIOeU0HklE=
-X-Received: by 2002:ac8:25e7:: with SMTP id f36mr87328163qtf.139.1564607274505;
- Wed, 31 Jul 2019 14:07:54 -0700 (PDT)
+        Wed, 31 Jul 2019 17:08:40 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4203570002>; Wed, 31 Jul 2019 14:08:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 31 Jul 2019 14:08:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 31 Jul 2019 14:08:39 -0700
+Received: from [10.110.102.167] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 31 Jul
+ 2019 21:08:38 +0000
+Subject: Re: [PATCH v7 16/20] arm64: tegra: Enable wake from deep sleep on RTC
+ alarm
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-17-git-send-email-skomatineni@nvidia.com>
+ <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <d4709085-f705-2608-08a8-65b238ae8844@nvidia.com>
+Date:   Wed, 31 Jul 2019 14:08:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190702132918.114818-1-houtao1@huawei.com> <CAPhsuW6yH7np1=+e5Rgutp3m1VA0TPvtANeX=0ZdpJaRKEvBkQ@mail.gmail.com>
- <b047c187-e4a6-a82a-3177-3da7fef2f6b8@huawei.com>
-In-Reply-To: <b047c187-e4a6-a82a-3177-3da7fef2f6b8@huawei.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 31 Jul 2019 14:07:43 -0700
-Message-ID: <CAPhsuW5c96vQDiwbPhDvKOG8_XkPapW62bkthPAHFOum2N2VhQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] md: export internal stats through debugfs
-To:     Hou Tao <houtao1@huawei.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>, NeilBrown <neilb@suse.com>,
-        linux-block@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>,
-        agk@redhat.com, dm-devel@redhat.com,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564607319; bh=XlHpdHbtbxW+pGHBpUV41umA2n21IWFw4wGwv1QIPi0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=UenDJ17yUxeK7zkDG7Pkq2W+yM57LLyemW5S81Fdy6R8p1oyT8DorQkbzRjPJ+VA3
+         kKqSdsHynICnxC9SZFU/RdKJ2+k1jt6h9n6o5u6++a8qBAt/CREyG2MPWJk0bAb+tI
+         VYK9AhlG1WWjcSqm4R3MwvZIsZujMkJ4GJJoGq6AMxb6KJQtBge9+wtn3i4PVVIIf7
+         EqsGODGKqpsIEQ/Z7xC6x5E5eN1ityGNdtlNxIUJlXtGBRfyUvYDs5pHAKB9FdtD/o
+         nZToRjbS8WQjxumSeWJ6w2iiWEO2vv/bggrSyR1n3KmP9s3+e3F6kcOvS4BcyNWrd9
+         ub4d3Q9hL4vAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 10:48 PM Hou Tao <houtao1@huawei.com> wrote:
->
-> Hi,
->
-[...]
-> >
-> > Hi,
-> >
-> > Sorry for the late reply.
-> >
-> > I think these information are really debug information that we should not
-> > show in /sys. Once we expose them in /sys, we need to support them
-> > because some use space may start searching data from them.
-> So debugfs is used to place these debug information instead of sysfs.
 
-I don't think we should dump random information into debugfs. It is common
-for the developers to carry some local patches that dumps information for
-debug. We cannot get these patches upstream.
-
-Thanks,
-Song
+On 7/31/19 4:04 AM, Dmitry Osipenko wrote:
+> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> This patch updates device tree for RTC and PMC to allow system wake
+>> from deep sleep on RTC alarm.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/=
+dts/nvidia/tegra210.dtsi
+>> index 659753118e96..30a7c48385a2 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>> @@ -768,7 +768,8 @@
+>>   	rtc@7000e000 {
+>>   		compatible =3D "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
+>>   		reg =3D <0x0 0x7000e000 0x0 0x100>;
+>> -		interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupts =3D <16 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-parent =3D <&pmc>;
+>>   		clocks =3D <&tegra_car TEGRA210_CLK_RTC>;
+>>   		clock-names =3D "rtc";
+>>   	};
+>> @@ -778,6 +779,8 @@
+>>   		reg =3D <0x0 0x7000e400 0x0 0x400>;
+>>   		clocks =3D <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+>>   		clock-names =3D "pclk", "clk32k_in";
+>> +		#interrupt-cells =3D <2>;
+>> +		interrupt-controller;
+>>  =20
+>>   		powergates {
+>>   			pd_audio: aud {
+>>
+> Is this a backwards-compatible change? Or it's not really worth to care
+> about the compatibility with older kernel versions, I'm not sure about
+> overall state of T210 in the upstream kernel.
+I don't think its required to be backwards-compatible as SC7 entry/exit=20
+implementation for T210 is with this patch series onwards..
