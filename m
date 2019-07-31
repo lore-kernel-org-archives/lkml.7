@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC80C32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90161C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE4D208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C888208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 15:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbfGaP7P (ORCPT
+        id S1730349AbfGaP7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 11:59:15 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3283 "EHLO huawei.com"
+        Wed, 31 Jul 2019 11:59:18 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3280 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730199AbfGaP6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730010AbfGaP6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 11:58:42 -0400
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2481227EAE3666F9148E;
+        by Forcepoint Email with ESMTP id 1F9E2CE9E1C1E0B667C5;
         Wed, 31 Jul 2019 23:58:41 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 31 Jul
- 2019 23:58:35 +0800
+ 2019 23:58:30 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Chao Yu <yuchao0@huawei.com>, <devel@driverdev.osuosl.org>
@@ -33,9 +33,9 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2 22/22] staging: erofs: update Kconfig
-Date:   Wed, 31 Jul 2019 23:57:52 +0800
-Message-ID: <20190731155752.210602-23-gaoxiang25@huawei.com>
+Subject: [PATCH v2 18/22] staging: erofs: remove clusterbits in sbi
+Date:   Wed, 31 Jul 2019 23:57:48 +0800
+Message-ID: <20190731155752.210602-19-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190731155752.210602-1-gaoxiang25@huawei.com>
 References: <20190731155752.210602-1-gaoxiang25@huawei.com>
@@ -48,120 +48,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Keep in line with erofs-outofstaging patchset:
- - turn on CONFIG_EROFS_FS_ZIP by default;
- - turn on CONFIG_EROFS_FS_SECURITY by default suggested by David;
- - update Kconfig description.
+clustersize can now be set on per-file basis
+rather than per-filesystem basis.
 
 Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/Kconfig | 54 ++++++++++++++++++-----------------
- 1 file changed, 28 insertions(+), 26 deletions(-)
+ drivers/staging/erofs/internal.h | 5 -----
+ drivers/staging/erofs/super.c    | 9 ---------
+ drivers/staging/erofs/zmap.c     | 3 +--
+ 3 files changed, 1 insertion(+), 16 deletions(-)
 
-diff --git a/drivers/staging/erofs/Kconfig b/drivers/staging/erofs/Kconfig
-index 1a8e48943e50..16316d1adca3 100644
---- a/drivers/staging/erofs/Kconfig
-+++ b/drivers/staging/erofs/Kconfig
-@@ -4,16 +4,16 @@ config EROFS_FS
- 	tristate "EROFS filesystem support"
- 	depends on BLOCK
- 	help
--	  EROFS(Enhanced Read-Only File System) is a lightweight
-+	  EROFS (Enhanced Read-Only File System) is a lightweight
- 	  read-only file system with modern designs (eg. page-sized
- 	  blocks, inline xattrs/data, etc.) for scenarios which need
--	  high-performance read-only requirements, eg. firmwares in
--	  mobile phone or LIVECDs.
-+	  high-performance read-only requirements, e.g. Android OS
-+	  for mobile phones and LIVECDs.
+diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+index a631acd0dc62..3176c350779e 100644
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -77,8 +77,6 @@ struct erofs_sb_info {
+ 	struct list_head list;
+ 	struct mutex umount_mutex;
  
--	  It also provides VLE compression support, focusing on
--	  random read improvements, keeping relatively lower
--	  compression ratios, which is useful for high-performance
--	  devices with limited memory and ROM space.
-+	  It also provides fixed-sized output compression support,
-+	  which improves storage density, keeps relatively higher
-+	  compression ratios, which is more useful to achieve high
-+	  performance for embedded devices with limited memory.
+-	/* cluster size in bit shift */
+-	unsigned char clusterbits;
+ 	/* the dedicated workstation for compression */
+ 	struct radix_tree_root workstn_tree;
  
- 	  If unsure, say N.
- 
-@@ -21,11 +21,19 @@ config EROFS_FS_DEBUG
- 	bool "EROFS debugging feature"
- 	depends on EROFS_FS
- 	help
--	  Print EROFS debugging messages and enable more BUG_ONs
--	  which check the filesystem consistency aggressively.
-+	  Print debugging messages and enable more BUG_ONs which check
-+	  filesystem consistency and find potential issues aggressively,
-+	  which can be used for Android eng build, for example.
- 
- 	  For daily use, say N.
- 
-+config EROFS_FAULT_INJECTION
-+	bool "EROFS fault injection facility"
-+	depends on EROFS_FS
-+	help
-+	  Test EROFS to inject faults such as ENOMEM, EIO, and so on.
-+	  If unsure, say N.
-+
- config EROFS_FS_XATTR
- 	bool "EROFS extended attributes"
- 	depends on EROFS_FS
-@@ -54,6 +62,7 @@ config EROFS_FS_POSIX_ACL
- config EROFS_FS_SECURITY
- 	bool "EROFS Security Labels"
- 	depends on EROFS_FS_XATTR
-+	default y
- 	help
- 	  Security labels provide an access control facility to support Linux
- 	  Security Models (LSMs) accepted by AppArmor, SELinux, Smack and TOMOYO
-@@ -63,22 +72,15 @@ config EROFS_FS_SECURITY
- 
- 	  If you are not using a security module, say N.
- 
--config EROFS_FAULT_INJECTION
--	bool "EROFS fault injection facility"
--	depends on EROFS_FS
--	help
--	  Test EROFS to inject faults such as ENOMEM, EIO, and so on.
--	  If unsure, say N.
+@@ -248,9 +246,6 @@ static inline int erofs_wait_on_workgroup_freezed(struct erofs_workgroup *grp)
+ /* hard limit of pages per compressed cluster */
+ #define Z_EROFS_CLUSTER_MAX_PAGES       (CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT)
+ #define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_CLUSTER_MAX_PAGES
 -
- config EROFS_FS_ZIP
--	bool "EROFS Data Compresssion Support"
-+	bool "EROFS Data Compression Support"
- 	depends on EROFS_FS
- 	select LZ4_DECOMPRESS
-+	default y
- 	help
--	  Currently we support LZ4 VLE Compression only.
--	  Play at your own risk.
-+	  Enable fixed-sized output compression for EROFS.
+-/* page count of a compressed cluster */
+-#define erofs_clusterpages(sbi)         ((1 << (sbi)->clusterbits) / PAGE_SIZE)
+ #else
+ #define EROFS_PCPUBUF_NR_PAGES          0
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+index af5d87793e4d..dad5a3137988 100644
+--- a/drivers/staging/erofs/super.c
++++ b/drivers/staging/erofs/super.c
+@@ -124,15 +124,6 @@ static int superblock_read(struct super_block *sb)
+ 	sbi->xattr_blkaddr = le32_to_cpu(layout->xattr_blkaddr);
+ #endif
+ 	sbi->islotbits = ffs(sizeof(struct erofs_inode_v1)) - 1;
+-#ifdef CONFIG_EROFS_FS_ZIP
+-	/* TODO: clusterbits should be related to inode */
+-	sbi->clusterbits = blkszbits;
+-
+-	if (1 << (sbi->clusterbits - PAGE_SHIFT) > Z_EROFS_CLUSTER_MAX_PAGES)
+-		errln("clusterbits %u is not supported on this kernel",
+-		      sbi->clusterbits);
+-#endif
+-
+ 	sbi->root_nid = le16_to_cpu(layout->root_nid);
+ 	sbi->inos = le64_to_cpu(layout->inos);
  
--	  If you don't want to use compression feature, say N.
-+	  If you don't want to enable compression feature, say N.
+diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
+index 205e884ca4e0..aeed5c674d9e 100644
+--- a/drivers/staging/erofs/zmap.c
++++ b/drivers/staging/erofs/zmap.c
+@@ -13,13 +13,12 @@
+ int z_erofs_fill_inode(struct inode *inode)
+ {
+ 	struct erofs_vnode *const vi = EROFS_V(inode);
+-	struct super_block *const sb = inode->i_sb;
  
- config EROFS_FS_CLUSTER_PAGE_LIMIT
- 	int "EROFS Cluster Pages Hard Limit"
-@@ -86,11 +88,11 @@ config EROFS_FS_CLUSTER_PAGE_LIMIT
- 	range 1 256
- 	default "1"
- 	help
--	  Indicates VLE compressed pages hard limit of a
--	  compressed cluster.
-+	  Indicates maximum # of pages of a compressed
-+	  physical cluster.
- 
--	  For example, if files of a image are compressed
--	  into 8k-unit, the hard limit should not be less
--	  than 2. Otherwise, the image cannot be mounted
--	  correctly on this kernel.
-+	  For example, if files in a image were compressed
-+	  into 8k-unit, hard limit should not be configured
-+	  less than 2. Otherwise, the image will be refused
-+	  to mount on this kernel.
- 
+ 	if (vi->datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY) {
+ 		vi->z_advise = 0;
+ 		vi->z_algorithmtype[0] = 0;
+ 		vi->z_algorithmtype[1] = 0;
+-		vi->z_logical_clusterbits = EROFS_SB(sb)->clusterbits;
++		vi->z_logical_clusterbits = LOG_BLOCK_SIZE;
+ 		vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits;
+ 		vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits;
+ 		set_bit(EROFS_V_Z_INITED_BIT, &vi->flags);
 -- 
 2.17.1
 
