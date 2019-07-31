@@ -2,181 +2,114 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8126CC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB6EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA0C208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4AB1206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 14:53:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="dHTL7S/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388057AbfGaOxI (ORCPT
+        id S2388102AbfGaOxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 10:53:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42314 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387926AbfGaOxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 10:53:07 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1A3933DE22;
-        Wed, 31 Jul 2019 14:53:07 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 711A162A72;
-        Wed, 31 Jul 2019 14:53:05 +0000 (UTC)
-Message-ID: <09a994054e43c8bd6ee49b7d1087c9c4e793058f.camel@redhat.com>
-Subject: Re: [PATCH V2] IB/core: Add mitigation for Spectre V1
-From:   Doug Ledford <dledford@redhat.com>
-To:     "Luck, Tony" <tony.luck@intel.com>, Ira Weiny <ira.weiny@intel.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 31 Jul 2019 10:52:53 -0400
-In-Reply-To: <20190731043957.GA1600@agluck-desk2.amr.corp.intel.com>
-References: <20190730202407.31046-1-tony.luck@intel.com>
-         <95f5cf70-1a1d-f48c-efac-f389360f585e@embeddedor.com>
-         <20190731042801.GA2179@iweiny-DESK2.sc.intel.com>
-         <20190731043957.GA1600@agluck-desk2.amr.corp.intel.com>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-QyH2BAuw48C31a2xlFXF"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 31 Jul 2019 10:53:25 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36080 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388075AbfGaOxZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 10:53:25 -0400
+Received: by mail-io1-f67.google.com with SMTP id o9so33283822iom.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 07:53:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zlcAXkKW8QVqrB0POXO1HOMAe1Y+4ab/2cQba0Zxxzc=;
+        b=dHTL7S/edkTumLq61B3dgRSTYGv9sotAJDMUJepTiJ29to2FTPzeJyv09hKFMXSzVd
+         KVPKvqqxnR/Oh93EXD/+aFdn2oJMNE728ofoODS4waMtHAjizmUISSWpa+PZSNsMK6NQ
+         D4CDBalZTrgsHbDmKAYrktzLxkox+OFDWkabHXC0WMtzWNWuyZqFzjM9SZoMlUM6fHy3
+         9gbAeeSYDTQl6aace1YXOpFKb0gJ082cn/p7wayzz/OmrcxO69KKCcvN0V7GBreuTHvJ
+         Ds3VuIZk98nydQHyX418KEGGQp02TOtX8eDxYbChd7t564PMfRLKvw9ZmOo/KQMqaLLe
+         FQhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zlcAXkKW8QVqrB0POXO1HOMAe1Y+4ab/2cQba0Zxxzc=;
+        b=XQvqY3yevhbrsDA8nVdNvJNa+vAQp1L3vsMc8XFBGBvIbBr/Cg7ZdKckyv4xBkwbPK
+         1QXU7ENXMWHWGmt26D9cyAabjTJhAqlAwywmkHriioqSDcgGBcr8kuagUJjoY5diUK/G
+         o6xdMepHtjtTriwmo3Vpj8k4rLVtou9oqDI1NOUmi+Ji8qtXd3LkXIvSj339zGTz7M9Q
+         GDy+O4sxLnn58bjFXi1GxeNYEZYm/AXGS+NR5lr1dDDoT7HtpIJw5zU5KIybputOvXCr
+         iS6aimzw0cTySBSom+Elvtwk7LkOpjwX/bnlTP53HFzrkbHM6XuxYoCzIcjZKzfkAjow
+         Fngg==
+X-Gm-Message-State: APjAAAU7IjNlkKyGtx0av3I3Nvw8GgQF9BTWoQqg35k3Fky8Ng9lxn9v
+        GpITXo2YdutxRK52xeS+fracMGttuNI=
+X-Google-Smtp-Source: APXvYqx+BXSVFPqAnw9J/ZjOuQ8bb3S7c7lnWx+PLlV1IxzY4n+cXUeefovmQctozHourMkeKSzzsA==
+X-Received: by 2002:a5e:9e0a:: with SMTP id i10mr2803063ioq.44.1564584804230;
+        Wed, 31 Jul 2019 07:53:24 -0700 (PDT)
+Received: from [192.168.1.57] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id y18sm65072836iob.64.2019.07.31.07.53.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 07:53:23 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS: floppy: take over maintainership
+To:     efremov@linux.com, Jiri Kosina <jikos@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Willy Tarreau <w@1wt.eu>, Will Deacon <will@kernel.org>,
+        Greg KH <greg@kroah.com>,
+        Alexander Popov <alex.popov@linux.com>, efremov@ispras.ru,
+        linux-block@vger.kernel.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+References: <20190712185523.7208-1-efremov@ispras.ru>
+ <20190713080726.GA19611@1wt.eu>
+ <ec0a6c5e-bdee-3c26-f5d2-31b883c0de5d@ispras.ru>
+ <CAHk-=wi=fHuiQg1fMzqAP9cuykBQSN_feD=eALDwRPmw27UwEg@mail.gmail.com>
+ <nycvar.YFH.7.76.1907172355020.5899@cbobk.fhfr.pm>
+ <57af5f3e-9cfe-b6d8-314c-f59855408cd5@linux.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <431bd981-d81a-d4dd-75fe-96a29f8f1065@kernel.dk>
+Date:   Wed, 31 Jul 2019 08:53:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 31 Jul 2019 14:53:07 +0000 (UTC)
+In-Reply-To: <57af5f3e-9cfe-b6d8-314c-f59855408cd5@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/31/19 8:47 AM, Denis Efremov wrote:
+> Hi All,
+> 
+> On 18.07.2019 01:03, Jiri Kosina wrote:
+>> On Wed, 17 Jul 2019, Linus Torvalds wrote:
+>>
+>>> I don't think we really have a floppy maintainer any more,
+>>
+>> Yeah, I basically volunteered myself to maintain it quite some time
+>> ago back when I fixed the concurrency issues which exhibited itself
+>> only with VM-emulated devices, and at the same time I still had the
+>> physical 3.5" reader.
+>>
+>> The hardware doesn't work any more though. So I guess I should just
+>> remove myself as a maintainer to reflect the reality and mark floppy.c
+>> as Orphaned.
+> 
+> Well, without jokes about Thunderdome, I've got time, hardware and
+> would like to maintain the floppy. Except the for recent fixes,
+> I described floppy ioctls in syzkaller. I've already spent quite
+> a lot of time with this code. Thus, if nobody minds
 
---=-QyH2BAuw48C31a2xlFXF
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Great, can't see anyone objecting to doling out some floppy love.
+Applied, thanks.
 
-On Tue, 2019-07-30 at 21:39 -0700, Luck, Tony wrote:
-> Some processors may mispredict an array bounds check and
-> speculatively access memory that they should not. With
-> a user supplied array index we like to play things safe
-> by masking the value with the array size before it is
-> used as an index.
->=20
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
->=20
-> ---
-> V2: Mask the index *AFTER* the bounds check. Issue pointed
->     out by Gustavo. Fix suggested by Ira.
->=20
->  drivers/infiniband/core/user_mad.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/infiniband/core/user_mad.c
-> b/drivers/infiniband/core/user_mad.c
-> index 9f8a48016b41..32cea5ed9ce1 100644
-> --- a/drivers/infiniband/core/user_mad.c
-> +++ b/drivers/infiniband/core/user_mad.c
-> @@ -49,6 +49,7 @@
->  #include <linux/sched.h>
->  #include <linux/semaphore.h>
->  #include <linux/slab.h>
-> +#include <linux/nospec.h>
-> =20
->  #include <linux/uaccess.h>
-> =20
-> @@ -888,7 +889,12 @@ static int ib_umad_unreg_agent(struct
-> ib_umad_file *file, u32 __user *arg)
->  	mutex_lock(&file->port->file_mutex);
->  	mutex_lock(&file->mutex);
-> =20
-> -	if (id >=3D IB_UMAD_MAX_AGENTS || !__get_agent(file, id)) {
-> +	if (id >=3D IB_UMAD_MAX_AGENTS) {
-> +		ret =3D -EINVAL;
-> +		goto out;
-> +	}
-> +	id =3D array_index_nospec(id, IB_UMAD_MAX_AGENTS);
-> +	if (!__get_agent(file, id)) {
->  		ret =3D -EINVAL;
->  		goto out;
->  	}
-
-I'm not sure this is the best fix for this.  However, here is where I
-get to admit that I largely ignored the whole Spectre V1 thing, so I'm
-not sure I completely understand the vulnerability and the limits to
-that.  But, looking at the function, it seems we can do an early return
-without ever taking any of the mutexes in the function in the case of id
->=3D IB_UMAD_MAX_AGENTS, so if we did that, would that separate the
-checking of id far enough from the usage of it as an array index that we
-wouldn't need the clamp to prevent speculative prefetch?  About how far,
-in code terms, does this speculative prefetch occur?
-
-This is the patch I was thinking of:
-
-diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/u=
-ser_mad.c
-index 9f8a48016b41..1e507dd257ff 100644
---- a/drivers/infiniband/core/user_mad.c
-+++ b/drivers/infiniband/core/user_mad.c
-@@ -49,6 +49,7 @@
- #include <linux/sched.h>
- #include <linux/semaphore.h>
- #include <linux/slab.h>
-+#include <linux/nospec.h>
-=20
- #include <linux/uaccess.h>
-=20
-@@ -884,11 +885,18 @@ static int ib_umad_unreg_agent(struct ib_umad_file *f=
-ile, u32 __user *arg)
-=20
-        if (get_user(id, arg))
-                return -EFAULT;
-+       if (id >=3D IB_UMAD_MAX_AGENTS)
-+               return -EINVAL;
-=20
-        mutex_lock(&file->port->file_mutex);
-        mutex_lock(&file->mutex);
-=20
--       if (id >=3D IB_UMAD_MAX_AGENTS || !__get_agent(file, id)) {
-+       /*
-+        * Is our check of id far enough away, code wise, to prevent
-+        * speculative prefetch?
-+        */
-+       id =3D array_index_nospec(id, IB_UMAD_MAX_AGENTS);
-+       if (!__get_agent(file, id)) {
-                ret =3D -EINVAL;
-                goto out;
-        }
-
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---=-QyH2BAuw48C31a2xlFXF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1Bq0UACgkQuCajMw5X
-L921jw/9EhWhfMF/Guidw2GPlq4vwkux/Qp+3y2kSJWsU2j5UBXYvcvoDOfkUFZC
-ku20pEVPW4Zf1Lww3SUwEuQLy3Ilt/UHvFQeUaXzgTkqoOJz5Ywf6oceNvSrd+Sp
-bznkCqP+cPzIz79jvYGhmIicBkgLjsN7UrXAfxycTRHQ2XAWxiQ/L8igEys4Me5O
-iASc5zDMfvqmiNRe0RCxtSUJ1k6uzog9Wk7hwmD0FZ4XhI6zfuu2d483lQdIu1Un
-TgFeL0fCD5zfAfVsSx55ocLjHtYoHkvsJqni79026IDNaBNotXGOYDNV3peiDXJq
-U5/qfjQH5KTcOYxVqw6TUJyegxGDrudDuRS5uFRq52LcBg7d8KB6VzLcNiUcr2qp
-1g6IoZjpXT/NIu+BAJC4O9/ZdxqfN4jVzz07m3ABwDycTgxXtRey30nQJfMxKV4p
-77lcW5T/zdNoq6krRHnmbLQJJUGRL57jByem2IkpGIh8qkz+H5nbm2e5W125P0t4
-w1qVp2Is0hj9RWW45f7gnZOk/c5OGghJhwthmZy2njvNv71JSG76cWZ+fj7kv3B1
-qtEBAgszLPEZ6YhaEFJZbCHIn9UubmsLzichrCauw6PKR4Cgu5fLFggJ9eNRrf7m
-tHIkdxY8qRy4wvYb1OAwBSpCZ9tt90raQ+6KyDpa/uWiKAP+vKk=
-=t8Ey
------END PGP SIGNATURE-----
-
---=-QyH2BAuw48C31a2xlFXF--
+-- 
+Jens Axboe
 
