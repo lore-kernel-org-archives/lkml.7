@@ -2,187 +2,226 @@ Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F67CC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2522AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A77D206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E266A21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 22:18:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BZG+BXl0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bajk5gYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbfGaWRb (ORCPT
+        id S1727857AbfGaWSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 18:17:31 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:47487 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731383AbfGaWR1 (ORCPT
+        Wed, 31 Jul 2019 18:18:32 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:41771 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729954AbfGaWRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 18:17:27 -0400
-Received: by mail-qk1-f201.google.com with SMTP id x17so59382833qkf.14
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:17:26 -0700 (PDT)
+        Wed, 31 Jul 2019 18:17:31 -0400
+Received: by mail-pg1-f201.google.com with SMTP id b18so43751593pgg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 15:17:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=8xCKbe4+SbEpflCZXnlVd2DD5MlWqrkpd7IK3sU8Kak=;
-        b=BZG+BXl0HRJnAWor1fWDAb3te4N+3JEeudwqdxZumR5nQKbZWyzBP82yF7aDDm/ryP
-         XYIEC0N5AzhgUY2kppAdv6Lavvl013cijyRnp/vvmhDo2VDxnDyaM6M+H6Z04vVxdqns
-         5ZWK7aA9w6ojRZfOs0cfmFG19kZr3CuDsjQW5GLagOanxY+/i2dDRLLY1beE2k5KOhCo
-         OaHShoncfKPMfhwbNzcvUYiLWtja/yn03P/Me+dgxfC8mY4/vE1/+Gj5LLs2sIpk2dgk
-         M8xGixaEZtWe1nRFg9f8PfgEfT+l0rPYzROiDPgGxta2stWsRWSOoeJo9g1bpsam2rfF
-         gf/A==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=Ogy4z5xXdkGcZVx/gotBD44dFgIvUZxytASg1dmnrz4=;
+        b=Bajk5gYeO0raa2iJAXLUTeo1rNux2thWTyxy5cP2BZX9rVUFcLLwBM1Ihyr4IW6Uxu
+         OVe2hKqMjonh2PlJah6B/xRvCxOEBYAVBGbGtG5SxGXbvgbox/ljX9f23uTjmk8CdtHj
+         OpACdBgg8QTDRBPMzNVaG3NusYWPWtzuSDBMG1K3yU06iS9f0IVwyo5+DUjxp1ZaqLKn
+         2PqUsKDMn3y2VNU/ELITmp+dzRb2ku3sU7bSFIAZC3m3mAJLzfVbP0Edc+IQpH/qk47X
+         2UowsAKC5Wju2BwdPCp4ZZhOFCQRE0tSdOQOXnHroYpPv2eDlt8O+buvUZBVcS1GIREQ
+         Qz/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=8xCKbe4+SbEpflCZXnlVd2DD5MlWqrkpd7IK3sU8Kak=;
-        b=bCbMMMIGUXa2LI2NTEw7Uf0LmjxLNg/rWjVUN6sYzGiZbK12IWD5PTCsd7c1OJBSxo
-         kgYecoaIASKn0AWkiD/AggctcMIAeEPEMA7putxPfYvmFLC9tSETfxu0ttK8S1DdLbX9
-         JKXO2fowd0RRseBRayUfNBcPL83Z5iza8oJrz0dsD+YZYOR7jWS4LJTO/LnVnD8FU99/
-         63Q0yeqf0lW2adcyyFM9bKhzUA8lz6vol4QzIu1IK3skXZQz+8GiTsVg+1jLoCXODuat
-         F3NjI+1sveaCnKPslVBJUUASG2AUxRbJoV9JWSTG2cxP4kOfYyIuH3gAzDJKJxgwt2/h
-         Ksfg==
-X-Gm-Message-State: APjAAAWAm9+cCDo7/dBfQUG2GxUczzSmw5o6WmFvp79eX/9PVvbRfr0O
-        1sd4mAZEe66nRxFwMUFJ2fd2iISRIpQpLHU=
-X-Google-Smtp-Source: APXvYqzQkikXOmdHnzLceN0ILgumdC0UgR3Gd4v74UNOhJcnLW9nKL7EtkA5UsucmUgtEVaCWWmO3w2jUnspYvI=
-X-Received: by 2002:a0c:b998:: with SMTP id v24mr90216699qvf.132.1564611446084;
- Wed, 31 Jul 2019 15:17:26 -0700 (PDT)
-Date:   Wed, 31 Jul 2019 15:17:13 -0700
-Message-Id: <20190731221721.187713-1-saravanak@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=Ogy4z5xXdkGcZVx/gotBD44dFgIvUZxytASg1dmnrz4=;
+        b=EjqXYwW+RZXn8QLAQOcDSFx7agpjv1lus+3d4WAMn1F6UbwCx3XPzrcFRZITwv24Dm
+         V0iMz3kjmNfWmaMem9oygTRXSYg++JSvlgbcniqNElS+Ai/Cy8hb6qbXpP7ySjXxlYFx
+         4daEjs18HnTUBmqfhGnwnwdu0jYtWiQr/9FUPozTZ+fnr9RsZzgU3s1xk4sTU11kapGV
+         DrTmpCGgVVPtH2ADh7RMRdVgivjnVlbkPtF4N6NGKKyvTBIghDJftUdK9GSaDASPUwvb
+         TR5bjUcgYNOZTDbZyFLcmI9ovVIek7SiCxkm9moy5bl6WVpdOIOr4pMWszCCgRbld0yW
+         Ut8g==
+X-Gm-Message-State: APjAAAX8bM4JCfw0D6WvOpqXxtXSBgfPlr2IpzY/l0Teci9/HYZO2cJh
+        LUJwpuHgkePla2Eg1o8s1W3VYPBwo82CKWVAjhkvsQ==
+X-Google-Smtp-Source: APXvYqxZSsn4zOtqAMIbC8IIUJ8BgotlRvfyfmjrcz+Kzfba+ryUsIe0e+54iON0Ue9ORs3wFILRx4yWxTev9k6Xexi4Gg==
+X-Received: by 2002:a63:6c7:: with SMTP id 190mr114475501pgg.7.1564611450073;
+ Wed, 31 Jul 2019 15:17:30 -0700 (PDT)
+Date:   Wed, 31 Jul 2019 15:16:13 -0700
+In-Reply-To: <20190731221617.234725-1-matthewgarrett@google.com>
+Message-Id: <20190731221617.234725-26-matthewgarrett@google.com>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe ordering
-From:   Saravana Kannan <saravanak@google.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        David Collins <collinsd@codeaurora.org>,
-        kernel-team@android.com
+References: <20190731221617.234725-1-matthewgarrett@google.com>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+Subject: [PATCH V37 25/29] kexec: Allow kexec_file() with appropriate IMA
+ policy when locked down
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-integrity@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-links to track functional dependencies between devices
-after they are created (but before they are probed) by looking at
-their common DT bindings like clocks, interconnects, etc.
+Systems in lockdown mode should block the kexec of untrusted kernels.
+For x86 and ARM we can ensure that a kernel is trustworthy by validating
+a PE signature, but this isn't possible on other architectures. On those
+platforms we can use IMA digital signatures instead. Add a function to
+determine whether IMA has or will verify signatures for a given event type,
+and if so permit kexec_file() even if the kernel is otherwise locked down.
+This is restricted to cases where CONFIG_INTEGRITY_TRUSTED_KEYRING is set
+in order to prevent an attacker from loading additional keys at runtime.
 
-Having functional dependencies automatically added before the devices
-are probed, provides the following benefits:
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Acked-by: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc: linux-integrity@vger.kernel.org
+---
+ include/linux/ima.h                 |  9 ++++++
+ kernel/kexec_file.c                 | 12 +++++--
+ security/integrity/ima/ima.h        |  2 ++
+ security/integrity/ima/ima_main.c   |  2 +-
+ security/integrity/ima/ima_policy.c | 50 +++++++++++++++++++++++++++++
+ 5 files changed, 72 insertions(+), 3 deletions(-)
 
-- Optimizes device probe order and avoids the useless work of
-  attempting probes of devices that will not probe successfully
-  (because their suppliers aren't present or haven't probed yet).
-
-  For example, in a commonly available mobile SoC, registering just
-  one consumer device's driver at an initcall level earlier than the
-  supplier device's driver causes 11 failed probe attempts before the
-  consumer device probes successfully. This was with a kernel with all
-  the drivers statically compiled in. This problem gets a lot worse if
-  all the drivers are loaded as modules without direct symbol
-  dependencies.
-
-- Supplier devices like clock providers, interconnect providers, etc
-  need to keep the resources they provide active and at a particular
-  state(s) during boot up even if their current set of consumers don't
-  request the resource to be active. This is because the rest of the
-  consumers might not have probed yet and turning off the resource
-  before all the consumers have probed could lead to a hang or
-  undesired user experience.
-
-  Some frameworks (Eg: regulator) handle this today by turning off
-  "unused" resources at late_initcall_sync and hoping all the devices
-  have probed by then. This is not a valid assumption for systems with
-  loadable modules. Other frameworks (Eg: clock) just don't handle
-  this due to the lack of a clear signal for when they can turn off
-  resources. This leads to downstream hacks to handle cases like this
-  that can easily be solved in the upstream kernel.
-
-  By linking devices before they are probed, we give suppliers a clear
-  count of the number of dependent consumers. Once all of the
-  consumers are active, the suppliers can turn off the unused
-  resources without making assumptions about the number of consumers.
-
-By default we just add device-links to track "driver presence" (probe
-succeeded) of the supplier device. If any other functionality provided
-by device-links are needed, it is left to the consumer/supplier
-devices to change the link when they probe.
-
-v1 -> v2:
-- Drop patch to speed up of_find_device_by_node()
-- Drop depends-on property and use existing bindings
-
-v2 -> v3:
-- Refactor the code to have driver core initiate the linking of devs
-- Have driver core link consumers to supplier before it's probed
-- Add support for drivers to edit the device links before probing
-
-v3 -> v4:
-- Tested edit_links() on system with cyclic dependency. Works.
-- Added some checks to make sure device link isn't attempted from
-  parent device node to child device node.
-- Added way to pause/resume sync_state callbacks across
-  of_platform_populate().
-- Recursively parse DT node to create device links from parent to
-  suppliers of parent and all child nodes.
-
-v4 -> v5:
-- Fixed copy-pasta bugs with linked list handling
-- Walk up the phandle reference till I find an actual device (needed
-  for regulators to work)
-- Added support for linking devices from regulator DT bindings
-- Tested the whole series again to make sure cyclic dependencies are
-  broken with edit_links() and regulator links are created properly.
-
-v5 -> v6:
-- Split, squashed and reordered some of the patches.
-- Refactored the device linking code to follow the same code pattern for
-  any property.
-
-v6 -> v7:
-- No functional changes.
-- Renamed i to index
-- Added comment to clarify not having to check property name for every
-  index
-- Added "matched" variable to clarify code. No functional change.
-- Added comments to include/linux/device.h for add_links()
-
-v7 -> v8:
-- Rebased on top of linux-next to handle device link changes in [1]
-
-v8 -> v9:
-- Fixed kbuild test bot reported errors (docs and const)
-
-[1] - https://lore.kernel.org/lkml/2305283.AStDPdUUnE@kreacher/
-
--Saravana
-
-
-Saravana Kannan (7):
-  driver core: Add support for linking devices during device addition
-  driver core: Add edit_links() callback for drivers
-  of/platform: Add functional dependency link from DT bindings
-  driver core: Add sync_state driver/bus callback
-  of/platform: Pause/resume sync state during init and
-    of_platform_populate()
-  of/platform: Create device links for all child-supplier depencencies
-  of/platform: Don't create device links for default busses
-
- .../admin-guide/kernel-parameters.txt         |   5 +
- drivers/base/core.c                           | 168 ++++++++++++++++
- drivers/base/dd.c                             |  29 +++
- drivers/of/platform.c                         | 189 ++++++++++++++++++
- include/linux/device.h                        |  60 ++++++
- 5 files changed, 451 insertions(+)
-
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index a20ad398d260..1c37f17f7203 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -131,4 +131,13 @@ static inline int ima_inode_removexattr(struct dentry *dentry,
+ 	return 0;
+ }
+ #endif /* CONFIG_IMA_APPRAISE */
++
++#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
++extern bool ima_appraise_signature(enum kernel_read_file_id func);
++#else
++static inline bool ima_appraise_signature(enum kernel_read_file_id func)
++{
++	return false;
++}
++#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
+ #endif /* _LINUX_IMA_H */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index dd06f1070d66..13c9960a5860 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -228,9 +228,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 			goto out;
+ 		}
+ 
+-		ret = security_locked_down(LOCKDOWN_KEXEC);
+-		if (ret)
++		ret = 0;
++
++		/* If IMA is guaranteed to appraise a signature on the kexec
++		 * image, permit it even if the kernel is otherwise locked
++		 * down.
++		 */
++		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
++		    security_locked_down(LOCKDOWN_KEXEC)) {
++			ret = -EPERM;
+ 			goto out;
++		}
+ 
+ 		break;
+ 
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 011b91c79351..64dcb11cf444 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -113,6 +113,8 @@ struct ima_kexec_hdr {
+ 	u64 count;
+ };
+ 
++extern const int read_idmap[];
++
+ #ifdef CONFIG_HAVE_IMA_KEXEC
+ void ima_load_kexec_buffer(void);
+ #else
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 584019728660..b9f57503af2c 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -502,7 +502,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
+ 	return 0;
+ }
+ 
+-static const int read_idmap[READING_MAX_ID] = {
++const int read_idmap[READING_MAX_ID] = {
+ 	[READING_FIRMWARE] = FIRMWARE_CHECK,
+ 	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
+ 	[READING_MODULE] = MODULE_CHECK,
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 6df7f641ff66..827f1e33fe86 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -1456,3 +1456,53 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 	return 0;
+ }
+ #endif	/* CONFIG_IMA_READ_POLICY */
++
++#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
++/*
++ * ima_appraise_signature: whether IMA will appraise a given function using
++ * an IMA digital signature. This is restricted to cases where the kernel
++ * has a set of built-in trusted keys in order to avoid an attacker simply
++ * loading additional keys.
++ */
++bool ima_appraise_signature(enum kernel_read_file_id id)
++{
++	struct ima_rule_entry *entry;
++	bool found = false;
++	enum ima_hooks func;
++
++	if (id >= READING_MAX_ID)
++		return false;
++
++	func = read_idmap[id] ?: FILE_CHECK;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(entry, ima_rules, list) {
++		if (entry->action != APPRAISE)
++			continue;
++
++		/*
++		 * A generic entry will match, but otherwise require that it
++		 * match the func we're looking for
++		 */
++		if (entry->func && entry->func != func)
++			continue;
++
++		/*
++		 * We require this to be a digital signature, not a raw IMA
++		 * hash.
++		 */
++		if (entry->flags & IMA_DIGSIG_REQUIRED)
++			found = true;
++
++		/*
++		 * We've found a rule that matches, so break now even if it
++		 * didn't require a digital signature - a later rule that does
++		 * won't override it, so would be a false positive.
++		 */
++		break;
++	}
++
++	rcu_read_unlock();
++	return found;
++}
++#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
 -- 
-2.22.0.709.g102302147b-goog
+2.22.0.770.g0f2c4a37fd-goog
 
