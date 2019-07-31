@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DFAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24284C32751
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E5B20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDEFD20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 17:31:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWlCOg5H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sspsKgwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730679AbfGaRbX (ORCPT
+        id S1730703AbfGaRb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 13:31:23 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38195 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730657AbfGaRbW (ORCPT
+        Wed, 31 Jul 2019 13:31:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43366 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730657AbfGaRb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 13:31:22 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f5so23567224pgu.5;
-        Wed, 31 Jul 2019 10:31:22 -0700 (PDT)
+        Wed, 31 Jul 2019 13:31:26 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r22so4780751pgk.10;
+        Wed, 31 Jul 2019 10:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3Rq4ixRwzTusnM+r4uVBay3rBSCCdr5LrRUS010+F0U=;
-        b=eWlCOg5Hdz1qSpJeRYwg3iuMlVPg4PoJxR7JZMVAfCHl+eNr9cdTsjj45SIIHZ/ef8
-         dKNctXKA053xAmYU9E5XFmzcAa7ZFH4wm+ySkqd/9me3XuPqgi2ZQNKnWqL+ij7ujx9C
-         5ntXpNwNMGgIIajoYi4fr0G1JCa9atthyNkADM5ikWp5Xi0vs0VmnKOUaaRw4A8w1IN7
-         OezZGKhalV5dBdH37KDLreWQGmx69LSVvV+TNjDBcYEMUNy2B+EoSQX18dvCHMDa20kP
-         8jRTp+7y351Sbc8YrUhX7EnIX2jJ1r+54qV7t71KVhqDKYzibA/4wG32OyqmokJ5zFGW
-         WxRA==
+        bh=KhB9UAG5LMtMLqhbRAHpprtUUF9g0FbRQZwyKChRHE0=;
+        b=sspsKgwFal2uExFBhgXxBFvRjoB+WDPkx1FG0rSvsEdDK5Rliw9/UzF3m7o0H3VMCS
+         1YfcmrET8yBiWOcIYA+7wHdIuh5LIS0rA596H218tEhOh6hBjbwoyEpkFN1Eb2p0FmgB
+         PpOs9Jh3oKyHaXRFLkZV/MuhXxoZOeY/IyOjwWAwp+m5GQ0UkODWzcl8RWyHblgPKKow
+         LrPV4h53cx5pbgb5a4LGMnj+HK9ncWYG+egtngV1FZGf2gS+S4nXixdZoZIPh+nsXBjp
+         +3z9BarI7J8HtMvAldlUvEhpyUdlMH25e1JI4JFQRmaf2vfQpQhhlvU0MO0BSQ+LgORI
+         UaYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3Rq4ixRwzTusnM+r4uVBay3rBSCCdr5LrRUS010+F0U=;
-        b=XTN34cieG1t1W/6AwI5L0OANcjmHQ+QRNHIifFOwT0pCmqhZBxIl++WzH/ls9Sq7v1
-         hFYboanbAppYbyW+5VZQXszIB/65sUbeDYevu4Mnu+HV/4yMxv4qpFGPudG9LbKmyjwz
-         2wN9Y4iYvXlprlzyPGKgox9eC9I8T80yKxSSH4j0qN4UQ/flh66P3qsx2GJa1VDEvuM5
-         GQDTufJJIPl71zJWoVtBmpbuq0xAN99NVFWX4pYHU7lZgdaHdfpyI9CX9tLkJn/3NI/L
-         dYdmXc98BPRfa3urM+vBKhlVBxB0KvOexUZcr7I40VoI940xDpz/SddvvBMo9KZ7CpFu
-         htmA==
-X-Gm-Message-State: APjAAAWtMKi0h3tk0qKaY8m0tqXM6DvwZ7AQSOod4XA9H9R+qqp1fRCz
-        Alxzzx0NMfZ5eo6MzODTtLybi/nXQyo=
-X-Google-Smtp-Source: APXvYqy8Cbiv2LiwMeZqjKVYKvkZ6s2SqIcxIx7B0qEOeCS0WBYVcEyqvLcLcf2xU1m7ISbqnXm5FA==
-X-Received: by 2002:a63:724f:: with SMTP id c15mr117597354pgn.257.1564594281510;
-        Wed, 31 Jul 2019 10:31:21 -0700 (PDT)
+        bh=KhB9UAG5LMtMLqhbRAHpprtUUF9g0FbRQZwyKChRHE0=;
+        b=QWV+H1B+LqbuF8Pz/B5dhGmKQfLzkdQKIz/iLSa1vEAobTKqCMOXig/XwYBqZp5req
+         sAmTrd5Nw8OoCv0AC/RRj2bhSqh7HLBvw2p/OkfJ9kO/oH3B59WZ1RBUzQd+JIn1sT/L
+         aHpBU60JiVlw+pRnhS9lJWmXvK03fJL3GvGMLrmze3mZWuNAnf1UDZIIuzEf+ywhti14
+         VE0YbDHRRhAILc2WyPiIpiYWNF8Kn7DoIsAe6XbcqsrU4/z7vDZUlWrNnx95ZMiKSXz7
+         kzfjLY8ThUqyNiYzW3ia5+g8rslShbprkh95wbhavGwMUWrsD8eK9re+h0+pnnE2MsM/
+         EZ3w==
+X-Gm-Message-State: APjAAAVcpRs/wh33W2kj/pWnobwZ6gnJ3gtcoMycnTjSRlQEA09EAOL2
+        mG/m1/ASxye/+DTQ8qH+soPrU8V/0j0=
+X-Google-Smtp-Source: APXvYqz7+8ET85JyzRDp1tTVzbWdhqfjjg6PGO7ExrrB3Zx+ix2xk7E12eGgg2zK8N3R9naosOfAKg==
+X-Received: by 2002:a62:770e:: with SMTP id s14mr46992799pfc.150.1564594285671;
+        Wed, 31 Jul 2019 10:31:25 -0700 (PDT)
 Received: from localhost.localdomain ([2607:fb90:4ad:5a0b:2aff:6e0f:8973:5a26])
-        by smtp.gmail.com with ESMTPSA id bo20sm2089617pjb.23.2019.07.31.10.31.19
+        by smtp.gmail.com with ESMTPSA id bo20sm2089617pjb.23.2019.07.31.10.31.23
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 10:31:20 -0700 (PDT)
+        Wed, 31 Jul 2019 10:31:25 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-serial@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -67,9 +67,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 07/23] tty: serial: fsl_lpuart: Fix issue in software flow control
-Date:   Wed, 31 Jul 2019 10:30:29 -0700
-Message-Id: <20190731173045.11718-8-andrew.smirnov@gmail.com>
+Subject: [PATCH v2 09/23] tty: serial: fsl_lpuart: Drop no-op bit opearation
+Date:   Wed, 31 Jul 2019 10:30:31 -0700
+Message-Id: <20190731173045.11718-10-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190731173045.11718-1-andrew.smirnov@gmail.com>
 References: <20190731173045.11718-1-andrew.smirnov@gmail.com>
@@ -80,23 +80,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although I haven't observed this bug in practice, it seems that the
-code for handling x_char of LPUART is pretty much identical to that of
-i.MX. So the fix found in commit 7e2fb5aa8d81 ("serial: imx: Fix issue
-in software flow control"):
-
-    serial: imx: Fix issue in software flow control
-
-    After send out x_char in UART driver, x_char needs to be cleared
-    by UART driver itself, otherwise data in TXFIFO can no longer be
-    sent out.
-    Also tx counter needs to be increased to keep track of correct
-    number of transmitted data.
-
-    Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-should apply here as well.
+The check for termios->c_cflag & CRTSCTS ensure that if we reach else
+branch, CRTSCTS in termios->c_cflag is already going to be
+cleard. Doing so explicitly there is not necessary. Drop it.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Stefan Agner <stefan@agner.ch>
@@ -109,22 +95,28 @@ Cc: linux-imx@nxp.com
 Cc: linux-serial@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/tty/serial/fsl_lpuart.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tty/serial/fsl_lpuart.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index c35f81df0cff..8657addbfd1c 100644
+index ed6d3f836c93..b3cc44548b34 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -782,6 +782,8 @@ static void lpuart_txint(struct lpuart_port *sport)
- 			lpuart32_write(&sport->port, sport->port.x_char, UARTDATA);
- 		else
- 			writeb(sport->port.x_char, sport->port.membase + UARTDR);
-+		sport->port.icount.tx++;
-+		sport->port.x_char = 0;
- 		goto out;
- 	}
+@@ -1650,12 +1650,10 @@ lpuart_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	if (sport->port.rs485.flags & SER_RS485_ENABLED)
+ 		termios->c_cflag &= ~CRTSCTS;
  
+-	if (termios->c_cflag & CRTSCTS) {
++	if (termios->c_cflag & CRTSCTS)
+ 		modem |= (UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
+-	} else {
+-		termios->c_cflag &= ~CRTSCTS;
++	else
+ 		modem &= ~(UARTMODEM_RXRTSE | UARTMODEM_TXCTSE);
+-	}
+ 
+ 	if (termios->c_cflag & CSTOPB)
+ 		termios->c_cflag &= ~CSTOPB;
 -- 
 2.21.0
 
