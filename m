@@ -2,157 +2,109 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D2FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80659C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE4F21726
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="RGkTVsKn"
+	by mail.kernel.org (Postfix) with ESMTP id 53A1E206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732414AbfHAVpF (ORCPT
+        id S1732422AbfHAVrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:45:05 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34811 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730924AbfHAVpF (ORCPT
+        Thu, 1 Aug 2019 17:47:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37971 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfHAVrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:45:05 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n5so76021338otk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 14:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=frWZM6vtCtibjV524zgoV1SgXB5n8GDLBSplraM3LKI=;
-        b=RGkTVsKn0HppoD90ZbwIiUcLoDfWsTd76bBY0/P9mDIX9xK6EnSGnO/dJTWcG4o9as
-         acP2cijwAMkWMJbQX/UxMPkSCpuhjBWGDDcLGtNYLvoUhkko06gaUK+2XfIEIJPIVXz6
-         tLHMpS37vngF3TbQGvssxf9av0EOuv/hod51Onx6XHIP8Vl5DwxEvHkizemmMBKsNxps
-         ir08JCNcavYVw2TML9XbI3J9Qi8qlia+P9j+76hDuALdvsrV/gpbhK8VfacGXEWEtYbF
-         tCOPyexZWurTEQ/HJZlzgmTLpENpElSeC4KyyQAi92Yj9a76QHrddBBqyK4yqiyR9BN0
-         6UiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=frWZM6vtCtibjV524zgoV1SgXB5n8GDLBSplraM3LKI=;
-        b=dEfB9KEpzRZ/3E2ha9AS9KeimpMDcdQwI7ichBZpITkB+EGz5VY3jUf6fRdVBK4clE
-         F280kkCLN+ensaYzV7rykfEav4jgZj8/kgDLCDM0j4BLhYe0JPGZfBQdPVstvoGd9r3T
-         hXkIGnBBJ+Hlf90BoxQfJa2LRk8WG8Pef9zDek8StHUBb+W1tp/5gnm9gbDtL6eEPg1C
-         Bh2yQNvyzXzngHVFS1hfUiXjfZ/nLf8JJdhm/e+8bc26bE8xMwNN41g/Cxk1CTZyMjum
-         /lM1W7+C/TxjosXNSWeuCws8ub5LXtlr3a5RtfOIP7rEkFa08dUGQaQ/XF0nqZNQlhY5
-         I7NQ==
-X-Gm-Message-State: APjAAAXXBkceiHuKpUBaEASVeZi2OQhmD0/gOzw1XuJ7+zFiuLsNpLQY
-        eGc3waildW6XUVLRdILqY1WQHTJogKUJwfKD844=
-X-Google-Smtp-Source: APXvYqwxulDzOjo7csspmFzcCOVy2RpKWcNzGL4/B4HegAvcoW/UJJlLEaSQ6wcSvJHTfNWIi6Rz/E8A3pXZScqtm68=
-X-Received: by 2002:a9d:5f02:: with SMTP id f2mr12471058oti.148.1564695904071;
- Thu, 01 Aug 2019 14:45:04 -0700 (PDT)
+        Thu, 1 Aug 2019 17:47:35 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1htIux-0002yx-Bj; Thu, 01 Aug 2019 23:47:23 +0200
+Date:   Thu, 1 Aug 2019 23:47:22 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+cc:     Oleg Nesterov <oleg@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>, kvm@vger.kernel.org,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [patch 2/5] x86/kvm: Handle task_work on VMENTER/EXIT
+In-Reply-To: <alpine.DEB.2.21.1908012343530.1789@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1908012345000.1789@nanos.tec.linutronix.de>
+References: <20190801143250.370326052@linutronix.de> <20190801143657.887648487@linutronix.de> <20190801162451.GE31538@redhat.com> <alpine.DEB.2.21.1908012025100.1789@nanos.tec.linutronix.de> <20190801213550.GE6783@linux.intel.com>
+ <alpine.DEB.2.21.1908012343530.1789@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher>
- <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com>
- <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com>
- <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com>
- <5d42281c.1c69fb81.bcda1.71f5@mx.google.com> <CANA+-vCoCuMtSKCfnav9NSwrzX7of9iLbppNX+pcymBp19kgQQ@mail.gmail.com>
- <5d434a23.1c69fb81.c4201.c65b@mx.google.com>
-In-Reply-To: <5d434a23.1c69fb81.c4201.c65b@mx.google.com>
-From:   Tri Vo <trong@android.com>
-Date:   Thu, 1 Aug 2019 14:44:52 -0700
-Message-ID: <CANA+-vCt3QJDykzbZWBDZyaiaMiz_SOJ+Htv7+G0czjL07MjmQ@mail.gmail.com>
-Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 1:23 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Tri Vo (2019-08-01 12:50:25)
-> > On Wed, Jul 31, 2019 at 4:45 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Rafael J. Wysocki (2019-07-31 16:10:38)
-> > > > On Thu, Aug 1, 2019 at 12:59 AM Tri Vo <trong@android.com> wrote:
+On Thu, 1 Aug 2019, Thomas Gleixner wrote:
+
+> On Thu, 1 Aug 2019, Sean Christopherson wrote:
+> > On Thu, Aug 01, 2019 at 08:34:53PM +0200, Thomas Gleixner wrote:
+> > > On Thu, 1 Aug 2019, Oleg Nesterov wrote:
+> > > > On 08/01, Thomas Gleixner wrote:
 > > > > >
-> > > > > >
-> > > > > > So why wouldn't something like this suffice:
-> > > > > >
-> > > > > > dev = device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
-> > > > > >                                 wakeup_source_groups, "wakeup:%s", ws->name);
-> > > > > >
-> > > > > > ?
-> > > > >
-> > > > > ws->name is inherited from the device name. IIUC device names are not
-> > > > > guaranteed to be unique. So if different devices with the same name
-> > > > > register wakeup sources, there is an error.
-> > > >
-> > > > OK
-> > > >
-> > > > So I guess the names are retained for backwards compatibility with
-> > > > existing user space that may be using them?
-> > > >
-> > > > That's kind of fair enough, but having two different identification
-> > > > schemes for wakeup sources will end up confusing.
-> > >
-> > > I understand your concern about the IDA now. Thanks for clarifying.
-> > >
-> > > How about we name the devices 'wakeupN' with the IDA when they're
-> > > registered with a non-NULL device pointer and then name them whatever
-> > > the name argument is when the device pointer is NULL. If we have this,
-> > > we should be able to drop the name attribute in sysfs and figure out the
-> > > name either by looking at the device name in /sys/class/wakeup/ if it
-> > > isn't 'wakeupN', or follow the symlink to the device in /sys/devices/
-> > > and look at the parent device name there.
-> >
-> > This makes it difficult for userspace to query the name a wakeup
-> > source, as it now has to first figure out if a wakeup source is
-> > associated with a device or not. The criteria for that is also
-> > awkward, userspase has to check if directory path contains "wakeupN",
-> > then it's a virtual wakeup source.
->
-> I think you mean if it doesn't match wakeupN then it's a virtual wakeup
-> source?
+> > > > > @@ -8172,6 +8174,10 @@ static int vcpu_run(struct kvm_vcpu *vcp
+> > > > >  			++vcpu->stat.signal_exits;
+> > > > >  			break;
+> > > > >  		}
+> > > > > +
+> > > > > +		if (notify_resume_pending())
+> > > > > +			tracehook_handle_notify_resume();
+> > > > 
+> > > > shouldn't you drop kvm->srcu before tracehook_handle_notify_resume() ?
+> > > > 
+> > > > I don't understand this code at all, but vcpu_run() does this even before
+> > > > cond_resched().
+> > > 
+> > > Yeah, I noticed that it's dropped around cond_resched().
+> > > 
+> > > My understanding is that for voluntary giving up the CPU via cond_resched()
+> > > it needs to be dropped.
+> > > 
+> > > For involuntary preemption (CONFIG_PREEMPT=y) it's not required as the
+> > > whole code section after preempt_enable() is fully preemptible.
+> > > 
+> > > Now the 1Mio$ question is whether any of the notify functions invokes
+> > > cond_resched() and whether that really matters. Paolo?
+> > 
+> > cond_resched() is called via tracehook_notify_resume()->task_work_run(),
+> > and "kernel code can only call cond_resched() in places where it ...
+> > cannot hold references to any RCU-protected data structures" according to
+> > https://lwn.net/Articles/603252/.
+> 
+> Right you are.
 
-Yes
->
-> >
-> > IMO it's cleaner to consistently have /sys/class/wakeup/wakeupN/name
-> > for every wakeup source.
->
-> I don't find it awkward or difficult. Just know what the name of the
-> /sys/class/wakeup/ path is and then extract the name from there if it
-> doesn't match wakeupN, otherwise read the 'device' symlink and run it
-> through basename.
+Bah. Hit send too fast.
 
-The concern was that having both "id" and "name" around might be
-confusing. I don't think that making the presence of "name"
-conditional helps here. And we have to maintain additional logic in
-both kernel and userspace to support this.
+Right you are about cond_resched() being called, but for SRCU this does not
+matter unless there is some way to do a synchronize operation on that SRCU
+entity. It might have some other performance side effect though.
 
-Also, say, userspace grabs a wakelock named "wakeup0". In the current
-patch, this results in a name collision and an error. Even assuming
-that userspace doesn't have ill intent, it still needs to be aware of
-"wakeupN" naming pattern to avoid this error condition.
+Thanks,
 
-All wakeup sources in the /sys/class/wakeup/ are in the same namespace
-regardless of where they originate from, i.e. we have to either (1)
-inspect the name of a wakeup source and make sure it's unique before
-using it as a directory name OR (2) generate the directory name on
-behalf of whomever is registering a wakeup source, which I think is a
-much simpler solution.
+	tglx
+
+
