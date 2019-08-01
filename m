@@ -2,205 +2,130 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F593C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F38C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA8C2080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD792080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p9wFGDVu"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="LejEUzoE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731630AbfHAOrd (ORCPT
+        id S1732253AbfHAOrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:47:33 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55186 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfHAOrd (ORCPT
+        Thu, 1 Aug 2019 10:47:40 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46818 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfHAOrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:47:33 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p74so64914314wme.4
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:47:30 -0700 (PDT)
+        Thu, 1 Aug 2019 10:47:40 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r4so52131217qkm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:47:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WaDcN9WC4e6YZt11roMS5sP9Gt2rMT2E9rLc1twFKIo=;
-        b=p9wFGDVuupIvGFQkDJES1JlPMge8CBH+WBw4SABtqf3a7uxFiEgzcSqDdUpdLcNVqh
-         8AOU46zQ8xDDPLKiSrRrDgEIwA5L3J7fuWZfJZLDzII/uCaGNsJcvov/yQdKRrYr1RI7
-         d9Lw3TSZVUeEIsA5P2MUrcsjXJAw4rqVTTFtY0YcEe71X2/eQh8G8Xj832axtJAjCfX0
-         bM8N81iWXe4J2s4eUlhVSP5MpPd1gHvmVu1Pvubl7ZrnjFC/lInTMyZmz03aGtIkTCYK
-         pjG+y16AfMwOBg0gGpNxvZOgzEp6JHzTPUKfNlAY5ZD4+PYSeST2xx9ViCwD2K6qie+k
-         fmow==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=230s3ChFPRc4aRDJM4ggG97b31ayoZtf71ejiTiSkjo=;
+        b=LejEUzoEVFEhSDCDH1H8Ri6NTYd+EQ93Bl/JO+hFoztUU8LZE/3ThN3ckZztuH/w1v
+         9ZBKE0O7YssDOoH1hgL0JQ0pwQ4Tviu5kZ5YskORAs0iZ0+ltBuEKKnhLwhVfoBLyPfz
+         d3Etk+ubEBLubY4IdfrS7mP66VUO9gIN8dQBHoQiV1U2dwuvTnBOWlcfbBMbBry5Emjx
+         BZLpm9BLNXjMfjYY2AXpHp2FMBW9IHG9JC/MUR6Ray/aqbZgZs+McxqDbeFLvx96PlRU
+         4vTWs2/AXl3PmmsA6wFbYZsVzZ/sHRBXrzLSDZRCzYvlG5U6RnMQCkeKXlij42mY/v7e
+         ORuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WaDcN9WC4e6YZt11roMS5sP9Gt2rMT2E9rLc1twFKIo=;
-        b=VoCFNfdl1xOGPAJcHWhpBpQGaw07iWhH4nAUrUCk+/rctoCux1im43wx+Ok/dlLkAW
-         j2H17Pyuu1jXIFahy0dHWFConjloC1AFRo/+a9JNVELlN4A6oJqfuWOL9zLCnokXV84n
-         AHI1PSsVgKI86yuS+2qSW+jF341wDva640pRMrmQVz9aKdprhyrkSJqC3ax8G0X3wACq
-         REhysasIRUMv8mpoT3aHNSZlq2t+Ku/4Zw05X8OIBg/NdOLZ1/rLT5+Ehg9XO+mg/CJi
-         JYKUe4lkG5NVl/ozK0zl/2zEb1A9YIsK2PrDBAS91xrRcTSo2wYwJuan+0YyF7GUlf4X
-         SDgQ==
-X-Gm-Message-State: APjAAAXIstvQ782kjp63BcxpwO5u70GVfYaq1fBUNMNqKYb5jaCFQMJA
-        HZhr/WmG+pU1Cq5MzbP69/zPFPqvhy9fZzYAlfI=
-X-Google-Smtp-Source: APXvYqwaqfkmr3nMyGcwwM5DehseSWfarkwjr47J2NS8nVy8YDVIdf3UQrexJUabYxCuaofvNUgfs+DVMLz30kRMRoM=
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr114333183wmc.25.1564670850160;
- Thu, 01 Aug 2019 07:47:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <1564563107-23736-1-git-send-email-hongxing.zhu@nxp.com>
-In-Reply-To: <1564563107-23736-1-git-send-email-hongxing.zhu@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Thu, 1 Aug 2019 17:47:17 +0300
-Message-ID: <CAEnQRZCz=fu7-2PmH+RGgnRgzeDCeR+A+wPbhjq2wQ2CZ3oQYg@mail.gmail.com>
-Subject: Re: [PATCH v3] mailbox: imx: add support for imx v1 mu
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     jassisinghbrar@gmail.com, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: multipart/mixed; boundary="000000000000370253058f0f52f8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=230s3ChFPRc4aRDJM4ggG97b31ayoZtf71ejiTiSkjo=;
+        b=M3Ag7Y8Fqkfd+8NzExCvNare0SrGT8gzavhCGW3lJ0QGBlR/IIk8/8BR+ouIncXcsU
+         1mOlbpRJsZUo8s9KiTTj76ACXQ/+GjHGc/AimaiUyRzLJw8nnAJ8r4g942/C+TydhNkm
+         LqwQRtbWliSGo5Rvi3JEn/ptWI4ayReH07AlD83eI4dNGBiawWCtvWh+MdNZ4CSvpuUy
+         kFcb6NSdgHGcK+CEs5HxLDJcTyW9gho5P7zMrQhT5yay71pUtyxC60bFofjT82eZllXu
+         1nCj5iQvH+kn65mENvR02IG8WSahWEBj9vd9dVJ1LiDR22HUc273lnCDXmcp2qiWmTvf
+         0Tkg==
+X-Gm-Message-State: APjAAAWUWJwn0CZB5TRfxeRD3Jgvk2ZuDDQPkLwau1ysv/2T8vZle9LT
+        n9crlDKdsE5amKh3j2BFGd7i8A==
+X-Google-Smtp-Source: APXvYqwHfUt80l0BXUJpBGTFwk3Bd4gQ46/mlKzXrLecWYywA/07oGtfuHM8Qz7nWtC7/qhxbBwNVA==
+X-Received: by 2002:ae9:e30d:: with SMTP id v13mr83907407qkf.148.1564670859058;
+        Thu, 01 Aug 2019 07:47:39 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id s11sm29605818qkm.51.2019.08.01.07.47.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 07:47:38 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     catalin.marinas@arm.com, will@kernel.org
+Cc:     andreyknvl@google.com, aryabinin@virtuozzo.com, glider@google.com,
+        dvyukov@google.com, linux-arm-kernel@lists.infradead.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] arm64/mm: fix variable 'tag' set but not used
+Date:   Thu,  1 Aug 2019 10:47:05 -0400
+Message-Id: <1564670825-4050-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000370253058f0f52f8
-Content-Type: text/plain; charset="UTF-8"
+When CONFIG_KASAN_SW_TAGS=n, set_tag() is compiled away. GCC throws a
+warning,
 
-Hi Richard,
+mm/kasan/common.c: In function '__kasan_kmalloc':
+mm/kasan/common.c:464:5: warning: variable 'tag' set but not used
+[-Wunused-but-set-variable]
+  u8 tag = 0xff;
+     ^~~
 
-Thanks for the patch. Please always add linux-imx@nxp.com mailing
-list for imx related patches. I missed it.
+Fix it by making __tag_set() a static inline function the same as
+arch_kasan_set_tag() in mm/kasan/kasan.h for consistency because there
+is a macro in arch/arm64/include/asm/kasan.h,
 
-Few comments inline.
+ #define arch_kasan_set_tag(addr, tag) __tag_set(addr, tag)
 
-Please also update in a separate patch attached to this series
-the devictree bindings doc Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-by adding description for mx7ulp-mu
+However, when CONFIG_DEBUG_VIRTUAL=n and CONFIG_SPARSEMEM_VMEMMAP=y,
+page_to_virt() will call __tag_set() with incorrect type of a
+parameter, so fix that as well. Also, still let page_to_virt() return
+"void *" instead of "const void *", so will not need to add a similar
+cast in lowmem_page_address().
 
-<snip>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
-> There is a version1.0 MU on i.MX7ULP platform.
+v2: Fix compilation warnings of CONFIG_DEBUG_VIRTUAL=n spotted by Will.
 
-space between version and 1.0
+ arch/arm64/include/asm/memory.h | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-> One new version ID register is added, and it's offset is 0.
-> TRn registers are defined at the offset 0x20 ~ 0x2C.
-> RRn registers are defined at the offset 0x40 ~ 0x4C.
-> SR/CR registers are defined at 0x60/0x64.
-> Extend this driver to support it.
+diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+index b7ba75809751..fb04f10a78ab 100644
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -210,7 +210,11 @@ static inline unsigned long kaslr_offset(void)
+ #define __tag_reset(addr)	untagged_addr(addr)
+ #define __tag_get(addr)		(__u8)((u64)(addr) >> 56)
+ #else
+-#define __tag_set(addr, tag)	(addr)
++static inline const void *__tag_set(const void *addr, u8 tag)
++{
++	return addr;
++}
++
+ #define __tag_reset(addr)	(addr)
+ #define __tag_get(addr)		0
+ #endif
+@@ -301,8 +305,8 @@ static inline void *phys_to_virt(phys_addr_t x)
+ #define page_to_virt(page)	({					\
+ 	unsigned long __addr =						\
+ 		((__page_to_voff(page)) | PAGE_OFFSET);			\
+-	unsigned long __addr_tag =					\
+-		 __tag_set(__addr, page_kasan_tag(page));		\
++	const void *__addr_tag =					\
++		__tag_set((void *)__addr, page_kasan_tag(page));	\
+ 	((void *)__addr_tag);						\
+ })
+ 
+-- 
+1.8.3.1
 
-Do you have a little bit of history about MU versioning? So there was:
-
-* version 0.5 on i.MX6-es
-* version 1.0 on i.MX7ULP
-
-Next, is this 1.0 compatbile with i.MX8 right?
-
-Also, can you please rebase your patch on my 2 bugfixes attached?
-
-thanks,
-Daniel.
-
---000000000000370253058f0f52f8
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0002-mailbox-imx-Clear-the-right-interrupts-at-shutdown.patch"
-Content-Disposition: attachment; 
-	filename="0002-mailbox-imx-Clear-the-right-interrupts-at-shutdown.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jysslp290>
-X-Attachment-Id: f_jysslp290
-
-RnJvbSBmOWYzODJiOGNhYjJjZjg4YWJmN2ZiMjZiODg1YWM5NmUwY2JhZmY0IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+
-CkRhdGU6IFRodSwgMSBBdWcgMjAxOSAxNzo0MToyNSArMDMwMApTdWJqZWN0OiBbUEFUQ0ggMi8y
-XSBtYWlsYm94OiBpbXg6IENsZWFyIHRoZSByaWdodCBpbnRlcnJ1cHRzIGF0IHNodXRkb3duCgpN
-YWtlIHN1cmUgdG8gb25seSBjbGVhciBlbmFibGVkIGludGVycnVwdHMga2VlcGluZyBjb3VudApv
-ZiB0aGUgY29ubmVjdGlvbiB0eXBlLgoKU3VnZ2VzdGVkLWJ5OiBPbGVrc2lqIFJlbXBlbCA8by5y
-ZW1wZWxAcGVuZ3V0cm9uaXguZGU+ClNpZ25lZC1vZmYtYnk6IERhbmllbCBCYWx1dGEgPGRhbmll
-bC5iYWx1dGFAbnhwLmNvbT4KLS0tCiBkcml2ZXJzL21haWxib3gvaW14LW1haWxib3guYyB8IDE1
-ICsrKysrKysrKysrKystLQogMSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDIgZGVs
-ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tYWlsYm94L2lteC1tYWlsYm94LmMgYi9k
-cml2ZXJzL21haWxib3gvaW14LW1haWxib3guYwppbmRleCA5NTdjMTBjNGU2NzQuLjNlY2ViZGM3
-ZjkxMyAxMDA2NDQKLS0tIGEvZHJpdmVycy9tYWlsYm94L2lteC1tYWlsYm94LmMKKysrIGIvZHJp
-dmVycy9tYWlsYm94L2lteC1tYWlsYm94LmMKQEAgLTIxOSw4ICsyMTksMTkgQEAgc3RhdGljIHZv
-aWQgaW14X211X3NodXRkb3duKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pCiAJCXJldHVybjsKIAl9
-CiAKLQlpbXhfbXVfeGNyX3Jtdyhwcml2LCAwLCBJTVhfTVVfeENSX1RJRW4oY3AtPmlkeCkgfAot
-CQkgICAgICAgSU1YX01VX3hDUl9SSUVuKGNwLT5pZHgpIHwgSU1YX01VX3hDUl9HSUVuKGNwLT5p
-ZHgpKTsKKwlzd2l0Y2ggKGNwLT50eXBlKSB7CisJCWNhc2UgSU1YX01VX1RZUEVfVFg6CisJCWlt
-eF9tdV94Y3Jfcm13KHByaXYsIDAsIElNWF9NVV94Q1JfVElFbihjcC0+aWR4KSk7CisJCWJyZWFr
-OworCWNhc2UgSU1YX01VX1RZUEVfUlg6CisJCWlteF9tdV94Y3Jfcm13KHByaXYsIDAsIElNWF9N
-VV94Q1JfUklFbihjcC0+aWR4KSk7CisJCWJyZWFrOworCWNhc2UgSU1YX01VX1RZUEVfUlhEQjoK
-KwkJaW14X211X3hjcl9ybXcocHJpdiwgMCwgSU1YX01VX3hDUl9HSUVuKGNwLT5pZHgpKTsKKwkJ
-YnJlYWs7CisJZGVmYXVsdDoKKwkJYnJlYWs7CisJfQogCiAJZnJlZV9pcnEocHJpdi0+aXJxLCBj
-aGFuKTsKIH0KLS0gCjIuMTcuMQoK
---000000000000370253058f0f52f8
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-mailbox-imx-Fix-Tx-doorbell-shutdown-path.patch"
-Content-Disposition: attachment; 
-	filename="0001-mailbox-imx-Fix-Tx-doorbell-shutdown-path.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jysslp2r1>
-X-Attachment-Id: f_jysslp2r1
-
-RnJvbSA4Yzc2NzBjOTE5ODMzNmY1ZTgzZjgzMjJjYjk0YmE3NzZiNzU5MTI1IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+
-CkRhdGU6IFdlZCwgMzEgSnVsIDIwMTkgMjM6NDc6MjkgKzAzMDAKU3ViamVjdDogW1BBVENIIDEv
-Ml0gbWFpbGJveDogaW14OiBGaXggVHggZG9vcmJlbGwgc2h1dGRvd24gcGF0aAoKVHggZG9vcmJl
-bGwgaXMgaGFuZGxlZCBieSB0eGRiX3Rhc2tsZXQgYW5kIGRvZXNuJ3QKaGF2ZSBhbiBhc3NvY2lh
-dGVkIElSUS4KCkFueWhvdywgaW14X211X3NodXRkb3duIGlnbm9yZXMgdGhpcyBhbmQgdHJpZXMg
-dG8KZnJlZSBhbiBJUlEgdGhhdCB3YXNuJ3QgcmVxdWVzdGVkIGZvciBUeCBEQiByZXN1bHRpbmcK
-aW4gdGhlIGZvbGxvd2luZyB3YXJuaW5nOgoKWyAgICAxLjk2NzY0NF0gVHJ5aW5nIHRvIGZyZWUg
-YWxyZWFkeS1mcmVlIElSUSAyNgpbICAgIDEuOTcyMTA4XSBXQVJOSU5HOiBDUFU6IDIgUElEOiAx
-NTcgYXQga2VybmVsL2lycS9tYW5hZ2UuYzoxNzA4IF9fZnJlZV9pcnErMHhjMC8weDM1OApbICAg
-IDEuOTgwMDI0XSBNb2R1bGVzIGxpbmtlZCBpbjoKWyAgICAxLjk4MzA4OF0gQ1BVOiAyIFBJRDog
-MTU3IENvbW06IGt3b3JrZXIvMjoxIFRhaW50ZWQ6IEcKWyAgICAxLjk5MzUyNF0gSGFyZHdhcmUg
-bmFtZTogRnJlZXNjYWxlIGkuTVg4UVhQIE1FSyAoRFQpClsgICAgMS45OTg2NjhdIFdvcmtxdWV1
-ZTogZXZlbnRzIGRlZmVycmVkX3Byb2JlX3dvcmtfZnVuYwpbICAgIDIuMDAzODEyXSBwc3RhdGU6
-IDYwMDAwMDg1IChuWkN2IGRhSWYgLVBBTiAtVUFPKQpbICAgIDIuMDA4NjA3XSBwYyA6IF9fZnJl
-ZV9pcnErMHhjMC8weDM1OApbICAgIDIuMDEyMzY0XSBsciA6IF9fZnJlZV9pcnErMHhjMC8weDM1
-OApbICAgIDIuMDE2MTExXSBzcCA6IGZmZmYwMDAwMTE3OWI3ZTAKWyAgICAyLjAxOTQyMl0geDI5
-OiBmZmZmMDAwMDExNzliN2UwIHgyODogMDAwMDAwMDAwMDAwMDAxOApbICAgIDIuMDI0NzM2XSB4
-Mjc6IGZmZmYwMDAwMTEyMzMwMDAgeDI2OiAwMDAwMDAwMDAwMDAwMDA0ClsgICAgMi4wMzAwNTNd
-IHgyNTogMDAwMDAwMDAwMDAwMDAxYSB4MjQ6IGZmZmY4MDA4M2JlYzc0ZDQKWyAgICAyLjAzNTM2
-OV0geDIzOiAwMDAwMDAwMDAwMDAwMDAwIHgyMjogZmZmZjgwMDgzYmVjNzU4OApbICAgIDIuMDQw
-Njg2XSB4MjE6IGZmZmY4MDA4M2IxZmU4ZDggeDIwOiBmZmZmODAwODNiZWM3NDAwClsgICAgMi4w
-NDYwMDNdIHgxOTogMDAwMDAwMDAwMDAwMDAwMCB4MTg6IGZmZmZmZmZmZmZmZmZmZmYKWyAgICAy
-LjA1MTMyMF0geDE3OiAwMDAwMDAwMDAwMDAwMDAwIHgxNjogMDAwMDAwMDAwMDAwMDAwMApbICAg
-IDIuMDU2NjM3XSB4MTU6IGZmZmYwMDAwMTExMjk2YzggeDE0OiBmZmZmMDAwMDkxNzliNTE3Clsg
-ICAgMi4wNjE5NTNdIHgxMzogZmZmZjAwMDAxMTc5YjUyNSB4MTI6IGZmZmYwMDAwMTExNDIwMDAK
-WyAgICAyLjA2NzI3MF0geDExOiBmZmZmMDAwMDExMTI5ZjIwIHgxMDogZmZmZjAwMDAxMDVkYTk3
-MApbICAgIDIuMDcyNTg3XSB4OSA6IDAwMDAwMDAwZmZmZmZmZDAgeDggOiAwMDAwMDAwMDAwMDAw
-MTk0ClsgICAgMi4wNzc5MDNdIHg3IDogNjEyMDY1NjU3MjY2MjA2ZiB4NiA6IGZmZmYwMDAwMTEx
-ZTdiMDkKWyAgICAyLjA4MzIyMF0geDUgOiAwMDAwMDAwMDAwMDAwMDAzIHg0IDogMDAwMDAwMDAw
-MDAwMDAwMApbICAgIDIuMDg4NTM3XSB4MyA6IDAwMDAwMDAwMDAwMDAwMDAgeDIgOiAwMDAwMDAw
-MGZmZmZmZmZmClsgICAgMi4wOTM4NTRdIHgxIDogMjhiNzBmMGEyYjYwYTUwMCB4MCA6IDAwMDAw
-MDAwMDAwMDAwMDAKWyAgICAyLjA5OTE3M10gQ2FsbCB0cmFjZToKWyAgICAyLjEwMTYxOF0gIF9f
-ZnJlZV9pcnErMHhjMC8weDM1OApbICAgIDIuMTA1MDIxXSAgZnJlZV9pcnErMHgzOC8weDk4Clsg
-ICAgMi4xMDgxNzBdICBpbXhfbXVfc2h1dGRvd24rMHg5MC8weGIwClsgICAgMi4xMTE5MjFdICBt
-Ym94X2ZyZWVfY2hhbm5lbC5wYXJ0LjIrMHgyNC8weGI4ClsgICAgMi4xMTY0NTNdICBtYm94X2Zy
-ZWVfY2hhbm5lbCsweDE4LzB4MjgKClRoaXMgYnVnIGlzIHByZXNlbnQgZnJvbSB0aGUgYmVnaW5u
-aW5nIG9mIHRpbWVzLgoKQ2M6IE9sZWtzaWogUmVtcGVsIDxvLnJlbXBlbEBwZW5ndXRyb25peC5k
-ZT4KU2lnbmVkLW9mZi1ieTogRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPgot
-LS0KIGRyaXZlcnMvbWFpbGJveC9pbXgtbWFpbGJveC5jIHwgNCArKystCiAxIGZpbGUgY2hhbmdl
-ZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
-YWlsYm94L2lteC1tYWlsYm94LmMgYi9kcml2ZXJzL21haWxib3gvaW14LW1haWxib3guYwppbmRl
-eCA5Zjc0ZGVlMWE1OGMuLjk1N2MxMGM0ZTY3NCAxMDA2NDQKLS0tIGEvZHJpdmVycy9tYWlsYm94
-L2lteC1tYWlsYm94LmMKKysrIGIvZHJpdmVycy9tYWlsYm94L2lteC1tYWlsYm94LmMKQEAgLTIx
-NCw4ICsyMTQsMTAgQEAgc3RhdGljIHZvaWQgaW14X211X3NodXRkb3duKHN0cnVjdCBtYm94X2No
-YW4gKmNoYW4pCiAJc3RydWN0IGlteF9tdV9wcml2ICpwcml2ID0gdG9faW14X211X3ByaXYoY2hh
-bi0+bWJveCk7CiAJc3RydWN0IGlteF9tdV9jb25fcHJpdiAqY3AgPSBjaGFuLT5jb25fcHJpdjsK
-IAotCWlmIChjcC0+dHlwZSA9PSBJTVhfTVVfVFlQRV9UWERCKQorCWlmIChjcC0+dHlwZSA9PSBJ
-TVhfTVVfVFlQRV9UWERCKSB7CiAJCXRhc2tsZXRfa2lsbCgmY3AtPnR4ZGJfdGFza2xldCk7CisJ
-CXJldHVybjsKKwl9CiAKIAlpbXhfbXVfeGNyX3Jtdyhwcml2LCAwLCBJTVhfTVVfeENSX1RJRW4o
-Y3AtPmlkeCkgfAogCQkgICAgICAgSU1YX01VX3hDUl9SSUVuKGNwLT5pZHgpIHwgSU1YX01VX3hD
-Ul9HSUVuKGNwLT5pZHgpKTsKLS0gCjIuMTcuMQoK
---000000000000370253058f0f52f8--
