@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B044C32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AC5C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD86D20657
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B640920657
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C8B8Mmw4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y8Civ5+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732901AbfHAQW0 (ORCPT
+        id S1732912AbfHAQW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:22:26 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42506 "EHLO
+        Thu, 1 Aug 2019 12:22:29 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42510 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732875AbfHAQWX (ORCPT
+        with ESMTP id S1727024AbfHAQWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:22:23 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x71GM8J4105848;
-        Thu, 1 Aug 2019 11:22:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564676528;
-        bh=KeQbhnKhlAxq21wtJY05JTQWNA3ofFtQPv/Bsy3nuG0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=C8B8Mmw4rKNgPbnGYuTWq+G4cg467ksfeVsgEIQ+N9y3pHQFlo014hAJuHPMHjOjt
-         h7qVlF2McTRvUNsxoq3haJ2gFmfaHJPK/MnZkTuPJYwPh+7XOthg8kiP0e/3bqjr1C
-         qM6+SnNtSHJsv0E//bMpq6TXSnP2b5xrbQ0o0/JI=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x71GM8VT075541
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 1 Aug 2019 11:22:08 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 1 Aug
- 2019 11:22:08 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 1 Aug 2019 11:22:08 -0500
-Received: from a0132425.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x71GLxdC097075;
+        Thu, 1 Aug 2019 12:22:24 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x71GM5Fr105827;
         Thu, 1 Aug 2019 11:22:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564676525;
+        bh=AMVuR4iXGx1aPpkMjmCtXi18bf1WqQfX1FutIf0KQXk=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=y8Civ5+H9gcBAoIUia3lpV5G6pOuGRxgnPeZJrCDgglu4dCxoDJXnXQi/+XdyKBf9
+         MrO78RxJKtoNOteS+UzgHiuTbdz8z/Rx1Pbv3yIswGSBqFIYw6/6i3QVtFOkwH9yco
+         0rXGffogjMzt0jXnN9ynoXEWmyi2fI8LeT+Ltkpg=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x71GM5e7011459
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 1 Aug 2019 11:22:05 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 1 Aug
+ 2019 11:22:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 1 Aug 2019 11:22:05 -0500
+Received: from a0132425.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x71GLxdB097075;
+        Thu, 1 Aug 2019 11:22:02 -0500
 From:   Vignesh Raghavendra <vigneshr@ti.com>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
@@ -57,9 +57,9 @@ CC:     Marek Vasut <marek.vasut@gmail.com>,
         Boris Brezillon <bbrezillon@kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
         Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v4 2/3] mtd: spi-nor: Move m25p80 code in spi-nor.c
-Date:   Thu, 1 Aug 2019 21:52:28 +0530
-Message-ID: <20190801162229.28897-3-vigneshr@ti.com>
+Subject: [PATCH v4 1/3] mtd: spi-nor: always use bounce buffer for register read/writes
+Date:   Thu, 1 Aug 2019 21:52:27 +0530
+Message-ID: <20190801162229.28897-2-vigneshr@ti.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190801162229.28897-1-vigneshr@ti.com>
 References: <20190801162229.28897-1-vigneshr@ti.com>
@@ -72,1373 +72,277 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@bootlin.com>
+spi-mem layer expects all buffers passed to it to be DMA'able. But
+spi-nor layer mostly allocates buffers on stack for reading/writing to
+registers and therefore are not DMA'able. Introduce bounce buffer to be
+used to read/write to registers. This ensures that buffer passed to
+spi-mem layer during register read/writes is DMA'able. With this change
+nor->cmd-buf is no longer used, so drop it.
 
-The m25p80 driver is actually a generic wrapper around the spi-mem
-layer. Not only the driver name is misleading, but we'd expect such a
-common logic to be directly available in the core. Another reason for
-moving this code is that SPI NOR controller drivers should
-progressively be replaced by SPI controller drivers implementing the
-spi_mem_ops interface, and when the conversion is done, we should have
-a single spi-nor driver directly interfacing with the spi-mem layer.
-
-While moving the code we also fix a longstanding issue when
-non-DMA-able buffers are passed by the MTD layer.
-
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 ---
+
 v4:
-Fix a bug in write_sr()
-Update comments around allocation of bounce buffer
+Avoid memcpy during READID
 
-v3:
-Simplify register read/write by dropping spi_nor_exec_op() and using
-spi_mem_exec_op() directly
-Modify spi_nor_spimem_xfer_data() to drop "enum spi_nor_protocol proto"
-Fix misc coding style comments by Tudor
+v3: new patch
 
-v2:
-Add docs for new functions added
-Add spi_nor_ prefix to new functions
-Incorporate Andrey's patches https://lkml.org/lkml/2019/4/1/32
-to avoid looping spi_nor_spimem_* APIs
+ drivers/mtd/spi-nor/spi-nor.c | 70 ++++++++++++++++++++---------------
+ include/linux/mtd/spi-nor.h   |  7 +++-
+ 2 files changed, 45 insertions(+), 32 deletions(-)
 
- drivers/mtd/devices/Kconfig   |  18 -
- drivers/mtd/devices/Makefile  |   1 -
- drivers/mtd/devices/m25p80.c  | 347 -------------------
- drivers/mtd/spi-nor/Kconfig   |   2 +
- drivers/mtd/spi-nor/spi-nor.c | 631 ++++++++++++++++++++++++++++++++--
- include/linux/mtd/spi-nor.h   |   3 +
- 6 files changed, 606 insertions(+), 396 deletions(-)
- delete mode 100644 drivers/mtd/devices/m25p80.c
-
-diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
-index 49abbc52457d..f96287c4b789 100644
---- a/drivers/mtd/devices/Kconfig
-+++ b/drivers/mtd/devices/Kconfig
-@@ -79,24 +79,6 @@ config MTD_DATAFLASH_OTP
- 	  other key product data.  The second half is programmed with a
- 	  unique-to-each-chip bit pattern at the factory.
- 
--config MTD_M25P80
--	tristate "Support most SPI Flash chips (AT26DF, M25P, W25X, ...)"
--	depends on SPI_MASTER && MTD_SPI_NOR
--	select SPI_MEM
--	help
--	  This enables access to most modern SPI flash chips, used for
--	  program and data storage.   Series supported include Atmel AT26DF,
--	  Spansion S25SL, SST 25VF, ST M25P, and Winbond W25X.  Other chips
--	  are supported as well.  See the driver source for the current list,
--	  or to add other chips.
--
--	  Note that the original DataFlash chips (AT45 series, not AT26DF),
--	  need an entirely different driver.
--
--	  Set up your spi devices with the right board-specific platform data,
--	  if you want to specify device partitioning or to use a device which
--	  doesn't support the JEDEC ID instruction.
--
- config MTD_MCHP23K256
- 	tristate "Microchip 23K256 SRAM"
- 	depends on SPI_MASTER
-diff --git a/drivers/mtd/devices/Makefile b/drivers/mtd/devices/Makefile
-index 94895eab3066..991c8d12c016 100644
---- a/drivers/mtd/devices/Makefile
-+++ b/drivers/mtd/devices/Makefile
-@@ -12,7 +12,6 @@ obj-$(CONFIG_MTD_MTDRAM)	+= mtdram.o
- obj-$(CONFIG_MTD_LART)		+= lart.o
- obj-$(CONFIG_MTD_BLOCK2MTD)	+= block2mtd.o
- obj-$(CONFIG_MTD_DATAFLASH)	+= mtd_dataflash.o
--obj-$(CONFIG_MTD_M25P80)	+= m25p80.o
- obj-$(CONFIG_MTD_MCHP23K256)	+= mchp23k256.o
- obj-$(CONFIG_MTD_SPEAR_SMI)	+= spear_smi.o
- obj-$(CONFIG_MTD_SST25L)	+= sst25l.o
-diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-deleted file mode 100644
-index c50888670250..000000000000
---- a/drivers/mtd/devices/m25p80.c
-+++ /dev/null
-@@ -1,347 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * MTD SPI driver for ST M25Pxx (and similar) serial flash chips
-- *
-- * Author: Mike Lavender, mike@steroidmicros.com
-- *
-- * Copyright (c) 2005, Intec Automation Inc.
-- *
-- * Some parts are based on lart.c by Abraham Van Der Merwe
-- *
-- * Cleaned up and generalized based on mtd_dataflash.c
-- */
--
--#include <linux/err.h>
--#include <linux/errno.h>
--#include <linux/module.h>
--#include <linux/device.h>
--
--#include <linux/mtd/mtd.h>
--#include <linux/mtd/partitions.h>
--
--#include <linux/spi/spi.h>
--#include <linux/spi/spi-mem.h>
--#include <linux/spi/flash.h>
--#include <linux/mtd/spi-nor.h>
--
--struct m25p {
--	struct spi_mem		*spimem;
--	struct spi_nor		spi_nor;
--};
--
--static int m25p80_read_reg(struct spi_nor *nor, u8 code, u8 *val, int len)
--{
--	struct m25p *flash = nor->priv;
--	struct spi_mem_op op = SPI_MEM_OP(SPI_MEM_OP_CMD(code, 1),
--					  SPI_MEM_OP_NO_ADDR,
--					  SPI_MEM_OP_NO_DUMMY,
--					  SPI_MEM_OP_DATA_IN(len, NULL, 1));
--	void *scratchbuf;
--	int ret;
--
--	scratchbuf = kmalloc(len, GFP_KERNEL);
--	if (!scratchbuf)
--		return -ENOMEM;
--
--	op.data.buf.in = scratchbuf;
--	ret = spi_mem_exec_op(flash->spimem, &op);
--	if (ret < 0)
--		dev_err(&flash->spimem->spi->dev, "error %d reading %x\n", ret,
--			code);
--	else
--		memcpy(val, scratchbuf, len);
--
--	kfree(scratchbuf);
--
--	return ret;
--}
--
--static int m25p80_write_reg(struct spi_nor *nor, u8 opcode, u8 *buf, int len)
--{
--	struct m25p *flash = nor->priv;
--	struct spi_mem_op op = SPI_MEM_OP(SPI_MEM_OP_CMD(opcode, 1),
--					  SPI_MEM_OP_NO_ADDR,
--					  SPI_MEM_OP_NO_DUMMY,
--					  SPI_MEM_OP_DATA_OUT(len, NULL, 1));
--	void *scratchbuf;
--	int ret;
--
--	scratchbuf = kmemdup(buf, len, GFP_KERNEL);
--	if (!scratchbuf)
--		return -ENOMEM;
--
--	op.data.buf.out = scratchbuf;
--	ret = spi_mem_exec_op(flash->spimem, &op);
--	kfree(scratchbuf);
--
--	return ret;
--}
--
--static ssize_t m25p80_write(struct spi_nor *nor, loff_t to, size_t len,
--			    const u_char *buf)
--{
--	struct m25p *flash = nor->priv;
--	struct spi_mem_op op =
--			SPI_MEM_OP(SPI_MEM_OP_CMD(nor->program_opcode, 1),
--				   SPI_MEM_OP_ADDR(nor->addr_width, to, 1),
--				   SPI_MEM_OP_NO_DUMMY,
--				   SPI_MEM_OP_DATA_OUT(len, buf, 1));
--	int ret;
--
--	/* get transfer protocols. */
--	op.cmd.buswidth = spi_nor_get_protocol_inst_nbits(nor->write_proto);
--	op.addr.buswidth = spi_nor_get_protocol_addr_nbits(nor->write_proto);
--	op.data.buswidth = spi_nor_get_protocol_data_nbits(nor->write_proto);
--
--	if (nor->program_opcode == SPINOR_OP_AAI_WP && nor->sst_write_second)
--		op.addr.nbytes = 0;
--
--	ret = spi_mem_adjust_op_size(flash->spimem, &op);
--	if (ret)
--		return ret;
--	op.data.nbytes = len < op.data.nbytes ? len : op.data.nbytes;
--
--	ret = spi_mem_exec_op(flash->spimem, &op);
--	if (ret)
--		return ret;
--
--	return op.data.nbytes;
--}
--
--/*
-- * Read an address range from the nor chip.  The address range
-- * may be any size provided it is within the physical boundaries.
-- */
--static ssize_t m25p80_read(struct spi_nor *nor, loff_t from, size_t len,
--			   u_char *buf)
--{
--	struct m25p *flash = nor->priv;
--	struct spi_mem_op op =
--			SPI_MEM_OP(SPI_MEM_OP_CMD(nor->read_opcode, 1),
--				   SPI_MEM_OP_ADDR(nor->addr_width, from, 1),
--				   SPI_MEM_OP_DUMMY(nor->read_dummy, 1),
--				   SPI_MEM_OP_DATA_IN(len, buf, 1));
--	size_t remaining = len;
--	int ret;
--
--	/* get transfer protocols. */
--	op.cmd.buswidth = spi_nor_get_protocol_inst_nbits(nor->read_proto);
--	op.addr.buswidth = spi_nor_get_protocol_addr_nbits(nor->read_proto);
--	op.dummy.buswidth = op.addr.buswidth;
--	op.data.buswidth = spi_nor_get_protocol_data_nbits(nor->read_proto);
--
--	/* convert the dummy cycles to the number of bytes */
--	op.dummy.nbytes = (nor->read_dummy * op.dummy.buswidth) / 8;
--
--	while (remaining) {
--		op.data.nbytes = remaining < UINT_MAX ? remaining : UINT_MAX;
--		ret = spi_mem_adjust_op_size(flash->spimem, &op);
--		if (ret)
--			return ret;
--
--		ret = spi_mem_exec_op(flash->spimem, &op);
--		if (ret)
--			return ret;
--
--		op.addr.val += op.data.nbytes;
--		remaining -= op.data.nbytes;
--		op.data.buf.in += op.data.nbytes;
--	}
--
--	return len;
--}
--
--/*
-- * board specific setup should have ensured the SPI clock used here
-- * matches what the READ command supports, at least until this driver
-- * understands FAST_READ (for clocks over 25 MHz).
-- */
--static int m25p_probe(struct spi_mem *spimem)
--{
--	struct spi_device *spi = spimem->spi;
--	struct flash_platform_data	*data;
--	struct m25p *flash;
--	struct spi_nor *nor;
--	struct spi_nor_hwcaps hwcaps = {
--		.mask = SNOR_HWCAPS_READ |
--			SNOR_HWCAPS_READ_FAST |
--			SNOR_HWCAPS_PP,
--	};
--	char *flash_name;
--	int ret;
--
--	data = dev_get_platdata(&spimem->spi->dev);
--
--	flash = devm_kzalloc(&spimem->spi->dev, sizeof(*flash), GFP_KERNEL);
--	if (!flash)
--		return -ENOMEM;
--
--	nor = &flash->spi_nor;
--
--	/* install the hooks */
--	nor->read = m25p80_read;
--	nor->write = m25p80_write;
--	nor->write_reg = m25p80_write_reg;
--	nor->read_reg = m25p80_read_reg;
--
--	nor->dev = &spimem->spi->dev;
--	spi_nor_set_flash_node(nor, spi->dev.of_node);
--	nor->priv = flash;
--
--	spi_mem_set_drvdata(spimem, flash);
--	flash->spimem = spimem;
--
--	if (spi->mode & SPI_RX_OCTAL) {
--		hwcaps.mask |= SNOR_HWCAPS_READ_1_1_8;
--
--		if (spi->mode & SPI_TX_OCTAL)
--			hwcaps.mask |= (SNOR_HWCAPS_READ_1_8_8 |
--					SNOR_HWCAPS_PP_1_1_8 |
--					SNOR_HWCAPS_PP_1_8_8);
--	} else if (spi->mode & SPI_RX_QUAD) {
--		hwcaps.mask |= SNOR_HWCAPS_READ_1_1_4;
--
--		if (spi->mode & SPI_TX_QUAD)
--			hwcaps.mask |= (SNOR_HWCAPS_READ_1_4_4 |
--					SNOR_HWCAPS_PP_1_1_4 |
--					SNOR_HWCAPS_PP_1_4_4);
--	} else if (spi->mode & SPI_RX_DUAL) {
--		hwcaps.mask |= SNOR_HWCAPS_READ_1_1_2;
--
--		if (spi->mode & SPI_TX_DUAL)
--			hwcaps.mask |= SNOR_HWCAPS_READ_1_2_2;
--	}
--
--	if (data && data->name)
--		nor->mtd.name = data->name;
--
--	if (!nor->mtd.name)
--		nor->mtd.name = spi_mem_get_name(spimem);
--
--	/* For some (historical?) reason many platforms provide two different
--	 * names in flash_platform_data: "name" and "type". Quite often name is
--	 * set to "m25p80" and then "type" provides a real chip name.
--	 * If that's the case, respect "type" and ignore a "name".
--	 */
--	if (data && data->type)
--		flash_name = data->type;
--	else if (!strcmp(spi->modalias, "spi-nor"))
--		flash_name = NULL; /* auto-detect */
--	else
--		flash_name = spi->modalias;
--
--	ret = spi_nor_scan(nor, flash_name, &hwcaps);
--	if (ret)
--		return ret;
--
--	return mtd_device_register(&nor->mtd, data ? data->parts : NULL,
--				   data ? data->nr_parts : 0);
--}
--
--
--static int m25p_remove(struct spi_mem *spimem)
--{
--	struct m25p	*flash = spi_mem_get_drvdata(spimem);
--
--	spi_nor_restore(&flash->spi_nor);
--
--	/* Clean up MTD stuff. */
--	return mtd_device_unregister(&flash->spi_nor.mtd);
--}
--
--static void m25p_shutdown(struct spi_mem *spimem)
--{
--	struct m25p *flash = spi_mem_get_drvdata(spimem);
--
--	spi_nor_restore(&flash->spi_nor);
--}
--/*
-- * Do NOT add to this array without reading the following:
-- *
-- * Historically, many flash devices are bound to this driver by their name. But
-- * since most of these flash are compatible to some extent, and their
-- * differences can often be differentiated by the JEDEC read-ID command, we
-- * encourage new users to add support to the spi-nor library, and simply bind
-- * against a generic string here (e.g., "jedec,spi-nor").
-- *
-- * Many flash names are kept here in this list (as well as in spi-nor.c) to
-- * keep them available as module aliases for existing platforms.
-- */
--static const struct spi_device_id m25p_ids[] = {
--	/*
--	 * Allow non-DT platform devices to bind to the "spi-nor" modalias, and
--	 * hack around the fact that the SPI core does not provide uevent
--	 * matching for .of_match_table
--	 */
--	{"spi-nor"},
--
--	/*
--	 * Entries not used in DTs that should be safe to drop after replacing
--	 * them with "spi-nor" in platform data.
--	 */
--	{"s25sl064a"},	{"w25x16"},	{"m25p10"},	{"m25px64"},
--
--	/*
--	 * Entries that were used in DTs without "jedec,spi-nor" fallback and
--	 * should be kept for backward compatibility.
--	 */
--	{"at25df321a"},	{"at25df641"},	{"at26df081a"},
--	{"mx25l4005a"},	{"mx25l1606e"},	{"mx25l6405d"},	{"mx25l12805d"},
--	{"mx25l25635e"},{"mx66l51235l"},
--	{"n25q064"},	{"n25q128a11"},	{"n25q128a13"},	{"n25q512a"},
--	{"s25fl256s1"},	{"s25fl512s"},	{"s25sl12801"},	{"s25fl008k"},
--	{"s25fl064k"},
--	{"sst25vf040b"},{"sst25vf016b"},{"sst25vf032b"},{"sst25wf040"},
--	{"m25p40"},	{"m25p80"},	{"m25p16"},	{"m25p32"},
--	{"m25p64"},	{"m25p128"},
--	{"w25x80"},	{"w25x32"},	{"w25q32"},	{"w25q32dw"},
--	{"w25q80bl"},	{"w25q128"},	{"w25q256"},
--
--	/* Flashes that can't be detected using JEDEC */
--	{"m25p05-nonjedec"},	{"m25p10-nonjedec"},	{"m25p20-nonjedec"},
--	{"m25p40-nonjedec"},	{"m25p80-nonjedec"},	{"m25p16-nonjedec"},
--	{"m25p32-nonjedec"},	{"m25p64-nonjedec"},	{"m25p128-nonjedec"},
--
--	/* Everspin MRAMs (non-JEDEC) */
--	{ "mr25h128" }, /* 128 Kib, 40 MHz */
--	{ "mr25h256" }, /* 256 Kib, 40 MHz */
--	{ "mr25h10" },  /*   1 Mib, 40 MHz */
--	{ "mr25h40" },  /*   4 Mib, 40 MHz */
--
--	{ },
--};
--MODULE_DEVICE_TABLE(spi, m25p_ids);
--
--static const struct of_device_id m25p_of_table[] = {
--	/*
--	 * Generic compatibility for SPI NOR that can be identified by the
--	 * JEDEC READ ID opcode (0x9F). Use this, if possible.
--	 */
--	{ .compatible = "jedec,spi-nor" },
--	{}
--};
--MODULE_DEVICE_TABLE(of, m25p_of_table);
--
--static struct spi_mem_driver m25p80_driver = {
--	.spidrv = {
--		.driver = {
--			.name	= "m25p80",
--			.of_match_table = m25p_of_table,
--		},
--		.id_table	= m25p_ids,
--	},
--	.probe	= m25p_probe,
--	.remove	= m25p_remove,
--	.shutdown	= m25p_shutdown,
--
--	/* REVISIT: many of these chips have deep power-down modes, which
--	 * should clearly be entered on suspend() to minimize power use.
--	 * And also when they're otherwise idle...
--	 */
--};
--
--module_spi_mem_driver(m25p80_driver);
--
--MODULE_LICENSE("GPL");
--MODULE_AUTHOR("Mike Lavender");
--MODULE_DESCRIPTION("MTD SPI driver for ST M25Pxx flash chips");
-diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-index 6de83277ce8b..f237fcdf7f86 100644
---- a/drivers/mtd/spi-nor/Kconfig
-+++ b/drivers/mtd/spi-nor/Kconfig
-@@ -2,6 +2,8 @@
- menuconfig MTD_SPI_NOR
- 	tristate "SPI-NOR device support"
- 	depends on MTD
-+	depends on MTD && SPI_MASTER
-+	select SPI_MEM
- 	help
- 	  This is the framework for the SPI NOR which can be used by the SPI
- 	  device drivers and the SPI-NOR device driver.
 diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index e02376e1127b..866962c715b4 100644
+index 03cc788511d5..e02376e1127b 100644
 --- a/drivers/mtd/spi-nor/spi-nor.c
 +++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -19,6 +19,7 @@
- 
- #include <linux/mtd/mtd.h>
- #include <linux/of_platform.h>
-+#include <linux/sched/task_stack.h>
- #include <linux/spi/flash.h>
- #include <linux/mtd/spi-nor.h>
- 
-@@ -288,6 +289,154 @@ struct flash_info {
- 
- #define JEDEC_MFR(info)	((info)->id[0])
- 
-+/**
-+ * spi_nor_spimem_xfer_data() - helper function to read/write data to
-+ *                              flash's memory region
-+ * @nor:        pointer to 'struct spi_nor'
-+ * @op:         pointer to 'struct spi_mem_op' template for transfer
-+ *
-+ * Return: number of bytes transferred on success, -errno otherwise
-+ */
-+static ssize_t spi_nor_spimem_xfer_data(struct spi_nor *nor,
-+					struct spi_mem_op *op)
-+{
-+	bool usebouncebuf = false;
-+	void *rdbuf = NULL;
-+	const void *buf;
-+	int ret;
-+
-+	if (op->data.dir == SPI_MEM_DATA_IN)
-+		buf = op->data.buf.in;
-+	else
-+		buf = op->data.buf.out;
-+
-+	if (object_is_on_stack(buf) || !virt_addr_valid(buf))
-+		usebouncebuf = true;
-+
-+	if (usebouncebuf) {
-+		if (op->data.nbytes > nor->bouncebuf_size)
-+			op->data.nbytes = nor->bouncebuf_size;
-+
-+		if (op->data.dir == SPI_MEM_DATA_IN) {
-+			rdbuf = op->data.buf.in;
-+			op->data.buf.in = nor->bouncebuf;
-+		} else {
-+			op->data.buf.out = nor->bouncebuf;
-+			memcpy(nor->bouncebuf, buf,
-+			       op->data.nbytes);
-+		}
-+	}
-+
-+	ret = spi_mem_adjust_op_size(nor->spimem, op);
-+	if (ret)
-+		return ret;
-+
-+	ret = spi_mem_exec_op(nor->spimem, op);
-+	if (ret)
-+		return ret;
-+
-+	if (usebouncebuf && op->data.dir == SPI_MEM_DATA_IN)
-+		memcpy(rdbuf, nor->bouncebuf, op->data.nbytes);
-+
-+	return op->data.nbytes;
-+}
-+
-+/**
-+ * spi_nor_spimem_read_data() - read data from flash's memory region via
-+ *                              spi-mem
-+ * @nor:        pointer to 'struct spi_nor'
-+ * @from:       offset to read from
-+ * @len:        number of bytes to read
-+ * @buf:        pointer to dst buffer
-+ *
-+ * Return: number of bytes read successfully, -errno otherwise
-+ */
-+static ssize_t spi_nor_spimem_read_data(struct spi_nor *nor, loff_t from,
-+					size_t len, u8 *buf)
-+{
-+	struct spi_mem_op op =
-+		SPI_MEM_OP(SPI_MEM_OP_CMD(nor->read_opcode, 1),
-+			   SPI_MEM_OP_ADDR(nor->addr_width, from, 1),
-+			   SPI_MEM_OP_DUMMY(nor->read_dummy, 1),
-+			   SPI_MEM_OP_DATA_IN(len, buf, 1));
-+
-+	/* get transfer protocols. */
-+	op.cmd.buswidth = spi_nor_get_protocol_inst_nbits(nor->read_proto);
-+	op.addr.buswidth = spi_nor_get_protocol_addr_nbits(nor->read_proto);
-+	op.data.buswidth = spi_nor_get_protocol_data_nbits(nor->read_proto);
-+	op.dummy.buswidth = spi_nor_get_protocol_addr_nbits(nor->read_proto);
-+
-+	/* convert the dummy cycles to the number of bytes */
-+	op.dummy.nbytes = (nor->read_dummy * op.dummy.buswidth) / 8;
-+
-+	return spi_nor_spimem_xfer_data(nor, &op);
-+}
-+
-+/**
-+ * spi_nor_read_data() - read data from flash memory
-+ * @nor:        pointer to 'struct spi_nor'
-+ * @from:       offset to read from
-+ * @len:        number of bytes to read
-+ * @buf:        pointer to dst buffer
-+ *
-+ * Return: number of bytes read successfully, -errno otherwise
-+ */
-+static ssize_t spi_nor_read_data(struct spi_nor *nor, loff_t from, size_t len,
-+				 u8 *buf)
-+{
-+	if (nor->spimem)
-+		return spi_nor_spimem_read_data(nor, from, len, buf);
-+
-+	return nor->read(nor, from, len, buf);
-+}
-+
-+/**
-+ * spi_nor_spimem_write_data() - write data to flash memory via
-+ *                               spi-mem
-+ * @nor:        pointer to 'struct spi_nor'
-+ * @to:         offset to write to
-+ * @len:        number of bytes to write
-+ * @buf:        pointer to src buffer
-+ *
-+ * Return: number of bytes written successfully, -errno otherwise
-+ */
-+static ssize_t spi_nor_spimem_write_data(struct spi_nor *nor, loff_t to,
-+					 size_t len, const u8 *buf)
-+{
-+	struct spi_mem_op op =
-+		SPI_MEM_OP(SPI_MEM_OP_CMD(nor->program_opcode, 1),
-+			   SPI_MEM_OP_ADDR(nor->addr_width, to, 1),
-+			   SPI_MEM_OP_NO_DUMMY,
-+			   SPI_MEM_OP_DATA_OUT(len, buf, 1));
-+
-+	op.cmd.buswidth = spi_nor_get_protocol_inst_nbits(nor->write_proto);
-+	op.addr.buswidth = spi_nor_get_protocol_addr_nbits(nor->write_proto);
-+	op.data.buswidth = spi_nor_get_protocol_data_nbits(nor->write_proto);
-+
-+	if (nor->program_opcode == SPINOR_OP_AAI_WP && nor->sst_write_second)
-+		op.addr.nbytes = 0;
-+
-+	return spi_nor_spimem_xfer_data(nor, &op);
-+}
-+
-+/**
-+ * spi_nor_write_data() - write data to flash memory
-+ * @nor:        pointer to 'struct spi_nor'
-+ * @to:         offset to write to
-+ * @len:        number of bytes to write
-+ * @buf:        pointer to src buffer
-+ *
-+ * Return: number of bytes written successfully, -errno otherwise
-+ */
-+static ssize_t spi_nor_write_data(struct spi_nor *nor, loff_t to, size_t len,
-+				  const u8 *buf)
-+{
-+	if (nor->spimem)
-+		return spi_nor_spimem_write_data(nor, to, len, buf);
-+
-+	return nor->write(nor, to, len, buf);
-+}
-+
- /*
-  * Read the status register, returning its value in the location
-  * Return the status register value.
-@@ -297,7 +446,18 @@ static int read_sr(struct spi_nor *nor)
+@@ -296,15 +296,14 @@ struct flash_info {
+ static int read_sr(struct spi_nor *nor)
  {
  	int ret;
+-	u8 val;
  
--	ret = nor->read_reg(nor, SPINOR_OP_RDSR, nor->bouncebuf, 1);
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RDSR, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
-+
-+		ret = spi_mem_exec_op(nor->spimem, &op);
-+	} else {
-+		ret = nor->read_reg(nor, SPINOR_OP_RDSR, nor->bouncebuf, 1);
-+	}
-+
+-	ret = nor->read_reg(nor, SPINOR_OP_RDSR, &val, 1);
++	ret = nor->read_reg(nor, SPINOR_OP_RDSR, nor->bouncebuf, 1);
  	if (ret < 0) {
  		pr_err("error %d reading SR\n", (int) ret);
  		return ret;
-@@ -315,7 +475,18 @@ static int read_fsr(struct spi_nor *nor)
+ 	}
+ 
+-	return val;
++	return nor->bouncebuf[0];
+ }
+ 
+ /*
+@@ -315,15 +314,14 @@ static int read_sr(struct spi_nor *nor)
+ static int read_fsr(struct spi_nor *nor)
  {
  	int ret;
+-	u8 val;
  
--	ret = nor->read_reg(nor, SPINOR_OP_RDFSR, nor->bouncebuf, 1);
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RDFSR, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
-+
-+		ret = spi_mem_exec_op(nor->spimem, &op);
-+	} else {
-+		ret = nor->read_reg(nor, SPINOR_OP_RDFSR, nor->bouncebuf, 1);
-+	}
-+
+-	ret = nor->read_reg(nor, SPINOR_OP_RDFSR, &val, 1);
++	ret = nor->read_reg(nor, SPINOR_OP_RDFSR, nor->bouncebuf, 1);
  	if (ret < 0) {
  		pr_err("error %d reading FSR\n", ret);
  		return ret;
-@@ -333,7 +504,18 @@ static int read_cr(struct spi_nor *nor)
+ 	}
+ 
+-	return val;
++	return nor->bouncebuf[0];
+ }
+ 
+ /*
+@@ -334,15 +332,14 @@ static int read_fsr(struct spi_nor *nor)
+ static int read_cr(struct spi_nor *nor)
  {
  	int ret;
+-	u8 val;
  
--	ret = nor->read_reg(nor, SPINOR_OP_RDCR, nor->bouncebuf, 1);
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RDCR, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
-+
-+		ret = spi_mem_exec_op(nor->spimem, &op);
-+	} else {
-+		ret = nor->read_reg(nor, SPINOR_OP_RDCR, nor->bouncebuf, 1);
-+	}
-+
+-	ret = nor->read_reg(nor, SPINOR_OP_RDCR, &val, 1);
++	ret = nor->read_reg(nor, SPINOR_OP_RDCR, nor->bouncebuf, 1);
  	if (ret < 0) {
  		dev_err(nor->dev, "error %d reading CR\n", ret);
  		return ret;
-@@ -349,6 +531,16 @@ static int read_cr(struct spi_nor *nor)
+ 	}
+ 
+-	return val;
++	return nor->bouncebuf[0];
+ }
+ 
+ /*
+@@ -351,8 +348,8 @@ static int read_cr(struct spi_nor *nor)
+  */
  static int write_sr(struct spi_nor *nor, u8 val)
  {
- 	nor->bouncebuf[0] = val;
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WRSR, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
- 	return nor->write_reg(nor, SPINOR_OP_WRSR, nor->bouncebuf, 1);
+-	nor->cmd_buf[0] = val;
+-	return nor->write_reg(nor, SPINOR_OP_WRSR, nor->cmd_buf, 1);
++	nor->bouncebuf[0] = val;
++	return nor->write_reg(nor, SPINOR_OP_WRSR, nor->bouncebuf, 1);
  }
  
-@@ -358,6 +550,16 @@ static int write_sr(struct spi_nor *nor, u8 val)
-  */
- static int write_enable(struct spi_nor *nor)
- {
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WREN, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_NO_DATA);
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
- 	return nor->write_reg(nor, SPINOR_OP_WREN, NULL, 0);
- }
- 
-@@ -366,6 +568,16 @@ static int write_enable(struct spi_nor *nor)
-  */
- static int write_disable(struct spi_nor *nor)
- {
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WRDI, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_NO_DATA);
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
- 	return nor->write_reg(nor, SPINOR_OP_WRDI, NULL, 0);
- }
- 
-@@ -465,12 +677,64 @@ static void spi_nor_set_4byte_opcodes(struct spi_nor *nor)
- 	}
- }
- 
-+static int macronix_set_4byte(struct spi_nor *nor, bool enable)
-+{
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(enable ?
-+						  SPINOR_OP_EN4B :
-+						  SPINOR_OP_EX4B,
-+						  1),
-+				  SPI_MEM_OP_NO_ADDR,
-+				  SPI_MEM_OP_NO_DUMMY,
-+				  SPI_MEM_OP_NO_DATA);
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
-+	return nor->write_reg(nor, enable ? SPINOR_OP_EN4B : SPINOR_OP_EX4B,
-+			      NULL, 0);
-+}
-+
-+static int spansion_set_4byte(struct spi_nor *nor, bool enable)
-+{
-+	nor->bouncebuf[0] = enable << 7;
-+
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_BRWR, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_OUT(1, nor->bouncebuf, 1));
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
-+	return nor->write_reg(nor, SPINOR_OP_BRWR, nor->bouncebuf, 1);
-+}
-+
-+static int spi_nor_write_ear(struct spi_nor *nor, u8 ear)
-+{
-+	nor->bouncebuf[0] = ear;
-+
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WREAR, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_OUT(1, nor->bouncebuf, 1));
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
-+	return nor->write_reg(nor, SPINOR_OP_WREAR, nor->bouncebuf, 1);
-+}
-+
- /* Enable/disable 4-byte addressing mode. */
- static int set_4byte(struct spi_nor *nor, bool enable)
- {
- 	int status;
- 	bool need_wren = false;
--	u8 cmd;
- 
- 	switch (JEDEC_MFR(nor->info)) {
- 	case SNOR_MFR_ST:
-@@ -483,8 +747,7 @@ static int set_4byte(struct spi_nor *nor, bool enable)
- 		if (need_wren)
- 			write_enable(nor);
- 
--		cmd = enable ? SPINOR_OP_EN4B : SPINOR_OP_EX4B;
--		status = nor->write_reg(nor, cmd, NULL, 0);
-+		status = macronix_set_4byte(nor, enable);
- 		if (need_wren)
- 			write_disable(nor);
- 
-@@ -497,25 +760,37 @@ static int set_4byte(struct spi_nor *nor, bool enable)
+ /*
+@@ -500,31 +497,31 @@ static int set_4byte(struct spi_nor *nor, bool enable)
  			 * We must clear the register to enable normal behavior.
  			 */
  			write_enable(nor);
--			nor->bouncebuf[0] = 0;
--			nor->write_reg(nor, SPINOR_OP_WREAR,
--				       nor->bouncebuf, 1);
-+			spi_nor_write_ear(nor, 0);
+-			nor->cmd_buf[0] = 0;
+-			nor->write_reg(nor, SPINOR_OP_WREAR, nor->cmd_buf, 1);
++			nor->bouncebuf[0] = 0;
++			nor->write_reg(nor, SPINOR_OP_WREAR,
++				       nor->bouncebuf, 1);
  			write_disable(nor);
  		}
  
  		return status;
  	default:
  		/* Spansion style */
--		nor->bouncebuf[0] = enable << 7;
--		return nor->write_reg(nor, SPINOR_OP_BRWR, nor->bouncebuf, 1);
-+		return spansion_set_4byte(nor, enable);
+-		nor->cmd_buf[0] = enable << 7;
+-		return nor->write_reg(nor, SPINOR_OP_BRWR, nor->cmd_buf, 1);
++		nor->bouncebuf[0] = enable << 7;
++		return nor->write_reg(nor, SPINOR_OP_BRWR, nor->bouncebuf, 1);
  	}
  }
  
-+static int spi_nor_xread_sr(struct spi_nor *nor, u8 *sr)
-+{
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_XRDSR, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_IN(1, sr, 1));
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
-+	return nor->read_reg(nor, SPINOR_OP_XRDSR, sr, 1);
-+}
-+
  static int s3an_sr_ready(struct spi_nor *nor)
- {
- 	int ret;
- 
--	ret = nor->read_reg(nor, SPINOR_OP_XRDSR, nor->bouncebuf, 1);
-+	ret = spi_nor_xread_sr(nor, nor->bouncebuf);
- 	if (ret < 0) {
- 		dev_err(nor->dev, "error %d reading XRDSR\n", (int) ret);
- 		return ret;
-@@ -524,6 +799,21 @@ static int s3an_sr_ready(struct spi_nor *nor)
- 	return !!(nor->bouncebuf[0] & XSR_RDY);
- }
- 
-+static int spi_nor_clear_sr(struct spi_nor *nor)
-+{
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_CLSR, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_NO_DATA);
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
-+	return nor->write_reg(nor, SPINOR_OP_CLSR, NULL, 0);
-+}
-+
- static int spi_nor_sr_ready(struct spi_nor *nor)
- {
- 	int sr = read_sr(nor);
-@@ -536,13 +826,28 @@ static int spi_nor_sr_ready(struct spi_nor *nor)
- 		else
- 			dev_err(nor->dev, "Programming Error occurred\n");
- 
--		nor->write_reg(nor, SPINOR_OP_CLSR, NULL, 0);
-+		spi_nor_clear_sr(nor);
- 		return -EIO;
- 	}
- 
- 	return !(sr & SR_WIP);
- }
- 
-+static int spi_nor_clear_fsr(struct spi_nor *nor)
-+{
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_CLFSR, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_NO_DATA);
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
-+	return nor->write_reg(nor, SPINOR_OP_CLFSR, NULL, 0);
-+}
-+
- static int spi_nor_fsr_ready(struct spi_nor *nor)
- {
- 	int fsr = read_fsr(nor);
-@@ -559,7 +864,7 @@ static int spi_nor_fsr_ready(struct spi_nor *nor)
- 			dev_err(nor->dev,
- 			"Attempted to modify a protected sector.\n");
- 
--		nor->write_reg(nor, SPINOR_OP_CLFSR, NULL, 0);
-+		spi_nor_clear_fsr(nor);
- 		return -EIO;
- 	}
- 
-@@ -627,6 +932,16 @@ static int erase_chip(struct spi_nor *nor)
- {
- 	dev_dbg(nor->dev, " %lldKiB\n", (long long)(nor->mtd.size >> 10));
- 
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_CHIP_ERASE, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_NO_DATA);
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
- 	return nor->write_reg(nor, SPINOR_OP_CHIP_ERASE, NULL, 0);
- }
- 
-@@ -688,6 +1003,16 @@ static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
- 	if (nor->erase)
- 		return nor->erase(nor, addr);
- 
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(nor->erase_opcode, 1),
-+				   SPI_MEM_OP_ADDR(nor->addr_width, addr, 1),
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_NO_DATA);
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
- 	/*
- 	 * Default implementation, if driver doesn't have a specialized HW
- 	 * control
-@@ -1405,7 +1730,18 @@ static int write_sr_cr(struct spi_nor *nor, u8 *sr_cr)
- 
- 	write_enable(nor);
- 
--	ret = nor->write_reg(nor, SPINOR_OP_WRSR, nor->bouncebuf, 2);
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WRSR, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_OUT(2, nor->bouncebuf, 1));
-+
-+		ret = spi_mem_exec_op(nor->spimem, &op);
-+	} else {
-+		ret = nor->write_reg(nor, SPINOR_OP_WRSR, nor->bouncebuf, 2);
-+	}
-+
- 	if (ret < 0) {
- 		dev_err(nor->dev,
- 			"error while writing configuration register\n");
-@@ -1584,6 +1920,36 @@ static int spansion_read_cr_quad_enable(struct spi_nor *nor)
- 	return 0;
- }
- 
-+static int spi_nor_write_sr2(struct spi_nor *nor, u8 *sr2)
-+{
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WRSR2, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_OUT(1, sr2, 1));
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
-+	return nor->write_reg(nor, SPINOR_OP_WRSR2, sr2, 1);
-+}
-+
-+static int spi_nor_read_sr2(struct spi_nor *nor, u8 *sr2)
-+{
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RDSR2, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_IN(1, sr2, 1));
-+
-+		return spi_mem_exec_op(nor->spimem, &op);
-+	}
-+
-+	return  nor->read_reg(nor, SPINOR_OP_RDSR2, sr2, 1);
-+}
-+
- /**
-  * sr2_bit7_quad_enable() - set QE bit in Status Register 2.
-  * @nor:	pointer to a 'struct spi_nor'
-@@ -1602,7 +1968,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
- 	int ret;
- 
- 	/* Check current Quad Enable bit value. */
--	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, sr2, 1);
-+	ret = spi_nor_read_sr2(nor, sr2);
- 	if (ret)
- 		return ret;
- 	if (*sr2 & SR2_QUAD_EN_BIT7)
-@@ -1613,7 +1979,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
- 
- 	write_enable(nor);
- 
--	ret = nor->write_reg(nor, SPINOR_OP_WRSR2, sr2, 1);
-+	ret = spi_nor_write_sr2(nor, sr2);
- 	if (ret < 0) {
- 		dev_err(nor->dev, "error while writing status register 2\n");
- 		return -EINVAL;
-@@ -1626,7 +1992,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
- 	}
- 
- 	/* Read back and check it. */
--	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, sr2, 1);
-+	ret = spi_nor_read_sr2(nor, sr2);
- 	if (!(ret > 0 && (*sr2 & SR2_QUAD_EN_BIT7))) {
- 		dev_err(nor->dev, "SR2 Quad bit not set\n");
- 		return -EINVAL;
-@@ -2180,7 +2546,18 @@ static const struct flash_info *spi_nor_read_id(struct spi_nor *nor)
- 	const struct flash_info	*info;
- 
- 	id = nor->bouncebuf;
--	tmp = nor->read_reg(nor, SPINOR_OP_RDID, id, SPI_NOR_MAX_ID_LEN);
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RDID, 1),
-+				   SPI_MEM_OP_NO_ADDR,
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_IN(SPI_NOR_MAX_ID_LEN, id, 1));
-+
-+		tmp = spi_mem_exec_op(nor->spimem, &op);
-+	} else {
-+		tmp = nor->read_reg(nor, SPINOR_OP_RDID, id,
-+				    SPI_NOR_MAX_ID_LEN);
-+	}
- 	if (tmp < 0) {
- 		dev_err(nor->dev, "error %d reading JEDEC ID\n", tmp);
- 		return ERR_PTR(tmp);
-@@ -2216,7 +2593,7 @@ static int spi_nor_read(struct mtd_info *mtd, loff_t from, size_t len,
- 		if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
- 			addr = spi_nor_s3an_addr_convert(nor, addr);
- 
--		ret = nor->read(nor, addr, len, buf);
-+		ret = spi_nor_read_data(nor, addr, len, buf);
- 		if (ret == 0) {
- 			/* We shouldn't see 0-length reads */
- 			ret = -EIO;
-@@ -2261,7 +2638,7 @@ static int sst_write(struct mtd_info *mtd, loff_t to, size_t len,
- 		nor->program_opcode = SPINOR_OP_BP;
- 
- 		/* write one byte. */
--		ret = nor->write(nor, to, 1, buf);
-+		ret = spi_nor_write_data(nor, to, 1, buf);
- 		if (ret < 0)
- 			goto sst_write_err;
- 		WARN(ret != 1, "While writing 1 byte written %i bytes\n",
-@@ -2277,7 +2654,7 @@ static int sst_write(struct mtd_info *mtd, loff_t to, size_t len,
- 		nor->program_opcode = SPINOR_OP_AAI_WP;
- 
- 		/* write two bytes. */
--		ret = nor->write(nor, to, 2, buf + actual);
-+		ret = spi_nor_write_data(nor, to, 2, buf + actual);
- 		if (ret < 0)
- 			goto sst_write_err;
- 		WARN(ret != 2, "While writing 2 bytes written %i bytes\n",
-@@ -2300,7 +2677,7 @@ static int sst_write(struct mtd_info *mtd, loff_t to, size_t len,
- 		write_enable(nor);
- 
- 		nor->program_opcode = SPINOR_OP_BP;
--		ret = nor->write(nor, to, 1, buf + actual);
-+		ret = spi_nor_write_data(nor, to, 1, buf + actual);
- 		if (ret < 0)
- 			goto sst_write_err;
- 		WARN(ret != 1, "While writing 1 byte written %i bytes\n",
-@@ -2362,7 +2739,7 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
- 			addr = spi_nor_s3an_addr_convert(nor, addr);
- 
- 		write_enable(nor);
--		ret = nor->write(nor, addr, page_remain, buf + i);
-+		ret = spi_nor_write_data(nor, addr, page_remain, buf + i);
- 		if (ret < 0)
- 			goto write_err;
- 		written = ret;
-@@ -2381,8 +2758,10 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
- 
- static int spi_nor_check(struct spi_nor *nor)
- {
--	if (!nor->dev || !nor->read || !nor->write ||
--		!nor->read_reg || !nor->write_reg) {
-+	if (!nor->dev ||
-+	    (!nor->spimem &&
-+	    (!nor->read || !nor->write || !nor->read_reg ||
-+	      !nor->write_reg))) {
- 		pr_err("spi-nor: please fill all the necessary fields!\n");
- 		return -EINVAL;
- 	}
-@@ -2393,9 +2772,8 @@ static int spi_nor_check(struct spi_nor *nor)
- static int s3an_nor_scan(struct spi_nor *nor)
  {
  	int ret;
 -	u8 val;
  
 -	ret = nor->read_reg(nor, SPINOR_OP_XRDSR, &val, 1);
-+	ret = spi_nor_xread_sr(nor, nor->bouncebuf);
++	ret = nor->read_reg(nor, SPINOR_OP_XRDSR, nor->bouncebuf, 1);
  	if (ret < 0) {
  		dev_err(nor->dev, "error %d reading XRDSR\n", (int) ret);
  		return ret;
-@@ -2417,7 +2795,7 @@ static int s3an_nor_scan(struct spi_nor *nor)
- 	 * The current addressing mode can be read from the XRDSR register
- 	 * and should not be changed, because is a destructive operation.
+ 	}
+ 
+-	return !!(val & XSR_RDY);
++	return !!(nor->bouncebuf[0] & XSR_RDY);
+ }
+ 
+ static int spi_nor_sr_ready(struct spi_nor *nor)
+@@ -683,7 +680,6 @@ static loff_t spi_nor_s3an_addr_convert(struct spi_nor *nor, unsigned int addr)
+  */
+ static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
+ {
+-	u8 buf[SPI_NOR_MAX_ADDR_WIDTH];
+ 	int i;
+ 
+ 	if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
+@@ -697,11 +693,12 @@ static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
+ 	 * control
  	 */
--	if (val & XSR_PAGESIZE) {
-+	if (nor->bouncebuf[0] & XSR_PAGESIZE) {
- 		/* Flash in Power of 2 mode */
- 		nor->page_size = (nor->page_size == 264) ? 256 : 512;
- 		nor->mtd.writebufsize = nor->page_size;
-@@ -2525,7 +2903,7 @@ static int spi_nor_read_raw(struct spi_nor *nor, u32 addr, size_t len, u8 *buf)
+ 	for (i = nor->addr_width - 1; i >= 0; i--) {
+-		buf[i] = addr & 0xff;
++		nor->bouncebuf[i] = addr & 0xff;
+ 		addr >>= 8;
+ 	}
+ 
+-	return nor->write_reg(nor, nor->erase_opcode, buf, nor->addr_width);
++	return nor->write_reg(nor, nor->erase_opcode, nor->bouncebuf,
++			      nor->addr_width);
+ }
+ 
+ /**
+@@ -1404,9 +1401,11 @@ static int write_sr_cr(struct spi_nor *nor, u8 *sr_cr)
+ {
  	int ret;
  
- 	while (len) {
--		ret = nor->read(nor, addr, len, buf);
-+		ret = spi_nor_read_data(nor, addr, len, buf);
- 		if (!ret || ret > len)
- 			return -EIO;
- 		if (ret < 0)
-@@ -4124,6 +4502,10 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
- 	/*
- 	 * We need the bounce buffer early to read/write registers when going
- 	 * through the spi-mem layer (buffers have to be DMA-able).
-+	 * For spi-mem drivers, we'll reallocate a new buffer if
-+	 * nor->page_size turns out to be greater than PAGE_SIZE (which
-+	 * shouldn't happen before long since NOR pages are usually less
-+	 * than 1KB) after spi_nor_scan() returns.
- 	 */
- 	nor->bouncebuf_size = PAGE_SIZE;
- 	nor->bouncebuf = devm_kmalloc(dev, nor->bouncebuf_size,
-@@ -4326,6 +4708,195 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
- }
- EXPORT_SYMBOL_GPL(spi_nor_scan);
- 
-+static int spi_nor_probe(struct spi_mem *spimem)
-+{
-+	struct spi_device *spi = spimem->spi;
-+	struct flash_platform_data *data = dev_get_platdata(&spi->dev);
-+	struct spi_nor *nor;
-+	struct spi_nor_hwcaps hwcaps = {
-+		.mask = SNOR_HWCAPS_READ |
-+			SNOR_HWCAPS_READ_FAST |
-+			SNOR_HWCAPS_PP,
-+	};
-+	char *flash_name;
-+	int ret;
++	memcpy(nor->bouncebuf, sr_cr, 2);
 +
-+	nor = devm_kzalloc(&spi->dev, sizeof(*nor), GFP_KERNEL);
-+	if (!nor)
+ 	write_enable(nor);
+ 
+-	ret = nor->write_reg(nor, SPINOR_OP_WRSR, sr_cr, 2);
++	ret = nor->write_reg(nor, SPINOR_OP_WRSR, nor->bouncebuf, 2);
+ 	if (ret < 0) {
+ 		dev_err(nor->dev,
+ 			"error while writing configuration register\n");
+@@ -1599,22 +1598,22 @@ static int spansion_read_cr_quad_enable(struct spi_nor *nor)
+  */
+ static int sr2_bit7_quad_enable(struct spi_nor *nor)
+ {
+-	u8 sr2;
++	u8 *sr2 = nor->bouncebuf;
+ 	int ret;
+ 
+ 	/* Check current Quad Enable bit value. */
+-	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, &sr2, 1);
++	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, sr2, 1);
+ 	if (ret)
+ 		return ret;
+-	if (sr2 & SR2_QUAD_EN_BIT7)
++	if (*sr2 & SR2_QUAD_EN_BIT7)
+ 		return 0;
+ 
+ 	/* Update the Quad Enable bit. */
+-	sr2 |= SR2_QUAD_EN_BIT7;
++	*sr2 |= SR2_QUAD_EN_BIT7;
+ 
+ 	write_enable(nor);
+ 
+-	ret = nor->write_reg(nor, SPINOR_OP_WRSR2, &sr2, 1);
++	ret = nor->write_reg(nor, SPINOR_OP_WRSR2, sr2, 1);
+ 	if (ret < 0) {
+ 		dev_err(nor->dev, "error while writing status register 2\n");
+ 		return -EINVAL;
+@@ -1627,8 +1626,8 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
+ 	}
+ 
+ 	/* Read back and check it. */
+-	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, &sr2, 1);
+-	if (!(ret > 0 && (sr2 & SR2_QUAD_EN_BIT7))) {
++	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, sr2, 1);
++	if (!(ret > 0 && (*sr2 & SR2_QUAD_EN_BIT7))) {
+ 		dev_err(nor->dev, "SR2 Quad bit not set\n");
+ 		return -EINVAL;
+ 	}
+@@ -2177,9 +2176,10 @@ static const struct flash_info spi_nor_ids[] = {
+ static const struct flash_info *spi_nor_read_id(struct spi_nor *nor)
+ {
+ 	int			tmp;
+-	u8			id[SPI_NOR_MAX_ID_LEN];
++	u8			*id;
+ 	const struct flash_info	*info;
+ 
++	id = nor->bouncebuf;
+ 	tmp = nor->read_reg(nor, SPINOR_OP_RDID, id, SPI_NOR_MAX_ID_LEN);
+ 	if (tmp < 0) {
+ 		dev_err(nor->dev, "error %d reading JEDEC ID\n", tmp);
+@@ -4121,6 +4121,16 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+ 	nor->read_proto = SNOR_PROTO_1_1_1;
+ 	nor->write_proto = SNOR_PROTO_1_1_1;
+ 
++	/*
++	 * We need the bounce buffer early to read/write registers when going
++	 * through the spi-mem layer (buffers have to be DMA-able).
++	 */
++	nor->bouncebuf_size = PAGE_SIZE;
++	nor->bouncebuf = devm_kmalloc(dev, nor->bouncebuf_size,
++				      GFP_KERNEL);
++	if (!nor->bouncebuf)
 +		return -ENOMEM;
 +
-+	nor->spimem = spimem;
-+	nor->dev = &spi->dev;
-+	spi_nor_set_flash_node(nor, spi->dev.of_node);
-+
-+	spi_mem_set_drvdata(spimem, nor);
-+
-+	if (spi->mode & SPI_RX_OCTAL) {
-+		hwcaps.mask |= SNOR_HWCAPS_READ_1_1_8;
-+
-+		if (spi->mode & SPI_TX_OCTAL)
-+			hwcaps.mask |= (SNOR_HWCAPS_READ_1_8_8 |
-+					SNOR_HWCAPS_PP_1_1_8 |
-+					SNOR_HWCAPS_PP_1_8_8);
-+	} else if (spi->mode & SPI_RX_QUAD) {
-+		hwcaps.mask |= SNOR_HWCAPS_READ_1_1_4;
-+
-+		if (spi->mode & SPI_TX_QUAD)
-+			hwcaps.mask |= (SNOR_HWCAPS_READ_1_4_4 |
-+					SNOR_HWCAPS_PP_1_1_4 |
-+					SNOR_HWCAPS_PP_1_4_4);
-+	} else if (spi->mode & SPI_RX_DUAL) {
-+		hwcaps.mask |= SNOR_HWCAPS_READ_1_1_2;
-+
-+		if (spi->mode & SPI_TX_DUAL)
-+			hwcaps.mask |= SNOR_HWCAPS_READ_1_2_2;
-+	}
-+
-+	if (data && data->name)
-+		nor->mtd.name = data->name;
-+
-+	if (!nor->mtd.name)
-+		nor->mtd.name = spi_mem_get_name(spimem);
-+
-+	/*
-+	 * For some (historical?) reason many platforms provide two different
-+	 * names in flash_platform_data: "name" and "type". Quite often name is
-+	 * set to "m25p80" and then "type" provides a real chip name.
-+	 * If that's the case, respect "type" and ignore a "name".
-+	 */
-+	if (data && data->type)
-+		flash_name = data->type;
-+	else if (!strcmp(spi->modalias, "spi-nor"))
-+		flash_name = NULL; /* auto-detect */
-+	else
-+		flash_name = spi->modalias;
-+
-+	ret = spi_nor_scan(nor, flash_name, &hwcaps);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * None of the existing parts have > 512B pages, but let's play safe
-+	 * and add this logic so that if anyone ever adds support for such
-+	 * a NOR we don't end up with buffer overflows.
-+	 */
-+	if (nor->page_size > PAGE_SIZE) {
-+		nor->bouncebuf_size = nor->page_size;
-+		devm_kfree(nor->dev, nor->bouncebuf);
-+		nor->bouncebuf = devm_kmalloc(nor->dev,
-+					      nor->bouncebuf_size,
-+					      GFP_KERNEL);
-+		if (!nor->bouncebuf)
-+			return -ENOMEM;
-+	}
-+
-+	return mtd_device_register(&nor->mtd, data ? data->parts : NULL,
-+				   data ? data->nr_parts : 0);
-+}
-+
-+static int spi_nor_remove(struct spi_mem *spimem)
-+{
-+	struct spi_nor *nor = spi_mem_get_drvdata(spimem);
-+
-+	spi_nor_restore(nor);
-+
-+	/* Clean up MTD stuff. */
-+	return mtd_device_unregister(&nor->mtd);
-+}
-+
-+static void spi_nor_shutdown(struct spi_mem *spimem)
-+{
-+	struct spi_nor *nor = spi_mem_get_drvdata(spimem);
-+
-+	spi_nor_restore(nor);
-+}
-+
-+/*
-+ * Do NOT add to this array without reading the following:
-+ *
-+ * Historically, many flash devices are bound to this driver by their name. But
-+ * since most of these flash are compatible to some extent, and their
-+ * differences can often be differentiated by the JEDEC read-ID command, we
-+ * encourage new users to add support to the spi-nor library, and simply bind
-+ * against a generic string here (e.g., "jedec,spi-nor").
-+ *
-+ * Many flash names are kept here in this list (as well as in spi-nor.c) to
-+ * keep them available as module aliases for existing platforms.
-+ */
-+static const struct spi_device_id spi_nor_dev_ids[] = {
-+	/*
-+	 * Allow non-DT platform devices to bind to the "spi-nor" modalias, and
-+	 * hack around the fact that the SPI core does not provide uevent
-+	 * matching for .of_match_table
-+	 */
-+	{"spi-nor"},
-+
-+	/*
-+	 * Entries not used in DTs that should be safe to drop after replacing
-+	 * them with "spi-nor" in platform data.
-+	 */
-+	{"s25sl064a"},	{"w25x16"},	{"m25p10"},	{"m25px64"},
-+
-+	/*
-+	 * Entries that were used in DTs without "jedec,spi-nor" fallback and
-+	 * should be kept for backward compatibility.
-+	 */
-+	{"at25df321a"},	{"at25df641"},	{"at26df081a"},
-+	{"mx25l4005a"},	{"mx25l1606e"},	{"mx25l6405d"},	{"mx25l12805d"},
-+	{"mx25l25635e"},{"mx66l51235l"},
-+	{"n25q064"},	{"n25q128a11"},	{"n25q128a13"},	{"n25q512a"},
-+	{"s25fl256s1"},	{"s25fl512s"},	{"s25sl12801"},	{"s25fl008k"},
-+	{"s25fl064k"},
-+	{"sst25vf040b"},{"sst25vf016b"},{"sst25vf032b"},{"sst25wf040"},
-+	{"m25p40"},	{"m25p80"},	{"m25p16"},	{"m25p32"},
-+	{"m25p64"},	{"m25p128"},
-+	{"w25x80"},	{"w25x32"},	{"w25q32"},	{"w25q32dw"},
-+	{"w25q80bl"},	{"w25q128"},	{"w25q256"},
-+
-+	/* Flashes that can't be detected using JEDEC */
-+	{"m25p05-nonjedec"},	{"m25p10-nonjedec"},	{"m25p20-nonjedec"},
-+	{"m25p40-nonjedec"},	{"m25p80-nonjedec"},	{"m25p16-nonjedec"},
-+	{"m25p32-nonjedec"},	{"m25p64-nonjedec"},	{"m25p128-nonjedec"},
-+
-+	/* Everspin MRAMs (non-JEDEC) */
-+	{ "mr25h128" }, /* 128 Kib, 40 MHz */
-+	{ "mr25h256" }, /* 256 Kib, 40 MHz */
-+	{ "mr25h10" },  /*   1 Mib, 40 MHz */
-+	{ "mr25h40" },  /*   4 Mib, 40 MHz */
-+
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(spi, spi_nor_dev_ids);
-+
-+static const struct of_device_id spi_nor_of_table[] = {
-+	/*
-+	 * Generic compatibility for SPI NOR that can be identified by the
-+	 * JEDEC READ ID opcode (0x9F). Use this, if possible.
-+	 */
-+	{ .compatible = "jedec,spi-nor" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, spi_nor_of_table);
-+
-+/*
-+ * REVISIT: many of these chips have deep power-down modes, which
-+ * should clearly be entered on suspend() to minimize power use.
-+ * And also when they're otherwise idle...
-+ */
-+static struct spi_mem_driver spi_nor_driver = {
-+	.spidrv = {
-+		.driver = {
-+			.name = "spi-nor",
-+			.of_match_table = spi_nor_of_table,
-+		},
-+		.id_table = spi_nor_dev_ids,
-+	},
-+	.probe = spi_nor_probe,
-+	.remove = spi_nor_remove,
-+	.shutdown = spi_nor_shutdown,
-+};
-+module_spi_mem_driver(spi_nor_driver);
-+
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Huang Shijie <shijie8@gmail.com>");
- MODULE_AUTHOR("Mike Lavender");
+ 	if (name)
+ 		info = spi_nor_match_id(name);
+ 	/* Try to auto-detect if chip name wasn't specified or not found */
 diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index 6b5956a7a65a..4f35b1877889 100644
+index 9f57cdfcc93d..6b5956a7a65a 100644
 --- a/include/linux/mtd/spi-nor.h
 +++ b/include/linux/mtd/spi-nor.h
-@@ -9,6 +9,7 @@
- #include <linux/bitops.h>
- #include <linux/mtd/cfi.h>
- #include <linux/mtd/mtd.h>
-+#include <linux/spi/spi-mem.h>
- 
- /*
-  * Manufacturer IDs
-@@ -344,6 +345,7 @@ struct flash_info;
+@@ -344,6 +344,9 @@ struct flash_info;
   * @mtd:		point to a mtd_info structure
   * @lock:		the lock for the read/write/erase/lock/unlock operations
   * @dev:		point to a spi device, or a spi nor controller device.
-+ * @spimem:		point to the spi mem device
-  * @bouncebuf:		bounce buffer used when the buffer passed by the MTD
-  *                      layer is not DMA-able
-  * @bouncebuf_size:	size of the bounce buffer
-@@ -384,6 +386,7 @@ struct spi_nor {
++ * @bouncebuf:		bounce buffer used when the buffer passed by the MTD
++ *                      layer is not DMA-able
++ * @bouncebuf_size:	size of the bounce buffer
+  * @info:		spi-nor part JDEC MFR id and other info
+  * @page_size:		the page size of the SPI NOR
+  * @addr_width:		number of address bytes
+@@ -356,7 +359,6 @@ struct flash_info;
+  * @read_proto:		the SPI protocol for read operations
+  * @write_proto:	the SPI protocol for write operations
+  * @reg_proto		the SPI protocol for read_reg/write_reg/erase operations
+- * @cmd_buf:		used by the write_reg
+  * @erase_map:		the erase map of the SPI NOR
+  * @prepare:		[OPTIONAL] do some preparations for the
+  *			read/write/erase/lock/unlock operations
+@@ -382,6 +384,8 @@ struct spi_nor {
  	struct mtd_info		mtd;
  	struct mutex		lock;
  	struct device		*dev;
-+	struct spi_mem		*spimem;
- 	u8			*bouncebuf;
- 	size_t			bouncebuf_size;
++	u8			*bouncebuf;
++	size_t			bouncebuf_size;
  	const struct flash_info	*info;
+ 	u32			page_size;
+ 	u8			addr_width;
+@@ -394,7 +398,6 @@ struct spi_nor {
+ 	enum spi_nor_protocol	reg_proto;
+ 	bool			sst_write_second;
+ 	u32			flags;
+-	u8			cmd_buf[SPI_NOR_MAX_CMD_SIZE];
+ 	struct spi_nor_erase_map	erase_map;
+ 
+ 	int (*prepare)(struct spi_nor *nor, enum spi_nor_ops ops);
 -- 
 2.22.0
 
