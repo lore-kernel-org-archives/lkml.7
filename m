@@ -2,98 +2,143 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1981FC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FC0C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E591820838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE3620838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:46:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsQiRLSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390459AbfHAXqm (ORCPT
+        id S2390469AbfHAXqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:46:42 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:32964 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732234AbfHAXpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:45:19 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1htKl2-0002MC-Oe; Thu, 01 Aug 2019 17:45:18 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1htKl1-00025C-Me; Thu, 01 Aug 2019 17:45:15 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Date:   Thu,  1 Aug 2019 17:45:03 -0600
-Message-Id: <20190801234514.7941-5-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190801234514.7941-1-logang@deltatee.com>
-References: <20190801234514.7941-1-logang@deltatee.com>
+        Thu, 1 Aug 2019 19:46:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39215 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732080AbfHAXqn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 19:46:43 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x4so22145690wrt.6;
+        Thu, 01 Aug 2019 16:46:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QeFuBP9JKrZCeHFf1rpKgsYUuBTv3R+2TjgNB/pftBU=;
+        b=BsQiRLSFEzFxFkoLp6ctIPQIKe1NJLA6ZKb8oqi3jFnLK8ustlV+YGmw4+9Q2iibOG
+         6XZmONx2pX/bs7wwnxinAObrKqMQ4jtTERHbGL4bDjkvpM+gDc+Jp5j8hQtxh+GTf7yT
+         dDFDfpWlaIF095ENGwNtT7Pfzpy/278F/X63j0ylPyerHXxsTOJ97h+GavPDtAdIGNa7
+         Hsz/l4M4z/737Fnw4SecAXf5Ost/qc2wNNbcRxwYHa1MsQ0dc7XrXVXd8oMS1lLYLSIJ
+         BG0cPWp+sMGjnRVmlzSSbvBwb8oyCPFzCdTgYDFP4n/upnZH04IyjdIWtEB9o/fsWohl
+         zL0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QeFuBP9JKrZCeHFf1rpKgsYUuBTv3R+2TjgNB/pftBU=;
+        b=T4OZ/RXzvN133OPCZLu+hlOCjrlJFZK6MZdSBE7L7IHaajGDE5SPPTDQvTsuOBsYvy
+         c7rqCnIPRbV5zgeg7lDuBvPi7KKosLPPx6kuzE82uThYjEpAjqw+vEzkXXveO4d9SuQu
+         07VTtP76+3Bv1VnI5UUQx0yeAn+4KM8tdpH8sqnqA4vpWEcm0FQuah5Q7C9iaV0ICeYe
+         SNnxpL6cvipqkr5yk8UAW8ER6PC7ZWLg0KrEUrEGRqSl7hr0Fsp3zxMbZBY7V7U6u/ud
+         nuDGuRfTtBTYGJo7V1Ww0q+B7EBYqitWFYbHV8/F0A0BC89AE/P+oLX+Dw67ABrmqLM5
+         4rGg==
+X-Gm-Message-State: APjAAAWXvXh+qaHOn7sEEzhkKveefdaMMAvt8EfUORE77SyqiFnihUNI
+        yznaJpzc1R6B6qLtdzC+708=
+X-Google-Smtp-Source: APXvYqzJCtFYQPVbIz7G6pETEDSPiYeHoAs11jF1K3cM6cXdE9D49HduHslWE4zb3ftxaZI90sRQWQ==
+X-Received: by 2002:adf:e483:: with SMTP id i3mr13171471wrm.210.1564703201468;
+        Thu, 01 Aug 2019 16:46:41 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id o3sm60526711wrs.59.2019.08.01.16.46.40
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 16:46:40 -0700 (PDT)
+Subject: Re: [PATCHv5 01/37] ns: Introduce Time Namespace
+To:     Andy Lutomirski <luto@kernel.org>, Dmitry Safonov <dima@arista.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>, Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        criu@openvz.org, Linux API <linux-api@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
+References: <20190729215758.28405-1-dima@arista.com>
+ <20190729215758.28405-2-dima@arista.com>
+ <CALCETrWHEcaG9gZe6ACt5H1H+P8D0RobrJ_bf4Wf9ts40NMM9w@mail.gmail.com>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <4d8d8489-28c8-259f-23a9-ed2b89699b73@gmail.com>
+Date:   Fri, 2 Aug 2019 00:46:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v7 04/14] nvmet: make nvmet_copy_ns_identifier() non-static
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+In-Reply-To: <CALCETrWHEcaG9gZe6ACt5H1H+P8D0RobrJ_bf4Wf9ts40NMM9w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function will be needed by the upcoming passthru code.
+Hi Andy,
 
-[chaitanya.kulkarni@wdc.com: this was factored out of a patch
- originally authored by Chaitanya]
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/target/admin-cmd.c | 4 ++--
- drivers/nvme/target/nvmet.h     | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+Thank you for the review,
 
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index 4dc12ea52f23..eeb24f606d00 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -506,8 +506,8 @@ static void nvmet_execute_identify_nslist(struct nvmet_req *req)
- 	nvmet_req_complete(req, status);
- }
- 
--static u16 nvmet_copy_ns_identifier(struct nvmet_req *req, u8 type, u8 len,
--				    void *id, off_t *off)
-+u16 nvmet_copy_ns_identifier(struct nvmet_req *req, u8 type, u8 len,
-+			     void *id, off_t *off)
- {
- 	struct nvme_ns_id_desc desc = {
- 		.nidt = type,
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index 217a787952e8..d1a0a3190a24 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -489,6 +489,8 @@ u16 nvmet_bdev_flush(struct nvmet_req *req);
- u16 nvmet_file_flush(struct nvmet_req *req);
- void nvmet_ns_changed(struct nvmet_subsys *subsys, u32 nsid);
- 
-+u16 nvmet_copy_ns_identifier(struct nvmet_req *req, u8 type, u8 len,
-+			     void *id, off_t *off);
- static inline u32 nvmet_rw_len(struct nvmet_req *req)
- {
- 	return ((u32)le16_to_cpu(req->cmd->rw.length) + 1) <<
--- 
-2.20.1
+On 8/1/19 6:29 AM, Andy Lutomirski wrote:
+> On Mon, Jul 29, 2019 at 2:58 PM Dmitry Safonov <dima@arista.com> wrote:
+>>
+>> From: Andrei Vagin <avagin@openvz.org>
+>>
+>> Time Namespace isolates clock values.
+> 
+>> +static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
+>> +{
+>> +       struct time_namespace *ns = to_time_ns(new);
+>> +
+>> +       if (!thread_group_empty(current))
+>> +               return -EINVAL;
+> 
+> You also need to check for other users of the mm.
 
+Oops. It seems like, if the check was
+
+if (!current_is_single_threaded())
+    return -EUSERS;
+
+instead of thread_group_empty(current), it would address the concerns
+from 23/37 and 25/37 patches, too?
+
+> 
+>> +
+>> +       if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN) ||
+>> +           !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
+>> +               return -EPERM;
+>> +
+>> +       get_time_ns(ns);
+>> +       get_time_ns(ns);
+>> +       put_time_ns(nsproxy->time_ns);
+>> +       put_time_ns(nsproxy->time_ns_for_children);
+>> +       nsproxy->time_ns = ns;
+>> +       nsproxy->time_ns_for_children = ns;
+>> +       ns->initialized = true;
+> 
+> I really really wish that setns() took an explicit flag for "change
+> now" or "change for children", since the semantics are different.  Oh
+> well.
+> 
+
+Thanks,
+          Dmitry
