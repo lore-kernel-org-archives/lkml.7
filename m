@@ -2,174 +2,151 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7F0C32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E826C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938CC2080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qCoC5rhb"
+	by mail.kernel.org (Postfix) with ESMTP id 50EE2206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564682788;
+	bh=VmvCWb7mfqIKc99hY4+HpoBTRUyH9cosex+SWHtBDh0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OuynVD5uSH1jtRvKNr3nnBVOFRvWoAJYYeqjIqcCRQCpRcbQpEWB+2z2pNGjlFTVv
+	 7LNieI19VX2yVBPq1D7+xrhu8WhMOfSVcpl+o8ZIbyN5OWXz9M+vwKZI+zZSyIEf02
+	 NfhB9P3YFryOULY+rKdZDBYx46h7I+vh/+a2xHl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732897AbfHASGJ (ORCPT
+        id S1732954AbfHASG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 14:06:09 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17957 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731642AbfHASGI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 14:06:08 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d432a0f0002>; Thu, 01 Aug 2019 11:06:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 01 Aug 2019 11:06:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 01 Aug 2019 11:06:06 -0700
-Received: from [10.110.103.107] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 1 Aug
- 2019 18:06:05 +0000
-Subject: Re: [PATCH v7 06/20] clk: tegra: Support for OSC context save and
- restore
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
- <16cca6aa-1034-f38a-49d1-d87b37fb6bbb@gmail.com>
- <b5a58bfc-c777-886f-d902-f499ec38e2ae@nvidia.com>
- <3b55a112-42a6-212b-beea-10b64d5341d9@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <cd9c5116-4235-758c-7a09-d7185d52b22b@nvidia.com>
-Date:   Thu, 1 Aug 2019 11:06:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 1 Aug 2019 14:06:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732904AbfHASG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 14:06:26 -0400
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EABC7205C9;
+        Thu,  1 Aug 2019 18:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564682785;
+        bh=VmvCWb7mfqIKc99hY4+HpoBTRUyH9cosex+SWHtBDh0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d5WCHW3r8+3cju524szQc7WHidK+U7DLXfyGFi46dJSvGOD7t535VMr6+fmlZT1a0
+         ZOADQ5PEa0JUKxdYnZzLM0Qs5OznRUvwE0+NzOTGARY4tIdIBRisZcZ7M1c6syK1zD
+         oiMGkLGuMQVJcfBxfvnIHA+MYgoVUzigCfkWpMH0=
+Received: by mail-qt1-f172.google.com with SMTP id h18so71202806qtm.9;
+        Thu, 01 Aug 2019 11:06:24 -0700 (PDT)
+X-Gm-Message-State: APjAAAXap4L1sJ8nANaUnrtmzuG04h2ApBkvRhWdE/AnQdII2HI+Ezxs
+        Zxe2nZBdD2eEiOZ/YDB6KIjaTpz04iJkXF/tHw==
+X-Google-Smtp-Source: APXvYqwNnqv0tF1obrjN4MP8PlG/HUUO6+Q0cjvIdPQtlTVARGH64UUmlrFCJ29XMPZ6fcPNbNwsBuLaIiLBTyI3IyA=
+X-Received: by 2002:a0c:b627:: with SMTP id f39mr95237020qve.72.1564682784150;
+ Thu, 01 Aug 2019 11:06:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3b55a112-42a6-212b-beea-10b64d5341d9@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+References: <20190730165618.10122-1-digetx@gmail.com> <20190730165618.10122-10-digetx@gmail.com>
+ <CAL_JsqL_LA+cW2GbCMdzRTFuv2oKE3pzyOm2UwdzLVLyVTnmNw@mail.gmail.com> <58e25c92-a61d-54f1-e784-ed85804236d7@gmail.com>
+In-Reply-To: <58e25c92-a61d-54f1-e784-ed85804236d7@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 1 Aug 2019 12:06:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLuzxRZUD16ONke_yrYMgW6zc4hyjkRFCn=sHdnaOVO-g@mail.gmail.com>
+Message-ID: <CAL_JsqLuzxRZUD16ONke_yrYMgW6zc4hyjkRFCn=sHdnaOVO-g@mail.gmail.com>
+Subject: Re: [PATCH v9 09/15] dt-bindings: memory: tegra30: Convert to
+ Tegra124 YAML
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564682768; bh=a/b87Pb8fvKcIFpkvTunCaHBVyc5/LnfxNoUaEcDg5I=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=qCoC5rhblage217ft9hYs6jutEKqU9rc/h3lWC/TfMqvABQEzG6VldIDeVkeqURk4
-         JHJ9qQB/1bT0oxNaSkENzZY1T2YjUsofCpBUyAXKWcWfAKqsu2bYTR21WCZby+VOLb
-         LQUE1X/gXDloaEVCT2KjXpY0eKsYwGiJosjLw+TYfZEQvtMdUI+96F/l0eN0qEahUY
-         8Dw/ed7zMdl8WTz1yAILTs1NLcksTchVpiBVUHpn9pusfUfNQ/E2+FJIdhCQCGEgKp
-         dRjdXn9fdczXH9YSWHuku9Sd6PCQpoGNpLdcs7jvLu/jVhKFMD56NOw1pUj6Faow7M
-         etjfkvr4ke+JQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/1/19 3:53 AM, Dmitry Osipenko wrote:
-> 01.08.2019 0:04, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 7/31/19 4:11 AM, Dmitry Osipenko wrote:
->>> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> This patch adds support for saving OSC clock frequency and the
->>>> drive-strength during OSC clock init and creates an API to restore
->>>> OSC control register value from the saved context.
->>>>
->>>> This API is invoked by Tegra210 clock driver during system resume
->>>> to restore the=C2=A0 OSC clock settings.
->>>>
->>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>  =C2=A0 drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
->>>>  =C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
->>>>  =C2=A0 2 files changed, 16 insertions(+)
->>>>
->>>> diff --git a/drivers/clk/tegra/clk-tegra-fixed.c
->>>> b/drivers/clk/tegra/clk-tegra-fixed.c
->>>> index 8d91b2b191cf..7c6c8abfcde6 100644
->>>> --- a/drivers/clk/tegra/clk-tegra-fixed.c
->>>> +++ b/drivers/clk/tegra/clk-tegra-fixed.c
->>>> @@ -17,6 +17,10 @@
->>>>  =C2=A0 #define OSC_CTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0x50
->>>>  =C2=A0 #define OSC_CTRL_OSC_FREQ_SHIFT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 28
->>>>  =C2=A0 #define OSC_CTRL_PLL_REF_DIV_SHIFT=C2=A0=C2=A0=C2=A0 26
->>>> +#define OSC_CTRL_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 (0x3f2 |=C2=A0=C2=A0=C2=A0 \
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (0xf << OSC_CTRL_OSC_FREQ_SHI=
-FT))
->>>> +
->>>> +static u32 osc_ctrl_ctx;
->>>>  =C2=A0 =C2=A0 int __init tegra_osc_clk_init(void __iomem *clk_base, s=
-truct
->>>> tegra_clk *clks,
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long *input_freqs, u=
-nsigned int num,
->>>> @@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem
->>>> *clk_base, struct tegra_clk *clks,
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned osc_idx;
->>>>  =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D readl_relaxed(clk_base =
-+ OSC_CTRL);
->>>> +=C2=A0=C2=A0=C2=A0 osc_ctrl_ctx =3D val & OSC_CTRL_MASK;
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 osc_idx =3D val >> OSC_CTRL_OSC_FREQ_S=
-HIFT;
->>>>  =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (osc_idx < num)
->>>> @@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk
->>>> *tegra_clks)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *dt_clk =3D cl=
-k;
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>  =C2=A0 }
->>>> +
->>>> +void tegra_clk_osc_resume(void __iomem *clk_base)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 u32 val;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 val =3D readl_relaxed(clk_base + OSC_CTRL) & ~OSC_=
-CTRL_MASK;
->>>> +=C2=A0=C2=A0=C2=A0 val |=3D osc_ctrl_ctx;
->>>> +=C2=A0=C2=A0=C2=A0 writel_relaxed(val, clk_base + OSC_CTRL);
->>> Why a full raw u32 OSC_CTRL value couldn't be simply saved and restored=
-?
->> Storing and restoring only required fields to avoid accidental
->> misconfiguration.
->>
->> OSC_CTRL register has other bits (PLL_REF_DIV) which are configured by
->> BR depending on OSC_FREQ and also setting PLL_REF_DIV while PLLS are in
->> use is not safe.
-> I'm looking at the clk-driver sources and see that none of the Tegra
-> drivers ever change the OSC_CTRL configuration, T30/114 even have
-> #defines for the OSC_CTRL that are unused.
+On Thu, Aug 1, 2019 at 11:52 AM Dmitry Osipenko <digetx@gmail.com> wrote:
 >
-> So, this leads to a question.. does any bootloader really ever change
-> the OSC_CTRL such that it differs after resume from suspend in
-> comparison to the value at the time of kernel's booting up?
+> 01.08.2019 19:25, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Tue, Jul 30, 2019 at 10:58 AM Dmitry Osipenko <digetx@gmail.com> wro=
+te:
+> >>
+> >> The Tegra30 binding will actually differ from the Tegra124 a tad, in
+> >> particular the EMEM configuration description. Hence rename the bindin=
+g
+> >> to Tegra124 during of the conversion to YAML.
+> >>
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
+> >>  .../nvidia,tegra124-mc.yaml                   | 158 +++++++++++++++++=
++
+> >>  .../memory-controllers/nvidia,tegra30-mc.txt  | 123 --------------
+> >>  2 files changed, 158 insertions(+), 123 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/memory-controlle=
+rs/nvidia,tegra124-mc.yaml
+> >>  delete mode 100644 Documentation/devicetree/bindings/memory-controlle=
+rs/nvidia,tegra30-mc.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvid=
+ia,tegra124-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/=
+nvidia,tegra124-mc.yaml
+> >> new file mode 100644
+> >> index 000000000000..2e2a116f1911
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegr=
+a124-mc.yaml
+> >> @@ -0,0 +1,158 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/memory-controllers/nvidia,tegra124=
+-mc.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: NVIDIA Tegra124 SoC Memory Controller
+> >> +
+> >> +maintainers:
+> >> +  - Jon Hunter <jonathanh@nvidia.com>
+> >> +  - Thierry Reding <thierry.reding@gmail.com>
+> >> +
+> >> +description: |
+> >> +  Tegra124 SoC features a hybrid 2x32-bit / 1x64-bit memory controlle=
+r.
+> >> +  These are interleaved to provide high performance with the load sha=
+red across
+> >> +  two memory channels. The Tegra124 Memory Controller handles memory =
+requests
+> >> +  from internal clients and arbitrates among them to allocate memory =
+bandwidth
+> >> +  for DDR3L and LPDDR3 SDRAMs.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: nvidia,tegra124-mc
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +    description:
+> >> +      Physical base address.
+> >
+> > You don't really need a description when there's only 1 item. Same on
+> > the others below.
+> >
+> > With that,
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> Okay, I'll change that in the next revision. I also assume that the r-b
+> applies to all three patches, otherwise please let me know. Thanks!
 
-For Tegra210, bootloader programs OSC_CTRL register for drivestrength=20
-programming.
+No. I'm reviewing those.
 
-These settings need to be restored to the same on SC7 exit as they gets=20
-reset during SC7 entry.
-
-
+Rob
