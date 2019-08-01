@@ -2,129 +2,241 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D094C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8BDC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0282720644
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="G3SrUa45"
+	by mail.kernel.org (Postfix) with ESMTP id E296A20644
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731985AbfHAOYM (ORCPT
+        id S1731999AbfHAOYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:24:12 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:44943 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbfHAOYL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:24:11 -0400
-Received: by mail-yw1-f67.google.com with SMTP id l79so26169708ywe.11
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:24:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=YASKrLlbJRP8fvLhH4iPtQLrp26GJFL1b4mQHAA3AZs=;
-        b=G3SrUa45PitiX3FLd4WSjcX0/D+PiaY3ftdOKTBVZWYrr05t6Z6UnYx8gHIv5sJto+
-         aCH/f0iQR7qVNrhpKy4gGNgVHUVddCtXJfJ6G5eiNLeQmyBFyS+UCxErnVxgHyVOoaeB
-         KeIOjIaizmbgQZPOcF/whbIjQ1fcRaRLiU33ofo953MELCgPiTphUff8t3Gd1M6ILcG3
-         EGx3NN3+gzUPFQzJXVyps1G8XxykDIhvujKRCZmlQdvJlIboje1DtreCzOsY5h/o7CaE
-         9JTHaJUUW/53+gdSWR3WTjlxCxO+u27XJ5mW2ayEn2CTXrJGaGE3GeicDecNjo6tfCZE
-         wfWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=YASKrLlbJRP8fvLhH4iPtQLrp26GJFL1b4mQHAA3AZs=;
-        b=rn8lj4oBilpzE1AJ6pATlZF5CyZ+Tef3EuRrsmF6hrXYLF+2JSgRJ4WKWwJHFbwIYs
-         GPHzCAmVZJ1gYA4IiedQHgHN6Pv3eqmXbVuAwbcLOlXSeUUlhXemNZrB+E1PrK9d0s9p
-         aQO/HZvzNiJl0dQBJslRPlliWdhBRBXayftQ8YtJZeehjpsSt3HZ87IO+Adww+V2t3Jv
-         l5pDlNRSzysxCxbYyR9r+XygxYbFyyUenRqETX+gLyZ2bVU3bc2A6IP7gPRZQxxBkS9T
-         384iY5sN+jwdY/rZ8hYVSe1MtgPWllpiCQjekzuPem9eU3ZPzNXiCqxm8X+he/jJ/+yd
-         iMeg==
-X-Gm-Message-State: APjAAAVUdQmJ9nWvUJGid8cxZUBASlKm7K3W4y9qvc6jrhhkSHV7Yunm
-        uZU5rAzgTGf48baR9jRthiRooQ==
-X-Google-Smtp-Source: APXvYqwX5+pgDm5RwnFmpQ4KELkPqv3W0V2bu85OXQs2pia4gyCUw5jUZwHp2+qbU88Muf0rrb0reg==
-X-Received: by 2002:a81:2710:: with SMTP id n16mr74951691ywn.209.1564669451110;
-        Thu, 01 Aug 2019 07:24:11 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id m124sm16302442ywc.51.2019.08.01.07.24.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 07:24:10 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 10:24:10 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] drm: msm: a6xx: Mark expected switch fall-through
-Message-ID: <20190801142410.GU104440@art_vandelay>
-References: <20190726112746.19410-1-anders.roxell@linaro.org>
+        Thu, 1 Aug 2019 10:24:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60330 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731986AbfHAOYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:24:33 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DCBE830860D7;
+        Thu,  1 Aug 2019 14:24:32 +0000 (UTC)
+Received: from [10.36.117.35] (ovpn-117-35.ams2.redhat.com [10.36.117.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E1971992D;
+        Thu,  1 Aug 2019 14:24:27 +0000 (UTC)
+Subject: Re: [PATCH] iommu: revisit iommu_insert_resv_region() implementation
+To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "hch@infradead.org" <hch@infradead.org>
+References: <20190730140055.9998-1-eric.auger@redhat.com>
+ <5FC3163CFD30C246ABAA99954A238FA83F33E69F@lhreml524-mbs.china.huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <9bcef2c9-2e90-9782-3855-b0b6cfd8ec26@redhat.com>
+Date:   Thu, 1 Aug 2019 16:24:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <5FC3163CFD30C246ABAA99954A238FA83F33E69F@lhreml524-mbs.china.huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190726112746.19410-1-anders.roxell@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 01 Aug 2019 14:24:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 01:27:46PM +0200, Anders Roxell wrote:
-> When fall-through warnings was enabled by default the following warning
-> was starting to show up:
-> 
-> ../drivers/gpu/drm/msm/adreno/a6xx_gpu.c: In function ‘a6xx_submit’:
-> ../drivers/gpu/drm/msm/adreno/a6xx_gpu.c:116:7: warning: this statement may fall
->  through [-Wimplicit-fallthrough=]
->     if (priv->lastctx == ctx)
->        ^
-> ../drivers/gpu/drm/msm/adreno/a6xx_gpu.c:118:3: note: here
->    case MSM_SUBMIT_CMD_BUF:
->    ^~~~
-> 
-> Rework so that the compiler doesn't warn about fall-through.
-> 
-> Fixes: d93512ef0f0e ("Makefile: Globally enable fall-through warning")
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Hi Shameer,
 
-Hi Anders,
-Thank you for your patches. Jordan had previously sent the same fixes in
-"drm/msm: Annotate intentional switch statement fall throughs" one day earlier
-than yours, so I'll pick up that patch.
-
-Thanks again!
-
-Sean
-
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 1 +
->  1 file changed, 1 insertion(+)
+On 8/1/19 3:46 PM, Shameerali Kolothum Thodi wrote:
+> Hi Eric,
 > 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index be39cf01e51e..644a6ee53f05 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -115,6 +115,7 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
->  		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
->  			if (priv->lastctx == ctx)
->  				break;
-> +			/* Fall through */
->  		case MSM_SUBMIT_CMD_BUF:
->  			OUT_PKT7(ring, CP_INDIRECT_BUFFER_PFE, 3);
->  			OUT_RING(ring, lower_32_bits(submit->cmd[i].iova));
-> -- 
-> 2.20.1
+>> -----Original Message-----
+>> From: Eric Auger [mailto:eric.auger@redhat.com]
+>> Sent: 30 July 2019 15:01
+>> To: eric.auger.pro@gmail.com; eric.auger@redhat.com; joro@8bytes.org;
+>> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
+>> dwmw2@infradead.org; alex.williamson@redhat.com;
+>> robin.murphy@arm.com; hch@infradead.org
+>> Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+>> Subject: [PATCH] iommu: revisit iommu_insert_resv_region() implementation
+>>
+>> Current implementation is recursive and in case of allocation
+>> failure the existing @regions list is altered. A non recursive
+>> version looks better for maintainability and simplifies the
+>> error handling. We use a separate stack for overlapping segment
+>> merging.
+>>
+>> Note this new implementation may change the region order of
+>> appearance in /sys/kernel/iommu_groups/<n>/reserved_regions
+>> files but this order has never been documented, see
+>> commit bc7d12b91bd3 ("iommu: Implement reserved_regions
+>> iommu-group sysfs file"). Previously the regions were sorted
+>> by start address. Now they are first sorted by type and within
+>> a type they are sorted by start address.
 > 
+> I had a quick run with this patch on one of our boards(D05) where we
+> actually have an untranslated HW MSI region.
+> 
+> Before..
+> estuary:/$ cat /sys/kernel/iommu_groups/3/reserved_regions
+> 0x0000000008000000 0x00000000080fffff msi
+> 0x00000000c6010000 0x00000000c601ffff msi 
+> 
+> After...
+> estuary:/$ cat /sys/kernel/iommu_groups/3/reserved_regions
+> 0x00000000c6010000 0x00000000c601ffff msi
+> 0x0000000008000000 0x00000000080fffff msi
+> 
+> I think the order is reversed now because they are both different types, but are 
+> called "msi". Slightly confusing, but not sure it's a good idea to change the
+> description to something more obvious. 
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Thank you very much for the testing. I have been working on another
+version which removes the recursiveness but still sorts by start address
+and then by type. I prefer this new one as this shouldn't change the
+order. I will submit it asap.
+
+Thanks
+
+Eric
+> 
+> Cheers,
+> Shameer
+> 
+>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>
+>> ---
+>> ---
+>>  drivers/iommu/iommu.c | 96 ++++++++++++++++++++++---------------------
+>>  1 file changed, 50 insertions(+), 46 deletions(-)
+>>
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 0c674d80c37f..7479f3d38e61 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -229,60 +229,64 @@ static ssize_t iommu_group_show_name(struct
+>> iommu_group *group, char *buf)
+>>   * @new: new region to insert
+>>   * @regions: list of regions
+>>   *
+>> - * The new element is sorted by address with respect to the other
+>> - * regions of the same type. In case it overlaps with another
+>> - * region of the same type, regions are merged. In case it
+>> - * overlaps with another region of different type, regions are
+>> - * not merged.
+>> + * Elements are sorted by region type and elements of the same
+>> + * type are sorted by start address. Overlapping segments of the
+>> + * same type are merged.
+>>   */
+>>  static int iommu_insert_resv_region(struct iommu_resv_region *new,
+>>  				    struct list_head *regions)
+>>  {
+>> -	struct iommu_resv_region *region;
+>> -	phys_addr_t start = new->start;
+>> -	phys_addr_t end = new->start + new->length - 1;
+>> -	struct list_head *pos = regions->next;
+>> +	struct iommu_resv_region *iter, *tmp, *nr, *top;
+>> +	struct list_head low, high, stack;
+>> +	bool added = false;
+>>
+>> -	while (pos != regions) {
+>> -		struct iommu_resv_region *entry =
+>> -			list_entry(pos, struct iommu_resv_region, list);
+>> -		phys_addr_t a = entry->start;
+>> -		phys_addr_t b = entry->start + entry->length - 1;
+>> -		int type = entry->type;
+>> +	INIT_LIST_HEAD(&low);
+>> +	INIT_LIST_HEAD(&high);
+>> +	INIT_LIST_HEAD(&stack);
+>>
+>> -		if (end < a) {
+>> -			goto insert;
+>> -		} else if (start > b) {
+>> -			pos = pos->next;
+>> -		} else if ((start >= a) && (end <= b)) {
+>> -			if (new->type == type)
+>> -				return 0;
+>> -			else
+>> -				pos = pos->next;
+>> -		} else {
+>> -			if (new->type == type) {
+>> -				phys_addr_t new_start = min(a, start);
+>> -				phys_addr_t new_end = max(b, end);
+>> -				int ret;
+>> -
+>> -				list_del(&entry->list);
+>> -				entry->start = new_start;
+>> -				entry->length = new_end - new_start + 1;
+>> -				ret = iommu_insert_resv_region(entry, regions);
+>> -				kfree(entry);
+>> -				return ret;
+>> -			} else {
+>> -				pos = pos->next;
+>> -			}
+>> -		}
+>> -	}
+>> -insert:
+>> -	region = iommu_alloc_resv_region(new->start, new->length,
+>> -					 new->prot, new->type);
+>> -	if (!region)
+>> +	nr = iommu_alloc_resv_region(new->start, new->length,
+>> +				     new->prot, new->type);
+>> +	if (!nr)
+>>  		return -ENOMEM;
+>>
+>> -	list_add_tail(&region->list, pos);
+>> +	/*
+>> +	 * Elements are dispatched into 3 lists: low/high contain
+>> +	 * segments of lower/higher types than @new; only segments
+>> +	 * with same type as @new remain in @regions, including @new
+>> +	 * ordered inserted by start address
+>> +	 */
+>> +	list_for_each_entry_safe(iter, tmp, regions, list) {
+>> +		if (iter->type < nr->type) {
+>> +			list_move_tail(&iter->list, &low);
+>> +		} else if (iter->type > nr->type) {
+>> +			list_move_tail(&iter->list, &high);
+>> +		} else if (nr->start <= iter->start && !added) {
+>> +			list_add_tail(&nr->list, &iter->list);
+>> +			added = true;
+>> +		}
+>> +	}
+>> +	if (!added)
+>> +		list_add_tail(&nr->list, regions);
+>> +
+>> +	/* Merge overlapping segments in @regions, if any */
+>> +	list_move(regions->next, &stack); /* move the 1st elt to the stack */
+>> +	list_for_each_entry_safe(iter, tmp, regions, list) {
+>> +		phys_addr_t top_end, iter_end = iter->start + iter->length - 1;
+>> +
+>> +		top = list_last_entry(&stack, struct iommu_resv_region, list);
+>> +		top_end = top->start + top->length - 1;
+>> +
+>> +		if (iter->start > top_end + 1) {
+>> +			list_move(&iter->list, &top->list);
+>> +		} else {
+>> +			top->length = max(top_end, iter_end) - top->start + 1;
+>> +			list_del(&iter->list);
+>> +			kfree(iter);
+>> +		}
+>> +	}
+>> +	list_splice(&stack, regions);
+>> +	list_splice(&low, regions);
+>> +	list_splice_tail(&high, regions);
+>>  	return 0;
+>>  }
+>>
+>> --
+>> 2.20.1
+> 
