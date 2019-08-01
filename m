@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19041C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D5EC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89B120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80CB120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AZLgdaUg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bStR7V2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732229AbfHAOko (ORCPT
+        id S1732237AbfHAOkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:40:44 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35868 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731741AbfHAOkk (ORCPT
+        Thu, 1 Aug 2019 10:40:49 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50994 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732207AbfHAOkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 1 Aug 2019 10:40:40 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g67so59336669wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:40:38 -0700 (PDT)
+Received: by mail-wm1-f68.google.com with SMTP id v15so64929719wml.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:40:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=M2NFLK/zY34Il3CN9ocOI5d4GwkmGixwcSg2zvyFkdU=;
-        b=AZLgdaUgvzf281Lh9Me9GLJ9HM7ksZx0exWcc3M06YCjvkJgxQRL0eNp8iIJt3CFPg
-         S5lnCeMYzoTmQgu/M5iH0Op2fF5cGGbwjRVWRNO97eSbNfsIM8GtoqBsIA4rpn5TIU+K
-         RpLbzpKHuFN9Su18XVPbbnIfrEBdIdYtxWZuivhFIEDq7R+CX7DmWtuhgIEGCa9P8+sR
-         rYSTPPgOHupwuISVf/+DW5sByd2gxlrwIK30r6pEkaVdwT25cADrM4jhTbOBMZEtA0ld
-         QntChvNFNwHb4wG5xR0osfqq0iPdfvFpgm02ozjN/pOwLVAZeIfTfXkKrx1DVbUS6JgR
-         ntnw==
+        bh=JLjvU2ODIosSbAGgfcgnEGYGA9K2KD8U033BkbWqs6s=;
+        b=bStR7V2YeW1gpq+dA8PYooGb99XNuHu+zzQtd51dbKalI8jrPgAb2R9ba/V4CAdF/H
+         woSWGAhZ/iHRhtyFLJs9GdUWHXbv81mkCwgAWmWkHJM9sR33mqR+hVEIto13KjW61G9V
+         /9MqwZDC/t+QiZYeHOAH3iqU2AabjsjpHQFaeWn6DOZwvj3mh6FxGGXiS1qFIqTMTe0L
+         K/Mxa3+TABsk5BcInkHnOZEiiq5cThOwPqIfDSGg2zldedK6t8eZD1wu4GuWkwf/Zf+w
+         k6+9I07eJO2tzcy0/9sexqeBmcBYNm8N+ynpD6GIyR83nfZVg9+BSmldfV8Gmr9R4Nmt
+         3H3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=M2NFLK/zY34Il3CN9ocOI5d4GwkmGixwcSg2zvyFkdU=;
-        b=lHjarZNUgHUeFKf/6/dKqu+BotkTh26v3VqcFRpiQolOIzueMDSVdjIA9a7uKAKFer
-         gwvQitFlQYspvpMX7pJ8/t2B7RbqLSHJuOkOU4Y6f4GsCOkEdE/GtijYBqiyjj7T1QEw
-         NCpwy6ulEYodL4JWISJ20Iq3mnThCaJIVkHLWBdFHdtgowEth8MBqyXy8LKOaOZ9a0v0
-         lf2WYcBSDGTgoeC61pTJ0R4IWIFjGFJYYYrNM5gxui1bh28Uhrqwu/NMYKcUWKAPdAMS
-         qMY5UzyV+/4XiO1sE1UNO5sG7JwHtzD8yCrsCRaQrSmRtulVtWnuzQ/xey0btlYpgnQP
-         r7jA==
-X-Gm-Message-State: APjAAAVV9oC7OHi1Tfyr1RSvye4JyafP+gy4f5kZQqgZH+OMMGxtHkF+
-        11V0v1vkHqhM6ozIAqmDBE/bzdzz4N0=
-X-Google-Smtp-Source: APXvYqxm90W8Ae+lIkkVhlV58c7HqZW27dzWVYq1IqJ6PBXtZLyecjiX4J4YEBarx5AsjE9kz7RNng==
-X-Received: by 2002:a7b:c398:: with SMTP id s24mr118537283wmj.53.1564670437791;
-        Thu, 01 Aug 2019 07:40:37 -0700 (PDT)
+        bh=JLjvU2ODIosSbAGgfcgnEGYGA9K2KD8U033BkbWqs6s=;
+        b=BpaiuKhZW4iQEqclXxalXV1zveX7maETqjL63RdKnxHRzeIa7s9GfJp4/BkqGykeon
+         JD8UlYOpVvl5pL4LC7aN9UZRF4ZJw8bJUddHF0LaisYZBrAr4Z97OPDpa5nskaI8ahuZ
+         z4hL5aM/lJuNoHUA6+2VDmMA3qixOroA9u0LmJMaRLRdOjf24QtlZgdWy/ohbjYuJ5V2
+         2o1dOn70wZBi8DV69pXhadCCTq9elG11EIO6tC0+eq6XjflT4jl0TpOthRLdFSmJObBH
+         e95pFJZQ/IE8o7K4l+JsbWCcw7jeFAYqTkBHVVKhB5C/dcYQi8/UO4XXDN+wkYXDJBOp
+         WMRw==
+X-Gm-Message-State: APjAAAUt+ODNRLqilDtHxvT0+gNSlnYTudi6Tp/1Alkwt5wovOiiZorb
+        yMVfxx5jGgcqRMbtxDWUZdAHY+DxiGk=
+X-Google-Smtp-Source: APXvYqz+Zw9kld2nPblI1PI9MXZipUcsQWerybRNNF582amjjXF8q2t4NKJ69J9yl3mEf03Ikld5aQ==
+X-Received: by 2002:a1c:a686:: with SMTP id p128mr55764273wme.130.1564670438525;
+        Thu, 01 Aug 2019 07:40:38 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:f:6020:9865:5ad1:5ff3:80c])
-        by smtp.gmail.com with ESMTPSA id y10sm58768873wmj.2.2019.08.01.07.40.36
+        by smtp.gmail.com with ESMTPSA id y10sm58768873wmj.2.2019.08.01.07.40.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 01 Aug 2019 07:40:37 -0700 (PDT)
+        Thu, 01 Aug 2019 07:40:38 -0700 (PDT)
 From:   Vincent Guittot <vincent.guittot@linaro.org>
 To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
         peterz@infradead.org
@@ -62,9 +62,9 @@ Cc:     pauld@redhat.com, valentin.schneider@arm.com,
         srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
         dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
         Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v2 7/8] sched/fair: evenly spread tasks when not overloaded
-Date:   Thu,  1 Aug 2019 16:40:23 +0200
-Message-Id: <1564670424-26023-8-git-send-email-vincent.guittot@linaro.org>
+Subject: [PATCH v2 8/8] sched/fair: use utilization to select misfit task
+Date:   Thu,  1 Aug 2019 16:40:24 +0200
+Message-Id: <1564670424-26023-9-git-send-email-vincent.guittot@linaro.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564670424-26023-1-git-send-email-vincent.guittot@linaro.org>
 References: <1564670424-26023-1-git-send-email-vincent.guittot@linaro.org>
@@ -73,65 +73,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there is only 1 cpu per group, using the idle cpus to evenly spread
-tasks doesn't make sense and nr_running is a better metrics.
+utilization is used to detect a misfit task but the load is then used to
+select the task on the CPU which can lead to select a small task with
+high weight instead of the task that triggered the misfit migration.
 
 Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/fair.c | 40 ++++++++++++++++++++++++++++------------
- 1 file changed, 28 insertions(+), 12 deletions(-)
+ kernel/sched/fair.c  | 28 ++++++++++++++--------------
+ kernel/sched/sched.h |  2 +-
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index dfaf0b8..53e64a7 100644
+index 53e64a7..d08cc12 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -8654,18 +8654,34 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
- 	    busiest->sum_nr_running > local->sum_nr_running + 1)
- 		goto force_balance;
+@@ -3817,16 +3817,16 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+ 		return;
  
--	if (busiest->group_type != group_overloaded &&
--	     (env->idle == CPU_NOT_IDLE ||
--	      local->idle_cpus <= (busiest->idle_cpus + 1)))
--		/*
--		 * If the busiest group is not overloaded
--		 * and there is no imbalance between this and busiest group
--		 * wrt idle CPUs, it is balanced. The imbalance
--		 * becomes significant if the diff is greater than 1 otherwise
--		 * we might end up to just move the imbalance on another
--		 * group.
--		 */
--		goto out_balanced;
-+	if (busiest->group_type != group_overloaded) {
-+		if (env->idle == CPU_NOT_IDLE)
-+			/*
-+			 * If the busiest group is not overloaded (and as a
-+			 * result the local one too) but this cpu is already
-+			 * busy, let another idle cpu try to pull task.
-+			 */
-+			goto out_balanced;
-+
-+		if (busiest->group_weight > 1 &&
-+		    local->idle_cpus <= (busiest->idle_cpus + 1))
-+			/*
-+			 * If the busiest group is not overloaded
-+			 * and there is no imbalance between this and busiest
-+			 * group wrt idle CPUs, it is balanced. The imbalance
-+			 * becomes significant if the diff is greater than 1
-+			 * otherwise we might end up to just move the imbalance
-+			 * on another group. Of course this applies only if
-+			 * there is more than 1 CPU per group.
-+			 */
-+			goto out_balanced;
-+
-+		if (busiest->sum_h_nr_running == 1)
-+			/*
-+			 * busiest doesn't have any tasks waiting to run
-+			 */
-+			goto out_balanced;
-+	}
+ 	if (!p) {
+-		rq->misfit_task_load = 0;
++		rq->misfit_task_util = 0;
+ 		return;
+ 	}
  
- force_balance:
- 	/* Looks like there is an imbalance. Compute it */
+ 	if (task_fits_capacity(p, capacity_of(cpu_of(rq)))) {
+-		rq->misfit_task_load = 0;
++		rq->misfit_task_util = 0;
+ 		return;
+ 	}
+ 
+-	rq->misfit_task_load = task_h_load(p);
++	rq->misfit_task_util = task_util_est(p);
+ }
+ 
+ #else /* CONFIG_SMP */
+@@ -7487,14 +7487,14 @@ static int detach_tasks(struct lb_env *env)
+ 			break;
+ 
+ 		case migrate_misfit:
+-			load = task_h_load(p);
++			util = task_util_est(p);
+ 
+ 			/*
+ 			 * utilization of misfit task might decrease a bit
+ 			 * since it has been recorded. Be conservative in the
+ 			 * condition.
+ 			 */
+-			if (load < env->imbalance)
++			if (2*util < env->imbalance)
+ 				goto next;
+ 
+ 			env->imbalance = 0;
+@@ -7785,7 +7785,7 @@ struct sg_lb_stats {
+ 	unsigned int group_weight;
+ 	enum group_type group_type;
+ 	unsigned int group_asym_capacity; /* tasks should be move to preferred cpu */
+-	unsigned long group_misfit_task_load; /* A CPU has a task too big for its capacity */
++	unsigned long group_misfit_task_util; /* A CPU has a task too big for its capacity */
+ #ifdef CONFIG_NUMA_BALANCING
+ 	unsigned int nr_numa_running;
+ 	unsigned int nr_preferred_running;
+@@ -7959,7 +7959,7 @@ check_cpu_capacity(struct rq *rq, struct sched_domain *sd)
+  */
+ static inline int check_misfit_status(struct rq *rq, struct sched_domain *sd)
+ {
+-	return rq->misfit_task_load &&
++	return rq->misfit_task_util &&
+ 		(rq->cpu_capacity_orig < rq->rd->max_cpu_capacity ||
+ 		 check_cpu_capacity(rq, sd));
+ }
+@@ -8078,7 +8078,7 @@ group_type group_classify(struct lb_env *env,
+ 	if (sgs->group_asym_capacity)
+ 		return group_asym_capacity;
+ 
+-	if (sgs->group_misfit_task_load)
++	if (sgs->group_misfit_task_util)
+ 		return group_misfit_task;
+ 
+ 	if (!group_has_capacity(env, sgs))
+@@ -8164,8 +8164,8 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+ 
+ 		/* Check for a misfit task on the cpu */
+ 		if (env->sd->flags & SD_ASYM_CPUCAPACITY &&
+-		    sgs->group_misfit_task_load < rq->misfit_task_load) {
+-			sgs->group_misfit_task_load = rq->misfit_task_load;
++		    sgs->group_misfit_task_util < rq->misfit_task_util) {
++			sgs->group_misfit_task_util = rq->misfit_task_util;
+ 			*sg_status |= SG_OVERLOAD;
+ 		}
+ 	}
+@@ -8261,7 +8261,7 @@ static bool update_sd_pick_busiest(struct lb_env *env,
+ 		 * If we have more than one misfit sg go with the
+ 		 * biggest misfit.
+ 		 */
+-		if (sgs->group_misfit_task_load < busiest->group_misfit_task_load)
++		if (sgs->group_misfit_task_util < busiest->group_misfit_task_util)
+ 			return false;
+ 		break;
+ 
+@@ -8458,7 +8458,7 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+ 	if (busiest->group_type == group_misfit_task) {
+ 		/* Set imbalance to allow misfit task to be balanced. */
+ 		env->balance_type = migrate_misfit;
+-		env->imbalance = busiest->group_misfit_task_load;
++		env->imbalance = busiest->group_misfit_task_util;
+ 		return;
+ 	}
+ 
+@@ -8801,8 +8801,8 @@ static struct rq *find_busiest_queue(struct lb_env *env,
+ 			 * For ASYM_CPUCAPACITY domains with misfit tasks we simply
+ 			 * seek the "biggest" misfit task.
+ 			 */
+-			if (rq->misfit_task_load > busiest_load) {
+-				busiest_load = rq->misfit_task_load;
++			if (rq->misfit_task_util > busiest_util) {
++				busiest_util = rq->misfit_task_util;
+ 				busiest = rq;
+ 			}
+ 
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 7583fad..ef6e1b2 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -916,7 +916,7 @@ struct rq {
+ 
+ 	unsigned char		idle_balance;
+ 
+-	unsigned long		misfit_task_load;
++	unsigned long		misfit_task_util;
+ 
+ 	/* For active balancing */
+ 	int			active_balance;
 -- 
 2.7.4
 
