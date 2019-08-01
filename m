@@ -2,339 +2,146 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EE0C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374CFC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10A2206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A69C20665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:48:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="BCqrZFER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731483AbfHAMrC (ORCPT
+        id S1731526AbfHAMsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:47:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:35500 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731335AbfHAMq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:46:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D16051570;
-        Thu,  1 Aug 2019 05:46:57 -0700 (PDT)
-Received: from queper01-lin.cambridge.arm.com (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B354D3F575;
-        Thu,  1 Aug 2019 05:46:55 -0700 (PDT)
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        catalin.marinas@arm.com, will@kernel.org, daniel.lezcano@linaro.org
-Cc:     dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        mka@chromium.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        quentin.perret@arm.com
-Subject: [PATCH v6 2/3] thermal: cpu_cooling: Make the power-related code depend on IPA
-Date:   Thu,  1 Aug 2019 13:46:42 +0100
-Message-Id: <20190801124643.17112-3-quentin.perret@arm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190801124643.17112-1-quentin.perret@arm.com>
-References: <20190801124643.17112-1-quentin.perret@arm.com>
+        Thu, 1 Aug 2019 08:48:11 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34226 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731399AbfHAMsK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:48:10 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b29so42919022lfq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 05:48:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rl9gxlsQAmtdUucdCjHcN4IJXqqRSXnZiys3c1iAChM=;
+        b=BCqrZFER2qt2tRS4BERTa8OYTuAczZw6Vu3z7uTZGQYFaSHcfqcuV5SQV52phXuR2o
+         pc7vXSMcsbSyYQZoWwSHx+qcs5+KqXD1ix4QMDk1fiOe2f+Ey++TFVh4YlYS57d7nY/R
+         +PJ/gd2ZVxTYilPY2dcgN2+QJY+52AFbAoy3305qeyBUImzo0UJUG1ndwMGZnl91xgKz
+         NZSc6hvZbcgaGjMl71JYcOKdsjCyGbbYqmWeQxBn+au/dhacM3cMsu+jw8f7pJ2BZvPK
+         ixzTT/jc3086+42k3lk1OU5aCakMaxf9AgMmj6t3GYjy8+6qb4n0kmkj+3oN88PiNKlA
+         pQPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rl9gxlsQAmtdUucdCjHcN4IJXqqRSXnZiys3c1iAChM=;
+        b=oTir0aMvHFzbyA//fAW4iU7JU0D0fWe4fNxzQVD9e3CR9+Z1CgHriIui+GM3XuTXRe
+         UiQhs6+zhMwy0jj1FP+aemq6T+JV1OM/3V4wdRK4fSZru91gHb+7NMPUyH64y0QrB4sU
+         OeGfw0yYk8sJsLLicZ/QfR4MdqFvNOmuOsM+tA71FMEFizYGLqODpr/rZ8J+n8nZQ8Yy
+         GAVKQsZsVoyYd/U0EU2uTSoQF14X6tUxb30YwGcPJ2a/HSv9ZRgq7l9bZFzHMcAYeFll
+         tXAsxZyVz9zsjJAqfYOkcZWKqYRFMAgqAn8ut+qM0RfD1Q15fjPBO5EQdV5H4kDnNeAf
+         7Ifg==
+X-Gm-Message-State: APjAAAXJ5F5ozEt5Tds4FYiwrMTxgEh2AAgbvY32uZoKjl+aNl0AsALu
+        Jgz0sBf5/gevIOZ3H41zI1ZgwTa+bWL6GbyYCA==
+X-Google-Smtp-Source: APXvYqxgr8PQjSzAdp7+U+PsgA9phbRv670CHsf3naEv6EhZF5kRfW6dfEe+5cBDHIT5XJU7QNpkLNvRclzntJy1hqs=
+X-Received: by 2002:ac2:5559:: with SMTP id l25mr59946611lfk.175.1564663688296;
+ Thu, 01 Aug 2019 05:48:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190731153443.4984-1-acgoide@tycho.nsa.gov> <1c62c931-9441-4264-c119-d038b2d0c9b9@schaufler-ca.com>
+ <CAHC9VhS6cfMw5ZUkOSov6hexh9QpnpKwipP7L7ZYGCVLCHGfFQ@mail.gmail.com> <66fbc35c-6cc8-bd08-9bf9-aa731dc3ff09@tycho.nsa.gov>
+In-Reply-To: <66fbc35c-6cc8-bd08-9bf9-aa731dc3ff09@tycho.nsa.gov>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 1 Aug 2019 08:47:56 -0400
+Message-ID: <CAHC9VhQg_UCDZpm=hWTn5YFAYQJt1K_fRxxq+LzORekJ8p9zNg@mail.gmail.com>
+Subject: Re: [PATCH] fanotify, inotify, dnotify, security: add security hook
+ for fs notifications
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Aaron Goidel <acgoide@tycho.nsa.gov>, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, dhowells@redhat.com, jack@suse.cz,
+        amir73il@gmail.com, James Morris <jmorris@namei.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The core CPU cooling infrastructure has power-related functions
-that have only one client: IPA. Since there can be no user of those
-functions if IPA is not compiled in, make sure to guard them with
-checks on CONFIG_THERMAL_GOV_POWER_ALLOCATOR to not waste space
-unnecessarily.
+On Thu, Aug 1, 2019 at 7:31 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
+> On 7/31/19 8:27 PM, Paul Moore wrote:
+> > On Wed, Jul 31, 2019 at 1:26 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> >> On 7/31/2019 8:34 AM, Aaron Goidel wrote:
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Quentin Perret <quentin.perret@arm.com>
----
- drivers/thermal/cpu_cooling.c | 214 +++++++++++++++++-----------------
- 1 file changed, 104 insertions(+), 110 deletions(-)
+...
 
-diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-index 4c5db59a619b..498f59ab64b2 100644
---- a/drivers/thermal/cpu_cooling.c
-+++ b/drivers/thermal/cpu_cooling.c
-@@ -46,7 +46,9 @@
-  */
- struct freq_table {
- 	u32 frequency;
-+#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
- 	u32 power;
-+#endif
- };
- 
- /**
-@@ -96,28 +98,6 @@ static DEFINE_IDA(cpufreq_ida);
- static DEFINE_MUTEX(cooling_list_lock);
- static LIST_HEAD(cpufreq_cdev_list);
- 
--/* Below code defines functions to be used for cpufreq as cooling device */
--
--/**
-- * get_level: Find the level for a particular frequency
-- * @cpufreq_cdev: cpufreq_cdev for which the property is required
-- * @freq: Frequency
-- *
-- * Return: level corresponding to the frequency.
-- */
--static unsigned long get_level(struct cpufreq_cooling_device *cpufreq_cdev,
--			       unsigned int freq)
--{
--	struct freq_table *freq_table = cpufreq_cdev->freq_table;
--	unsigned long level;
--
--	for (level = 1; level <= cpufreq_cdev->max_level; level++)
--		if (freq > freq_table[level].frequency)
--			break;
--
--	return level - 1;
--}
--
- /**
-  * cpufreq_thermal_notifier - notifier callback for cpufreq policy change.
-  * @nb:	struct notifier_block * with callback info.
-@@ -171,6 +151,27 @@ static int cpufreq_thermal_notifier(struct notifier_block *nb,
- 	return NOTIFY_OK;
- }
- 
-+#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
-+/**
-+ * get_level: Find the level for a particular frequency
-+ * @cpufreq_cdev: cpufreq_cdev for which the property is required
-+ * @freq: Frequency
-+ *
-+ * Return: level corresponding to the frequency.
-+ */
-+static unsigned long get_level(struct cpufreq_cooling_device *cpufreq_cdev,
-+			       unsigned int freq)
-+{
-+	struct freq_table *freq_table = cpufreq_cdev->freq_table;
-+	unsigned long level;
-+
-+	for (level = 1; level <= cpufreq_cdev->max_level; level++)
-+		if (freq > freq_table[level].frequency)
-+			break;
-+
-+	return level - 1;
-+}
-+
- /**
-  * update_freq_table() - Update the freq table with power numbers
-  * @cpufreq_cdev:	the cpufreq cooling device in which to update the table
-@@ -319,80 +320,6 @@ static u32 get_dynamic_power(struct cpufreq_cooling_device *cpufreq_cdev,
- 	return (raw_cpu_power * cpufreq_cdev->last_load) / 100;
- }
- 
--/* cpufreq cooling device callback functions are defined below */
--
--/**
-- * cpufreq_get_max_state - callback function to get the max cooling state.
-- * @cdev: thermal cooling device pointer.
-- * @state: fill this variable with the max cooling state.
-- *
-- * Callback for the thermal cooling device to return the cpufreq
-- * max cooling state.
-- *
-- * Return: 0 on success, an error code otherwise.
-- */
--static int cpufreq_get_max_state(struct thermal_cooling_device *cdev,
--				 unsigned long *state)
--{
--	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
--
--	*state = cpufreq_cdev->max_level;
--	return 0;
--}
--
--/**
-- * cpufreq_get_cur_state - callback function to get the current cooling state.
-- * @cdev: thermal cooling device pointer.
-- * @state: fill this variable with the current cooling state.
-- *
-- * Callback for the thermal cooling device to return the cpufreq
-- * current cooling state.
-- *
-- * Return: 0 on success, an error code otherwise.
-- */
--static int cpufreq_get_cur_state(struct thermal_cooling_device *cdev,
--				 unsigned long *state)
--{
--	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
--
--	*state = cpufreq_cdev->cpufreq_state;
--
--	return 0;
--}
--
--/**
-- * cpufreq_set_cur_state - callback function to set the current cooling state.
-- * @cdev: thermal cooling device pointer.
-- * @state: set this variable to the current cooling state.
-- *
-- * Callback for the thermal cooling device to change the cpufreq
-- * current cooling state.
-- *
-- * Return: 0 on success, an error code otherwise.
-- */
--static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
--				 unsigned long state)
--{
--	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
--	unsigned int clip_freq;
--
--	/* Request state should be less than max_level */
--	if (WARN_ON(state > cpufreq_cdev->max_level))
--		return -EINVAL;
--
--	/* Check if the old cooling action is same as new cooling action */
--	if (cpufreq_cdev->cpufreq_state == state)
--		return 0;
--
--	clip_freq = cpufreq_cdev->freq_table[state].frequency;
--	cpufreq_cdev->cpufreq_state = state;
--	cpufreq_cdev->clipped_freq = clip_freq;
--
--	cpufreq_update_policy(cpufreq_cdev->policy->cpu);
--
--	return 0;
--}
--
- /**
-  * cpufreq_get_requested_power() - get the current power
-  * @cdev:	&thermal_cooling_device pointer
-@@ -536,22 +463,88 @@ static int cpufreq_power2state(struct thermal_cooling_device *cdev,
- 				      power);
- 	return 0;
- }
-+#endif /* CONFIG_THERMAL_GOV_POWER_ALLOCATOR */
-+
-+/* cpufreq cooling device callback functions are defined below */
-+
-+/**
-+ * cpufreq_get_max_state - callback function to get the max cooling state.
-+ * @cdev: thermal cooling device pointer.
-+ * @state: fill this variable with the max cooling state.
-+ *
-+ * Callback for the thermal cooling device to return the cpufreq
-+ * max cooling state.
-+ *
-+ * Return: 0 on success, an error code otherwise.
-+ */
-+static int cpufreq_get_max_state(struct thermal_cooling_device *cdev,
-+				 unsigned long *state)
-+{
-+	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-+
-+	*state = cpufreq_cdev->max_level;
-+	return 0;
-+}
-+
-+/**
-+ * cpufreq_get_cur_state - callback function to get the current cooling state.
-+ * @cdev: thermal cooling device pointer.
-+ * @state: fill this variable with the current cooling state.
-+ *
-+ * Callback for the thermal cooling device to return the cpufreq
-+ * current cooling state.
-+ *
-+ * Return: 0 on success, an error code otherwise.
-+ */
-+static int cpufreq_get_cur_state(struct thermal_cooling_device *cdev,
-+				 unsigned long *state)
-+{
-+	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-+
-+	*state = cpufreq_cdev->cpufreq_state;
-+
-+	return 0;
-+}
-+
-+/**
-+ * cpufreq_set_cur_state - callback function to set the current cooling state.
-+ * @cdev: thermal cooling device pointer.
-+ * @state: set this variable to the current cooling state.
-+ *
-+ * Callback for the thermal cooling device to change the cpufreq
-+ * current cooling state.
-+ *
-+ * Return: 0 on success, an error code otherwise.
-+ */
-+static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
-+				 unsigned long state)
-+{
-+	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-+	unsigned int clip_freq;
-+
-+	/* Request state should be less than max_level */
-+	if (WARN_ON(state > cpufreq_cdev->max_level))
-+		return -EINVAL;
-+
-+	/* Check if the old cooling action is same as new cooling action */
-+	if (cpufreq_cdev->cpufreq_state == state)
-+		return 0;
-+
-+	clip_freq = cpufreq_cdev->freq_table[state].frequency;
-+	cpufreq_cdev->cpufreq_state = state;
-+	cpufreq_cdev->clipped_freq = clip_freq;
-+
-+	cpufreq_update_policy(cpufreq_cdev->policy->cpu);
-+
-+	return 0;
-+}
- 
- /* Bind cpufreq callbacks to thermal cooling device ops */
- 
- static struct thermal_cooling_device_ops cpufreq_cooling_ops = {
--	.get_max_state = cpufreq_get_max_state,
--	.get_cur_state = cpufreq_get_cur_state,
--	.set_cur_state = cpufreq_set_cur_state,
--};
--
--static struct thermal_cooling_device_ops cpufreq_power_cooling_ops = {
- 	.get_max_state		= cpufreq_get_max_state,
- 	.get_cur_state		= cpufreq_get_cur_state,
- 	.set_cur_state		= cpufreq_set_cur_state,
--	.get_requested_power	= cpufreq_get_requested_power,
--	.state2power		= cpufreq_state2power,
--	.power2state		= cpufreq_power2state,
- };
- 
- /* Notifier for cpufreq policy change */
-@@ -659,18 +652,19 @@ __cpufreq_cooling_register(struct device_node *np,
- 			pr_debug("%s: freq:%u KHz\n", __func__, freq);
- 	}
- 
-+	cooling_ops = &cpufreq_cooling_ops;
-+#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
- 	if (capacitance) {
- 		ret = update_freq_table(cpufreq_cdev, capacitance);
- 		if (ret) {
- 			cdev = ERR_PTR(ret);
- 			goto remove_ida;
- 		}
--
--		cooling_ops = &cpufreq_power_cooling_ops;
--	} else {
--		cooling_ops = &cpufreq_cooling_ops;
-+		cooling_ops->get_requested_power = cpufreq_get_requested_power;
-+		cooling_ops->state2power = cpufreq_state2power;
-+		cooling_ops->power2state = cpufreq_power2state;
- 	}
--
-+#endif
- 	cdev = thermal_of_cooling_device_register(np, dev_name, cpufreq_cdev,
- 						  cooling_ops);
- 	if (IS_ERR(cdev))
+> >>> +static int selinux_path_notify(const struct path *path, u64 mask,
+> >>> +                                             unsigned int obj_type)
+> >>> +{
+> >>> +     int ret;
+> >>> +     u32 perm;
+> >>> +
+> >>> +     struct common_audit_data ad;
+> >>> +
+> >>> +     ad.type = LSM_AUDIT_DATA_PATH;
+> >>> +     ad.u.path = *path;
+> >>> +
+> >>> +     /*
+> >>> +      * Set permission needed based on the type of mark being set.
+> >>> +      * Performs an additional check for sb watches.
+> >>> +      */
+> >>> +     switch (obj_type) {
+> >>> +     case FSNOTIFY_OBJ_TYPE_VFSMOUNT:
+> >>> +             perm = FILE__WATCH_MOUNT;
+> >>> +             break;
+> >>> +     case FSNOTIFY_OBJ_TYPE_SB:
+> >>> +             perm = FILE__WATCH_SB;
+> >>> +             ret = superblock_has_perm(current_cred(), path->dentry->d_sb,
+> >>> +                                             FILESYSTEM__WATCH, &ad);
+> >>> +             if (ret)
+> >>> +                     return ret;
+> >>> +             break;
+> >>> +     case FSNOTIFY_OBJ_TYPE_INODE:
+> >>> +             perm = FILE__WATCH;
+> >>> +             break;
+> >>> +     default:
+> >>> +             return -EINVAL;
+> >>> +     }
+> >>> +
+> >>> +     // check if the mask is requesting ability to set a blocking watch
+> >
+> > ... in the future please don't use "// XXX", use "/* XXX */" instead :)
+> >
+> > Don't respin the patch just for this, but if you have to do it for
+> > some other reason please fix the C++ style comments.  Thanks.
+>
+> This was discussed during the earlier RFC series but ultimately someone
+> pointed to:
+> https://lkml.org/lkml/2016/7/8/625
+> where Linus blessed the use of C++/C99 style comments.  And checkpatch
+> accepts them these days.
+
+Yep, I'm aware of both, it is simply a personal preference of mine.
+I'm not going to reject patches with C++ style comments, but I would
+ask people to stick to the good ol' fashioned comments for patches
+they submit.
+
+> Obviously if you truly don't want them in the SELinux code, that's your
+> call.  But note that all files now have at least one such comment as a
+> result of the mass SPDX license headers that were added throughout the
+> tree using that style.
+
+FYI, the sky is blue.
+
+It isn't just the license headers either, Al dropped one into hooks.c
+:).  Just like I don't plan to reject patches due only to the comment
+style, you don't see me pushing patches to change the C++ comments.
+
 -- 
-2.22.0
-
+paul moore
+www.paul-moore.com
