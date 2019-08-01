@@ -2,98 +2,90 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B752C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA9CC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B32206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CA8206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:14:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kGxY5Un9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbfHAHNR convert rfc822-to-8bit (ORCPT
+        id S1730546AbfHAHOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:13:17 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:38977 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729116AbfHAHNR (ORCPT
+        Thu, 1 Aug 2019 03:14:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40508 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfHAHOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:13:17 -0400
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id B3C0A100005;
-        Thu,  1 Aug 2019 07:13:12 +0000 (UTC)
-Date:   Thu, 1 Aug 2019 09:13:10 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     marek.vasut@gmail.com, bbrezillon@kernel.org, dwmw2@infradead.org,
-        computersforpeace@gmail.com, vigneshr@ti.com, richard@nod.at,
-        robh+dt@kernel.org, stefan@agner.ch, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        juliensu@mxic.com.tw, paul.burton@mips.com, liang.yang@amlogic.com,
-        lee.jones@linaro.org, anders.roxell@linaro.org,
-        christophe.kerello@st.com, paul@crapouillou.net,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] dt-bindings: mtd: Document Macronix raw NAND
- controller bindings
-Message-ID: <20190801091310.035bc824@xps13>
-In-Reply-To: <1564631710-30276-3-git-send-email-masonccyang@mxic.com.tw>
-References: <1564631710-30276-1-git-send-email-masonccyang@mxic.com.tw>
-        <1564631710-30276-3-git-send-email-masonccyang@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 1 Aug 2019 03:14:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r1so72328869wrl.7
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 00:14:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZtpEMYtf9IHdV3/wzdyegV2uPdXRwuCeceSmuY7Qe2Q=;
+        b=kGxY5Un9HMbrQVikYl7BdRGEJNk5seUr9xeLQkOJDxIPzBL8ZCOo5hZEehQdRAPkM2
+         OYSdq91UyJHcAXWkOS3fXNHZxPyQnrxo+Ulaf61evzNTscYjfi+7Cbehk+1E8m71/6mC
+         U13xfhTyg6+jd90DZaFh0A0KMY2LjWgUkLkn+OkzulwZD2J+oyygxJdv3WJPQVymFs3U
+         sYVSGFPXXiMGIgm0d6zF2kJtYo8sbLMA2okHxV9UWYZgZwDcwaR4342v7sjwNc+enXO9
+         chXU8y7gejR3HdyXdtx+tSVGh00n063k6lp/OlfmcsCP+Uo4pszNnccKOwxJod40odcD
+         BYng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZtpEMYtf9IHdV3/wzdyegV2uPdXRwuCeceSmuY7Qe2Q=;
+        b=cmlnX0bqJXLnyV5f05wq4XLLenvFdGC7gfn1nH00NaVgiPD3tR0ooj8ywDoO2jKU2O
+         rzRKzheVD208Ej8BzCOJHP35BN9Z2zZr3LseYKgyiWawWok5YE31R/+Qj87Xr3QBBmWv
+         x4CEWQrCt1EwOYRZz484vk/qQy7JpmdRyzxfEjxZhqaMghlTcILO0Is6C5Dvv7Y87fGu
+         KfeHNXbndVniq6zrfOqx8P+4IQ9sCOUM/1VXlGvkb9If0hkIjcANHcKjCEZtNVxw3754
+         f7L7rB8v4S3ike0Vwh3AsiHcAFP/+OOQNE9kZhrvkjBsu7B5zRsgbkEwVX2KRbP1hksI
+         jXjw==
+X-Gm-Message-State: APjAAAUQkEF0kgQhZKzkMu3PxflxDQg8r9ZDGQ6O1XtaajufJukHB6j9
+        O6nFtlTwpXL3sDT0LNwHzEJVOHh9ETKerT3BamOkFA==
+X-Google-Smtp-Source: APXvYqz2wqSKzTJIvgWm78hO385N0YvtpdJKQHPyq2WJg3IG6jUfYtbKcjYdcOtacK8hJh3nvmsajE/Vpys+rxreSuE=
+X-Received: by 2002:a5d:46cf:: with SMTP id g15mr1158635wrs.93.1564643652032;
+ Thu, 01 Aug 2019 00:14:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <1564578355-9639-1-git-send-email-iuliana.prodan@nxp.com> <VI1PR0402MB348576458A879D8F162D01C098DF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB348576458A879D8F162D01C098DF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 1 Aug 2019 10:14:00 +0300
+Message-ID: <CAKv+Gu9LTy4Qpo8hDdjuv62NiecMHDuUu5H19WoCqY+UupeBRw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] crypto: validate inputs for gcm and aes
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+On Wed, 31 Jul 2019 at 16:35, Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 7/31/2019 4:06 PM, Iuliana Prodan wrote:
+> > Added inline helper functions to check authsize and assoclen for
+> > gcm, rfc4106 and rfc4543.
+> > Added, also, inline helper function to check key length for AES algorit=
+hms.
+> > These are used in the generic implementation of gcm/rfc4106/rfc4543
+> > and aes.
+> >
+> For the series:
+> Reviewed-by: Horia Geant=C4=83 <horia.geanta@nxp.com>
+>
 
-Mason Yang <masonccyang@mxic.com.tw> wrote on Thu,  1 Aug 2019 11:55:10
-+0800:
+Likewise,
 
-> Document the bindings used by the Macronix raw NAND controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  Documentation/devicetree/bindings/mtd/mxic-nand.txt | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> new file mode 100644
-> index 0000000..de37d60
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> @@ -0,0 +1,19 @@
-> +Macronix Raw NAND Controller Device Tree Bindings
-> +-------------------------------------------------
-> +
-> +Required properties:
-> +- compatible: should be "mxicy,multi-itfc-v009-nand-morph"
-> +- reg: should contain 1 entry for the registers
-> +- interrupts: interrupt line connected to this raw NAND controller
-> +- clock-names: should contain "ps", "send" and "send_dly"
-> +- clocks: should contain 3 phandles for the "ps", "send" and
-> +	 "send_dly" clocks
-> +
-> +Example:
-> +
-> +	nand: nand-controller@43c30000 {
-> +		compatible = "mxicy,multi-itfc-v009-nand-morph";
-
-"mxicy" looks strange to me, I know it has been used in the past and
-cannot be removed, but I don't think it is wise to continue using it
-while your use "mxic" in all your other contributions. I would update
-the prefix to mxic here and fill-in the relevant doc.
-
-Also, what is nand-morph? I thought we were okay for
-the "-nand-controller" suffix.
-
-
-Thanks,
-Miquèl
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
