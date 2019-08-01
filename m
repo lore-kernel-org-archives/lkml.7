@@ -2,83 +2,108 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5389C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B079C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F5220838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA775206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564693931;
+	bh=Z3JBSEabCYqVERhucom6VoAMEjeEttCuwr//yqx2TY8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EHKhA0J++CScZVYO1KwHZYbkF2zb6i0Ues225EqxMBeLte7BWXS0eRbKAXMk3f2mJ
+	 rIiQgZ2klizpOLMvTWWF2cX1QE3EiKenimDbimpRKF359Pa/tFgy01iyaMDHbYlOK4
+	 PmI0HIZ7/RLRFKJw07rkxx5ztbBysmJi6oaQS11M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389061AbfHAVKR (ORCPT
+        id S2389085AbfHAVMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:10:17 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:55553 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726888AbfHAVKR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:10:17 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TYQEJnk_1564693809;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TYQEJnk_1564693809)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 02 Aug 2019 05:10:14 +0800
-Subject: Re: [BUG]: mm/vmscan.c: shrink_slab does not work correctly with
- memcg disabled via commandline
-To:     Jan Hadrava <had@kam.mff.cuni.cz>, Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        wizards@kam.mff.cuni.cz, Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190801134250.scbfnjewahbt5zui@kam.mff.cuni.cz>
- <20190801140610.GM11627@dhcp22.suse.cz>
- <20190801155434.2dftso2wuggfuv7a@kam.mff.cuni.cz>
- <20190801163213.GO11627@dhcp22.suse.cz>
- <20190801174631.ulnlx3pi2g2rznzk@kam.mff.cuni.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <8db8ec82-5a66-a221-09f3-66d0b8b9a75f@linux.alibaba.com>
-Date:   Thu, 1 Aug 2019 14:10:05 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 1 Aug 2019 17:12:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:45634 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732361AbfHAVMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 17:12:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 14:12:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,335,1559545200"; 
+   d="scan'208";a="348219613"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga005.jf.intel.com with ESMTP; 01 Aug 2019 14:12:08 -0700
+Date:   Thu, 1 Aug 2019 15:09:29 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        keith.busch@intel.com
+Subject: Re: [PATCH v4 2/7] PCI/ATS: Initialize PRI in pci_ats_init()
+Message-ID: <20190801210929.GE15795@localhost.localdomain>
+References: <cover.1562172836.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <744998862eebecfae79afd23c42d518264231a22.1562172836.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190801174631.ulnlx3pi2g2rznzk@kam.mff.cuni.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <744998862eebecfae79afd23c42d518264231a22.1562172836.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 03, 2019 at 01:46:19PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> +#ifdef CONFIG_PCI_PRI
+> +static void pci_pri_init(struct pci_dev *pdev)
+> +{
+> +	u32 max_requests;
+> +	int pos;
+> +
+> +	/*
+> +	 * As per PCIe r4.0, sec 9.3.7.11, only PF is permitted to
+> +	 * implement PRI and all associated VFs can only use it.
+> +	 * Since PF already initialized the PRI parameters there is
+> +	 * no need to proceed further.
+> +	 */
+> +	if (pdev->is_virtfn)
+> +		return;
+> +
+> +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+> +	if (!pos)
+> +		return;
+> +
+> +	pci_read_config_dword(pdev, pos + PCI_PRI_MAX_REQ, &max_requests);
+> +
+> +	/*
+> +	 * Since PRI is a shared resource between PF and VF, we must not
+> +	 * configure Outstanding Page Allocation Quota as a per device
+> +	 * resource in pci_enable_pri(). So use maximum value possible
+> +	 * as default value.
+> +	 */
+> +	pci_write_config_dword(pdev, pos + PCI_PRI_ALLOC_REQ, max_requests);
+> +
+> +	pdev->pri_reqs_alloc = max_requests;
+> +	pdev->pri_cap = pos;
+> +}
+> +#endif
+> +
+>  void pci_ats_init(struct pci_dev *dev)
+>  {
+>  	int pos;
+> @@ -28,6 +62,10 @@ void pci_ats_init(struct pci_dev *dev)
+>  		return;
+>  
+>  	dev->ats_cap = pos;
+> +
+> +#ifdef CONFIG_PCI_PRI
+> +	pci_pri_init(dev);
+> +#endif
+>  }
 
-
-On 8/1/19 10:46 AM, Jan Hadrava wrote:
-> On Thu, Aug 01, 2019 at 06:32:13PM +0200, Michal Hocko wrote:
->> On Thu 01-08-19 17:54:34, Jan Hadrava wrote:
->>> Just to be sure, i run my tests and patch proposed in the original thread
->>> solves my issue in all four affected stable releases:
->> Cc Andrew.
-> Are you sure? I can't see any change in e-mail headers.
-
-Cc'ed Andrew.
-
->
->> I assume we can assume your Tested-by tag?
-> Well, these test only checked, that bug is present without the patch
-> and disappears after applying it. Anyway: I am ok with it.
-
-Thanks for testing it. I think you ran into the similar pre-mature OOM 
-issue as what Shakeel reported.
-
-Andrew,
-
-The patch has been in -mm tree 
-(mm-vmscan-check-if-mem-cgroup-is-disabled-or-not-before-calling-memcg-slab-shrinker.patch), 
-it seems we'd better to get this fix in the upcoming 5.3-rc so that it 
-could get into stable release soon.
-
->
->
-
+Rather than surround the call to pci_pri_init() with the #ifdef, you
+should provide an empty function implementation when CONFIG_PCI_PRI is
+not defined. Same thing for the next patch adding PASID.
