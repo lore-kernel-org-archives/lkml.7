@@ -2,77 +2,189 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E948CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D290BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B7E206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AA9214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564633260;
-	bh=rmEeLKMV/HkMS3N47x2yY+MuFTr2JAbTc4wtVR45zsU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vwQwl2AfTt8dbr7Wjrj0AWN3eFe9RgtpUKCX4zD8cpqMnHIuHqEWdhZfJ6Go/0t86
-	 yi4rakyHQIj93HWSoH3L8W301wLM/bngO3PCvjsggxnjFi8ACNcLSwsqQhxdS4KDU8
-	 CLksRT93Z9csjwKS5Vpp6X7gsw3o+UDo4Vgomzpg=
+	s=default; t=1564633340;
+	bh=wX3aVTKu4GQPcVJzRJpgGpEpqupjqD0i6Q9nh8qWnK4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p1f9Kg3fE61OM26lg/6MVHwZl7Ss5bMBm/pSfX/bzD+PBz0UX3qs/WbcfZ8WX5h7d
+	 VV9mFhXgnXO04NOQ2TwW06KTniqg7DGqE++ExwNAR4ZQ4C76cwUyhbH3QZX7ablydR
+	 amd08o3hl7OcmHTXNIVdBv2LPTwXZooirUN/dc1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfHAEU7 (ORCPT
+        id S1727537AbfHAEWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 00:20:59 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:54578 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfHAEU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 00:20:58 -0400
-Received: from X1 (unknown [76.191.170.112])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 3B9324379;
-        Thu,  1 Aug 2019 04:20:56 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 21:20:52 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        dave.hansen@intel.com, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] fork: Improve error message for corrupted page tables
-Message-Id: <20190731212052.5c262ad084cbd6cf475df005@linux-foundation.org>
-In-Reply-To: <a05920e5994fb74af480255471a6c3f090f29b27.camel@intel.com>
-References: <20190730221820.7738-1-sai.praneeth.prakhya@intel.com>
-        <20190731152753.b17d9c4418f4bf6815a27ad8@linux-foundation.org>
-        <a05920e5994fb74af480255471a6c3f090f29b27.camel@intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 1 Aug 2019 00:22:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbfHAEWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 00:22:17 -0400
+Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92CE8206B8;
+        Thu,  1 Aug 2019 04:22:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564633335;
+        bh=wX3aVTKu4GQPcVJzRJpgGpEpqupjqD0i6Q9nh8qWnK4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b/SwCI6Cpy109EtBNqad4RqL+FNau8hYh1Ex0ejxlmXr0cACwc1LtzB550QQwlawK
+         qaJksGju8dh82nrD+EQ3L6TSHRYFQbUA10JAJLznO6ISLrbmlfp2ylyXkJiQ5nET5+
+         LFNEyHxADIBaqxti0VT9erTDxk5gm4igGVz7zE4o=
+Date:   Wed, 31 Jul 2019 21:22:15 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 RESEND] f2fs: introduce sb.required_features to store
+ incompatible features
+Message-ID: <20190801042215.GC84433@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190729150351.12223-1-chao@kernel.org>
+ <20190730231850.GA7097@jaegeuk-macbookpro.roam.corp.google.com>
+ <c7232d80-a4d8-88ae-2eca-01290dd0e56a@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7232d80-a4d8-88ae-2eca-01290dd0e56a@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 15:36:49 -0700 Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com> wrote:
-
-> > > +static const char * const resident_page_types[NR_MM_COUNTERS] = {
-> > > +	"MM_FILEPAGES",
-> > > +	"MM_ANONPAGES",
-> > > +	"MM_SWAPENTS",
-> > > +	"MM_SHMEMPAGES",
-> > > +};
+On 07/31, Chao Yu wrote:
+> On 2019/7/31 7:18, Jaegeuk Kim wrote:
+> > On 07/29, Chao Yu wrote:
+> >> From: Chao Yu <yuchao0@huawei.com>
+> >>
+> >> Later after this patch was merged, all new incompatible feature's
+> >> bit should be added into sb.required_features field, and define new
+> >> feature function with F2FS_INCOMPAT_FEATURE_FUNCS() macro.
+> >>
+> >> Then during mount, we will do sanity check with enabled features in
+> >> image, if there are features in sb.required_features that kernel can
+> >> not recognize, just fail the mount.
+> >>
+> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >> ---
+> >> v3:
+> >> - change commit title.
+> >> - fix wrong macro name.
+> >>  fs/f2fs/f2fs.h          | 15 +++++++++++++++
+> >>  fs/f2fs/super.c         | 10 ++++++++++
+> >>  include/linux/f2fs_fs.h |  3 ++-
+> >>  3 files changed, 27 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >> index a6eb828af57f..b8e17d4ddb8d 100644
+> >> --- a/fs/f2fs/f2fs.h
+> >> +++ b/fs/f2fs/f2fs.h
+> >> @@ -163,6 +163,15 @@ struct f2fs_mount_info {
+> >>  #define F2FS_CLEAR_FEATURE(sbi, mask)					\
+> >>  	(sbi->raw_super->feature &= ~cpu_to_le32(mask))
+> >>  
+> >> +#define F2FS_INCOMPAT_FEATURES		0
+> >> +
+> >> +#define F2FS_HAS_INCOMPAT_FEATURE(sbi, mask)				\
+> >> +	((sbi->raw_super->required_features & cpu_to_le32(mask)) != 0)
+> >> +#define F2FS_SET_INCOMPAT_FEATURE(sbi, mask)				\
+> >> +	(sbi->raw_super->required_features |= cpu_to_le32(mask))
+> >> +#define F2FS_CLEAR_INCOMPAT_FEATURE(sbi, mask)				\
+> >> +	(sbi->raw_super->required_features &= ~cpu_to_le32(mask))
+> >> +
+> >>  /*
+> >>   * Default values for user and/or group using reserved blocks
+> >>   */
+> >> @@ -3585,6 +3594,12 @@ F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
+> >>  F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
+> >>  F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
+> >>  
+> >> +#define F2FS_INCOMPAT_FEATURE_FUNCS(name, flagname) \
+> >> +static inline int f2fs_sb_has_##name(struct f2fs_sb_info *sbi) \
+> >> +{ \
+> >> +	return F2FS_HAS_INCOMPAT_FEATURE(sbi, F2FS_FEATURE_##flagname); \
+> >> +}
+> >> +
+> >>  #ifdef CONFIG_BLK_DEV_ZONED
+> >>  static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+> >>  				    block_t blkaddr)
+> >> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> >> index 5540fee0fe3f..3701dcce90e6 100644
+> >> --- a/fs/f2fs/super.c
+> >> +++ b/fs/f2fs/super.c
+> >> @@ -2513,6 +2513,16 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+> >>  		return -EINVAL;
+> >>  	}
+> >>  
+> >> +	/* check whether current kernel supports all features on image */
+> >> +	if (le32_to_cpu(raw_super->required_features) &
 > > 
-> > But please let's not put this in a header file.  We're asking the
-> > compiler to put a copy of all of this into every compilation unit which
-> > includes the header.  Presumably the compiler is smart enough not to
-> > do that, but it's not good practice.
+> > ...
+> > #define F2FS_FEATURE_VERITY	0x0400	/* reserved */
+> > ...
+> > #define F2FS_FEATURE_CASEFOLD	0x1000
+> > #define F2FS_FEATURE_SUPPORT	0x1BFF
+> > 
+> > 	if (le32_to_cpu(raw_super->required_features) & ~F2FS_FEATURE_SUPPORT) {
+> > 		...
+> > 		return -EINVAL;
+> > 	}
 > 
-> Thanks for the explanation. Makes sense to me.
+> Um, I thought .required_features are used to store new feature flags from 0x0.
 > 
-> Just wanted to check before sending V2,
-> Is it OK if I add this to kernel/fork.c? or do you have something else in
-> mind?
+> All 'F2FS_FEATURE_SUPPORT' bits should be stored in sb.feature instead of
+> sb.required_features, I'm confused...
 
-I was thinking somewhere like mm/util.c so the array could be used by
-other code.  But it seems there is no such code.  Perhaps it's best to
-just leave fork.c as it is now.
+I'm thinking,
 
+f2fs-tools     sb->required_features     f2fs    F2FS_FEATURE_SUPPORT
+v0             0                         v0      no_check -> ok
+v1             0x1BFF                    v0      no_check -> ok
+v0             0                         v1      0x1BFF -> ok
+v1             0x1BFF                    v1      0x1BFF -> ok
+v2             0x3BFF                    v1      0x1BFF -> fail
+v1             0x1BFF                    v2      0x3BFF -> ok
+v2             0x3BFF                    v2      0x3BFF -> ok
 
+> 
+> Thanks,
+> 
+> > 
+> > 
+> >> +			~F2FS_INCOMPAT_FEATURES) {
+> >> +		f2fs_info(sbi, "Unsupported feature: %x: supported: %x",
+> >> +			  le32_to_cpu(raw_super->required_features) ^
+> >> +			  F2FS_INCOMPAT_FEATURES,
+> >> +			  F2FS_INCOMPAT_FEATURES);
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >>  	/* Check checksum_offset and crc in superblock */
+> >>  	if (__F2FS_HAS_FEATURE(raw_super, F2FS_FEATURE_SB_CHKSUM)) {
+> >>  		crc_offset = le32_to_cpu(raw_super->checksum_offset);
+> >> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+> >> index a2b36b2e286f..4141be3f219c 100644
+> >> --- a/include/linux/f2fs_fs.h
+> >> +++ b/include/linux/f2fs_fs.h
+> >> @@ -117,7 +117,8 @@ struct f2fs_super_block {
+> >>  	__u8 hot_ext_count;		/* # of hot file extension */
+> >>  	__le16	s_encoding;		/* Filename charset encoding */
+> >>  	__le16	s_encoding_flags;	/* Filename charset encoding flags */
+> >> -	__u8 reserved[306];		/* valid reserved region */
+> >> +	__le32 required_features;       /* incompatible features to old kernel */
+> >> +	__u8 reserved[302];		/* valid reserved region */
+> >>  	__le32 crc;			/* checksum of superblock */
+> >>  } __packed;
+> >>  
+> >> -- 
+> >> 2.22.0
+> > .
+> > 
