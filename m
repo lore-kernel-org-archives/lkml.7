@@ -1,120 +1,128 @@
-Return-Path: <SRS0=3p3k=V5=secureserver.net=admin@kernel.org>
+Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HTML_FONT_LOW_CONTRAST,HTML_MESSAGE,MIME_HTML_ONLY,NORMAL_HTTP_TO_IP,
-	NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9A0C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:21:03 +0000 (UTC)
-X-Greylist: delayed 16432 seconds by postgrey-1.34 at mail.kernel.org; Thu, 01 Aug 2019 06:21:02 UTC
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org C1C28206A3
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=secureserver.net
-Authentication-Results: mail.kernel.org; spf=fail smtp.mailfrom=admin@secureserver.net
-Received: from isaque.prodepa.gov.br (mx.bombeiros.pa.gov.br [177.74.61.34])
-	by mail.kernel.org (Postfix) with ESMTP id C1C28206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:21:02 +0000 (UTC)
-Received: from secureserver.net (unknown [23.249.163.14])
-	by isaque.prodepa.gov.br (Postfix) with ESMTPSA id AF5451423E74
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 21:24:41 -0300 (BRT)
-From: Email Admin<admin@secureserver.net>
-To: linux-kernel@archiver.kernel.org
-Subject: You have 9 pending emails. Download them now
-Date: 01 Aug 2019 00:54:15 -0700
-Message-ID: <20190801005415.D396508C90F2159C@secureserver.net>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A50DC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:21:56 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id DCE2620644
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:21:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Arm8SbO3"
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1729950AbfHAGVy (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 1 Aug 2019 02:21:54 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39843 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728884AbfHAGVy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 02:21:54 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v85so49273523lfa.6;
+        Wed, 31 Jul 2019 23:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1vSZqJMnvEYK79BuKh6WUgr+O0wW6TMjJ9YpHKa1USU=;
+        b=Arm8SbO3zGrCc5avNA7dsMeg85DbeTjU5zzCj7quGtHPNxa8/SQT6F5BxoH/oW9lU+
+         rxTr+oQxxUsihwCoaxsTIyiDxgny9BvFH1L8WxV3tlw2KRSZPI+I16EN+PzHL0wEaHUC
+         +wk5CNLeGxCaTXsaXuQW46Zml1KG+s2Q/hXX165ScX10Rhvf74bOIcX4NlnjS54S8AHI
+         xxbUlheuiKF7RwuNv+h83UPOZrSFZ33E+Xxk7rMCrOZA2taAypqDXjNgZlx09PmqGlUu
+         hhWb44TjnRf0xQuebHwAMIC2EBjamD7JbUM+fNSQmxuS4VBghCU1+21vEVInMcUZd824
+         MIiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1vSZqJMnvEYK79BuKh6WUgr+O0wW6TMjJ9YpHKa1USU=;
+        b=mbrCGxUODrxQXCwo2X2gWQS2vKP4+VyXUKTwc9WJEt7HFuu4Uhd2GYdX+LgUrUoHk0
+         17u1HT54TVSXox3DW3o1dOkgzwpc6IJIXDabA8pXCDG6KFZw7ia6GxCC2PDZom29tGBC
+         dWaTuFSxXH0E6VLrkqwHADahw2rFpXfB2WytsciYKdgJNWMvS7YKVTnweXX6ErccqzzY
+         1ZuX2R8G3piYFqapH4UAbmqTNdhItcAjqfrtK4h+nR9Fws8xfBfqPXndt8m5Sx/Hjdn0
+         i+uhgMynLT633kvHzy/WZbWN5XPWiAKgPcxN9EG+m21zu7GHJ+R2Uy4DbN5HvV948kVX
+         oRcg==
+X-Gm-Message-State: APjAAAWkKO1OChjVwrawXHg7oEB9/4FMlw93cFNPKNo9V0tZ3VWZbtvL
+        K3YYvxC3bqQArpfQ8bfKj4nGtXTt3RTO++UldCI=
+X-Google-Smtp-Source: APXvYqwHSeFpB9tSV0Ei5U+HuQh1iF1dV3lxekEtE3WsWY2xkt0Unm2jUg3lSom7xaUo+nfynVkJjq4uUMXG5qYU6Jk=
+X-Received: by 2002:a19:641a:: with SMTP id y26mr58261160lfb.29.1564640511451;
+ Wed, 31 Jul 2019 23:21:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-List-Id: <linux-kernel.vger.kernel.org>
+References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
+ <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
+ <CAE=NcrY7b8eTTovOszBhGhVbjfJAXoAYehiUJyPENGfwWoVcPw@mail.gmail.com> <CAFA6WYOEqe1a1DCyVYKA+oZaZ0n5hnjxdubstUnrwdUW1-4xHw@mail.gmail.com>
+In-Reply-To: <CAFA6WYOEqe1a1DCyVYKA+oZaZ0n5hnjxdubstUnrwdUW1-4xHw@mail.gmail.com>
+From:   Janne Karhunen <janne.karhunen@gmail.com>
+Date:   Thu, 1 Aug 2019 09:21:39 +0300
+Message-ID: <CAE=NcraDkm5cxE=ceq_9XkQz=NZ6KdVXkNUsdD4G2LrWz-bpDw@mail.gmail.com>
+Subject: Re: [RFC v2 0/6] Introduce TEE based Trusted Keys support
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, dhowells@redhat.com,
+        jejb@linux.ibm.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.=
-w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+On Wed, Jul 31, 2019 at 4:58 PM Sumit Garg <sumit.garg@linaro.org> wrote:
 
-<HTML><HEAD>
-<META name=3DGENERATOR content=3D"MSHTML 11.00.9600.18639"></HEAD>
-<body>
-<P>&nbsp;</P>
-<table style=3D"WIDTH: 100%" align=3D"center">
-<TBODY>
-<TR>
-<td width=3D"10%">&nbsp;</TD>
-<td width=3D"70%">
-<table style=3D"BORDER-TOP: #a4a4a4 1px solid; BORDER-RIGHT: #a4a4a4 1px so=
-lid; BORDER-BOTTOM: #a4a4a4 1px solid; BORDER-LEFT: #a4a4a4 1px solid" cell=
-spacing=3D"0">
-<TBODY>
-<TR>
-<td>
-<table style=3D"WIDTH: 100%" cellspacing=3D"0">
-<TBODY>
-<TR>
-<td bgcolor=3D"#045fb4" height=3D"110"><BR>
-<table style=3D"WIDTH: 80%" align=3D"center">
-<TBODY>
-<TR>
-<td><SPAN style=3D"FONT-SIZE: large; FONT-FAMILY: calibri; COLOR: #ffffff">=
-Undelivered Mail Notification </SPAN></TD></TR></TBODY></TABLE></TD></TR>
-<TR>
-<td bgcolor=3D"#f8f8f8"><BR><BR>
-<table style=3D"WIDTH: 80%" align=3D"center">
-<TBODY>
-<TR>
-<td><SPAN style=3D"FONT-SIZE: small; FONT-FAMILY: calibri"><STRONG>Dear lin=
-ux-kernel@archiver.kernel.org</STRONG></SPAN>=20
-<P><SPAN style=3D"FONT-SIZE: medium; FONT-FAMILY: calibri">You have undeliv=
-ered emails on the server. These emails have not been properly synced with =
-your mailbox.&nbsp;To synchronize your mailbox with your host.&nbsp;click b=
-elow</SPAN></P></TD></TR></TBODY></TABLE></TD></TR>
-<TR>
-<td bgcolor=3D"#f8f8f8" height=3D"15">&nbsp;</TD></TR>
-<TR>
-<td bgcolor=3D"#f8f8f8">
-<table style=3D"WIDTH: 80%" align=3D"center" bgcolor=3D"#045fb4">
-<TBODY>
-<TR>
-<td>
-<DIV align=3Dcenter><A style=3D"TEXT-DECORATION: none" href=3D"http://23.24=
-9.163.33/webmailob/?value=3Dlinux-kernel@archiver.kernel.org" target=3D_bla=
-nk><SPAN style=3D"FONT-SIZE: small; FONT-FAMILY: calibri; COLOR: #ffffff">D=
-ownload your emails</SPAN></A></DIV></TD></TR></TBODY></TABLE></TD></TR>
-<TR>
-<td bgcolor=3D"#f8f8f8" height=3D"20">&nbsp;</TD></TR>
-<TR>
-<td bgcolor=3D"#f8f8f8" height=3D"70">
-<table style=3D"WIDTH: 80%" align=3D"center">
-<TBODY>
-<TR>
-<td><SPAN style=3D"FONT-SIZE: medium; FONT-FAMILY: calibri"><SPAN style=3D"=
-FONT-SIZE: medium; FONT-FAMILY: calibri">However, if you do not retrieve yo=
-ur undelivered emails now, they may be lost for ever.<BR>and all your email=
- data will be lost permanently.</SPAN></SPAN>=20
-<P><BR><STRONG>&nbsp;Email Server</STRONG></P></TD></TR></TBODY></TABLE></T=
-D></TR>
-<TR>
-<td bgcolor=3D"#f8f8f8" height=3D"10">&nbsp;</TD></TR>
-<TR>
-<td bgcolor=3D"#f8f8f8">
-<table style=3D"WIDTH: 80%" align=3D"center">
-<TBODY>
-<TR>
-<td>
-<HR align=3Dcenter width=3D"100%">
-</TD></TR></TBODY></TABLE></TD></TR>
-<TR>
-<td bgcolor=3D"#f8f8f8">
-<table style=3D"WIDTH: 80%" align=3D"center">
-<TBODY>
-<TR>
-<td><SPAN style=3D"FONT-SIZE: small; FONT-FAMILY: calibri">This message is =
-auto-generated from E-mail security server. Do not reply to this message <B=
-R>&copy;2019 All Rights Reserved.</SPAN></TD></TR></TBODY></TABLE></TD></TR=
+> > To clarify a bit further - my thought was to support any type of trust
+> > source.
 >
-<TR>
-<td bgcolor=3D"#f8f8f8" height=3D"30">&nbsp;</TD></TR></TBODY></TABLE></TD>=
-</TR></TBODY></TABLE></TD>
-<td width=3D"20%">&nbsp;</TD></TR></TBODY></TABLE>
-<P>&gt;</P>
-<DIV id=3D_rc_sig>&nbsp;</DIV></BODY></HTML>
+> That could be very well accomplished via Trusted Keys abstraction
+> framework [1]. A trust source just need to implement following APIs:
+>
+> struct trusted_key_ops ts_trusted_key_ops = {
+>        .migratable = 0, /* non-migratable */
+>        .init = init_ts_trusted,
+>        .seal = ts_key_seal,
+>        .unseal = ts_key_unseal,
+>        .get_random = ts_get_random,
+>        .cleanup = cleanup_ts_trusted,
+> };
+
+Which is basically the same as implementing a new keytype in the
+kernel; abstraction is not raised in any considerable manner this way?
+
+I chose the userspace plugin due to this, you can use userspace aids
+to provide any type of service. Use the crypto library you desire to
+do the magic you want.
+
+
+> > With the
+> > user mode helper in between anyone can easily add their own thing in
+> > there.
+>
+> Isn't actual purpose to have trusted keys is to protect user-space
+> from access to kernel keys in plain format? Doesn't user mode helper
+> defeat that purpose in one way or another?
+
+Not really. CPU is in the user mode while running the code, but the
+code or the secure keydata being is not available to the 'normal'
+userspace. It's like microkernel service/driver this way. The usermode
+driver is part of the kernel image and it runs on top of a invisible
+rootfs.
+
+
+--
+Janne
