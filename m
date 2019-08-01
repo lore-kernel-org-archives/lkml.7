@@ -2,106 +2,135 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF7CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280C0C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F01220838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0485C216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731015AbfHAMVM (ORCPT
+        id S1731058AbfHAMVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:21:12 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30848 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728791AbfHAMVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:21:12 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 05:21:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,334,1559545200"; 
-   d="scan'208";a="172896234"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Aug 2019 05:21:08 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1htA4w-0003Cp-F3; Thu, 01 Aug 2019 15:21:06 +0300
-Date:   Thu, 1 Aug 2019 15:21:06 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v3 5/7] drivers: Introduce device lookup variants by
- ACPI_COMPANION device
-Message-ID: <20190801122106.GU23480@smile.fi.intel.com>
-References: <20190723221838.12024-1-suzuki.poulose@arm.com>
- <20190723221838.12024-6-suzuki.poulose@arm.com>
- <20190726202353.GA963@kunai>
- <20190801115856.GS23480@smile.fi.intel.com>
- <20190801120830.GA1659@ninjato>
+        Thu, 1 Aug 2019 08:21:43 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51546 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728791AbfHAMVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:21:43 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5C0348E4323954FF7DE6;
+        Thu,  1 Aug 2019 20:21:41 +0800 (CST)
+Received: from HGHY4L002753561.china.huawei.com (10.133.215.186) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 1 Aug 2019 20:21:31 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH] iommu/arm-smmu-v3: add nr_ats_masters to avoid unnecessary operations
+Date:   Thu, 1 Aug 2019 20:20:40 +0800
+Message-ID: <20190801122040.26024-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801120830.GA1659@ninjato>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.133.215.186]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 02:08:30PM +0200, Wolfram Sang wrote:
-> On Thu, Aug 01, 2019 at 02:58:56PM +0300, Andy Shevchenko wrote:
-> > On Fri, Jul 26, 2019 at 10:23:54PM +0200, Wolfram Sang wrote:
-> > > On Tue, Jul 23, 2019 at 11:18:36PM +0100, Suzuki K Poulose wrote:
-> > > > Add a generic helper to match a device by the ACPI_COMPANION device
-> > > > and provide wrappers for the device lookup APIs.
-> > > > 
-> > > > Cc: Len Brown <lenb@kernel.org>
-> > > > Cc: linux-acpi@vger.kernel.org
-> > > > Cc: linux-spi@vger.kernel.org
-> > > > Cc: Mark Brown <broonie@kernel.org>
-> > > > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > Cc: Wolfram Sang <wsa@the-dreams.de>
-> > > > Cc: linux-i2c@vger.kernel.org
-> > > > Cc: Mark Brown <broonie@kernel.org>
-> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > > > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > > 
-> > > From my side, OK:
-> > > 
-> > > Acked-by: Wolfram Sang <wsa@the-dreams.de> # I2C parts
-> > > 
-> > > yet you missed to cc the I2C ACPI maintainers. Done so now.
-> > 
-> > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > 
-> > Thanks, Wolfram, for notifying.
-> 
-> Sure. There seems to be a problem, though? Please check:
-> 
-> [PATCH 1/3] i2c: Revert incorrect conversion to use generic helper
-> 
-> which came in today.
+When (smmu_domain->smmu->features & ARM_SMMU_FEAT_ATS) is true, even if a
+smmu domain does not contain any ats master, the operations of
+arm_smmu_atc_inv_to_cmd() and lock protection in arm_smmu_atc_inv_domain()
+are always executed. This will impact performance, especially in
+multi-core and stress scenarios. For my FIO test scenario, about 8%
+performance reduced.
 
-It's again not Cc'ed to all parties.
-But OK, looks good to me.
-Tough may be Jarkko can test all this.
+In fact, we can use a atomic member to record how many ats masters the
+smmu contains. And check that without traverse the list and check all
+masters one by one in the lock protection.
 
+Fixes: 9ce27afc0830 ("iommu/arm-smmu-v3: Add support for PCI ATS")
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ drivers/iommu/arm-smmu-v3.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index a9a9fabd396804a..1b370d9aca95f94 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -631,6 +631,7 @@ struct arm_smmu_domain {
+ 
+ 	struct io_pgtable_ops		*pgtbl_ops;
+ 	bool				non_strict;
++	atomic_t			nr_ats_masters;
+ 
+ 	enum arm_smmu_domain_stage	stage;
+ 	union {
+@@ -1531,7 +1532,7 @@ static int arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain,
+ 	struct arm_smmu_cmdq_ent cmd;
+ 	struct arm_smmu_master *master;
+ 
+-	if (!(smmu_domain->smmu->features & ARM_SMMU_FEAT_ATS))
++	if (!atomic_read(&smmu_domain->nr_ats_masters))
+ 		return 0;
+ 
+ 	arm_smmu_atc_inv_to_cmd(ssid, iova, size, &cmd);
+@@ -1869,6 +1870,7 @@ static int arm_smmu_enable_ats(struct arm_smmu_master *master)
+ 	size_t stu;
+ 	struct pci_dev *pdev;
+ 	struct arm_smmu_device *smmu = master->smmu;
++	struct arm_smmu_domain *smmu_domain = master->domain;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(master->dev);
+ 
+ 	if (!(smmu->features & ARM_SMMU_FEAT_ATS) || !dev_is_pci(master->dev) ||
+@@ -1887,12 +1889,15 @@ static int arm_smmu_enable_ats(struct arm_smmu_master *master)
+ 		return ret;
+ 
+ 	master->ats_enabled = true;
++	atomic_inc(&smmu_domain->nr_ats_masters);
++
+ 	return 0;
+ }
+ 
+ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
+ {
+ 	struct arm_smmu_cmdq_ent cmd;
++	struct arm_smmu_domain *smmu_domain = master->domain;
+ 
+ 	if (!master->ats_enabled || !dev_is_pci(master->dev))
+ 		return;
+@@ -1901,6 +1906,7 @@ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
+ 	arm_smmu_atc_inv_master(master, &cmd);
+ 	pci_disable_ats(to_pci_dev(master->dev));
+ 	master->ats_enabled = false;
++	atomic_dec(&smmu_domain->nr_ats_masters);
+ }
+ 
+ static void arm_smmu_detach_dev(struct arm_smmu_master *master)
+@@ -1915,10 +1921,10 @@ static void arm_smmu_detach_dev(struct arm_smmu_master *master)
+ 	list_del(&master->domain_head);
+ 	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
+ 
+-	master->domain = NULL;
+ 	arm_smmu_install_ste_for_dev(master);
+ 
+ 	arm_smmu_disable_ats(master);
++	master->domain = NULL;
+ }
+ 
+ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
 -- 
-With Best Regards,
-Andy Shevchenko
+1.8.3
 
 
