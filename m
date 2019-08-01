@@ -2,180 +2,89 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845D1C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE23C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4F3206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9E9216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1jyb7sI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730501AbfHAHwn convert rfc822-to-8bit (ORCPT
+        id S1730526AbfHAHzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:52:43 -0400
-Received: from mx1.mail.vl.ru ([80.92.161.250]:36942 "EHLO mx1.mail.vl.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfHAHwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:52:42 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mx1.mail.vl.ru (Postfix) with ESMTP id 350EA18414AF;
-        Thu,  1 Aug 2019 07:52:38 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at mail.vl.ru
-Received: from mx1.mail.vl.ru ([127.0.0.1])
-        by localhost (smtp1.srv.loc [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rbF6xbNrQuL0; Thu,  1 Aug 2019 17:52:36 +1000 (+10)
-Received: from [10.125.1.12] (unknown [109.126.62.18])
-        (Authenticated sender: turchanov@vl.ru)
-        by mx1.mail.vl.ru (Postfix) with ESMTPSA id B91B91841490;
-        Thu,  1 Aug 2019 17:52:36 +1000 (+10)
-Subject: Re: [BUG] lseek on /proc/meminfo is broken in 4.19.59
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <3bd775ab-9e31-c6b3-374e-7a9982a9a8cd@farpost.com>
- <5c4c0648-2a96-4132-9d22-91c22e7c7d4d@huawei.com>
-From:   Sergei Turchanov <turchanov@farpost.com>
-Organization: FarPost
-Message-ID: <9e0b13fb-8355-0430-557d-6b67e2ba2aac@farpost.com>
-Date:   Thu, 1 Aug 2019 17:52:36 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 1 Aug 2019 03:55:03 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53399 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729465AbfHAHzC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 03:55:02 -0400
+Received: by mail-wm1-f67.google.com with SMTP id x15so63566786wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 00:55:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DCllPmBw4lut+Uqi6OBcOMhCVblvrSC3X451qg4jFyI=;
+        b=1jyb7sI9h2Uu/fkFZ5BhBBVZzi57jo75CTaozgehdA86w5n7mdgbzo60jiiZVdMxE6
+         pU9AtBQsVZQWlm3Fj86Y/7/Guo6t5FrrkQTNpzN1jnFbIPJxcn2uLdrBjAQiIB45ETGJ
+         J9TgoQgHrrAtw2229GrQF+4d8T/JvLYVBTUb4XHiKyi39GxSMmrRHylwfXm10gJ9R5Br
+         0TOn0DO9J7iG7Nf18SBjlN5QL59+5/Kw2mEDuX16FEcZc+Tghy0Pp2JccwIvZ9bJSxTe
+         qBygl1LSw4Rk33E5JtmMmvOhd2R26tZZH7kmUCnLwzxgd4wcqbMN+ZWyjQ1jWXxE55Ko
+         lwtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DCllPmBw4lut+Uqi6OBcOMhCVblvrSC3X451qg4jFyI=;
+        b=YiJ38uOCxcgfOxpbIyXZ+naXXgvN1AW7nlswB2vlpJADJJ5bzP5IbnQbv60scemeyA
+         Lo6Vc/2GLYmEE1/IoWkZRsvr8D5ZNp3Y5+gr/Fh1XoerFeoYFMsQ6cMu54NFPk12aTJV
+         +CJh4WScy3XDY3JrS7ppEtLqrg8+gngsoI9kCyCytGRWfGo309DHnCKr4iUixqTa/yY1
+         EpbSRFLJ4/dJlFwH9XYznT3Tb6JEhwGeK4d9VTpB7p+WxSTyOAs30fr3R98gH6c2IwnK
+         hC/ye4Yudy2ile1CawAYA4efko3r4bC2/nFhuqnuaP6LJGIh6iC17LkpGIzJ8SNnqviC
+         dktQ==
+X-Gm-Message-State: APjAAAWxA6+JsFfG0ToURFF45Uai8vGyFa5pKO9ydZuZTqGylfwe1uPN
+        1jayHpm7PsLoVXvlbDBXL00IFNh3bgY=
+X-Google-Smtp-Source: APXvYqzlDJs+p7+lHmLvPaIqh7+AzhIFpJlRyvlJ/W3TVENURBpyKur7D9F3PzuD0Ye68XsD7jxAXw==
+X-Received: by 2002:a1c:407:: with SMTP id 7mr120943986wme.113.1564646100198;
+        Thu, 01 Aug 2019 00:55:00 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id y12sm64199221wrm.79.2019.08.01.00.54.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 00:54:59 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     p.zabel@pengutronix.de
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 0/3] reset: meson: update with SPDX Licence identifier
+Date:   Thu,  1 Aug 2019 09:54:51 +0200
+Message-Id: <20190801075454.23547-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <5c4c0648-2a96-4132-9d22-91c22e7c7d4d@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This serie updates the Amlogic Reset driver and bindings.
 
-Thank you very much for your suggestion. Will certainly do that.
+Neil Armstrong (3):
+  reset: reset-meson: update with SPDX Licence identifier
+  dt-bindings: reset: amlogic,meson-gxbb-reset: update with SPDX Licence
+    identifier
+  dt-bindings: reset: amlogic,meson8b-reset: update with SPDX Licence
+    identifier
 
-With best regards,
-Sergei.
+ drivers/reset/reset-meson.c                   | 51 +------------------
+ .../reset/amlogic,meson-gxbb-reset.h          | 51 +------------------
+ .../dt-bindings/reset/amlogic,meson8b-reset.h | 51 +------------------
+ 3 files changed, 3 insertions(+), 150 deletions(-)
 
-On 01.08.2019 17:11, Gao Xiang wrote:
-> Hi,
->
-> I just took a glance, maybe due to
-> commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
->
-> I simply reverted it just now and it seems fine... but I haven't digged into this commit.
->
-> Maybe you could Cc NeilBrown <neilb@suse.com> for some more advice and
-> I have no idea whether it's an expected behavior or not...
->
-> Thanks,
-> Gao Xiang
->
-> On 2019/8/1 14:16, Sergei Turchanov wrote:
->> Hello!
->>
->> (I sent this e-mail two weeks ago with no feedback. Does anyone care? Wrong mailing list? Anything....?)
->>
->> Seeking (to an offset within file size) in /proc/meminfo is broken in 4.19.59. It does seek to a desired position, but reading from that position returns the remainder of file and then a whole copy of file. This doesn't happen with /proc/vmstat or /proc/self/maps for example.
->>
->> Seeking did work correctly in kernel 4.14.47. So it seems something broke in the way.
->>
->> Background: this kind of access pattern (seeking to /proc/meminfo) is used by libvirt-lxc fuse driver for virtualized view of /proc/meminfo. So that /proc/meminfo is broken in guests when running kernel 4.19.x.
->>
->> $ ./test /proc/meminfo 0        # Works as expected
->>
->> MemTotal:       394907728 kB
->> MemFree:        173738328 kB
->> ...
->> DirectMap2M:    13062144 kB
->> DirectMap1G:    390070272 kB
->>
->> -----------------------------------------------------------------------
->>
->> $ ./test 1024                   # returns a copy of file after the remainder
->>
->> Will seek to 1024
->>
->>
->> Data read at offset 1024
->> gePages:         0 kB
->> ShmemHugePages:        0 kB
->> ShmemPmdMapped:        0 kB
->> HugePages_Total:       0
->> HugePages_Free:        0
->> HugePages_Rsvd:        0
->> HugePages_Surp:        0
->> Hugepagesize:       2048 kB
->> Hugetlb:               0 kB
->> DirectMap4k:      245204 kB
->> DirectMap2M:    13062144 kB
->> DirectMap1G:    390070272 kB
->> MemTotal:       394907728 kB
->> MemFree:        173738328 kB
->> MemAvailable:   379989680 kB
->> Buffers:          355812 kB
->> Cached:         207216224 kB
->> ...
->> DirectMap2M:    13062144 kB
->> DirectMap1G:    390070272 kB
->>
->> As you see, after "DirectMap1G:" line, a whole copy of /proc/meminfo returned by "read".
->>
->> Test program:
->>
->> #include <sys/types.h>
->> #include <sys/stat.h>
->> #include <unistd.h>
->> #include <fcntl.h>
->> #include <stdio.h>
->> #include <stdlib.h>
->>
->> #define SIZE 1024
->> char buf[SIZE + 1];
->>
->> int main(int argc, char *argv[]) {
->>      int     fd;
->>      ssize_t rd;
->>      off_t   ofs = 0;
->>
->>      if (argc < 2) {
->>          printf("Usage: test <file> [<offset>]\n");
->>          exit(1);
->>      }
->>
->>      if (-1 == (fd = open(argv[1], O_RDONLY))) {
->>          perror("open failed");
->>          exit(1);
->>      }
->>
->>      if (argc > 2) {
->>          ofs = atol(argv[2]);
->>      }
->>      printf("Will seek to %ld\n", ofs);
->>
->>      if (-1 == (lseek(fd, ofs, SEEK_SET))) {
->>          perror("lseek failed");
->>          exit(1);
->>      }
->>
->>      for (;; ofs += rd) {
->>          printf("\n\nData read at offset %ld\n", ofs);
->>          if (-1 == (rd = read(fd, buf, SIZE))) {
->>              perror("read failed");
->>              exit(1);
->>          }
->>          buf[rd] = '\0';
->>          printf(buf);
->>          if (rd < SIZE) {
->>              break;
->>          }
->>      }
->>
->>      return 0;
->> }
->>
->>
->>
+-- 
+2.22.0
 
