@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8215C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A966BC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C62302087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F552087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbfHAFOa (ORCPT
+        id S1729519AbfHAFO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 01:14:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43090 "EHLO
+        Thu, 1 Aug 2019 01:14:29 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43092 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728763AbfHAFOY (ORCPT
+        with ESMTP id S1729274AbfHAFOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 01:14:24 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p13so72037584wru.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 22:14:23 -0700 (PDT)
+        Thu, 1 Aug 2019 01:14:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p13so72037617wru.10
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 22:14:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yAuOdcFvKcJE+TJQBnlj7YZrsenOZm0DkL2Ya79xDlk=;
-        b=rcKWNdvw8bEQOeYOt8xq7jm/DbJ+uUwiZcD7dnfc1nzIpnqw9s/3c35LLUIE/kbdqb
-         S57uN1hVeb+Zmdtr4Dv22YcFF30Gx11D4n1VAA+MPQEtYmORKoYyN7Za2yDPEsexAWEL
-         3bYQxgEEt3sBMz7eIwGWzqUZ1cRa/Goj6f0sQzSmfyUL+FNnIePrRpG5TW5jrtZPGQ0/
-         lt1sTYZowJ5ZM12pkwtqOow0rCOZPB2rfvH/qjlLKtx3j1gotb0HhwL6NLGVgpATorgq
-         fqfVdAuts1NfsCqnOyI2Xu7NC0+DDaqcz4WjyewhzDLBa6j2TU9+LSmzpUUryQ3AFBCI
-         6hEQ==
-X-Gm-Message-State: APjAAAVhX9pc2PD6ndsEmaxv7xmVrCVLyT31KJgDCbOTy0FWdWkmJUE7
-        7Ab627gvSGRtkGHBxdgvVLFOcA==
-X-Google-Smtp-Source: APXvYqxGr1k6z/5aukJhARWDztMaUzfRv7qON3x9aDo/AOjnn+DXp9dJsmkrTq0CaT2g5O1DakAPCA==
-X-Received: by 2002:adf:f64a:: with SMTP id x10mr35053386wrp.287.1564636462452;
-        Wed, 31 Jul 2019 22:14:22 -0700 (PDT)
+        bh=k0Ev3p94bFZcOBtAj2tXYSUGySXDoFmcSIvRC97mli0=;
+        b=V+8v3g8CDQSXqOUDRW+DNyckPLpV2Y0vQnszPUiU8s+PgN9UXOGaibVzLreF8HxBqb
+         pjoJEw/GpkSw+If/PyFcwz2unSnFiFJrpV1GFQutAfrj5by9lDhl4FmpF3oBpKU2MJMW
+         2VVWbjOJ1DgCoMNl+m7/0vXpCJnE0kdEKhdhaGGzBDUozSCx3UNyHtgkyRt0eEy8l+sw
+         +U1dCJ7pi2ohKoaNm/L2YHLsaKcxSe0beZmfY9NEU91vZ7U4gnICE3focITr3FPGEb+g
+         hW+CZRCbs5bTX4iMpqT4gepSmxZJWHw8QuiDcSCt1mEesrnDSz/OHwsTgsxX1FLTTxMx
+         LSng==
+X-Gm-Message-State: APjAAAUUQqy7kuiuSHVJ+3splDJw85/RowIWivJSLZAakjazBAbNfscY
+        c3/OUmJ3S1LSqLF4gjNmMtmMGQ==
+X-Google-Smtp-Source: APXvYqxFMKDgaHVtw5HXmLs+H9FxYBBsQIrfWfc/Wtqd3xYMD85MvLpK0srCqZOwviF6l316rS7CQg==
+X-Received: by 2002:a5d:5448:: with SMTP id w8mr137051859wrv.180.1564636463692;
+        Wed, 31 Jul 2019 22:14:23 -0700 (PDT)
 Received: from vitty.brq.redhat.com (ip-89-176-127-93.net.upcbroadband.cz. [89.176.127.93])
-        by smtp.gmail.com with ESMTPSA id a2sm73855351wmj.9.2019.07.31.22.14.21
+        by smtp.gmail.com with ESMTPSA id a2sm73855351wmj.9.2019.07.31.22.14.22
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 22:14:21 -0700 (PDT)
+        Wed, 31 Jul 2019 22:14:23 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
         Joerg Roedel <joro@8bytes.org>,
         Jim Mattson <jmattson@google.com>
-Subject: [PATCH 1/5] x86: KVM: svm: don't pretend to advance RIP in case wrmsr_interception() results in #GP
-Date:   Thu,  1 Aug 2019 07:14:14 +0200
-Message-Id: <20190801051418.15905-2-vkuznets@redhat.com>
+Subject: [PATCH 2/5] x86: KVM: svm: avoid flooding logs when skip_emulated_instruction() fails
+Date:   Thu,  1 Aug 2019 07:14:15 +0200
+Message-Id: <20190801051418.15905-3-vkuznets@redhat.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190801051418.15905-1-vkuznets@redhat.com>
 References: <20190801051418.15905-1-vkuznets@redhat.com>
@@ -61,38 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-svm->next_rip is only used by skip_emulated_instruction() and in case
-kvm_set_msr() fails we rightfully don't do that. Move svm->next_rip
-advancement to 'else' branch to avoid creating false impression that
-it's always advanced (and make it look like rdmsr_interception()).
+When we're unable to skip instruction with kvm_emulate_instruction() we
+will not advance RIP and most likely the guest will get stuck as
+consequitive attempts to execute the same instruction will likely result
+in the same behavior.
 
-This is a preparatory change to removing hardcoded RIP advancement
-from instruction intercepts, no functional change.
+As we're not supposed to see these messages under normal conditions, switch
+to pr_err_once().
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
 ---
- arch/x86/kvm/svm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/svm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 7eafc6907861..7e843b340490 100644
+index 7e843b340490..80f576e05112 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
-@@ -4447,13 +4447,13 @@ static int wrmsr_interception(struct vcpu_svm *svm)
- 	msr.index = ecx;
- 	msr.host_initiated = false;
- 
--	svm->next_rip = kvm_rip_read(&svm->vcpu) + 2;
- 	if (kvm_set_msr(&svm->vcpu, &msr)) {
- 		trace_kvm_msr_write_ex(ecx, data);
- 		kvm_inject_gp(&svm->vcpu, 0);
- 		return 1;
- 	} else {
- 		trace_kvm_msr_write(ecx, data);
-+		svm->next_rip = kvm_rip_read(&svm->vcpu) + 2;
- 		return kvm_skip_emulated_instruction(&svm->vcpu);
+@@ -782,7 +782,8 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+ 	if (!svm->next_rip) {
+ 		if (kvm_emulate_instruction(vcpu, EMULTYPE_SKIP) !=
+ 				EMULATE_DONE)
+-			printk(KERN_DEBUG "%s: NOP\n", __func__);
++			pr_err_once("KVM: %s: unable to skip instruction\n",
++				    __func__);
+ 		return;
  	}
- }
+ 	if (svm->next_rip - kvm_rip_read(vcpu) > MAX_INST_SIZE)
 -- 
 2.20.1
 
