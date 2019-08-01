@@ -2,137 +2,70 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFEAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64863C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E596520838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA5A2087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="M+yZ5LoJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gs6eJLcn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731927AbfHAOTJ (ORCPT
+        id S1731932AbfHAOVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:19:09 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45069 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731868AbfHAOTI (ORCPT
+        Thu, 1 Aug 2019 10:21:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47942 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbfHAOVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:19:08 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x22so65434852qtp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:19:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hMA7vlwUroWdb0REjDf2neAobLqIjEsoQepgHkXMGQc=;
-        b=M+yZ5LoJGbhm7g0i1sIHAJmyeoJlxlLUxNMBipkE5Gk2KmuVJyj40RCbT2OMJyeUYM
-         zJHmHpLP79mwX+1GU1gaWmI+ZgMsrzh906sNv8d/eg/a5Xw25HKRKuFNgKcyKLM02Ww0
-         rufqIlPpawx9cNcQ6Ahy2tSEtMjGQsDi0/1f8f63o7vcW+ionqvcAAZen0904J/Ypmil
-         ZGhx4rO03KDS05ILM46VGBWJuCbsSKMR9WjJEMoOyUFc9cwx/Lc3OXwHZWF/4cg/Lo1f
-         MMC8Huc/zfOSWQ3eMe0y7mSe9oVAGDhdbvvwgs3CG/GKyE01CIy0PPbv9CbdNkVNHI2q
-         Ytxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hMA7vlwUroWdb0REjDf2neAobLqIjEsoQepgHkXMGQc=;
-        b=aD7pC5meZwfcGTkt3FqUaF0dWVCpey0W8uhs+16uYqUN2XG3Ze1fhCSu/lk2Q8jbT9
-         EyIRo7bmpl68vfIQ+mGCLVQbvRlgBK4kYa2KkYZsYGNqQuOdxkN8jaIO4IVr7XhYYEcu
-         BZ3ZtJf1yeg2JxkGQ0o3CsLoGeeBgcSfBq3ubVUBr7Jae1iplbQSx/tdsN5AOkn53A45
-         rQdcmB4/LJyihav5m208KmI1gziIOBuvajyO3t+Ka/pR8X6iU5Z9riohW8ezWNQrJJmh
-         22DZYvpk/ZViVxMbl0l1NawnqdSjI7Dbd33/wSXA6Ahkq1RntSUpvWq6eeKtUsGvTWVy
-         NdUw==
-X-Gm-Message-State: APjAAAXbGZBT2J+9fBTbzIwWpUaPVHda/FKRCUvvfsywCm4hz9UgszMs
-        26ncJc/Zi/89PNk7olZsAMHHCg==
-X-Google-Smtp-Source: APXvYqwTQf1KGpY8PZ+10TO7pJmffd0/JJ0SGE6m65X5GOGwylr1cSmZUzuB803q9/jTvKSKgNYkxg==
-X-Received: by 2002:a0c:aed0:: with SMTP id n16mr93783119qvd.101.1564669147681;
-        Thu, 01 Aug 2019 07:19:07 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id s127sm30805414qkd.107.2019.08.01.07.19.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 01 Aug 2019 07:19:07 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1htBv8-00084t-Lf; Thu, 01 Aug 2019 11:19:06 -0300
-Date:   Thu, 1 Aug 2019 11:19:06 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v4 1/3] mm/gup: add make_dirty arg to
- put_user_pages_dirty_lock()
-Message-ID: <20190801141906.GC23899@ziepe.ca>
-References: <20190730205705.9018-1-jhubbard@nvidia.com>
- <20190730205705.9018-2-jhubbard@nvidia.com>
- <20190801060755.GA14893@lst.de>
+        Thu, 1 Aug 2019 10:21:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=o3McWM/2bHyYOyL1mFZJ/4Q0USrtCE0kV4BVYCLDzEY=; b=Gs6eJLcnWsNhmKTj7X+mSbYPe
+        sWN22x7cdspZVuBOb/sWdUdPLhLBDtpvcboWjDhtNcMhLNRBsMfY6by3qN+lcy3LRZiUTk0N+2HWP
+        kOMZJFvxoPcRRNE0uvjE3622yufdZBOfEmuk+pAqJ8990LoLVBjJVTweC5ML2/fcSI/I5yQk9xkzC
+        DXo9lzPx4qs2+vDYwixYfvb2WsV3i/so3GWZx5jh//NyzYZwmzw2WyL3kD9ImGZ15MoGVv0+nXyc2
+        pqAha+cjJpUedSiG3zLHHfWNCMILWDl3fGMNdumhlKXZRRXsvXSn/qs7h+oJomhUXmSe+q3FHmFnl
+        YsYxtSn1Q==;
+Received: from [195.167.85.94] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1htBxQ-0006JC-Ow; Thu, 01 Aug 2019 14:21:29 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     iommu@lists.linux-foundation.org
+Cc:     Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: fix default dma_mmap_* pgprot
+Date:   Thu,  1 Aug 2019 17:21:17 +0300
+Message-Id: <20190801142118.21225-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801060755.GA14893@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 08:07:55AM +0200, Christoph Hellwig wrote:
-> On Tue, Jul 30, 2019 at 01:57:03PM -0700, john.hubbard@gmail.com wrote:
-> > @@ -40,10 +40,7 @@
-> >  static void __qib_release_user_pages(struct page **p, size_t num_pages,
-> >  				     int dirty)
-> >  {
-> > -	if (dirty)
-> > -		put_user_pages_dirty_lock(p, num_pages);
-> > -	else
-> > -		put_user_pages(p, num_pages);
-> > +	put_user_pages_dirty_lock(p, num_pages, dirty);
-> >  }
-> 
-> __qib_release_user_pages should be removed now as a direct call to
-> put_user_pages_dirty_lock is a lot more clear.
-> 
-> > index 0b0237d41613..62e6ffa9ad78 100644
-> > +++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
-> > @@ -75,10 +75,7 @@ static void usnic_uiom_put_pages(struct list_head *chunk_list, int dirty)
-> >  		for_each_sg(chunk->page_list, sg, chunk->nents, i) {
-> >  			page = sg_page(sg);
-> >  			pa = sg_phys(sg);
-> > -			if (dirty)
-> > -				put_user_pages_dirty_lock(&page, 1);
-> > -			else
-> > -				put_user_page(page);
-> > +			put_user_pages_dirty_lock(&page, 1, dirty);
-> >  			usnic_dbg("pa: %pa\n", &pa);
-> 
-> There is a pre-existing bug here, as this needs to use the sg_page
-> iterator.  Probably worth throwing in a fix into your series while you
-> are at it.
+Hi all,
 
-Sadly usnic does not use the core rdma umem abstraction but open codes
-an old version of it.
-
-In this version each sge in the sgl is exactly one page. See
-usnic_uiom_get_pages - so I think this loop is not a bug?
-
-Jason
+As Shawn pointed out we've had issues with the dma mmap pgprots ever
+since the dma_common_mmap helper was added beyong the initial
+architectures - we default to uncached mappings, but for devices that
+are DMA coherent, or if the DMA_ATTR_NON_CONSISTENT is set (and
+supported) this can lead to aliasing of cache attributes.  This patch
+fixes that.  My explanation of why this hasn't been much of an issue
+is that the dma_mmap_ helpers aren't used widely and mostly just in
+architecture specific drivers.
