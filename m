@@ -2,130 +2,93 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43F8C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FE6C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B209820838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872DB216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:40:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m9lrReYJ"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="bAFcHM5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389291AbfHAVjz (ORCPT
+        id S2389265AbfHAVju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:39:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51290 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389271AbfHAVjx (ORCPT
+        Thu, 1 Aug 2019 17:39:50 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38698 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389246AbfHAVjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:39:53 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x71LY1II104448;
-        Thu, 1 Aug 2019 21:39:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=LUtX7pBhHZfsgp7r0OheG59VIw+dCJxYfKI4K2OdooM=;
- b=m9lrReYJkWWi9heHpCLNN++GRGEAshPIkE3IkSr39RFyK2mEk0XKPLZthhaz88ya0+xH
- hT7scQxOq7bnEzOQ7MhadvXLPKp5MIPu7gmt8I0wTfp4zR+jsPcCh9lWrVpDEQj8Zjf0
- KmppReF76YcfcIVAgE7IaMAy9O0vNt7srWnZtahhkoGpXlSliZnimUtwUFulGQwSnQGz
- 7gnjfcXPqxTKH0O+iGpsLA1oLfADHjH2/6Th8iI6ixPafwBBVTPCFlV6MJTDERyD0J/o
- 4rXKWJkT3Ub9VHKZr8QQqdXq397o/6KwXuqcpLYFthhAEQ25U8jYG0wkrSZOSW+8kGh9 +A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2u0e1u6kws-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 01 Aug 2019 21:39:40 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x71LXL0l183979;
-        Thu, 1 Aug 2019 21:39:39 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2u2jp6kvym-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 01 Aug 2019 21:39:39 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x71LddYJ015405;
-        Thu, 1 Aug 2019 21:39:39 GMT
-Received: from dhcp-10-132-91-225.usdhcp.oraclecorp.com (/10.132.91.225)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 01 Aug 2019 14:39:38 -0700
-Subject: Re: [PATCH] KVM: x86: Unconditionally call x86 ops that are always
- implemented
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190801164606.20777-1-sean.j.christopherson@intel.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <3337d56f-de99-6879-96c2-0255db68541d@oracle.com>
-Date:   Thu, 1 Aug 2019 14:39:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        Thu, 1 Aug 2019 17:39:46 -0400
+Received: by mail-pl1-f196.google.com with SMTP id az7so32739368plb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 14:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UPjVOzxIWhoZ3jLWyfF8eHht0ZmcYW+YAayCLY421Ko=;
+        b=bAFcHM5KTORiEFTKFSUQ+5+sIca8SaUzn3leRYT0Ei0ZsrKsFvUA3lZffQDpSAr2Jm
+         hoTvRZneyQdSX03A734GsBP04VvIfBKL47LtsWwrikydtYva+Lj1KaRVdAl2Jkolz5l+
+         o2YP/pVjOZ0XtkfyBMnV2BXHm5sdfjQFsMCT0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UPjVOzxIWhoZ3jLWyfF8eHht0ZmcYW+YAayCLY421Ko=;
+        b=n24mP3L4Lt04eBckMot6S33WWuG/sqVFtAkSEh1NPlDboHBdl/X/NM2OQJk5F7Fgzt
+         NomxsndDwhalrGc6JHzvUJ8EqZuDlJj3U6vvF9Mwb4uXzv6v19v6Z9xlKTzXC5ojqFll
+         sd+yZW2R9EsSxg9LDpY47/LD1Fo8WIXcTE4hwL5xAtDn/tK2c/NWJ9J2fzp/0imuVLtE
+         PH9sOfT+exEG8Z584xKAiLeTd/str07mgO2nKVwktS8Z3uehsvA8Mj3Esz9ZhTL7PQvT
+         P7+yLRn7QaQKYstWGALtAoaOJoNzHHLfB1mUgxIfmHxbK1wcUm28C82EXA/8OMFfLh1K
+         ETOQ==
+X-Gm-Message-State: APjAAAVaUxtnJZUcu0wWfoehjAX3Wd8+myyCkHehN2Wfm3ioeagMOnT5
+        zSAZd/brNoTcfQ9XyRMdDBvpi5UI
+X-Google-Smtp-Source: APXvYqwzpOdKb1CkE9Av2YhdeBi81Sd7MLH0rkz7iJzyrLqIuBXqJGuSO49DxQvQP0BohWXdHyZ/6g==
+X-Received: by 2002:a17:902:e4:: with SMTP id a91mr31494499pla.150.1564695585474;
+        Thu, 01 Aug 2019 14:39:45 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id r61sm5940423pjb.7.2019.08.01.14.39.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 14:39:44 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org
+Subject: ['PATCH v2' 6/7] Restore docs "treewide: Rename rcu_dereference_raw_notrace() to _check()"
+Date:   Thu,  1 Aug 2019 17:39:21 -0400
+Message-Id: <20190801213922.158860-7-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+In-Reply-To: <20190801213922.158860-1-joel@joelfernandes.org>
+References: <20190801213922.158860-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-In-Reply-To: <20190801164606.20777-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9336 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=676
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908010228
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9336 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=728 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908010228
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This restores docs back in ReST format.
+---
+ Documentation/RCU/Design/Requirements/Requirements.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/Documentation/RCU/Design/Requirements/Requirements.rst b/Documentation/RCU/Design/Requirements/Requirements.rst
+index a33b5fb331b4..0b222469d7ce 100644
+--- a/Documentation/RCU/Design/Requirements/Requirements.rst
++++ b/Documentation/RCU/Design/Requirements/Requirements.rst
+@@ -1997,7 +1997,7 @@ Tracing and RCU
+ ~~~~~~~~~~~~~~~
+ 
+ It is possible to use tracing on RCU code, but tracing itself uses RCU.
+-For this reason, ``rcu_dereference_raw_notrace()`` is provided for use
++For this reason, ``rcu_dereference_raw_check()`` is provided for use
+ by tracing, which avoids the destructive recursion that could otherwise
+ ensue. This API is also used by virtualization in some architectures,
+ where RCU readers execute in environments in which tracing cannot be
+-- 
+2.22.0.770.g0f2c4a37fd-goog
 
-On 08/01/2019 09:46 AM, Sean Christopherson wrote:
-> Remove two stale checks for non-NULL ops now that they're implemented by
-> both VMX and SVM.
->
-> Fixes: 74f169090b6f ("kvm/svm: Setup MCG_CAP on AMD properly")
-> Fixes: b31c114b82b2 ("KVM: X86: Provide a capability to disable PAUSE intercepts")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->   arch/x86/kvm/x86.c | 8 ++------
->   1 file changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 01e18caac825..2c25a19d436f 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -3506,8 +3506,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(struct kvm_vcpu *vcpu,
->   	for (bank = 0; bank < bank_num; bank++)
->   		vcpu->arch.mce_banks[bank*4] = ~(u64)0;
->   
-> -	if (kvm_x86_ops->setup_mce)
-> -		kvm_x86_ops->setup_mce(vcpu);
-> +	kvm_x86_ops->setup_mce(vcpu);
->   out:
->   	return r;
->   }
-> @@ -9313,10 +9312,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
->   	kvm_page_track_init(kvm);
->   	kvm_mmu_init_vm(kvm);
->   
-> -	if (kvm_x86_ops->vm_init)
-> -		return kvm_x86_ops->vm_init(kvm);
-> -
-> -	return 0;
-> +	return kvm_x86_ops->vm_init(kvm);
->   }
->   
->   static void kvm_unload_vcpu_mmu(struct kvm_vcpu *vcpu)
-
-The following two ops are also implemented by both VMX and SVM:
-
-         update_cr8_intercept
-         update_pi_irte
