@@ -2,129 +2,127 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB50BC32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E24CC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C022D206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:00:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KyWodxvz"
+	by mail.kernel.org (Postfix) with ESMTP id 52E2521726
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:04:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564646653;
+	bh=iJ/jDfwskDyOu7dIT3HxTBTvS8lKujAL4owl/fbXJzE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bJsIGnoLk9DvmbLfLoje97JygBd9BRHzoyFa/pSHCZYTcDvPL7W+2DJc1AJxkzXce
+	 dRxMBlxnbqM2asueTa/lLPdPZoRjqXq2iwY1hsLXsUQX2sS7XIWYYRXGqjvwvCh+xa
+	 +A0DkyjrjKq/LyewgIaMju1qvQ3T5AkFDQpV/UjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbfHAIAG (ORCPT
+        id S1730164AbfHAIEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:00:06 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37351 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730514AbfHAIAF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:00:05 -0400
-Received: by mail-lj1-f195.google.com with SMTP id z28so14180137ljn.4;
-        Thu, 01 Aug 2019 01:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VAiKQtrdWdpAymEw2Fi6xVY10VrsZzJSh6lsPenXn5c=;
-        b=KyWodxvzOSUl5vMHnbnrwzIAAyi2FLqjzsrJG4CDOo0xubx8uDbAyXqHvMjXb2EZKR
-         3OTkmSgzUW5s4OFzZOJtJzkxL2Vw9tpTOsPuHNmJL10tEdjzf6+u9Z5Dm7Ybjzo2Fsnq
-         upL41HGVkP0Apu7kDsQGa73HXRgsYJ4eGQN4LQaCrmmTCyKiMdEQRG2WVK4rAboEaFkL
-         GR3a+bW/b/pBTN2NDcQHelOqJxfXR1ACeiixyEc+ACqJNOoNIwLeHNt7Gkj296UvulJw
-         dWF9aAtR4dZnfFwdJPh3B21ex1Yyr1oWQ/ZqlU8QV6eNaXvHxEZcelG2uu1GWLoxBxgQ
-         663w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VAiKQtrdWdpAymEw2Fi6xVY10VrsZzJSh6lsPenXn5c=;
-        b=GvMWCV/U9YOcLE4xcfMJjDR2SgtqeDGi7BJRHME7AqL7mr1ixuAmutOym0m4hpP9gI
-         9KJJiLh0a33oWkNvIlGJye3VJr7FaBpYMltsPF9ZuwiNyVThVc7NF9sCkmpaeL+VW8S6
-         JzHBjf3FlyEYnvmCpoytOs3XjGzzCn0mZtlv4yiOnhnRm9vts48kC8gObXYDu9acLLD6
-         pbfAi5YymPeSa+la3G9jxEYjwOe/rxKK2TfAp80/A1tUUKudy7iAtQiRqmlNFesL/EmR
-         ZOAG9VHLTE4JURgLRx0s0RPI0IYEwJ7AaY7xTuQbEpn6wiGR9N33TA0caDofY0MQk0Gu
-         psaA==
-X-Gm-Message-State: APjAAAV4H70kcD1p9bp7ucO1MXqQOHlQUUBk8sp+jH9za1IPL0ZpS3Zt
-        FL3iuRp9YJZkNG9rqQicEvdIFpDW58lVPftCJTA=
-X-Google-Smtp-Source: APXvYqx/gMgcGF2V7ylKamWcGjf6XGcn5JGjdm2r9vJ2Njp1NLJnu7wpmlveYBCUT/NrzJhe5JXapFqEUKI15zJ5ClQ=
-X-Received: by 2002:a2e:5d92:: with SMTP id v18mr67333062lje.9.1564646402586;
- Thu, 01 Aug 2019 01:00:02 -0700 (PDT)
+        Thu, 1 Aug 2019 04:04:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41198 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728582AbfHAIEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 04:04:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 468E0AC91;
+        Thu,  1 Aug 2019 08:04:10 +0000 (UTC)
+Date:   Thu, 1 Aug 2019 10:04:07 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Rashmica Gupta <rashmica.g@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        pasha.tatashin@soleen.com, Jonathan.Cameron@huawei.com,
+        anshuman.khandual@arm.com, Vlastimil Babka <vbabka@suse.cz>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
+Message-ID: <20190801080407.GJ11627@dhcp22.suse.cz>
+References: <20190702074806.GA26836@linux>
+ <CAC6rBskRyh5Tj9L-6T4dTgA18H0Y8GsMdC-X5_0Jh1SVfLLYtg@mail.gmail.com>
+ <20190731120859.GJ9330@dhcp22.suse.cz>
+ <4ddee0dd719abd50350f997b8089fa26f6004c0c.camel@gmail.com>
+ <20190801071709.GE11627@dhcp22.suse.cz>
+ <9bcbd574-7e23-5cfe-f633-646a085f935a@redhat.com>
+ <20190801072430.GF11627@dhcp22.suse.cz>
+ <e654aa97-6ab1-4069-60e6-fc099539729e@redhat.com>
+ <20190801073407.GG11627@dhcp22.suse.cz>
+ <7c12f0b1-61a5-ed6f-2c64-4058e47860a3@redhat.com>
 MIME-Version: 1.0
-References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
- <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
- <CAE=NcrY7b8eTTovOszBhGhVbjfJAXoAYehiUJyPENGfwWoVcPw@mail.gmail.com>
- <CAFA6WYOEqe1a1DCyVYKA+oZaZ0n5hnjxdubstUnrwdUW1-4xHw@mail.gmail.com>
- <CAE=NcraDkm5cxE=ceq_9XkQz=NZ6KdVXkNUsdD4G2LrWz-bpDw@mail.gmail.com> <CAFA6WYMOXQbL5OeheFUFpTr8gte8XHHr-71-h8+qX0+R_sekDQ@mail.gmail.com>
-In-Reply-To: <CAFA6WYMOXQbL5OeheFUFpTr8gte8XHHr-71-h8+qX0+R_sekDQ@mail.gmail.com>
-From:   Janne Karhunen <janne.karhunen@gmail.com>
-Date:   Thu, 1 Aug 2019 10:59:51 +0300
-Message-ID: <CAE=Ncrae6pM+WBDu9eJ7Fw2Fkvf3_YqH5tj9Tt938D4RtWcdSQ@mail.gmail.com>
-Subject: Re: [RFC v2 0/6] Introduce TEE based Trusted Keys support
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, dhowells@redhat.com,
-        jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c12f0b1-61a5-ed6f-2c64-4058e47860a3@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 10:40 AM Sumit Garg <sumit.garg@linaro.org> wrote:
+On Thu 01-08-19 09:50:29, David Hildenbrand wrote:
+> On 01.08.19 09:34, Michal Hocko wrote:
+> > On Thu 01-08-19 09:26:35, David Hildenbrand wrote:
+> >> On 01.08.19 09:24, Michal Hocko wrote:
+> >>> On Thu 01-08-19 09:18:47, David Hildenbrand wrote:
+> >>>> On 01.08.19 09:17, Michal Hocko wrote:
+> >>>>> On Thu 01-08-19 09:06:40, Rashmica Gupta wrote:
+> >>>>>> On Wed, 2019-07-31 at 14:08 +0200, Michal Hocko wrote:
+> >>>>>>> On Tue 02-07-19 18:52:01, Rashmica Gupta wrote:
+> >>>>>>> [...]
+> >>>>>>>>> 2) Why it was designed, what is the goal of the interface?
+> >>>>>>>>> 3) When it is supposed to be used?
+> >>>>>>>>>
+> >>>>>>>>>
+> >>>>>>>> There is a hardware debugging facility (htm) on some power chips.
+> >>>>>>>> To use
+> >>>>>>>> this you need a contiguous portion of memory for the output to be
+> >>>>>>>> dumped
+> >>>>>>>> to - and we obviously don't want this memory to be simultaneously
+> >>>>>>>> used by
+> >>>>>>>> the kernel.
+> >>>>>>>
+> >>>>>>> How much memory are we talking about here? Just curious.
+> >>>>>>
+> >>>>>> From what I've seen a couple of GB per node, so maybe 2-10GB total.
+> >>>>>
+> >>>>> OK, that is really a lot to keep around unused just in case the
+> >>>>> debugging is going to be used.
+> >>>>>
+> >>>>> I am still not sure the current approach of (ab)using memory hotplug is
+> >>>>> ideal. Sure there is some overlap but you shouldn't really need to
+> >>>>> offline the required memory range at all. All you need is to isolate the
+> >>>>> memory from any existing user and the page allocator. Have you checked
+> >>>>> alloc_contig_range?
+> >>>>>
+> >>>>
+> >>>> Rashmica mentioned somewhere in this thread that the virtual mapping
+> >>>> must not be in place, otherwise the HW might prefetch some of this
+> >>>> memory, leading to errors with memtrace (which checks that in HW).
+> >>>
+> >>> Does anything prevent from unmapping the pfn range from the direct
+> >>> mapping?
+> >>
+> >> I am not sure about the implications of having
+> >> pfn_valid()/pfn_present()/pfn_online() return true but accessing it
+> >> results in crashes. (suspend, kdump, whatever other technology touches
+> >> online memory)
+> > 
+> > If those pages are marked as Reserved then nobody should be touching
+> > them anyway.
+> 
+> Which is not true as I remember we already discussed - I even documented
+> what PG_reserved can mean after that discussion in page-flags.h (e.g.,
+> memmap of boot memory) - that's why we introduced PG_offline after all.
 
-> > I chose the userspace plugin due to this, you can use userspace aids
-> > to provide any type of service. Use the crypto library you desire to
-> > do the magic you want.
->
-> Here TEE isn't similar to a user-space crypto library. In our case TEE
-> is based on ARM TrustZone which only allows TEE communications to be
-> initiated from privileged mode. So why would you like to route
-> communications via user-mode (which is less secure) when we have
-> standardised TEE interface available in kernel?
+Sorry, my statement was imprecise. What I meant is what we have
+documented:
+ * PG_reserved is set for special pages. The "struct page" of such a page
+ * should in general not be touched (e.g. set dirty) except by its owner.
 
-The physical access guards for reading/writing the involved critical
-memory are identical as far as I know? Layered security is generally a
-good thing, and the userspace pass actually adds a layer, so not sure
-which is really safer?
-
-In my case the rerouting was to done generalize it. Any type of trust
-source, anywhere.
-
-
-> > > Isn't actual purpose to have trusted keys is to protect user-space
-> > > from access to kernel keys in plain format? Doesn't user mode helper
-> > > defeat that purpose in one way or another?
-> >
-> > Not really. CPU is in the user mode while running the code, but the
-> > code or the secure keydata being is not available to the 'normal'
-> > userspace. It's like microkernel service/driver this way. The usermode
-> > driver is part of the kernel image and it runs on top of a invisible
-> > rootfs.
->
-> Can you elaborate here with an example regarding how this user-mode
-> helper will securely communicate with a hardware based trust source
-> with other user-space processes denied access to that trust source?
-
-The other user mode processes will never see the device node to open.
-There is none in existence for them; it only exists in the ramfs based
-root for the user mode helper.
-
-
---
-Janne
+the owner part is important.
+-- 
+Michal Hocko
+SUSE Labs
