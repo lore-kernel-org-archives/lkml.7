@@ -2,129 +2,110 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E301C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A406C32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D704C214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564648067;
-	bh=GuiGEGKJuPK+PK+6JeAYCjVnb7BRAjtF7+C7+TDNTxY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mOMPiRw7ImeZGTNjmzSMGwjejxaTN7KzEaWKQAzovTmyAxzqqqmTkm9XNc8Dk3FM3
-	 Ej77+GzP/JLGX3ZrnJqyPntzi95Yf1UilIJGrQX501JnCWcJpP4PySrDTOOYI9H2Kx
-	 06/jQSXtIBmnBn8Vp6VlhM2PzbaBGf5/iLiD6Kck=
+	by mail.kernel.org (Postfix) with ESMTP id CD7C22087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVeh8Jw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbfHAI1q (ORCPT
+        id S1729906AbfHAIaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:27:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48390 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729140AbfHAI1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:27:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B402AB63C;
-        Thu,  1 Aug 2019 08:27:43 +0000 (UTC)
-Date:   Thu, 1 Aug 2019 10:27:41 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1] drivers/base/memory.c: Don't store end_section_nr in
- memory blocks
-Message-ID: <20190801082741.GK11627@dhcp22.suse.cz>
-References: <20190731124356.GL9330@dhcp22.suse.cz>
- <f0894c30-105a-2241-a505-7436bc15b864@redhat.com>
- <20190731132534.GQ9330@dhcp22.suse.cz>
- <58bd9479-051b-a13b-b6d0-c93aac2ed1b3@redhat.com>
- <20190731141411.GU9330@dhcp22.suse.cz>
- <c92a4d6f-b0f2-e080-5157-b90ab61a8c49@redhat.com>
- <20190731143714.GX9330@dhcp22.suse.cz>
- <d9db33a5-ca83-13bd-5fcb-5f7d5b3c1bfb@redhat.com>
- <20190801061344.GA11627@dhcp22.suse.cz>
- <f8767e9a-034d-dca6-05e6-dc6bbcb4d005@redhat.com>
+        Thu, 1 Aug 2019 04:30:20 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46008 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbfHAIaU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 04:30:20 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u10so10820542lfm.12;
+        Thu, 01 Aug 2019 01:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2xNohy2xyMAt9HM3Gyk3aetZhs8G9eF7ELJFgFiK0/I=;
+        b=KVeh8Jw9S5Hs+wIxrPmvLbiA/a8qd2ZozSyly4TxKurfCOo1wsw0V1V4FfYAeJ2wAl
+         hX+8KRVyClJNg+3FptaphJmcdmM9LnzOh6gagbOFy1eMrZjqDl8bcVFvxVo1dAiR9p+b
+         FgdFqaoPZgECEcYJFHKHAoCypPwq4VSG353KdX7BgFGul9ORNUmXLocQaAQdLdRYnRab
+         T20nnn0f6BhIpOqtJKrlqaa9f6Yn6/vlQQ1nLKTFluF8kJjAcp5eNSoiPczaPKAQJHFy
+         DDP/HFLbIHCTMQOK6z+FkUHrlVi24L40YmEl1myxFuqnS8aWTlzma/wECZhp/dCoKJv3
+         W0sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2xNohy2xyMAt9HM3Gyk3aetZhs8G9eF7ELJFgFiK0/I=;
+        b=LzNOOLJ8i1HHyeTpxE2+GpVdssv8bCiSKiOTnQAdQlI8miOya3BBc4LIBfvHtJGC7r
+         ALQRVHHiY8H8dDNkFQ7AeYC9QqEAz42yH7zN05PYFoI32Yw5dlf8lhG2ectZ5Cgf1b/K
+         RNP7jdLBOkBBhalOvOneQhubnWbg+XyLUWRFgWGphRltCQLE6+KCq4LLSRlxJo2MoKxK
+         j05d1rSCt3hCq+HVXKbThoOpk3VcpPCDnHMNX9tt7QayBBO2ZsZ45iimK08J8mHzp6us
+         Mf1qyeUWVuGK4lXxyGk+sMipfaysxbV38mWNuTYZX40/fdWec54Nd1Y7CnkjCxMYcmmi
+         nQiA==
+X-Gm-Message-State: APjAAAV6Rp+/Wkaudm7wMdKKATfevRsTpz0ZWkmjSDZ00A7YoDAjpx7q
+        x56J4fXo+pcpyh//iIf3XYAYG7QlIK1fYBBP4v4=
+X-Google-Smtp-Source: APXvYqzzD88SDt0GVEYWnLJkJRlwD14+HIfeihD4WoOdeKaL/6vYosJryMtEFIiIAgKt+K60XVbK4UMpvkES4vMcWVE=
+X-Received: by 2002:a19:f806:: with SMTP id a6mr47249319lff.102.1564648217496;
+ Thu, 01 Aug 2019 01:30:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f8767e9a-034d-dca6-05e6-dc6bbcb4d005@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
+ <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
+ <CAFA6WYPJAzbPdcpBqioxjY=T8RLw-73B_hpzX4cGnwVvm5zpJw@mail.gmail.com>
+ <CAE=Ncrb23q++z8R8UMbjDE2epEq4YVcNGzrRD31eH3JAooYejg@mail.gmail.com>
+ <CAFA6WYOKcOzSwakHhgshZcebD8ZBMSi7xQdjWYFS79=Xc+odOg@mail.gmail.com>
+ <CAE=NcrYz8bT9zDhS_ZcvY84fpeTDxZ-KhJKeQGGyf=o4pG2J-Q@mail.gmail.com>
+ <19d9be198619e951750dedeb4d0a7f372083b42c.camel@pengutronix.de>
+ <CAE=NcraqD9FNM0Gk9UGhPGi3heVzZrAKGc1gNZxoe1OnDaQ=pA@mail.gmail.com> <CAFA6WYPt4q+jaJbaoauXKr2qKgBHvtQ663s4t=W3nuPJPe2xpw@mail.gmail.com>
+In-Reply-To: <CAFA6WYPt4q+jaJbaoauXKr2qKgBHvtQ663s4t=W3nuPJPe2xpw@mail.gmail.com>
+From:   Janne Karhunen <janne.karhunen@gmail.com>
+Date:   Thu, 1 Aug 2019 11:30:05 +0300
+Message-ID: <CAE=NcrbujsM8wYJXq+s=o5Vy1xY1b0uKYBGvp6UP5ex70HrB2Q@mail.gmail.com>
+Subject: Re: [Tee-dev] [RFC v2 0/6] Introduce TEE based Trusted Keys support
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Rouven Czerwinski <r.czerwinski@pengutronix.de>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, jejb@linux.ibm.com,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dhowells@redhat.com, linux-security-module@vger.kernel.org,
+        keyrings@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-integrity@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 01-08-19 09:00:45, David Hildenbrand wrote:
-> On 01.08.19 08:13, Michal Hocko wrote:
-> > On Wed 31-07-19 16:43:58, David Hildenbrand wrote:
-> >> On 31.07.19 16:37, Michal Hocko wrote:
-> >>> On Wed 31-07-19 16:21:46, David Hildenbrand wrote:
-> >>> [...]
-> >>>>> Thinking about it some more, I believe that we can reasonably provide
-> >>>>> both APIs controlable by a command line parameter for backwards
-> >>>>> compatibility. It is the hotplug code to control sysfs APIs.  E.g.
-> >>>>> create one sysfs entry per add_memory_resource for the new semantic.
-> >>>>
-> >>>> Yeah, but the real question is: who needs it. I can only think about
-> >>>> some DIMM scenarios (some, not all). I would be interested in more use
-> >>>> cases. Of course, to provide and maintain two APIs we need a good reason.
-> >>>
-> >>> Well, my 3TB machine that has 7 movable nodes could really go with less
-> >>> than
-> >>> $ find /sys/devices/system/memory -name "memory*" | wc -l
-> >>> 1729>
-> >>
-> >> The question is if it would be sufficient to increase the memory block
-> >> size even further for these kinds of systems (e.g., via a boot parameter
-> >> - I think we have that on uv systems) instead of having blocks of
-> >> different sizes. Say, 128GB blocks because you're not going to hotplug
-> >> 128MB DIMMs into such a system - at least that's my guess ;)
-> > 
-> > The system has
-> > [    0.000000] ACPI: SRAT: Node 1 PXM 1 [mem 0x10000000000-0x17fffffffff]
-> > [    0.000000] ACPI: SRAT: Node 2 PXM 2 [mem 0x80000000000-0x87fffffffff]
-> > [    0.000000] ACPI: SRAT: Node 3 PXM 3 [mem 0x90000000000-0x97fffffffff]
-> > [    0.000000] ACPI: SRAT: Node 4 PXM 4 [mem 0x100000000000-0x107fffffffff]
-> > [    0.000000] ACPI: SRAT: Node 5 PXM 5 [mem 0x110000000000-0x117fffffffff]
-> > [    0.000000] ACPI: SRAT: Node 6 PXM 6 [mem 0x180000000000-0x183fffffffff]
-> > [    0.000000] ACPI: SRAT: Node 7 PXM 7 [mem 0x190000000000-0x191fffffffff]
-> > 
-> > hotplugable memory. I would love to have those 7 memory blocks to work
-> > with. Any smaller grained split is just not helping as the platform will
-> > not be able to hotremove it anyway.
-> > 
-> 
-> So the smallest granularity in your system is indeed 128GB (btw, nice
-> system, I wish I had something like that), the biggest one 512GB.
-> 
-> Using a memory block size of 128GB would imply on a 3TB system 24 memory
-> blocks - which is tolerable IMHO. Especially, performance-wise there
-> shouldn't be a real difference to 7 blocks. Hotunplug triggered via ACPI
-> will take care of offlining the right DIMMs.
+On Thu, Aug 1, 2019 at 10:58 AM Sumit Garg <sumit.garg@linaro.org> wrote:
 
-The problem with a fixed size memblock is that you might not know how
-much memory you will have until much later after the boot. For example,
-it should be quite reasonable to expect that this particular machine
-would boot with node 0 only and have additional boards with memory added
-during runtime. How big the memblock should be then? And I believe that
-the virtualization usecase is similar in that regards. You get memory on
-demand.
- 
-> Of course, 7 blocks would be nicer, but as discussed, not possible with
-> the current ABI.
+> > Anyway, just my .02c. I guess having any new support in the kernel for
+> > new trust sources is good and improvement from the current state. I
+> > can certainly make my stuff work with your setup as well, what ever
+> > people think is the best.
+>
+> Yes your implementation can very well fit under trusted keys
+> abstraction framework without creating a new keytype: "ext-trusted".
 
-As I've said, if we want to move forward we have to change the API we
-have right now. With backward compatible option of course.
+The fundamental problem with the 'standardized kernel tee' still
+exists - it will never be generic in real life. Getting all this in
+the kernel will solve your problem and sell this particular product,
+but it is quite unlikely to help that many users. If the security is
+truly important to you, would you really trust any of this code to
+someone else? In this day and age, I really doubt many do. Everyone
+does their own thing, so this is why I really see all that as a
+userspace problem.
 
--- 
-Michal Hocko
-SUSE Labs
+
+--
+Janne
