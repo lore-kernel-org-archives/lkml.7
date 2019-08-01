@@ -2,293 +2,183 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1B8C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81273C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 171292084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0A620838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="VbNY1mev"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Q2Yn9bpZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbfHASO5 (ORCPT
+        id S1733119AbfHASPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 14:14:57 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37811 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388211AbfHASOf (ORCPT
+        Thu, 1 Aug 2019 14:15:24 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34842 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731713AbfHASPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 14:14:35 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d1so1830123pgp.4
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 11:14:34 -0700 (PDT)
+        Thu, 1 Aug 2019 14:15:24 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u14so34551609pfn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 11:15:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=R5am/kvR4YdBRkExxjAP3dW6MnAlz9RnkWC4XFHMY/c=;
-        b=VbNY1mevOcCg/oXTPML6dmX4Dzkfx46dtH9/yxVjJXmTgfbDKImxA8iP9mT3lTsE9L
-         R2C7YsDFEqRskD+hY6yNvHsMcOffGuVY+gPgvoSGtxdJsFFAfIBWi2dU3rpM2OgGmZnz
-         rRUzlwDDiABz67GwlKu6CMUwZhA20tpxHl2Ks=
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=A/2U3sBSUHvfzL5QT64+0anCBzLTLTL1IfUmHYOzv8M=;
+        b=Q2Yn9bpZT7MTiS2Fuhc1CBYlxs3phQsozr5LA/k6MqS/FzmEF5/uvtngkdC0Z2cf8S
+         i6Qt/32fnNBpI5AKyVyX9TftvzDm1tJ82Db4g7d60SPTRnS4bZNCEt5m0QZ2Zlbp0Iez
+         WL0wC61c9DxrPRDpQVe+/uAJ51y4acrhIbDlw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=R5am/kvR4YdBRkExxjAP3dW6MnAlz9RnkWC4XFHMY/c=;
-        b=J5keGDLwD5gEnO/Nd+AqbLC3ODH8VywIGpRa09P33hZqrRxzfFIwdXic2b7YA09x9p
-         93d1arFxi/6VXsC2A+qf/hoz4wDBvS8VuftHiHXBjBfyfQiodnKAyP//wwvZVNcux/wz
-         Mj6+I7kjai8nl2sl7Si/8VWQPqWsE9fc/UhZniKawriyjYWvTw+makmDRqKJt19K/mWZ
-         yDv9zc0bW40K+WkoCFSGgReuBZ7mtgx209go50wtVRKjfizr48GkTWFfgyU0+ieRyzby
-         chpKhnjrSM07dK4pC9mhY68noQz48cNx4Y7hGnSUCeZNGdXwLW5bRa+nmfsJyKnndO6r
-         kByA==
-X-Gm-Message-State: APjAAAWKm8MFs53L8bG+68iFL5tzz8zYGGQWhMIrRcghH10dgW0zU3PX
-        opxjYEI1+WGh1NdDv3+I4HcAw9U5
-X-Google-Smtp-Source: APXvYqzcXKvgfM5Y0XWSWBXaRMtvgCu3yrFrpDe6agYFS7yYkht544ax+T1YWGu/vfpjK5ScQfXSng==
-X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr135658pjb.20.1564683273779;
-        Thu, 01 Aug 2019 11:14:33 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id g8sm82089165pgk.1.2019.08.01.11.14.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 11:14:33 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org
-Subject: [PATCH 8/9] Revert "Revert "rcu: Add support for consolidated-RCU reader checking""
-Date:   Thu,  1 Aug 2019 14:14:10 -0400
-Message-Id: <20190801181411.96429-9-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-In-Reply-To: <20190801181411.96429-1-joel@joelfernandes.org>
-References: <20190801181411.96429-1-joel@joelfernandes.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=A/2U3sBSUHvfzL5QT64+0anCBzLTLTL1IfUmHYOzv8M=;
+        b=Y5y3QvZvTySAilSCSH1hUccHUm1Xe+KIJ/9E81sBd1dB3sjufgAo/bu8KIlSowwGa8
+         on2ILzb4ztUv7Nqqd3r6za9Xbfsq6Xh5ziwx4m6S0U4Gm7fmohrdMuWo2lNRSCfJkKZy
+         ANpodUJjlHP8l0kprxktbetjmI5Do7gvYbFmExYf0C9QPevAWtes1QeEsUeKuEdN52H5
+         sG7p6qS6+fBqQzScP9CWS8kH/UHUFS2vCNB1Vuf65jvjxr/hE8i2MceoP86Dz9LFZ7xQ
+         lf6DMCUg24N7rJqp+89KxttwOliPwgZXPvV4z1pNERBYJzdwEK7cqyUDB0vSx7FTW6gB
+         4w7Q==
+X-Gm-Message-State: APjAAAVxCkh2L58JlPglx9ahH5v0UrTzC+XJLceeQbj+DMOIHywKsb5O
+        uQLHaeQ/dwxpjLEW3LEM6KCWDA==
+X-Google-Smtp-Source: APXvYqy5YxYnI0i+UvSKVSvJD5W3X8Ct2hIIE5d7R1nII78ojNXg/Ndq9IbIMXECeg+nkbwLTBNsVQ==
+X-Received: by 2002:a17:90a:2562:: with SMTP id j89mr74708pje.123.1564683322929;
+        Thu, 01 Aug 2019 11:15:22 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id l26sm84023425pgb.90.2019.08.01.11.15.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 11:15:21 -0700 (PDT)
+Subject: Re: [PATCH 2/3] firmware: add offset to request_firmware_into_buf
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>
+References: <20190523025113.4605-1-scott.branden@broadcom.com>
+ <20190523025113.4605-3-scott.branden@broadcom.com>
+ <20190523055233.GB22946@kroah.com>
+ <15c47e4d-e70d-26bb-9747-0ad0aa81597b@broadcom.com>
+ <20190523165424.GA21048@kroah.com>
+ <44282070-ddaf-3afb-9bdc-4751e3f197ac@broadcom.com>
+ <20190524052258.GB28229@kroah.com>
+ <2f67db0a-27c3-d13c-bbe0-0af5edd4f0da@broadcom.com>
+ <20190801061801.GA4338@kroah.com>
+ <20190801174215.GB16384@42.do-not-panic.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <74be1aa7-0e10-51dc-bbbf-94bb5f4bf7c4@broadcom.com>
+Date:   Thu, 1 Aug 2019 11:15:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190801174215.GB16384@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 24be1727c524b5874d5dc7828cd392cf86c3341e.
----
- include/linux/rculist.h  | 32 ++++++++++++++++----
- include/linux/rcupdate.h |  7 +++++
- kernel/rcu/Kconfig.debug | 11 +++++++
- kernel/rcu/update.c      | 65 ++++++++++++++++++++++++++--------------
- 4 files changed, 88 insertions(+), 27 deletions(-)
+Hi Luis,
 
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index 932296144131..4158b7212936 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -40,6 +40,24 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
-  */
- #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
- 
-+/*
-+ * Check during list traversal that we are within an RCU reader
-+ */
-+
-+#define check_arg_count_one(dummy)
-+
-+#ifdef CONFIG_PROVE_RCU_LIST
-+#define __list_check_rcu(dummy, cond, extra...)				\
-+	({								\
-+	check_arg_count_one(extra);					\
-+	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),		\
-+			 "RCU-list traversed in non-reader section!");	\
-+	 })
-+#else
-+#define __list_check_rcu(dummy, cond, extra...)				\
-+	({ check_arg_count_one(extra); })
-+#endif
-+
- /*
-  * Insert a new entry between two known consecutive entries.
-  *
-@@ -343,14 +361,16 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
-  * @pos:	the type * to use as a loop cursor.
-  * @head:	the head for your list.
-  * @member:	the name of the list_head within the struct.
-+ * @cond:	optional lockdep expression if called from non-RCU protection.
-  *
-  * This list-traversal primitive may safely run concurrently with
-  * the _rcu list-mutation primitives such as list_add_rcu()
-  * as long as the traversal is guarded by rcu_read_lock().
-  */
--#define list_for_each_entry_rcu(pos, head, member) \
--	for (pos = list_entry_rcu((head)->next, typeof(*pos), member); \
--		&pos->member != (head); \
-+#define list_for_each_entry_rcu(pos, head, member, cond...)		\
-+	for (__list_check_rcu(dummy, ## cond, 0),			\
-+	     pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-+		&pos->member != (head);					\
- 		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
- 
- /**
-@@ -616,13 +636,15 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
-  * @pos:	the type * to use as a loop cursor.
-  * @head:	the head for your list.
-  * @member:	the name of the hlist_node within the struct.
-+ * @cond:	optional lockdep expression if called from non-RCU protection.
-  *
-  * This list-traversal primitive may safely run concurrently with
-  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-  * as long as the traversal is guarded by rcu_read_lock().
-  */
--#define hlist_for_each_entry_rcu(pos, head, member)			\
--	for (pos = hlist_entry_safe(rcu_dereference_raw(hlist_first_rcu(head)),\
-+#define hlist_for_each_entry_rcu(pos, head, member, cond...)		\
-+	for (__list_check_rcu(dummy, ## cond, 0),			\
-+	     pos = hlist_entry_safe(rcu_dereference_raw(hlist_first_rcu(head)),\
- 			typeof(*(pos)), member);			\
- 		pos;							\
- 		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index bfcafbc1e301..80d6056f5855 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -221,6 +221,7 @@ int debug_lockdep_rcu_enabled(void);
- int rcu_read_lock_held(void);
- int rcu_read_lock_bh_held(void);
- int rcu_read_lock_sched_held(void);
-+int rcu_read_lock_any_held(void);
- 
- #else /* #ifdef CONFIG_DEBUG_LOCK_ALLOC */
- 
-@@ -241,6 +242,12 @@ static inline int rcu_read_lock_sched_held(void)
- {
- 	return !preemptible();
- }
-+
-+static inline int rcu_read_lock_any_held(void)
-+{
-+	return !preemptible();
-+}
-+
- #endif /* #else #ifdef CONFIG_DEBUG_LOCK_ALLOC */
- 
- #ifdef CONFIG_PROVE_RCU
-diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-index 5ec3ea4028e2..4aa02eee8f6c 100644
---- a/kernel/rcu/Kconfig.debug
-+++ b/kernel/rcu/Kconfig.debug
-@@ -8,6 +8,17 @@ menu "RCU Debugging"
- config PROVE_RCU
- 	def_bool PROVE_LOCKING
- 
-+config PROVE_RCU_LIST
-+	bool "RCU list lockdep debugging"
-+	depends on PROVE_RCU && RCU_EXPERT
-+	default n
-+	help
-+	  Enable RCU lockdep checking for list usages. By default it is
-+	  turned off since there are several list RCU users that still
-+	  need to be converted to pass a lockdep expression. To prevent
-+	  false-positive splats, we keep it default disabled but once all
-+	  users are converted, we can remove this config option.
-+
- config TORTURE_TEST
- 	tristate
- 	default n
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 64e9cc8609e7..c768f1fd6804 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -91,19 +91,30 @@ module_param(rcu_normal_after_boot, int, 0);
-  * Similarly, we avoid claiming an SRCU read lock held if the current
-  * CPU is offline.
-  */
-+static bool rcu_read_lock_held_common(bool *ret)
-+{
-+	if (!debug_lockdep_rcu_enabled()) {
-+		*ret = 1;
-+		return true;
-+	}
-+	if (!rcu_is_watching()) {
-+		*ret = 0;
-+		return true;
-+	}
-+	if (!rcu_lockdep_current_cpu_online()) {
-+		*ret = 0;
-+		return true;
-+	}
-+	return false;
-+}
-+
- int rcu_read_lock_sched_held(void)
- {
--	int lockdep_opinion = 0;
-+	bool ret;
- 
--	if (!debug_lockdep_rcu_enabled())
--		return 1;
--	if (!rcu_is_watching())
--		return 0;
--	if (!rcu_lockdep_current_cpu_online())
--		return 0;
--	if (debug_locks)
--		lockdep_opinion = lock_is_held(&rcu_sched_lock_map);
--	return lockdep_opinion || !preemptible();
-+	if (rcu_read_lock_held_common(&ret))
-+		return ret;
-+	return lock_is_held(&rcu_sched_lock_map) || !preemptible();
- }
- EXPORT_SYMBOL(rcu_read_lock_sched_held);
- #endif
-@@ -260,12 +271,10 @@ NOKPROBE_SYMBOL(debug_lockdep_rcu_enabled);
-  */
- int rcu_read_lock_held(void)
- {
--	if (!debug_lockdep_rcu_enabled())
--		return 1;
--	if (!rcu_is_watching())
--		return 0;
--	if (!rcu_lockdep_current_cpu_online())
--		return 0;
-+	bool ret;
-+
-+	if (rcu_read_lock_held_common(&ret))
-+		return ret;
- 	return lock_is_held(&rcu_lock_map);
- }
- EXPORT_SYMBOL_GPL(rcu_read_lock_held);
-@@ -287,16 +296,28 @@ EXPORT_SYMBOL_GPL(rcu_read_lock_held);
-  */
- int rcu_read_lock_bh_held(void)
- {
--	if (!debug_lockdep_rcu_enabled())
--		return 1;
--	if (!rcu_is_watching())
--		return 0;
--	if (!rcu_lockdep_current_cpu_online())
--		return 0;
-+	bool ret;
-+
-+	if (rcu_read_lock_held_common(&ret))
-+		return ret;
- 	return in_softirq() || irqs_disabled();
- }
- EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
- 
-+int rcu_read_lock_any_held(void)
-+{
-+	bool ret;
-+
-+	if (rcu_read_lock_held_common(&ret))
-+		return ret;
-+	if (lock_is_held(&rcu_lock_map) ||
-+	    lock_is_held(&rcu_bh_lock_map) ||
-+	    lock_is_held(&rcu_sched_lock_map))
-+		return 1;
-+	return !preemptible();
-+}
-+EXPORT_SYMBOL_GPL(rcu_read_lock_any_held);
-+
- #endif /* #ifdef CONFIG_DEBUG_LOCK_ALLOC */
- 
- /**
--- 
-2.22.0.770.g0f2c4a37fd-goog
+On 2019-08-01 10:42 a.m., Luis Chamberlain wrote:
+> On Thu, Aug 01, 2019 at 08:18:01AM +0200, Greg Kroah-Hartman wrote:
+>> On Wed, Jul 31, 2019 at 05:18:32PM -0700, Scott Branden wrote:
+>>> Hi Greg,
+>>>
+>>> I am now back from leave to continue this patch.  Comment below.
+>>>
+>>> On 2019-05-23 10:22 p.m., Greg Kroah-Hartman wrote:
+>>>> On Thu, May 23, 2019 at 10:01:38PM -0700, Scott Branden wrote:
+>>>>> On 2019-05-23 9:54 a.m., Greg Kroah-Hartman wrote:
+>>>>>> On Thu, May 23, 2019 at 09:36:02AM -0700, Scott Branden wrote:
+>>>>>>> Hi Greg,
+>>>>>>>
+>>>>>>> On 2019-05-22 10:52 p.m., Greg Kroah-Hartman wrote:
+>>>>>>>> On Wed, May 22, 2019 at 07:51:12PM -0700, Scott Branden wrote:
+>>>>>>>>> Add offset to request_firmware_into_buf to allow for portions
+>>>>>>>>> of firmware file to be read into a buffer.  Necessary where firmware
+>>>>>>>>> needs to be loaded in portions from file in memory constrained systems.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>>>>>>>>> ---
+>>>>>>>>>      drivers/base/firmware_loader/firmware.h |  5 +++
+>>>>>>>>>      drivers/base/firmware_loader/main.c     | 49 +++++++++++++++++--------
+>>>>>>>>>      include/linux/firmware.h                |  8 +++-
+>>>>>>>>>      3 files changed, 45 insertions(+), 17 deletions(-)
+>>>>>>>> No new firmware test for this new option?  How do we know it even works?
+>>>>>>> I was unaware there are existing firmware tests.  Please let me know where
+>>>>>>> these tests exists and I can add a test for this new option.
+>>>>>> tools/testing/selftests/firmware/
+>>>>> Unfortunately, there doesn't seem to be a test for the existing
+>>>>> request_firmware_into_buf api.
+>>>> Are you sure?  The test is for userspace functionality, there isn't
+>>>> kernel unit tests here.  You need to verify that you didn't break
+>>>> existing functionality as well as verify that your new functionality
+>>>> works.
+>>> I managed to figure out how to build and run
+>>> tools/testing/selftest/firmware/fw_run_tests.sh
+>>>
+>>> and my changes don't break existing functionality.
+> I'm soon going to release something that is going to let you do this
+> faster and easier, let me know if you had troubles in trying to figure
+> out how to not regress the kernel using this.
+
+Yes, I had troubles in trying to figure it out.  The kernel build should
+
+create an entire initrd with all the necessary components in it for 
+testing purposes.
+
+And the firmware test will now take me some time to figure out how it 
+all works.
+
+Could you please explain what you are going to release soon?  I don't 
+want to waste
+
+my time getting something working if everything is going to change on me 
+right away?
+
+>
+>>> But, I find no use of request_firmware_into_buf in lib/test_firmware.c
+>>> (triggered by fw_run_tests.sh).
+>>>
+>>> Is there another test for request_firmware_into_buf?
+>> I have no idea, sorry.
+> The folks who implemented request_firmware_into_buf() didn't add a
+> respective test, because, well, this API went upstream IMO without much
+> ACKs / review, and even no damn users. Now we have a user so we're stuck
+> with it.
+
+The request_firmware_into_buf is a necessity for me as well
+
+(along with the need for a partial request of the file which I'm adding).
+
+>
+> So new testing calls for it would be appreciated. If you have questions
+> I am happy to help.
+
+If you're an expert on the firmware test and can quickly add a simple 
+test of request_firmware_into_buf
+
+it would be appreciated.  If not, I'm going to have to dig further into 
+this and send early versions of
+
+a test out which would be great for you to comment on.
+
+>
+>    Luis
+
+Thanks,
+
+Scott
 
