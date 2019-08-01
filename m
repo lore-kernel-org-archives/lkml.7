@@ -2,92 +2,112 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110FEC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9268BC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FE9214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6C720644
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Nj95LxDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731247AbfHAJgr (ORCPT
+        id S1731251AbfHAJhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:36:47 -0400
-Received: from 9.mo68.mail-out.ovh.net ([46.105.78.111]:43745 "EHLO
-        9.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHAJgr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:36:47 -0400
-X-Greylist: delayed 1201 seconds by postgrey-1.27 at vger.kernel.org; Thu, 01 Aug 2019 05:36:46 EDT
-Received: from player791.ha.ovh.net (unknown [10.109.160.39])
-        by mo68.mail-out.ovh.net (Postfix) with ESMTP id 43E5913E980
-        for <linux-kernel@vger.kernel.org>; Thu,  1 Aug 2019 10:58:57 +0200 (CEST)
-Received: from kaod.org (lfbn-1-2240-157.w90-76.abo.wanadoo.fr [90.76.60.157])
-        (Authenticated sender: clg@kaod.org)
-        by player791.ha.ovh.net (Postfix) with ESMTPSA id EAA2686678C9;
-        Thu,  1 Aug 2019 08:58:45 +0000 (UTC)
-Subject: Re: [PATCH 1/2] powerpc/xive: Use GFP_KERNEL instead of GFP_ATOMIC in
- 'xive_irq_bitmap_add()'
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        allison@lohutok.net, tglx@linutronix.de, groug@kaod.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <cover.1564647619.git.christophe.jaillet@wanadoo.fr>
- <85d5d247ce753befd6aa63c473f7823de6520ccd.1564647619.git.christophe.jaillet@wanadoo.fr>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Message-ID: <669a1566-4048-1d81-f719-45e4ac05758b@kaod.org>
-Date:   Thu, 1 Aug 2019 10:58:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 1 Aug 2019 05:37:33 -0400
+Received: from onstation.org ([52.200.56.107]:49252 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbfHAJhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 05:37:33 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id AEA9D3E910;
+        Thu,  1 Aug 2019 09:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1564652252;
+        bh=bSREQHe0K6R3ACsHI8onhePS75HmOgPd/6TZve63MgA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nj95LxDaFriwiQaSAsOJb7M1D+sCBezKlRMBw0ZBe3WQ1vgmtEF6M1lVy5yBF385X
+         NThk1/24wo/YdDGOnvl2OnZ67NcOi7SsYZcJqDrH3ZNUo0UofDMgAYJC0vq9YvIoA3
+         8ZZhEZ7KfNsuLfSx6EeRvavP5EE2Rlobb1uijBro=
+Date:   Thu, 1 Aug 2019 05:37:31 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] iio: tsl2772: Use devm_add_action_or_reset
+Message-ID: <20190801093731.GC27653@onstation.org>
+References: <20190801073557.9578-1-hslester96@gmail.com>
+ <20190801093347.GA27653@onstation.org>
 MIME-Version: 1.0
-In-Reply-To: <85d5d247ce753befd6aa63c473f7823de6520ccd.1564647619.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 12236561665022528369
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrleejgddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801093347.GA27653@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/08/2019 10:32, Christophe JAILLET wrote:
-> There is no need to use GFP_ATOMIC here. GFP_KERNEL should be enough.
-> GFP_KERNEL is also already used for another allocation just a few lines
-> below.
-
-This is correct.
- 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-
-
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-
-Thanks,
-
-C.
-
-> ---
->  arch/powerpc/sysdev/xive/spapr.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Aug 01, 2019 at 05:33:47AM -0400, Brian Masney wrote:
+> On Thu, Aug 01, 2019 at 03:35:57PM +0800, Chuhong Yuan wrote:
+> > Use devm_add_action_or_reset to remove the call to
+> > tsl2772_disable_regulators_action to simplify the error path.
+> > 
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 > 
-> diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
-> index 8ef9cf4ebb1c..b4f5eb9e0f82 100644
-> --- a/arch/powerpc/sysdev/xive/spapr.c
-> +++ b/arch/powerpc/sysdev/xive/spapr.c
-> @@ -45,7 +45,7 @@ static int xive_irq_bitmap_add(int base, int count)
->  {
->  	struct xive_irq_bitmap *xibm;
->  
-> -	xibm = kzalloc(sizeof(*xibm), GFP_ATOMIC);
-> +	xibm = kzalloc(sizeof(*xibm), GFP_KERNEL);
->  	if (!xibm)
->  		return -ENOMEM;
->  
+> For the whole series:
 > 
+> Reviewed-by: Brian Masney <masneyb@onstation.org>
 
+Oops, I forgot to add this as well:
+
+Tested-by: Brian Masney <masneyb@onstation.org>
+
+I tested this on a Nexus 5 phone.
+
+Brian
+
+
+> 
+> I forgot to mention this before, but next time please use a cover letter
+> if you're sending more than one patch: git format-patch --cover-letter.
+> 
+> Brian
+> 
+> 
+> > ---
+> > Changes in v4:
+> >   - Split v3 into three patches.
+> >   - Revise description to make it more precise.
+> > 
+> >  drivers/iio/light/tsl2772.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
+> > index 83cece921843..29cfd8ae2700 100644
+> > --- a/drivers/iio/light/tsl2772.c
+> > +++ b/drivers/iio/light/tsl2772.c
+> > @@ -1807,10 +1807,10 @@ static int tsl2772_probe(struct i2c_client *clientp,
+> >  		return PTR_ERR(chip->vdd_supply);
+> >  	}
+> >  
+> > -	ret = devm_add_action(&clientp->dev, tsl2772_disable_regulators_action,
+> > -			      chip);
+> > +	ret = devm_add_action_or_reset(&clientp->dev,
+> > +					tsl2772_disable_regulators_action,
+> > +					chip);
+> >  	if (ret < 0) {
+> > -		tsl2772_disable_regulators_action(chip);
+> >  		dev_err(&clientp->dev, "Failed to setup regulator cleanup action %d\n",
+> >  			ret);
+> >  		return ret;
+> > -- 
+> > 2.20.1
