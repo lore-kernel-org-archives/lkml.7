@@ -2,171 +2,160 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F08C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8838C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06677214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564651229;
-	bh=YAamU4kuDlKkJoOK0xd1f7py4FkXYdYnuLBu/5WqDCs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NXRQEuDrHsWdIqW3fd9QmZHr01MC7CNCiXoy1ueehBuNWcS09o8/bbmK6sr3tWqdc
-	 7KboVgkkVg/ctKelrCZn0KjpJi4/ugl6sI4xJiZU695yPQ+N9R3lcE+sTVOy0Owt1o
-	 9xct+8RUVyBEPHoUMNE35EEbLljQ5ucBGrjD3qb4=
+	by mail.kernel.org (Postfix) with ESMTP id B7412214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbfHAJU2 (ORCPT
+        id S1731131AbfHAJUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 1 Aug 2019 05:20:32 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:15438 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729616AbfHAJU2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 1 Aug 2019 05:20:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727504AbfHAJU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:20:27 -0400
-Received: from localhost (unknown [84.241.203.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92A952087E;
-        Thu,  1 Aug 2019 09:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564651226;
-        bh=YAamU4kuDlKkJoOK0xd1f7py4FkXYdYnuLBu/5WqDCs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l6ZBYmYM6s01H7FLbD8+3Pp2Ee1BLcOHk8b5C0beouw09r8JDp4Im0ceAVZTM/Nto
-         zunV8/flUgg7HmXzcp+DuYu8re24DBq9M5LnUWheThSOZMkSx0b2VXqekbxE8Q6sTB
-         z/8o7xO22yXSLUrr3JfNtmsRi40Gf6pwmPbqt/9g=
-Date:   Thu, 1 Aug 2019 11:20:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Arseny Maslennikov <ar@cs.msu.ru>
-Cc:     Jiri Slaby <jslaby@suse.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Vladimir D. Seleznev" <vseleznv@altlinux.org>,
-        Rob Landley <rob@landley.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 7/7] n_tty: Provide an informational line on VSTATUS
- receipt
-Message-ID: <20190801092020.GB19329@kroah.com>
-References: <20190625161153.29811-1-ar@cs.msu.ru>
- <20190625161153.29811-8-ar@cs.msu.ru>
- <20190730161940.GA15798@kroah.com>
- <20190731222359.GA20574@cello>
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x719HTPb014187;
+        Thu, 1 Aug 2019 17:17:29 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id E762F2D1C15A92C1395E;
+        Thu,  1 Aug 2019 17:17:29 +0800 (CST)
+In-Reply-To: <20190801075725.4f23e0f5@collabora.com>
+References: <1564631710-30276-1-git-send-email-masonccyang@mxic.com.tw> <1564631710-30276-3-git-send-email-masonccyang@mxic.com.tw> <20190801075725.4f23e0f5@collabora.com>
+To:     "Boris Brezillon" <boris.brezillon@collabora.com>
+Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
+        christophe.kerello@st.com, computersforpeace@gmail.com,
+        devicetree@vger.kernel.org, dwmw2@infradead.org,
+        juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, mark.rutland@arm.com,
+        miquel.raynal@bootlin.com, paul@crapouillou.net,
+        paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org,
+        stefan@agner.ch, vigneshr@ti.com
+Subject: Re: [PATCH v6 2/2] dt-bindings: mtd: Document Macronix raw NAND controller
+ bindings
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731222359.GA20574@cello>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-KeepSent: 42C4D3EC:9549E8DC-48258449:003273A5;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF42C4D3EC.9549E8DC-ON48258449.003273A5-48258449.00330A06@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Thu, 1 Aug 2019 17:17:29 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/08/01 PM 05:17:29,
+        Serialize complete at 2019/08/01 PM 05:17:29
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x719HTPb014187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 01:23:59AM +0300, Arseny Maslennikov wrote:
-> On Tue, Jul 30, 2019 at 06:19:40PM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Jun 25, 2019 at 07:11:53PM +0300, Arseny Maslennikov wrote:
-> > > If the three termios local flags isig, icanon, iexten are enabled
-> > > and the local flag nokerninfo is disabled for a tty governed
-> > > by the n_tty line discipline, then on receiving the keyboard status
-> > > character n_tty will generate a status message and write it out to
-> > > the tty before sending SIGINFO to the tty's foreground process group.
-> > > 
-> > > This kerninfo line contains information about the current system load
-> > > as well as some properties of "the most interesting" process in the
-> > > tty's current foreground process group, namely:
-> > >  - its PID as seen inside its deepest PID namespace;
-> > >    * the whole process group ought to be in a single PID namespace,
-> > >      so this is actually deterministic
-> > >  - its saved command name truncated to 16 bytes (task_struct::comm);
-> > >    * at the time of writing TASK_COMM_LEN == 16
-> > >  - its state and some related bits, procps-style;
-> > >  - for S and D: its symbolic wait channel, if available; or a short
-> > >    description for other process states instead;
-> > >  - its user, system and real rusage time values;
-> > >  - its resident set size (as well as the high watermark) in kilobytes.
+
+Hi Boris,
+
+> On Thu,  1 Aug 2019 11:55:10 +0800
+> Mason Yang <masonccyang@mxic.com.tw> wrote:
+> 
+> > Document the bindings used by the Macronix raw NAND controller.
 > > 
-> > Why is this really all needed as we have the SysRq handlers that report
-> > all of this today?
-> 
-> Different use-cases have different needs; SysRq is targeted at a different
-> audience; see below.
-> 
-> > > The "most interesting" process is chosen as follows:
-> > >  - runnables over everything
-> > >  - uninterruptibles over everything else
-> > >  - among 2 runnables pick the biggest utime + stime
-> > >  - any unresolved ties are decided in favour of greatest PID.
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >  Documentation/devicetree/bindings/mtd/mxic-nand.txt | 19 
++++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >  create mode 100644 
+Documentation/devicetree/bindings/mtd/mxic-nand.txt
 > > 
-> > This does not feel like something that the tty core code should be doing
-> > at all.
+> > diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/
+> Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > new file mode 100644
+> > index 0000000..de37d60
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > @@ -0,0 +1,19 @@
+> > +Macronix Raw NAND Controller Device Tree Bindings
+> > +-------------------------------------------------
+> > +
+> > +Required properties:
+> > +- compatible: should be "mxicy,multi-itfc-v009-nand-morph"
+> > +- reg: should contain 1 entry for the registers
+> > +- interrupts: interrupt line connected to this raw NAND controller
+> > +- clock-names: should contain "ps", "send" and "send_dly"
+> > +- clocks: should contain 3 phandles for the "ps", "send" and
+> > +    "send_dly" clocks
+> > +
+> > +Example:
+> > +
+> > +   nand: nand-controller@43c30000 {
+> > +      compatible = "mxicy,multi-itfc-v009-nand-morph";
+> > +      reg = <0x43c30000 0x10000>;
+> > +      clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> > +      clock-names = "send", "send_dly", "ps";
 > 
-> Yes, this selection part is quite clumsy. In defense of it, one could
-> argue that we already have the whole n_tty implemented in kernel-space.
-
-One could argue that :)
-
-> One way we could get rid of this is to display a summarized statistic
-> for the whole pgrp: pgid, oldest real time, cumulative utime and stime,
-> cumulative memory usage. Would this be more acceptable? Are there any
-> other ideas?
-
-Given that I really think you are just making something up here that no
-one really is needing for their workflow, but would just be "cool to
-have", I say do whatever you think is right.
-
-And there is nothing wrong with "cool to have" things, I'm not trying to
-dismiss this, it's just that all new features come with the "you must
-support this until the end of time" requirement that we must balance it
-with.
-
-> > > While the kerninfo line is not very useful for debugging the kernel
-> > > itself, since we have much more powerful debugging tools, it still gives
-> > > the user behind the terminal some meaningful feedback to a VSTATUS that
-> > > works even if no processes respond.
-> > 
-> > That's what SysRq is for.  If there's a specific set of values that we
-> > don't currently report in that facility, why not just add the
-> > information there?  It's much simpler and "safer" that way.
+> You should have subnodes describing the NAND connected to the
+> controller (see [1]).
 > 
-> SysRq is intended for the person either administrating the system to be used in
-> emergency (e.g. f for the oom kill, the famous s-u-b combo also comes to
-> mind) or debugging the kernel, and it indeed does a much better job for
-> those purposes.  In both use-cases mentioned the person has access to
-> the system console, where the sysrq button handlers produce all their
-> output, if any, and to either a physical keyboard / serial console or to
-> /proc/sysrq-trigger, whose mode is 0200 (writable by uid 0 only).
+> [1]
+https://elixir.bootlin.com/linux/v5.3-rc2/source/Documentation/devicetree/
+> bindings/mtd/nand-controller.yaml#L131
 > 
-> The use-case for this is different: the ^T-line as proposed by this
-> patch is for the user that interacts with a system through a terminal, who
-> wants to be informed not about the whole system (sort of what SysRq-t
-> tells you), but about what they run on that particular tty.
-
-Ok, fair enough, although if you just add a new sysrq option for "what
-is running on this tty", would that help resolve this?
-
-> This is much less about "why does my system/kernel seem to hang?" or
-> exposing low-level internals (registers, hrtimers, locks, ...), and more
-> about "is my SSH terminal session unresponsive?" and "I ran a command,
-> it doesn't finish, how's it doing?".
-> e.g. A user might want to know if their SSH connection is alive without
-> interrupting anything, while having no access both to SysRq and console,
-> and no one in fg pgrp actually handles SIGINFO.
-
-If you have access to a tty, you should have access to sysrq, right?
-
-> SysRq is system-wide, whereas this is per-terminal and only cares about
-> one tty which the status char is pressed at and its foreground pgrp
-> (most likely it's the foreground shell job).
+> > +   };
 > 
-> I hope this is clear enough.
 
-It is, yes.  My big objection is the crazy code I point out above, as
-well as the "create a totally new interface when we might be able to use
-an existing one" that you need to convince me is really required :)
+Do you mean to add patternProperties ?
 
-thanks,
+                 nand: nand-controller@43c30000 {
+                                 compatible = 
+"mxicy,multi-itfc-v009-nand-morph";
+                                 reg = <0x43c30000 0x10000>;
+                                 clocks = <&clkwizard 0>, <&clkwizard 1>, 
+<&clkc 15>;
+                                 clock-names = "send", "send_dly", "ps";
 
-greg k-h
++                               nand@0 {
++
++                               };
+                 };
+
+something like that.
+
+thanks & best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
