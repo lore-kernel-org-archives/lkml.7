@@ -2,116 +2,135 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE77DC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74810C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5FDE20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A103214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:39:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j22DCmuj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731531AbfHANhy (ORCPT
+        id S1729583AbfHANjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:37:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59938 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbfHANhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:37:54 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BFD2B3CA00;
-        Thu,  1 Aug 2019 13:37:53 +0000 (UTC)
-Received: from pauld.bos.com (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7896860BF7;
-        Thu,  1 Aug 2019 13:37:51 +0000 (UTC)
-From:   Phil Auld <pauld@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH] sched: use rq_lock/unlock in online_fair_sched_group
-Date:   Thu,  1 Aug 2019 09:37:49 -0400
-Message-Id: <20190801133749.11033-1-pauld@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 01 Aug 2019 13:37:53 +0000 (UTC)
+        Thu, 1 Aug 2019 09:39:08 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34465 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbfHANjI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 09:39:08 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s49so34394522edb.1;
+        Thu, 01 Aug 2019 06:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
+        bh=PtC9Ul3xyUxdsRp//n5huG8WK8UIuyHf5FNaAaoJ6lI=;
+        b=j22DCmujTkp1v6xERjlBb9cv6AvS/qdCv2Ql+oavpsT37ofS20BqLBl8lAcfMAgq9F
+         tGQMMashEiIyv3f5VrQ2S/5je4mCuPyUCOKW7Yq62iBRniubibWUQ0ooI/h5qWv/Etvn
+         aLCz/MDeC033FQJ23SX7Qh9Q/MxbpQIgDg5Tnnl4Pj6cC+AeHNz5fbJx7aZb1ufoWAFI
+         ZJLZlrleUqpNRee7wXM1LPyZz/q15V52XXRJkeZPSU2D6aHl5KKH3vMVI0qyi86PFI2u
+         VGkJmbW+TQZXRnLyRAWZ0gz8O+2AEC3gITGMposPZVQNMkdvOV/gHc/ZhZIApIcjh498
+         cV1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=PtC9Ul3xyUxdsRp//n5huG8WK8UIuyHf5FNaAaoJ6lI=;
+        b=MTcZm/EzpVuWcZgezNnENGxzqnJXX/5H+S7pc9vupWQmzAfO8Bfom0aTniPJu9rFv7
+         6hz6PoMfwk96VDyI/BAV1q5FrQN4gR+mMQ3dWntEjOndLO2lc6krZxDlKYd8rlASp7UA
+         NTq2SXMcsfWzR/ehvTILzbI2moayUzukpKKfUalai05tkbulAY5UWc1jfyH4MNj8DbW6
+         5GmE/mC+BA6lmovq95Z12y3cIEBsR6kjCx/7qaYrl89gS3OR9+YV4Eo0Zlpp+ZhLOBku
+         mlRRdyBdVsIkwwlUFqnNrCxoJa6eXhjsr+JIYrzhTrcSYNsf1qIUyc6o+8VKDZ3Zw+dB
+         qpHQ==
+X-Gm-Message-State: APjAAAU4+HS72L5NuQ+yQdlpvdVDHflPfXYwcC+HbW54vX2T3h0/Vz+C
+        JtIMaG2+N9oGMbG0SB3E2RzOQKaQXKo64O4b2ng=
+X-Google-Smtp-Source: APXvYqz/UPRwrcD8HLFhptruuLqlej5jY1qcmnxYS+lhO1UyrzSeq19BRip4q5EHDq0cEi0M/T7Hr4ryE8t/rdHlioU=
+X-Received: by 2002:a17:906:154f:: with SMTP id c15mr99070580ejd.268.1564666746270;
+ Thu, 01 Aug 2019 06:39:06 -0700 (PDT)
+MIME-Version: 1.0
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Thu, 1 Aug 2019 15:38:54 +0200
+Message-ID: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
+Subject: pivot_root(".", ".") and the fchdir() dance
+To:     "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Containers <containers@lists.linux-foundation.org>,
+        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
+        Christian Brauner <christian@brauner.io>,
+        Al Viro <viro@ftp.linux.org.uk>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Jordan Ogas <jogas@lanl.gov>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
-warning to fire in update_rq_clock. This seems to be caused by onlining
-a new fair sched group not using the rq lock wrappers.
+Hi Serge, Andy, et al,
 
-[472978.683085] rq->clock_update_flags & RQCF_UPDATED
-[472978.683100] WARNING: CPU: 5 PID: 54385 at kernel/sched/core.c:210 update_rq_clock+0xec/0x150
-[472978.758465] Modules linked in: fuse vfat msdos fat ext4 mbcache jbd2 sunrpc iTCO_wdt gpio_ich iTCO_vendor_support intel_powerclamp coretemp kvm_intel kvm ipmi_ssif irqbypass ipmi_si crct10dif_pclmul crc32_pclmul ghash_clmulni_intel joydev pcspkr intel_cstate acpi_power_meter ipmi_devintf sg intel_uncore i7core_edac hpilo hpwdt lpc_ich ipmi_msghandler acpi_cpufreq ip_tables xfs libcrc32c sr_mod sd_mod cdrom ata_generic radeon i2c_algo_bit drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm ata_piix drm myri10ge hpsa libata serio_raw crc32c_intel scsi_transport_sas netxen_nic dca dm_mirror dm_region_hash dm_log dm_mod
-[472979.050101] CPU: 5 PID: 54385 Comm: cgcreate Not tainted 5.2.0-rc6+ #135
-[472979.089586] Hardware name: HP ProLiant DL580 G7, BIOS P65 08/16/2015
-[472979.123638] RIP: 0010:update_rq_clock+0xec/0x150
-[472979.146435] Code: a8 04 0f 84 55 ff ff ff 80 3d 93 34 2c 01 00 0f 85 48 ff ff ff 48 c7 c7 08 b9 a8 b7 31 c0 c6 05 7d 34 2c 01 01 e8 04 21 fd ff <0f> 0b 8b 83 b0 09 00 00 e9 26 ff ff ff e8 72 c3 f5 ff 66 90 4c 8b
-[472979.247671] RSP: 0018:ffffa9addac67d48 EFLAGS: 00010086
-[472979.277071] RAX: 0000000000000000 RBX: ffff9db3ff62a380 RCX: 0000000000000000
-[472979.314842] RDX: 0000000000000005 RSI: ffffffffb8434a45 RDI: ffffffffb84325ec
-[472979.352189] RBP: 0000000000000000 R08: ffffffffb8434a20 R09: ffffffb27562d751
-[472979.389326] R10: 000000000000d471 R11: ffffa9addac67a58 R12: ffff9d8a1c9d5a00
-[472979.425255] R13: ffff9db3fbbed400 R14: 000000000002a380 R15: 0000000000000000
-[472979.462417] FS:  00007f6a8218cb80(0000) GS:ffff9db3ff740000(0000) knlGS:0000000000000000
-[472979.511306] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[472979.543386] CR2: 00007f6a82198000 CR3: 0000003f33f16005 CR4: 00000000000206e0
-[472979.578646] Call Trace:
-[472979.591702]  online_fair_sched_group+0x53/0x100
-[472979.618172]  cpu_cgroup_css_online+0x16/0x20
-[472979.640264]  online_css+0x1c/0x60
-[472979.657648]  cgroup_apply_control_enable+0x231/0x3b0
-[472979.684979]  cgroup_mkdir+0x41b/0x530
-[472979.704845]  kernfs_iop_mkdir+0x61/0xa0
-[472979.726278]  vfs_mkdir+0x108/0x1a0
-[472979.745665]  do_mkdirat+0x77/0xe0
-[472979.764981]  do_syscall_64+0x55/0x1d0
-[472979.785990]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+I've been looking at doing some updates for the rather inaccurate
+pivot_root(2) manual page, and I noticed this 2014 commit in LXC
 
-Using the wrappers in online_fair_sched_group instead of the raw locking 
-removes this warning. 
+[[commit 2d489f9e87fa0cccd8a1762680a43eeff2fe1b6e
+Author: Serge Hallyn <serge.hallyn@ubuntu.com>
+Date:   Sat Sep 20 03:15:44 2014 +0000
 
-Signed-off-by: Phil Auld <pauld@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
----
- Resend with PATCH instead of CHANGE in subject, and more recent upstream x86 backtrace.
+    pivot_root: switch to a new mechanism (v2)
 
- kernel/sched/fair.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+    This idea came from Andy Lutomirski.  Instead of using a
+    temporary directory for the pivot_root put-old, use "." both
+    for new-root and old-root.  Then fchdir into the old root
+    temporarily in order to unmount the old-root, and finally
+    chdir back into our '/'.
+]]
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 036be95a87e9..5c1299a5675c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10242,17 +10242,17 @@ void online_fair_sched_group(struct task_group *tg)
- {
- 	struct sched_entity *se;
- 	struct rq *rq;
-+	struct rq_flags rf;
- 	int i;
- 
- 	for_each_possible_cpu(i) {
- 		rq = cpu_rq(i);
- 		se = tg->se[i];
--
--		raw_spin_lock_irq(&rq->lock);
-+		rq_lock(rq, &rf);
- 		update_rq_clock(rq);
- 		attach_entity_cfs_rq(se);
- 		sync_throttle(tg, i);
--		raw_spin_unlock_irq(&rq->lock);
-+		rq_unlock(rq, &rf);
- 	}
- }
- 
+I'd like to add some documentation about the pivot_root(".", ".")
+idea, but I have a doubt/question. In the lxc_pivot_root() code we
+have these steps
+
+        oldroot = open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+        newroot = open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+
+        fchdir(newroot);
+        pivot_root(".", ".");
+
+        fchdir(oldroot);      // ****
+
+        mount("", ".", "", MS_SLAVE | MS_REC, NULL);
+        umount2(".", MNT_DETACH);
+
+        fchdir(newroot);      // ****
+
+My question: are the two fchdir() calls marked "****" really
+necessary? I suspect not. My reasoning:
+1. By this point, both the CWD and root dir of the calling process are
+in newroot (and so do not keep newroot busy, and thus don't prevent
+the unmount).
+2. After the pivot_root() operation, there are two mount points
+stacked at "/": oldroot and newroot, with oldroot a child mount
+stacked on top of newroot (I did some experiments to verify that this
+is so, by examination of /proc/self/mountinfo).
+3. The umount(".") operation unmounts the topmost mount from the pair
+of mounts stacked at "/".
+
+At least, in some separate tests that I've done, things seem to work
+as I describe above without the use of the marked fchdir() calls. (My
+tests omit the mount(MS_SLAVE) piece, since in my tests I do a
+more-or-less equivalent step at an earlier point.
+
+Am I missing something?
+
+Thanks,
+
+Michael
+
 -- 
-2.18.0
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
