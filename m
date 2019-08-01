@@ -2,57 +2,156 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90881C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63731C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4BF20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3586D205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564668084;
+	bh=Gxug7njdErsR51Wm/lCiKFbDknIoaA5ax5ShtzOj3t0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ec5X1Y1wbYoUMQaepivjEncZ5Hm6z9Ve5VNuwQbqjUSqP3xRasCK/Sd0lnE7CCNcV
+	 +wkoYa9o3f75Wvw50i4M9lbwqz9P8P3IDqp3umiBoO2RJzAiXQ2U7Cm56Oygx5N+t4
+	 d2nwQuAEuO/cKAbyzYCGDzGA/6R9rAVrT3ZEuIHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731317AbfHAOAK (ORCPT
+        id S1731394AbfHAOBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:00:10 -0400
-Received: from ms.lwn.net ([45.79.88.28]:42540 "EHLO ms.lwn.net"
+        Thu, 1 Aug 2019 10:01:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730581AbfHAOAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:00:10 -0400
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1731338AbfHAOBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:01:22 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 5F61E8B2;
-        Thu,  1 Aug 2019 14:00:09 +0000 (UTC)
-Date:   Thu, 1 Aug 2019 08:00:08 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Federico Vaga <federico.vaga@cern.ch>
-Cc:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Alessia Mantegazza" <amantegazza@vaga.pv.it>
-Subject: Re: [PATCH] doc:it_IT: translations for documents in process/
-Message-ID: <20190801080008.44b3f8f4@lwn.net>
-In-Reply-To: <1695846.t893fQQLz3@pcbe13614>
-References: <20190728092054.1183-1-federico.vaga@vaga.pv.it>
-        <20190731125124.46e06ab6@lwn.net>
-        <20864529.Q1CKeA7GMu@pcbe13614>
-        <1695846.t893fQQLz3@pcbe13614>
-Organization: LWN.net
-MIME-Version: 1.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B93920838;
+        Thu,  1 Aug 2019 14:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564668082;
+        bh=Gxug7njdErsR51Wm/lCiKFbDknIoaA5ax5ShtzOj3t0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LHSHPZYM33wqzB+zVpkuUIMD3ccwF7O7CrAon4B0XDSJfhEY2WP1zNsNSB2zdX++K
+         R7wnTmmjadqmPOyhOmXnU5c6AHnZaFzJw2eS2zuJgiExcU244nL4wkSQv5BGwFTL1N
+         +zISzmcuSk+nQoYUm00WHbHvE+E5shaOfarVDQEI=
+Date:   Thu, 1 Aug 2019 23:01:17 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v2 00/12] tracing/probe: Add multi-probes per event
+ support
+Message-Id: <20190801230117.c415b1052cb271fcd4eb56b6@kernel.org>
+In-Reply-To: <20190731112539.1efac604@gandalf.local.home>
+References: <156095682948.28024.14190188071338900568.stgit@devnote2>
+        <20190731112539.1efac604@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019 11:53:06 +0200
-Federico Vaga <federico.vaga@cern.ch> wrote:
+On Wed, 31 Jul 2019 11:25:39 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Of course, I checked on the version available on my distribution. I did not 
-> look for translation changes on different version of the same email client @_@ 
+> On Thu, 20 Jun 2019 00:07:09 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > Hello,
+> > 
+> > This is the 2nd version of multi-probes per event support on ftrace
+> > and perf-tools.
+> > 
+> > Previous version is here;
+> > https://lkml.org/lkml/2019/5/31/573
+> > 
+> > >From this version, I omitted first 9 patches which has been picked  
+> > to Steve's tree.
+> > In this version, I've fixed some bugs and hardened some unexpected
+> > error cases according to Steve's comment.
+> > Here are changes in this version:
+> > 
+> >  - [1/12] This have below changes. 
+> >     - Warn if the primary trace_probe does not exist.
+> >     - Fix enable_trace_kprobe() to not return error if the any probes
+> >       are "gone" state. If all probes have gone or any other error
+> >       reason, the event can not be enabled and return error.
+> >     - Fix trace_probe_enable() to roll back all enabled uprobe if
+> >       any one of uprobe is failed to enable.
+> >  - [7/12] Swap the checking order of filename for avoiding unexpected
+> >      memory access.
+> > 
+> > 
+> > ====
+> > For trace-event, we can insert same trace-event on several places
+> > on the code, and those can record similar information as a same event
+> > with same format.
+> > 
+> > This series implements similar feature on probe-event. Since the probe
+> > event is based on the compiled binary, sometimes we find that the target
+> > source line is complied into several different addresses, e.g. inlined
+> > function, unrolled loop, etc. In those cases, it is useful to put a
+> > same probe-event on different addresses.
+> > 
+> > With this series, we can append multi probes on one event as below
+> > 
+> >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
+> >   # echo p:testevent fork_idle r1=%ax r2=%cx >> kprobe_events
+> >   # kprobe_events
+> >   p:kprobes/testevent _do_fork r1=%ax r2=%dx
+> >   p:kprobes/testevent fork_idle r1=%ax r2=%cx
+> > 
+> > This means testevent is hit on both of _do_fork and fork_idle.
+> > As you can see, the appended event must have same number of arguments
+> > and those must have same 'type' and 'name' as original one. This is like
+> > a function signature, it checks whether the appending event has the same
+> > type and name of event arguments and same probe type, but doesn't care
+> > about the assignment.
+> > 
+> > So, below appending commands will be rejected.
+> > 
+> >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
+> >   # echo p:testevent fork_idle r1=%ax >> kprobe_events
+> >   (No 2nd argument)
+> >   # echo p:testevent fork_idle r1=%ax r2=%ax:x8 >> kprobe_events
+> >   (The type of 2nd argument is different)
+> > 
+> > If one inlined code has an argument on a register, but another
+> > inlined code has fixed value (as a result of optimization),
+> > you can also specify the fixed immediate value, e.g.
+> > 
+> >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
+> >   # echo p:testevent fork_idle r1=%ax r2=\1 >> kprobe_events
+> > 
+> > 
+> 
+> 
+> Hi Masami,
+> 
+> I applied this patch set to my queue. Nice feature! I'll probably be
+> testing it a bit more. I wont be pushing it to my repo until v5.3-rc3
+> comes out, as I'll plan on rebasing my for-next branch on that.
 
-Hmm...normally we expect you to check all versions back to the 1991
-release of the 0.01 kernel...:)  I think that your diligence is more than
-sufficiently due, thanks.
+Thanks! if there is any issue, please let me know.
+I also start working on perf probe part to support this.
 
-jon
+Thank you,
+
+> 
+> Thanks!
+> 
+> -- Steve
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
