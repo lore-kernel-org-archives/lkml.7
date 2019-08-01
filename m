@@ -2,61 +2,54 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD37C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6345C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDEA3206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F74206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388185AbfHAWhu (ORCPT
+        id S2389728AbfHAWh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:37:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56116 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729432AbfHAWhu (ORCPT
+        Thu, 1 Aug 2019 18:37:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59578 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388213AbfHAWhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:37:50 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71Mb7Vi125390;
-        Thu, 1 Aug 2019 18:37:09 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u477ykn7b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:37:09 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71Mb8GY125401;
-        Thu, 1 Aug 2019 18:37:08 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u477ykn6v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:37:08 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MZOKA019586;
-        Thu, 1 Aug 2019 22:37:07 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma02dal.us.ibm.com with ESMTP id 2u0e85xfty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 22:37:07 +0000
+        Thu, 1 Aug 2019 18:37:55 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71MbFtk021108
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 18:37:54 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u460eeary-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:37:54 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 1 Aug 2019 23:37:53 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 1 Aug 2019 23:37:48 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71Mb7FK50463072
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71Mbl5R54395346
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Aug 2019 22:37:07 GMT
+        Thu, 1 Aug 2019 22:37:47 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08AA0B2077;
-        Thu,  1 Aug 2019 22:37:07 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0B912B2078;
+        Thu,  1 Aug 2019 22:37:47 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC7F3B2073;
-        Thu,  1 Aug 2019 22:37:06 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id E13C2B2070;
+        Thu,  1 Aug 2019 22:37:46 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Aug 2019 22:37:06 +0000 (GMT)
+        Thu,  1 Aug 2019 22:37:46 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 3C8E816C9A39; Thu,  1 Aug 2019 15:37:08 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 15:37:08 -0700
+        id 437FF16C9A39; Thu,  1 Aug 2019 15:37:48 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -64,15 +57,22 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu 0/12] Miscellaneous fixes for v5.4
-Message-ID: <20190801223708.GA14862@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 01/12] lockdep: Make print_lock() address visible
+Date:   Thu,  1 Aug 2019 15:37:36 -0700
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190801223708.GA14862@linux.ibm.com>
+References: <20190801223708.GA14862@linux.ibm.com>
 X-TM-AS-GCONF: 00
+x-cbid: 19080122-0064-0000-0000-000004057875
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011535; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01240734; UDB=6.00654294; IPR=6.01022158;
+ MB=3.00028000; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-01 22:37:52
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080122-0065-0000-0000-00003E81E9CD
+Message-Id: <20190801223747.15560-1-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_09:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -85,53 +85,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Security is a wonderful thing, but so is the ability to debug based on
+lockdep warnings.  This commit therefore makes lockdep lock addresses
+visible in the clear.
 
-This series contains miscellaneous fixes:
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+---
+ kernel/locking/lockdep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-1.	Make lockdep's print_lock() address visible.
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 4861cf8e274b..4aca3f4379d2 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -620,7 +620,7 @@ static void print_lock(struct held_lock *hlock)
+ 		return;
+ 	}
+ 
+-	printk(KERN_CONT "%p", hlock->instance);
++	printk(KERN_CONT "%px", hlock->instance);
+ 	print_lock_name(lock);
+ 	printk(KERN_CONT ", at: %pS\n", (void *)hlock->acquire_ip);
+ }
+-- 
+2.17.1
 
-2.	Fix tick_broadcast_offline() lockdep complaint.
-
-3.	Restore barrier() to rcu_read_lock() and rcu_read_unlock().
-
-4.	Add kernel parameter to dump trace after RCU CPU stall warning.
-
-5.	Add destroy_work_on_stack() to match INIT_WORK_ONSTACK().
-
-6.	Avoid srcutorture security-based pointer obfuscation.
-
-7.	Change return type of rcu_spawn_one_boost_kthread(), courtesy of
-	Byungchul Park.
-
-8.	Add rcutree.kthread_prio pointer to stallwarn.txt.
-
-9.	Prevent late-arriving interrupts from disrupting offline, courtesy
-	of Peter Zijlstra.
-
-10.	Remove redundant "if" condition from rcu_gp_is_expedited().
-
-11.	Use common outgoing-CPU-notification code for arm.
-
-12.	Fix spelling mistake "greate"->"great", courtesy of Mukesh Ojha.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- Documentation/RCU/Design/Requirements/Requirements.html |   71 ++++++++++++++++
- Documentation/RCU/stallwarn.txt                         |    6 +
- Documentation/admin-guide/kernel-parameters.txt         |    4 
- arch/arm/kernel/smp.c                                   |    6 -
- include/linux/tick.h                                    |   10 --
- kernel/locking/lockdep.c                                |    2 
- kernel/rcu/rcu.h                                        |    1 
- kernel/rcu/rcu_segcblist.h                              |   21 ----
- kernel/rcu/srcutree.c                                   |    5 -
- kernel/rcu/tree_exp.h                                   |    8 +
- kernel/rcu/tree_plugin.h                                |   31 ++----
- kernel/rcu/tree_stall.h                                 |    4 
- kernel/rcu/update.c                                     |    5 -
- kernel/sched/core.c                                     |   57 +++++++++++-
- kernel/sched/idle.c                                     |    5 -
- 15 files changed, 164 insertions(+), 72 deletions(-)
