@@ -2,162 +2,108 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A26C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA313C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F832087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868C4216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cMBE9seZ"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Yzt1J203"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730842AbfHALS7 (ORCPT
+        id S1730297AbfHALTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:18:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41091 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730593AbfHALS6 (ORCPT
+        Thu, 1 Aug 2019 07:19:49 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38684 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbfHALTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:18:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so69935496wrm.8
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 04:18:57 -0700 (PDT)
+        Thu, 1 Aug 2019 07:19:48 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r12so34013026edo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 04:19:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=LeVi3M3rABqtJE3t2RPfqLsPOq3zZyV/m8kt+qnj1zQ=;
-        b=cMBE9seZV2rlWrwD2KSNK2iWozGJLstP/lvQ+YuIn90t6OWhU12fBOEveO6RbxX9aL
-         RMm9jrco/0XpmcQmpbqsEjqHIW7hrZYavnobjlr+r0u81MoRD7JcNL0o7RT40C4uCFr3
-         SpUhON10c6PLS13qVPaUoTIPpxcc/CrnNpASxtihabzo0fcrkp4FrISwWzBhlVLYJO6S
-         SDT9V5OeGeyKMNHBgviitf5enbpmM51k/73Rfbz8Rd734Uq8HnkMA/ZncJ29p4bXqhts
-         Xog6k+u/97wt5HmBnP1cmlRrsWLDbKCq3Oh3xcKOcssc0iK0VHZwHS0KW4HZb3IeMt33
-         TP1w==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qkKpSTDuuwbIMR/7MbiNrB08VgfKwqP+sli4OTfz1gY=;
+        b=Yzt1J203i5UaLb2ByniXCHSrE3OhEgnQfeu54s8xJucGCdyxoKsLbHGRhZsFRJpNrV
+         F7zCOoVhdnnd+cfX0k0Bi0XvxD+Et5ZfpdlHyX/egg+VJ7fC6/tbb2Ewry0WiYu9rQ3L
+         wvgU+2TdbrfP3wwSbAVAtW0RUhVq4hOugmAZZrv8MT05kS4Eek87hzHHdcs8XxpBLYn0
+         7615oJ4D9zlLCIcJPyWyfvwwGm9vtX1ys+2UvvDqJQHTIcqwtjRDolSm3K57UNVyW7OO
+         BUDrc/ihfpfHmn05kCOru0irD6vVDgUhNNu3ncF+VJIGNavENV4OEmyrirRLZJuVEgf9
+         uiOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=LeVi3M3rABqtJE3t2RPfqLsPOq3zZyV/m8kt+qnj1zQ=;
-        b=pTsLnLvyLpVLJDjDXpKfHVrFJZJQn5Rv6mOxNIwwsFT7fNkN3GJ50gCTPlN0akcnn5
-         3SxnKxN/U0eZ4IEgxos/2KzFOsVUKtO9G19U2RFcK2biEoFsQp5abyOVXBdcWOakVZH5
-         LXdDvsPNRNdv8qwN015Zx01l7qu7GsM+VVs6TAr7T2WrCwvZNtbZyZ66IfYdVtdDDRJ/
-         r40lv6Kij6fVM9gqwqoRKGezsblGbq6MNHGMsNZyu/4cVldRURrX7VPkACsKDWhZgAS/
-         gf9haPLdQio91YdlPX+hirXT7twmyE73sGdUnrd4qeLgKqlV03NNtEgO4BnK7c4WqDAX
-         oRfA==
-X-Gm-Message-State: APjAAAUJCQ0Nf/lAjovsNBk0B/MHBmLZHLO5wXs5M67PpULtJ8zXR8QY
-        O2vlE2Yzn9O1iA0wCyQJPPc=
-X-Google-Smtp-Source: APXvYqzkBr+Wu2cLABxcKSHKUUQ0ibXMKozvJEjKAQG4ccxFTxDQ1e/E7TFcA1iSTj9mjHfYdmRdag==
-X-Received: by 2002:adf:cd81:: with SMTP id q1mr138879876wrj.16.1564658336375;
-        Thu, 01 Aug 2019 04:18:56 -0700 (PDT)
-Received: from villeb-dev (mail.bytesnap.co.uk. [94.198.185.106])
-        by smtp.gmail.com with ESMTPSA id v29sm138629wrv.74.2019.08.01.04.18.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 01 Aug 2019 04:18:55 -0700 (PDT)
-From:   Ville Baillie <vmbaillie@googlemail.com>
-X-Google-Original-From: Ville Baillie <villeb@bytesnap.co.uk>
-Date:   Thu, 1 Aug 2019 11:18:53 +0000
-To:     marex@denx.de, stefan@agner.ch, airlied@linux.ie, daniel@ffwll.ch,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mxsfb: allow attachment of display bridges
-Message-ID: <20190801111853.GA24574@villeb-dev>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qkKpSTDuuwbIMR/7MbiNrB08VgfKwqP+sli4OTfz1gY=;
+        b=K0min77fFsfcrqBKy9lEYM4Htar/H4RoS54F7pJtVJ22j87gcGYugYP3xM9qNwGOhJ
+         +dyNuzVdXg2MkLEVxIeJgdY1Pi7Y+FqwSUI1FA+2LfmKMuFeFXxxIJPJyKC4/+LjTP3l
+         382qDeTHpO6dDFCzg5OKObib6JXjEtVjXEOXhHBRG00VqvVfV6Mp/CPQRsd7Hfl2dE4q
+         VQ4lZeL4+13Wot6/eLPs6brOIobCBsT7D+0x6u2ObJDO2dmg7wSMF7oqBLSpTok/VZHE
+         T5nsr7x4ynLOeweylzI+VOxAxIYJvMDW2QEPKIj4wfaxe1BalxTOJrb415JEAJ232cSS
+         fmmw==
+X-Gm-Message-State: APjAAAVcZTd8TT9r/bJid+bxS6UXJnxcYv2Xrds481UKL8kfAQkDqXyd
+        glYnt4lTaSwHxUbXgNsad+Y=
+X-Google-Smtp-Source: APXvYqyF6SX0CWzPPaoMgH0374aYW1XGVWRamvSqB0icTKG4hTO5BH/o437WyHbZv3Vt63NUESQFzg==
+X-Received: by 2002:a50:89a6:: with SMTP id g35mr116231607edg.145.1564658386729;
+        Thu, 01 Aug 2019 04:19:46 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id fk15sm13004072ejb.42.2019.08.01.04.19.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 04:19:46 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id AF846101E94; Thu,  1 Aug 2019 14:19:45 +0300 (+03)
+Date:   Thu, 1 Aug 2019 14:19:45 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, matthew.wilcox@oracle.com,
+        kirill.shutemov@linux.intel.com, oleg@redhat.com,
+        kernel-team@fb.com, william.kucharski@oracle.com,
+        srikar@linux.vnet.ibm.com
+Subject: Re: [PATCH v2 0/2] khugepaged: collapse pmd for pte-mapped THP
+Message-ID: <20190801111945.t5jw3vivvfun4n27@box>
+References: <20190731183331.2565608-1-songliubraving@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190731183331.2565608-1-songliubraving@fb.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 20 ++++++++++++++++----
- drivers/gpu/drm/mxsfb/mxsfb_drv.h |  1 +
- drivers/gpu/drm/mxsfb/mxsfb_out.c | 14 +++++++++++---
- 3 files changed, 28 insertions(+), 7 deletions(-)
+On Wed, Jul 31, 2019 at 11:33:29AM -0700, Song Liu wrote:
+> Changes v1 => v2:
+> 1. Call collapse_pte_mapped_thp() directly from uprobe_write_opcode();
+> 2. Add VM_BUG_ON() for addr alignment in khugepaged_add_pte_mapped_thp()
+>    and collapse_pte_mapped_thp().
+> 
+> This set is the newer version of 5/6 and 6/6 of [1]. Newer version of
+> 1-4 of the work [2] was recently picked by Andrew.
+> 
+> Patch 1 enables khugepaged to handle pte-mapped THP. These THPs are left
+> in such state when khugepaged failed to get exclusive lock of mmap_sem.
+> 
+> Patch 2 leverages work in 1 for uprobe on THP. After [2], uprobe only
+> splits the PMD. When the uprobe is disabled, we get pte-mapped THP.
+> After this set, these pte-mapped THP will be collapsed as pmd-mapped.
+> 
+> [1] https://lkml.org/lkml/2019/6/23/23
+> [2] https://www.spinics.net/lists/linux-mm/msg185889.html
+> 
+> Song Liu (2):
+>   khugepaged: enable collapse pmd for pte-mapped THP
+>   uprobe: collapse THP pmd after removing all uprobes
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 6fafc90da4ec..c19a7b7aa3a6 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -229,10 +229,22 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 		goto err_vblank;
- 	}
- 
--	ret = drm_panel_attach(mxsfb->panel, &mxsfb->connector);
--	if (ret) {
--		dev_err(drm->dev, "Cannot connect panel\n");
--		goto err_vblank;
-+	if (mxsfb->panel) {
-+		ret = drm_panel_attach(mxsfb->panel, &mxsfb->connector);
-+		if (ret) {
-+			dev_err(drm->dev, "Cannot connect panel\n");
-+			goto err_vblank;
-+		}
-+	} else if (mxsfb->bridge) {
-+		ret = drm_bridge_attach(&mxsfb->pipe.encoder, mxsfb->bridge,
-+				NULL);
-+		if (ret) {
-+			dev_err(drm->dev, "Cannot connect bridge\n");
-+			goto err_vblank;
-+		}
-+	} else {
-+		dev_err(drm->dev, "No panel or bridge\n");
-+		return -EINVAL;
- 	}
- 
- 	drm->mode_config.min_width	= MXSFB_MIN_XRES;
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-index d975300dca05..436fe4bbb47a 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-@@ -29,6 +29,7 @@ struct mxsfb_drm_private {
- 	struct drm_simple_display_pipe	pipe;
- 	struct drm_connector		connector;
- 	struct drm_panel		*panel;
-+	struct drm_bridge		*bridge;
- };
- 
- int mxsfb_setup_crtc(struct drm_device *dev);
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_out.c b/drivers/gpu/drm/mxsfb/mxsfb_out.c
-index 91e76f9cead6..77e03eb0fca6 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_out.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_out.c
-@@ -78,9 +78,11 @@ int mxsfb_create_output(struct drm_device *drm)
- {
- 	struct mxsfb_drm_private *mxsfb = drm->dev_private;
- 	struct drm_panel *panel;
-+	struct drm_bridge *bridge;
- 	int ret;
- 
--	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0, &panel, NULL);
-+	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0, &panel,
-+			&bridge);
- 	if (ret)
- 		return ret;
- 
-@@ -91,8 +93,14 @@ int mxsfb_create_output(struct drm_device *drm)
- 	ret = drm_connector_init(drm, &mxsfb->connector,
- 				 &mxsfb_panel_connector_funcs,
- 				 DRM_MODE_CONNECTOR_Unknown);
--	if (!ret)
--		mxsfb->panel = panel;
-+	if (!ret) {
-+		if (panel)
-+			mxsfb->panel = panel;
-+		else if (bridge)
-+			mxsfb->bridge = bridge;
-+		else
-+			return -EINVAL;
-+	}
- 
- 	return ret;
- }
+Looks good for the start.
+
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+
 -- 
-2.17.1
-
+ Kirill A. Shutemov
