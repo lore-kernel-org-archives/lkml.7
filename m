@@ -2,182 +2,90 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0787DC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD862C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90FB20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:27:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gh8yhBGR"
+	by mail.kernel.org (Postfix) with ESMTP id BB8DA20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732961AbfHAQ1B (ORCPT
+        id S1732972AbfHAQ1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:27:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56535 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732943AbfHAQ07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:26:59 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71Fugid005824
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 1 Aug 2019 08:56:43 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71Fugid005824
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564675003;
-        bh=idIoVIY/hjrBTbn8KTBHUk3muR8F9nF4P8B0TndQlgE=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=gh8yhBGRqGhhPaCWNFCdy7uPE1J0Eiuzw8kh0vyK808xxKWDTPEidPK5SwpwzfGgz
-         29Kn4ufYAQIErypxydgRkBzDE3PdPx+Ao8oHyzM/u0qfyI5aFZYj/6Lc2Nm043CCX0
-         /cgy6TvDQPtZD0t+xqLU+aur38hCEAh4ZsyUaZ2Fg1Ku0yT+bZwBZENQSDFlCd02Nr
-         pAhebAyZYNLbtVQ4ZdmqzWnq9FXCblGl6BkHpnpKrjZ4od16AWXMKeBIrZQktvt1Ip
-         UjHsft8UCJN2B6XkKGhEkYQrIXZXbpOjyZ7xR42Gdwdu02JbHzwSVl/f3Ugi5SXzzd
-         oB1vZmVdHdc2Q==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71Fug9q005821;
-        Thu, 1 Aug 2019 08:56:42 -0700
-Date:   Thu, 1 Aug 2019 08:56:42 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-8dd1382c4f8562ee7395c030047a8cc2bc853042@git.kernel.org>
-Cc:     tglx@linutronix.de, peterz@infradead.org, bigeasy@linutronix.de,
-        hpa@zytor.com, mingo@kernel.org, linux-kernel@vger.kernel.org
-Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org,
-          tglx@linutronix.de, peterz@infradead.org, bigeasy@linutronix.de,
-          hpa@zytor.com
-In-Reply-To: <20190726185753.459144407@linutronix.de>
-References: <20190726185753.459144407@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] tick: Mark tick related hrtimers to expiry in
- hard interrupt context
-Git-Commit-ID: 8dd1382c4f8562ee7395c030047a8cc2bc853042
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Thu, 1 Aug 2019 12:27:50 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56624 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729293AbfHAQ1u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:27:50 -0400
+Received: from localhost (unknown [IPv6:2603:3004:624:eb00::2d06])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CB304153EF902;
+        Thu,  1 Aug 2019 09:27:48 -0700 (PDT)
+Date:   Thu, 01 Aug 2019 12:27:45 -0400 (EDT)
+Message-Id: <20190801.122745.9301893283319822.davem@davemloft.net>
+To:     avifishman70@gmail.com
+Cc:     venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org, tmaimon77@gmail.com,
+        tali.perry1@gmail.com, openbmc@lists.ozlabs.org,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH v1 2/2] net: npcm: add NPCM7xx EMC 10/100 Ethernet
+ driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190801072611.27935-3-avifishman70@gmail.com>
+References: <20190801072611.27935-1-avifishman70@gmail.com>
+        <20190801072611.27935-3-avifishman70@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 01 Aug 2019 09:27:49 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8dd1382c4f8562ee7395c030047a8cc2bc853042
-Gitweb:     https://git.kernel.org/tip/8dd1382c4f8562ee7395c030047a8cc2bc853042
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 20:30:56 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 1 Aug 2019 17:43:18 +0200
+From: Avi Fishman <avifishman70@gmail.com>
+Date: Thu,  1 Aug 2019 10:26:11 +0300
 
-tick: Mark tick related hrtimers to expiry in hard interrupt context
+> +#Eternet 10/100 EMC
 
-The tick related hrtimers, which drive the scheduler tick and hrtimer based
-broadcasting are required to expire in hard interrupt context for obvious
-reasons.
+"Ethernet"
 
-Mark them so PREEMPT_RT kernels wont move them to soft interrupt expiry.
+> +#ifdef CONFIG_NPCM7XX_EMC_ETH_DEBUG
+> +#define DEBUG
+> +#endif
 
-Make the horribly formatted RCU_NONIDLE bracket maze readable while at it.
+Please don't control the DEBUG define in this way.
 
-No functional change, 
+> +#if defined CONFIG_NPCM7XX_EMC_ETH_DEBUG || defined CONFIG_DEBUG_FS
+> +#define REG_PRINT(reg_name) {t = scnprintf(next, size, "%-10s = %08X\n", \
+> +	#reg_name, readl(ether->reg + (reg_name))); size -= t;	next += t; }
+> +#define DUMP_PRINT(f, x...) {t = scnprintf(next, size, f, ## x); size -= t; \
+> +	next += t; }
 
-[ tglx: Split out from larger combo patch. Add changelog ]
+Really, get rid of this custom debugging infrastructure and just use
+generic facilities the kernel has for this, as designed.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190726185753.459144407@linutronix.de
+> +static int npcm7xx_info_dump(char *buf, int count, struct net_device *netdev)
+> +{
+> +	struct npcm7xx_ether *ether = netdev_priv(netdev);
+> +	struct npcm7xx_txbd *txbd;
+> +	struct npcm7xx_rxbd *rxbd;
+> +	unsigned long flags;
+> +	unsigned int i, cur, txd_offset, rxd_offset;
+> +	char *next = buf;
+> +	unsigned int size = count;
+> +	int t;
+> +	int is_locked = spin_is_locked(&ether->lock);
 
+Reverse christmas tree (longest to shortest) ordering for local variables
+please.
 
----
- kernel/time/tick-broadcast-hrtimer.c | 13 +++++++++----
- kernel/time/tick-sched.c             | 15 +++++++++------
- 2 files changed, 18 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/time/tick-broadcast-hrtimer.c b/kernel/time/tick-broadcast-hrtimer.c
-index 5be6154e2fd2..c1f5bb590b5e 100644
---- a/kernel/time/tick-broadcast-hrtimer.c
-+++ b/kernel/time/tick-broadcast-hrtimer.c
-@@ -59,11 +59,16 @@ static int bc_set_next(ktime_t expires, struct clock_event_device *bc)
- 	 * hrtimer_{start/cancel} functions call into tracing,
- 	 * calls to these functions must be bound within RCU_NONIDLE.
- 	 */
--	RCU_NONIDLE({
-+	RCU_NONIDLE(
-+		{
- 			bc_moved = hrtimer_try_to_cancel(&bctimer) >= 0;
--			if (bc_moved)
-+			if (bc_moved) {
- 				hrtimer_start(&bctimer, expires,
--					      HRTIMER_MODE_ABS_PINNED);});
-+					      HRTIMER_MODE_ABS_PINNED_HARD);
-+			}
-+		}
-+	);
-+
- 	if (bc_moved) {
- 		/* Bind the "device" to the cpu */
- 		bc->bound_on = smp_processor_id();
-@@ -104,7 +109,7 @@ static enum hrtimer_restart bc_handler(struct hrtimer *t)
- 
- void tick_setup_hrtimer_broadcast(void)
- {
--	hrtimer_init(&bctimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	hrtimer_init(&bctimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
- 	bctimer.function = bc_handler;
- 	clockevents_register_device(&ce_broadcast_hrtimer);
- }
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index be9707f68024..01ff32a02af2 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -634,10 +634,12 @@ static void tick_nohz_restart(struct tick_sched *ts, ktime_t now)
- 	/* Forward the time to expire in the future */
- 	hrtimer_forward(&ts->sched_timer, now, tick_period);
- 
--	if (ts->nohz_mode == NOHZ_MODE_HIGHRES)
--		hrtimer_start_expires(&ts->sched_timer, HRTIMER_MODE_ABS_PINNED);
--	else
-+	if (ts->nohz_mode == NOHZ_MODE_HIGHRES) {
-+		hrtimer_start_expires(&ts->sched_timer,
-+				      HRTIMER_MODE_ABS_PINNED_HARD);
-+	} else {
- 		tick_program_event(hrtimer_get_expires(&ts->sched_timer), 1);
-+	}
- 
- 	/*
- 	 * Reset to make sure next tick stop doesn't get fooled by past
-@@ -802,7 +804,8 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
- 	}
- 
- 	if (ts->nohz_mode == NOHZ_MODE_HIGHRES) {
--		hrtimer_start(&ts->sched_timer, tick, HRTIMER_MODE_ABS_PINNED);
-+		hrtimer_start(&ts->sched_timer, tick,
-+			      HRTIMER_MODE_ABS_PINNED_HARD);
- 	} else {
- 		hrtimer_set_expires(&ts->sched_timer, tick);
- 		tick_program_event(tick, 1);
-@@ -1327,7 +1330,7 @@ void tick_setup_sched_timer(void)
- 	/*
- 	 * Emulate tick processing via per-CPU hrtimers:
- 	 */
--	hrtimer_init(&ts->sched_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	hrtimer_init(&ts->sched_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
- 	ts->sched_timer.function = tick_sched_timer;
- 
- 	/* Get the next period (per-CPU) */
-@@ -1342,7 +1345,7 @@ void tick_setup_sched_timer(void)
- 	}
- 
- 	hrtimer_forward(&ts->sched_timer, now, tick_period);
--	hrtimer_start_expires(&ts->sched_timer, HRTIMER_MODE_ABS_PINNED);
-+	hrtimer_start_expires(&ts->sched_timer, HRTIMER_MODE_ABS_PINNED_HARD);
- 	tick_nohz_activate(ts, NOHZ_MODE_HIGHRES);
- }
- #endif /* HIGH_RES_TIMERS */
+Audit your entire submission for this problem.
