@@ -2,127 +2,124 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9C3C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48B6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16309206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD828206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:55:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733206AbfHAQyy (ORCPT
+        id S1733223AbfHAQzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:54:54 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44566 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732234AbfHAQyx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:54:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p17so74326114wrf.11
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 09:54:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xk32o95NCOLgUCqaaBPTpr45XpC6FO5dIRTVup5ncyo=;
-        b=aSPDaMi/4iBHWI/KfnsXpulgnq+3iP7eLvJn6gErPvj3StCjWMgDscR1jacc+NsvME
-         owqhNmz2fWtOt05s7L31gQzQM5Vw3BEHFc1qGCT+nrdU4ybjkAltHYeGRsdaHPpmHzB9
-         T7dAbqME63P48KRxxRnnTD1ZSQG1rvPaYcuekbRVGM9GZ3SBWGuuDLLHpM8CYj33dRVI
-         MaZHqmplWQrmDjUKeTHcNri7YSc7tDEOklhE6Nl6ufyqcJoNZX+paj/xWUXpfzlDTSHu
-         qtPbLm9Yp560cOY0d4UXwcV25RrZKSD5L6lxVqtMPWpBHwKcjfdrlAUU8TV26JxXReFx
-         Rw/A==
-X-Gm-Message-State: APjAAAVyCorjUnkM7ITdTSKIWtkyOShBhyVk2ay+thm7KkQIKwPO4mud
-        gq1JPJ0cLs+CAXvPMhyYGoZukQ==
-X-Google-Smtp-Source: APXvYqx4rwx51xdjuRB5YgIrLUydM30Bos6mOWLmy3EJ68VNQ2cELBXtN3JThNTb+NcCk2E7jyCLAQ==
-X-Received: by 2002:a5d:438e:: with SMTP id i14mr18809848wrq.122.1564678491260;
-        Thu, 01 Aug 2019 09:54:51 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:91e7:65e:d8cd:fdb3? ([2001:b07:6468:f312:91e7:65e:d8cd:fdb3])
-        by smtp.gmail.com with ESMTPSA id r11sm114254839wre.14.2019.08.01.09.54.50
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 09:54:50 -0700 (PDT)
-Subject: Re: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when dedicated
- physical CPUs are available
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Wanpeng Li <kernellwp@gmail.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
- <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <c3fe182f-627f-88ad-cb4d-a4189202b438@redhat.com>
-Date:   Thu, 1 Aug 2019 18:54:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 1 Aug 2019 12:55:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34102 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1733208AbfHAQzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:55:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6893DAECA;
+        Thu,  1 Aug 2019 16:55:10 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 6CC5D1E3F4D; Thu,  1 Aug 2019 11:22:23 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 11:22:23 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.com>,
+        linux-ext4@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Joel Becker <jlbec@evilplan.org>
+Subject: Re: [patch V2 7/7] fs/jbd2: Free journal head outside of locked
+ region
+Message-ID: <20190801092223.GG25064@quack2.suse.cz>
+References: <20190801010126.245731659@linutronix.de>
+ <20190801010944.549462805@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <7b1e3025-f513-7068-32ac-4830d67b65ac@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801010944.549462805@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/08/19 18:51, Rafael J. Wysocki wrote:
-> On 8/1/2019 9:06 AM, Wanpeng Li wrote:
->> From: Wanpeng Li <wanpengli@tencent.com>
->>
->> The downside of guest side polling is that polling is performed even
->> with other runnable tasks in the host. However, even if poll in kvm
->> can aware whether or not other runnable tasks in the same pCPU, it
->> can still incur extra overhead in over-subscribe scenario. Now we can
->> just enable guest polling when dedicated pCPUs are available.
->>
->> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> Cc: Paolo Bonzini <pbonzini@redhat.com>
->> Cc: Radim Krčmář <rkrcmar@redhat.com>
->> Cc: Marcelo Tosatti <mtosatti@redhat.com>
->> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+On Thu 01-08-19 03:01:33, Thomas Gleixner wrote:
+> On PREEMPT_RT bit-spinlocks have the same semantics as on PREEMPT_RT=n,
+> i.e. they disable preemption. That means functions which are not safe to be
+> called in preempt disabled context on RT trigger a might_sleep() assert.
 > 
-> Paolo, Marcelo, any comments?
-
-Yes, it's a good idea.
-
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-
-Paolo
-
+> The journal head bit spinlock is mostly held for short code sequences with
+> trivial RT safe functionality, except for one place:
 > 
->> ---
->>   drivers/cpuidle/cpuidle-haltpoll.c   | 3 ++-
->>   drivers/cpuidle/governors/haltpoll.c | 2 +-
->>   2 files changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/cpuidle/cpuidle-haltpoll.c
->> b/drivers/cpuidle/cpuidle-haltpoll.c
->> index 9ac093d..7aee38a 100644
->> --- a/drivers/cpuidle/cpuidle-haltpoll.c
->> +++ b/drivers/cpuidle/cpuidle-haltpoll.c
->> @@ -53,7 +53,8 @@ static int __init haltpoll_init(void)
->>         cpuidle_poll_state_init(drv);
->>   -    if (!kvm_para_available())
->> +    if (!kvm_para_available() ||
->> +        !kvm_para_has_hint(KVM_HINTS_REALTIME))
->>           return 0;
->>         ret = cpuidle_register(&haltpoll_driver, NULL);
->> diff --git a/drivers/cpuidle/governors/haltpoll.c
->> b/drivers/cpuidle/governors/haltpoll.c
->> index 797477b..685c7007 100644
->> --- a/drivers/cpuidle/governors/haltpoll.c
->> +++ b/drivers/cpuidle/governors/haltpoll.c
->> @@ -141,7 +141,7 @@ static struct cpuidle_governor haltpoll_governor = {
->>     static int __init init_haltpoll(void)
->>   {
->> -    if (kvm_para_available())
->> +    if (kvm_para_available() && kvm_para_has_hint(KVM_HINTS_REALTIME))
->>           return cpuidle_register_governor(&haltpoll_governor);
->>         return 0;
+> jbd2_journal_put_journal_head() invokes __journal_remove_journal_head()
+> with the journal head bit spinlock held. __journal_remove_journal_head()
+> invokes kmem_cache_free() which must not be called with preemption disabled
+> on RT.
 > 
+> Jan suggested to rework the removal function so the actual free happens
+> outside the bit-spinlocked region.
 > 
+> Split it into two parts:
+> 
+>   - Do the sanity checks and the buffer head detach under the lock
+> 
+>   - Do the actual free after dropping the lock
+> 
+> There is error case handling in the free part which needs to dereference
+> the b_size field of the now detached buffer head. Due to paranoia (caused
+> by ignorance) the size is retrieved in the detach function and handed into
+> the free function. Might be over-engineered, but better safe than sorry.
+> 
+> This makes the journal head bit-spinlock usage RT compliant and also avoids
+> nested locking which is not covered by lockdep.
+> 
+> Suggested-by: Jan Kara <jack@suse.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-ext4@vger.kernel.org
+> Cc: "Theodore Ts'o" <tytso@mit.edu>
+> Cc: Jan Kara <jack@suse.com>
 
+Looks mostly good. Just a small suggestion for simplification below:
+
+> @@ -2559,11 +2568,14 @@ void jbd2_journal_put_journal_head(struc
+>  	J_ASSERT_JH(jh, jh->b_jcount > 0);
+>  	--jh->b_jcount;
+>  	if (!jh->b_jcount) {
+> -		__journal_remove_journal_head(bh);
+> +		size_t b_size = __journal_remove_journal_head(bh);
+> +
+>  		jbd_unlock_bh_journal_head(bh);
+> +		journal_release_journal_head(jh, b_size);
+>  		__brelse(bh);
+
+The bh is pinned until you call __brelse(bh) above and bh->b_size doesn't
+change during the lifetime of the buffer. So there's no need of
+fetching bh->b_size in __journal_remove_journal_head() and passing it back.
+You can just:
+
+		journal_release_journal_head(jh, bh->b_size);
+
+> -	} else
+> +	} else {
+>  		jbd_unlock_bh_journal_head(bh);
+> +	}
+>  }
+>  
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
