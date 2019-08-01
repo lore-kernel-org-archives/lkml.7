@@ -2,107 +2,122 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F057C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1696FC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02DF20644
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E909620644
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:04:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730986AbfHAJEJ convert rfc822-to-8bit (ORCPT
+        id S1731037AbfHAJE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:04:09 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:43563 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730567AbfHAJEJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:04:09 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x71940SC015459
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 1 Aug 2019 18:04:00 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x71940LC010973;
-        Thu, 1 Aug 2019 18:04:00 +0900
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7193E3B027604;
-        Thu, 1 Aug 2019 18:04:00 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.151] [10.38.151.151]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-2655495; Thu, 1 Aug 2019 17:18:27 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC23GP.gisp.nec.co.jp ([10.38.151.151]) with mapi id 14.03.0439.000; Thu, 1
- Aug 2019 17:18:27 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Jane Chu <jane.chu@oracle.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Subject: Re: [PATCH v3 2/2] mm/memory-failure: Poison read receives SIGKILL
- instead of SIGBUS if mmaped more than once
-Thread-Topic: [PATCH v3 2/2] mm/memory-failure: Poison read receives SIGKILL
- instead of SIGBUS if mmaped more than once
-Thread-Index: AQHVQzSPZWUqS0z8rU+q1hsF+rBObKblZhkA
-Date:   Thu, 1 Aug 2019 08:18:26 +0000
-Message-ID: <20190801081826.GB31767@hori.linux.bs1.fc.nec.co.jp>
-References: <1564092101-3865-1-git-send-email-jane.chu@oracle.com>
- <1564092101-3865-3-git-send-email-jane.chu@oracle.com>
-In-Reply-To: <1564092101-3865-3-git-send-email-jane.chu@oracle.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <3643947E1DEB764F9AEBCC8A0B8504B2@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Thu, 1 Aug 2019 05:04:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33058 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729084AbfHAJE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 05:04:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1AEA5AC63;
+        Thu,  1 Aug 2019 09:04:27 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 4EC4E1E3F4D; Thu,  1 Aug 2019 11:04:26 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 11:04:26 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, linux-ext4@vger.kernel.org,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.com>,
+        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Joel Becker <jlbec@evilplan.org>
+Subject: Re: [patch V2 5/7] fs/jbd2: Simplify journal_unmap_buffer()
+Message-ID: <20190801090426.GF25064@quack2.suse.cz>
+References: <20190801010126.245731659@linutronix.de>
+ <20190801010944.364767635@linutronix.de>
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801010944.364767635@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 04:01:41PM -0600, Jane Chu wrote:
-> Mmap /dev/dax more than once, then read the poison location using address
-> from one of the mappings. The other mappings due to not having the page
-> mapped in will cause SIGKILLs delivered to the process. SIGKILL succeeds
-> over SIGBUS, so user process looses the opportunity to handle the UE.
+On Thu 01-08-19 03:01:31, Thomas Gleixner wrote:
+> journal_unmap_buffer() checks first whether the buffer head is a journal.
+> If so it takes locks and then invokes jbd2_journal_grab_journal_head()
+> followed by another check whether this is journal head buffer.
 > 
-> Although one may add MAP_POPULATE to mmap(2) to work around the issue,
-> MAP_POPULATE makes mapping 128GB of pmem several magnitudes slower, so
-> isn't always an option.
+> The double checking is pointless.
 > 
-> Details -
+> Replace the initial check with jbd2_journal_grab_journal_head() which
+> alredy checks whether the buffer head is actually a journal.
 > 
-> ndctl inject-error --block=10 --count=1 namespace6.0
+> Allows also early access to the journal head pointer for the upcoming
+> conversion of state lock to a regular spinlock.
 > 
-> ./read_poison -x dax6.0 -o 5120 -m 2
-> mmaped address 0x7f5bb6600000
-> mmaped address 0x7f3cf3600000
-> doing local read at address 0x7f3cf3601400
-> Killed
-> 
-> Console messages in instrumented kernel -
-> 
-> mce: Uncorrected hardware memory error in user-access at edbe201400
-> Memory failure: tk->addr = 7f5bb6601000
-> Memory failure: address edbe201: call dev_pagemap_mapping_shift
-> dev_pagemap_mapping_shift: page edbe201: no PUD
-> Memory failure: tk->size_shift == 0
-> Memory failure: Unable to find user space address edbe201 in read_poison
-> Memory failure: tk->addr = 7f3cf3601000
-> Memory failure: address edbe201: call dev_pagemap_mapping_shift
-> Memory failure: tk->size_shift = 21
-> Memory failure: 0xedbe201: forcibly killing read_poison:22434 because of failure to unmap corrupted page
->   => to deliver SIGKILL
-> Memory failure: 0xedbe201: Killing read_poison:22434 due to hardware memory corruption
->   => to deliver SIGBUS
-> 
-> Signed-off-by: Jane Chu <jane.chu@oracle.com>
-> Suggested-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-ext4@vger.kernel.org
+> Cc: "Theodore Ts'o" <tytso@mit.edu>
+> Cc: Jan Kara <jack@suse.com>
 
-Thanks for the fix.
+Nice simplification. You can add:
 
-Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+> V2: New patch
+> ---
+>  fs/jbd2/transaction.c |    8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> --- a/fs/jbd2/transaction.c
+> +++ b/fs/jbd2/transaction.c
+> @@ -2196,7 +2196,8 @@ static int journal_unmap_buffer(journal_
+>  	 * holding the page lock. --sct
+>  	 */
+>  
+> -	if (!buffer_jbd(bh))
+> +	jh = jbd2_journal_grab_journal_head(bh);
+> +	if (!jh)
+>  		goto zap_buffer_unlocked;
+>  
+>  	/* OK, we have data buffer in journaled mode */
+> @@ -2204,10 +2205,6 @@ static int journal_unmap_buffer(journal_
+>  	jbd_lock_bh_state(bh);
+>  	spin_lock(&journal->j_list_lock);
+>  
+> -	jh = jbd2_journal_grab_journal_head(bh);
+> -	if (!jh)
+> -		goto zap_buffer_no_jh;
+> -
+>  	/*
+>  	 * We cannot remove the buffer from checkpoint lists until the
+>  	 * transaction adding inode to orphan list (let's call it T)
+> @@ -2329,7 +2326,6 @@ static int journal_unmap_buffer(journal_
+>  	 */
+>  	jh->b_modified = 0;
+>  	jbd2_journal_put_journal_head(jh);
+> -zap_buffer_no_jh:
+>  	spin_unlock(&journal->j_list_lock);
+>  	jbd_unlock_bh_state(bh);
+>  	write_unlock(&journal->j_state_lock);
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
