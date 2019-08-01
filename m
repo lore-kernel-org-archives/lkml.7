@@ -2,48 +2,49 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E46C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF93C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773AE20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B922087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:17:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BlFIny+X"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dkzwf6eh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388918AbfHAUQz (ORCPT
+        id S2388941AbfHAURO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 16:16:55 -0400
-Received: from mail-eopbgr60061.outbound.protection.outlook.com ([40.107.6.61]:62694
+        Thu, 1 Aug 2019 16:17:14 -0400
+Received: from mail-eopbgr60082.outbound.protection.outlook.com ([40.107.6.82]:11040
         "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725846AbfHAUQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:16:55 -0400
+        id S1725846AbfHAURN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 16:17:13 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PFNUq0uMt8re0+5oGbRsonbNmCaUQAkZkdW++20Q3goVm2bQ0dgy5TT0pCNwCGMAUykwaVj6R1Mc3yx17UW4WfdcV7dOnDt0OYVIn1Pfq39wAnpdcl2+z2V5zgkXnqOH5cZzSegqGrCFMsZuUKmTBTzWgemlEBXhmBALQQZHIrD5zkCdD6EVEl6V2c98Ti7zVa8iTtdnuZcRQYTJaQ8Lf3lWNGlDRuGQjqUMxnEGud6Gyb26J++v52HOaLBQsT/QMjW5M+OyLk0EBzjmot3ZIstKmzTcEmkM5xDD1ttLpBPWvch072u4vKwmtarn23utw9U2h1yqVXkJplB3tFeAAQ==
+ b=COMNkqqzs5CsKt/H7wpCMVjTTkVi14dr6AG3zti6O+Iiyn+PVb+XywUn8QTurHnNXqW1fw35k/0sa+9GNDNS6XfMO9XlTmWnkh0bjvLbvmNHpQv1GuryucqDIXwSq1K2/7DFmshyJulQwnF9T0NQoxqAlnbiPwmIC/2mj/IajmyKh3fVY+WU/5vOGbVDGE17bqieqYRb8QIv3mULkqgh+KBKeKwkzgQoNWyaOjABxHHnGSaQgN9G2w+fIWSlFqxt9AbVPeyxNS1MW0kxj1p7HXGi8gth3hul2hALIiv75uFTRh3GgNut4NIFLN1u8D3DyTa8ETfExaS10eY/RWEUvw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+c8eba/7+zK9KeiLM1wja1jJCEoM9hBau2vZcoh/bng=;
- b=TGSBf40xYfvXXQcH743eyT05Clpzbb4caYAP1Ic+YlvW3KrjIxavk2o5BK7XcvgNqRivkATqsq5GWTe6J0nwMAJfrcctd/m7OsSlgPLOYIJSBGYIowHOrsEg1WStQHcxVCTMssxkv0RFS4AsrJpcLnrVsGAy9jU+10aVGZIwyrIiIoS0DMmypIe6g7YkMpJqY1MZLevXSkqSN8Zr6pm8o/JOzPKo2ZAmOy1z2w/AfHcajrQFGGS9j2XbAjTorY4tjU9vXxF+vcKzXq0cB/lNN/CFfJRgL5eg2HCrVhP05clLnTQcvbT2N2ffoLaFUBJLKvcV5/fkBY4esJ3+7Gxf5g==
+ bh=3Rc8vExPXZwB8d4MZ9x7eOtOwLPlGtoP7wKctkSKqwI=;
+ b=WtH0aP3OPGRC94SsYkQJzicX/cm8QtbGz6J71rfCM0iqvJLQGf5ENh8cKFQ+r2FmFw2noNiglBkjgkVASyceBX46SSyWuuV5u5VIgMW8AIczZE/Xk4qzHq1iTrHe+U/r0cinYr47Y3zT9hbFdtvYssVjDhCVnsAyPS4TiK+v33ZGN3xTV29uBBVbcZNIOpBiiiBET3CwPrfwq6YQO70lDr2liiTBPGMnghIL3uNdu7m3WdSFEjYVXniIpEj7TmwlWAJjA22ZqL8wvo3xHxWWNPd6VA/jsNi4pCvuMOoSob/l2tv9Qu/Qb9YIuzO2uBnOIXzzyk8j93rgpApwiTLR4A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
  smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
  header.d=nxp.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+c8eba/7+zK9KeiLM1wja1jJCEoM9hBau2vZcoh/bng=;
- b=BlFIny+XXagZiQ0j8l8EIZil7/1VzVmAfpTwmRMHPbSSP3OEee/xWtWK8n/hqAUmarFntQUxm+gLZK+a0KrdO49IjLHTK7O5u4csEzFNufV6HRogkN6nMtMjSljGsXxntBsWy1HqgwitPCKdYVFs86evX4zHBssPtgfxRHFt5Ww=
+ bh=3Rc8vExPXZwB8d4MZ9x7eOtOwLPlGtoP7wKctkSKqwI=;
+ b=dkzwf6ehWUSsFxnj5bVwLOBn9xNIvvwFDQSCIr31mq3P0HwGJXCgap/iCH6NB44zlN7LhYK1slpIHUgBrjrQcqRc/vepEx3ywBIYXvF95EM2p7viIOmrXbO+i8vfU+fvsTrjw5JeTV5UIguu5HLvfDHazL+55l/oxKiE2ubNUs0=
 Received: from VE1PR04MB6463.eurprd04.prod.outlook.com (20.179.233.20) by
  VE1PR04MB6656.eurprd04.prod.outlook.com (20.179.235.95) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Thu, 1 Aug 2019 20:16:51 +0000
+ 15.20.2115.10; Thu, 1 Aug 2019 20:16:55 +0000
 Received: from VE1PR04MB6463.eurprd04.prod.outlook.com
  ([fe80::8fc:e04c:fbb6:4f1f]) by VE1PR04MB6463.eurprd04.prod.outlook.com
  ([fe80::8fc:e04c:fbb6:4f1f%7]) with mapi id 15.20.2115.005; Thu, 1 Aug 2019
- 20:16:51 +0000
+ 20:16:55 +0000
 From:   Roy Pledge <roy.pledge@nxp.com>
 To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-arm-kernel@lists.infradead.org" 
@@ -53,11 +54,15 @@ To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
 CC:     Madalin-cristian Bucur <madalin.bucur@nxp.com>,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>,
         Roy Pledge <roy.pledge@nxp.com>
-Subject: [PATCH v3 0/7]  soc/fsl/qbman: Enable Kexec for DPAA1 devices
-Thread-Topic: [PATCH v3 0/7]  soc/fsl/qbman: Enable Kexec for DPAA1 devices
-Thread-Index: AQHVSKYODnCIih9n4EOgU6xobSGIUg==
-Date:   Thu, 1 Aug 2019 20:16:51 +0000
-Message-ID: <1564690599-29713-1-git-send-email-roy.pledge@nxp.com>
+Subject: [PATCH v3 2/7] soc/fsl/qbman: Cleanup buffer pools if BMan was
+ initialized prior to bootup
+Thread-Topic: [PATCH v3 2/7] soc/fsl/qbman: Cleanup buffer pools if BMan was
+ initialized prior to bootup
+Thread-Index: AQHVSKYQDdAXIzwWDEO2MM4P3XgCBw==
+Date:   Thu, 1 Aug 2019 20:16:55 +0000
+Message-ID: <1564690599-29713-3-git-send-email-roy.pledge@nxp.com>
+References: <1564690599-29713-1-git-send-email-roy.pledge@nxp.com>
+In-Reply-To: <1564690599-29713-1-git-send-email-roy.pledge@nxp.com>
 Reply-To: Roy Pledge <roy.pledge@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
@@ -72,24 +77,24 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [72.142.119.78]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 91705b0e-ca8f-4591-d3c3-08d716bd3060
+x-ms-office365-filtering-correlation-id: 38197fa7-df37-48c1-fe59-08d716bd32c9
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6656;
 x-ms-traffictypediagnostic: VE1PR04MB6656:
-x-microsoft-antispam-prvs: <VE1PR04MB6656C71F920C32D1429D3B7686DE0@VE1PR04MB6656.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-microsoft-antispam-prvs: <VE1PR04MB66567CC4C4D23BA725C5559586DE0@VE1PR04MB6656.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:494;
 x-forefront-prvs: 01165471DB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(366004)(199004)(189003)(386003)(6506007)(305945005)(7736002)(71200400001)(71190400001)(68736007)(14454004)(36756003)(54906003)(316002)(110136005)(6116002)(3846002)(486006)(186003)(66066001)(6436002)(256004)(26005)(2201001)(6636002)(3450700001)(44832011)(6486002)(102836004)(2906002)(14444005)(476003)(2616005)(50226002)(64756008)(66446008)(66476007)(25786009)(81166006)(66946007)(52116002)(5660300002)(478600001)(66556008)(8676002)(86362001)(81156014)(8936002)(99286004)(6512007)(4326008)(2501003)(53936002)(43066004);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6656;H:VE1PR04MB6463.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(366004)(199004)(189003)(386003)(6506007)(305945005)(7736002)(71200400001)(71190400001)(68736007)(14454004)(36756003)(54906003)(316002)(110136005)(6116002)(3846002)(486006)(186003)(66066001)(6436002)(256004)(26005)(2201001)(6636002)(3450700001)(44832011)(6486002)(102836004)(2906002)(446003)(476003)(2616005)(50226002)(64756008)(66446008)(66476007)(25786009)(81166006)(66946007)(52116002)(5660300002)(11346002)(76176011)(478600001)(66556008)(8676002)(86362001)(81156014)(8936002)(99286004)(6512007)(4326008)(2501003)(53936002)(43066004);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6656;H:VE1PR04MB6463.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: C3h1bfOQuots1/tWB5YHjdBTOOMGutwnW45AsaNYyPXg+L9W5NAGlNchD6HJbPtSQnhKf5UyiBsONjuUsS3xSljHBYc2yPNdT+na5TR21ET89dDkqHjzBxp+Wjs2d4VEMS2+OVuK9mnS5D9W8vHXbHJrLapjavl0qUXOb10v3U1lTVb0u5rgG8rlB9Xwxnb3mX0HsfeUDemz9pPKoGeIBNSqFNf1z0mfgCsgQUVIjyFsXFmgvGwcofeOIchERMnXdXygdBxqfKDyLaYuaHuMRGndnCjE2jxcVn0i8/YsL52I3nLx3cE0o01/dfzjnDyJIrS7wsgvJeADazLRKXeHu2pZF/5c2SVGejDwJ5p5IfQ6y3PcAz467r1aXtkjWnCRDmvSXXGXTlBBNwiw5s02jDmnt2F0oiV2uQdWKllbFMo=
+x-microsoft-antispam-message-info: Q3/DR5KhiU0n0aX2rXM4WagF1mgdLPXZQtkbNCGb56MN3TNdsEPnGzrS3q3QTS/2ZI1hiuRnW52+WPxJorOlFdPM0Em1RvZXGraqL/Yq6iLSgVWmB745yosP4aPu54wXTRBddfYTRrK9ymkAFtNjKS6vIY1mwJsZJBU1AuJMKkCzwltBZaqv5jUPaj0noBRPLz/ns5ea7RdjmjyrKZrOuWkzc9z4LLFzViYh/IprOEm7oKXkUAbXdFK920WNDjOADPDGNo5qRk9MHcepIPBCDAgZhy2a7LzQlE43LlnwqSZJu1y1z5SFo+5WKYqSbSlKoecpwtKDOJx8oa2yjqsej5Aw113vkDGdS6VRR6Q8v1DO99zJsa1cKcxbrL9hItVCw7U4zyWe75qKj57RB206vfv9lxcx/zqzdJGXNy/WGlc=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91705b0e-ca8f-4591-d3c3-08d716bd3060
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 20:16:51.4615
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38197fa7-df37-48c1-fe59-08d716bd32c9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 20:16:55.4822
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
@@ -101,41 +106,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most DPAA1 devices do not support a soft reset which is an issue if
-Kexec starts a new kernel. This patch series allows Kexec to function
-by detecting that the QBMan device was previously initialized.
+Clean the BMan buffer pools if the device had been initialized
+previously.  This will ensure a consistent state if the kernel
+was soft restarted (kexec for example)
 
-The patches fix some issues with device cleanup as well as ensuring
-that the location of the QBMan private memories has not changed
-after the execution of the Kexec.
+Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
+---
+ drivers/soc/fsl/qbman/bman.c        | 17 +++++++++--------
+ drivers/soc/fsl/qbman/bman_ccsr.c   | 10 ++++++++++
+ drivers/soc/fsl/qbman/bman_portal.c | 18 +++++++++++++++++-
+ drivers/soc/fsl/qbman/bman_priv.h   |  5 +++++
+ 4 files changed, 41 insertions(+), 9 deletions(-)
 
-Changes since v1:
-	- Removed a bug fix and sent it separately to ease backporting
-Changes since v2:
-	- Expliciitly flush FQD memory from cache on PPC before unmapping
-
-Roy Pledge (7):
-  soc/fsl/qbman: Rework QBMan private memory setup
-  soc/fsl/qbman: Cleanup buffer pools if BMan was initialized prior to
-    bootup
-  soc/fsl/qbman: Cleanup QMan queues if device was already initialized
-  soc/fsl/qbman: Fix drain_mr_fqni()
-  soc/fsl/qbman: Disable interrupts during portal recovery
-  soc/fsl/qbman: Fixup qman_shutdown_fq()
-  soc/fsl/qbman: Update device tree with reserved memory
-
- drivers/soc/fsl/qbman/bman.c        | 17 ++++----
- drivers/soc/fsl/qbman/bman_ccsr.c   | 36 +++++++++++++++-
- drivers/soc/fsl/qbman/bman_portal.c | 18 +++++++-
- drivers/soc/fsl/qbman/bman_priv.h   |  5 +++
- drivers/soc/fsl/qbman/dpaa_sys.c    | 63 ++++++++++++++++------------
- drivers/soc/fsl/qbman/qman.c        | 83 +++++++++++++++++++++++++++++----=
-----
- drivers/soc/fsl/qbman/qman_ccsr.c   | 68 +++++++++++++++++++++++++++---
- drivers/soc/fsl/qbman/qman_portal.c | 18 +++++++-
- drivers/soc/fsl/qbman/qman_priv.h   |  8 ++++
- 9 files changed, 255 insertions(+), 61 deletions(-)
-
---
+diff --git a/drivers/soc/fsl/qbman/bman.c b/drivers/soc/fsl/qbman/bman.c
+index f84ab59..f4fb527 100644
+--- a/drivers/soc/fsl/qbman/bman.c
++++ b/drivers/soc/fsl/qbman/bman.c
+@@ -635,30 +635,31 @@ int bman_p_irqsource_add(struct bman_portal *p, u32 b=
+its)
+ 	return 0;
+ }
+=20
+-static int bm_shutdown_pool(u32 bpid)
++int bm_shutdown_pool(u32 bpid)
+ {
++	int err =3D 0;
+ 	struct bm_mc_command *bm_cmd;
+ 	union bm_mc_result *bm_res;
+=20
++
++	struct bman_portal *p =3D get_affine_portal();
+ 	while (1) {
+-		struct bman_portal *p =3D get_affine_portal();
+ 		/* Acquire buffers until empty */
+ 		bm_cmd =3D bm_mc_start(&p->p);
+ 		bm_cmd->bpid =3D bpid;
+ 		bm_mc_commit(&p->p, BM_MCC_VERB_CMD_ACQUIRE | 1);
+ 		if (!bm_mc_result_timeout(&p->p, &bm_res)) {
+-			put_affine_portal();
+ 			pr_crit("BMan Acquire Command timedout\n");
+-			return -ETIMEDOUT;
++			err =3D -ETIMEDOUT;
++			goto done;
+ 		}
+ 		if (!(bm_res->verb & BM_MCR_VERB_ACQUIRE_BUFCOUNT)) {
+-			put_affine_portal();
+ 			/* Pool is empty */
+-			return 0;
++			goto done;
+ 		}
+-		put_affine_portal();
+ 	}
+-
++done:
++	put_affine_portal();
+ 	return 0;
+ }
+=20
+diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman=
+_ccsr.c
+index dc6d7e5..cb24a08 100644
+--- a/drivers/soc/fsl/qbman/bman_ccsr.c
++++ b/drivers/soc/fsl/qbman/bman_ccsr.c
+@@ -195,6 +195,16 @@ int bman_is_probed(void)
+ }
+ EXPORT_SYMBOL_GPL(bman_is_probed);
+=20
++int bman_requires_cleanup(void)
++{
++	return __bman_requires_cleanup;
++}
++
++void bman_done_cleanup(void)
++{
++	__bman_requires_cleanup =3D 0;
++}
++
+ static int fsl_bman_probe(struct platform_device *pdev)
+ {
+ 	int ret, err_irq;
+diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bm=
+an_portal.c
+index c78cc69..cc06d95 100644
+--- a/drivers/soc/fsl/qbman/bman_portal.c
++++ b/drivers/soc/fsl/qbman/bman_portal.c
+@@ -100,7 +100,7 @@ static int bman_portal_probe(struct platform_device *pd=
+ev)
+ 	struct device_node *node =3D dev->of_node;
+ 	struct bm_portal_config *pcfg;
+ 	struct resource *addr_phys[2];
+-	int irq, cpu, err;
++	int irq, cpu, err, i;
+=20
+ 	err =3D bman_is_probed();
+ 	if (!err)
+@@ -181,6 +181,22 @@ static int bman_portal_probe(struct platform_device *p=
+dev)
+ 	if (!cpu_online(cpu))
+ 		bman_offline_cpu(cpu);
+=20
++	if (__bman_portals_probed =3D=3D 1 && bman_requires_cleanup()) {
++		/*
++		 * BMan wasn't reset prior to boot (Kexec for example)
++		 * Empty all the buffer pools so they are in reset state
++		 */
++		for (i =3D 0; i < BM_POOL_MAX; i++) {
++			err =3D  bm_shutdown_pool(i);
++			if (err) {
++				dev_err(dev, "Failed to shutdown bpool %d\n",
++					i);
++				goto err_portal_init;
++			}
++		}
++		bman_done_cleanup();
++	}
++
+ 	return 0;
+=20
+ err_portal_init:
+diff --git a/drivers/soc/fsl/qbman/bman_priv.h b/drivers/soc/fsl/qbman/bman=
+_priv.h
+index 751ce90..aa3981e 100644
+--- a/drivers/soc/fsl/qbman/bman_priv.h
++++ b/drivers/soc/fsl/qbman/bman_priv.h
+@@ -76,3 +76,8 @@ int bman_p_irqsource_add(struct bman_portal *p, u32 bits)=
+;
+=20
+ const struct bm_portal_config *
+ bman_get_bm_portal_config(const struct bman_portal *portal);
++
++int bman_requires_cleanup(void);
++void bman_done_cleanup(void);
++
++int bm_shutdown_pool(u32 bpid);
+--=20
 2.7.4
 
