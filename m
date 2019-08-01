@@ -2,96 +2,104 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B76C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1246CC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16A0E20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564676003;
-	bh=3I7L+wpEzIsxZD6Kyy6kCTKsUQJ4euk1NDIJbKWiRoY=;
-	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
-	b=ojCKSRJYC21vvL2+rBpwFPJkFzw9rt/0IE2URhGwBqc2uRt/a0npr1kea8gZ1saMr
-	 BIpp+ems4N8xDKSICNvSMO0gYi5Xyqw74u8xavZooQwlmFQrQ92huurecTmjsmLKX3
-	 5SfTE/q0Dry++JKvfxWqhOGDYVh9oSOJPnljLWOI=
+	by mail.kernel.org (Postfix) with ESMTP id E1D9A206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732810AbfHAQNW (ORCPT
+        id S1732821AbfHAQPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59246 "EHLO mail.kernel.org"
+        Thu, 1 Aug 2019 12:15:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48376 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731767AbfHAQNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:13:22 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731704AbfHAQPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:15:02 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D0A9206A3;
-        Thu,  1 Aug 2019 16:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564676001;
-        bh=3I7L+wpEzIsxZD6Kyy6kCTKsUQJ4euk1NDIJbKWiRoY=;
-        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
-        b=1nhxxbnLcnskcAVqC4YIxl9Zlzm6HYIppo9xEMeDqlctUgUQ4+9bQPVJWe0aGrIZT
-         5Ylgsbj1nORQmJlhGbmFOpKwxDedMZw33bkCyyYdptmEaUwwcDvHQ7UJMb090ts9jE
-         prtJYH6/ipangD4uylz1ASsLyoMr7DDOx6Uze7/o=
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 58730A23DB;
+        Thu,  1 Aug 2019 16:15:02 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 212076012A;
+        Thu,  1 Aug 2019 16:15:00 +0000 (UTC)
+Message-ID: <46095f6fd184092280401dc530f8a80478b5a1b0.camel@redhat.com>
+Subject: Re: [PATCH] IB/hfi1: Fix Spectre v1 vulnerability
+From:   Doug Ledford <dledford@redhat.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 01 Aug 2019 12:14:58 -0400
+In-Reply-To: <20190731175428.GA16736@embeddedor>
+References: <20190731175428.GA16736@embeddedor>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-K/NeFDo836XcRrv7GODw"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <74912a84-fb5a-a539-5ab4-c3f00727c413@kernel.org>
-References: <20190731193517.237136-1-sboyd@kernel.org> <20190731193517.237136-7-sboyd@kernel.org> <74912a84-fb5a-a539-5ab4-c3f00727c413@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Dinh Nguyen <dinguyen@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 6/9] clk: socfpga: Don't reference clk_init_data after registration
-User-Agent: alot/0.8.1
-Date:   Thu, 01 Aug 2019 09:13:20 -0700
-Message-Id: <20190801161321.4D0A9206A3@mail.kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 01 Aug 2019 16:15:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Dinh Nguyen (2019-08-01 08:12:58)
-> Hi Stephen,
->=20
-> On 7/31/19 2:35 PM, Stephen Boyd wrote:
-> > A future patch is going to change semantics of clk_register() so that
-> > clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-> > referencing this member here so that we don't run into NULL pointer
-> > exceptions.
-> >=20
-> > Cc: Dinh Nguyen <dinguyen@kernel.org>
-> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> > ---
-> >=20
-> > Please ack so I can take this through clk tree
-> >=20
-> >  drivers/clk/socfpga/clk-gate.c       | 21 +++++++++++----------
-> >  drivers/clk/socfpga/clk-periph-a10.c |  7 ++++---
-> >  2 files changed, 15 insertions(+), 13 deletions(-)
-> >=20
-> > diff --git a/drivers/clk/socfpga/clk-gate.c b/drivers/clk/socfpga/clk-g=
-ate.c
-> > index 3966cd43b552..b3c8143909dc 100644
-> > --- a/drivers/clk/socfpga/clk-gate.c
-> > +++ b/drivers/clk/socfpga/clk-gate.c
-> > @@ -31,20 +31,20 @@ static u8 socfpga_clk_get_parent(struct clk_hw *hwc=
-lk)
-> >       u32 l4_src;
-> >       u32 perpll_src;
->=20
-> You need this line here:
->=20
->         const char *name =3D clk_hw_get_name(hwclk);
->=20
-> Otherwise, it fails to build. With the above change:
->=20
-> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
 
-Awesome thanks!=20
+--=-K/NeFDo836XcRrv7GODw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2019-07-31 at 12:54 -0500, Gustavo A. R. Silva wrote:
+> sl is controlled by user-space, hence leading to a potential
+> exploitation of the Spectre variant 1 vulnerability.
+>=20
+> Fix this by sanitizing sl before using it to index ibp->sl_to_sc.
+>=20
+> Notice that given that speculation windows are large, the policy is
+> to kill the speculation on the first load and not worry if it can be
+> completed with a dependent load/store [1].
+>=20
+> [1]=20
+> https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+>=20
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+
+Thanks, applied to for-rc.
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-K/NeFDo836XcRrv7GODw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1DEAIACgkQuCajMw5X
+L93qDxAAheHnKgMq9WrxSODBtUqgFbkqgE1Ifu/SVsLX18TaPe0xJYTK5Prv1/h2
+6PC3Fj2/Bkp4Lj9FSNyAKL1uG/AkLF+Yd7mBmpjtNa621Ot/20tNLvcHIz0Z+VvS
+hBTBLlZh1cQDJqoZI3qrJonP2+yR7yexWEPSwVc0+pzunUChAAvVQHw8dqFeiRlL
+kOIG+wC6nJJsRO3KNqcoRx76ncvoZ8fWr/z4frzD5v+Qua39ZwWdaGO9UknNaUg3
+CsjuYhSB6H7ccutSdLmzEvITCcWfE8dQTTMju40swmbYK+p66SbB/gjrkVGITeq3
+vWH1R7n/hKjKP1UmOo5EdhTkLRxlVwqT2tyTcZfQJcU/gj1+CMLyRbKOnyhzoCLM
+z4aqv38Y0R3qlCjfsW5KgU5QAVEOEEOKfJszujhXGH7SsMHUgQrYgmKXUsxsdYeu
+awGYUsMOiKOUHdhPQGMibo3cItwenjbRfscmnmO588lpJQP7sBujNB4nlbMPVudf
+44duPmqW5EzTP1QOJ0TsXUeJ2TZl59S6kt3+oskzuIRBoOSahZUhXABs85Bo8Wlt
+Dh2eaTwAxYUWfc33bDekXk5KkmPbNTwEMSr3jGBGVJfDHHNgPGDUg8vAMnmgp+l7
+ykEdIkN6Vaibrt8oQUAajD7U29Cly5lYclPkGkVlcWKt03PfBjE=
+=9rCJ
+-----END PGP SIGNATURE-----
+
+--=-K/NeFDo836XcRrv7GODw--
 
