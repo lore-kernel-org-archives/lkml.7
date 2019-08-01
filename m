@@ -2,86 +2,59 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BCDC32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F431C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B564214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A802087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:18:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G/mtesQs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbfHALPq (ORCPT
+        id S1729767AbfHALSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:15:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44571 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbfHALPp (ORCPT
+        Thu, 1 Aug 2019 07:18:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44180 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbfHALSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:15:45 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ht93d-0007Ka-WF; Thu, 01 Aug 2019 11:15:42 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kevin Wang <kevin1.wang@amd.com>, Rex Zhu <rex.zhu@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][drm-next] drm/amd/powerplay: fix off-by-one upper bounds limit checks
-Date:   Thu,  1 Aug 2019 12:15:41 +0100
-Message-Id: <20190801111541.13627-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Thu, 1 Aug 2019 07:18:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Subject:Cc:To:From:Date:Message-Id:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/xlyNhAtc2Sq5DmhJOAsATTCI6HaFbrRMVkJiBS73ZE=; b=G/mtesQsUwbbK168p9xV8/ak9
+        OQk2LOgWkx6nMvve5fEiVBpqohqLeNE67dWqmuwpQjl+xiuf/Tyef7NF7q0+0CGc20egUKg9Lu/G8
+        TkfYOxh3G1SZ6+f6ZtCKtFDqD1IHbCcYQl9E1G8/egnaZ4eeXsHK38cwYH1H5aCRyf9Ybt5PJ/4ua
+        hF1sIU+sGbwbgoMnC07E0iDLS0/OFOKdr99gm3uksr/fGEdnOGLlFTczlsA2T+Dl/7exXmpG5ORva
+        HnxpKYVcIMiHZy2OAuZlIosIzZpYzpRryzrOSsr17oezN4YdXyq2voNRgEFc/JRKTc54q1ytUGaVt
+        U3jjFZRzg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1ht966-0006Uf-Iq; Thu, 01 Aug 2019 11:18:14 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 78B0E2029F869; Thu,  1 Aug 2019 13:18:12 +0200 (CEST)
+Message-Id: <20190801111348.530242235@infradead.org>
+User-Agent: quilt/0.65
+Date:   Thu, 01 Aug 2019 13:13:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     mingo@kernel.org
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org
+Subject: [PATCH 0/5] Fix FIFO-99 abuse
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+I noticed a bunch of kthreads defaulted to FIFO-99, fix them.
 
-There are two occurrances of off-by-one upper bound checking of indexes
-causing potential out-of-bounds array reads. Fix these.
+The generic default is FIFO-50, the admin will have to configure the system
+anyway.
 
-Addresses-Coverity: ("Out-of-bounds read")
-Fixes: cb33363d0e85 ("drm/amd/powerplay: add smu feature name support")
-Fixes: 6b294793e384 ("drm/amd/powerplay: add smu message name support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/amd/powerplay/amdgpu_smu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-index d029a99e600e..b64113740eb5 100644
---- a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-+++ b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-@@ -38,7 +38,7 @@ static const char* __smu_message_names[] = {
- 
- const char *smu_get_message_name(struct smu_context *smu, enum smu_message_type type)
- {
--	if (type < 0 || type > SMU_MSG_MAX_COUNT)
-+	if (type < 0 || type >= SMU_MSG_MAX_COUNT)
- 		return "unknown smu message";
- 	return __smu_message_names[type];
- }
-@@ -51,7 +51,7 @@ static const char* __smu_feature_names[] = {
- 
- const char *smu_get_feature_name(struct smu_context *smu, enum smu_feature_mask feature)
- {
--	if (feature < 0 || feature > SMU_FEATURE_COUNT)
-+	if (feature < 0 || feature >= SMU_FEATURE_COUNT)
- 		return "unknown smu feature";
- 	return __smu_feature_names[feature];
- }
--- 
-2.20.1
+For some the purpose is to be above OTHER and then FIFO-1 really is sufficient.
 
