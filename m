@@ -2,82 +2,255 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BE3C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BD5C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9E6206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA2720449
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:53:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uU5eo/y9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbfHAIsd (ORCPT
+        id S1730258AbfHAIxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:48:33 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34847 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfHAIsd (ORCPT
+        Thu, 1 Aug 2019 04:53:18 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43059 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729021AbfHAIxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:48:33 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ht6lA-00033w-Vq; Thu, 01 Aug 2019 10:48:28 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ht6l9-00042c-2F; Thu, 01 Aug 2019 10:48:27 +0200
-Date:   Thu, 1 Aug 2019 10:48:27 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: Re: [PATCH] serial: imx: Avoid probe failure in case of missing
- gpiolib
-Message-ID: <20190801084827.m42ci3amo37hmesi@pengutronix.de>
-References: <20190801081524.22577-1-frieder.schrempf@kontron.de>
+        Thu, 1 Aug 2019 04:53:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id r22so6179846pgk.10;
+        Thu, 01 Aug 2019 01:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=7pPjfFq3czlZ0A1due3nkqymqR9ji2k4J0Hf9ebBtPc=;
+        b=uU5eo/y9F6Bx6g6jgxtcFAcqIS1JPyXnW84XTP71X5fQKqV6G2JiJ5p3+CfQ4554C0
+         zxgxmL5HkYN3dKny0FQrCdpURGhsZru3cMg/8Hs0M3eIV8kuocoTARCzEYAsd61s5lep
+         dmzJilRcTvF6UyB7pdlBeMs4kaxoYdizLbQnt0Q6+ER+JaURlKZdIeJiQSUWnDzQdfqW
+         0E/Ktd1Ict49j13a6R77SJbp5jBbdVH/3lB6dSsehJJi+U9acMprTJJaiBLGHPCVK4a4
+         ETmne55/BsPXdorSVRdQnXiNSkn/q60dSL3yWfHDZtFsQNdih1KVqxKTeOsSMeqi1COZ
+         A8IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=7pPjfFq3czlZ0A1due3nkqymqR9ji2k4J0Hf9ebBtPc=;
+        b=VcyX+XMn8xvG8jFqzxaZR2GfPINocV4YHgRkb/KGSEFcOxqEYfFXclDb0RzC23G7uX
+         8kbfFsOXaESi1fm4i8lkmNdtDs9YAZsJLGc6go+/u4WmUsPVNf7oCY+c5JEtD5Skjk8j
+         M9kHiA+bkziMT0Xd0t5vDMnBXHHHSr6d699mLGn1PnT21xaGvcXzP1CrhtQp0HY0UPlj
+         2rrnMHQOIB3UzG9yKjsCSXhI6yxeQoWJWoWuMBIK6hsPln5oSx/fCCjYRMITGJlaK7+S
+         R30rayaGH/tjMYPmWaarOIX3n/nc4ZaFR32Vq7uj266uKjnRDOaHX6CZ2tNJbpUJ0kEB
+         cUWQ==
+X-Gm-Message-State: APjAAAU8kvMxCqmrnLq91dq+OttyLLz/80BO1IbEbeeYHsBxm6tIoG9O
+        tL0fy2WXA3l8+ZD6y7Gfye6tfAfOfVo=
+X-Google-Smtp-Source: APXvYqykMhqU3UuY1kH6u+Y5POueQXctPjSKrXoMQr3Elr123wzn/lKsiEupZuJDBGwMDng9TRSorA==
+X-Received: by 2002:a63:6904:: with SMTP id e4mr56961278pgc.321.1564649596272;
+        Thu, 01 Aug 2019 01:53:16 -0700 (PDT)
+Received: from [192.168.1.10] ([117.241.198.109])
+        by smtp.gmail.com with ESMTPSA id p20sm83768219pgi.81.2019.08.01.01.53.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 01:53:15 -0700 (PDT)
+Subject: Re: [PATCH v2] media:dvb-frontends:Remove dvb_pll_devcount and id
+ module parameters.
+To:     Sean Young <sean@mess.org>,
+        Michael Ira Krufky <mkrufky@linuxtv.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tskd08@gmail.com, skhan@linuxfoundation.org,
+        gregkh@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20190717141204.19433-1-bnvandana@gmail.com>
+ <20190720061302.24047-1-bnvandana@gmail.com>
+ <20190724053635.4pl44glggvcnton2@gofer.mess.org>
+ <20190801050915.bmv5xpbczixtaotf@gofer.mess.org>
+From:   Vandana BN <bnvandana@gmail.com>
+Message-ID: <96107af1-a2c2-b19b-c4e6-bdf92209bb36@gmail.com>
+Date:   Thu, 1 Aug 2019 14:23:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190801081524.22577-1-frieder.schrempf@kontron.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190801050915.bmv5xpbczixtaotf@gofer.mess.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 08:18:05AM +0000, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> If CONFIG_GPIOLIB is not enabled, mctrl_gpio_init() will return
-> -ENOSYS and cause the probing of the imx UART to fail. As the
-> GPIOs are optional, we should continue probing in this case.
 
-Is this really still the case? On which version did you hit this
-problem?
+On 01/08/19 10:39 AM, Sean Young wrote:
+> On Wed, Jul 24, 2019 at 06:36:35AM +0100, Sean Young wrote:
+>> On Sat, Jul 20, 2019 at 11:43:02AM +0530, Vandana BN wrote:
+>>> Syzbot reported global-out-of-bounds Read in dvb_pll_attach, while
+>>> accessing id[dvb_pll_devcount], because dvb_pll_devcount was 65,
+>>> that is more than size of 'id' which is DVB_PLL_MAX(64).
+>>>
+>>> Fix would be to check if DVB_PLL_MAX devices are attached and if so return
+>>> NULL from dvb_pll_attach(). But this will put a limit on the number of
+>>> devices that can be attached.
+>>> Also dvb_pll_devcount and "id" module parameter are used for debugging
+>>> purpose to override/force PLL type.
+>>> So this patch removes these module parameters.
+>>>
+>>> Reported-by: syz...@syzkaller.appspotmail.com
+>>>
+>>> usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
+>>> software demuxer
+>>> dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
+>>> usb 1-1: media controller created
+>>> dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+>>> tc90522 0-0018: Toshiba TC90522 attached.
+>>> usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
+>>> module)...
+>>> dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
+>>> module' registered.
+>>> ==================================================================
+>>> BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
+>>> drivers/media/dvb-frontends/dvb-pll.c:798
+>>> Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
+>>>
+>>> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
+>>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>>> Google 01/01/2011
+>>> Workqueue: usb_hub_wq hub_event
+>>> Call Trace:
+>>>   __dump_stack lib/dump_stack.c:77 [inline]
+>>>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>>>   print_address_description+0x67/0x231 mm/kasan/report.c:188
+>>>   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+>>>   kasan_report+0xe/0x20 mm/kasan/common.c:614
+>>>   dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
+>>>   dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
+>>>   i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
+>>>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>>>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>>>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>>>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>>>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>>>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>>>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>>>   i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
+>>>   i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
+>>>   dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
+>>>   friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
+>>>   dvb_usbv2_adapter_frontend_init
+>>> drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
+>>>   dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
+>>> [inline]
+>>>   dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
+>>>   dvb_usbv2_probe.cold+0x24dc/0x255d
+>>> drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
+>>>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>>>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>>>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>>>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>>>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>>>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>>>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>>>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>>>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>>>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>>>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>>>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>>>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>>>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>>>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>>>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>>>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>>>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>>>   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+>>>   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+>>>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>>>   port_event drivers/usb/core/hub.c:5350 [inline]
+>>>   hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+>>>   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+>>>   process_scheduled_works kernel/workqueue.c:2331 [inline]
+>>>   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+>>>   kthread+0x30b/0x410 kernel/kthread.c:255
+>>>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>>>
+>>> The buggy address belongs to the variable:
+>>>   id+0x100/0x120
+>>>
+>>> Memory state around the buggy address:
+>>>   ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
+>>>   ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>>>> ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
+>>>                                                         ^
+>>>   ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+>>>   ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+>>> ==================================================================
+>>>
+>>> Signed-off-by: Vandana BN <bnvandana@gmail.com>
+>>> ---
+>>>  drivers/media/dvb-frontends/dvb-pll.c | 19 +++----------------
+>>>  1 file changed, 3 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
+>>> index ba0c49107bd2..c3a04751e9cf 100644
+>>> --- a/drivers/media/dvb-frontends/dvb-pll.c
+>>> +++ b/drivers/media/dvb-frontends/dvb-pll.c
+>>> @@ -33,19 +33,11 @@ struct dvb_pll_priv {
+>>>  	u32 bandwidth;
+>>>  };
+>>>
+>>> -#define DVB_PLL_MAX 64
+>>> -
+>>> -static unsigned int dvb_pll_devcount;
+>>>
+>>>  static int debug;
+>>>  module_param(debug, int, 0644);
+>>>  MODULE_PARM_DESC(debug, "enable verbose debug messages");
+>>>
+>>> -static unsigned int id[DVB_PLL_MAX] =
+>>> -	{ [ 0 ... (DVB_PLL_MAX-1) ] = DVB_PLL_UNDEFINED };
+>>> -module_param_array(id, int, NULL, 0644);
+>>> -MODULE_PARM_DESC(id, "force pll id to use (DEBUG ONLY)");
+>>> -
+>> Mike, you introduced this module parameter in:
+>>
+>> commit 05a4611b5d71ad6f968fdeef092c24914570898b
+>> Author:     Michael Krufky <mkrufky@linuxtv.org>
+>> AuthorDate: Fri Sep 7 18:19:57 2007 -0300
+>>
+>>     V4L/DVB (6228): dvb-pll: add module option to specify rf input
+>>     
+>>     Add a module option to dvb-pll, called "input" to specify which rf
+>>     input to use on devices with multiple rf inputs.  If the module option
+>>     is not specified, then the driver will autoselect the rf input, as per
+>>     previous behavior.
+>>     
+>>     Signed-off-by: Michael Krufky <mkrufky@linuxtv.org>
+>>     Signed-off-by: Mauro Carvalho Chehab <mchehab@infradead.org>
+>>
+>> What was your motivation?
+> dvb_pll_devcount only ever gets increased, so this only works for the
+> first time a driver is loaded; after a usb replug or rmmod this does
+> not work anymore since the dvb_pll_devcount will have moved on to the
+> next entry. Considering it is broken maybe it should just be removed;
+> also we have no answer from mkrufky yet.
+>
+> If this functionality is useful, then it should be implemented with
+> an DEFINE_IDA() and ida_simpla_get(), but I'm not sure it's worth it
+> when the functionality is probably unused. If it was used, someone
+> would have noticed it was broken.
 
-I would expect that is gone with
-d99482673f950817b30caf3fcdfb31179b050ce1 if not earlier.
+Thanks Sean,
 
-Best regards
-Uwe
+I Will send updated patch addressing your review comments.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Regards,
+
+Vandana.
+
+>
+> Sean
