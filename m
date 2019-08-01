@@ -2,114 +2,173 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63F0C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E75DC32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A484D20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 748C020838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:15:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrbMWQFC"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Xxvi13uM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbfHAOOJ (ORCPT
+        id S1731875AbfHAOPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:14:09 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:46300 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731665AbfHAOOJ (ORCPT
+        Thu, 1 Aug 2019 10:15:16 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35513 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731665AbfHAOPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:14:09 -0400
-Received: by mail-vk1-f193.google.com with SMTP id b64so14612293vke.13
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:14:08 -0700 (PDT)
+        Thu, 1 Aug 2019 10:15:15 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d23so70388307qto.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:15:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KYYwECup+fF9qp+rfwpWlPQqwe1co2+YMnT+E8jGyP0=;
-        b=mrbMWQFCA7ngezQ2lWfc7FsgOQG0hjP2nr0N9Pc+5y+ZR+GLm4EWPIUcbx50KNWVb9
-         Q1YoCxQHgrCt0HnibYnOcVCOgWECWvE4EXjBLqbfd3B7xV+Otd2Unk5oJardDz7QnjTr
-         SoUBY5d1CmTSOur4PzjzcXO7xvltXPwy7C3dwEIHkh9GwZtH4KhLnNP57UWIt3UWU+1V
-         cC+hEtZIILUpfBtcaQJQPL5XszdES/nYVopS3EmKuoiRO3Bd32uoa4s5XMSk5yd5EdLY
-         /kfiq4hDnHIdW9DerzSQZhFc6z+TShtK2wXFdUQ5QuYfcDYTghfkQfA9bpBeOJ5ScF3j
-         fIsg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=is8PyxvRhNytWxsxvai2fZ7Vunv6qUm5JlLk3gubz8A=;
+        b=Xxvi13uMIuNd1i7qKKgkImlPAjK1xDFLxSCWyTWQlSWc0W0RYQ1MIbkdfqnYLZG9yu
+         5JI71oibP9i2ddPwTU9YBExPCU3Dlsj9Hb5dtaQ5jQpFVrZe095cwJxIxT6yDBH5wF1p
+         wCJApD147HK5V4ZzkFqufCd3njndvpO/gboYNoDeFKB07FcDW1Fik2Hzi8KFbGkqeU8B
+         FnLAkMgm4iKJeXTHx5eicQowVzuFCmxijHVptaHIDUKgEIgd9VbBsMKuWbYIgOQnQmmN
+         1oNq+b5+5oWwfawyEFBafayDt06Az4m3upS8lvLUrhifXOq6NRLkSxQqkth2e/4StwnK
+         u5vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KYYwECup+fF9qp+rfwpWlPQqwe1co2+YMnT+E8jGyP0=;
-        b=N018zOxkJqZVRzQumfjjxjdQJsLnhfadoGNfb0SY3n2yEfbiosSS37Nu3AXvNbybAL
-         oW6/QoGItSXtfNBJ3iEd7DZCfpLmDQX/a7GwFVbb9lvKvYSyC0cRkWNvbF6oCb8HG50H
-         zlx1sPaaLAvtKvJsZagMUBluF0egJHsV1Yb2E4+imOz7TdXRWpwhmLQYUJCnMJKI9rJZ
-         DPF28MErMMGLeetCgc/v31HEV2BmuUnQ41FaTqzRcTNQOf5dVfIausG7+KAHMaY0i85F
-         6FTuci1S94HDxbbLLgBbpIgE5HomS5SmmTlFLVsEYhQEkV4QTR2+LVFGxgadOHjIYuLJ
-         48Ng==
-X-Gm-Message-State: APjAAAVudoeoG6h6jDmdLwV1buf//lnUHdiZfuHzhKC+TkGNK80c5UAS
-        pMtihnU4YdTsBdZIIsp49x/X73+R4hoCta9fouJU0g==
-X-Google-Smtp-Source: APXvYqzn/EmS2UydZCPf4GmENl6D4/hrXDpwpD/+bpDbqfztRBUd8+cz2nYHyRaEUbadsesCkm/pvdUdC16liYbVT/4=
-X-Received: by 2002:a1f:2e56:: with SMTP id u83mr10776741vku.68.1564668847891;
- Thu, 01 Aug 2019 07:14:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=is8PyxvRhNytWxsxvai2fZ7Vunv6qUm5JlLk3gubz8A=;
+        b=t61jwKvVpWocGXlOBBKRwhvEBl/ZNNDTO+5K9fRSf0R4Qnb49EwZLPA6uM82GAAH28
+         3PaxM+ou8WD+lPKs3BMEJ6Ae7Fu1xwpAkg6IKtP0Vo9bf2iZK7G/7ezF2nzt+QeJJGWG
+         bufDiJZru/s+N7GXKYzKBAgjmgSkwhpwXmu1GU6NUjS/A4ABXnJrMuJvGrezkrfEmdfp
+         J4t2rzqEWWBbolhskW6Gst2BHoH1JFsCBHRPCPWCO94ArLoJmfmPwWDzZGM3XbIJqouD
+         tjyKsl2eUuEfhYeuvhIapr2BhIq16CNgk/MFe/rngW0+nupO/hnAbJWXHVKM81N4xdKy
+         sZqw==
+X-Gm-Message-State: APjAAAUKh9Rmnitbq1tLzCdM5w0Re0Fy4B9rrUm0j5DvVGuZIkoQgiTP
+        HbBsZMk5eFXbaEkYhRvMTXC5sTYqCQQ=
+X-Google-Smtp-Source: APXvYqzpRyNA15Vg4dJPptP9AquA0hd08+YvFQ9QkFLiFtu1omZ5ju/uevoFFYsI/1tqgZOzWDDXnw==
+X-Received: by 2002:ac8:1a7d:: with SMTP id q58mr88042253qtk.310.1564668914103;
+        Thu, 01 Aug 2019 07:15:14 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id e125sm29217763qkd.120.2019.08.01.07.15.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 01 Aug 2019 07:15:13 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1htBrN-00082a-0Q; Thu, 01 Aug 2019 11:15:13 -0300
+Date:   Thu, 1 Aug 2019 11:15:12 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
+ with worker
+Message-ID: <20190801141512.GB23899@ziepe.ca>
+References: <20190731084655.7024-1-jasowang@redhat.com>
+ <20190731084655.7024-8-jasowang@redhat.com>
+ <20190731123935.GC3946@ziepe.ca>
+ <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
+ <20190731193057.GG3946@ziepe.ca>
+ <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
 MIME-Version: 1.0
-References: <20190801135721.13211-1-ttayar@habana.ai>
-In-Reply-To: <20190801135721.13211-1-ttayar@habana.ai>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Thu, 1 Aug 2019 17:13:41 +0300
-Message-ID: <CAFCwf12jg7mS5wB05pfawOPrNC4rXXuSc=yJub5eWQBeHTTOQA@mail.gmail.com>
-Subject: Re: [PATCH] habanalabs: Avoid double free in error flow
-To:     Tomer Tayar <ttayar@habana.ai>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 4:57 PM Tomer Tayar <ttayar@habana.ai> wrote:
->
-> In case kernel context init fails during device initialization, both
-> hl_ctx_put() and kfree() are called, ending with a double free of the
-> kernel context.
-> Calling kfree() is needed only when a failure happens between the
-> allocation of the kernel context and its initialization, so move it to
-> there and remove it from the error flow.
->
-> Signed-off-by: Tomer Tayar <ttayar@habana.ai>
-> ---
->  drivers/misc/habanalabs/device.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-> index 0c4894dd9c02..7a8f9d0b71b5 100644
-> --- a/drivers/misc/habanalabs/device.c
-> +++ b/drivers/misc/habanalabs/device.c
-> @@ -970,7 +970,8 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
->         rc = hl_ctx_init(hdev, hdev->kernel_ctx, true);
->         if (rc) {
->                 dev_err(hdev->dev, "failed to initialize kernel context\n");
-> -               goto free_ctx;
-> +               kfree(hdev->kernel_ctx);
-> +               goto mmu_fini;
->         }
->
->         rc = hl_cb_pool_init(hdev);
-> @@ -1053,8 +1054,6 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
->         if (hl_ctx_put(hdev->kernel_ctx) != 1)
->                 dev_err(hdev->dev,
->                         "kernel ctx is still alive on initialization failure\n");
-> -free_ctx:
-> -       kfree(hdev->kernel_ctx);
->  mmu_fini:
->         hl_mmu_fini(hdev);
->  eq_fini:
-> --
-> 2.17.1
->
+On Thu, Aug 01, 2019 at 01:02:18PM +0800, Jason Wang wrote:
+> 
+> On 2019/8/1 上午3:30, Jason Gunthorpe wrote:
+> > On Wed, Jul 31, 2019 at 09:28:20PM +0800, Jason Wang wrote:
+> > > On 2019/7/31 下午8:39, Jason Gunthorpe wrote:
+> > > > On Wed, Jul 31, 2019 at 04:46:53AM -0400, Jason Wang wrote:
+> > > > > We used to use RCU to synchronize MMU notifier with worker. This leads
+> > > > > calling synchronize_rcu() in invalidate_range_start(). But on a busy
+> > > > > system, there would be many factors that may slow down the
+> > > > > synchronize_rcu() which makes it unsuitable to be called in MMU
+> > > > > notifier.
+> > > > > 
+> > > > > A solution is SRCU but its overhead is obvious with the expensive full
+> > > > > memory barrier. Another choice is to use seqlock, but it doesn't
+> > > > > provide a synchronization method between readers and writers. The last
+> > > > > choice is to use vq mutex, but it need to deal with the worst case
+> > > > > that MMU notifier must be blocked and wait for the finish of swap in.
+> > > > > 
+> > > > > So this patch switches use a counter to track whether or not the map
+> > > > > was used. The counter was increased when vq try to start or finish
+> > > > > uses the map. This means, when it was even, we're sure there's no
+> > > > > readers and MMU notifier is synchronized. When it was odd, it means
+> > > > > there's a reader we need to wait it to be even again then we are
+> > > > > synchronized.
+> > > > You just described a seqlock.
+> > > 
+> > > Kind of, see my explanation below.
+> > > 
+> > > 
+> > > > We've been talking about providing this as some core service from mmu
+> > > > notifiers because nearly every use of this API needs it.
+> > > 
+> > > That would be very helpful.
+> > > 
+> > > 
+> > > > IMHO this gets the whole thing backwards, the common pattern is to
+> > > > protect the 'shadow pte' data with a seqlock (usually open coded),
+> > > > such that the mmu notififer side has the write side of that lock and
+> > > > the read side is consumed by the thread accessing or updating the SPTE.
+> > > 
+> > > Yes, I've considered something like that. But the problem is, mmu notifier
+> > > (writer) need to wait for the vhost worker to finish the read before it can
+> > > do things like setting dirty pages and unmapping page.  It looks to me
+> > > seqlock doesn't provide things like this.
+> > The seqlock is usually used to prevent a 2nd thread from accessing the
+> > VA while it is being changed by the mm. ie you use something seqlocky
+> > instead of the ugly mmu_notifier_unregister/register cycle.
+> 
+> 
+> Yes, so we have two mappings:
+> 
+> [1] vring address to VA
+> [2] VA to PA
+> 
+> And have several readers and writers
+> 
+> 1) set_vring_num_addr(): writer of both [1] and [2]
+> 2) MMU notifier: reader of [1] writer of [2]
+> 3) GUP: reader of [1] writer of [2]
+> 4) memory accessors: reader of [1] and [2]
+> 
+> Fortunately, 1) 3) and 4) have already synchronized through vq->mutex. We
+> only need to deal with synchronization between 2) and each of the reset:
+> Sync between 1) and 2): For mapping [1], I do
+> mmu_notifier_unregister/register. This help to avoid holding any lock to do
+> overlap check.
 
-This patch is:
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Applied to -fixed
-Oded
+I suspect you could have done this with a RCU technique instead of
+register/unregister.
+
+> Sync between 2) and 4): For mapping [1], both are readers, no need any
+> synchronization. For mapping [2], synchronize through RCU (or something
+> simliar to seqlock).
+
+You can't really use a seqlock, seqlocks are collision-retry locks,
+and the semantic here is that invalidate_range_start *MUST* not
+continue until thread doing #4 above is guarenteed no longer touching
+the memory.
+
+This must be a proper barrier, like a spinlock, mutex, or
+synchronize_rcu.
+
+And, again, you can't re-invent a spinlock with open coding and get
+something better.
+
+Jason
