@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C44C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A141C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F33214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BAB620665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731089AbfHAM0E (ORCPT
+        id S1730968AbfHAM1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:26:04 -0400
-Received: from sauhun.de ([88.99.104.3]:52348 "EHLO pokefinder.org"
+        Thu, 1 Aug 2019 08:27:38 -0400
+Received: from sauhun.de ([88.99.104.3]:52378 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730299AbfHAM0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:26:01 -0400
+        id S1728903AbfHAM1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:27:38 -0400
 Received: from localhost (p54B333D2.dip0.t-ipconnect.de [84.179.51.210])
-        by pokefinder.org (Postfix) with ESMTPSA id 61D0B2C2817;
-        Thu,  1 Aug 2019 14:26:00 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 14:25:59 +0200
+        by pokefinder.org (Postfix) with ESMTPSA id 026C62C2817;
+        Thu,  1 Aug 2019 14:27:35 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 14:27:35 +0200
 From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        linux-kernel@vger.kernel.org,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        cocci@systeme.lip6.fr, Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [Cocci] [PATCH v5 0/3] Add error message to platform_get_irq*()
-Message-ID: <20190801122559.GC1659@ninjato>
-References: <20190730053845.126834-1-swboyd@chromium.org>
- <20190731142645.GA1680@kunai>
- <5d41ab2c.1c69fb81.6129.661f@mx.google.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v3 5/7] drivers: Introduce device lookup variants by
+ ACPI_COMPANION device
+Message-ID: <20190801122735.GD1659@ninjato>
+References: <20190723221838.12024-1-suzuki.poulose@arm.com>
+ <20190723221838.12024-6-suzuki.poulose@arm.com>
+ <20190726202353.GA963@kunai>
+ <20190801115856.GS23480@smile.fi.intel.com>
+ <20190801120830.GA1659@ninjato>
+ <20190801122106.GU23480@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oTHb8nViIGeoXxdp"
+        protocol="application/pgp-signature"; boundary="n2Pv11Ogg/Ox8ay5"
 Content-Disposition: inline
-In-Reply-To: <5d41ab2c.1c69fb81.6129.661f@mx.google.com>
+In-Reply-To: <20190801122106.GU23480@smile.fi.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -55,48 +54,37 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---oTHb8nViIGeoXxdp
+--n2Pv11Ogg/Ox8ay5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
 
-> these drivers pop up, I think we can have another function like
-> platform_get_irq_probe() or platform_get_irq_nowarn() that doesn't print
-> an error message. Then we can convert the drivers that are poking around
-> for interrupts to use this new function instead. It isn't the same as a
-> platform_get_optional_irq() API because it returns an error when the irq
-> isn't there or we fail to parse something, but at least the error
-> message is gone.
+> It's again not Cc'ed to all parties.
+> But OK, looks good to me.
+> Tough may be Jarkko can test all this.
 
-True.
-
-I still feel uneasy about pushing false positive error messages to
-users. Do you think your cocci-script could be updated to modify drivers
-which do not bail out when platform_get_irq() fails to use
-platform_get_irq_nowarn()? I'd think this would catch most of them?
-
-Or maybe the other way around? platform_get_irq_warn() and only convert
-those which print something?
+To be fair, only Mika is listed as I2C ACPI maintainer. Feel free to add
+more :) I assume Mika doesn't mind.
 
 
---oTHb8nViIGeoXxdp
+--n2Pv11Ogg/Ox8ay5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1C2lcACgkQFA3kzBSg
-KbbdSg/9HFWL5iUwHEJsV52vt2XJENx9m8QrdHV7lZ7jTjNxOOjLR976Iv/OBTSf
-M5+n+gSboLLJceumo7HdRuMmAf0+VUk/Di4vfIdhHTSqo39L5cUNvIOi64Qkt3We
-mrAv8PyJUaQvxS8GUD3VaWqpPLmqFuQVPWkjBdfkJtmOuhbn0/BR6zeScXVQ6WBA
-0wbiDg4ttOPZqRzmgqLmOjN8k/b5bxEirMvp6HUUK5wxXaI88Odaj8XvGAbl6IJ3
-G+youdvTAoueajXSegpQNbp3q2RSt1HOaSSG+86n0WL+R4m5veK8kxvWjMNe6D1s
-RlaqozlL2m+zbXAPpT3rY8OKiBxUKkaTNhUmdMOxWxsrbgWZAapeU3f9djwmlXNx
-BStZhTMnnSy3JcbS6Fk9cKjgHYfDQTaNDCWkdrSC5V3To8ZytkkMVbT7LwzmcHLF
-bbPPrtfKDSLeSUKufK+ICrYWfVQLgAWh9XyX+Vtm3NZ+kQvQMxk6QCV55A5wkRqk
-4JHRwks9yjkpCr18m5kpgYO87/AlA7TKz3nxoYLucIXvc+56exCRBCC8dQiHbaSM
-Q5A7bNLnWWa35txkCTIMlMCBQbnvqe5GH2H6CvRk21KyJqwVOfpio56V05qjYRep
-YkyTYumHpai0MlMIQdHbdOLFxtMInjyeDjw/mnaqdpL0gRqzUoE=
-=aWtB
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1C2rcACgkQFA3kzBSg
+KbbC7g/+JDJ/wQtaEgLwko1svAEbCfU6wxRadTwM0jWd4adQgIpPuwceKEDRV5ap
+sdqUoIDjY4UInI7HeUYLRTY/VUIaOmQ4C0VkWvgYFnAsZoAU/GWKrGVnJ74C34oK
+L1n76meYZVFj1+kuOPce8PKPbZ1N6t2N0H5VHChczypiPldel2s/UiW5Myk18T5v
+ZBt/xDU/C+vn2IPRKu5ybKFWzsSGIeAq0D/LvrnsO6q7z3bu8nmOL8rNTQCOVVwl
+vG1B3arBO1jwtT5kVA3/1hQZDoDucaXlFNw/8oL/jSHCajH2kKf/Ux0D4gAjK18y
+XWexgt84CLU9Q1MIwuYoJ+yuB8jyeJVdWAEkDSBVS6qUSZRx+00arhni5AJKWKGG
+aXe/UHiDv1FAgyqekJDwerz3pRRULCqtiGTZ3H3IOlLc1FtTibJ5VJeDZ8dH/+4z
++TeZiW+iLpNDufs3x8Sf6I+StIUB0bDWlvWyY2rdcL0YqozlUMYlQLvRfjOJLf9t
+3C1S9F4JB8pf9XOxPHKMIUgXpruGuWSLKm2m+rX7X49kQ3Ey4YRAhhVGT8PT9e3B
+1YtgOqFwsdaexAc3Y1LoVutgoLEARcqZ4q30pao5uIVzy7reLFmM/u3NRJDTKurR
+UxJH+EIkqg6UzLXABaZ5mTPYOFeiNDbjRAvLF7yBFENM9bBw2ZY=
+=K7Ly
 -----END PGP SIGNATURE-----
 
---oTHb8nViIGeoXxdp--
+--n2Pv11Ogg/Ox8ay5--
