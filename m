@@ -2,129 +2,120 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32703C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C529C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E4A2087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6347E2084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564687803;
+	bh=aGiuNYAKFtwr+H6dfpMjzcshOhxpjT0ZAh8jB5F/L0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l9IaKuzwZzwRJohaIxRj7zBiSojc4rIf4th8kFOUSH5IZF67Jrh9jBXxuzqfLftps
+	 hx086gFLXEdDhBni6kgevpDmdgivhsL5Jmtwo2PLp6sGeiHqdBqEeuf6rydEJ95MO6
+	 smD2NaIxxwRGOE1uA9gi1Na4AjDiDZw5Nd1NBKmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388666AbfHAT3I (ORCPT
+        id S2388688AbfHATaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:29:08 -0400
-Received: from mga02.intel.com ([134.134.136.20]:41185 "EHLO mga02.intel.com"
+        Thu, 1 Aug 2019 15:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbfHAT3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:29:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 12:29:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,335,1559545200"; 
-   d="scan'208";a="372714253"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 01 Aug 2019 12:29:05 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id CE6598D; Thu,  1 Aug 2019 22:29:04 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mans Rullgard <mans@mansr.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v4 2/2] auxdisplay: charlcd: Deduplicate simple_strtoul()
-Date:   Thu,  1 Aug 2019 22:29:04 +0300
-Message-Id: <20190801192904.41087-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190801192904.41087-1-andriy.shevchenko@linux.intel.com>
-References: <20190801192904.41087-1-andriy.shevchenko@linux.intel.com>
+        id S2388609AbfHATaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 15:30:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20FAB20838;
+        Thu,  1 Aug 2019 19:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564687800;
+        bh=aGiuNYAKFtwr+H6dfpMjzcshOhxpjT0ZAh8jB5F/L0A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ujfvtTrjvhO/7DUQN6B+/PSJcJ4VLRu59lE5mc6mxPMozovnomEOynQyjsTP6Xq/b
+         LWXiB1lHcp0YOwJ3oZkSWDFoqHD2nyuj0kP+rcIg2cUMQJXJkBCafEvI8shsGZTLMf
+         XMbTDVPDAnxO9TEon+cwBuJSVQ+/F6zEsN8KtVuA=
+Date:   Thu, 1 Aug 2019 21:29:58 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Matt Sickler <Matt.Sickler@daktronics.com>
+Cc:     Harsh Jain <harshjain32@gmail.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging:kpc2000:Fix dubious x | !y sparse warning
+Message-ID: <20190801192958.GA24482@kroah.com>
+References: <20190731183606.2513-1-harshjain32@gmail.com>
+ <20190801163437.GA8360@kroah.com>
+ <BYAPR02MB400519AC022AB41054C110FDEEDE0@BYAPR02MB4005.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR02MB400519AC022AB41054C110FDEEDE0@BYAPR02MB4005.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like in the commit
-  8b2303de399f ("serial: core: Fix handling of options after MMIO address")
-we may use simple_strtoul() which in comparison to kstrtoul() can do conversion
-in-place without additional and unnecessary code to be written.
+On Thu, Aug 01, 2019 at 07:22:13PM +0000, Matt Sickler wrote:
+> >-----Original Message-----
+> >From: devel <driverdev-devel-bounces@linuxdriverproject.org> On Behalf Of Greg KH
+> >Sent: Thursday, August 01, 2019 11:35 AM
+> >To: Harsh Jain <harshjain32@gmail.com>
+> >Cc: devel@driverdev.osuosl.org; linux-kernel@vger.kernel.org
+> >Subject: Re: [PATCH] staging:kpc2000:Fix dubious x | !y sparse warning
+> >
+> >On Thu, Aug 01, 2019 at 12:06:06AM +0530, Harsh Jain wrote:
+> >> Bitwise OR(|) operation with 0 always yield same result.
+> >> It fixes dubious x | !y sparse warning.
+> >>
+> >> Signed-off-by: Harsh Jain <harshjain32@gmail.com>
+> >> ---
+> >>  drivers/staging/kpc2000/kpc2000_i2c.c | 16 +---------------
+> >>  1 file changed, 1 insertion(+), 15 deletions(-)
+> >>
+> >> diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
+> >> index b108da4..5f027d7c 100644
+> >> --- a/drivers/staging/kpc2000/kpc2000_i2c.c
+> >> +++ b/drivers/staging/kpc2000/kpc2000_i2c.c
+> >> @@ -536,29 +536,15 @@ static u32 i801_func(struct i2c_adapter *adapter)
+> >>
+> >>       u32 f =
+> >>               I2C_FUNC_I2C                     | /* 0x00000001 (I enabled this one) */
+> >> -             !I2C_FUNC_10BIT_ADDR             | /* 0x00000002 */
+> >> -             !I2C_FUNC_PROTOCOL_MANGLING      | /* 0x00000004 */
+> >>               ((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) | /* 0x00000008 */
+> >> -             !I2C_FUNC_SMBUS_BLOCK_PROC_CALL  | /* 0x00008000 */
+> >>               I2C_FUNC_SMBUS_QUICK             | /* 0x00010000 */
+> >> -             !I2C_FUNC_SMBUS_READ_BYTE        | /* 0x00020000 */
+> >> -             !I2C_FUNC_SMBUS_WRITE_BYTE       | /* 0x00040000 */
+> >> -             !I2C_FUNC_SMBUS_READ_BYTE_DATA   | /* 0x00080000 */
+> >> -             !I2C_FUNC_SMBUS_WRITE_BYTE_DATA  | /* 0x00100000 */
+> >> -             !I2C_FUNC_SMBUS_READ_WORD_DATA   | /* 0x00200000 */
+> >> -             !I2C_FUNC_SMBUS_WRITE_WORD_DATA  | /* 0x00400000 */
+> >> -             !I2C_FUNC_SMBUS_PROC_CALL        | /* 0x00800000 */
+> >> -             !I2C_FUNC_SMBUS_READ_BLOCK_DATA  | /* 0x01000000 */
+> >> -             !I2C_FUNC_SMBUS_WRITE_BLOCK_DATA | /* 0x02000000 */
+> >
+> >This is ok, it is showing you that these bits are explicitly being not
+> >set.  Which is good, now you can go through the list and see that all
+> >are accounted for.
+> >
+> >So I think this should stay as-is, thanks.
+> 
+> I was going to say the same thing, but I didn't know what the kernel style guideline was.
+> Would Linus prefer this style or would commenting them out be preferred?
+> Seems like the sparse warnings means the current style is not acceptable?
+> 
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
----
-v4: append Petr's Rb tag
- drivers/auxdisplay/charlcd.c | 34 +++++++---------------------------
- 1 file changed, 7 insertions(+), 27 deletions(-)
+Sparse is just warning that you really are not doing anything here, in
+case you think you are, as it's a common pattern for bugs.
 
-diff --git a/drivers/auxdisplay/charlcd.c b/drivers/auxdisplay/charlcd.c
-index 92745efefb54..3858dc7a4154 100644
---- a/drivers/auxdisplay/charlcd.c
-+++ b/drivers/auxdisplay/charlcd.c
-@@ -287,31 +287,6 @@ static int charlcd_init_display(struct charlcd *lcd)
- 	return 0;
- }
- 
--/*
-- * Parses an unsigned integer from a string, until a non-digit character
-- * is found. The empty string is not accepted. No overflow checks are done.
-- *
-- * Returns whether the parsing was successful. Only in that case
-- * the output parameters are written to.
-- *
-- * TODO: If the kernel adds an inplace version of kstrtoul(), this function
-- * could be easily replaced by that.
-- */
--static bool parse_n(const char *s, unsigned long *res, const char **next_s)
--{
--	if (!isdigit(*s))
--		return false;
--
--	*res = 0;
--	while (isdigit(*s)) {
--		*res = *res * 10 + (*s - '0');
--		++s;
--	}
--
--	*next_s = s;
--	return true;
--}
--
- /*
-  * Parses a movement command of the form "(.*);", where the group can be
-  * any number of subcommands of the form "(x|y)[0-9]+".
-@@ -336,6 +311,7 @@ static bool parse_xy(const char *s, unsigned long *x, unsigned long *y)
- {
- 	unsigned long new_x = *x;
- 	unsigned long new_y = *y;
-+	char *p;
- 
- 	for (;;) {
- 		if (!*s)
-@@ -345,11 +321,15 @@ static bool parse_xy(const char *s, unsigned long *x, unsigned long *y)
- 			break;
- 
- 		if (*s == 'x') {
--			if (!parse_n(s + 1, &new_x, &s))
-+			new_x = simple_strtoul(s + 1, &p, 10);
-+			if (p == s + 1)
- 				return false;
-+			s = p;
- 		} else if (*s == 'y') {
--			if (!parse_n(s + 1, &new_y, &s))
-+			new_y = simple_strtoul(s + 1, &p, 10);
-+			if (p == s + 1)
- 				return false;
-+			s = p;
- 		} else {
- 			return false;
- 		}
--- 
-2.20.1
+So all should be fine, don't worry about it for now.
 
+thanks,
+
+greg k-h
