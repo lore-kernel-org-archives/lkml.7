@@ -2,123 +2,137 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44157C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A74AC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0619220B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C872206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKJz2gJx"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jfTmAkXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbfHADff (ORCPT
+        id S1728769AbfHADiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 23:35:35 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39064 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfHADfe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 23:35:34 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r21so66642967otq.6;
-        Wed, 31 Jul 2019 20:35:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tfDohl1hkWyeEmYeVB02shzd6/LeRxstafK96hHNxW0=;
-        b=oKJz2gJxDCanli9BPv4VG6U/5X4U5UnD11UUuzvvBmj0XdmH2vUg4t7rF8KK6UWDj/
-         QLWbNSok3bW+sM+rdFbWiMCadM6lYkOFsD2qTktf4K1y9l3XetlUSYnazqyn/XJC1VHh
-         +XEXoFVmTI/0cmXV7W0Yx8yesQLFy43K94EW/ZTX+t9S1oXOFQgJlAEn+MKzVgOvXIBj
-         aLSZu7q7VHVyHv/QUaOl8T9BhnVKs/rz+Y53NC7y43LIdInp8iaU+gkCCXj86pTeD/tq
-         Hj8+g7YQOYLwC2uPJJqSuAh2UsFtlX4xjTW8KcGB9ANDKMheaopQLgFVHC7JYYkf0Cw/
-         sp1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tfDohl1hkWyeEmYeVB02shzd6/LeRxstafK96hHNxW0=;
-        b=Jwh3XdXCJIMbfp3XjeX+WTDFJgWxYUr8E+21eaP5K8BHgoQ9UdTHRH/ajUDCpUcwKt
-         qaIvYmKtzm4ZrLVMu1/tzx8GgMBQxiR3QzYmDe7JRQBUJWsoX6cG6HWL1J9RdqNuyJ5O
-         wg7VbJhBO4+DAfFx4mFQuOoKVtLyx9YpDMzOO/nlEcuS7uqQogO7iDXf4PO9WiaePv9L
-         9e+Rg9EgXe8XYRtetp7gUfDxI9KIA0Go8XN6MDkX4qho3WzYqurn8n2Jq99QGe5Buneu
-         wbJh9Tgnyn6wIlhFZrBi9VdXcjrLWasHpVMEY9EySgwgDvEfuhZ2z7DFnH/OFWBJef4L
-         /jKg==
-X-Gm-Message-State: APjAAAUd4ul8admj3RVvEqpCRBDJnqz8tXrsiFrQPBKHj6jMPmt78hG/
-        q+CRQjNHuy5eeOTtOcJiZgzDcllt5CsNnnfJsdw=
-X-Google-Smtp-Source: APXvYqzEj5zqAqL4CVWZMSE8/eXPHQ6/+Opbz5Yftop3kbDtgICLJgAAjsit3aXWYne4p69TTLUGc0flvh/G4IxRPCw=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr11102801oto.118.1564630533734;
- Wed, 31 Jul 2019 20:35:33 -0700 (PDT)
+        Wed, 31 Jul 2019 23:38:46 -0400
+Received: from ozlabs.org ([203.11.71.1]:59349 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727000AbfHADip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 23:38:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zbcK5Z9mz9sNf;
+        Thu,  1 Aug 2019 13:38:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564630722;
+        bh=isPmiUGwY2MF0zG5T4q1ehy6NMVRyd1KzUvIWv/GRUo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jfTmAkXSJfer3viLdhLLGhK7RIAqhzF6lK3Ek71POl9TmeCIFfoBn2fn3W8FPBzSs
+         t/vmko3i/FwzJue9XHFazPz7lZeMO2DTLe+HF2+/a3Ea+5/MLJBR8Z4upo3dBzpKVe
+         MY1ThJ1pbhLymzCSk5AZaCMfY9JZlcdZojxvc7iwqKmYFPAHHeJ1XJ51l58CCzFoxs
+         6O/56bjvhwJA4D8RfBtmAKBbmUByXEkY+lrPIX7T65gbah1SlWGne3YBBT3GQMY2/b
+         RA++38rD/6EkiucuHeH33cGpeNPhEWLJ1GqlmIOZcBdEaTyRguGiZdfccBC4UrP3kq
+         XdsyIPVQl+kdw==
+Date:   Thu, 1 Aug 2019 13:38:41 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>
+Subject: linux-next: build failure after merge of the tip tree
+Message-ID: <20190801133841.64e69541@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1564572438-15518-3-git-send-email-wanpengli@tencent.com>
- <1564573198-16219-1-git-send-email-wanpengli@tencent.com> <9240ada8-8e18-d2b2-006e-41ededb89efb@redhat.com>
-In-Reply-To: <9240ada8-8e18-d2b2-006e-41ededb89efb@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 1 Aug 2019 11:35:17 +0800
-Message-ID: <CANRm+CwJyShOHCanUNmeq8Rr3OWJc1iw0vq5ZAF_WLD-0mSEHA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] KVM: Fix leak vCPU's VMCS value into other pCPU
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        "# v3 . 10+" <stable@vger.kernel.org>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/C8m=IPxq7KGrUarT+ZbNn=6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 at 20:55, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 31/07/19 13:39, Wanpeng Li wrote:
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index ed061d8..12f2c91 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -2506,7 +2506,7 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *me, bool yield_to_kernel_mode)
-> >                               continue;
-> >                       if (vcpu == me)
-> >                               continue;
-> > -                     if (swait_active(&vcpu->wq) && !kvm_arch_vcpu_runnable(vcpu))
-> > +                     if (READ_ONCE(vcpu->preempted) && swait_active(&vcpu->wq))
-> >                               continue;
-> >                       if (READ_ONCE(vcpu->preempted) && yield_to_kernel_mode &&
-> >                               !kvm_arch_vcpu_in_kernel(vcpu))
-> >
->
-> This cannot work.  swait_active means you are waiting, so you cannot be
-> involuntarily preempted.
->
-> The problem here is simply that kvm_vcpu_has_events is being called
-> without holding the lock.  So kvm_arch_vcpu_runnable is okay, it's the
-> implementation that's wrong.
->
-> Just rename the existing function to just vcpu_runnable and make a new
-> arch callback kvm_arch_dy_runnable.   kvm_arch_dy_runnable can be
-> conservative and only returns true for a subset of events, in particular
-> for x86 it can check:
->
-> - vcpu->arch.pv.pv_unhalted
->
-> - KVM_REQ_NMI or KVM_REQ_SMI or KVM_REQ_EVENT
->
-> - PIR.ON if APICv is set
->
-> Ultimately, all variables accessed in kvm_arch_dy_runnable should be
-> accessed with READ_ONCE or atomic_read.
->
-> And for all architectures, kvm_vcpu_on_spin should check
-> list_empty_careful(&vcpu->async_pf.done)
->
-> It's okay if your patch renames the function in non-x86 architectures,
-> leaving the fix to maintainers.  So, let's CC Marc and Christian since
-> ARM and s390 have pretty complex kvm_arch_vcpu_runnable as well.
+--Sig_/C8m=IPxq7KGrUarT+ZbNn=6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ok, just sent patch to do this.
+Hi all,
 
-Regards,
-Wanpeng Li
+After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
+
+drivers/staging/android/vsoc.c: In function 'handle_vsoc_cond_wait':
+drivers/staging/android/vsoc.c:440:33: error: passing argument 1 of 'hrtime=
+r_init_sleeper_on_stack' from incompatible pointer type [-Werror=3Dincompat=
+ible-pointer-types]
+   hrtimer_init_sleeper_on_stack(&to, CLOCK_MONOTONIC,
+                                 ^~~
+In file included from include/linux/pm.h:16,
+                 from include/linux/device.h:23,
+                 from include/linux/dma-mapping.h:7,
+                 from drivers/staging/android/vsoc.c:19:
+include/linux/hrtimer.h:381:67: note: expected 'struct hrtimer_sleeper *' b=
+ut argument is of type 'struct hrtimer_sleeper **'
+ extern void hrtimer_init_sleeper_on_stack(struct hrtimer_sleeper *sl,
+                                           ~~~~~~~~~~~~~~~~~~~~~~~~^~
+
+Caused by commit
+
+  82e18bace3dd ("hrtimer: Consolidate hrtimer_init() + hrtimer_init_sleeper=
+() calls")
+
+I have added the following patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 1 Aug 2019 13:33:44 +1000
+Subject: [PATCH] hrtimer: fix typo in hrtimer_init_sleeper_on_stack() conve=
+rsion
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/staging/android/vsoc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/android/vsoc.c b/drivers/staging/android/vsoc.c
+index 4f7e6c1dce42..1240bb0317d9 100644
+--- a/drivers/staging/android/vsoc.c
++++ b/drivers/staging/android/vsoc.c
+@@ -437,7 +437,7 @@ static int handle_vsoc_cond_wait(struct file *filp, str=
+uct vsoc_cond_wait *arg)
+ 			return -EINVAL;
+ 		wake_time =3D ktime_set(arg->wake_time_sec, arg->wake_time_nsec);
+=20
+-		hrtimer_init_sleeper_on_stack(&to, CLOCK_MONOTONIC,
++		hrtimer_init_sleeper_on_stack(to, CLOCK_MONOTONIC,
+ 					      HRTIMER_MODE_ABS);
+ 		hrtimer_set_expires_range_ns(&to->timer, wake_time,
+ 					     current->timer_slack_ns);
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/C8m=IPxq7KGrUarT+ZbNn=6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1CXsEACgkQAVBC80lX
+0Gzv1Af/Svs9pQ2C9NRXoLQBC6VPuNa+1hZUNJRHFHXCj5BChFx73OESfc55SMce
+o4RIDmxoGdWdGe96sllUnmBcW+lcDQm07H3agp+d/4GAVBKP3cxSw58OMk2B+ExU
+OaVmQx4uUj9l23CDES+WF47nin+Doj4MvXCPaQRE4VRm+x7WfGE7C+WjMs924jLd
+fApgrsXK6dWTz5jvZKReRJY4MyVVCgP/CJR4leji6UzgggHIxdh7l6Oq4e1WZLnu
+Gw9IBDJMgdaTePup81+TPzwzg/k5Pd5EkqRuLE1R9ujY7lGQUM3VLHnvAHRw4ekN
+mJiEjKM8hUOI0AXNqSHGmyTHhx/KVw==
+=SOjt
+-----END PGP SIGNATURE-----
+
+--Sig_/C8m=IPxq7KGrUarT+ZbNn=6--
