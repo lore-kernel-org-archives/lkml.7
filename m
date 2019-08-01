@@ -2,110 +2,69 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FA4C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C3BC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DBF214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:37:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Irrr23fM"
+	by mail.kernel.org (Postfix) with ESMTP id 9E4A3206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:38:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564641499;
+	bh=LO4m7/IlFInRA3rHLgS6MES1MKgAaPMEi+6uNhNyD00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y4SB+D1X56apFVQC/2fC0FzBUPA1b0Mz2ni9a8V7sWaDsnlbRT8WjefZkatwB5Mje
+	 gSSh0kuaSMU38ryM8obLSCZ7bElLNeEBY+EXc/x8MisBl5JI61P23etLYq7tavd0n6
+	 tzXqbxGDPe93YE6maKjO43AIyK6mwSRKCRVWdiWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730036AbfHAGhC (ORCPT
+        id S1730082AbfHAGiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 02:37:02 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35249 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728884AbfHAGg6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 02:36:58 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x25so68265353ljh.2;
-        Wed, 31 Jul 2019 23:36:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X9ZQbHrGzFtjEODVBGVi3gOgXCwBSDCk0xPlVmAv39c=;
-        b=Irrr23fMhTG6al2CUIKvRGL5QX0PhtRLcRnbsblPKgEqQOxD8SJoM0uIVm3vH8a07y
-         sps88K+hpaaGuRLYTRBAE727L6SCNxZHl98YcWCGE2nZBlrKZCFqhQYnFQa3O46eY8lL
-         /DxLFOpm2FTCNqNU9snTg9au+8PRn02r+vYkQ8uFHGAqYPis0WcrgzH4YS4+SDBfQEoV
-         7J4/uuOHdv42lZlMfAfkuWhF1r6IfctmUnPGE8QearmzNB3FBL+pVJ7DCBccFWYyYHn4
-         IiZQ1ElUjB3Z1LOP9E4MADCJzJeaPW8qtNE1bgA7zqga8L4CC95+lpKWT1r1gq4voAWE
-         6ZVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X9ZQbHrGzFtjEODVBGVi3gOgXCwBSDCk0xPlVmAv39c=;
-        b=NpDDvPthk+qRlJgv2aSBvSwFoTO3c1qKXNcXYY2a/Rzt2TJ4I1jz6fmSE5Mjp8P0ka
-         SXHSo4Kpq9FnPNsGHlNN3TpCzamab0TwyV9YOAZM64/TLO0wJnS8vgVteBVjXAKYOb79
-         u+97/EVjZTXpY02Hg2nZLQ9QXuref1mzVVUqNpQlO2BUabyqH+5QKKiNVCKFQnN/fZOJ
-         m94CE75ahEa6bxUJ5IRPu9T+GXlvnF9rHxZjO3K8gqmXzNQny9GyA6VK3QQViPs0UmB7
-         PwKBTOQBRPiWPklaOq3V6GqKERTo4g/3zXer3Wd5873cuI/o+EaClUdKU6Weh5CPE4t8
-         MepQ==
-X-Gm-Message-State: APjAAAXPkYLGoxx6gr40BSrgGJqjVoBcEwth09DSpRZcfYol95v3h7PF
-        A/nCj3wpuLFFcssUuaDe0ocvHGh5zns7eSFKSvM=
-X-Google-Smtp-Source: APXvYqxL/s6TY+Lcm9PtMPnltGMxl9EapEj/9hC3l7HRYjwRx4X4cLUEHb7EUd4m82x93CeGKns2H6cCLt/hUSnHVmU=
-X-Received: by 2002:a2e:b1c1:: with SMTP id e1mr31450663lja.228.1564641416029;
- Wed, 31 Jul 2019 23:36:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
- <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
- <CAFA6WYPJAzbPdcpBqioxjY=T8RLw-73B_hpzX4cGnwVvm5zpJw@mail.gmail.com>
- <CAE=Ncrb23q++z8R8UMbjDE2epEq4YVcNGzrRD31eH3JAooYejg@mail.gmail.com> <CAFA6WYOKcOzSwakHhgshZcebD8ZBMSi7xQdjWYFS79=Xc+odOg@mail.gmail.com>
-In-Reply-To: <CAFA6WYOKcOzSwakHhgshZcebD8ZBMSi7xQdjWYFS79=Xc+odOg@mail.gmail.com>
-From:   Janne Karhunen <janne.karhunen@gmail.com>
-Date:   Thu, 1 Aug 2019 09:36:44 +0300
-Message-ID: <CAE=NcrYz8bT9zDhS_ZcvY84fpeTDxZ-KhJKeQGGyf=o4pG2J-Q@mail.gmail.com>
-Subject: Re: [RFC v2 0/6] Introduce TEE based Trusted Keys support
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, dhowells@redhat.com,
-        jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Thu, 1 Aug 2019 02:38:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43068 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725804AbfHAGiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 02:38:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 531F4AD1E;
+        Thu,  1 Aug 2019 06:38:17 +0000 (UTC)
+Date:   Thu, 1 Aug 2019 08:38:14 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Miles Chen <miles.chen@mediatek.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Qian Cai <cai@lca.pw>
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20190801063814.GC11627@dhcp22.suse.cz>
+References: <20190731161151.26ef081e@canb.auug.org.au>
+ <1564554484.28000.3.camel@mtkswgap22>
+ <20190801155130.29a07b1b@canb.auug.org.au>
+ <20190801061527.GB11627@dhcp22.suse.cz>
+ <1564641003.25219.7.camel@mtkswgap22>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564641003.25219.7.camel@mtkswgap22>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 5:23 PM Sumit Garg <sumit.garg@linaro.org> wrote:
+On Thu 01-08-19 14:30:03, Miles Chen wrote:
+[...]
+> It's the first time that I receive a build warning after the patch has
+> been merged to -mm tree. The build warning had been fixed by Qian,
+> should I send another change for this?
+ 
+No need. Andrew has already picked up the fix for mmotm tree and it
+should show up in linux-next soon.
 
-> > I guess my wording was wrong, tried to say that physical TEEs in the
-> > wild vary massively hardware wise. Generalizing these things is rough.
-> >
->
-> There are already well defined GlobalPlatform Standards to generalize
-> the TEE interface. One of them is GlobalPlatform TEE Client API [1]
-> which provides the basis for this TEE interface.
-
-I'm aware of it - I have implemented a large part of the GP TEE APIs
-earlier (primarily the crypto functions). Does the TEE you work with
-actually support GP properly? Can I take a look at the code?
-
-Normally the TEE implementations are well-guarded secrets and the
-state of the implementation is quite random. In many cases keeping
-things secret is fine from my point of view, given that it is a RoT
-after all. The secrecy is the core business here. So, this is why I
-opted the userspace 'secret' route - no secrets in the kernel, but
-it's fine for the userspace. Umh was a logical fit to implement it.
-
-
---
-Janne
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
