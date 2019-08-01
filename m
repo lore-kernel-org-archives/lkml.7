@@ -2,98 +2,102 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CFEC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41C8C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770AA214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A85214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbfHAH2B (ORCPT
+        id S1730851AbfHAH2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:28:01 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34162 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbfHAH2B (ORCPT
+        Thu, 1 Aug 2019 03:28:07 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:40270 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730801AbfHAH2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:28:01 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1ht5V7-00084G-Tp; Thu, 01 Aug 2019 09:27:50 +0200
-Date:   Thu, 1 Aug 2019 09:27:49 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Daniel Drake <drake@endlessm.com>
-cc:     x86@kernel.org, aubrey.li@linux.intel.com,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Endless Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: setup_boot_APIC_clock() NULL dereference during early boot on
- reduced hardware platforms
-In-Reply-To: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908010918501.1788@nanos.tec.linutronix.de>
-References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 1 Aug 2019 03:28:06 -0400
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x717R6Mk004915;
+        Thu, 1 Aug 2019 10:27:06 +0300
+Received: by taln60.nuvoton.co.il (Postfix, from userid 8441)
+        id 45E6661FD3; Thu,  1 Aug 2019 10:27:06 +0300 (IDT)
+From:   Avi Fishman <avifishman70@gmail.com>
+To:     venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org
+Cc:     avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com,
+        openbmc@lists.ozlabs.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de
+Subject: [PATCH v1 1/2] dt-binding: net: document NPCM7xx EMC 10/100 DT bindings
+Date:   Thu,  1 Aug 2019 10:26:10 +0300
+Message-Id: <20190801072611.27935-2-avifishman70@gmail.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190801072611.27935-1-avifishman70@gmail.com>
+References: <20190801072611.27935-1-avifishman70@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel,
+Added device tree binding documentation for
+Nuvoton NPCM7xx Ethernet MAC Controller (EMC) 10/100 RMII
 
-On Thu, 1 Aug 2019, Daniel Drake wrote:
-> Working with a new consumer laptop based on AMD R7-3700U, we are
-> seeing a kernel panic during early boot (before the display
-> initializes). It's a new product and there is no previous known
-> working kernel version (tested 5.0, 5.2 and current linus master).
-> 
-> We may have also seen this problem on a MiniPC based on AMD APU 7010
-> from another vendor, but we don't have it in hands right now to
-> confirm that it's the exact same crash.
-> 
-> earlycon shows the details: a NULL dereference under
-> setup_boot_APIC_clock(), which actually happens in
-> calibrate_APIC_clock():
-> 
->     /* Replace the global interrupt handler */
->     real_handler = global_clock_event->event_handler;
->     global_clock_event->event_handler = lapic_cal_handler;
-> 
-> global_clock_event is NULL here. This is a "reduced hardware" ACPI
-> platform so acpi_generic_reduced_hw_init() has set timer_init to NULL,
-> avoiding the usual codepaths that would set up global_clock_event.
-> 
-> I tried the obvious:
->  if (!global_clock_event)
->     return -1;
-> 
-> However I'm probably missing part of the big picture here, as this
-> only makes boot fail later on. It continues til the next point that
-> something leads to schedule(), such as a driver calling msleep() or
-> mark_readonly() calling rcu_barrier(), etc. Then it hangs.
-> 
-> Is something missing in terms of timer setup here? Suggestions
-> appreciated...
+Signed-off-by: Avi Fishman <avifishman70@gmail.com>
+---
+ .../bindings/net/nuvoton,npcm7xx-emc.txt      | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt
 
-So that trips over the problem that there is no timer to calibrate against
-and the LAPIC freuency is obviously unknown.
-
-How is the kernel supposed to figure that out?
-
-The only possible option in that case is to use RTC, but we have no support
-for this at all.
-
-Thanks,
-
-	tglx
+diff --git a/Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt b/Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt
+new file mode 100644
+index 000000000000..a7ac3ca66de9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt
+@@ -0,0 +1,38 @@
++Nuvoton NPCM7XX 10/100 Ethernet MAC Controller (EMC)
++
++The NPCM7XX provides one or two Ethernet MAC RMII Controllers
++for WAN/LAN applications
++
++Required properties:
++- device_type     : Should be "network"
++- compatible      : "nuvoton,npcm750-emc" for Poleg NPCM7XX.
++- reg             : Offset and length of the register set for the device.
++- interrupts      : Contain the emc interrupts with flags for falling edge.
++                    first interrupt dedicated to Txirq
++                    second interrupt dedicated to Rxirq
++- phy-mode        : Should be "rmii" (see ethernet.txt in the same directory)
++- clocks          : phandle of emc reference clock.
++- resets          : phandle to the reset control for this device.
++- use-ncsi        : Use the NC-SI stack instead of an MDIO PHY
++
++Example:
++
++emc0: eth@f0825000 {
++	device_type = "network";
++	compatible = "nuvoton,npcm750-emc";
++	reg = <0xf0825000 0x1000>;
++	interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
++	             <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++	phy-mode = "rmii";
++	clocks = <&clk NPCM7XX_CLK_AHB>;
++
++	#use-ncsi; /* add this to support ncsi */
++
++	clock-names = "clk_emc";
++	resets = <&rstc 6>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&r1_pins
++	             &r1err_pins
++	             &r1md_pins>;
++	status = "okay";
++};
+-- 
+2.18.0
 
