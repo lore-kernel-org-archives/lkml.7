@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E29C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A80C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE59A206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0757217D6
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbfHAD6M (ORCPT
+        id S1730199AbfHAD6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 23:58:12 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3689 "EHLO huawei.com"
+        Wed, 31 Jul 2019 23:58:16 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39554 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729784AbfHAD56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 23:57:58 -0400
+        id S1729822AbfHAD6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 23:58:00 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 88576F82D78B676EA873;
+        by Forcepoint Email with ESMTP id B659D202895F335DEBBF;
         Thu,  1 Aug 2019 11:57:56 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 1 Aug 2019 11:57:45 +0800
+ 14.3.439.0; Thu, 1 Aug 2019 11:57:46 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 08/12] net: hns3: simplify hclge_cmd_query_error()
-Date:   Thu, 1 Aug 2019 11:55:41 +0800
-Message-ID: <1564631745-36733-9-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 12/12] net: hns3: activate reset timer when calling reset_event
+Date:   Thu, 1 Aug 2019 11:55:45 +0800
+Message-ID: <1564631745-36733-13-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564631745-36733-1-git-send-email-tanhuazhong@huawei.com>
 References: <1564631745-36733-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,87 +46,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@hisilicon.com>
+When calling hclge_reset_event() within HCLGE_RESET_INTERVAL,
+it returns directly now. If no one call it again, then the
+error which needs a reset to fix it can not be fixed.
 
-The 4th and 5th parameter of hclge_cmd_query_error is useless, so this
-patch removes them.
+So this patch activates the reset timer for this case, and
+adds checking in the end of the reset procedure to make this
+error fixed earlier.
 
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Reviewed-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Reviewed-by: Peng Li <lipeng321@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c    | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index 0a72438..05a4cdb 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -652,16 +652,11 @@ static void hclge_log_error(struct device *dev, char *reg,
-  * @desc: descriptor for describing the command
-  * @cmd:  command opcode
-  * @flag: flag for extended command structure
-- * @w_num: offset for setting the read interrupt type.
-- * @int_type: select which type of the interrupt for which the error
-- * info will be read(RAS-CE/RAS-NFE/RAS-FE etc).
-  *
-  * This function query the error info from hw register/s using command
-  */
- static int hclge_cmd_query_error(struct hclge_dev *hdev,
--				 struct hclge_desc *desc, u32 cmd,
--				 u16 flag, u8 w_num,
--				 enum hclge_err_int_type int_type)
-+				 struct hclge_desc *desc, u32 cmd, u16 flag)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index c4841c3..b7399f5 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -3517,7 +3517,15 @@ static void hclge_reset(struct hclge_dev *hdev)
+ 	hdev->reset_fail_cnt = 0;
+ 	hdev->rst_stats.reset_done_cnt++;
+ 	ae_dev->reset_type = HNAE3_NONE_RESET;
+-	del_timer(&hdev->reset_timer);
++
++	/* if default_reset_request has a higher level reset request,
++	 * it should be handled as soon as possible. since some errors
++	 * need this kind of reset to fix.
++	 */
++	hdev->reset_level = hclge_get_reset_level(ae_dev,
++						  &hdev->default_reset_request);
++	if (hdev->reset_level != HNAE3_NONE_RESET)
++		set_bit(hdev->reset_level, &hdev->reset_request);
+ 
+ 	return;
+ 
+@@ -3552,9 +3560,10 @@ static void hclge_reset_event(struct pci_dev *pdev, struct hnae3_handle *handle)
+ 		handle = &hdev->vport[0].nic;
+ 
+ 	if (time_before(jiffies, (hdev->last_reset_time +
+-				  HCLGE_RESET_INTERVAL)))
++				  HCLGE_RESET_INTERVAL))) {
++		mod_timer(&hdev->reset_timer, jiffies + HCLGE_RESET_INTERVAL);
+ 		return;
+-	else if (hdev->default_reset_request)
++	} else if (hdev->default_reset_request)
+ 		hdev->reset_level =
+ 			hclge_get_reset_level(ae_dev,
+ 					      &hdev->default_reset_request);
+@@ -3584,6 +3593,12 @@ static void hclge_reset_timer(struct timer_list *t)
  {
- 	struct device *dev = &hdev->pdev->dev;
- 	int desc_num = 1;
-@@ -673,8 +668,6 @@ static int hclge_cmd_query_error(struct hclge_dev *hdev,
- 		hclge_cmd_setup_basic_desc(&desc[1], cmd, true);
- 		desc_num = 2;
- 	}
--	if (w_num)
--		desc[0].data[w_num] = cpu_to_le32(int_type);
+ 	struct hclge_dev *hdev = from_timer(hdev, t, reset_timer);
  
- 	ret = hclge_cmd_send(&hdev->hw, &desc[0], desc_num);
- 	if (ret)
-@@ -872,8 +865,7 @@ static int hclge_config_tm_hw_err_int(struct hclge_dev *hdev, bool en)
- 	}
- 
- 	/* configure TM QCN hw errors */
--	ret = hclge_cmd_query_error(hdev, &desc, HCLGE_TM_QCN_MEM_INT_CFG,
--				    0, 0, 0);
-+	ret = hclge_cmd_query_error(hdev, &desc, HCLGE_TM_QCN_MEM_INT_CFG, 0);
- 	if (ret) {
- 		dev_err(dev, "fail(%d) to read TM QCN CFG status\n", ret);
- 		return ret;
-@@ -1410,7 +1402,7 @@ static int hclge_log_rocee_ecc_error(struct hclge_dev *hdev)
- 
- 	ret = hclge_cmd_query_error(hdev, &desc[0],
- 				    HCLGE_QUERY_ROCEE_ECC_RAS_INFO_CMD,
--				    HCLGE_CMD_FLAG_NEXT, 0, 0);
-+				    HCLGE_CMD_FLAG_NEXT);
- 	if (ret) {
- 		dev_err(dev, "failed(%d) to query ROCEE ECC error sts\n", ret);
- 		return ret;
-@@ -1434,7 +1426,7 @@ static int hclge_log_rocee_ovf_error(struct hclge_dev *hdev)
- 
- 	/* read overflow error status */
- 	ret = hclge_cmd_query_error(hdev, &desc[0], HCLGE_ROCEE_PF_RAS_INT_CMD,
--				    0, 0, 0);
-+				    0);
- 	if (ret) {
- 		dev_err(dev, "failed(%d) to query ROCEE OVF error sts\n", ret);
- 		return ret;
-@@ -1483,8 +1475,7 @@ hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
- 
- 	/* read RAS error interrupt status */
- 	ret = hclge_cmd_query_error(hdev, &desc[0],
--				    HCLGE_QUERY_CLEAR_ROCEE_RAS_INT,
--				    0, 0, 0);
-+				    HCLGE_QUERY_CLEAR_ROCEE_RAS_INT, 0);
- 	if (ret) {
- 		dev_err(dev, "failed(%d) to query ROCEE RAS INT SRC\n", ret);
- 		/* reset everything for now */
++	/* if default_reset_request has no value, it means that this reset
++	 * request has already be handled, so just return here
++	 */
++	if (!hdev->default_reset_request)
++		return;
++
+ 	dev_info(&hdev->pdev->dev,
+ 		 "triggering reset in reset timer\n");
+ 	hclge_reset_event(hdev->pdev, NULL);
 -- 
 2.7.4
 
