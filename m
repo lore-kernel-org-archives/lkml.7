@@ -2,309 +2,197 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EDCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C754C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10846206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:59:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AEbGk7v5"
+	by mail.kernel.org (Postfix) with ESMTP id 3D2C3206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732326AbfHAP7x (ORCPT
+        id S1732354AbfHAP75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:59:53 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56805 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729708AbfHAP7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:59:52 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71FxgOX006392
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 1 Aug 2019 08:59:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71FxgOX006392
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564675182;
-        bh=b+KSdwVDhv6OVp0UQeQ+UjCgbhrh0vArb1kMx9kzbic=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=AEbGk7v5vM3RVsWSStdmz+REQmvF0Y53AXIxbV1sYG0o2wGg/9xDYT33dN6U14/x0
-         ICaAmCmMTku4zoHp/RQ3a588IIVBKKhAvBeYbPKAIdVavZLklWP3uQHAwCvjjOGwGG
-         4f1iRGK8vx8lZ1sxAoxg9xAOGk/Sfrdz01BFXlNHXteSdI6mxFScVOZSuRz5Z3xMTR
-         /Pdv6vA+xhdpl1NMsBg/BmjQ9xkSRZXoye568U+GrTcljoLtIvf+xCN+mFMgxIkKf9
-         wv8usUQq+98AI0enA243fbq1oDdFNTkZsFDhPsevqS4dXd8KUTOmwlIeDC59odvJ9c
-         8GzTR4AZbgoqA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71Fxfk6006388;
-        Thu, 1 Aug 2019 08:59:41 -0700
-Date:   Thu, 1 Aug 2019 08:59:41 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Anna-Maria Gleixner <tipbot@zytor.com>
-Message-ID: <tip-1c2df8ac9292ea1fe6c958c198bf6bc5c768acf5@git.kernel.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        anna-maria@linutronix.de, bigeasy@linutronix.de, mingo@kernel.org,
-        hpa@zytor.com, peterz@infradead.org
-Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          mingo@kernel.org, bigeasy@linutronix.de,
-          anna-maria@linutronix.de, peterz@infradead.org, hpa@zytor.com
-In-Reply-To: <20190726185753.832418500@linutronix.de>
-References: <20190726185753.832418500@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] timers: Prepare support for PREEMPT_RT
-Git-Commit-ID: 1c2df8ac9292ea1fe6c958c198bf6bc5c768acf5
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 1 Aug 2019 11:59:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38800 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729708AbfHAP7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 11:59:54 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 331833149650;
+        Thu,  1 Aug 2019 15:59:53 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-117-35.ams2.redhat.com [10.36.117.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B00F760BF4;
+        Thu,  1 Aug 2019 15:59:50 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, shameerali.kolothum.thodi@huawei.com,
+        alex.williamson@redhat.com, robin.murphy@arm.com, hch@infradead.org
+Subject: [PATCH v2] iommu: revisit iommu_insert_resv_region() implementation
+Date:   Thu,  1 Aug 2019 17:59:46 +0200
+Message-Id: <20190801155946.20645-1-eric.auger@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 01 Aug 2019 15:59:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1c2df8ac9292ea1fe6c958c198bf6bc5c768acf5
-Gitweb:     https://git.kernel.org/tip/1c2df8ac9292ea1fe6c958c198bf6bc5c768acf5
-Author:     Anna-Maria Gleixner <anna-maria@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 20:31:00 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 1 Aug 2019 17:43:20 +0200
+Current implementation is recursive and in case of allocation
+failure the existing @regions list is altered. A non recursive
+version looks better for maintainability and simplifies the
+error handling. We use a separate stack for overlapping segment
+merging. The elements are sorted by start address and then by
+type, if their start address match.
 
-timers: Prepare support for PREEMPT_RT
+Note this new implementation may change the region order of
+appearance in /sys/kernel/iommu_groups/<n>/reserved_regions
+files but this order has never been documented, see
+commit bc7d12b91bd3 ("iommu: Implement reserved_regions
+iommu-group sysfs file").
 
-When PREEMPT_RT is enabled, the soft interrupt thread can be preempted.  If
-the soft interrupt thread is preempted in the middle of a timer callback,
-then calling del_timer_sync() can lead to two issues:
-
-  - If the caller is on a remote CPU then it has to spin wait for the timer
-    handler to complete. This can result in unbound priority inversion.
-
-  - If the caller originates from the task which preempted the timer
-    handler on the same CPU, then spin waiting for the timer handler to
-    complete is never going to end.
-
-To avoid these issues, add a new lock to the timer base which is held
-around the execution of the timer callbacks. If del_timer_sync() detects
-that the timer callback is currently running, it blocks on the expiry
-lock. When the callback is finished, the expiry lock is dropped by the
-softirq thread which wakes up the waiter and the system makes progress.
-
-This addresses both the priority inversion and the life lock issues.
-
-This mechanism is not used for timers which are marked IRQSAFE as for those
-preemption is disabled accross the callback and therefore this situation
-cannot happen. The callbacks for such timers need to be individually
-audited for RT compliance.
-
-The same issue can happen in virtual machines when the vCPU which runs a
-timer callback is scheduled out. If a second vCPU of the same guest calls
-del_timer_sync() it will spin wait for the other vCPU to be scheduled back
-in. The expiry lock mechanism would avoid that. It'd be trivial to enable
-this when paravirt spinlocks are enabled in a guest, but it's not clear
-whether this is an actual problem in the wild, so for now it's an RT only
-mechanism.
-
-As the softirq thread can be preempted with PREEMPT_RT=y, the SMP variant
-of del_timer_sync() needs to be used on UP as well.
-
-[ tglx: Refactored it for mainline ]
-
-Signed-off-by: Anna-Maria Gleixner <anna-maria@linutronix.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190726185753.832418500@linutronix.de
-
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
 ---
- include/linux/timer.h |   2 +-
- kernel/time/timer.c   | 103 ++++++++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 96 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 282e4f2a532a..1e6650ed066d 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -183,7 +183,7 @@ extern void add_timer(struct timer_list *timer);
- 
- extern int try_to_del_timer_sync(struct timer_list *timer);
- 
--#ifdef CONFIG_SMP
-+#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT)
-   extern int del_timer_sync(struct timer_list *timer);
- #else
- # define del_timer_sync(t)		del_timer(t)
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 343c7ba33b1c..673c6a0f0c45 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -196,6 +196,10 @@ EXPORT_SYMBOL(jiffies_64);
- struct timer_base {
- 	raw_spinlock_t		lock;
- 	struct timer_list	*running_timer;
-+#ifdef CONFIG_PREEMPT_RT
-+	spinlock_t		expiry_lock;
-+	atomic_t		timer_waiters;
-+#endif
- 	unsigned long		clk;
- 	unsigned long		next_expiry;
- 	unsigned int		cpu;
-@@ -1227,7 +1231,78 @@ int try_to_del_timer_sync(struct timer_list *timer)
- }
- EXPORT_SYMBOL(try_to_del_timer_sync);
- 
--#ifdef CONFIG_SMP
-+#ifdef CONFIG_PREEMPT_RT
-+static __init void timer_base_init_expiry_lock(struct timer_base *base)
-+{
-+	spin_lock_init(&base->expiry_lock);
-+}
-+
-+static inline void timer_base_lock_expiry(struct timer_base *base)
-+{
-+	spin_lock(&base->expiry_lock);
-+}
-+
-+static inline void timer_base_unlock_expiry(struct timer_base *base)
-+{
-+	spin_unlock(&base->expiry_lock);
-+}
-+
-+/*
-+ * The counterpart to del_timer_wait_running().
-+ *
-+ * If there is a waiter for base->expiry_lock, then it was waiting for the
-+ * timer callback to finish. Drop expiry_lock and reaquire it. That allows
-+ * the waiter to acquire the lock and make progress.
-+ */
-+static void timer_sync_wait_running(struct timer_base *base)
-+{
-+	if (atomic_read(&base->timer_waiters)) {
-+		spin_unlock(&base->expiry_lock);
-+		spin_lock(&base->expiry_lock);
-+	}
-+}
-+
-+/*
-+ * This function is called on PREEMPT_RT kernels when the fast path
-+ * deletion of a timer failed because the timer callback function was
-+ * running.
-+ *
-+ * This prevents priority inversion, if the softirq thread on a remote CPU
-+ * got preempted, and it prevents a life lock when the task which tries to
-+ * delete a timer preempted the softirq thread running the timer callback
-+ * function.
-+ */
-+static void del_timer_wait_running(struct timer_list *timer)
-+{
-+	u32 tf;
-+
-+	tf = READ_ONCE(timer->flags);
-+	if (!(tf & TIMER_MIGRATING)) {
-+		struct timer_base *base = get_timer_base(tf);
-+
-+		/*
-+		 * Mark the base as contended and grab the expiry lock,
-+		 * which is held by the softirq across the timer
-+		 * callback. Drop the lock immediately so the softirq can
-+		 * expire the next timer. In theory the timer could already
-+		 * be running again, but that's more than unlikely and just
-+		 * causes another wait loop.
-+		 */
-+		atomic_inc(&base->timer_waiters);
-+		spin_lock_bh(&base->expiry_lock);
-+		atomic_dec(&base->timer_waiters);
-+		spin_unlock_bh(&base->expiry_lock);
-+	}
-+}
-+#else
-+static inline void timer_base_init_expiry_lock(struct timer_base *base) { }
-+static inline void timer_base_lock_expiry(struct timer_base *base) { }
-+static inline void timer_base_unlock_expiry(struct timer_base *base) { }
-+static inline void timer_sync_wait_running(struct timer_base *base) { }
-+static inline void del_timer_wait_running(struct timer_list *timer) { }
-+#endif
-+
-+#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT)
- /**
-  * del_timer_sync - deactivate a timer and wait for the handler to finish.
-  * @timer: the timer to be deactivated
-@@ -1266,6 +1341,8 @@ EXPORT_SYMBOL(try_to_del_timer_sync);
+v1 -> v2:
+- adapt the algo so that we don't need to move elements of
+  other types to different list and sort by address and then by
+  type
+---
+ drivers/iommu/iommu.c | 107 +++++++++++++++++++++++-------------------
+ 1 file changed, 59 insertions(+), 48 deletions(-)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 0c674d80c37f..4257b179fa54 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -229,60 +229,71 @@ static ssize_t iommu_group_show_name(struct iommu_group *group, char *buf)
+  * @new: new region to insert
+  * @regions: list of regions
+  *
+- * The new element is sorted by address with respect to the other
+- * regions of the same type. In case it overlaps with another
+- * region of the same type, regions are merged. In case it
+- * overlaps with another region of different type, regions are
+- * not merged.
++ * Elements are sorted by start address and overlapping segments
++ * of the same type are merged.
   */
- int del_timer_sync(struct timer_list *timer)
+-static int iommu_insert_resv_region(struct iommu_resv_region *new,
+-				    struct list_head *regions)
++int iommu_insert_resv_region(struct iommu_resv_region *new,
++			     struct list_head *regions)
  {
-+	int ret;
-+
- #ifdef CONFIG_LOCKDEP
- 	unsigned long flags;
+-	struct iommu_resv_region *region;
+-	phys_addr_t start = new->start;
+-	phys_addr_t end = new->start + new->length - 1;
+-	struct list_head *pos = regions->next;
++	struct iommu_resv_region *iter, *tmp, *nr, *top;
++	struct list_head stack;
++	bool added = false;
  
-@@ -1283,12 +1360,17 @@ int del_timer_sync(struct timer_list *timer)
- 	 * could lead to deadlock.
- 	 */
- 	WARN_ON(in_irq() && !(timer->flags & TIMER_IRQSAFE));
--	for (;;) {
--		int ret = try_to_del_timer_sync(timer);
--		if (ret >= 0)
--			return ret;
--		cpu_relax();
+-	while (pos != regions) {
+-		struct iommu_resv_region *entry =
+-			list_entry(pos, struct iommu_resv_region, list);
+-		phys_addr_t a = entry->start;
+-		phys_addr_t b = entry->start + entry->length - 1;
+-		int type = entry->type;
++	INIT_LIST_HEAD(&stack);
+ 
+-		if (end < a) {
+-			goto insert;
+-		} else if (start > b) {
+-			pos = pos->next;
+-		} else if ((start >= a) && (end <= b)) {
+-			if (new->type == type)
+-				return 0;
+-			else
+-				pos = pos->next;
+-		} else {
+-			if (new->type == type) {
+-				phys_addr_t new_start = min(a, start);
+-				phys_addr_t new_end = max(b, end);
+-				int ret;
+-
+-				list_del(&entry->list);
+-				entry->start = new_start;
+-				entry->length = new_end - new_start + 1;
+-				ret = iommu_insert_resv_region(entry, regions);
+-				kfree(entry);
+-				return ret;
+-			} else {
+-				pos = pos->next;
+-			}
+-		}
 -	}
-+
-+	do {
-+		ret = try_to_del_timer_sync(timer);
-+
-+		if (unlikely(ret < 0)) {
-+			del_timer_wait_running(timer);
-+			cpu_relax();
+-insert:
+-	region = iommu_alloc_resv_region(new->start, new->length,
+-					 new->prot, new->type);
+-	if (!region)
++	nr = iommu_alloc_resv_region(new->start, new->length,
++				     new->prot, new->type);
++	if (!nr)
+ 		return -ENOMEM;
+ 
+-	list_add_tail(&region->list, pos);
++	/* First add the new elt based on start address sorting */
++	list_for_each_entry(iter, regions, list) {
++		if (nr->start < iter->start) {
++			list_add_tail(&nr->list, &iter->list);
++			added = true;
++			break;
++		} else if (nr->start == iter->start && nr->type <= iter->type) {
++			list_add_tail(&nr->list, &iter->list);
++			added = true;
++			break;
 +		}
-+	} while (ret < 0);
++	}
++	if (!added)
++		list_add_tail(&nr->list, regions);
 +
-+	return ret;
- }
- EXPORT_SYMBOL(del_timer_sync);
- #endif
-@@ -1360,10 +1442,13 @@ static void expire_timers(struct timer_base *base, struct hlist_head *head)
- 		if (timer->flags & TIMER_IRQSAFE) {
- 			raw_spin_unlock(&base->lock);
- 			call_timer_fn(timer, fn, baseclk);
-+			base->running_timer = NULL;
- 			raw_spin_lock(&base->lock);
- 		} else {
- 			raw_spin_unlock_irq(&base->lock);
- 			call_timer_fn(timer, fn, baseclk);
-+			base->running_timer = NULL;
-+			timer_sync_wait_running(base);
- 			raw_spin_lock_irq(&base->lock);
- 		}
- 	}
-@@ -1658,6 +1743,7 @@ static inline void __run_timers(struct timer_base *base)
- 	if (!time_after_eq(jiffies, base->clk))
- 		return;
- 
-+	timer_base_lock_expiry(base);
- 	raw_spin_lock_irq(&base->lock);
- 
- 	/*
-@@ -1684,8 +1770,8 @@ static inline void __run_timers(struct timer_base *base)
- 		while (levels--)
- 			expire_timers(base, heads + levels);
- 	}
--	base->running_timer = NULL;
- 	raw_spin_unlock_irq(&base->lock);
-+	timer_base_unlock_expiry(base);
- }
- 
- /*
-@@ -1930,6 +2016,7 @@ static void __init init_timer_cpu(int cpu)
- 		base->cpu = cpu;
- 		raw_spin_lock_init(&base->lock);
- 		base->clk = jiffies;
-+		timer_base_init_expiry_lock(base);
- 	}
++	/* Merge overlapping segments of type nr->type, if any */
++	list_for_each_entry_safe(iter, tmp, regions, list) {
++		phys_addr_t top_end, iter_end = iter->start + iter->length - 1;
++		bool found = false;
++
++		/* no merge needed on elements of different types than @nr */
++		if (iter->type != nr->type) {
++			list_move_tail(&iter->list, &stack);
++			continue;
++		}
++
++		/* look for the last stack element of same type as @iter */
++		list_for_each_entry_reverse(top, &stack, list)
++			if (top->type == iter->type) {
++				found = true;
++				break;
++			}
++		if (!found) {
++			list_move_tail(&iter->list, &stack);
++			continue;
++		}
++
++		top_end = top->start + top->length - 1;
++
++		if (iter->start > top_end + 1) {
++			list_move_tail(&iter->list, &stack);
++		} else {
++			top->length = max(top_end, iter_end) - top->start + 1;
++			list_del(&iter->list);
++			kfree(iter);
++		}
++	}
++	list_splice(&stack, regions);
+ 	return 0;
  }
  
+-- 
+2.20.1
+
