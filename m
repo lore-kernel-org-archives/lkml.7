@@ -2,31 +2,31 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49F7C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0631C32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A503F2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65802067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbfHABQk (ORCPT
+        id S1729598AbfHABQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 21:16:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33544 "EHLO
+        Wed, 31 Jul 2019 21:16:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33548 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729398AbfHABQh (ORCPT
+        with ESMTP id S1729399AbfHABQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 21:16:37 -0400
+        Wed, 31 Jul 2019 21:16:39 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hszhH-0002IA-Ks; Thu, 01 Aug 2019 03:15:59 +0200
-Message-Id: <20190801010944.174039805@linutronix.de>
+        id 1hszhE-0002I1-Vj; Thu, 01 Aug 2019 03:15:57 +0200
+Message-Id: <20190801010126.245731659@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 01 Aug 2019 03:01:29 +0200
+Date:   Thu, 01 Aug 2019 03:01:26 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -36,17 +36,14 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.cz>,
         "Theodore Tso" <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
         Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
         Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
         Joseph Qi <joseph.qi@linux.alibaba.com>,
         Joel Becker <jlbec@evilplan.org>
-Subject: [patch V2 3/7] fs/buffer: Substitute BH_Uptodate_Lock for RT and bit
- spinlock debugging
-References: <20190801010126.245731659@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [patch V2 0/7] fs: Substitute bit-spinlocks for PREEMPT_RT and
+ debugging
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -57,84 +54,32 @@ preemption, which is undesired for latency reasons and breaks when regular
 spinlocks are taken within the bit_spinlock locked region because regular
 spinlocks are converted to 'sleeping spinlocks' on RT.
 
-Substitute the BH_Uptodate_Lock bit spinlock with a regular spinlock for
-PREEMPT_RT enabled kernels.
-
 Bit spinlocks are also not covered by lock debugging, e.g. lockdep. With
-the spinlock substitution in place, they can be exposed via
-CONFIG_DEBUG_BIT_SPINLOCKS.
+the spinlock substitution in place, they can be exposed via a new config
+switch: CONFIG_DEBUG_BIT_SPINLOCKS.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: "Theodore Ts'o" <tytso@mit.edu>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: linux-fsdevel@vger.kernel.org
----
-V2: Collected Reviewed-by tag
----
- fs/buffer.c                 |    1 +
- include/linux/buffer_head.h |   31 +++++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+This series handles only buffer head and jbd2, but does not touch the
+hlist_bl bit-spinlock usage. See V1 for further details:
 
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -3360,6 +3360,7 @@ struct buffer_head *alloc_buffer_head(gf
- 	struct buffer_head *ret = kmem_cache_zalloc(bh_cachep, gfp_flags);
- 	if (ret) {
- 		INIT_LIST_HEAD(&ret->b_assoc_buffers);
-+		buffer_head_init_locks(ret);
- 		preempt_disable();
- 		__this_cpu_inc(bh_accounting.nr);
- 		recalc_bh_state();
---- a/include/linux/buffer_head.h
-+++ b/include/linux/buffer_head.h
-@@ -76,8 +76,35 @@ struct buffer_head {
- 	struct address_space *b_assoc_map;	/* mapping this buffer is
- 						   associated with */
- 	atomic_t b_count;		/* users using this buffer_head */
-+
-+#if defined(CONFIG_PREEMPT_RT) || defined(CONFIG_DEBUG_BIT_SPINLOCKS)
-+	spinlock_t b_uptodate_lock;
-+#endif
- };
- 
-+#if defined(CONFIG_PREEMPT_RT) || defined(CONFIG_DEBUG_BIT_SPINLOCKS)
-+
-+static inline unsigned long bh_uptodate_lock_irqsave(struct buffer_head *bh)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&bh->b_uptodate_lock, flags);
-+	return flags;
-+}
-+
-+static inline void
-+bh_uptodate_unlock_irqrestore(struct buffer_head *bh, unsigned long flags)
-+{
-+	spin_unlock_irqrestore(&bh->b_uptodate_lock, flags);
-+}
-+
-+static inline void buffer_head_init_locks(struct buffer_head *bh)
-+{
-+	spin_lock_init(&bh->b_uptodate_lock);
-+}
-+
-+#else /* PREEMPT_RT || DEBUG_BIT_SPINLOCKS */
-+
- static inline unsigned long bh_uptodate_lock_irqsave(struct buffer_head *bh)
- {
- 	unsigned long flags;
-@@ -94,6 +121,10 @@ bh_uptodate_unlock_irqrestore(struct buf
- 	local_irq_restore(flags);
- }
- 
-+static inline void buffer_head_init_locks(struct buffer_head *bh) { }
-+
-+#endif /* !PREEMPT_RT && !DEBUG_BIT_SPINLOCKS */
-+
- /*
-  * macro tricks to expand the set_buffer_foo(), clear_buffer_foo()
-  * and buffer_foo() functions.
+  https://lkml.kernel.org/r/20190730112452.871257694@linutronix.de
+
+Changes vs. V1:
+
+  - Collected reviewed-by tags for the BH_Uptodate part
+
+  - Reworked the JBD2 part according to Jan's review:
+
+     - Convert state lock to a regular spinlock unconditionally
+
+     - Refactor jbd2_journal_put_journal_head() to be RT friendly by
+       restricting the bit-spinlock held section to the minimum required
+       operations.
+
+       That part is probably over-engineered, but I'm sure Jan will tell me
+       sooner than later.
+
+Thanks,
+
+        tglx
 
 
