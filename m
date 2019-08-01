@@ -4,122 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E5EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110FEC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20E7206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FE9214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbfHAJgm convert rfc822-to-8bit (ORCPT
+        id S1731247AbfHAJgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:36:42 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:38127 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHAJgl (ORCPT
+        Thu, 1 Aug 2019 05:36:47 -0400
+Received: from 9.mo68.mail-out.ovh.net ([46.105.78.111]:43745 "EHLO
+        9.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHAJgr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:36:41 -0400
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A37A2200003;
-        Thu,  1 Aug 2019 09:36:32 +0000 (UTC)
-Date:   Thu, 1 Aug 2019 11:36:31 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     masonccyang@mxic.com.tw
-Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
-        christophe.kerello@st.com, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, mark.rutland@arm.com, paul@crapouillou.net,
-        paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org,
-        stefan@agner.ch, vigneshr@ti.com
-Subject: Re: [PATCH v6 2/2] dt-bindings: mtd: Document Macronix raw NAND
- controller bindings
-Message-ID: <20190801113631.0dcbbf2a@xps13>
-In-Reply-To: <OF6FA21ABA.C0DF9C78-ON48258449.00331EB3-48258449.0034600D@mxic.com.tw>
-References: <1564631710-30276-1-git-send-email-masonccyang@mxic.com.tw>
-        <1564631710-30276-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190801091310.035bc824@xps13>
-        <OF6FA21ABA.C0DF9C78-ON48258449.00331EB3-48258449.0034600D@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 1 Aug 2019 05:36:47 -0400
+X-Greylist: delayed 1201 seconds by postgrey-1.27 at vger.kernel.org; Thu, 01 Aug 2019 05:36:46 EDT
+Received: from player791.ha.ovh.net (unknown [10.109.160.39])
+        by mo68.mail-out.ovh.net (Postfix) with ESMTP id 43E5913E980
+        for <linux-kernel@vger.kernel.org>; Thu,  1 Aug 2019 10:58:57 +0200 (CEST)
+Received: from kaod.org (lfbn-1-2240-157.w90-76.abo.wanadoo.fr [90.76.60.157])
+        (Authenticated sender: clg@kaod.org)
+        by player791.ha.ovh.net (Postfix) with ESMTPSA id EAA2686678C9;
+        Thu,  1 Aug 2019 08:58:45 +0000 (UTC)
+Subject: Re: [PATCH 1/2] powerpc/xive: Use GFP_KERNEL instead of GFP_ATOMIC in
+ 'xive_irq_bitmap_add()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        allison@lohutok.net, tglx@linutronix.de, groug@kaod.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <cover.1564647619.git.christophe.jaillet@wanadoo.fr>
+ <85d5d247ce753befd6aa63c473f7823de6520ccd.1564647619.git.christophe.jaillet@wanadoo.fr>
+From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Message-ID: <669a1566-4048-1d81-f719-45e4ac05758b@kaod.org>
+Date:   Thu, 1 Aug 2019 10:58:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <85d5d247ce753befd6aa63c473f7823de6520ccd.1564647619.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 12236561665022528369
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrleejgddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+On 01/08/2019 10:32, Christophe JAILLET wrote:
+> There is no need to use GFP_ATOMIC here. GFP_KERNEL should be enough.
+> GFP_KERNEL is also already used for another allocation just a few lines
+> below.
 
-masonccyang@mxic.com.tw wrote on Thu, 1 Aug 2019 17:32:04 +0800:
+This is correct.
+ 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-> Hi Miquel,
-> 
-> > > Document the bindings used by the Macronix raw NAND controller.
-> > > 
-> > > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > > ---
-> > >  Documentation/devicetree/bindings/mtd/mxic-nand.txt | 19   
-> +++++++++++++++++++
-> > >  1 file changed, 19 insertions(+)
-> > >  create mode 100644   
-> Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/  
-> > Documentation/devicetree/bindings/mtd/mxic-nand.txt  
-> > > new file mode 100644
-> > > index 0000000..de37d60
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-> > > @@ -0,0 +1,19 @@
-> > > +Macronix Raw NAND Controller Device Tree Bindings
-> > > +-------------------------------------------------
-> > > +
-> > > +Required properties:
-> > > +- compatible: should be "mxicy,multi-itfc-v009-nand-morph"
-> > > +- reg: should contain 1 entry for the registers
-> > > +- interrupts: interrupt line connected to this raw NAND controller
-> > > +- clock-names: should contain "ps", "send" and "send_dly"
-> > > +- clocks: should contain 3 phandles for the "ps", "send" and
-> > > +    "send_dly" clocks
-> > > +
-> > > +Example:
-> > > +
-> > > +   nand: nand-controller@43c30000 {
-> > > +      compatible = "mxicy,multi-itfc-v009-nand-morph";  
-> > 
-> > "mxicy" looks strange to me, I know it has been used in the past and
-> > cannot be removed, but I don't think it is wise to continue using it
-> > while your use "mxic" in all your other contributions. I would update
-> > the prefix to mxic here and fill-in the relevant doc.
-> > 
-> > Also, what is nand-morph? I thought we were okay for
-> > the "-nand-controller" suffix.
-> >   
-> 
-> I thought there is a node name "nand-controller@43c30000" and the
-> "-nand-controller" suffix in compatible property seems repeated.
 
-It is repeated because it won't be used the same way. The node name
-will only be relevant in the DT itself (to reference a node for
-instance). I will also appear in the sysfs.
-
-The compatibles are listed in drivers and "given" to the kernel core so
-that the device-driver association can take place.
-
-> 
-> In addition, I would like to indicate it's a multi function controller.
-> 
-> nand-morph means this multi interface controller (multi-itfc) works in
-> raw NAND controller.
-
-I think this is clear as you already put "multi-itfc" in the name. If
-you want you can switch to "morph" in the prefix, but I want the suffix
-to be "-nand-controller".
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
 
 Thanks,
-Miquèl
+
+C.
+
+> ---
+>  arch/powerpc/sysdev/xive/spapr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
+> index 8ef9cf4ebb1c..b4f5eb9e0f82 100644
+> --- a/arch/powerpc/sysdev/xive/spapr.c
+> +++ b/arch/powerpc/sysdev/xive/spapr.c
+> @@ -45,7 +45,7 @@ static int xive_irq_bitmap_add(int base, int count)
+>  {
+>  	struct xive_irq_bitmap *xibm;
+>  
+> -	xibm = kzalloc(sizeof(*xibm), GFP_ATOMIC);
+> +	xibm = kzalloc(sizeof(*xibm), GFP_KERNEL);
+>  	if (!xibm)
+>  		return -ENOMEM;
+>  
+> 
+
