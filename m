@@ -2,123 +2,106 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE528C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF7CC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2375216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:18:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="FVUF2I04"
+	by mail.kernel.org (Postfix) with ESMTP id 5F01220838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730965AbfHAMS4 (ORCPT
+        id S1731015AbfHAMVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:18:56 -0400
-Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25518 "EHLO
-        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730918AbfHAMS4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:18:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1564661879; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=G29XdmNqjsJ4D0UPvZdmOLiI/XqItRXT7klctJalvfzJVQPU6RRyXBupxccRjza5hQt0RLMS0p/MfbqXxPYN40zM72TIfw+7+J9QTIDHmOC4pCif7UyYm0ZMrjP6Ld5oAPM/OYMI21CLm+VUg/u0tifLjQxeg532npAcNz7gVsY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1564661879; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=pnXglAPiqfqQmS39+JKh6ck+IIvkfDvKN7TtCs+d+E4=; 
-        b=e4ytnxPkyWJT8aK2aKHexmR/FF43DUG+xrNX4fc2gpPoWgFxwrXmc4B8asTSAHH/TQYBbMgknmcs2jMRt9q5vp4dyYQUIuMHpnh5sYjJsdZJ9noEagU+og+SSJu/5H0kRMSb2xDz9qQAhAUVipDwrk96DNjnUbjxCAf40Ua2z2I=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=h9FfRvLC48226fD9Vji0BAxlthjFOmxHl4RP37NjVI9/Oda7dHI0xRLaE8srxVkPTRK00+RzTeeS
-    pQbyX8MtSUuoolLzt3fnurGj4iDTjuceC1YgvnB0/bqKZlQxanVy  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1564661879;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=1754; bh=pnXglAPiqfqQmS39+JKh6ck+IIvkfDvKN7TtCs+d+E4=;
-        b=FVUF2I049LmMvYZtLCOAjxYP3GmYTY8TpblLJGb/OJcZHDWudjXDtavom2ZLOS/F
-        pgDh4OBeX8ECW9rlkly14EDQ6iCG99anjR04SQamOPiH8t68jwTuqhWQYJwXdVFmffR
-        VAYJGKCKhrIBfJTLvMy4RaWQo6mLTtqRNp38qbCc=
-Received: from localhost.localdomain (171.221.113.137 [171.221.113.137]) by mx.zohomail.com
-        with SMTPS id 1564661878427514.85343183529; Thu, 1 Aug 2019 05:17:58 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        paul@crapouillou.net, paul.burton@mips.com, jhogan@kernel.org,
-        malat@debian.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
-        allison@lohutok.net, syq@debian.org, chenhc@lemote.com,
-        jiaxun.yang@flygoat.com
-Subject: [PATCH 2/2 v3] MIPS: Ingenic: Fix bugs when calculate bogomips/lpj.
-Date:   Thu,  1 Aug 2019 20:16:31 +0800
-Message-Id: <1564661791-47731-3-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564661791-47731-1-git-send-email-zhouyanjie@zoho.com>
-References: <1564498510-3751-1-git-send-email-zhouyanjie@zoho.com>
- <1564661791-47731-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Thu, 1 Aug 2019 08:21:12 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30848 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728791AbfHAMVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:21:12 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 05:21:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,334,1559545200"; 
+   d="scan'208";a="172896234"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Aug 2019 05:21:08 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1htA4w-0003Cp-F3; Thu, 01 Aug 2019 15:21:06 +0300
+Date:   Thu, 1 Aug 2019 15:21:06 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v3 5/7] drivers: Introduce device lookup variants by
+ ACPI_COMPANION device
+Message-ID: <20190801122106.GU23480@smile.fi.intel.com>
+References: <20190723221838.12024-1-suzuki.poulose@arm.com>
+ <20190723221838.12024-6-suzuki.poulose@arm.com>
+ <20190726202353.GA963@kunai>
+ <20190801115856.GS23480@smile.fi.intel.com>
+ <20190801120830.GA1659@ninjato>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801120830.GA1659@ninjato>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable BTB lookups for short loops to fix bugs when calculate
-bogomips and loops_per_jiffy.
+On Thu, Aug 01, 2019 at 02:08:30PM +0200, Wolfram Sang wrote:
+> On Thu, Aug 01, 2019 at 02:58:56PM +0300, Andy Shevchenko wrote:
+> > On Fri, Jul 26, 2019 at 10:23:54PM +0200, Wolfram Sang wrote:
+> > > On Tue, Jul 23, 2019 at 11:18:36PM +0100, Suzuki K Poulose wrote:
+> > > > Add a generic helper to match a device by the ACPI_COMPANION device
+> > > > and provide wrappers for the device lookup APIs.
+> > > > 
+> > > > Cc: Len Brown <lenb@kernel.org>
+> > > > Cc: linux-acpi@vger.kernel.org
+> > > > Cc: linux-spi@vger.kernel.org
+> > > > Cc: Mark Brown <broonie@kernel.org>
+> > > > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > > > Cc: linux-i2c@vger.kernel.org
+> > > > Cc: Mark Brown <broonie@kernel.org>
+> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > > > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > 
+> > > From my side, OK:
+> > > 
+> > > Acked-by: Wolfram Sang <wsa@the-dreams.de> # I2C parts
+> > > 
+> > > yet you missed to cc the I2C ACPI maintainers. Done so now.
+> > 
+> > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > 
+> > Thanks, Wolfram, for notifying.
+> 
+> Sure. There seems to be a problem, though? Please check:
+> 
+> [PATCH 1/3] i2c: Revert incorrect conversion to use generic helper
+> 
+> which came in today.
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
- arch/mips/include/asm/mipsregs.h | 4 ++++
- arch/mips/kernel/cpu-probe.c     | 7 +++++++
- 2 files changed, 11 insertions(+)
+It's again not Cc'ed to all parties.
+But OK, looks good to me.
+Tough may be Jarkko can test all this.
 
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index 1e6966e..bdbdc19 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -689,6 +689,9 @@
- #define MIPS_CONF7_IAR		(_ULCAST_(1) << 10)
- #define MIPS_CONF7_AR		(_ULCAST_(1) << 16)
- 
-+/* Ingenic Config7 bits */
-+#define MIPS_CONF7_BTB_LOOP_EN	(_ULCAST_(1) << 4)
-+
- /* Config7 Bits specific to MIPS Technologies. */
- 
- /* Performance counters implemented Per TC */
-@@ -2813,6 +2816,7 @@ __BUILD_SET_C0(status)
- __BUILD_SET_C0(cause)
- __BUILD_SET_C0(config)
- __BUILD_SET_C0(config5)
-+__BUILD_SET_C0(config7)
- __BUILD_SET_C0(intcontrol)
- __BUILD_SET_C0(intctl)
- __BUILD_SET_C0(srsmap)
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index eb527a1..2bdd3e1 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -1964,6 +1964,13 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
- 		c->cputype = CPU_XBURST;
- 		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
- 		__cpu_name[cpu] = "Ingenic XBurst";
-+		/*
-+		 * The XBurst core by default attempts to avoid branch target
-+		 * buffer lookups by detecting & special casing loops. This
-+		 * feature will cause BogoMIPS and lpj calculate in error.
-+		 * Set cp0 config7 bit 4 to disable this feature.
-+		 */
-+		set_c0_config7(MIPS_CONF7_BTB_LOOP_EN);
- 		break;
- 	default:
- 		panic("Unknown Ingenic Processor ID!");
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
 
 
