@@ -2,149 +2,115 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C4FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1BDC32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA1120838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148CC20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:53:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P53KB114"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kc/HiXp+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387868AbfHARwS (ORCPT
+        id S2387904AbfHARxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 13:52:18 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39681 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbfHARwS (ORCPT
+        Thu, 1 Aug 2019 13:53:22 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17490 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbfHARxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 13:52:18 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so21357695wrt.6;
-        Thu, 01 Aug 2019 10:52:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ohZJTOM9nVguGoUhqHGSECOaLDP5lg21SOn4QPD4lfg=;
-        b=P53KB114bPG4EgaBgRyfA3chKoU/3otrIw46KCIzWQYQyEjpuTgm7aKrzm3F6hlNcr
-         ZKrzO1WkViwDHpdg8FrMm2opE5i09jVNlWH4xvy/ODETlwapOVfP66Vv+nbndxRSZP0z
-         vULLgTsl0WMEwlEOpgl7x3OL4eeXjWoiR1JiRO2jR2T6Tqrjl/tvXXTvHRddAW1oNlkU
-         tehcL615KbtvXZ005vtfrdHZ+RXH27wqTRx37KhDOmnBBMV+856nn15CxT8AOU6kYBDO
-         n1DQjQsvjE/dyC1iRK1dub9H9OXET80d3ma8e+jL7x2AgOPThJyIM9BIxkW8d8axYAhX
-         MM+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ohZJTOM9nVguGoUhqHGSECOaLDP5lg21SOn4QPD4lfg=;
-        b=fESp1MmTR6ST+U9Bgd9aa+SWn8emqVCUrgVJ8ShaOLiqd+7Cso54/wLlJu+Y9RQ2MY
-         1tz0NSkpGTNvyxo3Wo6tYXVg7PJjwSGjQdlKejR/Y0sEU7gMRlx7LlVtlv+Ks/50qBvW
-         WZ1KoPen4TJwCy73QW/Ebyia/WpCTLZKl/Fzfaoech731pkZoRlZs8ITUuvGY7HA3pwL
-         BYy4rGrApRzISBcvvsV4cWethZWNF3vZL+E6OCQFbKmvnMTIH6tj8JNUCuTPHiL4LYCB
-         gPd9fyN2T6MYzi1Q8j8mkm6PhhsNFYzrKBZKnRZRauwWasHA6sSivhDBu975rPgfNyEx
-         mk6g==
-X-Gm-Message-State: APjAAAUHPAb2jAud7FeqDC+ReD6+vNEk9eN1acpLV28BOz68Gec5pIDI
-        H9WzHlHrYp7yKasLq+wfbq5mtDGI
-X-Google-Smtp-Source: APXvYqy7rbdIRAr9veyqwHhwvbVMP3sLU2JgLWFf9cF5qovNnJfXY0HHf9fvnVxMh2KbS00eyEeV3Q==
-X-Received: by 2002:adf:e708:: with SMTP id c8mr40718094wrm.25.1564681935229;
-        Thu, 01 Aug 2019 10:52:15 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id j33sm155544226wre.42.2019.08.01.10.52.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 10:52:14 -0700 (PDT)
-Subject: Re: [PATCH v9 09/15] dt-bindings: memory: tegra30: Convert to
- Tegra124 YAML
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Thu, 1 Aug 2019 13:53:21 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4327110001>; Thu, 01 Aug 2019 10:53:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 01 Aug 2019 10:53:20 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 01 Aug 2019 10:53:20 -0700
+Received: from [10.110.103.107] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 1 Aug
+ 2019 17:53:20 +0000
+Subject: Re: [PATCH v7 10/20] clk: tegra: clk-dfll: Add suspend and resume
+ support
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     Peter De Schrijver <pdeschrijver@nvidia.com>,
         Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190730165618.10122-1-digetx@gmail.com>
- <20190730165618.10122-10-digetx@gmail.com>
- <CAL_JsqL_LA+cW2GbCMdzRTFuv2oKE3pzyOm2UwdzLVLyVTnmNw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <58e25c92-a61d-54f1-e784-ed85804236d7@gmail.com>
-Date:   Thu, 1 Aug 2019 20:52:12 +0300
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Jui Chang Kuo <jckuo@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>, Timo Alho <talho@nvidia.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Sandipan Patra <spatra@nvidia.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+ <1564607463-28802-11-git-send-email-skomatineni@nvidia.com>
+ <4400ffef-685f-b9e6-3b07-4790f851282c@gmail.com>
+ <501a9d0e-ce78-9b35-642d-dff7f9223926@gmail.com>
+ <BYAPR12MB3398C388471BC5811614C8FEC2DE0@BYAPR12MB3398.namprd12.prod.outlook.com>
+ <31990250-e237-ddb9-ce71-29b7c2302fc3@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <0dbc6d22-486c-8b45-bae1-b5ce4efdc370@nvidia.com>
+Date:   Thu, 1 Aug 2019 10:53:21 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqL_LA+cW2GbCMdzRTFuv2oKE3pzyOm2UwdzLVLyVTnmNw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <31990250-e237-ddb9-ce71-29b7c2302fc3@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564682001; bh=7+1PFHicTud3X5V5EB7upBR1QSBsHrLd4rrZFOsAsuU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=kc/HiXp+yv/RKIiD5ZYFWDIGn3g8OcPGCCPnVUXbgrYM5NgD33I+ceTh+gl93GUEr
+         1dykTeQ2sCIRLzcqRAHytJTZFo9y/J1K8xEffgEF4CUtblfIywVqrTeymPuodiLK4M
+         d1Dv40h3CECRQqYG9xmy2erXVSX1tHG8NsEOqcN0c9xqu2fJqReWvb+91ALTVAhV3i
+         EcbhiNyvSM01eKtTfHRpp5DXDK6t3nr8gG3Jyhhi5OTetVPncgbIghYuPhSBTARrM9
+         OPpGuelOP8c7Lt3VUQ9LTSpLx03v1Xn+0XY7P6jtk7fXsXfSTfBTbkETHsLUly9QRI
+         c7W9Y4/Aeis1w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.08.2019 19:25, Rob Herring пишет:
-> On Tue, Jul 30, 2019 at 10:58 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> The Tegra30 binding will actually differ from the Tegra124 a tad, in
->> particular the EMEM configuration description. Hence rename the binding
->> to Tegra124 during of the conversion to YAML.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  .../nvidia,tegra124-mc.yaml                   | 158 ++++++++++++++++++
->>  .../memory-controllers/nvidia,tegra30-mc.txt  | 123 --------------
->>  2 files changed, 158 insertions(+), 123 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->>  delete mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->> new file mode 100644
->> index 000000000000..2e2a116f1911
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
->> @@ -0,0 +1,158 @@
->> +# SPDX-License-Identifier: (GPL-2.0)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/memory-controllers/nvidia,tegra124-mc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: NVIDIA Tegra124 SoC Memory Controller
->> +
->> +maintainers:
->> +  - Jon Hunter <jonathanh@nvidia.com>
->> +  - Thierry Reding <thierry.reding@gmail.com>
->> +
->> +description: |
->> +  Tegra124 SoC features a hybrid 2x32-bit / 1x64-bit memory controller.
->> +  These are interleaved to provide high performance with the load shared across
->> +  two memory channels. The Tegra124 Memory Controller handles memory requests
->> +  from internal clients and arbitrates among them to allocate memory bandwidth
->> +  for DDR3L and LPDDR3 SDRAMs.
->> +
->> +properties:
->> +  compatible:
->> +    const: nvidia,tegra124-mc
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description:
->> +      Physical base address.
-> 
-> You don't really need a description when there's only 1 item. Same on
-> the others below.
-> 
-> With that,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Okay, I'll change that in the next revision. I also assume that the r-b
-applies to all three patches, otherwise please let me know. Thanks!
+On 8/1/19 10:10 AM, Dmitry Osipenko wrote:
+> 01.08.2019 19:10, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> I didn=E2=80=99t updated any patches. This is still same v7 just resent =
+with
+>> CPUFreq maintainers in CC as I missed to add them earlier.
+> There are now two different threads for the same patches, which is not
+> very good. When I said that CPUFreq maintainers should be CC'ed, I
+> didn't mean to resend it all, sorry for not being clear about it. You
+> should've wait for more comments to the original patches and then make a
+> v8. I suggest to do the same in the current situation as well, please
+> address all the current comments and wait for 1-2 days, then make a v8.
+
+Thought version bump is only when changes were made. Got it now.
+
+Thanks Dmitry. Sure, will give some time for all feedbacks before=20
+sending V8.
 
