@@ -7,66 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16785C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CA2C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFC121726
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2FB206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z9EGW8Ep"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MdmQoxQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbfHADov (ORCPT
+        id S1729748AbfHADox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 23:44:51 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37033 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfHADos (ORCPT
+        Wed, 31 Jul 2019 23:44:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36044 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729529AbfHADou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 23:44:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so33148023pfa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 20:44:48 -0700 (PDT)
+        Wed, 31 Jul 2019 23:44:50 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so33153591pfl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 20:44:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/QjSI1b8alIth1E7HJtMuZLsPsx44ZXhw7/4SnNJJUk=;
-        b=Z9EGW8Ep6iZzB6WcT1yvuoOLW03dKeUayVCnQHc9y9QdNBavUwlMez4gbLQk/LbsF7
-         LCH59XX31xuyCrwxPuWmkqkwW4R+5tt+sQ+4V34L1ozXCXAfD0YQPEpvhU0WXzYBxxYH
-         Snq3t4ydBqLPZ5R9Jzg0UofhXZmn7TAMwPahrPHrR6t1S9aYZGG782YeJDh/LKHSVfBh
-         2KtqomAW9xZ0RasEXxXt9JoW4KsPD4khMr3lHmCzE+wu7Kodwgs1sba341KEQ8gb34XE
-         xv+JAZQ46ubfd6OPx0vXFPAJ68eroDUg0X1hN8llrzdOkQ5FhfXZgjoi/RQ1unW7c8T4
-         ec6Q==
+        bh=glR6oLsrJBxGZFPDkXtm2pq0TMtj5d9cDHh+aCshZSM=;
+        b=MdmQoxQbTaoF/R7+yM5VR/ujeIBF5Fb754pcNDvBMGuz9U/tQe77z4f9FvNzWKoVoG
+         Mz02LZDfmF0puZa6CKDNrl8gwFRXEbiivEbkx8WgvhSCOWSic5m399U/oGiIe2RyHBvz
+         QsOXc4BKoo73GYJrYKtveMj6NjvGpP4OBC/sSOmuQQr6RT5gnFCvxP0x8uns39qhyXKm
+         sOFenrXPARzflNWYvqvqWN2uPlujyQukVt3ELkjt2cwvFM43rCyyrRRXPhJ463+lKecb
+         vhhIGfgcbMT3LmhQoEicVKt7ZxJh93HH79tJTQKKHQfvzoMtt5ttIRboolYZoHvlBOja
+         Qn6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/QjSI1b8alIth1E7HJtMuZLsPsx44ZXhw7/4SnNJJUk=;
-        b=nNFj88UoWCBC1/uNEvciRm8f/ioZ5bADlfbFe3v6Qicb2zr8luEb9WIvyL/euvYYsC
-         j50inYRuK9lmTBxSMnTmwplQ4+qHVSEIg4JzaRdD87vrTX8pz7uEJKP9spzhRpkrmpgA
-         A3hCBQMRXaJR/P+vyab8EBtKTKpDvEZZ72ql/JsBwaKyhmFMPU/RAGMTtBqjyh1zvtgt
-         BYhD+PM/WIXVMLyq+2/l1ISooBdGQdUOH5Qr/k0ELbftNMEO33MngJJrZ4QVCDKbfgpa
-         RZaYFpB6iyW3TO2pkt5jGmQv0Hp71C1tSMUTmHOeSq8GWs2vhy13O9roGkKGUGI+xg/D
-         +lPQ==
-X-Gm-Message-State: APjAAAUjMELTYG1tYptnHUA+FWMVYUTZSFS4ShVcnhEK+e82JL1rXL3C
-        qwB+paQwBEQL5OLAx7kEwOMiHwIxX18=
-X-Google-Smtp-Source: APXvYqz5tjq2NsRmnAofXBfa6ee/WnT/EZxT80QAkU/SM9rc9yFnRqsKdy5zrDajaeuaEnnpa8mSsg==
-X-Received: by 2002:a17:90a:9bca:: with SMTP id b10mr6190126pjw.90.1564631087485;
-        Wed, 31 Jul 2019 20:44:47 -0700 (PDT)
+        bh=glR6oLsrJBxGZFPDkXtm2pq0TMtj5d9cDHh+aCshZSM=;
+        b=tIwpyKkj7mOrFi1yYW9y4szrURYKzOL1XtbnMKKfOJQpVTKqSq8MFj11o7pMoEj3xi
+         qzBBVITsUsTxJE1emolTu9hCZm4W3YGkZmubEWHuq5JKRZFqjruBwajJ0XZmy9bNtY/u
+         +xKmNtBTDqxwcf8KUApM8mDU8qKpqXe6m5H1wSY+P3gUGJ1YFTpXcKgDTTpVXhcbcuHY
+         eEpyKdnh4fLtx/EqNAjwtMYkPO7gW43ehl7tGcbfsP+EHSDIcHhMedqVgjAaisQrwLbb
+         DISoNdk67bTeY6D3uyPjtof/WUkXvgdXfvtxf9Uq1clN12Jq9N24eQFW8PwQ3Dy+e01S
+         mUmQ==
+X-Gm-Message-State: APjAAAX04nBZJseleWGhLnf9J5aGaHNFKAgHRMKplhk4I6M5dpAkqXyW
+        /z/8FQ1w7G4tot/F4owyZpi9wO60Vb4=
+X-Google-Smtp-Source: APXvYqwZUyVJCtO5ywHyrzDNXrhYzKt4wEMC/xHUqrhtDKQAar1dMPYAHypw7YosnkttUE4n03KNUg==
+X-Received: by 2002:aa7:8dd2:: with SMTP id j18mr50211433pfr.88.1564631088809;
+        Wed, 31 Jul 2019 20:44:48 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id h70sm64775674pgc.36.2019.07.31.20.44.45
+        by smtp.gmail.com with ESMTPSA id h70sm64775674pgc.36.2019.07.31.20.44.47
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 20:44:46 -0700 (PDT)
+        Wed, 31 Jul 2019 20:44:48 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Da Lv <lvda3@hisilicon.com>, Rongrong Zou <zourongrong@gmail.com>,
+Cc:     John Stultz <john.stultz@linaro.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Yidong Lin <linyidong@huawei.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v3 01/26] drm: kirin: Fix for hikey620 display offset problem
-Date:   Thu,  1 Aug 2019 03:44:14 +0000
-Message-Id: <20190801034439.98227-2-john.stultz@linaro.org>
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v3 02/26] drm: kirin: Get rid of drmP.h includes
+Date:   Thu,  1 Aug 2019 03:44:15 +0000
+Message-Id: <20190801034439.98227-3-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190801034439.98227-1-john.stultz@linaro.org>
 References: <20190801034439.98227-1-john.stultz@linaro.org>
@@ -75,123 +73,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Da Lv <lvda3@hisilicon.com>
+Remove use of drmP.h in kirin driver
 
-The original HiKey (620) board has had a long running issue
-where when using a 1080p montior, the display would occasionally
-blink and come come back with a horizontal offset (usually also
-shifting the colors, depending on the value of the offset%4).
-
-After lots of analysis by HiSi developers, they found the issue
-was due to when running at 1080p, it was possible to hit the
-device memory bandwidth limits, which could cause the DSI signal
-to get out of sync.
-
-Unfortunately the DSI logic doesn't have the ability to
-automatically recover from this situation, but we can get a an
-LDI underflow interrupt when it happens.
-
-To then correct the issue, when we get an LDI underflow irq, we
-we can simply suspend and resume the display, which resets the
-hardware.
-
-Thus, this patch enables the ldi underflow interrupt, and
-initializes a workqueue that is used to suspend/resume the
-display to recover. Then when the irq occurs we clear it and
-schedule the workqueue to reset display engine.
-
-Cc: Rongrong Zou <zourongrong@gmail.com>
 Cc: David Airlie <airlied@linux.ie>
 Cc: Daniel Vetter <daniel@ffwll.ch>
 Cc: dri-devel <dri-devel@lists.freedesktop.org>
 Cc: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Da Lv <lvda3@hisilicon.com>
-Signed-off-by: Yidong Lin <linyidong@huawei.com>
-[jstultz: Reworded the commit message, checkpatch cleanups]
+Suggested-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v2: Minor cleanups
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 6 +++++-
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 4 +++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-v3: Rename workqueue entry for clarity (suggested by Sam)
----
- .../gpu/drm/hisilicon/kirin/kirin_ade_reg.h   |  1 +
- .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   | 22 +++++++++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-index e2ac09894a6d..0da860200410 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-@@ -83,6 +83,7 @@
- #define VSIZE_OFST			20
- #define LDI_INT_EN			0x741C
- #define FRAME_END_INT_EN_OFST		1
-+#define UNDERFLOW_INT_EN_OFST		2
- #define LDI_CTRL			0x7420
- #define BPP_OFST			3
- #define DATA_GATE_EN			BIT(2)
 diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-index ad7042ae2241..d69b5d458950 100644
+index d69b5d458950..9a9e3b688ba3 100644
 --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
 +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-@@ -54,6 +54,7 @@ struct ade_hw_ctx {
- struct ade_crtc {
- 	struct drm_crtc base;
- 	struct ade_hw_ctx *ctx;
-+	struct work_struct display_reset_wq;
- 	bool enable;
- 	u32 out_format;
- };
-@@ -172,6 +173,7 @@ static void ade_init(struct ade_hw_ctx *ctx)
- 	 */
- 	ade_update_bits(base + ADE_CTRL, FRM_END_START_OFST,
- 			FRM_END_START_MASK, REG_EFFECTIVE_IN_ADEEN_FRMEND);
-+	ade_update_bits(base + LDI_INT_EN, UNDERFLOW_INT_EN_OFST, MASK(1), 1);
- }
+@@ -17,8 +17,12 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
++#include <linux/platform_device.h>
  
- static bool ade_crtc_mode_fixup(struct drm_crtc *crtc,
-@@ -341,6 +343,17 @@ static void ade_crtc_disable_vblank(struct drm_crtc *crtc)
- 			MASK(1), 0);
- }
+-#include <drm/drmP.h>
++#include <drm/drm_vblank.h>
++#include <drm/drm_fourcc.h>
++#include <drm/drm_device.h>
++#include <drm/drm_drv.h>
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_crtc.h>
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+index 4a7fe10a37cb..fbab73c5851d 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+@@ -14,8 +14,10 @@
+ #include <linux/of_platform.h>
+ #include <linux/component.h>
+ #include <linux/of_graph.h>
++#include <linux/module.h>
  
-+static void drm_underflow_wq(struct work_struct *work)
-+{
-+	struct ade_crtc *acrtc = container_of(work, struct ade_crtc,
-+					      display_reset_wq);
-+	struct drm_device *drm_dev = (&acrtc->base)->dev;
-+	struct drm_atomic_state *state;
-+
-+	state = drm_atomic_helper_suspend(drm_dev);
-+	drm_atomic_helper_resume(drm_dev, state);
-+}
-+
- static irqreturn_t ade_irq_handler(int irq, void *data)
- {
- 	struct ade_crtc *acrtc = data;
-@@ -358,6 +371,12 @@ static irqreturn_t ade_irq_handler(int irq, void *data)
- 				MASK(1), 1);
- 		drm_crtc_handle_vblank(crtc);
- 	}
-+	if (status & BIT(UNDERFLOW_INT_EN_OFST)) {
-+		ade_update_bits(base + LDI_INT_CLR, UNDERFLOW_INT_EN_OFST,
-+				MASK(1), 1);
-+		DRM_ERROR("LDI underflow!");
-+		schedule_work(&acrtc->display_reset_wq);
-+	}
- 
- 	return IRQ_HANDLED;
- }
-@@ -1034,6 +1053,9 @@ static int ade_drm_init(struct platform_device *pdev)
- 	/* vblank irq init */
- 	ret = devm_request_irq(dev->dev, ctx->irq, ade_irq_handler,
- 			       IRQF_SHARED, dev->driver->name, acrtc);
-+
-+	INIT_WORK(&acrtc->display_reset_wq, drm_underflow_wq);
-+
- 	if (ret)
- 		return ret;
- 
+-#include <drm/drmP.h>
++#include <drm/drm_vblank.h>
++#include <drm/drm_drv.h>
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_fb_cma_helper.h>
+ #include <drm/drm_fb_helper.h>
 -- 
 2.17.1
 
