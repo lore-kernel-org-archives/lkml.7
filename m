@@ -2,109 +2,126 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80659C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54426C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A1E206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2216A20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:48:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AWsvSnZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732422AbfHAVrf (ORCPT
+        id S1732439AbfHAVsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:47:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37971 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfHAVrf (ORCPT
+        Thu, 1 Aug 2019 17:48:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41186 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfHAVsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:47:35 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1htIux-0002yx-Bj; Thu, 01 Aug 2019 23:47:23 +0200
-Date:   Thu, 1 Aug 2019 23:47:22 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-cc:     Oleg Nesterov <oleg@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>, kvm@vger.kernel.org,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [patch 2/5] x86/kvm: Handle task_work on VMENTER/EXIT
-In-Reply-To: <alpine.DEB.2.21.1908012343530.1789@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1908012345000.1789@nanos.tec.linutronix.de>
-References: <20190801143250.370326052@linutronix.de> <20190801143657.887648487@linutronix.de> <20190801162451.GE31538@redhat.com> <alpine.DEB.2.21.1908012025100.1789@nanos.tec.linutronix.de> <20190801213550.GE6783@linux.intel.com>
- <alpine.DEB.2.21.1908012343530.1789@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 1 Aug 2019 17:48:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lqJQbdb3ddUgVtJmTku8tGge+e5tYttwDrfbJdnwdDg=; b=AWsvSnZngSR7rJerNFv7fo4iw
+        Pt/MfwVDCbq1X25wBib0b0DsEVF7HI16DRjSa0tCSLig/2SPPMe5YIUJ+0gOzkF94bKO+gH8eodXg
+        NQaOCt11g6+VAw5rZ5EKOhakMsdkvDpEX+tEB0+tpt1/nsV3cIaLK3y47AJbehYEW9bbiaW8D4qdg
+        cb07o0OykDLT75/XcbdiV7ixQ4vujk2e1s2iqbafSLcUV1NywqGzu4Iy10gzbv4couJNmhr3zJ8Ni
+        RlGuyuBwThOBVuhGDTyq23IxTqOrKrtllhH3hYdnBNGhKA1UsCpUSX2zLpmTJJ8Y4pWQeDxx/kw0a
+        pfaKccHcw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1htIvn-0004OL-CF; Thu, 01 Aug 2019 21:48:15 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C1443202953BA; Thu,  1 Aug 2019 23:48:13 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 23:48:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>
+Subject: Re: [PATCH] perf/x86/amd: Change NMI latency mitigation to use a
+ timestamp
+Message-ID: <20190801214813.GB2332@hirez.programming.kicks-ass.net>
+References: <833ee307989ac6bfb45efe823c5eca4b2b80c7cf.1564685848.git.thomas.lendacky@amd.com>
+ <20190801211613.GB3578@hirez.programming.kicks-ass.net>
+ <b4597324-6eb8-31fa-e911-63f3b704c974@amd.com>
+ <alpine.DEB.2.21.1908012331550.1789@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908012331550.1789@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019, Thomas Gleixner wrote:
-
-> On Thu, 1 Aug 2019, Sean Christopherson wrote:
-> > On Thu, Aug 01, 2019 at 08:34:53PM +0200, Thomas Gleixner wrote:
-> > > On Thu, 1 Aug 2019, Oleg Nesterov wrote:
-> > > > On 08/01, Thomas Gleixner wrote:
-> > > > >
-> > > > > @@ -8172,6 +8174,10 @@ static int vcpu_run(struct kvm_vcpu *vcp
-> > > > >  			++vcpu->stat.signal_exits;
-> > > > >  			break;
-> > > > >  		}
-> > > > > +
-> > > > > +		if (notify_resume_pending())
-> > > > > +			tracehook_handle_notify_resume();
-> > > > 
-> > > > shouldn't you drop kvm->srcu before tracehook_handle_notify_resume() ?
-> > > > 
-> > > > I don't understand this code at all, but vcpu_run() does this even before
-> > > > cond_resched().
+On Thu, Aug 01, 2019 at 11:34:23PM +0200, Thomas Gleixner wrote:
+> On Thu, 1 Aug 2019, Lendacky, Thomas wrote:
+> > On 8/1/19 4:16 PM, Peter Zijlstra wrote:
+> > > On Thu, Aug 01, 2019 at 06:57:41PM +0000, Lendacky, Thomas wrote:
+> > >> From: Tom Lendacky <thomas.lendacky@amd.com>
+> > >>
+> > >> It turns out that the NMI latency workaround from commit 6d3edaae16c6
+> > >> ("x86/perf/amd: Resolve NMI latency issues for active PMCs") ends up
+> > >> being too conservative and results in the perf NMI handler claiming NMIs
+> > >> to easily on AMD hardware when the NMI watchdog is active.
+> > >>
+> > >> This has an impact, for example, on the hpwdt (HPE watchdog timer) module.
+> > >> This module can produce an NMI that is used to reset the system. It
+> > >> registers an NMI handler for the NMI_UNKNOWN type and relies on the fact
+> > >> that nothing has claimed an NMI so that its handler will be invoked when
+> > >> the watchdog device produces an NMI. After the referenced commit, the
+> > >> hpwdt module is unable to process its generated NMI if the NMI watchdog is
+> > >> active, because the current NMI latency mitigation results in the NMI
+> > >> being claimed by the perf NMI handler.
+> > >>
+> > >> Update the AMD perf NMI latency mitigation workaround to, instead, use a
+> > >> window of time. Whenever a PMC is handled in the perf NMI handler, set a
+> > >> timestamp which will act as a perf NMI window. Any NMIs arriving within
+> > >> that window will be claimed by perf. Anything outside that window will
+> > >> not be claimed by perf. The value for the NMI window is set to 100 msecs.
+> > >> This is a conservative value that easily covers any NMI latency in the
+> > >> hardware. While this still results in a window in which the hpwdt module
+> > >> will not receive its NMI, the window is now much, much smaller.
 > > > 
-> > > Yeah, I noticed that it's dropped around cond_resched().
-> > > 
-> > > My understanding is that for voluntary giving up the CPU via cond_resched()
-> > > it needs to be dropped.
-> > > 
-> > > For involuntary preemption (CONFIG_PREEMPT=y) it's not required as the
-> > > whole code section after preempt_enable() is fully preemptible.
-> > > 
-> > > Now the 1Mio$ question is whether any of the notify functions invokes
-> > > cond_resched() and whether that really matters. Paolo?
+> > > Blergh, I so hate all this. The proposed patch is basically duct tape.
 > > 
-> > cond_resched() is called via tracehook_notify_resume()->task_work_run(),
-> > and "kernel code can only call cond_resched() in places where it ...
-> > cannot hold references to any RCU-protected data structures" according to
-> > https://lwn.net/Articles/603252/.
+> > Yeah, I'm not a fan either.
+> > 
+> > > 
+> > > The horribly retarded x86 NMI infrastructure strikes again :/
+> > > 
+> > > Tom; do you have any idea how expensive it is to twiddle CR8 and play
+> > > games with interrupt priorities instead of piling world + dog on this
+> > > one NMI line? (as compared to CLI/STI)
+> > 
+> > I can check on that.  What are you thinking?
 > 
-> Right you are.
+> Avoid the whole NMI mess, make the PMC interrupt a proper vector in the
+> highest prio bucket and instead of using CLI/STI use CR8. That would have
+> the additional advantage that we could prevent perf "NMI" then occsionally :)
 
-Bah. Hit send too fast.
+Exactly, and not only the PMC, we can basically start giving out actual
+vectors on register_nmi_handler() and do away with all that shared line
+crap.
 
-Right you are about cond_resched() being called, but for SRCU this does not
-matter unless there is some way to do a synchronize operation on that SRCU
-entity. It might have some other performance side effect though.
+And then the actual NMI line will be mostly empty again, and it can read
+its stupid slow reason port again.
 
-Thanks,
+One complication though; IRET et al only do EFLAGS, not CR8, so that's
+going to be massive fun :-(
 
-	tglx
-
-
+Did I say I hates the x86 interrupt scheme?
