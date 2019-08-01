@@ -2,126 +2,116 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D301FC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 113E2C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95672206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20F7206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7zESjZM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Aom89KfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbfHAKkl (ORCPT
+        id S1731077AbfHAKn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 06:40:41 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43669 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfHAKkl (ORCPT
+        Thu, 1 Aug 2019 06:43:28 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37015 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729140AbfHAKn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 06:40:41 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c19so49869251lfm.10;
-        Thu, 01 Aug 2019 03:40:39 -0700 (PDT)
+        Thu, 1 Aug 2019 06:43:27 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z28so14645358ljn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 03:43:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=isUGmEYOLpjEg3jfVYEfLLyDXZizpluoarkdQOeJEco=;
-        b=e7zESjZM2/wzjwmiWWWbSAsTWhAV77ru/rCVx4JUymN/53sRSzBFQXud45X8Dr61zK
-         sqmwE48x+NwYk2Cj06PSvNDR8EAL73UGkym1ZfUF++xJXuhNMPXz+ZbmblOckb2EDibR
-         hn6TqYNEl4I925P779zb0qgrYlBYkGxknrNhHKo6jUgsDvnooc9DJ8mSJdetEzKQzfIu
-         yGRZza/lQjKJDFIMW4HrtW4SNKRhMMEr9D67Icb79a0oMCaE2HtXRxR5M4RhrEn5SpKM
-         a576UQfrDmvM2vsFwwi7Yxa0NJUzNBsNMxHNw41zLHW1yIPJgW5/e35MPiKmD1Qk/tSb
-         zgFg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=xJ+XW7erGOKB1qLPzmBxeO8g/P30n/FrQ5rJ6pbczJM=;
+        b=Aom89KfQg4zR8rFKZ7WwksWEApb+WF09Q42ttz2qRwj/xSkGBGezOX+UtiYKI/hUml
+         Do5bTuWh0t94mXcdLlZXXflSRP+PEOuuypvp9qDJOB3khN6LTQcSlKhVgksalzc5gqCr
+         u8z9/fKrkR5wjGzeI6QvFIhVFK920BSw6fUS/vl4oQlni0DwQnCrtgqqiajBWorsj3vB
+         Wmw0NdA5mrbzo6hCIkcYI+y27N7FSap7EEb+jIeLPoUNJAfs7Sl4K21CQ7zAORLIEzXa
+         8Z+PkfpLf3kNT6j2Yx4U2lpuRgVxesgZXbqznFUFPp7oqm+5i6qSsCLqVJXZaT1w7wmG
+         HKVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=isUGmEYOLpjEg3jfVYEfLLyDXZizpluoarkdQOeJEco=;
-        b=ocAW3vNpNejlf8c0y698MOcyJuojw2geujr5OI8EZf8JixVMH5BGYxyF12OwheKIUr
-         FTkdTfoVZjrYAQL6lLfV8xkuHqGIc/iMpZpVLlt3/G8K2a8OuhouDCchfXqv1C8P+dsd
-         Zet/ZJ0cIQSfEO8PU9iF47fqCK9jcvbKzlbzGLkdcrjgFbU5maowA9KThaHBi4VpCbGc
-         2xh8w4QFQSqKfm0c1HP/Lse5r4w5kFs7HdDXpVRCMS31VWfrjBTkcGB8JxnURvRAvKP+
-         QarxpIYxLhb/Bz+SMCtaKJqZ24UyvFuxi+VZcheCsLlaZmPr7uHMGqwUDCV2qchzCwIc
-         chkg==
-X-Gm-Message-State: APjAAAVpPfQFmrrocYYUn3tEzDYHhy5pR6AJwrLW++aj5K8MBLqchcvZ
-        fLMKoKL1ZfUbOrA4QSy8DD5B9YmUQv4xYWyeyXU=
-X-Google-Smtp-Source: APXvYqzBC9Gdh1FFxLOeL/OcODPMG8H50PClL/jL6/hOC+Ro8fVfZSKCPuosp/rXDAuw8uu1AiQV5PVAqbOPMwJCVac=
-X-Received: by 2002:ac2:5181:: with SMTP id u1mr10511367lfi.42.1564656038513;
- Thu, 01 Aug 2019 03:40:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
- <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
- <CAE=NcrY7b8eTTovOszBhGhVbjfJAXoAYehiUJyPENGfwWoVcPw@mail.gmail.com>
- <CAFA6WYOEqe1a1DCyVYKA+oZaZ0n5hnjxdubstUnrwdUW1-4xHw@mail.gmail.com>
- <CAE=NcraDkm5cxE=ceq_9XkQz=NZ6KdVXkNUsdD4G2LrWz-bpDw@mail.gmail.com>
- <CAFA6WYMOXQbL5OeheFUFpTr8gte8XHHr-71-h8+qX0+R_sekDQ@mail.gmail.com>
- <CAE=Ncrae6pM+WBDu9eJ7Fw2Fkvf3_YqH5tj9Tt938D4RtWcdSQ@mail.gmail.com> <CAFA6WYOwcO5-cyaJf3tMMAdyVHJo=BzmCWtsjA3S8aj5g-GZxQ@mail.gmail.com>
-In-Reply-To: <CAFA6WYOwcO5-cyaJf3tMMAdyVHJo=BzmCWtsjA3S8aj5g-GZxQ@mail.gmail.com>
-From:   Janne Karhunen <janne.karhunen@gmail.com>
-Date:   Thu, 1 Aug 2019 13:40:26 +0300
-Message-ID: <CAE=NcrY7zA1OkKwpVrPbPd+c0OymZeAgT2hp6xZ3HQOgbXaZjg@mail.gmail.com>
-Subject: Re: [RFC v2 0/6] Introduce TEE based Trusted Keys support
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, dhowells@redhat.com,
-        jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xJ+XW7erGOKB1qLPzmBxeO8g/P30n/FrQ5rJ6pbczJM=;
+        b=f8mjS9J7EjaLjUf8IBmGHtR2VtXk7i8cy44nOl0mB8bzE3LyypNhjmcS4uUqff/sMz
+         oq4kE1i7VRkEHc7qIv4FNkt7FQQCFEoN1xRLYb3NSwrypGSU9hmX7Ci1SIam8sM+AE10
+         m1zgbSJF0mBJJLijbSpVP0OgKFki5yx7vdEgmjsc8HAIWjLIyJh6DG9wcJ1B4t1sElXq
+         eRKnWooflBUytX/+R6PSC1UPfvN/WfR3KW85XyDVF/T26P6l6UtzcPdljR4BvtcMGM2v
+         J0f+/3ghNReW18BfFdwftVr0iVLPZ50MdqDbUU5XZNml3POZC9iT8mdjCxnrqA6dVBDC
+         KOlA==
+X-Gm-Message-State: APjAAAW6jmbTplS2gwgB9QWXezoDaLRptrDrtf+8T5YgwQJn/jnMLN0Q
+        YGR5zvA8vUh35tqWdSQ9KPWoSA==
+X-Google-Smtp-Source: APXvYqwr7N8nUcsTaa9qhK5CVPXKHkU82/bKtDqYW2xoBvPPjubmYiblEAF8FQu67NzuuouKXRNRGw==
+X-Received: by 2002:a2e:8ecb:: with SMTP id e11mr9432739ljl.218.1564656205540;
+        Thu, 01 Aug 2019 03:43:25 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
+        by smtp.gmail.com with ESMTPSA id u15sm14569573lje.89.2019.08.01.03.43.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 03:43:24 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v5.3-rc3
+Date:   Thu,  1 Aug 2019 12:43:19 +0200
+Message-Id: <20190801104319.25247-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 1:00 PM Sumit Garg <sumit.garg@linaro.org> wrote:
+Hi Linus,
 
-> > > Here TEE isn't similar to a user-space crypto library. In our case TEE
-> > > is based on ARM TrustZone which only allows TEE communications to be
-> > > initiated from privileged mode. So why would you like to route
-> > > communications via user-mode (which is less secure) when we have
-> > > standardised TEE interface available in kernel?
-> >
-> > The physical access guards for reading/writing the involved critical
-> > memory are identical as far as I know? Layered security is generally a
-> > good thing, and the userspace pass actually adds a layer, so not sure
-> > which is really safer?
->
-> AFAIK, layered security is better in case we move from lower privilege
-> level to higher privilege level rather than in reverse order.
+Here's a PR with a couple of MMC fixes intended for v5.3-rc3. Details about the
+highlights are as usual found in the signed tag.
 
-You can look at this in many ways. Another way to look at it is that
-the services should be provided with the least amount of permissions
-required for the task. Further you can containerize something, the
-better.
+Please pull this in!
 
-As for your PLATFORMS support: it is all nice, but there is no way to
-convince op-tee or any other tee to be adopted by many real users.
-Every serious user can and will do their own thing, or at very best,
-buy it from someone who did their own thing and is trusted. There is
-zero chance that samsung, huawei, apple, nsa, google, rambus, payment
-system vendors, .. would actually share the tee (or probably even the
-interfaces). It is just too vital and people do not trust each other
-anymore :(
-
-Anyway, enough about the topic from my side. I guess people will tell
-what they want, I'm fine with any, and it is all progress from the
-current state :)
+Kind regards
+Ulf Hansson
 
 
---
-Janne
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.3-rc1
+
+for you to fetch changes up to 3a6ffb3c8c3274a39dc8f2514526e645c5d21753:
+
+  mmc: mmc_spi: Enable stable writes (2019-07-22 15:31:00 +0200)
+
+----------------------------------------------------------------
+MMC host:
+ - sdhci-sprd: Add a missing pm_runtime_put_noidle() to fix deferred probe
+ - dw_mmc: Fix occasional hang after tuning on eMMC
+ - meson-mx-sdio: Fix misuse of GENMASK macro
+ - mmc_spi: Fix CRC problems for writes by using BDI_CAP_STABLE_WRITES
+
+----------------------------------------------------------------
+Andreas Koop (1):
+      mmc: mmc_spi: Enable stable writes
+
+Baolin Wang (1):
+      mmc: host: sdhci-sprd: Fix the missing pm_runtime_put_noidle()
+
+Douglas Anderson (1):
+      mmc: dw_mmc: Fix occasional hang after tuning on eMMC
+
+Joe Perches (1):
+      mmc: meson-mx-sdio: Fix misuse of GENMASK macro
+
+ drivers/mmc/core/queue.c         | 5 +++++
+ drivers/mmc/host/dw_mmc.c        | 3 +--
+ drivers/mmc/host/meson-mx-sdio.c | 2 +-
+ drivers/mmc/host/sdhci-sprd.c    | 1 +
+ 4 files changed, 8 insertions(+), 3 deletions(-)
