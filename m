@@ -2,104 +2,128 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C4FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3DBC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95E9214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:10:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="PibmSTkB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vpFmvQLp"
+	by mail.kernel.org (Postfix) with ESMTP id E36EC206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbfHAGKq (ORCPT
+        id S1729590AbfHAGLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 02:10:46 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:56753 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729226AbfHAGKq (ORCPT
+        Thu, 1 Aug 2019 02:11:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37888 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728763AbfHAGLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 02:10:46 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 41F9E21F3C;
-        Thu,  1 Aug 2019 02:10:45 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 01 Aug 2019 02:10:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=hOeNybep07VjZ/TbsIdXNPDn5HL
-        BnSZU3O6eiq4ILIg=; b=PibmSTkBgEJD7tlRYhHfO0gjT2CXcpJ82NXLBN/XCQz
-        BI7aA8g4hA4vmgGroLp5QyDY0WdIqSt9huaBOp3ldz86A4C0QrN9yBMAV9ECQSvZ
-        +9/PtQ07cnKpuO6WxvCdYzpU+K3rvtwoVKTniehlPZEO60i/qsJH3Fv8meOy/GjC
-        AlGuywiWKAKrfb78M1jlkI/5KcnnAIjIaovBfqo7RcUkaEg/L6Ewt6upk+h/KXgm
-        w9oHdwB0RYdbNdcEXhRop9uhuKzkApQbObQMyQEzT+WNnAo/1/7HvDRr3xWxKChM
-        XUcHfD4l9uX0XqJ1aVsHu+KvINYPwJW9MmAAz+nynEQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=hOeNyb
-        ep07VjZ/TbsIdXNPDn5HLBnSZU3O6eiq4ILIg=; b=vpFmvQLp+Ex1jnEmZdyR8f
-        cG7HKOwoRtQBBSHKOg0tr3Yr4N5uvXwesn144AoXFlxBE0EIMFHj+5dcNJd52ZxY
-        P4j6ZKy1t2QSxBWi4/qzmshBaOxrpyRjzz+IFgOIUQx2IaH8IPVPwE4A3QoZgwDc
-        2pBeTc569xc1DV2ESOY3sIzyjMEzGEub/cUL+W6MMqkuruLcIXf6RGk8cwIuPTwC
-        bRCr68B0fYHLcJDzg23bz0KuF6bB5atj7BpdF1RJ7YgPcBClZz00g5hb7cOo3wXY
-        anzg2S3uhkFu25nVf3BdnuuCZM2NI2W2s75Zu8r1wrfUXgb2b4HHoX2bASVV9AiQ
-        ==
-X-ME-Sender: <xms:ZIJCXbmTv7jrAHjk7ne7tq0abq_j5mF9rMy36fnUflYzAUVGiordbg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleeigddutddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
-    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:ZIJCXWgyd1dQ6phvgJJ-_-TD4hG-ATNmh-mBms9xKlRQSumlbPj9Kg>
-    <xmx:ZIJCXT32l18KgNSy1RftA0UcmTcohG7rly-tUxs8h74gjgRXGKn-nQ>
-    <xmx:ZIJCXSQr1OnssSo0UA7oS6mRMlL_G9LYyOZ5__6d7OVaPuxWLsEG5Q>
-    <xmx:ZYJCXVx9QWN3j6i2TMFzWsB1y3LKnyTIWS3q6VPeSrcVp8gEfw6oNA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 35B4A380076;
-        Thu,  1 Aug 2019 02:10:44 -0400 (EDT)
-Date:   Thu, 1 Aug 2019 08:10:42 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the driver-core tree
-Message-ID: <20190801061042.GA1132@kroah.com>
-References: <20190801150537.5878bbac@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801150537.5878bbac@canb.auug.org.au>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 1 Aug 2019 02:11:08 -0400
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1ht4Is-0002Hb-Fl
+        for linux-kernel@vger.kernel.org; Thu, 01 Aug 2019 06:11:06 +0000
+Received: by mail-pl1-f197.google.com with SMTP id q11so38909755pll.22
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 23:11:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=QZGV7+BXR1toRoMcvP04+kAINcsNNoog0nbXTRBRUkI=;
+        b=WVAjQjAlnIlxeKt7aRRcB5FoEp4kUPF2k9s92ZclEIy3kyc8pYFGepym7CTQOK9kxo
+         d9BR8BptDaWl5fM4r1NuvxRmuC52/eN+//D5LeZfmfZG/CqttjRPm7awOcYwSHs0dK+o
+         0I89HyWMmq1dsJFutHr7NPorfOTEEp/+aBekc+HktL4GUu1q5YQhww+KdWBDlAhEFK0G
+         jFsB2oEq29WQFBhiVfeN5zmpBr6TO+zhtbht5Rz4Uq4H10Z5Rcz7m542V9iz/8bzY9ix
+         c9cuPCLaNHhu+2d6VKHkA4psy17yb7noxQJegWLS8udI6IxVLSBpo2+iRgnHMSVN4Rel
+         HxAQ==
+X-Gm-Message-State: APjAAAXC+RROgY29vxOx36fJ0GTU+eqFEhHF/1jvJYKkdL+jmx4EKJ6r
+        FWHOMEGvkqzogBzxF7tDtqDtXwnRUzrevoFujMEY6lH2J4HWtdpH1FDqCpN1i1z9ILRG+3gga0e
+        kxwWeCNjNU0oNKPjwmpOyHX1EuHSlOSI4rbyPYezFNg==
+X-Received: by 2002:a17:902:aa95:: with SMTP id d21mr10486359plr.185.1564639865078;
+        Wed, 31 Jul 2019 23:11:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzzXh5jh0NLL++hnpmUdxpOQK3aTn8RT4M9XQoFlEZWbL6U+5kk0SoJW9sp8o1OsqZo1L05qA==
+X-Received: by 2002:a17:902:aa95:: with SMTP id d21mr10486342plr.185.1564639864814;
+        Wed, 31 Jul 2019 23:11:04 -0700 (PDT)
+Received: from 2001-b011-380f-37d3-f52e-c69b-5d89-c245.dynamic-ip6.hinet.net (2001-b011-380f-37d3-f52e-c69b-5d89-c245.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:f52e:c69b:5d89:c245])
+        by smtp.gmail.com with ESMTPSA id 97sm4210103pjz.12.2019.07.31.23.11.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 23:11:04 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] ACPI: PM: Fix regression in acpi_device_set_power()
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <4199592.UtrPOv3ZmA@kreacher>
+Date:   Thu, 1 Aug 2019 14:11:00 +0800
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <27715F95-E729-4EF5-B2BA-03BA3C87AE29@canonical.com>
+References: <4199592.UtrPOv3ZmA@kreacher>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 03:05:37PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the driver-core tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
-> 
-> drivers/i2c/i2c-core-acpi.c:347:12: warning: 'i2c_acpi_find_match_adapter' defined but not used [-Wunused-function]
->  static int i2c_acpi_find_match_adapter(struct device *dev, const void *data)
->             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Introduced by commit
-> 
->   00500147cbd3 ("drivers: Introduce device lookup variants by ACPI_COMPANION device")
+at 07:31, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 
-Oops, missed that one.
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Commit f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in
+> special cases") overlooked the fact that acpi_power_transition() may
+> change the power.state value for the target device and if that
+> happens, it may confuse acpi_device_set_power() and cause it to
+> omit the _PS0 evaluation which on some systems is necessary to
+> change power states of devices from low-power to D0.
+>
+> Fix that by saving the current value of power.state for the
+> target device before passing it to acpi_power_transition() and
+> using the saved value in a subsequent check.
+>
+> Fixes: f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in  
+> special cases")
+> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Reported-by: Mario Limonciello <mario.limonciello@dell.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Suzuki, can you send a follow-on patch to fix this up?
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-thanks,
+> ---
+>  drivers/acpi/device_pm.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> Index: linux-pm/drivers/acpi/device_pm.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/device_pm.c
+> +++ linux-pm/drivers/acpi/device_pm.c
+> @@ -236,13 +236,15 @@ int acpi_device_set_power(struct acpi_de
+>  		if (device->power.flags.power_resources)
+>  			result = acpi_power_transition(device, target_state);
+>  	} else {
+> +		int cur_state = device->power.state;
+> +
+>  		if (device->power.flags.power_resources) {
+>  			result = acpi_power_transition(device, ACPI_STATE_D0);
+>  			if (result)
+>  				goto end;
+>  		}
+>
+> -		if (device->power.state == ACPI_STATE_D0) {
+> +		if (cur_state == ACPI_STATE_D0) {
+>  			int psc;
+>
+>  			/* Nothing to do here if _PSC is not present. */
 
-greg k-h
+
