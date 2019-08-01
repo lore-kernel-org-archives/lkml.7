@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9FBC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7840DC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29410206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F48E2083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388580AbfHAXpT (ORCPT
+        id S2388698AbfHAXpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:45:19 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:32960 "EHLO ale.deltatee.com"
+        Thu, 1 Aug 2019 19:45:24 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:32976 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732215AbfHAXpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:45:18 -0400
+        id S2388581AbfHAXpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 19:45:21 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1htKl2-0002MI-OY; Thu, 01 Aug 2019 17:45:17 -0600
+        id 1htKl2-0002M9-OZ; Thu, 01 Aug 2019 17:45:20 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1htKl2-00025U-Aw; Thu, 01 Aug 2019 17:45:16 -0600
+        id 1htKl1-000253-ED; Thu, 01 Aug 2019 17:45:15 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
@@ -36,8 +36,8 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu,  1 Aug 2019 17:45:09 -0600
-Message-Id: <20190801234514.7941-11-logang@deltatee.com>
+Date:   Thu,  1 Aug 2019 17:45:00 -0600
+Message-Id: <20190801234514.7941-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190801234514.7941-1-logang@deltatee.com>
 References: <20190801234514.7941-1-logang@deltatee.com>
@@ -46,7 +46,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v7 10/14] nvmet-tcp: don't check data_len in nvmet_tcp_map_data()
+Subject: [PATCH v7 01/14] nvme-core: introduce nvme_ctrl_get_by_path()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,32 +54,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With passthru, the data_len is no longer guaranteed to be set
-for all requests. Therefore, we should not check for it to be
-non-zero. Instead check if the SGL length is zero and map
-when appropriate.
+nvme_ctrl_get_by_path() is analagous to blkdev_get_by_path() except it
+gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
+It makes use of filp_open() to open the file and uses the private
+data to obtain a pointer to the struct nvme_ctrl. If the fops of the
+file do not match, -EINVAL is returned.
 
-None of the other transports check data_len which is verified
-in core code.
+The purpose of this function is to support NVMe-OF target passthru.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/nvme/target/tcp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 24 ++++++++++++++++++++++++
+ drivers/nvme/host/nvme.h |  2 ++
+ 2 files changed, 26 insertions(+)
 
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 69b83fa0c76c..db5bc5f444c4 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -320,7 +320,7 @@ static int nvmet_tcp_map_data(struct nvmet_tcp_cmd *cmd)
- 	struct nvme_sgl_desc *sgl = &cmd->req.cmd->common.dptr.sgl;
- 	u32 len = le32_to_cpu(sgl->length);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index e6ee6f2a3da6..f72334f34a30 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2817,6 +2817,30 @@ static const struct file_operations nvme_dev_fops = {
+ 	.compat_ioctl	= nvme_dev_ioctl,
+ };
  
--	if (!cmd->req.data_len)
-+	if (!len)
- 		return 0;
++struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path)
++{
++	struct nvme_ctrl *ctrl;
++	struct file *f;
++
++	f = filp_open(path, O_RDWR, 0);
++	if (IS_ERR(f))
++		return ERR_CAST(f);
++
++	if (f->f_op != &nvme_dev_fops) {
++		ctrl = ERR_PTR(-EINVAL);
++		goto out_close;
++	}
++
++	ctrl = f->private_data;
++	nvme_get_ctrl(ctrl);
++
++out_close:
++	filp_close(f, NULL);
++
++	return ctrl;
++}
++EXPORT_SYMBOL_GPL(nvme_ctrl_get_by_path);
++
+ static ssize_t nvme_sysfs_reset(struct device *dev,
+ 				struct device_attribute *attr, const char *buf,
+ 				size_t count)
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index ecbd90c31d0d..7e827c9e892c 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -484,6 +484,8 @@ int nvme_get_log(struct nvme_ctrl *ctrl, u32 nsid, u8 log_page, u8 lsp,
+ extern const struct attribute_group *nvme_ns_id_attr_groups[];
+ extern const struct block_device_operations nvme_ns_head_ops;
  
- 	if (sgl->type == ((NVME_SGL_FMT_DATA_DESC << 4) |
++struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path);
++
+ #ifdef CONFIG_NVME_MULTIPATH
+ static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
+ {
 -- 
 2.20.1
 
