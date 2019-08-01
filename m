@@ -2,142 +2,110 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C46C8C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6BDC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959A3206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564665076;
-	bh=ZkteFIDU5hCTZNoj7MBn54U7GBILs2U9xPMt+jj97V0=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ePdks4zCellTtnFJlCvsmy2LNgEdO8sLK5TpnOFD7Jgd+ylBWPp8lTGpKn6TReg8O
-	 7SFdhFTCLRIvZV8eK+1E6MqCsT1GDigVE3PJQkg3ZkHnUsfuyAUmuo4v1ZdrWbaXoC
-	 rWZhCZBQ4XNMOfeWOBnTcmgocSHToZG2PEhNoUfs=
+	by mail.kernel.org (Postfix) with ESMTP id 40BB3206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="asicFrWR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731731AbfHANLP (ORCPT
+        id S1731744AbfHANLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:11:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54986 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731683AbfHANK7 (ORCPT
+        Thu, 1 Aug 2019 09:11:20 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:56997 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731663AbfHANKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:10:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=EqDX8e2thuVXATx0vdil8WYAE4YTgcex551s5XdQ6eo=; b=vmlePwupjBvb
-        VfI3ehuL8JQjTAOCtn//7Rn5+f+A4ojEXjtapGtYwvthbixVcLfIT7fRGPopAvSp6ohBPqf8JDRJK
-        iMqTAKbK4wSVThixN2qtqCk87XmmqA5BNmEwktQ8xMVN7RJrAgqHEGdqKrhJGKaCKSn4ZYNP1/lEe
-        XCXTk=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1htArA-0004kD-Az; Thu, 01 Aug 2019 13:10:56 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id CB19E2742C48; Thu,  1 Aug 2019 14:10:55 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: core: Use DEVICE_ATTR_RW() for SPI slave control sysfs attribute" to the spi tree
-In-Reply-To: <20190731124738.14519-1-geert+renesas@glider.be>
-X-Patchwork-Hint: ignore
-Message-Id: <20190801131055.CB19E2742C48@ypsilon.sirena.org.uk>
-Date:   Thu,  1 Aug 2019 14:10:55 +0100 (BST)
+        Thu, 1 Aug 2019 09:10:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1564665053; x=1596201053;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=GDxlgW2iIFv1GHLeEOVVxdcmyywibrFDiGbFKaCrd54=;
+  b=asicFrWRcXGeTsJTdviV8mJf5rk9kRWxQ/AC1jr9+9pPsTFC2SOHa4qj
+   qoGxydSQMpphh4j1/dm/VsFJxkaDgPUYAXfK2S/7V5SXaTVK8VbkofN2h
+   h7VsIAUSbkGUqdcQGdlQfvy2EPdlT1LPndwL50TXbnSEnPvuvJJr6iDpB
+   0=;
+X-IronPort-AV: E=Sophos;i="5.64,334,1559520000"; 
+   d="scan'208";a="407626862"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 01 Aug 2019 13:10:50 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id 83534A21B6;
+        Thu,  1 Aug 2019 13:10:46 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 1 Aug 2019 13:10:45 +0000
+Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.161.219) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 1 Aug 2019 13:10:36 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+        <Jonathan.Cameron@huawei.com>, <nicolas.ferre@microchip.com>,
+        <paulmck@linux.ibm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <hhhawa@amazon.com>
+Subject: [PATCH v4 3/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L2 EDAC
+Date:   Thu, 1 Aug 2019 14:09:55 +0100
+Message-ID: <20190801130956.26388-4-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190801130956.26388-1-hhhawa@amazon.com>
+References: <20190801130956.26388-1-hhhawa@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.219]
+X-ClientProxiedBy: EX13D16UWC004.ant.amazon.com (10.43.162.72) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Document Amazon's Annapurna Labs L2 EDAC SoC binding.
 
-   spi: core: Use DEVICE_ATTR_RW() for SPI slave control sysfs attribute
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From cc8b4659491d23577eb8992449d82c7f4f4fc170 Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Wed, 31 Jul 2019 14:47:38 +0200
-Subject: [PATCH] spi: core: Use DEVICE_ATTR_RW() for SPI slave control sysfs
- attribute
-
-Convert the SPI slave control sysfs attribute from DEVICE_ATTR() to
-DEVICE_ATTR_RW(), to reduce boilerplate.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20190731124738.14519-1-geert+renesas@glider.be
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
 ---
- drivers/spi/spi.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ .../bindings/edac/amazon,al-l2-edac.txt       | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 75ac046cae52..9fd7926e80c0 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2105,8 +2105,8 @@ static int match_true(struct device *dev, void *data)
- 	return 1;
- }
- 
--static ssize_t spi_slave_show(struct device *dev,
--			      struct device_attribute *attr, char *buf)
-+static ssize_t slave_show(struct device *dev, struct device_attribute *attr,
-+			  char *buf)
- {
- 	struct spi_controller *ctlr = container_of(dev, struct spi_controller,
- 						   dev);
-@@ -2117,9 +2117,8 @@ static ssize_t spi_slave_show(struct device *dev,
- 		       child ? to_spi_device(child)->modalias : NULL);
- }
- 
--static ssize_t spi_slave_store(struct device *dev,
--			       struct device_attribute *attr, const char *buf,
--			       size_t count)
-+static ssize_t slave_store(struct device *dev, struct device_attribute *attr,
-+			   const char *buf, size_t count)
- {
- 	struct spi_controller *ctlr = container_of(dev, struct spi_controller,
- 						   dev);
-@@ -2157,7 +2156,7 @@ static ssize_t spi_slave_store(struct device *dev,
- 	return count;
- }
- 
--static DEVICE_ATTR(slave, 0644, spi_slave_show, spi_slave_store);
-+static DEVICE_ATTR_RW(slave);
- 
- static struct attribute *spi_slave_attrs[] = {
- 	&dev_attr_slave.attr,
+diff --git a/Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt b/Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
+new file mode 100644
+index 000000000000..7b0b7347b711
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
+@@ -0,0 +1,20 @@
++* Amazon's Annapurna Labs L2 EDAC
++
++Amazon's Annapurna Labs SoCs supports L2 single bit correction and
++two bits detection capability based on ARM implementation.
++
++Required properties:
++- compatible:
++	should be "amazon,al-l2-edac".
++- l2-cache:
++	Phandle to L2 cache handler.
++	This property is used to compare with the CPU node property
++	'next-level-cache' to create cpu-mask with all CPUs that
++	share same L2 cache.
++
++Example:
++
++	al_l2_edac {
++		compatible = "amazon,al-l2-edac";
++		l2-cache = <&cluster0_l2>;
++	};
 -- 
-2.20.1
+2.17.1
 
