@@ -6,368 +6,160 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C63C32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61C7C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBDD206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8367C206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:40:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="SG8P8pba"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GbP1WOn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387624AbfHARiD (ORCPT
+        id S1731480AbfHARkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 13:38:03 -0400
-Received: from vern.gendns.com ([98.142.107.122]:42890 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbfHARiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 13:38:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=M0+lmhMY/kVlilI5RT8aTHXxBHFB5ycxtuzjEePjo5c=; b=SG8P8pbahdEQoYPH8H0dFQewzH
-        Klotmdm9ulKVce0hbZ+Jt/KBhJSofeKLx2FpjlF+ncdinWtSrQi3IsARH1+Coq8N/qR3wAPkk/pa+
-        3TVDNkARVpoAjlja2UG5L8LGdDc8k1Dbfwns8hvTi3amvCVLYRpuoo1bI/U37uWWVC3r1iMbq6vqK
-        t80i4IySgxDTapIXFqM/e1HxNM3V+/IMPH3Gr6I9suE+QnrN0kqRm/Cj1sa+F9L1iuCQ8j2hE+6Ix
-        zUKdK8VeD0VgLT47iv69u6U99tKeI5H5blyceJ8h2y/Iz59PH/Nna/Wd6JgJ8Rg4q1M/6RJS1azjP
-        PGOlvx8g==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:43324 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1htF1Z-001vIN-FQ; Thu, 01 Aug 2019 13:37:57 -0400
-Subject: Re: [PATCH 0/4] new driver for TI eQEP
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190725124037.GA4802@icarus>
- <4616508c-d753-586d-0d3b-5a003e86f582@lechnology.com>
- <20190730044536.GA5063@icarus>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <1b913919-beb9-34e7-d915-6bcc40eeee1d@lechnology.com>
-Date:   Thu, 1 Aug 2019 12:37:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 1 Aug 2019 13:40:07 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:46664 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728885AbfHARkH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 13:40:07 -0400
+Received: by mail-pg1-f173.google.com with SMTP id k189so15550315pgk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 10:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CV5KJuMKRvWixx4ezJXBxyoNVGaMRk943Xwor61oWZ0=;
+        b=GbP1WOn7/9PbIdwzkuN3chiaHFkVcDH4NKdncXl3s7kSJdiV0EEUoJZC2VqgFk60VL
+         Yov+7ppDp+2EHRdy1Lm951VSrXGW4vAim5laato1MVSD0uv0DAdp/psPC/BHwey0vLJh
+         bzese9evswLR5zaJ/OoTR2rVvExaDbATR/q+Q+tyySHqyS3m8XVF7/dvrzhXeU4EvTp+
+         p87YTxAEHBgktCoCuDblWGazQ7iy/PKCt3NkfQN5WUcemvyhOJxlUKBYhC3aD+PLkBA+
+         nBI12Flko+joy8/C0UMWYycemDIGK4P9JBLCfK6mUMgOHlZWoLtVAakH7NjaHzbpIzDu
+         yMmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=CV5KJuMKRvWixx4ezJXBxyoNVGaMRk943Xwor61oWZ0=;
+        b=ResP684md9jLap6vCB39A1OYJhfwNy7VQ67DJZ0wjsWLFJ8y/7qPZp1FRXlOTF1aZ5
+         92TZTAeuWZRXYsHayQERvo3YGTHoIUqoSEsmxfvmidBTmnV2vCIRJwYjjXI5tMFsOl6C
+         V8y681oinlicq3qlHJBSVSW58l7SghfIKXA/V5b3LQDafaSWMqAnLSzlOiUIJXiijNVN
+         RTdT1RVZx9t2usdXmbHTAAfKgp5b7IA9DgKFwOgNojfV4VQEf3+3GRDa+q21Vc6jhC37
+         LBN9OieQbomviuekrzHtgvALh0yaJ8hAOZthBTlPTeJTTgGOEZB2hPkL2qROiNtICR09
+         ppwA==
+X-Gm-Message-State: APjAAAX+PoimFfGi6uxnPBMM3hDaB8exYRSXWQJAFIEY5YI/H/v+hM/5
+        QXUaW8279xPppEryuu9raQ==
+X-Google-Smtp-Source: APXvYqyaoMJ8U5sAG1dzNMGShf6YvDYPBBsDeYcG2HtyD3zlzFDQ0i1obCTsJ8125fdPc2XwL2U9KQ==
+X-Received: by 2002:aa7:8e17:: with SMTP id c23mr55055415pfr.227.1564681205765;
+        Thu, 01 Aug 2019 10:40:05 -0700 (PDT)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id j12sm63983783pff.4.2019.08.01.10.40.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 10:40:05 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:7163:ab94:3829:eba3])
+        by serve.minyard.net (Postfix) with ESMTPSA id AB2B3180039;
+        Thu,  1 Aug 2019 17:40:03 +0000 (UTC)
+Date:   Thu, 1 Aug 2019 12:40:02 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH] ipmi_si_intf: use usleep_range() instead of busy looping
+Message-ID: <20190801174002.GC5001@minyard.net>
+Reply-To: minyard@acm.org
+References: <20190709210643.GJ657710@devbig004.ftw2.facebook.com>
+ <20190709214602.GD19430@minyard.net>
+ <20190709220908.GL657710@devbig004.ftw2.facebook.com>
+ <20190709230144.GE19430@minyard.net>
+ <20190710142221.GO657710@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190730044536.GA5063@icarus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710142221.GO657710@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/19 11:45 PM, William Breathitt Gray wrote:
-> On Thu, Jul 25, 2019 at 05:52:21PM -0500, David Lechner wrote:
->> On 7/25/19 7:40 AM, William Breathitt Gray wrote:
->>> On Mon, Jul 22, 2019 at 10:45:34AM -0500, David Lechner wrote:
->>>> This series adds device tree bindings and a new counter driver for the Texas
->>>> Instruments Enhanced Quadrature Encoder Pulse (eQEP).
->>>>
->>>> As mentioned in one of the commit messages, to start with, the driver only
->>>> supports reading the current counter value and setting the min/max values.
->>>> Other features can be added on an as-needed basis.
->>>>
->>>> The only other feature I am interested in is adding is getting time data in
->>>> order to calculate the rotational speed of a motor. However, there probably
->>>> needs to be a higher level discussion of how this can fit into the counter
->>>> subsystem in general first.
->>>
->>> I believe exposing some sort of time data has merit. Quadrature counter
->>> devices in particular are commonly used for position tracking of
->>> automation systems, and such systems would benefit from velocity/speed
->>> information. So let's try to introduce that sort of functionality in this
->>> driver if possible.
->>>
->>> First, let's discuss your specific use case and requirements, and hopefully we
->>> can generalize it enough to be of use for future drivers. From your description,
->>> it sounds like you're attaching some sort of rotary encoder to the eQEP device.
->>> Is that correct? What sort of time data are you hoping to use; does the eQEP
->>> device provide a clock value, or would you be grabbing a timestamp from the
->>> system?
->>
->> My use case is robotics using LEGO MINDSTORMS. More specifically, I am using
->> motors that have a cheap optical rotary encoder (plastic wheel and infrared
->> LED/detectors) that give 360 counts per 1 rotation of the motor shaft. One count
->> is defined as the rising edge or falling edge of the A signal. We are looking at
->> anywhere from 0 to around 2000 counts per second. We use the speed as feedback in
->> a control algorithm to drive the motor at a constant speed. The control loop
->> updates on the order of 1 to 10 ms.
->>
->> Because the encoder resolution and speeds are relatively low, we are currently
->> logging a timestamp for each count. If no count occurs for 50ms, then we log the
->> same count again with a new timestamp (otherwise we would never see 0 speed). To
->> get the actual speed, we find the first timestamp > 20 ms before the current
->> timestamp then compute the speed as the change in position divided by the change
->> in time between these two samples. This give a fairly accurate speed across most
->> of the range, but does get a bit noisy once we get below 100 counts per second.
->> It also means that we need a ring buffer that holds about 50 samples.
->>
->> The timestamp itself comes from the eQEP, not the system. There are latching
->> registers to ensure that the timestamp read is from exactly the moment when
->> the count register was read.
+On Wed, Jul 10, 2019 at 07:22:21AM -0700, Tejun Heo wrote:
+> Hello,
 > 
-> So if I understand correctly, there are two registers you're reading: a
-> count register and a timestamp register. The count register is updated
-> by the rotation of the motor shaft, while the timestamp register is
-> updated by reading the count register (thus logging the time associated
-> with the read count value).
+> On Tue, Jul 09, 2019 at 06:01:44PM -0500, Corey Minyard wrote:
+> > > I'm really not sure "carefully tuned" is applicable on indefinite busy
+> > > looping.
+> > 
+> > Well, yeah, but other things were tried and this was the only thing
+> > we could find that worked.  That was before the kind of SMP stuff
+> > we have now, though.
+> 
+> I see.
+> 
+> > > We can go for shorter timeouts for sure but I don't think this sort of
+> > > busy looping is acceptable.  Is your position that this must be a busy
+> > > loop?
+> > 
+> > Well, no.  I want something that provides as high a throughput as
+> > possible and doesn't cause scheduling issues.  But that may not be
+> > possible.  Screwing up the scheduler is a lot worse than slow IPMI
+> > firmware updates.
+> > 
+> > How short can the timeouts be and avoid issues?
+> 
+> We first tried msleep(1) and that was too slow even for sensor reading
+> making it take longer than 50s.  With the 100us-200us sleep, it got
+> down to ~5s which was good enough for our use case and the cpu /
+> scheduler impact was still mostly negligible.  I can't tell for sure
+> without testing but going significantly below 100us is likely to
+> become visible pretty quickly.
 
-That is correct.
+I spent some time looking at this.  Without the patch, I
+measured around 3.5ms to send/receive a get device ID message
+and uses 100% of the CPU on a core.
 
-> 
->>> I'm not sure yet if it would make sense to expose rotational speed directly as
->>> an attribute. If we were to expose just the count value and timestamp since the
->>> last read, that should be enough for a user to compute the delta and derive
->>> speed. I'll think more about this since some devices may simplify that case if
->>> the hardware is able to compute the speed for us.
->>>
->>
->> I agree that it probably doesn't make sense to expect drivers to compute the
->> speed. There isn't really a general way to do that works for an arbitrary
->> speed. For example at high speeds, it is better to just look at the change
->> in counts over a fixed interval rather than triggering a timestamp based on
->> a certain number of counts.
-> 
-> This is a good point. Depending on the resolution the user cares about,
-> they may be more interested in the speed over a short time interval
-> versus a long time interval. It doesn't seem practical to have the driver
-> try to handle all possible speed calculations when the user can decide
-> themselves how best to use the data.
-> 
->> I also don't think having a timestamp sysfs attribute would be very useful.
->> To make it work at all, I think it would have to be implemented such that
->> it returns the timestamp for the count that was most recently read via sysfs.
->> And it would require 4 syscalls (2 seeks and 2 reads) to get a single count/
->> timestamp pair in a control loop. On a 300MHz ARM9 processor, this is not
->> a negligible amount of time.
-> 
-> This is a concern I've had as well. The sysfs interface is useful in
-> that it provides an intuitive and human-friendly way to expose data
-> about devices. But as you note, there is considerable overhead in the
-> amount of syscalls we have to make to interact with multiple attributes.
-> 
-> One solution that may work is providing a character device interface in
-> addition to the sysfs interface. I believe that should reduce the
-> syscall overhead since a user can pass in a data structure with a
-> configuration defining what data/actions they want, and receive back
-> all data in a single syscall.
+I measured your patch, it slowed it down to around 10.5ms
+per message, which is not good.  Though it did just use a
+few percent of the core.
 
-Just toying with the idea here, but I've been thinking that it might
-work well to be able to mmap a char device to access a ring buffer.
-Then there should basically be no overhead at all from getting information
-from the kernel to userspace.
+I wrote some code to auto-adjust the timer.  It settled on
+a delay around 35us, which gave 4.7ms per message, which is
+probably acceptable, and used around 40% of the CPU.  If
+I use any timeout (even a 0-10us range) it won't go below
+4ms per message.
+
+The process is running at nice 19 priority, so it won't
+have a significant effect on other processes from a priority
+point of view.  It may still be hitting the scheduler locks
+pretty hard, though.  But I played with things quite a bit
+and the behavior or the management controller is too
+erratic to set a really good timeout.  Maybe other ones
+are better, don't know.
+
+One other option we have is that the driver has something
+called "maintenance mode".  If it detect that you have
+reset the management controller or are issuing firmware
+commands, it will modify timeout behavior.  It can also
+be activated manually.  I could also make it switch to
+just calling schedule instead of delaying when in that
+mode.
+
+The right thing it do is complain bitterly to vendors who
+build hardware that has to be polled.  But besides that,
+I'm thinking the maintenance mode is the thing to do.
+It will also change behavior if you reset the management
+controller, but only for 30 seconds or so.  Does that
+work?
+
+-corey
 
 > 
-> I think concern over latency was one of the reasons the GPIO subsystem
-> gained a character device interface as well. It's an addition to the
-> Counter subsystem that is worth considering, but the possible downsides
-> to such an interface should also be investigated.
->   
->> I noticed that several of the other counter drivers also register an IIO
->> device. So this got me thinking that perhaps the counter subsystem should
->> just be for configuring a counter device an then the IIO subsystem should
->> be used for triggers and ring buffers.
->>
->> For the general case a counter device could have two possible triggers.
->> One that triggers an interrupt after X counts and another that triggers
->> with a period of T nanoseconds (or microseconds). Both triggers would add
->> a count/timestamp pair to an IIO ring buffer.
->>
->> To fully reproduce our current methodology the first trigger would actually
->> need two configurable settings, the count X that triggers every X counts and
->> a watchdog time setting (using terminology from eQEP docs) that will also
->> trigger if and only if the count does not change before the time has elapsed.
->> Note, this is different from the other proposed time based trigger which
->> would cause a trigger interrupt at a fixed period regardless of whether
->> the count changed or not.
+> We can also take a hybrid approach where we busy poll w/ 1us udelay
+> upto, say, fifty times and then switch to sleeping poll.
 > 
-> The counter drivers in the kernel right now are registering IIO devices
-> in order to keep the preexisting (but now deprecated) IIO Counter
-> interface working for these devices -- some users may be using this
-> older interface so we don't want to remove it cold turkey. Regardless,
-> there's nothing the prevents incorporating the IIO interface with your
-> Counter drivers; in fact, in some circumstances it's better that you do
-> just that.
+> Are there some tests which can be used to verify the cases which may
+> get impacted by these changes?
 > 
-> The key idea to recognize is how the Counter subsystem differs from the
-> IIO subsystem on a conceptual level: the IIO subsystem provides an
-> interface for your device by describing it on a hardware level, whereas
-> the Counter subsystem provides an interface for your device by
-> describing it on a more abstract level.
+> Thanks.
 > 
-> What I mean is that every interface interaction in the Counter subsystem
-> relates to the abstract concept of an ideal "counter device" (Counts,
-> Synapses, Signals); if a device functionality or data does not relate
-> directly to those ideal counter device components, then the Counter
-> subsystem isn't that right interface for it.
-> 
-> For example, it makes sense to have an "enable" attribute or "present"
-> attribute, because these functionalities/data are directly related to
-> the Count, Synapse, and Signal components conceptually. However, in the
-> Counter subsystem you will likely not see something like the IIO
-> "in_voltageY_supply_raw" attribute -- not because that data is not
-> useful to know about for the operation of the counter device hardware,
-> but because it is outside the scope of the Counter subsystem paradigm
-> (i.e. it does not directly related to Counts, Synapses, or Signals).
-> As such, this would be a case where the counter driver should register
-> both a Counter device and IIO device, one to handle the counter device
-> on an abstract level while the other provides an interface for control
-> of the more specific hardware details.
-
-Makes sense. I that case, I don't see a need for an IIO device for the
-eQEP.
-
-> 
->> ---
->>
->> Thinking more generally though, I think what I would propose is adding a new
->> component to the existing list of Count, Signal and Synapse. The new component
->> could be called Event. Event would be more general than the trigger conditions
->> I have just discussed. In addition to those two, it could be any event
->> generated by the hardware, such as an error condition or a change in direction.
->>
->> Drivers could register an arbitrary number of events for each Count, so we
->> would have /sys/bus/counter/devices/counterX/eventY/*. There should be a few
->> standard attributes, like "name" and "enable". Configurable events would need
->> ext attributes to allow configuration.
->>
->> However, I see that there are already preset and error_noise "events" for
->> count objects, so maybe we don't do the eventY thing and keep it flatter (or
->> is the counter subsystem still considered in "staging" where breaking ABI
->> changes could be made?).
-> 
-> The components for handling events already exist in the Counter
-> interface paradigm: Signals and Synapses. Although, the Counter
-> subsystem is currently lacking the implementation (I still need to code
-> in support for interrupts and such), the paradigm itself supports the
-> concept of events and triggers.
-> 
-> Recall that the Counter subsystem represents hardware via the
-> abstraction of an idealized "counter device". This is important to
-> understand because it means that Signals are not necessarily limited to
-> the physical wires of the hardware. To summarize the Counter interface
-> paradigm:
-> 
->      * A Signal is a stream of data to be evaluated.
->      * A Synapse is a trigger condition based on the evaluation of the
->        data streams (i.e. the Signals).
->      * A Count is the accumulation of the effects of Synapses (i.e. the
->        triggers).
-> 
-> As such, in order to represent an event, you would add in a Signal to
-> represent the stream of device events, and a Synapse defining the
-> specific event that will trigger the action. I'll give an example in
-> order to demonstrate what I mean.
-> 
-> A simple clock can be conceptualize as a proper counter device: an
-> oscillation is a Signal, a rising edge from that oscillation line can be
-> the Synapse, and the current clock value is the Count.
-> 
->                  Count                Synapse          Signal
->                  -----                -------          ------
->          +---------------------+
->          | Data: Clock ticks   |    Rising Edge     _____________
->          | Function: Increase  |  <-------------   / Oscillation \
->          |                     |                  _________________
->          +---------------------+
-> 
-> Now, in order to represent your timestamping clock we need two Signals:
-> a simple clock and an event stream. The simple clock is the source of
-> the current clock ticks we will store, while the event stream provides
-> the rotation count register read notification that will trigger the
-> timestamp.
-> 
->                     Count                       Synapse      Signal
->                     -----                       -------      ------
->          +-------------------------------+
->          | Data: Timestamp               |       None        _______
->          | Function: Current clock ticks |  <------------   / Clock \
->          |                               |                 ___________
->          |                               |
->          |                               |    Read event     ________
->          |                               |  <------------   / Events \
->          |                               |                 ____________
->          +-------------------------------+
-> 
-> Note that in this case both Signals either do not exist in or are not
-> exposed by the hardware (maybe the simple clock is exposed, but it's not
-> necessary to be) -- they are meant to be abstract representations of the
-> components of the timestamp clock as an idealized "counter device".
-> 
-> By organizing the timestamp clock in this way, we can control and
-> configure the components using the standard Counter interface: common
-> attributes such as "name", "preset", "enable", etc. can now be exposed
-> to users like every other counter device component.
-
-This way of looking at things makes very much sense. Thanks for the
-detailed explanation.
-
-> 
-> In theory we can sleep on the timestamp count attribute read (or
-> character device equivalent if we go down that route), and be woken when
-> an event triggers updating the timestamp value. However, the current
-> Counter subsystem implementation is lacking the code for this so it
-> needs to be added to the core functionality first.
-> 
->> When thinking about what events would actually do when enabled though, it
->> seems like we should be using IIO events and triggers (we have found reading
->> sysfs attributes to be insufficient performance-wise). It seems like unnecessary
->> work to reproduce all of this in the counter subsystem. Which makes me wonder if
->> it would be better to have counter devices just be a different device type (i.e.
->> different struct device_type for dev->type) in the IIO subsystem instead of
->> creating a completely new subsystem.
-> 
-> I plan on adding interrupt support for the 104-QUAD-8 counter driver
-> since this device has some useful interrupts on configured threshold
-> conditions and such, so having the ability to handle an event rather
-> than constantly read and loop is something I want to have in the Counter
-> subsystem.
-> 
-> It's possible that I can reuse some code from the IIO subsystem, as
-> Jonathan pointed out, but overall I believe these should be separate
-> subsystems. From the reasons described above, the IIO subsystem and
-> Counter subsystem have different goals and thus different
-> implementations. I don't think that's a bad thing, and we can share code
-> in the few cases where the two may overlap.
-> 
-> Regarding whether to use IIO events and triggers within the TI eQEP
-> counter driver, I think we should wait for a proper Counter subsystem
-> implementation to be added first. My fear is that we'll have a similar
-> situation as what happened with IIO_COUNT, where we'll have to keep a
-> IIO interface present with a newer Counter interface. If adding in event
-> support to the Counter subsystem will take too long, we can add this TI
-> eQEP driver as-is now and later add in the timestamp support.
-
-I don't think we need triggers anymore since I now better understand
-what a synapse does.
-
----
-
-In summary, this has been a very helpful discussion. Back the the patch
-series I have submitted, I think it still makes sense to merge it now
-as-is (barring any serious issues) and the additional functionality we
-have been discussing can be added in the future as the framework for it
-is developed.
-
-
-
+> -- 
+> tejun
