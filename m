@@ -2,129 +2,75 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E492C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5834C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1701120644
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:11:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mjjKlnnd"
+	by mail.kernel.org (Postfix) with ESMTP id 8A0CB20644
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:12:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388046AbfHASLr (ORCPT
+        id S2388102AbfHASMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 14:11:47 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34519 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732904AbfHASLq (ORCPT
+        Thu, 1 Aug 2019 14:12:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37536 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732044AbfHASMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 14:11:46 -0400
-Received: by mail-io1-f67.google.com with SMTP id k8so146453222iot.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 11:11:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7MPd9Z2BvCtW7Jj5gv1G0oE0SQQ2Vxu4lTK1/nmzm1Y=;
-        b=mjjKlnndG/GVdJ2j0Hg/y21fENjZrPYmRXprn1WIV7jx1SFh4AKaGH6jAMk+6QX0b7
-         8MAe2ZM+HcBcGCigoIvlWqL3V9NE0D8RrWqeVkaXe7XqLQWa9/3iAo7hvm1eoLZsDCTD
-         KPZu7tNADpUrbzM3RdL9AfiLGqRc71KwRISis=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7MPd9Z2BvCtW7Jj5gv1G0oE0SQQ2Vxu4lTK1/nmzm1Y=;
-        b=AsjrvsEKOb+Xh6lYbTOQm2WYAwLThjfmMWCW0wP6snyVm+MvAQiDF61I9gH5bq1D/h
-         L4MTdLfd52dngZ1KSjR8vu7zYIwyrW1+yPAySQ4xK18R0U5IN4EG6yLrDOMpEUdhYhgc
-         NKF7fqeocfBLlEZ5qz1EXstDDnA+QO1z79Gr0llTHfrORE9w2IdaHJb5TZ3Z9SocQpWI
-         nbAA3BWFmtAweT9u+j/xM/piiS80VYATVRs6v07Ego5yv5DR5YlgdRMR/fsqFnm8cUtL
-         SP6tIo334lkE+NI37l6O6g/H9hBzCEYiGw//vdjWwthYc/uqGl/8i6b3CwvIFA5NMz/H
-         V/Cg==
-X-Gm-Message-State: APjAAAXRBgRIwT00ZxFq5Y77DZrG0H170o6iY2VvdLSZE5PRigndZUeF
-        dMHLc6mp+S2PoBVVDFWtVps68Po6vqMhaym3uBnABD0Eohg=
-X-Google-Smtp-Source: APXvYqys9OKV3WWO1jdTMSSqa3FCsNk1iOy3DY3kCK56G261uJszlQ4eZ7b5tSvUocfF99RAqKyEnoaFs161mi78zUo=
-X-Received: by 2002:a6b:e60b:: with SMTP id g11mr125198636ioh.9.1564683105971;
- Thu, 01 Aug 2019 11:11:45 -0700 (PDT)
+        Thu, 1 Aug 2019 14:12:55 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1htFYi-0006nw-Cj; Thu, 01 Aug 2019 20:12:12 +0200
+Date:   Thu, 1 Aug 2019 20:12:11 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jan Kara <jack@suse.cz>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.com>,
+        Theodore Tso <tytso@mit.edu>, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Joel Becker <jlbec@evilplan.org>, linux-ext4@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [patch V2 6/7] fs/jbd2: Make state lock a spinlock
+In-Reply-To: <20190801175703.GH25064@quack2.suse.cz>
+Message-ID: <alpine.DEB.2.21.1908012010020.1789@nanos.tec.linutronix.de>
+References: <20190801010126.245731659@linutronix.de> <20190801010944.457499601@linutronix.de> <20190801175703.GH25064@quack2.suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
- <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com>
-In-Reply-To: <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com>
-From:   Micah Morton <mortonm@chromium.org>
-Date:   Thu, 1 Aug 2019 11:11:34 -0700
-Message-ID: <CAJ-EccOqmmrf2KPb7Z7NU6bF_4W1XUawLLy=pLekCyFKqusjKQ@mail.gmail.com>
-Subject: Re: [GIT PULL] SafeSetID MAINTAINERS file update for v5.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry about that. To fix it I did a "git reset hard" to before any of
-those commits by Jann Horn, then fast-forwarded to the v5.3-rc2 tag
-and force pushed that to my origin/master then pushed a new branch up
-with my MAINTAINERS file changes. Hopefully this is a valid fix.
+On Thu, 1 Aug 2019, Jan Kara wrote:
+> On Thu 01-08-19 03:01:32, Thomas Gleixner wrote:
+> > As almost all functions which use this lock have a journal head pointer
+> > readily available, it makes more sense to remove the lock helper inlines
+> > and write out spin_*lock() at all call sites.
+> > 
+> 
+> Just a heads up that I didn't miss this patch. Just it has some bugs and I
+> figured that rather than explaining to you subtleties of jh lifetime it is
+> easier to fix up the problems myself since you're probably not keen on
+> becoming jbd2 developer ;)... which was more complex than I thought so I'm
+> not completely done yet. Hopefuly tomorrow.
 
---
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+I'm curious where I was too naive :)
 
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+Thanks for having a look!
 
-are available in the Git repository at:
-
-  https://github.com/micah-morton/linux.git
-  tags/safesetid-maintainers-correction-5.3-rc2
-
-for you to fetch changes up to fc5b34a35458314df1dd00281f6e41f419581aa9:
-
-  Add entry in MAINTAINERS file for SafeSetID LSM (2019-08-01 10:30:57 -0700)
-
-----------------------------------------------------------------
-Add entry in MAINTAINERS file for SafeSetID LSM.
-
-Has not had any bake time or testing, since its just changes to a text file.
-
-----------------------------------------------------------------
-Micah Morton (1):
-      Add entry in MAINTAINERS file for SafeSetID LSM
-
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-On Thu, Aug 1, 2019 at 6:25 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, Jul 31, 2019 at 2:30 PM Micah Morton <mortonm@chromium.org> wrote:
-> >
-> > You mentioned a couple weeks ago it would be good if I added myself to
-> > the MAINTAINERS file for the SafeSetID LSM. Here's the pull request
-> > for v5.3.
->
-> There's a lot more than the maintainer ID in there. You've rebased old
-> patches that I already had etc:
->
->   Jann Horn (10):
->       LSM: SafeSetID: fix pr_warn() to include newline
->       LSM: SafeSetID: fix check for setresuid(new1, new2, new3)
->       LSM: SafeSetID: refactor policy hash table
->       LSM: SafeSetID: refactor safesetid_security_capable()
->       LSM: SafeSetID: refactor policy parsing
->       LSM: SafeSetID: fix userns handling in securityfs
->       LSM: SafeSetID: rewrite userspace API to atomic updates
->       LSM: SafeSetID: add read handler
->       LSM: SafeSetID: verify transitive constrainedness
->       LSM: SafeSetID: fix use of literal -1 in capable hook
->
->   Micah Morton (2):
->       Merge commit 'v5.3-rc2^0'
->       Add entry in MAINTAINERS file for SafeSetID LSM
->
-> Not pulled.
->
->                   Linus
+       tglx
