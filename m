@@ -2,173 +2,70 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D99C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B562C32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D469520665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A07E214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731024AbfHAIT0 convert rfc822-to-8bit (ORCPT
+        id S1731076AbfHAIUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:19:26 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:38845 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbfHAIT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:19:26 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x718JDMC025230
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 1 Aug 2019 17:19:13 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x718JD2t023372;
-        Thu, 1 Aug 2019 17:19:13 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x718Isjq021046;
-        Thu, 1 Aug 2019 17:19:13 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.147] [10.38.151.147]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-7316139; Thu, 1 Aug 2019 17:17:39 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC19GP.gisp.nec.co.jp ([10.38.151.147]) with mapi id 14.03.0439.000; Thu, 1
- Aug 2019 17:17:38 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Jane Chu <jane.chu@oracle.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Subject: Re: [PATCH v3 2/2] mm/memory-failure: Poison read receives SIGKILL
- instead of SIGBUS if mmaped more than once
-Thread-Topic: [PATCH v3 2/2] mm/memory-failure: Poison read receives SIGKILL
- instead of SIGBUS if mmaped more than once
-Thread-Index: AQHVQzSPZWUqS0z8rU+q1hsF+rBObKblZd+A
-Date:   Thu, 1 Aug 2019 08:17:37 +0000
-Message-ID: <20190801081737.GA31767@hori.linux.bs1.fc.nec.co.jp>
-References: <1564092101-3865-1-git-send-email-jane.chu@oracle.com>
- <1564092101-3865-3-git-send-email-jane.chu@oracle.com>
-In-Reply-To: <1564092101-3865-3-git-send-email-jane.chu@oracle.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <372749A4D6FFC14982F5FD30BC1E06A7@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Thu, 1 Aug 2019 04:20:13 -0400
+Received: from verein.lst.de ([213.95.11.211]:41407 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728146AbfHAIUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 04:20:12 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 21DE768AFE; Thu,  1 Aug 2019 10:20:05 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 10:20:04 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Christoph Hellwig <hch@infradead.org>, john.hubbard@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, samba-technical@lists.samba.org,
+        v9fs-developer@lists.sourceforge.net,
+        virtualization@lists.linux-foundation.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>
+Subject: Re: [PATCH 03/12] block: bio_release_pages: use flags arg instead
+ of bool
+Message-ID: <20190801082004.GA17348@lst.de>
+References: <20190724042518.14363-1-jhubbard@nvidia.com> <20190724042518.14363-4-jhubbard@nvidia.com> <20190724053053.GA18330@infradead.org> <20190729205721.GB3760@redhat.com> <20190730102557.GA1700@lst.de> <20190730155702.GB10366@redhat.com>
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730155702.GB10366@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 04:01:41PM -0600, Jane Chu wrote:
-> Mmap /dev/dax more than once, then read the poison location using address
-> from one of the mappings. The other mappings due to not having the page
-> mapped in will cause SIGKILLs delivered to the process. SIGKILL succeeds
-> over SIGBUS, so user process looses the opportunity to handle the UE.
-> 
-> Although one may add MAP_POPULATE to mmap(2) to work around the issue,
-> MAP_POPULATE makes mapping 128GB of pmem several magnitudes slower, so
-> isn't always an option.
-> 
-> Details -
-> 
-> ndctl inject-error --block=10 --count=1 namespace6.0
-> 
-> ./read_poison -x dax6.0 -o 5120 -m 2
-> mmaped address 0x7f5bb6600000
-> mmaped address 0x7f3cf3600000
-> doing local read at address 0x7f3cf3601400
-> Killed
-> 
-> Console messages in instrumented kernel -
-> 
-> mce: Uncorrected hardware memory error in user-access at edbe201400
-> Memory failure: tk->addr = 7f5bb6601000
-> Memory failure: address edbe201: call dev_pagemap_mapping_shift
-> dev_pagemap_mapping_shift: page edbe201: no PUD
-> Memory failure: tk->size_shift == 0
-> Memory failure: Unable to find user space address edbe201 in read_poison
-> Memory failure: tk->addr = 7f3cf3601000
-> Memory failure: address edbe201: call dev_pagemap_mapping_shift
-> Memory failure: tk->size_shift = 21
-> Memory failure: 0xedbe201: forcibly killing read_poison:22434 because of failure to unmap corrupted page
->   => to deliver SIGKILL
-> Memory failure: 0xedbe201: Killing read_poison:22434 due to hardware memory corruption
->   => to deliver SIGBUS
-> 
-> Signed-off-by: Jane Chu <jane.chu@oracle.com>
-> Suggested-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> ---
->  mm/memory-failure.c | 22 +++++++++++++---------
->  1 file changed, 13 insertions(+), 9 deletions(-)
-> 
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 51d5b20..f668c88 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -199,7 +199,6 @@ struct to_kill {
->  	struct task_struct *tsk;
->  	unsigned long addr;
->  	short size_shift;
-> -	char addr_valid;
->  };
->  
->  /*
-> @@ -318,22 +317,27 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
->  	}
->  
->  	tk->addr = page_address_in_vma(p, vma);
-> -	tk->addr_valid = 1;
->  	if (is_zone_device_page(p))
->  		tk->size_shift = dev_pagemap_mapping_shift(p, vma);
->  	else
->  		tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
->  
->  	/*
-> -	 * In theory we don't have to kill when the page was
-> -	 * munmaped. But it could be also a mremap. Since that's
-> -	 * likely very rare kill anyways just out of paranoia, but use
-> -	 * a SIGKILL because the error is not contained anymore.
-> +	 * Send SIGKILL if "tk->addr == -EFAULT". Also, as
-> +	 * "tk->size_shift" is always non-zero for !is_zone_device_page(),
-> +	 * so "tk->size_shift == 0" effectively checks no mapping on
-> +	 * ZONE_DEVICE. Indeed, when a devdax page is mmapped N times
-> +	 * to a process' address space, it's possible not all N VMAs
-> +	 * contain mappings for the page, but at least one VMA does.
-> +	 * Only deliver SIGBUS with payload derived from the VMA that
-> +	 * has a mapping for the page.
->  	 */
-> -	if (tk->addr == -EFAULT || tk->size_shift == 0) {
-> +	if (tk->addr == -EFAULT) { 
-                              ^
-(sorry nitpicking...) there's a trailing whitespace.
-Otherwise looks good to me.
+On Tue, Jul 30, 2019 at 11:57:02AM -0400, Jerome Glisse wrote:
+> Other user can also add page that are not coming from GUP but need to
+> have a reference see __blkdev_direct_IO()
 
-Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-
->  		pr_info("Memory failure: Unable to find user space address %lx in %s\n",
->  			page_to_pfn(p), tsk->comm);
-> -		tk->addr_valid = 0;
-> +	} else if (tk->size_shift == 0) {
-> +		kfree(tk);
-> +		return;
->  	}
->  
->  	get_task_struct(tsk);
-> @@ -361,7 +365,7 @@ static void kill_procs(struct list_head *to_kill, int forcekill, bool fail,
->  			 * make sure the process doesn't catch the
->  			 * signal and then access the memory. Just kill it.
->  			 */
-> -			if (fail || tk->addr_valid == 0) {
-> +			if (fail || tk->addr == -EFAULT) {
->  				pr_err("Memory failure: %#lx: forcibly killing %s:%d because of failure to unmap corrupted page\n",
->  				       pfn, tk->tsk->comm, tk->tsk->pid);
->  				do_send_sig_info(SIGKILL, SEND_SIG_PRIV,
-> -- 
-> 1.8.3.1
-> 
-> 
+Except for the zero page case I mentioned in my last mail explicitly,
+and the KVEC/PIPE type iov vecs from the original mail what other
+pages do you see to get added?
