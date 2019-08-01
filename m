@@ -6,176 +6,82 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1936C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E19A2C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD26214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B5D20665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730982AbfHAIKB convert rfc822-to-8bit (ORCPT
+        id S1730705AbfHAINj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:10:01 -0400
-Received: from mx1.mail.vl.ru ([80.92.161.250]:38556 "EHLO mx1.mail.vl.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728987AbfHAIKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:10:00 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mx1.mail.vl.ru (Postfix) with ESMTP id F0D551860D81;
-        Thu,  1 Aug 2019 08:09:55 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at mail.vl.ru
-Received: from mx1.mail.vl.ru ([127.0.0.1])
-        by localhost (smtp1.srv.loc [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3msz10VMucFn; Thu,  1 Aug 2019 18:09:54 +1000 (+10)
-Received: from [10.125.1.12] (unknown [109.126.62.18])
-        (Authenticated sender: turchanov@vl.ru)
-        by mx1.mail.vl.ru (Postfix) with ESMTPSA id BA09D1860D70;
-        Thu,  1 Aug 2019 18:09:54 +1000 (+10)
-Subject: [BUG] lseek on /proc/meminfo is broken in 4.19.59 maybe due to commit
- 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and
- interface")
-To:     NeilBrown <neilb@suse.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <3bd775ab-9e31-c6b3-374e-7a9982a9a8cd@farpost.com>
- <5c4c0648-2a96-4132-9d22-91c22e7c7d4d@huawei.com>
-From:   Sergei Turchanov <turchanov@farpost.com>
-Organization: FarPost
-Message-ID: <eab812ef-ba79-11d6-0a4e-232872f0fcc4@farpost.com>
-Date:   Thu, 1 Aug 2019 18:09:54 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 1 Aug 2019 04:13:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34251 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfHAINi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 04:13:38 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ht6DM-0000OO-2f; Thu, 01 Aug 2019 10:13:32 +0200
+Date:   Thu, 1 Aug 2019 10:13:31 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+cc:     Daniel Drake <drake@endlessm.com>, x86@kernel.org,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>
+Subject: Re: setup_boot_APIC_clock() NULL dereference during early boot on
+ reduced hardware platforms
+In-Reply-To: <CAERHkrtaVAQHDU1cj2_GLL59LPjp7E=3X0Zna0spfFB=Ve5__w@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1908011011250.1788@nanos.tec.linutronix.de>
+References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com> <CAERHkruxfBc8DqNUr=fbYuQWrXrHC7cK6HnVR3xp0iLA9QtxiQ@mail.gmail.com> <alpine.DEB.2.21.1908010931550.1788@nanos.tec.linutronix.de>
+ <CAERHkrtaVAQHDU1cj2_GLL59LPjp7E=3X0Zna0spfFB=Ve5__w@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <5c4c0648-2a96-4132-9d22-91c22e7c7d4d@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Thu, 1 Aug 2019, Aubrey Li wrote:
+> On Thu, Aug 1, 2019 at 3:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > On Thu, 1 Aug 2019, Aubrey Li wrote:
+> > > On Thu, Aug 1, 2019 at 2:26 PM Daniel Drake <drake@endlessm.com> wrote:
+> > > > global_clock_event is NULL here. This is a "reduced hardware" ACPI
+> > > > platform so acpi_generic_reduced_hw_init() has set timer_init to NULL,
+> > > > avoiding the usual codepaths that would set up global_clock_event.
+> > > >
+> > > IIRC, acpi_generic_reduced_hw_init() avoids initializing PIT, the status of
+> > > this legacy device is unknown in ACPI hw-reduced mode.
+> > >
+> > > > I tried the obvious:
+> > > >  if (!global_clock_event)
+> > > >     return -1;
+> > > >
+> > > No, the platform needs a global clock event, can you turn on some other
+> >
+> > Wrong. The kernel boots perfectly fine without a global clock event. But
+> > for that the TSC and LAPIC frequency must be known.
+> 
+> I think LAPIC fast calibrate is only supported on intel platform, while
+> Daniel's box is an AMD platform. That's why lapic_init_clockevent() failed
+> and fall into the code path which needs a global clock event.
 
-[
-  As suggested in previous discussion this behavior may be caused by your
-  commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
-]
+We know that.
 
-Original bug report:
+The point is that it does not matter which vendor a CPU comes from. The
+kernel does support legacyless boot when the frequencies are known. Whether
+that's currently possible on that particular CPU is a different question.
 
-Seeking (to an offset within file size) in /proc/meminfo is broken in 4.19.59. It does seek to a desired position, but reading from that position returns the remainder of file and then a whole copy of file. This doesn't happen with /proc/vmstat or /proc/self/maps for example.
+Thanks,
 
-Seeking did work correctly in kernel 4.14.47. So it seems something broke in the way.
-
-Background: this kind of access pattern (seeking to /proc/meminfo) is used by libvirt-lxc fuse driver for virtualized view of /proc/meminfo. So that /proc/meminfo is broken in guests when running kernel 4.19.x.
-
- > On 01.08.2019 17:11, Gao Xiang wrote:
-> Hi,
->
-> I just took a glance, maybe due to
-> commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
->
-> I simply reverted it just now and it seems fine... but I haven't digged into this commit.
->
-> Maybe you could Cc NeilBrown <neilb@suse.com> for some more advice and
-> I have no idea whether it's an expected behavior or not...
->
-> Thanks,
-> Gao Xiang
->
-> On 2019/8/1 14:16, Sergei Turchanov wrote:
-
-
-$ ./test /proc/meminfo 0        # Works as expected
-
-MemTotal:       394907728 kB
-MemFree:        173738328 kB
-...
-DirectMap2M:    13062144 kB
-DirectMap1G:    390070272 kB
-
------------------------------------------------------------------------
-
-$ ./test /proc/meminfo 1024     # returns a copy of file after the remainder
-
-Will seek to 1024
-
-
-Data read at offset 1024
-gePages:         0 kB
-ShmemHugePages:        0 kB
-ShmemPmdMapped:        0 kB
-HugePages_Total:       0
-HugePages_Free:        0
-HugePages_Rsvd:        0
-HugePages_Surp:        0
-Hugepagesize:       2048 kB
-Hugetlb:               0 kB
-DirectMap4k:      245204 kB
-DirectMap2M:    13062144 kB
-DirectMap1G:    390070272 kB
-MemTotal:       394907728 kB
-MemFree:        173738328 kB
-MemAvailable:   379989680 kB
-Buffers:          355812 kB
-Cached:         207216224 kB
-...
-DirectMap2M:    13062144 kB
-DirectMap1G:    390070272 kB
-
-As you see, after "DirectMap1G:" line, a whole copy of /proc/meminfo returned by "read".
-
-Test program:
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#define SIZE 1024
-char buf[SIZE + 1];
-
-int main(int argc, char *argv[]) {
-     int     fd;
-     ssize_t rd;
-     off_t   ofs = 0;
-
-     if (argc < 2) {
-         printf("Usage: test <file> [<offset>]\n");
-         exit(1);
-     }
-
-     if (-1 == (fd = open(argv[1], O_RDONLY))) {
-         perror("open failed");
-         exit(1);
-     }
-
-     if (argc > 2) {
-         ofs = atol(argv[2]);
-     }
-     printf("Will seek to %ld\n", ofs);
-
-     if (-1 == (lseek(fd, ofs, SEEK_SET))) {
-         perror("lseek failed");
-         exit(1);
-     }
-
-     for (;; ofs += rd) {
-         printf("\n\nData read at offset %ld\n", ofs);
-         if (-1 == (rd = read(fd, buf, SIZE))) {
-             perror("read failed");
-             exit(1);
-         }
-         buf[rd] = '\0';
-         printf(buf);
-         if (rd < SIZE) {
-             break;
-         }
-     }
-
-     return 0;
-}
-
-
+	tglx
