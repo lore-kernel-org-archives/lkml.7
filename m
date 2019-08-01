@@ -2,83 +2,96 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A088C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79D5C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23D220838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9256620838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733165AbfHAQqJ (ORCPT
+        id S1733168AbfHAQq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:46:09 -0400
-Received: from mga04.intel.com ([192.55.52.120]:14400 "EHLO mga04.intel.com"
+        Thu, 1 Aug 2019 12:46:56 -0400
+Received: from mga11.intel.com ([192.55.52.93]:25929 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbfHAQqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:46:09 -0400
+        id S1725804AbfHAQq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:46:56 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 09:46:09 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 09:46:55 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,334,1559545200"; 
-   d="scan'208";a="201357081"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Aug 2019 09:46:08 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86: Unconditionally call x86 ops that are always implemented
-Date:   Thu,  1 Aug 2019 09:46:06 -0700
-Message-Id: <20190801164606.20777-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.22.0
+   d="scan'208";a="184304633"
+Received: from jcclaybu-mobl1.amr.corp.intel.com (HELO [10.252.137.82]) ([10.252.137.82])
+  by orsmga002.jf.intel.com with ESMTP; 01 Aug 2019 09:46:54 -0700
+Subject: Re: linux-next: manual merge of the sound-asoc tree with the sound
+ tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>
+References: <20190801125008.4a533637@canb.auug.org.au>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <3dfa9102-6fe4-dc9e-12d5-8fac565059da@linux.intel.com>
+Date:   Thu, 1 Aug 2019 11:46:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190801125008.4a533637@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove two stale checks for non-NULL ops now that they're implemented by
-both VMX and SVM.
 
-Fixes: 74f169090b6f ("kvm/svm: Setup MCG_CAP on AMD properly")
-Fixes: b31c114b82b2 ("KVM: X86: Provide a capability to disable PAUSE intercepts")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/x86.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 01e18caac825..2c25a19d436f 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3506,8 +3506,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(struct kvm_vcpu *vcpu,
- 	for (bank = 0; bank < bank_num; bank++)
- 		vcpu->arch.mce_banks[bank*4] = ~(u64)0;
- 
--	if (kvm_x86_ops->setup_mce)
--		kvm_x86_ops->setup_mce(vcpu);
-+	kvm_x86_ops->setup_mce(vcpu);
- out:
- 	return r;
- }
-@@ -9313,10 +9312,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	kvm_page_track_init(kvm);
- 	kvm_mmu_init_vm(kvm);
- 
--	if (kvm_x86_ops->vm_init)
--		return kvm_x86_ops->vm_init(kvm);
--
--	return 0;
-+	return kvm_x86_ops->vm_init(kvm);
- }
- 
- static void kvm_unload_vcpu_mmu(struct kvm_vcpu *vcpu)
--- 
-2.22.0
+On 7/31/19 9:50 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the sound-asoc tree got conflicts in:
+> 
+>    sound/soc/intel/skylake/skl-nhlt.c
+>    sound/soc/intel/skylake/skl.h
+> 
+> between commit:
+> 
+>    1169cbf6b98e ("ASoC: Intel: Skylake: use common NHLT module")
+> 
+> from the sound tree and commit:
+> 
+>    bcc2a2dc3ba8 ("ASoC: Intel: Skylake: Merge skl_sst and skl into skl_dev struct")
+> 
+> from the sound-asoc tree.
+> 
+> I fixed it up (I think, see below (I used the sound tree version of
+> ound/soc/intel/skylake/skl-nhlt.c)) and can carry the fix as necessary.
+> This is now fixed as far as linux-next is concerned, but any non
+> trivial conflicts should be mentioned to your upstream maintainer when
+> your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+
+Mark, this comes my NHLT fixes merged by Takashi and available on his 
+topic/hda-dmic branch.
+
+This can be fixed by merging this topic/hda-dmic into your for-next 
+branch, with a minor set of merge conflicts already identified by Stephen.
+
+If you don't like merge conflicts, we can also do this with 
+revert-merge-reapply, I pushed a branch 
+https://github.com/plbossart/sound/commits/fix/nhlt-conflicts to provide 
+the sequence needed
+
+Sorry about that, let me know if I can help further.
+-Pierre
 
