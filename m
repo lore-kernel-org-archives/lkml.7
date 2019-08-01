@@ -2,125 +2,85 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC43C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8D7C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862F22089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3194F206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KA02C6/q"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="dWrBmkFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfHAHGn (ORCPT
+        id S1728590AbfHAHHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:06:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37510 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHAHGn (ORCPT
+        Thu, 1 Aug 2019 03:07:48 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37941 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHAHHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:06:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so775428pgp.4;
-        Thu, 01 Aug 2019 00:06:42 -0700 (PDT)
+        Thu, 1 Aug 2019 03:07:47 -0400
+Received: by mail-wm1-f68.google.com with SMTP id s15so40762251wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 00:07:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sFn82hxl87C8fXjzpueTy3TJLhnUknUHXDSSwlywkZM=;
-        b=KA02C6/qRIwz7yk/cKlSKNW3Uh+6uNkHC4I3NyeEDdsrwD6UNzo/7hpOrKkiMs6XJy
-         liwhh/Nh1bWSAZ/7DK6JfdNt/BKoNm1up/PxL/FbPZLhcHM+/XggJl3nfBOyIdTTAUUO
-         +zeChb37ERCZdxksbacxo8JtVEDROXM9npygMwVbKkCXIABR4Tsk+UljplGXBVF/ltqj
-         Hm8N/dFoSBvVJMphXknCnKTuUKdAHX+6IgKpt4BR6YnD08YXbBje2sMzDuwns0p1CHiR
-         ZLc8Aba3rn9TvVuoyFRi/Z5EMWOxj1k5lN4zSxIO6H7Q9Qb+x7Va/S+gsdg3g693EdgZ
-         BWzw==
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0zKS+bHOSYnyT32IPvAXO9rhh7LcLf3miOYkXJWe5L4=;
+        b=dWrBmkFn3vVe7tzKRYyjOAhP9iOvoPwRcJ+f1L9bjQCjHEQT/Gcm6d1goQk1rH4SoB
+         Mm3i/w296UYLfpg2VEljZ7JynmeDSON5gpNNeQo9akA6QBdvdndiPje4wRZeW6sknNVt
+         3s7euiDANySVHdZRFoqvvXP58bLXAeM8ne+hOaui4UNrTznEwH7KC+Z1Fym9RmNaXOiT
+         kmaUtkCmujuOBn99xFoqS6QeKbTgoFxg2FjFjkzIUC8uArAtMZshVkdwp0PAGmRZRWoL
+         ygoLCV3MJGPbn1nKJD1m3gDBWXw126bKtoqaIEboV58sKqae675+raNZY2ZVnENOHSgA
+         XrwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sFn82hxl87C8fXjzpueTy3TJLhnUknUHXDSSwlywkZM=;
-        b=Gq2GdODuFnbcbx0bLnnBSOmi7AZDZdJGa3FZyfHDo1zcMQhvlIWQa6ul/2FJ8fIY9m
-         v31KioxxkAnu13js4GDmHaVv5kS0+IHBvvnbZWpoTXVJ4dk8rsOnbY2hOLybhS6MDyUK
-         b+9Ko3qWIXBYuPKtt3/4wNdi9MDLZfxWQCt2hUOY3nE/lBqHraoMmB+sxrc/kdYikaAj
-         CHgTYqv9wLmkWPgGCnlef49XAjUdu9uGzGFLOg9+5bLq5Up6YodzlRGCBjooQTQ5a7wI
-         Khi4zJ3WiGfVgiwH0RpWw8uqjVGms265+ttYy64FY50AbLWdLaiFnuiZDSkNkUSrrv6u
-         H5FA==
-X-Gm-Message-State: APjAAAUfO3bqmxNjJRM0hofxLzwMcz3rKvLi6e5asrJXZEiaFNT5nUSD
-        mgUZNAb9N3GzG2JJVmUvo+XYnVXG4bQ=
-X-Google-Smtp-Source: APXvYqyn219JPDPAJnEN8l24Z8CENaXeYWt1+yJwSOyfhTF9EIK66+hk9n2gnvhVYiytQzdxdpGY7A==
-X-Received: by 2002:a63:3ec7:: with SMTP id l190mr120885775pga.334.1564643202178;
-        Thu, 01 Aug 2019 00:06:42 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id j6sm9688175pjd.19.2019.08.01.00.06.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 01 Aug 2019 00:06:41 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when dedicated physical CPUs are available
-Date:   Thu,  1 Aug 2019 15:06:36 +0800
-Message-Id: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0zKS+bHOSYnyT32IPvAXO9rhh7LcLf3miOYkXJWe5L4=;
+        b=oN7iGbYu1Fv5a3M2qTFNp+p12zaSYT9nljhNV89zayORBAYxzw8wQlDliOXE3vy1X+
+         wynvFfGOQLj+IpNXZskZ+x3RAEG1g0fuIDiMtehdEcy7+bw1d7aqzppsDN2FCxlusC0z
+         4clFdIfTp1DGrOoEHHr+x4zSyoeAev+ng5C3ANr9Lg9bq+GjTxnDsmgFFOIkwdY1pBKi
+         pth4pUlOkrYTZMHFkPusvfvpI54gMikv9uhrojG+pS5U+Ab3CNcn98UVMC4s985P/4kQ
+         w0p5fEyGPfPG1oQP/xhZz1HxoDUmlpsBqMIS9cSqDL8qTyiYmLYgZ6ud2GvhPNx6Md4F
+         5Yiw==
+X-Gm-Message-State: APjAAAW01DaoSQhFzPLDn/aX7qWfkiJjGsu2BpZthxS57AGzCahGtwn2
+        AFpowavGe+PvpYSXS/JXJpcei4rvykyOyesnPM3grQ==
+X-Google-Smtp-Source: APXvYqxn8QMZyUJF1yqlNdxeuz9kgUitutcq7yzpiuVeQyEV/36zZBJj76nPfArr7DZ9GPlU2VJmM3gn88wCcDp4qGA=
+X-Received: by 2002:a05:600c:2146:: with SMTP id v6mr12874903wml.59.1564643265374;
+ Thu, 01 Aug 2019 00:07:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190731222214.15720-1-colin.king@canonical.com>
+In-Reply-To: <20190731222214.15720-1-colin.king@canonical.com>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Thu, 1 Aug 2019 09:07:33 +0200
+Message-ID: <CAMGffEnQ7oRebm9QNKQUcx+MQan1tgQWw6R=O081qbm1kKSw9w@mail.gmail.com>
+Subject: Re: [PATCH] scsi: pm80xx: remove redundant assignments to variable rc
+To:     Colin King <colin.king@canonical.com>
+Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Linux SCSI Mailinglist <linux-scsi@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Thu, Aug 1, 2019 at 12:22 AM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> There are several occasions where variable rc is being initialized
+> with a value that is never read and error is being re-assigned a
+> little later on.  Clean up the code by removing rc entirely and
+> just returning the return value from the call to pm8001_issue_ssp_tmf
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
 
-The downside of guest side polling is that polling is performed even 
-with other runnable tasks in the host. However, even if poll in kvm 
-can aware whether or not other runnable tasks in the same pCPU, it 
-can still incur extra overhead in over-subscribe scenario. Now we can 
-just enable guest polling when dedicated pCPUs are available.
-
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- drivers/cpuidle/cpuidle-haltpoll.c   | 3 ++-
- drivers/cpuidle/governors/haltpoll.c | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-index 9ac093d..7aee38a 100644
---- a/drivers/cpuidle/cpuidle-haltpoll.c
-+++ b/drivers/cpuidle/cpuidle-haltpoll.c
-@@ -53,7 +53,8 @@ static int __init haltpoll_init(void)
- 
- 	cpuidle_poll_state_init(drv);
- 
--	if (!kvm_para_available())
-+	if (!kvm_para_available() ||
-+		!kvm_para_has_hint(KVM_HINTS_REALTIME))
- 		return 0;
- 
- 	ret = cpuidle_register(&haltpoll_driver, NULL);
-diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/governors/haltpoll.c
-index 797477b..685c7007 100644
---- a/drivers/cpuidle/governors/haltpoll.c
-+++ b/drivers/cpuidle/governors/haltpoll.c
-@@ -141,7 +141,7 @@ static struct cpuidle_governor haltpoll_governor = {
- 
- static int __init init_haltpoll(void)
- {
--	if (kvm_para_available())
-+	if (kvm_para_available() && kvm_para_has_hint(KVM_HINTS_REALTIME))
- 		return cpuidle_register_governor(&haltpoll_governor);
- 
- 	return 0;
--- 
-2.7.4
-
+Thanks, Colin.
