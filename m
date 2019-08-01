@@ -2,338 +2,136 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D72C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BCCC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265FA2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25D92089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbfHAFqw (ORCPT
+        id S1729060AbfHAFrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 01:46:52 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33422 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbfHAFqw (ORCPT
+        Thu, 1 Aug 2019 01:47:10 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:54616 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728702AbfHAFrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 01:46:52 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8A2BF28BF70;
-        Thu,  1 Aug 2019 06:46:50 +0100 (BST)
-Date:   Thu, 1 Aug 2019 07:46:47 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH v3 1/3] mtd: spi-nor: always use bounce buffer for
- register read/writes
-Message-ID: <20190801074647.792479c1@collabora.com>
-In-Reply-To: <20190801043052.30192-2-vigneshr@ti.com>
-References: <20190801043052.30192-1-vigneshr@ti.com>
-        <20190801043052.30192-2-vigneshr@ti.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 1 Aug 2019 01:47:09 -0400
+Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x715l8go021436
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 01:47:08 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x715l3uM011412
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 01:47:08 -0400
+Received: by mail-qt1-f198.google.com with SMTP id s9so63751335qtn.14
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 22:47:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=BIaC2b1UDZwx7XdDPFY2TgT2duJrjp+VXdWjaLmhw8w=;
+        b=PJc2UXScmPr8wto+sAH+qpwUFX4XeQ/exbRLwDnw09H4w9HfX9woCcShqewAiTHOrp
+         zGpLDBXa8XGAeFdhBDkGdnVuvI7Es36zV4iDA6iSpTTqrj8pCPqqLMbJRApArnV94t/Z
+         TdAXWvBOQctUPPJfn2rRICCMLxoSkqFMe33sm9HZHScDGh03z8HNHLxvzkNkq4Lr+Y5v
+         LCmVkGmMPj8m7qY94XNiIWPwHfQbL1oXzU5Lr0L/6gBLYFb7nyS1KxZLjJbqjmWaW5jv
+         n3Kenj7EhF6u1WkpTZyHIAMp10JkEY5sUv2ofjsBgTvAt4ds7Ogds5MY2Il2TWWTjZg8
+         Qzcg==
+X-Gm-Message-State: APjAAAWXWDAEpxws8Up62p2xa42FD3E3kNYuUdJVTUqZ0W0VpLOIWkou
+        +EnjkVqhfGADx79vWCN2/iY1MabA0xMdqrBkDK8yhc47CBKvEbjuzMP1SkTk6Bl4cEToDqHjAmg
+        BpZwmmZVjKyOY3fAzsOmd++NJoQFbuzAwrwM=
+X-Received: by 2002:aed:2063:: with SMTP id 90mr88113269qta.307.1564638422875;
+        Wed, 31 Jul 2019 22:47:02 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwqF8ICZoH1tmAtHtEl5W8KWHLigjNPdoAD+HRUxmAy600psn7iIO6Ig+RDac8NonQMyb/M9g==
+X-Received: by 2002:aed:2063:: with SMTP id 90mr88113248qta.307.1564638422508;
+        Wed, 31 Jul 2019 22:47:02 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::7ca])
+        by smtp.gmail.com with ESMTPSA id x24sm29653893qts.63.2019.07.31.22.47.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 22:47:00 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] linux-next 20190731 - aegis128-core.c fails to build
+In-Reply-To: <CAKv+Gu8EF3R05hLWHh7mgbgkUyzBwELctdVvSFMq+6Crw6Tf4A@mail.gmail.com>
+References: <13353.1564635114@turing-police>
+ <CAKv+Gu8EF3R05hLWHh7mgbgkUyzBwELctdVvSFMq+6Crw6Tf4A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1564638419_11794P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 01 Aug 2019 01:46:59 -0400
+Message-ID: <32521.1564638419@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019 10:00:50 +0530
-Vignesh Raghavendra <vigneshr@ti.com> wrote:
+--==_Exmh_1564638419_11794P
+Content-Type: text/plain; charset=us-ascii
 
-> spi-mem layer expects all buffers passed to it to be DMA'able. But
-> spi-nor layer mostly allocates buffers on stack for reading/writing to
-> registers and therefore are not DMA'able. Introduce bounce buffer to be
-> used to read/write to registers. This ensures that buffer passed to
-> spi-mem layer during register read/writes is DMA'able. With this change
-> nor->cmd-buf is no longer used, so drop it.
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
-> v3: new patch
-> 
->  drivers/mtd/spi-nor/spi-nor.c | 71 ++++++++++++++++++++---------------
->  include/linux/mtd/spi-nor.h   |  7 +++-
->  2 files changed, 46 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 03cc788511d5..8685e4ab6a25 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -296,15 +296,14 @@ struct flash_info {
->  static int read_sr(struct spi_nor *nor)
->  {
->  	int ret;
-> -	u8 val;
->  
-> -	ret = nor->read_reg(nor, SPINOR_OP_RDSR, &val, 1);
-> +	ret = nor->read_reg(nor, SPINOR_OP_RDSR, nor->bouncebuf, 1);
->  	if (ret < 0) {
->  		pr_err("error %d reading SR\n", (int) ret);
->  		return ret;
->  	}
->  
-> -	return val;
-> +	return nor->bouncebuf[0];
->  }
->  
->  /*
-> @@ -315,15 +314,14 @@ static int read_sr(struct spi_nor *nor)
->  static int read_fsr(struct spi_nor *nor)
->  {
->  	int ret;
-> -	u8 val;
->  
-> -	ret = nor->read_reg(nor, SPINOR_OP_RDFSR, &val, 1);
-> +	ret = nor->read_reg(nor, SPINOR_OP_RDFSR, nor->bouncebuf, 1);
->  	if (ret < 0) {
->  		pr_err("error %d reading FSR\n", ret);
->  		return ret;
->  	}
->  
-> -	return val;
-> +	return nor->bouncebuf[0];
->  }
->  
->  /*
-> @@ -334,15 +332,14 @@ static int read_fsr(struct spi_nor *nor)
->  static int read_cr(struct spi_nor *nor)
->  {
->  	int ret;
-> -	u8 val;
->  
-> -	ret = nor->read_reg(nor, SPINOR_OP_RDCR, &val, 1);
-> +	ret = nor->read_reg(nor, SPINOR_OP_RDCR, nor->bouncebuf, 1);
->  	if (ret < 0) {
->  		dev_err(nor->dev, "error %d reading CR\n", ret);
->  		return ret;
->  	}
->  
-> -	return val;
-> +	return nor->bouncebuf[0];
->  }
->  
->  /*
-> @@ -351,8 +348,8 @@ static int read_cr(struct spi_nor *nor)
->   */
->  static int write_sr(struct spi_nor *nor, u8 val)
->  {
-> -	nor->cmd_buf[0] = val;
-> -	return nor->write_reg(nor, SPINOR_OP_WRSR, nor->cmd_buf, 1);
-> +	nor->bouncebuf[0] = val;
-> +	return nor->write_reg(nor, SPINOR_OP_WRSR, nor->bouncebuf, 1);
->  }
->  
->  /*
-> @@ -500,31 +497,31 @@ static int set_4byte(struct spi_nor *nor, bool enable)
->  			 * We must clear the register to enable normal behavior.
->  			 */
->  			write_enable(nor);
-> -			nor->cmd_buf[0] = 0;
-> -			nor->write_reg(nor, SPINOR_OP_WREAR, nor->cmd_buf, 1);
-> +			nor->bouncebuf[0] = 0;
-> +			nor->write_reg(nor, SPINOR_OP_WREAR,
-> +				       nor->bouncebuf, 1);
->  			write_disable(nor);
->  		}
->  
->  		return status;
->  	default:
->  		/* Spansion style */
-> -		nor->cmd_buf[0] = enable << 7;
-> -		return nor->write_reg(nor, SPINOR_OP_BRWR, nor->cmd_buf, 1);
-> +		nor->bouncebuf[0] = enable << 7;
-> +		return nor->write_reg(nor, SPINOR_OP_BRWR, nor->bouncebuf, 1);
->  	}
->  }
->  
->  static int s3an_sr_ready(struct spi_nor *nor)
->  {
->  	int ret;
-> -	u8 val;
->  
-> -	ret = nor->read_reg(nor, SPINOR_OP_XRDSR, &val, 1);
-> +	ret = nor->read_reg(nor, SPINOR_OP_XRDSR, nor->bouncebuf, 1);
->  	if (ret < 0) {
->  		dev_err(nor->dev, "error %d reading XRDSR\n", (int) ret);
->  		return ret;
->  	}
->  
-> -	return !!(val & XSR_RDY);
-> +	return !!(nor->bouncebuf[0] & XSR_RDY);
->  }
->  
->  static int spi_nor_sr_ready(struct spi_nor *nor)
-> @@ -683,7 +680,6 @@ static loff_t spi_nor_s3an_addr_convert(struct spi_nor *nor, unsigned int addr)
->   */
->  static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
->  {
-> -	u8 buf[SPI_NOR_MAX_ADDR_WIDTH];
->  	int i;
->  
->  	if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
-> @@ -697,11 +693,12 @@ static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
->  	 * control
->  	 */
->  	for (i = nor->addr_width - 1; i >= 0; i--) {
-> -		buf[i] = addr & 0xff;
-> +		nor->bouncebuf[i] = addr & 0xff;
->  		addr >>= 8;
->  	}
->  
-> -	return nor->write_reg(nor, nor->erase_opcode, buf, nor->addr_width);
-> +	return nor->write_reg(nor, nor->erase_opcode, nor->bouncebuf,
-> +			      nor->addr_width);
->  }
->  
->  /**
-> @@ -1404,9 +1401,11 @@ static int write_sr_cr(struct spi_nor *nor, u8 *sr_cr)
->  {
->  	int ret;
->  
-> +	memcpy(nor->bouncebuf, sr_cr, 2);
-> +
->  	write_enable(nor);
->  
-> -	ret = nor->write_reg(nor, SPINOR_OP_WRSR, sr_cr, 2);
-> +	ret = nor->write_reg(nor, SPINOR_OP_WRSR, nor->bouncebuf, 2);
->  	if (ret < 0) {
->  		dev_err(nor->dev,
->  			"error while writing configuration register\n");
-> @@ -1599,22 +1598,22 @@ static int spansion_read_cr_quad_enable(struct spi_nor *nor)
->   */
->  static int sr2_bit7_quad_enable(struct spi_nor *nor)
->  {
-> -	u8 sr2;
-> +	u8 *sr2 = nor->bouncebuf;
->  	int ret;
->  
->  	/* Check current Quad Enable bit value. */
-> -	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, &sr2, 1);
-> +	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, sr2, 1);
->  	if (ret)
->  		return ret;
-> -	if (sr2 & SR2_QUAD_EN_BIT7)
-> +	if (*sr2 & SR2_QUAD_EN_BIT7)
->  		return 0;
->  
->  	/* Update the Quad Enable bit. */
-> -	sr2 |= SR2_QUAD_EN_BIT7;
-> +	*sr2 |= SR2_QUAD_EN_BIT7;
->  
->  	write_enable(nor);
->  
-> -	ret = nor->write_reg(nor, SPINOR_OP_WRSR2, &sr2, 1);
-> +	ret = nor->write_reg(nor, SPINOR_OP_WRSR2, sr2, 1);
->  	if (ret < 0) {
->  		dev_err(nor->dev, "error while writing status register 2\n");
->  		return -EINVAL;
-> @@ -1627,8 +1626,8 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
->  	}
->  
->  	/* Read back and check it. */
-> -	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, &sr2, 1);
-> -	if (!(ret > 0 && (sr2 & SR2_QUAD_EN_BIT7))) {
-> +	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, sr2, 1);
-> +	if (!(ret > 0 && (*sr2 & SR2_QUAD_EN_BIT7))) {
->  		dev_err(nor->dev, "SR2 Quad bit not set\n");
->  		return -EINVAL;
->  	}
-> @@ -2180,11 +2179,13 @@ static const struct flash_info *spi_nor_read_id(struct spi_nor *nor)
->  	u8			id[SPI_NOR_MAX_ID_LEN];
->  	const struct flash_info	*info;
->  
-> -	tmp = nor->read_reg(nor, SPINOR_OP_RDID, id, SPI_NOR_MAX_ID_LEN);
-> +	tmp = nor->read_reg(nor, SPINOR_OP_RDID, nor->bouncebuf,
-> +			    SPI_NOR_MAX_ID_LEN);
->  	if (tmp < 0) {
->  		dev_err(nor->dev, "error %d reading JEDEC ID\n", tmp);
->  		return ERR_PTR(tmp);
->  	}
-> +	memcpy(id, nor->bouncebuf, SPI_NOR_MAX_ID_LEN);
+On Thu, 01 Aug 2019 08:01:54 +0300, Ard Biesheuvel said:
 
-Why not directly including the change you have in patch 2 (id is a
-pointer that points directly to ->bouncebuf) so you can get rid of this
-memcpy() here?
+> > ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefined!
+> > ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
+> > ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefined!
+> > make[1]: *** [scripts/Makefile.modpost:105: modules-modpost] Error 1
+> > make: *** [Makefile:1299: modules] Error 2
 
->  
->  	for (tmp = 0; tmp < ARRAY_SIZE(spi_nor_ids) - 1; tmp++) {
->  		info = &spi_nor_ids[tmp];
-> @@ -4121,6 +4122,16 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
->  	nor->read_proto = SNOR_PROTO_1_1_1;
->  	nor->write_proto = SNOR_PROTO_1_1_1;
->  
-> +	/*
-> +	 * We need the bounce buffer early to read/write registers when going
-> +	 * through the spi-mem layer (buffers have to be DMA-able).
+> Which compiler version are you using? All references to the
+> crypt_aegis128_xx_simd() routines should disappear if
+> CONFIG_CRYPTO_AEGIS128_SIMD is not set (in which case have_simd will
+> always be false and so the compiler should optimize away those calls).
 
-You should probably extend this comment in patch 2 to explain why 4k
-should be enough for regular read/write operations.
+gcc 9.1.1 obviously doesn't think it can be optimized away. Apparently, it's
+not smart enough to realize that nothing sets have_simd in any of the functions
+and therefor it's guaranteed to be zero, and  it can do dead code optimization
+based on that.
 
-The patch looks good otherwise.
+Now, if we had something like:
 
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+#ifdef CONFIG_CRYPTO_AEGIS_128_SIMD
+static bool have_simd;
+#else
+#define have_simd (0)
+#endif
 
-> +	 */
-> +	nor->bouncebuf_size = PAGE_SIZE;
-> +	nor->bouncebuf = devm_kmalloc(dev, nor->bouncebuf_size,
-> +				      GFP_KERNEL);
-> +	if (!nor->bouncebuf)
-> +		return -ENOMEM;
-> +
->  	if (name)
->  		info = spi_nor_match_id(name);
->  	/* Try to auto-detect if chip name wasn't specified or not found */
-> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> index 9f57cdfcc93d..6b5956a7a65a 100644
-> --- a/include/linux/mtd/spi-nor.h
-> +++ b/include/linux/mtd/spi-nor.h
-> @@ -344,6 +344,9 @@ struct flash_info;
->   * @mtd:		point to a mtd_info structure
->   * @lock:		the lock for the read/write/erase/lock/unlock operations
->   * @dev:		point to a spi device, or a spi nor controller device.
-> + * @bouncebuf:		bounce buffer used when the buffer passed by the MTD
-> + *                      layer is not DMA-able
-> + * @bouncebuf_size:	size of the bounce buffer
->   * @info:		spi-nor part JDEC MFR id and other info
->   * @page_size:		the page size of the SPI NOR
->   * @addr_width:		number of address bytes
-> @@ -356,7 +359,6 @@ struct flash_info;
->   * @read_proto:		the SPI protocol for read operations
->   * @write_proto:	the SPI protocol for write operations
->   * @reg_proto		the SPI protocol for read_reg/write_reg/erase operations
-> - * @cmd_buf:		used by the write_reg
->   * @erase_map:		the erase map of the SPI NOR
->   * @prepare:		[OPTIONAL] do some preparations for the
->   *			read/write/erase/lock/unlock operations
-> @@ -382,6 +384,8 @@ struct spi_nor {
->  	struct mtd_info		mtd;
->  	struct mutex		lock;
->  	struct device		*dev;
-> +	u8			*bouncebuf;
-> +	size_t			bouncebuf_size;
->  	const struct flash_info	*info;
->  	u32			page_size;
->  	u8			addr_width;
-> @@ -394,7 +398,6 @@ struct spi_nor {
->  	enum spi_nor_protocol	reg_proto;
->  	bool			sst_write_second;
->  	u32			flags;
-> -	u8			cmd_buf[SPI_NOR_MAX_CMD_SIZE];
->  	struct spi_nor_erase_map	erase_map;
->  
->  	int (*prepare)(struct spi_nor *nor, enum spi_nor_ops ops);
+then that should be enough to tell the compiler it can optimize it away, except
+that then runs into problems here:
 
+        if (IS_ENABLED(CONFIG_CRYPTO_AEGIS128_SIMD))
+                have_simd = crypto_aegis128_have_simd();
+
+because it will whine about the lack of an lvalue before it optimizes the assignment away...
+
+--==_Exmh_1564638419_11794P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXUJ80gdmEQWDXROgAQLkHg/9ECez7dCQZUrkvB9XBkF4GXqXZEAzg9q3
+YhNm4yxBbGrfk2bP8sQMGnrDMMyXnWjRYT5vEzwCqaTTqYSYmEOLsppDpgqLzSf4
+wiS59VQaD4/rcyfiUaUpu1yPOV4yFt1C1jA9Y0edRknZ3OItKOxip6WpPG1M2DqQ
+25aBzrl0fcNg40vWBQdV+dioh2IcDrhxflKkVZUITiT5/C5wUDFtogS4aEizS6Kn
+Xl2sU918ll1k+C5xO9i6OvAxBwSGPuiZBZV1GVe+UtaBGUCLnY6E3p44DMZzBvQ1
+8U/8FcTvX0w88vAjdYgOIj+tRG4djgn6qyVxCht94/C8oWGVIffHxsbdu+7W1/vO
+6bYwHOKVPt/3Tf8NV8mB42hzSelZ7Ni7T31oTckWQKUcPUMa98PIIU9f+MYSEmzM
+n4sLoNtF/8ea61ndWxpheVfxtuaimW3WST7Vx6lIxH8rN7FrRhnPe3VWclIVLBJh
+CUJZftTdnZw2VDg+oKLm+XKPfECdxIhAcjrnQsB7pm5Z88cCBq70cwmCbevPJo2A
+g9IRpfYumr57CpiDyvJXDdBn/5l1I2FQ8M3gAU/wyuZhFWGCSZ8QD0M6G8Zbap38
+qMmtMPCdluP8neXGpmHJRS/s6s40h1XLoXvpNt6czyHVz4DUqujFtFdzF9BVCH++
+GyQPMZBDIBE=
+=bIND
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1564638419_11794P--
