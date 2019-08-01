@@ -2,81 +2,100 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A50A5C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F13C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D53420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81AE2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfHABXm (ORCPT
+        id S1729792AbfHABXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 21:23:42 -0400
-Received: from ozlabs.org ([203.11.71.1]:50933 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbfHABXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 21:23:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zXcV6B1Wz9s7T;
-        Thu,  1 Aug 2019 11:23:37 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Luca Coelho <luca@coelho.fi>
-Subject: Re: Build regressions/improvements in v5.3-rc2
-In-Reply-To: <20190729081727.6094-1-geert@linux-m68k.org>
-References: <20190729081727.6094-1-geert@linux-m68k.org>
-Date:   Thu, 01 Aug 2019 11:23:37 +1000
-Message-ID: <871ry5r84m.fsf@concordia.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 31 Jul 2019 21:23:54 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:57875 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726595AbfHABXy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 21:23:54 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=zhang.jia@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TYHlArn_1564622625;
+Received: from localhost(mailfrom:zhang.jia@linux.alibaba.com fp:SMTPD_---0TYHlArn_1564622625)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 01 Aug 2019 09:23:52 +0800
+From:   Jia Zhang <zhang.jia@linux.alibaba.com>
+To:     dhowells@redhat.com, zohar@linux.ibm.com, dmitry.kasatkin@gmail.com
+Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zhang.jia@linux.alibaba.com
+Subject: [PATCH] ima: Allow to import the blacklisted cert signed by secondary CA cert
+Date:   Thu,  1 Aug 2019 09:23:45 +0800
+Message-Id: <1564622625-112173-1-git-send-email-zhang.jia@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Geert Uytterhoeven <geert@linux-m68k.org> writes:
-> Below is the list of build error/warning regressions/improvements in
-> v5.3-rc2[1] compared to v5.2[2].
->
-> Summarized:
->   - build errors: +10/-1
->   - build warnings: +136/-133
->
-> JFYI, when comparing v5.3-rc2[1] to v5.3-rc1[3], the summaries are:
->   - build errors: +0/-1
->   - build warnings: +125/-31
->
-> Note that there may be false regressions, as some logs are incomplete.
-> Still, they're build errors/warnings.
->
-> Happy fixing! ;-)
->
-> Thanks to the linux-next team for providing the build service.
->
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/609488bc979f99f805f34e9a32c1e3b71179d10b/ (241 out of 242 configs)
-> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0ecfebd2b52404ae0c54a878c872bb93363ada36/ (all 242 configs)
-> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/5f9e832c137075045d15cd6899ab0505cfb2ca4b/ (241 out of 242 configs)
->
->
-> *** ERRORS ***
->
-> 10 error regressions:
-...
->   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2446' declared with attribute error: BUILD_BUG_ON failed: err_str[sizeof(err_str) - 2] != '\n':  => 2445:3
->   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2452' declared with attribute error: BUILD_BUG_ON failed: err_str[sizeof(err_str) - 2] != '\n':  => 2451:3
->   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2790' declared with attribute error: BUILD_BUG_ON failed: invalid_ap_str[sizeof(invalid_ap_str) - 2] != '\n':  => 2789:5
->   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2801' declared with attribute error: BUILD_BUG_ON failed: invalid_ap_str[sizeof(invalid_ap_str) - 2] != '\n':  => 2800:5
+Similar to .ima, the cert imported to .ima_blacklist is able to be
+authenticated by a secondary CA cert.
 
-These have been reported and a fix is apparently on its way, but no sign
-of it yet.
+Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
+---
+ include/keys/system_keyring.h    | 6 ++++++
+ security/integrity/digsig.c      | 6 ------
+ security/integrity/ima/ima_mok.c | 2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-https://lore.kernel.org/lkml/20190712001708.170259-1-ndesaulniers@google.com/
+diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.h
+index c1a96fd..7dc91db 100644
+--- a/include/keys/system_keyring.h
++++ b/include/keys/system_keyring.h
+@@ -31,6 +31,12 @@ extern int restrict_link_by_builtin_and_secondary_trusted(
+ #define restrict_link_by_builtin_and_secondary_trusted restrict_link_by_builtin_trusted
+ #endif
+ 
++#ifdef CONFIG_IMA_KEYRINGS_PERMIT_SIGNED_BY_BUILTIN_OR_SECONDARY
++#define restrict_link_to_ima restrict_link_by_builtin_and_secondary_trusted
++#else
++#define restrict_link_to_ima restrict_link_by_builtin_trusted
++#endif
++
+ #ifdef CONFIG_SYSTEM_BLACKLIST_KEYRING
+ extern int mark_hash_blacklisted(const char *hash);
+ extern int is_hash_blacklisted(const u8 *hash, size_t hash_len,
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index 868ade3..c6f3384 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -33,12 +33,6 @@
+ 	".platform",
+ };
+ 
+-#ifdef CONFIG_IMA_KEYRINGS_PERMIT_SIGNED_BY_BUILTIN_OR_SECONDARY
+-#define restrict_link_to_ima restrict_link_by_builtin_and_secondary_trusted
+-#else
+-#define restrict_link_to_ima restrict_link_by_builtin_trusted
+-#endif
+-
+ int integrity_digsig_verify(const unsigned int id, const char *sig, int siglen,
+ 			    const char *digest, int digestlen)
+ {
+diff --git a/security/integrity/ima/ima_mok.c b/security/integrity/ima/ima_mok.c
+index 36cadad..6d0b12d 100644
+--- a/security/integrity/ima/ima_mok.c
++++ b/security/integrity/ima/ima_mok.c
+@@ -31,7 +31,7 @@ __init int ima_mok_init(void)
+ 	if (!restriction)
+ 		panic("Can't allocate IMA blacklist restriction.");
+ 
+-	restriction->check = restrict_link_by_builtin_trusted;
++	restriction->check = restrict_link_to_ima;
+ 
+ 	ima_blacklist_keyring = keyring_alloc(".ima_blacklist",
+ 				KUIDT_INIT(0), KGIDT_INIT(0), current_cred(),
+-- 
+1.8.3.1
 
-cheers
