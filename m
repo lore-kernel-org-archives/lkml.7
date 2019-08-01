@@ -3,30 +3,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1D6C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B2EC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D9B216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716BA20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732737AbfHAP0R (ORCPT
+        id S1732679AbfHAP0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:26:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43856 "EHLO mx1.redhat.com"
+        Thu, 1 Aug 2019 11:26:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58280 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731484AbfHAP0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:26:14 -0400
+        id S1732631AbfHAP0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 11:26:07 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6CC9514AFB8;
-        Thu,  1 Aug 2019 15:26:14 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1688F5F151;
+        Thu,  1 Aug 2019 15:26:07 +0000 (UTC)
 Received: from steredhat.redhat.com (ovpn-117-63.ams2.redhat.com [10.36.117.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 794ED600D1;
-        Thu,  1 Aug 2019 15:26:12 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D1EA600C4;
+        Thu,  1 Aug 2019 15:26:02 +0000 (UTC)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     netdev@vger.kernel.org
 Cc:     kvm@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
@@ -35,104 +35,162 @@ Cc:     kvm@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jorgen Hansen <jhansen@vmware.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/11] vsock_test: add --transport parameter
-Date:   Thu,  1 Aug 2019 17:25:39 +0200
-Message-Id: <20190801152541.245833-10-sgarzare@redhat.com>
+Subject: [PATCH v2 06/11] VSOCK: add send_byte()/recv_byte() test utilities
+Date:   Thu,  1 Aug 2019 17:25:36 +0200
+Message-Id: <20190801152541.245833-7-sgarzare@redhat.com>
 In-Reply-To: <20190801152541.245833-1-sgarzare@redhat.com>
 References: <20190801152541.245833-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 01 Aug 2019 15:26:14 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 01 Aug 2019 15:26:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new --transport parameter to skip some tests or checks
-not supported by a specific transport.
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-Suggested-by: Jorgen Hansen <jhansen@vmware.com>
+Test cases will want to transfer data.  This patch adds utility
+functions to do this.
+
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- tools/testing/vsock/util.h       |  8 ++++++++
- tools/testing/vsock/vsock_test.c | 20 +++++++++++++++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ tools/testing/vsock/util.c | 99 ++++++++++++++++++++++++++++++++++++++
+ tools/testing/vsock/util.h |  2 +
+ 2 files changed, 101 insertions(+)
 
+diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
+index 4280a56ba677..d46a6e079b96 100644
+--- a/tools/testing/vsock/util.c
++++ b/tools/testing/vsock/util.c
+@@ -9,6 +9,7 @@
+ 
+ #include <errno.h>
+ #include <stdio.h>
++#include <stdint.h>
+ #include <stdlib.h>
+ #include <signal.h>
+ #include <unistd.h>
+@@ -149,6 +150,104 @@ int vsock_stream_accept(unsigned int cid, unsigned int port,
+ 	return client_fd;
+ }
+ 
++/* Transmit one byte and check the return value.
++ *
++ * expected_ret:
++ *  <0 Negative errno (for testing errors)
++ *   0 End-of-file
++ *   1 Success
++ */
++void send_byte(int fd, int expected_ret)
++{
++	const uint8_t byte = 'A';
++	ssize_t nwritten;
++
++	timeout_begin(TIMEOUT);
++	do {
++		nwritten = write(fd, &byte, sizeof(byte));
++		timeout_check("write");
++	} while (nwritten < 0 && errno == EINTR);
++	timeout_end();
++
++	if (expected_ret < 0) {
++		if (nwritten != -1) {
++			fprintf(stderr, "bogus write(2) return value %zd\n",
++				nwritten);
++			exit(EXIT_FAILURE);
++		}
++		if (errno != -expected_ret) {
++			perror("write");
++			exit(EXIT_FAILURE);
++		}
++		return;
++	}
++
++	if (nwritten < 0) {
++		perror("write");
++		exit(EXIT_FAILURE);
++	}
++	if (nwritten == 0) {
++		if (expected_ret == 0)
++			return;
++
++		fprintf(stderr, "unexpected EOF while sending byte\n");
++		exit(EXIT_FAILURE);
++	}
++	if (nwritten != sizeof(byte)) {
++		fprintf(stderr, "bogus write(2) return value %zd\n", nwritten);
++		exit(EXIT_FAILURE);
++	}
++}
++
++/* Receive one byte and check the return value.
++ *
++ * expected_ret:
++ *  <0 Negative errno (for testing errors)
++ *   0 End-of-file
++ *   1 Success
++ */
++void recv_byte(int fd, int expected_ret)
++{
++	uint8_t byte;
++	ssize_t nread;
++
++	timeout_begin(TIMEOUT);
++	do {
++		nread = read(fd, &byte, sizeof(byte));
++		timeout_check("read");
++	} while (nread < 0 && errno == EINTR);
++	timeout_end();
++
++	if (expected_ret < 0) {
++		if (nread != -1) {
++			fprintf(stderr, "bogus read(2) return value %zd\n",
++				nread);
++			exit(EXIT_FAILURE);
++		}
++		if (errno != -expected_ret) {
++			perror("read");
++			exit(EXIT_FAILURE);
++		}
++		return;
++	}
++
++	if (nread < 0) {
++		perror("read");
++		exit(EXIT_FAILURE);
++	}
++	if (nread == 0) {
++		if (expected_ret == 0)
++			return;
++
++		fprintf(stderr, "unexpected EOF while receiving byte\n");
++		exit(EXIT_FAILURE);
++	}
++	if (nread != sizeof(byte)) {
++		fprintf(stderr, "bogus read(2) return value %zd\n", nread);
++		exit(EXIT_FAILURE);
++	}
++}
++
+ /* Run test cases.  The program terminates if a failure occurs. */
+ void run_tests(const struct test_case *test_cases,
+ 	       const struct test_opts *opts)
 diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
-index 379e02ab59bb..7fdb8100f035 100644
+index 1786305cfddd..fe524d393d67 100644
 --- a/tools/testing/vsock/util.h
 +++ b/tools/testing/vsock/util.h
-@@ -12,9 +12,17 @@ enum test_mode {
- 	TEST_MODE_SERVER
- };
+@@ -36,6 +36,8 @@ unsigned int parse_cid(const char *str);
+ int vsock_stream_connect(unsigned int cid, unsigned int port);
+ int vsock_stream_accept(unsigned int cid, unsigned int port,
+ 			struct sockaddr_vm *clientaddrp);
++void send_byte(int fd, int expected_ret);
++void recv_byte(int fd, int expected_ret);
+ void run_tests(const struct test_case *test_cases,
+ 	       const struct test_opts *opts);
  
-+enum test_transport {
-+	TEST_TRANSPORT_UNSET,
-+	TEST_TRANSPORT_VMCI,
-+	TEST_TRANSPORT_VIRTIO,
-+	TEST_TRANSPORT_HYPERV
-+};
-+
- /* Test runner options */
- struct test_opts {
- 	enum test_mode mode;
-+	enum test_transport transport;
- 	unsigned int peer_cid;
- };
- 
-diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-index 06099d037405..cb606091489f 100644
---- a/tools/testing/vsock/vsock_test.c
-+++ b/tools/testing/vsock/vsock_test.c
-@@ -218,6 +218,11 @@ static const struct option longopts[] = {
- 		.has_arg = required_argument,
- 		.val = 'p',
- 	},
-+	{
-+		.name = "transport",
-+		.has_arg = required_argument,
-+		.val = 't',
-+	},
- 	{
- 		.name = "help",
- 		.has_arg = no_argument,
-@@ -228,7 +233,7 @@ static const struct option longopts[] = {
- 
- static void usage(void)
- {
--	fprintf(stderr, "Usage: vsock_test [--help] [--control-host=<host>] --control-port=<port> --mode=client|server --peer-cid=<cid>\n"
-+	fprintf(stderr, "Usage: vsock_test [--help] [--control-host=<host>] --control-port=<port> --mode=client|server --peer-cid=<cid> [--transport=vmci|virtio|hyperv]\n"
- 		"\n"
- 		"  Server: vsock_test --control-port=1234 --mode=server --peer-cid=3\n"
- 		"  Client: vsock_test --control-host=192.168.0.1 --control-port=1234 --mode=client --peer-cid=2\n"
-@@ -252,6 +257,7 @@ int main(int argc, char **argv)
- 	const char *control_port = NULL;
- 	struct test_opts opts = {
- 		.mode = TEST_MODE_UNSET,
-+		.transport = TEST_TRANSPORT_UNSET,
- 		.peer_cid = VMADDR_CID_ANY,
- 	};
- 
-@@ -283,6 +289,18 @@ int main(int argc, char **argv)
- 		case 'P':
- 			control_port = optarg;
- 			break;
-+		case 't':
-+			if (strcmp(optarg, "vmci") == 0)
-+				opts.transport = TEST_TRANSPORT_VMCI;
-+			else if (strcmp(optarg, "virtio") == 0)
-+				opts.transport = TEST_TRANSPORT_VIRTIO;
-+			else if (strcmp(optarg, "hyperv") == 0)
-+				opts.transport = TEST_TRANSPORT_HYPERV;
-+			else {
-+				fprintf(stderr, "--transport must be \"vmci\" or \"virtio\" or \"hyperv\"\n");
-+				return EXIT_FAILURE;
-+			}
-+			break;
- 		case '?':
- 		default:
- 			usage();
 -- 
 2.20.1
 
