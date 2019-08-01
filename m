@@ -2,129 +2,183 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325AEC32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBD3C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A4D206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:48:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hLlUL1oF"
+	by mail.kernel.org (Postfix) with ESMTP id D208E206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfHAErv (ORCPT
+        id S1728973AbfHAEwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 00:47:51 -0400
-Received: from mail-eopbgr780053.outbound.protection.outlook.com ([40.107.78.53]:29696
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726612AbfHAErv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 00:47:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TWlO0EbTWBPq9Dbj+MTGjgzYUUu/TtI+7upsuSat01HoX/0I9fwgltwrLcNBWA/xVlWVxb8RQZVioFpih1SDRUhALejlIq5VbUbqSdsvqJJCrQz7c2WtYSF9utDpSkzna6G9cjLTazKZgywlY1cZ6VHdk46DmWPQ/znOYKYQz3eB+domSUK80YzwF/lo1sXcEV0IdAhkPXUEWTyJtDNTie5OYLFfdM2rfMiiJcGY0X3NXayVkNe24ImGDg/Z6larL2QWoVsfLFgqTJTGyFN2n49YWDi80xdb/cxuFrmFhIRLFahIVDyVAQvl9OIHU35jNN2eoljb0ds8pcj5XgVATw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z1y+Jdl3MkxZH/3zC2FhtVaDMVrBgMw0986z/p+FNSo=;
- b=F9BAlp8yBdeAKnWjZaq+Cb5ZyMV/5sea8lYm5c/7lcLLYccQgUKUdwcmo+Nx2w7isHYUZ5RTr4ruUGLHCUpKdiasL1akzHkFdadEF42mrLfUE28N+hfH0fojOOsYOAEgpebn0RsR2W6OQdKhq3pRd6t8sXWPoQBnLYmY4AHKKOCmxojreQlHzy9oDnkqzvIeN/RkQu62iI/uycGq7vIfnQCYe3EWXapV4UeOyxKGovMdwPfVLBEd0gkB8Im7kV8qR7LAKUpVFkcZeI9ogf2Zy7eucx5RRUAkPvrjfMVCYy3LdSF/fMwxGNN/GJINQDToMmI3OqqnUx3tR1xiaeF5zA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=xilinx.com;dmarc=pass action=none
- header.from=xilinx.com;dkim=pass header.d=xilinx.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z1y+Jdl3MkxZH/3zC2FhtVaDMVrBgMw0986z/p+FNSo=;
- b=hLlUL1oF0Ul9FCiwHwejJgF+44RDmBOMteYY/90F7ST5RjaU0rxPHBR6hOCY/o8jFV/M8WGdREVObWVoPuj1p16r4hdXyXjLatR6J8ZN0sqdeen5eXxAkoPXYgDS0/0WMIbKzCIjrhVCuXsrm7VoEocr5xdJ41t1+dlCQuZzl34=
-Received: from MN2PR02MB5727.namprd02.prod.outlook.com (20.179.85.153) by
- MN2PR02MB7102.namprd02.prod.outlook.com (20.180.27.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.15; Thu, 1 Aug 2019 04:47:48 +0000
-Received: from MN2PR02MB5727.namprd02.prod.outlook.com
- ([fe80::3873:a3ea:1f66:fc89]) by MN2PR02MB5727.namprd02.prod.outlook.com
- ([fe80::3873:a3ea:1f66:fc89%7]) with mapi id 15.20.2115.005; Thu, 1 Aug 2019
- 04:47:48 +0000
-From:   Naga Sureshkumar Relli <nagasure@xilinx.com>
-To:     "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>,
-        "boris.brezillon@collabora.com" <boris.brezillon@collabora.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>
-CC:     "richard@nod.at" <richard@nod.at>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>
-Subject: RE: [PATCH 5/6] mtd: spi-nor: Add s3an_post_sfdp_fixups()
-Thread-Topic: [PATCH 5/6] mtd: spi-nor: Add s3an_post_sfdp_fixups()
-Thread-Index: AQHVR4AuPtwOhxyzBUKoXu06OueqLabkpU9AgAANTICAAQbGMA==
-Date:   Thu, 1 Aug 2019 04:47:48 +0000
-Message-ID: <MN2PR02MB5727B99A02E915AEFE89D318AFDE0@MN2PR02MB5727.namprd02.prod.outlook.com>
-References: <20190731091145.27374-1-tudor.ambarus@microchip.com>
- <20190731091145.27374-6-tudor.ambarus@microchip.com>
- <MN2PR02MB5727FF8617B1A2FC89739601AFDF0@MN2PR02MB5727.namprd02.prod.outlook.com>
- <cfe63aee-2c48-c321-53b7-3997c97dc215@microchip.com>
-In-Reply-To: <cfe63aee-2c48-c321-53b7-3997c97dc215@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nagasure@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d1214451-18f6-48ae-0b15-08d7163b675e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR02MB7102;
-x-ms-traffictypediagnostic: MN2PR02MB7102:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <MN2PR02MB71026829BF43E6E66CE0EC41AFDE0@MN2PR02MB7102.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01165471DB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(366004)(396003)(346002)(39860400002)(13464003)(189003)(199004)(26005)(33656002)(66066001)(6246003)(52536014)(54906003)(110136005)(316002)(6436002)(229853002)(8676002)(71190400001)(71200400001)(186003)(53936002)(102836004)(81156014)(7696005)(305945005)(99286004)(256004)(8936002)(7736002)(81166006)(5660300002)(76176011)(6116002)(3846002)(476003)(66946007)(2906002)(446003)(9686003)(6306002)(55016002)(4326008)(74316002)(14454004)(11346002)(478600001)(7416002)(2501003)(68736007)(53546011)(2201001)(6506007)(966005)(486006)(25786009)(86362001)(64756008)(66556008)(76116006)(66476007)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB7102;H:MN2PR02MB5727.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ziD/EEI4Y3TcIrW1D9+IrkevZxaNA1W2qLEKFAYKyXoDZs3f8c+9dpK+h50ZdRo9U1Hawr9fnxKvED+8dr5Zs5qxMO2G7eIXADcsRyUnWW8Mg4mvvKxPEk0LH6qbcS4DtveGq45bL/iu3Qe/hhemZn1FJ60BBO/5WHd1QsqPV/t3Wr1lgD/Rbhzf5sZFPrIRJRnMf1fyyRJE7QcdJ+tDDFjbGiQ0S0XTvpbuLJgMtS3wMRNAMcWbdoeomfZYAbwKxmg0KRGckbDZ06Yn5+QiHoCVwk9sSQ6IgE+/nTnHFJ6WIqVsacYWhU+3G86Zqwj8cWZ1AtqfIDqDYeUVUKbx9+ZV6FO+NKFhO/4NzraxYKaul4NKjNnCdDta0q2Jdxjr1kawkITxTmywoNlO/XWxfD1/VOdrC1TceOd9cfvRURc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1214451-18f6-48ae-0b15-08d7163b675e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 04:47:48.8443
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nagasure@xilinx.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB7102
+        Thu, 1 Aug 2019 00:52:04 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:34212 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728861AbfHAEwD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 00:52:03 -0400
+Received: from mr5.cc.vt.edu (mr5.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:72:232:758b])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x714q2ER031951
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 00:52:02 -0400
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+        by mr5.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x714pvWn027859
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 00:52:02 -0400
+Received: by mail-qk1-f200.google.com with SMTP id t196so60187698qke.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 21:52:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=CZzuDKWbKN1JTYir8Hgre+/x4pJE/cZrbW2sxcH/pD8=;
+        b=S+DYn6MRmzCl4heWa8C7wX3Zob/TDKXN7i67RaMn8CgP7k07kBY3z02PtjnxLYHb+Y
+         h9KmGIdvciqhNxalHH0pHnef8vbvXxv2kEpRwZ9MSgRsByM9UNDexKfF08o0BWYCkNEu
+         xe95RgHDKvoMTS/opzy9oZcSXEjC2tSI0hzk20nxjgK7zACfcYReC+vLG1Izto6oH03f
+         KfU7bzXStGXtEsx7yhS1YDOFXyjBsvxC+OsrCCNdC/E4tDi6/D9cxPtFIxQNCsnjiAKp
+         mYAI3S4yMb2BciGnGrSEZZKDggxpww02Y6YZSIC9FuW21GvZ5AQ0nHuiA/7hRuyxhdRR
+         +wLg==
+X-Gm-Message-State: APjAAAX7XFcs8UdCDJXnId+gs8egzBDpcXND6nnhVSYi9QeCBrH5xUIi
+        +td2AkPGxtCKP7FnnPd/s9Qcr+3uXqAFrbVQY9qveBSrHyaHRX++qKwRN4AiqATBUDYnRkrdSjE
+        559LTlqqoOa9EPZ/yH/m1vvJRr1kYECtj/Ro=
+X-Received: by 2002:a0c:8a76:: with SMTP id 51mr91296635qvu.210.1564635117014;
+        Wed, 31 Jul 2019 21:51:57 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyZCZFPQt0JJB7U5BSL0tsH/+sb5gLek8gpvJd14zbTLTHzN9tKQrsvTS4Pz3p/0+WCwK/bUw==
+X-Received: by 2002:a0c:8a76:: with SMTP id 51mr91296617qvu.210.1564635116699;
+        Wed, 31 Jul 2019 21:51:56 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::7ca])
+        by smtp.gmail.com with ESMTPSA id m8sm31129350qti.97.2019.07.31.21.51.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 21:51:55 -0700 (PDT)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] linux-next 20190731 - aegis128-core.c fails to build
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Thu, 01 Aug 2019 00:51:54 -0400
+Message-ID: <13353.1564635114@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVHVkb3IsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVHVkb3Iu
-QW1iYXJ1c0BtaWNyb2NoaXAuY29tIDxUdWRvci5BbWJhcnVzQG1pY3JvY2hpcC5jb20+DQo+IFNl
-bnQ6IFdlZG5lc2RheSwgSnVseSAzMSwgMjAxOSA2OjM3IFBNDQo+IFRvOiBOYWdhIFN1cmVzaGt1
-bWFyIFJlbGxpIDxuYWdhc3VyZUB4aWxpbnguY29tPjsgYm9yaXMuYnJlemlsbG9uQGNvbGxhYm9y
-YS5jb207DQo+IG1hcmVrLnZhc3V0QGdtYWlsLmNvbTsgdmlnbmVzaHJAdGkuY29tDQo+IENjOiBy
-aWNoYXJkQG5vZC5hdDsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtbXRkQGxp
-c3RzLmluZnJhZGVhZC5vcmc7DQo+IG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb207IGNvbXB1dGVy
-c2ZvcnBlYWNlQGdtYWlsLmNvbTsgZHdtdzJAaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTog
-W1BBVENIIDUvNl0gbXRkOiBzcGktbm9yOiBBZGQgczNhbl9wb3N0X3NmZHBfZml4dXBzKCkNCj4g
-DQo+IEhpLCBOYWdhLA0KPiANCj4gT24gMDcvMzEvMjAxOSAwMzozMSBQTSwgTmFnYSBTdXJlc2hr
-dW1hciBSZWxsaSB3cm90ZToNCj4gPj4gKwlpZiAobm9yLT5pbmZvLT5mbGFncyAmIFNQSV9TM0FO
-KQ0KPiA+PiArCQlzM2FuX3Bvc3Rfc2ZkcF9maXh1cHMobm9yKTsNCj4gPj4gIH0NCj4gPj4NCj4g
-PiBJbnN0ZWFkIG9mIGNoZWNraW5nIHRoZSBmbGFncywgd2h5IGNhbid0IHdlIGNhbGwgZGlyZWN0
-bHkgdGhlIG5vcl9maXh1cHM/DQo+ID4gbGlrZSBCb3JpcyBpbXBsZW1lbnRhdGlvbiBub3ItPmlu
-Zm8tPmZpeHVwcy0+cG9zdF9zZmRwKCkNCj4gPiBodHRwczovL3BhdGNod29yay5vemxhYnMub3Jn
-L3BhdGNoLzEwMDkyOTEvDQo+IA0KPiBUaGlzIGNoZWNrIHdpbGwgdmFuaXNoIGFuZCBub3ItPmlu
-Zm8tPmZpeHVwcy0+cG9zdF9zZmRwKCkgd2lsbCBiZSBjYWxsZWQgZGlyZWN0bHkgb25jZSBJJ2xs
-DQo+IHJlc3BpbiB0aGUgbWFudWZhY3R1cmVyIGRyaXZlciBwYXJ0LiBwb3N0X3NmZHAoKSB3aWxs
-IHNldCBqdXN0IGZsYXNoIHBhcmFtZXRlcnMuIENoZWNrIEJvcmlzJw0KPiBwYXRjaCBhdCBodHRw
-czovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzEwMDkyOTUvDQo+IA0KPiBJJ2xsIHRyeSB0
-byByZXNwaW4gdGhlIHJlc3Qgb2YgQm9yaXMnIHBhdGNoZXMgc29tZXRpbWUgYXQgdGhlIGJlZ2lu
-bmluZyBvZiB0aGUgbmV4dCB3ZWVrLg0KT2ssIFRoYW5rcy4NCg0KUmVnYXJkcywNCk5hZ2EgU3Vy
-ZXNoa3VtYXIgUmVsbGkNCj4gDQo+IENoZWVycywNCj4gdGENCg==
+The recent NEON SIMD patches break the build if CONFIG_CRYPTO_AEGIS128_SIMD isn't set:
+
+  MODPOST 558 modules
+ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefined!
+ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
+ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefined!
+make[1]: *** [scripts/Makefile.modpost:105: modules-modpost] Error 1
+make: *** [Makefile:1299: modules] Error 2
+
+Add proper definitions and stubs to aegis.h so it builds both ways. This
+necessitated moving other stuff from aegis128-core.c to aegis.h so things were
+defined in the proper order.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+---
+diff --git a/crypto/aegis.h b/crypto/aegis.h
+index 4d56a85aea49..50a7496ca4ae 100644
+--- a/crypto/aegis.h
++++ b/crypto/aegis.h
+@@ -13,6 +13,11 @@
+ #include <linux/bitops.h>
+ #include <linux/types.h>
+ 
++#define AEGIS128_NONCE_SIZE 16
++#define AEGIS128_STATE_BLOCKS 5
++#define AEGIS128_KEY_SIZE 16
++#define AEGIS128_MIN_AUTH_SIZE 8
++#define AEGIS128_MAX_AUTH_SIZE 16
+ #define AEGIS_BLOCK_SIZE 16
+ 
+ union aegis_block {
+@@ -21,6 +26,39 @@ union aegis_block {
+ 	u8 bytes[AEGIS_BLOCK_SIZE];
+ };
+ 
++struct aegis_state {
++	union aegis_block blocks[AEGIS128_STATE_BLOCKS];
++};
++
++struct aegis_ctx {
++	union aegis_block key;
++};
++
++struct aegis128_ops {
++	int (*skcipher_walk_init)(struct skcipher_walk *walk,
++				  struct aead_request *req, bool atomic);
++
++	void (*crypt_chunk)(struct aegis_state *state, u8 *dst,
++			    const u8 *src, unsigned int size);
++};
++
++
++#ifdef CONFIG_CRYPTO_AEGIS128_SIMD
++bool crypto_aegis128_have_simd(void);
++void crypto_aegis128_update_simd(struct aegis_state *state, const void *msg);
++void crypto_aegis128_encrypt_chunk_simd(struct aegis_state *state, u8 *dst,
++					const u8 *src, unsigned int size);
++void crypto_aegis128_decrypt_chunk_simd(struct aegis_state *state, u8 *dst,
++					const u8 *src, unsigned int size);
++#else
++static inline bool crypto_aegis128_have_simd(void) { return false; }
++static inline void crypto_aegis128_update_simd(struct aegis_state *state, const void *msg) { }
++static inline void crypto_aegis128_encrypt_chunk_simd(struct aegis_state *state, u8 *dst,
++					const u8 *src, unsigned int size) { }
++static inline void crypto_aegis128_decrypt_chunk_simd(struct aegis_state *state, u8 *dst,
++					const u8 *src, unsigned int size) { }
++#endif
++
+ #define AEGIS_BLOCK_ALIGN (__alignof__(union aegis_block))
+ #define AEGIS_ALIGNED(p) IS_ALIGNED((uintptr_t)p, AEGIS_BLOCK_ALIGN)
+ 
+diff --git a/crypto/aegis128-core.c b/crypto/aegis128-core.c
+index f815b4685156..8b738128a921 100644
+--- a/crypto/aegis128-core.c
++++ b/crypto/aegis128-core.c
+@@ -20,37 +20,8 @@
+ 
+ #include "aegis.h"
+ 
+-#define AEGIS128_NONCE_SIZE 16
+-#define AEGIS128_STATE_BLOCKS 5
+-#define AEGIS128_KEY_SIZE 16
+-#define AEGIS128_MIN_AUTH_SIZE 8
+-#define AEGIS128_MAX_AUTH_SIZE 16
+-
+-struct aegis_state {
+-	union aegis_block blocks[AEGIS128_STATE_BLOCKS];
+-};
+-
+-struct aegis_ctx {
+-	union aegis_block key;
+-};
+-
+-struct aegis128_ops {
+-	int (*skcipher_walk_init)(struct skcipher_walk *walk,
+-				  struct aead_request *req, bool atomic);
+-
+-	void (*crypt_chunk)(struct aegis_state *state, u8 *dst,
+-			    const u8 *src, unsigned int size);
+-};
+-
+ static bool have_simd;
+ 
+-bool crypto_aegis128_have_simd(void);
+-void crypto_aegis128_update_simd(struct aegis_state *state, const void *msg);
+-void crypto_aegis128_encrypt_chunk_simd(struct aegis_state *state, u8 *dst,
+-					const u8 *src, unsigned int size);
+-void crypto_aegis128_decrypt_chunk_simd(struct aegis_state *state, u8 *dst,
+-					const u8 *src, unsigned int size);
+-
+ static void crypto_aegis128_update(struct aegis_state *state)
+ {
+ 	union aegis_block tmp;
+
