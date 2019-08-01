@@ -2,110 +2,93 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F33C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F6AC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56912206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D59216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:44:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EG54Vi8r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vA2XXEIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbfHAIoT (ORCPT
+        id S1730466AbfHAIoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:44:19 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39360 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbfHAIoP (ORCPT
+        Thu, 1 Aug 2019 04:44:37 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41655 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfHAIog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:44:15 -0400
-Received: by mail-wm1-f65.google.com with SMTP id u25so52035357wmc.4;
-        Thu, 01 Aug 2019 01:44:14 -0700 (PDT)
+        Thu, 1 Aug 2019 04:44:36 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 62so44741732lfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 01:44:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wbG1tKcKSzX4oqDDNmN4IBWjESBPU0P0uXP9xiyp8X4=;
-        b=EG54Vi8r+AgRGm++comVwkUjejlVCuBURBQsWnPYMYwYeVCBcQK3xmPtHnXG1nG4Jo
-         BgM3iktvqBAT+zfcR9kZRjZlMkV/YICQTnNH9ZUg8PZhAJDCtEgMML/SzMREUHHpdRVe
-         slJS/jQcP32xNACpDkZVpQlalZ0M9vx6mmn5JTbTmlYpZ1tVhpbloaV8PyA15YMHBYLp
-         mFxBRBKUbaWzEknkzyapESiKg+yfvus2kYI/d9+1oHAOJFAZdLLH0vxxkiprp0pko6em
-         5AKKCZFotnHQkTGS5PbHoCFqLol+Yu1w6g3edDHI3+mp4cYNUCEbpjXvI9fWnlvdJCQk
-         UdEw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ApaNlouSMx8uBbHDq5VJnFAAQcHTQjPYGjRXW3aemyY=;
+        b=vA2XXEIzAYm5CKmotczEq6u56vcPMSfU6SQ5r/RIFSOmWcaN1evlWsJWLH5SMntRQe
+         yowbGs+sPWuyH9wBiFmtYoKxRNLRd1xWHLV2pouaFBYyZdG/FazpVXMOcP53vTOsnuF/
+         I55H4RtKKCcXDXqPHHUEocLPVuGOmvmXazPUp0jJr99PLP29EBVHo+cNW8V+tB/eMRmF
+         oZKL3W6SbElPMWp2PyTqnfQXykWViJ11jtkvf8t7kFotqAFZR1ODt1pM6ykyZhXbKW2r
+         TsOTySbx6HXX5+TtL6vYpIw/jFZl8X/fTkdG4cJiGvYw+8ER+bbHaMNDX6TgFKyLGQsn
+         4rNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wbG1tKcKSzX4oqDDNmN4IBWjESBPU0P0uXP9xiyp8X4=;
-        b=oGf/VkXpaeHDeIFMhu1d8QHXauh82i3FKyqO6v1l/VdcqY4OKdLHfmEx8C+mhnM09q
-         OC7+HmqW5R9uEvsIn9G/jHKRPO+mpc5iSakh6igARgxhji7bdmskPz+auavXqkP0HOoV
-         0l5BuJayusN8eREd++9zK+RAYm8VkXs+nr1ZgCOEhQQJcIRKD9CRzWDi7gfJFMfymh38
-         RHn8ryd1iJt7ZXbMEng6zKGAmkSQcmLIKN7SJx8bS2I2CN1j3u8eBkqqt47kiQZ5Np9B
-         giYB0zn99USLhw08j1rnY31apvMEFCGCLej8veWEheisdhseQjfbvEEm9D4heaeoNNbt
-         FYtQ==
-X-Gm-Message-State: APjAAAUC7Bd+IazGVapMZFwogkgnSmWzspfCj02XAq9bN4WvI3joLkw/
-        FOjhx06dogeE3tIwxZuetv0=
-X-Google-Smtp-Source: APXvYqy/fvWuSBBAPRPVG+qUHIVz9oF4Zn1RQcucbT/rkf2Z7BGfRy8C5b9vV+sqpowWy2PfOZJXVA==
-X-Received: by 2002:a7b:cd09:: with SMTP id f9mr108894065wmj.64.1564649053607;
-        Thu, 01 Aug 2019 01:44:13 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id w24sm55282939wmc.30.2019.08.01.01.44.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 01 Aug 2019 01:44:12 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 10:44:11 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Roald Strauss <mr_lou@dewfall.dk>,
-        "Steven J. Magnani" <steve.magnani@digidescorp.com>,
-        Jan Kara <jack@suse.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: UDF filesystem image with Write-Once UDF Access Type
-Message-ID: <20190801084411.l4uv7xrb5ilouuje@pali>
-References: <20190712100224.s2chparxszlbnill@pali>
- <20190801073530.GA25064@quack2.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ApaNlouSMx8uBbHDq5VJnFAAQcHTQjPYGjRXW3aemyY=;
+        b=RRyayQBJJylSWFfPVPWIxM839KiVliLlZs+St0FEs4O0h4352KttKx6QvHM8SwCRrv
+         VuQSm3VZGXX3m9B9XGN2VBBCEHNcTj3uCvAH2Y7/V5IRHb2Zu7n+1/M2RflY8ZOEgGrH
+         n0bDt8SqCIoR3V1Y6Q2F1AYWzlU61qE6Fw/qeIKc6hir0B/Wq7GmyHeoEMYapRmnUWrF
+         t0wqUy+MtxxiTONkNlmQ02gbYJ7k5k4bqzs3kYPrYlJ6RzHpornbZtFA2NOtyZ1X9i34
+         uf4tjxSFHhmXzQ6g/7/9cD59xyL/To27i3Cy756dwmxgLL4zvLxs+29T0lYR/raeq+bs
+         XtCQ==
+X-Gm-Message-State: APjAAAXGFayQDk0xR6/ZQQYyvg9r9kKa3Mgz5rYa7ZW4zK4Y7DI5MN4z
+        caGMPL4e+wmPAJ2TiiexyN/gGU1YeOcifzQWadX0bA==
+X-Google-Smtp-Source: APXvYqwiPimAOKH35mc/iLJ4mkQBFGo7Fu8tx06pdbdue2EpML8TleV/2fqQ3x2CF8Rqg/xGPDEjUwi/0w3JXhg1D0w=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr60290264lfu.141.1564649074865;
+ Thu, 01 Aug 2019 01:44:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="inwxaplukm2xspax"
-Content-Disposition: inline
-In-Reply-To: <20190801073530.GA25064@quack2.suse.cz>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190712153722.3d1498be@endymion> <20190712155744.0771967c@endymion>
+In-Reply-To: <20190712155744.0771967c@endymion>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 1 Aug 2019 10:44:23 +0200
+Message-ID: <CACRpkdb_UAMc=KKgjvVXD1xGnQLusfc9JC-av0mUSTjC83GRmA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] soc: ixp4xx: Hide auto-selected drivers
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Krzysztof Halasa <khalasa@piap.pl>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 12, 2019 at 3:57 PM Jean Delvare <jdelvare@suse.de> wrote:
 
---inwxaplukm2xspax
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The 2 IXP4xx SOC drivers qmgr and npe are selected automatically when
+> needed so they do not need to be presented to the user.
+>
+> Furthermore these helper drivers are specific to the IXP4xx arch so
+> hide them completely on other architectures so as to not clutter the
+> config file.
+>
+> Signed-off-by: Jean Delvare <jdelvare@suse.de>
+> Cc: Krzysztof Halasa <khalasa@piap.pl>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Note: Ultimately all I want is that non-ixp4xx users are not asked
+> about IXP4XX_QMGR and IXP4XX_NPE. If there is another preferred option
+> to achieve the same, that would work with me too, just let me know.
 
-On Thursday 01 August 2019 09:35:30 Jan Kara wrote:
-> On Fri 12-07-19 12:02:24, Pali Roh=C3=A1r  wrote:
-> > Also in git master of udftools has mkduffs now new option --read-only
-> > which creates UDF image with Read-Only Access Type.
->=20
-> I've tested this and the kernel properly mounts the image read-only.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Roald, can you test that problem which you described to me with
-read-only access type is now correctly fixed?
+This is the right thing to do, sorry for not doing it like this to begin
+with. I'll queue it in my ixp4xx tree.
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---inwxaplukm2xspax
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXUKmWQAKCRCL8Mk9A+RD
-Us9IAKDBKpXCN3FssjdZETAu9KuhlTIURQCdFNIBQrFUPHRjge4zkW8cnEAImkE=
-=ItTT
------END PGP SIGNATURE-----
-
---inwxaplukm2xspax--
+Yours,
+Linus Walleij
