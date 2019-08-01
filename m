@@ -2,124 +2,121 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB3AC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936FEC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747A1206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0E0206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jpFxYnQm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKdgZCvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbfHAHQe (ORCPT
+        id S1730659AbfHAHQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:16:34 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38852 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730201AbfHAHQe (ORCPT
+        Thu, 1 Aug 2019 03:16:54 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39708 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730201AbfHAHQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:16:34 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s15so40784594wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 00:16:32 -0700 (PDT)
+        Thu, 1 Aug 2019 03:16:53 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v18so68244120ljh.6
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 00:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NnB2nDFWI5ec51xZpRNS0eGeVvyyeRajJNG5CTwO4OU=;
-        b=jpFxYnQm1en+21QoCMtdXajNs+goTe/CRGRqjtrMaD9G6dr71nskYBTTdLoHUbfyNe
-         dx60QgPZ72uI7pOr6AulRt1DkxBoXL8edSnrawZAHTg3D+ptHu/oPdEe4O3CkKs7L9LZ
-         wOwYQPQ61qBH0sqoHR3/jvCca09FY1BZLoakTnXMJQz++/j+Fa75z6MrTPT5urUf7W5e
-         keXbitgVe4JTb/Vn4UyX6sLk7ZQYsqVrTx32OOB3lWlhLT0f4xjyTtXBNofJ700mBVim
-         SLDY4UyceVgWtsPBbtn9Oqv7d3f5T/17uZQyN5TFLwCDvT+eA2PC7uVecrp6xJktEOsb
-         CUrA==
+        bh=4FFz/bBVyysFB3KKw1zsUFOn9cjX6r61XwqqAYRgWEw=;
+        b=iKdgZCvrJQJIeS+/g945+X55Tei/luMZ4Sc+Lm+E2znXcqp88ynGWLPy13tSntyR8e
+         O5LicATEHDYjGw1NW6E/WtaXTQOSYTQwWvm9aM2eBYDJqx+G1oMh53FAc55tmNGrIngK
+         PbbB/AVGuOu2GadLaAhka/pdIzfUBqGF6XNacXQ/vro1Nxpgl6zazyjtSzUm7JYOzDZA
+         sKUzfzXa1bU0BOipWyQFR4ZkJ7+oT5TQCR4rblxTy9Te69PdJAFtkSq5B/m07K0aMLzR
+         yIAloAMM1RKjaq3d68KdctLDYrfHChaNI76Q/vB1szFX8yTKiuF2/1M6DECgyVHp5N1W
+         JdAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NnB2nDFWI5ec51xZpRNS0eGeVvyyeRajJNG5CTwO4OU=;
-        b=KmWXmXkU7hObI7xKQjyVUtO21U9zWOAe4fC29wGi9mBByGre3BRtfs0ElghBY0U8pz
-         +t9KGRYeXjfkWU6IFP+5BRU+dfW2vv0S/HOUs1JN75pXx8jwKDCtdME2gzWlf/hyVVP6
-         hmFzjoRnKuymfJ4D0Ry6xajfrDbOfNesRK36IXhFTvlazimiinCJR8eYLF3QYuoS5ZUM
-         /J5pIzIdhRSz7rm0JGL2PD7+pYwsxrBlWgS3olc34H+5PUg4FfltCjXPnpRJhoYtuAlj
-         eSWRlVg9No/n1xlu7Y05qByUGhjvw/Je1AFbbM42wga3CwRUIz9kMb8BuvL/FeE5kswY
-         JLJw==
-X-Gm-Message-State: APjAAAVHPO64GBy1/NPZQ425AbhFKu+eRzHk3KOI/tKyBsrcn4lnPWoR
-        nEi7ZKXaNbtl1tsROAggCx3KI574nYIEg/tU2vjSZw==
-X-Google-Smtp-Source: APXvYqxs68atl0y996xjePC7x7rIgCrytEqFiRB74cPlgPYNA6yMTSx1VN9AUIgMKSNjSXYDwpUJb4m5lNmbJr7t08o=
-X-Received: by 2002:a1c:b706:: with SMTP id h6mr111148067wmf.119.1564643792026;
- Thu, 01 Aug 2019 00:16:32 -0700 (PDT)
+        bh=4FFz/bBVyysFB3KKw1zsUFOn9cjX6r61XwqqAYRgWEw=;
+        b=rvHBuRzXx5Rv9mNED0PhblnT0gm7foMmkDRlTY23z0p2kVvbTpa+Fke6E/A8zO6E9n
+         Wzk6wSNTC7OFNd8KBPmI1I7tirLVvkHYjD+DcpscvPdtGljG2ZjA3pWSKKXRAxY1IREN
+         PhCqGRyUoFeiixJDs5Fvtdskw/b4ZtqxpF6Vss/yTTJmN7GJJaNULZFivHwYR2JLPcAu
+         /kJbdIeFpf1L8tKywaMGEEl/qifctEM/PK2OHZmWQwLAXzsk2wXQCLN0BZBGhKVHipCg
+         DGyWMImbD8N2IXO/MViwaKnoUi3P9t9RdgL6mKQ2PKGqRoshnl+D2s531Yjzdpkw5hbf
+         m3Rw==
+X-Gm-Message-State: APjAAAVbIENmL6ht66gWxJWmB09pBdUiSOUZ+POYRs09fIEUtBVZcR2f
+        RhQMpv0RF8bswqJKcwZHZea+QwDqEWos0OKxh3Q=
+X-Google-Smtp-Source: APXvYqxawk86mFZPh1yYXR3JemJvu7om9uDV3pIgxG5km0lt7vXF06fErFGpfqHF0PbuR9wjdyTbewdJgcQ1kJUQlnk=
+X-Received: by 2002:a2e:298a:: with SMTP id p10mr65571927ljp.74.1564643811920;
+ Thu, 01 Aug 2019 00:16:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190801115346.77439e35@canb.auug.org.au> <20190801021133.GA1428@gondor.apana.org.au>
-In-Reply-To: <20190801021133.GA1428@gondor.apana.org.au>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 1 Aug 2019 10:16:21 +0300
-Message-ID: <CAKv+Gu-Yo72DQvh_M3P4NW9pOKDh5YH-DN3cH+MQZkdACwcb3g@mail.gmail.com>
-Subject: Re: [PATCH] asm-generic: Remove redundant arch-specific rules for simd.h
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
+References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com>
+In-Reply-To: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Thu, 1 Aug 2019 15:16:40 +0800
+Message-ID: <CAERHkruxfBc8DqNUr=fbYuQWrXrHC7cK6HnVR3xp0iLA9QtxiQ@mail.gmail.com>
+Subject: Re: setup_boot_APIC_clock() NULL dereference during early boot on
+ reduced hardware platforms
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019 at 05:11, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+On Thu, Aug 1, 2019 at 2:26 PM Daniel Drake <drake@endlessm.com> wrote:
 >
-> On Thu, Aug 01, 2019 at 11:53:46AM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > After merging the crypto tree, today's linux-next build (arm
-> > multi_v7_defconfig) produced this warning:
-> >
-> > scripts/Makefile.asm-generic:25: redundant generic-y found in arch/arm/include/asm/Kbuild: simd.h
-> >
-> > Introduced by commit
-> >
-> >   82cb54856874 ("asm-generic: make simd.h a mandatory include/asm header")
-> >
-> > Also the powerpc ppc64_defconfig build produced this warning:
-> >
-> > scripts/Makefile.asm-generic:25: redundant generic-y found in arch/powerpc/include/asm/Kbuild: simd.h
+> Hi,
 >
-> Thanks for the heads up Stephen.  This patch should fix the
-> warnings.
+> Working with a new consumer laptop based on AMD R7-3700U, we are
+> seeing a kernel panic during early boot (before the display
+> initializes). It's a new product and there is no previous known
+> working kernel version (tested 5.0, 5.2 and current linus master).
 >
-> ---8<---
-> Now that simd.h is in include/asm-generic/Kbuild we don't need
-> the arch-specific Kbuild rules for them.
+> We may have also seen this problem on a MiniPC based on AMD APU 7010
+> from another vendor, but we don't have it in hands right now to
+> confirm that it's the exact same crash.
 >
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Fixes: 82cb54856874 ("asm-generic: make simd.h a mandatory...")
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> earlycon shows the details: a NULL dereference under
+> setup_boot_APIC_clock(), which actually happens in
+> calibrate_APIC_clock():
 >
-> diff --git a/arch/arm/include/asm/Kbuild b/arch/arm/include/asm/Kbuild
-> index 6b2dc15..68ca86f 100644
-> --- a/arch/arm/include/asm/Kbuild
-> +++ b/arch/arm/include/asm/Kbuild
-> @@ -17,7 +17,6 @@ generic-y += parport.h
->  generic-y += preempt.h
->  generic-y += seccomp.h
->  generic-y += serial.h
-> -generic-y += simd.h
->  generic-y += trace_clock.h
+>     /* Replace the global interrupt handler */
+>     real_handler = global_clock_event->event_handler;
+>     global_clock_event->event_handler = lapic_cal_handler;
 >
->  generated-y += mach-types.h
-> diff --git a/arch/powerpc/include/asm/Kbuild b/arch/powerpc/include/asm/Kbuild
-> index 9a1d2fc..64870c7 100644
-> --- a/arch/powerpc/include/asm/Kbuild
-> +++ b/arch/powerpc/include/asm/Kbuild
-> @@ -11,4 +11,3 @@ generic-y += mcs_spinlock.h
->  generic-y += preempt.h
->  generic-y += vtime.h
->  generic-y += msi.h
-> -generic-y += simd.h
+> global_clock_event is NULL here. This is a "reduced hardware" ACPI
+> platform so acpi_generic_reduced_hw_init() has set timer_init to NULL,
+> avoiding the usual codepaths that would set up global_clock_event.
+>
+IIRC, acpi_generic_reduced_hw_init() avoids initializing PIT, the status of
+this legacy device is unknown in ACPI hw-reduced mode.
 
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> I tried the obvious:
+>  if (!global_clock_event)
+>     return -1;
+>
+No, the platform needs a global clock event, can you turn on some other
+clock source on your platform, like HPET?
+
+Thanks,
+-Aubrey
+
+> However I'm probably missing part of the big picture here, as this
+> only makes boot fail later on. It continues til the next point that
+> something leads to schedule(), such as a driver calling msleep() or
+> mark_readonly() calling rcu_barrier(), etc. Then it hangs.
+>
+> Is something missing in terms of timer setup here? Suggestions appreciated...
+>
+> Thanks
+> Daniel
