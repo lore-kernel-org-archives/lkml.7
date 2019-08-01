@@ -2,139 +2,102 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E003BC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8D2C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FC52064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:33:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cyRZJ1yR"
+	by mail.kernel.org (Postfix) with ESMTP id 61FD32064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732659AbfHAVdd (ORCPT
+        id S1732767AbfHAVeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:33:33 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46225 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbfHAVdd (ORCPT
+        Thu, 1 Aug 2019 17:34:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37931 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbfHAVea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:33:33 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k189so15857369pgk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 14:33:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RWmARDo48Z8Dv81pG22MrnEPvg/7991SYFzMS48qKnE=;
-        b=cyRZJ1yRaVu6PJnIyZ0m2XF/aeI4KSucQmlgOYSbGhPKcG5yUcoM8+RdJ8DbmCDMnc
-         RkHD86VRMuw7CevSp88Ee4Ezex7hFoeV3tSzVJFbBo0dyrpIsh0i+pZZIPAhDK8CzAxX
-         UpJhLcrmpqLJsBs7zYMLqfQrw6B4tik6LogGI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RWmARDo48Z8Dv81pG22MrnEPvg/7991SYFzMS48qKnE=;
-        b=m7mQmCrONL2xy05L/Z8nf71xuNLXffmHRx/jMpkFN9qB/p2jlWCfrMx0YmKKJUoHZt
-         WOC0joiz4ANoGCg//0TkGNB5GCjDF4NBnKoj7RS4BYNL9xpBLdIeJq6LSAXW4Lq7L0zt
-         lQ5zMpL9a2pizUw27J0xhxprKbL29JOBjLCES7wDzIBBsocFZjIDvbGZ2lffCPrgWKfY
-         HXarwVHn+f2aiRCIwFKmnvV4St6YJ9K+Apg2LuzL6suEvgnMPlKxARkJv/R7ty+8KUZg
-         1pAh3cV7W36T7YD9PEM8LVGJ8JK1IhMXPFe/V8mphVnoPR3CTHgP9fUGk8Jzr4qYmxpw
-         gNfg==
-X-Gm-Message-State: APjAAAVRbyHyZV4KJS8VEU2xeoO0jQjQS66sl4kzJwJw44HtF0poQLG4
-        rFqxf3TzWZxr4AdQtkF3+cKuRw==
-X-Google-Smtp-Source: APXvYqwYyiNdtpaoJsKsetkRz6ay7LYTZwzMZKhXzzcDkAft5BnXgQ6QvVK/JsDun15uuAKQ3FIRiw==
-X-Received: by 2002:a63:5945:: with SMTP id j5mr120457107pgm.452.1564695212134;
-        Thu, 01 Aug 2019 14:33:32 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id v138sm83854994pfc.15.2019.08.01.14.33.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 14:33:31 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        kernel-team@android.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tri Vo <trong@android.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH] power: supply: Init device wakeup after device_add()
-Date:   Thu,  1 Aug 2019 14:33:30 -0700
-Message-Id: <20190801213330.81079-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+        Thu, 1 Aug 2019 17:34:30 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1htIiO-0002Tq-7E; Thu, 01 Aug 2019 23:34:24 +0200
+Date:   Thu, 1 Aug 2019 23:34:23 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>
+Subject: Re: [PATCH] perf/x86/amd: Change NMI latency mitigation to use a
+ timestamp
+In-Reply-To: <b4597324-6eb8-31fa-e911-63f3b704c974@amd.com>
+Message-ID: <alpine.DEB.2.21.1908012331550.1789@nanos.tec.linutronix.de>
+References: <833ee307989ac6bfb45efe823c5eca4b2b80c7cf.1564685848.git.thomas.lendacky@amd.com> <20190801211613.GB3578@hirez.programming.kicks-ass.net> <b4597324-6eb8-31fa-e911-63f3b704c974@amd.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We may want to use the device pointer in device_init_wakeup() with
-functions that expect the device to already be added with device_add().
-For example, if we were to link the device initializing wakeup to
-something in sysfs such as a class for wakeups we'll run into an error.
-It looks like this code was written with the assumption that the device
-would be added before initializing wakeup due to the order of operations
-in power_supply_unregister().
+On Thu, 1 Aug 2019, Lendacky, Thomas wrote:
+> On 8/1/19 4:16 PM, Peter Zijlstra wrote:
+> > On Thu, Aug 01, 2019 at 06:57:41PM +0000, Lendacky, Thomas wrote:
+> >> From: Tom Lendacky <thomas.lendacky@amd.com>
+> >>
+> >> It turns out that the NMI latency workaround from commit 6d3edaae16c6
+> >> ("x86/perf/amd: Resolve NMI latency issues for active PMCs") ends up
+> >> being too conservative and results in the perf NMI handler claiming NMIs
+> >> to easily on AMD hardware when the NMI watchdog is active.
+> >>
+> >> This has an impact, for example, on the hpwdt (HPE watchdog timer) module.
+> >> This module can produce an NMI that is used to reset the system. It
+> >> registers an NMI handler for the NMI_UNKNOWN type and relies on the fact
+> >> that nothing has claimed an NMI so that its handler will be invoked when
+> >> the watchdog device produces an NMI. After the referenced commit, the
+> >> hpwdt module is unable to process its generated NMI if the NMI watchdog is
+> >> active, because the current NMI latency mitigation results in the NMI
+> >> being claimed by the perf NMI handler.
+> >>
+> >> Update the AMD perf NMI latency mitigation workaround to, instead, use a
+> >> window of time. Whenever a PMC is handled in the perf NMI handler, set a
+> >> timestamp which will act as a perf NMI window. Any NMIs arriving within
+> >> that window will be claimed by perf. Anything outside that window will
+> >> not be claimed by perf. The value for the NMI window is set to 100 msecs.
+> >> This is a conservative value that easily covers any NMI latency in the
+> >> hardware. While this still results in a window in which the hpwdt module
+> >> will not receive its NMI, the window is now much, much smaller.
+> > 
+> > Blergh, I so hate all this. The proposed patch is basically duct tape.
+> 
+> Yeah, I'm not a fan either.
+> 
+> > 
+> > The horribly retarded x86 NMI infrastructure strikes again :/
+> > 
+> > Tom; do you have any idea how expensive it is to twiddle CR8 and play
+> > games with interrupt priorities instead of piling world + dog on this
+> > one NMI line? (as compared to CLI/STI)
+> 
+> I can check on that.  What are you thinking?
 
-Let's change the order of operations so we don't run into problems here.
+Avoid the whole NMI mess, make the PMC interrupt a proper vector in the
+highest prio bucket and instead of using CLI/STI use CR8. That would have
+the additional advantage that we could prevent perf "NMI" then occsionally :)
 
-Fixes: 948dcf966228 ("power_supply: Prevent suspend until power supply events are processed")
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>                                                                                                                      
-Cc: Tri Vo <trong@android.com>                                                                                                                                             
-Cc: Kalesh Singh <kaleshsingh@google.com>      
-Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
+Thanks,
 
-See this thread[1] for more information on how this will be necessary.
-
-[1] https://lkml.kernel.org/r/20190731215514.212215-1-trong@android.com
-
-
- drivers/power/supply/power_supply_core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 82e84801264c..5c36c430ce8b 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -1051,14 +1051,14 @@ __power_supply_register(struct device *parent,
- 	}
- 
- 	spin_lock_init(&psy->changed_lock);
--	rc = device_init_wakeup(dev, ws);
--	if (rc)
--		goto wakeup_init_failed;
--
- 	rc = device_add(dev);
- 	if (rc)
- 		goto device_add_failed;
- 
-+	rc = device_init_wakeup(dev, ws);
-+	if (rc)
-+		goto wakeup_init_failed;
-+
- 	rc = psy_register_thermal(psy);
- 	if (rc)
- 		goto register_thermal_failed;
-@@ -1101,8 +1101,8 @@ __power_supply_register(struct device *parent,
- 	psy_unregister_thermal(psy);
- register_thermal_failed:
- 	device_del(dev);
--device_add_failed:
- wakeup_init_failed:
-+device_add_failed:
- check_supplies_failed:
- dev_set_name_failed:
- 	put_device(dev);
--- 
-Sent by a computer through tubes
-
+	tglx
