@@ -2,100 +2,124 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D243C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC22AC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D47E320449
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852252080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:53:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tfVE0gpM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pqSYmUoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732299AbfHAOvZ (ORCPT
+        id S1732308AbfHAOx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:51:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47980 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731148AbfHAOvZ (ORCPT
+        Thu, 1 Aug 2019 10:53:57 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42778 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfHAOx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:51:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TLXphQCYQA4IH6EeQfPIRer8TKaUSBx10Q5NGx+zH2A=; b=tfVE0gpM/bbhJ21q88MryQl3W
-        VpX8K2qjMXf2ZLhMSkeoQbqrPsU9ZrsrQNacazFNkqJZrfdGGRJwVGcQ94yYxloZP6LKLYCt1OIbf
-        WRxKna+/IOOgsWkKvhc0+05JYEILE71YYB88OGPSWnGt++lKvCqOmBfL75cMoU8YdqaMy9Qe5yma9
-        cborZwPpvfMaWKk2ePpV7LlvV7Pq5iKQQKH0zcT6OgICS1/pMWpMVMH+JwG1Diy7674fLSHYEfd7v
-        i0D6QkPd7sTNG12iftcHxo0XauzkcWoEGK4Xi835kdhlGES7tnNESUNUfVTpZV9kqeVXGjIDLM17p
-        cylcGOXww==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1htCQH-0005Qw-M0; Thu, 01 Aug 2019 14:51:17 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 17F132029F4C9; Thu,  1 Aug 2019 16:51:16 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 16:51:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Oleg Nesterov <oleg@redhat.com>, kvm@vger.kernel.org,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [patch 4/5] posix-cpu-timers: Defer timer handling to task_work
-Message-ID: <20190801145116.GD31398@hirez.programming.kicks-ass.net>
-References: <20190801143250.370326052@linutronix.de>
- <20190801143658.074833024@linutronix.de>
+        Thu, 1 Aug 2019 10:53:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x1so24026695wrr.9
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:53:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fQwjCZHn0hCfiGPjPuKEwhUSkgHi6FqRy5NYtVOPZRM=;
+        b=pqSYmUoWn7Y9stRF6ZpR06REAdu4QQiiYgSVTaYT96C/7YWj+FlPvttmcGZbl8QL3L
+         DjwL87YY/0mvbttZweuZQQdd6vZqjun4lfuJvQy566ZthS79p+QgVdx6GJLGaT8WfhSJ
+         z/D80HhzN0TTEtZiAXEhDP/Jciq52ZsUX8HJS5scxJ4PiNKnY+bHDh2SFwdp3rUV/9Yp
+         DfDaxuNpKXuDh2/3o36oJPEdVtyrwAXNmuh9kEw7KusrIWugmk/cBaHfwaKl5/Ai3pnt
+         r6b2fDN/D9K7gxk2tYh0b0lUkiKKuCSjNniTYJytMTa6OrkmIdAjk8MnCSgvyV5VwHON
+         7gkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fQwjCZHn0hCfiGPjPuKEwhUSkgHi6FqRy5NYtVOPZRM=;
+        b=cl0a9UEkqAn6mYKgnChO0g2PfcmvnhT/eVfSZMXcUGmzYEQnKF+F/L5qXdtLHUihXG
+         IMjQoCysoff9iFwYHAFowGV3cSkd9gjLgB9f2amghdxZJop3ogac0ayUmFTg6L7reDhH
+         PlI4Cd2tCSKarsfBnWGCF6Ir0frMh+RhanWs3q2dKPaexDhnDW4c3Lsnur+KiziTsP+a
+         q+dOXWYfhGYvpM4xrwdfALWniPbCYFfyDfegFcfmovrM2L+m6gZwnNPX9J0LvsUhigca
+         BhqFv30cewP5jrYG7uMwCEBI07ZMpAgavXkT/VqrPfKyikBgpRBcOBlGtEdVg4L1CdX1
+         BdIg==
+X-Gm-Message-State: APjAAAXdY4BRU2+wv01btuaCHEdZXDTxm5hl7U7sFz9nl2kdaLyUGWpT
+        +PZB3jiROeAj6pONOgd7xAJfYtVL3NL1hS6oJGM=
+X-Google-Smtp-Source: APXvYqzpaG1YbScy9oUumOFNtfVu0QAC2W3EyQb8DVsoVEborz1WwCAMqWFBurRipPcj7KfZXMJ8FuA/5zGH6L5tlBA=
+X-Received: by 2002:adf:f450:: with SMTP id f16mr108790740wrp.335.1564671234760;
+ Thu, 01 Aug 2019 07:53:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801143658.074833024@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190731205539.13997-1-daniel.baluta@nxp.com> <20190801061033.4diqrc4x4mighyju@pengutronix.de>
+In-Reply-To: <20190801061033.4diqrc4x4mighyju@pengutronix.de>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Thu, 1 Aug 2019 17:53:43 +0300
+Message-ID: <CAEnQRZCG4J-e_sx29qaPXUiBHcYirEZV=99dijctg9hr5pPH0w@mail.gmail.com>
+Subject: Re: [PATCH] mailbox: imx: Fix Tx doorbell shutdown path
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>, jassisinghbrar@gmail.com,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 04:32:54PM +0200, Thomas Gleixner wrote:
-> --- a/kernel/time/Kconfig
-> +++ b/kernel/time/Kconfig
-> @@ -52,6 +52,11 @@ config GENERIC_CLOCKEVENTS_MIN_ADJUST
->  config GENERIC_CMOS_UPDATE
->  	bool
->  
-> +# Select to handle posix CPU timers from task_work
-> +# and not from the timer interrupt context
-> +config POSIX_CPU_TIMERS_TASK_WORK
-> +	bool
-> +
->  if GENERIC_CLOCKEVENTS
->  menu "Timers subsystem"
->  
+Hi Oleksij,
 
+Thanks for review
 
-diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
-index deff97217496..76e37ad5bc31 100644
---- a/kernel/Kconfig.preempt
-+++ b/kernel/Kconfig.preempt
-@@ -58,6 +58,7 @@ config PREEMPT
- config PREEMPT_RT
- 	bool "Fully Preemptible Kernel (Real-Time)"
- 	depends on EXPERT && ARCH_SUPPORTS_RT
-+	depends on POSIX_CPU_TIMERS_TASK_WORK
- 	select PREEMPTION
- 	help
- 	  This option turns the kernel into a real-time kernel by replacing
+<snip>
+
+>
+> your patch is in conflicht with Richard's Zhu <hongxing.zhu@nxp.com>
+> patch "[PATCH v3] mailbox: imx: add support for imx v1 mu".
+> Please sync your works.
+
+Sent an email to Richard. Hopefully he can rebase his change on my patches.
+
+<snip>
+
+>
+> Looks like here is one more bug "from the beginning of times" :)
+> The imx_mu_xcr_rmw() should disable only one channel depending on the
+> type of channel.
+>
+> It should be:
+>         switch (cp->type) {
+>         case IMX_MU_TYPE_TX:
+>                 imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
+>                 break;
+>         case IMX_MU_TYPE_RX:
+>                 imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_RIEn(cp->idx));
+>                 break;
+>         case IMX_MU_TYPE_RXDB:
+>                 imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_GIEn(cp->idx));
+>                 break;
+>         default:
+>                 break;
+
+Honestly, this is not really a bug. The registers are expected to
+already be cleared.
+Also, please mind that we shouldn't clear TIE here because it should be cleared
+in the mu_isr.
+
+Anyhow, I have sent the patches with your exact suggestion to Richard.
+
+>         }
+>
+> Right now I'm on vocation and have nothing against, if you'll provide
+> this fix.
+
+Have a nice vacation and thanks for the review.
