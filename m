@@ -6,44 +6,39 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED9BC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75F2C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6AD92089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A992089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbfHAGWk (ORCPT
+        id S1729992AbfHAGYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 02:22:40 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33832 "EHLO
+        Thu, 1 Aug 2019 02:24:35 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33858 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729953AbfHAGWk (ORCPT
+        with ESMTP id S1729196AbfHAGYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 02:22:40 -0400
+        Thu, 1 Aug 2019 02:24:35 -0400
 Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 208C128AF56;
-        Thu,  1 Aug 2019 07:22:37 +0100 (BST)
-Date:   Thu, 1 Aug 2019 08:22:33 +0200
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id F2B9B28BFE1;
+        Thu,  1 Aug 2019 07:24:32 +0100 (BST)
+Date:   Thu, 1 Aug 2019 08:24:29 +0200
 From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     miquel.raynal@bootlin.com, marek.vasut@gmail.com,
-        bbrezillon@kernel.org, dwmw2@infradead.org,
-        computersforpeace@gmail.com, vigneshr@ti.com, richard@nod.at,
-        robh+dt@kernel.org, stefan@agner.ch, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        juliensu@mxic.com.tw, paul.burton@mips.com, liang.yang@amlogic.com,
-        lee.jones@linaro.org, anders.roxell@linaro.org,
-        christophe.kerello@st.com, paul@crapouillou.net,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] mtd: rawnand: Add Macronix raw NAND controller
- driver
-Message-ID: <20190801082233.759f6ae9@collabora.com>
-In-Reply-To: <1564631710-30276-2-git-send-email-masonccyang@mxic.com.tw>
-References: <1564631710-30276-1-git-send-email-masonccyang@mxic.com.tw>
-        <1564631710-30276-2-git-send-email-masonccyang@mxic.com.tw>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <marek.vasut@gmail.com>, <vigneshr@ti.com>, <dwmw2@infradead.org>,
+        <computersforpeace@gmail.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/7] mtd: spi-nor: Add default_init() hook to tweak
+ flash parameters
+Message-ID: <20190801082429.28feb2b5@collabora.com>
+In-Reply-To: <20190731090315.26798-2-tudor.ambarus@microchip.com>
+References: <20190731090315.26798-1-tudor.ambarus@microchip.com>
+        <20190731090315.26798-2-tudor.ambarus@microchip.com>
 Organization: Collabora
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
@@ -54,659 +49,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  1 Aug 2019 11:55:09 +0800
-Mason Yang <masonccyang@mxic.com.tw> wrote:
+On Wed, 31 Jul 2019 09:03:27 +0000
+<Tudor.Ambarus@microchip.com> wrote:
 
-> Add a driver for Macronix raw NAND controller.
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
 > 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> As of now, the flash parameters initialization logic is as following:
+> 
+> a/ default flash parameters init in spi_nor_init_params()
+> b/ manufacturer specific flash parameters updates, split across entire
+>    spi-nor core code
+> c/ flash parameters updates based on SFDP tables
+> d/ post BFPT flash parameter updates
+> 
+> In the quest of removing the manufacturer specific code from the spi-nor
+> core, we want to impose a timeline/priority on how the flash parameters
+> are updated. The following sequence of calls is pursued:
+> 
+> 1/ spi-nor core legacy flash parameters init:
+> 	spi_nor_default_init_params()
+> 
+> 2/ MFR-based manufacturer flash parameters init:
+> 	nor->manufacturer->fixups->default_init()
+> 
+> 3/ specific flash_info tweeks done when decisions can not be done just on
+>    MFR:
+> 	nor->info->fixups->default_init()
+> 
+> 4/ SFDP tables flash parameters init - SFDP knows better:
+> 	spi_nor_sfdp_init_params()
+> 
+> 5/ post SFDP tables flash parameters updates - in case manufacturers get
+>    the serial flash tables wrong or incomplete.
+> 	nor->info->fixups->post_sfdp()
+>    The later can be extended to nor->manufacturer->fixups->post_sfdp() if
+>    needed.
+> 
+> This patch opens doors for steps 2/ and 3/.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
 > ---
->  drivers/mtd/nand/raw/Kconfig     |   6 +
->  drivers/mtd/nand/raw/Makefile    |   1 +
->  drivers/mtd/nand/raw/mxic_nand.c | 554 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 561 insertions(+)
->  create mode 100644 drivers/mtd/nand/raw/mxic_nand.c
+>  drivers/mtd/spi-nor/spi-nor.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-> index 5a711d8..9cff36a 100644
-> --- a/drivers/mtd/nand/raw/Kconfig
-> +++ b/drivers/mtd/nand/raw/Kconfig
-> @@ -407,6 +407,12 @@ config MTD_NAND_MTK
->  	  Enables support for NAND controller on MTK SoCs.
->  	  This controller is found on mt27xx, mt81xx, mt65xx SoCs.
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 28a64dbdaea9..ac00f90ebaa9 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -219,12 +219,17 @@ struct sfdp_bfpt {
 >  
-> +config MTD_NAND_MXIC
-> +	tristate "Macronix raw NAND controller"
-> +	depends on HAS_IOMEM || COMPILE_TEST
-> +	help
-> +	  This selects the Macronix raw NAND controller driver.
-> +
->  config MTD_NAND_TEGRA
->  	tristate "NVIDIA Tegra NAND controller"
->  	depends on ARCH_TEGRA || COMPILE_TEST
-> diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
-> index efaf5cd..9b43fbf 100644
-> --- a/drivers/mtd/nand/raw/Makefile
-> +++ b/drivers/mtd/nand/raw/Makefile
-> @@ -54,6 +54,7 @@ obj-$(CONFIG_MTD_NAND_HISI504)	        += hisi504_nand.o
->  obj-$(CONFIG_MTD_NAND_BRCMNAND)		+= brcmnand/
->  obj-$(CONFIG_MTD_NAND_QCOM)		+= qcom_nandc.o
->  obj-$(CONFIG_MTD_NAND_MTK)		+= mtk_ecc.o mtk_nand.o
-> +obj-$(CONFIG_MTD_NAND_MXIC)		+= mxic_nand.o
->  obj-$(CONFIG_MTD_NAND_TEGRA)		+= tegra_nand.o
->  obj-$(CONFIG_MTD_NAND_STM32_FMC2)	+= stm32_fmc2_nand.o
->  obj-$(CONFIG_MTD_NAND_MESON)		+= meson_nand.o
-> diff --git a/drivers/mtd/nand/raw/mxic_nand.c b/drivers/mtd/nand/raw/mxic_nand.c
-> new file mode 100644
-> index 0000000..56e816d
-> --- /dev/null
-> +++ b/drivers/mtd/nand/raw/mxic_nand.c
-> @@ -0,0 +1,554 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 Macronix International Co., Ltd.
-> + *
-> + * Author:
-> + *	Mason Yang <masonccyang@mxic.com.tw>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/mtd/mtd.h>
-> +#include <linux/mtd/rawnand.h>
-> +#include <linux/mtd/nand_ecc.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "internals.h"
-> +
-> +#define HC_CFG			0x0
-> +#define HC_CFG_IF_CFG(x)	((x) << 27)
-> +#define HC_CFG_DUAL_SLAVE	BIT(31)
-> +#define HC_CFG_INDIVIDUAL	BIT(30)
-> +#define HC_CFG_NIO(x)		(((x) / 4) << 27)
-> +#define HC_CFG_TYPE(s, t)	((t) << (23 + ((s) * 2)))
-> +#define HC_CFG_TYPE_SPI_NOR	0
-> +#define HC_CFG_TYPE_SPI_NAND	1
-> +#define HC_CFG_TYPE_SPI_RAM	2
-> +#define HC_CFG_TYPE_RAW_NAND	3
-> +#define HC_CFG_SLV_ACT(x)	((x) << 21)
-> +#define HC_CFG_CLK_PH_EN	BIT(20)
-> +#define HC_CFG_CLK_POL_INV	BIT(19)
-> +#define HC_CFG_BIG_ENDIAN	BIT(18)
-> +#define HC_CFG_DATA_PASS	BIT(17)
-> +#define HC_CFG_IDLE_SIO_LVL(x)	((x) << 16)
-> +#define HC_CFG_MAN_START_EN	BIT(3)
-> +#define HC_CFG_MAN_START	BIT(2)
-> +#define HC_CFG_MAN_CS_EN	BIT(1)
-> +#define HC_CFG_MAN_CS_ASSERT	BIT(0)
-> +
-> +#define INT_STS			0x4
-> +#define INT_STS_EN		0x8
-> +#define INT_SIG_EN		0xc
-> +#define INT_STS_ALL		GENMASK(31, 0)
-> +#define INT_RDY_PIN		BIT(26)
-> +#define INT_RDY_SR		BIT(25)
-> +#define INT_LNR_SUSP		BIT(24)
-> +#define INT_ECC_ERR		BIT(17)
-> +#define INT_CRC_ERR		BIT(16)
-> +#define INT_LWR_DIS		BIT(12)
-> +#define INT_LRD_DIS		BIT(11)
-> +#define INT_SDMA_INT		BIT(10)
-> +#define INT_DMA_FINISH		BIT(9)
-> +#define INT_RX_NOT_FULL		BIT(3)
-> +#define INT_RX_NOT_EMPTY	BIT(2)
-> +#define INT_TX_NOT_FULL		BIT(1)
-> +#define INT_TX_EMPTY		BIT(0)
-> +
-> +#define HC_EN			0x10
-> +#define HC_EN_BIT		BIT(0)
-> +
-> +#define TXD(x)			(0x14 + ((x) * 4))
-> +#define RXD			0x24
-> +
-> +#define SS_CTRL(s)		(0x30 + ((s) * 4))
-> +#define LRD_CFG			0x44
-> +#define LWR_CFG			0x80
-> +#define RWW_CFG			0x70
-> +#define OP_READ			BIT(23)
-> +#define OP_DUMMY_CYC(x)		((x) << 17)
-> +#define OP_ADDR_BYTES(x)	((x) << 14)
-> +#define OP_CMD_BYTES(x)		(((x) - 1) << 13)
-> +#define OP_OCTA_CRC_EN		BIT(12)
-> +#define OP_DQS_EN		BIT(11)
-> +#define OP_ENHC_EN		BIT(10)
-> +#define OP_PREAMBLE_EN		BIT(9)
-> +#define OP_DATA_DDR		BIT(8)
-> +#define OP_DATA_BUSW(x)		((x) << 6)
-> +#define OP_ADDR_DDR		BIT(5)
-> +#define OP_ADDR_BUSW(x)		((x) << 3)
-> +#define OP_CMD_DDR		BIT(2)
-> +#define OP_CMD_BUSW(x)		(x)
-> +#define OP_BUSW_1		0
-> +#define OP_BUSW_2		1
-> +#define OP_BUSW_4		2
-> +#define OP_BUSW_8		3
-> +
-> +#define OCTA_CRC		0x38
-> +#define OCTA_CRC_IN_EN(s)	BIT(3 + ((s) * 16))
-> +#define OCTA_CRC_CHUNK(s, x)	((fls((x) / 32)) << (1 + ((s) * 16)))
-> +#define OCTA_CRC_OUT_EN(s)	BIT(0 + ((s) * 16))
-> +
-> +#define ONFI_DIN_CNT(s)		(0x3c + (s))
-> +
-> +#define LRD_CTRL		0x48
-> +#define RWW_CTRL		0x74
-> +#define LWR_CTRL		0x84
-> +#define LMODE_EN		BIT(31)
-> +#define LMODE_SLV_ACT(x)	((x) << 21)
-> +#define LMODE_CMD1(x)		((x) << 8)
-> +#define LMODE_CMD0(x)		(x)
-> +
-> +#define LRD_ADDR		0x4c
-> +#define LWR_ADDR		0x88
-> +#define LRD_RANGE		0x50
-> +#define LWR_RANGE		0x8c
-> +
-> +#define AXI_SLV_ADDR		0x54
-> +
-> +#define DMAC_RD_CFG		0x58
-> +#define DMAC_WR_CFG		0x94
-> +#define DMAC_CFG_PERIPH_EN	BIT(31)
-> +#define DMAC_CFG_ALLFLUSH_EN	BIT(30)
-> +#define DMAC_CFG_LASTFLUSH_EN	BIT(29)
-> +#define DMAC_CFG_QE(x)		(((x) + 1) << 16)
-> +#define DMAC_CFG_BURST_LEN(x)	(((x) + 1) << 12)
-> +#define DMAC_CFG_BURST_SZ(x)	((x) << 8)
-> +#define DMAC_CFG_DIR_READ	BIT(1)
-> +#define DMAC_CFG_START		BIT(0)
-> +
-> +#define DMAC_RD_CNT		0x5c
-> +#define DMAC_WR_CNT		0x98
-> +
-> +#define SDMA_ADDR		0x60
-> +
-> +#define DMAM_CFG		0x64
-> +#define DMAM_CFG_START		BIT(31)
-> +#define DMAM_CFG_CONT		BIT(30)
-> +#define DMAM_CFG_SDMA_GAP(x)	(fls((x) / 8192) << 2)
-> +#define DMAM_CFG_DIR_READ	BIT(1)
-> +#define DMAM_CFG_EN		BIT(0)
-> +
-> +#define DMAM_CNT		0x68
-> +
-> +#define LNR_TIMER_TH		0x6c
-> +
-> +#define RDM_CFG0		0x78
-> +#define RDM_CFG0_POLY(x)	(x)
-> +
-> +#define RDM_CFG1		0x7c
-> +#define RDM_CFG1_RDM_EN		BIT(31)
-> +#define RDM_CFG1_SEED(x)	(x)
-> +
-> +#define LWR_SUSP_CTRL		0x90
-> +#define LWR_SUSP_CTRL_EN	BIT(31)
-> +
-> +#define DMAS_CTRL		0x9c
-> +#define DMAS_CTRL_EN		BIT(31)
-> +#define DMAS_CTRL_DIR_READ	BIT(30)
-> +
-> +#define DATA_STROB		0xa0
-> +#define DATA_STROB_EDO_EN	BIT(2)
-> +#define DATA_STROB_INV_POL	BIT(1)
-> +#define DATA_STROB_DELAY_2CYC	BIT(0)
-> +
-> +#define IDLY_CODE(x)		(0xa4 + ((x) * 4))
-> +#define IDLY_CODE_VAL(x, v)	((v) << (((x) % 4) * 8))
-> +
-> +#define GPIO			0xc4
-> +#define GPIO_PT(x)		BIT(3 + ((x) * 16))
-> +#define GPIO_RESET(x)		BIT(2 + ((x) * 16))
-> +#define GPIO_HOLDB(x)		BIT(1 + ((x) * 16))
-> +#define GPIO_WPB(x)		BIT((x) * 16)
-> +
-> +#define HC_VER			0xd0
-> +
-> +#define HW_TEST(x)		(0xe0 + ((x) * 4))
-> +
-> +#define MXIC_NFC_MAX_CLK_HZ	50000000
-> +
-> +struct mxic_nand_ctlr {
-> +	struct clk *ps_clk;
-> +	struct clk *send_clk;
-> +	struct clk *send_dly_clk;
-> +	void __iomem *regs;
-> +	struct nand_controller controller;
-> +	struct device *dev;
-> +	void *priv;
-
-Looks like this priv field point to a nand_chip object. Please replace
-it by:
-
-	struct nand_chip *chip;
-
-> +};
-> +
-> +struct mxic_nand_chip {
-> +	struct nand_chip chip;
-> +};
-
-No need to define your own nand_chip struct if all it contains is the
-base definition.
-
-> +
-> +static int mxic_nfc_clk_enable(struct mxic_nand_ctlr *nfc)
+>  /**
+>   * struct spi_nor_fixups - SPI NOR fixup hooks
+> + * @default_init: called after default flash parameters init. Used to tweak
+> + *                flash parameters when information provided by the flash_info
+> + *                table is incomplete or wrong.
+>   * @post_bfpt: called after the BFPT table has been parsed
+>   *
+>   * Those hooks can be used to tweak the SPI NOR configuration when the SFDP
+>   * table is broken or not available.
+>   */
+>  struct spi_nor_fixups {
+> +	void (*default_init)(struct spi_nor *nor,
+> +			     struct spi_nor_flash_parameter *params);
+>  	int (*post_bfpt)(struct spi_nor *nor,
+>  			 const struct sfdp_parameter_header *bfpt_header,
+>  			 const struct sfdp_bfpt *bfpt,
+> @@ -4267,6 +4272,14 @@ static int spi_nor_parse_sfdp(struct spi_nor *nor,
+>  	return err;
+>  }
+>  
+> +static void
+> +spi_nor_manufacturer_init_params(struct spi_nor *nor,
+> +				 struct spi_nor_flash_parameter *params)
 > +{
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(nfc->ps_clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(nfc->send_clk);
-> +	if (ret)
-> +		goto err_ps_clk;
-> +
-> +	ret = clk_prepare_enable(nfc->send_dly_clk);
-> +	if (ret)
-> +		goto err_send_dly_clk;
-> +
-> +	return ret;
-> +
-> +err_send_dly_clk:
-> +	clk_disable_unprepare(nfc->send_clk);
-> +err_ps_clk:
-> +	clk_disable_unprepare(nfc->ps_clk);
-> +
-> +	return ret;
+> +	if (nor->info->fixups && nor->info->fixups->default_init)
+> +		return nor->info->fixups->default_init(nor, params);
 > +}
 > +
-> +static void mxic_nfc_clk_disable(struct mxic_nand_ctlr *nfc)
-> +{
-> +	clk_disable_unprepare(nfc->send_clk);
-> +	clk_disable_unprepare(nfc->send_dly_clk);
-> +	clk_disable_unprepare(nfc->ps_clk);
-> +}
+>  static int spi_nor_init_params(struct spi_nor *nor,
+>  			       struct spi_nor_flash_parameter *params)
+>  {
+> @@ -4370,6 +4383,8 @@ static int spi_nor_init_params(struct spi_nor *nor,
+>  			params->quad_enable = info->quad_enable;
+>  	}
+>  
+> +	spi_nor_manufacturer_init_params(nor, params);
 > +
-> +static void mxic_nfc_set_input_delay(struct mxic_nand_ctlr *nfc, u8 idly_code)
-> +{
-> +	writel(IDLY_CODE_VAL(0, idly_code) |
-> +	       IDLY_CODE_VAL(1, idly_code) |
-> +	       IDLY_CODE_VAL(2, idly_code) |
-> +	       IDLY_CODE_VAL(3, idly_code),
-> +	       nfc->regs + IDLY_CODE(0));
-> +	writel(IDLY_CODE_VAL(4, idly_code) |
-> +	       IDLY_CODE_VAL(5, idly_code) |
-> +	       IDLY_CODE_VAL(6, idly_code) |
-> +	       IDLY_CODE_VAL(7, idly_code),
-> +	       nfc->regs + IDLY_CODE(1));
-> +}
-> +
-> +static int mxic_nfc_clk_setup(struct mxic_nand_ctlr *nfc, unsigned long freq)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_set_rate(nfc->send_clk, freq);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_set_rate(nfc->send_dly_clk, freq);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * A constant delay range from 0x0 ~ 0x1F for input delay,
-> +	 * the unit is 78 ps, the max input delay is 2.418 ns.
-> +	 */
-> +	mxic_nfc_set_input_delay(nfc, 0xf);
-
-Just curious. Shouldn't we use that to support EDO modes? This being
-said, a delay of 2.5ns will not be enough for EDO...
-
-> +
-> +	/*
-> +	 * Phase degree = 360 * freq * output-delay
-> +	 * where output-delay is a constant value 1 ns in FPGA.
-> +	 *
-> +	 * Get Phase degree = 360 * freq * 1 ns
-> +	 *                  = 360 * freq * 1 sec / 1000000000
-> +	 *                  = 9 * freq / 25000000
-> +	 */
-> +	ret = clk_set_phase(nfc->send_dly_clk, 9 * freq / 25000000);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mxic_nfc_set_freq(struct mxic_nand_ctlr *nfc, unsigned long freq)
-> +{
-> +	int ret;
-> +
-> +	if (freq > MXIC_NFC_MAX_CLK_HZ)
-> +		freq = MXIC_NFC_MAX_CLK_HZ;
-> +
-> +	mxic_nfc_clk_disable(nfc);
-> +	ret = mxic_nfc_clk_setup(nfc, freq);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = mxic_nfc_clk_enable(nfc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static void mxic_nfc_hw_init(struct mxic_nand_ctlr *nfc)
-> +{
-> +	writel(DATA_STROB_EDO_EN, nfc->regs + DATA_STROB);
-
-Oh, no, here is the EDO flag. BTW, you should not have it set by
-default, it's something you configure in your ->setup_data_interface()
-implementation.
-
-> +	writel(HC_CFG_NIO(8) | HC_CFG_TYPE(1, HC_CFG_TYPE_RAW_NAND) |
-> +	       HC_CFG_SLV_ACT(0) | HC_CFG_MAN_CS_EN |
-> +	       HC_CFG_IDLE_SIO_LVL(1), nfc->regs + HC_CFG);
-> +	writel(INT_STS_ALL, nfc->regs + INT_STS_EN);
-> +	writel(0x0, nfc->regs + ONFI_DIN_CNT(0));
-> +	writel(0, nfc->regs + LRD_CFG);
-> +	writel(0, nfc->regs + LRD_CTRL);
-> +	writel(0x0, nfc->regs + HC_EN);
-> +
-> +	/* Default 10 MHz to setup tRC_min/tWC_min:100 ns */
-> +	mxic_nfc_set_freq(nfc, 10000000);
-
-Again, not something you should configure here, but I guess having a
-default setting does not hurt.
-
-> +}
-> +
-> +static void mxic_nfc_cs_enable(struct mxic_nand_ctlr *nfc)
-> +{
-> +	writel(readl(nfc->regs + HC_CFG) | HC_CFG_MAN_CS_EN,
-> +	       nfc->regs + HC_CFG);
-> +	writel(HC_CFG_MAN_CS_ASSERT | readl(nfc->regs + HC_CFG),
-> +	       nfc->regs + HC_CFG);
-> +}
-> +
-> +static void mxic_nfc_cs_disable(struct mxic_nand_ctlr *nfc)
-> +{
-> +	writel(~HC_CFG_MAN_CS_ASSERT & readl(nfc->regs + HC_CFG),
-> +	       nfc->regs + HC_CFG);
-> +}
-> +
-> +static int  mxic_nfc_wait_ready(struct nand_chip *chip)
-> +{
-> +	struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
-> +	u32 sts;
-> +
-> +	return readl_poll_timeout(nfc->regs + INT_STS, sts,
-> +				  sts & INT_RDY_PIN, 0, USEC_PER_SEC);
-
-You're not using interrupts at all? For things like R/B wait it's
-usually a good thing to rely on interrupts instead of status-polling.
-
-> +}
-> +
-> +static int mxic_nfc_data_xfer(struct mxic_nand_ctlr *nfc, const void *txbuf,
-> +			      void *rxbuf, unsigned int len)
-> +{
-> +	unsigned int pos = 0;
-> +
-> +	while (pos < len) {
-> +		unsigned int nbytes = len - pos;
-> +		u32 data = 0xffffffff;
-> +		u32 sts;
-> +		int ret;
-> +
-> +		if (nbytes > 4)
-> +			nbytes = 4;
-> +
-> +		if (txbuf)
-> +			memcpy(&data, txbuf + pos, nbytes);
-> +
-> +		ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
-> +					 sts & INT_TX_EMPTY, 0, USEC_PER_SEC);
-> +		if (ret)
-> +			return ret;
-> +
-> +		writel(data, nfc->regs + TXD(nbytes % 4));
-> +
-> +		ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
-> +					 sts & INT_TX_EMPTY, 0,
-> +					 USEC_PER_SEC);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
-> +					 sts & INT_RX_NOT_EMPTY, 0,
-> +					 USEC_PER_SEC);
-> +		if (ret)
-> +			return ret;
-> +
-> +		data = readl(nfc->regs + RXD);
-> +		if (rxbuf) {
-> +			data >>= (8 * (4 - nbytes));
-> +			memcpy(rxbuf + pos, &data, nbytes);
-> +		}
-> +		if (readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY)
-> +			dev_warn(nfc->dev, "RX FIFO not empty\n")
-> +
-> +		pos += nbytes;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mxic_nfc_exec_op(struct nand_chip *chip,
-> +			    const struct nand_operation *op, bool check_only)
-> +{
-> +	struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
-> +	const struct nand_op_instr *instr = NULL;
-> +	int ret = 0;
-> +	unsigned int op_id;
-> +
-> +	mxic_nfc_cs_enable(nfc);
-> +	for (op_id = 0; op_id < op->ninstrs; op_id++) {
-> +		instr = &op->instrs[op_id];
-> +
-> +		switch (instr->type) {
-> +		case NAND_OP_CMD_INSTR:
-> +			writel(0, nfc->regs + HC_EN);
-> +			writel(HC_EN_BIT, nfc->regs + HC_EN);
-> +			writel(OP_CMD_BUSW(OP_BUSW_8) |  OP_DUMMY_CYC(0x3F) |
-> +			       OP_CMD_BYTES(0), nfc->regs + SS_CTRL(0));
-> +
-> +			ret = mxic_nfc_data_xfer(nfc,
-> +						 &instr->ctx.cmd.opcode,
-> +						 NULL, 1);
-> +			break;
-> +
-> +		case NAND_OP_ADDR_INSTR:
-> +			writel(OP_ADDR_BUSW(OP_BUSW_8) | OP_DUMMY_CYC(0x3F) |
-> +			       OP_ADDR_BYTES(instr->ctx.addr.naddrs),
-> +			       nfc->regs + SS_CTRL(0));
-> +			ret = mxic_nfc_data_xfer(nfc,
-> +						 instr->ctx.addr.addrs, NULL,
-> +						 instr->ctx.addr.naddrs);
-> +			break;
-> +
-> +		case NAND_OP_DATA_IN_INSTR:
-> +			writel(0x0, nfc->regs + ONFI_DIN_CNT(0));
-> +			writel(OP_DATA_BUSW(OP_BUSW_8) | OP_DUMMY_CYC(0x3F) |
-> +			       OP_READ, nfc->regs + SS_CTRL(0));
-> +			ret = mxic_nfc_data_xfer(nfc, NULL,
-> +						 instr->ctx.data.buf.in,
-> +						 instr->ctx.data.len);
-> +			break;
-> +
-> +		case NAND_OP_DATA_OUT_INSTR:
-> +			writel(instr->ctx.data.len,
-> +			       nfc->regs + ONFI_DIN_CNT(0));
-> +			writel(OP_DATA_BUSW(OP_BUSW_8) | OP_DUMMY_CYC(0x3F),
-> +			       nfc->regs + SS_CTRL(0));
-> +			ret = mxic_nfc_data_xfer(nfc,
-> +						 instr->ctx.data.buf.out, NULL,
-> +						 instr->ctx.data.len);
-> +			break;
-> +
-> +		case NAND_OP_WAITRDY_INSTR:
-> +			ret = mxic_nfc_wait_ready(chip);
-> +			break;
-> +		}
-> +	}
-> +	mxic_nfc_cs_disable(nfc);
-> +
-> +	return ret;
-> +}
-> +
-> +static int mxic_nfc_setup_data_interface(struct nand_chip *chip, int chipnr,
-> +					 const struct nand_data_interface *conf)
-> +{
-> +	struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
-> +	const struct nand_sdr_timings *sdr;
-> +	unsigned long freq;
-> +
-> +	sdr = nand_get_sdr_timings(conf);
-> +	if (IS_ERR(sdr))
-> +		return PTR_ERR(sdr);
-> +
-> +	if (chipnr < 0)
-
-Please use the NAND_DATA_IFACE_CHECK_ONLY macro for this check:
-
-	if (chipnr == NAND_DATA_IFACE_CHECK_ONLY)
-		return 0;
-
-> +		return 0;
-> +
-> +	if (sdr->tRC_min)
-> +		freq = 1000000000 / (sdr->tRC_min / 1000);
-
-Please use NSEC_PER_SEC instead of 1000000000. And I think you can get
-rid of the check on sdr->tRC_min (it should never be 0).
-
-> +
-> +	return mxic_nfc_set_freq(nfc, freq);
-
-You should set the EDO when ->tRC_min < 30000 IIRC, clear it otherwise.
-
-> +}
-> +
-> +static const struct nand_controller_ops mxic_nand_controller_ops = {
-> +	.exec_op = mxic_nfc_exec_op,
-> +	.setup_data_interface = mxic_nfc_setup_data_interface,
-> +};
-> +
-> +static int mxic_nfc_probe(struct platform_device *pdev)
-> +{
-> +	struct mtd_info *mtd;
-> +	struct mxic_nand_ctlr *nfc;
-> +	struct mxic_nand_chip *mxic_nand;
-> +	struct nand_chip *nand_chip;
-> +	struct resource *res;
-> +	int err;
-> +
-> +	nfc = devm_kzalloc(&pdev->dev, sizeof(struct mxic_nand_ctlr),
-> +			   GFP_KERNEL);
-> +	if (!nfc)
-> +		return -ENOMEM;
-> +
-> +	mxic_nand = devm_kzalloc(&pdev->dev, sizeof(struct mxic_nand_chip),
-> +				 GFP_KERNEL);
-> +	if (!mxic_nand)
-> +		return -ENOMEM;
-> +
-> +	nfc->ps_clk = devm_clk_get(&pdev->dev, "ps");
-> +	if (IS_ERR(nfc->ps_clk))
-> +		return PTR_ERR(nfc->ps_clk);
-> +
-> +	nfc->send_clk = devm_clk_get(&pdev->dev, "send");
-> +	if (IS_ERR(nfc->send_clk))
-> +		return PTR_ERR(nfc->send_clk);
-> +
-> +	nfc->send_dly_clk = devm_clk_get(&pdev->dev, "send_dly");
-> +	if (IS_ERR(nfc->send_dly_clk))
-> +		return PTR_ERR(nfc->send_dly_clk);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	nfc->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(nfc->regs))
-> +		return PTR_ERR(nfc->regs);
-> +
-> +	nand_chip = &mxic_nand->chip;
-> +	mtd = nand_to_mtd(nand_chip);
-> +	mtd->dev.parent = &pdev->dev;
-> +	nand_chip->ecc.priv = NULL;
-
-No need to do this NULL assignment, the object is allocated with
-devm_kzalloc().
-
-> +	nand_set_flash_node(nand_chip, pdev->dev.of_node);
-
-The flash node should be a child of pdev->dev.of_node,
-pdev->dev.of_node is representing your controller not the NAND chip.
-
-> +	nand_chip->priv = nfc;
-> +	nfc->dev = &pdev->dev;
-> +	nfc->priv = nand_chip;
-> +
-> +	nfc->controller.ops = &mxic_nand_controller_ops;
-> +	nand_controller_init(&nfc->controller);
-> +	nand_chip->controller = &nfc->controller;
-> +
-> +	mxic_nfc_hw_init(nfc);
-> +
-> +	err = nand_scan(nand_chip, 1);
-> +	if (err)
-> +		goto fail;
-> +
-> +	err = mtd_device_register(mtd, NULL, 0);
-> +	if (err)
-> +		goto fail;
-> +
-> +	platform_set_drvdata(pdev, nfc);
-> +	return 0;
-> +
-> +fail:
-> +	mxic_nfc_clk_disable(nfc);
-
-Looks like you never call mxic_nfc_clk_enable(), which means you'll end
-up with unbalanced prepare/enable counts. Also not sure how that can
-work unless the bootloader takes care of enabling the clks for you.
-
-> +	return err;
-> +}
-> +
-> +static int mxic_nfc_remove(struct platform_device *pdev)
-> +{
-> +	struct mxic_nand_ctlr *nfc = platform_get_drvdata(pdev);
-> +
-> +	nand_release(nfc->priv);
-> +	mxic_nfc_clk_disable(nfc);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mxic_nfc_of_ids[] = {
-> +	{ .compatible = "mxicy,multi-itfc-v009-nand-morph", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, mxic_nfc_of_ids);
-> +
-> +static struct platform_driver mxic_nfc_driver = {
-> +	.probe = mxic_nfc_probe,
-> +	.remove = mxic_nfc_remove,
-> +	.driver = {
-> +		.name = "mxic-nfc",
-> +		.of_match_table = mxic_nfc_of_ids,
-> +	},
-> +};
-> +module_platform_driver(mxic_nfc_driver);
-> +
-> +MODULE_AUTHOR("Mason Yang <masonccyang@mxic.com.tw>");
-> +MODULE_DESCRIPTION("Macronix raw NAND controller driver");
-> +MODULE_LICENSE("GPL v2");
+>  	if ((info->flags & (SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)) &&
+>  	    !(info->flags & SPI_NOR_SKIP_SFDP)) {
+>  		struct spi_nor_flash_parameter sfdp_params;
 
