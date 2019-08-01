@@ -2,147 +2,78 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A017DC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE15C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75AD92087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564681340;
-	bh=C+3LvQCZPRehID8KfvUs7B+aNgIMxINlmTDG/BEDyMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WLy0xJgKfoOxtVhm0Gr+yAu+XNqRrwIafmiZBqnX2o1ZGvha0e9du3vLuH26wKMRs
-	 SE2qiPYajbRgUyuLeZLcoDWTkRB9Biv06jmQILiRUONGwZF90KPaVwNak5G0ejw+jV
-	 vnlNBiftYSPHHbqXLWMjhRLPWsf8O8eYAYPlTYdM=
+	by mail.kernel.org (Postfix) with ESMTP id B5CCC206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387650AbfHARmT (ORCPT
+        id S2387690AbfHARmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 13:42:19 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44239 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731573AbfHARmT (ORCPT
+        Thu, 1 Aug 2019 13:42:35 -0400
+Received: from smtprelay0128.hostedemail.com ([216.40.44.128]:55430 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731372AbfHARmf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 13:42:19 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so34451668pfe.11;
-        Thu, 01 Aug 2019 10:42:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=c2hESp5P0VdXb1KGHmHBHOL26umzSRk5VuA6OOFxtVM=;
-        b=fUiMNYiNxQbaJUKktacnDTuosoG403NWOfF1HoQSSVDbV0vtoPNVsxlMGoS8c+Ka1x
-         FyJqtwGWRA6wAHk4Pux8DTGUsiZk/YwnZNFqPdPKWd/IbLDLog5rA6RyQ2cMw6mdqoMe
-         Jkd2dJ/KQz3ZAylI1np91LamwLuI2qAHck1QaWVpPvL0slIoSGXEgc3ta/61GpkU2oem
-         eEXgctyQnlhJThZ4qWaihUQqPR5uGdiOUtu1wnjcz1tThKZzGNPgIngtimOLylL8yI4a
-         4Fk2QKc3xr7IvlJdIqifNbMLOQLrQpP1rzu54TUJtkhEiZ4Gwu3L5es+bqO+vAGAanyW
-         HDLQ==
-X-Gm-Message-State: APjAAAUxA+sxzCdOhwJLUxGAJHWMJOIJj+vQWg86NXsbwB7+Ael/522i
-        M7W4kciQyukLBdJofRoAHfM=
-X-Google-Smtp-Source: APXvYqwvXu3G8nVpXIkNxWN9ELmjM1cWN+Tl1xKF06uVZBAUb2aBahH/zXWAt3NRyzyefm9aQ216BA==
-X-Received: by 2002:a62:e901:: with SMTP id j1mr55881964pfh.189.1564681338080;
-        Thu, 01 Aug 2019 10:42:18 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id j6sm63680898pfa.141.2019.08.01.10.42.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 10:42:16 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 07BF440280; Thu,  1 Aug 2019 17:42:15 +0000 (UTC)
-Date:   Thu, 1 Aug 2019 17:42:15 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 2/3] firmware: add offset to request_firmware_into_buf
-Message-ID: <20190801174215.GB16384@42.do-not-panic.com>
-References: <20190523025113.4605-1-scott.branden@broadcom.com>
- <20190523025113.4605-3-scott.branden@broadcom.com>
- <20190523055233.GB22946@kroah.com>
- <15c47e4d-e70d-26bb-9747-0ad0aa81597b@broadcom.com>
- <20190523165424.GA21048@kroah.com>
- <44282070-ddaf-3afb-9bdc-4751e3f197ac@broadcom.com>
- <20190524052258.GB28229@kroah.com>
- <2f67db0a-27c3-d13c-bbe0-0af5edd4f0da@broadcom.com>
- <20190801061801.GA4338@kroah.com>
+        Thu, 1 Aug 2019 13:42:35 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id A968A181D3377;
+        Thu,  1 Aug 2019 17:42:33 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: feast32_3347d10424416
+X-Filterd-Recvd-Size: 2235
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  1 Aug 2019 17:42:32 +0000 (UTC)
+Message-ID: <a9d003ddd0d59fb144db3ecda3453b3d9c0cb139.camel@perches.com>
+Subject: Re: [PATCH] net: sctp: Rename fallthrough label to unhandled
+From:   Joe Perches <joe@perches.com>
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     Vlad Yasevich <vyasevich@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 01 Aug 2019 10:42:31 -0700
+In-Reply-To: <20190801105051.GA11487@hmswarspite.think-freely.org>
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+         <20190731111932.GA9823@hmswarspite.think-freely.org>
+         <eac3fe457d553a2b366e1c1898d47ae8c048087c.camel@perches.com>
+         <20190731121646.GD9823@hmswarspite.think-freely.org>
+         <b93bbb17b407e27bb1dc196af84e4f289d9dfd93.camel@perches.com>
+         <20190731205804.GE9823@hmswarspite.think-freely.org>
+         <d68403ce9f7e8a68fff09d6b17e5d1327eb1e12d.camel@perches.com>
+         <20190801105051.GA11487@hmswarspite.think-freely.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190801061801.GA4338@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 08:18:01AM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Jul 31, 2019 at 05:18:32PM -0700, Scott Branden wrote:
-> > Hi Greg,
-> > 
-> > I am now back from leave to continue this patch.  Comment below.
-> > 
-> > On 2019-05-23 10:22 p.m., Greg Kroah-Hartman wrote:
-> > > On Thu, May 23, 2019 at 10:01:38PM -0700, Scott Branden wrote:
-> > > > On 2019-05-23 9:54 a.m., Greg Kroah-Hartman wrote:
-> > > > > On Thu, May 23, 2019 at 09:36:02AM -0700, Scott Branden wrote:
-> > > > > > Hi Greg,
-> > > > > > 
-> > > > > > On 2019-05-22 10:52 p.m., Greg Kroah-Hartman wrote:
-> > > > > > > On Wed, May 22, 2019 at 07:51:12PM -0700, Scott Branden wrote:
-> > > > > > > > Add offset to request_firmware_into_buf to allow for portions
-> > > > > > > > of firmware file to be read into a buffer.  Necessary where firmware
-> > > > > > > > needs to be loaded in portions from file in memory constrained systems.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> > > > > > > > ---
-> > > > > > > >     drivers/base/firmware_loader/firmware.h |  5 +++
-> > > > > > > >     drivers/base/firmware_loader/main.c     | 49 +++++++++++++++++--------
-> > > > > > > >     include/linux/firmware.h                |  8 +++-
-> > > > > > > >     3 files changed, 45 insertions(+), 17 deletions(-)
-> > > > > > > No new firmware test for this new option?  How do we know it even works?
-> > > > > > I was unaware there are existing firmware tests.  Please let me know where
-> > > > > > these tests exists and I can add a test for this new option.
-> > > > > tools/testing/selftests/firmware/
-> > > > Unfortunately, there doesn't seem to be a test for the existing
-> > > > request_firmware_into_buf api.
-> > > Are you sure?  The test is for userspace functionality, there isn't
-> > > kernel unit tests here.  You need to verify that you didn't break
-> > > existing functionality as well as verify that your new functionality
-> > > works.
-> > 
-> > I managed to figure out how to build and run
-> > tools/testing/selftest/firmware/fw_run_tests.sh
-> > 
-> > and my changes don't break existing functionality.
+On Thu, 2019-08-01 at 06:50 -0400, Neil Horman wrote:
+> On Wed, Jul 31, 2019 at 03:23:46PM -0700, Joe Perches wrote:
+[]
+> You can say that if you want, but you made the point that your think the macro
+> as you have written is more readable.  You example illustrates though that /*
+> fallthrough */ is a pretty common comment, and not prefixing it makes it look
+> like someone didn't add a comment that they meant to.  The __ prefix is standard
+> practice for defining macros to attributes (212 instances of it by my count).  I
+> don't mind rewriting the goto labels at all, but I think consistency is
+> valuable.
 
-I'm soon going to release something that is going to let you do this 
-faster and easier, let me know if you had troubles in trying to figure
-out how to not regress the kernel using this.
+Hey Neil.
 
-> > But, I find no use of request_firmware_into_buf in lib/test_firmware.c
-> > (triggered by fw_run_tests.sh).
-> > 
-> > Is there another test for request_firmware_into_buf?
-> 
-> I have no idea, sorry.
+Perhaps you want to make this argument on the RFC patch thread
+that introduces the fallthrough pseudo-keyword.
 
-The folks who implemented request_firmware_into_buf() didn't add a
-respective test, because, well, this API went upstream IMO without much
-ACKs / review, and even no damn users. Now we have a user so we're stuck
-with it.
+https://lore.kernel.org/patchwork/patch/1108577/
 
-So new testing calls for it would be appreciated. If you have questions
-I am happy to help.
 
-  Luis
