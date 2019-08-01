@@ -2,163 +2,110 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE5AC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198ECC32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764FE206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A95206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfHAGHN (ORCPT
+        id S1728898AbfHAGIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 02:07:13 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35714 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHAGHM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 02:07:12 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x25so68195646ljh.2;
-        Wed, 31 Jul 2019 23:07:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=18o8C04iXfM/nT0jvGA4Jf28XWbsN5tGXLbxgSXhVzs=;
-        b=llDA96Me+c04fgKTnKNM/9kD+ZtZlu6HoRSln2B9vzXR2H59dKnk/Wh3A/NcuFWA+C
-         d2b2WJn11EPXHmo4ONPDvsymFtOb5bmSY/V9AMF9iC4cbTMjYJjtS1z13I/48+93969F
-         DeuX36mxUB2/C57Skg2Tl+5BbDIVbulmfwR87H2jHYxL4oFMtGxb+GJAfNhR9NZn9m8g
-         uhv8ST5HJVY51xPJEpEQkyYcYyYGQ3SDfvl89NlvgdBCf+LzEY3rzHa11vpxE27LXcSR
-         /27vzDlEns55ykzpnRZy4a8gKPhhgvn7ArxefS/4zk/yItyr00KQBYc6t/f9wlxR4T/Q
-         VJww==
-X-Gm-Message-State: APjAAAWtz5IKQihTdTXx8vY3Dxin88D3Siv9cfZAna2IIsF4VoedDZKz
-        aGW1GLqAo/TbGIouxol7erw=
-X-Google-Smtp-Source: APXvYqxKG07d8i5W9EW2ZSPbmxAYbD2CQxN8z4Q3ldQLMN1T7aYpz6Zd8cW86sgecTC+si0Y6OZAsw==
-X-Received: by 2002:a2e:834e:: with SMTP id l14mr20594274ljh.158.1564639630834;
-        Wed, 31 Jul 2019 23:07:10 -0700 (PDT)
-Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id t137sm12075348lff.78.2019.07.31.23.07.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 23:07:09 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5] modpost: check for static EXPORT_SYMBOL* functions
-Date:   Thu,  1 Aug 2019 09:06:57 +0300
-Message-Id: <20190801060657.5932-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190714152817.24693-1-efremov@linux.com>
-References: <20190714152817.24693-1-efremov@linux.com>
+        Thu, 1 Aug 2019 02:08:02 -0400
+Received: from verein.lst.de ([213.95.11.211]:40460 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbfHAGIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 02:08:02 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9C9C468B05; Thu,  1 Aug 2019 08:07:55 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 08:07:55 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     john.hubbard@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jerome Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v4 1/3] mm/gup: add make_dirty arg to
+ put_user_pages_dirty_lock()
+Message-ID: <20190801060755.GA14893@lst.de>
+References: <20190730205705.9018-1-jhubbard@nvidia.com> <20190730205705.9018-2-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730205705.9018-2-jhubbard@nvidia.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a check to warn about static EXPORT_SYMBOL* functions
-during the modpost. In most of the cases, a static symbol marked for
-exporting is an odd combination that should be fixed either by deleting
-the exporting mark or by removing the static attribute and adding the
-appropriate declaration to headers.
+On Tue, Jul 30, 2019 at 01:57:03PM -0700, john.hubbard@gmail.com wrote:
+> @@ -40,10 +40,7 @@
+>  static void __qib_release_user_pages(struct page **p, size_t num_pages,
+>  				     int dirty)
+>  {
+> -	if (dirty)
+> -		put_user_pages_dirty_lock(p, num_pages);
+> -	else
+> -		put_user_pages(p, num_pages);
+> +	put_user_pages_dirty_lock(p, num_pages, dirty);
+>  }
 
-This check could help to detect the following problems:
-1. 550113d4e9f5 ("i2c: add newly exported functions to the header, too")
-2. 54638c6eaf44 ("net: phy: make exported variables non-static")
-3. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
-4. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
-5. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
-6. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
-7. 14b4c48bb1ce ("gve: Remove the exporting of gve_probe")
-8. 9b79ee9773a8 ("scsi: libsas: remove the exporting of sas_wait_eh")
-9. ...
+__qib_release_user_pages should be removed now as a direct call to
+put_user_pages_dirty_lock is a lot more clear.
 
-The build time impact is very limited and is almost at the unnoticeable
-level (< 1 sec).
+> index 0b0237d41613..62e6ffa9ad78 100644
+> --- a/drivers/infiniband/hw/usnic/usnic_uiom.c
+> +++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
+> @@ -75,10 +75,7 @@ static void usnic_uiom_put_pages(struct list_head *chunk_list, int dirty)
+>  		for_each_sg(chunk->page_list, sg, chunk->nents, i) {
+>  			page = sg_page(sg);
+>  			pa = sg_phys(sg);
+> -			if (dirty)
+> -				put_user_pages_dirty_lock(&page, 1);
+> -			else
+> -				put_user_page(page);
+> +			put_user_pages_dirty_lock(&page, 1, dirty);
+>  			usnic_dbg("pa: %pa\n", &pa);
 
-Acked-by: Emil Velikov <emil.l.velikov@gmail.com>
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- scripts/mod/modpost.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+There is a pre-existing bug here, as this needs to use the sg_page
+iterator.  Probably worth throwing in a fix into your series while you
+are at it.
 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index f277e116e0eb..3e6d36ddfcdf 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -169,6 +169,7 @@ struct symbol {
- 	unsigned int kernel:1;     /* 1 if symbol is from kernel
- 				    *  (only for external modules) **/
- 	unsigned int preloaded:1;  /* 1 if symbol from Module.symvers, or crc */
-+	unsigned int is_static:1;  /* 1 if symbol is not global */
- 	enum export  export;       /* Type of export */
- 	char name[0];
- };
-@@ -201,6 +202,7 @@ static struct symbol *alloc_symbol(const char *name, unsigned int weak,
- 	strcpy(s->name, name);
- 	s->weak = weak;
- 	s->next = next;
-+	s->is_static = 1;
- 	return s;
- }
- 
-@@ -1980,6 +1982,21 @@ static void read_symbols(const char *modname)
- 		handle_modversions(mod, &info, sym, symname);
- 		handle_moddevtable(mod, &info, sym, symname);
- 	}
-+
-+	// check for static EXPORT_SYMBOL_* functions && global vars
-+	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
-+		unsigned char bind = ELF_ST_BIND(sym->st_info);
-+
-+		if (bind == STB_GLOBAL || bind == STB_WEAK) {
-+			struct symbol *s =
-+				find_symbol(remove_dot(info.strtab +
-+						       sym->st_name));
-+
-+			if (s)
-+				s->is_static = 0;
-+		}
-+	}
-+
- 	if (!is_vmlinux(modname) || vmlinux_section_warnings)
- 		check_sec_ref(mod, modname, &info);
- 
-@@ -2425,6 +2442,7 @@ int main(int argc, char **argv)
- 	char *dump_write = NULL, *files_source = NULL;
- 	int opt;
- 	int err;
-+	int n;
- 	struct ext_sym_list *extsym_iter;
- 	struct ext_sym_list *extsym_start = NULL;
- 
-@@ -2520,6 +2538,19 @@ int main(int argc, char **argv)
- 	if (sec_mismatch_count && sec_mismatch_fatal)
- 		fatal("modpost: Section mismatches detected.\n"
- 		      "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
-+	for (n = 0; n < SYMBOL_HASH_SIZE; n++) {
-+		struct symbol *s = symbolhash[n];
-+
-+		while (s) {
-+			if (s->is_static)
-+				warn("\"%s\" [%s] is a static %s\n",
-+				     s->name, s->module->name,
-+				     export_str(s->export));
-+
-+			s = s->next;
-+		}
-+	}
-+
- 	free(buf.p);
- 
- 	return err;
--- 
-2.21.0
+> @@ -63,15 +63,7 @@ struct siw_mem *siw_mem_id2obj(struct siw_device *sdev, int stag_index)
+>  static void siw_free_plist(struct siw_page_chunk *chunk, int num_pages,
+>  			   bool dirty)
+>  {
+> -	struct page **p = chunk->plist;
+> -
+> -	while (num_pages--) {
+> -		if (!PageDirty(*p) && dirty)
+> -			put_user_pages_dirty_lock(p, 1);
+> -		else
+> -			put_user_page(*p);
+> -		p++;
+> -	}
+> +	put_user_pages_dirty_lock(chunk->plist, num_pages, dirty);
 
+siw_free_plist should just go away now.
+
+Otherwise this looks good to me.
