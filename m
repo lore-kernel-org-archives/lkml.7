@@ -2,133 +2,137 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A341C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89315C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABC4206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A9B206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:13:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfHAJME (ORCPT
+        id S1730750AbfHAJNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:12:04 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3730 "EHLO huawei.com"
+        Thu, 1 Aug 2019 05:13:34 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3079 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726799AbfHAJME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:12:04 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6772E82FFE7FD0B29AB6;
-        Thu,  1 Aug 2019 17:12:01 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 1 Aug 2019
- 17:11:52 +0800
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-To:     <richard@nod.at>, <yi.zhang@huawei.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <chengzhihao1@huawei.com>
-Subject: [PATCH RFC] ubi: ubi_wl_get_peb: Replace a limited number of attempts with polling while getting PEB
-Date:   Thu, 1 Aug 2019 17:17:45 +0800
-Message-ID: <1564651065-4585-1-git-send-email-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726799AbfHAJNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 05:13:33 -0400
+Received: from dggemi401-hub.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 906E81AEC0426B887148;
+        Thu,  1 Aug 2019 17:13:27 +0800 (CST)
+Received: from DGGEMI423-HUB.china.huawei.com (10.1.199.152) by
+ dggemi401-hub.china.huawei.com (10.3.17.134) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 1 Aug 2019 17:13:27 +0800
+Received: from DGGEMI524-MBX.china.huawei.com ([169.254.7.227]) by
+ dggemi423-hub.china.huawei.com ([10.1.199.152]) with mapi id 14.03.0439.000;
+ Thu, 1 Aug 2019 17:13:20 +0800
+From:   chengzhihao <chengzhihao1@huawei.com>
+To:     "richard@nod.at" <richard@nod.at>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIIFJGQ10gdWJpOiB1Ymlfd2xfZ2V0X3BlYjogUmVwbGFj?=
+ =?gb2312?B?ZSBhIGxpbWl0ZWQgbnVtYmVyIG9mIGF0dGVtcHRzIHdpdGggcG9sbGluZyB3?=
+ =?gb2312?Q?hile_getting_PEB?=
+Thread-Topic: [PATCH RFC] ubi: ubi_wl_get_peb: Replace a limited number of
+ attempts with polling while getting PEB
+Thread-Index: AQHVSEkuRooM7Daz00mNhjuG43MDw6bmAggA
+Date:   Thu, 1 Aug 2019 09:13:20 +0000
+Message-ID: <0B80F9D4116B2F4484E7279D5A66984F7A8A13@dggemi524-mbx.china.huawei.com>
+References: <1564651065-4585-1-git-send-email-chengzhihao1@huawei.com>
+In-Reply-To: <1564651065-4585-1-git-send-email-chengzhihao1@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.224.82]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running pressure test io_paral (A pressure ubi test in mtd-utils) on an
-UBI device with fewer PEBs (fastmap enabled) may cause ENOSPC errors and
-make UBI device read-only, but there are still free PEBs on the UBI
-device. This problem can be easily reproduced by performing the following
-steps on a 2-core machine:
-  $ modprobe nandsim first_id_byte=0x20 second_id_byte=0x33 parts=80
-  $ modprobe ubi mtd="0,0" fm_autoconvert
-  $ ./io_paral /dev/ubi0
-
-We may see the following verbose:
-(output)
-  [io_paral] update_volume():105: function write() failed with error 30
-  (Read-only file system)
-  [io_paral] update_volume():108: failed to write 380 bytes at offset
-  95920 of volume 2
-  [io_paral] update_volume():109: update: 97088 bytes
-  [io_paral] write_thread():227: function pwrite() failed with error 28
-  (No space left on device)
-  [io_paral] write_thread():229: cannot write 15872 bytes to offs 31744,
-  wrote -1
-(dmesg)
-  ubi0 error: ubi_wl_get_peb [ubi]: Unable to get a free PEB from user WL
-  pool
-  ubi0 warning: ubi_eba_write_leb [ubi]: switch to read-only mode
-  ubi0 error: ubi_io_write [ubi]: read-only mode
-  CPU: 0 PID: 2027 Comm: io_paral Not tainted 5.3.0-rc2-00001-g5986cd0 #9
-  ubi0 warning: try_write_vid_and_data [ubi]: failed to write VID header
-  to LEB 2:5, PEB 18
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
-  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-   dump_stack+0x85/0xba
-   ubi_eba_write_leb+0xa1e/0xa40 [ubi]
-   vol_cdev_write+0x307/0x520 [ubi]
-  ubi0 error: vol_cdev_write [ubi]: cannot accept more 380 bytes of data,
-  error -30
-   vfs_write+0xfa/0x280
-   ksys_pwrite64+0xc5/0xe0
-   __x64_sys_pwrite64+0x22/0x30
-   do_syscall_64+0xbf/0x440
-
-In function ubi_wl_get_peb, the operation of filling the pool
-(ubi_update_fastmap) with free PEBs and fetching a free PEB from the pool
-is not atomic. After thread A filling the pool with free PEB, free PEB may
-be taken away by thread B. When thread A checks the expression again, the
-condition is still unsatisfactory. At this time, there may still be free
-PEBs on UBI that can be filled into the pool.
-So, ubi_wl_get_peb (in fastmap-wil.c) should be implemented to obtain a
-free PEB by polling method. The polling exit condition is that there is
-no free PEBs on UBI, no free PEBs in pool, and ubi->works_count is 0.
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
----
- drivers/mtd/ubi/fastmap-wl.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mtd/ubi/fastmap-wl.c b/drivers/mtd/ubi/fastmap-wl.c
-index d9e2e3a..c5512cf 100644
---- a/drivers/mtd/ubi/fastmap-wl.c
-+++ b/drivers/mtd/ubi/fastmap-wl.c
-@@ -196,7 +196,7 @@ static int produce_free_peb(struct ubi_device *ubi)
-  */
- int ubi_wl_get_peb(struct ubi_device *ubi)
- {
--	int ret, retried = 0;
-+	int ret;
- 	struct ubi_fm_pool *pool = &ubi->fm_pool;
- 	struct ubi_fm_pool *wl_pool = &ubi->fm_wl_pool;
- 
-@@ -220,13 +220,14 @@ int ubi_wl_get_peb(struct ubi_device *ubi)
- 	}
- 
- 	if (pool->used == pool->size) {
--		spin_unlock(&ubi->wl_lock);
--		if (retried) {
-+		if (!ubi->free.rb_node && ubi->works_count == 0) {
- 			ubi_err(ubi, "Unable to get a free PEB from user WL pool");
-+			ubi_assert(list_empty(&ubi->works));
-+			spin_unlock(&ubi->wl_lock);
- 			ret = -ENOSPC;
- 			goto out;
- 		}
--		retried = 1;
-+		spin_unlock(&ubi->wl_lock);
- 		up_read(&ubi->fm_eba_sem);
- 		ret = produce_free_peb(ubi);
- 		if (ret < 0) {
--- 
-2.7.4
-
+SSBkb24ndCBxdWl0ZSB1bmRlcnN0YW5kIHdoeSBhIGxpbWl0ZWQgbnVtYmVyIG9mIGF0dGVtcHRz
+IGhhdmUgYmVlbiBtYWRlIHRvIGdldCBhIGZyZWUgUEVCIGluIHViaV93bF9nZXRfcGViIChpbiBm
+YXN0bWFwLXdsLmMpLiBJIHByb3Bvc2VkIHRoaXMgUEFUQ0ggd2l0aCByZWZlcmVuY2UgdG8gdGhl
+IGltcGxlbWVudGF0aW9uIG9mIHViaV93bF9nZXRfcGViIChpbiB3bC5jKS4gQXMgZmFyIGFzIEkg
+a25vdywgZ2V0dGluZyBQRUIgYnkgcG9sbGluZyBwcm9iYWJseSB3b24ndCBmYWxsIGludG8gc29m
+dC1sb2NrdXAuDQp1YmlfdXBkYXRlX2Zhc3RtYXAgbWF5IGFkZCBuZXcgdGFza3MgKGluY2x1ZGlu
+ZyBlcmFzZSB0YXNrIG9yIHdsIHRhc2trLCB3bCB0YXNrcyBnZW5lcmFsbHkgZG8gbm90IGdlbmVy
+YXRlIGFkZGl0aW9uYWwgZnJlZSBQRUJzKSB0byB1YmktPndvcmtzLCBhbmQgcHJvZHVjZV9mcmVl
+X3BlYiB3aWxsIGV2ZW50dWFsbHkgY29tcGxldGUgYWxsIHRhc2tzIGluIHViaS0+d29ya3Mgb3Ig
+b2J0YWluIGFuIGZyZWUgUEVCIHRoYXQgY2FuIGJlIGZpbGxlZCBpbnRvIHBvb2wuDQoNCi0tLS0t
+08q8/tStvP4tLS0tLQ0Kt6K8/sjLOiBjaGVuZ3poaWhhbyANCreiy83KsbzkOiAyMDE5xOo41MIx
+yNUgMTc6MTgNCsrVvP7IyzogcmljaGFyZEBub2QuYXQ7IHpoYW5neWkgKEYpIDx5aS56aGFuZ0Bo
+dWF3ZWkuY29tPg0Ks63LzTogbGludXgtbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGNoZW5nemhpaGFvIDxjaGVuZ3poaWhhbzFAaHVhd2VpLmNv
+bT4NCtb3zOI6IFtQQVRDSCBSRkNdIHViaTogdWJpX3dsX2dldF9wZWI6IFJlcGxhY2UgYSBsaW1p
+dGVkIG51bWJlciBvZiBhdHRlbXB0cyB3aXRoIHBvbGxpbmcgd2hpbGUgZ2V0dGluZyBQRUINCg0K
+UnVubmluZyBwcmVzc3VyZSB0ZXN0IGlvX3BhcmFsIChBIHByZXNzdXJlIHViaSB0ZXN0IGluIG10
+ZC11dGlscykgb24gYW4gVUJJIGRldmljZSB3aXRoIGZld2VyIFBFQnMgKGZhc3RtYXAgZW5hYmxl
+ZCkgbWF5IGNhdXNlIEVOT1NQQyBlcnJvcnMgYW5kIG1ha2UgVUJJIGRldmljZSByZWFkLW9ubHks
+IGJ1dCB0aGVyZSBhcmUgc3RpbGwgZnJlZSBQRUJzIG9uIHRoZSBVQkkgZGV2aWNlLiBUaGlzIHBy
+b2JsZW0gY2FuIGJlIGVhc2lseSByZXByb2R1Y2VkIGJ5IHBlcmZvcm1pbmcgdGhlIGZvbGxvd2lu
+ZyBzdGVwcyBvbiBhIDItY29yZSBtYWNoaW5lOg0KICAkIG1vZHByb2JlIG5hbmRzaW0gZmlyc3Rf
+aWRfYnl0ZT0weDIwIHNlY29uZF9pZF9ieXRlPTB4MzMgcGFydHM9ODANCiAgJCBtb2Rwcm9iZSB1
+YmkgbXRkPSIwLDAiIGZtX2F1dG9jb252ZXJ0DQogICQgLi9pb19wYXJhbCAvZGV2L3ViaTANCg0K
+V2UgbWF5IHNlZSB0aGUgZm9sbG93aW5nIHZlcmJvc2U6DQoob3V0cHV0KQ0KICBbaW9fcGFyYWxd
+IHVwZGF0ZV92b2x1bWUoKToxMDU6IGZ1bmN0aW9uIHdyaXRlKCkgZmFpbGVkIHdpdGggZXJyb3Ig
+MzANCiAgKFJlYWQtb25seSBmaWxlIHN5c3RlbSkNCiAgW2lvX3BhcmFsXSB1cGRhdGVfdm9sdW1l
+KCk6MTA4OiBmYWlsZWQgdG8gd3JpdGUgMzgwIGJ5dGVzIGF0IG9mZnNldA0KICA5NTkyMCBvZiB2
+b2x1bWUgMg0KICBbaW9fcGFyYWxdIHVwZGF0ZV92b2x1bWUoKToxMDk6IHVwZGF0ZTogOTcwODgg
+Ynl0ZXMNCiAgW2lvX3BhcmFsXSB3cml0ZV90aHJlYWQoKToyMjc6IGZ1bmN0aW9uIHB3cml0ZSgp
+IGZhaWxlZCB3aXRoIGVycm9yIDI4DQogIChObyBzcGFjZSBsZWZ0IG9uIGRldmljZSkNCiAgW2lv
+X3BhcmFsXSB3cml0ZV90aHJlYWQoKToyMjk6IGNhbm5vdCB3cml0ZSAxNTg3MiBieXRlcyB0byBv
+ZmZzIDMxNzQ0LA0KICB3cm90ZSAtMQ0KKGRtZXNnKQ0KICB1YmkwIGVycm9yOiB1Ymlfd2xfZ2V0
+X3BlYiBbdWJpXTogVW5hYmxlIHRvIGdldCBhIGZyZWUgUEVCIGZyb20gdXNlciBXTA0KICBwb29s
+DQogIHViaTAgd2FybmluZzogdWJpX2ViYV93cml0ZV9sZWIgW3ViaV06IHN3aXRjaCB0byByZWFk
+LW9ubHkgbW9kZQ0KICB1YmkwIGVycm9yOiB1YmlfaW9fd3JpdGUgW3ViaV06IHJlYWQtb25seSBt
+b2RlDQogIENQVTogMCBQSUQ6IDIwMjcgQ29tbTogaW9fcGFyYWwgTm90IHRhaW50ZWQgNS4zLjAt
+cmMyLTAwMDAxLWc1OTg2Y2QwICM5DQogIHViaTAgd2FybmluZzogdHJ5X3dyaXRlX3ZpZF9hbmRf
+ZGF0YSBbdWJpXTogZmFpbGVkIHRvIHdyaXRlIFZJRCBoZWFkZXINCiAgdG8gTEVCIDI6NSwgUEVC
+IDE4DQogIEhhcmR3YXJlIG5hbWU6IFFFTVUgU3RhbmRhcmQgUEMgKGk0NDBGWCArIFBJSVgsIDE5
+OTYpLCBCSU9TIHJlbC0xLjEyLjANCiAgLTAtZ2E2OThjODk5NWYtcHJlYnVpbHQucWVtdS5vcmcg
+MDQvMDEvMjAxNA0KICBDYWxsIFRyYWNlOg0KICAgZHVtcF9zdGFjaysweDg1LzB4YmENCiAgIHVi
+aV9lYmFfd3JpdGVfbGViKzB4YTFlLzB4YTQwIFt1YmldDQogICB2b2xfY2Rldl93cml0ZSsweDMw
+Ny8weDUyMCBbdWJpXQ0KICB1YmkwIGVycm9yOiB2b2xfY2Rldl93cml0ZSBbdWJpXTogY2Fubm90
+IGFjY2VwdCBtb3JlIDM4MCBieXRlcyBvZiBkYXRhLA0KICBlcnJvciAtMzANCiAgIHZmc193cml0
+ZSsweGZhLzB4MjgwDQogICBrc3lzX3B3cml0ZTY0KzB4YzUvMHhlMA0KICAgX194NjRfc3lzX3B3
+cml0ZTY0KzB4MjIvMHgzMA0KICAgZG9fc3lzY2FsbF82NCsweGJmLzB4NDQwDQoNCkluIGZ1bmN0
+aW9uIHViaV93bF9nZXRfcGViLCB0aGUgb3BlcmF0aW9uIG9mIGZpbGxpbmcgdGhlIHBvb2wNCih1
+YmlfdXBkYXRlX2Zhc3RtYXApIHdpdGggZnJlZSBQRUJzIGFuZCBmZXRjaGluZyBhIGZyZWUgUEVC
+IGZyb20gdGhlIHBvb2wgaXMgbm90IGF0b21pYy4gQWZ0ZXIgdGhyZWFkIEEgZmlsbGluZyB0aGUg
+cG9vbCB3aXRoIGZyZWUgUEVCLCBmcmVlIFBFQiBtYXkgYmUgdGFrZW4gYXdheSBieSB0aHJlYWQg
+Qi4gV2hlbiB0aHJlYWQgQSBjaGVja3MgdGhlIGV4cHJlc3Npb24gYWdhaW4sIHRoZSBjb25kaXRp
+b24gaXMgc3RpbGwgdW5zYXRpc2ZhY3RvcnkuIEF0IHRoaXMgdGltZSwgdGhlcmUgbWF5IHN0aWxs
+IGJlIGZyZWUgUEVCcyBvbiBVQkkgdGhhdCBjYW4gYmUgZmlsbGVkIGludG8gdGhlIHBvb2wuDQpT
+bywgdWJpX3dsX2dldF9wZWIgKGluIGZhc3RtYXAtd2lsLmMpIHNob3VsZCBiZSBpbXBsZW1lbnRl
+ZCB0byBvYnRhaW4gYSBmcmVlIFBFQiBieSBwb2xsaW5nIG1ldGhvZC4gVGhlIHBvbGxpbmcgZXhp
+dCBjb25kaXRpb24gaXMgdGhhdCB0aGVyZSBpcyBubyBmcmVlIFBFQnMgb24gVUJJLCBubyBmcmVl
+IFBFQnMgaW4gcG9vbCwgYW5kIHViaS0+d29ya3NfY291bnQgaXMgMC4NCg0KU2lnbmVkLW9mZi1i
+eTogWmhpaGFvIENoZW5nIDxjaGVuZ3poaWhhbzFAaHVhd2VpLmNvbT4NCi0tLQ0KIGRyaXZlcnMv
+bXRkL3ViaS9mYXN0bWFwLXdsLmMgfCA5ICsrKysrLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA1IGlu
+c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC91
+YmkvZmFzdG1hcC13bC5jIGIvZHJpdmVycy9tdGQvdWJpL2Zhc3RtYXAtd2wuYyBpbmRleCBkOWUy
+ZTNhLi5jNTUxMmNmIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9tdGQvdWJpL2Zhc3RtYXAtd2wuYw0K
+KysrIGIvZHJpdmVycy9tdGQvdWJpL2Zhc3RtYXAtd2wuYw0KQEAgLTE5Niw3ICsxOTYsNyBAQCBz
+dGF0aWMgaW50IHByb2R1Y2VfZnJlZV9wZWIoc3RydWN0IHViaV9kZXZpY2UgKnViaSkNCiAgKi8N
+CiBpbnQgdWJpX3dsX2dldF9wZWIoc3RydWN0IHViaV9kZXZpY2UgKnViaSkgIHsNCi0JaW50IHJl
+dCwgcmV0cmllZCA9IDA7DQorCWludCByZXQ7DQogCXN0cnVjdCB1YmlfZm1fcG9vbCAqcG9vbCA9
+ICZ1YmktPmZtX3Bvb2w7DQogCXN0cnVjdCB1YmlfZm1fcG9vbCAqd2xfcG9vbCA9ICZ1YmktPmZt
+X3dsX3Bvb2w7DQogDQpAQCAtMjIwLDEzICsyMjAsMTQgQEAgaW50IHViaV93bF9nZXRfcGViKHN0
+cnVjdCB1YmlfZGV2aWNlICp1YmkpDQogCX0NCiANCiAJaWYgKHBvb2wtPnVzZWQgPT0gcG9vbC0+
+c2l6ZSkgew0KLQkJc3Bpbl91bmxvY2soJnViaS0+d2xfbG9jayk7DQotCQlpZiAocmV0cmllZCkg
+ew0KKwkJaWYgKCF1YmktPmZyZWUucmJfbm9kZSAmJiB1YmktPndvcmtzX2NvdW50ID09IDApIHsN
+CiAJCQl1YmlfZXJyKHViaSwgIlVuYWJsZSB0byBnZXQgYSBmcmVlIFBFQiBmcm9tIHVzZXIgV0wg
+cG9vbCIpOw0KKwkJCXViaV9hc3NlcnQobGlzdF9lbXB0eSgmdWJpLT53b3JrcykpOw0KKwkJCXNw
+aW5fdW5sb2NrKCZ1YmktPndsX2xvY2spOw0KIAkJCXJldCA9IC1FTk9TUEM7DQogCQkJZ290byBv
+dXQ7DQogCQl9DQotCQlyZXRyaWVkID0gMTsNCisJCXNwaW5fdW5sb2NrKCZ1YmktPndsX2xvY2sp
+Ow0KIAkJdXBfcmVhZCgmdWJpLT5mbV9lYmFfc2VtKTsNCiAJCXJldCA9IHByb2R1Y2VfZnJlZV9w
+ZWIodWJpKTsNCiAJCWlmIChyZXQgPCAwKSB7DQotLQ0KMi43LjQNCg0K
