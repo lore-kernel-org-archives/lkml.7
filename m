@@ -2,163 +2,162 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385EAC32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7320C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D602087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564675634;
-	bh=FyO14N9hdL7T+o4znc5y53gBxbiS53HRgMTnU1igtD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VxoInUrx67UNwqQxVnnwuO5rcWVPtLvGgN4opqvg1HTbtSpB3ixH+98zRxBhZe1kw
-	 LnzDfhsIqv2HrPrchNFrpfkZQ47xsvWC9VanpBO2FLPpt9nWdVl3JPl4T1sVoYOI4g
-	 7rEaBlQJzTAOIgGFPkvWkjeiGbl2stC3BvvTIUAM=
+	by mail.kernel.org (Postfix) with ESMTP id 62D4120838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:07:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="R/TUsuYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732724AbfHAQHM (ORCPT
+        id S1732733AbfHAQH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:07:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfHAQHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:07:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CFE4206B8;
-        Thu,  1 Aug 2019 16:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564675632;
-        bh=FyO14N9hdL7T+o4znc5y53gBxbiS53HRgMTnU1igtD4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=blbeNTn76GmBpQwumjGFE3Yzx6ZuMei3ImHsLEYOReE9oWpKcKYqNd/mcIOs/M+C9
-         wVAVEjP0PD1PFRY3gBzhJ6SJYBb8BsVKglxT9OEb6Pjd9TIQfwWE2pz7iZ9ElVULdO
-         ELZIiODuhD9Md5Qqlg4kDd154gUgu2cyBSRAplWg=
-Date:   Thu, 1 Aug 2019 18:07:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] usb: typec: tcpm: Ignore unsupported/unknown
- alternate mode requests
-Message-ID: <20190801160709.GA20933@kroah.com>
-References: <1564029037-22929-1-git-send-email-linux@roeck-us.net>
- <20190729140457.GC28600@kuha.fi.intel.com>
- <20190729173104.GA32556@roeck-us.net>
- <20190730120747.GL28600@kuha.fi.intel.com>
- <a14d8a51-85f6-65d8-2e1e-19538a7bf3d3@roeck-us.net>
- <20190731095555.GN28600@kuha.fi.intel.com>
+        Thu, 1 Aug 2019 12:07:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:47797 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfHAQH0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:07:26 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71G7GwY009933
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 1 Aug 2019 09:07:16 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71G7GwY009933
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564675637;
+        bh=26PtLRURl1fUoMPCAjycO6ILoWoaLnioXFQ+vMKFF+0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=R/TUsuYKv55PhLkY4H0JstyFGFuRSKiw5o/B8zmfsfDiQbXJjcUbEdBEsm7Nu7lAx
+         +VuWeyuyMj7xigoLZRSuxXqJ2B0DcoTeAhT4Mst+dp6EXnJaDtvk4vRlwDrumNBd6H
+         PpiwpvCvOgdBTwf44XFP8vTCwpG00d4DNxDHt6FjbxcaPRG+vAUsYWn8RK1sADwvdv
+         Z2SMd6r4XstaOk/fjSiaa4CdOGZUW5V4LbL9t5AUD9GLNN0F6aCihsmo0NBVQlt/W/
+         Fse9JbrhnOLK5g/8UFGv2aTn2hRTEZSWkWYiWJknsXuZ2SNaCL+MPjbfTjQ+L4eSz6
+         BeOKe4mbLTw6A==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71G7GZq009928;
+        Thu, 1 Aug 2019 09:07:16 -0700
+Date:   Thu, 1 Aug 2019 09:07:16 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-f8d1b0549263354b8d8854fefc521ac536be70ff@git.kernel.org>
+Cc:     anna-maria@linutronix.de, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, hpa@zytor.com, peterz@infradead.org,
+        tglx@linutronix.de
+Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
+          anna-maria@linutronix.de, peterz@infradead.org,
+          tglx@linutronix.de
+In-Reply-To: <20190730223828.874901027@linutronix.de>
+References: <20190730223828.874901027@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] posix-timers: Rework cancel retry loops
+Git-Commit-ID: f8d1b0549263354b8d8854fefc521ac536be70ff
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190731095555.GN28600@kuha.fi.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 12:55:55PM +0300, Heikki Krogerus wrote:
-> On Tue, Jul 30, 2019 at 06:28:52AM -0700, Guenter Roeck wrote:
-> > On 7/30/19 5:07 AM, Heikki Krogerus wrote:
-> > > On Mon, Jul 29, 2019 at 10:31:04AM -0700, Guenter Roeck wrote:
-> > > > On Mon, Jul 29, 2019 at 05:04:57PM +0300, Heikki Krogerus wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > On Wed, Jul 24, 2019 at 09:30:37PM -0700, Guenter Roeck wrote:
-> > > > > > TCPM may receive PD messages associated with unknown or unsupported
-> > > > > > alternate modes. If that happens, calls to typec_match_altmode()
-> > > > > > will return NULL. The tcpm code does not currently take this into
-> > > > > > account. This results in crashes.
-> > > > > > 
-> > > > > > Unable to handle kernel NULL pointer dereference at virtual address 000001f0
-> > > > > > pgd = 41dad9a1
-> > > > > > [000001f0] *pgd=00000000
-> > > > > > Internal error: Oops: 5 [#1] THUMB2
-> > > > > > Modules linked in: tcpci tcpm
-> > > > > > CPU: 0 PID: 2338 Comm: kworker/u2:0 Not tainted 5.1.18-sama5-armv7-r2 #6
-> > > > > > Hardware name: Atmel SAMA5
-> > > > > > Workqueue: 2-0050 tcpm_pd_rx_handler [tcpm]
-> > > > > > PC is at typec_altmode_attention+0x0/0x14
-> > > > > > LR is at tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm]
-> > > > > > ...
-> > > > > > [<c03fbee8>] (typec_altmode_attention) from [<bf8030fb>]
-> > > > > > 				(tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm])
-> > > > > > [<bf8030fb>] (tcpm_pd_rx_handler [tcpm]) from [<c012082b>]
-> > > > > > 				(process_one_work+0x123/0x2a8)
-> > > > > > [<c012082b>] (process_one_work) from [<c0120a6d>]
-> > > > > > 				(worker_thread+0xbd/0x3b0)
-> > > > > > [<c0120a6d>] (worker_thread) from [<c012431f>] (kthread+0xcf/0xf4)
-> > > > > > [<c012431f>] (kthread) from [<c01010f9>] (ret_from_fork+0x11/0x38)
-> > > > > > 
-> > > > > > Ignore PD messages if the asociated alternate mode is not supported.
-> > > > > > 
-> > > > > > Reported-by: Douglas Gilbert <dgilbert@interlog.com>
-> > > > > > Cc: Douglas Gilbert <dgilbert@interlog.com>
-> > > > > > Fixes: e9576fe8e605c ("usb: typec: tcpm: Support for Alternate Modes")
-> > > > > > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > > > > > ---
-> > > > > > Taking a stab at the problem. I don't really know if this is the correct
-> > > > > > fix, or even if my understanding of the problem is correct, thus marking
-> > > > > > the patch as RFC.
-> > > > > 
-> > > > > My guess is that typec_match_altmode() is the real culprit. We can't
-> > > > > rely on the partner mode index number when identifying the port alt
-> > > > > mode.
-> > > > > 
-> > > > > Douglas, can you test the attached hack instead of this patch?
-> > > > > 
-> > > > > 
-> > > > > thanks,
-> > > > > 
-> > > > > -- 
-> > > > > heikki
-> > > > 
-> > > > > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> > > > > index ec525811a9eb..033dc097ba83 100644
-> > > > > --- a/drivers/usb/typec/tcpm/tcpm.c
-> > > > > +++ b/drivers/usb/typec/tcpm/tcpm.c
-> > > > > @@ -1067,12 +1067,11 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
-> > > > >   	modep = &port->mode_data;
-> > > > > -	adev = typec_match_altmode(port->port_altmode, ALTMODE_DISCOVERY_MAX,
-> > > > > -				   PD_VDO_VID(p[0]), PD_VDO_OPOS(p[0]));
-> > > > > -
-> > > > >   	pdev = typec_match_altmode(port->partner_altmode, ALTMODE_DISCOVERY_MAX,
-> > > > >   				   PD_VDO_VID(p[0]), PD_VDO_OPOS(p[0]));
-> > > > > +	adev = (void *)typec_altmode_get_partner(pdev);
-> > > > > +
-> > > > 
-> > > > I understand that typec_altmode_get_partner() returns a const *;
-> > > > maybe adev should be declared as const struct typec_altmode *
-> > > > instead of using a typecast.
-> > > 
-> > > Yes...
-> > > 
-> > > > Also, typec_altmode_get_partner() can return NULL as well if pdev is NULL.
-> > > > Is it guaranteed that typec_match_altmode() never returns NULL for pdev ?
-> > > 
-> > > ...and probable no. But I don't think we can receive Attention to a
-> > > mode that hasn't been entered.
-> > > 
-> > 
-> > If I understand correctly, the Attention was generated by a test system.
-> > What prevents badly implemented code in the connected system from sending
-> > such an Attention message ?
-> 
-> Oh, if that is the case, then I don't think my change has any effect.
-> I misunderstood the scenario. Sorry for that.
-> 
-> I think we should use your patch to fix this issue.
+Commit-ID:  f8d1b0549263354b8d8854fefc521ac536be70ff
+Gitweb:     https://git.kernel.org/tip/f8d1b0549263354b8d8854fefc521ac536be70ff
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Wed, 31 Jul 2019 00:33:53 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 1 Aug 2019 17:46:42 +0200
 
-So is this an "ack"?  I'm confused as to if this patch should be applied
-or not...
+posix-timers: Rework cancel retry loops
 
-thanks,
+As a preparatory step for adding the PREEMPT RT specific synchronization
+mechanism to wait for a running timer callback, rework the timer cancel
+retry loops so they call a common function. This allows trivial
+substitution in one place.
 
-greg k-h
+Originally-by: Anna-Maria Gleixner <anna-maria@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190730223828.874901027@linutronix.de
+
+---
+ kernel/time/posix-timers.c | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index f5aedd2f60df..bbe8f9686a70 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -805,6 +805,17 @@ static int common_hrtimer_try_to_cancel(struct k_itimer *timr)
+ 	return hrtimer_try_to_cancel(&timr->it.real.timer);
+ }
+ 
++static struct k_itimer *timer_wait_running(struct k_itimer *timer,
++					   unsigned long *flags)
++{
++	timer_t timer_id = READ_ONCE(timer->it_id);
++
++	unlock_timer(timer, *flags);
++	cpu_relax();
++	/* Relock the timer. It might be not longer hashed. */
++	return lock_timer(timer_id, flags);
++}
++
+ /* Set a POSIX.1b interval timer. */
+ int common_timer_set(struct k_itimer *timr, int flags,
+ 		     struct itimerspec64 *new_setting,
+@@ -859,8 +870,9 @@ static int do_timer_settime(timer_t timer_id, int tmr_flags,
+ 
+ 	if (old_spec64)
+ 		memset(old_spec64, 0, sizeof(*old_spec64));
+-retry:
++
+ 	timr = lock_timer(timer_id, &flags);
++retry:
+ 	if (!timr)
+ 		return -EINVAL;
+ 
+@@ -870,11 +882,14 @@ retry:
+ 	else
+ 		error = kc->timer_set(timr, tmr_flags, new_spec64, old_spec64);
+ 
+-	unlock_timer(timr, flags);
+ 	if (error == TIMER_RETRY) {
+-		old_spec64 = NULL;	// We already got the old time...
++		// We already got the old time...
++		old_spec64 = NULL;
++		/* Unlocks and relocks the timer if it still exists */
++		timr = timer_wait_running(timr, &flags);
+ 		goto retry;
+ 	}
++	unlock_timer(timr, flags);
+ 
+ 	return error;
+ }
+@@ -951,13 +966,15 @@ SYSCALL_DEFINE1(timer_delete, timer_t, timer_id)
+ 	struct k_itimer *timer;
+ 	unsigned long flags;
+ 
+-retry_delete:
+ 	timer = lock_timer(timer_id, &flags);
++
++retry_delete:
+ 	if (!timer)
+ 		return -EINVAL;
+ 
+-	if (timer_delete_hook(timer) == TIMER_RETRY) {
+-		unlock_timer(timer, flags);
++	if (unlikely(timer_delete_hook(timer) == TIMER_RETRY)) {
++		/* Unlocks and relocks the timer if it still exists */
++		timer = timer_wait_running(timer, &flags);
+ 		goto retry_delete;
+ 	}
+ 
