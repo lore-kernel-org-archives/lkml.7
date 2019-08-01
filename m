@@ -2,241 +2,101 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8BDC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D05C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E296A20644
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76042171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hOqWAL/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731999AbfHAOYe (ORCPT
+        id S1732019AbfHAOZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:24:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60330 "EHLO mx1.redhat.com"
+        Thu, 1 Aug 2019 10:25:11 -0400
+Received: from ozlabs.org ([203.11.71.1]:49605 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731986AbfHAOYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:24:33 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1731986AbfHAOZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:25:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DCBE830860D7;
-        Thu,  1 Aug 2019 14:24:32 +0000 (UTC)
-Received: from [10.36.117.35] (ovpn-117-35.ams2.redhat.com [10.36.117.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E1971992D;
-        Thu,  1 Aug 2019 14:24:27 +0000 (UTC)
-Subject: Re: [PATCH] iommu: revisit iommu_insert_resv_region() implementation
-To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "hch@infradead.org" <hch@infradead.org>
-References: <20190730140055.9998-1-eric.auger@redhat.com>
- <5FC3163CFD30C246ABAA99954A238FA83F33E69F@lhreml524-mbs.china.huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <9bcef2c9-2e90-9782-3855-b0b6cfd8ec26@redhat.com>
-Date:   Thu, 1 Aug 2019 16:24:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zsyC6ZmKz9s7T;
+        Fri,  2 Aug 2019 00:25:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564669508;
+        bh=fr2Ht3+8dgEWKOJ2z6MmGWX6pP//2xVJZMrrvySq0qI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hOqWAL/b/zf+bdYXFw3KSz7Y7FEh7YYfpBZ0tp2dpTsp3oE3LYRzak84aNulVucCu
+         JcojD9xSrLqiHVB5uhMjvg5ay64cLCMoQvQuONU5vlqgs8y2THB1OkJR2fGzBPM8nS
+         TPC/sluYZb6QkucyX39f2VCN/iBsmF38FIvjNLWx8kVOBVSKCCZEqqjzysQOaELcKQ
+         JkdJQc2mozNoDcXKXlzVlUxzLCvjWOWD6BYtUdl1DkWm4wKRfUzWp5rHDUYn5uQ0mA
+         nvgHAIw34sw3BXBmheEEKUQFxhIqJQkslTgw6y8Q8aAdog4rl190N1B7+B6ITUO/cx
+         d5lVhVmQpgufQ==
+Date:   Fri, 2 Aug 2019 00:25:05 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the arm64-fixes
+ tree
+Message-ID: <20190802002505.6f814277@canb.auug.org.au>
+In-Reply-To: <20190801141009.iksa5pc25vxlydak@willie-the-truck>
+References: <20190801235614.4318ce1a@canb.auug.org.au>
+        <20190801141009.iksa5pc25vxlydak@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <5FC3163CFD30C246ABAA99954A238FA83F33E69F@lhreml524-mbs.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 01 Aug 2019 14:24:33 +0000 (UTC)
+Content-Type: multipart/signed; boundary="Sig_/xjwJ5G4EUR0rL6BIo3G7JQk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shameer,
+--Sig_/xjwJ5G4EUR0rL6BIo3G7JQk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 8/1/19 3:46 PM, Shameerali Kolothum Thodi wrote:
-> Hi Eric,
-> 
->> -----Original Message-----
->> From: Eric Auger [mailto:eric.auger@redhat.com]
->> Sent: 30 July 2019 15:01
->> To: eric.auger.pro@gmail.com; eric.auger@redhat.com; joro@8bytes.org;
->> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
->> dwmw2@infradead.org; alex.williamson@redhat.com;
->> robin.murphy@arm.com; hch@infradead.org
->> Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
->> Subject: [PATCH] iommu: revisit iommu_insert_resv_region() implementation
->>
->> Current implementation is recursive and in case of allocation
->> failure the existing @regions list is altered. A non recursive
->> version looks better for maintainability and simplifies the
->> error handling. We use a separate stack for overlapping segment
->> merging.
->>
->> Note this new implementation may change the region order of
->> appearance in /sys/kernel/iommu_groups/<n>/reserved_regions
->> files but this order has never been documented, see
->> commit bc7d12b91bd3 ("iommu: Implement reserved_regions
->> iommu-group sysfs file"). Previously the regions were sorted
->> by start address. Now they are first sorted by type and within
->> a type they are sorted by start address.
-> 
-> I had a quick run with this patch on one of our boards(D05) where we
-> actually have an untranslated HW MSI region.
-> 
-> Before..
-> estuary:/$ cat /sys/kernel/iommu_groups/3/reserved_regions
-> 0x0000000008000000 0x00000000080fffff msi
-> 0x00000000c6010000 0x00000000c601ffff msi 
-> 
-> After...
-> estuary:/$ cat /sys/kernel/iommu_groups/3/reserved_regions
-> 0x00000000c6010000 0x00000000c601ffff msi
-> 0x0000000008000000 0x00000000080fffff msi
-> 
-> I think the order is reversed now because they are both different types, but are 
-> called "msi". Slightly confusing, but not sure it's a good idea to change the
-> description to something more obvious. 
+Hi Will,
 
-Thank you very much for the testing. I have been working on another
-version which removes the recursiveness but still sorts by start address
-and then by type. I prefer this new one as this shouldn't change the
-order. I will submit it asap.
+On Thu, 1 Aug 2019 15:10:09 +0100 Will Deacon <will@kernel.org> wrote:
+>
+> On Thu, Aug 01, 2019 at 11:56:14PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > Commit
+> >=20
+> >   23fb9748a46d ("arm64: Lower priority mask for GIC_PRIO_IRQON")
+> >=20
+> > is missing a Signed-off-by from its committer. =20
+>=20
+> Urgh, I just can't get this one right, can I? Let's see if I managed it
+> this time. Otherwise I'm reverting the thing and we'll just have to live
+> with broken priority masking forever!
 
-Thanks
+Looks good - disaster averted :-)
+--=20
+Cheers,
+Stephen Rothwell
 
-Eric
-> 
-> Cheers,
-> Shameer
-> 
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>
->> ---
->> ---
->>  drivers/iommu/iommu.c | 96 ++++++++++++++++++++++---------------------
->>  1 file changed, 50 insertions(+), 46 deletions(-)
->>
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 0c674d80c37f..7479f3d38e61 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -229,60 +229,64 @@ static ssize_t iommu_group_show_name(struct
->> iommu_group *group, char *buf)
->>   * @new: new region to insert
->>   * @regions: list of regions
->>   *
->> - * The new element is sorted by address with respect to the other
->> - * regions of the same type. In case it overlaps with another
->> - * region of the same type, regions are merged. In case it
->> - * overlaps with another region of different type, regions are
->> - * not merged.
->> + * Elements are sorted by region type and elements of the same
->> + * type are sorted by start address. Overlapping segments of the
->> + * same type are merged.
->>   */
->>  static int iommu_insert_resv_region(struct iommu_resv_region *new,
->>  				    struct list_head *regions)
->>  {
->> -	struct iommu_resv_region *region;
->> -	phys_addr_t start = new->start;
->> -	phys_addr_t end = new->start + new->length - 1;
->> -	struct list_head *pos = regions->next;
->> +	struct iommu_resv_region *iter, *tmp, *nr, *top;
->> +	struct list_head low, high, stack;
->> +	bool added = false;
->>
->> -	while (pos != regions) {
->> -		struct iommu_resv_region *entry =
->> -			list_entry(pos, struct iommu_resv_region, list);
->> -		phys_addr_t a = entry->start;
->> -		phys_addr_t b = entry->start + entry->length - 1;
->> -		int type = entry->type;
->> +	INIT_LIST_HEAD(&low);
->> +	INIT_LIST_HEAD(&high);
->> +	INIT_LIST_HEAD(&stack);
->>
->> -		if (end < a) {
->> -			goto insert;
->> -		} else if (start > b) {
->> -			pos = pos->next;
->> -		} else if ((start >= a) && (end <= b)) {
->> -			if (new->type == type)
->> -				return 0;
->> -			else
->> -				pos = pos->next;
->> -		} else {
->> -			if (new->type == type) {
->> -				phys_addr_t new_start = min(a, start);
->> -				phys_addr_t new_end = max(b, end);
->> -				int ret;
->> -
->> -				list_del(&entry->list);
->> -				entry->start = new_start;
->> -				entry->length = new_end - new_start + 1;
->> -				ret = iommu_insert_resv_region(entry, regions);
->> -				kfree(entry);
->> -				return ret;
->> -			} else {
->> -				pos = pos->next;
->> -			}
->> -		}
->> -	}
->> -insert:
->> -	region = iommu_alloc_resv_region(new->start, new->length,
->> -					 new->prot, new->type);
->> -	if (!region)
->> +	nr = iommu_alloc_resv_region(new->start, new->length,
->> +				     new->prot, new->type);
->> +	if (!nr)
->>  		return -ENOMEM;
->>
->> -	list_add_tail(&region->list, pos);
->> +	/*
->> +	 * Elements are dispatched into 3 lists: low/high contain
->> +	 * segments of lower/higher types than @new; only segments
->> +	 * with same type as @new remain in @regions, including @new
->> +	 * ordered inserted by start address
->> +	 */
->> +	list_for_each_entry_safe(iter, tmp, regions, list) {
->> +		if (iter->type < nr->type) {
->> +			list_move_tail(&iter->list, &low);
->> +		} else if (iter->type > nr->type) {
->> +			list_move_tail(&iter->list, &high);
->> +		} else if (nr->start <= iter->start && !added) {
->> +			list_add_tail(&nr->list, &iter->list);
->> +			added = true;
->> +		}
->> +	}
->> +	if (!added)
->> +		list_add_tail(&nr->list, regions);
->> +
->> +	/* Merge overlapping segments in @regions, if any */
->> +	list_move(regions->next, &stack); /* move the 1st elt to the stack */
->> +	list_for_each_entry_safe(iter, tmp, regions, list) {
->> +		phys_addr_t top_end, iter_end = iter->start + iter->length - 1;
->> +
->> +		top = list_last_entry(&stack, struct iommu_resv_region, list);
->> +		top_end = top->start + top->length - 1;
->> +
->> +		if (iter->start > top_end + 1) {
->> +			list_move(&iter->list, &top->list);
->> +		} else {
->> +			top->length = max(top_end, iter_end) - top->start + 1;
->> +			list_del(&iter->list);
->> +			kfree(iter);
->> +		}
->> +	}
->> +	list_splice(&stack, regions);
->> +	list_splice(&low, regions);
->> +	list_splice_tail(&high, regions);
->>  	return 0;
->>  }
->>
->> --
->> 2.20.1
-> 
+--Sig_/xjwJ5G4EUR0rL6BIo3G7JQk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1C9kIACgkQAVBC80lX
+0GxH4gf/R5PA/x9bLwm2o8wJcd9rV4BbXyrSOS9CBxiS2pLmYOu28MucXk+a3Vbn
+5aLAjSkoqRvJ/qEatj3AEL4tuSU6fJNCxs7lbNLdqDNTGDaWhOfBIcrc4ciHVZCY
+o9ydKNmfgqEJr4wVawRoLF82214vP/iJ+nRSB6W0FwTpB1Xy+6ZmzFIZB1cM3nrW
+snks6ihcTeSDwtukWj1sADsfDIlxOa0c3BRQKR4qmPP40tXJe5PcOXj5kbO1ttNd
+vUuk6QcCj5Xvo+Q8GKkMym9Phn29CUnL0z2HaolSwURoSS+Ci3zGQgVk0P7c29Zl
+yxGPS2nXJXHBpFVwtdRFIkIZDwMzCw==
+=ewv0
+-----END PGP SIGNATURE-----
+
+--Sig_/xjwJ5G4EUR0rL6BIo3G7JQk--
