@@ -2,88 +2,86 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579AAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300AEC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 188E42080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE602080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Zjzn8KFh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NFJ5mx3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732796AbfHAVy6 (ORCPT
+        id S1732862AbfHAV70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:54:58 -0400
-Received: from ozlabs.org ([203.11.71.1]:34175 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730419AbfHAVy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:54:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4603xB6btMz9s3Z;
-        Fri,  2 Aug 2019 07:54:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564696495;
-        bh=KPSAi5E+QrUSQRNI6r1fH4edAAA6UKpIr2v3WfOzsUM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Zjzn8KFhqkkNwUTuWoG0Xvc1yGBWR3A9ezgltqCmGPDn25E8O+0dQ8dECIltwbTiU
-         Uq3zA0LUOldzWueWuZKRyqqTLvQxzyx5/WSnw2uaE1UCj9CqdCKbP849IOOCsea3Lp
-         rpUOzcswmjphrkGjkvQB7QLaLrB38iISvWMeH0oWMI2oNt0NE5OOVSEZ2jqzdVhCX3
-         bVzgX+PpXcqgxMHy+g1CiFa+BNq4BRd8ubiwSOWgeAaMT2dsupwoSaKX7X7Zl5HfVn
-         wIUD1hxSXULnH84j6+v+yqWPA6Z6RtGX3jZBwfSR6mK2nnxoUQGvo2FVUttEQj7S6Q
-         aLJXzvIGNqY+A==
-Date:   Fri, 2 Aug 2019 07:54:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Steve French <smfrench@gmail.com>,
-        CIFS <linux-cifs@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the cifs tree
-Message-ID: <20190802075453.06066be1@canb.auug.org.au>
+        Thu, 1 Aug 2019 17:59:26 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55528 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfHAV7Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 17:59:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FlbNAsgaWkp1ShDCheHxAkj85en9Tu2y9Hru44fhYz0=; b=NFJ5mx3pun9BIYphO0C68UAUu
+        bNIl5t6nnsxHXQq8rOyvK1+2xENKG1banbuqonFceMoKyQfDoNijJJq1cmdDthZGkLdEJaHaa+JRR
+        sy9AZHK01JafhzTXpLIhZcM24Nt52lWl/kRGtNf5E6LX5xx1DNeoa8ZNntincpMLRDHuDoi7WC/+y
+        HA3O23EObKhT4TPP+bFOaHWWnfil3CE5Ggc/aCnZxceKFfwCToLfXOTGqgxuInpjTOEyU5G52eQ61
+        7gsEOZqcrfczHuU7P7Dx4ONddvwcraEmcYcTxxpMkFOgVNQGyPcL7cM+eMlCVnQ+Z2HDd9+SLiVEF
+        If+0fSSdQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1htJ6I-0002fJ-Mv; Thu, 01 Aug 2019 21:59:07 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 51E57202953B0; Thu,  1 Aug 2019 23:59:04 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 23:59:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, lizefan@huawei.com,
+        Johannes Weiner <hannes@cmpxchg.org>, axboe@kernel.dk,
+        Dennis Zhou <dennis@kernel.org>,
+        Dennis Zhou <dennisszhou@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        Nick Kralevich <nnk@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/1] psi: do not require setsched permission from the
+ trigger creator
+Message-ID: <20190801215904.GC2332@hirez.programming.kicks-ass.net>
+References: <20190730013310.162367-1-surenb@google.com>
+ <20190730081122.GH31381@hirez.programming.kicks-ass.net>
+ <CAJuCfpH7NpuYKv-B9-27SpQSKhkzraw0LZzpik7_cyNMYcqB2Q@mail.gmail.com>
+ <20190801095112.GA31381@hirez.programming.kicks-ass.net>
+ <CAJuCfpHGpsU4bVcRxpc3wOybAOtiTKAsB=BNAtZcGnt10j5gbA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Tvn2OBSDkwMEDVigN//YA/m";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpHGpsU4bVcRxpc3wOybAOtiTKAsB=BNAtZcGnt10j5gbA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Tvn2OBSDkwMEDVigN//YA/m
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 01, 2019 at 11:28:30AM -0700, Suren Baghdasaryan wrote:
+> > By marking it FIFO-99 you're in effect saying that your stupid
+> > statistics gathering is more important than your life. It will preempt
+> > the task that's in control of the band-saw emergency break, it will
+> > preempt the task that's adjusting the electromagnetic field containing
+> > this plasma flow.
+> >
+> > That's insane.
+> 
+> IMHO an opt-in feature stops being "stupid" as soon as the user opted
+> in to use it, therefore explicitly indicating interest in it. However
+> I assume you are using "stupid" here to indicate that it's "less
+> important" rather than it's "useless".
 
-Hi all,
-
-Commit
-
-  c3ab166ec798 ("SMB3: Kernel oops mounting a encryptData share with CONFIG=
-_DEBUG_VIRTUAL")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Tvn2OBSDkwMEDVigN//YA/m
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1DX60ACgkQAVBC80lX
-0GxHhgf+IB5SocUd0MMJ3udUo6oRImUgkO4C10Y5xlU9lvYlehoV4DT348vKYMYB
-mGqvq4Og5JHUXg3CG4XR06uLQATcXJn7ao7zUqHixOL1a+idvNAFCZ2mjqL74QsS
-9ZwqxwZFdGb5ELYWqoq1vxN2a6eTRpSmjRgf2XYinEzdNvR5BVkMDmXw7BkwLtN+
-zcBIFefBRWYoocKqbV4QkJlw3usjjnDWvSL2pSyim5yJlP6Bqax9wkqYkOHr3cFf
-jp43R8ytVZRH8Vnm8Wn2WAlUXCT8qlR+h2fIkVXttuRJYzh7kwT/TYZqLNEY/D4j
-EZyenU+Bdy1TUg7hvSO9X3jIVpjfmA==
-=Dju+
------END PGP SIGNATURE-----
-
---Sig_/Tvn2OBSDkwMEDVigN//YA/m--
+Quite; PSI does have its uses. RT just isn't one of them.
