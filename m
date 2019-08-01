@@ -2,136 +2,134 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BCCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551B4C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25D92089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3386F2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfHAFrK (ORCPT
+        id S1729186AbfHAFsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 01:47:10 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:54616 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728702AbfHAFrJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 01:47:09 -0400
-Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x715l8go021436
-        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 01:47:08 -0400
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x715l3uM011412
-        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 01:47:08 -0400
-Received: by mail-qt1-f198.google.com with SMTP id s9so63751335qtn.14
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 22:47:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=BIaC2b1UDZwx7XdDPFY2TgT2duJrjp+VXdWjaLmhw8w=;
-        b=PJc2UXScmPr8wto+sAH+qpwUFX4XeQ/exbRLwDnw09H4w9HfX9woCcShqewAiTHOrp
-         zGpLDBXa8XGAeFdhBDkGdnVuvI7Es36zV4iDA6iSpTTqrj8pCPqqLMbJRApArnV94t/Z
-         TdAXWvBOQctUPPJfn2rRICCMLxoSkqFMe33sm9HZHScDGh03z8HNHLxvzkNkq4Lr+Y5v
-         LCmVkGmMPj8m7qY94XNiIWPwHfQbL1oXzU5Lr0L/6gBLYFb7nyS1KxZLjJbqjmWaW5jv
-         n3Kenj7EhF6u1WkpTZyHIAMp10JkEY5sUv2ofjsBgTvAt4ds7Ogds5MY2Il2TWWTjZg8
-         Qzcg==
-X-Gm-Message-State: APjAAAWXWDAEpxws8Up62p2xa42FD3E3kNYuUdJVTUqZ0W0VpLOIWkou
-        +EnjkVqhfGADx79vWCN2/iY1MabA0xMdqrBkDK8yhc47CBKvEbjuzMP1SkTk6Bl4cEToDqHjAmg
-        BpZwmmZVjKyOY3fAzsOmd++NJoQFbuzAwrwM=
-X-Received: by 2002:aed:2063:: with SMTP id 90mr88113269qta.307.1564638422875;
-        Wed, 31 Jul 2019 22:47:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwqF8ICZoH1tmAtHtEl5W8KWHLigjNPdoAD+HRUxmAy600psn7iIO6Ig+RDac8NonQMyb/M9g==
-X-Received: by 2002:aed:2063:: with SMTP id 90mr88113248qta.307.1564638422508;
-        Wed, 31 Jul 2019 22:47:02 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::7ca])
-        by smtp.gmail.com with ESMTPSA id x24sm29653893qts.63.2019.07.31.22.47.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 22:47:00 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] linux-next 20190731 - aegis128-core.c fails to build
-In-Reply-To: <CAKv+Gu8EF3R05hLWHh7mgbgkUyzBwELctdVvSFMq+6Crw6Tf4A@mail.gmail.com>
-References: <13353.1564635114@turing-police>
- <CAKv+Gu8EF3R05hLWHh7mgbgkUyzBwELctdVvSFMq+6Crw6Tf4A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1564638419_11794P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
+        Thu, 1 Aug 2019 01:48:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:58460 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728702AbfHAFsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 01:48:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC921337;
+        Wed, 31 Jul 2019 22:48:05 -0700 (PDT)
+Received: from [10.163.1.81] (unknown [10.163.1.81])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BE013F694;
+        Wed, 31 Jul 2019 22:50:07 -0700 (PDT)
+Subject: Re: [PATCH] fork: Improve error message for corrupted page tables
+To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     dave.hansen@intel.com, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190730221820.7738-1-sai.praneeth.prakhya@intel.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <56ad91b8-1ea0-6736-5bc5-eea0ced01054@arm.com>
+Date:   Thu, 1 Aug 2019 11:18:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190730221820.7738-1-sai.praneeth.prakhya@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 01 Aug 2019 01:46:59 -0400
-Message-ID: <32521.1564638419@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1564638419_11794P
-Content-Type: text/plain; charset=us-ascii
 
-On Thu, 01 Aug 2019 08:01:54 +0300, Ard Biesheuvel said:
 
-> > ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefined!
-> > ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
-> > ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefined!
-> > make[1]: *** [scripts/Makefile.modpost:105: modules-modpost] Error 1
-> > make: *** [Makefile:1299: modules] Error 2
+On 07/31/2019 03:48 AM, Sai Praneeth Prakhya wrote:
+> When a user process exits, the kernel cleans up the mm_struct of the user
+> process and during cleanup, check_mm() checks the page tables of the user
+> process for corruption (E.g: unexpected page flags set/cleared). For
+> corrupted page tables, the error message printed by check_mm() isn't very
+> clear as it prints the loop index instead of page table type (E.g: Resident
+> file mapping pages vs Resident shared memory pages). Hence, improve the
+> error message so that it's more informative.
 
-> Which compiler version are you using? All references to the
-> crypt_aegis128_xx_simd() routines should disappear if
-> CONFIG_CRYPTO_AEGIS128_SIMD is not set (in which case have_simd will
-> always be false and so the compiler should optimize away those calls).
+The loop index in check_mm() also happens to be the index in rss_stat[] which
+represents individual memory type stats. But you are right, index value here
+in the print does not make any sense.
 
-gcc 9.1.1 obviously doesn't think it can be optimized away. Apparently, it's
-not smart enough to realize that nothing sets have_simd in any of the functions
-and therefor it's guaranteed to be zero, and  it can do dead code optimization
-based on that.
+> 
+> Without patch:
+> --------------
+> [  204.836425] mm/pgtable-generic.c:29: bad p4d 0000000089eb4e92(800000025f941467)
+> [  204.836544] BUG: Bad rss-counter state mm:00000000f75895ea idx:0 val:2
+> [  204.836615] BUG: Bad rss-counter state mm:00000000f75895ea idx:1 val:5
+> [  204.836685] BUG: non-zero pgtables_bytes on freeing mm: 20480
+> 
+> With patch:
+> -----------
+> [   69.815453] mm/pgtable-generic.c:29: bad p4d 0000000084653642(800000025ca37467)
+> [   69.815872] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_FILEPAGES val:2
+> [   69.815962] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_ANONPAGES val:5
+> [   69.816050] BUG: non-zero pgtables_bytes on freeing mm: 20480
 
-Now, if we had something like:
+Yes, this is definitely better.
 
-#ifdef CONFIG_CRYPTO_AEGIS_128_SIMD
-static bool have_simd;
-#else
-#define have_simd (0)
-#endif
+> 
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Suggested-by/Acked-by: Dave Hansen <dave.hansen@intel.com>
 
-then that should be enough to tell the compiler it can optimize it away, except
-that then runs into problems here:
+Though I am not sure, should the above be two separate lines instead ?
 
-        if (IS_ENABLED(CONFIG_CRYPTO_AEGIS128_SIMD))
-                have_simd = crypto_aegis128_have_simd();
+> Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+> ---
+>  include/linux/mm_types_task.h | 7 +++++++
+>  kernel/fork.c                 | 4 ++--
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/mm_types_task.h b/include/linux/mm_types_task.h
+> index d7016dcb245e..881f4ea3a1b5 100644
+> --- a/include/linux/mm_types_task.h
+> +++ b/include/linux/mm_types_task.h
+> @@ -44,6 +44,13 @@ enum {
+>  	NR_MM_COUNTERS
+>  };
+>  
+> +static const char * const resident_page_types[NR_MM_COUNTERS] = {
+> +	"MM_FILEPAGES",
+> +	"MM_ANONPAGES",
+> +	"MM_SWAPENTS",
+> +	"MM_SHMEMPAGES",
+> +};
 
-because it will whine about the lack of an lvalue before it optimizes the assignment away...
+Should index them to match respective typo macros.
 
---==_Exmh_1564638419_11794P
-Content-Type: application/pgp-signature
+	[MM_FILEPAGES] = "MM_FILEPAGES",
+	[MM_ANONPAGES] = "MM_ANONPAGES",
+	[MM_SWAPENTS] = "MM_SWAPENTS",
+	[MM_SHMEMPAGES] = "MM_SHMEMPAGES",
 
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXUJ80gdmEQWDXROgAQLkHg/9ECez7dCQZUrkvB9XBkF4GXqXZEAzg9q3
-YhNm4yxBbGrfk2bP8sQMGnrDMMyXnWjRYT5vEzwCqaTTqYSYmEOLsppDpgqLzSf4
-wiS59VQaD4/rcyfiUaUpu1yPOV4yFt1C1jA9Y0edRknZ3OItKOxip6WpPG1M2DqQ
-25aBzrl0fcNg40vWBQdV+dioh2IcDrhxflKkVZUITiT5/C5wUDFtogS4aEizS6Kn
-Xl2sU918ll1k+C5xO9i6OvAxBwSGPuiZBZV1GVe+UtaBGUCLnY6E3p44DMZzBvQ1
-8U/8FcTvX0w88vAjdYgOIj+tRG4djgn6qyVxCht94/C8oWGVIffHxsbdu+7W1/vO
-6bYwHOKVPt/3Tf8NV8mB42hzSelZ7Ni7T31oTckWQKUcPUMa98PIIU9f+MYSEmzM
-n4sLoNtF/8ea61ndWxpheVfxtuaimW3WST7Vx6lIxH8rN7FrRhnPe3VWclIVLBJh
-CUJZftTdnZw2VDg+oKLm+XKPfECdxIhAcjrnQsB7pm5Z88cCBq70cwmCbevPJo2A
-g9IRpfYumr57CpiDyvJXDdBn/5l1I2FQ8M3gAU/wyuZhFWGCSZ8QD0M6G8Zbap38
-qMmtMPCdluP8neXGpmHJRS/s6s40h1XLoXvpNt6czyHVz4DUqujFtFdzF9BVCH++
-GyQPMZBDIBE=
-=bIND
------END PGP SIGNATURE-----
-
---==_Exmh_1564638419_11794P--
+> +
+>  #if USE_SPLIT_PTE_PTLOCKS && defined(CONFIG_MMU)
+>  #define SPLIT_RSS_COUNTING
+>  /* per-thread cached information, */
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 2852d0e76ea3..6aef5842d4e0 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -649,8 +649,8 @@ static void check_mm(struct mm_struct *mm)
+>  		long x = atomic_long_read(&mm->rss_stat.count[i]);
+>  
+>  		if (unlikely(x))
+> -			printk(KERN_ALERT "BUG: Bad rss-counter state "
+> -					  "mm:%p idx:%d val:%ld\n", mm, i, x);
+> +			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%ld\n",
+> +				 mm, resident_page_types[i], x);
+It changes the print function as well, though very minor change but perhaps
+mention that in the commit message ?
