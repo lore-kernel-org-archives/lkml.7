@@ -2,146 +2,178 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374CFC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645AFC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A69C20665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:48:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="BCqrZFER"
+	by mail.kernel.org (Postfix) with ESMTP id 2F3C320665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731526AbfHAMsL (ORCPT
+        id S1731489AbfHAMsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:48:11 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34226 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731399AbfHAMsK (ORCPT
+        Thu, 1 Aug 2019 08:48:37 -0400
+Received: from 17.mo4.mail-out.ovh.net ([46.105.41.16]:33638 "EHLO
+        17.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731399AbfHAMsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:48:10 -0400
-Received: by mail-lf1-f67.google.com with SMTP id b29so42919022lfq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 05:48:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rl9gxlsQAmtdUucdCjHcN4IJXqqRSXnZiys3c1iAChM=;
-        b=BCqrZFER2qt2tRS4BERTa8OYTuAczZw6Vu3z7uTZGQYFaSHcfqcuV5SQV52phXuR2o
-         pc7vXSMcsbSyYQZoWwSHx+qcs5+KqXD1ix4QMDk1fiOe2f+Ey++TFVh4YlYS57d7nY/R
-         +PJ/gd2ZVxTYilPY2dcgN2+QJY+52AFbAoy3305qeyBUImzo0UJUG1ndwMGZnl91xgKz
-         NZSc6hvZbcgaGjMl71JYcOKdsjCyGbbYqmWeQxBn+au/dhacM3cMsu+jw8f7pJ2BZvPK
-         ixzTT/jc3086+42k3lk1OU5aCakMaxf9AgMmj6t3GYjy8+6qb4n0kmkj+3oN88PiNKlA
-         pQPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rl9gxlsQAmtdUucdCjHcN4IJXqqRSXnZiys3c1iAChM=;
-        b=oTir0aMvHFzbyA//fAW4iU7JU0D0fWe4fNxzQVD9e3CR9+Z1CgHriIui+GM3XuTXRe
-         UiQhs6+zhMwy0jj1FP+aemq6T+JV1OM/3V4wdRK4fSZru91gHb+7NMPUyH64y0QrB4sU
-         OeGfw0yYk8sJsLLicZ/QfR4MdqFvNOmuOsM+tA71FMEFizYGLqODpr/rZ8J+n8nZQ8Yy
-         GAVKQsZsVoyYd/U0EU2uTSoQF14X6tUxb30YwGcPJ2a/HSv9ZRgq7l9bZFzHMcAYeFll
-         tXAsxZyVz9zsjJAqfYOkcZWKqYRFMAgqAn8ut+qM0RfD1Q15fjPBO5EQdV5H4kDnNeAf
-         7Ifg==
-X-Gm-Message-State: APjAAAXJ5F5ozEt5Tds4FYiwrMTxgEh2AAgbvY32uZoKjl+aNl0AsALu
-        Jgz0sBf5/gevIOZ3H41zI1ZgwTa+bWL6GbyYCA==
-X-Google-Smtp-Source: APXvYqxgr8PQjSzAdp7+U+PsgA9phbRv670CHsf3naEv6EhZF5kRfW6dfEe+5cBDHIT5XJU7QNpkLNvRclzntJy1hqs=
-X-Received: by 2002:ac2:5559:: with SMTP id l25mr59946611lfk.175.1564663688296;
- Thu, 01 Aug 2019 05:48:08 -0700 (PDT)
+        Thu, 1 Aug 2019 08:48:36 -0400
+X-Greylist: delayed 13777 seconds by postgrey-1.27 at vger.kernel.org; Thu, 01 Aug 2019 08:48:35 EDT
+Received: from player758.ha.ovh.net (unknown [10.108.35.103])
+        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 7A02A1FE73A
+        for <linux-kernel@vger.kernel.org>; Thu,  1 Aug 2019 13:31:47 +0200 (CEST)
+Received: from kaod.org (lfbn-1-2240-157.w90-76.abo.wanadoo.fr [90.76.60.157])
+        (Authenticated sender: clg@kaod.org)
+        by player758.ha.ovh.net (Postfix) with ESMTPSA id 1E73F88D821D;
+        Thu,  1 Aug 2019 11:31:36 +0000 (UTC)
+Subject: Re: [PATCH] powerpc/xive: Add some error handling code to
+ 'xive_spapr_init()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        allison@lohutok.net, tglx@linutronix.de, groug@kaod.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20190801110956.8517-1-christophe.jaillet@wanadoo.fr>
+From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Message-ID: <bb72af16-d775-de39-498b-5e64976d93de@kaod.org>
+Date:   Thu, 1 Aug 2019 13:31:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190731153443.4984-1-acgoide@tycho.nsa.gov> <1c62c931-9441-4264-c119-d038b2d0c9b9@schaufler-ca.com>
- <CAHC9VhS6cfMw5ZUkOSov6hexh9QpnpKwipP7L7ZYGCVLCHGfFQ@mail.gmail.com> <66fbc35c-6cc8-bd08-9bf9-aa731dc3ff09@tycho.nsa.gov>
-In-Reply-To: <66fbc35c-6cc8-bd08-9bf9-aa731dc3ff09@tycho.nsa.gov>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 1 Aug 2019 08:47:56 -0400
-Message-ID: <CAHC9VhQg_UCDZpm=hWTn5YFAYQJt1K_fRxxq+LzORekJ8p9zNg@mail.gmail.com>
-Subject: Re: [PATCH] fanotify, inotify, dnotify, security: add security hook
- for fs notifications
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, dhowells@redhat.com, jack@suse.cz,
-        amir73il@gmail.com, James Morris <jmorris@namei.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190801110956.8517-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 14817687201574521713
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrleejgdegtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 7:31 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
-> On 7/31/19 8:27 PM, Paul Moore wrote:
-> > On Wed, Jul 31, 2019 at 1:26 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> >> On 7/31/2019 8:34 AM, Aaron Goidel wrote:
+On 01/08/2019 13:09, Christophe JAILLET wrote:
+> 'xive_irq_bitmap_add()' can return -ENOMEM.
+> In this case, we should free the memory already allocated and return
+> 'false' to the caller.
+> 
+> Also add an error path which undoes the 'tima = ioremap(...)'
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> NOT compile tested (I don't have a cross compiler and won't install one).
 
-...
+All distros have a packaged powerpc cross compiler. 
 
-> >>> +static int selinux_path_notify(const struct path *path, u64 mask,
-> >>> +                                             unsigned int obj_type)
-> >>> +{
-> >>> +     int ret;
-> >>> +     u32 perm;
-> >>> +
-> >>> +     struct common_audit_data ad;
-> >>> +
-> >>> +     ad.type = LSM_AUDIT_DATA_PATH;
-> >>> +     ad.u.path = *path;
-> >>> +
-> >>> +     /*
-> >>> +      * Set permission needed based on the type of mark being set.
-> >>> +      * Performs an additional check for sb watches.
-> >>> +      */
-> >>> +     switch (obj_type) {
-> >>> +     case FSNOTIFY_OBJ_TYPE_VFSMOUNT:
-> >>> +             perm = FILE__WATCH_MOUNT;
-> >>> +             break;
-> >>> +     case FSNOTIFY_OBJ_TYPE_SB:
-> >>> +             perm = FILE__WATCH_SB;
-> >>> +             ret = superblock_has_perm(current_cred(), path->dentry->d_sb,
-> >>> +                                             FILESYSTEM__WATCH, &ad);
-> >>> +             if (ret)
-> >>> +                     return ret;
-> >>> +             break;
-> >>> +     case FSNOTIFY_OBJ_TYPE_INODE:
-> >>> +             perm = FILE__WATCH;
-> >>> +             break;
-> >>> +     default:
-> >>> +             return -EINVAL;
-> >>> +     }
-> >>> +
-> >>> +     // check if the mask is requesting ability to set a blocking watch
-> >
-> > ... in the future please don't use "// XXX", use "/* XXX */" instead :)
-> >
-> > Don't respin the patch just for this, but if you have to do it for
-> > some other reason please fix the C++ style comments.  Thanks.
->
-> This was discussed during the earlier RFC series but ultimately someone
-> pointed to:
-> https://lkml.org/lkml/2016/7/8/625
-> where Linus blessed the use of C++/C99 style comments.  And checkpatch
-> accepts them these days.
+Then, you need to compile a kernel for a pseries machine and run a pseries
+machine with it under QEMU. You can use a simple ppc initrd, a net install 
+one for example.
 
-Yep, I'm aware of both, it is simply a personal preference of mine.
-I'm not going to reject patches with C++ style comments, but I would
-ask people to stick to the good ol' fashioned comments for patches
-they submit.
+You could also hack the device tree in QEMU to torture the XIVE sPAPR driver.
+Nothing too complex, all is here : 
 
-> Obviously if you truly don't want them in the SELinux code, that's your
-> call.  But note that all files now have at least one such comment as a
-> result of the mass SPDX license headers that were added throughout the
-> tree using that style.
+https://git.qemu.org/?p=qemu.git;a=blob;f=hw/intc/spapr_xive.c;h=097f88d4608d8ba160526756a3a224e5176b6e0f;hb=HEAD#l1427
 
-FYI, the sky is blue.
 
-It isn't just the license headers either, Al dropped one into hooks.c
-:).  Just like I don't plan to reject patches due only to the comment
-style, you don't see me pushing patches to change the C++ comments.
+> So if some correction or improvement are needed, feel free to propose and
+> commit it directly.
 
--- 
-paul moore
-www.paul-moore.com
+Yes there is I think. I would move at the end all the code that needs a 
+rollback.
+
+Thanks for taking a look, I might do that one day.
+
+Cheers,
+C.  
+
+
+> ---
+>  arch/powerpc/sysdev/xive/spapr.c | 36 +++++++++++++++++++++++++-------
+>  1 file changed, 28 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
+> index 52198131c75e..b3ae0b76c433 100644
+> --- a/arch/powerpc/sysdev/xive/spapr.c
+> +++ b/arch/powerpc/sysdev/xive/spapr.c
+> @@ -64,6 +64,17 @@ static int xive_irq_bitmap_add(int base, int count)
+>  	return 0;
+>  }
+>  
+> +static void xive_irq_bitmap_remove_all(void)
+> +{
+> +	struct xive_irq_bitmap *xibm, *tmp;
+> +
+> +	list_for_each_entry_safe(xibm, tmp, &xive_irq_bitmaps, list) {
+> +		list_del(&xibm->list);
+> +		kfree(xibm->bitmap);
+> +		kfree(xibm);
+> +	}
+> +}
+> +
+>  static int __xive_irq_bitmap_alloc(struct xive_irq_bitmap *xibm)
+>  {
+>  	int irq;
+> @@ -723,7 +734,7 @@ bool __init xive_spapr_init(void)
+>  	u32 val;
+>  	u32 len;
+>  	const __be32 *reg;
+> -	int i;
+> +	int i, err;
+>  
+>  	if (xive_spapr_disabled())
+>  		return false;
+> @@ -748,23 +759,26 @@ bool __init xive_spapr_init(void)
+>  	}
+>  
+>  	if (!xive_get_max_prio(&max_prio))
+> -		return false;
+> +		goto err_unmap;
+>  
+>  	/* Feed the IRQ number allocator with the ranges given in the DT */
+>  	reg = of_get_property(np, "ibm,xive-lisn-ranges", &len);
+>  	if (!reg) {
+>  		pr_err("Failed to read 'ibm,xive-lisn-ranges' property\n");
+> -		return false;
+> +		goto err_unmap;
+>  	}
+>  
+>  	if (len % (2 * sizeof(u32)) != 0) {
+>  		pr_err("invalid 'ibm,xive-lisn-ranges' property\n");
+> -		return false;
+> +		goto err_unmap;
+>  	}
+>  
+> -	for (i = 0; i < len / (2 * sizeof(u32)); i++, reg += 2)
+> -		xive_irq_bitmap_add(be32_to_cpu(reg[0]),
+> -				    be32_to_cpu(reg[1]));
+> +	for (i = 0; i < len / (2 * sizeof(u32)); i++, reg += 2) {
+> +		err = xive_irq_bitmap_add(be32_to_cpu(reg[0]),
+> +					  be32_to_cpu(reg[1]));
+> +		if (err < 0)
+> +			goto err_mem_free;
+> +	}
+>  
+>  	/* Iterate the EQ sizes and pick one */
+>  	of_property_for_each_u32(np, "ibm,xive-eq-sizes", prop, reg, val) {
+> @@ -775,8 +789,14 @@ bool __init xive_spapr_init(void)
+>  
+>  	/* Initialize XIVE core with our backend */
+>  	if (!xive_core_init(&xive_spapr_ops, tima, TM_QW1_OS, max_prio))
+> -		return false;
+> +		goto err_mem_free;
+>  
+>  	pr_info("Using %dkB queues\n", 1 << (xive_queue_shift - 10));
+>  	return true;
+> +
+> +err_mem_free:
+> +	xive_irq_bitmap_remove_all();
+> +err_unmap:
+> +	iounmap(tima);
+> +	return false;
+>  }
+> 
+
