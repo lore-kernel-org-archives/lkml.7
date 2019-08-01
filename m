@@ -2,119 +2,90 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C2BC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A33C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74AC1206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73BBD206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389994AbfHAWns (ORCPT
+        id S2390008AbfHAWn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:43:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4300 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389970AbfHAWnm (ORCPT
+        Thu, 1 Aug 2019 18:43:58 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36027 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389970AbfHAWn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:43:42 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71MfekP023464;
-        Thu, 1 Aug 2019 18:43:01 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48mgrvdb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:43:01 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71Mfw3f024004;
-        Thu, 1 Aug 2019 18:43:00 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48mgrvct-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:43:00 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MeiaL023094;
-        Thu, 1 Aug 2019 22:42:59 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02dal.us.ibm.com with ESMTP id 2u0e85xg18-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 22:42:59 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MgwfD13042592
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Aug 2019 22:42:58 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C34AFB206C;
-        Thu,  1 Aug 2019 22:42:58 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AE8F5B2076;
-        Thu,  1 Aug 2019 22:42:58 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Aug 2019 22:42:58 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 16A0C16C9A4A; Thu,  1 Aug 2019 15:43:00 -0700 (PDT)
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 4/8] rcu/sync: Remove custom check for RCU readers
-Date:   Thu,  1 Aug 2019 15:42:54 -0700
-Message-Id: <20190801224258.16679-4-paulmck@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190801224240.GA16092@linux.ibm.com>
-References: <20190801224240.GA16092@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908010239
+        Thu, 1 Aug 2019 18:43:58 -0400
+Received: from callcc.thunk.org (96-72-84-49-static.hfc.comcastbusiness.net [96.72.84.49] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x71MhiQQ009996
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 1 Aug 2019 18:43:46 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id C0B7E4202F5; Thu,  1 Aug 2019 18:43:44 -0400 (EDT)
+Date:   Thu, 1 Aug 2019 18:43:44 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org
+Subject: Re: [PATCH 09/20] ext4: Initialize timestamps limits
+Message-ID: <20190801224344.GC17372@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org
+References: <20190730014924.2193-1-deepa.kernel@gmail.com>
+ <20190730014924.2193-10-deepa.kernel@gmail.com>
+ <20190731152609.GB7077@magnolia>
+ <CABeXuvpiom9eQi0y7PAwAypUP1ezKKRfbh-Yqr8+Sbio=QtUJQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABeXuvpiom9eQi0y7PAwAypUP1ezKKRfbh-Yqr8+Sbio=QtUJQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+On Thu, Aug 01, 2019 at 12:18:28PM -0700, Deepa Dinamani wrote:
+> > Say you have a filesystem with s_inode_size > 128 where not all of the
+> > ondisk inodes have been upgraded to i_extra_isize > 0 and therefore
+> > don't support nanoseconds or times beyond 2038.  I think this happens on
+> > ext3 filesystems that reserved extra space for inode attrs that are
+> > subsequently converted to ext4?
+> 
+> I'm confused about ext3 being converted to ext4. If the converted
+> inodes have extra space, then ext4_iget() will start using the extra
+> space when it modifies the on disk inode, won't it?i
 
-The rcu/sync code currently does a special check for being in an RCU
-read-side critical section.  With RCU consolidating flavors and the
-generic helper added earlier in this series, this check is no longer need.
-This commit switches to the generic helper, saving a couple of lines
-of code.
+It is possible that you can have an ext3 file system with (for
+example) 256 byte inodes, and all of the extra space was used for
+extended attributes, then ext4 won't have the extra space available.
+This is going toh be on an inode-by-inode basis, and if an extended
+attribute is motdified or deleted, the space would become available,t
+and then inode would start getting a higher resolution timestamp.
 
-Cc: Oleg Nesterov <oleg@redhat.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
----
- include/linux/rcu_sync.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I really don't think it's worth worrying about that, though.  It's
+highly unlikely ext3 file systems will be still be in service by the
+time it's needed in 2038.  And if so, it's highly unlikely they would
+be converted to ext4.
 
-diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
-index 9b83865d24f9..0027d4c8087c 100644
---- a/include/linux/rcu_sync.h
-+++ b/include/linux/rcu_sync.h
-@@ -31,9 +31,7 @@ struct rcu_sync {
-  */
- static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
- {
--	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&
--			 !rcu_read_lock_bh_held() &&
--			 !rcu_read_lock_sched_held(),
-+	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
- 			 "suspicious rcu_sync_is_idle() usage");
- 	return !READ_ONCE(rsp->gp_state); /* GP_IDLE */
- }
--- 
-2.17.1
-
+						- Ted
