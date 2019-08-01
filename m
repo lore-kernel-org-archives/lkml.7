@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18752C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C695FC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61162087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD1A2087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbfHAIc2 (ORCPT
+        id S1730460AbfHAIci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:32:28 -0400
-Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:46759 "EHLO
+        Thu, 1 Aug 2019 04:32:38 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:26982 "EHLO
         smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730133AbfHAIc1 (ORCPT
+        with ESMTP id S1730133AbfHAIci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:32:27 -0400
+        Thu, 1 Aug 2019 04:32:38 -0400
 Received: from localhost.localdomain ([176.167.121.156])
         by mwinf5d80 with ME
-        id jkYQ2000L3NZnML03kYRHB; Thu, 01 Aug 2019 10:32:26 +0200
+        id jkYb2000U3NZnML03kYcJj; Thu, 01 Aug 2019 10:32:36 +0200
 X-ME-Helo: localhost.localdomain
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 01 Aug 2019 10:32:26 +0200
+X-ME-Date: Thu, 01 Aug 2019 10:32:36 +0200
 X-ME-IP: 176.167.121.156
 From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
@@ -34,9 +34,9 @@ To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 1/2] powerpc/xive: Use GFP_KERNEL instead of GFP_ATOMIC in 'xive_irq_bitmap_add()'
-Date:   Thu,  1 Aug 2019 10:32:31 +0200
-Message-Id: <85d5d247ce753befd6aa63c473f7823de6520ccd.1564647619.git.christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 2/2] powerpc/xive: Add a check for memory allocation failure
+Date:   Thu,  1 Aug 2019 10:32:42 +0200
+Message-Id: <cc53462734dfeaf15b6bad0e626b483de18656b4.1564647619.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1564647619.git.christophe.jaillet@wanadoo.fr>
 References: <cover.1564647619.git.christophe.jaillet@wanadoo.fr>
@@ -47,28 +47,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to use GFP_ATOMIC here. GFP_KERNEL should be enough.
-GFP_KERNEL is also already used for another allocation just a few lines
-below.
+The result of this kzalloc is not checked. Add a check and corresponding
+error handling code.
 
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- arch/powerpc/sysdev/xive/spapr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Note that 'xive_irq_bitmap_add()' failures are not handled in
+'xive_spapr_init()'
+I guess that it is not really an issue. This function is _init, so if a
+memory allocation occures here, it is likely that the system will
+already be in bad shape.
+Anyway, the check added here would at least keep the data linked in
+'xive_irq_bitmaps' usable.
+---
+ arch/powerpc/sysdev/xive/spapr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
-index 8ef9cf4ebb1c..b4f5eb9e0f82 100644
+index b4f5eb9e0f82..52198131c75e 100644
 --- a/arch/powerpc/sysdev/xive/spapr.c
 +++ b/arch/powerpc/sysdev/xive/spapr.c
-@@ -45,7 +45,7 @@ static int xive_irq_bitmap_add(int base, int count)
- {
- 	struct xive_irq_bitmap *xibm;
+@@ -53,6 +53,10 @@ static int xive_irq_bitmap_add(int base, int count)
+ 	xibm->base = base;
+ 	xibm->count = count;
+ 	xibm->bitmap = kzalloc(xibm->count, GFP_KERNEL);
++	if (!xibm->bitmap) {
++		kfree(xibm);
++		return -ENOMEM;
++	}
+ 	list_add(&xibm->list, &xive_irq_bitmaps);
  
--	xibm = kzalloc(sizeof(*xibm), GFP_ATOMIC);
-+	xibm = kzalloc(sizeof(*xibm), GFP_KERNEL);
- 	if (!xibm)
- 		return -ENOMEM;
- 
+ 	pr_info("Using IRQ range [%x-%x]", xibm->base,
 -- 
 2.20.1
 
