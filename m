@@ -7,57 +7,53 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EAAC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C46C8C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0942C206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959A3206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564665073;
-	bh=Pjfp5/FPJktZUmBdEwkYtGdpQNdHhkrH5WVL39P6TSo=;
+	s=default; t=1564665076;
+	bh=ZkteFIDU5hCTZNoj7MBn54U7GBILs2U9xPMt+jj97V0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=yVhgG6QFKuDqo8IEn2pPMPSm3UDWQT1AoXx3oiKwWqhbFVrHP8+MBxKs1SYjQgiDX
-	 R4ej4eK52pZ8amorOUHItpph0aKR5V/x2S9O6aDgvWup8RBC98fztFEoVZapxS2MEG
-	 TY0mtLUS6r120F4VjCABnWtmKAq6AyzzweE/ECmM=
+	b=ePdks4zCellTtnFJlCvsmy2LNgEdO8sLK5TpnOFD7Jgd+ylBWPp8lTGpKn6TReg8O
+	 7SFdhFTCLRIvZV8eK+1E6MqCsT1GDigVE3PJQkg3ZkHnUsfuyAUmuo4v1ZdrWbaXoC
+	 rWZhCZBQ4XNMOfeWOBnTcmgocSHToZG2PEhNoUfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731691AbfHANLA (ORCPT
+        id S1731731AbfHANLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:11:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54710 "EHLO
+        Thu, 1 Aug 2019 09:11:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54986 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731644AbfHANKu (ORCPT
+        with ESMTP id S1731683AbfHANK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:10:50 -0400
+        Thu, 1 Aug 2019 09:10:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=SIcw7oNKmi9/Oc/uKvmWuwiOyL3ZlEHWKaiCWsI5Vic=; b=CsMVNHLewrYU
-        GoAXdPWw6hVq4eBBZUcEtyfKsToI+qs6d2uDxXfgqtlMqtm5WaAjWpexFKyqaufpkPXFc2OaZfC+B
-        /krFVFC8QGkG2kvt8KB/Vhde1PD3h7Vc1OIDYu9Yf3hW2fmZC86Beupb1xQpFkX8OAC4uUv+j/KKv
-        jhqO8=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        List-Archive; bh=EqDX8e2thuVXATx0vdil8WYAE4YTgcex551s5XdQ6eo=; b=vmlePwupjBvb
+        VfI3ehuL8JQjTAOCtn//7Rn5+f+A4ojEXjtapGtYwvthbixVcLfIT7fRGPopAvSp6ohBPqf8JDRJK
+        iMqTAKbK4wSVThixN2qtqCk87XmmqA5BNmEwktQ8xMVN7RJrAgqHEGdqKrhJGKaCKSn4ZYNP1/lEe
+        XCXTk=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1htAqu-0004ip-Jr; Thu, 01 Aug 2019 13:10:40 +0000
+        id 1htArA-0004kD-Az; Thu, 01 Aug 2019 13:10:56 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id EAD042742D2C; Thu,  1 Aug 2019 14:10:39 +0100 (BST)
+        id CB19E2742C48; Thu,  1 Aug 2019 14:10:55 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: Intel: SoC: skylake: no need to check return value of debugfs_create functions" to the asoc tree
-In-Reply-To: <20190731131716.9764-1-gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: core: Use DEVICE_ATTR_RW() for SPI slave control sysfs attribute" to the spi tree
+In-Reply-To: <20190731124738.14519-1-geert+renesas@glider.be>
 X-Patchwork-Hint: ignore
-Message-Id: <20190801131039.EAD042742D2C@ypsilon.sirena.org.uk>
-Date:   Thu,  1 Aug 2019 14:10:39 +0100 (BST)
+Message-Id: <20190801131055.CB19E2742C48@ypsilon.sirena.org.uk>
+Date:   Thu,  1 Aug 2019 14:10:55 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +61,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: Intel: SoC: skylake: no need to check return value of debugfs_create functions
+   spi: core: Use DEVICE_ATTR_RW() for SPI slave control sysfs attribute
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,88 +86,58 @@ to this mail.
 Thanks,
 Mark
 
-From d8701fae95c0e6cb587b293cb8e01acc96dd1095 Mon Sep 17 00:00:00 2001
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date: Wed, 31 Jul 2019 15:17:14 +0200
-Subject: [PATCH] ASoC: Intel: SoC: skylake: no need to check return value of
- debugfs_create functions
+From cc8b4659491d23577eb8992449d82c7f4f4fc170 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Wed, 31 Jul 2019 14:47:38 +0200
+Subject: [PATCH] spi: core: Use DEVICE_ATTR_RW() for SPI slave control sysfs
+ attribute
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+Convert the SPI slave control sysfs attribute from DEVICE_ATTR() to
+DEVICE_ATTR_RW(), to reduce boilerplate.
 
-Also, if a debugfs call fails, userspace is notified with an error in
-the log, so no need to log the error again.
-
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
-Cc: Jie Yang <yang.jie@linux.intel.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20190731131716.9764-1-gregkh@linuxfoundation.org
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20190731124738.14519-1-geert+renesas@glider.be
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/intel/skylake/skl-debug.c | 28 +++++-----------------------
- 1 file changed, 5 insertions(+), 23 deletions(-)
+ drivers/spi/spi.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/intel/skylake/skl-debug.c b/sound/soc/intel/skylake/skl-debug.c
-index fb232428109f..212370bf704c 100644
---- a/sound/soc/intel/skylake/skl-debug.c
-+++ b/sound/soc/intel/skylake/skl-debug.c
-@@ -164,10 +164,8 @@ void skl_debug_init_module(struct skl_debug *d,
- 			struct snd_soc_dapm_widget *w,
- 			struct skl_module_cfg *mconfig)
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 75ac046cae52..9fd7926e80c0 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2105,8 +2105,8 @@ static int match_true(struct device *dev, void *data)
+ 	return 1;
+ }
+ 
+-static ssize_t spi_slave_show(struct device *dev,
+-			      struct device_attribute *attr, char *buf)
++static ssize_t slave_show(struct device *dev, struct device_attribute *attr,
++			  char *buf)
  {
--	if (!debugfs_create_file(w->name, 0444,
--				d->modules, mconfig,
--				&mcfg_fops))
--		dev_err(d->dev, "%s: module debugfs init failed\n", w->name);
-+	debugfs_create_file(w->name, 0444, d->modules, mconfig,
-+			    &mcfg_fops);
+ 	struct spi_controller *ctlr = container_of(dev, struct spi_controller,
+ 						   dev);
+@@ -2117,9 +2117,8 @@ static ssize_t spi_slave_show(struct device *dev,
+ 		       child ? to_spi_device(child)->modalias : NULL);
  }
  
- static ssize_t fw_softreg_read(struct file *file, char __user *user_buf,
-@@ -224,34 +222,18 @@ struct skl_debug *skl_debugfs_init(struct skl_dev *skl)
- 		return NULL;
- 
- 	/* create the debugfs dir with platform component's debugfs as parent */
--	d->fs = debugfs_create_dir("dsp",
--				   skl->component->debugfs_root);
--	if (IS_ERR(d->fs) || !d->fs) {
--		dev_err(&skl->pci->dev, "debugfs root creation failed\n");
--		return NULL;
--	}
-+	d->fs = debugfs_create_dir("dsp", skl->component->debugfs_root);
- 
- 	d->skl = skl;
- 	d->dev = &skl->pci->dev;
- 
- 	/* now create the module dir */
- 	d->modules = debugfs_create_dir("modules", d->fs);
--	if (IS_ERR(d->modules) || !d->modules) {
--		dev_err(&skl->pci->dev, "modules debugfs create failed\n");
--		goto err;
--	}
- 
--	if (!debugfs_create_file("fw_soft_regs_rd", 0444, d->fs, d,
--				 &soft_regs_ctrl_fops)) {
--		dev_err(d->dev, "fw soft regs control debugfs init failed\n");
--		goto err;
--	}
-+	debugfs_create_file("fw_soft_regs_rd", 0444, d->fs, d,
-+			    &soft_regs_ctrl_fops);
- 
- 	return d;
--
--err:
--	debugfs_remove_recursive(d->fs);
--	return NULL;
+-static ssize_t spi_slave_store(struct device *dev,
+-			       struct device_attribute *attr, const char *buf,
+-			       size_t count)
++static ssize_t slave_store(struct device *dev, struct device_attribute *attr,
++			   const char *buf, size_t count)
+ {
+ 	struct spi_controller *ctlr = container_of(dev, struct spi_controller,
+ 						   dev);
+@@ -2157,7 +2156,7 @@ static ssize_t spi_slave_store(struct device *dev,
+ 	return count;
  }
  
- void skl_debugfs_exit(struct skl_dev *skl)
+-static DEVICE_ATTR(slave, 0644, spi_slave_show, spi_slave_store);
++static DEVICE_ATTR_RW(slave);
+ 
+ static struct attribute *spi_slave_attrs[] = {
+ 	&dev_attr_slave.attr,
 -- 
 2.20.1
 
