@@ -2,197 +2,245 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71D5C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320DFC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2DCE20449
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F13B7214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:58:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NoLb0vr0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sl5IXHiH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfHAI40 (ORCPT
+        id S1729292AbfHAI6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:56:26 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33570 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfHAI40 (ORCPT
+        Thu, 1 Aug 2019 04:58:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36467 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfHAI6A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:56:26 -0400
-Received: by mail-ed1-f66.google.com with SMTP id i11so4919492edq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 01:56:24 -0700 (PDT)
+        Thu, 1 Aug 2019 04:58:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so72764327wrs.3;
+        Thu, 01 Aug 2019 01:57:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PBTnLCvDSjUrM5VA6hRLwxeWErZVATZCYstiolhIwfY=;
-        b=NoLb0vr03SaJFiFBi/AvOZ0tOGsl2F71+ULfqAHJQdNz1s6+g8ouEys8/MJETlTZEN
-         srka9oQ1P7WPq65ngL0VmuS1fNb5kjPDXdTqtz1GLjJMS6YGrv8HmUFKH7WkNZDzAAcx
-         0eTb6+UXViDSIC+/jTCaQe4v72rH4sd7pZy1SNaAFmftnAdoChzd8/Mj09Idt0i2cYu2
-         cCYjF0UNolnQqV22RklzJJemUVinGgMLueDcFA2ZgJtgWaImKjmbkQst3rMS3KA0Q+th
-         J7VvC6MqN6JDp1NFQpRDE9XMj9zktpMPZFpIdWoT6n0eymISZrqf0/Z088JDdIonV2pf
-         1B5w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/HEhyFZO0PQcA15hc+xv1gSr3R650WNl/Bsog3ig1Vs=;
+        b=sl5IXHiHCL5z+uilPCGfWVyupm8W5EY68r0TP12ZTaGzoKU5+ultngbNZ5OSxjdENi
+         //faMtKZAL52HnWpHh3fy0Yoh2ELqMvQpIF2nCI/MvWkFCovAxRrARYKeCy7KR/9sivS
+         K/XZzXeA3hOdS49iMCHq6MuDCwkbcwb4GPreSz0S0fxDBOhf893Vs7ww/5QoTtsAchxI
+         ViykhyMJSTtX/+6QGW1KcY0TyCo+SB48lwP44xGKRnpnYIrl1gPPnddWGCQ84vxDtDhV
+         Uh2HOjRnxiuh6DkdYuHk9Aasne9Tp3ZYdipdFsA8YW6fLpSTooGgAS+Yqt1shKiS5dai
+         eNCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PBTnLCvDSjUrM5VA6hRLwxeWErZVATZCYstiolhIwfY=;
-        b=lg2wWoK/RhS2rDwxvH9ifIkRRUzbkexC4s5LWyxxTw8sF17c9ONPrF6GAw+nB30T1S
-         XJI1X5CyUUI0jvTjtLChYNaniuEsl5BaB2uwXUuctAKzDIbc5WpsS+gJ+07cEQcoAMZJ
-         jsr+AZFZgR/2VSU8rRvygGxOw7iA94cUDTIn/6Y/7jqQ3BRZ393YrGccwIsmXyFZ/zNz
-         Wnn8TslUlbgHsLavkqlgzABdFx8FS+Mxz8ftEeJksx+2he00gvjTiO0J7ss9aQ4QkkYj
-         vJ3TMYuHnfFS4DWs5t/+CjlmsfWNiG/ggm5nem7A49cRAvyXctQRi8oNmg0XztSy9TaP
-         U6iA==
-X-Gm-Message-State: APjAAAURJmaCKuRMgYor1yo0UGPahfQdUspnq52gH/2WT6A3KEdmpDRB
-        ppk8s5sTBmUoi8MpZDGIzpU4RCJInCG3cBzJLpk=
-X-Google-Smtp-Source: APXvYqySdIHX4t/XbVlFWPNMolBJN2yEroFtRV93xbfuz+4fTUGkuwwYkvNVJyZRFJG0EvIVMvbqsZIvTd3ouVg5yO4=
-X-Received: by 2002:a17:906:fc5:: with SMTP id c5mr56482594ejk.129.1564649783883;
- Thu, 01 Aug 2019 01:56:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/HEhyFZO0PQcA15hc+xv1gSr3R650WNl/Bsog3ig1Vs=;
+        b=BAFOB7nwOHUGVF1X935hbfzgr14RkoDr7a99EcsAsQD+3F2QE507FhRlrOvNz/81fC
+         Euv+ITrJ77M8yUc2znnKA+4jR0Nva4POuHoHzA5JwoW1j6Xb4O35Xwar2bIhozi4w4rk
+         RpkFFT4oGZXL7yJ2ZOaLD72nQChNR1eipjz1kz5gGnCfzRYxt5XQvxmskE6owvNcyx6K
+         YrcGHs7HCHAwHwtQSRRnV3ideHk4RBwU4lV9x99olJZGEwgyOnuMea/wMSdeTjBvaX1v
+         +8AiTRnDshDKkzi/xZFIRjpZjxvCpAt8LdjH+E/QDhVZE30Wbv4YAxO+uCVMbK1nG451
+         7vXw==
+X-Gm-Message-State: APjAAAVPJtzvqF6beL3FTv+RxkINbOvKjtCJA/Gin1DooXhp6NPlvMpM
+        GA/sgrfZNhUh5KthFy452wa0PM70
+X-Google-Smtp-Source: APXvYqyY+3vcNwphJXMCGTksVgAY06ND6JvRvKgU7VlRBs1UnVnNBiDqL4YHpDS6Nj3/XwlTKW5hkQ==
+X-Received: by 2002:adf:f6d2:: with SMTP id y18mr63065880wrp.102.1564649877368;
+        Thu, 01 Aug 2019 01:57:57 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id d16sm64969933wrv.55.2019.08.01.01.57.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 01 Aug 2019 01:57:56 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 10:57:55 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Roald Strauss <mr_lou@dewfall.dk>,
+        "Steven J. Magnani" <steve.magnani@digidescorp.com>,
+        Jan Kara <jack@suse.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: UDF filesystem image with Write-Once UDF Access Type
+Message-ID: <20190801085755.amohgsxdcmzf2nzc@pali>
+References: <20190712100224.s2chparxszlbnill@pali>
+ <20190801073530.GA25064@quack2.suse.cz>
+ <20190801083800.GC25064@quack2.suse.cz>
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.9999.1907261259420.26670@viisi.sifive.com>
- <CAEUhbmUh0rJzFUoA05En9osy+Vv9AP0yOr-bs1goqk7+6SCv2g@mail.gmail.com> <alpine.DEB.2.21.9999.1907301218560.3486@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1907301218560.3486@viisi.sifive.com>
-From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Thu, 1 Aug 2019 16:56:12 +0800
-Message-ID: <CAEUhbmU8u-Z1At+U3KMk1OnQm8+NJnFiQGhu2f=xkOHYMkrPCA@mail.gmail.com>
-Subject: Re: [PATCH] riscv: kbuild: add virtual memory system selection
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexandre Ghiti <alex@ghiti.fr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="mwzeuwgqdutbd6v3"
+Content-Disposition: inline
+In-Reply-To: <20190801083800.GC25064@quack2.suse.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 3:37 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> On Sun, 28 Jul 2019, Bin Meng wrote:
->
-> > The spec does not mention 40-bit physical addresses, but 56-bit.
->
-> Thanks, agreed.  Updated patch below
->
->
-> - Paul
->
-> From: Paul Walmsley <paul.walmsley@sifive.com>
-> Date: Fri, 26 Jul 2019 10:21:11 -0700
-> Subject: [PATCH v2] riscv: kbuild: add virtual memory system selection
->
-> The RISC-V specifications currently define three virtual memory
-> translation systems: Sv32, Sv39, and Sv48.  Sv32 is currently specific
-> to 32-bit systems; Sv39 and Sv48 are currently specific to 64-bit
-> systems.  The current kernel only supports Sv32 and Sv39, but we'd
-> like to start preparing for Sv48.  As an initial step, allow the
-> virtual memory translation system to be selected via kbuild, and stop
-> the build if an option is selected that the kernel doen't currently
-> support.
->
-> This second version of the patch fixes some errors in the Kconfig
-> description text, found by Bin Meng <bmeng.cn@gmail.com>.
->
-> This patch currently has no functional impact.
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Alexandre Ghiti <alex@ghiti.fr>
-> Cc: Bin Meng <bmeng.cn@gmail.com>
-> ---
->  arch/riscv/Kconfig                  | 43 +++++++++++++++++++++++++++++
->  arch/riscv/include/asm/pgtable-32.h |  4 +++
->  arch/riscv/include/asm/pgtable-64.h |  4 +++
->  3 files changed, 51 insertions(+)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 59a4727ecd6c..f5e76e25a91e 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -155,6 +155,49 @@ config MODULE_SECTIONS
->         bool
->         select HAVE_MOD_ARCH_SPECIFIC
->
-> +choice
-> +       prompt "Virtual Memory System"
-> +       default RISCV_VM_SV32 if 32BIT
-> +       default RISCV_VM_SV39 if 64BIT
-> +       help
-> +         The RISC-V Instruction Set Manual Volume II: Privileged
-> +         Architecture defines several different "virtual memory
-> +         systems" which specify virtual and physical address formats
-> +         and the structure of page table entries.  This determines
-> +         the amount of virtual address space present and how it is
-> +         translated into physical addresses.
-> +
-> +       config RISCV_VM_SV32
-> +               depends on 32BIT
-> +               bool "RISC-V Sv32"
-> +               help
-> +                 The Sv32 virtual memory system is a page-based
-> +                 address and page table format for RV32 systems.
-> +                 It specifies a translation between 32-bit virtual
-> +                 addresses and 33-bit physical addresses, via a
-> +                 two-stage page table layout.
-> +       config RISCV_VM_SV39
-> +               depends on 64BIT
-> +               bool "RISC-V Sv39"
-> +               help
-> +                 The Sv39 virtual memory system is a page-based
-> +                 address and page table format for RV64 systems.
-> +                 It specifies a translation between 39-bit virtual
-> +                 addresses and 56-bit physical addresses, via a
-> +                 three-stage page table layout.
-> +       config RISCV_VM_SV48
-> +               depends on 64BIT
-> +               bool "RISC-V Sv48"
-> +               help
-> +                 The Sv48 virtual memory system is a page-based
-> +                 address and page table format for RV64 systems.
-> +                 It specifies a translation between 48-bit virtual
-> +                 addresses and 56-bit physical addresses, via a
-> +                 four-stage page table layout.
-> +
-> +endchoice
-> +
-> +
->  choice
->         prompt "Maximum Physical Memory"
->         default MAXPHYSMEM_2GB if 32BIT
-> diff --git a/arch/riscv/include/asm/pgtable-32.h b/arch/riscv/include/asm/pgtable-32.h
-> index b0ab66e5fdb1..86d41a04735b 100644
-> --- a/arch/riscv/include/asm/pgtable-32.h
-> +++ b/arch/riscv/include/asm/pgtable-32.h
-> @@ -6,6 +6,10 @@
->  #ifndef _ASM_RISCV_PGTABLE_32_H
->  #define _ASM_RISCV_PGTABLE_32_H
->
-> +#if !defined(CONFIG_RISCV_VM_SV32)
-> +#error Only Sv32 supported
-> +#endif
-> +
->  #include <asm-generic/pgtable-nopmd.h>
->  #include <linux/const.h>
->
-> diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-> index 74630989006d..86935595115d 100644
-> --- a/arch/riscv/include/asm/pgtable-64.h
-> +++ b/arch/riscv/include/asm/pgtable-64.h
-> @@ -6,6 +6,10 @@
->  #ifndef _ASM_RISCV_PGTABLE_64_H
->  #define _ASM_RISCV_PGTABLE_64_H
->
-> +#if !defined(CONFIG_RISCV_VM_SV39)
-> +#error Only Sv39 supported for now
-> +#endif
-> +
->  #include <linux/const.h>
->
->  #define PGDIR_SHIFT     30
-> --
 
-Reviewed-by: Bin Meng <bmeng.cn@gmail.com>
+--mwzeuwgqdutbd6v3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thursday 01 August 2019 10:38:00 Jan Kara wrote:
+> On Thu 01-08-19 09:35:30, Jan Kara wrote:
+> > > If you want to play with Write-Once Access Type, use recent version of
+> > > mkudffs and choose --media-type=3Dcdr option, which generates UDF
+> > > filesystem suitable for CD-R (Write-Once Access Type with VAT and oth=
+er
+> > > UDF options according to UDF specification).
+> >=20
+> > Reasonably recent kernels should have this bug fixed and mount such fs =
+read
+> > only. That being said I've tested current upstream kernel with a media
+> > created with --media-type=3Dcdr and mounting failed with:
+> >=20
+> > UDF-fs: error (device ubdb): udf_read_inode: (ino 524287) failed !bh
+> > UDF-fs: error (device ubdb): udf_read_inode: (ino 524286) failed !bh
+> > UDF-fs: error (device ubdb): udf_read_inode: (ino 524285) failed !bh
+> > UDF-fs: error (device ubdb): udf_read_inode: (ino 524284) failed !bh
+> > UDF-fs: Scanning with blocksize 2048 failed
+> >=20
+> > So there's something fishy either in the created image or the kernel...
+> > Didn't debug this further yet.
+
+Hi!
+
+Now I verified version from git master branch and it seems to work.
+
+$ ./mkudffs/mkudffs --media-type=3Dcdr --new-file /tmp/cdr 307200
+filename=3D/tmp/cdr
+label=3DLinuxUDF
+uuid=3D1564648861319606
+blocksize=3D2048
+blocks=3D307200
+udfrev=3D2.01
+vatblock=3D319
+start=3D0, blocks=3D16, type=3DRESERVED=20
+start=3D16, blocks=3D4, type=3DVRS=20
+start=3D20, blocks=3D76, type=3DUSPACE=20
+start=3D96, blocks=3D16, type=3DMVDS=20
+start=3D112, blocks=3D16, type=3DUSPACE=20
+start=3D128, blocks=3D1, type=3DLVID=20
+start=3D129, blocks=3D95, type=3DUSPACE=20
+start=3D224, blocks=3D16, type=3DRVDS=20
+start=3D240, blocks=3D16, type=3DUSPACE=20
+start=3D256, blocks=3D1, type=3DANCHOR=20
+start=3D257, blocks=3D31, type=3DUSPACE=20
+start=3D288, blocks=3D306912, type=3DPSPACE
+
+$ ls -l -a /tmp/cdr
+-rw-r----- 1 pali pali 655360 aug  1 10:41 /tmp/cdr
+
+$ mkdir /mnt/cdr
+
+$ sudo mount /tmp/cdr /mnt/cdr -o loop
+mount: /dev/loop0 is write-protected, mounting read-only
+
+$ dmesg | tail
+[320934.128836] loop: module loaded
+[320934.169960] UDF-fs: warning (device loop0): udf_load_vrs: No anchor fou=
+nd
+[320934.169965] UDF-fs: Rescanning with blocksize 2048
+[320934.177772] UDF-fs: warning (device loop0): udf_load_vrs: No anchor fou=
+nd
+[320934.177777] UDF-fs: Rescanning with blocksize 2048
+[320934.181206] UDF-fs: INFO Mounting volume 'LinuxUDF', timestamp 2019/08/=
+01 10:41 (1078)
+
+$ uname -rvm
+4.9.0-9-amd64 #1 SMP Debian 4.9.168-1+deb9u4 (2019-07-19) x86_64
+
+
+And CDR code was not modified since release 2.1. At time of releasing
+version 2.1 I tested that cdr image created by mkudffs and burned to
+CD-R disc can be correctly recognized and mounted by linux kernel.
+
+> Hum, looks like a problem with mkudffs. Relevant debug messages look like:
+>=20
+> UDF-fs: fs/udf/super.c:671:udf_check_vsd: Starting at sector 16 (2048 byt=
+e sectors)
+> UDF-fs: fs/udf/super.c:824:udf_load_pvoldesc: recording time 2019/08/01 0=
+9:47 (1078)
+> UDF-fs: fs/udf/super.c:836:udf_load_pvoldesc: volIdent[] =3D 'LinuxUDF'
+> UDF-fs: fs/udf/super.c:844:udf_load_pvoldesc: volSetIdent[] =3D '15646456=
+45200563LinuxUDF'
+> UDF-fs: fs/udf/super.c:1462:udf_load_logicalvol: Partition (0:0) type 1 o=
+n volume 1
+> UDF-fs: fs/udf/super.c:1462:udf_load_logicalvol: Partition (1:0) type 2 o=
+n volume 1
+> UDF-fs: fs/udf/super.c:1471:udf_load_logicalvol: FileSet found in Logical=
+VolDesc at block=3D0, partition=3D1
+> UDF-fs: fs/udf/super.c:1218:udf_load_partdesc: Searching map: (0 =3D=3D 0)
+> UDF-fs: fs/udf/super.c:1060:udf_fill_partdesc_info: Partition (0 type 151=
+1) starts at physical 288, block length 524000
+> UDF-fs: fs/udf/super.c:1060:udf_fill_partdesc_info: Partition (1 type 201=
+2) starts at physical 288, block length 524000
+> UDF-fs: fs/udf/misc.c:223:udf_read_tagged: location mismatch block 524287=
+, tag 0 !=3D 523999
+> UDF-fs: error (device ubdb): udf_read_inode: (ino 524287) failed !bh
+>=20
+> So the fact that location tag was 0 in block 524287 (which should contain
+> VAT inode) suggests there's something fishy with how / where mkudffs
+> creates the VAT inode. Can you have a look?
+>=20
+> BTW, mkudffs messages look like:
+> filename=3D/tmp/image
+> label=3DLinuxUDF
+> uuid=3D1564645645200563
+> blocksize=3D2048
+> blocks=3D524288
+> udfrev=3D2.01
+> vatblock=3D319
+> start=3D0, blocks=3D16, type=3DRESERVED=20
+> start=3D16, blocks=3D4, type=3DVRS=20
+> start=3D20, blocks=3D76, type=3DUSPACE=20
+> start=3D96, blocks=3D16, type=3DMVDS=20
+> start=3D112, blocks=3D16, type=3DUSPACE=20
+> start=3D128, blocks=3D1, type=3DLVID=20
+> start=3D129, blocks=3D95, type=3DUSPACE=20
+> start=3D224, blocks=3D16, type=3DRVDS=20
+> start=3D240, blocks=3D16, type=3DUSPACE=20
+> start=3D256, blocks=3D1, type=3DANCHOR=20
+> start=3D257, blocks=3D31, type=3DUSPACE=20
+> start=3D288, blocks=3D524000, type=3DPSPACE=20
+>=20
+> which suggests that VAT was indeed allocated somewhere in the beginning of
+> the partition.
+
+For write-once media you are not able to modify size of UDF partition.
+So if you are creating image for CD-R disc, you need to specify size of
+UDF filesystem to match size of CD-R disc. VAT is always burned to the
+last block of current track on CD-R.
+
+Therefore if you had pre-allocated big image file for CD-R and then you
+run mkudffs for cdr on it, you lost information what is the last used
+block on that cdr image. Normally for optical drivers kernel use mmc
+commands to retrieve last block of current session and based on it find
+VAT. But image files loaded via /dev/loop are not optical drivers and
+therefore do not have ability "hardware" ability to ask where is the
+last used block. IIRC in this case kernel just fallback to the last
+block of block device for VAT, which in this case is not correct.
+
+What should help is to truncate image file to "correct" size after
+running mkudffs with --media-type=3Dcdr. Maybe mkudffs itself should do it
+when was asked to create UDF filesystem for CD-R on existing image file.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--mwzeuwgqdutbd6v3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXUKpkQAKCRCL8Mk9A+RD
+UoBGAJsFXEkWo4MN9Hbbot3YpaSU0RNkvACfRpFrTTCDAY08DdAAYKZiUGQl2gQ=
+=9GYB
+-----END PGP SIGNATURE-----
+
+--mwzeuwgqdutbd6v3--
