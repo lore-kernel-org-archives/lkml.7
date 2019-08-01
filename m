@@ -2,65 +2,78 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27E1C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E9EC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF96320838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219FA2087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730707AbfHAHmZ (ORCPT
+        id S1730714AbfHAHoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:42:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:41121 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730577AbfHAHmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:42:25 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D5C1E227A81; Thu,  1 Aug 2019 09:42:20 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 09:42:20 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Thu, 1 Aug 2019 03:44:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33404 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726185AbfHAHoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 03:44:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3E2ABB11C;
+        Thu,  1 Aug 2019 07:44:05 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 74FE31E3F4D; Thu,  1 Aug 2019 09:44:04 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 09:44:04 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Steve Magnani <steve.magnani@digidescorp.com>
+Cc:     Roald Strauss <mr_lou@dewfall.dk>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
+        Jan Kara <jack@suse.com>, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/9] mm: turn migrate_vma upside down
-Message-ID: <20190801074220.GB16178@lst.de>
-References: <20190729142843.22320-1-hch@lst.de> <20190729142843.22320-2-hch@lst.de> <33b82c28-74be-8767-08fa-e41516d11c7e@nvidia.com>
+Subject: Re: UDF filesystem image with Write-Once UDF Access Type
+Message-ID: <20190801074404.GB25064@quack2.suse.cz>
+References: <20190712100224.s2chparxszlbnill@pali>
+ <35c0e9f3-b3b6-96c3-e339-2267a3abde9b@digidescorp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <33b82c28-74be-8767-08fa-e41516d11c7e@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <35c0e9f3-b3b6-96c3-e339-2267a3abde9b@digidescorp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 06:46:25PM -0700, Ralph Campbell wrote:
->>   	for (i = 0; i < npages; i += c) {
->> -		unsigned long next;
->> -
->>   		c = min(SG_MAX_SINGLE_ALLOC, npages);
->> -		next = start + (c << PAGE_SHIFT);
->> -		ret = migrate_vma(&nouveau_dmem_migrate_ops, vma, start,
->> -				  next, src_pfns, dst_pfns, &migrate);
->> +		args.end = start + (c << PAGE_SHIFT);
->
-> Since migrate_vma_setup() is called in a loop, either args.cpages and
-> args.npages need to be cleared here or cleared in migrate_vma_setup().
+On Fri 26-07-19 12:44:34, Steve Magnani wrote:
+> Hi,
+> 
+> On 7/12/19 5:02 AM, Pali Rohár wrote:
+> > In my opinion without support for additional layer, kernel should treat
+> > UDF Write-Once Access Type as read-only mount for userspace. And not
+> > classic read/write mount.
+> > 
+> > ...
+> > 
+> > It seems that udf.ko does not support updating VAT table, so probably it
+> > should treat also filesystem with VAT as read-only too.
+> > 
+> 
+> I thinkb085fbe2ef7fa7489903c45271ae7b7a52b0f9ab  <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/fs/udf?h=v5.1&id=b085fbe2ef7fa7489903c45271ae7b7a52b0f9ab>, deployed in 4.20,
+> does both of the things you want.
+> 
+> One case I ran across today that Windows handles, but Linux doesn't,
+> is write-protection via flags in the DomainIdentifier fields of the
+> Logical Volume Descriptor and File Set Descriptor. Linux allows
+> RW mount when those are marked protected, but Windows forces RO mount.
 
-I think clearing everything that is not used for argument passing in
-migrate_vma_setup is a good idea.  I'll do that.
+Yeah, you're right. We are currently completely ignoring the
+DomainIdentifier field and at least for read-write mounts we should make
+sure it is valid. So that's something that needs fixing.
 
-Btw, it seems like this was a fullquote just for the little comment
-as far as I could tell from wading through it.  It would be very
-appreciated to properly quote the replies.
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
