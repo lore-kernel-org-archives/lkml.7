@@ -2,91 +2,89 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162E9C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3671C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9714206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77715206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:50:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbfHAGtS (ORCPT
+        id S1730426AbfHAGue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 02:49:18 -0400
-Received: from verein.lst.de ([213.95.11.211]:40711 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730296AbfHAGtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 02:49:18 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A602568B05; Thu,  1 Aug 2019 08:49:14 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 08:49:14 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 07/13] mm: remove the page_shift member from struct
- hmm_range
-Message-ID: <20190801064914.GA15404@lst.de>
-References: <20190730055203.28467-1-hch@lst.de> <20190730055203.28467-8-hch@lst.de> <20190730125512.GF24038@mellanox.com> <20190730131430.GC4566@lst.de> <20190730175011.GL24038@mellanox.com>
+        Thu, 1 Aug 2019 02:50:34 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60055 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbfHAGud (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 02:50:33 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost.localdomain)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <r.czerwinski@pengutronix.de>)
+        id 1ht4ux-0006ob-9h; Thu, 01 Aug 2019 08:50:27 +0200
+Message-ID: <19d9be198619e951750dedeb4d0a7f372083b42c.camel@pengutronix.de>
+Subject: Re: [Tee-dev] [RFC v2 0/6] Introduce TEE based Trusted Keys support
+From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
+To:     Janne Karhunen <janne.karhunen@gmail.com>,
+        Sumit Garg <sumit.garg@linaro.org>
+Cc:     "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, jejb@linux.ibm.com,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dhowells@redhat.com, linux-security-module@vger.kernel.org,
+        keyrings@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-integrity@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Date:   Thu, 01 Aug 2019 08:50:22 +0200
+In-Reply-To: <CAE=NcrYz8bT9zDhS_ZcvY84fpeTDxZ-KhJKeQGGyf=o4pG2J-Q@mail.gmail.com>
+References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
+         <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
+         <CAFA6WYPJAzbPdcpBqioxjY=T8RLw-73B_hpzX4cGnwVvm5zpJw@mail.gmail.com>
+         <CAE=Ncrb23q++z8R8UMbjDE2epEq4YVcNGzrRD31eH3JAooYejg@mail.gmail.com>
+         <CAFA6WYOKcOzSwakHhgshZcebD8ZBMSi7xQdjWYFS79=Xc+odOg@mail.gmail.com>
+         <CAE=NcrYz8bT9zDhS_ZcvY84fpeTDxZ-KhJKeQGGyf=o4pG2J-Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730175011.GL24038@mellanox.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: r.czerwinski@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 05:50:16PM +0000, Jason Gunthorpe wrote:
-> The way ODP seems to work is once in hugetlb mode the dma addresses
-> must give huge pages or the page fault will be failed. I think that is
-> a terrible design, but this is how the driver is ..
+On Thu, 2019-08-01 at 09:36 +0300, Janne Karhunen wrote:
+> On Wed, Jul 31, 2019 at 5:23 PM Sumit Garg <sumit.garg@linaro.org>
+> wrote:
 > 
-> So, from this HMM perspective if the caller asked for huge pages then
-> the results have to be all huge pages or a hard failure.
-
-Which isn't how the page_shift member works at moment.  It still
-allows non-hugetlb mappings even with the member.
-
-> It is not negotiated as an optimization like you are thinking.
+> > > I guess my wording was wrong, tried to say that physical TEEs in
+> > > the
+> > > wild vary massively hardware wise. Generalizing these things is
+> > > rough.
+> > > 
+> > 
+> > There are already well defined GlobalPlatform Standards to
+> > generalize
+> > the TEE interface. One of them is GlobalPlatform TEE Client API [1]
+> > which provides the basis for this TEE interface.
 > 
-> [note, I haven't yet checked carefully how this works in ODP, every
->  time I look at parts of it the thing seems crazy]
+> I'm aware of it - I have implemented a large part of the GP TEE APIs
+> earlier (primarily the crypto functions). Does the TEE you work with
+> actually support GP properly? Can I take a look at the code?
 
-This seems pretty crazy.  Especially as hugetlb use in applications
-seems to fade in favour of THP, for which this ODP scheme does not seem
-to work at all.
+AFAIK Sumit is working with the OP-TEE implementation, which can be
+found on github: https://github.com/op-tee/optee_os
 
-> > The best API for mlx4 would of course be to pass a biovec-style
-> > variable length structure that hmm_fault could fill out, but that would
-> > be a major restructure.
-> 
-> It would work, but the driver has to expand that into a page list
-> right awayhow.
-> 
-> We can't even dma map the biovec with today's dma API as it needs the
-> ability to remap on a page granularity.
+Regards,
+Rouven
 
-We can do dma_map_page loops over each biovec entry pretty trivially,
-and that won't be any worse than the current loop over each page in
-the hmm dma helpers.  Once I get around the work to have a better
-API for iommu mappings for bio_vecs we could coalesce it similar to
-how we do it with scatterlist (but without all the mess of a new
-structure).  That work is going to take a little longer through, as
-it needs the amd and intell iommu drivers to be convered to dma-iommu
-which isn't making progress as far as I hoped.
-
-Let me know if you want to keep this code for now despite the issues,
-or if we'd rather reimplement it once you've made sense of the ODP
-code.
