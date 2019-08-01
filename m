@@ -2,169 +2,119 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA53C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F534C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C948206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wv/oDHey"
+	by mail.kernel.org (Postfix) with ESMTP id F38AC2084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730034AbfHAUdU (ORCPT
+        id S1730147AbfHAUda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 16:33:20 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39656 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfHAUdU (ORCPT
+        Thu, 1 Aug 2019 16:33:30 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38015 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfHAUda (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:33:20 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x71KSLqj133217;
-        Thu, 1 Aug 2019 20:33:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=6xycjKuoswkI3FDwNMe3S7sf751k8TRmInp/HgRG2MU=;
- b=wv/oDHeyvBT0sPyOQx7oO3lLMjIG5xHqdsGqoVf6Eh6PmhHRfwkdcJw/9psrj2DmFIFp
- PbNJO2w1S7CTXJAUhyNNYh9qvCYXUDeqRyhlsrlxn1LS9W+iMc4qs+dZyiM4Oj5cVfTr
- 4kYf1d+L6rJjF6UoO3vvryhdryEVBxKWw2KuwdGzEleFEseJCjYd8OcfH+C/0b+WbvwI
- M2qEtowCyQpAZhgEsOVHJyB9msWXiS8Dy9LfUYu6Q6K41eiUILbox1I68rgtacJsw7Hn
- prTXWnLNQkoI4myh+uXP8mWepMOfs5Bu1MUYU5HxP/LT6pdkDU4ZZRpEqmat0jfi7EBN UQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2u0ejpx50e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 01 Aug 2019 20:33:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x71KWudn053509;
-        Thu, 1 Aug 2019 20:33:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2u2jp6jfk1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 01 Aug 2019 20:33:06 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x71KX3A9010841;
-        Thu, 1 Aug 2019 20:33:03 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 01 Aug 2019 13:33:03 -0700
-Subject: Re: [RFC PATCH 2/3] mm, compaction: use MIN_COMPACT_COSTLY_PRIORITY
- everywhere for costly orders
-To:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>, Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190724175014.9935-1-mike.kravetz@oracle.com>
- <20190724175014.9935-3-mike.kravetz@oracle.com>
- <278da9d8-6781-b2bc-8de6-6a71e879513c@suse.cz>
- <0942e0c2-ac06-948e-4a70-a29829cbcd9c@oracle.com>
- <89ba8e07-b0f8-4334-070e-02fbdfc361e3@suse.cz>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <2f1d6779-2b87-4699-abf7-0aa59a2e74d9@oracle.com>
-Date:   Thu, 1 Aug 2019 13:33:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 1 Aug 2019 16:33:30 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1htHlI-0003TO-CA; Thu, 01 Aug 2019 22:33:20 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1htHlE-0001p3-TM; Thu, 01 Aug 2019 22:33:16 +0200
+Date:   Thu, 1 Aug 2019 22:33:16 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] serial: mctrl_gpio: Avoid probe failures in case
+ of missing gpiolib
+Message-ID: <20190801203316.7ntlv6hequmddfxu@pengutronix.de>
+References: <20190801184505.17239-1-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-In-Reply-To: <89ba8e07-b0f8-4334-070e-02fbdfc361e3@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9336 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908010216
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9336 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908010215
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190801184505.17239-1-frieder.schrempf@kontron.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/1/19 6:01 AM, Vlastimil Babka wrote:
-> Could you try testing the patch below instead? It should hopefully
-> eliminate the stalls. If it makes hugepage allocation give up too early,
-> we'll know we have to involve __GFP_RETRY_MAYFAIL in allowing the
-> MIN_COMPACT_PRIORITY priority. Thanks!
+On Thu, Aug 01, 2019 at 06:45:21PM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> If CONFIG_GPIOLIB is not enabled, mctrl_gpio_init() and
+> mctrl_gpio_init_noauto() will currently return an error pointer with
+> -ENOSYS. As the mctrl GPIOs are usually optional, drivers need to
+> check for this condition to allow continue probing.
+> 
+> To avoid the need for this check in each driver, we return NULL
+> instead, as all the mctrl_gpio_*() functions are skipped anyway.
+> We also adapt mctrl_gpio_to_gpiod() to be in line with this change.
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-Thanks.  This patch does eliminate the stalls I was seeing.
+nitpick: put your S-o-b last.
 
-In my testing, there is little difference in how many hugetlb pages are
-allocated.  It does not appear to be giving up/failing too early.  But,
-this is only with __GFP_RETRY_MAYFAIL.  The real concern would with THP
-requests.  Any suggestions on how to test that?
+> ---
+> Changes in v2
+> =============
+> * Move the sh_sci changes to a separate patch
+> * Add a patch for the 8250 driver
+> * Add Fabio's R-b tag
+> ---
+>  drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
+>  drivers/tty/serial/serial_mctrl_gpio.h | 6 +++---
+>  2 files changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+> index 2b400189be91..54c43e02e375 100644
+> --- a/drivers/tty/serial/serial_mctrl_gpio.c
+> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
+> @@ -61,6 +61,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
+>  struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
+>  				      enum mctrl_gpio_idx gidx)
+>  {
+> +	if (gpios == NULL)
+> +		return NULL;
+> +
+
+I wonder why you need this. If GPIOLIB is off this code isn't active and
+with GPIOLIB calling mctrl_gpio_to_gpiod with a gpios == NULL is a bug
+that IMHO should not be silently ignored.
+
+Am I missing something (again)?
+
+>  	return gpios->gpio[gidx];
+>  }
+
+Best regards
+Uwe
 
 -- 
-Mike Kravetz
-
-> ----8<----
-> diff --git a/include/linux/compaction.h b/include/linux/compaction.h
-> index 9569e7c786d3..b8bfe8d5d2e9 100644
-> --- a/include/linux/compaction.h
-> +++ b/include/linux/compaction.h
-> @@ -129,11 +129,7 @@ static inline bool compaction_failed(enum compact_result result)
->  	return false;
->  }
->  
-> -/*
-> - * Compaction  has backed off for some reason. It might be throttling or
-> - * lock contention. Retrying is still worthwhile.
-> - */
-> -static inline bool compaction_withdrawn(enum compact_result result)
-> +static inline bool compaction_needs_reclaim(enum compact_result result)
->  {
->  	/*
->  	 * Compaction backed off due to watermark checks for order-0
-> @@ -142,6 +138,15 @@ static inline bool compaction_withdrawn(enum compact_result result)
->  	if (result == COMPACT_SKIPPED)
->  		return true;
->  
-> +	return false;
-> +}
-> +
-> +/*
-> + * Compaction  has backed off for some reason. It might be throttling or
-> + * lock contention. Retrying is still worthwhile.
-> + */
-> +static inline bool compaction_withdrawn(enum compact_result result)
-> +{
->  	/*
->  	 * If compaction is deferred for high-order allocations, it is
->  	 * because sync compaction recently failed. If this is the case
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 272c6de1bf4e..3dfce1f79112 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -3965,6 +3965,11 @@ should_compact_retry(struct alloc_context *ac, int order, int alloc_flags,
->  	if (compaction_failed(compact_result))
->  		goto check_priority;
->  
-> +	if (compaction_needs_reclaim(compact_result)) {
-> +		ret = compaction_zonelist_suitable(ac, order, alloc_flags);
-> +		goto out;
-> +	}
-> +
->  	/*
->  	 * make sure the compaction wasn't deferred or didn't bail out early
->  	 * due to locks contention before we declare that we should give up.
-> @@ -3972,8 +3977,7 @@ should_compact_retry(struct alloc_context *ac, int order, int alloc_flags,
->  	 * compaction.
->  	 */
->  	if (compaction_withdrawn(compact_result)) {
-> -		ret = compaction_zonelist_suitable(ac, order, alloc_flags);
-> -		goto out;
-> +		goto check_priority;
->  	}
->  
->  	/*
-> 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
