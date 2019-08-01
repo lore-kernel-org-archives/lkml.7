@@ -2,131 +2,65 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31661C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD08AC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C74206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:12:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HrCl0x5Q"
+	by mail.kernel.org (Postfix) with ESMTP id ABD03206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:15:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389352AbfHAWL7 (ORCPT
+        id S2389379AbfHAWPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:11:59 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33627 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728170AbfHAWL7 (ORCPT
+        Thu, 1 Aug 2019 18:15:16 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:33778 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbfHAWPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:11:59 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so34854528pfq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 15:11:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=ODIRyiL2jtm5+/15idQHr4S7cTy4XyQupt2hfbfu6pE=;
-        b=HrCl0x5QBEnYD9qwWOywZJP+pIVZLFd/RMfSyMarPnYV6bB5gkfq4UstgZv/I6KWre
-         WrZqFHlGrgGS2NpJ3Zkh0adwD9LjZiHgqs7DmVbDJd2cBJ7k/9zsOKFRqwx6DsIpGGPa
-         DRexuLZIGD8yWzRNR69KPmmdZWa7pRQnY8bWc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=ODIRyiL2jtm5+/15idQHr4S7cTy4XyQupt2hfbfu6pE=;
-        b=JeXmywFWogrJhLFSnAE9FFVdn8sBOB1g8zJnR6gReT6fhj9cOg1azwJOcTcmKewt+9
-         fUI3jV0mzWhOMuWtN7cVhd1b2LlSzWyXc1YwdI2qZ8e3V0er1vOKTXLp+DgSBPugxVVU
-         bEFDYP3ceHRz1EZOdCLIc2jPvg/irnxyqvnPTXXJN7r4urTdKk8mWLWj071mooH9Qeuk
-         wZjlYNw4nDFI12ju2AVKHZUKVuabX9nbqCNjTqySq/CHtYk9zbK6RbgStw+VhgmdRvmu
-         4LpO25+RZsy1g1BWWYN7xuvzWOgIkIXkPqxug+GObV4uUdPPK2pKzCGSk5vZnJmxocdT
-         SDcA==
-X-Gm-Message-State: APjAAAV5tqQLPpnwiNoXRdB91LdSZEcXKMHz6lVuuYIqauDOKni7fMFj
-        +ONfaWAGDwNcYO9HTCyLN9BfWQ==
-X-Google-Smtp-Source: APXvYqzUKogwUrnGchxyuNQspz6IllekXTdbX1rD7q4rhhL1SC2V1i+o0c6K8ExVK774XbpjyozXyQ==
-X-Received: by 2002:a17:90a:19c2:: with SMTP id 2mr959761pjj.13.1564697518491;
-        Thu, 01 Aug 2019 15:11:58 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id e5sm2796523pgt.91.2019.08.01.15.11.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 15:11:58 -0700 (PDT)
-Message-ID: <5d4363ae.1c69fb81.b621e.65ed@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CANA+-vCt3QJDykzbZWBDZyaiaMiz_SOJ+Htv7+G0czjL07MjmQ@mail.gmail.com>
-References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher> <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com> <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com> <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com> <5d42281c.1c69fb81.bcda1.71f5@mx.google.com> <CANA+-vCoCuMtSKCfnav9NSwrzX7of9iLbppNX+pcymBp19kgQQ@mail.gmail.com> <5d434a23.1c69fb81.c4201.c65b@mx.google.com> <CANA+-vCt3QJDykzbZWBDZyaiaMiz_SOJ+Htv7+G0czjL07MjmQ@mail.gmail.com>
-Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-To:     Tri Vo <trong@android.com>
-User-Agent: alot/0.8.1
-Date:   Thu, 01 Aug 2019 15:11:57 -0700
+        Thu, 1 Aug 2019 18:15:15 -0400
+Received: from localhost (unknown [172.58.27.22])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6D5B915434E2B;
+        Thu,  1 Aug 2019 15:15:14 -0700 (PDT)
+Date:   Thu, 01 Aug 2019 18:15:08 -0400 (EDT)
+Message-Id: <20190801.181508.657295078853071495.davem@davemloft.net>
+To:     takondra@cisco.com
+Cc:     jon.maloy@ericsson.com, ying.xue@windriver.com,
+        netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, xe-linux-external@cisco.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] tipc: compat: allow tipc commands without arguments
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190729221507.48893-1-takondra@cisco.com>
+References: <20190729221507.48893-1-takondra@cisco.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 01 Aug 2019 15:15:15 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Tri Vo (2019-08-01 14:44:52)
-> On Thu, Aug 1, 2019 at 1:23 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> >
-> > I don't find it awkward or difficult. Just know what the name of the
-> > /sys/class/wakeup/ path is and then extract the name from there if it
-> > doesn't match wakeupN, otherwise read the 'device' symlink and run it
-> > through basename.
->=20
-> The concern was that having both "id" and "name" around might be
-> confusing. I don't think that making the presence of "name"
-> conditional helps here. And we have to maintain additional logic in
-> both kernel and userspace to support this.
->=20
-> Also, say, userspace grabs a wakelock named "wakeup0". In the current
-> patch, this results in a name collision and an error. Even assuming
-> that userspace doesn't have ill intent, it still needs to be aware of
-> "wakeupN" naming pattern to avoid this error condition.
->=20
-> All wakeup sources in the /sys/class/wakeup/ are in the same namespace
-> regardless of where they originate from, i.e. we have to either (1)
-> inspect the name of a wakeup source and make sure it's unique before
-> using it as a directory name OR (2) generate the directory name on
-> behalf of whomever is registering a wakeup source, which I think is a
-> much simpler solution.
+From: Taras Kondratiuk <takondra@cisco.com>
+Date: Mon, 29 Jul 2019 22:15:07 +0000
 
-Ok. If the device name is going to be something generic like 'wakeupN',
-then we need to make sure that the wakeup source name is unique.
-Otherwise, I'm not able to see how userspace will differentiate between
-two of the same named wakelocks. Before this patch the wakeup source
-name looks to have been used for debugging, but now it's being used
-programmatically to let userspace act upon it somehow. Maybe it's for
-debug still, but I could see how userspace may want to hunt down the
-wakelock that's created in userspace and penalize or kill the task
-that's waking up the device.
+> Commit 2753ca5d9009 ("tipc: fix uninit-value in tipc_nl_compat_doit")
+> broke older tipc tools that use compat interface (e.g. tipc-config from
+> tipcutils package):
+ ...
+> This patch relaxes the original fix and rejects messages without
+> arguments only if such arguments are expected by a command (reg_type is
+> non zero).
+> 
+> Fixes: 2753ca5d9009 ("tipc: fix uninit-value in tipc_nl_compat_doit")
+> Signed-off-by: Taras Kondratiuk <takondra@cisco.com>
+> ---
+> The patch is based on v5.3-rc2.
 
-I see that wakelock_lookup_add() already checks the list of wakelock
-wakeup sources, but I don't see how I can't create an "alarmtimer"
-wakelock again, but this time for userspace, by writing into
-/sys/power/wake_lock.
-
-What happens with namespaces here BTW? Can a wakelock be made in one
-namespace and that is the same name as another wakelock in a different
-namespace? Right now it doesn't look possible because of the global name
-matching, but it probably makes sense to support this? Maybe we just
-shouldn't make anything in sysfs for wake sources that can be any random
-name created from the wakelock path right now. I don't see how it can be
-traced back to the process that created it in any reasonable way.
-
+Applied and queued up for -stable.
