@@ -2,104 +2,128 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1246CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7AFC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D9A206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC48206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:16:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="gDPsHP45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732821AbfHAQPD (ORCPT
+        id S1732835AbfHAQQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:15:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48376 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731704AbfHAQPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:15:02 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 58730A23DB;
-        Thu,  1 Aug 2019 16:15:02 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 212076012A;
-        Thu,  1 Aug 2019 16:15:00 +0000 (UTC)
-Message-ID: <46095f6fd184092280401dc530f8a80478b5a1b0.camel@redhat.com>
-Subject: Re: [PATCH] IB/hfi1: Fix Spectre v1 vulnerability
-From:   Doug Ledford <dledford@redhat.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 01 Aug 2019 12:14:58 -0400
-In-Reply-To: <20190731175428.GA16736@embeddedor>
-References: <20190731175428.GA16736@embeddedor>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-K/NeFDo836XcRrv7GODw"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Thu, 1 Aug 2019 12:16:44 -0400
+Received: from mail-eopbgr1310102.outbound.protection.outlook.com ([40.107.131.102]:7518
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727885AbfHAQQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:16:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LWmCum1/CvPb77Su4/ORrNp01uEeh+sEHvkfXMoELVMx+oE1mfYGRBrU/HxcmK4TQ/eJ6QMH9jVOESyjTBx/6uF3LPBA+40zmSrYMy0Inpqh9X1PwTJImE5AWPlVdcnQ83E0w1Fkg8zDuiCNQwmXAZbk7fbwJbAyJYm5oSp76gvwLdyZ9frL1uJ81XpZ46nYUuhoMrmbkwwR8BHp8xeMoU0x2OrffEADlIpHRv1jejdQC5xkay9YzfYoqqiWRExO6BGbSIFXogU9WO8IonOj4NuDqlJVKOszy1hLIAnzHOV5/hstuQNE0c9zhy3sg4puRHKi0VOGwtGJq9rWtjGfag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l/7Bp29L4cYlWioEx7CP1pg43dGk+nE7SkOmQ3BfUlI=;
+ b=mceDIaqG+GfbOHmAFJKgryB8FyvIOHbk9MBnVLl9yeNLoRAA6kxpGu4c4PqtHCWEoocNmH2tk/4KMKieXq9XEgUHoyNdA9FkG39CofKhFArutKy4E5SLkqn2qmTl0EtC9fEm32igNLOyMwgD1nZj0WSVxCBNpjfl11Hr1RnoChXoZBza1R0UckLhcBp60wJih3ERTFbqYA/Q0R14qxirxNStGIj8aueq/oL/RbPRfTbSOyVapMd6EA0fb3VFKE07/sjMnr49n0qpGRu7Rik6wKJyi9o9OcHmYJYkgcTfkL6lXl8eP3dghIdS0pHnpcGC+2tKRrU26Xvdp33G4g5fTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l/7Bp29L4cYlWioEx7CP1pg43dGk+nE7SkOmQ3BfUlI=;
+ b=gDPsHP45Cx2KFMW5nq3UalwXvP5fV2U0yF85JOOcKcLhlDWIRYoPTAcivoaxP2bVp3px81MDFiZ6iYLL4h7FKo38FnOe4hRVyN9kW11/w2thwnqk65iez8ELN7KUwT5p94PUZ2im8QCG/4o69Oew1rt1cd3jW5Bs0/ZB6LkgiuE=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0153.APCP153.PROD.OUTLOOK.COM (10.170.188.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.2; Thu, 1 Aug 2019 16:16:37 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Thu, 1 Aug 2019
+ 16:16:37 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 00/11] VSOCK: add vsock_test test suite
+Thread-Topic: [PATCH v2 00/11] VSOCK: add vsock_test test suite
+Thread-Index: AQHVSH1oyNMGwOsBlk2yUfB0Nho2J6bmd0rg
+Date:   Thu, 1 Aug 2019 16:16:37 +0000
+Message-ID: <PU1P153MB0169B265ECA51CB0AE1212DEBFDE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <20190801152541.245833-1-sgarzare@redhat.com>
+In-Reply-To: <20190801152541.245833-1-sgarzare@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-01T16:16:34.7794498Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1a9f8a58-5882-44cf-939e-d69466f2ea74;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:0:bd98:1395:3c14:560a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8e7541f1-6fdd-428e-0e61-08d7169ba131
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0153;
+x-ms-traffictypediagnostic: PU1P153MB0153:
+x-microsoft-antispam-prvs: <PU1P153MB01535C72982EB1296915DDE6BFDE0@PU1P153MB0153.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 01165471DB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(376002)(346002)(39860400002)(136003)(199004)(189003)(305945005)(102836004)(256004)(74316002)(14454004)(6246003)(478600001)(6506007)(229853002)(68736007)(53936002)(55016002)(9686003)(46003)(6436002)(476003)(11346002)(10290500003)(186003)(486006)(446003)(71200400001)(71190400001)(10090500001)(4744005)(8990500004)(2906002)(6116002)(2501003)(5660300002)(7696005)(81156014)(99286004)(81166006)(8676002)(7736002)(33656002)(76176011)(66556008)(66446008)(52536014)(8936002)(64756008)(76116006)(66946007)(22452003)(66476007)(25786009)(110136005)(316002)(86362001)(54906003)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0153;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: SVph8nurYgyy/7OHrFNrT4H/MT8tqvH3UucOUJelIy52UDI5kixK21ynV1jp35TlAKTXc7xoR9PdCX9xVucyHxdO9WTUZhW+D+iFUdL+qeCafO4uubcIEiM0/KndIXaTWss8GO15ZLHSPEaw4TYVnSxFfF8Oi8xmwgBqhtkM7xmo/qsUIMG6sw1iWruFFMKlUj43fJgFa7ojwox459HzaHd32AXP6BG+UbaZLi81B3h0Y4nhkAMPDTssh/KNPtfxWtKMzTGKBjbhYWZk+tW073vOxwmJHlqt/m7mTqDg7BK6KBqZLRDRCsMQFtDNfrTPs1n7zYY2pGye7Pn7ZGM8S7lsWRmfiaV6gPVnBluDdj7ezdLEvUPAmJX8bkJcU1168nFq+tIraNXcfEF90ccHVWGj++EBhX8IUqwAB2UXMvE=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 01 Aug 2019 16:15:02 +0000 (UTC)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e7541f1-6fdd-428e-0e61-08d7169ba131
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 16:16:37.2785
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fMgBp0geK0pOeuLJK+kva/hN+cPXpVX2xUGBQ/7FpTlO8is92yBHw3SUNzMNPBTlkIMG0rkfgqYPR8TSwqiWcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-K/NeFDo836XcRrv7GODw
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2019-07-31 at 12:54 -0500, Gustavo A. R. Silva wrote:
-> sl is controlled by user-space, hence leading to a potential
-> exploitation of the Spectre variant 1 vulnerability.
+> From: Stefano Garzarella <sgarzare@redhat.com>
+> Sent: Thursday, August 1, 2019 8:26 AM
 >=20
-> Fix this by sanitizing sl before using it to index ibp->sl_to_sc.
+> The vsock_diag.ko module already has a test suite but the core AF_VSOCK
+> functionality has no tests.  This patch series adds several test cases th=
+at
+> exercise AF_VSOCK SOCK_STREAM socket semantics (send/recv,
+> connect/accept,
+> half-closed connections, simultaneous connections).
 >=20
-> Notice that given that speculation windows are large, the policy is
-> to kill the speculation on the first load and not worry if it can be
-> completed with a dependent load/store [1].
->=20
-> [1]=20
-> https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
->=20
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
+> Dexuan: Do you think can be useful to test HyperV?
 
-Thanks, applied to for-rc.
+Hi Stefano,
+Thanks! This should be useful, though I have to write the Windows host side
+code to use the test program(s). :-)
 
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---=-K/NeFDo836XcRrv7GODw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1DEAIACgkQuCajMw5X
-L93qDxAAheHnKgMq9WrxSODBtUqgFbkqgE1Ifu/SVsLX18TaPe0xJYTK5Prv1/h2
-6PC3Fj2/Bkp4Lj9FSNyAKL1uG/AkLF+Yd7mBmpjtNa621Ot/20tNLvcHIz0Z+VvS
-hBTBLlZh1cQDJqoZI3qrJonP2+yR7yexWEPSwVc0+pzunUChAAvVQHw8dqFeiRlL
-kOIG+wC6nJJsRO3KNqcoRx76ncvoZ8fWr/z4frzD5v+Qua39ZwWdaGO9UknNaUg3
-CsjuYhSB6H7ccutSdLmzEvITCcWfE8dQTTMju40swmbYK+p66SbB/gjrkVGITeq3
-vWH1R7n/hKjKP1UmOo5EdhTkLRxlVwqT2tyTcZfQJcU/gj1+CMLyRbKOnyhzoCLM
-z4aqv38Y0R3qlCjfsW5KgU5QAVEOEEOKfJszujhXGH7SsMHUgQrYgmKXUsxsdYeu
-awGYUsMOiKOUHdhPQGMibo3cItwenjbRfscmnmO588lpJQP7sBujNB4nlbMPVudf
-44duPmqW5EzTP1QOJ0TsXUeJ2TZl59S6kt3+oskzuIRBoOSahZUhXABs85Bo8Wlt
-Dh2eaTwAxYUWfc33bDekXk5KkmPbNTwEMSr3jGBGVJfDHHNgPGDUg8vAMnmgp+l7
-ykEdIkN6Vaibrt8oQUAajD7U29Cly5lYclPkGkVlcWKt03PfBjE=
-=9rCJ
------END PGP SIGNATURE-----
-
---=-K/NeFDo836XcRrv7GODw--
-
+Thanks,
+-- Dexuan
