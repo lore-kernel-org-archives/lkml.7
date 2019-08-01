@@ -4,187 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D290BC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F009C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95AA9214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 636F2214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564633340;
-	bh=wX3aVTKu4GQPcVJzRJpgGpEpqupjqD0i6Q9nh8qWnK4=;
+	s=default; t=1564633614;
+	bh=x3oQphNi97BHKesFCyayCBd82tnHLFnRd4EkUkIb9LU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p1f9Kg3fE61OM26lg/6MVHwZl7Ss5bMBm/pSfX/bzD+PBz0UX3qs/WbcfZ8WX5h7d
-	 VV9mFhXgnXO04NOQ2TwW06KTniqg7DGqE++ExwNAR4ZQ4C76cwUyhbH3QZX7ablydR
-	 amd08o3hl7OcmHTXNIVdBv2LPTwXZooirUN/dc1I=
+	b=0gLyXib5zDbpCOaTcS0mLLrh3K408v4m4cb1EL+RF9VpEtMvoqqbpCfT4GOX4ovqL
+	 RWXlYhoxpYpdOEZzRQGcZWn4BLfMi5OIzF72yH6zRshMYUffwWbb6SU1bKLn5iUfrh
+	 QFOQoN+6SM8InzZRMOW+ieuGcHYHABQ66AEqJJqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfHAEWR (ORCPT
+        id S1728142AbfHAE0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 00:22:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36006 "EHLO mail.kernel.org"
+        Thu, 1 Aug 2019 00:26:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfHAEWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 00:22:17 -0400
+        id S1726224AbfHAE0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 00:26:52 -0400
 Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92CE8206B8;
-        Thu,  1 Aug 2019 04:22:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F161206B8;
+        Thu,  1 Aug 2019 04:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564633335;
-        bh=wX3aVTKu4GQPcVJzRJpgGpEpqupjqD0i6Q9nh8qWnK4=;
+        s=default; t=1564633611;
+        bh=x3oQphNi97BHKesFCyayCBd82tnHLFnRd4EkUkIb9LU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b/SwCI6Cpy109EtBNqad4RqL+FNau8hYh1Ex0ejxlmXr0cACwc1LtzB550QQwlawK
-         qaJksGju8dh82nrD+EQ3L6TSHRYFQbUA10JAJLznO6ISLrbmlfp2ylyXkJiQ5nET5+
-         LFNEyHxADIBaqxti0VT9erTDxk5gm4igGVz7zE4o=
-Date:   Wed, 31 Jul 2019 21:22:15 -0700
+        b=EeUYGnHhD5Uw+xaqPnD9h3Ef8nY+q7sUcL6J6hJyLV3MYcLgGWSTfw1nzGTVGjB2J
+         cEufzu6izk8I2/CcmjO2ouN7kl1cf139fwicID4od8qakauIExNoVryLGopD611WrN
+         GRVOTXQxhtbZb2ZrM0j5DbQR6ZmAUkggqwDMUjms=
+Date:   Wed, 31 Jul 2019 21:26:50 -0700
 From:   Jaegeuk Kim <jaegeuk@kernel.org>
 To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 RESEND] f2fs: introduce sb.required_features to store
- incompatible features
-Message-ID: <20190801042215.GC84433@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190729150351.12223-1-chao@kernel.org>
- <20190730231850.GA7097@jaegeuk-macbookpro.roam.corp.google.com>
- <c7232d80-a4d8-88ae-2eca-01290dd0e56a@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix livelock in swapfile writes
+Message-ID: <20190801042650.GD84433@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190731204353.62056-1-jaegeuk@kernel.org>
+ <f500dafa-19f4-78ff-2645-2239fbf43eab@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c7232d80-a4d8-88ae-2eca-01290dd0e56a@huawei.com>
+In-Reply-To: <f500dafa-19f4-78ff-2645-2239fbf43eab@huawei.com>
 User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/31, Chao Yu wrote:
-> On 2019/7/31 7:18, Jaegeuk Kim wrote:
-> > On 07/29, Chao Yu wrote:
-> >> From: Chao Yu <yuchao0@huawei.com>
-> >>
-> >> Later after this patch was merged, all new incompatible feature's
-> >> bit should be added into sb.required_features field, and define new
-> >> feature function with F2FS_INCOMPAT_FEATURE_FUNCS() macro.
-> >>
-> >> Then during mount, we will do sanity check with enabled features in
-> >> image, if there are features in sb.required_features that kernel can
-> >> not recognize, just fail the mount.
-> >>
-> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >> ---
-> >> v3:
-> >> - change commit title.
-> >> - fix wrong macro name.
-> >>  fs/f2fs/f2fs.h          | 15 +++++++++++++++
-> >>  fs/f2fs/super.c         | 10 ++++++++++
-> >>  include/linux/f2fs_fs.h |  3 ++-
-> >>  3 files changed, 27 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >> index a6eb828af57f..b8e17d4ddb8d 100644
-> >> --- a/fs/f2fs/f2fs.h
-> >> +++ b/fs/f2fs/f2fs.h
-> >> @@ -163,6 +163,15 @@ struct f2fs_mount_info {
-> >>  #define F2FS_CLEAR_FEATURE(sbi, mask)					\
-> >>  	(sbi->raw_super->feature &= ~cpu_to_le32(mask))
-> >>  
-> >> +#define F2FS_INCOMPAT_FEATURES		0
-> >> +
-> >> +#define F2FS_HAS_INCOMPAT_FEATURE(sbi, mask)				\
-> >> +	((sbi->raw_super->required_features & cpu_to_le32(mask)) != 0)
-> >> +#define F2FS_SET_INCOMPAT_FEATURE(sbi, mask)				\
-> >> +	(sbi->raw_super->required_features |= cpu_to_le32(mask))
-> >> +#define F2FS_CLEAR_INCOMPAT_FEATURE(sbi, mask)				\
-> >> +	(sbi->raw_super->required_features &= ~cpu_to_le32(mask))
-> >> +
-> >>  /*
-> >>   * Default values for user and/or group using reserved blocks
-> >>   */
-> >> @@ -3585,6 +3594,12 @@ F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
-> >>  F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
-> >>  F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
-> >>  
-> >> +#define F2FS_INCOMPAT_FEATURE_FUNCS(name, flagname) \
-> >> +static inline int f2fs_sb_has_##name(struct f2fs_sb_info *sbi) \
-> >> +{ \
-> >> +	return F2FS_HAS_INCOMPAT_FEATURE(sbi, F2FS_FEATURE_##flagname); \
-> >> +}
-> >> +
-> >>  #ifdef CONFIG_BLK_DEV_ZONED
-> >>  static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
-> >>  				    block_t blkaddr)
-> >> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> >> index 5540fee0fe3f..3701dcce90e6 100644
-> >> --- a/fs/f2fs/super.c
-> >> +++ b/fs/f2fs/super.c
-> >> @@ -2513,6 +2513,16 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
-> >>  		return -EINVAL;
-> >>  	}
-> >>  
-> >> +	/* check whether current kernel supports all features on image */
-> >> +	if (le32_to_cpu(raw_super->required_features) &
+On 08/01, Chao Yu wrote:
+> On 2019/8/1 4:43, Jaegeuk Kim wrote:
+> > This patch fixes livelock in the below call path when writing swap pages.
 > > 
-> > ...
-> > #define F2FS_FEATURE_VERITY	0x0400	/* reserved */
-> > ...
-> > #define F2FS_FEATURE_CASEFOLD	0x1000
-> > #define F2FS_FEATURE_SUPPORT	0x1BFF
+> > [46374.617256] c2    701  __switch_to+0xe4/0x100
+> > [46374.617265] c2    701  __schedule+0x80c/0xbc4
+> > [46374.617273] c2    701  schedule+0x74/0x98
+> > [46374.617281] c2    701  rwsem_down_read_failed+0x190/0x234
+> > [46374.617291] c2    701  down_read+0x58/0x5c
+> > [46374.617300] c2    701  f2fs_map_blocks+0x138/0x9a8
+> > [46374.617310] c2    701  get_data_block_dio_write+0x74/0x104
+> > [46374.617320] c2    701  __blockdev_direct_IO+0x1350/0x3930
+> > [46374.617331] c2    701  f2fs_direct_IO+0x55c/0x8bc
+> > [46374.617341] c2    701  __swap_writepage+0x1d0/0x3e8
+> > [46374.617351] c2    701  swap_writepage+0x44/0x54
+> > [46374.617360] c2    701  shrink_page_list+0x140/0xe80
+> > [46374.617371] c2    701  shrink_inactive_list+0x510/0x918
+> > [46374.617381] c2    701  shrink_node_memcg+0x2d4/0x804
+> > [46374.617391] c2    701  shrink_node+0x10c/0x2f8
+> > [46374.617400] c2    701  do_try_to_free_pages+0x178/0x38c
+> > [46374.617410] c2    701  try_to_free_pages+0x348/0x4b8
+> > [46374.617419] c2    701  __alloc_pages_nodemask+0x7f8/0x1014
+> > [46374.617429] c2    701  pagecache_get_page+0x184/0x2cc
+> > [46374.617438] c2    701  f2fs_new_node_page+0x60/0x41c
+> > [46374.617449] c2    701  f2fs_new_inode_page+0x50/0x7c
+> > [46374.617460] c2    701  f2fs_init_inode_metadata+0x128/0x530
+> > [46374.617472] c2    701  f2fs_add_inline_entry+0x138/0xd64
+> > [46374.617480] c2    701  f2fs_do_add_link+0xf4/0x178
+> > [46374.617488] c2    701  f2fs_create+0x1e4/0x3ac
+> > [46374.617497] c2    701  path_openat+0xdc0/0x1308
+> > [46374.617507] c2    701  do_filp_open+0x78/0x124
+> > [46374.617516] c2    701  do_sys_open+0x134/0x248
+> > [46374.617525] c2    701  SyS_openat+0x14/0x20
 > > 
-> > 	if (le32_to_cpu(raw_super->required_features) & ~F2FS_FEATURE_SUPPORT) {
-> > 		...
-> > 		return -EINVAL;
-> > 	}
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > ---
+> >  fs/f2fs/data.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> > index abbf14e9bd72..f49f243fd54f 100644
+> > --- a/fs/f2fs/data.c
+> > +++ b/fs/f2fs/data.c
+> > @@ -1372,7 +1372,7 @@ static int get_data_block_dio_write(struct inode *inode, sector_t iblock,
+> >  	return __get_data_block(inode, iblock, bh_result, create,
+> >  				F2FS_GET_BLOCK_DIO, NULL,
+> >  				f2fs_rw_hint_to_seg_type(inode->i_write_hint),
+> > -				true);
+> > +				IS_SWAPFILE(inode) ? false : true);
 > 
-> Um, I thought .required_features are used to store new feature flags from 0x0.
+> I suspect that we should use node_change for swapfile rather than just changing
+> may_write field to skip lock.
+
+Swap write should not change the node page.
+
 > 
-> All 'F2FS_FEATURE_SUPPORT' bits should be stored in sb.feature instead of
-> sb.required_features, I'm confused...
-
-I'm thinking,
-
-f2fs-tools     sb->required_features     f2fs    F2FS_FEATURE_SUPPORT
-v0             0                         v0      no_check -> ok
-v1             0x1BFF                    v0      no_check -> ok
-v0             0                         v1      0x1BFF -> ok
-v1             0x1BFF                    v1      0x1BFF -> ok
-v2             0x3BFF                    v1      0x1BFF -> fail
-v1             0x1BFF                    v2      0x3BFF -> ok
-v2             0x3BFF                    v2      0x3BFF -> ok
-
+> __do_map_lock()
+> if (flag == F2FS_GET_BLOCK_PRE_AIO || IS_SWAPFILE(inode)) {
+> 	...
+> } else {
+> 	...
+> }
 > 
 > Thanks,
 > 
-> > 
-> > 
-> >> +			~F2FS_INCOMPAT_FEATURES) {
-> >> +		f2fs_info(sbi, "Unsupported feature: %x: supported: %x",
-> >> +			  le32_to_cpu(raw_super->required_features) ^
-> >> +			  F2FS_INCOMPAT_FEATURES,
-> >> +			  F2FS_INCOMPAT_FEATURES);
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >>  	/* Check checksum_offset and crc in superblock */
-> >>  	if (__F2FS_HAS_FEATURE(raw_super, F2FS_FEATURE_SB_CHKSUM)) {
-> >>  		crc_offset = le32_to_cpu(raw_super->checksum_offset);
-> >> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-> >> index a2b36b2e286f..4141be3f219c 100644
-> >> --- a/include/linux/f2fs_fs.h
-> >> +++ b/include/linux/f2fs_fs.h
-> >> @@ -117,7 +117,8 @@ struct f2fs_super_block {
-> >>  	__u8 hot_ext_count;		/* # of hot file extension */
-> >>  	__le16	s_encoding;		/* Filename charset encoding */
-> >>  	__le16	s_encoding_flags;	/* Filename charset encoding flags */
-> >> -	__u8 reserved[306];		/* valid reserved region */
-> >> +	__le32 required_features;       /* incompatible features to old kernel */
-> >> +	__u8 reserved[302];		/* valid reserved region */
-> >>  	__le32 crc;			/* checksum of superblock */
-> >>  } __packed;
-> >>  
-> >> -- 
-> >> 2.22.0
-> > .
+> 
+> >  }
+> >  
+> >  static int get_data_block_dio(struct inode *inode, sector_t iblock,
 > > 
