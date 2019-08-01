@@ -2,182 +2,132 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F257FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BEBC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4EE3206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FCD206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tg5UJX47"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WIw3Lx1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388471AbfHATIZ (ORCPT
+        id S2388485AbfHATIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:08:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36190 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388399AbfHATIG (ORCPT
+        Thu, 1 Aug 2019 15:08:38 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57775 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388399AbfHATIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:08:06 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so34607088pfl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 12:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3OVjdcXCPwuFsvnheb2FVh3Xzrvqr6Atdn2Iwx7oV+0=;
-        b=Tg5UJX47uPAFj3X9l1nh1kTacYdQYspCbtB0tQ+L4p4sqSi1mcgIlqOMXWybeOWD8r
-         WBGI54twdOSlHNtgdKgT1k9x3hZhXHHtR1ixan505WuTw+8t1taQ/fAPr9pSEPBv9H47
-         AUQ8EYiEi7lbcdm/ZCCIv7ECf0bcU7CUko1dM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3OVjdcXCPwuFsvnheb2FVh3Xzrvqr6Atdn2Iwx7oV+0=;
-        b=pb11g2U72++ttNbkYBSVI/1mw9QDokjMou+0dcHkeKWFh4JcTP0vQfFz27uDQSF2lS
-         MI+2EKYXyahmbANyK3RVop1GQfS5AqSN7ZB6Cppi0a3n1v10R5bBq8zNAV/jOXvth+Jt
-         CgwZmr51vXT7CSOCRglb/HNhGRaPLTyixCoL1tTc96esLIMdm7W/3rbZxqDXD4RZPYsF
-         qThamhEZ/LR8L5I6KyWC3+ShMiK9cxGxa/PlDvcLzvgMiUG0nP//1KHnXUi7XZ3UpGkN
-         o/bbn4liFO5Uh3TPazAEJCUCQ3bQ0BGDu1GhvHZnl6gXg8hv3leONT7yu/sSZ5aYK+zp
-         pguw==
-X-Gm-Message-State: APjAAAXaKLpPZgXY4hlAKuKMBygMvz2r7HgAB6uDNUkCRppzsIahhhBS
-        F0UlNI9Ghow4z86ZKjNpBGMHqg==
-X-Google-Smtp-Source: APXvYqySqv4UWFLApIVrgFow3MNR0qCXgidPdh04SBiV2KFLAPagBOPHeNSxD7x8jsrFtFme+4yWWg==
-X-Received: by 2002:a17:90a:350c:: with SMTP id q12mr334860pjb.46.1564686486184;
-        Thu, 01 Aug 2019 12:08:06 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id e13sm91452970pff.45.2019.08.01.12.08.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 12:08:05 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v4 2/4] net: phy: Add function to retrieve LED configuration from the DT
-Date:   Thu,  1 Aug 2019 12:07:57 -0700
-Message-Id: <20190801190759.28201-3-mka@chromium.org>
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-In-Reply-To: <20190801190759.28201-1-mka@chromium.org>
-References: <20190801190759.28201-1-mka@chromium.org>
+        Thu, 1 Aug 2019 15:08:37 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71J8RHU071502
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 1 Aug 2019 12:08:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71J8RHU071502
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564686508;
+        bh=4fpoA/AIApSz5zG8debCYd61iwWXegUm7ZZXFLrLLzc=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=WIw3Lx1D+8ZrNBTjECnMAHW+QSA1qIN+gmY0vUTUzO9sXhsP9/qWSVfbetNTRgvdR
+         MOuXRT/p6DHEpBuPvmN4aOiGB0prgZONjksv5XYaQ1ZZP0klBqq0OJkJ+XZ92ma/0Y
+         UH9LYZ4CRUPFk2VgaPsFB3GUZC2Nh/LkZ8V4rE5x1KiKOjBOIEoPCbjoUNee8sgAQG
+         yvq47EXH95vZBbVsWJINw+Ro+QXGKItRNh46RF/HZZQMw33soZDfPF04qi1xSXHGqd
+         lh47jRs3xSGe4bhGYGxu5KmsNFW0IERDEer9YGCG281jeluP56Iiw6xRNHN2dP5yt+
+         ZMkQb6WC0faow==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71J8RMi071499;
+        Thu, 1 Aug 2019 12:08:27 -0700
+Date:   Thu, 1 Aug 2019 12:08:27 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-21670ee44f1e3565030bcabc62178b8e5eb2fce7@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, peterz@infradead.org,
+        tglx@linutronix.de, mingo@kernel.org
+Reply-To: peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com
+In-Reply-To: <20190730223828.782664411@linutronix.de>
+References: <20190730223828.782664411@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] posix-timers: Cleanup the flag/flags confusion
+Git-Commit-ID: 21670ee44f1e3565030bcabc62178b8e5eb2fce7
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a phylib function for retrieving PHY LED configuration that
-is specified in the device tree using the generic binding. LEDs
-can be configured to be 'on' for a certain link speed or to blink
-when there is TX/RX activity.
+Commit-ID:  21670ee44f1e3565030bcabc62178b8e5eb2fce7
+Gitweb:     https://git.kernel.org/tip/21670ee44f1e3565030bcabc62178b8e5eb2fce7
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Wed, 31 Jul 2019 00:33:52 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 1 Aug 2019 20:51:24 +0200
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v4:
-- patch added to the series
----
- drivers/net/phy/phy_device.c | 50 ++++++++++++++++++++++++++++++++++++
- include/linux/phy.h          | 15 +++++++++++
- 2 files changed, 65 insertions(+)
+posix-timers: Cleanup the flag/flags confusion
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 6b5cb87f3866..b4b48de45712 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -2188,6 +2188,56 @@ static bool phy_drv_supports_irq(struct phy_driver *phydrv)
- 	return phydrv->config_intr && phydrv->ack_interrupt;
+do_timer_settime() has a 'flags' argument and uses 'flag' for the interrupt
+flags, which is confusing at best.
+
+Rename the argument so 'flags' can be used for interrupt flags as usual.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190730223828.782664411@linutronix.de
+
+
+---
+ kernel/time/posix-timers.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index d7f2d91acdac..f5aedd2f60df 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -844,13 +844,13 @@ int common_timer_set(struct k_itimer *timr, int flags,
+ 	return 0;
  }
  
-+int of_get_phy_led_cfg(struct phy_device *phydev, int led,
-+		       struct phy_led_config *cfg)
-+{
-+	struct device_node *np, *child;
-+	const char *trigger;
-+	int ret;
-+
-+	if (!IS_ENABLED(CONFIG_OF_MDIO))
-+		return -ENOENT;
-+
-+	np = of_find_node_by_name(phydev->mdio.dev.of_node, "leds");
-+	if (!np)
-+		return -ENOENT;
-+
-+	for_each_child_of_node(np, child) {
-+		u32 val;
-+
-+		if (!of_property_read_u32(child, "reg", &val)) {
-+			if (val == (u32)led)
-+				break;
-+		}
-+	}
-+
-+	if (!child)
-+		return -ENOENT;
-+
-+	ret = of_property_read_string(child, "linux,default-trigger",
-+				      &trigger);
-+	if (ret)
-+		return ret;
-+
-+	if (!strcmp(trigger, "phy_link_10m_active")) {
-+		cfg->trigger = PHY_LED_LINK_10M;
-+	} else if (!strcmp(trigger, "phy_link_100m_active")) {
-+		cfg->trigger = PHY_LED_LINK_100M;
-+	} else if (!strcmp(trigger, "phy_link_1g_active")) {
-+		cfg->trigger = PHY_LED_LINK_1G;
-+	} else if (!strcmp(trigger, "phy_link_10g_active")) {
-+		cfg->trigger = PHY_LED_LINK_10G;
-+	}  else if (!strcmp(trigger, "phy_activity")) {
-+		cfg->trigger = PHY_LED_ACTIVITY;
-+	} else {
-+		phydev_warn(phydev, "trigger '%s' for LED%d is invalid\n",
-+			    trigger, led);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * phy_probe - probe and init a PHY device
-  * @dev: device to probe and init
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 462b90b73f93..b4693415be31 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1176,6 +1176,21 @@ int phy_ethtool_set_link_ksettings(struct net_device *ndev,
- 				   const struct ethtool_link_ksettings *cmd);
- int phy_ethtool_nway_reset(struct net_device *ndev);
+-static int do_timer_settime(timer_t timer_id, int flags,
++static int do_timer_settime(timer_t timer_id, int tmr_flags,
+ 			    struct itimerspec64 *new_spec64,
+ 			    struct itimerspec64 *old_spec64)
+ {
+ 	const struct k_clock *kc;
+ 	struct k_itimer *timr;
+-	unsigned long flag;
++	unsigned long flags;
+ 	int error = 0;
  
-+enum phy_led_trigger {
-+	PHY_LED_LINK_10M,
-+	PHY_LED_LINK_100M,
-+	PHY_LED_LINK_1G,
-+	PHY_LED_LINK_10G,
-+	PHY_LED_ACTIVITY,
-+};
-+
-+struct phy_led_config {
-+	enum phy_led_trigger trigger;
-+};
-+
-+int of_get_phy_led_cfg(struct phy_device *phydev, int led,
-+		       struct phy_led_config *cfg);
-+
- #if IS_ENABLED(CONFIG_PHYLIB)
- int __init mdio_bus_init(void);
- void mdio_bus_exit(void);
--- 
-2.22.0.770.g0f2c4a37fd-goog
-
+ 	if (!timespec64_valid(&new_spec64->it_interval) ||
+@@ -860,7 +860,7 @@ static int do_timer_settime(timer_t timer_id, int flags,
+ 	if (old_spec64)
+ 		memset(old_spec64, 0, sizeof(*old_spec64));
+ retry:
+-	timr = lock_timer(timer_id, &flag);
++	timr = lock_timer(timer_id, &flags);
+ 	if (!timr)
+ 		return -EINVAL;
+ 
+@@ -868,9 +868,9 @@ retry:
+ 	if (WARN_ON_ONCE(!kc || !kc->timer_set))
+ 		error = -EINVAL;
+ 	else
+-		error = kc->timer_set(timr, flags, new_spec64, old_spec64);
++		error = kc->timer_set(timr, tmr_flags, new_spec64, old_spec64);
+ 
+-	unlock_timer(timr, flag);
++	unlock_timer(timr, flags);
+ 	if (error == TIMER_RETRY) {
+ 		old_spec64 = NULL;	// We already got the old time...
+ 		goto retry;
