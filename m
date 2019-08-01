@@ -6,150 +6,335 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84716C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EE0C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6289020665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10A2206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731523AbfHAMrL convert rfc822-to-8bit (ORCPT
+        id S1731483AbfHAMrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:47:11 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:41592 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731511AbfHAMrI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:47:08 -0400
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 56C7667A6F0;
-        Thu,  1 Aug 2019 14:46:43 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 1 Aug 2019
- 14:46:42 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Thu, 1 Aug 2019 14:46:42 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] serial: mctrl_gpio: Avoid probe failures in case of missing
- gpiolib
-Thread-Topic: [PATCH] serial: mctrl_gpio: Avoid probe failures in case of
- missing gpiolib
-Thread-Index: AQHVSGcrNWPx0fgcHUyq9EomzdiefQ==
-Date:   Thu, 1 Aug 2019 12:46:42 +0000
-Message-ID: <20190801124446.15703-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Thu, 1 Aug 2019 08:47:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:35500 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731335AbfHAMq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:46:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D16051570;
+        Thu,  1 Aug 2019 05:46:57 -0700 (PDT)
+Received: from queper01-lin.cambridge.arm.com (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B354D3F575;
+        Thu,  1 Aug 2019 05:46:55 -0700 (PDT)
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, will@kernel.org, daniel.lezcano@linaro.org
+Cc:     dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
+        mka@chromium.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        quentin.perret@arm.com
+Subject: [PATCH v6 2/3] thermal: cpu_cooling: Make the power-related code depend on IPA
+Date:   Thu,  1 Aug 2019 13:46:42 +0100
+Message-Id: <20190801124643.17112-3-quentin.perret@arm.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190801124643.17112-1-quentin.perret@arm.com>
+References: <20190801124643.17112-1-quentin.perret@arm.com>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 56C7667A6F0.AF21B
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: festevam@gmail.com, gregkh@linuxfoundation.org,
-        jslaby@suse.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+The core CPU cooling infrastructure has power-related functions
+that have only one client: IPA. Since there can be no user of those
+functions if IPA is not compiled in, make sure to guard them with
+checks on CONFIG_THERMAL_GOV_POWER_ALLOCATOR to not waste space
+unnecessarily.
 
-If CONFIG_GPIOLIB is not enabled, mctrl_gpio_init() and
-mctrl_gpio_init_noauto() will currently return an error pointer with
--ENOSYS. As the mctrl GPIOs are usually optional, drivers need to
-check for this condition to allow continue probing.
-
-To avoid the need for this check in each driver, we return NULL
-instead, as all the mctrl_gpio_*() functions are skipped anyway.
-We also adapt mctrl_gpio_to_gpiod() to be in line with this change.
-
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Quentin Perret <quentin.perret@arm.com>
 ---
- drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
- drivers/tty/serial/serial_mctrl_gpio.h | 6 +++---
- drivers/tty/serial/sh-sci.c            | 2 +-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/thermal/cpu_cooling.c | 214 +++++++++++++++++-----------------
+ 1 file changed, 104 insertions(+), 110 deletions(-)
 
-diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
-index 2b400189be91..54c43e02e375 100644
---- a/drivers/tty/serial/serial_mctrl_gpio.c
-+++ b/drivers/tty/serial/serial_mctrl_gpio.c
-@@ -61,6 +61,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
- struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
- 				      enum mctrl_gpio_idx gidx)
- {
-+	if (gpios == NULL)
-+		return NULL;
+diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+index 4c5db59a619b..498f59ab64b2 100644
+--- a/drivers/thermal/cpu_cooling.c
++++ b/drivers/thermal/cpu_cooling.c
+@@ -46,7 +46,9 @@
+  */
+ struct freq_table {
+ 	u32 frequency;
++#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
+ 	u32 power;
++#endif
+ };
+ 
+ /**
+@@ -96,28 +98,6 @@ static DEFINE_IDA(cpufreq_ida);
+ static DEFINE_MUTEX(cooling_list_lock);
+ static LIST_HEAD(cpufreq_cdev_list);
+ 
+-/* Below code defines functions to be used for cpufreq as cooling device */
+-
+-/**
+- * get_level: Find the level for a particular frequency
+- * @cpufreq_cdev: cpufreq_cdev for which the property is required
+- * @freq: Frequency
+- *
+- * Return: level corresponding to the frequency.
+- */
+-static unsigned long get_level(struct cpufreq_cooling_device *cpufreq_cdev,
+-			       unsigned int freq)
+-{
+-	struct freq_table *freq_table = cpufreq_cdev->freq_table;
+-	unsigned long level;
+-
+-	for (level = 1; level <= cpufreq_cdev->max_level; level++)
+-		if (freq > freq_table[level].frequency)
+-			break;
+-
+-	return level - 1;
+-}
+-
+ /**
+  * cpufreq_thermal_notifier - notifier callback for cpufreq policy change.
+  * @nb:	struct notifier_block * with callback info.
+@@ -171,6 +151,27 @@ static int cpufreq_thermal_notifier(struct notifier_block *nb,
+ 	return NOTIFY_OK;
+ }
+ 
++#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
++/**
++ * get_level: Find the level for a particular frequency
++ * @cpufreq_cdev: cpufreq_cdev for which the property is required
++ * @freq: Frequency
++ *
++ * Return: level corresponding to the frequency.
++ */
++static unsigned long get_level(struct cpufreq_cooling_device *cpufreq_cdev,
++			       unsigned int freq)
++{
++	struct freq_table *freq_table = cpufreq_cdev->freq_table;
++	unsigned long level;
 +
- 	return gpios->gpio[gidx];
- }
- EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
-diff --git a/drivers/tty/serial/serial_mctrl_gpio.h b/drivers/tty/serial/serial_mctrl_gpio.h
-index b7d3cca48ede..1b2ff503b2c2 100644
---- a/drivers/tty/serial/serial_mctrl_gpio.h
-+++ b/drivers/tty/serial/serial_mctrl_gpio.h
-@@ -114,19 +114,19 @@ static inline
- struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
- 				      enum mctrl_gpio_idx gidx)
- {
--	return ERR_PTR(-ENOSYS);
-+	return NULL;
- }
- 
- static inline
- struct mctrl_gpios *mctrl_gpio_init(struct uart_port *port, unsigned int idx)
- {
--	return ERR_PTR(-ENOSYS);
-+	return NULL;
++	for (level = 1; level <= cpufreq_cdev->max_level; level++)
++		if (freq > freq_table[level].frequency)
++			break;
++
++	return level - 1;
++}
++
+ /**
+  * update_freq_table() - Update the freq table with power numbers
+  * @cpufreq_cdev:	the cpufreq cooling device in which to update the table
+@@ -319,80 +320,6 @@ static u32 get_dynamic_power(struct cpufreq_cooling_device *cpufreq_cdev,
+ 	return (raw_cpu_power * cpufreq_cdev->last_load) / 100;
  }
  
- static inline
- struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
- {
--	return ERR_PTR(-ENOSYS);
-+	return NULL;
+-/* cpufreq cooling device callback functions are defined below */
+-
+-/**
+- * cpufreq_get_max_state - callback function to get the max cooling state.
+- * @cdev: thermal cooling device pointer.
+- * @state: fill this variable with the max cooling state.
+- *
+- * Callback for the thermal cooling device to return the cpufreq
+- * max cooling state.
+- *
+- * Return: 0 on success, an error code otherwise.
+- */
+-static int cpufreq_get_max_state(struct thermal_cooling_device *cdev,
+-				 unsigned long *state)
+-{
+-	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
+-
+-	*state = cpufreq_cdev->max_level;
+-	return 0;
+-}
+-
+-/**
+- * cpufreq_get_cur_state - callback function to get the current cooling state.
+- * @cdev: thermal cooling device pointer.
+- * @state: fill this variable with the current cooling state.
+- *
+- * Callback for the thermal cooling device to return the cpufreq
+- * current cooling state.
+- *
+- * Return: 0 on success, an error code otherwise.
+- */
+-static int cpufreq_get_cur_state(struct thermal_cooling_device *cdev,
+-				 unsigned long *state)
+-{
+-	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
+-
+-	*state = cpufreq_cdev->cpufreq_state;
+-
+-	return 0;
+-}
+-
+-/**
+- * cpufreq_set_cur_state - callback function to set the current cooling state.
+- * @cdev: thermal cooling device pointer.
+- * @state: set this variable to the current cooling state.
+- *
+- * Callback for the thermal cooling device to change the cpufreq
+- * current cooling state.
+- *
+- * Return: 0 on success, an error code otherwise.
+- */
+-static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+-				 unsigned long state)
+-{
+-	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
+-	unsigned int clip_freq;
+-
+-	/* Request state should be less than max_level */
+-	if (WARN_ON(state > cpufreq_cdev->max_level))
+-		return -EINVAL;
+-
+-	/* Check if the old cooling action is same as new cooling action */
+-	if (cpufreq_cdev->cpufreq_state == state)
+-		return 0;
+-
+-	clip_freq = cpufreq_cdev->freq_table[state].frequency;
+-	cpufreq_cdev->cpufreq_state = state;
+-	cpufreq_cdev->clipped_freq = clip_freq;
+-
+-	cpufreq_update_policy(cpufreq_cdev->policy->cpu);
+-
+-	return 0;
+-}
+-
+ /**
+  * cpufreq_get_requested_power() - get the current power
+  * @cdev:	&thermal_cooling_device pointer
+@@ -536,22 +463,88 @@ static int cpufreq_power2state(struct thermal_cooling_device *cdev,
+ 				      power);
+ 	return 0;
  }
++#endif /* CONFIG_THERMAL_GOV_POWER_ALLOCATOR */
++
++/* cpufreq cooling device callback functions are defined below */
++
++/**
++ * cpufreq_get_max_state - callback function to get the max cooling state.
++ * @cdev: thermal cooling device pointer.
++ * @state: fill this variable with the max cooling state.
++ *
++ * Callback for the thermal cooling device to return the cpufreq
++ * max cooling state.
++ *
++ * Return: 0 on success, an error code otherwise.
++ */
++static int cpufreq_get_max_state(struct thermal_cooling_device *cdev,
++				 unsigned long *state)
++{
++	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
++
++	*state = cpufreq_cdev->max_level;
++	return 0;
++}
++
++/**
++ * cpufreq_get_cur_state - callback function to get the current cooling state.
++ * @cdev: thermal cooling device pointer.
++ * @state: fill this variable with the current cooling state.
++ *
++ * Callback for the thermal cooling device to return the cpufreq
++ * current cooling state.
++ *
++ * Return: 0 on success, an error code otherwise.
++ */
++static int cpufreq_get_cur_state(struct thermal_cooling_device *cdev,
++				 unsigned long *state)
++{
++	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
++
++	*state = cpufreq_cdev->cpufreq_state;
++
++	return 0;
++}
++
++/**
++ * cpufreq_set_cur_state - callback function to set the current cooling state.
++ * @cdev: thermal cooling device pointer.
++ * @state: set this variable to the current cooling state.
++ *
++ * Callback for the thermal cooling device to change the cpufreq
++ * current cooling state.
++ *
++ * Return: 0 on success, an error code otherwise.
++ */
++static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
++				 unsigned long state)
++{
++	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
++	unsigned int clip_freq;
++
++	/* Request state should be less than max_level */
++	if (WARN_ON(state > cpufreq_cdev->max_level))
++		return -EINVAL;
++
++	/* Check if the old cooling action is same as new cooling action */
++	if (cpufreq_cdev->cpufreq_state == state)
++		return 0;
++
++	clip_freq = cpufreq_cdev->freq_table[state].frequency;
++	cpufreq_cdev->cpufreq_state = state;
++	cpufreq_cdev->clipped_freq = clip_freq;
++
++	cpufreq_update_policy(cpufreq_cdev->policy->cpu);
++
++	return 0;
++}
  
- static inline
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index d18c680aa64b..249325b65ee0 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -3287,7 +3287,7 @@ static int sci_probe_single(struct platform_device *dev,
- 		return ret;
+ /* Bind cpufreq callbacks to thermal cooling device ops */
  
- 	sciport->gpios = mctrl_gpio_init(&sciport->port, 0);
--	if (IS_ERR(sciport->gpios) && PTR_ERR(sciport->gpios) != -ENOSYS)
-+	if (IS_ERR(sciport->gpios))
- 		return PTR_ERR(sciport->gpios);
+ static struct thermal_cooling_device_ops cpufreq_cooling_ops = {
+-	.get_max_state = cpufreq_get_max_state,
+-	.get_cur_state = cpufreq_get_cur_state,
+-	.set_cur_state = cpufreq_set_cur_state,
+-};
+-
+-static struct thermal_cooling_device_ops cpufreq_power_cooling_ops = {
+ 	.get_max_state		= cpufreq_get_max_state,
+ 	.get_cur_state		= cpufreq_get_cur_state,
+ 	.set_cur_state		= cpufreq_set_cur_state,
+-	.get_requested_power	= cpufreq_get_requested_power,
+-	.state2power		= cpufreq_state2power,
+-	.power2state		= cpufreq_power2state,
+ };
  
- 	if (sciport->has_rtscts) {
+ /* Notifier for cpufreq policy change */
+@@ -659,18 +652,19 @@ __cpufreq_cooling_register(struct device_node *np,
+ 			pr_debug("%s: freq:%u KHz\n", __func__, freq);
+ 	}
+ 
++	cooling_ops = &cpufreq_cooling_ops;
++#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
+ 	if (capacitance) {
+ 		ret = update_freq_table(cpufreq_cdev, capacitance);
+ 		if (ret) {
+ 			cdev = ERR_PTR(ret);
+ 			goto remove_ida;
+ 		}
+-
+-		cooling_ops = &cpufreq_power_cooling_ops;
+-	} else {
+-		cooling_ops = &cpufreq_cooling_ops;
++		cooling_ops->get_requested_power = cpufreq_get_requested_power;
++		cooling_ops->state2power = cpufreq_state2power;
++		cooling_ops->power2state = cpufreq_power2state;
+ 	}
+-
++#endif
+ 	cdev = thermal_of_cooling_device_register(np, dev_name, cpufreq_cdev,
+ 						  cooling_ops);
+ 	if (IS_ERR(cdev))
 -- 
-2.17.1
+2.22.0
+
