@@ -2,182 +2,128 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CF8C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B593C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5396A206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:32:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="EC5cKgN/"
+	by mail.kernel.org (Postfix) with ESMTP id 76BF6206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387540AbfHAWce (ORCPT
+        id S2387737AbfHAWdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:32:34 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46259 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfHAWcd (ORCPT
+        Thu, 1 Aug 2019 18:33:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9398 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733064AbfHAWdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:32:33 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 57F6B891A9
-        for <linux-kernel@vger.kernel.org>; Fri,  2 Aug 2019 10:32:30 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1564698750;
-        bh=8qWL9NaUIJ/SgjySjJWNgrXG4lk9lFh5S9UjWCecd8k=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=EC5cKgN/XlASh17HvzQgJi/AlqNjPJ81pDiIVBuoA3Xdm8wb1U3cw0o5GZGgGgsR4
-         EhaC1NaB06K7BtT3U6Nh2SRNYEySjHIjWDb7p96lX5/piFOBHa3hVSOXCKeImIEFpZ
-         dZuJ4aPg+7QULwxEdzJWP5ARCwU1D8MFonsoW4FaUY7Ecbt1MKVYGiXMaLeEvavUHq
-         CAqF1cBtutVroyJ0pufLJgGXHG5LGXbwiI6sDa9OVGDYcuUCQKBBUQDYg7iSkbtgLc
-         3RuZWrcj2KO48EY9FiXgBQp3wzA455J31Pcb2zdyXvTe46/ad27PMhya8Fol5pVMvO
-         9g4vuyHqxzKVg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d43687d0000>; Fri, 02 Aug 2019 10:32:29 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Fri, 2 Aug 2019 10:32:26 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 2 Aug 2019 10:32:26 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "malat@debian.org" <malat@debian.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] powerpc: Support CMDLINE_EXTEND
-Thread-Topic: [PATCH v2] powerpc: Support CMDLINE_EXTEND
-Thread-Index: AQHVSA6Sthwti05MCUCRzXUJc8LL2KblB3mAgAERO4A=
-Date:   Thu, 1 Aug 2019 22:32:25 +0000
-Message-ID: <1564698745.4914.14.camel@alliedtelesis.co.nz>
-References: <20190801021206.26799-1-chris.packham@alliedtelesis.co.nz>
-         <0a47ab71-d968-5aaa-6b5f-bd255d2565dd@c-s.fr>
-In-Reply-To: <0a47ab71-d968-5aaa-6b5f-bd255d2565dd@c-s.fr>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EE440E8A97DA6143A7B4B7D3D60EB727@atlnz.lc>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Thu, 1 Aug 2019 18:33:00 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71MWFFH114015;
+        Thu, 1 Aug 2019 18:32:19 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u475rumjt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Aug 2019 18:32:19 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71MWIDe114326;
+        Thu, 1 Aug 2019 18:32:19 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u475rumbv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Aug 2019 18:32:18 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MV1sM021427;
+        Thu, 1 Aug 2019 22:31:59 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma05wdc.us.ibm.com with ESMTP id 2u0e85w6dk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Aug 2019 22:31:59 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MVwFI50528540
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 1 Aug 2019 22:31:58 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F872B205F;
+        Thu,  1 Aug 2019 22:31:58 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4A33DB2067;
+        Thu,  1 Aug 2019 22:31:58 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  1 Aug 2019 22:31:58 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9FFF616C9A39; Thu,  1 Aug 2019 15:31:59 -0700 (PDT)
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 1/3] rcu: Simplify rcu_read_unlock_special() deferred wakeups
+Date:   Thu,  1 Aug 2019 15:31:56 -0700
+Message-Id: <20190801223158.14407-1-paulmck@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190801223132.GA14044@linux.ibm.com>
+References: <20190801223132.GA14044@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908010237
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTAxIGF0IDA4OjE0ICswMjAwLCBDaHJpc3RvcGhlIExlcm95IHdyb3Rl
-Og0KPiANCj4gTGUgMDEvMDgvMjAxOSDDoCAwNDoxMiwgQ2hyaXMgUGFja2hhbSBhIMOpY3JpdMKg
-Og0KPiA+IA0KPiA+IEJyaW5nIHBvd2VycGMgaW4gbGluZSB3aXRoIG90aGVyIGFyY2hpdGVjdHVy
-ZXMgdGhhdCBzdXBwb3J0DQo+ID4gZXh0ZW5kaW5nIG9yDQo+ID4gb3ZlcnJpZGluZyB0aGUgYm9v
-dGxvYWRlciBwcm92aWRlZCBjb21tYW5kIGxpbmUuDQo+ID4gDQo+ID4gVGhlIGN1cnJlbnQgYmVo
-YXZpb3VyIGlzIG1vc3QgbGlrZSBDTURMSU5FX0ZST01fQk9PVExPQURFUiB3aGVyZQ0KPiA+IHRo
-ZQ0KPiA+IGJvb3Rsb2FkZXIgY29tbWFuZCBsaW5lIGlzIHByZWZlcnJlZCBidXQgdGhlIGtlcm5l
-bCBjb25maWcgY2FuDQo+ID4gcHJvdmlkZSBhDQo+ID4gZmFsbGJhY2sgc28gQ01ETElORV9GUk9N
-X0JPT1RMT0FERVIgaXMgdGhlIGRlZmF1bHQuIENNRExJTkVfRVhURU5EDQo+ID4gY2FuDQo+ID4g
-YmUgdXNlZCB0byBhcHBlbmQgdGhlIENNRExJTkUgZnJvbSB0aGUga2VybmVsIGNvbmZpZyB0byB0
-aGUgb25lDQo+ID4gcHJvdmlkZWQNCj4gPiBieSB0aGUgYm9vdGxvYWRlci4NCj4gPiANCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBDaHJpcyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMu
-Y28ubno+DQo+ID4gLS0tDQo+ID4gV2hpbGUgSSdtIGF0IGl0IGRvZXMgYW55b25lIHRoaW5rIGl0
-J3Mgd29ydGggZ2V0dGluZyByaWQgb2YgdGhlDQo+ID4gZGVmYXVsdCBDTURMSU5FDQo+ID4gdmFs
-dWUgaWYgQ01ETElORV9CT09MIGFuZCBtYXliZSBDTURMSU5FX0JPT0w/IEV2ZXJ5IGRlZmNvbmZp
-ZyBpbg0KPiA+IHRoZSBrZXJuZWwNCj4gPiB0aGF0IHNldHMgQ01ETElORV9CT09MPXkgYWxzbyBz
-ZXRzIENNRExJTkUgdG8gc29tZXRoaW5nIG90aGVyIHRoYW4NCj4gPiAiY29uc29sZT10dHlTMCw5
-NjAwIGNvbnNvbGU9dHR5MCByb290PS9kZXYvc2RhMiIuIFJlbW92aW5nDQo+ID4gQ01ETElORV9C
-T09MIGFuZA0KPiA+IHVuY29uZGl0aW9uYWxseSBzZXR0aW5nIHRoZSBkZWZhdWx0IHZhbHVlIG9m
-IENNRExJTkUgdG8gIiIgd291bGQNCj4gPiBjbGVhbiB1cCB0aGUNCj4gPiBLY29uZmlnIGV2ZW4g
-bW9yZS4NCj4gTm90ZcKgDQo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9r
-ZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jbw0KPiBtbWl0Lz9pZD1jYmU0NmJkNGY1MTA0
-NTUyYjYxMjUwNWI3M2QzNjZmNjZlZmMyMzQxwqANCj4gd2hpY2ggaXMgYWxyZWFkeSBhIHN0ZXAg
-Zm9yd2FyZC4NCj4gDQo+IEkgZ3Vlc3MgdGhhdCBkZWZhdWx0IGlzIGZvciB1c2VycyBzZWxlY3Rp
-bmcgdGhpcyBvcHRpb24gbWFudWFsbHkgdG8NCj4gZ2V0wqANCj4gYSBmaXJzdCBzZW5zaXRpdmUg
-Q01ETElORS4gQnV0IGlzIGl0IHJlYWxseSB3b3J0aCBpdCA/DQo+IA0KDQpJJ20gbm90IGV2ZW4g
-c3VyZSBpZiBpdCBpcyB3b3JraW5nIGFzIGludGVuZGVkIHJpZ2h0IG5vdy4gRXZlbiB3aXRob3V0
-DQpteSBjaGFuZ2VzIGlmIEkgdXNlIG1lbnVjb25maWcgYW5kIHNlbGVjdCBDTURMSU5FX0JPT0wg
-SSBlbmQgdXAgd2l0aMKgDQpDT05GSUdfQ01ETElORT0iIiBpbiB0aGUgcmVzdWx0aW5nIC5jb25m
-aWcuDQoNCj4gPiANCj4gPiANCj4gPiBDaGFuZ2VzIGluIHYyOg0KPiA+IC0gaW5jb3Jwb3JhdGUg
-aWRlYXMgZnJvbSBDaHJpc3RvcGUncyBwYXRjaCBodHRwczovL3BhdGNod29yay5vemxhYnMNCj4g
-PiAub3JnL3BhdGNoLzEwNzQxMjYvDQo+ID4gDQo+ID4gwqAgYXJjaC9wb3dlcnBjL0tjb25maWfC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8IDIwICsrKysrKysrKysrKysrKysrKystDQo+ID4gwqAg
-YXJjaC9wb3dlcnBjL2tlcm5lbC9wcm9tX2luaXQuYyB8IDI2ICsrKysrKysrKysrKysrKysrKysr
-KysrKystDQo+ID4gwqAgMiBmaWxlcyBjaGFuZ2VkLCA0NCBpbnNlcnRpb25zKCspLCAyIGRlbGV0
-aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvS2NvbmZpZyBiL2Fy
-Y2gvcG93ZXJwYy9LY29uZmlnDQo+ID4gaW5kZXggNzdmNmViZjk3MTEzLi5kNDEzZmUxYjQwNTgg
-MTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL0tjb25maWcNCj4gPiArKysgYi9hcmNoL3Bv
-d2VycGMvS2NvbmZpZw0KPiA+IEBAIC04NTIsMTUgKzg1MiwzMyBAQCBjb25maWcgQ01ETElORQ0K
-PiA+IMKgwqAJwqDCoHNvbWUgY29tbWFuZC1saW5lIG9wdGlvbnMgYXQgYnVpbGQgdGltZSBieSBl
-bnRlcmluZw0KPiA+IHRoZW0gaGVyZS7CoMKgSW4NCj4gPiDCoMKgCcKgwqBtb3N0IGNhc2VzIHlv
-dSB3aWxsIG5lZWQgdG8gc3BlY2lmeSB0aGUgcm9vdCBkZXZpY2UNCj4gPiBoZXJlLg0KPiA+IMKg
-wqANCj4gPiArY2hvaWNlDQo+ID4gKwlwcm9tcHQgIktlcm5lbCBjb21tYW5kIGxpbmUgdHlwZSIg
-aWYgQ01ETElORSAhPSAiIg0KPiA+ICsJZGVmYXVsdCBDTURMSU5FX0ZST01fQk9PVExPQURFUg0K
-PiA+ICsNCj4gPiArY29uZmlnIENNRExJTkVfRlJPTV9CT09UTE9BREVSDQo+ID4gKwlib29sICJV
-c2UgYm9vdGxvYWRlciBrZXJuZWwgYXJndW1lbnRzIGlmIGF2YWlsYWJsZSINCj4gPiArCWhlbHAN
-Cj4gPiArCcKgwqBVc2VzIHRoZSBjb21tYW5kLWxpbmUgb3B0aW9ucyBwYXNzZWQgYnkgdGhlIGJv
-b3QgbG9hZGVyLg0KPiA+IElmDQo+ID4gKwnCoMKgdGhlIGJvb3QgbG9hZGVyIGRvZXNuJ3QgcHJv
-dmlkZSBhbnksIHRoZSBkZWZhdWx0IGtlcm5lbA0KPiA+IGNvbW1hbmQNCj4gPiArCcKgwqBzdHJp
-bmcgcHJvdmlkZWQgaW4gQ01ETElORSB3aWxsIGJlIHVzZWQuDQo+ID4gKw0KPiA+ICtjb25maWcg
-Q01ETElORV9FWFRFTkQNCj4gPiArCWJvb2wgIkV4dGVuZCBib290bG9hZGVyIGtlcm5lbCBhcmd1
-bWVudHMiDQo+ID4gKwloZWxwDQo+ID4gKwnCoMKgVGhlIGNvbW1hbmQtbGluZSBhcmd1bWVudHMg
-cHJvdmlkZWQgYnkgdGhlIGJvb3QgbG9hZGVyDQo+ID4gd2lsbCBiZQ0KPiA+ICsJwqDCoGFwcGVu
-ZGVkIHRvIHRoZSBkZWZhdWx0IGtlcm5lbCBjb21tYW5kIHN0cmluZy4NCj4gPiArDQo+ID4gwqAg
-Y29uZmlnIENNRExJTkVfRk9SQ0UNCj4gPiDCoMKgCWJvb2wgIkFsd2F5cyB1c2UgdGhlIGRlZmF1
-bHQga2VybmVsIGNvbW1hbmQgc3RyaW5nIg0KPiA+IC0JZGVwZW5kcyBvbiBDTURMSU5FX0JPT0wN
-Cj4gPiDCoMKgCWhlbHANCj4gPiDCoMKgCcKgwqBBbHdheXMgdXNlIHRoZSBkZWZhdWx0IGtlcm5l
-bCBjb21tYW5kIHN0cmluZywgZXZlbiBpZg0KPiA+IHRoZSBib290DQo+ID4gwqDCoAnCoMKgbG9h
-ZGVyIHBhc3NlcyBvdGhlciBhcmd1bWVudHMgdG8gdGhlIGtlcm5lbC4NCj4gPiDCoMKgCcKgwqBU
-aGlzIGlzIHVzZWZ1bCBpZiB5b3UgY2Fubm90IG9yIGRvbid0IHdhbnQgdG8gY2hhbmdlDQo+ID4g
-dGhlDQo+ID4gwqDCoAnCoMKgY29tbWFuZC1saW5lIG9wdGlvbnMgeW91ciBib290IGxvYWRlciBw
-YXNzZXMgdG8gdGhlDQo+ID4ga2VybmVsLg0KPiA+IMKgwqANCj4gPiArZW5kY2hvaWNlDQo+ID4g
-Kw0KPiA+IMKgIGNvbmZpZyBFWFRSQV9UQVJHRVRTDQo+ID4gwqDCoAlzdHJpbmcgIkFkZGl0aW9u
-YWwgZGVmYXVsdCBpbWFnZSB0eXBlcyINCj4gPiDCoMKgCWhlbHANCj4gPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9wb3dlcnBjL2tlcm5lbC9wcm9tX2luaXQuYw0KPiA+IGIvYXJjaC9wb3dlcnBjL2tlcm5l
-bC9wcm9tX2luaXQuYw0KPiA+IGluZGV4IDUxNDcwN2VmNjc3OS4uZGYyOWYxNDFkYmQyIDEwMDY0
-NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9rZXJuZWwvcHJvbV9pbml0LmMNCj4gPiArKysgYi9h
-cmNoL3Bvd2VycGMva2VybmVsL3Byb21faW5pdC5jDQo+ID4gQEAgLTMxMCw2ICszMTAsMjUgQEAg
-c3RhdGljIHNpemVfdCBfX2luaXQgcHJvbV9zdHJsY3B5KGNoYXIgKmRlc3QsDQo+ID4gY29uc3Qg
-Y2hhciAqc3JjLCBzaXplX3Qgc2l6ZSkNCj4gPiDCoMKgCXJldHVybiByZXQ7DQo+ID4gwqAgfQ0K
-PiA+IMKgwqANCj4gPiArc3RhdGljIHNpemVfdCBfX2luaXQgcHJvbV9zdHJsY2F0KGNoYXIgKmRl
-c3QsIGNvbnN0IGNoYXIgKnNyYywNCj4gPiBzaXplX3QgY291bnQpDQo+ID4gK3sNCj4gPiArCXNp
-emVfdCBkc2l6ZSA9IHByb21fc3RybGVuKGRlc3QpOw0KPiA+ICsJc2l6ZV90IGxlbiA9IHByb21f
-c3RybGVuKHNyYyk7DQo+ID4gKwlzaXplX3QgcmVzID0gZHNpemUgKyBsZW47DQo+ID4gKw0KPiA+
-ICsJLyogVGhpcyB3b3VsZCBiZSBhIGJ1ZyAqLw0KPiA+ICsJQlVHX09OKGRzaXplID49IGNvdW50
-KTsNCj4gSGFzIHlvdSBwb2ludGVkIGluIGFub3RoZXIgbWFpbCwgQlVHX09OKCkgc2hvdWxkIGJl
-IGF2b2lkZWQgaGVyZS4NCj4gSSBndWVzcyBpZiB0aGUgZGVzdGluYXRpb24gaXMgYWxyZWFkeSBm
-dWxsLCBqdXN0IHJldHVybiBjb3VudDoNCj4gDQo+IGlmIChkc2l6ZSA+PSBjb3VudCkNCj4gCXJl
-dHVybiBjb3VudDsNCj4gDQoNCldpbGwgZml4IGluIHYzLg0KDQo+ID4gDQo+ID4gKw0KPiA+ICsJ
-ZGVzdCArPSBkc2l6ZTsNCj4gPiArCWNvdW50IC09IGRzaXplOw0KPiA+ICsJaWYgKGxlbiA+PSBj
-b3VudCkNCj4gPiArCQlsZW4gPSBjb3VudC0xOw0KPiA+ICsJbWVtY3B5KGRlc3QsIHNyYywgbGVu
-KTsNCj4gPiArCWRlc3RbbGVuXSA9IDA7DQo+ID4gKwlyZXR1cm4gcmVzOw0KPiA+ICsNCj4gPiAr
-fQ0KPiA+ICsNCj4gPiDCoCAjaWZkZWYgQ09ORklHX1BQQ19QU0VSSUVTDQo+ID4gwqAgc3RhdGlj
-IGludCBfX2luaXQgcHJvbV9zdHJ0b2Jvb2woY29uc3QgY2hhciAqcywgYm9vbCAqcmVzKQ0KPiA+
-IMKgIHsNCj4gPiBAQCAtNzYxLDggKzc4MCwxMyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgZWFybHlf
-Y21kbGluZV9wYXJzZSh2b2lkKQ0KPiA+IMKgwqAJcCA9IHByb21fY21kX2xpbmU7DQo+ID4gwqDC
-oAlpZiAoKGxvbmcpcHJvbS5jaG9zZW4gPiAwKQ0KPiA+IMKgwqAJCWwgPSBwcm9tX2dldHByb3Ao
-cHJvbS5jaG9zZW4sICJib290YXJncyIsIHAsDQo+ID4gQ09NTUFORF9MSU5FX1NJWkUtMSk7DQo+
-IFRoZSBhYm92ZSBpcyBwb2ludGxlc3MgaW4gY2FzZSBDT05GSUdfQ01ETElORV9GT1JDRSBpcyBz
-ZWxlY3RlZC4NCj4gDQoNCldpbGwgZml4IGluIHYzLg0KDQo+ID4gDQo+ID4gLQlpZiAoSVNfRU5B
-QkxFRChDT05GSUdfQ01ETElORV9CT09MKSAmJiAobCA8PSAwIHx8IHBbMF0gPT0NCj4gPiAnXDAn
-KSkgLyogZGJsIGNoZWNrICovDQo+ID4gKw0KPiA+ICsJaWYgKElTX0VOQUJMRUQoQ09ORklHX0NN
-RExJTkVfRk9SQ0UpIHx8IGwgPD0gMCB8fCBwWzBdID09DQo+ID4gJ1wwJykNCj4gPiDCoMKgCQlw
-cm9tX3N0cmxjcHkocHJvbV9jbWRfbGluZSwgQ09ORklHX0NNRExJTkUsDQo+ID4gc2l6ZW9mKHBy
-b21fY21kX2xpbmUpKTsNCj4gSWYgd2UgY2FuIGVuc3VyZSB0aGF0IHByb21fY21kX2xpbmUgcmVt
-YWlucyBlbXB0eSB3aGVuwqANCj4gQ09ORklHX0NNRExJTkVfRk9SQ0UgaXMgc2VsZWN0ZWQgKHNl
-ZSBhYm92ZSBjb21tZW50KSwgdGhlbsKgDQo+IHByb21fc3RybGNhdCgpIGNhbiBiZSB1c2VkIGlu
-IGxpZXUgb2YgcHJvbV9zdHJsY3B5KCkNCj4gDQo+ID4gDQo+ID4gKwllbHNlIGlmIChJU19FTkFC
-TEVEKENPTkZJR19DTURMSU5FX0VYVEVORCkpDQo+ID4gKwkJcHJvbV9zdHJsY2F0KHByb21fY21k
-X2xpbmUsICIgIiBDT05GSUdfQ01ETElORSwNCj4gPiArCQkJwqDCoMKgwqDCoHNpemVvZihwcm9t
-X2NtZF9saW5lKSk7DQo+ID4gKw0KPiA+IMKgwqAJcHJvbV9wcmludGYoImNvbW1hbmQgbGluZTog
-JXNcbiIsIHByb21fY21kX2xpbmUpOw0KPiA+IMKgwqANCj4gPiDCoCAjaWZkZWYgQ09ORklHX1BQ
-QzY0DQo+ID4gDQo+IENocmlzdG9waGU=
+In !use_softirq runs, we clearly cannot rely on raise_softirq() and
+its lightweight bit setting, so we must instead do some form of wakeup.
+In the absence of a self-IPI when interrupts are disabled, these wakeups
+can be delayed until the next interrupt occurs.  This means that calling
+invoke_rcu_core() doesn't actually do any expediting.
+
+In this case, it is better to take the "else" clause, which sets the
+current CPU's resched bits and, if there is an expedited grace period
+in flight, uses IRQ-work to force the needed self-IPI.  This commit
+therefore removes the "else if" clause that calls invoke_rcu_core().
+
+Reported-by: Scott Wood <swood@redhat.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+---
+ kernel/rcu/tree_plugin.h | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index acb225023ed1..3f0701e860e4 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -631,17 +631,12 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 			// Using softirq, safe to awaken, and we get
+ 			// no help from enabling irqs, unlike bh/preempt.
+ 			raise_softirq_irqoff(RCU_SOFTIRQ);
+-		} else if (exp && irqs_were_disabled && !use_softirq &&
+-			   !t->rcu_read_unlock_special.b.deferred_qs) {
+-			// Safe to awaken and we get no help from enabling
+-			// irqs, unlike bh/preempt.
+-			invoke_rcu_core();
+ 		} else {
+ 			// Enabling BH or preempt does reschedule, so...
+ 			// Also if no expediting or NO_HZ_FULL, slow is OK.
+ 			set_tsk_need_resched(current);
+ 			set_preempt_need_resched();
+-			if (IS_ENABLED(CONFIG_IRQ_WORK) &&
++			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
+ 			    !rdp->defer_qs_iw_pending && exp) {
+ 				// Get scheduler to re-evaluate and call hooks.
+ 				// If !IRQ_WORK, FQS scan will eventually IPI.
+-- 
+2.17.1
+
