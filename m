@@ -2,293 +2,212 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBEFC32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99160C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4CF206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCrRfxxS"
+	by mail.kernel.org (Postfix) with ESMTP id 5BBDC2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564670183;
+	bh=gNavx9bU2HfWoYxCWFKAghweKbumZo3LkXjbFk543Fs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eYv2NwOmdB4SWtSoSdIkYzkz3WQLXtCI1z8SNEfGE6LzLlgKxYMMCTg+umoq47Jsa
+	 odwG2elCnBAsw+2RMo7t6p7S0hIWS04MYQQIReHqFUEZurg9MdDpGks4nFbLjaIwBu
+	 jSAdI8djL41I1yXs/xFeCLi2AVxr6rYYvqczm7iY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732109AbfHAOgR (ORCPT
+        id S1732120AbfHAOgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:36:17 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38422 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731397AbfHAOgQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:36:16 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y15so34199140pfn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pibx78EWG8gcOu1hDUtRcgYysH58v/vtqrpOcAw6IUw=;
-        b=vCrRfxxSxKnmkxXdjlHz6jpu0VaVwAwF9gijiaar/VO4KY+Lah0TkNsuJsq2shBGib
-         gwZKKJuTlXJ4wdaeK7EfP1ow/n2uL9jDzVqlFFx6rIJwMmE/Sfy9UFN8zFhydTYIKKd7
-         7pvX/y6BZ7ypVMF865669HD1CxHK5c1slsH6hv0qr3ZX880fi93/y/ysz1tdXcCXbOEw
-         7bPCS/fncRYHjOlABYLMAo9D+qxxtZ9MUmWSvQROdGGMLb8+3ssQocExz0f2FvrZKVi9
-         cQ2cl9wwkXDpARY1xHuWDYk/0PCGBr3uc6a86WTuOSMa9+ka43irQCIFqDcpyClwvIJE
-         Cs7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pibx78EWG8gcOu1hDUtRcgYysH58v/vtqrpOcAw6IUw=;
-        b=XQPAoNtCdMHjnj2KVuFCXuc8zrjpu9WXDQxPesxLr2Hx3kvCxyo3kWcaEA97c+eqnC
-         Sg540dHs1MTk90iooLPKmhuqbhYmMcx0dERGKuB/THBV6GLCnptgdsIlw3VBij9Dhao+
-         SMgRAA+cy4yf1Ixolz+sq+KZDNKT7soc/95NpDuEuwDelKDF2TNQY6B/mIH1O/lz3YDf
-         OpvRaszNRbLyXURYCHBAUlFSqpvOcxolej0IaYKkNy1c6lz7hU8biRdMO4Gg5Ojjpguj
-         7XoMpFobNrWkKhS/UMad0MGC/uu7RuIGKav2qtNqxzcHA1PsnG0E12+fgvjQANGKMres
-         QKNw==
-X-Gm-Message-State: APjAAAXYCY93G1lfR3QJ7o5usw0gNuJ4e0bzzoFf1ByKu7raf1E7W9Q4
-        sT3h1KX5FKlccGQgMQHr/1KsWw==
-X-Google-Smtp-Source: APXvYqzQsHGjFMFrJt2isegmbNtDWJz61+n+L0FWCYTV7fTkYB0L9NzLnbs6kghQKO85K5VdRt884Q==
-X-Received: by 2002:a63:6686:: with SMTP id a128mr111329429pgc.361.1564670175416;
-        Thu, 01 Aug 2019 07:36:15 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f32sm4650500pgb.21.2019.08.01.07.36.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 07:36:14 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 07:37:45 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jitendra Sharma <shajit@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SC7180 pinctrl
- binding
-Message-ID: <20190801143745.GZ7234@tuxbook-pro>
-References: <20190801100717.23333-1-rnayak@codeaurora.org>
+        Thu, 1 Aug 2019 10:36:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731397AbfHAOgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:36:21 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38C68214DA;
+        Thu,  1 Aug 2019 14:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564670179;
+        bh=gNavx9bU2HfWoYxCWFKAghweKbumZo3LkXjbFk543Fs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j86hI4avSMlrEkB2xUPvszkv+w/kjcNG3MznkbXhgGqAl3nbzUtO7g9XaExXEWayk
+         uNlvALJ1Yx7/xWfdAfbLHJkh/+f1+qyknXC+qijbBpFrMqhUvGq8TcqQfNBgngARL3
+         6eOQYpcJoUoDWsUWqK/aJmWkqz/8SFP1W5ri8XKQ=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Dan Rue <dan.rue@linaro.org>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Daniel Diaz <daniel.diaz@linaro.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH v4] arm64: Make debug exception handlers visible from RCU
+Date:   Thu,  1 Aug 2019 23:36:14 +0900
+Message-Id: <156467017472.19457.9270489483493488031.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190801073737.wrhespf5xh3qudil@willie-the-truck>
+References: <20190801073737.wrhespf5xh3qudil@willie-the-truck>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801100717.23333-1-rnayak@codeaurora.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 01 Aug 03:07 PDT 2019, Rajendra Nayak wrote:
+Make debug exceptions visible from RCU so that synchronize_rcu()
+correctly track the debug exception handler.
 
-> From: Jitendra Sharma <shajit@codeaurora.org>
-> 
-> Add the binding for the TLMM pinctrl block found in the SC7180 platform
-> 
-> Signed-off-by: Jitendra Sharma <shajit@codeaurora.org>
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> [rnayak: Fix some copy-paste issues, sort and fix functions]
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+This also introduces sanity checks for user-mode exceptions as same
+as x86's ist_enter()/ist_exit().
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+The debug exception can interrupt in idle task. For example, it warns
+if we put a kprobe on a function called from idle task as below.
+The warning message showed that the rcu_read_lock() caused this
+problem. But actually, this means the RCU is lost the context which
+is already in NMI/IRQ.
 
-> ---
->  .../bindings/pinctrl/qcom,sc7180-pinctrl.txt  | 186 ++++++++++++++++++
->  1 file changed, 186 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
-> new file mode 100644
-> index 000000000000..948cd56cfab7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
-> @@ -0,0 +1,186 @@
-> +Qualcomm Technologies, Inc. SC7180 TLMM block
-> +
-> +This binding describes the Top Level Mode Multiplexer block found in the
-> +SC7180 platform.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be "qcom,sc7180-pinctrl"
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: the base address and size of the north, south and west
-> +		    TLMM tiles
-> +
-> +- reg-names:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Defintiion: names for the cells of reg, must contain "north", "south"
-> +		    and "west".
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: should specify the TLMM summary IRQ.
-> +
-> +- interrupt-controller:
-> +	Usage: required
-> +	Value type: <none>
-> +	Definition: identifies this node as an interrupt controller
-> +
-> +- #interrupt-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: must be 2. Specifying the pin number and flags, as defined
-> +		    in <dt-bindings/interrupt-controller/irq.h>
-> +
-> +- gpio-controller:
-> +	Usage: required
-> +	Value type: <none>
-> +	Definition: identifies this node as a gpio controller
-> +
-> +- #gpio-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: must be 2. Specifying the pin number and flags, as defined
-> +		    in <dt-bindings/gpio/gpio.h>
-> +
-> +- gpio-ranges:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition:  see ../gpio/gpio.txt
-> +
-> +- gpio-reserved-ranges:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: see ../gpio/gpio.txt
-> +
-> +Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
-> +a general description of GPIO and interrupt bindings.
-> +
-> +Please refer to pinctrl-bindings.txt in this directory for details of the
-> +common pinctrl bindings used by client devices, including the meaning of the
-> +phrase "pin configuration node".
-> +
-> +The pin configuration nodes act as a container for an arbitrary number of
-> +subnodes. Each of these subnodes represents some desired configuration for a
-> +pin, a group, or a list of pins or groups. This configuration can include the
-> +mux function to select on those pin(s)/group(s), and various pin configuration
-> +parameters, such as pull-up, drive strength, etc.
-> +
-> +
-> +PIN CONFIGURATION NODES:
-> +
-> +The name of each subnode is not important; all subnodes should be enumerated
-> +and processed purely based on their content.
-> +
-> +Each subnode only affects those parameters that are explicitly listed. In
-> +other words, a subnode that lists a mux function but no pin configuration
-> +parameters implies no information about any pin configuration parameters.
-> +Similarly, a pin subnode that describes a pullup parameter implies no
-> +information about e.g. the mux function.
-> +
-> +
-> +The following generic properties as defined in pinctrl-bindings.txt are valid
-> +to specify in a pin configuration subnode:
-> +
-> +- pins:
-> +	Usage: required
-> +	Value type: <string-array>
-> +	Definition: List of gpio pins affected by the properties specified in
-> +		    this subnode.
-> +
-> +		    Valid pins are:
-> +		      gpio0-gpio118
-> +		        Supports mux, bias and drive-strength
-> +
-> +		      sdc1_clk, sdc1_cmd, sdc1_data sdc2_clk, sdc2_cmd,
-> +		      sdc2_data sdc1_rclk
-> +		        Supports bias and drive-strength
-> +
-> +		      ufs_reset
-> +			Supports bias and drive-strength
-> +
-> +- function:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Specify the alternative function to be configured for the
-> +		    specified pins. Functions are only valid for gpio pins.
-> +		    Valid values are:
-> +
-> +		    adsp_ext, agera_pll, aoss_cti, atest_char, atest_char0,
-> +		    atest_char1, atest_char2, atest_char3, atest_tsens,
-> +		    atest_tsens2, atest_usb1, atest_usb10, atest_usb11,
-> +		    atest_usb12, atest_usb13, atest_usb2, atest_usb20,
-> +		    atest_usb21, atest_usb22, atest_usb23, audio_ref,
-> +		    btfm_slimbus, cam_mclk, cci_async, cci_i2c, cci_timer0,
-> +		    cci_timer1, cci_timer2, cci_timer3, cci_timer4,
-> +		    cri_trng, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
-> +		    ddr_pxi2, ddr_pxi3, dp_hot, edp_lcd, gcc_gp1, gcc_gp2,
-> +		    gcc_gp3, gpio, gp_pdm0, gp_pdm1, gp_pdm2, gps_tx,
-> +		    jitter_bist, ldo_en, ldo_update, lpass_ext, mdp_vsync,
-> +		    mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s_0,
-> +		    mi2s_1, mi2s_2, mss_lte, m_voc, pa_indicator, phase_flag,
-> +		    PLL_BIST, pll_bypassnl, pll_reset, prng_rosc, qdss,
-> +		    qdss_cti, qlink_enable, qlink_request, qspi_clk, qspi_cs,
-> +		    qspi_data, qup00, qup01, qup02, qup03, qup04, qup05,
-> +		    qup10, qup11, qup12, qup13, qup14, qup15, sdc1_tb,
-> +		    sdc2_tb, sd_write, sp_cmu, tgu_ch0, tgu_ch1, tgu_ch2,
-> +		    tgu_ch3, tsense_pwm1, tsense_pwm2, uim1, uim2, uim_batt,
-> +		    usb_phy, vfr_1, _V_GPIO, _V_PPS_IN, _V_PPS_OUT,
-> +		    vsense_trigger, wlan1_adc0, wlan1_adc1, wlan2_adc0,
-> +		    wlan2_adc1,
-> +
-> +- bias-disable:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configured as no pull.
-> +
-> +- bias-pull-down:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configured as pull down.
-> +
-> +- bias-pull-up:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configured as pull up.
-> +
-> +- output-high:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins are configured in output mode, driven
-> +		    high.
-> +		    Not valid for sdc pins.
-> +
-> +- output-low:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins are configured in output mode, driven
-> +		    low.
-> +		    Not valid for sdc pins.
-> +
-> +- drive-strength:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: Selects the drive strength for the specified pins, in mA.
-> +		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
-> +
-> +Example:
-> +
-> +	tlmm: pinctrl@3000000 {
-> +		compatible = "qcom,sc7180-pinctrl";
-> +		reg = <0x3500000 0x300000>,
-> +		      <0x3900000 0x300000>,
-> +		      <0x3D00000 0x300000>;
-> +		reg-names = "west", "north", "south";
-> +		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		gpio-ranges = <&tlmm 0 0 119>;
-> +		gpio-reserved-ranges = <0 4>, <106 4>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+  /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events
+  /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable
+  /sys/kernel/debug/tracing # [  135.122237]
+  [  135.125035] =============================
+  [  135.125310] WARNING: suspicious RCU usage
+  [  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
+  [  135.125904] -----------------------------
+  [  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
+  [  135.126839]
+  [  135.126839] other info that might help us debug this:
+  [  135.126839]
+  [  135.127410]
+  [  135.127410] RCU used illegally from idle CPU!
+  [  135.127410] rcu_scheduler_active = 2, debug_locks = 1
+  [  135.128114] RCU used illegally from extended quiescent state!
+  [  135.128555] 1 lock held by swapper/0/0:
+  [  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
+  [  135.130499]
+  [  135.130499] stack backtrace:
+  [  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
+  [  135.131841] Hardware name: linux,dummy-virt (DT)
+  [  135.132224] Call trace:
+  [  135.132491]  dump_backtrace+0x0/0x140
+  [  135.132806]  show_stack+0x24/0x30
+  [  135.133133]  dump_stack+0xc4/0x10c
+  [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
+  [  135.134171]  call_break_hook+0x170/0x178
+  [  135.134486]  brk_handler+0x28/0x68
+  [  135.134792]  do_debug_exception+0x90/0x150
+  [  135.135051]  el1_dbg+0x18/0x8c
+  [  135.135260]  default_idle_call+0x0/0x44
+  [  135.135516]  cpu_startup_entry+0x2c/0x30
+  [  135.135815]  rest_init+0x1b0/0x280
+  [  135.136044]  arch_call_rest_init+0x14/0x1c
+  [  135.136305]  start_kernel+0x4d4/0x500
+  [  135.136597]
+
+So make debug exception visible to RCU can fix this warning.
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ Changes in v4:
+  - Update comment of debug_exception_enter().
+  - Move trace_hardirqs_off/on() into debug_exception_enter/exit().
+ Changes in v3:
+  - Make a comment for debug_exception_enter() clearer.
+---
+ arch/arm64/mm/fault.c |   57 ++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 49 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index 9568c116ac7f..cfd65b63f36f 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -777,6 +777,53 @@ void __init hook_debug_fault_code(int nr,
+ 	debug_fault_info[nr].name	= name;
+ }
+ 
++/*
++ * In debug exception context, we explicitly disable preemption despite
++ * having interrupts disabled.
++ * This serves two purposes: it makes it much less likely that we would
++ * accidentally schedule in exception context and it will force a warning
++ * if we somehow manage to schedule by accident.
++ */
++static void debug_exception_enter(struct pt_regs *regs)
++{
++	/*
++	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
++	 * already disabled to preserve the last enabled/disabled addresses.
++	 */
++	if (interrupts_enabled(regs))
++		trace_hardirqs_off();
++
++	if (user_mode(regs)) {
++		RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
++	} else {
++		/*
++		 * We might have interrupted pretty much anything.  In
++		 * fact, if we're a debug exception, we can even interrupt
++		 * NMI processing. We don't want this code makes in_nmi()
++		 * to return true, but we need to notify RCU.
++		 */
++		rcu_nmi_enter();
++	}
++
++	preempt_disable();
++
++	/* This code is a bit fragile.  Test it. */
++	RCU_LOCKDEP_WARN(!rcu_is_watching(), "exception_enter didn't work");
++}
++NOKPROBE_SYMBOL(debug_exception_enter);
++
++static void debug_exception_exit(struct pt_regs *regs)
++{
++	preempt_enable_no_resched();
++
++	if (!user_mode(regs))
++		rcu_nmi_exit();
++
++	if (interrupts_enabled(regs))
++		trace_hardirqs_on();
++}
++NOKPROBE_SYMBOL(debug_exception_exit);
++
+ #ifdef CONFIG_ARM64_ERRATUM_1463225
+ DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
+ 
+@@ -817,12 +864,7 @@ asmlinkage void __exception do_debug_exception(unsigned long addr_if_watchpoint,
+ 	if (cortex_a76_erratum_1463225_debug_handler(regs))
+ 		return;
+ 
+-	/*
+-	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
+-	 * already disabled to preserve the last enabled/disabled addresses.
+-	 */
+-	if (interrupts_enabled(regs))
+-		trace_hardirqs_off();
++	debug_exception_enter(regs);
+ 
+ 	if (user_mode(regs) && !is_ttbr0_addr(pc))
+ 		arm64_apply_bp_hardening();
+@@ -832,7 +874,6 @@ asmlinkage void __exception do_debug_exception(unsigned long addr_if_watchpoint,
+ 				 inf->sig, inf->code, (void __user *)pc, esr);
+ 	}
+ 
+-	if (interrupts_enabled(regs))
+-		trace_hardirqs_on();
++	debug_exception_exit(regs);
+ }
+ NOKPROBE_SYMBOL(do_debug_exception);
+
