@@ -2,86 +2,88 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46777C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C92C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10985206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A90206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:42:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mv6z0bTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbfHAUjH (ORCPT
+        id S1729728AbfHAUmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 16:39:07 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40799 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbfHAUjH (ORCPT
+        Thu, 1 Aug 2019 16:42:44 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45465 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfHAUmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:39:07 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1htHqp-0003ty-I9; Thu, 01 Aug 2019 22:39:03 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1htHqo-0001xt-8C; Thu, 01 Aug 2019 22:39:02 +0200
-Date:   Thu, 1 Aug 2019 22:39:02 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 2/3] serial: sh-sci: Remove check for specific
- mctrl_gpio_init() return value
-Message-ID: <20190801203902.xie5dexnsoqxxlat@pengutronix.de>
-References: <20190801184505.17239-1-frieder.schrempf@kontron.de>
- <20190801184505.17239-2-frieder.schrempf@kontron.de>
+        Thu, 1 Aug 2019 16:42:44 -0400
+Received: by mail-io1-f66.google.com with SMTP id g20so147368928ioc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 13:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lMH0PSgx6Uw521Ile0FkmOu1AQ4AnGl2b2LD6f0V7lw=;
+        b=Mv6z0bTWhcWzmPMAa8WNgTytLenPwtsKNMFXZbhEFXwGK9nEL4W7vFZkrsetALCbR5
+         1UflM2NczBPJTIJW91GKL5lQq5uKXTi5ca9vnhB2PqvKWOiK89zTHeshqpXAFDCL7GP3
+         gGXc1zgIXdCQxmZly30bpM177mxVOUDZ8gu9XBpVtobSV3JEob0ErTrX059NXvy/H712
+         osyOy8nMACpzq+vrxTk9JljUUTn/bsD9s703uJBNV1960EiqM5aO44zhny6vx8iJuiH4
+         zOfSQmiqdyo/LZ0ZZkbuqV44qbcCj7cYppuARx7uUHsNlY2J3ThTI1h7aZO5rG7JDe98
+         s0TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lMH0PSgx6Uw521Ile0FkmOu1AQ4AnGl2b2LD6f0V7lw=;
+        b=G9U0uDpq5TCTw1jM255tDildrk8BuMvDsslv2UvCJp4fU4lRSEaio87dgtuaKqeqRV
+         PIBSlYAlBq/kb+PtQ035rPysS6odp3vfXPu1zyiS+gPazH2nPm3mJvUlDS55sEFQksuA
+         UQJen0GM3p8nokxvfccRwM2OkS6bkffBv1JEbCYDiqZW1ryYYPpZLyEU7Zat0bRWhoSf
+         GiTvj9+vt7d8BDNXlD4fwCWv6Quf/lYK8sKVZXOEZ7tcBAz0GnfP7dSPCDvHJ2h5aaTK
+         dw9zsFP3N6HnYGsxF+bWwx+IvxSU9weSjzph24yOgNHdWX1NuDwnvzGM3UZB4MVHoJ/0
+         r9OA==
+X-Gm-Message-State: APjAAAUko4/O0tsZ42a1m2Zb9H3H7bN/WQxtV4wHgjqmUWGnby/SwgCu
+        UbfpHlZmw9xxXLk6V8VdPtOHWn+qE8lqtwttmE1S5Q==
+X-Google-Smtp-Source: APXvYqyNsdIo5cG3iRn2E0sXHOsTfshbx+8l5Wey772GDb6fRSzjMH0UCH36mDLfCqY4G9IrrYkaCqzTJWi0i8V9iYc=
+X-Received: by 2002:a5d:968b:: with SMTP id m11mr74306975ion.16.1564692162904;
+ Thu, 01 Aug 2019 13:42:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190801184505.17239-2-frieder.schrempf@kontron.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20190731221617.234725-1-matthewgarrett@google.com>
+ <20190731221617.234725-5-matthewgarrett@google.com> <20190801142157.GA5834@linux-8ccs>
+In-Reply-To: <20190801142157.GA5834@linux-8ccs>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Thu, 1 Aug 2019 13:42:31 -0700
+Message-ID: <CACdnJusD_9W9tFqwKptDTA8fZU8HrSvsEQhKo0WS9QxLpgz5tA@mail.gmail.com>
+Subject: Re: [PATCH V37 04/29] Enforce module signatures if the kernel is
+ locked down
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 06:45:24PM +0000, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> Now that the mctrl_gpio code returns NULL instead of ERR_PTR(-ENOSYS)
-> in cases when CONFIG_GPIOLIB is disabled, we can safely remove this
-> check.
+On Thu, Aug 1, 2019 at 7:22 AM Jessica Yu <jeyu@kernel.org> wrote:
+> Apologies if this was addressed in another patch in your series (I've
+> only skimmed the first few), but what should happen if the kernel is
+> locked down, but CONFIG_MODULE_SIG=n? Or shouldn't CONFIG_SECURITY_LOCKDOWN_LSM
+> depend on CONFIG_MODULE_SIG? Otherwise I think we'll end up calling
+> the empty !CONFIG_MODULE_SIG module_sig_check() stub even though
+> lockdown is enabled.
 
-I would mention -ENOSYS in the Subject line. Something like:
-
-	serial: sh-sci: don't check for mctrl_gpio_init returning -ENOSYS
-
-	Now that the mctrl_gpio code returns NULL instead of
-	ERR_PTR(-ENOSYS) if CONFIG_GPIOLIB is disabled, we can safely
-	remove this check.
-
-Thanks
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Hm. Someone could certainly configure their kernel in that way. I'm
+not sure that tying CONFIG_SECURITY_LOCKDOWN_LSM to CONFIG_MODULE_SIG
+is the right solution, since the new LSM approach means that any other
+LSM could also impose the same policy. Perhaps we should just document
+this?
