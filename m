@@ -2,144 +2,123 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B74C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42787C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5291206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="riNql9Zz"
+	by mail.kernel.org (Postfix) with ESMTP id 1E569206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfHAC5k (ORCPT
+        id S1728032AbfHAC5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 22:57:40 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:25321 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfHAC5k (ORCPT
+        Wed, 31 Jul 2019 22:57:52 -0400
+Received: from smtprelay0034.hostedemail.com ([216.40.44.34]:59120 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726626AbfHAC5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 22:57:40 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x712vKs3017242;
-        Thu, 1 Aug 2019 11:57:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x712vKs3017242
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564628241;
-        bh=XuEZx9KL8vPGiZUdkIWpRAE9VOsgYYJ1v/yggHWObxg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=riNql9ZzrcPC6iMP4ab6Ms3k8YmOJaNEIiBou9lIaWeRyZujvSeHeuoLB+8VIZLxJ
-         wT0WQOA/D7Xde7f93KmH96SO0rhwndJ298fDuFWDA1/a6q0uLZSDY90/DYxOGfQekN
-         PYcHZS9ULsGnzvDCRD69HG0kUP/SVq3+nMh0lswhmnev/8yfwnzF276hHIiPcS2R7V
-         Ii8PdXlyLbkeuMxWUTGA99IiAbpFcuumNe03EklPITbvRfLsrvKqocUg794U6cgEGX
-         GqrIkdkuqFvhxu9r0AB1Bn1l8SCNEeiBvIrRig9+pmHA47E4KvqIjN+MA9k5qC3Lbh
-         JNC7vgnhYcNpg==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id v6so47863943vsq.4;
-        Wed, 31 Jul 2019 19:57:21 -0700 (PDT)
-X-Gm-Message-State: APjAAAUi993QD44em/wC7Mb78sSx/BJYqLlfV1aoGk1/ilABaVtNoCtQ
-        LYC/WczSjnDkiuivuaEIN/NJyGTQB1esF/mqtx8=
-X-Google-Smtp-Source: APXvYqxyzK4p9kMB94A2SuClr+PFLUQZBK0sic/kJfGaOShDgKQem92Jkd/1tmuRzBeZuXTzy+xmBfS3RjXKWL5lXGQ=
-X-Received: by 2002:a67:f495:: with SMTP id o21mr80697696vsn.54.1564628240326;
- Wed, 31 Jul 2019 19:57:20 -0700 (PDT)
+        Wed, 31 Jul 2019 22:57:52 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 0E0C3181D3377;
+        Thu,  1 Aug 2019 02:57:51 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: hot98_2748f26d67433
+X-Filterd-Recvd-Size: 4139
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  1 Aug 2019 02:57:49 +0000 (UTC)
+Message-ID: <d18482fae2c6ca7cdb955aff4c724b007ef45aba.camel@perches.com>
+Subject: Re: [PATCH] linux/bits.h: Add compile time sanity check of GENMASK
+ inputs
+From:   Joe Perches <joe@perches.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 31 Jul 2019 19:57:48 -0700
+In-Reply-To: <CAK7LNAT2r8J+4C8bAPDZ1R4Xk7Psr+fAS9wcs_c+JhuUqj-uAw@mail.gmail.com>
+References: <0306bec0ec270b01b09441da3200252396abed27.camel@perches.com>
+         <20190731190309.19909-1-rikard.falkeborn@gmail.com>
+         <CAK7LNAT2r8J+4C8bAPDZ1R4Xk7Psr+fAS9wcs_c+JhuUqj-uAw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-References: <20190730164803.45080-1-swboyd@chromium.org> <20190730164959.GA129059@archlinux-threadripper>
- <CAK7LNARvyxzJa9CG-4uSoE7asdHp=Cbeh71_13dmuP8zMJtqSA@mail.gmail.com>
-In-Reply-To: <CAK7LNARvyxzJa9CG-4uSoE7asdHp=Cbeh71_13dmuP8zMJtqSA@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 1 Aug 2019 11:56:44 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASNxKzhO3cKXBTxcLWNoEX2pMdO6MFScyu3wprdtH2rzw@mail.gmail.com>
-Message-ID: <CAK7LNASNxKzhO3cKXBTxcLWNoEX2pMdO6MFScyu3wprdtH2rzw@mail.gmail.com>
-Subject: Re: [PATCH v3] kbuild: Check for unknown options with cc-option usage
- in Kconfig and clang
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Douglas Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 1:51 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Wed, Jul 31, 2019 at 1:50 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > On Tue, Jul 30, 2019 at 09:48:03AM -0700, Stephen Boyd wrote:
-> > > If the particular version of clang a user has doesn't enable
-> > > -Werror=unknown-warning-option by default, even though it is the
-> > > default[1], then make sure to pass the option to the Kconfig cc-option
-> > > command so that testing options from Kconfig files works properly.
-> > > Otherwise, depending on the default values setup in the clang toolchain
-> > > we will silently assume options such as -Wmaybe-uninitialized are
-> > > supported by clang, when they really aren't.
-> > >
-> > > A compilation issue only started happening for me once commit
-> > > 589834b3a009 ("kbuild: Add -Werror=unknown-warning-option to
-> > > CLANG_FLAGS") was applied on top of commit b303c6df80c9 ("kbuild:
-> > > compute false-positive -Wmaybe-uninitialized cases in Kconfig"). This
-> > > leads kbuild to try and test for the existence of the
-> > > -Wmaybe-uninitialized flag with the cc-option command in
-> > > scripts/Kconfig.include, and it doesn't see an error returned from the
-> > > option test so it sets the config value to Y. Then the Makefile tries to
-> > > pass the unknown option on the command line and
-> > > -Werror=unknown-warning-option catches the invalid option and breaks the
-> > > build. Before commit 589834b3a009 ("kbuild: Add
-> > > -Werror=unknown-warning-option to CLANG_FLAGS") the build works fine,
-> > > but any cc-option test of a warning option in Kconfig files silently
-> > > evaluates to true, even if the warning option flag isn't supported on
-> > > clang.
-> > >
-> > > Note: This doesn't change cc-option usages in Makefiles because those
-> > > use a different rule that includes KBUILD_CFLAGS by default (see the
-> > > __cc-option command in scripts/Kbuild.incluide). The KBUILD_CFLAGS
-> > > variable already has the -Werror=unknown-warning-option flag set. Thanks
-> > > to Doug for pointing out the different rule.
-> > >
-> > > [1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
-> > > Cc: Peter Smith <peter.smith@linaro.org>
-> > > Cc: Nathan Chancellor <natechancellor@gmail.com>
-> > > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > > Cc: Douglas Anderson <dianders@chromium.org>
-> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> >
-> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> >
-> > > ---
-> > >  Makefile                | 1 +
-> > >  scripts/Kconfig.include | 2 +-
-> > >  2 files changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Makefile b/Makefile
-> > > index 9be5834073f8..517d0a3f6539 100644
-> > > --- a/Makefile
-> > > +++ b/Makefile
-> > > @@ -536,6 +536,7 @@ KBUILD_AFLAGS     += $(CLANG_FLAGS)
-> > >  export CLANG_FLAGS
-> > >  endif
-> > >
-> > > +
-> >
-> > Not sure it's worth sending a v4 for but I don't think this should be
-> > there.
->
->
-> I will remove it when I apply this.
->
+On Thu, 2019-08-01 at 11:50 +0900, Masahiro Yamada wrote:
+> On Thu, Aug 1, 2019 at 4:04 AM Rikard Falkeborn
+> <rikard.falkeborn@gmail.com> wrote:
+> > GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+> > as the first argument and the low bit as the second argument. Mixing
+> > them will return a mask with zero bits set.
+> > 
+> > Recent commits show getting this wrong is not uncommon, see e.g.
+> > commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+> > commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+> > macro").
+> > 
+> > To prevent such mistakes from appearing again, add compile time sanity
+> > checking to the arguments of GENMASK() and GENMASK_ULL(). If both the
+> > arguments are known at compile time, and the low bit is higher than the
+> > high bit, break the build to detect the mistake immediately.
+> > 
+> > Since GENMASK() is used in declarations, BUILD_BUG_OR_ZERO() must be
+> > used instead of BUILD_BUG_ON(), and __is_constexpr() must be used instead
+> > of __builtin_constant_p().
+> > 
+> > Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+> > available in assembly") made the macros in linux/bits.h available in
+> > assembly. Since neither BUILD_BUG_OR_ZERO() or __is_constexpr() are asm
+> > compatible, disable the checks if the file is included in an asm file.
+> > 
+> > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> > ---
+> > Joe Perches sent a series to fix the existing misuses of GENMASK() that
+> > needs to be merged before this to avoid build failures. Currently, 7 of
+> > the patches were not in Linus tree, and 2 were not in linux-next.
+> > 
+> > Also, there's currently no asm users of bits.h, but since it was made
+> > asm-compatible just two weeks ago it would be a shame to break it right
+> > away...
+[]
+> > diff --git a/include/linux/bits.h b/include/linux/bits.h
+[]
+> >  #define GENMASK(h, l) \
+> > +       (GENMASK_INPUT_CHECK(h, l) + \
+> >         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+> > -        (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+> > +        (~UL(0) >> (BITS_PER_LONG - 1 - (h)))))
+> > 
+> >  #define GENMASK_ULL(h, l) \
+> > +       (GENMASK_INPUT_CHECK(h, l) + \
+> >         (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+> > -        (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
+> > +        (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h)))))
+> 
+> This is getting cluttered with so many parentheses.
+> 
+> One way of clean-up is to rename the current macros as follows:
+> 
+>    GENMASK()    ->  __GENMASK()
+>    GENMASK_UL() ->  __GENMASK_ULL()
+> 
+> Then,
+> 
+> #define GENMASK(h, l)       (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+> #define GENMASK_ULL(h, l)   (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
 
-Applied to linux-kbuild/fixes. Thanks.
+Much nicer.  It may be better still to use avoid
+multiple dereferences of each argument.
 
--- 
-Best Regards
-Masahiro Yamada
+Also it'd be useful to rename h and l to something like
+high_bit and low_bit or high and low.
+
+
