@@ -2,128 +2,96 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7AFC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EA5C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC48206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:16:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="gDPsHP45"
+	by mail.kernel.org (Postfix) with ESMTP id 6A75B206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732835AbfHAQQo (ORCPT
+        id S1732840AbfHAQTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:16:44 -0400
-Received: from mail-eopbgr1310102.outbound.protection.outlook.com ([40.107.131.102]:7518
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727885AbfHAQQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:16:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LWmCum1/CvPb77Su4/ORrNp01uEeh+sEHvkfXMoELVMx+oE1mfYGRBrU/HxcmK4TQ/eJ6QMH9jVOESyjTBx/6uF3LPBA+40zmSrYMy0Inpqh9X1PwTJImE5AWPlVdcnQ83E0w1Fkg8zDuiCNQwmXAZbk7fbwJbAyJYm5oSp76gvwLdyZ9frL1uJ81XpZ46nYUuhoMrmbkwwR8BHp8xeMoU0x2OrffEADlIpHRv1jejdQC5xkay9YzfYoqqiWRExO6BGbSIFXogU9WO8IonOj4NuDqlJVKOszy1hLIAnzHOV5/hstuQNE0c9zhy3sg4puRHKi0VOGwtGJq9rWtjGfag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l/7Bp29L4cYlWioEx7CP1pg43dGk+nE7SkOmQ3BfUlI=;
- b=mceDIaqG+GfbOHmAFJKgryB8FyvIOHbk9MBnVLl9yeNLoRAA6kxpGu4c4PqtHCWEoocNmH2tk/4KMKieXq9XEgUHoyNdA9FkG39CofKhFArutKy4E5SLkqn2qmTl0EtC9fEm32igNLOyMwgD1nZj0WSVxCBNpjfl11Hr1RnoChXoZBza1R0UckLhcBp60wJih3ERTFbqYA/Q0R14qxirxNStGIj8aueq/oL/RbPRfTbSOyVapMd6EA0fb3VFKE07/sjMnr49n0qpGRu7Rik6wKJyi9o9OcHmYJYkgcTfkL6lXl8eP3dghIdS0pHnpcGC+2tKRrU26Xvdp33G4g5fTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l/7Bp29L4cYlWioEx7CP1pg43dGk+nE7SkOmQ3BfUlI=;
- b=gDPsHP45Cx2KFMW5nq3UalwXvP5fV2U0yF85JOOcKcLhlDWIRYoPTAcivoaxP2bVp3px81MDFiZ6iYLL4h7FKo38FnOe4hRVyN9kW11/w2thwnqk65iez8ELN7KUwT5p94PUZ2im8QCG/4o69Oew1rt1cd3jW5Bs0/ZB6LkgiuE=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0153.APCP153.PROD.OUTLOOK.COM (10.170.188.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Thu, 1 Aug 2019 16:16:37 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Thu, 1 Aug 2019
- 16:16:37 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 00/11] VSOCK: add vsock_test test suite
-Thread-Topic: [PATCH v2 00/11] VSOCK: add vsock_test test suite
-Thread-Index: AQHVSH1oyNMGwOsBlk2yUfB0Nho2J6bmd0rg
-Date:   Thu, 1 Aug 2019 16:16:37 +0000
-Message-ID: <PU1P153MB0169B265ECA51CB0AE1212DEBFDE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <20190801152541.245833-1-sgarzare@redhat.com>
-In-Reply-To: <20190801152541.245833-1-sgarzare@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-01T16:16:34.7794498Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1a9f8a58-5882-44cf-939e-d69466f2ea74;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:0:bd98:1395:3c14:560a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8e7541f1-6fdd-428e-0e61-08d7169ba131
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0153;
-x-ms-traffictypediagnostic: PU1P153MB0153:
-x-microsoft-antispam-prvs: <PU1P153MB01535C72982EB1296915DDE6BFDE0@PU1P153MB0153.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 01165471DB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(376002)(346002)(39860400002)(136003)(199004)(189003)(305945005)(102836004)(256004)(74316002)(14454004)(6246003)(478600001)(6506007)(229853002)(68736007)(53936002)(55016002)(9686003)(46003)(6436002)(476003)(11346002)(10290500003)(186003)(486006)(446003)(71200400001)(71190400001)(10090500001)(4744005)(8990500004)(2906002)(6116002)(2501003)(5660300002)(7696005)(81156014)(99286004)(81166006)(8676002)(7736002)(33656002)(76176011)(66556008)(66446008)(52536014)(8936002)(64756008)(76116006)(66946007)(22452003)(66476007)(25786009)(110136005)(316002)(86362001)(54906003)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0153;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SVph8nurYgyy/7OHrFNrT4H/MT8tqvH3UucOUJelIy52UDI5kixK21ynV1jp35TlAKTXc7xoR9PdCX9xVucyHxdO9WTUZhW+D+iFUdL+qeCafO4uubcIEiM0/KndIXaTWss8GO15ZLHSPEaw4TYVnSxFfF8Oi8xmwgBqhtkM7xmo/qsUIMG6sw1iWruFFMKlUj43fJgFa7ojwox459HzaHd32AXP6BG+UbaZLi81B3h0Y4nhkAMPDTssh/KNPtfxWtKMzTGKBjbhYWZk+tW073vOxwmJHlqt/m7mTqDg7BK6KBqZLRDRCsMQFtDNfrTPs1n7zYY2pGye7Pn7ZGM8S7lsWRmfiaV6gPVnBluDdj7ezdLEvUPAmJX8bkJcU1168nFq+tIraNXcfEF90ccHVWGj++EBhX8IUqwAB2UXMvE=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 1 Aug 2019 12:19:15 -0400
+Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:51359 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727024AbfHAQTP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:19:15 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id AA946801BDBC;
+        Thu,  1 Aug 2019 16:19:13 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: songs99_32ffe7e5c531c
+X-Filterd-Recvd-Size: 2560
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  1 Aug 2019 16:19:09 +0000 (UTC)
+Message-ID: <917395fc42633b66abe3f713a9eef8edfdf7ee44.camel@perches.com>
+Subject: Re: [PATCH 08/12] printk: Replace strncmp with str_has_prefix
+From:   Joe Perches <joe@perches.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 01 Aug 2019 09:19:04 -0700
+In-Reply-To: <CANhBUQ2RD065Dn8eGkbzSQxfie5XrR_kgaFQ1QgOS4cKNhAfPA@mail.gmail.com>
+References: <20190729151505.9660-1-hslester96@gmail.com>
+         <5dee05d6cb8498b3e636f5e8a62da673334cb5a9.camel@perches.com>
+         <CANhBUQ2RD065Dn8eGkbzSQxfie5XrR_kgaFQ1QgOS4cKNhAfPA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e7541f1-6fdd-428e-0e61-08d7169ba131
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 16:16:37.2785
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fMgBp0geK0pOeuLJK+kva/hN+cPXpVX2xUGBQ/7FpTlO8is92yBHw3SUNzMNPBTlkIMG0rkfgqYPR8TSwqiWcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0153
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> Sent: Thursday, August 1, 2019 8:26 AM
->=20
-> The vsock_diag.ko module already has a test suite but the core AF_VSOCK
-> functionality has no tests.  This patch series adds several test cases th=
-at
-> exercise AF_VSOCK SOCK_STREAM socket semantics (send/recv,
-> connect/accept,
-> half-closed connections, simultaneous connections).
->=20
-> Dexuan: Do you think can be useful to test HyperV?
+On Thu, 2019-08-01 at 23:23 +0800, Chuhong Yuan wrote:
+> Joe Perches <joe@perches.com> 于2019年7月30日周二 上午8:16写道：
+> > On Mon, 2019-07-29 at 23:15 +0800, Chuhong Yuan wrote:
+> > > strncmp(str, const, len) is error-prone.
+> > > We had better use newly introduced
+> > > str_has_prefix() instead of it.
+> > []
+> > > diff --git a/kernel/printk/braille.c b/kernel/printk/braille.c
+> > []
+> > > @@ -11,10 +11,10 @@
+> > > 
+> > >  int _braille_console_setup(char **str, char **brl_options)
+> > >  {
+> > > -     if (!strncmp(*str, "brl,", 4)) {
+> > > +     if (str_has_prefix(*str, "brl,")) {
+> > >               *brl_options = "";
+> > >               *str += 4;
+> > > -     } else if (!strncmp(*str, "brl=", 4)) {
+> > > +     } else if (str_has_prefix(*str, "brl=")) {
+> > >               *brl_options = *str + 4;
+> > 
+> > Better to get rid of the += 4 uses too by storing the result
+> > of str_has_prefix and using that as the addend.
+> > 
+> > Perhaps
+> >         size_t len;
+> > 
+> >         if ((len = str_has_prefix(*str, "brl,"))) {
+> >                 *brl_options = "";
+> >                 *str += len;
+> >         } else if ((len = str_has_prefix(*str, "brl="))) {
+> >                 etc...
+> > 
+> 
+> I find that checkpatch.pl forbids assignment in if condition.
+> So this seems to be infeasible...
 
-Hi Stefano,
-Thanks! This should be useful, though I have to write the Windows host side
-code to use the test program(s). :-)
+checkpatch is a stupid script and doesn't forbid
+anything.  It's just a suggestion guide.
 
-Thanks,
--- Dexuan
+Ignore checkpatch when you know better.
+
+
