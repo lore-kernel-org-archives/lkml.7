@@ -2,127 +2,149 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E0DC41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D1FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB3B206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:46:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vUXnXx5k"
+	by mail.kernel.org (Postfix) with ESMTP id 81B5220665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731438AbfHAMqZ (ORCPT
+        id S1731451AbfHAMqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:46:25 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55655 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730334AbfHAMqY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:46:24 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a15so64516453wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 05:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cZCY92RMfghZJsFP1Vz0w4UO7UoxBKe+hI+aMfOaKM8=;
-        b=vUXnXx5kNtIFZ0huFPiV/HxhJIbQdYlkFxXwCPijUEreVyNC/1pxQMald0tr6/5oU+
-         Ku4JTGZOhL69MmV/Q5dbk4vWDah5/JPXEMYMNks43DojB8zmCbVBMLURc1fImEZ3YdI2
-         doKD9u7bejJ/UhT/GPcMTjZ3kZuOJbdM7J2rwAqwTZGpSbztlqyjT6hvwS7ltXOWjcBk
-         TrrLVnQKDRIuXxZS6tfQvsGHNDhV8M+CJGdf4t3WAuO9zvRHvrl20GzPHvRRlfXh2a0J
-         Ljef/yOoYB7o1JF7ZWTjXgMEN9MOgFo75dmzLwOg0n27FcmGHiQyvs9PyZVPgyw/6NZ0
-         KxRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cZCY92RMfghZJsFP1Vz0w4UO7UoxBKe+hI+aMfOaKM8=;
-        b=Ql07FfKbD2MVLw/5hFDHXzlvfGh04fEGhkW79JRdTrVTcyGfrP2FSObvNqdEPaRn8v
-         c9wy10oraYjMHI7UnHxfzBZtWEn8qJ4ST9x7T5CI+gkmZp/k8EZQmX65HbMRA2Ng8Qna
-         VevU3kqIAa55wg8ZnHBIJBnG2EQVCPSSsSZK/VI0WJnG4iNidmiR2I/tReCAtc7+52F5
-         RaStUOpmvHkyH4KHcqMBCOSp6yijfVFU6RR4cl0JWwRlT21GJ6gh0vDZitH8rDN5v8q5
-         XcwVMuYl+Dgb9xscsaSKUXH8IemU8z2wt0nmV6p+sHTvCVQUTSiMn31ce+KH35vZW0pP
-         Zg5Q==
-X-Gm-Message-State: APjAAAWeNfm1yUCE8NSc2+3dtq0gDRYQSmffEgE+ACgW4cKfK4+hZzxf
-        J2Ed1qxzpyDDYjMQ/aA15lV0Ag==
-X-Google-Smtp-Source: APXvYqx/EB+krQbuHfDMiwKikaXaFO+7qwPqB2cAqkBDAaRdrKTmsFkpl+/WGtL6bOLXv0IkeDY/3A==
-X-Received: by 2002:a1c:3cc4:: with SMTP id j187mr110992050wma.36.1564663582722;
-        Thu, 01 Aug 2019 05:46:22 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id f70sm96317715wme.22.2019.08.01.05.46.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 05:46:21 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 14:46:18 +0200
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/4] crypto: amlogic: Add crypto accelerator for amlogic
- GXL
-Message-ID: <20190801124618.GA30316@Red>
-References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
- <1564083776-20540-3-git-send-email-clabbe@baylibre.com>
- <CAFBinCD7pgUaBJgeGHTOu-uZRA9a6K2kxPsu+huKe23wcnKPoA@mail.gmail.com>
+        Thu, 1 Aug 2019 08:46:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:35458 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730334AbfHAMqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:46:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44DC51570;
+        Thu,  1 Aug 2019 05:46:53 -0700 (PDT)
+Received: from queper01-lin.cambridge.arm.com (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41FB93F575;
+        Thu,  1 Aug 2019 05:46:51 -0700 (PDT)
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, will@kernel.org, daniel.lezcano@linaro.org
+Cc:     dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
+        mka@chromium.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        quentin.perret@arm.com
+Subject: [PATCH v6 0/3] Make IPA use PM_EM
+Date:   Thu,  1 Aug 2019 13:46:40 +0100
+Message-Id: <20190801124643.17112-1-quentin.perret@arm.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFBinCD7pgUaBJgeGHTOu-uZRA9a6K2kxPsu+huKe23wcnKPoA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 02:17:38PM +0200, Martin Blumenstingl wrote:
-> Hi Corentin,
-> 
-> it's great to see you working on this :)
-> 
-> On Thu, Jul 25, 2019 at 9:45 PM Corentin Labbe <clabbe@baylibre.com> wrote:
-> >
-> > This patch adds support for the amlogic GXL cryptographic offloader present
-> > on GXL SoCs.
-> >
-> > This driver supports AES cipher in CBC/ECB mode.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> > ---
-> >  drivers/crypto/Kconfig                  |   2 +
-> >  drivers/crypto/Makefile                 |   1 +
-> >  drivers/crypto/amlogic/Kconfig          |  24 ++
-> >  drivers/crypto/amlogic/Makefile         |   2 +
-> >  drivers/crypto/amlogic/amlogic-cipher.c | 358 ++++++++++++++++++++++++
-> >  drivers/crypto/amlogic/amlogic-core.c   | 326 +++++++++++++++++++++
-> >  drivers/crypto/amlogic/amlogic.h        | 172 ++++++++++++
-> >  7 files changed, 885 insertions(+)
-> >  create mode 100644 drivers/crypto/amlogic/Kconfig
-> >  create mode 100644 drivers/crypto/amlogic/Makefile
-> >  create mode 100644 drivers/crypto/amlogic/amlogic-cipher.c
-> >  create mode 100644 drivers/crypto/amlogic/amlogic-core.c
-> >  create mode 100644 drivers/crypto/amlogic/amlogic.h
-> there are two different crypto IPs on Amlogic SoCs:
-> - GXL and newer use the "BLKMV" crypto IP
-> - GXBB, Meson8/Meson8b/Meson8m2 (and probably older SoCs) use the
-> "NDMA" crypto IP
-> 
+Changes in v6
+*************
+ - Added Daniel's and Viresh's Acked-by to all patches
 
-I believed it was the opposite. (BLKMV the older, NDMA the newer)
-Anyway, on the datasheet I found (s905d), neither NDMA or BLKMV is mentioned, it is just called Crypto Engine.
-So I think GXL is the best choice.
+Changes in v5:
+**************
+ - Changed patch 02 to guard IPA-specific code in cpu_cooling.c with
+   appropriate ifdefery (Daniel)
+ - Rebased on 5.2-rc2
 
-> personally I think it makes sense to either have the IP name (blkmv)
-> or SoC name (GXL) in the file or directory names as well as being
-> consistent with that in the Kconfig option names
+Changes in v4:
+**************
+ - Added Viresh's Acked-by to all 3 patches
+ - Improved commit message of patch 3/3 to explain how it has no
+   functional impact on existing users (Eduardo)
 
-Ok I will rename files to amlogic-gxl-xxx
+Changes in v3:
+**************
+ - Changed warning message for unordered tables to something more
+   explicit (Viresh)
+ - Changed WARN() into a pr_err() for consistency
 
-Thanks
+Changes in v2:
+**************
+ - Fixed patch 01/03 to actually enable CONFIG_ENERGY_MODEL
+ - Added "depends on ENERGY_MODEL" to IPA (Daniel)
+ - Added check to bail out if the freq table is unsorted (Viresh)
+
+Cover letter:
+*************
+
+The Intelligent Power Allocator (IPA) thermal governor uses an Energy
+Model (or EM) of the CPUs to re-distribute the power budget. To do so,
+it builds a table of <frequency, power> tuples where the power values
+are computed using the 'dynamic-power-coefficient' DT property. All of
+this is done in and only for the thermal subsystem, and more
+specifically for CPUs -- the power of other types of devices is obtained
+differently.
+
+Recently, the CPU scheduler has seen the introduction of Energy Aware
+Scheduling (EAS) patches, which also rely on an EM of the CPUs. This EM,
+however, is managed by an independent framework, called PM_EM, aimed to
+be used by all kernel subsystems interested in the power consumed by
+CPUs, and not only the scheduler.
+
+This patch series follows this logic and removes the (now redundant)
+thermal-specific EM computation code to migrate IPA to use PM_EM
+instead.
+
+Doing so should have no visible functional impact for existing users of
+IPA since:
+
+ - during the 5.1 development cycle, a series of patches [1] introduced
+   in PM_OPP some infrastructure (dev_pm_opp_of_register_em()) enabling
+   the registration of EMs in PM_EM using the DT property used by IPA;
+
+ - the existing upstream cpufreq drivers marked with the
+   'CPUFREQ_IS_COOLING_DEV' flag all call dev_pm_opp_of_register_em(),
+   which means they all support PM_EM (the only two exceptions are
+   qoriq-cpufreq which doesn't in fact use an EM and scmi-cpufreq which
+   already supports PM_EM without using the PM_OPP infrastructurei
+   because it read power costs directly from firmware);
+
+So, migrating IPA to using PM_EM should effectively be just plumbing
+since for the existing IPA users the PM_EM tables will contain the
+exact same power values that IPA used to compute on its own until now.
+The only new dependency is to compile in CONFIG_ENERGY_MODEL.
+
+Why is this migration still a good thing ? For three main reasons.
+
+ 1. it removes redundant code;
+
+ 2. it introduces an abstraction layer between IPA and the EM
+    computation. PM_EM offers to EAS and IPA (and potentially other
+    clients) standardized EM tables and hides 'how' these tables have
+    been obtained. PM_EM as of now supports power values either coming
+    from the 'dynamic-power-coefficient' DT property or obtained
+    directly from firmware using SCMI. The latter is a new feature for
+    IPA and that comes 'for free' with the migration. This will also be
+    true in the future every time PM_EM gets support for other ways of
+    loading the EM. Moreover, PM_EM is documented and has a debugfs
+    interface which should help adding support for new platforms.
+
+ 3. it builds a consistent view of the EM of CPUs across kernel
+    subsystems, which is a pre-requisite for any kind of future work
+    aiming at a smarter power allocation using scheduler knowledge about
+    the system for example.
+
+[1] https://lore.kernel.org/lkml/20190204110952.16025-1-quentin.perret@arm.com/
+
+
+Quentin Perret (3):
+  arm64: defconfig: Enable CONFIG_ENERGY_MODEL
+  thermal: cpu_cooling: Make the power-related code depend on IPA
+  thermal: cpu_cooling: Migrate to using the EM framework
+
+ arch/arm64/configs/defconfig  |   1 +
+ drivers/thermal/Kconfig       |   1 +
+ drivers/thermal/cpu_cooling.c | 428 ++++++++++++++--------------------
+ 3 files changed, 178 insertions(+), 252 deletions(-)
+
+-- 
+2.22.0
 
