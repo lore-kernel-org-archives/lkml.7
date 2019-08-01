@@ -2,143 +2,175 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FC0C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E16C32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE3620838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C01206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsQiRLSF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXApa2bK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390469AbfHAXqq (ORCPT
+        id S1733182AbfHAXrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:46:46 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39215 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732080AbfHAXqn (ORCPT
+        Thu, 1 Aug 2019 19:47:41 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45998 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfHAXrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:46:43 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so22145690wrt.6;
-        Thu, 01 Aug 2019 16:46:42 -0700 (PDT)
+        Thu, 1 Aug 2019 19:47:40 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r1so34951135pfq.12;
+        Thu, 01 Aug 2019 16:47:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QeFuBP9JKrZCeHFf1rpKgsYUuBTv3R+2TjgNB/pftBU=;
-        b=BsQiRLSFEzFxFkoLp6ctIPQIKe1NJLA6ZKb8oqi3jFnLK8ustlV+YGmw4+9Q2iibOG
-         6XZmONx2pX/bs7wwnxinAObrKqMQ4jtTERHbGL4bDjkvpM+gDc+Jp5j8hQtxh+GTf7yT
-         dDFDfpWlaIF095ENGwNtT7Pfzpy/278F/X63j0ylPyerHXxsTOJ97h+GavPDtAdIGNa7
-         Hsz/l4M4z/737Fnw4SecAXf5Ost/qc2wNNbcRxwYHa1MsQ0dc7XrXVXd8oMS1lLYLSIJ
-         BG0cPWp+sMGjnRVmlzSSbvBwb8oyCPFzCdTgYDFP4n/upnZH04IyjdIWtEB9o/fsWohl
-         zL0w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vg4QzQ/7F17W/rUghukJhcqs5s9RAye4AZfxR//QV0o=;
+        b=VXApa2bKtU/+qjnj54No4w9jeBNCs/2ouRrzJwhVcI9bqY8FfV+lWiNYwbsicvbOdl
+         gMkx/W/bNkCq+wNmaOVEypvcnQYCBpMtS63geb51KtbNv6tA5o8AavZ/OkslLikGEpN7
+         TZ6jcPk7YupGsAob95DLycEHEidCNCO3vJMcSsJfyWJdg5s82DlsF0VMt6NkiZ36SD/y
+         ewsev+xHhO4YL7/M/T3jKGSqWEQRwKTVpHkem9aFrBpI2POpX89SLC42HKEqRQxV6KlB
+         XyXV7Rr5gxVbGs2rlTCzOJkRGFi8/OkuUi2i3rMP7bEQkC5KSNXB3wChRcRIy1jl586G
+         iecw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QeFuBP9JKrZCeHFf1rpKgsYUuBTv3R+2TjgNB/pftBU=;
-        b=T4OZ/RXzvN133OPCZLu+hlOCjrlJFZK6MZdSBE7L7IHaajGDE5SPPTDQvTsuOBsYvy
-         c7rqCnIPRbV5zgeg7lDuBvPi7KKosLPPx6kuzE82uThYjEpAjqw+vEzkXXveO4d9SuQu
-         07VTtP76+3Bv1VnI5UUQx0yeAn+4KM8tdpH8sqnqA4vpWEcm0FQuah5Q7C9iaV0ICeYe
-         SNnxpL6cvipqkr5yk8UAW8ER6PC7ZWLg0KrEUrEGRqSl7hr0Fsp3zxMbZBY7V7U6u/ud
-         nuDGuRfTtBTYGJo7V1Ww0q+B7EBYqitWFYbHV8/F0A0BC89AE/P+oLX+Dw67ABrmqLM5
-         4rGg==
-X-Gm-Message-State: APjAAAWXvXh+qaHOn7sEEzhkKveefdaMMAvt8EfUORE77SyqiFnihUNI
-        yznaJpzc1R6B6qLtdzC+708=
-X-Google-Smtp-Source: APXvYqzJCtFYQPVbIz7G6pETEDSPiYeHoAs11jF1K3cM6cXdE9D49HduHslWE4zb3ftxaZI90sRQWQ==
-X-Received: by 2002:adf:e483:: with SMTP id i3mr13171471wrm.210.1564703201468;
-        Thu, 01 Aug 2019 16:46:41 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id o3sm60526711wrs.59.2019.08.01.16.46.40
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 16:46:40 -0700 (PDT)
-Subject: Re: [PATCHv5 01/37] ns: Introduce Time Namespace
-To:     Andy Lutomirski <luto@kernel.org>, Dmitry Safonov <dima@arista.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrei Vagin <avagin@openvz.org>,
-        Adrian Reber <adrian@lisas.de>, Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        criu@openvz.org, Linux API <linux-api@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-References: <20190729215758.28405-1-dima@arista.com>
- <20190729215758.28405-2-dima@arista.com>
- <CALCETrWHEcaG9gZe6ACt5H1H+P8D0RobrJ_bf4Wf9ts40NMM9w@mail.gmail.com>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <4d8d8489-28c8-259f-23a9-ed2b89699b73@gmail.com>
-Date:   Fri, 2 Aug 2019 00:46:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        bh=Vg4QzQ/7F17W/rUghukJhcqs5s9RAye4AZfxR//QV0o=;
+        b=N1Lb8s5HpfyygsQOIpG9sj+ZBYy1wLqn6ewXAb6owpCvwBymhSEcUpPOh/UMhKFYMw
+         wFoxmKOyDV7Af+2JyEiWEc/fMZDYs1PJL5wuhXJO0qIsQqKp7zyptCn1+vNR6kGZ089R
+         y8wse0OY5zEfuPqXy8nO33Aq7mFqn+TdMXM76RJ4HsXrIsNOWh8Yg51njwpIJue/wI9k
+         LCRVD8/qBsvKvKhpNlPpoHq4ROUPRzQT4luxp8VbpGbyQmVbh4mYstsfEPG0ifr2t+u2
+         0IkKOcYZa+DNPZPmA4IlqFUyJJT9zhRMXfkcqei9hrbRzdwD0M2HZ/kzuko+sa8pFh1i
+         6J7Q==
+X-Gm-Message-State: APjAAAUadnpEirGaDcWbRXfq3TK+BrdjFpfViCN+4WwAw13G3P0Dcsom
+        DjLGlvnnmqxuCPH+gH4sUFhj/fjP
+X-Google-Smtp-Source: APXvYqwHoHG6JQ3jRjRVySMONqToxLBPphS71bd0Tygq+HVgAHEylGaHC3u+H2i9mxt915ePZzuW3w==
+X-Received: by 2002:a63:e5a:: with SMTP id 26mr117179570pgo.3.1564703259868;
+        Thu, 01 Aug 2019 16:47:39 -0700 (PDT)
+Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id q7sm79090792pff.2.2019.08.01.16.47.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 16:47:38 -0700 (PDT)
+From:   john.hubbard@gmail.com
+X-Google-Original-From: jhubbard@nvidia.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Yan Zheng <zyan@redhat.com>, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v5 0/3]  mm/gup: add make_dirty arg to put_user_pages_dirty_lock()
+Date:   Thu,  1 Aug 2019 16:47:32 -0700
+Message-Id: <20190801234735.2149-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <CALCETrWHEcaG9gZe6ACt5H1H+P8D0RobrJ_bf4Wf9ts40NMM9w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+From: John Hubbard <jhubbard@nvidia.com>
 
-Thank you for the review,
+Changes since v4:
 
-On 8/1/19 6:29 AM, Andy Lutomirski wrote:
-> On Mon, Jul 29, 2019 at 2:58 PM Dmitry Safonov <dima@arista.com> wrote:
->>
->> From: Andrei Vagin <avagin@openvz.org>
->>
->> Time Namespace isolates clock values.
-> 
->> +static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
->> +{
->> +       struct time_namespace *ns = to_time_ns(new);
->> +
->> +       if (!thread_group_empty(current))
->> +               return -EINVAL;
-> 
-> You also need to check for other users of the mm.
+* Christophe Hellwig's review applied: deleted siw_free_plist() and
+  __qib_release_user_pages(), now that put_user_pages_dirty_lock() does
+  what those routines were doing.
 
-Oops. It seems like, if the check was
+* Applied Bjorn's ACK for net/xdp, and Christophe's Reviewed-by for patch
+  #1.
 
-if (!current_is_single_threaded())
-    return -EUSERS;
+Changes since v3:
 
-instead of thread_group_empty(current), it would address the concerns
-from 23/37 and 25/37 patches, too?
+* Fixed an unused variable warning in siw_mem.c
 
-> 
->> +
->> +       if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN) ||
->> +           !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
->> +               return -EPERM;
->> +
->> +       get_time_ns(ns);
->> +       get_time_ns(ns);
->> +       put_time_ns(nsproxy->time_ns);
->> +       put_time_ns(nsproxy->time_ns_for_children);
->> +       nsproxy->time_ns = ns;
->> +       nsproxy->time_ns_for_children = ns;
->> +       ns->initialized = true;
-> 
-> I really really wish that setns() took an explicit flag for "change
-> now" or "change for children", since the semantics are different.  Oh
-> well.
-> 
+Changes since v2:
 
-Thanks,
-          Dmitry
+* Critical bug fix: remove a stray "break;" from the new routine.
+
+Changes since v1:
+
+* Instead of providing __put_user_pages(), add an argument to
+  put_user_pages_dirty_lock(), and delete put_user_pages_dirty().
+  This is based on the following points:
+
+    1. Lots of call sites become simpler if a bool is passed
+    into put_user_page*(), instead of making the call site
+    choose which put_user_page*() variant to call.
+
+    2. Christoph Hellwig's observation that set_page_dirty_lock()
+    is usually correct, and set_page_dirty() is usually a
+    bug, or at least questionable, within a put_user_page*()
+    calling chain.
+
+* Added the Infiniband driver back to the patch series, because it is
+  a caller of put_user_pages_dirty_lock().
+
+Unchanged parts from the v1 cover letter (except for the diffstat):
+
+Notes about the remaining patches to come:
+
+There are about 50+ patches in my tree [2], and I'll be sending out the
+remaining ones in a few more groups:
+
+    * The block/bio related changes (Jerome mostly wrote those, but I've
+      had to move stuff around extensively, and add a little code)
+
+    * mm/ changes
+
+    * other subsystem patches
+
+    * an RFC that shows the current state of the tracking patch set. That
+      can only be applied after all call sites are converted, but it's
+      good to get an early look at it.
+
+This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+("mm: introduce put_user_page*(), placeholder versions").
+
+
+
+John Hubbard (3):
+  mm/gup: add make_dirty arg to put_user_pages_dirty_lock()
+  drivers/gpu/drm/via: convert put_page() to put_user_page*()
+  net/xdp: convert put_page() to put_user_page*()
+
+ drivers/gpu/drm/via/via_dmablit.c          |  10 +-
+ drivers/infiniband/core/umem.c             |   5 +-
+ drivers/infiniband/hw/hfi1/user_pages.c    |   5 +-
+ drivers/infiniband/hw/qib/qib_user_pages.c |  13 +--
+ drivers/infiniband/hw/usnic/usnic_uiom.c   |   5 +-
+ drivers/infiniband/sw/siw/siw_mem.c        |  18 +---
+ include/linux/mm.h                         |   5 +-
+ mm/gup.c                                   | 115 +++++++++------------
+ net/xdp/xdp_umem.c                         |   9 +-
+ 9 files changed, 63 insertions(+), 122 deletions(-)
+
+-- 
+2.22.0
+
