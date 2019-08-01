@@ -2,89 +2,127 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E061C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E0DC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134DC20665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB3B206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:46:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vUXnXx5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731427AbfHAMpz (ORCPT
+        id S1731438AbfHAMqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:45:55 -0400
-Received: from sauhun.de ([88.99.104.3]:52522 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730458AbfHAMpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:45:54 -0400
-Received: from localhost (p54B333D2.dip0.t-ipconnect.de [84.179.51.210])
-        by pokefinder.org (Postfix) with ESMTPSA id A00772C2817;
-        Thu,  1 Aug 2019 14:45:52 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 14:45:52 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] i2c: tegra: Compile PM functions unconditionally
-Message-ID: <20190801124552.GF1659@ninjato>
-References: <20190707231234.11679-1-digetx@gmail.com>
+        Thu, 1 Aug 2019 08:46:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55655 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730334AbfHAMqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:46:24 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a15so64516453wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 05:46:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cZCY92RMfghZJsFP1Vz0w4UO7UoxBKe+hI+aMfOaKM8=;
+        b=vUXnXx5kNtIFZ0huFPiV/HxhJIbQdYlkFxXwCPijUEreVyNC/1pxQMald0tr6/5oU+
+         Ku4JTGZOhL69MmV/Q5dbk4vWDah5/JPXEMYMNks43DojB8zmCbVBMLURc1fImEZ3YdI2
+         doKD9u7bejJ/UhT/GPcMTjZ3kZuOJbdM7J2rwAqwTZGpSbztlqyjT6hvwS7ltXOWjcBk
+         TrrLVnQKDRIuXxZS6tfQvsGHNDhV8M+CJGdf4t3WAuO9zvRHvrl20GzPHvRRlfXh2a0J
+         Ljef/yOoYB7o1JF7ZWTjXgMEN9MOgFo75dmzLwOg0n27FcmGHiQyvs9PyZVPgyw/6NZ0
+         KxRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cZCY92RMfghZJsFP1Vz0w4UO7UoxBKe+hI+aMfOaKM8=;
+        b=Ql07FfKbD2MVLw/5hFDHXzlvfGh04fEGhkW79JRdTrVTcyGfrP2FSObvNqdEPaRn8v
+         c9wy10oraYjMHI7UnHxfzBZtWEn8qJ4ST9x7T5CI+gkmZp/k8EZQmX65HbMRA2Ng8Qna
+         VevU3kqIAa55wg8ZnHBIJBnG2EQVCPSSsSZK/VI0WJnG4iNidmiR2I/tReCAtc7+52F5
+         RaStUOpmvHkyH4KHcqMBCOSp6yijfVFU6RR4cl0JWwRlT21GJ6gh0vDZitH8rDN5v8q5
+         XcwVMuYl+Dgb9xscsaSKUXH8IemU8z2wt0nmV6p+sHTvCVQUTSiMn31ce+KH35vZW0pP
+         Zg5Q==
+X-Gm-Message-State: APjAAAWeNfm1yUCE8NSc2+3dtq0gDRYQSmffEgE+ACgW4cKfK4+hZzxf
+        J2Ed1qxzpyDDYjMQ/aA15lV0Ag==
+X-Google-Smtp-Source: APXvYqx/EB+krQbuHfDMiwKikaXaFO+7qwPqB2cAqkBDAaRdrKTmsFkpl+/WGtL6bOLXv0IkeDY/3A==
+X-Received: by 2002:a1c:3cc4:: with SMTP id j187mr110992050wma.36.1564663582722;
+        Thu, 01 Aug 2019 05:46:22 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id f70sm96317715wme.22.2019.08.01.05.46.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 05:46:21 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 14:46:18 +0200
+From:   LABBE Corentin <clabbe@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/4] crypto: amlogic: Add crypto accelerator for amlogic
+ GXL
+Message-ID: <20190801124618.GA30316@Red>
+References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
+ <1564083776-20540-3-git-send-email-clabbe@baylibre.com>
+ <CAFBinCD7pgUaBJgeGHTOu-uZRA9a6K2kxPsu+huKe23wcnKPoA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aZoGpuMECXJckB41"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190707231234.11679-1-digetx@gmail.com>
+In-Reply-To: <CAFBinCD7pgUaBJgeGHTOu-uZRA9a6K2kxPsu+huKe23wcnKPoA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 27, 2019 at 02:17:38PM +0200, Martin Blumenstingl wrote:
+> Hi Corentin,
+> 
+> it's great to see you working on this :)
+> 
+> On Thu, Jul 25, 2019 at 9:45 PM Corentin Labbe <clabbe@baylibre.com> wrote:
+> >
+> > This patch adds support for the amlogic GXL cryptographic offloader present
+> > on GXL SoCs.
+> >
+> > This driver supports AES cipher in CBC/ECB mode.
+> >
+> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> > ---
+> >  drivers/crypto/Kconfig                  |   2 +
+> >  drivers/crypto/Makefile                 |   1 +
+> >  drivers/crypto/amlogic/Kconfig          |  24 ++
+> >  drivers/crypto/amlogic/Makefile         |   2 +
+> >  drivers/crypto/amlogic/amlogic-cipher.c | 358 ++++++++++++++++++++++++
+> >  drivers/crypto/amlogic/amlogic-core.c   | 326 +++++++++++++++++++++
+> >  drivers/crypto/amlogic/amlogic.h        | 172 ++++++++++++
+> >  7 files changed, 885 insertions(+)
+> >  create mode 100644 drivers/crypto/amlogic/Kconfig
+> >  create mode 100644 drivers/crypto/amlogic/Makefile
+> >  create mode 100644 drivers/crypto/amlogic/amlogic-cipher.c
+> >  create mode 100644 drivers/crypto/amlogic/amlogic-core.c
+> >  create mode 100644 drivers/crypto/amlogic/amlogic.h
+> there are two different crypto IPs on Amlogic SoCs:
+> - GXL and newer use the "BLKMV" crypto IP
+> - GXBB, Meson8/Meson8b/Meson8m2 (and probably older SoCs) use the
+> "NDMA" crypto IP
+> 
 
---aZoGpuMECXJckB41
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I believed it was the opposite. (BLKMV the older, NDMA the newer)
+Anyway, on the datasheet I found (s905d), neither NDMA or BLKMV is mentioned, it is just called Crypto Engine.
+So I think GXL is the best choice.
 
-On Mon, Jul 08, 2019 at 02:12:34AM +0300, Dmitry Osipenko wrote:
-> The I2C driver fails to probe if CONFIG_PM_SLEEP=3Dn because runtime PM
-> doesn't depend on the PM sleep and in this case the runtime PM ops are
-> not included in the driver, resulting in I2C clock not being enabled.
-> It's much cleaner to simply allow compiler to remove the dead code
-> instead of messing with the #ifdefs.
->=20
-> This patch fixes such errors when CONFIG_PM_SLEEP=3Dn:
->=20
->   tegra-i2c 7000c400.i2c: timeout waiting for fifo flush
->   tegra-i2c 7000c400.i2c: Failed to initialize i2c controller
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> personally I think it makes sense to either have the IP name (blkmv)
+> or SoC name (GXL) in the file or directory names as well as being
+> consistent with that in the Kconfig option names
 
-Applied to for-next, thanks!
+Ok I will rename files to amlogic-gxl-xxx
 
+Thanks
 
---aZoGpuMECXJckB41
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1C3vsACgkQFA3kzBSg
-KbYELg//d7ixrsPiRwLtaLHuba30xC1YeUezmk5+ixVYw/7+c14MZLNZga8JxydY
-AOkuAOmM9FifwuQpYFO6dHilZuF0zPngcwPKTUusPoFZacSJVfU4qfPjRNtpqPrJ
-aEy7kgRYpvAgtXhX/Yl/7l/19Gq8Jw3nzJ8XMG6QWVhAsE5c8FJr2fSUGJmVRE7I
-Aof/qD1QStABjSa42ClCvBn5DRnJRYYH/aAz4RlKI5N+Tqm6Jkh8MQOn6slg415K
-9vtZDG9OY9lO6fkSRhrDkNwIR/K7acJV9mjjCJ6xiOA0sFhyuB1xw5Z1uJSCzHlj
-3Oh7aiVYAxK23Z8XugdCheppSvauuNqV14x8i/wmLImjBoK+KFfJSq6m5uMgtjHz
-0qW4YQH69OPA83L2Ko1g63UKqL2wYMChGAGcLu/qZECP4Y2RYIAE/eL0Zx1h3ezv
-bR1pg7DGVxs6DPm7bcM69i8pinqrBnKtq8eRmVGsLrwjCgWXMyJT8rjUqzJOA4GC
-8+2Urg9mjGRFhUwFaawvffzqUzfLMIiOSTbZLw+C0FWjarFlc7bv5lY/ODefhQl2
-uy9oqBNlXHVcsm8O7FTa4t8qyL/zm1/92OREQiHE3fRogrhmJsOXNcN+TwgkBkaB
-3lZFAFQA3eqAK8W6bW/250JMsuAlac2LB/4dQm3vDLrLf9XMVWU=
-=1CO3
------END PGP SIGNATURE-----
-
---aZoGpuMECXJckB41--
