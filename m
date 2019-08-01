@@ -2,162 +2,104 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800A0C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741ACC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C15020838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:31:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="idub+EGE"
+	by mail.kernel.org (Postfix) with ESMTP id 419CA20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731519AbfHAPbp (ORCPT
+        id S1731598AbfHAPd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:31:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35278 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729110AbfHAPbp (ORCPT
+        Thu, 1 Aug 2019 11:33:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21198 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728916AbfHAPd5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:31:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u14so34293390pfn.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 08:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:from:to:subject:user-agent:date;
-        bh=P4+QkcP5SWfnPke/f4WzJjlFeJ5WbmTA3DCQpoIEOwo=;
-        b=idub+EGEAbLZ4tR3sB6OGyyoDN4Dx3awXMt99vRAI6Vnr6fGz4v78jbzggQ/sTRIyj
-         +1/kvEecNC+K6qLeXU+Yq9sjjIijHXv5jFkc817cZ96zXdImJ11+vBArzqkAgBz84UIo
-         1a+cU/uZf4LZsTAFIlOoXUcGu+1C6rHccPRKQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
-         :user-agent:date;
-        bh=P4+QkcP5SWfnPke/f4WzJjlFeJ5WbmTA3DCQpoIEOwo=;
-        b=njK4MhwObuPAEsUAcB3yOK4Iv2WOKiFA5Jp0sPjZSqHQVaHZe+WHiNJGvu0hFqulQr
-         1c7Szgp3UDd0bGWdFjy4eOvBmAMWcoaMotCPRQ8dZudEo+CpeW92GqAdt7Cu++77Zha6
-         cptJ+40bSNAWubmZYEkbXgukhs3y1R9V9zcDna69U7G33UrN+R5ynDXETVxmkUZeNKMV
-         tswgF7kQkJRh3Nm639AG6jamGCkZVOliKF/2clC1r75BGgKctiIHjH9/RPMkJunt2ANM
-         lQKUKOqDpHrpczBVmfI5lVgCyOI4iJLVmgBrCEYKTXMxLQ/Y/wqUYOVISrGu36aKhZTC
-         jA1g==
-X-Gm-Message-State: APjAAAX1UbPvIOpmczam1vb7iNKol2Gx/CBgKg7xu79xSBv/LHzPALyt
-        ILoDnXSJ7x2Q/uiIg5yMeMaikw==
-X-Google-Smtp-Source: APXvYqyKhNXanLEqc3S/0be5CT8tQHKUMlAHzimJSNFlmKiEaKcKDacCqnXnNDuNpJ/KcwniiOFELg==
-X-Received: by 2002:a63:29c4:: with SMTP id p187mr68449509pgp.330.1564673504344;
-        Thu, 01 Aug 2019 08:31:44 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id d15sm16313360pjc.8.2019.08.01.08.31.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 08:31:43 -0700 (PDT)
-Message-ID: <5d4305df.1c69fb81.c4013.1950@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 1 Aug 2019 11:33:57 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71FRTwe083574;
+        Thu, 1 Aug 2019 11:33:51 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u403tyquu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Aug 2019 11:33:51 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71FVVof095951;
+        Thu, 1 Aug 2019 11:33:50 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u403tyqtj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Aug 2019 11:33:49 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71FWKiG032095;
+        Thu, 1 Aug 2019 15:33:47 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma04dal.us.ibm.com with ESMTP id 2u0e876pu9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Aug 2019 15:33:47 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71FXkeS47383000
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 1 Aug 2019 15:33:46 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E1A6BB206A;
+        Thu,  1 Aug 2019 15:33:46 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C3B6AB205F;
+        Thu,  1 Aug 2019 15:33:46 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  1 Aug 2019 15:33:46 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 90CCC16C9A0B; Thu,  1 Aug 2019 08:33:47 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 08:33:47 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH 2/5] rcu/tree: Fix SCHED_FIFO params
+Message-ID: <20190801153347.GK5913@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190801111348.530242235@infradead.org>
+ <20190801111541.742613597@infradead.org>
+ <20190801135103.GI5913@linux.ibm.com>
+ <20190801144327.GB31398@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJZ5v0jkLXwqmXwyYtdZ9X2=W2KNKS4Ok_NrDew2yvvt1=4pgQ@mail.gmail.com>
-References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher> <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com> <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com> <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com> <5d42281c.1c69fb81.bcda1.71f5@mx.google.com> <5d423637.1c69fb81.62114.ca6f@mx.google.com> <CAJZ5v0jkLXwqmXwyYtdZ9X2=W2KNKS4Ok_NrDew2yvvt1=4pgQ@mail.gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tri Vo <trong@android.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-User-Agent: alot/0.8.1
-Date:   Thu, 01 Aug 2019 08:31:42 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801144327.GB31398@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908010162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rafael J. Wysocki (2019-08-01 01:09:22)
-> On Thu, Aug 1, 2019 at 2:45 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Stephen Boyd (2019-07-31 16:45:31)
-> > >
-> > > This approach also nicely detects duplicate wakeup source names in the
-> > > case that the string passed in to wakeup_source_register() is already
-> > > used on the virtual bus.
-> >
-> > This was clearly untested! Here's a better one. This is what I see on my
-> > device with this patch squashed in:
-> >
-> > localhost ~ # cat /sys/kernel/debug/wakeup_sources
-> > name            active_count    event_count     wakeup_count    expire_=
-count    active_since    total_time      max_time        last_change  preve=
-nt_suspend_time
-> > 1-1.2.4.1       0               0               0               0      =
-         0               0               0               0   0
-> > 1-1.1           0               0               0               0      =
-         0               0               0               0   0
-> > gpio-keys       0               0               0               0      =
-         0               0               0               0   0
-> > spi10.0         0               0               0               0      =
-         0               0               0               0   0
-> > a88000.spi:ec@0:keyboard-controller     0               0              =
- 0               0               0               0           0
-> >                 0               0
-> > alarmtimer      0               0               0               0      =
-         0               0               0               0   0
-> > cros-ec-rtc.1.auto      0               0               0              =
- 0               0               0               0           0
-> >                 0
-> > a8f8800.usb     0               0               0               0      =
-         0               0               0               0   0
-> > a6f8800.usb     0               0               0               0      =
-         0               0               0               0   0
-> > localhost ~ # ls -l /sys/class/wakeup/
-> > total 0
-> > lrwxrwxrwx. 1 root root 0 Jul 31 17:43 alarmtimer -> ../../devices/plat=
-form/soc/ac0000.geniqup/a88000.spi/spi_master/spi10/spi10.0/cros-ec-dev.0.a=
-uto/cros-ec-rtc.1.auto/rtc/rtc0/alarmtimer
->=20
-> So why is this not "(...)rtc0/wakeup/alarmtimer" ?
->=20
-> This particular bit looks kind of inconsistent.
+On Thu, Aug 01, 2019 at 04:43:27PM +0200, Peter Zijlstra wrote:
+> On Thu, Aug 01, 2019 at 06:51:03AM -0700, Paul E. McKenney wrote:
+> > On Thu, Aug 01, 2019 at 01:13:50PM +0200, Peter Zijlstra wrote:
+> > > A rather embarrasing mistake had us call sched_setscheduler() before
+> > > initializing the parameters passed to it.
+> > > 
+> > > Cc: Juri Lelli <juri.lelli@redhat.com>
+> > > Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> > 
+> > Thank you for having CCed me this time.  ;-)
+> 
+> Yeah, pretty much everything about that last time seems to have gone
+> wrong...
 
-I believe this is the code you're looking for in drivers/base/core.c
+Not that I necessarily would have spotted the bug, mind you...
 
-                /*
-                 * If we have no parent, we live in "virtual".
-                 * Class-devices with a non class-device as parent, live
-                 * in a "glue" directory to prevent namespace collisions.
-                 */
-                if (parent =3D=3D NULL)
-                        parent_kobj =3D virtual_device_parent(dev);
-                else if (parent->class && !dev->class->ns_type)
-                        return &parent->kobj;
-                else
-                        parent_kobj =3D &parent->kobj;
-
-
->=20
-> I guess without your patch you'd see "(...)rtc0/wakeup/wakeup0" instead, =
-right?
-
-No, it would be rtc0/wakeup0. That's because rtc is a class, and rtc0 is
-part of that class, so we don't try to make a glue directory named after
-the class to avoid collisions (see class_dir_create_and_add()
-implementation).
-
-BTW, paths in /sys/devices aren't supposed to matter too much. In this
-case, I'd expect to see userspace looking at the /sys/class/wakeup path
-to follow the symlink to figure out what device triggered a wakeup. It
-can look at the 'device' symlink inside the directory for the wakeup
-device to figure out which one it is.
-
-Final thought, might want to suppress the power directory from being
-created for the wakeup class. It looks odd to have
-/sys/class/wakeup/wakeup0/power when the presumably does nothing.
+							Thanx, Paul
