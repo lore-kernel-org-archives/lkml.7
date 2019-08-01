@@ -2,98 +2,187 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F1CC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D56C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60C9206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:39:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P5U10DY4"
+	by mail.kernel.org (Postfix) with ESMTP id 3DA2D206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbfHAGjw (ORCPT
+        id S1730144AbfHAGkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 02:39:52 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40065 "EHLO ozlabs.org"
+        Thu, 1 Aug 2019 02:40:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:59020 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbfHAGjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 02:39:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zgdK2v0cz9sNf;
-        Thu,  1 Aug 2019 16:39:49 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564641589;
-        bh=rOSJAfU1wXnYm8NVYz2R7oA6F020iwGkyVXHzPWR894=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=P5U10DY4ohbE1nG9sJTUSrcEnkOrugtJZBB9lGP1PHT7t65lYxqHSMD9v0wVUOza2
-         WPRW83apbxcUn23iy1Wr18TN1xngEefkB86fI1oUGDCUc48Rw6e7ejBLT/Ic4KqnaI
-         wKVslK8H07HRqPDuVXI6YidlJQiQJFrQ6I3ySo/B12iO5QLYGYK6RXB/SV449GAG+k
-         kgX4/9pVe6uy7mYEzbGO2r5lVOmU3DL9yM7yILDUYV3lrlZLM0UryiZHPIUmjT89rJ
-         SK3eYN7aNLLcXwuRcQGWpYoSN44paLzDlXrhfGewZTyMrc4MNU/Ptff+7A43KryrYA
-         rjvZsWOQeJ/VA==
-Date:   Thu, 1 Aug 2019 16:39:48 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Miles Chen <miles.chen@mediatek.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
+        id S1725804AbfHAGko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 02:40:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF3BA337;
+        Wed, 31 Jul 2019 23:40:43 -0700 (PDT)
+Received: from [10.163.1.81] (unknown [10.163.1.81])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 84E463F694;
+        Wed, 31 Jul 2019 23:42:33 -0700 (PDT)
+Subject: Re: [PATCH v9 12/21] mm: pagewalk: Allow walking without vma
+To:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org
+Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qian Cai <cai@lca.pw>
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20190801163948.7c869a34@canb.auug.org.au>
-In-Reply-To: <1564641003.25219.7.camel@mtkswgap22>
-References: <20190731161151.26ef081e@canb.auug.org.au>
-        <1564554484.28000.3.camel@mtkswgap22>
-        <20190801155130.29a07b1b@canb.auug.org.au>
-        <20190801061527.GB11627@dhcp22.suse.cz>
-        <1564641003.25219.7.camel@mtkswgap22>
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-13-steven.price@arm.com>
+ <7fc50563-7d5d-7270-5a6a-63769e9c335a@arm.com>
+ <5aff70f7-67a5-c7e8-5fec-8182dea0da0c@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <b43b68c5-8245-52cc-31b8-613dc299a469@arm.com>
+Date:   Thu, 1 Aug 2019 12:11:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/FmbzQ19EXZAy_89KnZKET1R";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <5aff70f7-67a5-c7e8-5fec-8182dea0da0c@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/FmbzQ19EXZAy_89KnZKET1R
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Miles,
 
-On Thu, 1 Aug 2019 14:30:03 +0800 Miles Chen <miles.chen@mediatek.com> wrot=
-e:
->
-> It's the first time that I receive a build warning after the patch has
-> been merged to -mm tree. The build warning had been fixed by Qian,
-> should I send another change for this?
+On 07/29/2019 05:59 PM, Steven Price wrote:
+> On 28/07/2019 15:20, Anshuman Khandual wrote:
+>>
+>>
+>> On 07/22/2019 09:12 PM, Steven Price wrote:
+>>> Since 48684a65b4e3: "mm: pagewalk: fix misbehavior of walk_page_range
+>>> for vma(VM_PFNMAP)", page_table_walk() will report any kernel area as
+>>> a hole, because it lacks a vma.
+>>>
+>>> This means each arch has re-implemented page table walking when needed,
+>>> for example in the per-arch ptdump walker.
+>>>
+>>> Remove the requirement to have a vma except when trying to split huge
+>>> pages.
+>>>
+>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>> ---
+>>>  mm/pagewalk.c | 25 +++++++++++++++++--------
+>>>  1 file changed, 17 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+>>> index 98373a9f88b8..1cbef99e9258 100644
+>>> --- a/mm/pagewalk.c
+>>> +++ b/mm/pagewalk.c
+>>> @@ -36,7 +36,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>>>  	do {
+>>>  again:
+>>>  		next = pmd_addr_end(addr, end);
+>>> -		if (pmd_none(*pmd) || !walk->vma) {
+>>> +		if (pmd_none(*pmd)) {
+>>>  			if (walk->pte_hole)
+>>>  				err = walk->pte_hole(addr, next, walk);
+>>>  			if (err)
+>>> @@ -59,9 +59,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>>>  		if (!walk->pte_entry)
+>>>  			continue;
+>>>  
+>>> -		split_huge_pmd(walk->vma, pmd, addr);
+>>> -		if (pmd_trans_unstable(pmd))
+>>> -			goto again;
+>>> +		if (walk->vma) {
+>>> +			split_huge_pmd(walk->vma, pmd, addr);
+>>
+>> Check for a PMD THP entry before attempting to split it ?
+> 
+> split_huge_pmd does the check for us:
+>> #define split_huge_pmd(__vma, __pmd, __address)				\
+>> 	do {								\
+>> 		pmd_t *____pmd = (__pmd);				\
+>> 		if (is_swap_pmd(*____pmd) || pmd_trans_huge(*____pmd)	\
+>> 					|| pmd_devmap(*____pmd))	\
+>> 			__split_huge_pmd(__vma, __pmd, __address,	\
+>> 						false, NULL);		\
+>> 	}  while (0)
+> 
+> And this isn't a change from the previous code - only that the entry is
+> no longer split when walk->vma==NULL.
 
-No, that will do.
+Does it make sense to name walk->vma check to differentiate between user
+and kernel page tables. IMHO that will help make things clear and explicit
+during page table walk.
 
---=20
-Cheers,
-Stephen Rothwell
+> 
+>>> +			if (pmd_trans_unstable(pmd))
+>>> +				goto again;
+>>> +		} else if (pmd_leaf(*pmd)) {
+>>> +			continue;
+>>> +		}
+>>> +
+>>>  		err = walk_pte_range(pmd, addr, next, walk);
+>>>  		if (err)
+>>>  			break;
+>>> @@ -81,7 +86,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>>>  	do {
+>>>   again:
+>>>  		next = pud_addr_end(addr, end);
+>>> -		if (pud_none(*pud) || !walk->vma) {
+>>> +		if (pud_none(*pud)) {
+>>>  			if (walk->pte_hole)
+>>>  				err = walk->pte_hole(addr, next, walk);
+>>>  			if (err)
+>>> @@ -95,9 +100,13 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>>>  				break;
+>>>  		}
+>>>  
+>>> -		split_huge_pud(walk->vma, pud, addr);
+>>> -		if (pud_none(*pud))
+>>> -			goto again;
+>>> +		if (walk->vma) {
+>>> +			split_huge_pud(walk->vma, pud, addr);
+>>
+>> Check for a PUD THP entry before attempting to split it ?
+> 
+> Same as above.
+> 
+>>> +			if (pud_none(*pud))
+>>> +				goto again;
+>>> +		} else if (pud_leaf(*pud)) {
+>>> +			continue;
+>>> +		}
+>>
+>> This is bit cryptic. walk->vma check should be inside a helper is_user_page_table()
+>> or similar to make things clear. p4d_leaf() check missing in walk_p4d_range() for
+>> kernel page table walk ? Wondering if p?d_leaf() test should be moved earlier while
+>> calling p?d_entry() for kernel page table walk.
+> 
+> I wasn't sure if it was worth putting p4d_leaf() and pgd_leaf() checks
+> in (yet). No architecture that I know of uses such large pages.
 
---Sig_/FmbzQ19EXZAy_89KnZKET1R
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Just to be complete it does make sense to add the remaining possible leaf
+entry checks but will leave it upto you.
 
------BEGIN PGP SIGNATURE-----
+> 
+> I'm not sure what you mean by moving the p?d_leaf() test earlier? Can
+> you explain with an example?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1CiTQACgkQAVBC80lX
-0GzrZAf+PAXK3DBKf3Xwfy9ytM9ikQJhvS5DtkN0xU+R/RS+bZ81t3iyFWHA+iRR
-+e+8lM1UHqDydcZJ22f1KkCY2/NxfvlwGfPpuzGSsnRkcJWz6HyrNPJCA30U9sx3
-Qx3y8vr+CAlVjLM3BtoGPbqNPqc6hxNAio+Q4/UT5eMDaTmpspgSVIXtRazWE1uu
-GWJwwi8nBCQON/RfiWCcbdLOTToeiEw0AC31LqLcLmy9xrSuRZyZaPU+2GbcxL/d
-PbEPoEk8JBFvRostEp/DW7jgTrPsWhCz34tTmBkl3vgOeK9soyllqxq2jFWK/rQO
-8hQu2ayfIlsE9ANEjVhBpf0nakLbHQ==
-=7q1y
------END PGP SIGNATURE-----
-
---Sig_/FmbzQ19EXZAy_89KnZKET1R--
+In case its a kernel p?d_leaf() entry, then there is nothing to be done
+after calling respective walk->p?d_entry() functions. Hence this check
+should not complement user page table check (walk->vma) later in the
+function but instead be checked right after walk->p?d_entry(). But its
+not a big deal I guess.
