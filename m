@@ -2,204 +2,293 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA56C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AEAC32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA21820B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571FE20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:45:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OZNZh5Rg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfHAApn (ORCPT
+        id S1729038AbfHAApr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 20:45:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33444 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfHAApn (ORCPT
+        Wed, 31 Jul 2019 20:45:47 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33233 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728847AbfHAApp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 20:45:43 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hszDv-0001p4-9m; Thu, 01 Aug 2019 02:45:39 +0200
-Date:   Thu, 1 Aug 2019 02:45:38 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-cc:     mingo@redhat.com, peterz@infradead.org, dvhart@infradead.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Zebediah Figura <z.figura12@gmail.com>,
-        Steven Noonan <steven@valvesoftware.com>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>
-Subject: Re: [PATCH RFC 2/2] futex: Implement mechanism to wait on any of
- several futexes
-In-Reply-To: <20190730220602.28781-2-krisman@collabora.com>
-Message-ID: <alpine.DEB.2.21.1908010039470.1788@nanos.tec.linutronix.de>
-References: <20190730220602.28781-1-krisman@collabora.com> <20190730220602.28781-2-krisman@collabora.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 31 Jul 2019 20:45:45 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c14so31138309plo.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 17:45:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:from:to:subject:user-agent:date;
+        bh=Gk2QCSUiXttK0DpMjrYYxGGSGPwiVtPzozTzPLwckQk=;
+        b=OZNZh5RgQj+c21xd9fx1O0GKIykxqvn0eo7tx5caoozgFnc6gFlrrU00H6PijLBp/T
+         8Ed2i5y7wYz0704iX7SL1rPJPnwQ7nEta0IkzPUcGhqq5UdZpxjkmXAG/EJLo9xTQAWJ
+         TIZv4yn7bzDpkyXOp2JwxU+BzcaybpOJiwP90=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
+         :user-agent:date;
+        bh=Gk2QCSUiXttK0DpMjrYYxGGSGPwiVtPzozTzPLwckQk=;
+        b=iVuDXtNzkLWlQMsT73dzGIthpPT9ZDLpfJ/QKdzlufWYZJKjm3gw2UTlacVNzpCsLq
+         fXSWpGkr683kGkSQQRZKzmerxZKyNLFtcciF1VMwBCN8lPp0pHfokKtqAtpyRm7vxJ57
+         250ixS4sKy4AtFXJM0cLtdyAIdBC7h5kYPCHpFO2ZT2slnwJEz995PjjQSN8ksGddsGx
+         wtcGHw/cMuH/BFIowvuu6VEkFb1oQwRFDd7H1bRLbNYyRqcQa0or+hgx7hWBvd6x3Vu2
+         DmhTK44jCvIDO60sneZ6wYLqXS75tscziEQ09+a6WPKMpW1sg9NLIUrIZEAcwSm767RF
+         Yriw==
+X-Gm-Message-State: APjAAAX689okX2KbJzjAs21HVe4z79prZedZNyLmDW+AT3fVCyiC6bXT
+        DtgYiOClMSNR9UhEPHkEyOx2fA==
+X-Google-Smtp-Source: APXvYqxHW8vfm/YSXch50SJ6dYCLCVyXFK5B8g5Aib6Vk7BXUffeZpUKJLPY+G5yqs2Ub5T4fKcFYA==
+X-Received: by 2002:a17:902:e30b:: with SMTP id cg11mr22374400plb.335.1564620343901;
+        Wed, 31 Jul 2019 17:45:43 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id p65sm68869957pfp.58.2019.07.31.17.45.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 17:45:43 -0700 (PDT)
+Message-ID: <5d423637.1c69fb81.62114.ca6f@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <5d42281c.1c69fb81.bcda1.71f5@mx.google.com>
+References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher> <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com> <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com> <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com> <5d42281c.1c69fb81.bcda1.71f5@mx.google.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>, Tri Vo <trong@android.com>
+Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
+User-Agent: alot/0.8.1
+Date:   Wed, 31 Jul 2019 17:45:42 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jul 2019, Gabriel Krisman Bertazi wrote:
-> + retry:
-> +	for (i = 0; i < count; i++) {
-> +		qs[i].key = FUTEX_KEY_INIT;
-> +		qs[i].bitset = wb[i].bitset;
-> +
-> +		ret = get_futex_key(wb[i].uaddr, flags & FLAGS_SHARED,
-> +				    &qs[i].key, FUTEX_READ);
-> +		if (unlikely(ret != 0)) {
-> +			for (--i; i >= 0; i--)
-> +				put_futex_key(&qs[i].key);
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	set_current_state(TASK_INTERRUPTIBLE);
-> +
-> +	for (i = 0; i < count; i++) {
-> +		ret = __futex_wait_setup(wb[i].uaddr, wb[i].val,
-> +					 flags, &qs[i], &hb);
-> +		if (ret) {
-> +			/* Drop the failed key directly.  keys 0..(i-1)
-> +			 * will be put by unqueue_me.
-> +			 */
-> +			put_futex_key(&qs[i].key);
-> +
-> +			/* Undo the partial work we did. */
-> +			for (--i; i >= 0; i--)
-> +				unqueue_me(&qs[i]);
+Quoting Stephen Boyd (2019-07-31 16:45:31)
+>=20
+> This approach also nicely detects duplicate wakeup source names in the
+> case that the string passed in to wakeup_source_register() is already
+> used on the virtual bus.
 
-That lacks a comment why this does not evaluate the return value of
-unqueue_me(). If one of the already queued futexes got woken, then it's
-debatable whether that counts as success or not. Whatever the decision is
-it needs to be documented instead of documenting the obvious.
+This was clearly untested! Here's a better one. This is what I see on my
+device with this patch squashed in:
 
-> +			__set_current_state(TASK_RUNNING);
-> +			if (ret > 0)
-> +				goto retry;
-> +			goto out;
-> +		}
-> +
-> +		/* We can't hold to the bucket lock when dealing with
-> +		 * the next futex. Queue ourselves now so we can unlock
-> +		 * it before moving on.
-> +		 */
-> +		queue_me(&qs[i], hb);
-> +	}
+localhost ~ # cat /sys/kernel/debug/wakeup_sources=20
+name            active_count    event_count     wakeup_count    expire_coun=
+t    active_since    total_time      max_time        last_change  prevent_s=
+uspend_time
+1-1.2.4.1       0               0               0               0          =
+     0               0               0               0   0
+1-1.1           0               0               0               0          =
+     0               0               0               0   0
+gpio-keys       0               0               0               0          =
+     0               0               0               0   0
+spi10.0         0               0               0               0          =
+     0               0               0               0   0
+a88000.spi:ec@0:keyboard-controller     0               0               0  =
+             0               0               0           0
+                0               0
+alarmtimer      0               0               0               0          =
+     0               0               0               0   0
+cros-ec-rtc.1.auto      0               0               0               0  =
+             0               0               0           0
+                0
+a8f8800.usb     0               0               0               0          =
+     0               0               0               0   0
+a6f8800.usb     0               0               0               0          =
+     0               0               0               0   0
+localhost ~ # ls -l /sys/class/wakeup/=20
+total 0
+lrwxrwxrwx. 1 root root 0 Jul 31 17:43 alarmtimer -> ../../devices/platform=
+/soc/ac0000.geniqup/a88000.spi/spi_master/spi10/spi10.0/cros-ec-dev.0.auto/=
+cros-ec-rtc.1.auto/rtc/rtc0/alarmtimer
+lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup0 -> ../../devices/platform/so=
+c/a6f8800.usb/wakeup/wakeup0
+lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup1 -> ../../devices/platform/so=
+c/a8f8800.usb/wakeup/wakeup1
+lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup2 -> ../../devices/platform/so=
+c/ac0000.geniqup/a88000.spi/spi_master/spi10/spi10.0/cros-ec-dev.0.auto/cro=
+s-ec-rtc.1.auto/wakeup/wakeup2
+lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup3 -> ../../devices/platform/so=
+c/ac0000.geniqup/a88000.spi/spi_master/spi10/spi10.0/a88000.spi:ec@0:keyboa=
+rd-controller/wakeup/wakeup3
+lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup4 -> ../../devices/platform/so=
+c/ac0000.geniqup/a88000.spi/spi_master/spi10/spi10.0/wakeup/wakeup4
+lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup5 -> ../../devices/platform/gp=
+io-keys/wakeup/wakeup5
+lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup6 -> ../../devices/platform/so=
+c/a8f8800.usb/a800000.dwc3/xhci-hcd.7.auto/usb1/1-1/1-1.1/wakeup/wakeup6
+lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup7 -> ../../devices/platform/so=
+c/a8f8800.usb/a800000.dwc3/xhci-hcd.7.auto/usb1/1-1/1-1.2/1-1.2.4/1-1.2.4.1=
+/wakeup/wakeup7
 
-Why  does this use two loops and two cleanup loops instead of doing
-it in a single one?
-
-> +
-> +	/* There is no easy to way to check if we are wake already on
-> +	 * multiple futexes without waking through each one of them.  So
-
-waking?
-
-> +	ret = -ERESTARTSYS;
-> +	if (!abs_time)
-> +		goto out;
-> +
-> +	ret = -ERESTART_RESTARTBLOCK;
-> + out:
-
-There is surely no more convoluted way to write this? That goto above is
-just making my eyes bleed. Yes I know where you copied that from and then
-removed everthing between the goto and the assignement.
-
-     	ret = abs_time ? -ERESTART_RESTARTBLOCK : -ERESTARTSYS;
-
-would be too simple to read.
-
-Also this is a new interface and there is absolutely no reason to make it
-misfeature compatible to FUTEX_WAIT even for the case that this might share
-code. Supporting relative timeouts is wrong to begin with and for absolute
-timeouts there is no reason to use restartblock.
-
-> +static int futex_wait_multiple(u32 __user *uaddr, unsigned int flags,
-> +			       u32 count, ktime_t *abs_time)
-> +{
-> +	struct futex_wait_block *wb;
-> +	struct restart_block *restart;
-> +	int ret;
-> +
-> +	if (!count)
-> +		return -EINVAL;
-> +
-> +
-> +	wb = kcalloc(count, sizeof(struct futex_wait_block), GFP_KERNEL);
-
-There are a couple of wrongs here:
-
-  - Lacks a sane upper limit for count. Relying on kcalloc() to fail is
-    just wrong.
-  
-  - kcalloc() does a pointless zeroing for a buffer which is going to be
-    overwritten anyway
-
-  - sizeof(struct foo) instead of sizeof(*wb)
-
-count * sizeof(*wb) must be calculated anyway because copy_from_user()
-needs it. So using kcalloc() is pointless.
-
-> +	if (!wb)
-> +		return -ENOMEM;
-> +
-> +	if (copy_from_user(wb, uaddr,
-> +			   count * sizeof(struct futex_wait_block))) {
-
-And doing the size calculation only once spares that fugly line break.
-
-But that's cosmetic. The way more serious issue is:
-
-How is that supposed to work with compat tasks? 32bit and 64 bit apps do
-not share the same pointer size and your UAPI struct is:
-
-> +struct futex_wait_block {
-> +	__u32 __user *uaddr;
-> +	__u32 val;
-> +	__u32 bitset;
-> +};
-
-A 64 bit kernel will happily read beyond the user buffer when called from a
-32bit task and all struct members turn into garbage. That can be solved
-with padding so pointer conversion can be avoided, but you have to be
-careful about endianness.
-
-Coming back to to allocation itself:
-
-do_futex_wait_multiple() does another allocation depending on count. So you
-call into the memory allocator twice in a row and on the way out you do the
-same thing again with free.
-
-Looking at the size constraints.
-
-If I assume a maximum of 65 futexes which got mentioned in one of the
-replies then this will allocate 7280 bytes alone for the futex_q array with
-a stock debian config which has no debug options enabled which would bloat
-the struct. Adding the futex_wait_block array into the same allocation
-becomes larger than 8K which already exceeds thelimit of SLUB kmem
-caches and forces the whole thing into the page allocator directly.
-
-This sucks.
-
-Also I'm confused about the 64 maximum resulting in 65 futexes comment in
-one of the mails.
-
-Can you please explain what you are trying to do exatly on the user space
-side?
-
-Thanks,
-
-	tglx
-
+----8<----
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 79668b45eae6..ec414f0db0b1 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -201,7 +201,7 @@ EXPORT_SYMBOL_GPL(wakeup_source_remove);
+ /**
+  * wakeup_source_register - Create wakeup source and add it to the list.
+  * @dev: Device this wakeup source is associated with (or NULL if virtual).
+- * @name: Name of the wakeup source to register.
++ * @name: Name of the wakeup source to register (or NULL if device wakeup).
+  */
+ struct wakeup_source *wakeup_source_register(struct device *dev,
+ 					     const char *name)
+@@ -209,9 +209,9 @@ struct wakeup_source *wakeup_source_register(struct dev=
+ice *dev,
+ 	struct wakeup_source *ws;
+ 	int ret;
+=20
+-	ws =3D wakeup_source_create(name);
++	ws =3D wakeup_source_create(name ? : dev_name(dev));
+ 	if (ws) {
+-		ret =3D wakeup_source_sysfs_add(dev, ws);
++		ret =3D wakeup_source_sysfs_add(dev, ws, !!name);
+ 		if (ret) {
+ 			kfree_const(ws->name);
+ 			kfree(ws);
+@@ -275,7 +275,7 @@ int device_wakeup_enable(struct device *dev)
+ 	if (pm_suspend_target_state !=3D PM_SUSPEND_ON)
+ 		dev_dbg(dev, "Suspicious %s() during system transition!\n", __func__);
+=20
+-	ws =3D wakeup_source_register(dev, dev_name(dev));
++	ws =3D wakeup_source_register(dev, NULL);
+ 	if (!ws)
+ 		return -ENOMEM;
+=20
+diff --git a/drivers/base/power/wakeup_stats.c b/drivers/base/power/wakeup_=
+stats.c
+index a26f019faca9..0f4c59b02d5d 100644
+--- a/drivers/base/power/wakeup_stats.c
++++ b/drivers/base/power/wakeup_stats.c
+@@ -81,15 +81,6 @@ static ssize_t last_change_ms_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(last_change_ms);
+=20
+-static ssize_t name_show(struct device *dev, struct device_attribute *attr,
+-			 char *buf)
+-{
+-	struct wakeup_source *ws =3D dev_get_drvdata(dev);
+-
+-	return sprintf(buf, "%s\n", ws->name);
+-}
+-static DEVICE_ATTR_RO(name);
+-
+ static ssize_t prevent_suspend_time_ms_show(struct device *dev,
+ 					    struct device_attribute *attr,
+ 					    char *buf)
+@@ -106,7 +97,6 @@ static ssize_t prevent_suspend_time_ms_show(struct devic=
+e *dev,
+ static DEVICE_ATTR_RO(prevent_suspend_time_ms);
+=20
+ static struct attribute *wakeup_source_attrs[] =3D {
+-	&dev_attr_name.attr,
+ 	&dev_attr_active_count.attr,
+ 	&dev_attr_event_count.attr,
+ 	&dev_attr_wakeup_count.attr,
+@@ -126,22 +116,35 @@ static DEFINE_IDA(wakeup_ida);
+  * wakeup_source_sysfs_add - Add wakeup_source attributes to sysfs.
+  * @parent: Device given wakeup source is associated with (or NULL if virt=
+ual).
+  * @ws: Wakeup source to be added in sysfs.
++ * @use_ws_name: True to use ws->name or false to use 'wakeupN' for device=
+ name
+  */
+-int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source *w=
+s)
++int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source *w=
+s,
++			    bool use_ws_name)
+ {
+ 	struct device *dev;
+ 	int id;
+=20
+-	id =3D ida_alloc(&wakeup_ida, GFP_KERNEL);
+-	if (id < 0)
+-		return id;
+-	ws->id =3D id;
++	ws->id =3D -1;
++	if (use_ws_name) {
++		dev =3D device_create_with_groups(wakeup_class, parent,
++						MKDEV(0, 0), ws,
++						wakeup_source_groups,
++						ws->name);
++	} else {
++		id =3D ida_alloc(&wakeup_ida, GFP_KERNEL);
++		if (id < 0)
++			return id;
++		ws->id =3D id;
++
++		dev =3D device_create_with_groups(wakeup_class, parent,
++						MKDEV(0, 0), ws,
++						wakeup_source_groups,
++						"wakeup%d", ws->id);
++	}
+=20
+-	dev =3D device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
+-					wakeup_source_groups, "ws%d",
+-					ws->id);
+ 	if (IS_ERR(dev)) {
+-		ida_free(&wakeup_ida, ws->id);
++		if (ws->id >=3D 0)
++			ida_free(&wakeup_ida, ws->id);
+ 		return PTR_ERR(dev);
+ 	}
+=20
+@@ -157,7 +160,8 @@ EXPORT_SYMBOL_GPL(wakeup_source_sysfs_add);
+ void wakeup_source_sysfs_remove(struct wakeup_source *ws)
+ {
+ 	device_unregister(ws->dev);
+-	ida_simple_remove(&wakeup_ida, ws->id);
++	if (ws->id >=3D 0)
++		ida_free(&wakeup_ida, ws->id);
+ }
+ EXPORT_SYMBOL_GPL(wakeup_source_sysfs_remove);
+=20
+diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+index f39f768389c8..c9fb00fca22e 100644
+--- a/include/linux/pm_wakeup.h
++++ b/include/linux/pm_wakeup.h
+@@ -107,7 +107,7 @@ extern void pm_wakeup_dev_event(struct device *dev, uns=
+igned int msec, bool hard
+=20
+ /* drivers/base/power/wakeup_stats.c */
+ extern int wakeup_source_sysfs_add(struct device *parent,
+-				   struct wakeup_source *ws);
++				   struct wakeup_source *ws, bool use_ws_name);
+ extern void wakeup_source_sysfs_remove(struct wakeup_source *ws);
+=20
+ #else /* !CONFIG_PM_SLEEP */
+diff --git a/kernel/power/wakelock.c b/kernel/power/wakelock.c
+index 826fcd97647a..7f2fc5f9b3b3 100644
+--- a/kernel/power/wakelock.c
++++ b/kernel/power/wakelock.c
+@@ -192,7 +192,7 @@ static struct wakelock *wakelock_lookup_add(const char =
+*name, size_t len,
+ 	wl->ws.name =3D wl->name;
+ 	wl->ws.last_time =3D ktime_get();
+=20
+-	ret =3D wakeup_source_sysfs_add(NULL, &wl->ws);
++	ret =3D wakeup_source_sysfs_add(NULL, &wl->ws, true);
+ 	if (ret) {
+ 		kfree(wl->name);
+ 		kfree(wl);
