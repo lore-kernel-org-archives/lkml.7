@@ -2,126 +2,170 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E2DC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9221AC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9922520665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mjC+j0aa"
+	by mail.kernel.org (Postfix) with ESMTP id 67E4120665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731539AbfHAMsu (ORCPT
+        id S1731554AbfHAMtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:48:50 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36816 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731373AbfHAMsu (ORCPT
+        Thu, 1 Aug 2019 08:49:03 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:33263 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731373AbfHAMtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:48:50 -0400
-Received: by mail-pg1-f193.google.com with SMTP id l21so34150373pgm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 05:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ATAFhJly7oayn4QwVxAmF/cKx18eZXYIEq5cLXvpdzg=;
-        b=mjC+j0aaEEkkMHnLNHs9TEJqIdScFWRlkAZG8TbiBl3AyUZ8l5nLaU29ZLHSb7WvwH
-         X3OlQDdgsBZjncfM3ONy8Dqcuih1q2WnbLztoEOKMtf5vefqmMIHHwchJuo+ue+DCVka
-         b9rui+0AvY5PeeX+qJY2jvBZQab/NzRkSsMupCgkTdlEDxE6K7Nu5zDKiMeGfnD3hicf
-         2VPYUTHD9bJKAQWesHnbiPWY9rwW/eF7WIHmcnvL9DkrJEokfA1mnjx39I+4RQdt1WLM
-         ieuyPRr8iw6XMHiEGmpinxm+wGAydMTsA6N4zI0Tg/WWtENcJ84NKdjINucR3C9EQWXN
-         EQGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ATAFhJly7oayn4QwVxAmF/cKx18eZXYIEq5cLXvpdzg=;
-        b=XO38njydGvYm1e5sTtP5uSrMWyAxtsuV1ebZftK4AkHtPvbhemxLZaOXKyavR/yzPt
-         odPF90oPt81sLGomcx0fQMKxtQtHQZQlb8fM4Ctdzwci8yR5nlWxE83MkMObu6/Y3MqA
-         6V+JyGrioJ8Q3UG/+42vaXd0Q1k1kDB1DYyoltvOwOqz6sIhhAlBMk9Nz3wT8V/XH3pk
-         on6q9CCfdDwlzixS+XnglvlhI5ueWVsXxvV9sJxk8mXP2qGgtZ0eU5UM2bh0c8q7wImI
-         MKwviHvu1NcVHJI96ds1QsQAN1wBOS2sWdbDTlILfZWgYe4ntxo+fDa8Bb+ZAp9AIwiF
-         BQPQ==
-X-Gm-Message-State: APjAAAV6J45Wwc62ofIgJ/pD1LP66UT86tCLVNgQkI92xSRoHKBSL4lV
-        d+fcBEw6Y/Phyy7E6CvObpYO6hZdWSYHizofOYN8DA==
-X-Google-Smtp-Source: APXvYqyuYmWo+CP2FzNWYkHFT0ZLT3W5Y5OJQeMQdVh76HiNmdD4jPQ2fznL3kD7gDek9Cqsx8/zBcK9HOnHQgVpStE=
-X-Received: by 2002:a65:4b8b:: with SMTP id t11mr118476394pgq.130.1564663728917;
- Thu, 01 Aug 2019 05:48:48 -0700 (PDT)
+        Thu, 1 Aug 2019 08:49:03 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C98F9200013;
+        Thu,  1 Aug 2019 12:48:59 +0000 (UTC)
+Date:   Thu, 1 Aug 2019 14:48:59 +0200
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     netdev@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@free-electrons.com>,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>
+Subject: Re: [PATCH net v2] mvpp2: fix panic on module removal
+Message-ID: <20190801124859.GB14470@kwain>
+References: <20190801121330.30823-1-mcroce@redhat.com>
 MIME-Version: 1.0
-References: <cover.1563904656.git.andreyknvl@google.com> <8c618cc9-ae68-9769-c5bb-67f1295abc4e@intel.com>
- <13b4cf53-3ecb-f7e7-b504-d77af15d77aa@arm.com>
-In-Reply-To: <13b4cf53-3ecb-f7e7-b504-d77af15d77aa@arm.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 1 Aug 2019 14:48:37 +0200
-Message-ID: <CAAeHK+zTFqsLiB3Wf0bAi5A8ukQX5ZuvfUg4td-=r5UhBsUBOQ@mail.gmail.com>
-Subject: Re: [PATCH v19 00/15] arm64: untag user pointers passed to the kernel
-To:     Kevin Brodsky <kevin.brodsky@arm.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190801121330.30823-1-mcroce@redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 2:11 PM Kevin Brodsky <kevin.brodsky@arm.com> wrote:
->
-> On 31/07/2019 17:50, Dave Hansen wrote:
-> > On 7/23/19 10:58 AM, Andrey Konovalov wrote:
-> >> The mmap and mremap (only new_addr) syscalls do not currently accept
-> >> tagged addresses. Architectures may interpret the tag as a background
-> >> colour for the corresponding vma.
-> > What the heck is a "background colour"? :)
->
-> Good point, this is some jargon that we started using for MTE, the idea being that
-> the kernel could set a tag value (specified during mmap()) as "background colour" for
-> anonymous pages allocated in that range.
->
-> Anyway, this patch series is not about MTE. Andrey, for v20 (if any), I think it's
-> best to drop this last sentence to avoid any confusion.
+Hello Matteo,
 
-Sure, thanks!
+On Thu, Aug 01, 2019 at 02:13:30PM +0200, Matteo Croce wrote:
+> mvpp2 uses a delayed workqueue to gather traffic statistics.
+> On module removal the workqueue can be destroyed before calling
+> cancel_delayed_work_sync() on its works.
+> Fix it by moving the destroy_workqueue() call after mvpp2_port_remove().
+> Also remove an unneeded call to flush_workqueue()
+> 
+>     # rmmod mvpp2
+>     [ 2743.311722] mvpp2 f4000000.ethernet eth1: phy link down 10gbase-kr/10Gbps/Full
+>     [ 2743.320063] mvpp2 f4000000.ethernet eth1: Link is Down
+>     [ 2743.572263] mvpp2 f4000000.ethernet eth2: phy link down sgmii/1Gbps/Full
+>     [ 2743.580076] mvpp2 f4000000.ethernet eth2: Link is Down
+>     [ 2744.102169] mvpp2 f2000000.ethernet eth0: phy link down 10gbase-kr/10Gbps/Full
+>     [ 2744.110441] mvpp2 f2000000.ethernet eth0: Link is Down
+>     [ 2744.115614] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+>     [ 2744.115615] Mem abort info:
+>     [ 2744.115616]   ESR = 0x96000005
+>     [ 2744.115617]   Exception class = DABT (current EL), IL = 32 bits
+>     [ 2744.115618]   SET = 0, FnV = 0
+>     [ 2744.115619]   EA = 0, S1PTW = 0
+>     [ 2744.115620] Data abort info:
+>     [ 2744.115621]   ISV = 0, ISS = 0x00000005
+>     [ 2744.115622]   CM = 0, WnR = 0
+>     [ 2744.115624] user pgtable: 4k pages, 39-bit VAs, pgdp=0000000422681000
+>     [ 2744.115626] [0000000000000000] pgd=0000000000000000, pud=0000000000000000
+>     [ 2744.115630] Internal error: Oops: 96000005 [#1] SMP
+>     [ 2744.115632] Modules linked in: mvpp2(-) algif_hash af_alg nls_iso8859_1 nls_cp437 vfat fat xhci_plat_hcd m25p80 spi_nor xhci_hcd mtd usbcore i2c_mv64xxx sfp usb_common marvell10g phy_generic spi_orion mdio_i2c i2c_core mvmdio phylink sbsa_gwdt ip_tables x_tables autofs4 [last unloaded: mvpp2]
+>     [ 2744.115654] CPU: 3 PID: 8357 Comm: kworker/3:2 Not tainted 5.3.0-rc2 #1
+>     [ 2744.115655] Hardware name: Marvell 8040 MACCHIATOBin Double-shot (DT)
+>     [ 2744.115665] Workqueue: events_power_efficient phylink_resolve [phylink]
+>     [ 2744.115669] pstate: a0000085 (NzCv daIf -PAN -UAO)
+>     [ 2744.115675] pc : __queue_work+0x9c/0x4d8
+>     [ 2744.115677] lr : __queue_work+0x170/0x4d8
+>     [ 2744.115678] sp : ffffff801001bd50
+>     [ 2744.115680] x29: ffffff801001bd50 x28: ffffffc422597600
+>     [ 2744.115684] x27: ffffff80109ae6f0 x26: ffffff80108e4018
+>     [ 2744.115688] x25: 0000000000000003 x24: 0000000000000004
+>     [ 2744.115691] x23: ffffff80109ae6e0 x22: 0000000000000017
+>     [ 2744.115694] x21: ffffffc42c030000 x20: ffffffc42209e8f8
+>     [ 2744.115697] x19: 0000000000000000 x18: 0000000000000000
+>     [ 2744.115699] x17: 0000000000000000 x16: 0000000000000000
+>     [ 2744.115701] x15: 0000000000000010 x14: ffffffffffffffff
+>     [ 2744.115702] x13: ffffff8090e2b95f x12: ffffff8010e2b967
+>     [ 2744.115704] x11: ffffff8010906000 x10: 0000000000000040
+>     [ 2744.115706] x9 : ffffff80109223b8 x8 : ffffff80109223b0
+>     [ 2744.115707] x7 : ffffffc42bc00068 x6 : 0000000000000000
+>     [ 2744.115709] x5 : ffffffc42bc00000 x4 : 0000000000000000
+>     [ 2744.115710] x3 : 0000000000000000 x2 : 0000000000000000
+>     [ 2744.115712] x1 : 0000000000000008 x0 : ffffffc42c030000
+>     [ 2744.115714] Call trace:
+>     [ 2744.115716]  __queue_work+0x9c/0x4d8
+>     [ 2744.115718]  delayed_work_timer_fn+0x28/0x38
+>     [ 2744.115722]  call_timer_fn+0x3c/0x180
+>     [ 2744.115723]  expire_timers+0x60/0x168
+>     [ 2744.115724]  run_timer_softirq+0xbc/0x1e8
+>     [ 2744.115727]  __do_softirq+0x128/0x320
+>     [ 2744.115731]  irq_exit+0xa4/0xc0
+>     [ 2744.115734]  __handle_domain_irq+0x70/0xc0
+>     [ 2744.115735]  gic_handle_irq+0x58/0xa8
+>     [ 2744.115737]  el1_irq+0xb8/0x140
+>     [ 2744.115738]  console_unlock+0x3a0/0x568
+>     [ 2744.115740]  vprintk_emit+0x200/0x2a0
+>     [ 2744.115744]  dev_vprintk_emit+0x1c8/0x1e4
+>     [ 2744.115747]  dev_printk_emit+0x6c/0x7c
+>     [ 2744.115751]  __netdev_printk+0x104/0x1d8
+>     [ 2744.115752]  netdev_printk+0x60/0x70
+>     [ 2744.115756]  phylink_resolve+0x38c/0x3c8 [phylink]
+>     [ 2744.115758]  process_one_work+0x1f8/0x448
+>     [ 2744.115760]  worker_thread+0x54/0x500
+>     [ 2744.115762]  kthread+0x12c/0x130
+>     [ 2744.115764]  ret_from_fork+0x10/0x1c
+>     [ 2744.115768] Code: aa1403e0 97fffbbe aa0003f5 b4000700 (f9400261)
+> 
+> Fixes: 118d6298f6f0 ("net: mvpp2: add ethtool GOP statistics")
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
->
-> Kevin
+Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
+
+Thanks!
+Antoine
+
+> ---
+>  drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> index c51f1d5b550b..ad42cc0a2b4a 100644
+> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> @@ -5759,9 +5759,6 @@ static int mvpp2_remove(struct platform_device *pdev)
+>  
+>  	mvpp2_dbgfs_cleanup(priv);
+>  
+> -	flush_workqueue(priv->stats_queue);
+> -	destroy_workqueue(priv->stats_queue);
+> -
+>  	fwnode_for_each_available_child_node(fwnode, port_fwnode) {
+>  		if (priv->port_list[i]) {
+>  			mutex_destroy(&priv->port_list[i]->gather_stats_lock);
+> @@ -5770,6 +5767,8 @@ static int mvpp2_remove(struct platform_device *pdev)
+>  		i++;
+>  	}
+>  
+> +	destroy_workqueue(priv->stats_queue);
+> +
+>  	for (i = 0; i < MVPP2_BM_POOLS_NUM; i++) {
+>  		struct mvpp2_bm_pool *bm_pool = &priv->bm_pools[i];
+>  
+> -- 
+> 2.21.0
+> 
+
+-- 
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
