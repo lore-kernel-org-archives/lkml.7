@@ -2,107 +2,205 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD91C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F173C32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D45520449
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:31:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mobgdh1A"
+	by mail.kernel.org (Postfix) with ESMTP id 0F75D20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbfHACbh (ORCPT
+        id S1727747AbfHAChu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 22:31:37 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:34521 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfHACbg (ORCPT
+        Wed, 31 Jul 2019 22:37:50 -0400
+Received: from anchovy3.45ru.net.au ([203.30.46.155]:34562 "EHLO
+        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbfHAChu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 22:31:36 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x712VLkp031078;
-        Thu, 1 Aug 2019 11:31:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x712VLkp031078
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564626682;
-        bh=v7tebXzVuIjpWij2FCnUZC9VfqyHCstSxtXYGo/JQaw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mobgdh1A6L2xfO1H1LK+ttHQHvmieoWnB8xVVqAPVDnlPAoZOpuY41Jel/Z0kW2gA
-         ZyhrSvTPOUVXvRe4x6ZRyz6fmJlF0xUw7wiSEtgG1LIysPezoH1XecZaD6XbHRPYQt
-         HsIRY2/XDLW2XA+qwexWJD+03XctuWm8okpJrwx2k/xZ5foAmVeDnPhZdLmdjmknn/
-         169Fld+e8p2+VQdV7KHzhetEFZbsZSLJm2X6/hPAi18OXQ8eSI6PmXTXFREf0QmjWh
-         2AQBdP8jz7jWmI87kwaEUoe7AXZis0+RFc9+O87OwgIpf7QmVf9qOj2MbgFbZqhhu/
-         /Mb2LlfAkskBQ==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id a97so27793115uaa.9;
-        Wed, 31 Jul 2019 19:31:21 -0700 (PDT)
-X-Gm-Message-State: APjAAAXJqG5FEKYkEMSqnlmojUn5O/TZXnifu88NmlMv7GHAn/GGufmF
-        vq8gFgUw+jHfRzs/86J+QEr6eW0fcpMAZkHAbvM=
-X-Google-Smtp-Source: APXvYqye+xSiOZooqZfZiBZrjUaqPJGNZgygtAZnjxFm+XMhDELoSbERP2u2elHRRY+h2JYNWrxNWScvA7PtWnS+grw=
-X-Received: by 2002:ab0:234e:: with SMTP id h14mr8749337uao.25.1564626680940;
- Wed, 31 Jul 2019 19:31:20 -0700 (PDT)
+        Wed, 31 Jul 2019 22:37:50 -0400
+Received: (qmail 19867 invoked by uid 5089); 1 Aug 2019 02:37:47 -0000
+Received: by simscan 1.2.0 ppid: 19739, pid: 19743, t: 0.0566s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
+  by anchovy2.45ru.net.au with ESMTPA; 1 Aug 2019 02:37:46 -0000
+Subject: Re: [PATCH v6 19/57] iio: Remove dev_err() usage after
+ platform_get_irq()
+To:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20190730181557.90391-1-swboyd@chromium.org>
+ <20190730181557.90391-20-swboyd@chromium.org>
+ <f28e8440-a57d-e269-f3a8-5bf5b9fcd41f@electromag.com.au>
+ <5d41a66d.1c69fb81.6d372.4c72@mx.google.com>
+From:   Phil Reid <preid@electromag.com.au>
+Message-ID: <6dc9dbc0-c338-eb21-aeb3-70026bebfd41@electromag.com.au>
+Date:   Thu, 1 Aug 2019 10:37:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190617162123.24920-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190617162123.24920-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 1 Aug 2019 11:30:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
-Message-ID: <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
-Subject: Re: [PATCH] libfdt: reduce the number of headers included from libfdt_env.h
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5d41a66d.1c69fb81.6d372.4c72@mx.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 1:21 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Currently, libfdt_env.h includes <linux/kernel.h> just for INT_MAX.
->
-> <linux/kernel.h> pulls in a lots of broat.
->
-> Thanks to commit 54d50897d544 ("linux/kernel.h: split *_MAX and *_MIN
-> macros into <linux/limits.h>"), <linux/kernel.h> can be replaced with
-> <linux/limits.h>.
->
-> This saves including dozens of headers.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+G'day Stephen,
+
+One comment below.
+
+On 31/07/2019 22:32, Stephen Boyd wrote:
+> Quoting Phil Reid (2019-07-30 23:42:16)
+>> G'day Stephen,
+>>
+>> A comment unrelated to your change.
+>>
+>> On 31/07/2019 02:15, Stephen Boyd wrote:
+>> ....
+>>
+>>> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
+>>> index 32f1c4a33b20..abe99856c823 100644
+>>> --- a/drivers/iio/adc/at91_adc.c
+>>> +++ b/drivers/iio/adc/at91_adc.c
+>>> @@ -1179,10 +1179,8 @@ static int at91_adc_probe(struct platform_device *pdev)
+>>>        idev->info = &at91_adc_info;
+>>>    
+>>>        st->irq = platform_get_irq(pdev, 0);
+>>> -     if (st->irq < 0) {
+>>> -             dev_err(&pdev->dev, "No IRQ ID is designated\n");
+>>> +     if (st->irq < 0)
+>>>                return -ENODEV;
+>> Should this be returning st->irq instead of -ENODEV?
+>> eg: platform_get_irq can return -EPROBE_DEFER
+>>
+>> Pattern is repeated in a number of other places.
+> 
+> Probably? Here's a patch.
+> 
+> ----8<----
+> From: Stephen Boyd <swboyd@chromium.org>
+> Subject: [PATCH] iio: Return error values from platform_get_irq*()
+> 
+> Sometimes platform_get_irq*() can return -EPROBE_DEFER, so it's best to
+> return the actual error value from calling this function instead of
+> overriding the value to something like -EINVAL or -ENXIO. Except for in
+> the case when the irq value is 0 and the driver knows that irq 0 isn't
+> valid. In such a situation, return whatever error value was returned
+> before this change.
+> 
+> Reported-by: Phil Reid <preid@electromag.com.au>
+> Cc: Phil Reid <preid@electromag.com.au>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Hartmut Knaack <knaack.h@gmx.de>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> Cc: linux-iio@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
+>   drivers/iio/adc/at91_adc.c      | 2 +-
+>   drivers/iio/adc/bcm_iproc_adc.c | 2 +-
+>   drivers/iio/adc/fsl-imx25-gcq.c | 4 +---
+>   drivers/iio/adc/lpc32xx_adc.c   | 2 +-
+>   drivers/iio/adc/npcm_adc.c      | 2 +-
+>   drivers/iio/adc/spear_adc.c     | 2 +-
+>   6 files changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
+> index abe99856c823..2c604198c4b7 100644
+> --- a/drivers/iio/adc/at91_adc.c
+> +++ b/drivers/iio/adc/at91_adc.c
+> @@ -1180,7 +1180,7 @@ static int at91_adc_probe(struct platform_device *pdev)
+>   
+>   	st->irq = platform_get_irq(pdev, 0);
+>   	if (st->irq < 0)
+> -		return -ENODEV;
+> +		return st->irq;
+>   
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   
+> diff --git a/drivers/iio/adc/bcm_iproc_adc.c b/drivers/iio/adc/bcm_iproc_adc.c
+> index 646ebdc0a8b4..6c05ea510c40 100644
+> --- a/drivers/iio/adc/bcm_iproc_adc.c
+> +++ b/drivers/iio/adc/bcm_iproc_adc.c
+> @@ -541,7 +541,7 @@ static int iproc_adc_probe(struct platform_device *pdev)
+>   
+>   	adc_priv->irqno = platform_get_irq(pdev, 0);
+>   	if (adc_priv->irqno <= 0)
+> -		return -ENODEV;
+> +		return adc_priv->irqno;
 
-ping?
+		return adc_priv->irqno ? : -ENODEV;
 
-
->  include/linux/libfdt_env.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-> index edb0f0c30904..2231eb855e8f 100644
-> --- a/include/linux/libfdt_env.h
-> +++ b/include/linux/libfdt_env.h
-> @@ -2,7 +2,7 @@
->  #ifndef LIBFDT_ENV_H
->  #define LIBFDT_ENV_H
->
-> -#include <linux/kernel.h>      /* For INT_MAX */
-> +#include <linux/limits.h>      /* For INT_MAX */
->  #include <linux/string.h>
->
->  #include <asm/byteorder.h>
-> --
-> 2.17.1
->
+>   
+>   	ret = regmap_update_bits(adc_priv->regmap, IPROC_REGCTL2,
+>   				IPROC_ADC_AUXIN_SCAN_ENA, 0);
+> diff --git a/drivers/iio/adc/fsl-imx25-gcq.c b/drivers/iio/adc/fsl-imx25-gcq.c
+> index fa71489195c6..ee20ab09abe5 100644
+> --- a/drivers/iio/adc/fsl-imx25-gcq.c
+> +++ b/drivers/iio/adc/fsl-imx25-gcq.c
+> @@ -340,9 +340,7 @@ static int mx25_gcq_probe(struct platform_device *pdev)
+>   
+>   	priv->irq = platform_get_irq(pdev, 0);
+>   	if (priv->irq <= 0) {
+> -		ret = priv->irq;
+> -		if (!ret)
+> -			ret = -ENXIO;
+> +		ret = priv->irq ? : -ENXIO;
+>   		goto err_clk_unprepare;
+>   	}
+>   
+> diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_adc.c
+> index b896f7ff4572..edbb58212fba 100644
+> --- a/drivers/iio/adc/lpc32xx_adc.c
+> +++ b/drivers/iio/adc/lpc32xx_adc.c
+> @@ -173,7 +173,7 @@ static int lpc32xx_adc_probe(struct platform_device *pdev)
+>   
+>   	irq = platform_get_irq(pdev, 0);
+>   	if (irq <= 0)
+> -		return -ENXIO;
+> +		return irq ? : -ENXIO;
+>   
+>   	retval = devm_request_irq(&pdev->dev, irq, lpc32xx_adc_isr, 0,
+>   				  LPC32XXAD_NAME, st);
+> diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
+> index 910f3585fa54..1e54a64a4534 100644
+> --- a/drivers/iio/adc/npcm_adc.c
+> +++ b/drivers/iio/adc/npcm_adc.c
+> @@ -225,7 +225,7 @@ static int npcm_adc_probe(struct platform_device *pdev)
+>   
+>   	irq = platform_get_irq(pdev, 0);
+>   	if (irq <= 0) {
+> -		ret = -EINVAL;
+> +		ret = irq ? : -EINVAL;
+>   		goto err_disable_clk;
+>   	}
+>   
+> diff --git a/drivers/iio/adc/spear_adc.c b/drivers/iio/adc/spear_adc.c
+> index 592b97c464da..9b16717ac7e7 100644
+> --- a/drivers/iio/adc/spear_adc.c
+> +++ b/drivers/iio/adc/spear_adc.c
+> @@ -301,7 +301,7 @@ static int spear_adc_probe(struct platform_device *pdev)
+>   
+>   	irq = platform_get_irq(pdev, 0);
+>   	if (irq <= 0) {
+> -		ret = -EINVAL;
+> +		ret = irq ? : -EINVAL;
+>   		goto errout2;
+>   	}
+>   
+> 
 
 
 -- 
-Best Regards
-Masahiro Yamada
+Regards
+Phil Reid
