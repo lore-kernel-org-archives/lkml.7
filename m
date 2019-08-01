@@ -2,126 +2,163 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0627C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0F0C32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA2D206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A8D206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:58:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nvF/OtFV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732421AbfHAP6m (ORCPT
+        id S1732454AbfHAP6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:58:42 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40673 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732315AbfHAP6l (ORCPT
+        Thu, 1 Aug 2019 11:58:53 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34981 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730581AbfHAP6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:58:41 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v19so63707068wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 08:58:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a0EUgeGqQ7K8JBk8474/F7Qfdf6czPogTZsCAuEQGPE=;
-        b=cVmJk6D1wod+tuZTBfVHAlrliIJ3ms6lCGgvUyU2UPvU4KppdfpeKk1EeHhDDdIaRv
-         6cLFdnXSoEe/iQx9doMuGV820dOKv2h9VYObUlrvhWDGNvusaRdfsm68JBONq31gA0Os
-         mAEMqycclXCYvZjdXhQFhhB0iyn+qHkP/pTar46PzlM7S/Sz5YWXleV6yFzdBZGYdWu1
-         jAsvS9+eRIDosEXb1HzcPXIqigGGncyO8lr23y6MNZKFvXYED6cuTFYJzcmHn29YBorU
-         LVNfbea3l9h/SKT7h2jt3On6YVVnBhBQENj85ICYodQ7Vl4xoN+JPRkKgR1Zx7g5WOik
-         f7zw==
-X-Gm-Message-State: APjAAAXGVDN3scq7mVkG+oQ7ez/juKdJQH0tkFfNO15GETo168v4ybhC
-        6ZfdQgqkEzWBIAwCj0yCWEjQww==
-X-Google-Smtp-Source: APXvYqzzbNpTopM4KULhskQlC6/TwvH5ODVZW62e6oBlm1yrl91OGvxzGfqciA+7f4tgcVTJRlc2uQ==
-X-Received: by 2002:a05:600c:2388:: with SMTP id m8mr15142423wma.23.1564675119726;
-        Thu, 01 Aug 2019 08:58:39 -0700 (PDT)
-Received: from steredhat (host122-201-dynamic.13-79-r.retail.telecomitalia.it. [79.13.201.122])
-        by smtp.gmail.com with ESMTPSA id r4sm44542036wrq.82.2019.08.01.08.58.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 08:58:39 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 17:58:36 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        virtualization@lists.linux-foundation.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/11] vsock_test: skip read() in test_stream*close
- tests on a VMCI host
-Message-ID: <20190801155836.ssounrtdtm5m6q6u@steredhat>
-References: <20190801152541.245833-1-sgarzare@redhat.com>
- <20190801152541.245833-11-sgarzare@redhat.com>
- <79ffb2a6-8ed2-cce2-7704-ed872446c0fe@cogentembedded.com>
+        Thu, 1 Aug 2019 11:58:52 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71FwBW3006205
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 1 Aug 2019 08:58:11 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71FwBW3006205
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564675092;
+        bh=Ds32z9DFn0egwHSquaeFfe86wEKuewaoNO6pP2d8jn8=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=nvF/OtFVDBcRXpwLBGCCp2D6cxrP3t7usN6d6LgwwQ9C9YDK936Um28+wqLaGXibn
+         3UG3pWboBf6fIo8uS6ITQy/OXsfml7pqdOf3imMVq/Jc4FtHSloxrGm63/pIsW0Aub
+         /f6hHK+VwCWkQzYKx4krMku1hJwI6d5042U2DyYt7JQeQ3N4Ut70Mt6SMWdkBmCfLo
+         9+bPEBIjFaaauOfbdKMvO898tKMMp71IVATI3WU2LqSAZnindQLyzBj6qdCQFJbIOc
+         RShWPSKrpmy541Z4zBPu4Tk9Eii3NSoy9jMnbLFVk+X9WWWFzjUa4JpwjCL61h8a+4
+         0GvLLstBwoBTg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71FwAjM006200;
+        Thu, 1 Aug 2019 08:58:10 -0700
+Date:   Thu, 1 Aug 2019 08:58:10 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-876f28e7bdf152da7514a28c79f83e61e0c6d30e@git.kernel.org>
+Cc:     mingo@kernel.org, bigeasy@linutronix.de, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        rostedt@goodmis.org, hpa@zytor.com
+Reply-To: tglx@linutronix.de, bigeasy@linutronix.de,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, rostedt@goodmis.org,
+          mingo@kernel.org, peterz@infradead.org
+In-Reply-To: <20190726185753.645792403@linutronix.de>
+References: <20190726185753.645792403@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] hrtimer: Determine hard/soft expiry mode for
+ hrtimer sleepers on RT
+Git-Commit-ID: 876f28e7bdf152da7514a28c79f83e61e0c6d30e
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <79ffb2a6-8ed2-cce2-7704-ed872446c0fe@cogentembedded.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 06:53:32PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
+Commit-ID:  876f28e7bdf152da7514a28c79f83e61e0c6d30e
+Gitweb:     https://git.kernel.org/tip/876f28e7bdf152da7514a28c79f83e61e0c6d30e
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Fri, 26 Jul 2019 20:30:58 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 1 Aug 2019 17:43:19 +0200
 
-Hi :)
+hrtimer: Determine hard/soft expiry mode for hrtimer sleepers on RT
 
-> On 08/01/2019 06:25 PM, Stefano Garzarella wrote:
-> 
-> > When VMCI transport is used, if the guest closes a connection,
-> > all data is gone and EOF is returned, so we should skip the read
-> > of data written by the peer before closing the connection.
-> > 
-> > Reported-by: Jorgen Hansen <jhansen@vmware.com>
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > ---
-> >  tools/testing/vsock/vsock_test.c | 26 ++++++++++++++++++++++++--
-> >  1 file changed, 24 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-> > index cb606091489f..64adf45501ca 100644
-> > --- a/tools/testing/vsock/vsock_test.c
-> > +++ b/tools/testing/vsock/vsock_test.c
-> [...]
-> > @@ -79,16 +80,27 @@ static void test_stream_client_close_server(const struct test_opts *opts)
-> >  		exit(EXIT_FAILURE);
-> >  	}
-> >  
-> > +	local_cid = vsock_get_local_cid(fd);
-> > +
-> >  	control_expectln("CLOSED");
-> >  
-> >  	send_byte(fd, -EPIPE);
-> > -	recv_byte(fd, 1);
-> > +
-> > +	/* Skip the read of data wrote by the peer if we are on VMCI and
-> 
->    s/wrote/written/?
-> 
+On PREEMPT_RT enabled kernels hrtimers which are not explicitely marked for
+hard interrupt expiry mode are moved into soft interrupt context either for
+latency reasons or because the hrtimer callback takes regular spinlocks or
+invokes other functions which are not suitable for hard interrupt context
+on PREEMPT_RT.
 
-Thanks, I'll fix it!
-Stefano
+The hrtimer_sleeper callback is RT compatible in hard interrupt context,
+but there is a latency concern: Untrusted userspace can spawn many threads
+which arm timers for the same expiry time on the same CPU. On expiry that
+causes a latency spike due to the wakeup of a gazillion threads.
 
-> > +	 * we are on the host side, because when the guest closes a
-> > +	 * connection, all data is gone and EOF is returned.
-> > +	 */
-> > +	if (!(opts->transport == TEST_TRANSPORT_VMCI &&
-> > +	    local_cid == VMADDR_CID_HOST))
-> > +		recv_byte(fd, 1);
-> > +
-> >  	recv_byte(fd, 0);
-> >  	close(fd);
-> >  }
-> [...]
-> 
-> MBR, Sergei
+OTOH, priviledged real-time user space applications rely on the low latency
+of hard interrupt wakeups. These syscall related wakeups are all based on
+hrtimer sleepers.
 
--- 
+If the current task is in a real-time scheduling class, mark the mode for
+hard interrupt expiry.
+
+[ tglx: Split out of a larger combo patch. Added changelog ]
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190726185753.645792403@linutronix.de
+
+
+---
+ kernel/time/hrtimer.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 90dcc4d95e91..c101f88ae8aa 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1676,6 +1676,16 @@ static enum hrtimer_restart hrtimer_wakeup(struct hrtimer *timer)
+ void hrtimer_sleeper_start_expires(struct hrtimer_sleeper *sl,
+ 				   enum hrtimer_mode mode)
+ {
++	/*
++	 * Make the enqueue delivery mode check work on RT. If the sleeper
++	 * was initialized for hard interrupt delivery, force the mode bit.
++	 * This is a special case for hrtimer_sleepers because
++	 * hrtimer_init_sleeper() determines the delivery mode on RT so the
++	 * fiddling with this decision is avoided at the call sites.
++	 */
++	if (IS_ENABLED(CONFIG_PREEMPT_RT) && sl->timer.is_hard)
++		mode |= HRTIMER_MODE_HARD;
++
+ 	hrtimer_start_expires(&sl->timer, mode);
+ }
+ EXPORT_SYMBOL_GPL(hrtimer_sleeper_start_expires);
+@@ -1683,6 +1693,30 @@ EXPORT_SYMBOL_GPL(hrtimer_sleeper_start_expires);
+ static void __hrtimer_init_sleeper(struct hrtimer_sleeper *sl,
+ 				   clockid_t clock_id, enum hrtimer_mode mode)
+ {
++	/*
++	 * On PREEMPT_RT enabled kernels hrtimers which are not explicitely
++	 * marked for hard interrupt expiry mode are moved into soft
++	 * interrupt context either for latency reasons or because the
++	 * hrtimer callback takes regular spinlocks or invokes other
++	 * functions which are not suitable for hard interrupt context on
++	 * PREEMPT_RT.
++	 *
++	 * The hrtimer_sleeper callback is RT compatible in hard interrupt
++	 * context, but there is a latency concern: Untrusted userspace can
++	 * spawn many threads which arm timers for the same expiry time on
++	 * the same CPU. That causes a latency spike due to the wakeup of
++	 * a gazillion threads.
++	 *
++	 * OTOH, priviledged real-time user space applications rely on the
++	 * low latency of hard interrupt wakeups. If the current task is in
++	 * a real-time scheduling class, mark the mode for hard interrupt
++	 * expiry.
++	 */
++	if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
++		if (task_is_realtime(current) && !(mode & HRTIMER_MODE_SOFT))
++			mode |= HRTIMER_MODE_HARD;
++	}
++
+ 	__hrtimer_init(&sl->timer, clock_id, mode);
+ 	sl->timer.function = hrtimer_wakeup;
+ 	sl->task = current;
