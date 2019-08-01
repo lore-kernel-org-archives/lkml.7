@@ -2,196 +2,143 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3653FC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C03C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1426206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79557206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:18:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oP/qcp7e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nzneK+/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388608AbfHATRm (ORCPT
+        id S2388611AbfHATSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:17:42 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40051 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfHATRm (ORCPT
+        Thu, 1 Aug 2019 15:18:41 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45478 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfHATSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:17:42 -0400
-Received: by mail-qk1-f194.google.com with SMTP id s145so52935776qke.7;
-        Thu, 01 Aug 2019 12:17:41 -0700 (PDT)
+        Thu, 1 Aug 2019 15:18:41 -0400
+Received: by mail-io1-f68.google.com with SMTP id g20so146840905ioc.12;
+        Thu, 01 Aug 2019 12:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=sRRiRudfVesVn/6GMaai5lXBbVTh+LZyVmU+cspSzXM=;
-        b=oP/qcp7e7SDYkq4SklR2U463DOEjUG4XH1YJwo0VEXBwicGboi5pGMn9abgg1uE6Xj
-         fRhU7NN5gxmDrnvq2yP/Cbd18TjvIpe+oVr0tv0H3Z/bRc04MMMeIGxtdBimifVARFAZ
-         16UNH5EY/Ds7R3HDg4JY0C3nKuulhZ9fBhGkpfLNMn+krDlZQ5YhexVczp+M/AxYX457
-         Z+nWS9w5zyF2p3XiT6fipxcUJixAslkf0NJ5+aZ77DkOGS2/zawWMKVM3E6zIplMZe3O
-         FqSqbOuiacf4qjJngTBhzjbXTm4PxSioxliQWYbDhyJsosAp2WaV9vvKcon/rOTdCY+l
-         Aaqg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qjpoHgl5bdIW+3zphyfPWlEvrE7q6jtPkvim4b+gWWE=;
+        b=nzneK+/u3TPRauFfvnomb/Pk19cglmMEjCtBKiLMDM3A8440os6Cy1BJePPtGey4Fu
+         B/IGmikieJ24pr+Z/23tvhziRDB4OG0zOHFRYNhf2BGZ5v/SFM7eyH79AeXSnuVainl8
+         KBLWMIqQzjT1X4do5oxoIM3BcfEv7smcjA2lKgHrybX8U9we3u/RSyS3zvJvrFD5Hg7W
+         d3nAXUBLweU+9tghXXUwUOFzhYKyOPMGDxpDJ10Sj0LptlXJo98InmnQCkypLr04jTx4
+         ojLyHMrrzP2HlyE5qIckvCkMjD+nMzdXVpk8EBkvTFQveGpDgsStifcJgRCp4GmRzLjw
+         xj0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=sRRiRudfVesVn/6GMaai5lXBbVTh+LZyVmU+cspSzXM=;
-        b=LHIZ68GeXKKLHT/XG/UU6Oy0ihng908E2LuEQzYsc7KlEPVUXqdTxl/hhnQgZGW/89
-         ktWtpU0SEDdgKeBVCjiCa6Y343qmmulTKLVy+Po6ZG7yZ+UayvBCANPE9QfpD1BdZKdp
-         SSn8KbRlRRIOx7A1zAioKx2CY/qikowo23eb+G8dfcgFXngwJfqrq+Fs8hrmNWFmtZ7r
-         QoTR/uvtmMDUVxUuGldJyGJAlKCFQr1vQRwgUPMCUvlVK7pGjqThi1T9K06euQ8wRvrz
-         8/kuqtdF7kIpRkfMCsujhPzfvITHVw4TRl7U0OpxKvcULEyFE268EeJjDJIH738izyim
-         xIfQ==
-X-Gm-Message-State: APjAAAVsttshSdrng75rsZzU2FyU8UYzRSulAUJ0tuySgvOdCR65LcJe
-        WFUWL+ien40lDxWGaD7PNlM=
-X-Google-Smtp-Source: APXvYqwbb+2/P206McEARDR/PpaP7VGFQSLFT8WPG1r9AaOcQVeVBRt8JCgiRpqNZSS57GaRn0zqwg==
-X-Received: by 2002:a05:620a:1404:: with SMTP id d4mr87093639qkj.228.1564687060980;
-        Thu, 01 Aug 2019 12:17:40 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id w25sm29324472qto.87.2019.08.01.12.17.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 12:17:40 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 15:17:39 -0400
-Message-ID: <20190801151739.GB32290@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
-        davem@davemloft.net, bridge@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        allan.nielsen@microchip.com,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-In-Reply-To: <1564055044-27593-1-git-send-email-horatiu.vultur@microchip.com>
-References: <1564055044-27593-1-git-send-email-horatiu.vultur@microchip.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qjpoHgl5bdIW+3zphyfPWlEvrE7q6jtPkvim4b+gWWE=;
+        b=o/8WUAPQ46nFDxJWt1BWW+kSNlQcVF5Qu76wEW3WfF/dJnsx1DsGNhDBasipukDGYB
+         tfdzQzb3H4ZLB+ZeFe7/BMWhenqtDIDLBIf36szXYvI0F7ryxDlu+fDcHjvqhMa63iWz
+         pGv1jPA1xx4SBo5h6PnxguDI50Of0J0dILfV2rn8uXspbRRC80kr1BuG50WiYO6u3NJz
+         B2OaMOA15G0vL4cYnbNMn/qPPoKbPpE8XLbw1E8ekIpb3w2otfEDTgKjVs0z1OJNRvaY
+         jm1I1MbL/rIH5AjsVtqRXuzqbWH+wFyDCZbcsA0EmIiR68G2EGTfgL7S1x3hcYWgHq8j
+         to2Q==
+X-Gm-Message-State: APjAAAWmgDwF4pmUNn/3CY85xkFUVXYJMlqzaQM63X5z+qzIG1WJTo1R
+        QHzx8XipUrms6b9O66N7wp9RBLDLnMoxyykntccQebwE
+X-Google-Smtp-Source: APXvYqyOirlLY6jL3gsrbs2t8Mnyu1eLSteNFlFjLUnfILt6FDPS3g+bKQZTIfiRfJuoYjhJpCaVQ76UFN0hr6Q3krE=
+X-Received: by 2002:a02:b78a:: with SMTP id f10mr138565005jam.5.1564687120011;
+ Thu, 01 Aug 2019 12:18:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-10-deepa.kernel@gmail.com>
+ <20190731152609.GB7077@magnolia>
+In-Reply-To: <20190731152609.GB7077@magnolia>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Thu, 1 Aug 2019 12:18:28 -0700
+Message-ID: <CABeXuvpiom9eQi0y7PAwAypUP1ezKKRfbh-Yqr8+Sbio=QtUJQ@mail.gmail.com>
+Subject: Re: [PATCH 09/20] ext4: Initialize timestamps limits
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Horatiu,
+On Wed, Jul 31, 2019 at 8:26 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+>
+> On Mon, Jul 29, 2019 at 06:49:13PM -0700, Deepa Dinamani wrote:
+> > ext4 has different overflow limits for max filesystem
+> > timestamps based on the extra bytes available.
+> >
+> > The timestamp limits are calculated according to the
+> > encoding table in
+> > a4dad1ae24f85i(ext4: Fix handling of extended tv_sec):
+> >
+> > * extra  msb of                         adjust for signed
+> > * epoch  32-bit                         32-bit tv_sec to
+> > * bits   time    decoded 64-bit tv_sec  64-bit tv_sec      valid time range
+> > * 0 0    1    -0x80000000..-0x00000001  0x000000000   1901-12-13..1969-12-31
+> > * 0 0    0    0x000000000..0x07fffffff  0x000000000   1970-01-01..2038-01-19
+> > * 0 1    1    0x080000000..0x0ffffffff  0x100000000   2038-01-19..2106-02-07
+> > * 0 1    0    0x100000000..0x17fffffff  0x100000000   2106-02-07..2174-02-25
+> > * 1 0    1    0x180000000..0x1ffffffff  0x200000000   2174-02-25..2242-03-16
+> > * 1 0    0    0x200000000..0x27fffffff  0x200000000   2242-03-16..2310-04-04
+> > * 1 1    1    0x280000000..0x2ffffffff  0x300000000   2310-04-04..2378-04-22
+> > * 1 1    0    0x300000000..0x37fffffff  0x300000000   2378-04-22..2446-05-10
+>
+> My recollection of ext4 has gotten rusty, so this could be a bogus
+> question:
+>
+> Say you have a filesystem with s_inode_size > 128 where not all of the
+> ondisk inodes have been upgraded to i_extra_isize > 0 and therefore
+> don't support nanoseconds or times beyond 2038.  I think this happens on
+> ext3 filesystems that reserved extra space for inode attrs that are
+> subsequently converted to ext4?
+>
+> In any case, that means that you have some inodes that support 34-bit
+> tv_sec and some inodes that only support 32-bit tv_sec.  For the inodes
+> with 32-bit tv_sec, I think all that happens is that a large timestamp
+> will be truncated further, right?
+>
+> And no mount time warning because at least /some/ of the inodes are
+> ready to go for the next 30 years?
 
-On Thu, 25 Jul 2019 13:44:04 +0200, Horatiu Vultur <horatiu.vultur@microchip.com> wrote:
-> There is no way to configure the bridge, to receive only specific link
-> layer multicast addresses. From the description of the command 'bridge
-> fdb append' is supposed to do that, but there was no way to notify the
-> network driver that the bridge joined a group, because LLADDR was added
-> to the unicast netdev_hw_addr_list.
-> 
-> Therefore update fdb_add_entry to check if the NLM_F_APPEND flag is set
-> and if the source is NULL, which represent the bridge itself. Then add
-> address to multicast netdev_hw_addr_list for each bridge interfaces.
-> And then the .ndo_set_rx_mode function on the driver is called. To notify
-> the driver that the list of multicast mac addresses changed.
-> 
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  net/bridge/br_fdb.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 46 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/bridge/br_fdb.c b/net/bridge/br_fdb.c
-> index b1d3248..d93746d 100644
-> --- a/net/bridge/br_fdb.c
-> +++ b/net/bridge/br_fdb.c
-> @@ -175,6 +175,29 @@ static void fdb_add_hw_addr(struct net_bridge *br, const unsigned char *addr)
->  	}
->  }
->  
-> +static void fdb_add_hw_maddr(struct net_bridge *br, const unsigned char *addr)
-> +{
-> +	int err;
-> +	struct net_bridge_port *p;
-> +
-> +	ASSERT_RTNL();
-> +
-> +	list_for_each_entry(p, &br->port_list, list) {
-> +		if (!br_promisc_port(p)) {
-> +			err = dev_mc_add(p->dev, addr);
-> +			if (err)
-> +				goto undo;
-> +		}
-> +	}
-> +
-> +	return;
-> +undo:
-> +	list_for_each_entry_continue_reverse(p, &br->port_list, list) {
-> +		if (!br_promisc_port(p))
-> +			dev_mc_del(p->dev, addr);
-> +	}
-> +}
-> +
->  /* When a static FDB entry is deleted, the HW address from that entry is
->   * also removed from the bridge private HW address list and updates all
->   * the ports with needed information.
-> @@ -192,13 +215,27 @@ static void fdb_del_hw_addr(struct net_bridge *br, const unsigned char *addr)
->  	}
->  }
->  
-> +static void fdb_del_hw_maddr(struct net_bridge *br, const unsigned char *addr)
-> +{
-> +	struct net_bridge_port *p;
-> +
-> +	ASSERT_RTNL();
-> +
-> +	list_for_each_entry(p, &br->port_list, list) {
-> +		if (!br_promisc_port(p))
-> +			dev_mc_del(p->dev, addr);
-> +	}
-> +}
-> +
->  static void fdb_delete(struct net_bridge *br, struct net_bridge_fdb_entry *f,
->  		       bool swdev_notify)
->  {
->  	trace_fdb_delete(br, f);
->  
-> -	if (f->is_static)
-> +	if (f->is_static) {
->  		fdb_del_hw_addr(br, f->key.addr.addr);
-> +		fdb_del_hw_maddr(br, f->key.addr.addr);
-> +	}
->  
->  	hlist_del_init_rcu(&f->fdb_node);
->  	rhashtable_remove_fast(&br->fdb_hash_tbl, &f->rhnode,
-> @@ -843,13 +880,19 @@ static int fdb_add_entry(struct net_bridge *br, struct net_bridge_port *source,
->  			fdb->is_local = 1;
->  			if (!fdb->is_static) {
->  				fdb->is_static = 1;
-> -				fdb_add_hw_addr(br, addr);
-> +				if (flags & NLM_F_APPEND && !source)
-> +					fdb_add_hw_maddr(br, addr);
-> +				else
-> +					fdb_add_hw_addr(br, addr);
->  			}
->  		} else if (state & NUD_NOARP) {
->  			fdb->is_local = 0;
->  			if (!fdb->is_static) {
->  				fdb->is_static = 1;
-> -				fdb_add_hw_addr(br, addr);
-> +				if (flags & NLM_F_APPEND && !source)
-> +					fdb_add_hw_maddr(br, addr);
-> +				else
-> +					fdb_add_hw_addr(br, addr);
->  			}
->  		} else {
->  			fdb->is_local = 0;
-> -- 
-> 2.7.4
-> 
+I'm confused about ext3 being converted to ext4. If the converted
+inodes have extra space, then ext4_iget() will start using the extra
+space when it modifies the on disk inode, won't it?
 
-I'm a bit late in the conversation. Isn't this what you want?
+But, if there are 32 bit tv_sec and 34 bit tv_sec in a superblock then
+from this macro below, if an inode has space for extra bits in
+timestamps, it uses it. Otherwise, only the first 32 bits are copied
+to the on disk timestamp. This matches the behavior today for 32 bit
+tv_sec. But, the 34 bit tv_sec has a better behavior after the series
+because of the clamping and warning.
 
-    ip address add <multicast IPv4 address> dev br0 autojoin
+#define EXT4_INODE_SET_XTIME(xtime, inode, raw_inode)                \
+do {                                        \
+    (raw_inode)->xtime = cpu_to_le32((inode)->xtime.tv_sec);        \
+    if (EXT4_FITS_IN_INODE(raw_inode, EXT4_I(inode), xtime ## _extra))     {\
+        (raw_inode)->xtime ## _extra =                    \
+                ext4_encode_extra_time(&(inode)->xtime);    \
+        }                                \
+} while (0)
 
+I'm not sure if this corner case if important. Maybe the maintainers
+can help me here. If this is important, then the inode time updates
+for an ext4 inode should always be through ext4_setattr() and we can
+clamp the timestamps there as a special case. And, this patch can be
+added separately?
 
 Thanks,
-Vivien
+Deepa
