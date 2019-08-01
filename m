@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F41C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99A1C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2967120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA64F20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732186AbfHAOi3 (ORCPT
+        id S1732196AbfHAOie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:38:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36235 "EHLO
+        Thu, 1 Aug 2019 10:38:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36248 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732157AbfHAOi0 (ORCPT
+        with ESMTP id S1732171AbfHAOib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:38:26 -0400
+        Thu, 1 Aug 2019 10:38:31 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1htCDW-0000m4-17; Thu, 01 Aug 2019 16:38:06 +0200
-Message-Id: <20190801143657.887648487@linutronix.de>
+        id 1htCDX-0000mC-7j; Thu, 01 Aug 2019 16:38:07 +0200
+Message-Id: <20190801143658.074833024@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 01 Aug 2019 16:32:52 +0200
+Date:   Thu, 01 Aug 2019 16:32:54 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
@@ -36,14 +36,14 @@ Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Julia Cartwright <julia@ni.com>,
         Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>, kvm@vger.kernel.org,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
         John Stultz <john.stultz@linaro.org>,
         Andy Lutomirski <luto@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [patch 2/5] x86/kvm: Handle task_work on VMENTER/EXIT
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Oleg Nesterov <oleg@redhat.com>, kvm@vger.kernel.org,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [patch 4/5] posix-cpu-timers: Defer timer handling to task_work
 References: <20190801143250.370326052@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -52,60 +52,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TIF_NOTITY_RESUME is evaluated on return to user space along with other TIF
-flags.
+Running posix cpu timers in hard interrupt context has a few downsides:
 
->From the kernels point of view a VMENTER is more or less equivalent to
-return to user space which means that at least a subset of TIF flags needs
-to be evaluated and handled.
+ - For PREEMPT_RT it cannot work as the expiry code needs to take sighand
+   lock, which is a 'sleeping spinlock' in RT
 
-Currently KVM handles only TIF_SIGPENDING and TIF_NEED_RESCHED, but
-TIF_NOTIFY_RESUME is ignored. So pending task_work etc, is completely
-ignored until the vCPU thread actually goes all the way back into
-userspace/qemu.
+ - For fine grained accounting it's just wrong to run this in context of
+   the timer interrupt because that way a process specific cpu time is
+   accounted to the timer interrupt.
 
-Use the newly provided notify_resume_pending() and
-tracehook_handle_notify_resume() to solve this similar to the existing
-handling of SIGPENDING.
+There is no real hard requirement to run the expiry code in hard interrupt
+context. The posix CPU timers are an approximation anyway, so having them
+expired and evaluated in task work context does not really make them worse.
+
+Make it conditional on a selectable config switch as this requires that
+task work is handled in KVM.
+
+The available tests pass and no problematic difference has been observed.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: kvm@vger.kernel.org
-Cc: Radim Krcmar <rkrcmar@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
 ---
- arch/x86/kvm/x86.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ include/linux/sched.h          |    3 +++
+ kernel/time/Kconfig            |    5 +++++
+ kernel/time/posix-cpu-timers.c |   26 +++++++++++++++++++++++++-
+ 3 files changed, 33 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -52,6 +52,7 @@
- #include <linux/irqbypass.h>
- #include <linux/sched/stat.h>
- #include <linux/sched/isolation.h>
-+#include <linux/tracehook.h>
- #include <linux/mem_encrypt.h>
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -880,6 +880,9 @@ struct task_struct {
+ 	struct task_cputime		cputime_expires;
+ 	struct list_head		cpu_timers[3];
+ #endif
++#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
++	struct callback_head		cpu_timer_work;
++#endif
  
- #include <trace/events/kvm.h>
-@@ -7972,7 +7973,8 @@ static int vcpu_enter_guest(struct kvm_v
- 		kvm_x86_ops->sync_pir_to_irr(vcpu);
+ 	/* Process credentials: */
  
- 	if (vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu)
--	    || need_resched() || signal_pending(current)) {
-+	    || need_resched() || signal_pending(current)
-+	    || notify_resume_pending()) {
- 		vcpu->mode = OUTSIDE_GUEST_MODE;
- 		smp_wmb();
- 		local_irq_enable();
-@@ -8172,6 +8174,10 @@ static int vcpu_run(struct kvm_vcpu *vcp
- 			++vcpu->stat.signal_exits;
- 			break;
- 		}
+--- a/kernel/time/Kconfig
++++ b/kernel/time/Kconfig
+@@ -52,6 +52,11 @@ config GENERIC_CLOCKEVENTS_MIN_ADJUST
+ config GENERIC_CMOS_UPDATE
+ 	bool
+ 
++# Select to handle posix CPU timers from task_work
++# and not from the timer interrupt context
++config POSIX_CPU_TIMERS_TASK_WORK
++	bool
 +
-+		if (notify_resume_pending())
-+			tracehook_handle_notify_resume();
+ if GENERIC_CLOCKEVENTS
+ menu "Timers subsystem"
+ 
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -14,6 +14,7 @@
+ #include <linux/tick.h>
+ #include <linux/workqueue.h>
+ #include <linux/compat.h>
++#include <linux/task_work.h>
+ #include <linux/sched/deadline.h>
+ 
+ #include "posix-timers.h"
+@@ -1127,7 +1128,7 @@ static inline int fastpath_timer_check(s
+ 	return 0;
+ }
+ 
+-static void __run_posix_cpu_timers(struct task_struct *tsk)
++static void handle_posix_cpu_timers(struct task_struct *tsk)
+ {
+ 	struct k_itimer *timer, *next;
+ 	unsigned long flags;
+@@ -1178,6 +1179,29 @@ static void __run_posix_cpu_timers(struc
+ 	}
+ }
+ 
++#ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
 +
- 		if (need_resched()) {
- 			srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
- 			cond_resched();
++static void posix_cpu_timers_work(struct callback_head *work)
++{
++	handle_posix_cpu_timers(current);
++}
++
++static void __run_posix_cpu_timers(struct task_struct *tsk)
++{
++	/* FIXME: Init it proper in fork or such */
++	init_task_work(&tsk->cpu_timer_work, posix_cpu_timers_work);
++	task_work_add(tsk, &tsk->cpu_timer_work, true);
++}
++
++#else
++
++static void __run_posix_cpu_timers(struct task_struct *tsk)
++{
++	handle_posix_cpu_timers(tsk);
++}
++
++#endif
++
+ /*
+  * This is called from the timer interrupt handler.  The irq handler has
+  * already updated our counts.  We need to check if any timers fire now.
 
 
