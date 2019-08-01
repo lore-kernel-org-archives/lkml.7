@@ -2,134 +2,310 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80681C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F88C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8032080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4460B2080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:04:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PS86srXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389315AbfHAWCf (ORCPT
+        id S2389325AbfHAWEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:02:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43408 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbfHAWCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:02:34 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C25D730EA981;
-        Thu,  1 Aug 2019 22:02:30 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 15EB61001281;
-        Thu,  1 Aug 2019 22:02:25 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        David Airlie <airlied@redhat.com>,
-        Jerry Zuo <Jerry.Zuo@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Juston Li <juston.li@intel.com>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>, stable@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/nouveau: Only release VCPI slots on mode changes
-Date:   Thu,  1 Aug 2019 18:02:15 -0400
-Message-Id: <20190801220216.15323-1-lyude@redhat.com>
+        Thu, 1 Aug 2019 18:04:01 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34261 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728559AbfHAWEA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 18:04:00 -0400
+Received: by mail-pl1-f195.google.com with SMTP id i2so32809622plt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 15:04:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O7hLnC+GOiCgk4z8TAevBK2YUS9V2gISweOdp52qemw=;
+        b=PS86srXDaP4fTTf+RUB3qrKPYKv5VVImbD5sr2kp3apOfNZ0eWIzFc0Mv0njZFxFih
+         kIDPoa29TcWLjeGb1zylTG9tEJhsGTACwRaj6SaDNKYuk/UKYaAaiJJjHkiQvrgHK+lH
+         RHGzZEyajD813os98uy8cLCgzhZFoWeYOIKZE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O7hLnC+GOiCgk4z8TAevBK2YUS9V2gISweOdp52qemw=;
+        b=Wc/aP47D25Eiy7B0rp9lN16WaFVp99eSk61lUU4f28WB3YqztB4gyPKpvYbPwjJvtZ
+         jHhVZtSeYOfglZE2KBHjKcTsoObRC1R4tkHmhS1nTti9FdVE0jzIM9v5TNyI5Y9PReci
+         FrfEYflaQXp/E4+W8EckAwUCjOC3YYEasclOG5a0euaIgDFzuyBOTjIjHq0hUrWslNGw
+         iZyIFPctkmGhSHJNR7OPr6f6ugGYcpiGBu1damvuUzJ7x6BGXrrVFcDLw9YO1JzvDSZt
+         iZ4mfwFBC8UJ/aC5oxaZKn79r/44gnpxJOb643qQdE3mY4XTAVNtLF/kgkldjoP4ZBSM
+         uyOg==
+X-Gm-Message-State: APjAAAU0amkzuGnwiplj4AFwGVoz1AmKV9rwxfDCZUhmWZMBZy2/ulRt
+        1YLZGcxsFs84jIazSz2DUaGdGw==
+X-Google-Smtp-Source: APXvYqxQ7cTZ2SN8igestlUX5ILuYgeNHRyShGDtkVrlsOwVJu4l7U3wDMFfsEDwuJT3bLOSz/Aj3Q==
+X-Received: by 2002:a17:902:7288:: with SMTP id d8mr44455167pll.133.1564697039800;
+        Thu, 01 Aug 2019 15:03:59 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id g2sm89824740pfb.95.2019.08.01.15.03.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 15:03:59 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] ARM: dts: rockchip: Add pin names for rk3288-veyron fievel
+Date:   Thu,  1 Aug 2019 15:03:54 -0700
+Message-Id: <20190801220354.142933-1-mka@chromium.org>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 01 Aug 2019 22:02:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like a regression got introduced into nv50_mstc_atomic_check()
-that somehow didn't get found until now. If userspace changes
-crtc_state->active to false but leaves the CRTC enabled, we end up
-calling drm_dp_atomic_find_vcpi_slots() using the PBN calculated in
-asyh->dp.pbn. However, if the display is inactive we end up calculating
-a PBN of 0, which inadvertently causes us to have an allocation of 0.
-From there, if userspace then disables the CRTC afterwards we end up
-accidentally attempting to free the VCPI twice:
+This is like commit 0ca87bd5baa6 ("ARM: dts: rockchip: Add pin names
+for rk3288-veyron-jerry") and other similar commits, but for the
+veyron fievel board (and tiger, which includes the fievel .dtsi).
 
-WARNING: CPU: 0 PID: 1484 at drivers/gpu/drm/drm_dp_mst_topology.c:3336
-drm_dp_atomic_release_vcpi_slots+0x87/0xb0 [drm_kms_helper]
-RIP: 0010:drm_dp_atomic_release_vcpi_slots+0x87/0xb0 [drm_kms_helper]
-Call Trace:
- drm_atomic_helper_check_modeset+0x3f3/0xa60 [drm_kms_helper]
- ? drm_atomic_check_only+0x43/0x780 [drm]
- drm_atomic_helper_check+0x15/0x90 [drm_kms_helper]
- nv50_disp_atomic_check+0x83/0x1d0 [nouveau]
- drm_atomic_check_only+0x54d/0x780 [drm]
- ? drm_atomic_set_crtc_for_connector+0xec/0x100 [drm]
- drm_atomic_commit+0x13/0x50 [drm]
- drm_atomic_helper_set_config+0x81/0x90 [drm_kms_helper]
- drm_mode_setcrtc+0x194/0x6a0 [drm]
- ? vprintk_emit+0x16a/0x230
- ? drm_ioctl+0x163/0x390 [drm]
- ? drm_mode_getcrtc+0x180/0x180 [drm]
- drm_ioctl_kernel+0xaa/0xf0 [drm]
- drm_ioctl+0x208/0x390 [drm]
- ? drm_mode_getcrtc+0x180/0x180 [drm]
- nouveau_drm_ioctl+0x63/0xb0 [nouveau]
- do_vfs_ioctl+0x405/0x660
- ? recalc_sigpending+0x17/0x50
- ? _copy_from_user+0x37/0x60
- ksys_ioctl+0x5e/0x90
- ? exit_to_usermode_loop+0x92/0xe0
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x59/0x190
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-WARNING: CPU: 0 PID: 1484 at drivers/gpu/drm/drm_dp_mst_topology.c:3336
-drm_dp_atomic_release_vcpi_slots+0x87/0xb0 [drm_kms_helper]
----[ end trace 4c395c0c51b1f88d ]---
-[drm:drm_dp_atomic_release_vcpi_slots [drm_kms_helper]] *ERROR* no VCPI for
-[MST PORT:00000000e288eb7d] found in mst state 000000008e642070
-
-So, fix this by doing what we probably should have done from the start: only
-call drm_dp_atomic_find_vcpi_slots() when crtc_state->mode_changed is set, so
-that VCPI allocations remain for as long as the CRTC is enabled.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: 232c9eec417a ("drm/nouveau: Use atomic VCPI helpers for MST")
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Ben Skeggs <bskeggs@redhat.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: David Airlie <airlied@redhat.com>
-Cc: Jerry Zuo <Jerry.Zuo@amd.com>
-Cc: Harry Wentland <harry.wentland@amd.com>
-Cc: Juston Li <juston.li@intel.com>
-Cc: Karol Herbst <karolherbst@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ilia Mirkin <imirkin@alum.mit.edu>
-Cc: <stable@vger.kernel.org> # v5.1+
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/disp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3288-veyron-fievel.dts | 214 +++++++++++++++++++++
+ 1 file changed, 214 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index 8497768f1b41..126703816794 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -780,7 +780,7 @@ nv50_msto_atomic_check(struct drm_encoder *encoder,
- 			drm_dp_calc_pbn_mode(crtc_state->adjusted_mode.clock,
- 					     connector->display_info.bpc * 3);
+diff --git a/arch/arm/boot/dts/rk3288-veyron-fievel.dts b/arch/arm/boot/dts/rk3288-veyron-fievel.dts
+index 696566f72d30..5c14a8fa6574 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-fievel.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-fievel.dts
+@@ -198,6 +198,220 @@
+ 	pinctrl-0 = <&drv_5v>;
+ };
  
--	if (drm_atomic_crtc_needs_modeset(crtc_state)) {
-+	if (crtc_state->mode_changed) {
- 		slots = drm_dp_atomic_find_vcpi_slots(state, &mstm->mgr,
- 						      mstc->port,
- 						      asyh->dp.pbn);
++&gpio0 {
++	gpio-line-names = "PMIC_SLEEP_AP",
++			  "DDRIO_PWROFF",
++			  "DDRIO_RETEN",
++			  "TS3A227E_INT_L",
++			  "PMIC_INT_L",
++			  "PWR_KEY_L",
++			  "HUB_USB1_nFALUT",
++			  "PHY_PMEB",
++
++			  "PHY_INT",
++			  "REC_MODE_L",
++			  "OTP_OUT",
++			  "",
++			  "USB_OTG_POWER_EN",
++			  "AP_WARM_RESET_H",
++			  "USB_OTG_nFALUT",
++			  "I2C0_SDA_PMIC",
++
++			  "I2C0_SCL_PMIC",
++			  "DEVMODE_L",
++			  "USB_INT";
++};
++
++&gpio2 {
++	gpio-line-names = "CONFIG0",
++			  "CONFIG1",
++			  "CONFIG2",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "CONFIG3",
++
++			  "",
++			  "EMMC_RST_L",
++			  "",
++			  "",
++			  "BL_PWR_EN",
++			  "",
++			  "TOUCH_INT",
++			  "TOUCH_RST",
++
++			  "I2C3_SCL_TP",
++			  "I2C3_SDA_TP";
++};
++
++&gpio3 {
++	gpio-line-names = "FLASH0_D0",
++			  "FLASH0_D1",
++			  "FLASH0_D2",
++			  "FLASH0_D3",
++			  "FLASH0_D4",
++			  "FLASH0_D5",
++			  "FLASH0_D6",
++			  "FLASH0_D7",
++
++			  "VCC5V_GOOD_H",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++
++			  "FLASH0_CS2/EMMC_CMD",
++			  "",
++			  "FLASH0_DQS/EMMC_CLKO",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++
++			  "PHY_TXD2",
++			  "PHY_TXD3",
++			  "MAC_RXD2",
++			  "MAC_RXD3",
++			  "PHY_TXD0",
++			  "PHY_TXD1",
++			  "MAC_RXD0",
++			  "MAC_RXD1";
++};
++
++&gpio4 {
++	gpio-line-names = "MAC_MDC",
++			  "MAC_RXDV",
++			  "MAC_RXER",
++			  "MAC_CLK",
++			  "PHY_TXEN",
++			  "MAC_MDIO",
++			  "MAC_RXCLK",
++			  "",
++
++			  "PHY_RST",
++			  "PHY_TXCLK",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++
++			  "UART0_RXD",
++			  "UART0_TXD",
++			  "UART0_CTS_L",
++			  "UART0_RTS_L",
++			  "SDIO0_D0",
++			  "SDIO0_D1",
++			  "SDIO0_D2",
++			  "SDIO0_D3",
++
++			  "SDIO0_CMD",
++			  "SDIO0_CLK",
++			  "BT_DEV_WAKE",
++			  "",
++			  "WIFI_ENABLE_H",
++			  "BT_ENABLE_L",
++			  "WIFI_HOST_WAKE",
++			  "BT_HOST_WAKE";
++};
++
++&gpio5 {
++	gpio-line-names = "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++
++			  "",
++			  "",
++			  "",
++			  "",
++			  "USB_OTG_CTL1",
++			  "HUB_USB2_CTL1",
++			  "HUB_USB2_PWR_EN",
++			  "HUB_USB_ILIM_SEL",
++
++			  "USB_OTG_STATUS_L",
++			  "HUB_USB1_CTL1",
++			  "HUB_USB1_PWR_EN",
++			  "VCC50_HDMI_EN";
++};
++
++&gpio6 {
++	gpio-line-names = "I2S0_SCLK",
++			  "I2S0_LRCK_RX",
++			  "I2S0_LRCK_TX",
++			  "I2S0_SDI",
++			  "I2S0_SDO0",
++			  "HP_DET_H",
++			  "",
++			  "INT_CODEC",
++
++			  "I2S0_CLK",
++			  "I2C2_SDA",
++			  "I2C2_SCL",
++			  "MICDET",
++			  "",
++			  "",
++			  "",
++			  "",
++
++			  "HUB_USB2_nFALUT",
++			  "USB_OTG_ILIM_SEL";
++};
++
++&gpio7 {
++	gpio-line-names = "LCD_BL_PWM",
++			  "PWM_LOG",
++			  "BL_EN",
++			  "PWR_LED1",
++			  "TPM_INT_H",
++			  "SPK_ON",
++			  "FW_WP_AP",
++			  "",
++
++			  "CPU_NMI",
++			  "DVSOK",
++			  "",
++			  "EDP_HPD",
++			  "DVS1",
++			  "",
++			  "LCD_EN",
++			  "DVS2",
++
++			  "HDMI_CEC",
++			  "I2C4_SDA",
++			  "I2C4_SCL",
++			  "I2C5_SDA_HDMI",
++			  "I2C5_SCL_HDMI",
++			  "5V_DRV",
++			  "UART2_RXD",
++			  "UART2_TXD";
++};
++
++&gpio8 {
++	gpio-line-names = "RAM_ID0",
++			  "RAM_ID1",
++			  "RAM_ID2",
++			  "RAM_ID3",
++			  "I2C1_SDA_TPM",
++			  "I2C1_SCL_TPM",
++			  "SPI2_CLK",
++			  "SPI2_CS0",
++
++			  "SPI2_RXD",
++			  "SPI2_TXD";
++};
++
+ &pinctrl {
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <
 -- 
-2.21.0
+2.22.0.770.g0f2c4a37fd-goog
 
