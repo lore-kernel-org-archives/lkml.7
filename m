@@ -2,288 +2,315 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C00C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8D9C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326172083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564698470;
-	bh=cqKGC0/Mmv+kicgsvExbiyIi13wzBUDWLZxBEbE2ZDg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z2H6iaGZ2D7zaRrDfa4yhCipyvYSne8ZFgAPBQ+i3DQFSmxm4SY4NKecufva+aYUR
-	 jqSANzmAuCzy9AmvMiYswsWSuTTWP0sH7O8a7ZaqcNJxxH3VK43ijoR6yQqhEescUu
-	 e+N2ro/PSuOB7d0by66ubl4CA8doNc/mtfr2xJGI=
+	by mail.kernel.org (Postfix) with ESMTP id 3A241206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:29:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C34Jr62z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733056AbfHAW1t (ORCPT
+        id S1733099AbfHAW3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:27:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732928AbfHAW1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:27:48 -0400
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D40B206B8;
-        Thu,  1 Aug 2019 22:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564698467;
-        bh=cqKGC0/Mmv+kicgsvExbiyIi13wzBUDWLZxBEbE2ZDg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OTa3yXGDnFDQ7hXFPwssvSCPLBnnvP2X0LiBOP3VPYBc9DjFg5nkiOAr4OEgQ3EnF
-         GLC5f9kbRWoh6ZfGgRRvdq7vPB4834m7nX0TZW9h3XfNNvU4m8Vp+gtK5q/fqEbCpM
-         jPnx2DUnIHV/nkytTmrpqo48iG8HW/M7z1BUmyfQ=
-Date:   Thu, 1 Aug 2019 15:27:46 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH v2] f2fs: separate NOCoW and pinfile semantics
-Message-ID: <20190801222746.GA27597@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190719073903.9138-1-yuchao0@huawei.com>
- <20190723023640.GC60778@jaegeuk-macbookpro.roam.corp.google.com>
- <d4d064a2-2b3c-3536-6488-39e7cfdb1ea4@huawei.com>
- <20190729055738.GA95664@jaegeuk-macbookpro.roam.corp.google.com>
- <07cd3aba-3516-9ba5-286e-277abb98e244@huawei.com>
- <20190730180231.GB76478@jaegeuk-macbookpro.roam.corp.google.com>
- <00e70eb1-c4fa-a6c9-69d7-71ff995c7d6c@huawei.com>
- <20190801041435.GB84433@jaegeuk-macbookpro.roam.corp.google.com>
- <d35d5ad7-5622-fbf5-5853-e541f8c26670@huawei.com>
+        Thu, 1 Aug 2019 18:29:23 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44465 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729432AbfHAW3W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 18:29:22 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b7so25886197otl.11;
+        Thu, 01 Aug 2019 15:29:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=qiq6gR71/Np4kj7TR/VhXXY9IMafNu+VvX5LVu17sf0=;
+        b=C34Jr62zLOYAiVtJEvShJTY2kq2zXYedFyQaHgTZuzPDmNRWAeac3UsKAjSgLJmSz6
+         vv8kV/zhtNghKj8p5s0+emQhClcoNE/K8ERpifeGolniAy9doAr9lXzvftRAnd2x+Nyl
+         3OyFFVdNrA+fRNI7lgSou/I7tjeHtvlx56FL83jP5da2PG9ehzz0UfljkJUFQxWM845d
+         QxLvhv6zTLqrwplMKmC64Fd3XrG4lXh+WJMMRectn2bFny8dk/ZCI06isL3qU1wbEahM
+         cHYukakNEogSOx0PCMtUalgAVJFaKBSdd1JKpZ7VDo9CrleqHtk/ekW2FsNX5QM0zr9k
+         dIJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=qiq6gR71/Np4kj7TR/VhXXY9IMafNu+VvX5LVu17sf0=;
+        b=beqsNQ5A7RT5EMpEQt4+eY8ttwY7hZe5CN5RxETRHthvb8mGxFrTZ8STmkJ3RAP8/T
+         dHReXi9XZW5LrAcsu5cQjU5tJ88h3IhTJtXsa+BI0kam1oc3k4khknvFU7Up0TYcZdFI
+         /ddg5Yos7SdyHTk0LQ8P3SOSofRIhp9QUIb1hmxiD+iTLDcO49VCBzPXB0xtXLSvsdJu
+         Hkcr6vaqY5JDcttDklI9Z0JBbw2+yUP9ZPcR5J3CfoESf52abHnHCBR35QB/ubHimfbJ
+         CAEcy09NDkfruiD0F/RnNKNY9zRK9d7ojj552/2shEMPc+SdpeAh0iGwjED27evBFaRe
+         xUjg==
+X-Gm-Message-State: APjAAAUwrxc4szgnN2UOoNn+M6ou/qATMyUPMewxVoHmSfHquHmMFlOL
+        Ns2Q7X/G8WAuBy9cQ/ggAUw=
+X-Google-Smtp-Source: APXvYqy0KyNGtP3yK4Et1UQf7VLvShSVVcTiZ13hP+qWWhjr0UfqR1QA5O3PJR1WYOl1STAGfPm/tA==
+X-Received: by 2002:a9d:65cb:: with SMTP id z11mr60468452oth.325.1564698561089;
+        Thu, 01 Aug 2019 15:29:21 -0700 (PDT)
+Received: from localhost.localdomain (50-39-177-61.bvtn.or.frontiernet.net. [50.39.177.61])
+        by smtp.gmail.com with ESMTPSA id 9sm22844406oij.25.2019.08.01.15.29.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 15:29:20 -0700 (PDT)
+Subject: [PATCH v3 1/6] mm: Adjust shuffle code to allow for future
+ coalescing
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        mst@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, willy@infradead.org,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+Date:   Thu, 01 Aug 2019 15:27:07 -0700
+Message-ID: <20190801222707.22190.37136.stgit@localhost.localdomain>
+In-Reply-To: <20190801222158.22190.96964.stgit@localhost.localdomain>
+References: <20190801222158.22190.96964.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d35d5ad7-5622-fbf5-5853-e541f8c26670@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01, Chao Yu wrote:
-> On 2019/8/1 12:14, Jaegeuk Kim wrote:
-> > On 07/31, Chao Yu wrote:
-> >> On 2019/7/31 2:02, Jaegeuk Kim wrote:
-> >>> On 07/29, Chao Yu wrote:
-> >>>> On 2019/7/29 13:57, Jaegeuk Kim wrote:
-> >>>>> On 07/23, Chao Yu wrote:
-> >>>>>> On 2019/7/23 10:36, Jaegeuk Kim wrote:
-> >>>>>>> On 07/19, Chao Yu wrote:
-> >>>>>>>> Pinning a file is heavy, because skipping pinned files make GC
-> >>>>>>>> running with heavy load or no effect.
-> >>>>>>>
-> >>>>>>> Pinned file is a part of NOCOW files, so I don't think we can simply drop it
-> >>>>>>> for backward compatibility.
-> >>>>>>
-> >>>>>> Yes,
-> >>>>>>
-> >>>>>> But what I concerned is that pin file is too heavy, so in order to satisfy below
-> >>>>>> demand, how about introducing pin_file_2 flag to triggering IPU only during
-> >>>>>> flush/writeback.
-> >>>>>
-> >>>>> That can be done by cold files?
-> >>>>
-> >>>> Then it may inherit property of cold type file, e.g. a) goes into cold area; b)
-> >>>> update with very low frequency.
-> >>>>
-> >>>> Actually pin_file_2 could be used by db-wal/log file, which are updated
-> >>>> frequently, and should go to hot/warm area, it does not match above two property.
-> >>>
-> >>> How about considering another name like "IPU-only mode"?
-> >>>
-> >>>               fallocate         write    Flag         GC
-> >>> Pin_file:     preallocate       IPU      FS_NOCOW_FL  Not allowed
-> >>> IPU_file:     Not preallocate   IPU      N/A          Default by temperature
-> >>
-> >> One question, do we need preallocate physical block address for IPU_file as
-> >> Pin_file? since it can enhance db file's sequential read performance, not sure,
-> >> db can handle random data in preallocated blocks.
-> > 
-> > db file will do atomic writes, which can not be used with this. -wal may be able
-> 
-> Now WAL mode were set by default in Android, so most of db file are -wal type now.
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Will be back again tho.
+This patch is meant to move the head/tail adding logic out of the shuffle
+code and into the __free_one_page function since ultimately that is where
+it is really needed anyway. By doing this we should be able to reduce the
+overhead and can consolidate all of the list addition bits in one spot.
 
-> 
-> > to preallocate blocks, but it can eat disk space unnecessarily.
-> 
-> I meant .db-wal file rather than .db.
-> 
-> Yes, that's ext4 style, that would bring better performance due to less holes in
-> block distribution.
-> 
-> I don't think we need to worry about space issue for db-wal file. I tracked
-> .db-wal file's update before:
-> - there are very frequently truncation and deletion, that means the preallocated
-> blocks won't exist for long time.
-> - and also there are very frequently append writes, I suspect there almost very
-> few preallocate block are not written.
-> - total db-wal file number is less.
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+ include/linux/mmzone.h |   12 --------
+ mm/page_alloc.c        |   70 +++++++++++++++++++++++++++---------------------
+ mm/shuffle.c           |   24 ----------------
+ mm/shuffle.h           |   32 ++++++++++++++++++++++
+ 4 files changed, 71 insertions(+), 67 deletions(-)
 
-Sometimes it can be large enough for system. If it's from user apps and short
-lived, why do we need preallocation?
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index d77d717c620c..738e9c758135 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -116,18 +116,6 @@ static inline void add_to_free_area_tail(struct page *page, struct free_area *ar
+ 	area->nr_free++;
+ }
+ 
+-#ifdef CONFIG_SHUFFLE_PAGE_ALLOCATOR
+-/* Used to preserve page allocation order entropy */
+-void add_to_free_area_random(struct page *page, struct free_area *area,
+-		int migratetype);
+-#else
+-static inline void add_to_free_area_random(struct page *page,
+-		struct free_area *area, int migratetype)
+-{
+-	add_to_free_area(page, area, migratetype);
+-}
+-#endif
+-
+ /* Used for pages which are on another list */
+ static inline void move_to_free_area(struct page *page, struct free_area *area,
+ 			     int migratetype)
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d3bb601c461b..dfed182f200d 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -877,6 +877,36 @@ static inline struct capture_control *task_capc(struct zone *zone)
+ #endif /* CONFIG_COMPACTION */
+ 
+ /*
++ * If this is not the largest possible page, check if the buddy
++ * of the next-highest order is free. If it is, it's possible
++ * that pages are being freed that will coalesce soon. In case,
++ * that is happening, add the free page to the tail of the list
++ * so it's less likely to be used soon and more likely to be merged
++ * as a higher order page
++ */
++static inline bool
++buddy_merge_likely(unsigned long pfn, unsigned long buddy_pfn,
++		   struct page *page, unsigned int order)
++{
++	struct page *higher_page, *higher_buddy;
++	unsigned long combined_pfn;
++
++	if (order >= MAX_ORDER - 2)
++		return false;
++
++	if (!pfn_valid_within(buddy_pfn))
++		return false;
++
++	combined_pfn = buddy_pfn & pfn;
++	higher_page = page + (combined_pfn - pfn);
++	buddy_pfn = __find_buddy_pfn(combined_pfn, order + 1);
++	higher_buddy = higher_page + (buddy_pfn - combined_pfn);
++
++	return pfn_valid_within(buddy_pfn) &&
++	       page_is_buddy(higher_page, higher_buddy, order + 1);
++}
++
++/*
+  * Freeing function for a buddy system allocator.
+  *
+  * The concept of a buddy system is to maintain direct-mapped table
+@@ -905,11 +935,12 @@ static inline void __free_one_page(struct page *page,
+ 		struct zone *zone, unsigned int order,
+ 		int migratetype)
+ {
+-	unsigned long combined_pfn;
++	struct capture_control *capc = task_capc(zone);
+ 	unsigned long uninitialized_var(buddy_pfn);
+-	struct page *buddy;
++	unsigned long combined_pfn;
++	struct free_area *area;
+ 	unsigned int max_order;
+-	struct capture_control *capc = task_capc(zone);
++	struct page *buddy;
+ 
+ 	max_order = min_t(unsigned int, MAX_ORDER, pageblock_order + 1);
+ 
+@@ -978,35 +1009,12 @@ static inline void __free_one_page(struct page *page,
+ done_merging:
+ 	set_page_order(page, order);
+ 
+-	/*
+-	 * If this is not the largest possible page, check if the buddy
+-	 * of the next-highest order is free. If it is, it's possible
+-	 * that pages are being freed that will coalesce soon. In case,
+-	 * that is happening, add the free page to the tail of the list
+-	 * so it's less likely to be used soon and more likely to be merged
+-	 * as a higher order page
+-	 */
+-	if ((order < MAX_ORDER-2) && pfn_valid_within(buddy_pfn)
+-			&& !is_shuffle_order(order)) {
+-		struct page *higher_page, *higher_buddy;
+-		combined_pfn = buddy_pfn & pfn;
+-		higher_page = page + (combined_pfn - pfn);
+-		buddy_pfn = __find_buddy_pfn(combined_pfn, order + 1);
+-		higher_buddy = higher_page + (buddy_pfn - combined_pfn);
+-		if (pfn_valid_within(buddy_pfn) &&
+-		    page_is_buddy(higher_page, higher_buddy, order + 1)) {
+-			add_to_free_area_tail(page, &zone->free_area[order],
+-					      migratetype);
+-			return;
+-		}
+-	}
+-
+-	if (is_shuffle_order(order))
+-		add_to_free_area_random(page, &zone->free_area[order],
+-				migratetype);
++	area = &zone->free_area[order];
++	if (is_shuffle_order(order) ? shuffle_add_to_tail() :
++	    buddy_merge_likely(pfn, buddy_pfn, page, order))
++		add_to_free_area_tail(page, area, migratetype);
+ 	else
+-		add_to_free_area(page, &zone->free_area[order], migratetype);
+-
++		add_to_free_area(page, area, migratetype);
+ }
+ 
+ /*
+diff --git a/mm/shuffle.c b/mm/shuffle.c
+index 3ce12481b1dc..55d592e62526 100644
+--- a/mm/shuffle.c
++++ b/mm/shuffle.c
+@@ -4,7 +4,6 @@
+ #include <linux/mm.h>
+ #include <linux/init.h>
+ #include <linux/mmzone.h>
+-#include <linux/random.h>
+ #include <linux/moduleparam.h>
+ #include "internal.h"
+ #include "shuffle.h"
+@@ -182,26 +181,3 @@ void __meminit __shuffle_free_memory(pg_data_t *pgdat)
+ 	for (z = pgdat->node_zones; z < pgdat->node_zones + MAX_NR_ZONES; z++)
+ 		shuffle_zone(z);
+ }
+-
+-void add_to_free_area_random(struct page *page, struct free_area *area,
+-		int migratetype)
+-{
+-	static u64 rand;
+-	static u8 rand_bits;
+-
+-	/*
+-	 * The lack of locking is deliberate. If 2 threads race to
+-	 * update the rand state it just adds to the entropy.
+-	 */
+-	if (rand_bits == 0) {
+-		rand_bits = 64;
+-		rand = get_random_u64();
+-	}
+-
+-	if (rand & 1)
+-		add_to_free_area(page, area, migratetype);
+-	else
+-		add_to_free_area_tail(page, area, migratetype);
+-	rand_bits--;
+-	rand >>= 1;
+-}
+diff --git a/mm/shuffle.h b/mm/shuffle.h
+index 777a257a0d2f..add763cc0995 100644
+--- a/mm/shuffle.h
++++ b/mm/shuffle.h
+@@ -3,6 +3,7 @@
+ #ifndef _MM_SHUFFLE_H
+ #define _MM_SHUFFLE_H
+ #include <linux/jump_label.h>
++#include <linux/random.h>
+ 
+ /*
+  * SHUFFLE_ENABLE is called from the command line enabling path, or by
+@@ -43,6 +44,32 @@ static inline bool is_shuffle_order(int order)
+ 		return false;
+ 	return order >= SHUFFLE_ORDER;
+ }
++
++static inline bool shuffle_add_to_tail(void)
++{
++	static u64 rand;
++	static u8 rand_bits;
++	u64 rand_old;
++
++	/*
++	 * The lack of locking is deliberate. If 2 threads race to
++	 * update the rand state it just adds to the entropy.
++	 */
++	if (rand_bits-- == 0) {
++		rand_bits = 64;
++		rand = get_random_u64();
++	}
++
++	/*
++	 * Test highest order bit while shifting our random value. This
++	 * should result in us testing for the carry flag following the
++	 * shift.
++	 */
++	rand_old = rand;
++	rand <<= 1;
++
++	return rand < rand_old;
++}
+ #else
+ static inline void shuffle_free_memory(pg_data_t *pgdat)
+ {
+@@ -60,5 +87,10 @@ static inline bool is_shuffle_order(int order)
+ {
+ 	return false;
+ }
++
++static inline bool shuffle_add_to_tail(void)
++{
++	return false;
++}
+ #endif
+ #endif /* _MM_SHUFFLE_H */
 
-> 
-> > 
-> >>
-> >> Other behaviors looks good to me. :)
-> >>
-> >> I plan to use last bit in inode.i_inline to store this flag.
-> > 
-> > Why not using i_flag like FS_NOCOW_FL?
-> 
-> Oops, as you listed in last email, I can see you don't want to break
-> FS_NOCOW_FL's semantics for backward compatibility.
-> 
-> 			Flag
-> IPU_file		N/A			
-> 
-> If we plan to use FS_NOCOW_FL, that's what this patch has already did, you can
-> merge it directly... :P
-> 
-> > 
-> >>
-> >>> Cold_file:    Not preallocate   IPU      N/A          Move in cold area
-> >>> Hot_file:     Not preallocate   IPU/OPU  N/A          Move in hot area
-> >>
-> >> Should hot file be gced to hot area? That would mix new hot data with old 'hot'
-> >> data which actually become cold.
-> > 
-> > But, user explicitly specified this is hot.
-> 
-> With current implementation, GC will migrate data from hot/warm/cold area to
-> cold area.
-> 
-> Thanks,
-> 
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>>
-> >>>>
-> >>>> Thank,
-> >>>>
-> >>>>>
-> >>>>>>
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>> So that this patch propose to separate nocow and pinfile semantics:
-> >>>>>>>> - NOCoW flag can only be set on regular file.
-> >>>>>>>> - NOCoW file will only trigger IPU at common writeback/flush.
-> >>>>>>>> - NOCow file will do OPU during GC.
-> >>>>>>>>
-> >>>>>>>> For the demand of 1) avoid fragment of file's physical block and
-> >>>>>>>> 2) userspace don't care about file's specific physical address,
-> >>>>>>>> tagging file as NOCoW will be cheaper than pinned one.
-> >>>>>>
-> >>>>>> ^^^
-> >>>>>>
-> >>>>>> Thanks,
-> >>>>>>
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >>>>>>>> ---
-> >>>>>>>> v2:
-> >>>>>>>> - rebase code to fix compile error.
-> >>>>>>>>  fs/f2fs/data.c |  3 ++-
-> >>>>>>>>  fs/f2fs/f2fs.h |  1 +
-> >>>>>>>>  fs/f2fs/file.c | 22 +++++++++++++++++++---
-> >>>>>>>>  3 files changed, 22 insertions(+), 4 deletions(-)
-> >>>>>>>>
-> >>>>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> >>>>>>>> index a2a28bb269bf..15fb8954c363 100644
-> >>>>>>>> --- a/fs/f2fs/data.c
-> >>>>>>>> +++ b/fs/f2fs/data.c
-> >>>>>>>> @@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
-> >>>>>>>>  
-> >>>>>>>>  bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
-> >>>>>>>>  {
-> >>>>>>>> -	if (f2fs_is_pinned_file(inode))
-> >>>>>>>> +	if (f2fs_is_pinned_file(inode) ||
-> >>>>>>>> +			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
-> >>>>>>>>  		return true;
-> >>>>>>>>  
-> >>>>>>>>  	/* if this is cold file, we should overwrite to avoid fragmentation */
-> >>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>>>>>>> index 596ab3e1dd7b..f6c5a3d2e659 100644
-> >>>>>>>> --- a/fs/f2fs/f2fs.h
-> >>>>>>>> +++ b/fs/f2fs/f2fs.h
-> >>>>>>>> @@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
-> >>>>>>>>  #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
-> >>>>>>>>  #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
-> >>>>>>>>  #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
-> >>>>>>>> +#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
-> >>>>>>>>  #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
-> >>>>>>>>  
-> >>>>>>>>  /* Flags that should be inherited by new inodes from their parent. */
-> >>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> >>>>>>>> index 7ca545874060..ae0fec54cac6 100644
-> >>>>>>>> --- a/fs/f2fs/file.c
-> >>>>>>>> +++ b/fs/f2fs/file.c
-> >>>>>>>> @@ -1692,6 +1692,7 @@ static const struct {
-> >>>>>>>>  	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
-> >>>>>>>>  	{ F2FS_INDEX_FL,	FS_INDEX_FL },
-> >>>>>>>>  	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
-> >>>>>>>> +	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
-> >>>>>>>>  	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
-> >>>>>>>>  };
-> >>>>>>>>  
-> >>>>>>>> @@ -1715,7 +1716,8 @@ static const struct {
-> >>>>>>>>  		FS_NODUMP_FL |		\
-> >>>>>>>>  		FS_NOATIME_FL |		\
-> >>>>>>>>  		FS_DIRSYNC_FL |		\
-> >>>>>>>> -		FS_PROJINHERIT_FL)
-> >>>>>>>> +		FS_PROJINHERIT_FL |	\
-> >>>>>>>> +		FS_NOCOW_FL)
-> >>>>>>>>  
-> >>>>>>>>  /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
-> >>>>>>>>  static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
-> >>>>>>>> @@ -1753,8 +1755,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
-> >>>>>>>>  		fsflags |= FS_ENCRYPT_FL;
-> >>>>>>>>  	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
-> >>>>>>>>  		fsflags |= FS_INLINE_DATA_FL;
-> >>>>>>>> -	if (is_inode_flag_set(inode, FI_PIN_FILE))
-> >>>>>>>> -		fsflags |= FS_NOCOW_FL;
-> >>>>>>>>  
-> >>>>>>>>  	fsflags &= F2FS_GETTABLE_FS_FL;
-> >>>>>>>>  
-> >>>>>>>> @@ -1794,6 +1794,22 @@ static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
-> >>>>>>>>  	if (ret)
-> >>>>>>>>  		goto out;
-> >>>>>>>>  
-> >>>>>>>> +	if ((fsflags ^ old_fsflags) & FS_NOCOW_FL) {
-> >>>>>>>> +		if (!S_ISREG(inode->i_mode)) {
-> >>>>>>>> +			ret = -EINVAL;
-> >>>>>>>> +			goto out;
-> >>>>>>>> +		}
-> >>>>>>>> +
-> >>>>>>>> +		if (f2fs_should_update_outplace(inode, NULL)) {
-> >>>>>>>> +			ret = -EINVAL;
-> >>>>>>>> +			goto out;
-> >>>>>>>> +		}
-> >>>>>>>> +
-> >>>>>>>> +		ret = f2fs_convert_inline_inode(inode);
-> >>>>>>>> +		if (ret)
-> >>>>>>>> +			goto out;
-> >>>>>>>> +	}
-> >>>>>>>> +
-> >>>>>>>>  	ret = f2fs_setflags_common(inode, iflags,
-> >>>>>>>>  			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
-> >>>>>>>>  out:
-> >>>>>>>> -- 
-> >>>>>>>> 2.18.0.rc1
-> >>>>>>> .
-> >>>>>>>
-> >>>>> .
-> >>>>>
-> >>> .
-> >>>
-> > .
-> > 
