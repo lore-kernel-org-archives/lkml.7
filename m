@@ -2,110 +2,91 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC12C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7EAC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6287A214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:25:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oNrtWDmQ"
+	by mail.kernel.org (Postfix) with ESMTP id 7B1DA216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730642AbfHAMZd (ORCPT
+        id S1730918AbfHAM0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:25:33 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51434 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHAMZd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:25:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4br+Q3plR4iQD9exedxQ6jORxCMSk+q/1IT08N4btxQ=; b=oNrtWDmQoU84abGPgvjoBww7Y
-        4gVPHqizMVovOZMhCZn7gvg4X8ZjmGD5ftSRyGsDq4zqTECHJadvfV144P/dcIsja3NDs2DrlIbUC
-        S5Nr7S+68PJrSCxkY6W1pZOMi4SZrK4zC8Tm9qkimfDG+Z6tIHkEHz7w0nqRh9vJ+T6jQYWEZuG8J
-        sVWMc2neFZAZAOu/3utKIYahTzjsY+BXGuvcUcr6jiRC+UQTTIEmzXuxK4qz+BamfrWLFCD2GwH83
-        79QXXFpcWZ/zM/porl8oswtTJc6t9DgDC1sl2LI6BzPMwt+RdyLSseOi0EHhj7ZHQiW9WulR4ydaf
-        /ynGskHSw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1htA92-0006RW-JK; Thu, 01 Aug 2019 12:25:20 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F00F42029F869; Thu,  1 Aug 2019 14:25:18 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 14:25:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     hpa@zytor.com, Joe Perches <joe@perches.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
- keyword for switch/case use
-Message-ID: <20190801122518.GZ31398@hirez.programming.kicks-ass.net>
-References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
- <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
- <20190731171429.GA24222@amd>
- <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
- <765E740C-4259-4835-A58D-432006628BAC@zytor.com>
- <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
- <201907311301.EC1D84F@keescook>
+        Thu, 1 Aug 2019 08:26:01 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3731 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbfHAM0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:26:00 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 12FDD479233C989B242E;
+        Thu,  1 Aug 2019 20:25:58 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 1 Aug 2019
+ 20:25:48 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <hauke@hauke-m.de>, <andrew@lunn.ch>,
+        <vivien.didelot@gmail.com>, <f.fainelli@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] net: dsa: lantiq: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 1 Aug 2019 20:25:46 +0800
+Message-ID: <20190801122546.8516-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201907311301.EC1D84F@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 01:02:07PM -0700, Kees Cook wrote:
-> On Wed, Jul 31, 2019 at 08:48:32PM +0200, Peter Zijlstra wrote:
-> > On Wed, Jul 31, 2019 at 11:24:36AM -0700, hpa@zytor.com wrote:
-> > > >> > +/*
-> > > >> > + * Add the pseudo keyword 'fallthrough' so case statement blocks
-> > > >> > + * must end with any of these keywords:
-> > > >> > + *   break;
-> > > >> > + *   fallthrough;
-> > > >> > + *   goto <label>;
-> > > >> > + *   return [expression];
-> > > >> > + *
-> > > >> > + *  gcc: >https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html#Statement-Attributes
-> > > >> > + */
-> > > >> > +#if __has_attribute(__fallthrough__)
-> > > >> > +# define fallthrough                   __attribute__((__fallthrough__))
-> > > >> > +#else
-> > > >> > +# define fallthrough                    do {} while (0)  /* fallthrough */
-> > > >> > +#endif
-> > > >> > +
-> > 
-> > > If the comments are stripped, how would the compiler see them to be
-> > > able to issue a warning? I would guess that it is retained or replaced
-> > > with some other magic token.
-> > 
-> > Everything that has the warning (GCC-7+/CLANG-9) has that attribute.
-> 
-> I'd like to make sure we don't regress Coverity most of all. If the
-> recent updates to the Coverity scanner include support for the attribute
-> now, then I'm all for it. :)
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-IMO Coverity can go pound sand, I never see its output, while I get to
-look at the code and GCC output daily.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/dsa/lantiq_gswip.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswip.c
+index 4e64835..2175ec1 100644
+--- a/drivers/net/dsa/lantiq_gswip.c
++++ b/drivers/net/dsa/lantiq_gswip.c
+@@ -1822,7 +1822,6 @@ static int gswip_gphy_fw_list(struct gswip_priv *priv,
+ static int gswip_probe(struct platform_device *pdev)
+ {
+ 	struct gswip_priv *priv;
+-	struct resource *gswip_res, *mdio_res, *mii_res;
+ 	struct device_node *mdio_np, *gphy_fw_np;
+ 	struct device *dev = &pdev->dev;
+ 	int err;
+@@ -1833,18 +1832,15 @@ static int gswip_probe(struct platform_device *pdev)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	gswip_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->gswip = devm_ioremap_resource(dev, gswip_res);
++	priv->gswip = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->gswip))
+ 		return PTR_ERR(priv->gswip);
+ 
+-	mdio_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	priv->mdio = devm_ioremap_resource(dev, mdio_res);
++	priv->mdio = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(priv->mdio))
+ 		return PTR_ERR(priv->mdio);
+ 
+-	mii_res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+-	priv->mii = devm_ioremap_resource(dev, mii_res);
++	priv->mii = devm_platform_ioremap_resource(pdev, 2);
+ 	if (IS_ERR(priv->mii))
+ 		return PTR_ERR(priv->mii);
+ 
+-- 
+2.7.4
+
+
