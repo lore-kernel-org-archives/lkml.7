@@ -2,127 +2,195 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0248EC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B44B1C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43F5206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7722084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:43:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZxJbecw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389921AbfHAWnO (ORCPT
+        id S2389935AbfHAWnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:43:14 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40438 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389885AbfHAWnJ (ORCPT
+        Thu, 1 Aug 2019 18:43:19 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35307 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389922AbfHAWnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:43:09 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71Mffjl030406;
-        Thu, 1 Aug 2019 18:42:41 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u460eeejh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:42:41 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71Mfg2E030571;
-        Thu, 1 Aug 2019 18:42:40 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u460eeeja-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:42:40 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71Melmp025611;
-        Thu, 1 Aug 2019 22:42:40 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04wdc.us.ibm.com with ESMTP id 2u0e85w6n7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 22:42:39 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71Mgd4j20775178
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Aug 2019 22:42:39 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7C4A9B206C;
-        Thu,  1 Aug 2019 22:42:39 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5CF1CB2070;
-        Thu,  1 Aug 2019 22:42:39 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Aug 2019 22:42:39 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id B330A16C9A36; Thu,  1 Aug 2019 15:42:40 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 15:42:40 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu 0/8] RCU list-traversal lockdep updates for v5.4
-Message-ID: <20190801224240.GA16092@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
+        Thu, 1 Aug 2019 18:43:17 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u14so34904425pfn.2;
+        Thu, 01 Aug 2019 15:43:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=a/jqoVnZMS4gCQHlsNMs0Wm0i9/bhDBfzuCMndLKGiI=;
+        b=NZxJbecwhsIRKAn7eTc+DEWg5Y73G1yfBpYfTgoTLj8uI430qQIWPf10i2RoOhFOEM
+         K8s8te0tZX6GiAk7J6xt9n53Vx8l2tHByIvKeFp1u6mjdP6+CETi9j1HazLfHNtMc6eH
+         VBQBrLk1u4q/6cvecxbda6RZqN85ILzhHl2209VVRYknXehPkppSaaPPWFvMCqW/ytZ5
+         ByPdU2snob67LZhf3oPJywHM6b1TJsX9O1t5FRK8sTKgA9nY37Z9fjisjPcfI0O2xEZT
+         pD/i7OGIux0iSaaqYyOJyGgm4y2fH9QVmE0oMxOJhFwZEcJztwOGUuwZtFVjwWKf2tEX
+         Yf6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=a/jqoVnZMS4gCQHlsNMs0Wm0i9/bhDBfzuCMndLKGiI=;
+        b=uO+WmyhQhVSjoHthW3NYIfmvMN6rCSaFRYbH8OK/PT6QXRueiJ+rPXZgb3SoY8g9TW
+         0fVQ/FfxSAhSCaN6oYSSPb5+08YR/OK66hEshCD3BlLE1v57zF2r3OrbZkQGiP2kbZ8I
+         nN5EkdyXMiNeTtx20dmk5CV6BzhRzLRUeK/r7ZW0cQUjP6AHskK1G1DLYZhRl7cpiEuY
+         1FLEqAO4zCNn3MhpjH4g13mqdWJoOUbXTOOhNctS5ILnIPLYBjbBUpK7HZFaEgfP00ZZ
+         WDRBF1Ae96FOjXOcfobUzSLwMZzDzo+iK7TtTsLU1gKrMYwVc6TdKaGWv3IF0t7wPwd7
+         +2TA==
+X-Gm-Message-State: APjAAAWFtUlHgx7hNMWPK11eXnJ2+QUgfIxHUCFw7+Bcbu6A8Q4lS10c
+        tzUvBPLZ8CR/YqdNCI4r/TU=
+X-Google-Smtp-Source: APXvYqwiVWmnhoDrq1Jrz/xXQN53b06Pcnek1E3BC3T6NIZ9i646fPk8RQ021fFAFPi8Y0XxndForA==
+X-Received: by 2002:a62:ae02:: with SMTP id q2mr54784607pff.1.1564699395583;
+        Thu, 01 Aug 2019 15:43:15 -0700 (PDT)
+Received: from localhost.localdomain (50-39-177-61.bvtn.or.frontiernet.net. [50.39.177.61])
+        by smtp.gmail.com with ESMTPSA id b6sm63677178pgq.26.2019.08.01.15.43.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 15:43:15 -0700 (PDT)
+Subject: [PATCH v3 QEMU 1/2] virtio-ballon: Implement support for page
+ poison tracking feature
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        mst@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, willy@infradead.org,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+Date:   Thu, 01 Aug 2019 15:41:04 -0700
+Message-ID: <20190801224104.24744.18563.stgit@localhost.localdomain>
+In-Reply-To: <20190801222158.22190.96964.stgit@localhost.localdomain>
+References: <20190801222158.22190.96964.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908010239
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-This series provides enhancements to RCU pointer and list macros, all
-courtesy of Joel Fernandes:
+We need to make certain to advertise support for page poison tracking if
+we want to actually get data on if the guest will be poisoning pages. So
+if free page hinting is active we should add page poisoning support and
+let the guest disable it if it isn't using it.
 
-1.	Rename rcu_dereference_raw_notrace() to _check().
+Page poisoning will result in a page being dirtied on free. As such we
+cannot really avoid having to copy the page at least one more time since
+we will need to write the poison value to the destination. As such we can
+just ignore free page hinting if page poisoning is enabled as it will
+actually reduce the work we have to do.
 
-2.	Remove redundant debug_locks check in rcu_read_lock_sched_held().
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+ hw/virtio/virtio-balloon.c         |   25 +++++++++++++++++++++----
+ include/hw/virtio/virtio-balloon.h |    1 +
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-3.	Add support for consolidated-RCU reader checking.
+diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+index 25de15430710..003b3ebcfdfb 100644
+--- a/hw/virtio/virtio-balloon.c
++++ b/hw/virtio/virtio-balloon.c
+@@ -530,6 +530,15 @@ static void virtio_balloon_free_page_start(VirtIOBalloon *s)
+         return;
+     }
+ 
++    /*
++     * If page poisoning is enabled then we probably shouldn't bother with
++     * the hinting since the poisoning will dirty the page and invalidate
++     * the work we are doing anyway.
++     */
++    if (virtio_vdev_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
++        return;
++    }
++
+     if (s->free_page_report_cmd_id == UINT_MAX) {
+         s->free_page_report_cmd_id =
+                        VIRTIO_BALLOON_FREE_PAGE_REPORT_CMD_ID_MIN;
+@@ -617,12 +626,10 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
+     if (s->qemu_4_0_config_size) {
+         return sizeof(struct virtio_balloon_config);
+     }
+-    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON)) {
++    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON) ||
++        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+         return sizeof(struct virtio_balloon_config);
+     }
+-    if (virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+-        return offsetof(struct virtio_balloon_config, poison_val);
+-    }
+     return offsetof(struct virtio_balloon_config, free_page_report_cmd_id);
+ }
+ 
+@@ -633,6 +640,7 @@ static void virtio_balloon_get_config(VirtIODevice *vdev, uint8_t *config_data)
+ 
+     config.num_pages = cpu_to_le32(dev->num_pages);
+     config.actual = cpu_to_le32(dev->actual);
++    config.poison_val = cpu_to_le32(dev->poison_val);
+ 
+     if (dev->free_page_report_status == FREE_PAGE_REPORT_S_REQUESTED) {
+         config.free_page_report_cmd_id =
+@@ -696,6 +704,8 @@ static void virtio_balloon_set_config(VirtIODevice *vdev,
+         qapi_event_send_balloon_change(vm_ram_size -
+                         ((ram_addr_t) dev->actual << VIRTIO_BALLOON_PFN_SHIFT));
+     }
++    dev->poison_val = virtio_vdev_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON) ? 
++                      le32_to_cpu(config.poison_val) : 0;
+     trace_virtio_balloon_set_config(dev->actual, oldactual);
+ }
+ 
+@@ -705,6 +715,9 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
+     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
+     f |= dev->host_features;
+     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
++    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
++        virtio_add_feature(&f, VIRTIO_BALLOON_F_PAGE_POISON);
++    }
+ 
+     return f;
+ }
+@@ -846,6 +859,8 @@ static void virtio_balloon_device_reset(VirtIODevice *vdev)
+         g_free(s->stats_vq_elem);
+         s->stats_vq_elem = NULL;
+     }
++
++    s->poison_val = 0;
+ }
+ 
+ static void virtio_balloon_set_status(VirtIODevice *vdev, uint8_t status)
+@@ -908,6 +923,8 @@ static Property virtio_balloon_properties[] = {
+                     VIRTIO_BALLOON_F_DEFLATE_ON_OOM, false),
+     DEFINE_PROP_BIT("free-page-hint", VirtIOBalloon, host_features,
+                     VIRTIO_BALLOON_F_FREE_PAGE_HINT, false),
++    DEFINE_PROP_BIT("x-page-poison", VirtIOBalloon, host_features,
++                    VIRTIO_BALLOON_F_PAGE_POISON, false),
+     /* QEMU 4.0 accidentally changed the config size even when free-page-hint
+      * is disabled, resulting in QEMU 3.1 migration incompatibility.  This
+      * property retains this quirk for QEMU 4.1 machine types.
+diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
+index d1c968d2376e..7fe78e5c14d7 100644
+--- a/include/hw/virtio/virtio-balloon.h
++++ b/include/hw/virtio/virtio-balloon.h
+@@ -70,6 +70,7 @@ typedef struct VirtIOBalloon {
+     uint32_t host_features;
+ 
+     bool qemu_4_0_config_size;
++    uint32_t poison_val;
+ } VirtIOBalloon;
+ 
+ #endif
 
-4.	Remove custom check for RCU readers.
-
-5.	Add lockdep condition to fix for_each_entry().
-
-6.	Convert to use built-in RCU list checking.
-
-7.	Pass lockdep condition to pcm_mmcfg_list iterator.
-
-8.	Use built-in RCU list checking for acpi_ioremaps list.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- Documentation/RCU/Design/Requirements/Requirements.html |    2 
- arch/powerpc/include/asm/kvm_book3s_64.h                |    2 
- arch/x86/pci/mmconfig-shared.c                          |    5 -
- drivers/acpi/osl.c                                      |    6 -
- drivers/base/base.h                                     |    1 
- drivers/base/core.c                                     |   10 ++
- drivers/base/power/runtime.c                            |   15 ++-
- include/linux/rcu_sync.h                                |    4 
- include/linux/rculist.h                                 |   38 +++++++--
- include/linux/rcupdate.h                                |    9 +-
- kernel/rcu/Kconfig.debug                                |   11 ++
- kernel/rcu/update.c                                     |   67 ++++++++++------
- kernel/trace/ftrace_internal.h                          |    8 -
- kernel/trace/trace.c                                    |    4 
- net/ipv4/fib_frontend.c                                 |    3 
- 15 files changed, 132 insertions(+), 53 deletions(-)
