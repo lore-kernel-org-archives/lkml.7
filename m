@@ -2,76 +2,133 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A637C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A341C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450E22087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABC4206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbfHAJHV convert rfc822-to-8bit (ORCPT
+        id S1730194AbfHAJME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:07:21 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:44207 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfHAJHU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:07:20 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x7197CsK017672
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 1 Aug 2019 18:07:12 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7197CP4008465;
-        Thu, 1 Aug 2019 18:07:12 +0900
-Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7196QOn002648;
-        Thu, 1 Aug 2019 18:07:12 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-7309567; Thu, 1 Aug 2019 18:06:53 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Thu, 1
- Aug 2019 18:06:52 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Jane Chu <jane.chu@oracle.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Subject: Re: [PATCH v3 1/2] mm/memory-failure.c clean up around tk
- pre-allocation
-Thread-Topic: [PATCH v3 1/2] mm/memory-failure.c clean up around tk
- pre-allocation
-Thread-Index: AQHVQzSRmIJeo+dcwUujsqrGBDWq6ablc6CA
-Date:   Thu, 1 Aug 2019 09:06:51 +0000
-Message-ID: <20190801090651.GC31767@hori.linux.bs1.fc.nec.co.jp>
-References: <1564092101-3865-1-git-send-email-jane.chu@oracle.com>
- <1564092101-3865-2-git-send-email-jane.chu@oracle.com>
-In-Reply-To: <1564092101-3865-2-git-send-email-jane.chu@oracle.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <1FD28E0D8B0232438C43D1B28666B164@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Thu, 1 Aug 2019 05:12:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3730 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726799AbfHAJME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 05:12:04 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6772E82FFE7FD0B29AB6;
+        Thu,  1 Aug 2019 17:12:01 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 1 Aug 2019
+ 17:11:52 +0800
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+To:     <richard@nod.at>, <yi.zhang@huawei.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <chengzhihao1@huawei.com>
+Subject: [PATCH RFC] ubi: ubi_wl_get_peb: Replace a limited number of attempts with polling while getting PEB
+Date:   Thu, 1 Aug 2019 17:17:45 +0800
+Message-ID: <1564651065-4585-1-git-send-email-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 04:01:40PM -0600, Jane Chu wrote:
-> add_to_kill() expects the first 'tk' to be pre-allocated, it makes
-> subsequent allocations on need basis, this makes the code a bit
-> difficult to read. Move all the allocation internal to add_to_kill()
-> and drop the **tk argument.
-> 
-> Signed-off-by: Jane Chu <jane.chu@oracle.com>
+Running pressure test io_paral (A pressure ubi test in mtd-utils) on an
+UBI device with fewer PEBs (fastmap enabled) may cause ENOSPC errors and
+make UBI device read-only, but there are still free PEBs on the UBI
+device. This problem can be easily reproduced by performing the following
+steps on a 2-core machine:
+  $ modprobe nandsim first_id_byte=0x20 second_id_byte=0x33 parts=80
+  $ modprobe ubi mtd="0,0" fm_autoconvert
+  $ ./io_paral /dev/ubi0
 
-Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+We may see the following verbose:
+(output)
+  [io_paral] update_volume():105: function write() failed with error 30
+  (Read-only file system)
+  [io_paral] update_volume():108: failed to write 380 bytes at offset
+  95920 of volume 2
+  [io_paral] update_volume():109: update: 97088 bytes
+  [io_paral] write_thread():227: function pwrite() failed with error 28
+  (No space left on device)
+  [io_paral] write_thread():229: cannot write 15872 bytes to offs 31744,
+  wrote -1
+(dmesg)
+  ubi0 error: ubi_wl_get_peb [ubi]: Unable to get a free PEB from user WL
+  pool
+  ubi0 warning: ubi_eba_write_leb [ubi]: switch to read-only mode
+  ubi0 error: ubi_io_write [ubi]: read-only mode
+  CPU: 0 PID: 2027 Comm: io_paral Not tainted 5.3.0-rc2-00001-g5986cd0 #9
+  ubi0 warning: try_write_vid_and_data [ubi]: failed to write VID header
+  to LEB 2:5, PEB 18
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
+  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  Call Trace:
+   dump_stack+0x85/0xba
+   ubi_eba_write_leb+0xa1e/0xa40 [ubi]
+   vol_cdev_write+0x307/0x520 [ubi]
+  ubi0 error: vol_cdev_write [ubi]: cannot accept more 380 bytes of data,
+  error -30
+   vfs_write+0xfa/0x280
+   ksys_pwrite64+0xc5/0xe0
+   __x64_sys_pwrite64+0x22/0x30
+   do_syscall_64+0xbf/0x440
 
-# somehow I sent 2 acks to 2/2, sorry about the noise.
+In function ubi_wl_get_peb, the operation of filling the pool
+(ubi_update_fastmap) with free PEBs and fetching a free PEB from the pool
+is not atomic. After thread A filling the pool with free PEB, free PEB may
+be taken away by thread B. When thread A checks the expression again, the
+condition is still unsatisfactory. At this time, there may still be free
+PEBs on UBI that can be filled into the pool.
+So, ubi_wl_get_peb (in fastmap-wil.c) should be implemented to obtain a
+free PEB by polling method. The polling exit condition is that there is
+no free PEBs on UBI, no free PEBs in pool, and ubi->works_count is 0.
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+ drivers/mtd/ubi/fastmap-wl.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mtd/ubi/fastmap-wl.c b/drivers/mtd/ubi/fastmap-wl.c
+index d9e2e3a..c5512cf 100644
+--- a/drivers/mtd/ubi/fastmap-wl.c
++++ b/drivers/mtd/ubi/fastmap-wl.c
+@@ -196,7 +196,7 @@ static int produce_free_peb(struct ubi_device *ubi)
+  */
+ int ubi_wl_get_peb(struct ubi_device *ubi)
+ {
+-	int ret, retried = 0;
++	int ret;
+ 	struct ubi_fm_pool *pool = &ubi->fm_pool;
+ 	struct ubi_fm_pool *wl_pool = &ubi->fm_wl_pool;
+ 
+@@ -220,13 +220,14 @@ int ubi_wl_get_peb(struct ubi_device *ubi)
+ 	}
+ 
+ 	if (pool->used == pool->size) {
+-		spin_unlock(&ubi->wl_lock);
+-		if (retried) {
++		if (!ubi->free.rb_node && ubi->works_count == 0) {
+ 			ubi_err(ubi, "Unable to get a free PEB from user WL pool");
++			ubi_assert(list_empty(&ubi->works));
++			spin_unlock(&ubi->wl_lock);
+ 			ret = -ENOSPC;
+ 			goto out;
+ 		}
+-		retried = 1;
++		spin_unlock(&ubi->wl_lock);
+ 		up_read(&ubi->fm_eba_sem);
+ 		ret = produce_free_peb(ubi);
+ 		if (ret < 0) {
+-- 
+2.7.4
+
