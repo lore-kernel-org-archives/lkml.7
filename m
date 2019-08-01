@@ -3,72 +3,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71701C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FD8C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3157C2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DA1216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbfHAHBz (ORCPT
+        id S1727259AbfHAHEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:01:55 -0400
-Received: from verein.lst.de ([213.95.11.211]:40859 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbfHAHBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:01:55 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8C39E68AFE; Thu,  1 Aug 2019 09:01:51 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 09:01:51 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 11/13] mm: cleanup the hmm_vma_handle_pmd stub
-Message-ID: <20190801070151.GB15404@lst.de>
-References: <20190730055203.28467-1-hch@lst.de> <20190730055203.28467-12-hch@lst.de> <20190730175309.GN24038@mellanox.com>
+        Thu, 1 Aug 2019 03:04:15 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:36113 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbfHAHEP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 03:04:15 -0400
+Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 583F4100012;
+        Thu,  1 Aug 2019 07:04:10 +0000 (UTC)
+Date:   Thu, 1 Aug 2019 09:04:10 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hertz Wong <hertz.wong@rock-chips.com>
+Subject: Re: [PATCH 7/9] media: hantro: Add core bits to support H264 decoding
+Message-ID: <20190801070410.GA22382@aptenodytes>
+References: <20190619121540.29320-1-boris.brezillon@collabora.com>
+ <20190619121540.29320-8-boris.brezillon@collabora.com>
+ <CAHD77HksotqFBTE84rRM=DuNFX=YJPs=YnsuFkaN-pWUNCtoxA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
 Content-Disposition: inline
-In-Reply-To: <20190730175309.GN24038@mellanox.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAHD77HksotqFBTE84rRM=DuNFX=YJPs=YnsuFkaN-pWUNCtoxA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 05:53:14PM +0000, Jason Gunthorpe wrote:
-> > -	/* If THP is not enabled then we should never reach this 
-> 
-> This old comment says we should never get here
-> 
-> > +}
-> > +#else /* CONFIG_TRANSPARENT_HUGEPAGE */
-> > +static int hmm_vma_handle_pmd(struct mm_walk *walk, unsigned long addr,
-> > +		unsigned long end, uint64_t *pfns, pmd_t pmd)
-> > +{
-> >  	return -EINVAL;
-> 
-> So could we just do
->    #define hmm_vma_handle_pmd NULL
-> 
-> ?
-> 
-> At the very least this seems like a WARN_ON too?
 
-Despite the name of the function hmm_vma_handle_pmd is not a callback
-for the pagewalk, but actually called from hmm_vma_handle_pmd.
+--gKMricLos+KVdGMg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What we could try is just and empty non-inline prototype without an
-actual implementation, which means if the compiler doesn't optimize
-the calls away we'll get a link error.
+Hi,
+
+On Thu 01 Aug 19, 13:06, Tomasz Figa wrote:
+> Hi Boris,
+>=20
+> On Wed, Jun 19, 2019 at 9:15 PM Boris Brezillon
+> <boris.brezillon@collabora.com> wrote:
+> [snip]
+> > @@ -533,10 +535,21 @@ hantro_queue_setup(struct vb2_queue *vq, unsigned=
+ int *num_buffers,
+> >                 return -EINVAL;
+> >         }
+> >
+> > +       /* The H264 decoder needs extra size on the output buffer. */
+> > +       if (ctx->vpu_src_fmt->fourcc =3D=3D V4L2_PIX_FMT_H264_SLICE_RAW)
+> > +               extra_size0 =3D 128 * DIV_ROUND_UP(pixfmt->width, 16) *
+> > +                             DIV_ROUND_UP(pixfmt->height, 16);
+> > +
+>=20
+> I wonder if this shouldn't be accounted for already in the sizeimage
+> returned by TRY_/S_FMT, so that the application can know the required
+> buffer size if it uses some external allocator and DMABUF memory type.
+> I know we had it like this in our downstream code, but it wasn't the
+> problem because we use minigbm, where we explicitly add the same
+> padding in the rockchip backend. Any thoughts?
+
+Does the extra size have to be allocated along with the buffer?
+
+On cedrus, we have a need for a similar side-buffer but give it a dedicated=
+ CMA
+allocation, which should allow dma-buf-imported buffers.
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--gKMricLos+KVdGMg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl1CjukACgkQ3cLmz3+f
+v9E6+wf+OYHawgm5Z7vHIOssrL6TF8ZV3xNsgqTT2Je54KLFCRbarBvD2HyB8nFc
+pSPCrxiELvO1Tio+KYCoYz2Xve0PlzdxiBq1zbEYnzb8k95YbZnOMb2Vj90ZLPNm
+FPpXE5VrVih6v5T3qgtqBNjaYRHOHLztiWoHRbRshiWxEPvzreD/Hfyawe4LbsJ6
+dnzSPh8DvV46LsjnYe4rskINbfEkxEk7VtBynQ9CucYaZ2O8xXKYVQk5D/XkNhtm
+48LgrQQJ2QrZH6Qed+We9pqBhOUH/in49PdD+UGN054dLBHT86nVc+0dbfJQW87N
+jwHDYAmZKitBd74E4nNs5DQeWXCfig==
+=h/ad
+-----END PGP SIGNATURE-----
+
+--gKMricLos+KVdGMg--
