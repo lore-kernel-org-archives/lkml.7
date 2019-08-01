@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C71C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FDCC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBC1206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADCB0206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:37:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3g1D4CZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+46mN08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733074AbfHAShG (ORCPT
+        id S1733154AbfHAShK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 14:37:06 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34456 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732411AbfHAShD (ORCPT
+        Thu, 1 Aug 2019 14:37:10 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33552 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733069AbfHAShG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 14:37:03 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k10so2142996qtq.1;
-        Thu, 01 Aug 2019 11:37:02 -0700 (PDT)
+        Thu, 1 Aug 2019 14:37:06 -0400
+Received: by mail-qt1-f196.google.com with SMTP id r6so67052046qtt.0;
+        Thu, 01 Aug 2019 11:37:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hIE7BCR1Y9QjYs/Q1fIXG7Lo3ffro8qX6bIfZ3EqFU8=;
-        b=Y3g1D4CZIbthEffAmDXBsd9bPiltxmI8cemEHY+3iZcMqRpseH6xldbcpi+nNtjfLc
-         tZnYeEA0FHCeGN/KQBDE060K+DiwXWK2q2svpNZ4GHWcAFglmugZ5hgaDUZeDKIe4URs
-         tu1edxMfWZZZewAx79sQl+SOezflexZghqAm+xp3e9wmwMKIAEHDrh2+VCIRwZS5Cc/y
-         kScJUURdfwxJ/HoClps9MJaeCetqmaUs6Am1thnCpPxUJ3W/8TrfySVVYuwz8HD8k2SI
-         tZ5qnREyHi/H4Z6fxhi1YkksO69VYLKVsw0cFLariTjtivI45o7EbJHsqYF+N13M4bgu
-         akMg==
+        bh=pGi8H59E1OhtYa7RV1NV+08kQPmaea3wa8GhYLJtxig=;
+        b=B+46mN08Xg+FcohLIV0VDxhPrWM8uEY5xa8LddKuSjtqf0B3f1YCULEmz6+dlkDnBP
+         6gP7ackMdSDs7iR+jEDKxAHuraPsFYhoeaUDoFifeP5Z20zR8HTkcAb2IdK103lJ7cc9
+         7MYZqkq1MQlOalCRF199P1kHbP8NnQ47uwFQYq+pvG82O3DTGenA08P7qt++Jizgsh9V
+         k+/X6397gnX9eZXNNU+CYFBP2y/02oAwr73KSGyXTCBmCEUgywRPWQH6x5rIGRvQ1lc8
+         le3fNmyACjKiQJpMSNOPj6NY7fUpvPq+zS7Q4onhlOT8vHIqqeHyFmkjK+bq68UhZVeF
+         0voQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hIE7BCR1Y9QjYs/Q1fIXG7Lo3ffro8qX6bIfZ3EqFU8=;
-        b=TFz2MJOQImU4jHJK8n+nKplSMM3H4LIKU4P0PLlBVLhm0S/RBkxgh8NMQ05xO0BaWQ
-         uMTZ0Ixz0rRRmuEyLslUhxPX67bzUOdpf1I1nWQ9fLqVMZ672uT+rH4Gg5FAMXEPXdQK
-         ZaymtaGuI3ZTaEristNdCuFROkkBzfgquar+e9HaH2AEqPBpDuACJi2ZaXx9aqhvkBGj
-         EQa7w2Rs19gNHcShZCzaFZt6u1auEoFqX+AJLkfJDM6vHtIWhQlanSpc8CjU7MAFhA4E
-         BSr7l+VxMcj/N5MTDsjraa9izFn3roon6OWoZWAVTeVBN/z2/MTlmgRIVM5hVfHfR+Gl
-         OTiQ==
-X-Gm-Message-State: APjAAAVuc91PKcEeXtmEB82FrgyD7xgqA1O01cSXc2ZpcbCQw5je92Ye
-        5dHVQNTXFZ07AKVClZCmtR2JuIewazU=
-X-Google-Smtp-Source: APXvYqxYjfYOX8r2Dx345ceWJgNvZWM9+hi2K+cs0Xiia4hez8GAWKcjCx5PDGeg1odH4Wa2S4B8mw==
-X-Received: by 2002:a0c:9163:: with SMTP id q90mr95994952qvq.37.1564684622148;
-        Thu, 01 Aug 2019 11:37:02 -0700 (PDT)
+        bh=pGi8H59E1OhtYa7RV1NV+08kQPmaea3wa8GhYLJtxig=;
+        b=kVOjX8hCur2y2dJcKiu1WTuaLKaAJHdZ4q54maNu8Z/jAPMFMSBsz/UES1UPI9cAgp
+         Fum+q8AJeJk5eMUCtZhFOyjOpHBDMesVQBMCH4VCkME50/OeuPJQHralqeVyeVvFeDso
+         fz3H+gIJFMyX1SH6njEY5ri5YKsiFS/tT+MIq0zfyWyR1BbzYsUQmlwoHZReNMSIJCCi
+         wNPcu4TbCPBJa+ljEjm4n5dz8B7w8vL3clCuqAbDztAA+fpoLDOMJQegmvO0S0sp2gUA
+         ljOS7NejcIQpuUtGhHomgye7BR6loqOPXrWcK1DoruoEWXOojitHHx3GBHQZoJ4e3wfW
+         +a8g==
+X-Gm-Message-State: APjAAAURsb5b6kmvWN2Kdz7eWkpn2OE209pRRRYQQ2k0weWuh6j/32T3
+        tadOzY6sewkLtqAWnAhb6h/2CMwk/bw=
+X-Google-Smtp-Source: APXvYqzBgTkymGyZ4xDWaJEsToBDte3lExeHgyvo940ZrtYT/WzPY0pPBh2z+AE0MN+Z70CIM8qyAA==
+X-Received: by 2002:ac8:142:: with SMTP id f2mr91502850qtg.336.1564684625641;
+        Thu, 01 Aug 2019 11:37:05 -0700 (PDT)
 Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id q56sm36693368qtq.64.2019.08.01.11.37.01
+        by smtp.gmail.com with ESMTPSA id j2sm32816077qtb.89.2019.08.01.11.37.04
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 11:37:01 -0700 (PDT)
+        Thu, 01 Aug 2019 11:37:05 -0700 (PDT)
 From:   Vivien Didelot <vivien.didelot@gmail.com>
 Cc:     linux-kernel@vger.kernel.org,
         Vivien Didelot <vivien.didelot@gmail.com>,
         Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
         f.fainelli@gmail.com, andrew@lunn.ch, netdev@vger.kernel.org,
         davem@davemloft.net
-Subject: [PATCH net-next 2/5] net: dsa: mv88e6xxx: explicit entry passed to vtu_getnext
-Date:   Thu,  1 Aug 2019 14:36:34 -0400
-Message-Id: <20190801183637.24841-3-vivien.didelot@gmail.com>
+Subject: [PATCH net-next 4/5] net: dsa: mv88e6xxx: call vtu_getnext directly in vlan_del
+Date:   Thu,  1 Aug 2019 14:36:36 -0400
+Message-Id: <20190801183637.24841-5-vivien.didelot@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190801183637.24841-1-vivien.didelot@gmail.com>
 References: <20190801183637.24841-1-vivien.didelot@gmail.com>
@@ -77,86 +77,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mv88e6xxx_vtu_getnext interprets two members from the input
-mv88e6xxx_vtu_entry structure: the (excluded) vid member to start
-the iteration from, and the valid argument specifying whether the VID
-must be written or not (only required once at the start of a loop).
+Wrapping mv88e6xxx_vtu_getnext makes the code less easy to read.
+Explicit the call to mv88e6xxx_vtu_getnext in _mv88e6xxx_port_vlan_del
+and the return value expected by switchdev in case of software VLANs.
 
-Explicit the assignation of these two fields right before calling
-mv88e6xxx_vtu_getnext, as it is done in the mv88e6xxx_vtu_get wrapper.
+At the same time, rename the helper using an old underscore convention.
 
 Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/net/dsa/mv88e6xxx/chip.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 1b2cb46d3b53..c825fa3477fa 100644
+index 42ab57dbc790..50a6dbcc669c 100644
 --- a/drivers/net/dsa/mv88e6xxx/chip.c
 +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -1361,9 +1361,7 @@ static int mv88e6xxx_vtu_loadpurge(struct mv88e6xxx_chip *chip,
- static int mv88e6xxx_atu_new(struct mv88e6xxx_chip *chip, u16 *fid)
+@@ -1671,18 +1671,27 @@ static void mv88e6xxx_port_vlan_add(struct dsa_switch *ds, int port,
+ 	mv88e6xxx_reg_unlock(chip);
+ }
+ 
+-static int _mv88e6xxx_port_vlan_del(struct mv88e6xxx_chip *chip,
+-				    int port, u16 vid)
++static int mv88e6xxx_port_vlan_leave(struct mv88e6xxx_chip *chip,
++				     int port, u16 vid)
  {
- 	DECLARE_BITMAP(fid_bitmap, MV88E6XXX_N_FID);
--	struct mv88e6xxx_vtu_entry vlan = {
--		.vid = chip->info->max_vid,
--	};
-+	struct mv88e6xxx_vtu_entry vlan;
+ 	struct mv88e6xxx_vtu_entry vlan;
  	int i, err;
  
- 	bitmap_zero(fid_bitmap, MV88E6XXX_N_FID);
-@@ -1378,6 +1376,9 @@ static int mv88e6xxx_atu_new(struct mv88e6xxx_chip *chip, u16 *fid)
- 	}
- 
- 	/* Set every FID bit used by the VLAN entries */
-+	vlan.vid = chip->info->max_vid;
+-	err = mv88e6xxx_vtu_get(chip, vid, &vlan, false);
++	if (!vid)
++		return -EOPNOTSUPP;
++
++	vlan.vid = vid - 1;
 +	vlan.valid = false;
 +
- 	do {
- 		err = mv88e6xxx_vtu_getnext(chip, &vlan);
- 		if (err)
-@@ -1441,9 +1442,7 @@ static int mv88e6xxx_port_check_hw_vlan(struct dsa_switch *ds, int port,
- 					u16 vid_begin, u16 vid_end)
- {
- 	struct mv88e6xxx_chip *chip = ds->priv;
--	struct mv88e6xxx_vtu_entry vlan = {
--		.vid = vid_begin - 1,
--	};
-+	struct mv88e6xxx_vtu_entry vlan;
- 	int i, err;
- 
- 	/* DSA and CPU ports have to be members of multiple vlans */
-@@ -1453,6 +1452,9 @@ static int mv88e6xxx_port_check_hw_vlan(struct dsa_switch *ds, int port,
- 	if (!vid_begin)
- 		return -EOPNOTSUPP;
- 
-+	vlan.vid = vid_begin - 1;
-+	vlan.valid = false;
-+
- 	do {
- 		err = mv88e6xxx_vtu_getnext(chip, &vlan);
- 		if (err)
-@@ -1789,9 +1791,7 @@ static int mv88e6xxx_port_db_dump_fid(struct mv88e6xxx_chip *chip,
- static int mv88e6xxx_port_db_dump(struct mv88e6xxx_chip *chip, int port,
- 				  dsa_fdb_dump_cb_t *cb, void *data)
- {
--	struct mv88e6xxx_vtu_entry vlan = {
--		.vid = chip->info->max_vid,
--	};
-+	struct mv88e6xxx_vtu_entry vlan;
- 	u16 fid;
- 	int err;
- 
-@@ -1805,6 +1805,9 @@ static int mv88e6xxx_port_db_dump(struct mv88e6xxx_chip *chip, int port,
++	err = mv88e6xxx_vtu_getnext(chip, &vlan);
+ 	if (err)
  		return err;
  
- 	/* Dump VLANs' Filtering Information Databases */
-+	vlan.vid = chip->info->max_vid;
-+	vlan.valid = false;
-+
- 	do {
- 		err = mv88e6xxx_vtu_getnext(chip, &vlan);
+-	/* Tell switchdev if this VLAN is handled in software */
+-	if (vlan.member[port] == MV88E6XXX_G1_VTU_DATA_MEMBER_TAG_NON_MEMBER)
++	/* If the VLAN doesn't exist in hardware or the port isn't a member,
++	 * tell switchdev that this VLAN is likely handled in software.
++	 */
++	if (vlan.vid != vid || !vlan.valid ||
++	    vlan.member[port] == MV88E6XXX_G1_VTU_DATA_MEMBER_TAG_NON_MEMBER)
+ 		return -EOPNOTSUPP;
+ 
+ 	vlan.member[port] = MV88E6XXX_G1_VTU_DATA_MEMBER_TAG_NON_MEMBER;
+@@ -1721,7 +1730,7 @@ static int mv88e6xxx_port_vlan_del(struct dsa_switch *ds, int port,
+ 		goto unlock;
+ 
+ 	for (vid = vlan->vid_begin; vid <= vlan->vid_end; ++vid) {
+-		err = _mv88e6xxx_port_vlan_del(chip, port, vid);
++		err = mv88e6xxx_port_vlan_leave(chip, port, vid);
  		if (err)
+ 			goto unlock;
+ 
 -- 
 2.22.0
 
