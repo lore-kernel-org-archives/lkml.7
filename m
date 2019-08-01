@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC934C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F41C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA78120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2967120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732168AbfHAOi0 (ORCPT
+        id S1732186AbfHAOi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:38:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36227 "EHLO
+        Thu, 1 Aug 2019 10:38:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36235 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731467AbfHAOiY (ORCPT
+        with ESMTP id S1732157AbfHAOi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:38:24 -0400
+        Thu, 1 Aug 2019 10:38:26 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1htCDW-0000m7-KX; Thu, 01 Aug 2019 16:38:06 +0200
-Message-Id: <20190801143657.980489544@linutronix.de>
+        id 1htCDW-0000m4-17; Thu, 01 Aug 2019 16:38:06 +0200
+Message-Id: <20190801143657.887648487@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 01 Aug 2019 16:32:53 +0200
+Date:   Thu, 01 Aug 2019 16:32:52 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
@@ -36,14 +36,14 @@ Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Julia Cartwright <julia@ni.com>,
         Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, kvm@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>, kvm@vger.kernel.org,
         Radim Krcmar <rkrcmar@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
         John Stultz <john.stultz@linaro.org>,
         Andy Lutomirski <luto@kernel.org>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [patch 3/5] posix-cpu-timers: Split run_posix_cpu_timers()
+Subject: [patch 2/5] x86/kvm: Handle task_work on VMENTER/EXIT
 References: <20190801143250.370326052@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -52,77 +52,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split run_posix_cpu_timers() into two pieces, the hard interrupt context
-part and the actual timer evaluation/expiry part.
+TIF_NOTITY_RESUME is evaluated on return to user space along with other TIF
+flags.
 
-The hard interrupt context part contains only the lockless fast path check
-and for now calls the expiry part as before.
+>From the kernels point of view a VMENTER is more or less equivalent to
+return to user space which means that at least a subset of TIF flags needs
+to be evaluated and handled.
 
-No functional change. Preparatory change to move the expiry part into task
-context.
+Currently KVM handles only TIF_SIGPENDING and TIF_NEED_RESCHED, but
+TIF_NOTIFY_RESUME is ignored. So pending task_work etc, is completely
+ignored until the vCPU thread actually goes all the way back into
+userspace/qemu.
+
+Use the newly provided notify_resume_pending() and
+tracehook_handle_notify_resume() to solve this similar to the existing
+handling of SIGPENDING.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Oleg Nesterov <oleg@redhat.com>
-
+Cc: kvm@vger.kernel.org
+Cc: Radim Krcmar <rkrcmar@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
 ---
- kernel/time/posix-cpu-timers.c |   37 +++++++++++++++++++++----------------
- 1 file changed, 21 insertions(+), 16 deletions(-)
+ arch/x86/kvm/x86.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -1127,25 +1127,11 @@ static inline int fastpath_timer_check(s
- 	return 0;
- }
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -52,6 +52,7 @@
+ #include <linux/irqbypass.h>
+ #include <linux/sched/stat.h>
+ #include <linux/sched/isolation.h>
++#include <linux/tracehook.h>
+ #include <linux/mem_encrypt.h>
  
--/*
-- * This is called from the timer interrupt handler.  The irq handler has
-- * already updated our counts.  We need to check if any timers fire now.
-- * Interrupts are disabled.
-- */
--void run_posix_cpu_timers(struct task_struct *tsk)
-+static void __run_posix_cpu_timers(struct task_struct *tsk)
- {
--	LIST_HEAD(firing);
- 	struct k_itimer *timer, *next;
- 	unsigned long flags;
--
--	lockdep_assert_irqs_disabled();
--
--	/*
--	 * The fast path checks that there are no expired thread or thread
--	 * group timers.  If that's so, just return.
--	 */
--	if (!fastpath_timer_check(tsk))
--		return;
-+	LIST_HEAD(firing);
+ #include <trace/events/kvm.h>
+@@ -7972,7 +7973,8 @@ static int vcpu_enter_guest(struct kvm_v
+ 		kvm_x86_ops->sync_pir_to_irr(vcpu);
  
- 	if (!lock_task_sighand(tsk, &flags))
- 		return;
-@@ -1193,6 +1179,25 @@ void run_posix_cpu_timers(struct task_st
- }
- 
- /*
-+ * This is called from the timer interrupt handler.  The irq handler has
-+ * already updated our counts.  We need to check if any timers fire now.
-+ * Interrupts are disabled.
-+ */
-+void run_posix_cpu_timers(struct task_struct *tsk)
-+{
-+	lockdep_assert_irqs_disabled();
+ 	if (vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu)
+-	    || need_resched() || signal_pending(current)) {
++	    || need_resched() || signal_pending(current)
++	    || notify_resume_pending()) {
+ 		vcpu->mode = OUTSIDE_GUEST_MODE;
+ 		smp_wmb();
+ 		local_irq_enable();
+@@ -8172,6 +8174,10 @@ static int vcpu_run(struct kvm_vcpu *vcp
+ 			++vcpu->stat.signal_exits;
+ 			break;
+ 		}
 +
-+	/*
-+	 * The fast path checks that there are no expired thread or thread
-+	 * group timers.  If that's so, just return.
-+	 */
-+	if (!fastpath_timer_check(tsk))
-+		return;
++		if (notify_resume_pending())
++			tracehook_handle_notify_resume();
 +
-+	__run_posix_cpu_timers(tsk);
-+}
-+
-+/*
-  * Set one of the process-wide special case CPU timers or RLIMIT_CPU.
-  * The tsk->sighand->siglock must be held by the caller.
-  */
+ 		if (need_resched()) {
+ 			srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
+ 			cond_resched();
 
 
