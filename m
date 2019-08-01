@@ -2,182 +2,160 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E512BC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1F5C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B30206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642C1206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:54:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTwd5sa8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731201AbfHAKwF (ORCPT
+        id S1731223AbfHAKyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 06:52:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:33898 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbfHAKwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 06:52:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3022C1570;
-        Thu,  1 Aug 2019 03:52:04 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4D793F575;
-        Thu,  1 Aug 2019 03:52:02 -0700 (PDT)
-Subject: Re: KASAN: use-after-free Read in usb_free_coherent
-To:     syzbot+d1fedb1c1fdb07fca507@syzkaller.appspotmail.com,
-        andreyknvl@google.com, dtor@chromium.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, mans@mansr.com,
-        mathias.payer@nebelwelt.net, robh@kernel.org,
-        srinivas.kandagatla@linaro.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000003f86d8058f0bd671@google.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <8d2b9cb5-d32c-e24c-c973-a3a11a436dc6@arm.com>
-Date:   Thu, 1 Aug 2019 11:52:01 +0100
+        Thu, 1 Aug 2019 06:54:55 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33528 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfHAKyy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 06:54:54 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h10so68920175ljg.0;
+        Thu, 01 Aug 2019 03:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oFQKCykke/lf7rDu0GMqPJgCLMHDcVhMm3FNRrZdzNY=;
+        b=iTwd5sa8LtWHYdDIuBR2Oop7NofDS05cFB22pFMGOesSXQvhBHIjk0brLQ9uNaSugI
+         tdDdW4TktKBGKdIv8UDCaVa0L1ltG+cndFq/19lhsX/5PieMEkoaOBG/Ibmp/Td6gYP9
+         MfdN7zgol7bYD7Mc/LXpolws+miLfzk0GjHQo3wgLsLjWYv5lAi91MZFtjzBIV0Ds1qm
+         oZ5Z0uIedFdBPCjjFbE3lvSVmW5jC+NBruR4EN/bZkUQ5YeT0a4M1Nvi3EC6E6hjrnd4
+         zc9fIirmlVa0iJHbTQ6BKfeyCfJB2bqhf0rs6h6b4KTuePMbqzp3WVo+nzwpCqvYW7ES
+         p+Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oFQKCykke/lf7rDu0GMqPJgCLMHDcVhMm3FNRrZdzNY=;
+        b=HtiJBLgo0WK26YGpH6wyCXEJH1qMN/HpBBqtoT/yvmDaNEwa8Wb6FSPePV0KhwTT+h
+         YIU5s6PfUt0nxaLfDYxFmeOsJbUaQmgMqU34IU8+sSx16YFdbM89zPZVF6yr2M+fYay3
+         0113RtQUOVKEarhoyNxTa4PySGASon9acunsf2wWmS+7tJxx2DIcmiHUzOh2ZM2xOkSa
+         yd0cI9R3tfUjQ+FSc9UO5rTx5xHle2h/Dl62G8BdBerQ/PhuEjfwcQ3wAhP/uaX/MQbC
+         B+4F2cPZX4RrSRQcOUQy1HsCd3ikaMrPPkFvkrIT1ZsCSyjVfJekm/iTnIqcxO7K9JcJ
+         xFog==
+X-Gm-Message-State: APjAAAXMDnBeSrG675d5hazl7yJIfvvbrVjxAmB1t+aCryaANdH68H3I
+        MMYNxkQ7lUN9AxMdr2whII1Cfy6u
+X-Google-Smtp-Source: APXvYqwNnv/kfNFCfYM5K6oSw//k8zB9afVXkG/lPoRRnsasU+tMtFwESUqpIgBaNIkoN1yVXBbp0w==
+X-Received: by 2002:a2e:92c6:: with SMTP id k6mr67981309ljh.148.1564656891433;
+        Thu, 01 Aug 2019 03:54:51 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id l11sm13787058lfc.18.2019.08.01.03.54.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 03:54:50 -0700 (PDT)
+Subject: Re: [PATCH v7 06/20] clk: tegra: Support for OSC context save and
+ restore
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
+ <16cca6aa-1034-f38a-49d1-d87b37fb6bbb@gmail.com>
+ <b5a58bfc-c777-886f-d902-f499ec38e2ae@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3b55a112-42a6-212b-beea-10b64d5341d9@gmail.com>
+Date:   Thu, 1 Aug 2019 13:53:53 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <0000000000003f86d8058f0bd671@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <b5a58bfc-c777-886f-d902-f499ec38e2ae@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+01.08.2019 0:04, Sowjanya Komatineni пишет:
+> 
+> On 7/31/19 4:11 AM, Dmitry Osipenko wrote:
+>> 31.07.2019 3:20, Sowjanya Komatineni пишет:
+>>> This patch adds support for saving OSC clock frequency and the
+>>> drive-strength during OSC clock init and creates an API to restore
+>>> OSC control register value from the saved context.
+>>>
+>>> This API is invoked by Tegra210 clock driver during system resume
+>>> to restore the  OSC clock settings.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
+>>>   drivers/clk/tegra/clk.h             |  1 +
+>>>   2 files changed, 16 insertions(+)
+>>>
+>>> diff --git a/drivers/clk/tegra/clk-tegra-fixed.c
+>>> b/drivers/clk/tegra/clk-tegra-fixed.c
+>>> index 8d91b2b191cf..7c6c8abfcde6 100644
+>>> --- a/drivers/clk/tegra/clk-tegra-fixed.c
+>>> +++ b/drivers/clk/tegra/clk-tegra-fixed.c
+>>> @@ -17,6 +17,10 @@
+>>>   #define OSC_CTRL            0x50
+>>>   #define OSC_CTRL_OSC_FREQ_SHIFT        28
+>>>   #define OSC_CTRL_PLL_REF_DIV_SHIFT    26
+>>> +#define OSC_CTRL_MASK            (0x3f2 |    \
+>>> +                    (0xf << OSC_CTRL_OSC_FREQ_SHIFT))
+>>> +
+>>> +static u32 osc_ctrl_ctx;
+>>>     int __init tegra_osc_clk_init(void __iomem *clk_base, struct
+>>> tegra_clk *clks,
+>>>                     unsigned long *input_freqs, unsigned int num,
+>>> @@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem
+>>> *clk_base, struct tegra_clk *clks,
+>>>       unsigned osc_idx;
+>>>         val = readl_relaxed(clk_base + OSC_CTRL);
+>>> +    osc_ctrl_ctx = val & OSC_CTRL_MASK;
+>>>       osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
+>>>         if (osc_idx < num)
+>>> @@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk
+>>> *tegra_clks)
+>>>           *dt_clk = clk;
+>>>       }
+>>>   }
+>>> +
+>>> +void tegra_clk_osc_resume(void __iomem *clk_base)
+>>> +{
+>>> +    u32 val;
+>>> +
+>>> +    val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
+>>> +    val |= osc_ctrl_ctx;
+>>> +    writel_relaxed(val, clk_base + OSC_CTRL);
+>> Why a full raw u32 OSC_CTRL value couldn't be simply saved and restored?
+> 
+> Storing and restoring only required fields to avoid accidental
+> misconfiguration.
+> 
+> OSC_CTRL register has other bits (PLL_REF_DIV) which are configured by
+> BR depending on OSC_FREQ and also setting PLL_REF_DIV while PLLS are in
+> use is not safe.
 
-On 01/08/2019 11:38, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13efa030600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-> dashboard link: https://syzkaller.appspot.com/bug?extid=d1fedb1c1fdb07fca507
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+d1fedb1c1fdb07fca507@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in usb_free_coherent+0x79/0x80
-> drivers/usb/core/usb.c:928
-> Read of size 8 at addr ffff8881b18599c8 by task syz-executor.4/16007
-> 
-> CPU: 0 PID: 16007 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #23
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->    __dump_stack lib/dump_stack.c:77 [inline]
->    dump_stack+0xca/0x13e lib/dump_stack.c:113
->    print_address_description+0x6a/0x32c mm/kasan/report.c:351
->    __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->    kasan_report+0xe/0x12 mm/kasan/common.c:612
->    usb_free_coherent+0x79/0x80 drivers/usb/core/usb.c:928
->    yurex_delete+0x138/0x330 drivers/usb/misc/yurex.c:100
->    kref_put include/linux/kref.h:65 [inline]
->    yurex_release+0x66/0x90 drivers/usb/misc/yurex.c:392
->    __fput+0x2d7/0x840 fs/file_table.c:280
->    task_work_run+0x13f/0x1c0 kernel/task_work.c:113
->    tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->    exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
->    prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
->    syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
->    do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x413511
-> Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48
-> 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48
-> 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-> RSP: 002b:00007ffc424ea2e0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-> RAX: 0000000000000000 RBX: 0000000000000007 RCX: 0000000000413511
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000006
-> RBP: 0000000000000001 R08: 0000000029a2fc22 R09: 0000000029a2fc26
-> R10: 00007ffc424ea3c0 R11: 0000000000000293 R12: 000000000075c9a0
-> R13: 000000000075c9a0 R14: 0000000000761938 R15: ffffffffffffffff
-> 
-> Allocated by task 2776:
->    save_stack+0x1b/0x80 mm/kasan/common.c:69
->    set_track mm/kasan/common.c:77 [inline]
->    __kasan_kmalloc mm/kasan/common.c:487 [inline]
->    __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
->    kmalloc include/linux/slab.h:552 [inline]
->    kzalloc include/linux/slab.h:748 [inline]
->    usb_alloc_dev+0x51/0xf95 drivers/usb/core/usb.c:583
->    hub_port_connect drivers/usb/core/hub.c:5004 [inline]
->    hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->    port_event drivers/usb/core/hub.c:5359 [inline]
->    hub_event+0x15c0/0x3640 drivers/usb/core/hub.c:5441
->    process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->    worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->    kthread+0x318/0x420 kernel/kthread.c:255
->    ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> 
-> Freed by task 16007:
->    save_stack+0x1b/0x80 mm/kasan/common.c:69
->    set_track mm/kasan/common.c:77 [inline]
->    __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
->    slab_free_hook mm/slub.c:1423 [inline]
->    slab_free_freelist_hook mm/slub.c:1470 [inline]
->    slab_free mm/slub.c:3012 [inline]
->    kfree+0xe4/0x2f0 mm/slub.c:3953
->    device_release+0x71/0x200 drivers/base/core.c:1064
->    kobject_cleanup lib/kobject.c:693 [inline]
->    kobject_release lib/kobject.c:722 [inline]
->    kref_put include/linux/kref.h:65 [inline]
->    kobject_put+0x171/0x280 lib/kobject.c:739
->    put_device+0x1b/0x30 drivers/base/core.c:2213
->    usb_put_dev+0x1f/0x30 drivers/usb/core/usb.c:725
->    yurex_delete+0x40/0x330 drivers/usb/misc/yurex.c:95
->    kref_put include/linux/kref.h:65 [inline]
->    yurex_release+0x66/0x90 drivers/usb/misc/yurex.c:392
->    __fput+0x2d7/0x840 fs/file_table.c:280
->    task_work_run+0x13f/0x1c0 kernel/task_work.c:113
->    tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->    exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
->    prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
->    syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
->    do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
+I'm looking at the clk-driver sources and see that none of the Tegra
+drivers ever change the OSC_CTRL configuration, T30/114 even have
+#defines for the OSC_CTRL that are unused.
 
-Looks like the yurex_delete() drops the ref count on the dev->udev
-way early in the function and then later tries to see if there
-are any other buffers associated with it worth releasing. So,
-I am guessing moving the usb_put_dev(), after we have finished
-all that might solve the issue ?
-
-----8>----
-
-diff --git a/drivers/usb/misc/yurex.c b/drivers/usb/misc/yurex.c
-index 7b306aa22d25..e38fe3a53c97 100644
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -92,7 +92,6 @@ static void yurex_delete(struct kref *kref)
-
-  	dev_dbg(&dev->interface->dev, "%s\n", __func__);
-
--	usb_put_dev(dev->udev);
-  	if (dev->cntl_urb) {
-  		usb_kill_urb(dev->cntl_urb);
-  		kfree(dev->cntl_req);
-@@ -108,6 +107,8 @@ static void yurex_delete(struct kref *kref)
-  				dev->int_buffer, dev->urb->transfer_dma);
-  		usb_free_urb(dev->urb);
-  	}
-+
-+	usb_put_dev(dev->udev);
-  	kfree(dev);
-  }
-
-
+So, this leads to a question.. does any bootloader really ever change
+the OSC_CTRL such that it differs after resume from suspend in
+comparison to the value at the time of kernel's booting up?
