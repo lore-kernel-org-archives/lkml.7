@@ -4,115 +4,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1763C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A250C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79566217D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28AAE20665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:23:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNrTD/eg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKHRDl7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732456AbfHAPS7 (ORCPT
+        id S1732358AbfHAPXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:18:59 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40182 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730835AbfHAPS6 (ORCPT
+        Thu, 1 Aug 2019 11:23:45 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40937 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730087AbfHAPXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:18:58 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k8so69503310eds.7
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 08:18:57 -0700 (PDT)
+        Thu, 1 Aug 2019 11:23:45 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k8so69518201eds.7
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 08:23:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gIfSabpVp9eE7lJHzBppB62vKhN84Wb7zIuuCObxbsE=;
-        b=ZNrTD/egNWyggNQI4aKhw3rt484V0kvyB4GuTDajjJPMP/vSaPJ0VuKljCqlbb+P5A
-         hiRrdAK2QJlU7pZ92i3/6LTZgDwgXzRHGJeelw/vI2reaGscjHx1CxZiBhfL960X6Ml+
-         TfZdbaazxJGcfI2xZ1kF0Z1/sVrMw6Sq9ea+zlCmGiovy2qkcz0EUWurWeapH8GvMTni
-         12OJLt1vEQYnJKMakup4T/6eArPfE72r6UQ4h9n3BY/xPpxWimbCg7s6E108ASiiW1qI
-         eVS9DIQBAFDZmVUk4nZDVsgHA/Z3b12+wE+0CJbESVN03dDSpW8pM3e7reqOp1fVXXnj
-         Obbg==
+         :cc:content-transfer-encoding;
+        bh=npl7N80MmZBIHx6RTeaJpSZSlY3/u9gRYYg1tmf3W0Q=;
+        b=EKHRDl7gAACsadCtqApsW+xXKEyXy5TbF2hEya+9SJVGhWvdKErwWg0R1cXBf+CKt1
+         w7APcxQkvYMxwTGWsc/ZOx4E4pyvXrJrGjAGoK8l5S/bV7VsdctbeWXRKQSvwXeY6pyw
+         E7QLS7ymeG/YpP18y+Ee9XFPZlf7LlOwDo2gBk+smhXyHjfWr8DCY0YPX4Zeqnr0f68M
+         dC2WCrkyX5kmLd7E1Ibz6SS+L6T9ioOKAm8ZqTeBK8ZTVZEC+sxR+dx+vGMwO2kfJK6f
+         PxjGLOeAq4ZbzzSEf0+aqeR2ByzvbesEqXRwfe9VqCSElR3XpHI4+0wfa2UGiEIl1vSw
+         kYdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gIfSabpVp9eE7lJHzBppB62vKhN84Wb7zIuuCObxbsE=;
-        b=hh0Z19e1R34z1MLK/Bk1fN3YF2XLxpNja0052H3tXMbeX9wZcmJV803VeVWEQvir6N
-         fqO3dbfPNwh7cToSBEMMXgh34fnveuLzIVIPVJjZDMpaXVvdlWMqoUTqX4coPecSOhp6
-         Zl40vI/9XUqZEfPWXsfmen3f3RfFH/AbDtcLc9ctORuOpInSketAj2Px84ylBUs9nTO4
-         y34qcwm9ldvCJ9PSZQkJYSR8VXJjMsuhBC3JSrVeXvKu/LuSb2aeIhAvtXlTT2wtKCzj
-         00IOCjZdVzmJrmg3p36LJTlMS/7yFACo0DXbOfcmZKe3RMtqOhGH7mcPvq10PSJ2bzVp
-         ZUZA==
-X-Gm-Message-State: APjAAAWq7+28w7kEFFpKSZFTzrSXDAS3VKrfsJ586bIvrqMyA1PmMMXv
-        7ZeV3hBlheS1uDLLASkbieMh3fnAKTsuoflOleg=
-X-Google-Smtp-Source: APXvYqxi0dJxQtEdKZtFvGG3TF56BLjVuzQQjIsbAkPejhzpILAjKGsAIJYs66UGezOdwa7K1pdcB1cSy+80rGdyxho=
-X-Received: by 2002:a17:906:3612:: with SMTP id q18mr102805422ejb.278.1564672736964;
- Thu, 01 Aug 2019 08:18:56 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=npl7N80MmZBIHx6RTeaJpSZSlY3/u9gRYYg1tmf3W0Q=;
+        b=CPooi78JFD/CmHgBMidjlAqIBmobq4fz4Shf84WyqYPaqBWR5pdtgAIIUmEjyU1uCL
+         8EE+UGzkovQvKuniRCB3zIcbBv7boWl3f5z43yTQwPuW4AS2X5ZlTLw3UbfHRkkQcAZD
+         4FPjEB7l4zzENxfSV7O7W30mNagKbW/Lo83o68oycakBYMBo03o0G/Bq7IvU/WrPT6Zr
+         yeZgHl6yXTIeEHLALTo0YbR2c2IC4+KxVIQivXOgY6Mf4d3bX4A/Pt9AsoDee8XO9QP5
+         1S2e1PFUe70nA5mCfeUs4I5T1EVKQHVyRF9wFD+C/qqoJz2Xp5IToOSF/GpBi8Ce9ty4
+         fL6w==
+X-Gm-Message-State: APjAAAUMHh9ARHA319gLtwoN/4LYmMe6DgVOOHhbCXDd30gyB6gw3K2T
+        lDC0H1Ppgcdu9GxwGjsU2EtkgPonZIiljZj29EI=
+X-Google-Smtp-Source: APXvYqyht9DhYfAcKFAEDrHPxjp/V/bK/n4GyiPl/S+A58tLat15QfaQF9GcypqwNLxm96LHJuQke2ZS6IpGI3uH2Bc=
+X-Received: by 2002:aa7:cf8e:: with SMTP id z14mr114013981edx.40.1564673023905;
+ Thu, 01 Aug 2019 08:23:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190717211542.30482-1-robdclark@gmail.com> <20190719092153.GJ15868@phenom.ffwll.local>
- <20190731192331.GT104440@art_vandelay> <156466322613.6045.7313079853087889718@skylake-alporthouse-com>
-In-Reply-To: <156466322613.6045.7313079853087889718@skylake-alporthouse-com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 1 Aug 2019 08:18:45 -0700
-Message-ID: <CAF6AEGu8K+PwRyY738aFyv+fdZ_UZDhY3XcFY-w4uLMW+w6X9Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/vgem: fix cache synchronization on arm/arm64
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     David Airlie <airlied@linux.ie>,
-        Deepak Sharma <deepak.sharma@amd.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Eric Anholt <eric@anholt.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190729151505.9660-1-hslester96@gmail.com> <5dee05d6cb8498b3e636f5e8a62da673334cb5a9.camel@perches.com>
+In-Reply-To: <5dee05d6cb8498b3e636f5e8a62da673334cb5a9.camel@perches.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Thu, 1 Aug 2019 23:23:33 +0800
+Message-ID: <CANhBUQ2RD065Dn8eGkbzSQxfie5XrR_kgaFQ1QgOS4cKNhAfPA@mail.gmail.com>
+Subject: Re: [PATCH 08/12] printk: Replace strncmp with str_has_prefix
+To:     Joe Perches <joe@perches.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 5:40 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+Joe Perches <joe@perches.com> =E4=BA=8E2019=E5=B9=B47=E6=9C=8830=E6=97=A5=
+=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=888:16=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Quoting Sean Paul (2019-07-31 20:23:31)
-> > On Fri, Jul 19, 2019 at 11:21:53AM +0200, Daniel Vetter wrote:
-> > > On Wed, Jul 17, 2019 at 02:15:37PM -0700, Rob Clark wrote:
-> > > > From: Rob Clark <robdclark@chromium.org>
-> > > >
-> > > > drm_cflush_pages() is no-op on arm/arm64.  But instead we can use
-> > > > dma_sync API.
-> > > >
-> > > > Fixes failures w/ vgem_test.
-> > > >
-> > > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > > ---
-> > > > An alternative approach to the series[1] I sent yesterday
-> > > >
-> > > > On the plus side, it keeps the WC buffers and avoids any drm core
-> > > > changes.  On the minus side, I don't think it will work (at least
-> > > > on arm64) prior to v5.0[2], so the fix can't be backported very
-> > > > far.
-> > >
-> > > Yeah seems a lot more reasonable.
-> > >
-> > > Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> On Mon, 2019-07-29 at 23:15 +0800, Chuhong Yuan wrote:
+> > strncmp(str, const, len) is error-prone.
+> > We had better use newly introduced
+> > str_has_prefix() instead of it.
+> []
+> > diff --git a/kernel/printk/braille.c b/kernel/printk/braille.c
+> []
+> > @@ -11,10 +11,10 @@
 > >
-> > Applied to drm-misc-fixes, thanks!
+> >  int _braille_console_setup(char **str, char **brl_options)
+> >  {
+> > -     if (!strncmp(*str, "brl,", 4)) {
+> > +     if (str_has_prefix(*str, "brl,")) {
+> >               *brl_options =3D "";
+> >               *str +=3D 4;
+> > -     } else if (!strncmp(*str, "brl=3D", 4)) {
+> > +     } else if (str_has_prefix(*str, "brl=3D")) {
+> >               *brl_options =3D *str + 4;
 >
-> But it didn't actually fix the failures in CI.
+> Better to get rid of the +=3D 4 uses too by storing the result
+> of str_has_prefix and using that as the addend.
+>
+> Perhaps
+>         size_t len;
+>
+>         if ((len =3D str_has_prefix(*str, "brl,"))) {
+>                 *brl_options =3D "";
+>                 *str +=3D len;
+>         } else if ((len =3D str_has_prefix(*str, "brl=3D"))) {
+>                 etc...
+>
 
-Hmm, that is unfortunate, I'd assumed that silence meant latest
-version was working in CI..
+I find that checkpatch.pl forbids assignment in if condition.
+So this seems to be infeasible...
 
-dma_sync_sg_* doesn't work on x86?  It would be kinda unfortunate to
-have vgem only work on x86 *or* arm..  maybe bringing back
-drm_cflush_pages() could make it work in both cases
-
-BR,
--R
+> >               *str =3D strchr(*brl_options, ',');
+> >               if (!*str) {
+> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> []
+> > @@ -121,13 +121,13 @@ static int __control_devkmsg(char *str)
+> >       if (!str)
+> >               return -EINVAL;
+> >
+> > -     if (!strncmp(str, "on", 2)) {
+> > +     if (str_has_prefix(str, "on")) {
+> >               devkmsg_log =3D DEVKMSG_LOG_MASK_ON;
+> >               return 2;
+> > -     } else if (!strncmp(str, "off", 3)) {
+> > +     } else if (str_has_prefix(str, "off")) {
+> >               devkmsg_log =3D DEVKMSG_LOG_MASK_OFF;
+> >               return 3;
+> > -     } else if (!strncmp(str, "ratelimit", 9)) {
+> > +     } else if (str_has_prefix(str, "ratelimit")) {
+> >               devkmsg_log =3D DEVKMSG_LOG_MASK_DEFAULT;
+> >               return 9;
+> >       }
+>
+> here too.
+>
+>
