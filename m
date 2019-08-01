@@ -2,185 +2,123 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6502BC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910BCC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43EA12089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672AD206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:04:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U3srDwm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbfHAGDG (ORCPT
+        id S1728340AbfHAGEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 02:03:06 -0400
-Received: from mga02.intel.com ([134.134.136.20]:50829 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728340AbfHAGDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 02:03:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 23:03:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,333,1559545200"; 
-   d="scan'208";a="184119291"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 31 Jul 2019 23:02:58 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH 3/3] iommu/vt-d: Cleanup after using per-device dma ops
-Date:   Thu,  1 Aug 2019 14:01:56 +0800
-Message-Id: <20190801060156.8564-4-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190801060156.8564-1-baolu.lu@linux.intel.com>
-References: <20190801060156.8564-1-baolu.lu@linux.intel.com>
+        Thu, 1 Aug 2019 02:04:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33682 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfHAGEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 02:04:24 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h19so2805068wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 23:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZX8DEZG5Ea4sWFl/9jg9pO3wxEnjlg0LPax30I/HuEI=;
+        b=U3srDwm+9wseLkx5qtt3lUz/lvVsvqnqihuUwsbeXKkBgKpmgXujCZ4DbQH7AOaolj
+         b/xl/C0xgW1JTEIyvb3KdYWOGmXBTT9QoIou15Q6uOIkDObjSIEHmxuFIim03SEHLMk4
+         h984h9UQiyaxRtRWZ+J7g9vIBQLhFLDIdcescwEa4ySEzMXXC7ut/L2eFvD4t9UOlpPJ
+         DDPTTzxt+pxQcNp3V6t1xROnwsnYiB/YJO9SpXNnL6olRO9ZJPsYYOzIOeVg1IbXlxix
+         GOLbXj/l4mX0xpkrR7u2li4dyEz+eHUr/K5ByllfSMZZKMDEYLQSU4D4dCHlnz/RZsTi
+         N9hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZX8DEZG5Ea4sWFl/9jg9pO3wxEnjlg0LPax30I/HuEI=;
+        b=bsfDBz7+rSjaiADgi2mfSbNdH8ZL+LHaUYdeeF4XpkOLh1eHh+MWpglD14ROdihkEP
+         upb1goUT+7sWIucgAnJexVbsgNutXF7tndTegHSVjk74u+huGThq3L3NJ+0YA8xS4E75
+         6BNvFqnI8SSoPTpvtA3tGeaVUAX5AHQNQWaJ/DLHUlj9jHSwtg/LLpzyI+DE0/USM8WN
+         wrLm+gychxAInfc3KBGfI4WSyNuDgwdqvUF2TnJknGgLujPZJSdGFemW3XtEQpVeBdIq
+         /wldQpLQ03mgg6u/einUkJDQqsiIqHCA9p4xqX/shhrcfDrtmMMT/o2+djNXH0p5+iMD
+         0+0w==
+X-Gm-Message-State: APjAAAVWHb+kFKSUNy3dRaa/zdNtRr25Q6sApdtXc/YJGiRG1tPuBFPq
+        zSi5hfSXvL4t8nJ69jIC9xJgu4xTlrPkDfv1/YPgvw==
+X-Google-Smtp-Source: APXvYqz7Hx5Vl5ToMrMxE/l4VfUQcmbVYx2Oqw/jQf6dLJG1mYM9y8hd9gXbwqDQtby/tqAgS7dZqRzp/ZuqN9aCduY=
+X-Received: by 2002:a05:600c:20c1:: with SMTP id y1mr117636636wmm.10.1564639462519;
+ Wed, 31 Jul 2019 23:04:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <13353.1564635114@turing-police> <CAKv+Gu8EF3R05hLWHh7mgbgkUyzBwELctdVvSFMq+6Crw6Tf4A@mail.gmail.com>
+ <32521.1564638419@turing-police>
+In-Reply-To: <32521.1564638419@turing-police>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 1 Aug 2019 09:04:11 +0300
+Message-ID: <CAKv+Gu_zEO75s6o8bv4TXPxibSH-dCe-V46AYjL-dOEAvpQaqw@mail.gmail.com>
+Subject: Re: [PATCH] linux-next 20190731 - aegis128-core.c fails to build
+To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After using per-device dma ops, we don't need to check whether
-a dvice needs mapping, hence all checks of iommu_need_mapping()
-are unnecessary now.
+On Thu, 1 Aug 2019 at 08:47, Valdis Kl=C4=93tnieks <valdis.kletnieks@vt.edu=
+> wrote:
+>
+> On Thu, 01 Aug 2019 08:01:54 +0300, Ard Biesheuvel said:
+>
+> > > ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] unde=
+fined!
+> > > ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
+> > > ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] unde=
+fined!
+> > > make[1]: *** [scripts/Makefile.modpost:105: modules-modpost] Error 1
+> > > make: *** [Makefile:1299: modules] Error 2
+>
+> > Which compiler version are you using? All references to the
+> > crypt_aegis128_xx_simd() routines should disappear if
+> > CONFIG_CRYPTO_AEGIS128_SIMD is not set (in which case have_simd will
+> > always be false and so the compiler should optimize away those calls).
+>
+> gcc 9.1.1 obviously doesn't think it can be optimized away. Apparently, i=
+t's
+> not smart enough to realize that nothing sets have_simd in any of the fun=
+ctions
+> and therefor it's guaranteed to be zero, and  it can do dead code optimiz=
+ation
+> based on that.
+>
+> Now, if we had something like:
+>
+> #ifdef CONFIG_CRYPTO_AEGIS_128_SIMD
+> static bool have_simd;
+> #else
+> #define have_simd (0)
+> #endif
+>
+> then that should be enough to tell the compiler it can optimize it away, =
+except
+> that then runs into problems here:
+>
+>         if (IS_ENABLED(CONFIG_CRYPTO_AEGIS128_SIMD))
+>                 have_simd =3D crypto_aegis128_have_simd();
+>
+> because it will whine about the lack of an lvalue before it optimizes the=
+ assignment away...
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel-iommu.c | 50 ++++---------------------------------
- 1 file changed, 5 insertions(+), 45 deletions(-)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 609b539b93f6..f7399d98f404 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2761,17 +2761,6 @@ static int __init si_domain_init(int hw)
- 	return 0;
- }
- 
--static int identity_mapping(struct device *dev)
--{
--	struct device_domain_info *info;
--
--	info = dev->archdata.iommu;
--	if (info && info != DUMMY_DEVICE_DOMAIN_INFO)
--		return (info->domain == si_domain);
--
--	return 0;
--}
--
- static int domain_add_dev_info(struct dmar_domain *domain, struct device *dev)
- {
- 	struct dmar_domain *ndomain;
-@@ -3428,15 +3417,6 @@ static struct dmar_domain *get_private_domain_for_dev(struct device *dev)
- 	return domain;
- }
- 
--/* Check if the dev needs to go through non-identity map and unmap process.*/
--static bool iommu_need_mapping(struct device *dev)
--{
--	if (iommu_dummy(dev))
--		return false;
--
--	return !identity_mapping(dev);
--}
--
- static dma_addr_t __intel_map_single(struct device *dev, phys_addr_t paddr,
- 				     size_t size, int dir, u64 dma_mask)
- {
-@@ -3498,20 +3478,15 @@ static dma_addr_t intel_map_page(struct device *dev, struct page *page,
- 				 enum dma_data_direction dir,
- 				 unsigned long attrs)
- {
--	if (iommu_need_mapping(dev))
--		return __intel_map_single(dev, page_to_phys(page) + offset,
--				size, dir, *dev->dma_mask);
--	return dma_direct_map_page(dev, page, offset, size, dir, attrs);
-+	return __intel_map_single(dev, page_to_phys(page) + offset,
-+				  size, dir, *dev->dma_mask);
- }
- 
- static dma_addr_t intel_map_resource(struct device *dev, phys_addr_t phys_addr,
- 				     size_t size, enum dma_data_direction dir,
- 				     unsigned long attrs)
- {
--	if (iommu_need_mapping(dev))
--		return __intel_map_single(dev, phys_addr, size, dir,
--				*dev->dma_mask);
--	return dma_direct_map_resource(dev, phys_addr, size, dir, attrs);
-+	return __intel_map_single(dev, phys_addr, size, dir, *dev->dma_mask);
- }
- 
- static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
-@@ -3563,17 +3538,13 @@ static void intel_unmap_page(struct device *dev, dma_addr_t dev_addr,
- 			     size_t size, enum dma_data_direction dir,
- 			     unsigned long attrs)
- {
--	if (iommu_need_mapping(dev))
--		intel_unmap(dev, dev_addr, size);
--	else
--		dma_direct_unmap_page(dev, dev_addr, size, dir, attrs);
-+	intel_unmap(dev, dev_addr, size);
- }
- 
- static void intel_unmap_resource(struct device *dev, dma_addr_t dev_addr,
- 		size_t size, enum dma_data_direction dir, unsigned long attrs)
- {
--	if (iommu_need_mapping(dev))
--		intel_unmap(dev, dev_addr, size);
-+	intel_unmap(dev, dev_addr, size);
- }
- 
- static void *intel_alloc_coherent(struct device *dev, size_t size,
-@@ -3583,9 +3554,6 @@ static void *intel_alloc_coherent(struct device *dev, size_t size,
- 	struct page *page = NULL;
- 	int order;
- 
--	if (!iommu_need_mapping(dev))
--		return dma_direct_alloc(dev, size, dma_handle, flags, attrs);
--
- 	size = PAGE_ALIGN(size);
- 	order = get_order(size);
- 
-@@ -3619,9 +3587,6 @@ static void intel_free_coherent(struct device *dev, size_t size, void *vaddr,
- 	int order;
- 	struct page *page = virt_to_page(vaddr);
- 
--	if (!iommu_need_mapping(dev))
--		return dma_direct_free(dev, size, vaddr, dma_handle, attrs);
--
- 	size = PAGE_ALIGN(size);
- 	order = get_order(size);
- 
-@@ -3639,9 +3604,6 @@ static void intel_unmap_sg(struct device *dev, struct scatterlist *sglist,
- 	struct scatterlist *sg;
- 	int i;
- 
--	if (!iommu_need_mapping(dev))
--		return dma_direct_unmap_sg(dev, sglist, nelems, dir, attrs);
--
- 	for_each_sg(sglist, sg, nelems, i) {
- 		nrpages += aligned_nrpages(sg_dma_address(sg), sg_dma_len(sg));
- 	}
-@@ -3663,8 +3625,6 @@ static int intel_map_sg(struct device *dev, struct scatterlist *sglist, int nele
- 	struct intel_iommu *iommu;
- 
- 	BUG_ON(dir == DMA_NONE);
--	if (!iommu_need_mapping(dev))
--		return dma_direct_map_sg(dev, sglist, nelems, dir, attrs);
- 
- 	domain = deferred_attach_domain(dev);
- 	if (!domain)
--- 
-2.17.1
-
+The fact that crypto_aegis128_have_simd() does get optimized away, but
+crypto_aegis128_update_simd() doesn't (which is only called directly
+and not via a function pointer like the other two routines) makes me
+suspicious that this is some pathology in the compiler. Is this a
+distro build of gcc? Also, which architecture are you compiling for?
