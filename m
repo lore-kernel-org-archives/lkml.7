@@ -2,128 +2,123 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B58C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44157C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0210920B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0619220B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YfTqkkhe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKJz2gJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbfHADfO (ORCPT
+        id S1729399AbfHADff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 23:35:14 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42005 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfHADfO (ORCPT
+        Wed, 31 Jul 2019 23:35:35 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39064 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfHADfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 23:35:14 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h18so68812282qtm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 20:35:13 -0700 (PDT)
+        Wed, 31 Jul 2019 23:35:34 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r21so66642967otq.6;
+        Wed, 31 Jul 2019 20:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pbBP1a5vz9LXfKrpqmLYROgp0dhYosum5tb/DUbL2NE=;
-        b=YfTqkkhedP+30s5tEYK+1pvWEbwvFULIzEK/DaGsig/1f0A6WsHk+ovEGa3iYsMmfe
-         Nk/Jij7FxNUBbO2AdwscxfrXkWFQgEioqU5JydD+iqdEr0sHNsZziR7KGVkG1k15yPxh
-         g7msAiNaIfHm8FkRugefuVTQH1atly5yDXy5axyInrIF1vgeCo8BZ8rTieQ2svHqjiBS
-         z7U4203ve8JS7RlqvMuu53J+iT6cFxAXDf5dOPGPG1O3J0/Ra1i9LcLWsbV3xh1vR+Kp
-         TUWREKLrZ6dy9IxGmlNh9nJieNnn4T5GEMMCEBbF6Gqydd1hhOtODlGHmKi/pEFl9L51
-         gMnA==
+         :cc;
+        bh=tfDohl1hkWyeEmYeVB02shzd6/LeRxstafK96hHNxW0=;
+        b=oKJz2gJxDCanli9BPv4VG6U/5X4U5UnD11UUuzvvBmj0XdmH2vUg4t7rF8KK6UWDj/
+         QLWbNSok3bW+sM+rdFbWiMCadM6lYkOFsD2qTktf4K1y9l3XetlUSYnazqyn/XJC1VHh
+         +XEXoFVmTI/0cmXV7W0Yx8yesQLFy43K94EW/ZTX+t9S1oXOFQgJlAEn+MKzVgOvXIBj
+         aLSZu7q7VHVyHv/QUaOl8T9BhnVKs/rz+Y53NC7y43LIdInp8iaU+gkCCXj86pTeD/tq
+         Hj8+g7YQOYLwC2uPJJqSuAh2UsFtlX4xjTW8KcGB9ANDKMheaopQLgFVHC7JYYkf0Cw/
+         sp1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pbBP1a5vz9LXfKrpqmLYROgp0dhYosum5tb/DUbL2NE=;
-        b=YULPGYyXRetJtZyaQ78F5rIo2Jiy5VwmB/6fTfazgCdOjT6vq23KqhGnTdfgtL5mmj
-         1UUfvXhxGDsr3rMOqzaGvO6mCuBKMadSTlir1SCN7Q9GChDFIHhfAq3f3tCDwLw67/Rz
-         g4w2tXiuTAfzayfChnuxmmBEWEfCOZ9wHjL5BoEfaiGwjd/PDfkILVsL8h0+u6RQPiUo
-         LnkC8XzOwIfXTVR9yg4/vrSLtE1cic3XBXu2Z3ff1BgvrlboTFRe4I/y0zCqR+GdGkCd
-         sIl/35dU+3VKMgQCndVVb4IDatiGXVja6ZP0MeZgSSeskHItFu9iQiX8qSnCJS7FemQl
-         rzSA==
-X-Gm-Message-State: APjAAAXm4QTcN/ONbcpdfttGX1UzzhVMoxMINtUPsYstVVnvwYzqFWwT
-        Ns/emJ4qleSWa1E/LKgH8bnmRGh2TjdMiTJZnrU=
-X-Google-Smtp-Source: APXvYqzhcZCTwiX7Qnv2duqf9sCENlg+TpJDs9LzbWZZkr/9Wer2rXkPvtIg+YgdewF22FLewWMVhnRRzxMJO/P9/ew=
-X-Received: by 2002:a0c:8910:: with SMTP id 16mr91100016qvp.55.1564630513367;
- Wed, 31 Jul 2019 20:35:13 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=tfDohl1hkWyeEmYeVB02shzd6/LeRxstafK96hHNxW0=;
+        b=Jwh3XdXCJIMbfp3XjeX+WTDFJgWxYUr8E+21eaP5K8BHgoQ9UdTHRH/ajUDCpUcwKt
+         qaIvYmKtzm4ZrLVMu1/tzx8GgMBQxiR3QzYmDe7JRQBUJWsoX6cG6HWL1J9RdqNuyJ5O
+         wg7VbJhBO4+DAfFx4mFQuOoKVtLyx9YpDMzOO/nlEcuS7uqQogO7iDXf4PO9WiaePv9L
+         9e+Rg9EgXe8XYRtetp7gUfDxI9KIA0Go8XN6MDkX4qho3WzYqurn8n2Jq99QGe5Buneu
+         wbJh9Tgnyn6wIlhFZrBi9VdXcjrLWasHpVMEY9EySgwgDvEfuhZ2z7DFnH/OFWBJef4L
+         /jKg==
+X-Gm-Message-State: APjAAAUd4ul8admj3RVvEqpCRBDJnqz8tXrsiFrQPBKHj6jMPmt78hG/
+        q+CRQjNHuy5eeOTtOcJiZgzDcllt5CsNnnfJsdw=
+X-Google-Smtp-Source: APXvYqzEj5zqAqL4CVWZMSE8/eXPHQ6/+Opbz5Yftop3kbDtgICLJgAAjsit3aXWYne4p69TTLUGc0flvh/G4IxRPCw=
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr11102801oto.118.1564630533734;
+ Wed, 31 Jul 2019 20:35:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190109203911.7887-1-logang@deltatee.com> <20190109203911.7887-3-logang@deltatee.com>
- <CAEbi=3d0RNVKbDUwRL-o70O12XBV7q6n_UT-pLqFoh9omYJZKQ@mail.gmail.com> <c4298fdd-6fd6-fa7f-73f7-5ff016788e49@deltatee.com>
-In-Reply-To: <c4298fdd-6fd6-fa7f-73f7-5ff016788e49@deltatee.com>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Thu, 1 Aug 2019 11:34:37 +0800
-Message-ID: <CAEbi=3cn4+7zk2DU1iRa45CDwTsJYfkAV8jXHf-S7Jz63eYy-A@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] RISC-V: Implement sparsemem
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     greentime.hu@sifive.com, paul.walmsley@sifive.com,
-        Rob Herring <robh@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andrew Waterman <andrew@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Bates <sbates@raithlin.com>,
-        Zong Li <zong@andestech.com>, Olof Johansson <olof@lixom.net>,
-        linux-riscv@lists.infradead.org,
-        Michael Clark <michaeljclark@mac.com>,
-        Christoph Hellwig <hch@lst.de>
+References: <1564572438-15518-3-git-send-email-wanpengli@tencent.com>
+ <1564573198-16219-1-git-send-email-wanpengli@tencent.com> <9240ada8-8e18-d2b2-006e-41ededb89efb@redhat.com>
+In-Reply-To: <9240ada8-8e18-d2b2-006e-41ededb89efb@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 1 Aug 2019 11:35:17 +0800
+Message-ID: <CANRm+CwJyShOHCanUNmeq8Rr3OWJc1iw0vq5ZAF_WLD-0mSEHA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] KVM: Fix leak vCPU's VMCS value into other pCPU
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        "# v3 . 10+" <stable@vger.kernel.org>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Logan,
-
-Logan Gunthorpe <logang@deltatee.com> =E6=96=BC 2019=E5=B9=B48=E6=9C=881=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=881:08=E5=AF=AB=E9=81=93=EF=BC=9A
+On Wed, 31 Jul 2019 at 20:55, Paolo Bonzini <pbonzini@redhat.com> wrote:
 >
+> On 31/07/19 13:39, Wanpeng Li wrote:
+> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > index ed061d8..12f2c91 100644
+> > --- a/virt/kvm/kvm_main.c
+> > +++ b/virt/kvm/kvm_main.c
+> > @@ -2506,7 +2506,7 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *me, bool yield_to_kernel_mode)
+> >                               continue;
+> >                       if (vcpu == me)
+> >                               continue;
+> > -                     if (swait_active(&vcpu->wq) && !kvm_arch_vcpu_runnable(vcpu))
+> > +                     if (READ_ONCE(vcpu->preempted) && swait_active(&vcpu->wq))
+> >                               continue;
+> >                       if (READ_ONCE(vcpu->preempted) && yield_to_kernel_mode &&
+> >                               !kvm_arch_vcpu_in_kernel(vcpu))
+> >
 >
+> This cannot work.  swait_active means you are waiting, so you cannot be
+> involuntarily preempted.
 >
-> On 2019-07-31 12:30 a.m., Greentime Hu wrote:
-> > I look this issue more closely.
-> > I found it always sets each memblock region to node 0. Does this make s=
-ense?
-> > I am not sure if I understand this correctly. Do you have any idea for
-> > this? Thank you. :)
+> The problem here is simply that kvm_vcpu_has_events is being called
+> without holding the lock.  So kvm_arch_vcpu_runnable is okay, it's the
+> implementation that's wrong.
 >
-> Yes, I think this is normal. When we talk about memory nodes we're
-> talking about NUMA nodes which is unrelated to device tree nodes.
-
-Ok, but it seems the second memblock_region may overwrite the first
-memblock_region in for_each_memblock(memory, reg)  loop. It always
-uses this API to set to node 0.
-memblock_set_node(PFN_PHYS(start_pfn),PFN_PHYS(end_pfn - start_pfn),
-&memblock.memory,0)
-
-
-> I'm not really sure what's causing the crash. Have you verified it's
-> this patch that causes it? Is it related to there being a hole in your
-> memory, does it work if you only have one memory node?
+> Just rename the existing function to just vcpu_runnable and make a new
+> arch callback kvm_arch_dy_runnable.   kvm_arch_dy_runnable can be
+> conservative and only returns true for a subset of events, in particular
+> for x86 it can check:
 >
+> - vcpu->arch.pv.pv_unhalted
+>
+> - KVM_REQ_NMI or KVM_REQ_SMI or KVM_REQ_EVENT
+>
+> - PIR.ON if APICv is set
+>
+> Ultimately, all variables accessed in kvm_arch_dy_runnable should be
+> accessed with READ_ONCE or atomic_read.
+>
+> And for all architectures, kvm_vcpu_on_spin should check
+> list_empty_careful(&vcpu->async_pf.done)
+>
+> It's okay if your patch renames the function in non-x86 architectures,
+> leaving the fix to maintainers.  So, let's CC Marc and Christian since
+> ARM and s390 have pretty complex kvm_arch_vcpu_runnable as well.
 
-It works fine if there is only one memory node described in dts.
+Ok, just sent patch to do this.
 
-I think it is related to there being a hole in the device tree script.
-I don't actually have a platform with a hole in the memory region, so
-I use device tree script to describe it.
-
-The physical address layout will be like this.
-2GB-3GB-hole-6GB-7GB
-
-memory@80000000 {
-    device_type =3D "memory";
-    reg =3D <0x0 0x80000000 0x0 0x40000000>;
-};
-memory@180000000 {
-    device_type =3D "memory";
-    reg =3D <0x1 0x80000000 0x0 0x40000000>;
-};
-
-Thank you for the quick reply. :)
+Regards,
+Wanpeng Li
