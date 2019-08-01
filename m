@@ -2,130 +2,81 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C34C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50A5C32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80FE2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:22:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fDskO53+"
+	by mail.kernel.org (Postfix) with ESMTP id 7D53420B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbfHABW5 (ORCPT
+        id S1729640AbfHABXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 21:22:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39835 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfHABW5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 21:22:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id f4so140676106ioh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 18:22:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MnK27LorQx4kBNENrZZMBjXUFWjugtUM3KSU8CcHvaU=;
-        b=fDskO53+M3eAyhvlp4uHkoXvYG2j5rGjCWKBixWadEWj02AjgaXDbqhwKioU+3qW2o
-         2bn38sMgdHusHjS0wug7Do4N63tn+nhlFhSYlX/POqW3Zf7Y/emH3zX4BlWdbvCWv2UJ
-         XrCMcEC9I6InRFlmfr9bpuRzylw6dSr+C5PHB5LmqU2gbuiOxobxqxFb8aYAHmadzSUH
-         YFURzsQJARKU/tDUShvS8QrvG/svVNABlmtpQvxtZ7AXSuoaE0QxToVl4THX/1ijG4k9
-         aFybKbzfHaIWBUGAtT4JrPkZDeMyDXjlV0kkb8WbHOx5q0CAGb8L84SJ49zhtNRboDIi
-         wcmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MnK27LorQx4kBNENrZZMBjXUFWjugtUM3KSU8CcHvaU=;
-        b=KGY9EEBxYICHxa2+t6mIS7Y4XpkZMCESxCFP1stwECxZ8TIDfHyfrWgQODJmaLC3WL
-         ESFERmCNqgmwL8/E5VfcUu0DIrGKNLF8X9L/GycJTEd6TVu3sPCTnCK05IYIHxCA15ly
-         K5y2jp21etMOzfgfXQnIXYV4I/GqzGMwXiqnfFeBApLtYJBtlvsaM6pQiOk8uIUxy3ca
-         gNS8OQ5HYR7Cw+FEuZswFXnHFdZ6DWfaBZCdlOZ8Cvusziwb9qIQ9BrFpQjFHMbsdi9N
-         avZYgEyhtlJcnKACTbP1Q/AntxV+YijHyfBVe1rPwWfgs6uh1u3TU6InhhbQxicLzN5g
-         X1+A==
-X-Gm-Message-State: APjAAAUQ5pVH0QGDnEAJZNMI/V0P91GZ4Cy23GpWt9o/Ocm3OarYFri7
-        271tnQrbzmrg6yjrns2FBuc=
-X-Google-Smtp-Source: APXvYqxgA8cfMWHt5m21MTKQZo4cFmaoZ+a6a6qu3BsAS77xfK8WhcwaYGZTBIAt86TmiqOVh9XsUA==
-X-Received: by 2002:a6b:2c96:: with SMTP id s144mr114369478ios.57.1564622576567;
-        Wed, 31 Jul 2019 18:22:56 -0700 (PDT)
-Received: from [192.168.0.8] (97-116-188-146.mpls.qwest.net. [97.116.188.146])
-        by smtp.googlemail.com with ESMTPSA id h8sm63351518ioq.61.2019.07.31.18.22.55
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 18:22:56 -0700 (PDT)
-Subject: Re: [PATCH RFC 2/2] futex: Implement mechanism to wait on any of
- several futexes
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, dvhart@infradead.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Steven Noonan <steven@valvesoftware.com>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>
-References: <20190730220602.28781-1-krisman@collabora.com>
- <20190730220602.28781-2-krisman@collabora.com>
- <alpine.DEB.2.21.1908010039470.1788@nanos.tec.linutronix.de>
-From:   Zebediah Figura <z.figura12@gmail.com>
-Message-ID: <31ad0ada-ecc7-60b3-e204-898460254be3@gmail.com>
-Date:   Wed, 31 Jul 2019 20:22:54 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 21:23:42 -0400
+Received: from ozlabs.org ([203.11.71.1]:50933 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726595AbfHABXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 21:23:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zXcV6B1Wz9s7T;
+        Thu,  1 Aug 2019 11:23:37 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Luca Coelho <luca@coelho.fi>
+Subject: Re: Build regressions/improvements in v5.3-rc2
+In-Reply-To: <20190729081727.6094-1-geert@linux-m68k.org>
+References: <20190729081727.6094-1-geert@linux-m68k.org>
+Date:   Thu, 01 Aug 2019 11:23:37 +1000
+Message-ID: <871ry5r84m.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908010039470.1788@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/19 7:45 PM, Thomas Gleixner wrote:
-> If I assume a maximum of 65 futexes which got mentioned in one of the
-> replies then this will allocate 7280 bytes alone for the futex_q array with
-> a stock debian config which has no debug options enabled which would bloat
-> the struct. Adding the futex_wait_block array into the same allocation
-> becomes larger than 8K which already exceeds thelimit of SLUB kmem
-> caches and forces the whole thing into the page allocator directly.
-> 
-> This sucks.
-> 
-> Also I'm confused about the 64 maximum resulting in 65 futexes comment in
-> one of the mails.
-> 
-> Can you please explain what you are trying to do exatly on the user space
-> side?
+Geert Uytterhoeven <geert@linux-m68k.org> writes:
+> Below is the list of build error/warning regressions/improvements in
+> v5.3-rc2[1] compared to v5.2[2].
+>
+> Summarized:
+>   - build errors: +10/-1
+>   - build warnings: +136/-133
+>
+> JFYI, when comparing v5.3-rc2[1] to v5.3-rc1[3], the summaries are:
+>   - build errors: +0/-1
+>   - build warnings: +125/-31
+>
+> Note that there may be false regressions, as some logs are incomplete.
+> Still, they're build errors/warnings.
+>
+> Happy fixing! ;-)
+>
+> Thanks to the linux-next team for providing the build service.
+>
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/609488bc979f99f805f34e9a32c1e3b71179d10b/ (241 out of 242 configs)
+> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0ecfebd2b52404ae0c54a878c872bb93363ada36/ (all 242 configs)
+> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/5f9e832c137075045d15cd6899ab0505cfb2ca4b/ (241 out of 242 configs)
+>
+>
+> *** ERRORS ***
+>
+> 10 error regressions:
+...
+>   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2446' declared with attribute error: BUILD_BUG_ON failed: err_str[sizeof(err_str) - 2] != '\n':  => 2445:3
+>   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2452' declared with attribute error: BUILD_BUG_ON failed: err_str[sizeof(err_str) - 2] != '\n':  => 2451:3
+>   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2790' declared with attribute error: BUILD_BUG_ON failed: invalid_ap_str[sizeof(invalid_ap_str) - 2] != '\n':  => 2789:5
+>   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2801' declared with attribute error: BUILD_BUG_ON failed: invalid_ap_str[sizeof(invalid_ap_str) - 2] != '\n':  => 2800:5
 
-The extra futex comes from the fact that there are a couple of, as it 
-were, out-of-band ways to wake up a thread on Windows. [Specifically, a 
-thread can enter an "alertable" wait in which case it will be woken up 
-by a request from another thread to execute an "asynchronous procedure 
-call".] It's easiest for us to just add another futex to the list in 
-that case.
+These have been reported and a fix is apparently on its way, but no sign
+of it yet.
 
-I'd also point out, for whatever it's worth, that while 64 is a hard 
-limit, real applications almost never go nearly that high. By far the 
-most common number of primitives to select on is one. 
-Performance-critical code never tends to wait on more than three. The 
-most I've ever seen is twelve.
+https://lore.kernel.org/lkml/20190712001708.170259-1-ndesaulniers@google.com/
 
-If you'd like to see the user-side source, most of the relevant code is 
-at [1], in particular the functions __fsync_wait_objects() [line 712] 
-and do_single_wait [line 655]. Please feel free to ask for further 
-clarification.
-
-[1] 
-https://github.com/ValveSoftware/wine/blob/proton_4.11/dlls/ntdll/fsync.c
-
-
-
-> 
-> Thanks,
-> 
-> 	tglx
-> 
-
+cheers
