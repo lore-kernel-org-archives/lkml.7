@@ -2,113 +2,254 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2257C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62C0C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7448421773
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:53:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IapEsavW"
+	by mail.kernel.org (Postfix) with ESMTP id 9113520838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:53:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564696424;
+	bh=zj83okLyIYavnGvsyCan0qr/OGuCk8648E33+ERiAa4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r2DJ0pF8zEYVnLVPe5OIyohVuVXboiYcHJbqhRBY4fs8lhNb75Ut+uhQAMXBCMSbP
+	 27plghifmIAqX3aqCqxg1w5OpzIH3VB9+1rmYzPbRLknb9sS9iB80x8rD+j12QApEo
+	 Vdh4IUSlwcK+6f9/OgpRBChUv7Gu57ZyPV7rDXr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732610AbfHAVxY (ORCPT
+        id S1732717AbfHAVxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:53:24 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38704 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfHAVxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:53:24 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s15so43130670wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 14:53:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nrK5VYG3frnI0dPT19ekGa5QOgRLyzUshpUSH8DEy3w=;
-        b=IapEsavWifq9MMtfS+pSqtYQBiSMaWWZwsItdY5MmXzc/tfTosGEbKcSjBbk0rLlHs
-         8WQKrrXZe8mHveH0D3Naj2ipWJ2NTx3UQnKZ5VJKH17f+9AOah0NzcGs+K/4lNT3EU4a
-         xlbVo9VVNJ3kHlmXyCBpC0s+f5W1LVjHLy0LYEGfsF/UM8cTT3MChTDYgKUB+1g0DzMe
-         Keqh8veN4y8W2ZECAku8GlDf3nBXJc49DVCxkH7r5psE3nlglJQea5w4bEBQIQzngiZe
-         T4IO92Q4T718QN0nkoeOorIU7xMKz6vyfc2N6Nt8qERw73XxvFGvxq0Ctw6UrFQP622X
-         hM7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nrK5VYG3frnI0dPT19ekGa5QOgRLyzUshpUSH8DEy3w=;
-        b=SF7PQ4FWWCnClliRSgER7A75TSUdmkdc+TkPls41Urt3ILOadoGdRBgahyQudYvoRI
-         yBLbkyLSYBYCIXsTTFoCJz2BZEPkixk5Lv7c3E2mjbhK6nhkXoMjJ9GHIkJ1N3HYNTpC
-         tUAN4yhtLvTyXyQ4uZ3UMZXBs7fPzdkKQ5tbTuE+Oa0eqOSYaGVxj+3HA5lAf+p3w2v7
-         kXHDZkPp4Y+tWF2m2WgJ6HzVfCqnVeOV8MoSUApsv6ijehUtoLX3CLbiAdM3Uj6C2QzK
-         Dt3BiPlQzdj2vN68N341YKrqSrTpvjCx7JXVbEYAB0EGarnhW747CQhLd+t8J4/D7zfb
-         9fVg==
-X-Gm-Message-State: APjAAAVwK2QJD66W5dO7qS3qeDPECKaq+1S1cmbRjHUIFDXcibOsKdvz
-        uH6ejAKKFqi+FJR9aXCaKOmkcDQ=
-X-Google-Smtp-Source: APXvYqwvgLxH3Gn3z5vik1rnTRWKuZ5qu4WddFDpB89hoMKrNLpXlWEf3II4gl8IyKLS7E/PjE0mrg==
-X-Received: by 2002:a1c:f918:: with SMTP id x24mr510225wmh.132.1564696402302;
-        Thu, 01 Aug 2019 14:53:22 -0700 (PDT)
-Received: from avx2 ([46.53.248.54])
-        by smtp.gmail.com with ESMTPSA id q18sm89245892wrw.36.2019.08.01.14.53.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 14:53:21 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 00:53:19 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-        jing.lin@intel.com, bp@alien8.de, x86@kernel.org
-Subject: Re: [PATCH] x86/asm: Add support for MOVDIR64B instruction
-Message-ID: <20190801215319.GA8277@avx2>
-References: <20190801194348.GA6059@avx2>
- <20190801194947.GA12033@agluck-desk2.amr.corp.intel.com>
+        Thu, 1 Aug 2019 17:53:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732503AbfHAVxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 17:53:43 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 450972080C;
+        Thu,  1 Aug 2019 21:53:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564696421;
+        bh=zj83okLyIYavnGvsyCan0qr/OGuCk8648E33+ERiAa4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jTCb/6QUQUiIh/v25/hntXLRXzgDYnHALtUZ9xcbddsq6gA4oSrtmkUwKiCQ+W43w
+         0c47fiu13qk/q/LwZehd+y7VbH9RvtASAs/vJgyLxHEVgagvwaescR7NOB/9NQPQrS
+         JXi1cjcYKopH1h4qprA7QAFoT8kuMoxZnmi5eQ+c=
+Date:   Thu, 1 Aug 2019 16:53:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
+        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
+ downstream component
+Message-ID: <20190801215339.GF151852@google.com>
+References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
+ <20190703133953.GK128603@google.com>
+ <20190703150341.GW2640@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801194947.GA12033@agluck-desk2.amr.corp.intel.com>
+In-Reply-To: <20190703150341.GW2640@lahna.fi.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 12:49:48PM -0700, Luck, Tony wrote:
-> On Thu, Aug 01, 2019 at 10:43:48PM +0300, Alexey Dobriyan wrote:
-> > > +static inline void movdir64b(void *dst, const void *src)
+[+cc FPGA folks, just FYI; I'm pretty sure PCI could do a much better
+job supporting FPGAs, so any input is welcome!]
+
+On Wed, Jul 03, 2019 at 06:03:41PM +0300, Mika Westerberg wrote:
+> On Wed, Jul 03, 2019 at 08:39:53AM -0500, Bjorn Helgaas wrote:
+> > On Wed, May 29, 2019 at 01:49:42PM +0300, Mika Westerberg wrote:
+> > > PCIe root and downstream ports have link control register that can be
+> > > used disable the link from software. This can be useful for instance
+> > > when performing "software" hotplug on systems that do not support real
+> > > PCIe/ACPI hotplug.
+> > > 
+> > > For example when used with FPGA card we can burn a new FPGA image
+> > > without need to reboot the system.
+> > > 
+> > > First we remove the FGPA device from Linux PCI stack:
+> > > 
+> > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/0000:02:00.0/remove
+> > > 
+> > > Then we disable the link:
+> > > 
+> > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/link_disable
+> > > 
+> > > By doing this we prevent the kernel from accessing the hardware while we
+> > > burn the new FPGA image. 
+> > 
+> > What is the case where the kernel accesses the hardware?  You've
+> > already done the remove, so the pci_dev is gone.  Is this to protect
+> > against another user doing a rescan?  Or is there some spurious event
+> > during the FPGA update that causes an interrupt that causes pciehp to
+> > rescan?  Something else?
+> 
+> Protect against another user doing rescan.
+
+I'm not 100% sure this is enough of an issue to warrant a new sysfs
+file.  The file is visible all the time to everybody, but it only
+protects root from shooting him/herself in the foot.
+
+> > I guess this particular FPGA update must be done via some side channel
+> > (not the PCIe link)?  I assume there are other FPGA arrangements where
+> > the update *would* be done via the PCIe link, and we would just do a
+> > reset to make the update take effect.
+> 
+> In this setup the FPGA is programmed using side channel. I haven't seen
+> the actual system but I think it is some sort of FPGA programmer
+> connected to another system.
+> 
+> > > Once the new FPGA is burned we can re-enable
+> > > the link and rescan the new and possibly different device:
+> > > 
+> > >   # echo 0 > /sys/bus/pci/devices/0000:00:01.1/link_disable
+> > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/rescan
+> > > 
+> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-bus-pci |  8 +++
+> > >  drivers/pci/pci-sysfs.c                 | 65 ++++++++++++++++++++++++-
+> > >  2 files changed, 72 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> > > index 8bfee557e50e..c93d6b9ab580 100644
+> > > --- a/Documentation/ABI/testing/sysfs-bus-pci
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> > > @@ -324,6 +324,14 @@ Description:
+> > >  		This is similar to /sys/bus/pci/drivers_autoprobe, but
+> > >  		affects only the VFs associated with a specific PF.
+> > >  
+> > > +What:		/sys/bus/pci/devices/.../link_disable
+> > > +Date:		September 2019
+> > > +Contact:	Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > +Description:
+> > > +		PCIe root and downstream ports have this attribute. Writing
+> > > +		1 causes the link to downstream component be disabled.
+> > > +		Re-enabling the link happens by writing 0 instead.
+> > > +
+> > >  What:		/sys/bus/pci/devices/.../p2pmem/size
+> > >  Date:		November 2017
+> > >  Contact:	Logan Gunthorpe <logang@deltatee.com>
+> > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > index 6d27475e39b2..dfcd21745192 100644
+> > > --- a/drivers/pci/pci-sysfs.c
+> > > +++ b/drivers/pci/pci-sysfs.c
+> > > @@ -218,6 +218,56 @@ static ssize_t current_link_width_show(struct device *dev,
+> > >  }
+> > >  static DEVICE_ATTR_RO(current_link_width);
+> > >  
+> > > +static ssize_t link_disable_show(struct device *dev,
+> > > +				 struct device_attribute *attr, char *buf)
 > > > +{
-> > > +	/* movdir64b [rdx], rax */
-> > > +	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
-> > > +			: "=m" (*(char *)dst)
-> >                                ^^^^^^^^^^
-> > 
-> > > +			: "d" (src), "a" (dst));
+> > > +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> > > +	u16 linkctl;
+> > > +	int ret;
+> > > +
+> > > +	ret = pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &linkctl);
+> > > +	if (ret)
+> > > +		return -EINVAL;
+> > > +
+> > > +	return sprintf(buf, "%d\n", !!(linkctl & PCI_EXP_LNKCTL_LD));
 > > > +}
+> > > +
+> > > +static ssize_t link_disable_store(struct device *dev,
+> > > +				  struct device_attribute *attr,
+> > > +				  const char *buf, size_t count)
+> > > +{
+> > > +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> > > +	u16 linkctl;
+> > > +	bool disable;
+> > > +	int ret;
+> > > +
+> > > +	ret = kstrtobool(buf, &disable);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &linkctl);
+> > > +	if (ret)
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (disable) {
+> > > +		if (linkctl & PCI_EXP_LNKCTL_LD)
+> > > +			goto out;
+> > > +		linkctl |= PCI_EXP_LNKCTL_LD;
+> > > +	} else {
+> > > +		if (!(linkctl & PCI_EXP_LNKCTL_LD))
+> > > +			goto out;
+> > > +		linkctl &= ~PCI_EXP_LNKCTL_LD;
+> > > +	}
+> > > +
+> > > +	ret = pcie_capability_write_word(pci_dev, PCI_EXP_LNKCTL, linkctl);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +out:
+> > > +	return count;
+> > > +}
+> > > +static DEVICE_ATTR_RW(link_disable);
+> > > +
+> > >  static ssize_t secondary_bus_number_show(struct device *dev,
+> > >  					 struct device_attribute *attr,
+> > >  					 char *buf)
+> > > @@ -785,6 +835,7 @@ static struct attribute *pcie_dev_attrs[] = {
+> > >  	&dev_attr_current_link_width.attr,
+> > >  	&dev_attr_max_link_width.attr,
+> > >  	&dev_attr_max_link_speed.attr,
+> > > +	&dev_attr_link_disable.attr,
+> > >  	NULL,
+> > >  };
+> > >  
+> > > @@ -1656,8 +1707,20 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
+> > >  	struct device *dev = kobj_to_dev(kobj);
+> > >  	struct pci_dev *pdev = to_pci_dev(dev);
+> > >  
+> > > -	if (pci_is_pcie(pdev))
+> > > +	if (pci_is_pcie(pdev)) {
+> > > +		if (a == &dev_attr_link_disable.attr) {
+> > > +			switch (pci_pcie_type(pdev)) {
+> > > +			case PCI_EXP_TYPE_ROOT_PORT:
+> > > +			case PCI_EXP_TYPE_DOWNSTREAM:
 > > 
-> > Probably needs fake 64-byte type, so that compiler knows what is dirty.
+> > This is actually not completely reliable because there are weird
+> > systems that don't identify upstream/downstream ports correctly, e.g.,
+> > see d0751b98dfa3 ("PCI: Add dev->has_secondary_link to track
+> > downstream PCIe links") and c8fc9339409d ("PCI/ASPM: Use
+> > dev->has_secondary_link to find downstream links").
 > 
-> Would that be something like this?
+> D'oh!
 > 
-> static inline void movdir64b(void *dst, const void *src)
-> {
-> 	struct dstbytes {
-> 		char pad[64];
-> 	};
+> It never came to my mind that using pci_pcie_type() would not be
+> reliable. Thanks for pointing it out.
 > 
-> 	/* movdir64b [rdx], rax */
-> 	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
-> 		     : "=m" (*(struct dstbytes *)dst)
-> 		     : "d" (src), "a" (dst));
-> }
+> > I think I suggested the dev->has_secondary_link approach, but I now
+> > think that was a mistake because it means we have to remember to look
+> > at has_secondary_link instead of doing the obvious thing like your
+> > code.
+> > 
+> > set_pcie_port_type() detects those unusual topologies, and I think it
+> > would probably be better for it to just change the cached caps reg
+> > used by pci_pcie_type() so checking for PCI_EXP_TYPE_DOWNSTREAM does
+> > the right thing.
 > 
-> Or did you have something else in mind?
+> You mean modify set_pcie_port_type() to correct the type if it finds:
+> 
+>   type == PCI_EXP_TYPE_UPSTREAM && !pdev->has_secondary_link => type = PCI_EXP_TYPE_DOWNSTREAM
+> 
+> or
+> 
+>   type == PCI_EXP_TYPE_DOWNSTREAM && pdev->has_secondary_link => type = PCI_EXP_TYPE_UPSTREAM
+> 
+> ? Assuming my understanding of pdev->has_secondary_link is correct.
 
-Well, it doesn't need a name:
+I was hoping we could get rid of "has_secondary_link" completely if we
+corrected the type, but I'm not sure that's possible.
 
-	: "=m" (*(struct{char _[64];}*)dst)
-
-But yes, something like that.
-
-Can't cast to "char[64]" :-(
+Bjorn
