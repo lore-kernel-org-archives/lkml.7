@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF12C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48454C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1D8214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF10214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:18:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o3Y/TsIS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aABm2nu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbfHALS2 (ORCPT
+        id S1730410AbfHALS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:18:28 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:50864 "EHLO
+        Thu, 1 Aug 2019 07:18:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50866 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbfHALSW (ORCPT
+        with ESMTP id S1729802AbfHALSW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 1 Aug 2019 07:18:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -28,26 +28,27 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=RShUMMtmLWW/JRpvXQyg8jZ/IGVNtUn4GyYteFYWmvo=; b=o3Y/TsISOb8ysis9GPxh/tcqM+
-        FHI/rH0evddZFY4BJtQhbwyqh3oo6LCDY7RjaJkVDAAdGpjCNufqG28L7iucmETyB2azGTfboLVD+
-        VJ8APT9PnGBy+aiIjG0rJWjzhKF9RTA2FY8mU7MNU/jQeZuhkeA7BsRW3+dWrI0kSfopzAtRJvn+R
-        tn7fYrcdcmov7RZeglA4dXEABU/XK3O8yd5EeFbcmX2OOic//NKH124kAqPRr8U34+INzYSguq5ZD
-        zQBe1SXB3LSLQw8qs0v6ZhxaoVwWvv1YLwbyhGKuM6FXmVXvUSATtAWDHgo0tyhQWv72iHCpqozev
-        bxjaVVeA==;
+        bh=MDmpY5EHj8U+zmmNaXw1ntCBz285jVsAmek2qVWzj1E=; b=aABm2nu9jDgmlCzsbre1rsw4Ak
+        OGgghGKpUWPzgmQERlBHr4p1a9E55RLrbmCl7sygRMRlKxdRGkxRuG/q6cLXG+g/IqQjwBq9Ec2gw
+        VN/Z19p6+0z6ig0KDmmc5kMMTBY+yRwPMkiUAFJyFCxd1ME0rj9DoTSfzREE5MbhDkG3SwnxNa1hy
+        Y4MAgAJPBcN9iwYB0sSlJzC+r2OjVPtGOpKnncEc+tz7lUmsXe8JV5TYqL1NGljvl9n3rVnkMhj3d
+        QSL4IwHmehgXKVUJ1Z2ueCzl5ouqmiEvAp964LlAwICOMUx8QNsPb6zQYRfd8Hq/MegTAJ3cCSZ1J
+        s5vYR+Wg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1ht968-0005fd-GX; Thu, 01 Aug 2019 11:18:16 +0000
+        id 1ht968-0005fc-GW; Thu, 01 Aug 2019 11:18:17 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 804FF20297646; Thu,  1 Aug 2019 13:18:12 +0200 (CEST)
-Message-Id: <20190801111541.742613597@infradead.org>
+        id 89CC7202975E3; Thu,  1 Aug 2019 13:18:12 +0200 (CEST)
+Message-Id: <20190801111541.858088180@infradead.org>
 User-Agent: quilt/0.65
-Date:   Thu, 01 Aug 2019 13:13:50 +0200
+Date:   Thu, 01 Aug 2019 13:13:52 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org
 Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        Juri Lelli <juri.lelli@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH 2/5] rcu/tree: Fix SCHED_FIFO params
+        Andy Walls <awalls@md.metrocast.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4/5] media/ivtv: Reduce default FIFO priority
 References: <20190801111348.530242235@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -56,35 +57,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A rather embarrasing mistake had us call sched_setscheduler() before
-initializing the parameters passed to it.
+The ivtv driver creates a FIFO-99 thread by default, reduce this to
+FIFO-1.
 
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Fixes: 1a763fd7c633 ("rcu/tree: Call setschedule() gp ktread to SCHED_FIFO outside of atomic region")
+FIFO-99 is the very highest priority available to SCHED_FIFO and
+it not a suitable default; it would indicate the ivtv work is the
+most important work on the machine.
+
+FIFO-1 gets it above all OTHER tasks, which seems high enough lacking
+better justification.
+
+Cc: Andy Walls <awalls@md.metrocast.net>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/rcu/tree.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/pci/ivtv/ivtv-driver.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3234,13 +3234,13 @@ static int __init rcu_spawn_gp_kthread(v
- 	t = kthread_create(rcu_gp_kthread, NULL, "%s", rcu_state.name);
- 	if (WARN_ONCE(IS_ERR(t), "%s: Could not start grace-period kthread, OOM is now expected behavior\n", __func__))
- 		return 0;
--	if (kthread_prio)
-+	if (kthread_prio) {
-+		sp.sched_priority = kthread_prio;
- 		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
-+	}
- 	rnp = rcu_get_root();
- 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	rcu_state.gp_kthread = t;
--	if (kthread_prio)
--		sp.sched_priority = kthread_prio;
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 	wake_up_process(t);
- 	rcu_spawn_nocb_kthreads();
+--- a/drivers/media/pci/ivtv/ivtv-driver.c
++++ b/drivers/media/pci/ivtv/ivtv-driver.c
+@@ -738,7 +738,7 @@ static void ivtv_process_options(struct
+  */
+ static int ivtv_init_struct1(struct ivtv *itv)
+ {
+-	struct sched_param param = { .sched_priority = 99 };
++	struct sched_param param = { .sched_priority = 1 };
+ 
+ 	itv->base_addr = pci_resource_start(itv->pdev, 0);
+ 	itv->enc_mbox.max_mbox = 2; /* the encoder has 3 mailboxes (0-2) */
 
 
