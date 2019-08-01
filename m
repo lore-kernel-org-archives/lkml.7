@@ -2,74 +2,96 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E13CC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA666C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F29E20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:41:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="NSZQCYCZ"
+	by mail.kernel.org (Postfix) with ESMTP id A3550206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731470AbfHAVlu (ORCPT
+        id S1731997AbfHAVmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:41:50 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35922 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730273AbfHAVlt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:41:49 -0400
-Received: by mail-lf1-f67.google.com with SMTP id q26so51413025lfc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 14:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wy5NJcQ2NTEJIuX16bOQiS1WPonz/S5C/OXL6ClZM8E=;
-        b=NSZQCYCZlvdefAiOE6lkVFKH/0MfWEwsNqY1dvxclHpGH/1Ij8ZFhbDtHkbxPrbUJh
-         Vs0FMC9vuUdWZoosLb5rHh6Kzlee6CeTvVxfDidOhK/sQBA6iUDzereRrAsmpvemrV6d
-         2vwzsLgn5YE1nDj57dyRroFW1t4hh45IFXQho=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wy5NJcQ2NTEJIuX16bOQiS1WPonz/S5C/OXL6ClZM8E=;
-        b=sFFjMCiAGLIebc7VdwSWnvmIr5BBOHDePPmFLQEFQkPA1iw+RC+eURxgFDDkGFsoC/
-         QYJUXihgdys0us8LeM5SHumKSPiHztPb3EVTQPHsjqGnCgQBUDUx6UvMPSHA2sgWnFP5
-         lN+dYL1JGmtEq/lOSDXSUQWiHjOMa06epUVSlOdtxu5EYRm6E9DHmDZ39EqjX4uovjs1
-         8Ot8gyBiYNVVg9YaE3+dmkOfH8oWAJYAhOCm4ZVeENc/2Dx04A1oixQdUw3e6aJyVTZA
-         erGAXMHJ7o7Zg0q5NZxAQZxwH/rnzLDkpB5PRwUD5RRjrFLK+ZnRR86O5PId8GVBhP+g
-         VCbA==
-X-Gm-Message-State: APjAAAUApj7buhOLTyFJZD+4B5jA8JUSkDzUs7odsyxymNCeTrvypc8L
-        y7bqKgu/rFRyF6U9Z4pSpvAFs4q1OJYCoY1HcIqi18Bo
-X-Google-Smtp-Source: APXvYqz0uWsugdX3fasAhfKy/3p7tlWt0iLS1cZzwqJhKhd7WGC+IFaUB1uXnZBg/lNKzSSt3dH08bmMCbjfDTHiTeo=
-X-Received: by 2002:ac2:5a44:: with SMTP id r4mr27941899lfn.118.1564695706755;
- Thu, 01 Aug 2019 14:41:46 -0700 (PDT)
+        Thu, 1 Aug 2019 17:42:08 -0400
+Received: from mga18.intel.com ([134.134.136.126]:22989 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729708AbfHAVmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 17:42:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 14:42:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,335,1559545200"; 
+   d="scan'208";a="175382650"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga003.jf.intel.com with ESMTP; 01 Aug 2019 14:42:07 -0700
+Date:   Thu, 1 Aug 2019 14:42:07 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: Unconditionally call x86 ops that are always
+ implemented
+Message-ID: <20190801214207.GF6783@linux.intel.com>
+References: <20190801164606.20777-1-sean.j.christopherson@intel.com>
+ <3337d56f-de99-6879-96c2-0255db68541d@oracle.com>
 MIME-Version: 1.0
-References: <20190801213922.158860-1-joel@joelfernandes.org>
-In-Reply-To: <20190801213922.158860-1-joel@joelfernandes.org>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Thu, 1 Aug 2019 17:41:35 -0400
-Message-ID: <CAEXW_YTp0UxtYGb5qZfVEpotfYvcYfjYj5Ob1M93Uidju6GxOw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] Doc updates to /dev branch
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        rcu <rcu@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3337d56f-de99-6879-96c2-0255db68541d@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 5:39 PM Joel Fernandes (Google)
-<joel@joelfernandes.org> wrote:
->
-> This series fixes the rcu/dev branch with the new ReST conversion patches.
->
+On Thu, Aug 01, 2019 at 02:39:38PM -0700, Krish Sadhukhan wrote:
+> 
+> 
+> On 08/01/2019 09:46 AM, Sean Christopherson wrote:
+> >Remove two stale checks for non-NULL ops now that they're implemented by
+> >both VMX and SVM.
+> >
+> >Fixes: 74f169090b6f ("kvm/svm: Setup MCG_CAP on AMD properly")
+> >Fixes: b31c114b82b2 ("KVM: X86: Provide a capability to disable PAUSE intercepts")
+> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >---
+> >  arch/x86/kvm/x86.c | 8 ++------
+> >  1 file changed, 2 insertions(+), 6 deletions(-)
+> >
+> >diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> >index 01e18caac825..2c25a19d436f 100644
+> >--- a/arch/x86/kvm/x86.c
+> >+++ b/arch/x86/kvm/x86.c
+> >@@ -3506,8 +3506,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(struct kvm_vcpu *vcpu,
+> >  	for (bank = 0; bank < bank_num; bank++)
+> >  		vcpu->arch.mce_banks[bank*4] = ~(u64)0;
+> >-	if (kvm_x86_ops->setup_mce)
+> >-		kvm_x86_ops->setup_mce(vcpu);
+> >+	kvm_x86_ops->setup_mce(vcpu);
+> >  out:
+> >  	return r;
+> >  }
+> >@@ -9313,10 +9312,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+> >  	kvm_page_track_init(kvm);
+> >  	kvm_mmu_init_vm(kvm);
+> >-	if (kvm_x86_ops->vm_init)
+> >-		return kvm_x86_ops->vm_init(kvm);
+> >-
+> >-	return 0;
+> >+	return kvm_x86_ops->vm_init(kvm);
+> >  }
+> >  static void kvm_unload_vcpu_mmu(struct kvm_vcpu *vcpu)
+> 
+> The following two ops are also implemented by both VMX and SVM:
+> 
+>         update_cr8_intercept
+>         update_pi_irte
 
-And as always, the patch 3/7 made it only to patchwork ;-)
-https://lore.kernel.org/patchwork/patch/1109660/
+Drat, I didn't think to grep for !kvm_x86_ops.  I'll spin a v2.  Thanks!
