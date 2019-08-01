@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCA2C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047D4C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9462084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C8720838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WJQONFkK"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KEn2iKzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387489AbfHASsj (ORCPT
+        id S2387528AbfHASsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 14:48:39 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:51540 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730486AbfHASsi (ORCPT
+        Thu, 1 Aug 2019 14:48:41 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:9110 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730581AbfHASsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 14:48:38 -0400
-Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
-        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71IlLl1006725
-        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 11:48:37 -0700
+        Thu, 1 Aug 2019 14:48:40 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71Im0xQ000403
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 11:48:38 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=zObU9GlGDcgEYU9jwlQPoLYzrtPGAUMxAXujM++xfYg=;
- b=WJQONFkK0FE6lpoNxg+1XKew9fiaKTTOFAiQ1p5PSDNvjeroNNKcQnUnrBQShy6SolDz
- NfJfzhvuYz9asuaFW9IuzSe7jpNSoDg95gO8sSNSZgFalmHvJSctd9OFlG8pVtNaZajj
- GV/p6l2/yGQOEfkRglFoqnmunwAyVtBIZX0= 
+ content-type; s=facebook; bh=+37X0RibitZUAeswArEIGq+Z3GPvqESwv4PubAKnT74=;
+ b=KEn2iKzrLT9jsBa3cwHz7s7TBpUPl4WhFgn+zaCYhgv2ie8mtyo9foOx6DRTRiWqU6m9
+ 5kmkWuj7Wqsyb4MHclgETGbNNY6XNKiN5ZdWE7I0luaJ47JndtuLFokJNA2JUOIVKJoq
+ uHqxr4odrTOjIpZk9vsSDZXOkazTDljzMAg= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0b-00082601.pphosted.com with ESMTP id 2u427wrx6v-6
+        by mx0a-00082601.pphosted.com with ESMTP id 2u435b8pnp-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 11:48:36 -0700
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 11:48:38 -0700
 Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
  mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 1 Aug 2019 11:48:34 -0700
+ 15.1.1713.5; Thu, 1 Aug 2019 11:48:37 -0700
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 483FD62E1FCA; Thu,  1 Aug 2019 11:48:33 -0700 (PDT)
+        id E577962E1FCA; Thu,  1 Aug 2019 11:48:36 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -52,9 +52,9 @@ CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
         <william.kucharski@oracle.com>, <srikar@linux.vnet.ibm.com>,
         Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v3 1/2] khugepaged: enable collapse pmd for pte-mapped THP
-Date:   Thu, 1 Aug 2019 11:48:22 -0700
-Message-ID: <20190801184823.3184410-2-songliubraving@fb.com>
+Subject: [PATCH v3 2/2] uprobe: collapse THP pmd after removing all uprobes
+Date:   Thu, 1 Aug 2019 11:48:23 -0700
+Message-ID: <20190801184823.3184410-3-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190801184823.3184410-1-songliubraving@fb.com>
 References: <20190801184823.3184410-1-songliubraving@fb.com>
@@ -64,9 +64,9 @@ Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=576 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=455 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908010195
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,244 +74,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-khugepaged needs exclusive mmap_sem to access page table. When it fails
-to lock mmap_sem, the page will fault in as pte-mapped THP. As the page
-is already a THP, khugepaged will not handle this pmd again.
-
-This patch enables the khugepaged to retry collapse the page table.
-
-struct mm_slot (in khugepaged.c) is extended with an array, containing
-addresses of pte-mapped THPs. We use array here for simplicity. We can
-easily replace it with more advanced data structures when needed. This
-array is protected by khugepaged_mm_lock.
-
-In khugepaged_scan_mm_slot(), if the mm contains pte-mapped THP, we try
-to collapse the page table.
-
-Since collapse may happen at an later time, some pages may already fault
-in. collapse_pte_mapped_thp() is added to properly handle these pages.
-collapse_pte_mapped_thp() also double checks whether all ptes in this pmd
-are mapping to the same THP. This is necessary because some subpage of
-the THP may be replaced, for example by uprobe. In such cases, it is not
-possible to collapse the pmd.
+After all uprobes are removed from the huge page (with PTE pgtable), it
+is possible to collapse the pmd and benefit from THP again. This patch
+does the collapse by calling collapse_pte_mapped_thp().
 
 Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- include/linux/khugepaged.h |  12 ++++
- mm/khugepaged.c            | 140 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 152 insertions(+)
+ kernel/events/uprobes.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
-index 082d1d2a5216..a75693b95071 100644
---- a/include/linux/khugepaged.h
-+++ b/include/linux/khugepaged.h
-@@ -15,6 +15,14 @@ extern int __khugepaged_enter(struct mm_struct *mm);
- extern void __khugepaged_exit(struct mm_struct *mm);
- extern int khugepaged_enter_vma_merge(struct vm_area_struct *vma,
- 				      unsigned long vm_flags);
-+#ifdef CONFIG_SHMEM
-+extern void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long haddr);
-+#else
-+static inline void collapse_pte_mapped_thp(struct mm_struct *mm,
-+					   unsigned long haddr)
-+{
-+}
-+#endif
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 27b596f14463..e5c30941ea04 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -26,6 +26,7 @@
+ #include <linux/percpu-rwsem.h>
+ #include <linux/task_work.h>
+ #include <linux/shmem_fs.h>
++#include <linux/khugepaged.h>
  
- #define khugepaged_enabled()					       \
- 	(transparent_hugepage_flags &				       \
-@@ -73,6 +81,10 @@ static inline int khugepaged_enter_vma_merge(struct vm_area_struct *vma,
- {
- 	return 0;
- }
-+static inline void collapse_pte_mapped_thp(struct mm_struct *mm,
-+					   unsigned long haddr)
-+{
-+}
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ #include <linux/uprobes.h>
  
- #endif /* _LINUX_KHUGEPAGED_H */
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index eaaa21b23215..8e8e53318605 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -76,6 +76,8 @@ static __read_mostly DEFINE_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
- 
- static struct kmem_cache *mm_slot_cache __read_mostly;
- 
-+#define MAX_PTE_MAPPED_THP 8
-+
- /**
-  * struct mm_slot - hash lookup from mm to mm_slot
-  * @hash: hash collision list
-@@ -86,6 +88,10 @@ struct mm_slot {
- 	struct hlist_node hash;
- 	struct list_head mm_node;
- 	struct mm_struct *mm;
-+
-+	/* pte-mapped THP in this mm */
-+	int nr_pte_mapped_thp;
-+	unsigned long pte_mapped_thp[MAX_PTE_MAPPED_THP];
- };
- 
- /**
-@@ -1248,6 +1254,135 @@ static void collect_mm_slot(struct mm_slot *mm_slot)
- }
- 
- #if defined(CONFIG_SHMEM) && defined(CONFIG_TRANSPARENT_HUGE_PAGECACHE)
-+/*
-+ * Notify khugepaged that given addr of the mm is pte-mapped THP. Then
-+ * khugepaged should try to collapse the page table.
-+ */
-+static int khugepaged_add_pte_mapped_thp(struct mm_struct *mm,
-+					 unsigned long addr)
-+{
-+	struct mm_slot *mm_slot;
-+	int ret = 0;
-+
-+	/* hold mmap_sem for khugepaged_test_exit() */
-+	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
-+	VM_BUG_ON(addr & ~HPAGE_PMD_MASK);
-+
-+	if (unlikely(khugepaged_test_exit(mm)))
-+		return 0;
-+
-+	if (!test_bit(MMF_VM_HUGEPAGE, &mm->flags) &&
-+	    !test_bit(MMF_DISABLE_THP, &mm->flags)) {
-+		ret = __khugepaged_enter(mm);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	spin_lock(&khugepaged_mm_lock);
-+	mm_slot = get_mm_slot(mm);
-+	if (likely(mm_slot && mm_slot->nr_pte_mapped_thp < MAX_PTE_MAPPED_THP))
-+		mm_slot->pte_mapped_thp[mm_slot->nr_pte_mapped_thp++] = addr;
-+	spin_unlock(&khugepaged_mm_lock);
-+	return 0;
-+}
-+
-+/**
-+ * Try to collapse a pte-mapped THP for mm at address haddr.
-+ *
-+ * This function checks whether all the PTEs in the PMD are pointing to the
-+ * right THP. If so, retract the page table so the THP can refault in with
-+ * as pmd-mapped.
-+ */
-+void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long haddr)
-+{
-+	struct vm_area_struct *vma = find_vma(mm, haddr);
-+	pmd_t *pmd = mm_find_pmd(mm, haddr);
-+	struct page *hpage = NULL;
-+	unsigned long addr;
-+	spinlock_t *ptl;
-+	int count = 0;
-+	pmd_t _pmd;
-+	int i;
-+
-+	VM_BUG_ON(haddr & ~HPAGE_PMD_MASK);
-+
-+	if (!vma || !vma->vm_file || !pmd)
-+		return;
-+
-+	/* step 1: check all mapped PTEs are to the right huge page */
-+	for (i = 0, addr = haddr; i < HPAGE_PMD_NR; i++, addr += PAGE_SIZE) {
-+		pte_t *pte = pte_offset_map(pmd, addr);
-+		struct page *page;
-+
-+		if (pte_none(*pte))
-+			continue;
-+
-+		page = vm_normal_page(vma, addr, *pte);
-+
-+		if (!PageCompound(page))
-+			return;
-+
-+		if (!hpage) {
-+			hpage = compound_head(page);
-+			if (hpage->mapping != vma->vm_file->f_mapping)
-+				return;
-+		}
-+
-+		if (hpage + i != page)
-+			return;
-+		count++;
-+	}
-+
-+	/* step 2: adjust rmap */
-+	for (i = 0, addr = haddr; i < HPAGE_PMD_NR; i++, addr += PAGE_SIZE) {
-+		pte_t *pte = pte_offset_map(pmd, addr);
-+		struct page *page;
-+
-+		if (pte_none(*pte))
-+			continue;
-+		page = vm_normal_page(vma, addr, *pte);
-+		page_remove_rmap(page, false);
-+	}
-+
-+	/* step 3: set proper refcount and mm_counters. */
-+	if (hpage) {
-+		page_ref_sub(hpage, count);
-+		add_mm_counter(vma->vm_mm, mm_counter_file(hpage), -count);
-+	}
-+
-+	/* step 4: collapse pmd */
-+	ptl = pmd_lock(vma->vm_mm, pmd);
-+	_pmd = pmdp_collapse_flush(vma, addr, pmd);
-+	spin_unlock(ptl);
-+	mm_dec_nr_ptes(mm);
-+	pte_free(mm, pmd_pgtable(_pmd));
-+}
-+
-+static int khugepaged_collapse_pte_mapped_thps(struct mm_slot *mm_slot)
-+{
-+	struct mm_struct *mm = mm_slot->mm;
-+	int i;
-+
-+	lockdep_assert_held(&khugepaged_mm_lock);
-+
-+	if (likely(mm_slot->nr_pte_mapped_thp == 0))
-+		return 0;
-+
-+	if (!down_write_trylock(&mm->mmap_sem))
-+		return -EBUSY;
-+
-+	if (unlikely(khugepaged_test_exit(mm)))
-+		goto out;
-+
-+	for (i = 0; i < mm_slot->nr_pte_mapped_thp; i++)
-+		collapse_pte_mapped_thp(mm, mm_slot->pte_mapped_thp[i]);
-+
-+out:
-+	mm_slot->nr_pte_mapped_thp = 0;
-+	up_write(&mm->mmap_sem);
-+	return 0;
-+}
-+
- static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
- {
+@@ -472,6 +473,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	struct page *old_page, *new_page;
  	struct vm_area_struct *vma;
-@@ -1281,6 +1416,10 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
- 			up_write(&vma->vm_mm->mmap_sem);
- 			mm_dec_nr_ptes(vma->vm_mm);
- 			pte_free(vma->vm_mm, pmd_pgtable(_pmd));
-+		} else if (down_read_trylock(&vma->vm_mm->mmap_sem)) {
-+			/* need down_read for khugepaged_test_exit() */
-+			khugepaged_add_pte_mapped_thp(vma->vm_mm, addr);
-+			up_read(&vma->vm_mm->mmap_sem);
- 		}
- 	}
- 	i_mmap_unlock_write(mapping);
-@@ -1667,6 +1806,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages,
- 		khugepaged_scan.address = 0;
- 		khugepaged_scan.mm_slot = mm_slot;
- 	}
-+	khugepaged_collapse_pte_mapped_thps(mm_slot);
- 	spin_unlock(&khugepaged_mm_lock);
+ 	int ret, is_register, ref_ctr_updated = 0;
++	bool orig_page_huge = false;
  
- 	mm = mm_slot->mm;
+ 	is_register = is_swbp_insn(&opcode);
+ 	uprobe = container_of(auprobe, struct uprobe, arch);
+@@ -529,6 +531,9 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 				/* let go new_page */
+ 				put_page(new_page);
+ 				new_page = NULL;
++
++				if (PageCompound(orig_page))
++					orig_page_huge = true;
+ 			}
+ 			put_page(orig_page);
+ 		}
+@@ -547,6 +552,10 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	if (ret && is_register && ref_ctr_updated)
+ 		update_ref_ctr(uprobe, mm, -1);
+ 
++	/* try collapse pmd for compound page */
++	if (!ret && orig_page_huge)
++		collapse_pte_mapped_thp(mm, vaddr & HPAGE_PMD_MASK);
++
+ 	return ret;
+ }
+ 
 -- 
 2.17.1
 
