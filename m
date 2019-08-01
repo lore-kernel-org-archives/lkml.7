@@ -2,168 +2,150 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F213AC32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B0BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39E0216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4732A205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qai+NTOj"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Ip3T/FmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbfHACuN (ORCPT
+        id S1728168AbfHACvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 22:50:13 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40559 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbfHACuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 22:50:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zZXK0vY4z9sMr;
-        Thu,  1 Aug 2019 12:50:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564627810;
-        bh=Vz4PbnGvp87fekQr8Axb0T3lKXfAHGX5+7DZxMwiTsE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qai+NTOjAghdddihkjQork1rjg5sA/onFT1l63P1d+xXvcnqjdnPG+LobkoGBsgCN
-         e114GOo3LM2yYHAKgh7T6+pyIUuY3C6QxoBpBf8TfNFB1Q73nNRqzveVgiHQQRxEYm
-         2UB92rK7D8sE8yUCT6jmHMwSbr1MHKZVwHZlGqBzfrberXpX6ekkwExH2j98PKPsLF
-         hwIRf5S8Pp5+iHDKv8SDaQcQoa1sleK37Flik66JWpPTVBEc7hJYNSU0UGWEyDBPd/
-         jzU6ONEE2txadkVi8Z/CdZolCbK2IfQrulmnLhQk66kgWzGNEzDb20fdVNGkUWeAly
-         8fEhEiKhwFAZA==
-Date:   Thu, 1 Aug 2019 12:50:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>
-Subject: linux-next: manual merge of the sound-asoc tree with the sound tree
-Message-ID: <20190801125008.4a533637@canb.auug.org.au>
+        Wed, 31 Jul 2019 22:51:22 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:48880 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfHACvV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 22:51:21 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x712pDvX024730
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 11:51:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x712pDvX024730
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564627874;
+        bh=6TJM9VDYF9EtQNeGWDC4vgS6nHe+nk5JsaYmJiVXyBI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ip3T/FmOcMM0Xe1G9kF0kVoTwbrk8BewSMJnPxRispVgtY50AhB8uFI3rOG3M9/QM
+         XLjmSx3URsrphsgwvgQdUY57MfeEMzr8IKvwp2zJljTdnoCYQ/FTmf/AqqA90Mq5CE
+         Rc/shGko8O6Sozs4Pnx9H0Wd/zCHvt4HvA4Lav7j6IoMWkHTd9w80ZWJqStvYT8nhj
+         TpiwvOOmJy8UalIPDjzobDQqg6bSLmAnMSbMQLF0SY7nAtoXj2AWy0NJXLOGP3jbaU
+         mzSot8oistN5lDod77IzhazhuL2o27wHMpat6HsD6Xb9wHOHYk8H5pZHZ9mZIM+kHS
+         qyumrdtP1ZZDQ==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id 2so47771454vso.8
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 19:51:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAXBrmW+T8baILD1sT6AzUDhnorG+VJ4Nr3P9hgvLfqgsobVGKnj
+        C/U9KdjE58CRiRYEHhr8BsydGg9YSrmVXhPcyAY=
+X-Google-Smtp-Source: APXvYqwHhHB2zdOBNLzdxW0bRxUMu2FfZ44yc107C8w3WGao4L0NcTxQPnTBuBwfLpd397ee2X7kKqxcaDQTatWMN2E=
+X-Received: by 2002:a67:d46:: with SMTP id 67mr81172763vsn.181.1564627872707;
+ Wed, 31 Jul 2019 19:51:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Of7hYDvcZhZJ_+VWo=quPjd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <0306bec0ec270b01b09441da3200252396abed27.camel@perches.com> <20190731190309.19909-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 1 Aug 2019 11:50:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT2r8J+4C8bAPDZ1R4Xk7Psr+fAS9wcs_c+JhuUqj-uAw@mail.gmail.com>
+Message-ID: <CAK7LNAT2r8J+4C8bAPDZ1R4Xk7Psr+fAS9wcs_c+JhuUqj-uAw@mail.gmail.com>
+Subject: Re: [PATCH] linux/bits.h: Add compile time sanity check of GENMASK inputs
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Of7hYDvcZhZJ_+VWo=quPjd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 1, 2019 at 4:04 AM Rikard Falkeborn
+<rikard.falkeborn@gmail.com> wrote:
+>
+> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+> as the first argument and the low bit as the second argument. Mixing
+> them will return a mask with zero bits set.
+>
+> Recent commits show getting this wrong is not uncommon, see e.g.
+> commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+> commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+> macro").
+>
+> To prevent such mistakes from appearing again, add compile time sanity
+> checking to the arguments of GENMASK() and GENMASK_ULL(). If both the
+> arguments are known at compile time, and the low bit is higher than the
+> high bit, break the build to detect the mistake immediately.
+>
+> Since GENMASK() is used in declarations, BUILD_BUG_OR_ZERO() must be
+> used instead of BUILD_BUG_ON(), and __is_constexpr() must be used instead
+> of __builtin_constant_p().
+>
+> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+> available in assembly") made the macros in linux/bits.h available in
+> assembly. Since neither BUILD_BUG_OR_ZERO() or __is_constexpr() are asm
+> compatible, disable the checks if the file is included in an asm file.
+>
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> ---
+> Joe Perches sent a series to fix the existing misuses of GENMASK() that
+> needs to be merged before this to avoid build failures. Currently, 7 of
+> the patches were not in Linus tree, and 2 were not in linux-next.
+>
+> Also, there's currently no asm users of bits.h, but since it was made
+> asm-compatible just two weeks ago it would be a shame to break it right
+> away...
+>
+>  include/linux/bits.h | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/bits.h b/include/linux/bits.h
+> index 669d69441a62..73489579eef9 100644
+> --- a/include/linux/bits.h
+> +++ b/include/linux/bits.h
+> @@ -18,12 +18,22 @@
+>   * position @h. For example
+>   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+>   */
+> +#ifndef __ASSEMBLY__
+> +#include <linux/build_bug.h>
+> +#define GENMASK_INPUT_CHECK(h, l)  BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> +               __is_constexpr(h) && __is_constexpr(l), (l) > (h), 0))
+> +#else
+> +#define GENMASK_INPUT_CHECK(h, l) 0
+> +#endif
+> +
+>  #define GENMASK(h, l) \
+> +       (GENMASK_INPUT_CHECK(h, l) + \
+>         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+> -        (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+> +        (~UL(0) >> (BITS_PER_LONG - 1 - (h)))))
+>
+>  #define GENMASK_ULL(h, l) \
+> +       (GENMASK_INPUT_CHECK(h, l) + \
+>         (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+> -        (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
+> +        (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h)))))
 
-Hi all,
 
-Today's linux-next merge of the sound-asoc tree got conflicts in:
+This is getting cluttered with so many parentheses.
 
-  sound/soc/intel/skylake/skl-nhlt.c
-  sound/soc/intel/skylake/skl.h
+One way of clean-up is to rename the current macros as follows:
 
-between commit:
+   GENMASK()    ->  __GENMASK()
+   GENMASK_UL() ->  __GENMASK_ULL()
 
-  1169cbf6b98e ("ASoC: Intel: Skylake: use common NHLT module")
+Then,
 
-from the sound tree and commit:
+#define GENMASK(h, l)       (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+#define GENMASK_ULL(h, l)   (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
 
-  bcc2a2dc3ba8 ("ASoC: Intel: Skylake: Merge skl_sst and skl into skl_dev s=
-truct")
 
-from the sound-asoc tree.
 
-I fixed it up (I think, see below (I used the sound tree version of
-ound/soc/intel/skylake/skl-nhlt.c)) and can carry the fix as necessary.
-This is now fixed as far as linux-next is concerned, but any non
-trivial conflicts should be mentioned to your upstream maintainer when
-your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc sound/soc/intel/skylake/skl-nhlt.c
-index 6f57ceb9efb7,6fc3a190067e..000000000000
---- a/sound/soc/intel/skylake/skl-nhlt.c
-+++ b/sound/soc/intel/skylake/skl-nhlt.c
-diff --cc sound/soc/intel/skylake/skl.h
-index f4dd6c767993,600a61f79b0a..000000000000
---- a/sound/soc/intel/skylake/skl.h
-+++ b/sound/soc/intel/skylake/skl.h
-@@@ -16,7 -16,9 +16,8 @@@
-  #include <sound/hdaudio_ext.h>
-  #include <sound/hda_codec.h>
-  #include <sound/soc.h>
- -#include "skl-nhlt.h"
-  #include "skl-ssp-clk.h"
-+ #include "skl-sst-ipc.h"
- =20
-  #define SKL_SUSPEND_DELAY 2000
- =20
-@@@ -128,24 -167,27 +166,24 @@@ struct skl_dsp_ops=20
-  int skl_platform_unregister(struct device *dev);
-  int skl_platform_register(struct device *dev);
- =20
-- struct nhlt_specific_cfg *skl_get_ep_blob(struct skl *skl, u32 instance,
- -struct nhlt_acpi_table *skl_nhlt_init(struct device *dev);
- -void skl_nhlt_free(struct nhlt_acpi_table *addr);
-+ struct nhlt_specific_cfg *skl_get_ep_blob(struct skl_dev *skl, u32 instan=
-ce,
-  					u8 link_type, u8 s_fmt, u8 no_ch,
-  					u32 s_rate, u8 dirn, u8 dev_type);
- =20
-- int skl_nhlt_update_topology_bin(struct skl *skl);
-- int skl_init_dsp(struct skl *skl);
-- int skl_free_dsp(struct skl *skl);
-- int skl_suspend_late_dsp(struct skl *skl);
-- int skl_suspend_dsp(struct skl *skl);
-- int skl_resume_dsp(struct skl *skl);
-- void skl_cleanup_resources(struct skl *skl);
- -int skl_get_dmic_geo(struct skl_dev *skl);
-+ int skl_nhlt_update_topology_bin(struct skl_dev *skl);
-+ int skl_init_dsp(struct skl_dev *skl);
-+ int skl_free_dsp(struct skl_dev *skl);
-+ int skl_suspend_late_dsp(struct skl_dev *skl);
-+ int skl_suspend_dsp(struct skl_dev *skl);
-+ int skl_resume_dsp(struct skl_dev *skl);
-+ void skl_cleanup_resources(struct skl_dev *skl);
-  const struct skl_dsp_ops *skl_get_dsp_ops(int pci_id);
-  void skl_update_d0i3c(struct device *dev, bool enable);
-- int skl_nhlt_create_sysfs(struct skl *skl);
-- void skl_nhlt_remove_sysfs(struct skl *skl);
-- void skl_get_clks(struct skl *skl, struct skl_ssp_clk *ssp_clks);
-+ int skl_nhlt_create_sysfs(struct skl_dev *skl);
-+ void skl_nhlt_remove_sysfs(struct skl_dev *skl);
-+ void skl_get_clks(struct skl_dev *skl, struct skl_ssp_clk *ssp_clks);
-  struct skl_clk_parent_src *skl_get_parent_clk(u8 clk_id);
-- int skl_dsp_set_dma_control(struct skl_sst *ctx, u32 *caps,
-+ int skl_dsp_set_dma_control(struct skl_dev *skl, u32 *caps,
-  				u32 caps_size, u32 node_id);
- =20
-  struct skl_module_cfg;
-
---Sig_/Of7hYDvcZhZJ_+VWo=quPjd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1CU2AACgkQAVBC80lX
-0Gx+Jgf6A9sBdThuP5HB4RNEfLuww0j7MwkSNFi/V4Ur1+70oJbE3elPkuy+VkrO
-JX4WOY0MXZ9j/b02nEkj3Tc5HAuKQlkPuSZcgNYOszHjw21ZbJRBS9OAbZ2wPp8i
-bGKpsMNjgDWyCrU9ef9hbtu0juMri/DIk6i1GtSuva6Z/dMH0iLc1MFG8w5kfmLS
-5gGZYmqKGOiW72Bt3QJhx9PaAiHyV4XQnp5Ru0u4YQkBCIwGEa0fXaHL8eTeXgX0
-3rMZmO5MuSq+I/3h1ev9AKHkA+KDokybFIuM1P39do69t/3KLdqQQkkyZtM9m9a5
-Tb9830pfCL7tTAGpMkdg0tgnGgDMkw==
-=S4cp
------END PGP SIGNATURE-----
-
---Sig_/Of7hYDvcZhZJ_+VWo=quPjd--
+-- 
+Best Regards
+Masahiro Yamada
