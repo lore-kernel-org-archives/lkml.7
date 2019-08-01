@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7486FC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0902FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430BB20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6FE20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389650AbfHAWVq (ORCPT
+        id S2389660AbfHAWVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:21:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21528 "EHLO
+        Thu, 1 Aug 2019 18:21:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14320 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389570AbfHAWVT (ORCPT
+        by vger.kernel.org with ESMTP id S2389563AbfHAWVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:21:19 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71MH7O7098602;
-        Thu, 1 Aug 2019 18:21:01 -0400
+        Thu, 1 Aug 2019 18:21:18 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71MGwmf068440;
+        Thu, 1 Aug 2019 18:20:59 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u457uqc6v-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u45607ndv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:21:00 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71MHD3d099768;
-        Thu, 1 Aug 2019 18:21:00 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u457uqc5m-1
+        Thu, 01 Aug 2019 18:20:59 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71MKexx078053;
+        Thu, 1 Aug 2019 18:20:59 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u45607nd7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:21:00 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MJmko017599;
-        Thu, 1 Aug 2019 22:20:58 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma02wdc.us.ibm.com with ESMTP id 2u0e85w6bg-1
+        Thu, 01 Aug 2019 18:20:59 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MJu47014819;
+        Thu, 1 Aug 2019 22:20:57 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma05wdc.us.ibm.com with ESMTP id 2u0e85w67h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 22:20:58 +0000
+        Thu, 01 Aug 2019 22:20:57 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MKwCC20382078
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MKvqD25756130
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Aug 2019 22:20:58 GMT
+        Thu, 1 Aug 2019 22:20:57 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 059DBB2068;
-        Thu,  1 Aug 2019 22:20:58 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6B743B2065;
+        Thu,  1 Aug 2019 22:20:57 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6FDDB2075;
+        by IMSVA (Postfix) with ESMTP id 3BD45B206B;
         Thu,  1 Aug 2019 22:20:57 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Thu,  1 Aug 2019 22:20:57 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id E610C16C9A4A; Thu,  1 Aug 2019 15:20:58 -0700 (PDT)
+        id 929C616C9A4E; Thu,  1 Aug 2019 15:20:58 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -64,9 +64,9 @@ Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
         npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
         luc.maranget@inria.fr, akiyks@gmail.com,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH RFC memory-model 20/31] tools/memory-model: Implement --hw support for checkghlitmus.sh
-Date:   Thu,  1 Aug 2019 15:20:45 -0700
-Message-Id: <20190801222056.12144-20-paulmck@linux.ibm.com>
+Subject: [PATCH RFC memory-model 04/31] tools/memory-model: Make judgelitmus.sh identify bad macros
+Date:   Thu,  1 Aug 2019 15:20:29 -0700
+Message-Id: <20190801222056.12144-4-paulmck@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190801222026.GA11315@linux.ibm.com>
 References: <20190801222026.GA11315@linux.ibm.com>
@@ -83,149 +83,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commits enables the "--hw" argument for the checkghlitmus.sh script,
-causing it to convert any applicable C-language litmus tests to the
-specified flavor of assembly language, to verify these assembly-language
-litmus tests, and checking compatibility of the outcomes.
+Currently, judgelitmus.sh treats use of unknown primitives (such as
+srcu_read_lock() prior to SRCU support) as "!!! Verification error".
+This can be misleading because it fails to call out typos and running
+a version LKMM on a litmus test requiring a feature not provided by
+that version.  This commit therefore changes judgelitmus.sh to check
+for unknown primitives and to report them, for example, with:
 
-Note that the conversion does not yet handle locking, RCU, SRCU, plain
-C-language memory accesses, or casts.
+	'!!! Current LKMM version does not know "rcu_write_lock"'.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/checkghlitmus.sh |  9 ++++---
- tools/memory-model/scripts/hwfnseg.sh       | 20 +++++++++++++++
- tools/memory-model/scripts/runlitmushist.sh | 27 +++++++++++++--------
- 3 files changed, 42 insertions(+), 14 deletions(-)
- create mode 100755 tools/memory-model/scripts/hwfnseg.sh
+ tools/memory-model/scripts/cmplitmushist.sh | 31 ++++++++++++++++++---
+ tools/memory-model/scripts/judgelitmus.sh   | 12 ++++++++
+ 2 files changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/tools/memory-model/scripts/checkghlitmus.sh b/tools/memory-model/scripts/checkghlitmus.sh
-index 6589fbb6f653..2ea220d2564b 100755
---- a/tools/memory-model/scripts/checkghlitmus.sh
-+++ b/tools/memory-model/scripts/checkghlitmus.sh
-@@ -10,6 +10,7 @@
- # parseargs.sh scripts for arguments.
- 
- . scripts/parseargs.sh
-+. scripts/hwfnseg.sh
- 
- T=/tmp/checkghlitmus.sh.$$
- trap 'rm -rf $T' 0
-@@ -32,9 +33,9 @@ then
- 	( cd "$LKMM_DESTDIR"; sed -e 's/^/mkdir -p /' | sh )
- fi
- 
--# Create a list of the C-language litmus tests previously run.
--( cd $LKMM_DESTDIR; find litmus -name '*.litmus.out' -print ) |
--	sed -e 's/\.out$//' |
-+# Create a list of the specified litmus tests previously run.
-+( cd $LKMM_DESTDIR; find litmus -name "*.litmus${hwfnseg}.out" -print ) |
-+	sed -e "s/${hwfnseg}"'\.out$//' |
- 	xargs -r egrep -l '^ \* Result: (Never|Sometimes|Always|DEADLOCK)' |
- 	xargs -r grep -L "^P${LKMM_PROCS}"> $T/list-C-already
- 
-@@ -44,7 +45,7 @@ find litmus -name '*.litmus' -exec grep -l -m 1 "^C " {} \; > $T/list-C
- xargs < $T/list-C -r egrep -l '^ \* Result: (Never|Sometimes|Always|DEADLOCK)' > $T/list-C-result
- xargs < $T/list-C-result -r grep -L "^P${LKMM_PROCS}" > $T/list-C-result-short
- 
--# Form list of tests without corresponding .litmus.out files
-+# Form list of tests without corresponding .out files
- sort $T/list-C-already $T/list-C-result-short | uniq -u > $T/list-C-needed
- 
- # Run any needed tests.
-diff --git a/tools/memory-model/scripts/hwfnseg.sh b/tools/memory-model/scripts/hwfnseg.sh
-new file mode 100755
-index 000000000000..580c3281181c
---- /dev/null
-+++ b/tools/memory-model/scripts/hwfnseg.sh
-@@ -0,0 +1,20 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Generate the hardware extension to the litmus-test filename, or the
-+# empty string if this is an LKMM run.  The extension is placed in
-+# the shell variable hwfnseg.
-+#
-+# Usage:
-+#	. hwfnseg.sh
-+#
-+# Copyright IBM Corporation, 2019
-+#
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
-+
-+if test -z "$LKMM_HW_MAP_FILE"
-+then
-+	hwfnseg=
-+else
-+	hwfnseg=".$LKMM_HW_MAP_FILE"
-+fi
-diff --git a/tools/memory-model/scripts/runlitmushist.sh b/tools/memory-model/scripts/runlitmushist.sh
-index 852786fef179..c6c2bdc67a50 100755
---- a/tools/memory-model/scripts/runlitmushist.sh
-+++ b/tools/memory-model/scripts/runlitmushist.sh
-@@ -15,6 +15,8 @@
- #
- # Author: Paul E. McKenney <paulmck@linux.ibm.com>
- 
-+. scripts/hwfnseg.sh
-+
- T=/tmp/runlitmushist.sh.$$
- trap 'rm -rf $T' 0
+diff --git a/tools/memory-model/scripts/cmplitmushist.sh b/tools/memory-model/scripts/cmplitmushist.sh
+index b9c174dd8004..ca1ac8b64614 100755
+--- a/tools/memory-model/scripts/cmplitmushist.sh
++++ b/tools/memory-model/scripts/cmplitmushist.sh
+@@ -12,6 +12,7 @@ trap 'rm -rf $T' 0
  mkdir $T
-@@ -30,15 +32,12 @@ fi
- # Prefixes for per-CPU scripts
- for ((i=0;i<$LKMM_JOBS;i++))
- do
--	echo dir="$LKMM_DESTDIR" > $T/$i.sh
- 	echo T=$T >> $T/$i.sh
--	echo herdoptions=\"$LKMM_HERD_OPTIONS\" >> $T/$i.sh
- 	cat << '___EOF___' >> $T/$i.sh
- 	runtest () {
--		echo ' ... ' /usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $1 '>' $dir/$1.out '2>&1'
--		if /usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $1 > $dir/$1.out 2>&1
-+		if scripts/runlitmus.sh $1
- 		then
--			if ! grep -q '^Observation ' $dir/$1.out
-+			if ! grep -q '^Observation ' $LKMM_DESTDIR/$1$2.out
- 			then
- 				echo ' !!! Herd failed, no Observation:' $1
- 			fi
-@@ -47,10 +46,16 @@ do
- 			if test "$exitcode" -eq 124
- 			then
- 				exitmsg="timed out"
-+			elif test "$exitcode" -eq 253
-+			then
-+				exitmsg=
- 			else
- 				exitmsg="failed, exit code $exitcode"
- 			fi
--			echo ' !!! Herd' ${exitmsg}: $1
-+			if test -n "$exitmsg"
-+			then
-+				echo ' !!! Herd' ${exitmsg}: $1
-+			fi
- 		fi
- 	}
- ___EOF___
-@@ -59,11 +64,13 @@ done
- awk -v q="'" -v b='\\' '
- {
- 	print "echo `grep " q "^P[0-9]" b "+(" q " " $0 " | tail -1 | sed -e " q "s/^P" b "([0-9]" b "+" b ")(.*$/" b "1/" q "` " $0
--}' | bash |
--sort -k1n |
--awk -v ncpu=$LKMM_JOBS -v t=$T '
-+}' | sh | sort -k1n |
-+awk -v dq='"' -v hwfnseg="$hwfnseg" -v ncpu="$LKMM_JOBS" -v t="$T" '
- {
--	print "runtest " $2 >> t "/" NR % ncpu ".sh";
-+	print "if test -z " dq hwfnseg dq " || scripts/simpletest.sh " dq $2 dq
-+	print "then"
-+	print "\techo runtest " dq $2 dq " " hwfnseg " >> " t "/" NR % ncpu ".sh";
-+	print "fi"
- }
  
- END {
+ # comparetest oldpath newpath
++badmacnam=0
+ timedout=0
+ perfect=0
+ obsline=0
+@@ -19,8 +20,26 @@ noobsline=0
+ obsresult=0
+ badcompare=0
+ comparetest () {
+-	if grep -q '^Command exited with non-zero status 124' $1 ||
+-	   grep -q '^Command exited with non-zero status 124' $2
++	if grep -q ': Unknown macro ' $1 || grep -q ': Unknown macro ' $2
++	then
++		if grep -q ': Unknown macro ' $1
++		then
++			badname=`grep ': Unknown macro ' $1 |
++				sed -e 's/^.*: Unknown macro //' |
++				sed -e 's/ (User error).*$//'`
++			echo 'Current LKMM version does not know "'$badname'"' $1
++		fi
++		if grep -q ': Unknown macro ' $2
++		then
++			badname=`grep ': Unknown macro ' $2 |
++				sed -e 's/^.*: Unknown macro //' |
++				sed -e 's/ (User error).*$//'`
++			echo 'Current LKMM version does not know "'$badname'"' $2
++		fi
++		badmacnam=`expr "$badmacnam" + 1`
++		return 0
++	elif grep -q '^Command exited with non-zero status 124' $1 ||
++	     grep -q '^Command exited with non-zero status 124' $2
+ 	then
+ 		if grep -q '^Command exited with non-zero status 124' $1 &&
+ 		   grep -q '^Command exited with non-zero status 124' $2
+@@ -56,7 +75,7 @@ comparetest () {
+ 			return 0
+ 		fi
+ 	else
+-		echo Missing Observation line "(e.g., herd7 timeout)": $2
++		echo Missing Observation line "(e.g., syntax error)": $2
+ 		noobsline=`expr "$noobsline" + 1`
+ 		return 0
+ 	fi
+@@ -90,7 +109,7 @@ then
+ fi
+ if test "$noobsline" -ne 0
+ then
+-	echo Missing Observation line "(e.g., herd7 timeout)": $noobsline 1>&2
++	echo Missing Observation line "(e.g., syntax error)": $noobsline 1>&2
+ fi
+ if test "$obsresult" -ne 0
+ then
+@@ -100,6 +119,10 @@ if test "$timedout" -ne 0
+ then
+ 	echo "!!!" Timed out: $timedout 1>&2
+ fi
++if test "$badmacnam" -ne 0
++then
++	echo "!!!" Unknown primitive: $badmacnam 1>&2
++fi
+ if test "$badcompare" -ne 0
+ then
+ 	echo "!!!" Result changed: $badcompare 1>&2
+diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
+index d3c313b9a458..d40439c7b71e 100755
+--- a/tools/memory-model/scripts/judgelitmus.sh
++++ b/tools/memory-model/scripts/judgelitmus.sh
+@@ -42,6 +42,18 @@ grep '^Observation' $LKMM_DESTDIR/$litmus.out
+ if grep -q '^Observation' $LKMM_DESTDIR/$litmus.out
+ then
+ 	:
++elif grep ': Unknown macro ' $LKMM_DESTDIR/$litmus.out
++then
++	badname=`grep ': Unknown macro ' $LKMM_DESTDIR/$litmus.out |
++		sed -e 's/^.*: Unknown macro //' |
++		sed -e 's/ (User error).*$//'`
++	badmsg=' !!! Current LKMM version does not know "'$badname'"'" $litmus"
++	echo $badmsg
++	if ! grep -q '!!!' $LKMM_DESTDIR/$litmus.out
++	then
++		echo ' !!! '$badmsg >> $LKMM_DESTDIR/$litmus.out 2>&1
++	fi
++	exit 254
+ elif grep '^Command exited with non-zero status 124' $LKMM_DESTDIR/$litmus.out
+ then
+ 	echo ' !!! Timeout' $litmus
 -- 
 2.17.1
 
