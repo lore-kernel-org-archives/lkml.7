@@ -3,73 +3,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300BAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1689C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DAAA20679
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950F620838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:09:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731785AbfHAOJQ (ORCPT
+        id S1731834AbfHAOJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:09:16 -0400
-Received: from verein.lst.de ([213.95.11.211]:43803 "EHLO verein.lst.de"
+        Thu, 1 Aug 2019 10:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731377AbfHAOJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:09:16 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id EEECA68AFE; Thu,  1 Aug 2019 16:09:13 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 16:09:13 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH 1/3] iommu/vt-d: Refactor find_domain() helper
-Message-ID: <20190801140913.GD23435@lst.de>
-References: <20190801060156.8564-1-baolu.lu@linux.intel.com> <20190801060156.8564-2-baolu.lu@linux.intel.com> <20190801061021.GA14955@lst.de> <40f3a736-0a96-0491-61ad-0ddf03612d91@linux.intel.com>
+        id S1731377AbfHAOJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:09:53 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FA1320679;
+        Thu,  1 Aug 2019 14:09:51 +0000 (UTC)
+Date:   Thu, 1 Aug 2019 10:09:49 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andres Freund <andres@anarazel.de>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] tools/lib/traceevent, tools/perf: Move struct
+ tep_handler definition in a local header file
+Message-ID: <20190801100949.1e2f1348@gandalf.local.home>
+In-Reply-To: <20190726205544.yffnsfsnji362jk7@alap3.anarazel.de>
+References: <20181005122225.522155df@gandalf.local.home>
+        <20190726035829.4xcw5k2exx4omlvg@alap3.anarazel.de>
+        <20190726091200.0d1e1f01@gandalf.local.home>
+        <20190726205544.yffnsfsnji362jk7@alap3.anarazel.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <40f3a736-0a96-0491-61ad-0ddf03612d91@linux.intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 02:20:07PM +0800, Lu Baolu wrote:
-> Hi Christoph,
->
-> On 8/1/19 2:10 PM, Christoph Hellwig wrote:
->> On Thu, Aug 01, 2019 at 02:01:54PM +0800, Lu Baolu wrote:
->>> +	/* No lock here, assumes no domain exit in normal case */
->>
->> s/exit/exists/ ?
->
-> This comment is just moved from one place to another in this patch.
->
-> "no domain exit" means "the domain isn't freed". (my understand)
+On Fri, 26 Jul 2019 13:55:44 -0700
+Andres Freund <andres@anarazel.de> wrote:
 
-Maybe we'll get that refconfirmed and can fix up the comment?
+> > Care to send a formal patch?  
+> 
+> Will do.
 
->
->>
->>> +	info = dev->archdata.iommu;
->>> +	if (likely(info))
->>> +		return info->domain;
->>
->> But then again the likely would be odd.
->>
->
-> Normally there's a domain for a device (default domain or isolation
-> domain for assignment cases).
 
-Makes sense, I just mean to say that the likely was contrary to my
-understanding of the above comment.
+Hi Andres,
+
+Have you had a chance to send a patch?
+
+Thanks!
+
+-- Steve
