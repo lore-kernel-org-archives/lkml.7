@@ -2,136 +2,101 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F8BC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C50AC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C132080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:59:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POeIR6JC"
+	by mail.kernel.org (Postfix) with ESMTP id 035912080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564671615;
+	bh=091gtdXlEVyUW6VzAQOFZMewkTNouRWp/o+Ak23SpG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xwz/8bc7UPAP8v0TShKTgEq4VZ+sf1pwj1Y+BBuK6JVVPlQ6+nWSTXahwQSIl+tGW
+	 sX26UnSg15eelR1HDhpWQwBuLTp70SdJUJikdpTtDGtbeZcaAiDUj2aEWPVfjVER2e
+	 YR9N7+2lMqrAhVDtZKgDy5GfgTbdGjdj6jQcZVoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbfHAO7M (ORCPT
+        id S1730814AbfHAPAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:59:12 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:45271 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfHAO7L (ORCPT
+        Thu, 1 Aug 2019 11:00:14 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40862 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730328AbfHAPAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:59:11 -0400
-Received: by mail-vs1-f68.google.com with SMTP id h28so49054713vsl.12
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:59:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HZi73lGQN00R4hLz2SVQy1XpIlUHoTiGbhTsmJxfUN8=;
-        b=POeIR6JCB3hi2tCwSY/8k8k78LXYZFkW02y+yCkooOHKQZaL5n9fDzcIaw7qL/x0bD
-         0Sbx+pPs7pTMc3jTpV21rcdiVVVxFUAZSCtlN/j5xXrafdAQeqfFiNkYSnIYlRDvsybM
-         /y6eVD8EkSdPv9LifZJWRMOm9+eZYQtfxaB1lcuuFDdL4+cHLqcATf2OkLCRvuVvVKZv
-         68h5AwChuIp+WLxSvn7qnl+OypnyQ5mhMwgL0jhQJfPG/0roBFo50us7gS6KIl8qTVSU
-         DlWRgh4kVtvo3CMbLNj8mJj+jxJhIhfBu0dUs0NXGurVRbTvB9NqdrRAUkzeRgi4QF1a
-         AgsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HZi73lGQN00R4hLz2SVQy1XpIlUHoTiGbhTsmJxfUN8=;
-        b=bfGS/p3GvXL849fqlqs93NhDmeZ3gNFpTulNcwxyECoNQmxrsOsmzE+WMoaDvw0xgh
-         agC1YQlM8i76f9M1ty31LfkfVQ3Q/+BOwo2FujFsaPPZFlRTG1A9M/CFY5ivGtUAXe8A
-         7fAm+Jnvcqo67tTHJ6f66MqMV209AnOx01fV7ZqWoL53KEJ1Tib845m2FelMLDLJ/yJr
-         1lYdNeAmlaDsg3sAoURGCbGAI2guGzLFuWcDG1NZ6klUobUJzJZwJTfKWM8WP4zFdq8U
-         rJekfTPeJi2rrKeTk5CYmWyXlvAhv3gn5PSV87WsLJKW7Ca27gnZ21H6ywTPjPABMdwk
-         s9hg==
-X-Gm-Message-State: APjAAAUrFeEK2/GzHof2ZcXutJyvCSD+pW9aZl2HA5qYNQeUG208IpBs
-        DMn1cQuTtPLDhlzhx12zF2ETjvBE9F503ARvnY2dVQ==
-X-Google-Smtp-Source: APXvYqw68dvHKKu6qAXsBV19hf2DA1P86szVyTw40C4W7t9cyo/4LZT8SwE7GgzcSXNYEBQomzRstucQfJn/G7Oz0S8=
-X-Received: by 2002:a67:ee16:: with SMTP id f22mr82204826vsp.191.1564671550796;
- Thu, 01 Aug 2019 07:59:10 -0700 (PDT)
+        Thu, 1 Aug 2019 11:00:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KsWgLD+afQ98tFuvnGCOkxA8hwl5IDMAgcL9FOQ28wc=; b=aDjOzVkoZj1XbiBBOR3fuFgtH
+        HB/tZXM1A4Ut3zgyt6D7YovYtzBTgd9Co0Sr3poshWWoardFcxraDTx2h6nImYuUYR29c9TWMsR6V
+        1X/P4Jv9waDP5/NcVYisYBV/doBmylgAU8ZhCXoaAbBnhVUxadCrNLsfoYiVtIb0PvT/g=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1htCYp-00050A-EI; Thu, 01 Aug 2019 15:00:07 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id A92CD2742C48; Thu,  1 Aug 2019 16:00:05 +0100 (BST)
+Date:   Thu, 1 Aug 2019 16:00:05 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Vijendar Mukunda <vijendar.mukunda@amd.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the
+ sound-asoc-fixes tree
+Message-ID: <20190801150005.GE5488@sirena.org.uk>
+References: <20190801235926.4b973d01@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190726142252.9654-1-baijiaju1990@gmail.com>
-In-Reply-To: <20190726142252.9654-1-baijiaju1990@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 1 Aug 2019 16:58:34 +0200
-Message-ID: <CAPDyKFp7z3uXws4+jL=-U6cZekVX+QeJNKmqegmap8ZWhbgRoA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: host: dw_mmc: Fix possible null-pointer dereferences
- in dw_mci_runtime_resume()
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gDGSpKKIBgtShtf+"
+Content-Disposition: inline
+In-Reply-To: <20190801235926.4b973d01@canb.auug.org.au>
+X-Cookie: Love thy neighbor, tune thy piano.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jul 2019 at 16:23, Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
->
-> In dw_mci_runtime_resume(), there is an if statement on line 3420
-> to check whether host->slot is NULL:
->     if (host->slot && ...)
->
-> When host->slot is NULL, it is used on line 3458:
->     if (host->slot->mmc->pm_flags & MMC_PM_KEEP_POWER)
-> and on line 3462:
->     dw_mci_setup_bus(host->slot, true);
->         struct dw_mci *host = slot->host;
->
-> Thus, possible null-pointer dereferences may occur.
->
-> To fix these bugs, host->slot is checked before being used.
->
-> These bugs are found by a static analysis tool STCheck written by us.
 
-I fully respect these kind of tools and they for sure find lots of
-problems for us.
+--gDGSpKKIBgtShtf+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-However, in this case I think the fix should be made a bit
-differently, see more below.
+On Thu, Aug 01, 2019 at 11:59:26PM +1000, Stephen Rothwell wrote:
 
->
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  drivers/mmc/host/dw_mmc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index faaaf52a46d2..91bd6c3ccf50 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -3455,11 +3455,12 @@ int dw_mci_runtime_resume(struct device *dev)
->         mci_writel(host, CTRL, SDMMC_CTRL_INT_ENABLE);
->
->
-> -       if (host->slot->mmc->pm_flags & MMC_PM_KEEP_POWER)
-> +       if (host->slot && (host->slot->mmc->pm_flags & MMC_PM_KEEP_POWER))
->                 dw_mci_set_ios(host->slot->mmc, &host->slot->mmc->ios);
+> Commit
 
-Unless I missing something (still in "slow mode" due to holidays),
-dw_mci_runtime_suspend|resume() should only be called when there is a
-slot (host->slot) initialized for the host. This is guaranteed by the
-the driver when it runs ->probe().
+>   66b25f247e90 ("ASoC: amd: use dma_ops of parent device for acp3x dma driver")
 
->
->         /* Force setup bus to guarantee available clock output */
-> -       dw_mci_setup_bus(host->slot, true);
-> +       if (host->slot)
-> +               dw_mci_setup_bus(host->slot, true);
+> is missing a Signed-off-by from its author.
 
-Ditto.
+Ugh, yes - misparsed that as being a variant on the same name.
+Dropped, please fix and resend.
 
->
->         /* Now that slots are all setup, we can enable card detect */
->         dw_mci_enable_cd(host);
+--gDGSpKKIBgtShtf+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-So, I am thinking that there is really no need to check for host->slot
-at all. And if there really were, I am sure there would have been bug
-reports already about it.
+-----BEGIN PGP SIGNATURE-----
 
-Kind regards
-Uffe
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1C/nQACgkQJNaLcl1U
+h9A8vwf/bAu9uXS8crNLVmxdYGmYj24whOqrBolRSi/RBou6tA6Oo7QwyvkS+oK+
+CZmNDGmyR56gyLAhxkxrvSV+0rw8N6dvOQ0wwav0VVZO8J0PhpsB0ev5lKKKo5hx
+wLO4MzRRbvC0VEWTCyvcQRJ3hnRAMbCcyTp/c4fFFbJ8bDAPX0MvrCbI7FsWDJVF
+mvZR8FpKAFJ5NfCRmoxJ6zjPSxeMdkul7OBlJBPIXkgXqcXhrWal2kapTH1gO/Vf
+Pp5jACOftTdJEv/UwwJgIkjOfxrSJuEcb2XChHVNEBtPE61S3/6L1aRWV5/j70U0
+oqBINW7umaCh4a/KKuAATNGmFzypvw==
+=wF0e
+-----END PGP SIGNATURE-----
+
+--gDGSpKKIBgtShtf+--
