@@ -2,160 +2,104 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B2BC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636D5C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C916D205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453EE20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731586AbfHAMvr (ORCPT
+        id S1731504AbfHAM5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:51:47 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:16352 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731335AbfHAMvr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:51:47 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 2+Lg3f808W8Ko/TvGY+D0dzXyTWjYgoH5Xuh4Ylc7SPwyJD4SFv/vajNl8U2pEd45vtGXMaS7X
- Xb+S+miSsGcsI59JfV6Amm57ollqFXT/Ij+Sf0/IfC/X4Wr6SJ4bKg1WvYT1GM86kq6n4LgwT6
- LDiDu1TqDE/LUur4OxzLZGks8YUZVHdGQxne0BzoqojNtmrJloCCKixAkvz/SqeJwgsZ77JY0+
- mbMe5eUXHVNcn5XCvvdazbXaRfIFXT2cRn/a7VdoSJC8NLhPn36odf0rRv24I0Y7GS2WpV7tOW
- pvw=
-X-IronPort-AV: E=Sophos;i="5.64,334,1559545200"; 
-   d="scan'208";a="42025085"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Aug 2019 05:51:45 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 1 Aug 2019 05:51:44 -0700
-Received: from soft-dev3.microsemi.net (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 1 Aug 2019 05:51:42 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <idosch@mellanox.com>,
-        <andrew@lunn.ch>, <allan.nielsen@microchip.com>
-CC:     <davem@davemloft.net>, <roopa@cumulusnetworks.com>,
-        <petrm@mellanox.com>, <tglx@linutronix.de>, <fw@strlen.de>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>,
-        "Horatiu Vultur" <horatiu.vultur@microchip.com>
-Subject: [iproute2,rfc] bridge: mdb: Extend with with LLADDR
-Date:   Thu, 1 Aug 2019 14:51:27 +0200
-Message-ID: <1564663887-27854-1-git-send-email-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 1 Aug 2019 08:57:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38418 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730887AbfHAM5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:57:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C1A5DAD17;
+        Thu,  1 Aug 2019 12:57:51 +0000 (UTC)
+Message-ID: <04700afaf68114b5ab329f5a5182e21578c15795.camel@suse.com>
+Subject: Re: [PATCH] KVM: Disable wake-affine vCPU process to mitigate lock
+ holder preemption
+From:   Dario Faggioli <dfaggioli@suse.com>
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Date:   Thu, 01 Aug 2019 14:57:50 +0200
+In-Reply-To: <1564479235-25074-1-git-send-email-wanpengli@tencent.com>
+References: <1564479235-25074-1-git-send-email-wanpengli@tencent.com>
+Organization: SUSE
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-vBZfl3lnf5iunDc9R2jw"
+User-Agent: Evolution 3.32.3 
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend bridge mdb command to accept as group also link layer multicast
-addresss. The old behaviour is not change.
 
-To add new mdb entry:
-bridge mdb add dev br0 port eth0 grp 11:22:33:44:55:66 permanent vid 1
+--=-vBZfl3lnf5iunDc9R2jw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-To display existing entries:
-bridge mdb
-dev br0 port eth4 grp 01:00:00:00:00:01 permanent offload vid 1
+On Tue, 2019-07-30 at 17:33 +0800, Wanpeng Li wrote:
+> However, in multiple VMs over-subscribe virtualization scenario, it
+> increases=20
+> the probability to incur vCPU stacking which means that the sibling
+> vCPUs from=20
+> the same VM will be stacked on one pCPU. I test three 80 vCPUs VMs
+> running on=20
+> one 80 pCPUs Skylake server(PLE is supported), the ebizzy score can
+> increase 17%=20
+> after disabling wake-affine for vCPU process.=20
+>=20
+Can't we achieve this by removing SD_WAKE_AFFINE from the relevant
+scheduling domains? By acting on
+/proc/sys/kernel/sched_domain/cpuX/domainY/flags, I mean?
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- bridge/mdb.c                   | 29 ++++++++++++++++++++++++-----
- include/uapi/linux/if_bridge.h |  1 +
- 2 files changed, 25 insertions(+), 5 deletions(-)
+Of course this will impact all tasks, not only KVM vcpus. But if the
+host does KVM only anyway...
 
-diff --git a/bridge/mdb.c b/bridge/mdb.c
-index 928ae56..057c0b6 100644
---- a/bridge/mdb.c
-+++ b/bridge/mdb.c
-@@ -138,9 +138,21 @@ static void print_mdb_entry(FILE *f, int ifindex, const struct br_mdb_entry *e,
- 	print_string(PRINT_ANY, "port", " port %s",
- 		     ll_index_to_name(e->ifindex));
- 
--	print_color_string(PRINT_ANY, ifa_family_color(af),
--			    "grp", " grp %s",
--			    inet_ntop(af, src, abuf, sizeof(abuf)));
-+	if (e->addr.proto == htons(ETH_P_IP) ||
-+	    e->addr.proto == htons(ETH_P_IPV6)) {
-+		print_color_string(PRINT_ANY, ifa_family_color(af),
-+				   "grp", " grp %s",
-+				   inet_ntop(af, src, abuf, sizeof(abuf)));
-+	} else {
-+		const char *lladdr;
-+		SPRINT_BUF(b1);
-+
-+		lladdr = ll_addr_n2a(e->addr.u.mac, ETH_ALEN, 0, b1,
-+				     sizeof(b1));
-+
-+		print_color_string(PRINT_ANY, COLOR_MAC, "grp", " grp %s",
-+				   lladdr);
-+	}
- 
- 	print_string(PRINT_ANY, "state", " %s",
- 			   (e->state & MDB_PERMANENT) ? "permanent" : "temp");
-@@ -380,6 +392,7 @@ static int mdb_modify(int cmd, int flags, int argc, char **argv)
- 	};
- 	struct br_mdb_entry entry = {};
- 	char *d = NULL, *p = NULL, *grp = NULL;
-+	char abuf[ETH_ALEN];
- 	short vid = 0;
- 
- 	while (argc > 0) {
-@@ -422,8 +435,14 @@ static int mdb_modify(int cmd, int flags, int argc, char **argv)
- 
- 	if (!inet_pton(AF_INET, grp, &entry.addr.u.ip4)) {
- 		if (!inet_pton(AF_INET6, grp, &entry.addr.u.ip6)) {
--			fprintf(stderr, "Invalid address \"%s\"\n", grp);
--			return -1;
-+			if (sscanf(grp, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
-+				   abuf, abuf+1, abuf+2, abuf+3, abuf+4,
-+				   abuf+5) != 6) {
-+				fprintf(stderr, "Invalid address \"%s\"\n", grp);
-+				return -1;
-+			}
-+			memcpy(entry.addr.u.mac, abuf, ETH_ALEN);
-+			entry.addr.proto = 0;
- 		} else
- 			entry.addr.proto = htons(ETH_P_IPV6);
- 	} else
-diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-index 04f763c..88aad9c 100644
---- a/include/uapi/linux/if_bridge.h
-+++ b/include/uapi/linux/if_bridge.h
-@@ -243,6 +243,7 @@ struct br_mdb_entry {
- 		union {
- 			__be32	ip4;
- 			struct in6_addr ip6;
-+			__u8	mac[ETH_ALEN];
- 		} u;
- 		__be16		proto;
- 	} addr;
--- 
-2.7.4
+Regards
+--=20
+Dario Faggioli, Ph.D
+http://about.me/dario.faggioli
+Virtualization Software Engineer
+SUSE Labs, SUSE https://www.suse.com/
+-------------------------------------------------------------------
+<<This happens because _I_ choose it to happen!>> (Raistlin Majere)
+
+
+--=-vBZfl3lnf5iunDc9R2jw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAl1C4c4ACgkQFkJ4iaW4
+c+7UHg/+P8QYc8TBLL2Cq4O4prnodY1NuKoDBoyLlSg+nYJ19AbFovcVqlKwx9BM
+laUFBLg9B5WaqEk6aoT9TSuzvsAagZYOqLBP8m1JtweVUa3anBeTYZ8qKgyP96tZ
+zTUt/xjUyIJ6PWnSbhqB6umvkugVH+o5YZPWjWc1oVPxV+PwXdsSLZt3sjYIcsVJ
+Gb7NAZIM7nSyoFdiwcC5D42frnVaLzNz1w70tlOJ0h4BP+SAk+7A5x32JtHTIOo6
+YJETylcZwSqxDaONxOE83T8xOmCnL+zmAsKz0zlg+6gVfEjNwgZxfG3acGLxjMJR
+K9garfWrSsp5WHDnx5eGXjA82ZlOdtdv34h7O9YWBvmqrpXGVogMJObbAw3PTLWz
+4LPFtkS3ZMF2LuL+wpFDiZyw1Powk2yBbgNQIn6R0cESp4hgk9FxTDIddzOZnrak
+GCb7Tnlx4i3onGD4oSQ4+K8b56c0isVzUL4vusXbYj0u5O+j/uv/DfS2njH3eLgX
+36QXdnqgzjTPvKuWW01PIbx0dKUYPfRI4oSzXd3WdvNjUZkLvIn9HBOGQQesXfBe
+FERg8UEO6TV0mvPCtdAygqreZ67yDKzEi+cjw3st1B6C9lqo4uy7dirKESoSBzC4
+tJ/s9r2771rl33lkhqzJFxB9FqI0ycZUKq/rWeXJZGJGjP7DM/Y=
+=/DLl
+-----END PGP SIGNATURE-----
+
+--=-vBZfl3lnf5iunDc9R2jw--
 
