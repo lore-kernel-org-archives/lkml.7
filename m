@@ -2,103 +2,139 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BD6C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C42CC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89D52087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D811D20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:17:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a/tboTaT"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RLDyPFLk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388973AbfHAURV (ORCPT
+        id S2388984AbfHAURZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 16:17:21 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51937 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388953AbfHAURT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:17:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 207so65833044wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 13:17:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+2f47S9TyynfRuvT0EIxN+x9IBMjQklZO2mS15S/FPM=;
-        b=a/tboTaTAA7U22KkiWKgcpqovbFR9fW6T4w9RnlkV/wOd6gST44QEqb4yVG5gUCf8T
-         VKsiuLwjP12EZaBqZJgQVqIOxyqSUdGaesaxmdc0GJ/DwZyS9YnxwbvNcyKjFCLKvC+7
-         5qwm5D9v32NxrJ7KD9ZiqZ94kwN98X2/ARO3KD9f/Ff8B6r0fZG/9CZBqCVfn78/bVRg
-         kr0v59xk1JjQj+ubScHK5ATwO/AScFIAUSyd+qURaHSc4GMwa7hHqVPzAj9Q80XQ4oB0
-         uJij8u+NeJk4Nqx268L6gEG+OCtAV4eNU/kuMqn4F1zw2YSkdxfOXdu+4VTEoXqTB9I3
-         Syuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+2f47S9TyynfRuvT0EIxN+x9IBMjQklZO2mS15S/FPM=;
-        b=AUIYfeyuCfbG0BcSBSxTmub3YFbe5PJ7r79FQ+KyLVb11DnYVBkut6jvwokx+DF8Ov
-         XDACCp3VFyc+GAzXvtd3VvDRn6s3cBZuKeCNYwmJIs2J3L5FVJzTuCdHxQLot57bt/t9
-         GEPeCspKTKDEDXlgas6GDN1fpNKgHPDlL/jbi3+opcWEYAAvg6MK25lLqIf5KufwYfQt
-         o7I4I5PbQsMtMiyUz4BZZg9HqyS+GKm160amBQU9I3nC7IBPzEg41bfS0fCsqL8hOas7
-         kOtD9LIACEToE4MFvXgFXoRDQNT4CWI9f7dkBg1e38z5FlqC2qv67WaKlGvW0hFERZcu
-         U1DQ==
-X-Gm-Message-State: APjAAAWTw/LLIaZb2OaHvuxIC27LVt18hBdB58/e3ykPZOWF0e0nWcQa
-        yHx7rmjPBdXtu4MvBJMlaHTJ3rXXBouYMVvlqPasLQ==
-X-Google-Smtp-Source: APXvYqzs3BOEDM3w9OuhJ4FQl4f2puNY9YafhpkAs2qld4bMQQtf2+HUV0DluaeoOIMugNCx0V3PFA4aCCtffsdiVE8=
-X-Received: by 2002:a1c:720e:: with SMTP id n14mr339413wmc.53.1564690637336;
- Thu, 01 Aug 2019 13:17:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <13353.1564635114@turing-police> <CAKv+Gu8EF3R05hLWHh7mgbgkUyzBwELctdVvSFMq+6Crw6Tf4A@mail.gmail.com>
- <32521.1564638419@turing-police> <CAKv+Gu_zEO75s6o8bv4TXPxibSH-dCe-V46AYjL-dOEAvpQaqw@mail.gmail.com>
- <1166.1564639726@turing-police>
-In-Reply-To: <1166.1564639726@turing-police>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 1 Aug 2019 23:17:05 +0300
-Message-ID: <CAKv+Gu8oK22Su5mq=i3pnKrkPq85a3hX-kyog9xwAVYa705iYg@mail.gmail.com>
-Subject: Re: [PATCH] linux-next 20190731 - aegis128-core.c fails to build
-To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 1 Aug 2019 16:17:25 -0400
+Received: from mail-eopbgr60082.outbound.protection.outlook.com ([40.107.6.82]:11040
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725846AbfHAURS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 16:17:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RffXdq5IMWd99E3ft2BFBBovy6Sgjz6qb8j66RD44BjpFdi5WtdzYJIF7XNnStcR8/goxwFNrufIpkcXl9WDk/5zPx5t8cAg+0P8zE+/JJwZh8CdpTaivcEWXVKYcldskd3oOycQYU0J5NJ16gUTIacnHV+yt6u89iEYJYOcA03yadqrVaryvy+sKZzPqsIJInKy56VFQOimqepwe23jEXihUP4DhLZzwsZTYj8d7hOfGX22LxmIP/ckuWafJZCY9/kfuooecLHh0PXzQFkhW8JQW8BxhVTbltQIQQiMXXMY0mDXSSywBJBOVzTrq5UMheYFNW6VAfsEedvtvkeL4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aBWOZB9A9QLCsl/EiU2J6XfBNYpFfgi0BtBgM52Vh8M=;
+ b=K+GowrPsjIZwOnsf5QpTiFdyvWoBQd5Wq7G1OJ0p4iD3kUKxyG/z6Jh9TCGapOZ5XJWJ3cKKdC1vG3074JEAquJm0cnW8k1tYXJLrvmvBn26A5opjHVj+UIyvQkmbFtRWLMn1OIc47vJ1byj5w7RSH8ENL+rbpb4iOmYjlFhUB2JnKGeIzB/FOe75PsItnpvYqB3v51rH7brGM74fU+Audz4QJWiP/tQMCYBJU1pscXfYug6tIXur/hYyVuAWRjdPfMegokqdaj8lNCzAG+z+WiyR4TW8FezFbfJsOy/DrKKKJuNCyiLbpmS+2/DVrxlUnra5VpUIgNqAHhx75zsSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aBWOZB9A9QLCsl/EiU2J6XfBNYpFfgi0BtBgM52Vh8M=;
+ b=RLDyPFLkOpzZrlwtSfnEQiAiuRKS9Ldpnp+iFr7fIXxeMvOkEt0MZ1xEl5Q6QEQVo1Xpajc/t3+9X0HPmpZDVO52emIrdb+jckzvPThfBy9EovSUYTWCusXpFuRanwrb+Ux0vejNQEm2UqU5v+1vQWayf1PyvI5OsxLzuBb3kQQ=
+Received: from VE1PR04MB6463.eurprd04.prod.outlook.com (20.179.233.20) by
+ VE1PR04MB6656.eurprd04.prod.outlook.com (20.179.235.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.10; Thu, 1 Aug 2019 20:16:59 +0000
+Received: from VE1PR04MB6463.eurprd04.prod.outlook.com
+ ([fe80::8fc:e04c:fbb6:4f1f]) by VE1PR04MB6463.eurprd04.prod.outlook.com
+ ([fe80::8fc:e04c:fbb6:4f1f%7]) with mapi id 15.20.2115.005; Thu, 1 Aug 2019
+ 20:16:59 +0000
+From:   Roy Pledge <roy.pledge@nxp.com>
+To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+CC:     Madalin-cristian Bucur <madalin.bucur@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>
+Subject: [PATCH v3 4/7] soc/fsl/qbman: Fix drain_mr_fqni()
+Thread-Topic: [PATCH v3 4/7] soc/fsl/qbman: Fix drain_mr_fqni()
+Thread-Index: AQHVSKYSvUv/rPwBlkeXxjwGukCmsA==
+Date:   Thu, 1 Aug 2019 20:16:59 +0000
+Message-ID: <1564690599-29713-5-git-send-email-roy.pledge@nxp.com>
+References: <1564690599-29713-1-git-send-email-roy.pledge@nxp.com>
+In-Reply-To: <1564690599-29713-1-git-send-email-roy.pledge@nxp.com>
+Reply-To: Roy Pledge <roy.pledge@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: SN4PR0501CA0130.namprd05.prod.outlook.com
+ (2603:10b6:803:42::47) To VE1PR04MB6463.eurprd04.prod.outlook.com
+ (2603:10a6:803:11d::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=roy.pledge@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [72.142.119.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6049c9a1-f12f-452c-727d-08d716bd3535
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6656;
+x-ms-traffictypediagnostic: VE1PR04MB6656:
+x-microsoft-antispam-prvs: <VE1PR04MB66560F08A80AEF6D0B649A1186DE0@VE1PR04MB6656.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:330;
+x-forefront-prvs: 01165471DB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(366004)(199004)(189003)(386003)(6506007)(305945005)(7736002)(71200400001)(71190400001)(68736007)(14454004)(36756003)(54906003)(316002)(4744005)(110136005)(6116002)(3846002)(486006)(186003)(66066001)(6436002)(256004)(26005)(2201001)(6636002)(3450700001)(44832011)(6486002)(102836004)(2906002)(14444005)(446003)(476003)(2616005)(50226002)(64756008)(66446008)(66476007)(25786009)(81166006)(66946007)(52116002)(5660300002)(11346002)(76176011)(478600001)(66556008)(8676002)(86362001)(81156014)(8936002)(99286004)(6512007)(4326008)(2501003)(53936002)(43066004);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6656;H:VE1PR04MB6463.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MIb5s+aQ0MhROi2TSCfXpU78AOwyFbta0P+YAFTHfdSSu1PDwH1Pis8mY1+y2JBuQViVJVbTMBfxhOBIC3AN0ZtCu1jekactVCAoF46ZQ8Ig3c6r3Vn1EFW26ViB07fnVrGONkXf711UZAfZHmBpLMqoMSsG2d4ErQXMW7E2/vr/bCMQMmK7vT3qTnFD1A20Ajd8XL2QqwMe4wDMIecfuTJIg8NFdvt1uA0m95PyM4wYHIyqwvJAlqJMSWdiLtBnleQtcs4nrE9lJ9ET/9ZXR6F8N1MGRqzY+170nbuYBWRDRja/cxFS88gMJZVb87ZHg6xU5ugtmFv3tn5LI5+yy5TbMz2x95jLHOsNwZgiQM1Yfc4K5u7JBTA3ame53qLh8zNFAAsQcng0AVAmEAi8ic872b7FtHbY4FFjzpX/1+o=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6049c9a1-f12f-452c-727d-08d716bd3535
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 20:16:59.6707
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: roy.pledge@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6656
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019 at 09:08, Valdis Kl=C4=93tnieks <valdis.kletnieks@vt.edu=
-> wrote:
->
-> On Thu, 01 Aug 2019 09:04:11 +0300, Ard Biesheuvel said:
->
-> > The fact that crypto_aegis128_have_simd() does get optimized away, but
-> > crypto_aegis128_update_simd() doesn't (which is only called directly
-> > and not via a function pointer like the other two routines) makes me
-> > suspicious that this is some pathology in the compiler. Is this a
-> > distro build of gcc? Also, which architecture are you compiling for?
->
-> It's the Fedora Rawhide build on x86_64.
->
->  [/usr/src/linux-next] gcc --version
-> gcc (GCC) 9.1.1 20190605 (Red Hat 9.1.1-2)
-> Copyright (C) 2019 Free Software Foundation, Inc.
-> This is free software; see the source for copying conditions.  There is N=
-O
-> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOS=
-E.
->
+The drain_mr_fqni() function may be called fron uninterruptable
+context so convert the msleep() to an mdelay().  Also ensure that
+the valid bit is updated while polling.
 
-Strange.
+Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
+---
+ drivers/soc/fsl/qbman/qman.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Does the following patch make any difference?
+diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
+index f10f77d..2989504 100644
+--- a/drivers/soc/fsl/qbman/qman.c
++++ b/drivers/soc/fsl/qbman/qman.c
+@@ -1164,6 +1164,7 @@ static int drain_mr_fqrni(struct qm_portal *p)
+ {
+ 	const union qm_mr_entry *msg;
+ loop:
++	qm_mr_pvb_update(p);
+ 	msg =3D qm_mr_current(p);
+ 	if (!msg) {
+ 		/*
+@@ -1180,7 +1181,8 @@ static int drain_mr_fqrni(struct qm_portal *p)
+ 		 * entries well before the ring has been fully consumed, so
+ 		 * we're being *really* paranoid here.
+ 		 */
+-		msleep(1);
++		mdelay(1);
++		qm_mr_pvb_update(p);
+ 		msg =3D qm_mr_current(p);
+ 		if (!msg)
+ 			return 0;
+--=20
+2.7.4
 
-https://lore.kernel.org/linux-crypto/20190729074434.21064-1-ard.biesheuvel@=
-linaro.org/
