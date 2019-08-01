@@ -1,227 +1,207 @@
-Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2647CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5A9C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1ABC206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D4A2083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpX3xrgb"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="UCgqj0Jt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390498AbfHAXt7 (ORCPT
+        id S2390507AbfHBABB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:49:59 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36922 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733221AbfHAXt6 (ORCPT
+        Thu, 1 Aug 2019 20:01:01 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:16852 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387972AbfHBABA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:49:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so2240991pgp.4;
-        Thu, 01 Aug 2019 16:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZWaIxuds+fAxPI+2i3BQU9GXQMcarXfdL0gnfPCB4yQ=;
-        b=hpX3xrgbLuZLcB7WTbXosIEW9mOwfvBvwqhJD4eNrKccC+bV5g29LSoETCNwlMOktl
-         GB/lsNp9rQjCj8KG7NSysGmEXBfvVHsp4DFzzazeFcnWxDN7DpPOoDi1msvs0m+FLHqa
-         GU3DrCTt36Nwpcd026E9meilQcDBAPOL+Hs52npL2LqszT5pW2dHikw/BCaN/oZd2Gc7
-         gDHHnxffnZWmIpKO39x/lC7S1/RBpiDxYMqiy/L/xy5D9pgjPM7XgtCg0snUVpvpaD3B
-         WiwzpNHvJshrqXU72npl509nyyoWx7Xcu1EpdDbjiFetSbzOBbatWea+3E5GKJf79g86
-         vTGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZWaIxuds+fAxPI+2i3BQU9GXQMcarXfdL0gnfPCB4yQ=;
-        b=mfTG+PZbEeTOjCFGzn4rOXabzruyeXS0Uq6vMUtfThghLfiqIWzFeFhbNWPiyalj2Z
-         Dxn5VS+xBor4peJLmRpy7xv7x7cpXAu7Fq1RF9JhX0EmZNG4WiolUF1OnV0fNA/6U9K/
-         Ymwip7TtI5F1Ye4pVkj34enysG5xlAlppJ+D4kd73rcErAf73fDzqdZyX06nK7XdgqUG
-         LHjwhUjZq9SqH3RN89c+Ho8p0UOQuW79gCDSsYc3O0PfPLQqHnZR+du76BeID0Vksq+u
-         fNBRS/VXZQtWs2skUgiKMtgl3+npRZLG2OGL3ILapx1/LhaRVf/N7zeerZvzDT73l3Mt
-         BXmQ==
-X-Gm-Message-State: APjAAAUGcpSM7LOenFLV9FCtfJaFTXEpVpu9ervddEJk3rB1iVS7cQ8O
-        3/c5BUNZqgp4NrbtUdjzpWY=
-X-Google-Smtp-Source: APXvYqylp5idCgCBoFUIRFsygvNeoUpvOKse0G/WyQ1syiU8lx75tvMLyANOaR46FOPtJwy7r45sZw==
-X-Received: by 2002:aa7:8202:: with SMTP id k2mr57377907pfi.31.1564703397147;
-        Thu, 01 Aug 2019 16:49:57 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id t96sm5884929pjb.1.2019.08.01.16.49.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 16:49:56 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 16:49:54 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [RFC PATCH v2 0/4] Input: mpr121-polled: Add polled driver for
- MPR121
-Message-ID: <20190801234954.GA178933@dtor-ws>
-References: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
- <20190521053705.GI183429@dtor-ws>
- <ef172b24-cd27-5bb0-d8b1-718f835d0647@ysoft.com>
- <20190725085753.GA26665@penguin>
- <ac436c3c-fa89-f777-85b2-f38adf842e10@ysoft.com>
- <20190725144009.GA27432@penguin>
- <dcee1139-c53f-5ea0-f387-a3aa5a9bf39f@ysoft.com>
- <20190727073156.GA795@penguin>
- <f06a913e-09aa-3225-a495-bb290ee2bb6f@ysoft.com>
+        Thu, 1 Aug 2019 20:01:00 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x720065A022672
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 17:00:59 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=cjDGnhVgKZxQMoBl3g/Va2GjGcp23Xg5CV43gWMZbIk=;
+ b=UCgqj0JtVB+hapENVvmgDC0zsj6/V/sdV72pvzuqqLpVPtOKAWE1fLX5DcrQXWtUUUfA
+ 36IZ2cRkyuUCXrbST/CO28Y0Vf2XsCvBWtARfjbchxZ4lIGqpj36957oHLjZhPnAQ/70
+ ZdlpL0KhkMP9NzsgL16pY7lNcU3V1IVVF2k= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2u430ysr6s-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 17:00:59 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Thu, 1 Aug 2019 17:00:56 -0700
+Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
+        id 463B8187F2686; Thu,  1 Aug 2019 16:58:41 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Tao Ren <taoren@fb.com>
+Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <openbmc@lists.ozlabs.org>
+CC:     Tao Ren <taoren@fb.com>
+Smtp-Origin-Cluster: prn1c35
+Subject: [PATCH net-next v2] net: phy: broadcom: add 1000Base-X support for BCM54616S
+Date:   Thu, 1 Aug 2019 16:58:39 -0700
+Message-ID: <20190801235839.290689-1-taoren@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f06a913e-09aa-3225-a495-bb290ee2bb6f@ysoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=613 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908010255
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:25:49AM +0200, Michal Vokáč wrote:
-> On 27. 07. 19 9:31, Dmitry Torokhov wrote:
-> > On Fri, Jul 26, 2019 at 01:31:31PM +0200, Michal Vokáč wrote:
-> > > On 25. 07. 19 16:40, Dmitry Torokhov wrote:
-> > > > On Thu, Jul 25, 2019 at 02:58:02PM +0200, Michal Vokáč wrote:
-> > > > > On 25. 07. 19 10:57, Dmitry Torokhov wrote:
-> > > > > > Hi Michal,
-> > > > > > 
-> > > > > > On Tue, May 21, 2019 at 08:51:17AM +0200, Michal Vokáč wrote:
-> > > > > > > On 21. 05. 19 7:37, Dmitry Torokhov wrote:
-> > > > > > > > Hi Michal,
-> > > > > > > > 
-> > > > > > > > On Fri, May 17, 2019 at 03:12:49PM +0200, Michal Vokáč wrote:
-> > > > > > > > > Hi,
-> > > > > > > > > 
-> > > > > > > > > I have to deal with a situation where we have a custom i.MX6 based
-> > > > > > > > > platform in production that uses the MPR121 touchkey controller.
-> > > > > > > > > Unfortunately the chip is connected using only the I2C interface.
-> > > > > > > > > The interrupt line is not used. Back in 2015 (Linux v3.14), my
-> > > > > > > > > colleague modded the existing mpr121_touchkey.c driver to use polling
-> > > > > > > > > instead of interrupt.
-> > > > > > > > > 
-> > > > > > > > > For quite some time yet I am in a process of updating the product from
-> > > > > > > > > the ancient Freescale v3.14 kernel to the latest mainline and pushing
-> > > > > > > > > any needed changes upstream. The DT files for our imx6dl-yapp4 platform
-> > > > > > > > > already made it into v5.1-rc.
-> > > > > > > > > 
-> > > > > > > > > I rebased and updated our mpr121 patch to the latest mainline.
-> > > > > > > > > It is created as a separate driver, similarly to gpio_keys_polled.
-> > > > > > > > > 
-> > > > > > > > > The I2C device is quite susceptible to ESD. An ESD test quite often
-> > > > > > > > > causes reset of the chip or some register randomly changes its value.
-> > > > > > > > > The [PATCH 3/4] adds a write-through register cache. With the cache
-> > > > > > > > > this state can be detected and the device can be re-initialied.
-> > > > > > > > > 
-> > > > > > > > > The main question is: Is there any chance that such a polled driver
-> > > > > > > > > could be accepted? Is it correct to implement it as a separate driver
-> > > > > > > > > or should it be done as an option in the existing driver? I can not
-> > > > > > > > > really imagine how I would do that though..
-> > > > > > > > > 
-> > > > > > > > > There are also certain worries that the MPR121 chip may no longer be
-> > > > > > > > > available in nonspecifically distant future. In case of EOL I will need
-> > > > > > > > > to add a polled driver for an other touchkey chip. May it be already
-> > > > > > > > > in mainline or a completely new one.
-> > > > > > > > 
-> > > > > > > > I think that my addition of input_polled_dev was ultimately a wrong
-> > > > > > > > thing to do. I am looking into enabling polling mode for regular input
-> > > > > > > > devices as we then can enable polling mode in existing drivers.
-> > > > > > > 
-> > > > > > > OK, that sounds good. Especially when one needs to switch from one chip
-> > > > > > > to another that is already in tree, the need for a whole new polling
-> > > > > > > driver is eliminated.
-> > > > > > 
-> > > > > > Could you please try the patch below and see if it works for your use
-> > > > > > case? Note that I have not tried running it, but it compiles so it must
-> > > > > > be good ;)
-> > > > > 
-> > > > > Hi Dmitry,
-> > > > > Thank you very much for the patch!
-> > > > > I gave it a shot and it seems you forgot to add the input-poller.h file
-> > > > > to the patch.. it does not compile on my side :(
-> > > > 
-> > > > Oops ;) Please see the updated patch below.
-> > > 
-> > > Thank you, now it is (almost) good as you said :D
-> > > 
-> > > > > 
-> > > > > > Input: add support for polling to input devices
-> > > > > > 
-> > > > > > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > > > > 
-> > > > > > Separating "normal" and "polled" input devices was a mistake, as often we want
-> > > > > > to allow the very same device work on both interrupt-driven and polled mode,
-> > > > > > depending on the board on which the device is used.
-> > > > > > 
-> > > > > > This introduces new APIs:
-> > > > > > 
-> > > > > > - input_setup_polling
-> > > > > > - input_set_poll_interval
-> > > > > > - input_set_min_poll_interval
-> > > > > > - input_set_max_poll_interval
-> > > > > > 
-> > > > > > These new APIs allow switching an input device into polled mode with sysfs
-> > > > > > attributes matching drivers using input_polled_dev APIs that will be eventually
-> > > > > > removed.
-> > > > > 
-> > > > > After reading this I am not really sure what else needs to be done
-> > > > > to test/use the poller. I suspect I need to modify the input device
-> > > > > driver (mpr121_touchkey.c in my case) like this:
-> > > > > 
-> > > > > If the interrupt gpio is not provided in DT, the device driver probe
-> > > > > function should:
-> > > > >    - not request the threaded interrupt
-> > > > >    - call input_setup_polling and provide it with poll_fn
-> > > > >      Can the mpr_touchkey_interrupt function be used as is for this
-> > > > >      purpose? The only problem I see is it returns IRQ_HANDLED.
-> > > > 
-> > > > I'd factor out code suitable for polling from mpr_touchkey_interrupt()
-> > > > and then do
-> > > > 
-> > > > static irqreturn_t mpr_touchkey_interrupt(...)
-> > > > {
-> > > > 	mpr_touchkey_report(...);
-> > > > 	return IRQ_HANDLED;
-> > > > }
-> > > > 
-> > > 
-> > > Probably a trivial problem for experienced kernel hacker but I can not
-> > > wrap my head around this - the interrupt handler takes the mpr121
-> > > device id as an argument while the poller poll_fn takes struct input_dev.
-> > > 
-> > > I fail to figure out how to get the device id from the input device.
-> > > 
-> Thanks for the hints Dmitry. I am trying my best but still have some
-> issues with the input_set/get_drvdata.
-> 
-> The kernel Oopses on NULL pointer dereference in mpr_touchkey_report.
-> Here is the backtrace:
-> 
-> [    2.916960] 8<--- cut here ---
-> [    2.920022] Unable to handle kernel NULL pointer dereference at virtual address 000001d0
-> [    2.928138] pgd = (ptrval)
+genphy_read_status() cannot report correct link speed when BCM54616S PHY
+is configured in RGMII->1000Base-KX mode (for example, on Facebook CMM
+BMC platform), and it is because speed-related fields in MII registers
+are assigned different meanings in 1000X register set. Actually there
+is no speed field in 1000X register set because link speed is always
+1000 Mb/s.
 
-Ah, that's my fault I believe. Can you please try sticking
+The patch adds "probe" callback to detect PHY's operation mode based on
+INTERF_SEL[1:0] pins and 1000X/100FX selection bit in SerDES 100-FX
+Control register. Besides, link speed is manually set to 1000 Mb/s in
+"read_status" callback if PHY-switch link is 1000Base-X.
 
-	poller->input = dev;
+Signed-off-by: Tao Ren <taoren@fb.com>
+---
+ Changes in v2:
+  - Auto-detect PHY operation mode instead of passing DT node.
+  - move PHY mode auto-detect logic from config_init to probe callback.
+  - only set speed (not including duplex) in read_status callback.
+  - update patch description with more background to avoid confusion.
+  - patch #1 in the series ("net: phy: broadcom: set features explicitly
+    for BCM54616") is dropped: the fix should go to get_features callback
+    which may potentially depend on this patch.
 
-into input_setup_polling()?
+ drivers/net/phy/broadcom.c | 53 +++++++++++++++++++++++++++++++++++---
+ include/linux/brcmphy.h    | 10 +++++--
+ 2 files changed, 58 insertions(+), 5 deletions(-)
 
-Thanks.
-
+diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
+index 937d0059e8ac..b6debbc6054e 100644
+--- a/drivers/net/phy/broadcom.c
++++ b/drivers/net/phy/broadcom.c
+@@ -383,9 +383,9 @@ static int bcm5482_config_init(struct phy_device *phydev)
+ 		/*
+ 		 * Select 1000BASE-X register set (primary SerDes)
+ 		 */
+-		reg = bcm_phy_read_shadow(phydev, BCM5482_SHD_MODE);
+-		bcm_phy_write_shadow(phydev, BCM5482_SHD_MODE,
+-				     reg | BCM5482_SHD_MODE_1000BX);
++		reg = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
++		bcm_phy_write_shadow(phydev, BCM54XX_SHD_MODE,
++				     reg | BCM54XX_SHD_MODE_1000BX);
+ 
+ 		/*
+ 		 * LED1=ACTIVITYLED, LED3=LINKSPD[2]
+@@ -464,6 +464,51 @@ static int bcm54616s_config_aneg(struct phy_device *phydev)
+ 	return ret;
+ }
+ 
++static int bcm54616s_probe(struct phy_device *phydev)
++{
++	int val, intf_sel;
++
++	val = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
++	if (val < 0)
++		return val;
++
++	/* The PHY is strapped in RGMII to fiber mode when INTERF_SEL[1:0]
++	 * is 01b.
++	 */
++	intf_sel = (val & BCM54XX_SHD_INTF_SEL_MASK) >> 1;
++	if (intf_sel == 1) {
++		val = bcm_phy_read_shadow(phydev, BCM54616S_SHD_100FX_CTRL);
++		if (val < 0)
++			return val;
++
++		/* Bit 0 of the SerDes 100-FX Control register, when set
++		 * to 1, sets the MII/RGMII -> 100BASE-FX configuration.
++		 * When this bit is set to 0, it sets the GMII/RGMII ->
++		 * 1000BASE-X configuration.
++		 */
++		if (!(val & BCM54616S_100FX_MODE))
++			phydev->dev_flags |= PHY_BCM_FLAGS_MODE_1000BX;
++	}
++
++	return 0;
++}
++
++static int bcm54616s_read_status(struct phy_device *phydev)
++{
++	int err;
++
++	err = genphy_read_status(phydev);
++
++	/* 1000Base-X register set doesn't provide speed fields: the
++	 * link speed is always 1000 Mb/s as long as link is up.
++	 */
++	if (phydev->dev_flags & PHY_BCM_FLAGS_MODE_1000BX &&
++	    phydev->link)
++		phydev->speed = SPEED_1000;
++
++	return err;
++}
++
+ static int brcm_phy_setbits(struct phy_device *phydev, int reg, int set)
+ {
+ 	int val;
+@@ -655,6 +700,8 @@ static struct phy_driver broadcom_drivers[] = {
+ 	.config_aneg	= bcm54616s_config_aneg,
+ 	.ack_interrupt	= bcm_phy_ack_intr,
+ 	.config_intr	= bcm_phy_config_intr,
++	.read_status	= bcm54616s_read_status,
++	.probe		= bcm54616s_probe,
+ }, {
+ 	.phy_id		= PHY_ID_BCM5464,
+ 	.phy_id_mask	= 0xfffffff0,
+diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
+index 6db2d9a6e503..b475e7f20d28 100644
+--- a/include/linux/brcmphy.h
++++ b/include/linux/brcmphy.h
+@@ -200,9 +200,15 @@
+ #define BCM5482_SHD_SSD		0x14	/* 10100: Secondary SerDes control */
+ #define BCM5482_SHD_SSD_LEDM	0x0008	/* SSD LED Mode enable */
+ #define BCM5482_SHD_SSD_EN	0x0001	/* SSD enable */
+-#define BCM5482_SHD_MODE	0x1f	/* 11111: Mode Control Register */
+-#define BCM5482_SHD_MODE_1000BX	0x0001	/* Enable 1000BASE-X registers */
+ 
++/* 10011: SerDes 100-FX Control Register */
++#define BCM54616S_SHD_100FX_CTRL	0x13
++#define	BCM54616S_100FX_MODE		BIT(0)	/* 100-FX SerDes Enable */
++
++/* 11111: Mode Control Register */
++#define BCM54XX_SHD_MODE		0x1f
++#define BCM54XX_SHD_INTF_SEL_MASK	GENMASK(2, 1)	/* INTERF_SEL[1:0] */
++#define BCM54XX_SHD_MODE_1000BX		BIT(0)	/* Enable 1000-X registers */
+ 
+ /*
+  * EXPANSION SHADOW ACCESS REGISTERS.  (PHY REG 0x15, 0x16, and 0x17)
 -- 
-Dmitry
+2.17.1
+
