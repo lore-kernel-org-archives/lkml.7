@@ -2,81 +2,80 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEBFC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10A2C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96A7214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564654228;
-	bh=xdUmGqlkKKHPRZYpNIXYrU6rl1LlF4QUNBWLB8n4PrU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gVNDBgFox8E4Z7HrBouWkI1i6zjTb73WntHwWW/jc5IrvwHkBV0H+5olAEZ2brOjB
-	 Nc5z9ZDToBhWUy86Kv3JqXx3JKqk7QdS6z2qCW0MFbXSeiphFJzYBIJwEWLGmcnl9w
-	 AjxzsTVAaapAUXZqpK8OlvjbmlPj62GOY6xs+rTE=
+	by mail.kernel.org (Postfix) with ESMTP id 6CB0B206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:13:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbfHAKK1 (ORCPT
+        id S1729697AbfHAKN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 06:10:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbfHAKK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 06:10:27 -0400
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9918F206B8;
-        Thu,  1 Aug 2019 10:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564654226;
-        bh=xdUmGqlkKKHPRZYpNIXYrU6rl1LlF4QUNBWLB8n4PrU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VvBNK3f7i4CetdgFcyjUeqVWbufpz3ovhP3c5TvB6RcdTHyiH0EKYm0AiGOF6DI2r
-         +MQl/BylYctg0rdmOQlIK+TfZF0daHOUCvrab2PLWh1gOtyFrNErEZ5bsYVJQV3ZgX
-         mxKXDRjUf6EFTTiS1EWB/1pAbuAnKsGmtJu1TobQ=
-Date:   Thu, 1 Aug 2019 13:10:23 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     oulijun@huawei.com, xavier.huwei@huawei.com, dledford@redhat.com,
-        jgg@ziepe.ca, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH -next] RDMA/hns: remove set but not used variable
- 'irq_num'
-Message-ID: <20190801101023.GI4832@mtr-leonro.mtl.com>
-References: <20190731073748.17664-1-yuehaibing@huawei.com>
+        Thu, 1 Aug 2019 06:13:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34506 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbfHAKN3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 06:13:29 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ht85J-0002jZ-C1; Thu, 01 Aug 2019 12:13:21 +0200
+Date:   Thu, 1 Aug 2019 12:13:16 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
+cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Daniel Drake <drake@endlessm.com>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: setup_boot_APIC_clock() NULL dereference during early boot on
+ reduced hardware platforms
+In-Reply-To: <81666b28-d029-56c3-8978-90abc219d1b7@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1908011054210.1965@nanos.tec.linutronix.de>
+References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com> <CAERHkruxfBc8DqNUr=fbYuQWrXrHC7cK6HnVR3xp0iLA9QtxiQ@mail.gmail.com> <alpine.DEB.2.21.1908010931550.1788@nanos.tec.linutronix.de> <CAERHkrtaVAQHDU1cj2_GLL59LPjp7E=3X0Zna0spfFB=Ve5__w@mail.gmail.com>
+ <alpine.DEB.2.21.1908011011250.1788@nanos.tec.linutronix.de> <81666b28-d029-56c3-8978-90abc219d1b7@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731073748.17664-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 03:37:48PM +0800, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function hns_roce_v2_cleanup_eq_table:
-> drivers/infiniband/hw/hns/hns_roce_hw_v2.c:5920:6:
->  warning: variable irq_num set but not used [-Wunused-but-set-variable]
->
-> It is not used since
-> commit 33db6f94847c ("RDMA/hns: Refactor eq table init for hip08")
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 --
->  1 file changed, 2 deletions(-)
->
+On Thu, 1 Aug 2019, Li, Aubrey wrote:
+> On 2019/8/1 16:13, Thomas Gleixner wrote:
+> > The point is that it does not matter which vendor a CPU comes from. The
+> > kernel does support legacyless boot when the frequencies are known. Whether
+> > that's currently possible on that particular CPU is a different question.
+> > 
+> Yeah, I should specify, Daniel, your platform needs a global clock event, ;-)
 
-I'm hitting this error too.
+Care to look at the manuals before making assumptions?
+
+  2.1.9 Timers
+
+   Each core includes the following timers. These timers do not vary in
+   frequency regardless of the current P-state or C-state.
+
+   * Core::X86::Msr::TSC; the TSC increments at the rate specified by the
+     P0 Pstate. See Core::X86::Msr::PStateDef.
+
+   * The APIC timer (Core::X86::Apic::TimerInitialCount and
+     Core::X86::Apic::TimerCurrentCount), which increments at the rate of
+     2xCLKIN; the APIC timer may increment in units of between 1 and 8.
+
+The Ryzens use a 100MHz input clock for the APIC normally, but I'm not sure
+whether this is subject to overclocking. If so then it should be possible
+to figure that out somehow. Tom?
 
 Thanks,
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+
+	tglx
+
