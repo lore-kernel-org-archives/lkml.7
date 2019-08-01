@@ -2,164 +2,116 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38365C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6FFC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074162054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:16:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="A8/G7jLp"
+	by mail.kernel.org (Postfix) with ESMTP id C3B5F206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388558AbfHATQZ (ORCPT
+        id S2388585AbfHATQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:16:25 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44409 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfHATQY (ORCPT
+        Thu, 1 Aug 2019 15:16:30 -0400
+Received: from smtprelay0097.hostedemail.com ([216.40.44.97]:55866 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726118AbfHATQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:16:24 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d79so52876123qke.11
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 12:16:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5t3tzqXqpNbdKtPEsmdz9Dwf6r6pNTpWJhNvYjQG3h4=;
-        b=A8/G7jLpfTgWadsEuB/dl0+Z3G3BWFlweQBVY1yMVtyNgidSuRKVOD5NLpfvbzBoQl
-         Jxg6iXbYPCsTP7otqAHyNwF+tG3vwKTo2Nn7xzSAHpDS0Q/XMRNZuwJ7hlq4DtT+7R0O
-         RtOF5zxB6zAo28I7gSVJsacqmeJ/bUlChSE1raHV6axfUoBIPrDJH0sWABXqS0odxz7r
-         lJTEGA4UnGeuLdxwkP54y154QbH4j5pwN7I5eH6SyZwM1pnPmBWiUXpjU50JfMGhL7hF
-         BvhAapZSg0WnouNpqVkx+bYXXWNTyGvL9UOwrlrtTJPaaz2BSdhsnTlUH+ZBI+2zXJ/A
-         TozA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5t3tzqXqpNbdKtPEsmdz9Dwf6r6pNTpWJhNvYjQG3h4=;
-        b=iYtTQEkhgTiLeWD3+jCbxhEe1aEv/FWeqMPM32QghTZ1hJto8jM87CjsNUkMYgz0Lt
-         4HcD5LdVqS0JeKY7cBnvqkHjD+p090syKvEOsnVrVtUFxZEWrRDver3M4ba7Dr5SgTnr
-         1PsiSHcyAuZM/tQqh5xTm4P/EtBkWHd0GpLuoFMC/OG011F3DyeP/LAwxKijgEzMSeB/
-         5XGF2L8/nd+Z/meCazcC9Mqgb6UmmTD4fYeGnOUaUreUzSHdjvvN6h/WHFkCzFFcE1U9
-         jq9s36/77Ja7D8EnOeHM9ibIPDq/+rU/PvD2Dfm84Wqh+3mqgN5En92ZRMFq9tmoxYRt
-         uNZQ==
-X-Gm-Message-State: APjAAAVpfL4oGvYtvpD3U12dmBEXrhL8jgPrH8b7e1Et9z+QloJAZv8D
-        JJfFo/n+swvd/jG01kPrNUPstQ==
-X-Google-Smtp-Source: APXvYqwM7On48Iw3/mNYaF1NUbOCZVmS3TGeF0EMRVlHSC1fsLS/im9rYTx4L2OgDwy5PG98GWwuYg==
-X-Received: by 2002:a05:620a:1404:: with SMTP id d4mr87089021qkj.228.1564686983047;
-        Thu, 01 Aug 2019 12:16:23 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id c5sm33070187qkb.41.2019.08.01.12.16.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 12:16:22 -0700 (PDT)
-Message-ID: <1564686979.11067.48.camel@lca.pw>
-Subject: Re: [PATCH v2] acpica: fix -Wnull-pointer-arithmetic warnings
-From:   Qian Cai <cai@lca.pw>
-To:     "Moore, Robert" <robert.moore@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Cc:     "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "jkim@FreeBSD.org" <jkim@FreeBSD.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "ndesaulniers@google.com" <ndesaulniers@google.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 01 Aug 2019 15:16:19 -0400
-In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3B9661CBD@ORSMSX110.amr.corp.intel.com>
-References: <20190718194846.1880-1-cai@lca.pw>
-         <94F2FBAB4432B54E8AACC7DFDE6C92E3B9661CBD@ORSMSX110.amr.corp.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 1 Aug 2019 15:16:30 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id C848318029123;
+        Thu,  1 Aug 2019 19:16:28 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: ring06_8f6c4551ca725
+X-Filterd-Recvd-Size: 3026
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  1 Aug 2019 19:16:24 +0000 (UTC)
+Message-ID: <ce8c8a7342282467c3b681fd1b0874817250c16e.camel@perches.com>
+Subject: Re: [PATCH][drm-next] drm/amd/powerplay: fix a few spelling mistakes
+From:   Joe Perches <joe@perches.com>
+To:     Alex Deucher <alexdeucher@gmail.com>,
+        Colin King <colin.king@canonical.com>
+Cc:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 01 Aug 2019 12:16:23 -0700
+In-Reply-To: <CADnq5_OdBM83zkkgtjwzQ0jqsiDP5wZoMXioGcq4mycX2=Tavw@mail.gmail.com>
+References: <20190801083941.4230-1-colin.king@canonical.com>
+         <CADnq5_OdBM83zkkgtjwzQ0jqsiDP5wZoMXioGcq4mycX2=Tavw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-26 at 19:35 +0000, Moore, Robert wrote:
-> We've taken the change to ACPI_TO_POINTER.
+On Thu, 2019-08-01 at 15:02 -0400, Alex Deucher wrote:
+> Applied.  thanks!
+> 
+> Alex
+> 
+> On Thu, Aug 1, 2019 at 4:39 AM Colin King <colin.king@canonical.com> wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> > 
+> > There are a few spelling mistakes "unknow" -> "unknown" and
+> > "enabeld" -> "enabled". Fix these.
+[]
+> > diff --git a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
+[]
+> > @@ -39,7 +39,7 @@ static const char* __smu_message_names[] = {
+> >  const char *smu_get_message_name(struct smu_context *smu, enum smu_message_type type)
+> >  {
+> >         if (type < 0 || type > SMU_MSG_MAX_COUNT)
 
-I am a bit confused here. I saw the commit in the acpia repo.
+This looks like an off-by-one test against
+SMU_MSG_MAX_COUNT where type
+should be >=
 
-https://github.com/acpica/acpica/commit/02bbca5070e42d298c9b824300aa0eb8a082d797
+> > -               return "unknow smu message";
+> > +               return "unknown smu message";
+> >         return __smu_message_names[type];
+[]
+> > @@ -52,7 +52,7 @@ static const char* __smu_feature_names[] = {
+> >  const char *smu_get_feature_name(struct smu_context *smu, enum smu_feature_mask feature)
+> >  {
+> >         if (feature < 0 || feature > SMU_FEATURE_COUNT)
 
-but how does that change will go into the linux kernel? Suppose Rafael will need
-to pick it up manually?
+here too
 
-> 
-> 
-> -----Original Message-----
-> From: Qian Cai [mailto:cai@lca.pw] 
-> Sent: Thursday, July 18, 2019 12:49 PM
-> To: Wysocki, Rafael J <rafael.j.wysocki@intel.com>
-> Cc: Moore, Robert <robert.moore@intel.com>; Schmauss, Erik <erik.schmauss@inte
-> l.com>; jkim@FreeBSD.org; lenb@kernel.org; ndesaulniers@google.com; linux-acpi
-> @vger.kernel.org; devel@acpica.org; clang-built-linux@googlegroups.com; linux-
-> kernel@vger.kernel.org; Qian Cai <cai@lca.pw>
-> Subject: [PATCH v2] acpica: fix -Wnull-pointer-arithmetic warnings
-> 
-> Clang generate quite a few of those warnings.
-> 
-> drivers/acpi/scan.c:759:28: warning: arithmetic on a null pointer treated as a
-> cast from integer to pointer is a GNU extension [-Wnull-pointer-arithmetic]
-> 		status = acpi_get_handle(ACPI_ROOT_OBJECT,
-> obj->string.pointer,
->                                          ^~~~~~~~~~~~~~~~
-> ./include/acpi/actypes.h:458:56: note: expanded from macro 'ACPI_ROOT_OBJECT'
->  #define ACPI_ROOT_OBJECT                ((acpi_handle) ACPI_TO_POINTER
-> (ACPI_MAX_PTR))
-> 							^~~~~~~~~~~~~~~
-> ./include/acpi/actypes.h:509:41: note: expanded from macro 'ACPI_TO_POINTER'
->  #define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) 0,
-> (acpi_size) (i))
->                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ./include/acpi/actypes.h:503:84: note: expanded from macro 'ACPI_ADD_PTR'
->  #define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t,
-> (ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
->                                          ^~~~~~~~~~~~~~~~~
-> ./include/acpi/actypes.h:501:66: note: expanded from macro 'ACPI_CAST_PTR'
->  #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
->                                                                  ^ This is
-> because pointer arithmetic on a pointer not pointing to an array is an
-> undefined behavior (C11 6.5.6, constraint 8). Fix it by just casting the
-> corresponding pointers using ACPI_CAST_PTR() and skip the arithmetic. Also,
-> fix a checkpatch warning together.
-> 
-> ERROR: Macros with complex values should be enclosed in parentheses
->  #45: FILE: include/acpi/actypes.h:509:
-> +#define ACPI_TO_POINTER(i)              ACPI_CAST_PTR (void, i)
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
-> 
-> v2: Use ACPI_CAST_PTR() in ACPI_TO_POINTER() directly without
->     arithmetic.
-> 
->  include/acpi/actypes.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h index
-> ad6892a24015..163181e2d884 100644
-> --- a/include/acpi/actypes.h
-> +++ b/include/acpi/actypes.h
-> @@ -506,7 +506,7 @@ typedef u64 acpi_integer;
->  
->  /* Pointer/Integer type conversions */
->  
-> -#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) 0,
-> (acpi_size) (i))
-> +#define ACPI_TO_POINTER(i)              (ACPI_CAST_PTR (void, i))
->  #define ACPI_TO_INTEGER(p)              ACPI_PTR_DIFF (p, (void *) 0)
->  #define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void
-> *) 0)
->  #define ACPI_PHYSADDR_TO_PTR(i)         ACPI_TO_POINTER(i)
-> --
-> 2.20.1 (Apple Git-117)
-> 
+> > -               return "unknow smu feature";
+> > +               return "unknown smu feature";
+> >         return __smu_feature_names[feature];
+
+Perhaps instead it should be against ARRAY_SIZE(__smu_<foo>)
+
+Also, the  __SMU_DUMMY_MAP macro is unnecessarily complex.
+
+It might be better to have some direct
+index and name struct like
+
+struct enum_name {
+	int val;
+	const char *name;
+};
+
+And walk that.
+
+Perhaps add a macro like
+
+#define enum_map(e)
+	{.val = e, .name = #e}
+
+
