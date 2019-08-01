@@ -2,67 +2,121 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8353CC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88F0C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC2D206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45CF6206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbfHAHL6 (ORCPT
+        id S1730300AbfHAHMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:11:58 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:54098 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHAHL6 (ORCPT
+        Thu, 1 Aug 2019 03:12:38 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:54705 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHAHMh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:11:58 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1ht5FW-0007nT-U7; Thu, 01 Aug 2019 09:11:43 +0200
-Message-ID: <3a2b6d4f9356d54ab8e83fbf25ba9c5f50181f0d.camel@sipsolutions.net>
-Subject: Re: [PATCH -next] iwlwifi: dbg: work around clang bug by marking
- debug strings static
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        kvalo@codeaurora.org, Luca Coelho <luciano.coelho@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Sara Sharon <sara.sharon@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Date:   Thu, 01 Aug 2019 09:11:40 +0200
-In-Reply-To: <874l31r88y.fsf@concordia.ellerman.id.au> (sfid-20190801_032117_118545_20A85892)
-References: <20190712001708.170259-1-ndesaulniers@google.com>
-         <874l31r88y.fsf@concordia.ellerman.id.au>
-         (sfid-20190801_032117_118545_20A85892)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 1 Aug 2019 03:12:37 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: KOIO5aPBnyj78kcD+HN+oud5Hl32sOC01iATWdQpiINf+aunYA+T17ybBj6R6SPmU8+RWsXEDu
+ CTHM8/wdD9a6tdnC2nox7Exyes0RUqxzW1IlcFaZLcK9pWvHOnrAE6HUXty+yNVE2EJGnQms4V
+ vVXFrt7qiWoO3SbmWKY0PKRI2Jy08xwDCiCZs+C+h/VFTXd/e8sR7/6F/7po6fjE8AuOqF1vr7
+ WXT8LCzLeNeq750Uk4QtJcPkSQ89LMcBhpuBFZDnVo/ZEPt2n8Xu4UNozSThA54kKoY/rbbbiU
+ rSU=
+X-IronPort-AV: E=Sophos;i="5.64,333,1559545200"; 
+   d="scan'208";a="42778277"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Aug 2019 00:12:36 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 1 Aug 2019 00:12:33 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Thu, 1 Aug 2019 00:12:32 -0700
+Date:   Thu, 1 Aug 2019 09:11:36 +0200
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Kees Cook <keescook@chromium.org>
+CC:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] mmc: atmel-mci: Mark expected switch fall-throughs
+Message-ID: <20190801071136.37yjjr3kmdhfyxna@M43218.corp.atmel.com>
+Mail-Followup-To: Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20190729000123.GA23902@embeddedor>
+ <20190731113216.ztxckd54a74g2lw5@M43218.corp.atmel.com>
+ <201907310905.B90C6E25@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <201907310905.B90C6E25@keescook>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 31, 2019 at 09:06:07AM -0700, Kees Cook wrote:
+> On Wed, Jul 31, 2019 at 01:32:16PM +0200, Ludovic Desroches wrote:
+> > > drivers/mmc/host/atmel-mci.c:2426:40: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> > >    host->caps.need_notbusy_for_read_ops = 1;
+> > >    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+> > > drivers/mmc/host/atmel-mci.c:2427:2: note: here
+> > >   case 0x100:
+> > >   ^~~~
+> > > 
+> > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> > 
+> > I don't know if there is a policy in the kernel about the expression to
+> > use. As this one does the job
+> 
+> Yup, documented here:
+> https://www.kernel.org/doc/html/latest/process/deprecated.html#implicit-switch-case-fall-through
 
-> Luca, you said this was already fixed in your internal tree, and the fix
-> would appear soon in next, but I don't see anything in linux-next?
+Thanks for the pointer.
 
-Luca is still on vacation, but I just sent out a version of the patch we
-had applied internally.
+Regards
 
-Also turns out it wasn't actually _fixed_, just _moved_, so those
-internal patches wouldn't have helped anyway.
+Ludovic
 
-johannes
-
+> 
+> > Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> 
+> Thanks!
+> 
+> -- 
+> Kees Cook
