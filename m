@@ -2,96 +2,139 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83746C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6B7C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62AA420838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045F72080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:23:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lxWCa9qR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbfHAUVr (ORCPT
+        id S1729747AbfHAUXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 16:21:47 -0400
-Received: from sauhun.de ([88.99.104.3]:56804 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfHAUVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:21:47 -0400
-Received: from localhost (p54B333D2.dip0.t-ipconnect.de [84.179.51.210])
-        by pokefinder.org (Postfix) with ESMTPSA id 7D2FE2CF684;
-        Thu,  1 Aug 2019 22:21:44 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 22:21:44 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Subject: Re: linux-next: Fixes tag needs some work in the i2c tree
-Message-ID: <20190801202143.GA16487@ninjato>
-References: <20190802000252.74ada349@canb.auug.org.au>
+        Thu, 1 Aug 2019 16:23:01 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33350 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfHAUXA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 16:23:00 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so34709785pfq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 13:23:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:from:to:subject:user-agent:date;
+        bh=fTIZJQikQI8w/BKVVJZ33osEkUPhfPGMi+gSFP68ip4=;
+        b=lxWCa9qRPtHhH2oHKBdo2XyMWrk9vqfYVYeT6QPsAjlAmS0/cIk+KAOcG/75md+Br0
+         5dFST6qO2H9lshNgpnQ8B3ElPqmBbyqzytFI8DolFwaGRugcmEpie+aWP7RcXWEgEW+Q
+         hGHe//H9rh8Uive6cfcspibky09EEiirl8w+Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
+         :user-agent:date;
+        bh=fTIZJQikQI8w/BKVVJZ33osEkUPhfPGMi+gSFP68ip4=;
+        b=XvVN54ejUINUOrHIhSNncX8AWbWIXr29NDEp4XRRFVGjyWl3ytd5ttNuDhRzrAGtp5
+         HlnKBjm6+kxkPJJf+EYoT62Fu0NPs0Gq7BX4M12EvlgbmzFAzCbh7wcM556QOCM59o5R
+         VaPVUOHpi31kYkfUYu1coz5n19v/vR7c5l33RoL/S24hy3nuThvNVj5VFAok+85T3lno
+         OvIVt0Qhdz+qe2xS8daKnqld8zGd3yYLhKXwbr42tnY04mgnPTeyYJ/FhdQ9HnydAEK8
+         4Bmo7w2vxSxz2nV3ZvrQRYyu6TCZE2XGgMxpbyz4pzndIyBDOSt6ZjKbpGcU2gFCLI4o
+         I9JA==
+X-Gm-Message-State: APjAAAUfZbxkGEMyP+GjxyR55IiL6j3A5TXucD8f9l6qsLymP7Os+TUF
+        kQyO7ylVK6amQkhupDJUZSkQSQ==
+X-Google-Smtp-Source: APXvYqzOdAoaZaiqO2EChiR593oybTXQTEM78AmeRaPQ7zZ2jslmJrWVVU4RARZJaB1u8UqhhQ/+uw==
+X-Received: by 2002:a63:5b52:: with SMTP id l18mr121210400pgm.21.1564690979818;
+        Thu, 01 Aug 2019 13:22:59 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id l1sm94261462pfl.9.2019.08.01.13.22.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 13:22:59 -0700 (PDT)
+Message-ID: <5d434a23.1c69fb81.c4201.c65b@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Content-Disposition: inline
-In-Reply-To: <20190802000252.74ada349@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CANA+-vCoCuMtSKCfnav9NSwrzX7of9iLbppNX+pcymBp19kgQQ@mail.gmail.com>
+References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher> <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com> <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com> <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com> <5d42281c.1c69fb81.bcda1.71f5@mx.google.com> <CANA+-vCoCuMtSKCfnav9NSwrzX7of9iLbppNX+pcymBp19kgQQ@mail.gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Tri Vo <trong@android.com>
+Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
+User-Agent: alot/0.8.1
+Date:   Thu, 01 Aug 2019 13:22:58 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Stephen,
-
-> In commit
+Quoting Tri Vo (2019-08-01 12:50:25)
+> On Wed, Jul 31, 2019 at 4:45 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Rafael J. Wysocki (2019-07-31 16:10:38)
+> > > On Thu, Aug 1, 2019 at 12:59 AM Tri Vo <trong@android.com> wrote:
+> > > >
+> > > > >
+> > > > > So why wouldn't something like this suffice:
+> > > > >
+> > > > > dev =3D device_create_with_groups(wakeup_class, parent, MKDEV(0, =
+0), ws,
+> > > > >                                 wakeup_source_groups, "wakeup:%s"=
+, ws->name);
+> > > > >
+> > > > > ?
+> > > >
+> > > > ws->name is inherited from the device name. IIUC device names are n=
+ot
+> > > > guaranteed to be unique. So if different devices with the same name
+> > > > register wakeup sources, there is an error.
+> > >
+> > > OK
+> > >
+> > > So I guess the names are retained for backwards compatibility with
+> > > existing user space that may be using them?
+> > >
+> > > That's kind of fair enough, but having two different identification
+> > > schemes for wakeup sources will end up confusing.
+> >
+> > I understand your concern about the IDA now. Thanks for clarifying.
+> >
+> > How about we name the devices 'wakeupN' with the IDA when they're
+> > registered with a non-NULL device pointer and then name them whatever
+> > the name argument is when the device pointer is NULL. If we have this,
+> > we should be able to drop the name attribute in sysfs and figure out the
+> > name either by looking at the device name in /sys/class/wakeup/ if it
+> > isn't 'wakeupN', or follow the symlink to the device in /sys/devices/
+> > and look at the parent device name there.
 >=20
->   9c5718e14b81 ("i2c: at91: disable TXRDY interrupt after sending data")
+> This makes it difficult for userspace to query the name a wakeup
+> source, as it now has to first figure out if a wakeup source is
+> associated with a device or not. The criteria for that is also
+> awkward, userspase has to check if directory path contains "wakeupN",
+> then it's a virtual wakeup source.
+
+I think you mean if it doesn't match wakeupN then it's a virtual wakeup
+source?
+
 >=20
-> Fixes tag
->=20
->   Fixes: fac368a0404 ("i2c: at91: add new driver")
->=20
-> has these problem(s):
->=20
->   - SHA1 should be at least 12 digits long
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
+> IMO it's cleaner to consistently have /sys/class/wakeup/wakeupN/name
+> for every wakeup source.
 
-Thanks for the report, I fixed it.
+I don't find it awkward or difficult. Just know what the name of the
+/sys/class/wakeup/ path is and then extract the name from there if it
+doesn't match wakeupN, otherwise read the 'device' symlink and run it
+through basename.
 
-Micha=C5=82, please check your gitconfig to avoid these issue in the future.
-And I will check why checkpatch didn't report this flaw to me.
-
-Kind regards,
-
-   Wolfram
-
-
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1DSdMACgkQFA3kzBSg
-KbY9kg/+IjNTKlYEX5yiyVIkYDgPl1yCKrHTw59Xu9Mt7HhAaN/0ZZo4sV0wcVn8
-eCppj7OF6MdrCkuN60YH63ynLg/2wkMrXo80h9iy1H66hQLWYoN4uX8xrYfD5LlP
-Vm74p9wsZebbdBFP6hSMC/VOKLL79Kahebsr8qLEammSTVxPAXsszx/MWGZBJIf2
-IVbdLSywqOig2KARPDeUUvG2YTnex3B7acraZB8p5zCWNG1uwOpU+ePzoK+6u9h7
-+6O1E7YUOZZ3ENyYidwTZryNCgGI6bWf8vBziDu4+cLSNzXTNYfkbVcVkuWu8nY6
-2SouJ3u+omzBj7UMfbItsScCWCXpQVB+wOKmXOMJb0tlWULLQVsNOoWqAUuRcWw0
-s7swGhmIrJIOz7ym9UyKcCHvpZ3hm4eXju3S+vLPNeJDFRzsz4EdEf/OXqI0EwRt
-GlPeASlKGHM7Ea3yxZj5cYDvU6U+76Sa3DvyrX00aYwyUwfx6EKyOPq1df4G33in
-me7DNI+Z3AO72gx1mQXzy25BIbUIKxCUdqN5ZDbhG2NMYRiBQLn8zrS5EgfISlEr
-qEldomEhDk7pwmquOq9gc0RBmysK46Mk/CXzHIc2xgCN+iQzHW0o5MscSYK6fWx0
-6hwqDOG36C4PqcI8qUyhrWwKJ/hhXBYp6qyu3gJDKPe8Oe5gPzM=
-=CqVz
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
