@@ -2,134 +2,120 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7259C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4BFC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D6B216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D850214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="AAy+jPnO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="y/Aa/Y+N"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="XL5l8TWu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o5EN+Drq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbfHANro (ORCPT
+        id S1728853AbfHANuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:47:44 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:40981 "EHLO
+        Thu, 1 Aug 2019 09:50:51 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:49165 "EHLO
         wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725930AbfHANrn (ORCPT
+        by vger.kernel.org with ESMTP id S1725930AbfHANuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:47:43 -0400
+        Thu, 1 Aug 2019 09:50:50 -0400
 Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 95FA3405;
-        Thu,  1 Aug 2019 09:47:39 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id 47C8D43F;
+        Thu,  1 Aug 2019 09:50:49 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 01 Aug 2019 09:47:40 -0400
+  by compute6.internal (MEProxy); Thu, 01 Aug 2019 09:50:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=HxNgJJg2nhiPwmgNt7+DyzeN6pL
-        3GbnAaqp3b9wUFk4=; b=AAy+jPnO/oVUFq4jUmE3x97NZJYdTPaqtNJUf7nwz4N
-        9AdlhiaxrugfOl9/aL2MZs7a5ojdwqNJBpQH0b0pODxu8assB4upmc3K/8Uaw/7a
-        EDWxkklm5A1xiZPR5HyyMFS6PRSDewL7cuYQk5IQTTKH6XQQJlKoW8uwT/Dm0wkK
-        EQ5Gv3GqAC+FEP+DsPTI/HLHEDcR1yUggE6N/8h2cqoX13iis1jumIbzsuwyVJPC
-        VLXLvL/H8KhCzg+LMPdFoj+QauZKEIoS+sUE5lPmMAkVS9iTgXBsZz7sXnUfSvpb
-        28kUzRNUZ9nYc0sSiLK1x2bugmb3PhtsfbAcZjywTEQ==
+        :content-type:in-reply-to; s=fm1; bh=VD0+62PbXYEUtn3nWDeyLEdc1Uk
+        cObs+jXwJEZ9imi8=; b=XL5l8TWup11/3STFzR7FeSvbvt+oA0XRSm16xAqK+UI
+        +J1Np0f66xrbHY4zCea8Cx+bUs/d6DsB4/KR5v5uSOf6XtXoKW2FNBV6gLppNYX8
+        0OvQ1bltL8Z/Co6+exZx36hE/zrT/MvfM5gybzossmBhWKbWriyq3mW5CP+WEgGJ
+        bpZh5h0ZDY4bG+CQ2cVxt2qPw6DUUqNh64+pIwkGB/d0EzOOOBvLZR/9dOVY8CGF
+        zVrTizMk+ft48EAKGmT36pgPlkmMLfJtPmVtzeHhvYimKtUCXRRnvKdk0HyeKBVh
+        K9DsXFAKo2zS9AN10HDcSIJmJ1ZQP9CYGmXFKZe0J9w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=HxNgJJ
-        g2nhiPwmgNt7+DyzeN6pL3GbnAaqp3b9wUFk4=; b=y/Aa/Y+NgfYU+fo/Tzn4oY
-        /wi9dVZE9Kq3W/nJ+pqxkJu5IfqS4B+Ss6bCd2P6n1rO68+3BU4ECB1Y1mOxeBGv
-        G1pgAwbDcWd3P//lrm+WoCFwdup3S0Olh4DlsR7+AAJkW7NceSFjgmNANP8B1KaM
-        3yigh/KDCmim0/8IrRDrz02gG2T2WOJiiIw3+mqu5VbFVsKeQ63SUY4sc3MPNScK
-        +X66uvIzYK8bMFLgwae6xxq+3hnkX/9uIh5MQJD5xgsmMpviTZsTn8yTwEqAoYLm
-        wa2yo2tdK0/hNU0yhDe+vT6qAZo9t6NA3C50vzohep3sRMjxu9pvFHCnJnxk+CEg
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=VD0+62
+        PbXYEUtn3nWDeyLEdc1UkcObs+jXwJEZ9imi8=; b=o5EN+DrqUd3XeC2qlsJKEw
+        THLsfg6/pjZU4AV6lOnDON7LxQPdmkmCLODaPXk4im4gYjSn7wfQnVZPjsRNuKUt
+        0MenDWGt+R/qaqlEe7wcJ4V6hxkSbhp9mDNMKqaop5pk4r7xdZmFP/bZ2kotrYGu
+        0sZUQcl2GY+UqsVg8bHxj83eCsVEze774dabczLiqI7b6r2ygW6p5RUdv1vZIGHC
+        16Sgs3I9l7fajimGfIy960P48jGJ1A6uJBQr7z0n9BU624DM8G1/YvrLvAIUqgok
+        eScDLxq26OHzuMMlPfz5k2wsCr57Qw05YBgohBN5bBgLAwkTR03CslqR0p/lbG5A
         ==
-X-ME-Sender: <xms:eu1CXTJ3D6noxacELy3qEukfzFIgpgQrciOUfXwoezAVSAHRNp9I3w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleejgdeijecutefuodetggdotefrodftvf
+X-ME-Sender: <xms:OO5CXe58fVDB1Y-4wsdg5Ayynxd1j2VvdEjG-FjbZHlMyOJRhvAgZQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleejgdeikecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
     mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
     ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
     lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:eu1CXWtDbL5upCIHa0CnQAqT6PjLHVEBLWCwg2-B7xze5oT-yiVWvA>
-    <xmx:eu1CXSInz_iX1dsHVJz1vpEOr5jvLBIi1WVFzouU_xPVMxqfzrRuhA>
-    <xmx:eu1CXb8DgB6HtttgXY1UTrLzVoyZPCts3AnGf_oV2CBqBtUQco9edg>
-    <xmx:e-1CXfgEu_lo7EqH29CmOZdrWg_bpyYNjEOZrLF1dNJDHiZmpNhlyw>
+X-ME-Proxy: <xmx:OO5CXekqEv3fICIw9qvS_0Cr9VW5YjMICx1KXxm2CwVv3LHbcVPqjw>
+    <xmx:OO5CXXnDngUcH-x5bMdAp67_eq-rBCJHQPBlhG4H5lT4fwUO5MSFsA>
+    <xmx:OO5CXa7GqhyrEbuEOjrJOee6WJ9hbxA9-i5RRC2mGYzAxtLko5jRbw>
+    <xmx:OO5CXb6RaIXMZWT47YEkLtOuE3r3MSueMlY-gtHtdsDxd-CJiFov8A>
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B456A380079;
-        Thu,  1 Aug 2019 09:47:37 -0400 (EDT)
-Date:   Thu, 1 Aug 2019 15:47:33 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1328F380076;
+        Thu,  1 Aug 2019 09:50:47 -0400 (EDT)
+Date:   Thu, 1 Aug 2019 15:50:44 +0200
 From:   Greg KH <greg@kroah.com>
-To:     walter harms <wharms@bfs.de>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        jikos@kernel.org, benjamin.tissoires@redhat.com,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] HID: usbhid: Use GFP_KERNEL instead of GFP_ATOMIC when
- applicable
-Message-ID: <20190801134733.GA24791@kroah.com>
-References: <20190801074759.32738-1-christophe.jaillet@wanadoo.fr>
- <5D42B98B.40900@bfs.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Vladis Dronov <vdronov@redhat.com>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v5.3-rc2] Bluetooth: hci_uart: check for missing tty
+ operations
+Message-ID: <20190801135044.GB24791@kroah.com>
+References: <20190730093345.25573-1-marcel@holtmann.org>
+ <20190801133132.6BF30206A3@mail.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5D42B98B.40900@bfs.de>
+In-Reply-To: <20190801133132.6BF30206A3@mail.kernel.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 12:06:03PM +0200, walter harms wrote:
+On Thu, Aug 01, 2019 at 01:31:31PM +0000, Sasha Levin wrote:
+> Hi,
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a "Fixes:" tag,
+> fixing commit: .
+> 
+> The bot has tested the following trees: v5.2.4, v5.1.21, v4.19.62, v4.14.134, v4.9.186, v4.4.186.
+> 
+> v5.2.4: Build OK!
+> v5.1.21: Build OK!
+> v4.19.62: Build OK!
+> v4.14.134: Failed to apply! Possible dependencies:
+>     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
+> 
+> v4.9.186: Failed to apply! Possible dependencies:
+>     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
+> 
+> v4.4.186: Failed to apply! Possible dependencies:
+>     162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+>     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
+>     395174bb07c1 ("Bluetooth: hci_uart: Add Intel/AG6xx support")
+>     9e69130c4efc ("Bluetooth: hci_uart: Add Nokia Protocol identifier")
 > 
 > 
-> Am 01.08.2019 09:47, schrieb Christophe JAILLET:
-> > There is no need to use GFP_ATOMIC when calling 'usb_alloc_coherent()'
-> > here. These calls are done from probe functions and using GFP_KERNEL should
-> > be safe.
-> > The memory itself is used within some interrupts, but it is not a
-> > problem, once it has been allocated.
-> > 
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > ---
-> >  drivers/hid/usbhid/usbkbd.c   | 4 ++--
-> >  drivers/hid/usbhid/usbmouse.c | 2 +-
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/hid/usbhid/usbkbd.c b/drivers/hid/usbhid/usbkbd.c
-> > index d5b7a696a68c..63e8ef8beb45 100644
-> > --- a/drivers/hid/usbhid/usbkbd.c
-> > +++ b/drivers/hid/usbhid/usbkbd.c
-> > @@ -239,11 +239,11 @@ static int usb_kbd_alloc_mem(struct usb_device *dev, struct usb_kbd *kbd)
-> >  		return -1;
-> >  	if (!(kbd->led = usb_alloc_urb(0, GFP_KERNEL)))
-> >  		return -1;
-> > -	if (!(kbd->new = usb_alloc_coherent(dev, 8, GFP_ATOMIC, &kbd->new_dma)))
-> > +	if (!(kbd->new = usb_alloc_coherent(dev, 8, GFP_KERNEL, &kbd->new_dma)))
-> >  		return -1;
-> >  	if (!(kbd->cr = kmalloc(sizeof(struct usb_ctrlrequest), GFP_KERNEL)))
-> >  		return -1;
-> > -	if (!(kbd->leds = usb_alloc_coherent(dev, 1, GFP_ATOMIC, &kbd->leds_dma)))
-> > +	if (!(kbd->leds = usb_alloc_coherent(dev, 1, GFP_KERNEL, &kbd->leds_dma)))
-> >  		return -1;
-> >  
+> NOTE: The patch will not be queued to stable trees until it is upstream.
 > 
-> the kernel style is usually:
->  kbd->new = usb_alloc_coherent(dev, 8, GFP_ATOMIC, &kbd->new_dma);
->  if (!kbd->new)
-> 	return -1;
-> 
-> 
-> in usbmouse.c this is done, any reason for the change here ?
+> How should we proceed with this patch?
 
-If you want to be extra-correct, don't return -1, return -ENOMEM.
-
-thanks,
+Already fixed up by hand and queued up, your automated email is a bit
+slow :)
 
 greg k-h
