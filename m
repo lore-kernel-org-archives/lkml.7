@@ -2,86 +2,136 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36D2C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA51C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD63F214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BA2216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:44:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="usboDGU6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbfHAKnf (ORCPT
+        id S1731117AbfHAKoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 06:43:35 -0400
-Received: from 10.mo178.mail-out.ovh.net ([46.105.76.150]:55787 "EHLO
-        10.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbfHAKne (ORCPT
+        Thu, 1 Aug 2019 06:44:15 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46703 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfHAKoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 06:43:34 -0400
-X-Greylist: delayed 3708 seconds by postgrey-1.27 at vger.kernel.org; Thu, 01 Aug 2019 06:43:33 EDT
-Received: from player778.ha.ovh.net (unknown [10.108.57.38])
-        by mo178.mail-out.ovh.net (Postfix) with ESMTP id 7388F70E71
-        for <linux-kernel@vger.kernel.org>; Thu,  1 Aug 2019 11:24:00 +0200 (CEST)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player778.ha.ovh.net (Postfix) with ESMTPSA id 17FDD87377A1;
-        Thu,  1 Aug 2019 09:23:49 +0000 (UTC)
-Date:   Thu, 1 Aug 2019 11:23:48 +0200
-From:   Greg Kurz <groug@kaod.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        allison@lohutok.net, tglx@linutronix.de, clg@kaod.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 1/2] powerpc/xive: Use GFP_KERNEL instead of GFP_ATOMIC
- in 'xive_irq_bitmap_add()'
-Message-ID: <20190801112348.2d1760f3@bahia.lan>
-In-Reply-To: <85d5d247ce753befd6aa63c473f7823de6520ccd.1564647619.git.christophe.jaillet@wanadoo.fr>
-References: <cover.1564647619.git.christophe.jaillet@wanadoo.fr>
-        <85d5d247ce753befd6aa63c473f7823de6520ccd.1564647619.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 1 Aug 2019 06:44:15 -0400
+Received: by mail-lf1-f67.google.com with SMTP id z15so45612504lfh.13;
+        Thu, 01 Aug 2019 03:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A9cNcwd9IRgmvJyTlL5BGGVDEQhizQRLKM43NthiAE0=;
+        b=usboDGU6NGUK3qHYroj4RCdJOx+Sf10386/eHiQMaWkw9l/UnAHTCuDn1FQGSFcFkt
+         wUTR+IWoCevF1ZMWaD9o0nd66076Vx+sMiTpUczZR5eMTiTa/zwDnKfai13M31Troxp8
+         7rDzsJvvH0sVA2i4tIuL8IvwkB/5U5VQEMq1xJtFNSLF/mdxVOBzpaXBZj9w/q3nf2bL
+         LrhvBPaB1a4jX1FCuNV/4L/WiIoR1QsgqlnXIyFvMFG70s+sD/X7b8QBatsvKCIPcmjk
+         8a0AYuWuXlGypW7owZEV2eRZzAjWmtW3+UlHbW702h5ZQtJ3rWsokKpagTAY6vaBclUz
+         mKhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A9cNcwd9IRgmvJyTlL5BGGVDEQhizQRLKM43NthiAE0=;
+        b=uGiR4gKDy7Ksrwd44upBJVURO1IXTQdCFO9iptMZ3PbIrC/PoiTleD13Xe83clI88I
+         2RUQ0JyFEKSHRTE5Mhvg2HrOr+DQQVXr6ylz0r/2pG+YOqpuBgZPlPUXOKq6cDyTR82O
+         bLGzXn44xgU1Z1YZxi1q5Gt+G35JOcdvx5LbmMwXwe4Mn9POR4Sm+UFGFOgKE9jGbOj0
+         Hy9RplScVDDT28wWidYrWwvW1UBNKm1VFxOJGve60ZsrTwVWqHJAAdvOR+Na7Oe7Upcw
+         ByQC3JnTUtaO5zB1+NoEjdbtOz5ZW+VhOty4WY5BfiKZTR8twapnVBhNWolQ7ZNLHYiW
+         4GjQ==
+X-Gm-Message-State: APjAAAW4KcdBLl8eQ5zR3BmltN1UHkXZJ3VSAR6ouJOBpcsGKuAfWUNU
+        1ixL7vzOkLJflZx3k3litsJmEsIq
+X-Google-Smtp-Source: APXvYqz2Y9yO3DiF+D395+ZEnFkpJg59qBaSjGFWD2gYvgHURdqUCdJs91JgmbgjhhmlQ3qiOoz+2A==
+X-Received: by 2002:ac2:414d:: with SMTP id c13mr9975444lfi.47.1564656252635;
+        Thu, 01 Aug 2019 03:44:12 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id b6sm13533059lfa.54.2019.08.01.03.44.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 03:44:12 -0700 (PDT)
+Subject: Re: [PATCH v7 16/20] arm64: tegra: Enable wake from deep sleep on RTC
+ alarm
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-17-git-send-email-skomatineni@nvidia.com>
+ <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
+ <d4709085-f705-2608-08a8-65b238ae8844@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4f8b9ee7-5402-6463-d6d2-7b00e274a185@gmail.com>
+Date:   Thu, 1 Aug 2019 13:43:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 12659618553387784475
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrleejgddugecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+In-Reply-To: <d4709085-f705-2608-08a8-65b238ae8844@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  1 Aug 2019 10:32:31 +0200
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
-
-> There is no need to use GFP_ATOMIC here. GFP_KERNEL should be enough.
-> GFP_KERNEL is also already used for another allocation just a few lines
-> below.
+01.08.2019 0:08, Sowjanya Komatineni пишет:
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
+> On 7/31/19 4:04 AM, Dmitry Osipenko wrote:
+>> 31.07.2019 3:20, Sowjanya Komatineni пишет:
+>>> This patch updates device tree for RTC and PMC to allow system wake
+>>> from deep sleep on RTC alarm.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 ++++-
+>>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>> b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>> index 659753118e96..30a7c48385a2 100644
+>>> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>> @@ -768,7 +768,8 @@
+>>>       rtc@7000e000 {
+>>>           compatible = "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
+>>>           reg = <0x0 0x7000e000 0x0 0x100>;
+>>> -        interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>>> +        interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+>>> +        interrupt-parent = <&pmc>;
+>>>           clocks = <&tegra_car TEGRA210_CLK_RTC>;
+>>>           clock-names = "rtc";
+>>>       };
+>>> @@ -778,6 +779,8 @@
+>>>           reg = <0x0 0x7000e400 0x0 0x400>;
+>>>           clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+>>>           clock-names = "pclk", "clk32k_in";
+>>> +        #interrupt-cells = <2>;
+>>> +        interrupt-controller;
+>>>             powergates {
+>>>               pd_audio: aud {
+>>>
+>> Is this a backwards-compatible change? Or it's not really worth to care
+>> about the compatibility with older kernel versions, I'm not sure about
+>> overall state of T210 in the upstream kernel.
+> I don't think its required to be backwards-compatible as SC7 entry/exit
+> implementation for T210 is with this patch series onwards..
 
-Good catch.
-
-Reviewed-by: Greg Kurz <groug@kaod.org>
-
->  arch/powerpc/sysdev/xive/spapr.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
-> index 8ef9cf4ebb1c..b4f5eb9e0f82 100644
-> --- a/arch/powerpc/sysdev/xive/spapr.c
-> +++ b/arch/powerpc/sysdev/xive/spapr.c
-> @@ -45,7 +45,7 @@ static int xive_irq_bitmap_add(int base, int count)
->  {
->  	struct xive_irq_bitmap *xibm;
->  
-> -	xibm = kzalloc(sizeof(*xibm), GFP_ATOMIC);
-> +	xibm = kzalloc(sizeof(*xibm), GFP_KERNEL);
->  	if (!xibm)
->  		return -ENOMEM;
->  
-
+The new device tree binary should work with older kernel versions, AFAIK
+this is the upstream rule. But if kernel support isn't in a very good
+shape and not much people are using it, then obviously it is not very
+important.
