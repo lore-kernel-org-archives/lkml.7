@@ -2,74 +2,97 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B9CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64231C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31916206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E9D206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388819AbfHATxG (ORCPT
+        id S2388830AbfHATxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:53:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41886 "EHLO mx1.redhat.com"
+        Thu, 1 Aug 2019 15:53:48 -0400
+Received: from fieldses.org ([173.255.197.46]:44350 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388761AbfHATxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:53:05 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AE9CF30EA984;
-        Thu,  1 Aug 2019 19:53:05 +0000 (UTC)
-Received: from max.com (unknown [10.40.205.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CDFFE60BE0;
-        Thu,  1 Aug 2019 19:53:01 +0000 (UTC)
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [GIT PULL] Fix gfs2 cluster coherency bug
-Date:   Thu,  1 Aug 2019 21:52:58 +0200
-Message-Id: <20190801195259.27274-1-agruenba@redhat.com>
+        id S2388679AbfHATxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 15:53:47 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id E4FA21C95; Thu,  1 Aug 2019 15:53:46 -0400 (EDT)
+Date:   Thu, 1 Aug 2019 15:53:46 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Wenbin Zeng <wenbin.zeng@gmail.com>
+Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk, jlayton@kernel.org,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        wenbinzeng@tencent.com, dsahern@gmail.com,
+        nicolas.dichtel@6wind.com, willy@infradead.org,
+        edumazet@google.com, jakub.kicinski@netronome.com,
+        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] auth_gss: netns refcount leaks when
+ use-gss-proxy==1
+Message-ID: <20190801195346.GA21527@fieldses.org>
+References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
+ <1560341370-24197-1-git-send-email-wenbinzeng@tencent.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 01 Aug 2019 19:53:05 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560341370-24197-1-git-send-email-wenbinzeng@tencent.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+I lost track, what happened to these patches?
 
-could you please pull the following gfs2 bug fix?
+--b.
 
-Thanks,
-Andreas
-
-
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
-
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-v5.3-rc2.fixes
-
-for you to fetch changes up to 706cb5492c8c459199fa0ab3b5fd2ba54ee53b0c:
-
-  gfs2: Inode dirtying fix (2019-07-31 18:51:50 +0200)
-
-----------------------------------------------------------------
-Fix gfs2 cluster coherency bug
-
-----------------------------------------------------------------
-Andreas Gruenbacher (1):
-      gfs2: Inode dirtying fix
-
- fs/gfs2/bmap.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+On Wed, Jun 12, 2019 at 08:09:27PM +0800, Wenbin Zeng wrote:
+> This patch series fixes an auth_gss bug that results in netns refcount
+> leaks when use-gss-proxy is set to 1.
+> 
+> The problem was found in privileged docker containers with gssproxy service
+> enabled and /proc/net/rpc/use-gss-proxy set to 1, the corresponding
+> struct net->count ends up at 2 after container gets killed, the consequence
+> is that the struct net cannot be freed.
+> 
+> It turns out that write_gssp() called gssp_rpc_create() to create a rpc
+> client, this increases net->count by 2; rpcsec_gss_exit_net() is supposed
+> to decrease net->count but it never gets called because its call-path is:
+>         net->count==0 -> cleanup_net -> ops_exit_list -> rpcsec_gss_exit_net
+> Before rpcsec_gss_exit_net() gets called, net->count cannot reach 0, this
+> is a deadlock situation.
+> 
+> To fix the problem, we must break the deadlock, rpcsec_gss_exit_net()
+> should move out of the put() path and find another chance to get called,
+> I think nsfs_evict() is a good place to go, when netns inode gets evicted
+> we call rpcsec_gss_exit_net() to free the rpc client, this requires a new
+> callback i.e. evict to be added in struct proc_ns_operations, and add
+> netns_evict() as one of netns_operations as well.
+> 
+> v1->v2:
+>  * in nsfs_evict(), move ->evict() in front of ->put()
+> v2->v3:
+>  * rpcsec_gss_evict_net() directly call gss_svc_shutdown_net() regardless
+>    if gssp_clnt is null, this is exactly same to what rpcsec_gss_exit_net()
+>    previously did
+> 
+> Wenbin Zeng (3):
+>   nsfs: add evict callback into struct proc_ns_operations
+>   netns: add netns_evict into netns_operations
+>   auth_gss: fix deadlock that blocks rpcsec_gss_exit_net when
+>     use-gss-proxy==1
+> 
+>  fs/nsfs.c                      |  2 ++
+>  include/linux/proc_ns.h        |  1 +
+>  include/net/net_namespace.h    |  1 +
+>  net/core/net_namespace.c       | 12 ++++++++++++
+>  net/sunrpc/auth_gss/auth_gss.c |  4 ++--
+>  5 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 1.8.3.1
