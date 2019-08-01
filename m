@@ -2,91 +2,96 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0075C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5685FC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD03D20679
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OA94mFnK"
+	by mail.kernel.org (Postfix) with ESMTP id 2D58220679
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564677282;
+	bh=9dtaBDceSfT8Z//OdbDVGNrZL3XEU07S5L41ZyczgiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M0K8n3s7scTVHW46SnCG4VuKZyhiGO/gwKcli4a0FGNBJ36CmSTqfzmsNBOEnIRt3
+	 gVURMOZ/3+Z6Ppppy2V9140cezJ1wpfJ2qeVpKAeSlSe/l5JqO5a6b7yvByR9ujNK3
+	 JTPojpAyrqMHbvWctDLF3yDFavv4TIrRGI/imS5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733012AbfHAQee (ORCPT
+        id S1733023AbfHAQek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:34:34 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:41787 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbfHAQee (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:34:34 -0400
-Received: by mail-vs1-f65.google.com with SMTP id 2so49264497vso.8
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 09:34:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dvRoX0NEsQk9uexjhPZ3WYNGs4rNhG1WU3C5nGaJfJM=;
-        b=OA94mFnKu9MN40x5ZP19/Na2xaPAb2ScvmDnDhcfY2prbEDzeCDna+MwcFseo3nnf5
-         1AUcDpimJVSG1wT8fJosG0BZnnSuvapIZ53206Su4kgn5QQmaxAvbnNbW1l2qDcUSf7S
-         g1CCg6WhlKunjGWiR+ByOfg5e/renIOsnueh69l9UYU9kzwbl+y/0wFgo7RZe9BpcWQf
-         y4NlE7WvT9g6JByabW9SWTk6ge4/LEx9IlMEx8x8h0CEwzdytxY4S23QstL7jNj7dZbT
-         yHei/SyFU3x0wlV9kg/i7T6d1yO8NHrdI7yzGaWIgDYZfPY1l7ma8qkaYpdrU7paRQLU
-         dqHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dvRoX0NEsQk9uexjhPZ3WYNGs4rNhG1WU3C5nGaJfJM=;
-        b=E/9qbnu2bEEE0JpS426zJdVG+OuolrNdS77KWQFGto9psW5qPBHcAgnev1fiF06/J3
-         Yw4qoVBfpkJedx/0tcv9Yh0kzafxSU84Ws7lfio/R1mb8ca0NuH+S765zKhJIfNF3iiJ
-         rOiPtNV9cztglEncffzb6i73zNNt+OOBfinl7c5VJBvssuOcD33RiCfedvICmg1UJDRn
-         j4P0B6xkeE4olaayqY6RkUKPn2q9KzB8eDGWjq60ILHY8b7jseFByXSh+lkoReGMzU7u
-         dgKtrF4kynMHEk2JUT0IeB67jFa2kDd7zL9fALc3BEju4KA/Zgk84C8Yw+icQ/CCi7Yy
-         52Ew==
-X-Gm-Message-State: APjAAAVX0TL8snmWVQuh+BKrcq1YljYAHpp7E20WNo0bSnXZENMRBK7h
-        uD/SWumJa2U2huf4UTgwyvHjkBUaQ76njfeU0TW63w==
-X-Google-Smtp-Source: APXvYqydtcOkpu3k1CXQGjTrhaIKC2YliA7J9eX1NcSUJxl4798q/t6LuS+fW/3LemXGtS34w27lPgBhk1ooXMDOtVg=
-X-Received: by 2002:a67:a44b:: with SMTP id p11mr78053893vsh.237.1564677272877;
- Thu, 01 Aug 2019 09:34:32 -0700 (PDT)
+        Thu, 1 Aug 2019 12:34:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727024AbfHAQek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:34:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E93342087E;
+        Thu,  1 Aug 2019 16:34:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564677279;
+        bh=9dtaBDceSfT8Z//OdbDVGNrZL3XEU07S5L41ZyczgiA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WT2m9/ZmMm0l9PwXVJS7ub8v7biP+JM2Y62c28yiUZZ9QKXP7twRdPLWgFwI4CO4F
+         k/1R4ZL6/6F4iTr36TLbdNoALaNlJcTjdVXH9jp/L9E86sebkQn7zHNsLDvNsWaymg
+         BpnOw0a1dhTCoN5oX6ebUvNpETCnfOT8vSmT4l+4=
+Date:   Thu, 1 Aug 2019 18:34:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Harsh Jain <harshjain32@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging:kpc2000:Fix dubious x | !y sparse warning
+Message-ID: <20190801163437.GA8360@kroah.com>
+References: <20190731183606.2513-1-harshjain32@gmail.com>
 MIME-Version: 1.0
-References: <20190731050549.GA20809@kroah.com> <20190731212933.23673-1-kaleshsingh@google.com>
- <20190801061941.GB4338@kroah.com>
-In-Reply-To: <20190801061941.GB4338@kroah.com>
-From:   Kalesh Singh <kaleshsingh@google.com>
-Date:   Thu, 1 Aug 2019 09:34:22 -0700
-Message-ID: <CAC_TJvdUReRL-Xqq-sSOZ6w1FpEA=Uzys22Mami1USrErnkw+Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PM/sleep: Expose suspend stats in sysfs
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     rjw@rjwysocki.net, Tri Vo <trong@google.com>, trong@android.com,
-        Sandeep Patil <sspatil@google.com>,
-        Hridya Valsaraju <hridya@google.com>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731183606.2513-1-harshjain32@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 11:19 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Jul 31, 2019 at 02:29:33PM -0700, Kalesh Singh wrote:
-> > Userspace can get suspend stats from the suspend stats debugfs node.
-> > Since debugfs doesn't have stable ABI, expose suspend stats in
-> > sysfs under /sys/power/suspend_stats.
-> >
-> > Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
-> > ---
-> > Changes in v2:
-> >   - Added separate show functions for last_failed_* stats, as per Greg
-> >   - Updated ABI Documentation
->
-> This is nice, I didn't even know some of these were in the debugfs
-> entries, so this should be more helpful to people.
->
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Thu, Aug 01, 2019 at 12:06:06AM +0530, Harsh Jain wrote:
+> Bitwise OR(|) operation with 0 always yield same result.
+> It fixes dubious x | !y sparse warning.
+> 
+> Signed-off-by: Harsh Jain <harshjain32@gmail.com>
+> ---
+>  drivers/staging/kpc2000/kpc2000_i2c.c | 16 +---------------
+>  1 file changed, 1 insertion(+), 15 deletions(-)
+> 
+> diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
+> index b108da4..5f027d7c 100644
+> --- a/drivers/staging/kpc2000/kpc2000_i2c.c
+> +++ b/drivers/staging/kpc2000/kpc2000_i2c.c
+> @@ -536,29 +536,15 @@ static u32 i801_func(struct i2c_adapter *adapter)
+>  
+>  	u32 f =
+>  		I2C_FUNC_I2C                     | /* 0x00000001 (I enabled this one) */
+> -		!I2C_FUNC_10BIT_ADDR             | /* 0x00000002 */
+> -		!I2C_FUNC_PROTOCOL_MANGLING      | /* 0x00000004 */
+>  		((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) | /* 0x00000008 */
+> -		!I2C_FUNC_SMBUS_BLOCK_PROC_CALL  | /* 0x00008000 */
+>  		I2C_FUNC_SMBUS_QUICK             | /* 0x00010000 */
+> -		!I2C_FUNC_SMBUS_READ_BYTE        | /* 0x00020000 */
+> -		!I2C_FUNC_SMBUS_WRITE_BYTE       | /* 0x00040000 */
+> -		!I2C_FUNC_SMBUS_READ_BYTE_DATA   | /* 0x00080000 */
+> -		!I2C_FUNC_SMBUS_WRITE_BYTE_DATA  | /* 0x00100000 */
+> -		!I2C_FUNC_SMBUS_READ_WORD_DATA   | /* 0x00200000 */
+> -		!I2C_FUNC_SMBUS_WRITE_WORD_DATA  | /* 0x00400000 */
+> -		!I2C_FUNC_SMBUS_PROC_CALL        | /* 0x00800000 */
+> -		!I2C_FUNC_SMBUS_READ_BLOCK_DATA  | /* 0x01000000 */
+> -		!I2C_FUNC_SMBUS_WRITE_BLOCK_DATA | /* 0x02000000 */
 
-Thanks for the review Greg :)
+This is ok, it is showing you that these bits are explicitly being not
+set.  Which is good, now you can go through the list and see that all
+are accounted for.
+
+So I think this should stay as-is, thanks.
+
+greg k-h
