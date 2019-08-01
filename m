@@ -2,118 +2,101 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28066C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4B0C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFAF620665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:42:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="EAIcg+8z"
+	by mail.kernel.org (Postfix) with ESMTP id D81E320665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbfHAMmD (ORCPT
+        id S1731396AbfHAMnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:42:03 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39409 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730319AbfHAMmD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:42:03 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r21so68039167otq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 05:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8uskxS/gtrPQuiJ87KLLKVngRsb10iia7FAnQ4L/FP4=;
-        b=EAIcg+8zVmf3aiVkaSk+pQ7W32nML3AqDBA07rhI0mWPYK/3osobGOnAeAR2GlrG5m
-         GO67N6l3RvzR1eC9rcIQ/IFgb+zglv9oj8/wU4H08MKHLJJa85rXrV4FO+pKiinnosMb
-         mCgSmt1FKFQwTTDk+TptbMlLUZ8htN5s4VI7phJCqz3/9pWvmS+uRts6NzJLSukl5MrM
-         EPQfCYOa9Htm7r3gBWUwcksVmOWkRg6/O7wrrJ8ia/a/5YlLOc9KmQFsjW9Ituh5Zqag
-         wMzaWeA/jTiW3O6YYUVPnsN+5rZwJnoL7Qdd2VrvWcUzCbJis87TaKZCkTzBY+R8j1L2
-         TXSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8uskxS/gtrPQuiJ87KLLKVngRsb10iia7FAnQ4L/FP4=;
-        b=eDBlLmycuYoVLK32Gv26c0tr5NcYXCAjkZSWDbC0NUOiAGiXkdtaCa3dEdMlnV5js1
-         RZMxCTX+Z2VgbuP02w/0l3ha0nwHKnu4ma2ZPlVuDCm8oyNJVxaUsaXu/WmKv6tfexR2
-         SrP6zeVOE1ttpLQBHDsutBNGU8BYnDr1HncNX8MBoJgkqfMpGCHnD/kGWp9QeCHKjPPz
-         JnWowLGbSKS6c5XddepSrQqcWrM/pVQAlHkR/+PRVxs4kDBcCYwZTC5HSU7+SHB14WcC
-         mMCL9vGIQXVp4YbCQn6+hYVOj6HYK44A7HvmqJpinAGOfSqgV/tvCs7cOpPHbPNtC9qN
-         Ht6Q==
-X-Gm-Message-State: APjAAAUAbZ/EjzzEOV1WO99HHoDD7AUuwtZpcrLdD5ohq1UzbrXrKw46
-        AOzVFJx20qHRXm/S5P6Fewk=
-X-Google-Smtp-Source: APXvYqyHzZulqNC8IOq14HrLA4yNgQS3ZptHYQMkICdV9xK4l15HxfWQ3z36+yWTTEw4+o1rfM2ftQ==
-X-Received: by 2002:a9d:7cd1:: with SMTP id r17mr11015019otn.356.1564663322159;
-        Thu, 01 Aug 2019 05:42:02 -0700 (PDT)
-Received: from [192.168.1.10] (072-182-052-210.res.spectrum.com. [72.182.52.210])
-        by smtp.googlemail.com with ESMTPSA id k135sm25007479oih.1.2019.08.01.05.42.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 05:42:01 -0700 (PDT)
-Subject: Re: [PATCH v2 7/7] n_tty: Provide an informational line on VSTATUS
- receipt
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arseny Maslennikov <ar@cs.msu.ru>
-Cc:     Jiri Slaby <jslaby@suse.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Vladimir D. Seleznev" <vseleznv@altlinux.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Pavel Machek <pavel@ucw.cz>
-References: <20190625161153.29811-1-ar@cs.msu.ru>
- <20190625161153.29811-8-ar@cs.msu.ru> <20190730161940.GA15798@kroah.com>
- <20190731222359.GA20574@cello> <20190801092020.GB19329@kroah.com>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <f6b331e1-14ff-040b-be2c-8f1a696a721e@landley.net>
-Date:   Thu, 1 Aug 2019 07:44:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 1 Aug 2019 08:43:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46714 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731187AbfHAMnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:43:55 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B4DDD308FF23;
+        Thu,  1 Aug 2019 12:43:54 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id DE9E960A9F;
+        Thu,  1 Aug 2019 12:43:52 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu,  1 Aug 2019 14:43:54 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 14:43:52 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, matthew.wilcox@oracle.com,
+        kirill.shutemov@linux.intel.com, kernel-team@fb.com,
+        william.kucharski@oracle.com, srikar@linux.vnet.ibm.com
+Subject: Re: [PATCH v2 1/2] khugepaged: enable collapse pmd for pte-mapped THP
+Message-ID: <20190801124351.GA31538@redhat.com>
+References: <20190731183331.2565608-1-songliubraving@fb.com>
+ <20190731183331.2565608-2-songliubraving@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20190801092020.GB19329@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731183331.2565608-2-songliubraving@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 01 Aug 2019 12:43:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/1/19 4:20 AM, Greg Kroah-Hartman wrote:
->> SysRq is system-wide, whereas this is per-terminal and only cares about
->> one tty which the status char is pressed at and its foreground pgrp
->> (most likely it's the foreground shell job).
->>
->> I hope this is clear enough.
-> 
-> It is, yes.  My big objection is the crazy code I point out above, as
-> well as the "create a totally new interface when we might be able to use
-> an existing one" that you need to convince me is really required :)
+On 07/31, Song Liu wrote:
+>
+> +void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long haddr)
+> +{
+> +	struct vm_area_struct *vma = find_vma(mm, haddr);
+> +	pmd_t *pmd = mm_find_pmd(mm, haddr);
+> +	struct page *hpage = NULL;
+> +	unsigned long addr;
+> +	spinlock_t *ptl;
+> +	int count = 0;
+> +	pmd_t _pmd;
+> +	int i;
+> +
+> +	VM_BUG_ON(haddr & ~HPAGE_PMD_MASK);
+> +
+> +	if (!vma || !pmd || pmd_trans_huge(*pmd))
+                            ^^^^^^^^^^^^^^^^^^^^
 
-It's not a new interface, it's a multiple decades old BSD interface our
-tcgetattr man page already mentions, which seems to be one of the big things BSD
-people miss when using Linux, and which I tried and failed to implement without
-kernel support months ago.
+mm_find_pmd() returns NULL if pmd_trans_huge()
 
-I wasn't involved in this kernel patch effort, I got pointed at news coverage
-about it by the Android Bionic maintainer:
+> +	/* step 1: check all mapped PTEs are to the right huge page */
+> +	for (i = 0, addr = haddr; i < HPAGE_PMD_NR; i++, addr += PAGE_SIZE) {
+> +		pte_t *pte = pte_offset_map(pmd, addr);
+> +		struct page *page;
+> +
+> +		if (pte_none(*pte))
+> +			continue;
+> +
+> +		page = vm_normal_page(vma, addr, *pte);
+> +
+> +		if (!PageCompound(page))
+> +			return;
+> +
+> +		if (!hpage) {
+> +			hpage = compound_head(page);
+> +			if (hpage->mapping != vma->vm_file->f_mapping)
 
-  http://lists.landley.net/pipermail/toybox-landley.net/2019-June/010536.html
+Hmm. But how can we know this is still the same vma ?
 
-Which is how I wound up cc'd on this thread.
+If nothing else, why vma->vm_file can't be NULL?
 
-I don't think Android specifically cares about SIGINFO, but they're trying to
-support building Android on MacOSX, which means trying to support building it on
-FreeBSD, which involves outreach to the BSD community, and they brought up the
-lack of ctrl-T and siginfo as a thing they really missed when having to deal
-with the Linux command line.
+Say, a process unmaps this memory after khugepaged_add_pte_mapped_thp()
+was called, then it does mmap(haddr, MAP_PRIVATE|MAP_ANONYMOUS), then
+do_huge_pmd_anonymous_page() installs a huge page at the same address,
+then split_huge_pmd() is called by any reason.
 
-(The fact there _was_ news coverage of the patch for somebody to point me at may
-also be an indication of interest floating around out there...)
+No?
 
-Rob
