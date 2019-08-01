@@ -2,61 +2,60 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291B9C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E93C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01AE82080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9499320B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389694AbfHAWW3 (ORCPT
+        id S2389513AbfHAWVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:22:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62894 "EHLO
+        Thu, 1 Aug 2019 18:21:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45734 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389515AbfHAWVO (ORCPT
+        by vger.kernel.org with ESMTP id S2389491AbfHAWVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:21:14 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71MHbZG174575;
+        Thu, 1 Aug 2019 18:21:11 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71MGvO4016113;
         Thu, 1 Aug 2019 18:20:59 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u460edvq2-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u488k91uu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 01 Aug 2019 18:20:59 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71MHmMT175309;
-        Thu, 1 Aug 2019 18:20:58 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u460edvpn-1
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71MHl1I018325;
+        Thu, 1 Aug 2019 18:20:59 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u488k91u1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:20:58 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MJkkG031647;
+        Thu, 01 Aug 2019 18:20:59 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MJlVc026752;
         Thu, 1 Aug 2019 22:20:58 GMT
 Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01wdc.us.ibm.com with ESMTP id 2u0e86ytfa-1
+        by ppma01dal.us.ibm.com with ESMTP id 2u0e87h3qh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 01 Aug 2019 22:20:58 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MKvnh35193162
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MKvT631785384
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Thu, 1 Aug 2019 22:20:57 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4BC3B2075;
+        by IMSVA (Postfix) with ESMTP id 3FD50B2065;
         Thu,  1 Aug 2019 22:20:57 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 96BB8B2065;
+        by IMSVA (Postfix) with ESMTP id 2BD01B2066;
         Thu,  1 Aug 2019 22:20:57 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Thu,  1 Aug 2019 22:20:57 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id AF62816C9A53; Thu,  1 Aug 2019 15:20:58 -0700 (PDT)
+        id 8245B16C9A4A; Thu,  1 Aug 2019 15:20:58 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -65,9 +64,9 @@ Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
         npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
         luc.maranget@inria.fr, akiyks@gmail.com,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH RFC memory-model 09/31] tools/memory-model: Add simpletest.sh to check locking, RCU, and SRCU
-Date:   Thu,  1 Aug 2019 15:20:34 -0700
-Message-Id: <20190801222056.12144-9-paulmck@linux.ibm.com>
+Subject: [PATCH RFC memory-model 01/31] tools/memory-model: Make scripts be executable
+Date:   Thu,  1 Aug 2019 15:20:26 -0700
+Message-Id: <20190801222056.12144-1-paulmck@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190801222026.GA11315@linux.ibm.com>
 References: <20190801222026.GA11315@linux.ibm.com>
@@ -77,63 +76,60 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=975 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=831 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908010234
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit abstracts out common function to check a given litmus test
-for locking, RCU, and SRCU in order to avoid duplicating code.
+This commit simplifies life a bit by making all of the scripts in
+tools/memory-model/scripts be executable.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/simpletest.sh | 35 ++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100755 tools/memory-model/scripts/simpletest.sh
+ tools/memory-model/scripts/checkghlitmus.sh   | 0
+ tools/memory-model/scripts/checklitmushist.sh | 0
+ tools/memory-model/scripts/cmplitmushist.sh   | 0
+ tools/memory-model/scripts/initlitmushist.sh  | 0
+ tools/memory-model/scripts/judgelitmus.sh     | 0
+ tools/memory-model/scripts/newlitmushist.sh   | 0
+ tools/memory-model/scripts/parseargs.sh       | 0
+ tools/memory-model/scripts/runlitmushist.sh   | 0
+ 8 files changed, 0 insertions(+), 0 deletions(-)
+ mode change 100644 => 100755 tools/memory-model/scripts/checkghlitmus.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/checklitmushist.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/cmplitmushist.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/initlitmushist.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/judgelitmus.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/newlitmushist.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/parseargs.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/runlitmushist.sh
 
-diff --git a/tools/memory-model/scripts/simpletest.sh b/tools/memory-model/scripts/simpletest.sh
-new file mode 100755
-index 000000000000..7edc5d361665
---- /dev/null
-+++ b/tools/memory-model/scripts/simpletest.sh
-@@ -0,0 +1,35 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Give zero status if this is a simple test and non-zero otherwise.
-+# Simple tests do not contain locking, RCU, or SRCU.
-+#
-+# Usage:
-+#	simpletest.sh file.litmus
-+#
-+# Copyright IBM Corporation, 2019
-+#
-+# Author: Paul E. McKenney <paulmck@linux.ibm.com>
-+
-+
-+litmus=$1
-+
-+if test -f "$litmus" -a -r "$litmus"
-+then
-+	:
-+else
-+	echo ' --- ' error: \"$litmus\" is not a readable file
-+	exit 255
-+fi
-+exclude="^[[:space:]]*\("
-+exclude="${exclude}spin_lock(\|spin_unlock(\|spin_trylock(\|spin_is_locked("
-+exclude="${exclude}\|rcu_read_lock(\|rcu_read_unlock("
-+exclude="${exclude}\|synchronize_rcu(\|synchronize_rcu_expedited("
-+exclude="${exclude}\|srcu_read_lock(\|srcu_read_unlock("
-+exclude="${exclude}\|synchronize_srcu(\|synchronize_srcu_expedited("
-+exclude="${exclude}\)"
-+if grep -q $exclude $litmus
-+then
-+	exit 255
-+fi
-+exit 0
+diff --git a/tools/memory-model/scripts/checkghlitmus.sh b/tools/memory-model/scripts/checkghlitmus.sh
+old mode 100644
+new mode 100755
+diff --git a/tools/memory-model/scripts/checklitmushist.sh b/tools/memory-model/scripts/checklitmushist.sh
+old mode 100644
+new mode 100755
+diff --git a/tools/memory-model/scripts/cmplitmushist.sh b/tools/memory-model/scripts/cmplitmushist.sh
+old mode 100644
+new mode 100755
+diff --git a/tools/memory-model/scripts/initlitmushist.sh b/tools/memory-model/scripts/initlitmushist.sh
+old mode 100644
+new mode 100755
+diff --git a/tools/memory-model/scripts/judgelitmus.sh b/tools/memory-model/scripts/judgelitmus.sh
+old mode 100644
+new mode 100755
+diff --git a/tools/memory-model/scripts/newlitmushist.sh b/tools/memory-model/scripts/newlitmushist.sh
+old mode 100644
+new mode 100755
+diff --git a/tools/memory-model/scripts/parseargs.sh b/tools/memory-model/scripts/parseargs.sh
+old mode 100644
+new mode 100755
+diff --git a/tools/memory-model/scripts/runlitmushist.sh b/tools/memory-model/scripts/runlitmushist.sh
+old mode 100644
+new mode 100755
 -- 
 2.17.1
 
