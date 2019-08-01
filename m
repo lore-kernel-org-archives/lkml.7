@@ -2,82 +2,93 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F1AC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADA8C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5AA206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFAA12064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388868AbfHAUsp (ORCPT
+        id S2389019AbfHAUwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 16:48:45 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:55757 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfHAUsp (ORCPT
+        Thu, 1 Aug 2019 16:52:06 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37893 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388889AbfHAUv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:48:45 -0400
-Received: from cpe-2606-a000-111b-6140-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:6140::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1htI00-0000tn-VN; Thu, 01 Aug 2019 16:48:39 -0400
-Date:   Thu, 1 Aug 2019 16:48:04 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Vlad Yasevich <vyasevich@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: sctp: Rename fallthrough label to unhandled
-Message-ID: <20190801204804.GB11487@hmswarspite.think-freely.org>
-References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
- <20190731111932.GA9823@hmswarspite.think-freely.org>
- <eac3fe457d553a2b366e1c1898d47ae8c048087c.camel@perches.com>
- <20190731121646.GD9823@hmswarspite.think-freely.org>
- <b93bbb17b407e27bb1dc196af84e4f289d9dfd93.camel@perches.com>
- <20190731205804.GE9823@hmswarspite.think-freely.org>
- <d68403ce9f7e8a68fff09d6b17e5d1327eb1e12d.camel@perches.com>
- <20190801105051.GA11487@hmswarspite.think-freely.org>
- <a9d003ddd0d59fb144db3ecda3453b3d9c0cb139.camel@perches.com>
+        Thu, 1 Aug 2019 16:51:57 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1htI3G-0001g7-R9; Thu, 01 Aug 2019 22:51:54 +0200
+Date:   Thu, 1 Aug 2019 22:51:53 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH] sched/fair: Cleanup task->numa_work initialization
+Message-ID: <alpine.DEB.2.21.1908012246530.1789@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9d003ddd0d59fb144db3ecda3453b3d9c0cb139.camel@perches.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 10:42:31AM -0700, Joe Perches wrote:
-> On Thu, 2019-08-01 at 06:50 -0400, Neil Horman wrote:
-> > On Wed, Jul 31, 2019 at 03:23:46PM -0700, Joe Perches wrote:
-> []
-> > You can say that if you want, but you made the point that your think the macro
-> > as you have written is more readable.  You example illustrates though that /*
-> > fallthrough */ is a pretty common comment, and not prefixing it makes it look
-> > like someone didn't add a comment that they meant to.  The __ prefix is standard
-> > practice for defining macros to attributes (212 instances of it by my count).  I
-> > don't mind rewriting the goto labels at all, but I think consistency is
-> > valuable.
-> 
-> Hey Neil.
-> 
-> Perhaps you want to make this argument on the RFC patch thread
-> that introduces the fallthrough pseudo-keyword.
-> 
-> https://lore.kernel.org/patchwork/patch/1108577/
-> 
-> 
-> 
-Sure, but it will have to wait for tomorrow at this point, as I need to run to
-an appointment.
+- Resolve the ancient TODO by setting the numa_work function in
+  init_numa_balancing() which is called on fork().
 
-Best
-Neil
+- Make task_numa_work() static as it's not used outside of the fair
+  scheduler and lacks a prototype as well.
 
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index bc9cfeaac8bd..f47869c0cdad 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1103,6 +1103,7 @@ static struct numa_group *deref_curr_numa_group(struct task_struct *p)
+ 
+ static inline unsigned long group_faults_priv(struct numa_group *ng);
+ static inline unsigned long group_faults_shared(struct numa_group *ng);
++static void task_numa_work(struct callback_head *work);
+ 
+ static unsigned int task_nr_scan_windows(struct task_struct *p)
+ {
+@@ -1203,6 +1204,7 @@ void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
+ 	p->node_stamp			= 0;
+ 	p->numa_scan_seq		= mm ? mm->numa_scan_seq : 0;
+ 	p->numa_scan_period		= sysctl_numa_balancing_scan_delay;
++	p->numa_work.func		= task_numa_work;
+ 	p->numa_work.next		= &p->numa_work;
+ 	p->numa_faults			= NULL;
+ 	RCU_INIT_POINTER(p->numa_group, NULL);
+@@ -2523,7 +2525,7 @@ static void reset_ptenuma_scan(struct task_struct *p)
+  * The expensive part of numa migration is done from task_work context.
+  * Triggered from task_tick_numa().
+  */
+-void task_numa_work(struct callback_head *work)
++static void task_numa_work(struct callback_head *work)
+ {
+ 	unsigned long migrate, next_scan, now = jiffies;
+ 	struct task_struct *p = current;
+@@ -2693,10 +2695,8 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
+ 			curr->numa_scan_period = task_scan_start(curr);
+ 		curr->node_stamp += period;
+ 
+-		if (!time_before(jiffies, curr->mm->numa_next_scan)) {
+-			init_task_work(work, task_numa_work); /* TODO: move this into sched_fork() */
++		if (!time_before(jiffies, curr->mm->numa_next_scan))
+ 			task_work_add(curr, work, true);
+-		}
+ 	}
+ }
+ 
