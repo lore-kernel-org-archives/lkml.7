@@ -7,54 +7,53 @@ X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8526C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253EAC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50CFC206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC51E206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:08:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="3xDAxEWp"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ys2JK/2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732745AbfHAQIO (ORCPT
+        id S1732768AbfHAQI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:08:14 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46889 "EHLO
+        Thu, 1 Aug 2019 12:08:57 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53201 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfHAQIN (ORCPT
+        with ESMTP id S1727403AbfHAQI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:08:13 -0400
+        Thu, 1 Aug 2019 12:08:57 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71G82TJ010050
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71G8k7c010136
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 1 Aug 2019 09:08:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71G82TJ010050
+        Thu, 1 Aug 2019 09:08:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71G8k7c010136
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564675682;
-        bh=BeSO+XFfNYMZSS26kDLBaUm7Y96k9Dy2ppnatAp1m30=;
+        s=2019071901; t=1564675727;
+        bh=oqiteH2N7bZJpAn0FmMTHg0sVUfEFzV5QH08eZRlFQE=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=3xDAxEWpDxylUZCoVdm1J3o4ns+e7CKY6K6E76Pkd2pwWfIcsHQKBEPvSbJiv9TQv
-         1g2tyqYdi/YO0VhDSCmO1dCBpnUKJXZzZAlszFHrjnN2NHFnXMJ2ht4k6Lh8lKMdvD
-         Sb+k6AlDN5BaXVCChrquSKDtfvR3ZIgxoXJDkzMsUP+/dIEA1PgDo30+sl7O+jgyfW
-         1wxK7zKH0u1VZu25WyH/u1gt001yu5n7JDKOqDQviaim3nx77rRowAKmN1xc3kDnJJ
-         kP/orCMwkF7qFe2Pv/EALPwxQKx6nixGLCKWryiPM5DvwAHl/QKTZQ2aOC/XzLtKqG
-         Bv/5rj98QZltQ==
+        b=ys2JK/2j9h3xhb8JHJ8nsTN3WOB9vCgQuRgdKtZ2cJ0kjUH2Y6nHIwAscRtzzA9f4
+         asexqMYRVEI2SnZ/r0xWviXiRMtYgebDCxB6ivM4okfdSQ9aJ/YmPkBFzAfsK2eAN2
+         Wscio+IxXA2jt7Bo+bArXFGlCvIT6vrD9O3XAnihksMOyKZap3cwuPhUt5Exk9I0Nf
+         RqzSc1afX/TVcLgXpsz8BngG9NGiyLhp6suwsYT6wsm5Ma8KoR+d5aeauLZx745QFt
+         Vb0SIs5ADDN8JhLxD6A0NRee1SXJ4rMNt4SsQAdulGvbbCnGgyHIi7AaXks+Y/gU8I
+         cPoN1qUl0dTiA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71G82U2010047;
-        Thu, 1 Aug 2019 09:08:02 -0700
-Date:   Thu, 1 Aug 2019 09:08:02 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71G8kI3010133;
+        Thu, 1 Aug 2019 09:08:46 -0700
+Date:   Thu, 1 Aug 2019 09:08:46 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-eb5d344194342c08406e0f04c224007ea7338c11@git.kernel.org>
-Cc:     tglx@linutronix.de, peterz@infradead.org, mingo@kernel.org,
-        bigeasy@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org
-Reply-To: tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, peterz@infradead.org, hpa@zytor.com,
-          bigeasy@linutronix.de
-In-Reply-To: <20190730223828.965541887@linutronix.de>
-References: <20190730223828.965541887@linutronix.de>
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-3a839db3eaeeef31520de45f3b078204d068e3d0@git.kernel.org>
+Cc:     anna-maria@linutronix.de, mingo@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org
+Reply-To: anna-maria@linutronix.de, mingo@kernel.org, peterz@infradead.org,
+          tglx@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20190730223829.058247862@linutronix.de>
+References: <20190730223829.058247862@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] posix-timers: Move rcu_head out of it union
-Git-Commit-ID: eb5d344194342c08406e0f04c224007ea7338c11
+Subject: [tip:timers/core] posix-timers: Prepare for PREEMPT_RT
+Git-Commit-ID: 3a839db3eaeeef31520de45f3b078204d068e3d0
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -68,84 +67,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  eb5d344194342c08406e0f04c224007ea7338c11
-Gitweb:     https://git.kernel.org/tip/eb5d344194342c08406e0f04c224007ea7338c11
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Wed, 31 Jul 2019 00:33:54 +0200
+Commit-ID:  3a839db3eaeeef31520de45f3b078204d068e3d0
+Gitweb:     https://git.kernel.org/tip/3a839db3eaeeef31520de45f3b078204d068e3d0
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Wed, 31 Jul 2019 00:33:55 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 1 Aug 2019 17:46:42 +0200
+CommitDate: Thu, 1 Aug 2019 17:46:43 +0200
 
-posix-timers: Move rcu_head out of it union
+posix-timers: Prepare for PREEMPT_RT
 
-Timer deletion on PREEMPT_RT is prone to priority inversion and live
-locks. The hrtimer code has a synchronization mechanism for this. Posix CPU
-timers will grow one.
+Posix timer delete retry loops are affected by the same priority inversion
+and live lock issues as the other timers.
 
-But that mechanism cannot be invoked while holding the k_itimer lock
-because that can deadlock against the running timer callback. So the lock
-must be dropped which allows the timer to be freed.
+Provide a RT specific synchronization function which keeps a reference to
+the timer by holding rcu read lock to prevent the timer from being freed,
+dropping the timer lock and invoking the timer specific wait function.
 
-The timer free can be prevented by taking RCU readlock before dropping the
-lock, but because the rcu_head is part of the 'it' union a concurrent free
-will overwrite the hrtimer on which the task is trying to synchronize.
+This does not yet cover posix CPU timers because they need more special
+treatment on PREEMPT_RT.
 
-Move the rcu_head out of the union to prevent this.
-
-[ tglx: Fixed up kernel-doc. Rewrote changelog ]
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Originally-by: Anna-Maria Gleixenr <anna-maria@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190730223828.965541887@linutronix.de
+Link: https://lkml.kernel.org/r/20190730223829.058247862@linutronix.de
 
 ---
- include/linux/posix-timers.h | 5 +++--
- kernel/time/posix-timers.c   | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ kernel/time/posix-timers.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
-index b20798fc5191..604cec0e41ba 100644
---- a/include/linux/posix-timers.h
-+++ b/include/linux/posix-timers.h
-@@ -85,7 +85,8 @@ static inline int clockid_to_fd(const clockid_t clk)
-  * @it_process:		The task to wakeup on clock_nanosleep (CPU timers)
-  * @sigq:		Pointer to preallocated sigqueue
-  * @it:			Union representing the various posix timer type
-- *			internals. Also used for rcu freeing the timer.
-+ *			internals.
-+ * @rcu:		RCU head for freeing the timer.
-  */
- struct k_itimer {
- 	struct list_head	list;
-@@ -114,8 +115,8 @@ struct k_itimer {
- 		struct {
- 			struct alarm	alarmtimer;
- 		} alarm;
--		struct rcu_head		rcu;
- 	} it;
-+	struct rcu_head		rcu;
- };
- 
- void run_posix_cpu_timers(struct task_struct *task);
 diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index bbe8f9686a70..3e663f982c82 100644
+index 3e663f982c82..a71c1aab071c 100644
 --- a/kernel/time/posix-timers.c
 +++ b/kernel/time/posix-timers.c
-@@ -442,7 +442,7 @@ static struct k_itimer * alloc_posix_timer(void)
+@@ -805,6 +805,29 @@ static int common_hrtimer_try_to_cancel(struct k_itimer *timr)
+ 	return hrtimer_try_to_cancel(&timr->it.real.timer);
+ }
  
- static void k_itimer_rcu_free(struct rcu_head *head)
++#ifdef CONFIG_PREEMPT_RT
++static struct k_itimer *timer_wait_running(struct k_itimer *timer,
++					   unsigned long *flags)
++{
++	const struct k_clock *kc = READ_ONCE(timer->kclock);
++	timer_t timer_id = READ_ONCE(timer->it_id);
++
++	/* Prevent kfree(timer) after dropping the lock */
++	rcu_read_lock();
++	unlock_timer(timer, *flags);
++
++	if (kc->timer_arm == common_hrtimer_arm)
++		hrtimer_cancel_wait_running(&timer->it.real.timer);
++	else if (kc == &alarm_clock)
++		hrtimer_cancel_wait_running(&timer->it.alarm.alarmtimer.timer);
++	else
++		WARN_ON_ONCE(1);
++	rcu_read_unlock();
++
++	/* Relock the timer. It might be not longer hashed. */
++	return lock_timer(timer_id, flags);
++}
++#else
+ static struct k_itimer *timer_wait_running(struct k_itimer *timer,
+ 					   unsigned long *flags)
  {
--	struct k_itimer *tmr = container_of(head, struct k_itimer, it.rcu);
-+	struct k_itimer *tmr = container_of(head, struct k_itimer, rcu);
- 
- 	kmem_cache_free(posix_timers_cache, tmr);
+@@ -815,6 +838,7 @@ static struct k_itimer *timer_wait_running(struct k_itimer *timer,
+ 	/* Relock the timer. It might be not longer hashed. */
+ 	return lock_timer(timer_id, flags);
  }
-@@ -459,7 +459,7 @@ static void release_posix_timer(struct k_itimer *tmr, int it_id_set)
- 	}
- 	put_pid(tmr->it_pid);
- 	sigqueue_free(tmr->sigq);
--	call_rcu(&tmr->it.rcu, k_itimer_rcu_free);
-+	call_rcu(&tmr->rcu, k_itimer_rcu_free);
- }
++#endif
  
- static int common_timer_create(struct k_itimer *new_timer)
+ /* Set a POSIX.1b interval timer. */
+ int common_timer_set(struct k_itimer *timr, int flags,
