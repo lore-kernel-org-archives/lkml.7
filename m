@@ -2,160 +2,242 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1F5C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E62C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 642C1206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65751206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:56:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTwd5sa8"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="RbJzcmb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbfHAKyz (ORCPT
+        id S1731237AbfHAK4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 06:54:55 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33528 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfHAKyy (ORCPT
+        Thu, 1 Aug 2019 06:56:07 -0400
+Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25590 "EHLO
+        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfHAK4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 06:54:54 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h10so68920175ljg.0;
-        Thu, 01 Aug 2019 03:54:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oFQKCykke/lf7rDu0GMqPJgCLMHDcVhMm3FNRrZdzNY=;
-        b=iTwd5sa8LtWHYdDIuBR2Oop7NofDS05cFB22pFMGOesSXQvhBHIjk0brLQ9uNaSugI
-         tdDdW4TktKBGKdIv8UDCaVa0L1ltG+cndFq/19lhsX/5PieMEkoaOBG/Ibmp/Td6gYP9
-         MfdN7zgol7bYD7Mc/LXpolws+miLfzk0GjHQo3wgLsLjWYv5lAi91MZFtjzBIV0Ds1qm
-         oZ5Z0uIedFdBPCjjFbE3lvSVmW5jC+NBruR4EN/bZkUQ5YeT0a4M1Nvi3EC6E6hjrnd4
-         zc9fIirmlVa0iJHbTQ6BKfeyCfJB2bqhf0rs6h6b4KTuePMbqzp3WVo+nzwpCqvYW7ES
-         p+Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oFQKCykke/lf7rDu0GMqPJgCLMHDcVhMm3FNRrZdzNY=;
-        b=HtiJBLgo0WK26YGpH6wyCXEJH1qMN/HpBBqtoT/yvmDaNEwa8Wb6FSPePV0KhwTT+h
-         YIU5s6PfUt0nxaLfDYxFmeOsJbUaQmgMqU34IU8+sSx16YFdbM89zPZVF6yr2M+fYay3
-         0113RtQUOVKEarhoyNxTa4PySGASon9acunsf2wWmS+7tJxx2DIcmiHUzOh2ZM2xOkSa
-         yd0cI9R3tfUjQ+FSc9UO5rTx5xHle2h/Dl62G8BdBerQ/PhuEjfwcQ3wAhP/uaX/MQbC
-         B+4F2cPZX4RrSRQcOUQy1HsCd3ikaMrPPkFvkrIT1ZsCSyjVfJekm/iTnIqcxO7K9JcJ
-         xFog==
-X-Gm-Message-State: APjAAAXMDnBeSrG675d5hazl7yJIfvvbrVjxAmB1t+aCryaANdH68H3I
-        MMYNxkQ7lUN9AxMdr2whII1Cfy6u
-X-Google-Smtp-Source: APXvYqwNnv/kfNFCfYM5K6oSw//k8zB9afVXkG/lPoRRnsasU+tMtFwESUqpIgBaNIkoN1yVXBbp0w==
-X-Received: by 2002:a2e:92c6:: with SMTP id k6mr67981309ljh.148.1564656891433;
-        Thu, 01 Aug 2019 03:54:51 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id l11sm13787058lfc.18.2019.08.01.03.54.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 03:54:50 -0700 (PDT)
-Subject: Re: [PATCH v7 06/20] clk: tegra: Support for OSC context save and
- restore
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
- <16cca6aa-1034-f38a-49d1-d87b37fb6bbb@gmail.com>
- <b5a58bfc-c777-886f-d902-f499ec38e2ae@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3b55a112-42a6-212b-beea-10b64d5341d9@gmail.com>
-Date:   Thu, 1 Aug 2019 13:53:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 1 Aug 2019 06:56:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1564656934; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=Zq1xQN4Dq3dpqcOowrFfRfTZSL6R2xa5xWr0QUnyQmRDOc0SKblPYjRq9h+FHVcIs4/+VNVw6Ndoc7Hg9UCJuk0YD0RzQjZEPTg2OG+rzZmhf0N9KYQNbRQY+65jDxZqiCiJyqSBLfkXkN0fxDNF6EmuKYjwA022+u5QOzZgtUY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1564656934; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To:ARC-Authentication-Results; 
+        bh=FKwQa98aOpx600LrbRf6vLHAw0mRX3SYa7sADjgeP74=; 
+        b=lPMKFx+Mcj+EWco0C76be09Ymy4n1wPuMqteefQEMnbGU3a9I1xQr2j6tyNBtWnzaNjuk2qFmFdJpuIMKZS/o52bgZn607NKk7MsOtpXc0r4ClXqEFA6aGPmJYXk8WhGAQbQYxyl4hmGWW4DGUJZCxGx+cYwykhIshfjAIIWfzQ=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=fTX0m5RFB+/6o9YgIdwPE9u1ZL/D1BgCiBpVya8/qiW9Tf1nAtcJi5d3+BOA3xxU8gpaZ6Kw31Za
+    9aKmpbS8cTswADTuLg9T8bonhlHOzmGvhgsykOyrgFAme5O3cQck  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1564656934;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        l=6285; bh=FKwQa98aOpx600LrbRf6vLHAw0mRX3SYa7sADjgeP74=;
+        b=RbJzcmb5cZt5vtjHPe8e8F7CXrCd1A0wTZxzql8UQ+1X+DMYuGevCJ33sKv+mWFp
+        cjjsVZ8iMVEy6F3P7pU6I6WgS4e13Qka+9qj3XIKdjxPvAPMGy5MWa4QNqb6VUOKnA+
+        J3wDrGkuRS8GoNVMnN7Y6owpAZgzRGaUH2hpYWTY=
+Received: from [192.168.10.218] (171.221.113.137 [171.221.113.137]) by mx.zohomail.com
+        with SMTPS id 1564656932898519.5279234666671; Thu, 1 Aug 2019 03:55:32 -0700 (PDT)
+Subject: Re: [PATCH v2] MIPS: Ingenic: Fix bugs when detecting X1000's
+ parameters.
+To:     Paul Burton <paul.burton@mips.com>
+References: <1564498510-3751-1-git-send-email-zhouyanjie@zoho.com>
+ <1564547943-27505-1-git-send-email-zhouyanjie@zoho.com>
+ <1564547943-27505-2-git-send-email-zhouyanjie@zoho.com>
+ <20190731203430.2wst6pivwxnmtt74@pburton-laptop>
+Cc:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        "paul@crapouillou.net" <paul@crapouillou.net>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "malat@debian.org" <malat@debian.org>,
+        "chenhc@lemote.com" <chenhc@lemote.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "syq@debian.org" <syq@debian.org>,
+        "jiaxun.yang@flygoat.com" <jiaxun.yang@flygoat.com>
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5D42C51E.1090906@zoho.com>
+Date:   Thu, 1 Aug 2019 18:55:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-In-Reply-To: <b5a58bfc-c777-886f-d902-f499ec38e2ae@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190731203430.2wst6pivwxnmtt74@pburton-laptop>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.08.2019 0:04, Sowjanya Komatineni пишет:
-> 
-> On 7/31/19 4:11 AM, Dmitry Osipenko wrote:
->> 31.07.2019 3:20, Sowjanya Komatineni пишет:
->>> This patch adds support for saving OSC clock frequency and the
->>> drive-strength during OSC clock init and creates an API to restore
->>> OSC control register value from the saved context.
->>>
->>> This API is invoked by Tegra210 clock driver during system resume
->>> to restore the  OSC clock settings.
->>>
->>> Acked-by: Thierry Reding <treding@nvidia.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
->>>   drivers/clk/tegra/clk.h             |  1 +
->>>   2 files changed, 16 insertions(+)
->>>
->>> diff --git a/drivers/clk/tegra/clk-tegra-fixed.c
->>> b/drivers/clk/tegra/clk-tegra-fixed.c
->>> index 8d91b2b191cf..7c6c8abfcde6 100644
->>> --- a/drivers/clk/tegra/clk-tegra-fixed.c
->>> +++ b/drivers/clk/tegra/clk-tegra-fixed.c
->>> @@ -17,6 +17,10 @@
->>>   #define OSC_CTRL            0x50
->>>   #define OSC_CTRL_OSC_FREQ_SHIFT        28
->>>   #define OSC_CTRL_PLL_REF_DIV_SHIFT    26
->>> +#define OSC_CTRL_MASK            (0x3f2 |    \
->>> +                    (0xf << OSC_CTRL_OSC_FREQ_SHIFT))
->>> +
->>> +static u32 osc_ctrl_ctx;
->>>     int __init tegra_osc_clk_init(void __iomem *clk_base, struct
->>> tegra_clk *clks,
->>>                     unsigned long *input_freqs, unsigned int num,
->>> @@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem
->>> *clk_base, struct tegra_clk *clks,
->>>       unsigned osc_idx;
->>>         val = readl_relaxed(clk_base + OSC_CTRL);
->>> +    osc_ctrl_ctx = val & OSC_CTRL_MASK;
->>>       osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
->>>         if (osc_idx < num)
->>> @@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk
->>> *tegra_clks)
->>>           *dt_clk = clk;
->>>       }
->>>   }
->>> +
->>> +void tegra_clk_osc_resume(void __iomem *clk_base)
->>> +{
->>> +    u32 val;
->>> +
->>> +    val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
->>> +    val |= osc_ctrl_ctx;
->>> +    writel_relaxed(val, clk_base + OSC_CTRL);
->> Why a full raw u32 OSC_CTRL value couldn't be simply saved and restored?
-> 
-> Storing and restoring only required fields to avoid accidental
-> misconfiguration.
-> 
-> OSC_CTRL register has other bits (PLL_REF_DIV) which are configured by
-> BR depending on OSC_FREQ and also setting PLL_REF_DIV while PLLS are in
-> use is not safe.
+Hi Paul,
 
-I'm looking at the clk-driver sources and see that none of the Tegra
-drivers ever change the OSC_CTRL configuration, T30/114 even have
-#defines for the OSC_CTRL that are unused.
+On 2019=E5=B9=B408=E6=9C=8801=E6=97=A5 04:34, Paul Burton wrote:
+> Hi Zhou,
+>
+> On Wed, Jul 31, 2019 at 12:39:03PM +0800, Zhou Yanjie wrote:
+>> 1.fix bugs when detecting L2 cache sets value.
+>> 2.fix bugs when detecting L2 cache ways value.
+>> 3.fix bugs when calculate bogoMips and loops_per_jiffy.
+> This should be split into 2 patches - one that fixes the L2 cache
+> detection problems, and possibly one that fixes the bogomips/lpj issue.
+Thanks for your advice. I have split it in v3.
+>
+>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>> ---
+>>   arch/mips/include/asm/mipsregs.h |  1 +
+>>   arch/mips/kernel/cpu-probe.c     |  7 +++++++
+>>   arch/mips/mm/sc-mips.c           | 18 +++++++++++++++---
+>>   3 files changed, 23 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mi=
+psregs.h
+>> index 1e6966e..01e0fcb 100644
+>> --- a/arch/mips/include/asm/mipsregs.h
+>> +++ b/arch/mips/include/asm/mipsregs.h
+>> @@ -2813,6 +2813,7 @@ __BUILD_SET_C0(status)
+>>   __BUILD_SET_C0(cause)
+>>   __BUILD_SET_C0(config)
+>>   __BUILD_SET_C0(config5)
+>> +__BUILD_SET_C0(config7)
+>>   __BUILD_SET_C0(intcontrol)
+>>   __BUILD_SET_C0(intctl)
+>>   __BUILD_SET_C0(srsmap)
+>> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+>> index eb527a1..547c9a0 100644
+>> --- a/arch/mips/kernel/cpu-probe.c
+>> +++ b/arch/mips/kernel/cpu-probe.c
+>> @@ -1964,6 +1964,13 @@ static inline void cpu_probe_ingenic(struct cpuin=
+fo_mips *c, unsigned int cpu)
+>>   =09=09c->cputype =3D CPU_XBURST;
+>>   =09=09c->writecombine =3D _CACHE_UNCACHED_ACCELERATED;
+>>   =09=09__cpu_name[cpu] =3D "Ingenic XBurst";
+>> +=09=09/*
+>> +=09=09 * config7 bit 4 is used to control a low-power mode in
+>> +=09=09 * XBurst architecture. This mode may cause errors in the
+>> +=09=09 * calculation of bogomips and loops_per_jiffy, set config7
+>> +=09=09 * bit 4 to disable this feature to prevent that.
+>> +=09=09 */
+>> +=09=09set_c0_config7(BIT(4));
+> I happen to know what this bit does - see this old patch for an
+> explanation:
+>
+>    https://github.com/paulburton/linux/commit/0d72377bd615d00e99733adc0d3=
+7e6a2373fcde7
+>
+> In short it disables a loop optimization in the CPU that is supposed to
+> special case loops & prevent them from relying upon the BTB.
+> Unfortunately that loop optimization negatively affects short loops,
+> such as in __delay(), and Ingenic's vendor kernels have generally set
+> this bit to disable it.
+>
+> Note though that bogomips is bogus, so changing the bogomips value is
+> really not good justification for the patch at all (which is why I've so
+> far not bothered upstreaming the patch linked above). The best
+> justification I can think of is that Ingenic set the bit in their
+> downstream kernels, which presumably means it's beneficial overall (or
+> just that someone cares too much about bogomips).
+>
+> In any case, one thing I don't know for sure is which CPU versions are
+> affected. I don't believe this affected older devices like the JZ4740,
+> and my copy of the XBurst1 CPU Core Programming Manual documents the bit
+> as reserved. Given that you're seeing the X1000 is affected, and I know
+> the JZ4780 is affected, that covers at least 2 different PRIDs so we
+> can't just check for that.
+>
+> Hopefully writing to the bit is just a no-op on older systems if it is
+> actually reserved, but it'd be great if we could test that.
+>
+> At the very least we should define the bit in asm/mipsregs.h & properly
+> document what it does - using BIT(4) here may be a little nicer than
+> (1<<4), but it's still just a magic number. I don't mind if you want to
+> fix your patch to do that, or one of us can resurrect mine which has
+> that information already.
+I have verified the Ingenic's CPU department. According to their reply,
+all XBurst1 cores support this feature. Therefore, it is safe to turn off i=
+t
+in XBurst1.
 
-So, this leads to a question.. does any bootloader really ever change
-the OSC_CTRL such that it differs after resume from suspend in
-comparison to the value at the time of kernel's booting up?
+However, the hardware that I can use normally is JZ4760 and later, so
+the JZ4730/JZ4740/JZ4750 has not been tested. So for safe we can also
+turn off this feature only in JZ4760 and later if necessary. Wait for your
+comments and if necessary I will change it in v4.
+>>   =09=09break;
+>>   =09default:
+>>   =09=09panic("Unknown Ingenic Processor ID!");
+>> diff --git a/arch/mips/mm/sc-mips.c b/arch/mips/mm/sc-mips.c
+>> index 9385ddb..ed953d4 100644
+>> --- a/arch/mips/mm/sc-mips.c
+>> +++ b/arch/mips/mm/sc-mips.c
+>> @@ -215,6 +215,14 @@ static inline int __init mips_sc_probe(void)
+>>   =09else
+>>   =09=09return 0;
+>>  =20
+>> +=09/*
+>> +=09 * According to config2 it would be 512-sets, but that is contradict=
+ed
+>> +=09 * by all documentation.
+>> +=09 */
+>> +=09if (current_cpu_type() =3D=3D CPU_XBURST &&
+>> +=09=09=09=09mips_machtype =3D=3D MACH_INGENIC_X1000)
+>> +=09=09c->scache.sets =3D 256;
+>> +
+>>   =09tmp =3D (config2 >> 0) & 0x0f;
+>>   =09if (tmp <=3D 7)
+>>   =09=09c->scache.ways =3D tmp + 1;
+>> @@ -225,9 +233,13 @@ static inline int __init mips_sc_probe(void)
+>>   =09 * According to config2 it would be 5-ways, but that is contradicte=
+d
+>>   =09 * by all documentation.
+>>   =09 */
+>> -=09if (current_cpu_type() =3D=3D CPU_XBURST &&
+>> -=09=09=09=09mips_machtype =3D=3D MACH_INGENIC_JZ4770)
+>> -=09=09c->scache.ways =3D 4;
+>> +=09if (current_cpu_type() =3D=3D CPU_XBURST) {
+>> +=09=09switch (mips_machtype) {
+>> +=09=09case MACH_INGENIC_JZ4770:
+>> +=09=09case MACH_INGENIC_X1000:
+>> +=09=09=09c->scache.ways =3D 4;
+>> +=09=09}
+>> +=09}
+>>  =20
+>>   =09c->scache.waysize =3D c->scache.sets * c->scache.linesz;
+>>   =09c->scache.waybit =3D __ffs(c->scache.waysize);
+> Given that we need to fix up both sets & ways, I think this would be
+> cleaner if both were done in the switch statement here after we've read
+> the values from Config2. ie. something like:
+>
+> =09if (current_cpu_type() =3D=3D CPU_XBURST) {
+> =09=09switch (mips_machtype) {
+> =09=09case MACH_INGENIC_JZ4770:
+> =09=09=09c->scache.ways =3D 4;
+> =09=09=09break;
+>
+> =09=09case MACH_INGENIC_X1000:
+> =09=09=09c->scache.sets =3D 256;
+> =09=09=09c->scache.ways =3D 4;
+> =09=09=09break;
+> =09=09}
+> =09}
+>
+> With appropriate comments added for each machine/SoC.
+
+Thanks for you advice. I have change it in v3.
+>
+> Thanks,
+>      Paul
+
+
+
