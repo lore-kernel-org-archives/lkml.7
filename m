@@ -2,102 +2,162 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A7AC41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CCBC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF742171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D004B204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564679802;
-	bh=hugktKepZTaSJZmk5APIsma6IAUz8PHugOUthpU6u7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G0rhwE9YmJnJfS6VVWG2TFwoMq4B+czOQPGP1KbT1/JNqXMn0qfoHQvSsgqfNdMcx
-	 ZHl9IMfwwSmD3/n8fF+gmQqF5RYIFttku+dMO9/xW7/smb6OuxkNk9a64+hUc0Kmth
-	 Ar5v7ogSFXQ6g54nVK/atlWBUT5eOQORBrh65ziw=
+	s=default; t=1564680118;
+	bh=FNhzEXoRvzAG0HDZsIkQ/llSv5oKPGkF0H+k2Fc0PW4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NmKb+SVR+956P0VNOHM+1EabTbmyNK7T6B7zv3P50evJ1nHteHL2YQXbCFn0E9fIb
+	 HYa+BgGvQy0atU4tqAJo6d6akDtRbWUnevVK+8Z+YkyK6VZxsQz6N0YG4JijBFUxD0
+	 R4Z7vLcOPA3kKJGTb162osm4GMz6RV9mTQCl5Hv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387599AbfHARQl (ORCPT
+        id S1731334AbfHARV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 13:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730102AbfHARQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 13:16:41 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B0AF2064A;
-        Thu,  1 Aug 2019 17:16:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564679800;
-        bh=hugktKepZTaSJZmk5APIsma6IAUz8PHugOUthpU6u7E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ul81fXoq2+6K9dejlvslqd6qtXd1pW3517qC4jMHJf6YdXNisnZ36FSu7x7Xr9CDn
-         ayMZXoOC6vhL81Z3iRfW4HUWTPy+akkWQmTDfHBqw48R+lx6XaiSOROqaSxj1oNWrr
-         QtfvbX+OoljXiBMMHejW6a8L8uC2Y/JKMkep2ct8=
-Date:   Thu, 1 Aug 2019 13:16:39 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg KH <greg@kroah.com>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Vladis Dronov <vdronov@redhat.com>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v5.3-rc2] Bluetooth: hci_uart: check for missing tty
- operations
-Message-ID: <20190801171639.GC17697@sasha-vm>
-References: <20190730093345.25573-1-marcel@holtmann.org>
- <20190801133132.6BF30206A3@mail.kernel.org>
- <20190801135044.GB24791@kroah.com>
+        Thu, 1 Aug 2019 13:21:57 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35001 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfHARV5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 13:21:57 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j19so36628294otq.2;
+        Thu, 01 Aug 2019 10:21:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ONDKKiCVIxrv79Fe4EJypm2SI1odtF39CM+MiqFDUUs=;
+        b=BRpnJdJ5CiCDbJzilHwBl70VA+3u6o1DoYavTdwpN0cbNcM5MLn6lBBn0gi41ZHS71
+         fWNb7S9MXdNEVWkfX/WYB15QrVf56O2j3d1g2RzYEApvHFOGRYUo0GMalW+xc0CjkZ1P
+         BcaVVLqCbNX2JyQf9JY3Dc1uDN+a9X8vMFAWc1THaJLA0DF8RZiUAC9KAKkfmNB8vQWz
+         vbFIn1jDDJJZ86FVUI9V8/9WkBHpnmq6A8a9dnF4Wcw0bwG4pqxq9NS9p4s0/q/ER4J6
+         ggQK5yudFsffH/LuylVj3vhZwqI2DyTLrC5YSJVAIQsOxtM+D4aOZxEuf9nzupYr2Yh8
+         +63w==
+X-Gm-Message-State: APjAAAUYXDX4yFaKJomua8oYfCZLtFbYairnf+QqD8swcl9FOrMchqFA
+        km+2/CzL07xj4uAb0zbwWBxkq9TZInMh4oY6Fqs=
+X-Google-Smtp-Source: APXvYqyuyaONhATriUIvpzRyvAHuQcipIx3MF7QaOFWyyvWZCViadzdAlvjYDkBwEhh9cdRxeE+KKuFikcNj567QEzU=
+X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr91002299otp.189.1564680115917;
+ Thu, 01 Aug 2019 10:21:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190801135044.GB24791@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher>
+ <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com>
+ <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com>
+ <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com>
+ <5d42281c.1c69fb81.bcda1.71f5@mx.google.com> <5d423637.1c69fb81.62114.ca6f@mx.google.com>
+ <CAJZ5v0jkLXwqmXwyYtdZ9X2=W2KNKS4Ok_NrDew2yvvt1=4pgQ@mail.gmail.com> <5d4305df.1c69fb81.c4013.1950@mx.google.com>
+In-Reply-To: <5d4305df.1c69fb81.c4013.1950@mx.google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 1 Aug 2019 19:21:44 +0200
+Message-ID: <CAJZ5v0hDE908XcreUyzZ8JGjFJbgVX1N1ELeMwf+n_ENxPA_DA@mail.gmail.com>
+Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tri Vo <trong@android.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 03:50:44PM +0200, Greg KH wrote:
->On Thu, Aug 01, 2019 at 01:31:31PM +0000, Sasha Levin wrote:
->> Hi,
->>
->> [This is an automated email]
->>
->> This commit has been processed because it contains a "Fixes:" tag,
->> fixing commit: .
->>
->> The bot has tested the following trees: v5.2.4, v5.1.21, v4.19.62, v4.14.134, v4.9.186, v4.4.186.
->>
->> v5.2.4: Build OK!
->> v5.1.21: Build OK!
->> v4.19.62: Build OK!
->> v4.14.134: Failed to apply! Possible dependencies:
->>     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
->>
->> v4.9.186: Failed to apply! Possible dependencies:
->>     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
->>
->> v4.4.186: Failed to apply! Possible dependencies:
->>     162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
->>     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
->>     395174bb07c1 ("Bluetooth: hci_uart: Add Intel/AG6xx support")
->>     9e69130c4efc ("Bluetooth: hci_uart: Add Nokia Protocol identifier")
->>
->>
->> NOTE: The patch will not be queued to stable trees until it is upstream.
->>
->> How should we proceed with this patch?
+On Thu, Aug 1, 2019 at 5:31 PM Stephen Boyd <swboyd@chromium.org> wrote:
 >
->Already fixed up by hand and queued up, your automated email is a bit
->slow :)
+> Quoting Rafael J. Wysocki (2019-08-01 01:09:22)
+> > On Thu, Aug 1, 2019 at 2:45 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Stephen Boyd (2019-07-31 16:45:31)
+> > > >
+> > > > This approach also nicely detects duplicate wakeup source names in the
+> > > > case that the string passed in to wakeup_source_register() is already
+> > > > used on the virtual bus.
+> > >
+> > > This was clearly untested! Here's a better one. This is what I see on my
+> > > device with this patch squashed in:
+> > >
+> > > localhost ~ # cat /sys/kernel/debug/wakeup_sources
+> > > name            active_count    event_count     wakeup_count    expire_count    active_since    total_time      max_time        last_change  prevent_suspend_time
+> > > 1-1.2.4.1       0               0               0               0               0               0               0               0   0
+> > > 1-1.1           0               0               0               0               0               0               0               0   0
+> > > gpio-keys       0               0               0               0               0               0               0               0   0
+> > > spi10.0         0               0               0               0               0               0               0               0   0
+> > > a88000.spi:ec@0:keyboard-controller     0               0               0               0               0               0           0
+> > >                 0               0
+> > > alarmtimer      0               0               0               0               0               0               0               0   0
+> > > cros-ec-rtc.1.auto      0               0               0               0               0               0               0           0
+> > >                 0
+> > > a8f8800.usb     0               0               0               0               0               0               0               0   0
+> > > a6f8800.usb     0               0               0               0               0               0               0               0   0
+> > > localhost ~ # ls -l /sys/class/wakeup/
+> > > total 0
+> > > lrwxrwxrwx. 1 root root 0 Jul 31 17:43 alarmtimer -> ../../devices/platform/soc/ac0000.geniqup/a88000.spi/spi_master/spi10/spi10.0/cros-ec-dev.0.auto/cros-ec-rtc.1.auto/rtc/rtc0/alarmtimer
+> >
+> > So why is this not "(...)rtc0/wakeup/alarmtimer" ?
+> >
+> > This particular bit looks kind of inconsistent.
+>
+> I believe this is the code you're looking for in drivers/base/core.c
+>
+>                 /*
+>                  * If we have no parent, we live in "virtual".
+>                  * Class-devices with a non class-device as parent, live
+>                  * in a "glue" directory to prevent namespace collisions.
+>                  */
+>                 if (parent == NULL)
+>                         parent_kobj = virtual_device_parent(dev);
+>                 else if (parent->class && !dev->class->ns_type)
+>                         return &parent->kobj;
+>                 else
+>                         parent_kobj = &parent->kobj;
+>
 
-/me scratches head
+OK, so it looks like there really is a little benefit from making the
+device associated with the wakeup source be the parent of its virtual
+dev.
 
-The patch went out two days ago:
-https://lore.kernel.org/lkml/20190730093345.25573-1-marcel@holtmann.org/
+> >
+> > I guess without your patch you'd see "(...)rtc0/wakeup/wakeup0" instead, right?
+>
+> No, it would be rtc0/wakeup0. That's because rtc is a class, and rtc0 is
+> part of that class, so we don't try to make a glue directory named after
+> the class to avoid collisions (see class_dir_create_and_add()
+> implementation).
 
-How did it make it upstream already?
+That's not really consistent.
+
+> BTW, paths in /sys/devices aren't supposed to matter too much. In this
+> case, I'd expect to see userspace looking at the /sys/class/wakeup path
+> to follow the symlink to figure out what device triggered a wakeup. It
+> can look at the 'device' symlink inside the directory for the wakeup
+> device to figure out which one it is.
+
+But if you go from the device, it would be good to be able to figure
+out which wakeup sources are associated with it and in the alarmtimer
+example you don't even see that it is a wakeup source without
+following the link.
+
+So the "wakeupN" virtual dev names for all wakeup source objects are
+less confusing IMO.
+
+It would be good to avoid the glue dir creation in all cases somehow too.
+
+> Final thought, might want to suppress the power directory from being
+> created for the wakeup class. It looks odd to have
+> /sys/class/wakeup/wakeup0/power when the presumably does nothing.
+
+I agree and there is a flag for that IIRC.
