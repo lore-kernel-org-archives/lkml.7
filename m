@@ -2,107 +2,119 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91991C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6C7C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6631F2084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC39C206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:12:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lAk6aqqr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IyYiP0D6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388525AbfHATMO (ORCPT
+        id S2388534AbfHATMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:12:14 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36476 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbfHATMN (ORCPT
+        Thu, 1 Aug 2019 15:12:30 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44602 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbfHATMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:12:13 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x71JC3lg032175;
-        Thu, 1 Aug 2019 14:12:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564686723;
-        bh=n+W1i+7kfv4vYrkPoC4pIrwHXKJ0yL1bnKOV95y6GAQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lAk6aqqrZ82svaBSjBNq/wF03p1vPyjqwBIVaDlyOg8bashGxSGe0WhGJZqEBVJ2y
-         e5yBKJIq5qh4lpjjmV7V6aUodHUxUyHI6IOHaF9xY+lOcCSIbw+pjU3AWk07kCBntx
-         fgq0tTrOKmMHC11FLBOZaC+HzIVpl7TFJhAoAh3c=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x71JC3Rt093267
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 1 Aug 2019 14:12:03 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 1 Aug
- 2019 14:12:02 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 1 Aug 2019 14:12:02 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x71JC1M0072703;
-        Thu, 1 Aug 2019 14:12:01 -0500
-Subject: Re: [PATCH 2/3] dt: lm3532: Add property for full scale current.
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <tony@atomide.com>, <sre@kernel.org>, <nekit1000@gmail.com>,
-        <mpartap@gmx.net>, <merlijn@wizzup.org>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190801151421.21486-1-dmurphy@ti.com>
- <20190801151421.21486-2-dmurphy@ti.com>
- <2c486267-e0b4-25f3-0a3e-189447adf8b5@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <73134d05-7422-8f4e-01d1-63a80a5bb87e@ti.com>
-Date:   Thu, 1 Aug 2019 14:12:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 1 Aug 2019 15:12:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p17so74713026wrf.11;
+        Thu, 01 Aug 2019 12:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=29eX/7Ti8XYPdnzI29FfnnfKBQG8Yx8Y8+IXP8UDyjQ=;
+        b=IyYiP0D64J6DV1eYBS943TYBTz8YgAE88T9bDGFQVgMS2JdnLsmgSB3nY/zz4tLmCV
+         bISNAx/148/e0txOpysXy3hWzALkLZ8Gk70I2YfSlIwMW8YQVDTfHNyhDa2FjuvRRBCp
+         0M+XN9hlp8rlRFUiyGrXK/llF6njsT0mqv83BLKi1RfWXq0GyOe8p3oQwonFahspM698
+         E+TM5d8NI+M5voTh5UeWCNnsOS7KFbgvur8iqB8O5E0SiLAwJm/gtzPZ3hauk81Ffl05
+         CdB3fVDmwon7Tu5WkEEXcBWWPhp9zKXiWvQKFjQN709TI8/U/6k7honECL8ZUxsqlcmJ
+         aUHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=29eX/7Ti8XYPdnzI29FfnnfKBQG8Yx8Y8+IXP8UDyjQ=;
+        b=ILpgOEA6G+UsC9Ve47iECvPPx5UBGWR9XlniW2p2nCz8+MriIIOn4hMHHrQNM18sTT
+         RSELcDcoez0vtWbjA4nNrG2oND/8v5fIPtcHgFl28rNiwY7YmquLbdrOPRwOBvUXwVzf
+         5ZsaBW0QPXwXrmLPPS4/2r7CoQ4d+SMdPyhCAM2bKSKznQ1+UKaIUu9wB6r5X0IHEmf8
+         AVrKdMy7akxMkb2V2TsGHoWeXLiYJG+RQQ5ENmn8MUxyiG5xLUBKT3I39sv+CCaqCl8H
+         bvZknvhIfKBSgCLwnKwlUwshVRjg6RSTzgo9ydlcgZ9jSVlcZv1r0bCiyMMAwdIPUaWN
+         E6OA==
+X-Gm-Message-State: APjAAAWO+59NtngUA6GnETc29rol3Pw1ASxLGeWtbjP1ZUD+NSCAJmsm
+        zWNOgENyJl7doyMR4fo0HFW/QcxP7Kw+mTp6Js4=
+X-Google-Smtp-Source: APXvYqz1dtgJsKtH3HyoA320M+YjnfJkgSzjwkowOb7aXNJJczt8kJkwziW03I18NJKTuyBaxgF+2VNOywn1TUuBUTQ=
+X-Received: by 2002:adf:a299:: with SMTP id s25mr134496190wra.74.1564686748120;
+ Thu, 01 Aug 2019 12:12:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2c486267-e0b4-25f3-0a3e-189447adf8b5@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190801110145.10803-1-colin.king@canonical.com>
+In-Reply-To: <20190801110145.10803-1-colin.king@canonical.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 1 Aug 2019 15:12:16 -0400
+Message-ID: <CADnq5_Oo8AthzgGsRCRaiNqn7skzGCGMZGdMcNo8Et+5Zt12Og@mail.gmail.com>
+Subject: Re: [PATCH][drm-next] drm/amdgpu: fix unsigned variable instance
+ compared to less than zero
+To:     Colin King <colin.king@canonical.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Le Ma <le.ma@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
-
-On 8/1/19 1:53 PM, Jacek Anaszewski wrote:
-> Dan,
+On Thu, Aug 1, 2019 at 7:01 AM Colin King <colin.king@canonical.com> wrote:
 >
-> On 8/1/19 5:14 PM, Dan Murphy wrote:
->> Add a property for each control bank to configure the
->> full scale current setting for the device.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   Documentation/devicetree/bindings/leds/leds-lm3532.txt | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
->> index c087f85ddddc..d3498dd24e8e 100644
->> --- a/Documentation/devicetree/bindings/leds/leds-lm3532.txt
->> +++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
->> @@ -62,6 +62,9 @@ Optional LED child properties:
->>   	- label : see Documentation/devicetree/bindings/leds/common.txt
->>   	- linux,default-trigger :
->>   	   see Documentation/devicetree/bindings/leds/common.txt
->> +	- ti,fs-current : Defines the full scale current value for each control
->> +			  bank.  The range is from 5000uA-29800uA in increments
->> +			  of 800uA.
-> Wouldn't led-max-microamp fit here?
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Currenly the error check on variable instance is always false because
+> it is a uint32_t type and this is never less than zero. Fix this by
+> making it an int type.
+>
+> Addresses-Coverity: ("Unsigned compared against 0")
+> Fixes: 7d0e6329dfdc ("drm/amdgpu: update more sdma instances irq support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Ah thats what I was looking for.  I would rather use existing properties.
+Applied.  thanks!
 
-I will change that.
+Alex
 
-Dan
-
-
+> ---
+>  drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
+> index a33bd867287e..92257f2bf171 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
+> @@ -1962,7 +1962,8 @@ static int sdma_v4_0_process_trap_irq(struct amdgpu_device *adev,
+>  static int sdma_v4_0_process_ras_data_cb(struct amdgpu_device *adev,
+>                 struct amdgpu_iv_entry *entry)
+>  {
+> -       uint32_t instance, err_source;
+> +       uint32_t err_source;
+> +       int instance;
+>
+>         instance = sdma_v4_0_irq_id_to_seq(entry->client_id);
+>         if (instance < 0)
+> --
+> 2.20.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
