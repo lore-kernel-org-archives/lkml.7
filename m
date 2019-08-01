@@ -6,100 +6,92 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7045FC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6ACEC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C59720665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C658620665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731228AbfHAMWe (ORCPT
+        id S1731271AbfHAMWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:22:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3692 "EHLO huawei.com"
+        Thu, 1 Aug 2019 08:22:36 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52218 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728217AbfHAMWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:22:32 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 00C158748E0FA7FF6A83;
-        Thu,  1 Aug 2019 20:22:27 +0800 (CST)
-Received: from HGHY4L002753561.china.huawei.com (10.133.215.186) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 1 Aug 2019 20:22:16 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 1/2] iommu/iova: introduce iova_magazine_compact_pfns()
-Date:   Thu, 1 Aug 2019 20:21:53 +0800
-Message-ID: <20190801122154.18820-1-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        id S1728791AbfHAMWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:22:33 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CB7B23117771CD2C9A52;
+        Thu,  1 Aug 2019 20:22:31 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 1 Aug 2019
+ 20:22:21 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <antoine.tenart@bootlin.com>,
+        <maxime.chevallier@bootlin.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] mvpp2: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 1 Aug 2019 20:22:02 +0800
+Message-ID: <20190801122202.7800-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.133.215.186]
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-iova_magazine_free_pfns() can only free the whole magazine buffer, add
-iova_magazine_compact_pfns() to support free part of it.
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/iommu/iova.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 3e1a8a6755723a9..4b7a9efa0ef40af 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -795,18 +795,19 @@ static void iova_magazine_free(struct iova_magazine *mag)
- 	kfree(mag);
- }
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 937e4b9..e9d8ffe 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -5014,7 +5014,6 @@ static int mvpp2_port_probe(struct platform_device *pdev,
+ 	struct device_node *port_node = to_of_node(port_fwnode);
+ 	netdev_features_t features;
+ 	struct net_device *dev;
+-	struct resource *res;
+ 	struct phylink *phylink;
+ 	char *mac_from = "";
+ 	unsigned int ntxqs, nrxqs, thread;
+@@ -5118,8 +5117,7 @@ static int mvpp2_port_probe(struct platform_device *pdev,
+ 	port->comphy = comphy;
  
--static void
--iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
-+static void iova_magazine_compact_pfns(struct iova_magazine *mag,
-+				       struct iova_domain *iovad,
-+				       unsigned long newsize)
- {
- 	unsigned long flags;
- 	int i;
+ 	if (priv->hw_version == MVPP21) {
+-		res = platform_get_resource(pdev, IORESOURCE_MEM, 2 + id);
+-		port->base = devm_ioremap_resource(&pdev->dev, res);
++		port->base = devm_platform_ioremap_resource(pdev, 2 + id);
+ 		if (IS_ERR(port->base)) {
+ 			err = PTR_ERR(port->base);
+ 			goto err_free_irq;
+@@ -5551,14 +5549,12 @@ static int mvpp2_probe(struct platform_device *pdev)
+ 	if (priv->hw_version == MVPP21)
+ 		queue_mode = MVPP2_QDIST_SINGLE_MODE;
  
--	if (!mag)
-+	if (!mag || mag->size <= newsize)
- 		return;
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
  
- 	spin_lock_irqsave(&iovad->iova_rbtree_lock, flags);
- 
--	for (i = 0 ; i < mag->size; ++i) {
-+	for (i = newsize; i < mag->size; ++i) {
- 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
- 
- 		BUG_ON(!iova);
-@@ -815,7 +816,13 @@ static void iova_magazine_free(struct iova_magazine *mag)
- 
- 	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
- 
--	mag->size = 0;
-+	mag->size = newsize;
-+}
-+
-+static void
-+iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
-+{
-+	iova_magazine_compact_pfns(mag, iovad, 0);
- }
- 
- static bool iova_magazine_full(struct iova_magazine *mag)
+ 	if (priv->hw_version == MVPP21) {
+-		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-		priv->lms_base = devm_ioremap_resource(&pdev->dev, res);
++		priv->lms_base = devm_platform_ioremap_resource(pdev, 1);
+ 		if (IS_ERR(priv->lms_base))
+ 			return PTR_ERR(priv->lms_base);
+ 	} else {
 -- 
-1.8.3
+2.7.4
 
 
