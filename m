@@ -7,101 +7,87 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FA5C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AE1C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E06206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B787206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Npgpo0bd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ee16V7Ty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389881AbfHAWmG (ORCPT
+        id S1732708AbfHAWmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:42:06 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45592 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728719AbfHAWmF (ORCPT
+        Thu, 1 Aug 2019 18:42:52 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34352 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728719AbfHAWmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:42:05 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so70885384lje.12;
-        Thu, 01 Aug 2019 15:42:04 -0700 (PDT)
+        Thu, 1 Aug 2019 18:42:52 -0400
+Received: by mail-pl1-f194.google.com with SMTP id i2so32843631plt.1;
+        Thu, 01 Aug 2019 15:42:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zPpilKaOTYv54wofyHkUAny9IhEVO2TjoF1NDfPLYk0=;
-        b=Npgpo0bdPcFZIGjdsXC/vYnwEsKfPPSfMELVuVTdQl7HeY/ZR476KkeZ8ahZ2ktIM8
-         Ui92g4x3wutC3tenXz/G7fi8+7WV37/D+hEX3tphd403LFbfZdAJvG27U2bBFvSyN9xm
-         EKX8XjsjMgkracuCgRW7wMQ2Vk3475voIx+OVGoGtQoCARcQyrOyQJssYFXPNS77etU+
-         3jXgSqaFdyKftJdPDigfXjtHRZyzfrQvJrs2CBOgMLAgsQRSiuORGANs8xu0mQvqWZ8H
-         sMLu2vMHoxsFNNSHuCSwlHEPLx2gDPnuZEQ40rLHil2fqqP9DM7/Q9wnhNBmCjaaM8mt
-         bP1A==
+        bh=fomdWM13prZfQ7vSZjiuPyioG/SgkiDt0SZpZ1hksfA=;
+        b=Ee16V7TyWma9ZzO+MfYbY01TWD+PJYsqu/sciLstLnhHA0GZKS0yflmkj0vw3mciM+
+         oRzxwP/T9fdmCduKRBSdymmttk0eOso7x+vDnZ7nwplyFrjHk5Uxhid68nQOMREFtu4I
+         6QtnzS02SldThmbP4SySSEq9MDMC2raoyF2ChOKFd+ZvgBv+KEt7JnLqJI8esWwHpj6X
+         uCFSjPkkDK6DRFKdgmUMPJmDPjRhtpRcSFGqXR+rS1zejPksAXh29y/7X0UeU98krnhP
+         sdTynsvRO+pDSLqZAw7Z+f0nH4jdV6VDu99+lw7g0w8ZEMuuEQ/LMkEr6ZXZvxLyWSYh
+         jtnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zPpilKaOTYv54wofyHkUAny9IhEVO2TjoF1NDfPLYk0=;
-        b=UepKap9A4N0chi3w2o95X7P7+N4rwmGD49TexTji4sZDleVNs+EhVItVj5UE08MoXu
-         6VZwKkVgkEp3TkW5wbKcxeKraxWqv5tOZk7jfIKZYC2aWmltUj83QMSp5WTRsKxMrx+9
-         OKyha3PQEPUseUSrvQ3Q7OYrn+EaubG07tGKeg6Jn0TBZjCAny4Ysx9ZwUV/BF/B17CE
-         3Rl03LIW/4552QEnRuh/DZRSUj/fkyWrzC5ECdPwEYwxRxe55hTuOOaYUmBoIEHEcyBN
-         iah52ssdjftQw1taTnpYNjPBEmn/eXOW6W3n9lgeJ+fKxYZ93OzDElnP9UPMxTSHy4WR
-         9KwQ==
-X-Gm-Message-State: APjAAAVgXewCEPmkR6M7N5AopuCzbf+VMTz47XS/X4B/SlsHJ+8qhnFL
-        Q2N4LY3MRnYcc39phuoguMmgk+SKFR27S4PMWZ0=
-X-Google-Smtp-Source: APXvYqz82X0PIUyuArp5WFv8gOIid4HhOloID2Z2ADtMivkkZA3/z71oIuBOAgX4A+sMBJe652cfGr8/p0vbCLvROi8=
-X-Received: by 2002:a2e:b048:: with SMTP id d8mr28071195ljl.118.1564699323493;
- Thu, 01 Aug 2019 15:42:03 -0700 (PDT)
+        bh=fomdWM13prZfQ7vSZjiuPyioG/SgkiDt0SZpZ1hksfA=;
+        b=bkETA5A5OO1sabbdCiaQYTafIr5fww6W/IJ6CCp+jE1HPK/Pl56sm/DwSWMVajoRPr
+         l5iZGUEvj9KtNBfNMsj791kex5fqBgsyAnhXlvi/NP1rsWg/YJRK/dCRCp9TQ1BcFdpo
+         G1QcmMTEWu5jsXe0on1MpxKF4nvhDKX1bu59M47p/ZZF/GGYVxyp04qbtzzoVRf450An
+         F3WLTcBMH2CsVbGc8kevNecJ/SMnnPW/p0sUl9iAEuN0OaVPZ/dUoZ01x7xvwPDkIq7M
+         NZ7SMCWvpwZKr8nvT3qPvBWHgZuq2a3TNw+ZJKVObHUCYHrKvDgGx+oSSyyioPqiulpW
+         g/+A==
+X-Gm-Message-State: APjAAAVaEVWMCDFkdrTqCALVT3CrtLLur3wQ8ScFPyQ0AV62ASmoGvbt
+        Rate39H2hNHEfcIxacp4Kkr2cUNeA0zrxv3/TXecj3S1
+X-Google-Smtp-Source: APXvYqymyfyz8/HNnj11yxmLGdBA4kOlsce5EmA7gV+DlPXeUby884J8R66Q3PaDByYFW0yTPM5bHW8972cOoq9vkUg=
+X-Received: by 2002:a17:902:2a29:: with SMTP id i38mr129344380plb.46.1564699371026;
+ Thu, 01 Aug 2019 15:42:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAB3wodfF=Gc3FbKedU4JBWi8hZLxcBPUtVPipsCVnaHdFXGk8Q@mail.gmail.com>
- <20190801222613.iugdsswxbn2pawgd@qor.donarmstrong.com>
-In-Reply-To: <20190801222613.iugdsswxbn2pawgd@qor.donarmstrong.com>
-From:   Phillip Lougher <phillip.lougher@gmail.com>
-Date:   Thu, 1 Aug 2019 23:41:51 +0100
-Message-ID: <CAB3wodcKj4uqm7sSiwpZmPpWv4-AgYHOMtM71Cq2SnMBjC=vdw@mail.gmail.com>
-Subject: Re: Bug#921146: Program mksquashfs from squashfs-tools 1:4.3-11 does
- not make use all CPU cores
-To:     Don Armstrong <don@debian.org>
-Cc:     owner@bugs.debian.org, listmaster@lists.debian.org,
-        linux-embedded <linux-embedded@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
+References: <20190802075453.06066be1@canb.auug.org.au>
+In-Reply-To: <20190802075453.06066be1@canb.auug.org.au>
+From:   Steve French <smfrench@gmail.com>
+Date:   Thu, 1 Aug 2019 17:42:36 -0500
+Message-ID: <CAH2r5muO8rYmSEDHogiDkoWbMMm4bd367U-jzbpk_gixk7hkhg@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 11:26 PM Don Armstrong <don@debian.org> wrote:
+Fixed
+
+On Thu, Aug 1, 2019 at 4:55 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> On Thu, 01 Aug 2019, Phillip Lougher wrote:
-> > That patch is a laughable piece of rubbish.  I believe both you
-> > people (the Debian maintainer and author) are in total denial
-> > about your incompetence in this matter.  This is obviously just my
-> > opinion I've formed over the last couple of months, in case you want to
-> > claim that it is libellous.
+> Hi all,
 >
-> This isn't an appropriate tone for Debian mailing lists or the our bug
-> tracking system.
+> Commit
 >
-> It's fine to disagree on technical matters, but it's not appropriate to
-> claim that people are incompetent or that they are making rubbish.
+>   c3ab166ec798 ("SMB3: Kernel oops mounting a encryptData share with CONFIG_DEBUG_VIRTUAL")
 >
-
-I am only defending myself from the slurs and false information being
-spread by your maintainer.
-
-I would not be doing this otherwise.
-
-Cheers
-
-Phillip
-
-> Please stop.
+> is missing a Signed-off-by from its committer.
 >
 > --
-> Don Armstrong                      https://www.donarmstrong.com
->
-> To punish me for my contempt of authority, Fate has made me an
-> authority myself
->  -- Albert Einstein
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+Thanks,
+
+Steve
