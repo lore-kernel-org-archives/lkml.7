@@ -2,135 +2,128 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74810C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA24BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A103214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944F920838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:42:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j22DCmuj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAsxTZht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfHANjI (ORCPT
+        id S1728195AbfHANmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:39:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34465 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbfHANjI (ORCPT
+        Thu, 1 Aug 2019 09:42:00 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35064 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727299AbfHANmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:39:08 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s49so34394522edb.1;
-        Thu, 01 Aug 2019 06:39:07 -0700 (PDT)
+        Thu, 1 Aug 2019 09:42:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u14so34123742pfn.2;
+        Thu, 01 Aug 2019 06:41:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
-        bh=PtC9Ul3xyUxdsRp//n5huG8WK8UIuyHf5FNaAaoJ6lI=;
-        b=j22DCmujTkp1v6xERjlBb9cv6AvS/qdCv2Ql+oavpsT37ofS20BqLBl8lAcfMAgq9F
-         tGQMMashEiIyv3f5VrQ2S/5je4mCuPyUCOKW7Yq62iBRniubibWUQ0ooI/h5qWv/Etvn
-         aLCz/MDeC033FQJ23SX7Qh9Q/MxbpQIgDg5Tnnl4Pj6cC+AeHNz5fbJx7aZb1ufoWAFI
-         ZJLZlrleUqpNRee7wXM1LPyZz/q15V52XXRJkeZPSU2D6aHl5KKH3vMVI0qyi86PFI2u
-         VGkJmbW+TQZXRnLyRAWZ0gz8O+2AEC3gITGMposPZVQNMkdvOV/gHc/ZhZIApIcjh498
-         cV1w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e6SUu+1rvN5NRaEyrhAZRkSrDdvDH6KraBIZ1o6M+y4=;
+        b=mAsxTZhtB+USQ2Ez9xEc3x9IB+7NKzCQ0wmUfrBoEVJAW7BDjWvqRdpEs1cumaIi79
+         /oa5PVMlYxeA1xzg+ZLMTkckyChE+hoCFWpibwHS4UiKMaK2serQLY+jQt/XNFF7FnCe
+         g8TAXHr1k4TGv7Dx32ZFJbA+gzrnQK06gwV4hmMG4bOS3km0JZmUxd/QWEZr/3ZZuBon
+         oAw1t/rNPrf6xyQ/XruTB1PrMg21C8s4LOGp91XDYOW3gvPPCJnXqZCwyZTUz3uV6wOd
+         5mkEL+r6C20JAay2Kw5hlkLcFvO51KptZ9WyYnT7jTcfZf3SVzjax7VxW2VMMj/E6KAu
+         UXlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=PtC9Ul3xyUxdsRp//n5huG8WK8UIuyHf5FNaAaoJ6lI=;
-        b=MTcZm/EzpVuWcZgezNnENGxzqnJXX/5H+S7pc9vupWQmzAfO8Bfom0aTniPJu9rFv7
-         6hz6PoMfwk96VDyI/BAV1q5FrQN4gR+mMQ3dWntEjOndLO2lc6krZxDlKYd8rlASp7UA
-         NTq2SXMcsfWzR/ehvTILzbI2moayUzukpKKfUalai05tkbulAY5UWc1jfyH4MNj8DbW6
-         5GmE/mC+BA6lmovq95Z12y3cIEBsR6kjCx/7qaYrl89gS3OR9+YV4Eo0Zlpp+ZhLOBku
-         mlRRdyBdVsIkwwlUFqnNrCxoJa6eXhjsr+JIYrzhTrcSYNsf1qIUyc6o+8VKDZ3Zw+dB
-         qpHQ==
-X-Gm-Message-State: APjAAAU4+HS72L5NuQ+yQdlpvdVDHflPfXYwcC+HbW54vX2T3h0/Vz+C
-        JtIMaG2+N9oGMbG0SB3E2RzOQKaQXKo64O4b2ng=
-X-Google-Smtp-Source: APXvYqz/UPRwrcD8HLFhptruuLqlej5jY1qcmnxYS+lhO1UyrzSeq19BRip4q5EHDq0cEi0M/T7Hr4ryE8t/rdHlioU=
-X-Received: by 2002:a17:906:154f:: with SMTP id c15mr99070580ejd.268.1564666746270;
- Thu, 01 Aug 2019 06:39:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e6SUu+1rvN5NRaEyrhAZRkSrDdvDH6KraBIZ1o6M+y4=;
+        b=YImO4wsn72KSTYI9yIA/5L+KiVbJa0+achXga/70YaPPg2UaSDartzXNfu8cUA9PqE
+         LVh5UG8H+KBAKEDLO6et2aLu7WJtrEKgUGmnc1JJVtQ8Yp2uGXqP4KZJ8/WrVOYNpmNO
+         y+tGHUpfqO4w/WNeXy/NwViEaASSUN7oZsAsZbanQbprWA2OmN/0jltilWWLPdmamrYa
+         JLGmfbfhPhrOosXo/eg1JG2CButSBmpCS8EI14yzTcyBQOAzbtd+lIJlj9UjrsFf3+gn
+         q5Pj3EqqjGQmgp2GVBhm6S53KcPH3eJwMnkgCbZVmn6yc8tf/WNq8Y1O9CfIJQ0YM7yD
+         871g==
+X-Gm-Message-State: APjAAAVhB0a0coUyVrixhsGmTIkkJWaDFLWwQz5XApFHpooLtI39688x
+        DkxcNiJl48tQCw1inFyHS5o=
+X-Google-Smtp-Source: APXvYqwhPXJVg7ocTv8yFgwqNJVM+vY3pMPSSH6aXTdj0mq5HeKL7QVEMLAYnB/n2hYraWbdUdn2Vg==
+X-Received: by 2002:a63:7205:: with SMTP id n5mr64492235pgc.443.1564666919432;
+        Thu, 01 Aug 2019 06:41:59 -0700 (PDT)
+Received: from host ([183.101.165.200])
+        by smtp.gmail.com with ESMTPSA id m13sm12112869pgn.57.2019.08.01.06.41.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 01 Aug 2019 06:41:58 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 22:41:49 +0900
+From:   Joonwon Kang <kjw1627@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     re.emese@gmail.com, kernel-hardening@lists.openwall.com,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        jinb.park7@gmail.com
+Subject: Re: [PATCH 2/2] randstruct: remove dead code in is_pure_ops_struct()
+Message-ID: <20190801134149.GA2149@host>
+References: <cover.1564595346.git.kjw1627@gmail.com>
+ <281a65cc361512e3dc6c5deffa324f800eb907be.1564595346.git.kjw1627@gmail.com>
+ <201907311259.D485EED2B7@keescook>
 MIME-Version: 1.0
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Thu, 1 Aug 2019 15:38:54 +0200
-Message-ID: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
-Subject: pivot_root(".", ".") and the fchdir() dance
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Containers <containers@lists.linux-foundation.org>,
-        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
-        Christian Brauner <christian@brauner.io>,
-        Al Viro <viro@ftp.linux.org.uk>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Jordan Ogas <jogas@lanl.gov>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201907311259.D485EED2B7@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Serge, Andy, et al,
+On Wed, Jul 31, 2019 at 12:59:30PM -0700, Kees Cook wrote:
+> On Thu, Aug 01, 2019 at 03:01:49AM +0900, Joonwon Kang wrote:
+> > Recursive declaration for struct which has member of the same struct
+> > type, for example,
+> > 
+> > struct foo {
+> >     struct foo f;
+> >     ...
+> > };
+> > 
+> > is not allowed. So, it is unnecessary to check if a struct has this
+> > kind of member.
+> 
+> Is that the only case where this loop could happen? Seems also safe to
+> just leave it as-is...
+> 
+> -Kees
 
-I've been looking at doing some updates for the rather inaccurate
-pivot_root(2) manual page, and I noticed this 2014 commit in LXC
+I think it is pretty obvious that it is the only case. I compiled kernel
+with allyesconfig and the condition never hit even once. However, it will
+also be no problem to just leave it as-is as you mentioned.
 
-[[commit 2d489f9e87fa0cccd8a1762680a43eeff2fe1b6e
-Author: Serge Hallyn <serge.hallyn@ubuntu.com>
-Date:   Sat Sep 20 03:15:44 2014 +0000
-
-    pivot_root: switch to a new mechanism (v2)
-
-    This idea came from Andy Lutomirski.  Instead of using a
-    temporary directory for the pivot_root put-old, use "." both
-    for new-root and old-root.  Then fchdir into the old root
-    temporarily in order to unmount the old-root, and finally
-    chdir back into our '/'.
-]]
-
-I'd like to add some documentation about the pivot_root(".", ".")
-idea, but I have a doubt/question. In the lxc_pivot_root() code we
-have these steps
-
-        oldroot = open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
-        newroot = open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
-
-        fchdir(newroot);
-        pivot_root(".", ".");
-
-        fchdir(oldroot);      // ****
-
-        mount("", ".", "", MS_SLAVE | MS_REC, NULL);
-        umount2(".", MNT_DETACH);
-
-        fchdir(newroot);      // ****
-
-My question: are the two fchdir() calls marked "****" really
-necessary? I suspect not. My reasoning:
-1. By this point, both the CWD and root dir of the calling process are
-in newroot (and so do not keep newroot busy, and thus don't prevent
-the unmount).
-2. After the pivot_root() operation, there are two mount points
-stacked at "/": oldroot and newroot, with oldroot a child mount
-stacked on top of newroot (I did some experiments to verify that this
-is so, by examination of /proc/self/mountinfo).
-3. The umount(".") operation unmounts the topmost mount from the pair
-of mounts stacked at "/".
-
-At least, in some separate tests that I've done, things seem to work
-as I describe above without the use of the marked fchdir() calls. (My
-tests omit the mount(MS_SLAVE) piece, since in my tests I do a
-more-or-less equivalent step at an earlier point.
-
-Am I missing something?
-
-Thanks,
-
-Michael
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+> 
+> > 
+> > Signed-off-by: Joonwon Kang <kjw1627@gmail.com>
+> > ---
+> >  scripts/gcc-plugins/randomize_layout_plugin.c | 3 ---
+> >  1 file changed, 3 deletions(-)
+> > 
+> > diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
+> > index bd29e4e7a524..e14efe23e645 100644
+> > --- a/scripts/gcc-plugins/randomize_layout_plugin.c
+> > +++ b/scripts/gcc-plugins/randomize_layout_plugin.c
+> > @@ -440,9 +440,6 @@ static int is_pure_ops_struct(const_tree node)
+> >  		const_tree fieldtype = get_field_type(field);
+> >  		enum tree_code code = TREE_CODE(fieldtype);
+> >  
+> > -		if (node == fieldtype)
+> > -			continue;
+> > -
+> >  		if (code == RECORD_TYPE || code == UNION_TYPE) {
+> >  			if (!is_pure_ops_struct(fieldtype))
+> >  				return 0;
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> Kees Cook
