@@ -2,90 +2,86 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA49C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251B9C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040AD2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F08C820B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:39:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732205AbfHAOip (ORCPT
+        id S1731632AbfHAOja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:38:45 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36216 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731397AbfHAOiU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:38:20 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1htCDU-0000lv-Qd; Thu, 01 Aug 2019 16:38:04 +0200
-Message-Id: <20190801143250.370326052@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Thu, 01 Aug 2019 16:32:50 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, kvm@vger.kernel.org,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [patch 0/5] posix-cpu-timers: Move expiry into task work context
+        Thu, 1 Aug 2019 10:39:30 -0400
+Received: from comms.puri.sm ([159.203.221.185]:54674 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726409AbfHAOj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:39:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 29B3EE0F66;
+        Thu,  1 Aug 2019 07:39:29 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id FG_DbJrd2E_C; Thu,  1 Aug 2019 07:39:28 -0700 (PDT)
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+To:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH] iio: imu: st_lsm6dsx: make IIO_CHAN_INFO_SCALE shared by type
+Date:   Thu,  1 Aug 2019 16:39:08 +0200
+Message-Id: <20190801143908.27608-1-martin.kepplinger@puri.sm>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running posix cpu timers in hard interrupt context has a few downsides:
+in_accel_x_scale, in_accel_y_scale and in_accel_z_scale are always
+the same. The scale is still defined to be in "info_mask_separate".
 
- - For PREEMPT_RT it cannot work as the expiry code needs to take sighand
-   lock, which is a 'sleeping spinlock' in RT
+Userspace (iio-sensor-proxy and others) is not used to that and only
+looks for "in_accel_scale" for the scaling factor to apply.
 
- - For fine grained accounting it's just wrong to run this in context of
-   the timer interrupt because that way a process specific cpu time is
-   accounted to the timer interrupt.
+Change IIO_CHAN_INFO_SCALE from being separate in all channel to be
+shared by type.
 
-There is no real hard requirement to run the expiry code in hard interrupt
-context. The posix CPU timers are an approximation anyway, so having them
-expired and evaluated in task work context does not really make them worse.
+This removes in_accel_x_scale, in_accel_y_scale and in_accel_z_scale and
+makes available in_accel_scale.
 
-That unearthed the fact that KVM is missing to handle task work before
-entering a VM which is delaying pending task work until the vCPU thread
-goes all the way back to user space qemu.
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+---
 
-The series implements the necessary handling for x86/KVM and switches the
-posix cpu timer expiry into task work for X86. The posix timer modification
-is conditional on a selectable config switch as this requires that
-task work is handled in KVM.
+AFAIK in all other drivers, IIO_CHAN_INFO_SCALE is "shared by type". Sure
+devices are different, but LSM6DSX devices still don't have different
+scales for x/y/z channels :)
 
-The available tests pass and no problematic difference has been observed.
+thanks,
 
-Thanks,
-
-	tglx
-
-8<--------------------
- arch/x86/kvm/x86.c             |    8 ++++-
- arch/x86/Kconfig               |    1 
- include/linux/sched.h          |    3 ++
- include/linux/tracehook.h      |   15 ++++++++++
- kernel/task_work.c             |   19 ++++++++++++
- kernel/time/Kconfig            |    5 +++
- kernel/time/posix-cpu-timers.c |   61 ++++++++++++++++++++++++++++++-----------
- 7 files changed, 95 insertions(+), 17 deletions(-)
+                              martin
 
 
+
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+index af379a5429ed..59c3ab7cbb6f 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+@@ -56,8 +56,8 @@ enum st_lsm6dsx_hw_id {
+ 	.address = addr,						\
+ 	.modified = 1,							\
+ 	.channel2 = mod,						\
+-	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
+-			      BIT(IIO_CHAN_INFO_SCALE),			\
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
++	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),		\
+ 	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
+ 	.scan_index = scan_idx,						\
+ 	.scan_type = {							\
+-- 
+2.20.1
 
