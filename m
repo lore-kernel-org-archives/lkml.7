@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A01AC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A64C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FEA2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43372083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389805AbfHAWi3 (ORCPT
+        id S2389815AbfHAWib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:38:29 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15878 "EHLO
+        Thu, 1 Aug 2019 18:38:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51450 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731855AbfHAWi1 (ORCPT
+        by vger.kernel.org with ESMTP id S2389791AbfHAWi2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:38:27 -0400
+        Thu, 1 Aug 2019 18:38:28 -0400
 Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71MbE7n143826;
-        Thu, 1 Aug 2019 18:37:50 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48hagxsm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:37:50 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71Mbnla145054;
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71Mb3mm143607;
         Thu, 1 Aug 2019 18:37:49 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48hagxs6-1
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48hagxsd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 01 Aug 2019 18:37:49 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MZJ3E007787;
-        Thu, 1 Aug 2019 22:37:48 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 2u0e87h66a-1
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71Mbnc9145022;
+        Thu, 1 Aug 2019 18:37:49 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48hagxrv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 22:37:48 +0000
+        Thu, 01 Aug 2019 18:37:48 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MZPHR024026;
+        Thu, 1 Aug 2019 22:37:47 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma05wdc.us.ibm.com with ESMTP id 2u0e85w6h8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Aug 2019 22:37:47 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MblsZ51446264
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71Mblta54067656
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Thu, 1 Aug 2019 22:37:47 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79F08B2081;
+        by IMSVA (Postfix) with ESMTP id 1935EB2079;
         Thu,  1 Aug 2019 22:37:47 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5B36FB2070;
-        Thu,  1 Aug 2019 22:37:47 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id EFD7EB2077;
+        Thu,  1 Aug 2019 22:37:46 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Aug 2019 22:37:47 +0000 (GMT)
+        Thu,  1 Aug 2019 22:37:46 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 63E5916C9A4D; Thu,  1 Aug 2019 15:37:48 -0700 (PDT)
+        id 55DB016C9A4A; Thu,  1 Aug 2019 15:37:48 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -65,9 +65,9 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 08/12] doc: Add rcutree.kthread_prio pointer to stallwarn.txt
-Date:   Thu,  1 Aug 2019 15:37:43 -0700
-Message-Id: <20190801223747.15560-8-paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 05/12] rcu: Add destroy_work_on_stack() to match INIT_WORK_ONSTACK()
+Date:   Thu,  1 Aug 2019 15:37:40 -0700
+Message-Id: <20190801223747.15560-5-paulmck@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190801223708.GA14862@linux.ibm.com>
 References: <20190801223708.GA14862@linux.ibm.com>
@@ -84,33 +84,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds mention of the rcutree.kthread_prio kernel boot parameter
-to the discussion of how high-priority real-time tasks can result in
-RCU CPU stall warnings.  (However, this does not necessarily help when
-the high-priority real-time tasks are using dubious deadlines.)
+The synchronize_rcu_expedited() function has an INIT_WORK_ONSTACK(),
+but lacks the corresponding destroy_work_on_stack().  This commit
+therefore adds destroy_work_on_stack().
 
+Reported-by: Andrea Arcangeli <aarcange@redhat.com>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Acked-by: Andrea Arcangeli <aarcange@redhat.com>
 ---
- Documentation/RCU/stallwarn.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/rcu/tree_exp.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/RCU/stallwarn.txt b/Documentation/RCU/stallwarn.txt
-index 13e88fc00f01..f48f4621ccbc 100644
---- a/Documentation/RCU/stallwarn.txt
-+++ b/Documentation/RCU/stallwarn.txt
-@@ -57,6 +57,12 @@ o	A CPU-bound real-time task in a CONFIG_PREEMPT_RT kernel that
- 	CONFIG_PREEMPT_RCU case, you might see stall-warning
- 	messages.
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index af7e7b9c86af..513b403b683b 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -792,6 +792,7 @@ static int rcu_print_task_exp_stall(struct rcu_node *rnp)
+  */
+ void synchronize_rcu_expedited(void)
+ {
++	bool boottime = (rcu_scheduler_active == RCU_SCHEDULER_INIT);
+ 	struct rcu_exp_work rew;
+ 	struct rcu_node *rnp;
+ 	unsigned long s;
+@@ -817,7 +818,7 @@ void synchronize_rcu_expedited(void)
+ 		return;  /* Someone else did our work for us. */
  
-+	You can use the rcutree.kthread_prio kernel boot parameter to
-+	increase the scheduling priority of RCU's kthreads, which can
-+	help avoid this problem.  However, please note that doing this
-+	can increase your system's context-switch rate and thus degrade
-+	performance.
+ 	/* Ensure that load happens before action based on it. */
+-	if (unlikely(rcu_scheduler_active == RCU_SCHEDULER_INIT)) {
++	if (unlikely(boottime)) {
+ 		/* Direct call during scheduler init and early_initcalls(). */
+ 		rcu_exp_sel_wait_wake(s);
+ 	} else {
+@@ -835,5 +836,8 @@ void synchronize_rcu_expedited(void)
+ 
+ 	/* Let the next expedited grace period start. */
+ 	mutex_unlock(&rcu_state.exp_mutex);
 +
- o	A periodic interrupt whose handler takes longer than the time
- 	interval between successive pairs of interrupts.  This can
- 	prevent RCU's kthreads and softirq handlers from running.
++	if (likely(!boottime))
++		destroy_work_on_stack(&rew.rew_work);
+ }
+ EXPORT_SYMBOL_GPL(synchronize_rcu_expedited);
 -- 
 2.17.1
 
