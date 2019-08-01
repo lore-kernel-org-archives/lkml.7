@@ -2,293 +2,172 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AEAC32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F243C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571FE20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:45:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OZNZh5Rg"
+	by mail.kernel.org (Postfix) with ESMTP id 4E8E2214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbfHAApr (ORCPT
+        id S1727961AbfHAAu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 20:45:47 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33233 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728847AbfHAApp (ORCPT
+        Wed, 31 Jul 2019 20:50:27 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35096 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfHAAu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 20:45:45 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c14so31138309plo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 17:45:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:from:to:subject:user-agent:date;
-        bh=Gk2QCSUiXttK0DpMjrYYxGGSGPwiVtPzozTzPLwckQk=;
-        b=OZNZh5RgQj+c21xd9fx1O0GKIykxqvn0eo7tx5caoozgFnc6gFlrrU00H6PijLBp/T
-         8Ed2i5y7wYz0704iX7SL1rPJPnwQ7nEta0IkzPUcGhqq5UdZpxjkmXAG/EJLo9xTQAWJ
-         TIZv4yn7bzDpkyXOp2JwxU+BzcaybpOJiwP90=
+        Wed, 31 Jul 2019 20:50:27 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r21so50738262qke.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 17:50:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
-         :user-agent:date;
-        bh=Gk2QCSUiXttK0DpMjrYYxGGSGPwiVtPzozTzPLwckQk=;
-        b=iVuDXtNzkLWlQMsT73dzGIthpPT9ZDLpfJ/QKdzlufWYZJKjm3gw2UTlacVNzpCsLq
-         fXSWpGkr683kGkSQQRZKzmerxZKyNLFtcciF1VMwBCN8lPp0pHfokKtqAtpyRm7vxJ57
-         250ixS4sKy4AtFXJM0cLtdyAIdBC7h5kYPCHpFO2ZT2slnwJEz995PjjQSN8ksGddsGx
-         wtcGHw/cMuH/BFIowvuu6VEkFb1oQwRFDd7H1bRLbNYyRqcQa0or+hgx7hWBvd6x3Vu2
-         DmhTK44jCvIDO60sneZ6wYLqXS75tscziEQ09+a6WPKMpW1sg9NLIUrIZEAcwSm767RF
-         Yriw==
-X-Gm-Message-State: APjAAAX689okX2KbJzjAs21HVe4z79prZedZNyLmDW+AT3fVCyiC6bXT
-        DtgYiOClMSNR9UhEPHkEyOx2fA==
-X-Google-Smtp-Source: APXvYqxHW8vfm/YSXch50SJ6dYCLCVyXFK5B8g5Aib6Vk7BXUffeZpUKJLPY+G5yqs2Ub5T4fKcFYA==
-X-Received: by 2002:a17:902:e30b:: with SMTP id cg11mr22374400plb.335.1564620343901;
-        Wed, 31 Jul 2019 17:45:43 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id p65sm68869957pfp.58.2019.07.31.17.45.42
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=NPkDfDpHDw3YeQl+T3W6AvueVUYarX7de1k02h9BSIY=;
+        b=Idd42Fx8c7Sz4VPriWIBGmfebqKpa0lycZKRmCUqZS77Rey912da1RQ7Gp/nJVmiWc
+         a7uIMTdNuKrvShYTPS1D68P4NI8cqWFpI/KjzrcY7sKMxtWBqiYGNeFAdAbBlT0GAo80
+         3HNRpMA2JVN7uy3lvQ5J8nLC0ISDuWb6SKSrqjU/KNjk10fGRLrO+qSEz+dA0TDqTRs0
+         lWYipq6gScTusL1xtBjOt6b9P+QAYy9SxdMW1tFmHUipR+6SLBBmYBbAPKFfCdjWyQKI
+         4guPH45hi4BspkWnDd1k2tUErZJKVhlYLp2iyj2/k//j69+fdLfzoa2CtYMRYo71/yG7
+         X8FA==
+X-Gm-Message-State: APjAAAVTdtQht3tYXe4s3yyWM0j1H6q6uXUwt0i4Nasg5TEkUv/R4hgF
+        ZMArawzFRvh8G2RUrvWarCJOQw==
+X-Google-Smtp-Source: APXvYqwkDwn1luI7XpQfjVzNA8rWMn0lr8TYrp6rYPQ9VCloeDW1Ozpk8FUP+0y3phbatU5iT/UbJQ==
+X-Received: by 2002:a05:620a:16a6:: with SMTP id s6mr82383362qkj.39.1564620625950;
+        Wed, 31 Jul 2019 17:50:25 -0700 (PDT)
+Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id a6sm31199887qth.76.2019.07.31.17.50.21
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 17:45:43 -0700 (PDT)
-Message-ID: <5d423637.1c69fb81.62114.ca6f@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 31 Jul 2019 17:50:24 -0700 (PDT)
+Message-ID: <97d4312d883f3c031c5a6144a2f5f5dd74dfe4df.camel@redhat.com>
+Subject: Re: [PATCH] Revert "PCI: Enable NVIDIA HDA controllers"
+From:   Lyude Paul <lyude@redhat.com>
+To:     Karol Herbst <kherbst@redhat.com>, Lukas Wunner <lukas@wunner.de>
+Cc:     nouveau <nouveau@lists.freedesktop.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Daniel Drake <drake@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Maik Freudenberg <hhfeuer@gmx.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 31 Jul 2019 20:50:20 -0400
+In-Reply-To: <b27614151184f29bb147786933cb424fddb82a23.camel@redhat.com>
+References: <20190731201927.22054-1-lyude@redhat.com>
+         <20190731211842.befvpoyudrm2subf@wunner.de>
+         <CACO55tu=9ZBzGkwdXPOwWARy1UTspFv+v=nrmLFoOKiSGU+E5Q@mail.gmail.com>
+         <b27614151184f29bb147786933cb424fddb82a23.camel@redhat.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5d42281c.1c69fb81.bcda1.71f5@mx.google.com>
-References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher> <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com> <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com> <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com> <5d42281c.1c69fb81.bcda1.71f5@mx.google.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>, Tri Vo <trong@android.com>
-Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-User-Agent: alot/0.8.1
-Date:   Wed, 31 Jul 2019 17:45:42 -0700
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2019-07-31 16:45:31)
->=20
-> This approach also nicely detects duplicate wakeup source names in the
-> case that the string passed in to wakeup_source_register() is already
-> used on the virtual bus.
+On Wed, 2019-07-31 at 17:35 -0400, Lyude Paul wrote:
+> On Wed, 2019-07-31 at 23:26 +0200, Karol Herbst wrote:
+> > On Wed, Jul 31, 2019 at 11:18 PM Lukas Wunner <lukas@wunner.de> wrote:
+> > > On Wed, Jul 31, 2019 at 04:19:27PM -0400, Lyude Paul wrote:
+> > > > While this fixes audio for a number of users, this commit has the
+> > > > sideaffect of breaking the BIOS workaround that's required to make the
+> > > > GPU on the nvidia P50 work, by causing the GPU's PCI device function
+> > > > to
+> > > > stop working after it's been set to multifunction mode.
+> > > 
+> > > This is missing a reference to the commit introducing the P50 quirk,
+> > > which is e0547c81bfcf ("PCI: Reset Lenovo ThinkPad P50 nvgpu at boot
+> > > if necessary").
+> > > 
+> > > Please describe in more detail how the GPU's PCI function stops working.
+> > > Does it respond with "all ones" when accessing MMIO?
+> > > Do MMIO accesses cause the system to hang?
+> > > 
+> > > Could you provide lspci -vvxx output for the GPU and its associated
+> > > HDA controller with and without b516ea586d71?
+> > > 
+> > > Does this machine have external display connectors via which audio
+> > > can be streamed?
+> > > 
+> > > 
+> > > > I'm not really holding my breath on this patch to being accepted:
+> > > > there's a good chance there's a better solution for this (and I'm
+> > > > going
+> > > > to continue investigating for one after sending this patch), this is
+> > > > more just to start a conversation on what the proper way to fix this
+> > > > is.
+> > > 
+> > > Posting as an RFC might have been more appropriate then.
+> > > 
+> > 
+> > no, a revert is actually appropriate.  If a commit fixes something,
+> > but breaks something else, it gets either reverted or fixed. If nobody
+> > fixes it, then revert it is.
+> 
+> To answer Lukas's question btw: most of the details on how things break are
+> back in the original commit (sorry for forgetting the reference!), there's a
+> _lot_ of explanation there that I'd rather not retype, so just refer back to
+> the commit and bug @ https://bugs.freedesktop.org/show_bug.cgi?id=75985
+> 
+> Additionally, there was some extra discussion providing some more detail in
+> the email thread that I had with Bjorn:
+> 
+> https://lkml.org/lkml/2019/2/12/1172
+> 
+> As for how this commit breaks the workaround: it seems that when we enable
+> the
+> HDA controller and put the GPU into multifunction mode, the function-level
+> reset stops working and thus we can't reset the GPU anymore. Currently I can
+> see a couple of solutions (again, please feel free to suggest more!):
+> 
+>  * Just revert the commit. We should do this if necessary, but of course I'd
+>    much rather try finding a fix first
+>  * Disable the HDA controller temporarily when a GPU reset is neded in
+>    quirk_reset_lenovo_thinkpad_p50_nvgpu(), then call the function level
+>    reset, then re-enable the HDA controller. I have no idea if this actually
+>    works yet, but I'm about to try this on my system
+>  * Get quirk_reset_lenovo_thinkpad_p50_nvgpu() to run before
+>    quirk_nvidia_hda(). This would probably be fine, but we would need to
+>    rework some stuff in the PCI subsystem (maybe it already has a way to do
+>    this? haven't checked yet) so that we could perform an flr probe early
+>    enough to perform the quirk
 
-This was clearly untested! Here's a better one. This is what I see on my
-device with this patch squashed in:
+Good news! After some investigation looks like that function level reset
+actually does work, just that after we put it in multifunction mode
+pci_parent_bus_reset() sees multiple devices on the bus and returns -ENOTTY as
+a result. So I should definitely be able to come up with a fix for this other
+then reverting this :). Will send out patches soon
 
-localhost ~ # cat /sys/kernel/debug/wakeup_sources=20
-name            active_count    event_count     wakeup_count    expire_coun=
-t    active_since    total_time      max_time        last_change  prevent_s=
-uspend_time
-1-1.2.4.1       0               0               0               0          =
-     0               0               0               0   0
-1-1.1           0               0               0               0          =
-     0               0               0               0   0
-gpio-keys       0               0               0               0          =
-     0               0               0               0   0
-spi10.0         0               0               0               0          =
-     0               0               0               0   0
-a88000.spi:ec@0:keyboard-controller     0               0               0  =
-             0               0               0           0
-                0               0
-alarmtimer      0               0               0               0          =
-     0               0               0               0   0
-cros-ec-rtc.1.auto      0               0               0               0  =
-             0               0               0           0
-                0
-a8f8800.usb     0               0               0               0          =
-     0               0               0               0   0
-a6f8800.usb     0               0               0               0          =
-     0               0               0               0   0
-localhost ~ # ls -l /sys/class/wakeup/=20
-total 0
-lrwxrwxrwx. 1 root root 0 Jul 31 17:43 alarmtimer -> ../../devices/platform=
-/soc/ac0000.geniqup/a88000.spi/spi_master/spi10/spi10.0/cros-ec-dev.0.auto/=
-cros-ec-rtc.1.auto/rtc/rtc0/alarmtimer
-lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup0 -> ../../devices/platform/so=
-c/a6f8800.usb/wakeup/wakeup0
-lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup1 -> ../../devices/platform/so=
-c/a8f8800.usb/wakeup/wakeup1
-lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup2 -> ../../devices/platform/so=
-c/ac0000.geniqup/a88000.spi/spi_master/spi10/spi10.0/cros-ec-dev.0.auto/cro=
-s-ec-rtc.1.auto/wakeup/wakeup2
-lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup3 -> ../../devices/platform/so=
-c/ac0000.geniqup/a88000.spi/spi_master/spi10/spi10.0/a88000.spi:ec@0:keyboa=
-rd-controller/wakeup/wakeup3
-lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup4 -> ../../devices/platform/so=
-c/ac0000.geniqup/a88000.spi/spi_master/spi10/spi10.0/wakeup/wakeup4
-lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup5 -> ../../devices/platform/gp=
-io-keys/wakeup/wakeup5
-lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup6 -> ../../devices/platform/so=
-c/a8f8800.usb/a800000.dwc3/xhci-hcd.7.auto/usb1/1-1/1-1.1/wakeup/wakeup6
-lrwxrwxrwx. 1 root root 0 Jul 31 17:43 wakeup7 -> ../../devices/platform/so=
-c/a8f8800.usb/a800000.dwc3/xhci-hcd.7.auto/usb1/1-1/1-1.2/1-1.2.4/1-1.2.4.1=
-/wakeup/wakeup7
+> > > > So, I'm kind of confused about why exactly this was implemented as an
+> > > > early boot quirk in the first place. If we're seeing the GPU's PCI
+> > > > device, we already know the GPU is there. Shouldn't we be able to
+> > > > check
+> > > > for the existence of the HDA device once we probe the GPU in nouveau?
+> > > 
+> > > I think a motivation to keep this generic was to make it work with
+> > > other drivers besides nouveau, specifically Nvidia's proprietary driver.
+> > > nouveau might not even be enabled.
+> > > 
+> > > 
+> > > > that still doesn't explain why this was implemented as an early quirk
+> > > 
+> > > This isn't an early quirk.  Those live in arch/x86/kernel/early-
+> > > quirks.c.
+> > > This is just a PCI quirk executed on device enumeration and on resume.
+> > > Devices aren't necessarily enumerated only on boot, e.g. think
+> > > Thunderbolt.
+> > > 
+> > > Thanks,
+> > > 
+> > > Lukas
+-- 
+Cheers,
+	Lyude Paul
 
-----8<----
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index 79668b45eae6..ec414f0db0b1 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -201,7 +201,7 @@ EXPORT_SYMBOL_GPL(wakeup_source_remove);
- /**
-  * wakeup_source_register - Create wakeup source and add it to the list.
-  * @dev: Device this wakeup source is associated with (or NULL if virtual).
-- * @name: Name of the wakeup source to register.
-+ * @name: Name of the wakeup source to register (or NULL if device wakeup).
-  */
- struct wakeup_source *wakeup_source_register(struct device *dev,
- 					     const char *name)
-@@ -209,9 +209,9 @@ struct wakeup_source *wakeup_source_register(struct dev=
-ice *dev,
- 	struct wakeup_source *ws;
- 	int ret;
-=20
--	ws =3D wakeup_source_create(name);
-+	ws =3D wakeup_source_create(name ? : dev_name(dev));
- 	if (ws) {
--		ret =3D wakeup_source_sysfs_add(dev, ws);
-+		ret =3D wakeup_source_sysfs_add(dev, ws, !!name);
- 		if (ret) {
- 			kfree_const(ws->name);
- 			kfree(ws);
-@@ -275,7 +275,7 @@ int device_wakeup_enable(struct device *dev)
- 	if (pm_suspend_target_state !=3D PM_SUSPEND_ON)
- 		dev_dbg(dev, "Suspicious %s() during system transition!\n", __func__);
-=20
--	ws =3D wakeup_source_register(dev, dev_name(dev));
-+	ws =3D wakeup_source_register(dev, NULL);
- 	if (!ws)
- 		return -ENOMEM;
-=20
-diff --git a/drivers/base/power/wakeup_stats.c b/drivers/base/power/wakeup_=
-stats.c
-index a26f019faca9..0f4c59b02d5d 100644
---- a/drivers/base/power/wakeup_stats.c
-+++ b/drivers/base/power/wakeup_stats.c
-@@ -81,15 +81,6 @@ static ssize_t last_change_ms_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(last_change_ms);
-=20
--static ssize_t name_show(struct device *dev, struct device_attribute *attr,
--			 char *buf)
--{
--	struct wakeup_source *ws =3D dev_get_drvdata(dev);
--
--	return sprintf(buf, "%s\n", ws->name);
--}
--static DEVICE_ATTR_RO(name);
--
- static ssize_t prevent_suspend_time_ms_show(struct device *dev,
- 					    struct device_attribute *attr,
- 					    char *buf)
-@@ -106,7 +97,6 @@ static ssize_t prevent_suspend_time_ms_show(struct devic=
-e *dev,
- static DEVICE_ATTR_RO(prevent_suspend_time_ms);
-=20
- static struct attribute *wakeup_source_attrs[] =3D {
--	&dev_attr_name.attr,
- 	&dev_attr_active_count.attr,
- 	&dev_attr_event_count.attr,
- 	&dev_attr_wakeup_count.attr,
-@@ -126,22 +116,35 @@ static DEFINE_IDA(wakeup_ida);
-  * wakeup_source_sysfs_add - Add wakeup_source attributes to sysfs.
-  * @parent: Device given wakeup source is associated with (or NULL if virt=
-ual).
-  * @ws: Wakeup source to be added in sysfs.
-+ * @use_ws_name: True to use ws->name or false to use 'wakeupN' for device=
- name
-  */
--int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source *w=
-s)
-+int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source *w=
-s,
-+			    bool use_ws_name)
- {
- 	struct device *dev;
- 	int id;
-=20
--	id =3D ida_alloc(&wakeup_ida, GFP_KERNEL);
--	if (id < 0)
--		return id;
--	ws->id =3D id;
-+	ws->id =3D -1;
-+	if (use_ws_name) {
-+		dev =3D device_create_with_groups(wakeup_class, parent,
-+						MKDEV(0, 0), ws,
-+						wakeup_source_groups,
-+						ws->name);
-+	} else {
-+		id =3D ida_alloc(&wakeup_ida, GFP_KERNEL);
-+		if (id < 0)
-+			return id;
-+		ws->id =3D id;
-+
-+		dev =3D device_create_with_groups(wakeup_class, parent,
-+						MKDEV(0, 0), ws,
-+						wakeup_source_groups,
-+						"wakeup%d", ws->id);
-+	}
-=20
--	dev =3D device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
--					wakeup_source_groups, "ws%d",
--					ws->id);
- 	if (IS_ERR(dev)) {
--		ida_free(&wakeup_ida, ws->id);
-+		if (ws->id >=3D 0)
-+			ida_free(&wakeup_ida, ws->id);
- 		return PTR_ERR(dev);
- 	}
-=20
-@@ -157,7 +160,8 @@ EXPORT_SYMBOL_GPL(wakeup_source_sysfs_add);
- void wakeup_source_sysfs_remove(struct wakeup_source *ws)
- {
- 	device_unregister(ws->dev);
--	ida_simple_remove(&wakeup_ida, ws->id);
-+	if (ws->id >=3D 0)
-+		ida_free(&wakeup_ida, ws->id);
- }
- EXPORT_SYMBOL_GPL(wakeup_source_sysfs_remove);
-=20
-diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-index f39f768389c8..c9fb00fca22e 100644
---- a/include/linux/pm_wakeup.h
-+++ b/include/linux/pm_wakeup.h
-@@ -107,7 +107,7 @@ extern void pm_wakeup_dev_event(struct device *dev, uns=
-igned int msec, bool hard
-=20
- /* drivers/base/power/wakeup_stats.c */
- extern int wakeup_source_sysfs_add(struct device *parent,
--				   struct wakeup_source *ws);
-+				   struct wakeup_source *ws, bool use_ws_name);
- extern void wakeup_source_sysfs_remove(struct wakeup_source *ws);
-=20
- #else /* !CONFIG_PM_SLEEP */
-diff --git a/kernel/power/wakelock.c b/kernel/power/wakelock.c
-index 826fcd97647a..7f2fc5f9b3b3 100644
---- a/kernel/power/wakelock.c
-+++ b/kernel/power/wakelock.c
-@@ -192,7 +192,7 @@ static struct wakelock *wakelock_lookup_add(const char =
-*name, size_t len,
- 	wl->ws.name =3D wl->name;
- 	wl->ws.last_time =3D ktime_get();
-=20
--	ret =3D wakeup_source_sysfs_add(NULL, &wl->ws);
-+	ret =3D wakeup_source_sysfs_add(NULL, &wl->ws, true);
- 	if (ret) {
- 		kfree(wl->name);
- 		kfree(wl);
