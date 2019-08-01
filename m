@@ -2,125 +2,102 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BFAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42449C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FFD206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uTv0KihH"
+	by mail.kernel.org (Postfix) with ESMTP id 1A08C206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403820AbfHAXpx (ORCPT
+        id S2390434AbfHAXp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:45:53 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33194 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390427AbfHAXpt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:45:49 -0400
-Received: by mail-vs1-f67.google.com with SMTP id m8so50205075vsj.0;
-        Thu, 01 Aug 2019 16:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EX8X4lO7aSaVB1FpMoDQxncs8FMEtYzW491XME/gSYQ=;
-        b=uTv0KihHzXdFtzn+LjPKqpsUXs5DAkUGjm8wB/wmTC2piN3+7ufjR8Gkc2bMAmuhEI
-         Cfx9ohunWZK6FdjhCn5oMZdAn8IvFR0ngPfc9C56hc4J/sBdN2+Z/eb/iVB3u4+FYP++
-         YZ0+8RE6Yij1Ht1M96t+C0aZmGOrrttpUJXmGZy19FeYx8UbMgHxSP2DV6dJf6N+WJ7Z
-         hTo0z0PRLdZon5magUgEiwBnhaqI8d/vqLa0UNKFOlQlB4A5ZG8TH25VKQLfVXYIPoh5
-         n+GVUoIfKxa6cvwwL4jiGFJNjvgehcO+pqA6bGwtSZrSNeRxy99oUKMOWvARbKnRGuNl
-         glQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EX8X4lO7aSaVB1FpMoDQxncs8FMEtYzW491XME/gSYQ=;
-        b=eMIRxZ7qBb/WaQWXgTA8jDhbF22kAohEnMsmkGE1s6Mo2oacECpbHx3M2Jx5vKb6tQ
-         pcowMEilY9JRslicvdR050Pud7tCoWFC34FzV8tTV1qMG/UJYYaHHeenL/xejSZZtEw3
-         drgqVps4xs7VSs19HhNfMFf/z7F2TYsfI5z2IlwDuS3nQwN8jNDI434OaJWViGpq5VAE
-         AblrRdk6pniMGtvoXNKADsxA6zryA1cOmjEWOYIIzzz8LIqd2HrAMpHyRA3w3Kt2dXni
-         ADsciyHhKsoezkbwuBL9mmoqxdiZ5LtenkDZQtU3upQYJW/c/9X51P7t6Y+xpERsUKPd
-         1ETA==
-X-Gm-Message-State: APjAAAWOj68pHqP2oxNY8LhfT3Hi/I1fbZo1A+bvd1xLlGf4aDNrxVKS
-        FDJVuhEk9wSDEgi5+tTlWqGP93UqAV4hsA+RCpg=
-X-Google-Smtp-Source: APXvYqwMxagfEomHjxLC2RbiQGAR+rGQzLMmlo5MUf4VwLIYt05EApA1Z5u6c0EjAR5+WcC4BnDGCEACOcfzlLG2eVM=
-X-Received: by 2002:a67:fd91:: with SMTP id k17mr84874201vsq.121.1564703147897;
- Thu, 01 Aug 2019 16:45:47 -0700 (PDT)
+        Thu, 1 Aug 2019 19:45:27 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:32996 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388642AbfHAXpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 19:45:23 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1htKl2-0002MK-OY; Thu, 01 Aug 2019 17:45:22 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1htKl2-00025a-Im; Thu, 01 Aug 2019 17:45:16 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu,  1 Aug 2019 17:45:11 -0600
+Message-Id: <20190801234514.7941-13-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190801234514.7941-1-logang@deltatee.com>
+References: <20190801234514.7941-1-logang@deltatee.com>
 MIME-Version: 1.0
-References: <20190801220117.14952-1-lyude@redhat.com>
-In-Reply-To: <20190801220117.14952-1-lyude@redhat.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Fri, 2 Aug 2019 09:45:36 +1000
-Message-ID: <CACAvsv4RUe7RpRFcOqigyKMdXm-z0VaiF7RqVHL1bGmRALU3kw@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH] PCI: Use pci_reset_bus() in quirk_reset_lenovo_thinkpad_50_nvgpu()
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     ML nouveau <nouveau@lists.freedesktop.org>,
-        linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Aaron Plattner <aplattner@nvidia.com>,
-        Maik Freudenberg <hhfeuer@gmx.de>,
-        linux-kernel@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v7 12/14] block: don't check blk_rq_is_passthrough() in blk_do_io_stat()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2 Aug 2019 at 08:01, Lyude Paul <lyude@redhat.com> wrote:
->
-> Since quirk_nvidia_hda() was added there's now two nvidia device
-> functions on any laptops with nvidia GPUs: the HDA controller, and the
-> GPU itself. Unfortunately this has the sideaffect of breaking
-> quirk_reset_lenovo_thinkpad_50_nvgpu() since pci_reset_function() was
-> using pci_parent_bus_reset() to reset the GPU's respective PCI bus, and
-> pci_parent_bus_reset() does not work on busses which have more then a
-> single device function present.
->
-> So, fix this by simply calling pci_reset_bus() instead which properly
-> resets the GPU bus and all device functions under it, including both the
-> GPU and the HDA controller.
->
-> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Daniel Drake <drake@endlessm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Aaron Plattner <aplattner@nvidia.com>
-> Cc: Peter Wu <peter@lekensteyn.nl>
-> Cc: Ilia Mirkin <imirkin@alum.mit.edu>
-> Cc: Karol Herbst <kherbst@redhat.com>
-> Cc: Maik Freudenberg <hhfeuer@gmx.de>
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-Acked-by: Ben Skeggs <bskeggs@redhat.com>
+Instead of checking blk_rq_is_passthruough() for every call to
+blk_do_io_stat(), don't set RQF_IO_STAT for passthrough requests.
+This should be equivalent, and opens the possibility of passthrough
+requests specifically requesting statistics tracking.
 
-> ---
->  drivers/pci/quirks.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 208aacf39329..44c4ae1abd00 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5256,7 +5256,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
->          */
->         if (ioread32(map + 0x2240c) & 0x2) {
->                 pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
-> -               ret = pci_reset_function(pdev);
-> +               ret = pci_reset_bus(pdev);
->                 if (ret < 0)
->                         pci_err(pdev, "Failed to reset GPU: %d\n", ret);
->         }
-> --
-> 2.21.0
->
-> _______________________________________________
-> Nouveau mailing list
-> Nouveau@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/nouveau
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ block/blk-mq.c | 2 +-
+ block/blk.h    | 5 ++---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index f78d3287dd82..66cb5bfa2ebf 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -318,7 +318,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
+ 	rq->cmd_flags = op;
+ 	if (data->flags & BLK_MQ_REQ_PREEMPT)
+ 		rq->rq_flags |= RQF_PREEMPT;
+-	if (blk_queue_io_stat(data->q))
++	if (blk_queue_io_stat(data->q) && !blk_rq_is_passthrough(rq))
+ 		rq->rq_flags |= RQF_IO_STAT;
+ 	INIT_LIST_HEAD(&rq->queuelist);
+ 	INIT_HLIST_NODE(&rq->hash);
+diff --git a/block/blk.h b/block/blk.h
+index de6b2e146d6e..554efa769bfe 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -234,13 +234,12 @@ int blk_dev_init(void);
+  *
+  *	a) it's attached to a gendisk, and
+  *	b) the queue had IO stats enabled when this request was started, and
+- *	c) it's a file system request
++ *	c) it's a file system request (RQF_IO_STAT will not be set otherwise)
+  */
+ static inline bool blk_do_io_stat(struct request *rq)
+ {
+ 	return rq->rq_disk &&
+-	       (rq->rq_flags & RQF_IO_STAT) &&
+-		!blk_rq_is_passthrough(rq);
++	       (rq->rq_flags & RQF_IO_STAT);
+ }
+ 
+ static inline void req_set_nomerge(struct request_queue *q, struct request *req)
+-- 
+2.20.1
+
