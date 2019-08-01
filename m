@@ -2,91 +2,153 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F3BC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99B3C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BC9206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:00:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bt6gngaa"
+	by mail.kernel.org (Postfix) with ESMTP id CB20F20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732461AbfHAQAV (ORCPT
+        id S1732510AbfHAQAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:00:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44560 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729117AbfHAQAU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:00:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=V+mqoypCyVp89zi7d87lU2RRcj8SerxFad94nqYfDDE=; b=bt6gngaaXNa1IgChUaFBMxOpq
-        K1NbxFgScMZWeTQ73hgbZzAx4ufmsIUGLnz6lvvQJ6x5x9kT/i9sPC5jWyLi95xJWvW/47+MXAtDF
-        rIxaoHaEtcFSyXxXF43v5KfgS3OyU+4BBTPDlndKEqrlEelpyXpfgbdl/mRkRLZAk+Y2fHVQc94UV
-        tkOs/n9yRp+Ps6geOWY44SabkW5UBW5WXk+7k+AnO/GP2Wm1vCshU0UK/vFtMMGX9QwUueUrIm3Zn
-        t0n2fDCZJ7ATyuYUOHF42+YhnnsUNO6xeZyKRmo1uYSWE+FaIzApgbGwXzYKGGlgHQJHoe84ILoOy
-        DDx8UpF5Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1htDUz-00024S-4b; Thu, 01 Aug 2019 16:00:13 +0000
-Date:   Thu, 1 Aug 2019 09:00:13 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     catalin.marinas@arm.com, will@kernel.org, andreyknvl@google.com,
-        aryabinin@virtuozzo.com, glider@google.com, dvyukov@google.com,
-        linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64/mm: fix variable 'tag' set but not used
-Message-ID: <20190801160013.GK4700@bombadil.infradead.org>
-References: <1564670825-4050-1-git-send-email-cai@lca.pw>
+        Thu, 1 Aug 2019 12:00:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46452 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729117AbfHAQAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:00:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7FF1DAC2E;
+        Thu,  1 Aug 2019 16:00:27 +0000 (UTC)
+Message-ID: <ed5388412df78ad0a9ed69cdf3ac716eac075141.camel@suse.de>
+Subject: Re: [PATCH 6/8] dma-direct: turn ARCH_ZONE_DMA_BITS into a variable
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     catalin.marinas@arm.com, wahrenst@gmx.net, marc.zyngier@arm.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-mm@kvack.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org, eric@anholt.net,
+        mbrugger@suse.com, akpm@linux-foundation.org,
+        frowand.list@gmail.com, linux-rpi-kernel@lists.infradead.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
+Date:   Thu, 01 Aug 2019 17:59:34 +0200
+In-Reply-To: <20190801140452.GB23435@lst.de>
+References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
+         <20190731154752.16557-7-nsaenzjulienne@suse.de>
+         <20190801140452.GB23435@lst.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-1xpVXG9aO5tI8LW1PkIr"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564670825-4050-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 10:47:05AM -0400, Qian Cai wrote:
 
-Given this:
+--=-1xpVXG9aO5tI8LW1PkIr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> -#define __tag_set(addr, tag)	(addr)
-> +static inline const void *__tag_set(const void *addr, u8 tag)
-> +{
-> +	return addr;
-> +}
-> +
->  #define __tag_reset(addr)	(addr)
->  #define __tag_get(addr)		0
->  #endif
-> @@ -301,8 +305,8 @@ static inline void *phys_to_virt(phys_addr_t x)
->  #define page_to_virt(page)	({					\
->  	unsigned long __addr =						\
->  		((__page_to_voff(page)) | PAGE_OFFSET);			\
-> -	unsigned long __addr_tag =					\
-> -		 __tag_set(__addr, page_kasan_tag(page));		\
-> +	const void *__addr_tag =					\
-> +		__tag_set((void *)__addr, page_kasan_tag(page));	\
->  	((void *)__addr_tag);						\
->  })
+Hi Christoph, thanks for the review.
 
-Can't you simplify that macro to:
+On Thu, 2019-08-01 at 16:04 +0200, Christoph Hellwig wrote:
+> A few nitpicks, otherwise this looks great:
+>=20
+> > @@ -201,7 +202,7 @@ static int __init mark_nonram_nosave(void)
+> >   * everything else. GFP_DMA32 page allocations automatically fall back=
+ to
+> >   * ZONE_DMA.
+> >   *
+> > - * By using 31-bit unconditionally, we can exploit ARCH_ZONE_DMA_BITS =
+to
+> > + * By using 31-bit unconditionally, we can exploit arch_zone_dma_bits =
+to
+> >   * inform the generic DMA mapping code.  32-bit only devices (if not
+> > handled
+> >   * by an IOMMU anyway) will take a first dip into ZONE_NORMAL and get
+> >   * otherwise served by ZONE_DMA.
+> > @@ -237,9 +238,18 @@ void __init paging_init(void)
+> >  	printk(KERN_DEBUG "Memory hole size: %ldMB\n",
+> >  	       (long int)((top_of_ram - total_ram) >> 20));
+> > =20
+> > +	/*
+> > +	 * Allow 30-bit DMA for very limited Broadcom wifi chips on many
+> > +	 * powerbooks.
+> > +	 */
+> > +	if (IS_ENABLED(CONFIG_PPC32))
+> > +		arch_zone_dma_bits =3D 30;
+> > +	else
+> > +		arch_zone_dma_bits =3D 31;
+> > +
+>=20
+> So the above unconditionally comment obviously isn't true any more, and
+> Ben also said for the recent ppc32 hack he'd prefer dynamic detection.
+>=20
+> Maybe Ben and or other ppc folks can chime in an add a patch to the serie=
+s
+> to sort this out now that we have a dynamic ZONE_DMA threshold?
 
- #define page_to_virt(page)	({					\
- 	unsigned long __addr =						\
- 		((__page_to_voff(page)) | PAGE_OFFSET);			\
--	unsigned long __addr_tag =					\
--		 __tag_set(__addr, page_kasan_tag(page));		\
--	((void *)__addr_tag);						\
-+	__tag_set((void *)__addr, page_kasan_tag(page));		\
- })
+Noted, for now I'll remove the comment.
+
+> > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> > index 59bdceea3737..40dfc9b4ee4c 100644
+> > --- a/kernel/dma/direct.c
+> > +++ b/kernel/dma/direct.c
+> > @@ -19,9 +19,7 @@
+> >   * Most architectures use ZONE_DMA for the first 16 Megabytes, but
+> >   * some use it for entirely different regions:
+> >   */
+> > -#ifndef ARCH_ZONE_DMA_BITS
+> > -#define ARCH_ZONE_DMA_BITS 24
+> > -#endif
+> > +unsigned int arch_zone_dma_bits __ro_after_init =3D 24;
+>=20
+> I'd prefer to drop the arch_ prefix and just calls this zone_dma_bits.
+> In the long run we really need to find a way to just automatically set
+> this from the meminit code, but that is out of scope for this series.
+> For now can you please just update the comment above to say something
+> like:
+>=20
+> /*
+>  * Most architectures use ZONE_DMA for the first 16 Megabytes, but some u=
+se it
+>  * it for entirely different regions.  In that case the arch code needs t=
+o
+>  * override the variable below for dma-direct to work properly.
+>  */
+
+Ok perfect.
+
+
+--=-1xpVXG9aO5tI8LW1PkIr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1DDGYACgkQlfZmHno8
+x/7w9wgAsuuhgVK1nlC7WgrB2sfSYqL6HTJlDfkLJ2RMgzu/WSw4RJsje86on5R9
+NmRSTVntXnCdpTNiKcSEKP7MnrVtMh2TtopfTOCvgho/uDJsc4DPAqZaLHO4quzo
+ZfimsWkcpC6n/E8ybEcew+6U7BIyqJPtqxgdkXz98gLQ1NK1wJU2x0Gt+KXT5a/0
+hR3hA3whz8yIe4hwQTEiAzX/LnSP8+Yp+g1LLFjYveqt2RUbfC/udykYkLS7LdoO
+SJ6j5S/1jRpvusBjENkY3PQiRGrhfRnT4qxVSdpkK/rMG6pLMW4l9YjfbQCLOFhn
+8qxZKNifDs1KxpZjExjd4Lisum4nhw==
+=nw8i
+-----END PGP SIGNATURE-----
+
+--=-1xpVXG9aO5tI8LW1PkIr--
+
