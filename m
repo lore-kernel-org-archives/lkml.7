@@ -2,184 +2,140 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F65C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D3CC32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4262067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ABA6214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="n8/0XorC"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="t4aFmpM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbfHACMd (ORCPT
+        id S1729686AbfHACSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 22:12:33 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44364 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfHACMd (ORCPT
+        Wed, 31 Jul 2019 22:18:25 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:41137 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729603AbfHACSU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 22:12:33 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 268C6806CB;
-        Thu,  1 Aug 2019 14:12:30 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1564625550;
-        bh=BJLWyjePC2+DBjwmNFu0d5Smcae6KotI87TPj31Ta1s=;
-        h=From:To:Cc:Subject:Date;
-        b=n8/0XorCrJswqUn9NfbqYYPlt64vFpvc3/IhMiayXavNkA/vKYF6Rz4sfeo3C5rtI
-         3NIUbnx5tkYijcT//IQ+9LOWLUIwnopClchyGUvil0dUyldFuO9Zj6RfZdCWAQSDZZ
-         YIdZyfNhq+A+fn+sjzIMj9i/BvgyPppa2so5xZGOqekNgAlii7samzZJT0aDSpjEBO
-         bfJcd23OmkUc+n9ZhuHQ+K0VbRJysMLZQ2quQFTNtXmSvX/ERIUYp7e9rGkBX9waPJ
-         71pbl8iZWkcCle//8nbQFT6YG1bUHAZKTlSuT50ztGEPnke0uTbFCP4MUYXgSdhSni
-         NtwVnR0NRUJEw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d424a8d0000>; Thu, 01 Aug 2019 14:12:29 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 7023313EEED;
-        Thu,  1 Aug 2019 14:12:31 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 330BC1E0504; Thu,  1 Aug 2019 14:12:29 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        christophe.leroy@c-s.fr, malat@debian.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2] powerpc: Support CMDLINE_EXTEND
-Date:   Thu,  1 Aug 2019 14:12:06 +1200
-Message-Id: <20190801021206.26799-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.22.0
+        Wed, 31 Jul 2019 22:18:20 -0400
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x712I9jD007756;
+        Thu, 1 Aug 2019 11:18:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x712I9jD007756
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564625890;
+        bh=bXXXUmyTcVtdjMx8G5OoQyejaocjSPDe16O/9zTAkoQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=t4aFmpM+PFuTAVsZVLiF1SoU65IJA84Ahaw2ehugDuK2yZw8wiUN46sTurIfP4xYp
+         MD2DlJKF2zCHAe+QmpIML4laLG/JHHd7qzt4FgusuXGAZJY5NH5wyuVIqGsfS/yyBZ
+         +W2ftIl6Dcf6rZlfMdOkwBk4WX0y5nRV0rkTjlKZ26F39/DMZVPFRWQesP3VUw1E0t
+         LShcc5Jkb+Gw5wvy3+zwjVMfV28RRTO1/1lCY0TIOeTiuaDHcYHuMMuQCk5iuRmq/C
+         kuPkzCq39+xJCtTjG6F5Hr+P9OhMP6cgRot3RRIr3XNoWtoUXwVpYcDwkn5JR3tOPD
+         zIs3hlPlAlyDw==
+X-Nifty-SrcIP: [209.85.217.43]
+Received: by mail-vs1-f43.google.com with SMTP id m23so47794602vso.1;
+        Wed, 31 Jul 2019 19:18:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAWr4fRdNKTFt1y3mGAdqEOQj47Ihl1TwetbMf3cYC79cm2pRpRx
+        sAjV2k8lekwhE/U/O6lC1XSMq7qSm3Vq2/H7gR8=
+X-Google-Smtp-Source: APXvYqyKYbsfX9QIAmkSUdwHw2bT7AgoOn++jSjSKiO+rYMkyJP7vGE+fDBiuC4AOMDk9t/lW5TUjnDTLiPNpUkCN1I=
+X-Received: by 2002:a67:fc45:: with SMTP id p5mr18937841vsq.179.1564625888758;
+ Wed, 31 Jul 2019 19:18:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
+ <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com> <20190731194419.GB4084@kunai>
+In-Reply-To: <20190731194419.GB4084@kunai>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 1 Aug 2019 11:17:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ6siWHU+N2c+6gqh7hHEJ_aDrVoiWnrTq1jiXQWSYYBA@mail.gmail.com>
+Message-ID: <CAK7LNAQ6siWHU+N2c+6gqh7hHEJ_aDrVoiWnrTq1jiXQWSYYBA@mail.gmail.com>
+Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bring powerpc in line with other architectures that support extending or
-overriding the bootloader provided command line.
+Hi.
 
-The current behaviour is most like CMDLINE_FROM_BOOTLOADER where the
-bootloader command line is preferred but the kernel config can provide a
-fallback so CMDLINE_FROM_BOOTLOADER is the default. CMDLINE_EXTEND can
-be used to append the CMDLINE from the kernel config to the one provided
-by the bootloader.
+On Thu, Aug 1, 2019 at 4:44 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+> Hi Javier,
+>
+> thank you for providing the extra information.
+>
+> (And Kieran, thanks for the patch!)
+>
+> > The other option is to remove i2c_of_match_device() and don't make OF match
+> > to fallback to i2c_of_match_device_sysfs(). This is what happens in the ACPI
+> > case, since i2c_device_match() just calls acpi_driver_match_device() directly
+> > and doesn't have a wrapper function that fallbacks to sysfs matching.
+> >
+> > In this case an I2C device ID table would be required if the devices have to
+> > be instantiated through sysfs. That way the I2C table would be used both for
+> > auto-loading and also to match the device when it doesn't have an of_node.
+>
+> That would probably mean that only a minority of drivers will not add an I2C
+> device ID table because it is easy to add an you get the sysfs feature?
+>
+> Then we are back again with the situation that most drivers will have
+> multiple tables. With the minor change that the I2C device id table is
+> not required anymore by the core, but it will be just very useful to
+> have? Or?
+>
+> > If the former is the correct way to solve this then the patch looks good to me.
+> >
+> > Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+>
+> For this actual patch from Kieran, I'd like to hear an opinion from the
+> people maintaining modpost.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-While I'm at it does anyone think it's worth getting rid of the default C=
-MDLINE
-value if CMDLINE_BOOL and maybe CMDLINE_BOOL? Every defconfig in the kern=
-el
-that sets CMDLINE_BOOL=3Dy also sets CMDLINE to something other than
-"console=3DttyS0,9600 console=3Dtty0 root=3D/dev/sda2". Removing CMDLINE_=
-BOOL and
-unconditionally setting the default value of CMDLINE to "" would clean up=
- the
-Kconfig even more.
 
-Changes in v2:
-- incorporate ideas from Christope's patch https://patchwork.ozlabs.org/p=
-atch/1074126/
+As you see 'git log scripts/mod/file2alias.c',
+this file is touched by every subsystem.
 
- arch/powerpc/Kconfig            | 20 +++++++++++++++++++-
- arch/powerpc/kernel/prom_init.c | 26 +++++++++++++++++++++++++-
- 2 files changed, 44 insertions(+), 2 deletions(-)
+So, the decision is up to you, Wolfram.
+And, you can pick this to your tree if you like.
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 77f6ebf97113..d413fe1b4058 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -852,15 +852,33 @@ config CMDLINE
- 	  some command-line options at build time by entering them here.  In
- 	  most cases you will need to specify the root device here.
-=20
-+choice
-+	prompt "Kernel command line type" if CMDLINE !=3D ""
-+	default CMDLINE_FROM_BOOTLOADER
-+
-+config CMDLINE_FROM_BOOTLOADER
-+	bool "Use bootloader kernel arguments if available"
-+	help
-+	  Uses the command-line options passed by the boot loader. If
-+	  the boot loader doesn't provide any, the default kernel command
-+	  string provided in CMDLINE will be used.
-+
-+config CMDLINE_EXTEND
-+	bool "Extend bootloader kernel arguments"
-+	help
-+	  The command-line arguments provided by the boot loader will be
-+	  appended to the default kernel command string.
-+
- config CMDLINE_FORCE
- 	bool "Always use the default kernel command string"
--	depends on CMDLINE_BOOL
- 	help
- 	  Always use the default kernel command string, even if the boot
- 	  loader passes other arguments to the kernel.
- 	  This is useful if you cannot or don't want to change the
- 	  command-line options your boot loader passes to the kernel.
-=20
-+endchoice
-+
- config EXTRA_TARGETS
- 	string "Additional default image types"
- 	help
-diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_i=
-nit.c
-index 514707ef6779..df29f141dbd2 100644
---- a/arch/powerpc/kernel/prom_init.c
-+++ b/arch/powerpc/kernel/prom_init.c
-@@ -310,6 +310,25 @@ static size_t __init prom_strlcpy(char *dest, const =
-char *src, size_t size)
- 	return ret;
- }
-=20
-+static size_t __init prom_strlcat(char *dest, const char *src, size_t co=
-unt)
-+{
-+	size_t dsize =3D prom_strlen(dest);
-+	size_t len =3D prom_strlen(src);
-+	size_t res =3D dsize + len;
-+
-+	/* This would be a bug */
-+	BUG_ON(dsize >=3D count);
-+
-+	dest +=3D dsize;
-+	count -=3D dsize;
-+	if (len >=3D count)
-+		len =3D count-1;
-+	memcpy(dest, src, len);
-+	dest[len] =3D 0;
-+	return res;
-+
-+}
-+
- #ifdef CONFIG_PPC_PSERIES
- static int __init prom_strtobool(const char *s, bool *res)
- {
-@@ -761,8 +780,13 @@ static void __init early_cmdline_parse(void)
- 	p =3D prom_cmd_line;
- 	if ((long)prom.chosen > 0)
- 		l =3D prom_getprop(prom.chosen, "bootargs", p, COMMAND_LINE_SIZE-1);
--	if (IS_ENABLED(CONFIG_CMDLINE_BOOL) && (l <=3D 0 || p[0] =3D=3D '\0')) =
-/* dbl check */
-+
-+	if (IS_ENABLED(CONFIG_CMDLINE_FORCE) || l <=3D 0 || p[0] =3D=3D '\0')
- 		prom_strlcpy(prom_cmd_line, CONFIG_CMDLINE, sizeof(prom_cmd_line));
-+	else if (IS_ENABLED(CONFIG_CMDLINE_EXTEND))
-+		prom_strlcat(prom_cmd_line, " " CONFIG_CMDLINE,
-+			     sizeof(prom_cmd_line));
-+
- 	prom_printf("command line: %s\n", prom_cmd_line);
-=20
- #ifdef CONFIG_PPC64
---=20
-2.22.0
 
+The implementation is really trivial.
+
+
+As Javier pointed out, this discussion comes down to
+"do we want to fall back to i2c_of_match_device_sysfs()?"
+
+If a driver supports DT and devices are instantiated via DT,
+in which situation is this useful?
+Do legacy non-DT platforms need this?
+
+
+
+> The aproach looks okay to me, yet I can't
+> tell how "easy" we are with adding new types like 'i2c_of'.
+
+As far as I understood, this patch provides a shorthand.
+You can save one table, but still get the
+same MODULE_ALIAS in the *.mod.c file.
+You need to add two MODULE_DEVICE_TABLE() though.
+
+MODULE_DEVICE_TABLE(of, si4713_of_match);
+MODULE_DEVICE_TABLE(i2c_of, si4713_of_match);
+
+
+-- 
+Best Regards
+Masahiro Yamada
