@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342E4C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41577C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F986206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D060206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390406AbfHAXJa (ORCPT
+        id S2390417AbfHAXJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:09:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30262 "EHLO
+        Thu, 1 Aug 2019 19:09:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16642 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732128AbfHAXIy (ORCPT
+        by vger.kernel.org with ESMTP id S2388033AbfHAXIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 1 Aug 2019 19:08:54 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71N7MAt143660;
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71N7Dgb084087;
         Thu, 1 Aug 2019 19:08:14 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u47v133fm-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u460ef3hf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 01 Aug 2019 19:08:14 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71N7oT0144972;
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71N7rOu085384;
         Thu, 1 Aug 2019 19:08:13 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u47v133f5-1
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u460ef3gs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 01 Aug 2019 19:08:13 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71N4whZ002995;
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71N4xGh021252;
         Thu, 1 Aug 2019 23:08:12 GMT
 Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma01dal.us.ibm.com with ESMTP id 2u0e87hb4f-1
+        by ppma03dal.us.ibm.com with ESMTP id 2u0e8799se-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 01 Aug 2019 23:08:12 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71N8BmT50921972
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71N8BEr43909542
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Thu, 1 Aug 2019 23:08:11 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 544EDB205F;
+        by IMSVA (Postfix) with ESMTP id 8C827B206B;
         Thu,  1 Aug 2019 23:08:11 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 333EDB2070;
+        by IMSVA (Postfix) with ESMTP id 78BEBB2072;
         Thu,  1 Aug 2019 23:08:11 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Thu,  1 Aug 2019 23:08:11 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 6651816C9A56; Thu,  1 Aug 2019 16:08:12 -0700 (PDT)
+        id 73A1716C9A58; Thu,  1 Aug 2019 16:08:12 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -65,9 +65,9 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 15/18] rcu/nocb: Use build-time no-CBs check in rcu_do_batch()
-Date:   Thu,  1 Aug 2019 16:08:07 -0700
-Message-Id: <20190801230810.21570-15-paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 17/18] rcu/nocb: Use build-time no-CBs check in rcu_pending()
+Date:   Thu,  1 Aug 2019 16:08:09 -0700
+Message-Id: <20190801230810.21570-17-paulmck@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190801230744.GA19115@linux.ibm.com>
 References: <20190801230744.GA19115@linux.ibm.com>
@@ -84,56 +84,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, rcu_do_batch() invokes rcu_segcblist_is_offloaded() each time
-it needs to know whether the current CPU is a no-CBs CPU.  Given that it
-is not possible to change the no-CBs status of a CPU after boot, and given
-that it is not possible to even have no-CBs CPUs in CONFIG_RCU_NOCB_CPU=n
-kernels, this per-callback invocation wastes CPU.  This commit therefore
-created a const on-stack variable to allow this check to be done only
-once per rcu_do_batch() invocation.
+Currently, rcu_pending() invokes rcu_segcblist_is_offloaded() even
+in CONFIG_RCU_NOCB_CPU=n kernels, which cannot possibly be offloaded.
+Given that rcu_pending() is on a fastpath, it makes sense to check for
+CONFIG_RCU_NOCB_CPU=y before invoking rcu_segcblist_is_offloaded().
+This commit therefore makes this change.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- kernel/rcu/tree.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ kernel/rcu/tree.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index e5f30b364276..16dabd6b36d7 100644
+index 14939273d120..fb6b80aa34f6 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -2087,6 +2087,8 @@ int rcutree_dead_cpu(unsigned int cpu)
- static void rcu_do_batch(struct rcu_data *rdp)
- {
- 	unsigned long flags;
-+	const bool offloaded = IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
-+			       rcu_segcblist_is_offloaded(&rdp->cblist);
- 	struct rcu_head *rhp;
- 	struct rcu_cblist rcl = RCU_CBLIST_INITIALIZER(rcl);
- 	long bl, count;
-@@ -2128,12 +2130,11 @@ static void rcu_do_batch(struct rcu_data *rdp)
- 		 * Stop only if limit reached and CPU has something to do.
- 		 * Note: The rcl structure counts down from zero.
- 		 */
--		if (-rcl.len >= bl &&
--		    !rcu_segcblist_is_offloaded(&rdp->cblist) &&
-+		if (-rcl.len >= bl && !offloaded &&
- 		    (need_resched() ||
- 		     (!is_idle_task(current) && !rcu_is_callbacks_kthread())))
- 			break;
--		if (rcu_segcblist_is_offloaded(&rdp->cblist)) {
-+		if (offloaded) {
- 			WARN_ON_ONCE(in_serving_softirq());
- 			local_bh_enable();
- 			lockdep_assert_irqs_enabled();
-@@ -2175,8 +2176,7 @@ static void rcu_do_batch(struct rcu_data *rdp)
- 	rcu_nocb_unlock_irqrestore(rdp, flags);
- 
- 	/* Re-invoke RCU core processing if there are callbacks remaining. */
--	if (!rcu_segcblist_is_offloaded(&rdp->cblist) &&
--	    rcu_segcblist_ready_cbs(&rdp->cblist))
-+	if (!offloaded && rcu_segcblist_ready_cbs(&rdp->cblist))
- 		invoke_rcu_core();
- }
+@@ -2773,7 +2773,8 @@ static int rcu_pending(void)
+ 	/* Has RCU gone idle with this CPU needing another grace period? */
+ 	if (!rcu_gp_in_progress() &&
+ 	    rcu_segcblist_is_enabled(&rdp->cblist) &&
+-	    !rcu_segcblist_is_offloaded(&rdp->cblist) &&
++	    (!IS_ENABLED(CONFIG_RCU_NOCB_CPU) ||
++	     !rcu_segcblist_is_offloaded(&rdp->cblist)) &&
+ 	    !rcu_segcblist_restempty(&rdp->cblist, RCU_NEXT_READY_TAIL))
+ 		return 1;
  
 -- 
 2.17.1
