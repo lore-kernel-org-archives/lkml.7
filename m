@@ -2,132 +2,137 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8582C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE97C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C739720644
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A757214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731055AbfHAJGC (ORCPT
+        id S1731066AbfHAJGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:06:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40700 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfHAJGC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:06:02 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1ht728-0007Tj-20
-        for linux-kernel@vger.kernel.org; Thu, 01 Aug 2019 09:06:00 +0000
-Received: by mail-pg1-f199.google.com with SMTP id h3so44757813pgc.19
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 02:05:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CE/jIvfMb8MGoIQ8tRgk5BgnN9f/9L2WwMekkyWaOOI=;
-        b=Bkt9Y3gkRSxC0CJNLMICB2hwsc5glSocnB8WIG4XccAerUaP18GJAPKbMkrQ9xJrMy
-         gQF6xMk/rmiKljVV5wYkZyrx8upnWyXqB1PfMcxwVdT2VTZk82VRQt9JiWS54aS8cfrT
-         EqNE8WRLwH0tLmu0Ff5xtBj6EBIbIvg8wE/z3ImM8GrFKt5A3eua3UMBKwAe7IujcIME
-         OyAsP74BhMOJtZku30qxNGo7r3tYMRauDush+wKxLCwv5moVP4x3R/obtX4Cvde8uOEC
-         K69Td+LNX1Btv1GbNDLYNqYf7xHbcjT+Ae1JQ7fXDPftqth+gr4mAziLzTUZPFU8irp0
-         tQmw==
-X-Gm-Message-State: APjAAAWPDk8oEl0DeOh3Gs2HILPBZXJiTJR9ScPDHldz/Mg6gpESe3M1
-        yUMMEJDfLHsLAllkrOJPQ1HhYbY+OmUjzgJ/TCV0U437Jc1/J9afSgXSOw8mKvydqvTUmOWJtdc
-        mlxD4sw2V51bWwHu1080K5HdGOOPJWOHVBWI2+RnOOQ==
-X-Received: by 2002:a17:902:23:: with SMTP id 32mr37995693pla.34.1564650358686;
-        Thu, 01 Aug 2019 02:05:58 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwAXl4RJjTfmo0Fjo42W3mWvcZyKw/aanim8XYIpsdISoCCH8mQj5GW8+GFyrYPLhWNDtgylw==
-X-Received: by 2002:a17:902:23:: with SMTP id 32mr37995661pla.34.1564650358329;
-        Thu, 01 Aug 2019 02:05:58 -0700 (PDT)
-Received: from 2001-b011-380f-37d3-ac53-c2c3-6814-e821.dynamic-ip6.hinet.net (2001-b011-380f-37d3-ac53-c2c3-6814-e821.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:ac53:c2c3:6814:e821])
-        by smtp.gmail.com with ESMTPSA id s7sm3536097pjn.28.2019.08.01.02.05.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 02:05:57 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
- suspend" has problems
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
-Date:   Thu, 1 Aug 2019 17:05:54 +0800
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>
-Content-Transfer-Encoding: 8bit
-Message-Id: <70D536BE-8DC7-4CA2-84A9-AFB067BA520E@canonical.com>
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
- <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
- <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
- <20190730213114.GK13948@localhost.localdomain>
- <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
- <20190731221956.GB15795@localhost.localdomain>
- <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Thu, 1 Aug 2019 05:06:13 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3930 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726185AbfHAJGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 05:06:13 -0400
+Received: from dggemi405-hub.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 1AF422B956612A72CA01;
+        Thu,  1 Aug 2019 17:06:11 +0800 (CST)
+Received: from DGGEMI423-HUB.china.huawei.com (10.1.199.152) by
+ dggemi405-hub.china.huawei.com (10.3.17.143) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 1 Aug 2019 17:06:10 +0800
+Received: from DGGEMI524-MBX.china.huawei.com ([169.254.7.227]) by
+ dggemi423-hub.china.huawei.com ([10.1.199.152]) with mapi id 14.03.0439.000;
+ Thu, 1 Aug 2019 17:06:02 +0800
+From:   chengzhihao <chengzhihao1@huawei.com>
+To:     "richard@nod.at" <richard@nod.at>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?gb2312?B?tPC4tDogW1JGQ10gdWJpOiB1Ymlfd2xfZ2V0X3BlYjogUmVwbGFjZSBhIGxp?=
+ =?gb2312?B?bWl0ZWQgbnVtYmVyIG9mIGF0dGVtcHRzIHdpdGggcG9sbGluZyB3aGlsZSBn?=
+ =?gb2312?Q?etting_PEB?=
+Thread-Topic: [RFC] ubi: ubi_wl_get_peb: Replace a limited number of
+ attempts with polling while getting PEB
+Thread-Index: AQHVSEfLw0ApResN0UiZm+hnG/hjmKbl/81A
+Date:   Thu, 1 Aug 2019 09:06:02 +0000
+Message-ID: <0B80F9D4116B2F4484E7279D5A66984F7A85FB@dggemi524-mbx.china.huawei.com>
+References: <1564650469-130037-1-git-send-email-chengzhihao1@huawei.com>
+In-Reply-To: <1564650469-130037-1-git-send-email-chengzhihao1@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.224.82]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 06:33, Rafael J. Wysocki <rafael@kernel.org> wrote:
-
-> On Thu, Aug 1, 2019 at 12:22 AM Keith Busch <kbusch@kernel.org> wrote:
->> On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
->>> A couple of remarks if you will.
->>>
->>> First, we don't know which case is the majority at this point.  For
->>> now, there is one example of each, but it may very well turn out that
->>> the SK Hynix BC501 above needs to be quirked.
->>>
->>> Second, the reference here really is 5.2, so if there are any systems
->>> that are not better off with 5.3-rc than they were with 5.2, well, we
->>> have not made progress.  However, if there are systems that are worse
->>> off with 5.3, that's bad.  In the face of the latest findings the only
->>> way to avoid that is to be backwards compatible with 5.2 and that's
->>> where my patch is going.  That cannot be achieved by quirking all
->>> cases that are reported as "bad", because there still may be
->>> unreported ones.
->>
->> I have to agree. I think your proposal may allow PCI D3cold,
->
-> Yes, it may.
-
-Somehow the 9380 with Toshiba NVMe never hits SLP_S0 with or without  
-Rafael’s patch.
-But the “real” s2idle power consumption does improve with the patch.
-
-Can we use a DMI based quirk for this platform? It seems like a platform  
-specific issue.
-
->
->> In which case we do need to reintroduce the HMB handling.
->
-> Right.
-
-The patch alone doesn’t break HMB Toshiba NVMe I tested. But I think it’s  
-still safer to do proper HMB handling.
-
-Kai-Heng
-
+SSBkb24ndCBxdWl0ZSB1bmRlcnN0YW5kIHdoeSBhIGxpbWl0ZWQgbnVtYmVyIG9mIGF0dGVtcHRz
+IGhhdmUgYmVlbiBtYWRlIHRvIGdldCBhIGZyZWUgUEVCIGluIHViaV93bF9nZXRfcGViIChpbiBm
+YXN0bWFwLXdsLmMpLiBJIHByb3Bvc2VkIHRoaXMgUEFUQ0ggd2l0aCByZWZlcmVuY2UgdG8gdGhl
+IGltcGxlbWVudGF0aW9uIG9mIHViaV93bF9nZXRfcGViIChpbiB3bC5jKS4gQXMgZmFyIGFzIEkg
+a25vdywgZ2V0dGluZyBQRUIgYnkgcG9sbGluZyBwcm9iYWJseSB3b24ndCBmYWxsIGludG8gc29m
+dC1sb2NrdXAuDQp1YmlfdXBkYXRlX2Zhc3RtYXAgbWF5IGFkZCBuZXcgdGFza3MgKGluY2x1ZGlu
+ZyBlcmFzZSB0YXNrIG9yIHdsIHRhc2trLCB3bCB0YXNrcyBnZW5lcmFsbHkgZG8gbm90IGdlbmVy
+YXRlIGFkZGl0aW9uYWwgZnJlZSBQRUJzKSB0byB1YmktPndvcmtzLCBhbmQgcHJvZHVjZV9mcmVl
+X3BlYiB3aWxsIGV2ZW50dWFsbHkgY29tcGxldGUgYWxsIHRhc2tzIGluIHViaS0+d29ya3Mgb3Ig
+b2J0YWluIGFuIGZyZWUgUEVCIHRoYXQgY2FuIGJlIGZpbGxlZCBpbnRvIHBvb2wuDQoNCi0NCkNo
+ZW5nIHpoaWhhbw0KDQotLS0tLdPKvP7Urbz+LS0tLS0NCreivP7IyzogY2hlbmd6aGloYW8gDQq3
+osvNyrG85DogMjAxOcTqONTCMcjVIDE3OjA4DQrK1bz+yMs6IHJpY2hhcmRAbm9kLmF0OyB6aGFu
+Z3lpIChGKSA8eWkuemhhbmdAaHVhd2VpLmNvbT4NCrOty806IGxpbnV4LW10ZEBsaXN0cy5pbmZy
+YWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBjaGVuZ3poaWhhbyA8Y2hl
+bmd6aGloYW8xQGh1YXdlaS5jb20+DQrW98ziOiBbUkZDXSB1Ymk6IHViaV93bF9nZXRfcGViOiBS
+ZXBsYWNlIGEgbGltaXRlZCBudW1iZXIgb2YgYXR0ZW1wdHMgd2l0aCBwb2xsaW5nIHdoaWxlIGdl
+dHRpbmcgUEVCDQoNClJ1bm5pbmcgcHJlc3N1cmUgdGVzdCBpb19wYXJhbCAoQSBwcmVzc3VyZSB1
+YmkgdGVzdCBpbiBtdGQtdXRpbHMpIG9uIGFuIFVCSSBkZXZpY2Ugd2l0aCBmZXdlciBQRUJzIChm
+YXN0bWFwIGVuYWJsZWQpIG1heSBjYXVzZSBFTk9TUEMgZXJyb3JzIGFuZCBtYWtlIFVCSSBkZXZp
+Y2UgcmVhZC1vbmx5LCBidXQgdGhlcmUgYXJlIHN0aWxsIGZyZWUgUEVCcyBvbiB0aGUgVUJJIGRl
+dmljZS4gVGhpcyBwcm9ibGVtIGNhbiBiZSBlYXNpbHkgcmVwcm9kdWNlZCBieSBwZXJmb3JtaW5n
+IHRoZSBmb2xsb3dpbmcgc3RlcHMgb24gYSAyLWNvcmUgbWFjaGluZToNCiAgJCBtb2Rwcm9iZSBu
+YW5kc2ltIGZpcnN0X2lkX2J5dGU9MHgyMCBzZWNvbmRfaWRfYnl0ZT0weDMzIHBhcnRzPTgwDQog
+ICQgbW9kcHJvYmUgdWJpIG10ZD0iMCwwIiBmbV9hdXRvY29udmVydA0KICAkIC4vaW9fcGFyYWwg
+L2Rldi91YmkwDQoNCldlIG1heSBzZWUgdGhlIGZvbGxvd2luZyB2ZXJib3NlOg0KKG91dHB1dCkN
+CiAgW2lvX3BhcmFsXSB1cGRhdGVfdm9sdW1lKCk6MTA1OiBmdW5jdGlvbiB3cml0ZSgpIGZhaWxl
+ZCB3aXRoIGVycm9yIDMwDQogIChSZWFkLW9ubHkgZmlsZSBzeXN0ZW0pDQogIFtpb19wYXJhbF0g
+dXBkYXRlX3ZvbHVtZSgpOjEwODogZmFpbGVkIHRvIHdyaXRlIDM4MCBieXRlcyBhdCBvZmZzZXQN
+CiAgOTU5MjAgb2Ygdm9sdW1lIDINCiAgW2lvX3BhcmFsXSB1cGRhdGVfdm9sdW1lKCk6MTA5OiB1
+cGRhdGU6IDk3MDg4IGJ5dGVzDQogIFtpb19wYXJhbF0gd3JpdGVfdGhyZWFkKCk6MjI3OiBmdW5j
+dGlvbiBwd3JpdGUoKSBmYWlsZWQgd2l0aCBlcnJvciAyOA0KICAoTm8gc3BhY2UgbGVmdCBvbiBk
+ZXZpY2UpDQogIFtpb19wYXJhbF0gd3JpdGVfdGhyZWFkKCk6MjI5OiBjYW5ub3Qgd3JpdGUgMTU4
+NzIgYnl0ZXMgdG8gb2ZmcyAzMTc0NCwNCiAgd3JvdGUgLTENCihkbWVzZykNCiAgdWJpMCBlcnJv
+cjogdWJpX3dsX2dldF9wZWIgW3ViaV06IFVuYWJsZSB0byBnZXQgYSBmcmVlIFBFQiBmcm9tIHVz
+ZXIgV0wNCiAgcG9vbA0KICB1YmkwIHdhcm5pbmc6IHViaV9lYmFfd3JpdGVfbGViIFt1YmldOiBz
+d2l0Y2ggdG8gcmVhZC1vbmx5IG1vZGUNCiAgdWJpMCBlcnJvcjogdWJpX2lvX3dyaXRlIFt1Ymld
+OiByZWFkLW9ubHkgbW9kZQ0KICBDUFU6IDAgUElEOiAyMDI3IENvbW06IGlvX3BhcmFsIE5vdCB0
+YWludGVkIDUuMy4wLXJjMi0wMDAwMS1nNTk4NmNkMCAjOQ0KICB1YmkwIHdhcm5pbmc6IHRyeV93
+cml0ZV92aWRfYW5kX2RhdGEgW3ViaV06IGZhaWxlZCB0byB3cml0ZSBWSUQgaGVhZGVyDQogIHRv
+IExFQiAyOjUsIFBFQiAxOA0KICBIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChpNDQw
+RlggKyBQSUlYLCAxOTk2KSwgQklPUyByZWwtMS4xMi4wDQogIC0wLWdhNjk4Yzg5OTVmLXByZWJ1
+aWx0LnFlbXUub3JnIDA0LzAxLzIwMTQNCiAgQ2FsbCBUcmFjZToNCiAgIGR1bXBfc3RhY2srMHg4
+NS8weGJhDQogICB1YmlfZWJhX3dyaXRlX2xlYisweGExZS8weGE0MCBbdWJpXQ0KICAgdm9sX2Nk
+ZXZfd3JpdGUrMHgzMDcvMHg1MjAgW3ViaV0NCiAgdWJpMCBlcnJvcjogdm9sX2NkZXZfd3JpdGUg
+W3ViaV06IGNhbm5vdCBhY2NlcHQgbW9yZSAzODAgYnl0ZXMgb2YgZGF0YSwNCiAgZXJyb3IgLTMw
+DQogICB2ZnNfd3JpdGUrMHhmYS8weDI4MA0KICAga3N5c19wd3JpdGU2NCsweGM1LzB4ZTANCiAg
+IF9feDY0X3N5c19wd3JpdGU2NCsweDIyLzB4MzANCiAgIGRvX3N5c2NhbGxfNjQrMHhiZi8weDQ0
+MA0KDQpJbiBmdW5jdGlvbiB1Ymlfd2xfZ2V0X3BlYiwgdGhlIG9wZXJhdGlvbiBvZiBmaWxsaW5n
+IHRoZSBwb29sDQoodWJpX3VwZGF0ZV9mYXN0bWFwKSB3aXRoIGZyZWUgUEVCcyBhbmQgZmV0Y2hp
+bmcgYSBmcmVlIFBFQiBmcm9tIHRoZSBwb29sIGlzIG5vdCBhdG9taWMuIEFmdGVyIHRocmVhZCBB
+IGZpbGxpbmcgdGhlIHBvb2wgd2l0aCBmcmVlIFBFQiwgZnJlZSBQRUIgbWF5IGJlIHRha2VuIGF3
+YXkgYnkgdGhyZWFkIEIuIFdoZW4gdGhyZWFkIEEgY2hlY2tzIHRoZSBleHByZXNzaW9uIGFnYWlu
+LCB0aGUgY29uZGl0aW9uIGlzIHN0aWxsIHVuc2F0aXNmYWN0b3J5LiBBdCB0aGlzIHRpbWUsIHRo
+ZXJlIG1heSBzdGlsbCBiZSBmcmVlIFBFQnMgb24gVUJJIHRoYXQgY2FuIGJlIGZpbGxlZCBpbnRv
+IHRoZSBwb29sLg0KU28sIHViaV93bF9nZXRfcGViIChpbiBmYXN0bWFwLXdpbC5jKSBzaG91bGQg
+YmUgaW1wbGVtZW50ZWQgdG8gb2J0YWluIGEgZnJlZSBQRUIgYnkgcG9sbGluZyBtZXRob2QuIFRo
+ZSBwb2xsaW5nIGV4aXQgY29uZGl0aW9uIGlzIHRoYXQgdGhlcmUgaXMgbm8gZnJlZSBQRUJzIG9u
+IFVCSSwgbm8gZnJlZSBQRUJzIGluIHBvb2wsIGFuZCB1YmktPndvcmtzX2NvdW50IGlzIDAuDQoN
+ClNpZ25lZC1vZmYtYnk6IFpoaWhhbyBDaGVuZyA8Y2hlbmd6aGloYW8xQGh1YXdlaS5jb20+DQot
+LS0NCiBkcml2ZXJzL210ZC91YmkvZmFzdG1hcC13bC5jIHwgOSArKysrKy0tLS0NCiAxIGZpbGUg
+Y2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9tdGQvdWJpL2Zhc3RtYXAtd2wuYyBiL2RyaXZlcnMvbXRkL3ViaS9mYXN0bWFwLXds
+LmMgaW5kZXggZDllMmUzYS4uYzU1MTJjZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbXRkL3ViaS9m
+YXN0bWFwLXdsLmMNCisrKyBiL2RyaXZlcnMvbXRkL3ViaS9mYXN0bWFwLXdsLmMNCkBAIC0xOTYs
+NyArMTk2LDcgQEAgc3RhdGljIGludCBwcm9kdWNlX2ZyZWVfcGViKHN0cnVjdCB1YmlfZGV2aWNl
+ICp1YmkpDQogICovDQogaW50IHViaV93bF9nZXRfcGViKHN0cnVjdCB1YmlfZGV2aWNlICp1Ymkp
+ICB7DQotCWludCByZXQsIHJldHJpZWQgPSAwOw0KKwlpbnQgcmV0Ow0KIAlzdHJ1Y3QgdWJpX2Zt
+X3Bvb2wgKnBvb2wgPSAmdWJpLT5mbV9wb29sOw0KIAlzdHJ1Y3QgdWJpX2ZtX3Bvb2wgKndsX3Bv
+b2wgPSAmdWJpLT5mbV93bF9wb29sOw0KIA0KQEAgLTIyMCwxMyArMjIwLDE0IEBAIGludCB1Ymlf
+d2xfZ2V0X3BlYihzdHJ1Y3QgdWJpX2RldmljZSAqdWJpKQ0KIAl9DQogDQogCWlmIChwb29sLT51
+c2VkID09IHBvb2wtPnNpemUpIHsNCi0JCXNwaW5fdW5sb2NrKCZ1YmktPndsX2xvY2spOw0KLQkJ
+aWYgKHJldHJpZWQpIHsNCisJCWlmICghdWJpLT5mcmVlLnJiX25vZGUgJiYgdWJpLT53b3Jrc19j
+b3VudCA9PSAwKSB7DQogCQkJdWJpX2Vycih1YmksICJVbmFibGUgdG8gZ2V0IGEgZnJlZSBQRUIg
+ZnJvbSB1c2VyIFdMIHBvb2wiKTsNCisJCQl1YmlfYXNzZXJ0KGxpc3RfZW1wdHkoJnViaS0+d29y
+a3MpKTsNCisJCQlzcGluX3VubG9jaygmdWJpLT53bF9sb2NrKTsNCiAJCQlyZXQgPSAtRU5PU1BD
+Ow0KIAkJCWdvdG8gb3V0Ow0KIAkJfQ0KLQkJcmV0cmllZCA9IDE7DQorCQlzcGluX3VubG9jaygm
+dWJpLT53bF9sb2NrKTsNCiAJCXVwX3JlYWQoJnViaS0+Zm1fZWJhX3NlbSk7DQogCQlyZXQgPSBw
+cm9kdWNlX2ZyZWVfcGViKHViaSk7DQogCQlpZiAocmV0IDwgMCkgew0KLS0NCjIuNy40DQoNCg==
