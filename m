@@ -2,201 +2,104 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA1DC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F232BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D82206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:05:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564632324;
-	bh=p93UwHtzJnT9bTmzWi9Xj9kNuVoH+OlrITuCGkgZCU0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S1CCS8ScbY+h5nV0oCcIK7gOBukDBexl3sEWxmpKluuy3y4XuhErixFaBIaH6mAxg
-	 eylFhPJnjXgs7LGgC3sxvs/1sXe52fhgSgp3+mHqde2v+IUlwnNf/z6KOijSQj0gDN
-	 grvqHnfU9eModLzlJ8AxGdwQ4vIhQKH/OJPOKngI=
+	by mail.kernel.org (Postfix) with ESMTP id C1D0B2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:06:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rqy1b9wg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbfHAEFX (ORCPT
+        id S1726403AbfHAEGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 00:05:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbfHAEFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 00:05:22 -0400
-Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F7AA206A3;
-        Thu,  1 Aug 2019 04:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564632321;
-        bh=p93UwHtzJnT9bTmzWi9Xj9kNuVoH+OlrITuCGkgZCU0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZvE7R67i5/FJqUTpXXMJgmYnrP6zkjLyIIQ94Tw1YOk7s0QqPvmNW/1maP7qQTEm/
-         vWMPM77/byfy78m7B/pqD4jpczOqeWOzwnSaKYaX6tsk4zQMH/EQLw/tBAw4Yxb5va
-         SVcj+hsNBIIFdLlvxBRGSUG5zSnPzPc9A2Lo+tQo=
-Date:   Wed, 31 Jul 2019 21:05:20 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Daniel Rosenberg <drosen@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v4 3/3] f2fs: Support case-insensitive file name lookups
-Message-ID: <20190801040520.GA84433@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190723230529.251659-1-drosen@google.com>
- <20190723230529.251659-4-drosen@google.com>
- <20190731175748.GA48637@archlinux-threadripper>
- <5d6c5da8-ad1e-26e2-0a3d-84949cd4e9aa@huawei.com>
+        Thu, 1 Aug 2019 00:06:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38048 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfHAEGY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 00:06:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id g17so71950344wrr.5
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 21:06:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0mB42y3xmrJWhBLWeWzKTdkVYurhG+q5hPYefS8udCw=;
+        b=Rqy1b9wgnbO9iiiBCq0yAP3hGF9q5tLtF+rAKGfMKigKhec6hrRDE2gbAmGB6vil2r
+         3lcZJ1qyK34AcYzj1Pc4F5LaFctVd17q/tHL6sMpyVAhjhlkvj+6WFudBTwwiM77jJg2
+         1pvNRrRsnFSe3u9RLO+v1a/eLfrm+Ons2lnZo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0mB42y3xmrJWhBLWeWzKTdkVYurhG+q5hPYefS8udCw=;
+        b=tXFjfHyjqoNVvUELdRw0mvsbXnzFHe+/PwXPHqcnlmasNviNYTLADEyDBjM34wAimZ
+         kLk885BO4ZV5dnEBDKZEx0SK18dgMhecqjVq7znjeI4P/K70cxUusXveKfRXwhou550J
+         PnBIYYcOJk2ut4LwOJhJHVVPnWpkd7I8WDwdav43ClfEq1TeAAE0i7j6GsC9Zoszl65g
+         olQN6vby1bcD3cb2d4M6P6T0tqELVAgcptxakv4mlYwROcaWD9izXE086nHNwSS4VkFG
+         K2lasew9QttfqMDeLJe9gonXAgvruNqKRybTNXi9FYLB9Y3YpNKChasgOWN1cOPsJiRh
+         Bf2Q==
+X-Gm-Message-State: APjAAAVz/t3x809Ts/i5/VtKYrgR4ceCMQsEmCAcSRXAGcLf3SlqQsAZ
+        in8N5vH7uZkE0v5MyVhkzpdqdXm5R0doekVYGrjNxQ==
+X-Google-Smtp-Source: APXvYqycKy7N26liWehbx4OB6WFB2ks3ASboEt4UcIJYI8SMe0JfZCnvhCeu+F7MPJNgeMKOB0gT4IRbMod1SEgn704=
+X-Received: by 2002:adf:f08f:: with SMTP id n15mr52081058wro.213.1564632382431;
+ Wed, 31 Jul 2019 21:06:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d6c5da8-ad1e-26e2-0a3d-84949cd4e9aa@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+References: <20190619121540.29320-1-boris.brezillon@collabora.com> <20190619121540.29320-8-boris.brezillon@collabora.com>
+In-Reply-To: <20190619121540.29320-8-boris.brezillon@collabora.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Thu, 1 Aug 2019 13:06:10 +0900
+Message-ID: <CAHD77HksotqFBTE84rRM=DuNFX=YJPs=YnsuFkaN-pWUNCtoxA@mail.gmail.com>
+Subject: Re: [PATCH 7/9] media: hantro: Add core bits to support H264 decoding
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hertz Wong <hertz.wong@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01, Chao Yu wrote:
-> Hi Nathan,
-> 
-> Thanks for the report! :)
-> 
-> On 2019/8/1 1:57, Nathan Chancellor wrote:
-> > Hi all,
-> > 
-> > <snip>
-> > 
-> >> diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
-> >> index cc82f142f811f..99e79934f5088 100644
-> >> --- a/fs/f2fs/hash.c
-> >> +++ b/fs/f2fs/hash.c
-> >> @@ -14,6 +14,7 @@
-> >>  #include <linux/f2fs_fs.h>
-> >>  #include <linux/cryptohash.h>
-> >>  #include <linux/pagemap.h>
-> >> +#include <linux/unicode.h>
-> >>  
-> >>  #include "f2fs.h"
-> >>  
-> >> @@ -67,7 +68,7 @@ static void str2hashbuf(const unsigned char *msg, size_t len,
-> >>  		*buf++ = pad;
-> >>  }
-> >>  
-> >> -f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
-> >> +static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
-> >>  				struct fscrypt_name *fname)
-> >>  {
-> >>  	__u32 hash;
-> >> @@ -103,3 +104,35 @@ f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
-> >>  	f2fs_hash = cpu_to_le32(hash & ~F2FS_HASH_COL_BIT);
-> >>  	return f2fs_hash;
-> >>  }
-> >> +
-> >> +f2fs_hash_t f2fs_dentry_hash(const struct inode *dir,
-> >> +		const struct qstr *name_info, struct fscrypt_name *fname)
-> >> +{
-> >> +#ifdef CONFIG_UNICODE
-> >> +	struct f2fs_sb_info *sbi = F2FS_SB(dir->i_sb);
-> >> +	const struct unicode_map *um = sbi->s_encoding;
-> >> +	int r, dlen;
-> >> +	unsigned char *buff;
-> >> +	struct qstr *folded;
-> >> +
-> >> +	if (name_info->len && IS_CASEFOLDED(dir)) {
-> >> +		buff = f2fs_kzalloc(sbi, sizeof(char) * PATH_MAX, GFP_KERNEL);
-> >> +		if (!buff)
-> >> +			return -ENOMEM;
-> >> +
-> >> +		dlen = utf8_casefold(um, name_info, buff, PATH_MAX);
-> >> +		if (dlen < 0) {
-> >> +			kvfree(buff);
-> >> +			goto opaque_seq;
-> >> +		}
-> >> +		folded->name = buff;
-> >> +		folded->len = dlen;
-> >> +		r = __f2fs_dentry_hash(folded, fname);
-> >> +
-> >> +		kvfree(buff);
-> >> +		return r;
-> >> +	}
-> >> +opaque_seq:
-> >> +#endif
-> >> +	return __f2fs_dentry_hash(name_info, fname);
-> >> +}
-> > 
-> > Clang now warns:
-> > 
-> > fs/f2fs/hash.c:128:3: warning: variable 'folded' is uninitialized when used here [-Wuninitialized]
-> >                 folded->name = buff;
-> >                 ^~~~~~
-> > fs/f2fs/hash.c:116:21: note: initialize the variable 'folded' to silence this warning
-> >         struct qstr *folded;
-> >                            ^
-> >                             = NULL
-> > 1 warning generated.
-> > 
-> > I assume that it wants to be initialized with f2fs_kzalloc as well but
-> > I am not familiar with this code and what it expects to do.
-> > 
-> > Please look into this when you get a chance!
-> 
-> That should be a bug, it needs to define a struct qstr type variable rather than
-> a pointer there.
-> 
-> Jaegeuk, could you fix this in you branch?
+Hi Boris,
 
-Yeah, let me apply this.
+On Wed, Jun 19, 2019 at 9:15 PM Boris Brezillon
+<boris.brezillon@collabora.com> wrote:
+[snip]
+> @@ -533,10 +535,21 @@ hantro_queue_setup(struct vb2_queue *vq, unsigned int *num_buffers,
+>                 return -EINVAL;
+>         }
+>
+> +       /* The H264 decoder needs extra size on the output buffer. */
+> +       if (ctx->vpu_src_fmt->fourcc == V4L2_PIX_FMT_H264_SLICE_RAW)
+> +               extra_size0 = 128 * DIV_ROUND_UP(pixfmt->width, 16) *
+> +                             DIV_ROUND_UP(pixfmt->height, 16);
+> +
 
---- a/fs/f2fs/hash.c
-+++ b/fs/f2fs/hash.c
-@@ -113,25 +113,27 @@ f2fs_hash_t f2fs_dentry_hash(const struct inode *dir,
-        const struct unicode_map *um = sbi->s_encoding;
-        int r, dlen;
-        unsigned char *buff;
--       struct qstr *folded;
-+       struct qstr folded;
+I wonder if this shouldn't be accounted for already in the sizeimage
+returned by TRY_/S_FMT, so that the application can know the required
+buffer size if it uses some external allocator and DMABUF memory type.
+I know we had it like this in our downstream code, but it wasn't the
+problem because we use minigbm, where we explicitly add the same
+padding in the rockchip backend. Any thoughts?
 
--       if (name_info->len && IS_CASEFOLDED(dir)) {
--               buff = f2fs_kzalloc(sbi, sizeof(char) * PATH_MAX, GFP_KERNEL);
--               if (!buff)
--                       return -ENOMEM;
-+       if (!name_info->len || !IS_CASEFOLDED(dir))
-+               goto opaque_seq;
-
--               dlen = utf8_casefold(um, name_info, buff, PATH_MAX);
--               if (dlen < 0) {
--                       kvfree(buff);
--                       goto opaque_seq;
--               }
--               folded->name = buff;
--               folded->len = dlen;
--               r = __f2fs_dentry_hash(folded, fname);
-+       buff = f2fs_kzalloc(sbi, sizeof(char) * PATH_MAX, GFP_KERNEL);
-+       if (!buff)
-+               return -ENOMEM;
-
-+       dlen = utf8_casefold(um, name_info, buff, PATH_MAX);
-+       if (dlen < 0) {
-                kvfree(buff);
--               return r;
-+               goto opaque_seq;
-        }
-+       folded.name = buff;
-+       folded.len = dlen;
-+       r = __f2fs_dentry_hash(&folded, fname);
-+
-+       kvfree(buff);
-+       return r;
-+
- opaque_seq:
- #endif
-        return __f2fs_dentry_hash(name_info, fname);
-
+Best regards,
+Tomasz
