@@ -2,95 +2,114 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD0FC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0334C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0D3206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24D5206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:49:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="H1rBOX4e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="w0gH11WS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387782AbfHARtL (ORCPT
+        id S2387817AbfHARt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 13:49:11 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36626 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731061AbfHARtL (ORCPT
+        Thu, 1 Aug 2019 13:49:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:53746 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbfHARt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 13:49:11 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so34494390pfl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 10:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y6hdHpqGEBI+iVGPp14PxolI5mp64P3aoDRclef1uXs=;
-        b=H1rBOX4e1UB8ZnKJ7SDE6klXGJFF3zsPjduSN8Z02OId7gY00conT5jk0RaL2uwfBx
-         aPVZxDsYAshkjMZ257WbkZfNRR7PdiePMxjFeWn2g93Q9sTPRv6V9OCXAIz971KnliG5
-         mhA5ONZyx7jNiWP5kYa2471dy4bF6cxu98jZbjlSPvg1DKgriB6dNbyIOHAMIAa8eJhK
-         jAx7Gx3scQVZDiEgnF4b0b99HuzHJIZaioGVMgPP5YA0Lq1VN2O5dlqfdXoN46xlllGH
-         pe2YPuV3WWwqiIBvMj3V7xpuM7RsPCjGIhJbaETmKoDsb4w/HJQ18qNCq3OPVaSwjUML
-         /OAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y6hdHpqGEBI+iVGPp14PxolI5mp64P3aoDRclef1uXs=;
-        b=EsbO3edZdTpMFpRujKU9xLoFFcZbPpafSSE7TFfdkvJGQ6B5dIQuDgNLYAx8Qgdudk
-         +dK4Xz4meCI7/EuV18uCIOC9EitQAuutg2YxLtt3LsuxTIkMezULKlMVqtAANZ929olm
-         vBZ4IQ1ELM5Q9qMI8NpBL/1Mjxwe0bjPVLysicIk0gC8v4p2scU+bVyBvnIznexKzIyf
-         yhoHmWgTsvpdu+/GqpzGCSi7t8G2UWuQH6wsdt+AV+94rPuimN8UiYvTN5Ktm9Ev48fv
-         hryR+RXJCy+lFi3jl6wUo4cld1rBvs8z84bJCwBIUoKEQmjaUZUfHmEYWpvuMox3zs76
-         Fmxg==
-X-Gm-Message-State: APjAAAVJ0HcC8f/pEGK0rbFrJaVWkUqhLa8qaQD1e1ZJ13XrKzy9FyjM
-        P9HX4MxHUfz8Y+N+Zv8aysI=
-X-Google-Smtp-Source: APXvYqwG6QCNgn3q8ZubpYM4sdBg+SifuSKIr4EsSNa27iacMuRB6yqyNVkq6uIotPklc5Bav20CHw==
-X-Received: by 2002:a63:4041:: with SMTP id n62mr49026346pga.312.1564681750112;
-        Thu, 01 Aug 2019 10:49:10 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:533])
-        by smtp.gmail.com with ESMTPSA id b136sm93410600pfb.73.2019.08.01.10.49.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 10:49:09 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 13:49:07 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 1/5] sched/pci: Reduce psimon FIFO priority
-Message-ID: <20190801174907.GA16554@cmpxchg.org>
-References: <20190801111348.530242235@infradead.org>
- <20190801111541.685367413@infradead.org>
+        Thu, 1 Aug 2019 13:49:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/wQ1T27awT3hqgJbloxgvOfdBCqajpO4xm94w+4G9Do=; b=w0gH11WScMc6U6c0/193f4lVGY
+        pJ5Va3+tj/TSEWluBZbB3EsZdE+5fi40Hd7sR4n8NRx+T69RBSZmHZ/UoJHMHoQqhP0bN7L7xwpnd
+        PnyuEOEWkSHWMDK4bwLVQOrsAZuYdJkbpUohRpAB/vTiDgEeNENBjcpfppf159WsUPFbRzRBYdiS2
+        B4yBu2ZX/XwmYyMam1kq+dPc+qgHtzng5hOraEFbZeQWxzCZ5ytD4CBej0CrS8EFW10k3lit3r5ul
+        1VLKt68FO3Nz279TNa/NMYzQtnkvCu2SBByGuhcqnupvhyqUPFTBrEug8bQuR/lE/4Arfluds3QCk
+        VKAOrv0w==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1htFCR-0000Yn-NH; Thu, 01 Aug 2019 17:49:11 +0000
+Subject: Re: [PATCH bpf-next v10 10/10] landlock: Add user and kernel
+ documentation for Landlock
+To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Drysdale <drysdale@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thomas Graf <tgraf@suug.ch>, Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+References: <20190721213116.23476-1-mic@digikod.net>
+ <20190721213116.23476-11-mic@digikod.net>
+ <88e90c22-1b78-c2f2-8823-fa776265361c@infradead.org>
+ <2ced8fc8-79a6-b0fb-70fe-6716fae92aa7@ssi.gouv.fr>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <08c94f99-68e0-4866-3eba-28fa71347fca@infradead.org>
+Date:   Thu, 1 Aug 2019 10:49:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801111541.685367413@infradead.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <2ced8fc8-79a6-b0fb-70fe-6716fae92aa7@ssi.gouv.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 01:13:49PM +0200, Peter Zijlstra wrote:
-> PSI defaults to a FIFO-99 thread, reduce this to FIFO-1.
+On 8/1/19 10:03 AM, Mickaël Salaün wrote:
+>>> +Ptrace restrictions
+>>> +-------------------
+>>> +
+>>> +A landlocked process has less privileges than a non-landlocked process and must
+>>> +then be subject to additional restrictions when manipulating another process.
+>>> +To be allowed to use :manpage:`ptrace(2)` and related syscalls on a target
+>>> +process, a landlocked process must have a subset of the target process programs.
+>>             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> Maybe that last statement is correct, but it seems to me that it is missing something.
+> What about this:
 > 
-> FIFO-99 is the very highest priority available to SCHED_FIFO and
-> it not a suitable default; it would indicate the psi work is the
-> most important work on the machine.
-> 
-> Since Real-Time tasks will have pre-allocated memory and locked it in
-> place, Real-Time tasks do not care about PSI. All it needs is to be
-> above OTHER.
-> 
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> To be allowed to trace a process (using :manpage:`ptrace(2)`), a
+> landlocked tracer process must only be constrained by a subset (possibly
+> empty) of the Landlock programs which are also applied to the tracee.
+> This ensure that the tracer has less or the same constraints than the
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+       ensures
 
-Subject should be s/pci/psi/
+> tracee, hence protecting against privilege escalation.
+
+Yes, better.  Thanks.
+
+
+-- 
+~Randy
