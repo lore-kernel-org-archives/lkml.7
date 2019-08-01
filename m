@@ -2,272 +2,201 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D4AC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA1DC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D657206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D82206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 04:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564632324;
+	bh=p93UwHtzJnT9bTmzWi9Xj9kNuVoH+OlrITuCGkgZCU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S1CCS8ScbY+h5nV0oCcIK7gOBukDBexl3sEWxmpKluuy3y4XuhErixFaBIaH6mAxg
+	 eylFhPJnjXgs7LGgC3sxvs/1sXe52fhgSgp3+mHqde2v+IUlwnNf/z6KOijSQj0gDN
+	 grvqHnfU9eModLzlJ8AxGdwQ4vIhQKH/OJPOKngI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbfHAD7J (ORCPT
+        id S1726017AbfHAEFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 23:59:09 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3722 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728217AbfHAD5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 23:57:54 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 78E2527F5D6C20CA1A0C;
-        Thu,  1 Aug 2019 11:57:51 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 1 Aug 2019 11:57:44 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 01/12] net: hns3: add link change event report
-Date:   Thu, 1 Aug 2019 11:55:34 +0800
-Message-ID: <1564631745-36733-2-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1564631745-36733-1-git-send-email-tanhuazhong@huawei.com>
-References: <1564631745-36733-1-git-send-email-tanhuazhong@huawei.com>
+        Thu, 1 Aug 2019 00:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbfHAEFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 00:05:22 -0400
+Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F7AA206A3;
+        Thu,  1 Aug 2019 04:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564632321;
+        bh=p93UwHtzJnT9bTmzWi9Xj9kNuVoH+OlrITuCGkgZCU0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZvE7R67i5/FJqUTpXXMJgmYnrP6zkjLyIIQ94Tw1YOk7s0QqPvmNW/1maP7qQTEm/
+         vWMPM77/byfy78m7B/pqD4jpczOqeWOzwnSaKYaX6tsk4zQMH/EQLw/tBAw4Yxb5va
+         SVcj+hsNBIIFdLlvxBRGSUG5zSnPzPc9A2Lo+tQo=
+Date:   Wed, 31 Jul 2019 21:05:20 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Daniel Rosenberg <drosen@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v4 3/3] f2fs: Support case-insensitive file name lookups
+Message-ID: <20190801040520.GA84433@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190723230529.251659-1-drosen@google.com>
+ <20190723230529.251659-4-drosen@google.com>
+ <20190731175748.GA48637@archlinux-threadripper>
+ <5d6c5da8-ad1e-26e2-0a3d-84949cd4e9aa@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d6c5da8-ad1e-26e2-0a3d-84949cd4e9aa@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+On 08/01, Chao Yu wrote:
+> Hi Nathan,
+> 
+> Thanks for the report! :)
+> 
+> On 2019/8/1 1:57, Nathan Chancellor wrote:
+> > Hi all,
+> > 
+> > <snip>
+> > 
+> >> diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
+> >> index cc82f142f811f..99e79934f5088 100644
+> >> --- a/fs/f2fs/hash.c
+> >> +++ b/fs/f2fs/hash.c
+> >> @@ -14,6 +14,7 @@
+> >>  #include <linux/f2fs_fs.h>
+> >>  #include <linux/cryptohash.h>
+> >>  #include <linux/pagemap.h>
+> >> +#include <linux/unicode.h>
+> >>  
+> >>  #include "f2fs.h"
+> >>  
+> >> @@ -67,7 +68,7 @@ static void str2hashbuf(const unsigned char *msg, size_t len,
+> >>  		*buf++ = pad;
+> >>  }
+> >>  
+> >> -f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
+> >> +static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
+> >>  				struct fscrypt_name *fname)
+> >>  {
+> >>  	__u32 hash;
+> >> @@ -103,3 +104,35 @@ f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
+> >>  	f2fs_hash = cpu_to_le32(hash & ~F2FS_HASH_COL_BIT);
+> >>  	return f2fs_hash;
+> >>  }
+> >> +
+> >> +f2fs_hash_t f2fs_dentry_hash(const struct inode *dir,
+> >> +		const struct qstr *name_info, struct fscrypt_name *fname)
+> >> +{
+> >> +#ifdef CONFIG_UNICODE
+> >> +	struct f2fs_sb_info *sbi = F2FS_SB(dir->i_sb);
+> >> +	const struct unicode_map *um = sbi->s_encoding;
+> >> +	int r, dlen;
+> >> +	unsigned char *buff;
+> >> +	struct qstr *folded;
+> >> +
+> >> +	if (name_info->len && IS_CASEFOLDED(dir)) {
+> >> +		buff = f2fs_kzalloc(sbi, sizeof(char) * PATH_MAX, GFP_KERNEL);
+> >> +		if (!buff)
+> >> +			return -ENOMEM;
+> >> +
+> >> +		dlen = utf8_casefold(um, name_info, buff, PATH_MAX);
+> >> +		if (dlen < 0) {
+> >> +			kvfree(buff);
+> >> +			goto opaque_seq;
+> >> +		}
+> >> +		folded->name = buff;
+> >> +		folded->len = dlen;
+> >> +		r = __f2fs_dentry_hash(folded, fname);
+> >> +
+> >> +		kvfree(buff);
+> >> +		return r;
+> >> +	}
+> >> +opaque_seq:
+> >> +#endif
+> >> +	return __f2fs_dentry_hash(name_info, fname);
+> >> +}
+> > 
+> > Clang now warns:
+> > 
+> > fs/f2fs/hash.c:128:3: warning: variable 'folded' is uninitialized when used here [-Wuninitialized]
+> >                 folded->name = buff;
+> >                 ^~~~~~
+> > fs/f2fs/hash.c:116:21: note: initialize the variable 'folded' to silence this warning
+> >         struct qstr *folded;
+> >                            ^
+> >                             = NULL
+> > 1 warning generated.
+> > 
+> > I assume that it wants to be initialized with f2fs_kzalloc as well but
+> > I am not familiar with this code and what it expects to do.
+> > 
+> > Please look into this when you get a chance!
+> 
+> That should be a bug, it needs to define a struct qstr type variable rather than
+> a pointer there.
+> 
+> Jaegeuk, could you fix this in you branch?
 
-Previously, PF updates link status per second. For some scenario,
-it requires link down event being reported more quickly.
-To solve it, firmware pushes the link change event to PF with
-CMDQ message, and driver updates the link status directly.
+Yeah, let me apply this.
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Reviewed-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |  1 +
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c | 25 ++++++++++++++++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  7 +++++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |  9 +++---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  8 ++++++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 33 ++++++++++++++++++++++
- 6 files changed, 79 insertions(+), 4 deletions(-)
+--- a/fs/f2fs/hash.c
++++ b/fs/f2fs/hash.c
+@@ -113,25 +113,27 @@ f2fs_hash_t f2fs_dentry_hash(const struct inode *dir,
+        const struct unicode_map *um = sbi->s_encoding;
+        int r, dlen;
+        unsigned char *buff;
+-       struct qstr *folded;
++       struct qstr folded;
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-index 75329ab..1564be5 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-@@ -47,6 +47,7 @@ enum HCLGE_MBX_OPCODE {
- 	HCLGE_MBX_GET_MEDIA_TYPE,       /* (VF -> PF) get media type */
- 
- 	HCLGE_MBX_GET_VF_FLR_STATUS = 200, /* (M7 -> PF) get vf reset status */
-+	HCLGE_MBX_PUSH_LINK_STATUS,	/* (M7 -> PF) get port link status */
- };
- 
- /* below are per-VF mac-vlan subcodes */
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index d9858f2..538d101 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -383,6 +383,22 @@ int hclge_cmd_queue_init(struct hclge_dev *hdev)
- 	return ret;
- }
- 
-+static int hclge_firmware_compat_config(struct hclge_dev *hdev)
-+{
-+	struct hclge_firmware_compat_cmd *req;
-+	struct hclge_desc desc;
-+	u32 compat = 0;
+-       if (name_info->len && IS_CASEFOLDED(dir)) {
+-               buff = f2fs_kzalloc(sbi, sizeof(char) * PATH_MAX, GFP_KERNEL);
+-               if (!buff)
+-                       return -ENOMEM;
++       if (!name_info->len || !IS_CASEFOLDED(dir))
++               goto opaque_seq;
+
+-               dlen = utf8_casefold(um, name_info, buff, PATH_MAX);
+-               if (dlen < 0) {
+-                       kvfree(buff);
+-                       goto opaque_seq;
+-               }
+-               folded->name = buff;
+-               folded->len = dlen;
+-               r = __f2fs_dentry_hash(folded, fname);
++       buff = f2fs_kzalloc(sbi, sizeof(char) * PATH_MAX, GFP_KERNEL);
++       if (!buff)
++               return -ENOMEM;
+
++       dlen = utf8_casefold(um, name_info, buff, PATH_MAX);
++       if (dlen < 0) {
+                kvfree(buff);
+-               return r;
++               goto opaque_seq;
+        }
++       folded.name = buff;
++       folded.len = dlen;
++       r = __f2fs_dentry_hash(&folded, fname);
 +
-+	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_M7_COMPAT_CFG, false);
++       kvfree(buff);
++       return r;
 +
-+	req = (struct hclge_firmware_compat_cmd *)desc.data;
-+
-+	hnae3_set_bit(compat, HCLGE_LINK_EVENT_REPORT_EN_B, 1);
-+	req->compat = cpu_to_le32(compat);
-+
-+	return hclge_cmd_send(&hdev->hw, &desc, 1);
-+}
-+
- int hclge_cmd_init(struct hclge_dev *hdev)
- {
- 	u32 version;
-@@ -429,6 +445,15 @@ int hclge_cmd_init(struct hclge_dev *hdev)
- 		 hnae3_get_field(version, HNAE3_FW_VERSION_BYTE0_MASK,
- 				 HNAE3_FW_VERSION_BYTE0_SHIFT));
- 
-+	/* ask the firmware to enable some features, driver can work without
-+	 * it.
-+	 */
-+	ret = hclge_firmware_compat_config(hdev);
-+	if (ret)
-+		dev_warn(&hdev->pdev->dev,
-+			 "Firmware compatible features not enabled(%d).\n",
-+			 ret);
-+
- 	return 0;
- 
- err_cmd_init:
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index 96840d8..743c9f4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -257,6 +257,7 @@ enum hclge_opcode_type {
- 	/* M7 stats command */
- 	HCLGE_OPC_M7_STATS_BD		= 0x7012,
- 	HCLGE_OPC_M7_STATS_INFO		= 0x7013,
-+	HCLGE_OPC_M7_COMPAT_CFG		= 0x701A,
- 
- 	/* SFP command */
- 	HCLGE_OPC_GET_SFP_INFO		= 0x7104,
-@@ -1009,6 +1010,12 @@ struct hclge_query_ppu_pf_other_int_dfx_cmd {
- 	u8 rsv[4];
- };
- 
-+#define HCLGE_LINK_EVENT_REPORT_EN_B	0
-+struct hclge_firmware_compat_cmd {
-+	__le32 compat;
-+	u8 rsv[20];
-+};
-+
- int hclge_cmd_init(struct hclge_dev *hdev);
- static inline void hclge_write_reg(void __iomem *base, u32 reg, u32 value)
- {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 4138780..855b65e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2517,7 +2517,7 @@ static void hclge_reset_task_schedule(struct hclge_dev *hdev)
- 			      &hdev->rst_service_task);
- }
- 
--static void hclge_task_schedule(struct hclge_dev *hdev)
-+void hclge_task_schedule(struct hclge_dev *hdev, unsigned long delay_time)
- {
- 	if (!test_bit(HCLGE_STATE_DOWN, &hdev->state) &&
- 	    !test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
-@@ -2526,7 +2526,7 @@ static void hclge_task_schedule(struct hclge_dev *hdev)
- 		hdev->fd_arfs_expire_timer++;
- 		mod_delayed_work_on(cpumask_first(&hdev->affinity_mask),
- 				    system_wq, &hdev->service_task,
--				    round_jiffies_relative(HZ));
-+				    delay_time);
- 	}
- }
- 
-@@ -3636,7 +3636,7 @@ static void hclge_service_task(struct work_struct *work)
- 		hdev->fd_arfs_expire_timer = 0;
- 	}
- 
--	hclge_task_schedule(hdev);
-+	hclge_task_schedule(hdev, round_jiffies_relative(HZ));
- }
- 
- struct hclge_vport *hclge_get_vport(struct hnae3_handle *handle)
-@@ -6175,7 +6175,7 @@ static void hclge_set_timer_task(struct hnae3_handle *handle, bool enable)
- 	struct hclge_dev *hdev = vport->back;
- 
- 	if (enable) {
--		hclge_task_schedule(hdev);
-+		hclge_task_schedule(hdev, round_jiffies_relative(HZ));
- 	} else {
- 		/* Set the DOWN flag here to disable the service to be
- 		 * scheduled again
-@@ -6220,6 +6220,7 @@ static void hclge_ae_stop(struct hnae3_handle *handle)
- 	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) &&
- 	    hdev->reset_type != HNAE3_FUNC_RESET) {
- 		hclge_mac_stop_phy(hdev);
-+		hclge_update_link_status(hdev);
- 		return;
- 	}
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 688e425..c9b9867f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -302,6 +302,13 @@ enum hclge_fc_mode {
- 	HCLGE_FC_DEFAULT
- };
- 
-+enum hclge_link_fail_code {
-+	HCLGE_LF_NORMAL,
-+	HCLGE_LF_REF_CLOCK_LOST,
-+	HCLGE_LF_XSFP_TX_DISABLE,
-+	HCLGE_LF_XSFP_ABSENT,
-+};
-+
- #define HCLGE_PG_NUM		4
- #define HCLGE_SCH_MODE_SP	0
- #define HCLGE_SCH_MODE_DWRR	1
-@@ -1021,4 +1028,5 @@ int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
- int hclge_push_vf_port_base_vlan_info(struct hclge_vport *vport, u8 vfid,
- 				      u16 state, u16 vlan_tag, u16 qos,
- 				      u16 vlan_proto);
-+void hclge_task_schedule(struct hclge_dev *hdev, unsigned long delay_time);
+ opaque_seq:
  #endif
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index 690b999..87de32d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -545,6 +545,36 @@ static int hclge_get_rss_key(struct hclge_vport *vport,
- 				    HCLGE_RSS_MBX_RESP_LEN);
- }
- 
-+static void hclge_link_fail_parse(struct hclge_dev *hdev, u8 link_fail_code)
-+{
-+	switch (link_fail_code) {
-+	case HCLGE_LF_REF_CLOCK_LOST:
-+		dev_warn(&hdev->pdev->dev, "Reference clock lost!\n");
-+		break;
-+	case HCLGE_LF_XSFP_TX_DISABLE:
-+		dev_warn(&hdev->pdev->dev, "SFP tx is disabled!\n");
-+		break;
-+	case HCLGE_LF_XSFP_ABSENT:
-+		dev_warn(&hdev->pdev->dev, "SFP is absent!\n");
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+static void hclge_handle_link_change_event(struct hclge_dev *hdev,
-+					   struct hclge_mbx_vf_to_pf_cmd *req)
-+{
-+#define LINK_STATUS_OFFSET	1
-+#define LINK_FAIL_CODE_OFFSET	2
-+
-+	clear_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state);
-+	hclge_task_schedule(hdev, 0);
-+
-+	if (!req->msg[LINK_STATUS_OFFSET])
-+		hclge_link_fail_parse(hdev, req->msg[LINK_FAIL_CODE_OFFSET]);
-+}
-+
- static bool hclge_cmd_crq_empty(struct hclge_hw *hw)
- {
- 	u32 tail = hclge_read_dev(hw, HCLGE_NIC_CRQ_TAIL_REG);
-@@ -707,6 +737,9 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
- 					"PF fail(%d) to media type for VF\n",
- 					ret);
- 			break;
-+		case HCLGE_MBX_PUSH_LINK_STATUS:
-+			hclge_handle_link_change_event(hdev, req);
-+			break;
- 		default:
- 			dev_err(&hdev->pdev->dev,
- 				"un-supported mailbox message, code = %d\n",
--- 
-2.7.4
+        return __f2fs_dentry_hash(name_info, fname);
 
