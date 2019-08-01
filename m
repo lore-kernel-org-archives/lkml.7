@@ -2,147 +2,163 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70D4C32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C50C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE09206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE3D206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:55:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="IzvL6Fh8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="foI75pjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730651AbfHAHzG (ORCPT
+        id S1730882AbfHAHz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:55:06 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35454 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729954AbfHAHzD (ORCPT
+        Thu, 1 Aug 2019 03:55:58 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38574 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729091AbfHAHz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:55:03 -0400
-Received: by mail-wm1-f67.google.com with SMTP id l2so62213019wmg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 00:55:01 -0700 (PDT)
+        Thu, 1 Aug 2019 03:55:57 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y15so33576154pfn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 00:55:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VDh+yTCqb2E9NnVNrkncEUqcUL07YA1bsORJMbcQ8lw=;
-        b=IzvL6Fh8RsohbqMby4W0y9O0NYlulPkbH7/6/KE7ev/epMQUxqEMGoBNO7hasjRB01
-         /HKKAZluufYjxDeMWVHHn/PBOC16QdfF8bFsHPAH/y0seF5aLbTFn3qY0xodZ77nucSY
-         xYMW3sPy+9Q9CM6qMRRSINJH5EbEDk5vXnNhNZLhPlQpUwj+N7ffv9fojxS7O7dsAM1Q
-         wmk7yQI6F4l8KrAM7trg2kTFx7sn9OQD/diXUgZ9QzkMHRXcqBM5bSemJqoYhaxQhj/7
-         E9wFCTeeCCjgGVkitxS5ZV+i0H0VTV0ObPeyma9le55NMAyecpfvqWXsQP3FV+hdWzCM
-         UtSw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4/tIHbAVspQ7tb+i3R1jpcOr2OfCcE8cs80Va5VgOMk=;
+        b=foI75pjJCZ7OQ4gv4EDZjxtg3XzzdhiWy4PAl52Hln8gYzgJDanD6QfpT1oSiwLBR2
+         trQGCG9DBsVQ/pdfzgvVdHWuFr2RhCMEtvJ10UWZOQ4aFny681l1InQrd+6WCz7VxDGJ
+         v4DnSWB9w8UNHR7POjvADGmm5YeW0CxL+JqHN8LbYPUJUBszNzwszMEpaZ052q+MCy17
+         S8Wx77EIRG4GBDvd62HN4qwpFA2ekHxQ5w6Abr6k+IhgSIkl+yaW7vaEEttvYIQBbEMf
+         ChXARUwjKD1H26VFbZjZHYGcQ3Zf2H2PU06YnctqxNEf5pBXK7PbGX0MR7fSTBv92fIb
+         VHDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VDh+yTCqb2E9NnVNrkncEUqcUL07YA1bsORJMbcQ8lw=;
-        b=hmJdhRP8caSaO24WxlfFpAjgamKl4Pxuc+lTIZR2DYcEqaKyv8Wb9BNHfiHDgsc2UV
-         xhl2lUHuWiaLEDLxGhv4SAgmTJZw7y8rdi1rkkFTCN5tJp+fP2JvMBgnsbeIEXIUHrpc
-         /W8+bJ6/RBI3F95276aC2h9oyWVPlhCarARejfu8PVyCeQ10OvUvxrdKVx4D48joygHr
-         8z/16XQ6eEcoxNTW/EHT19tQsx5j38tesiCyB5tHEboo5jOGqUu7nrbTOKiQqfIJHe8w
-         4x81OoDDTsJPgRXH3WlTvn9q/OY2xIDe176U04A1k6uljW1i8iuvtkQZ1D5ROIvXK0Kv
-         F7eg==
-X-Gm-Message-State: APjAAAVxcd3fGnV1RkyS1LwuFiuQBEsLWLqdnhzMI+DvJxN+eAywpjmo
-        gPuc8cAvA+ohKLecE7caiqPi0OwtM14=
-X-Google-Smtp-Source: APXvYqzGk38l6yq4GXNCBAzayn9dzPlX9QGyiHIVNo8jdmjDHvCA/27f71y7td8ETAlQCK68vOhRjA==
-X-Received: by 2002:a7b:ce01:: with SMTP id m1mr34128533wmc.1.1564646100811;
-        Thu, 01 Aug 2019 00:55:00 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id y12sm64199221wrm.79.2019.08.01.00.55.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 00:55:00 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     p.zabel@pengutronix.de
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/3] reset: reset-meson: update with SPDX Licence identifier
-Date:   Thu,  1 Aug 2019 09:54:52 +0200
-Message-Id: <20190801075454.23547-2-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190801075454.23547-1-narmstrong@baylibre.com>
-References: <20190801075454.23547-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4/tIHbAVspQ7tb+i3R1jpcOr2OfCcE8cs80Va5VgOMk=;
+        b=jphID7lvqHWtdJbG0o2+NVwi/54nyFbHJ2UfgZFM7j2WXQcKHvy6LOohkRanWUfqKE
+         DqTDOOIRsqvRgEeCyuZVyoMTCFC+C0pJqqbCrFvZb/7f4Lw4lnsnX4Jz3hR74bDdjo+z
+         Fo+ZSwbyryTaXoCZEG6eaOr+hXrr6MJZGCuDL+bSVPpQpychMZ/tXIjeLCGfyaG+vYcd
+         +JHWGY8NxbaBRo42Ff8qSLDBLfUjh8f35Yu2tjMPxysrKg1ANYZyvybjxp3ivRP+mjq+
+         jHwDtGLU4sgEELZ9Oa4UOj6ORUnw7ld56CmovnGWbUegzYE7a7MIduTMb8SMVn+Y6Y0g
+         sZhQ==
+X-Gm-Message-State: APjAAAV9rJby89Ovw5+lAUQFPD71Nxsun4zEMYnqLWolXkStTdtlCXaM
+        ocCU4W2975BvpMUfuzuPI5qdCQ==
+X-Google-Smtp-Source: APXvYqykUy8A33+0QAA/r+xLhtkymplAzX3AYi87a2JVR2oWBpoqcjwLpw/DrJOKv2zCIySbXdbYdw==
+X-Received: by 2002:a63:f959:: with SMTP id q25mr117160756pgk.357.1564646156404;
+        Thu, 01 Aug 2019 00:55:56 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id j6sm10315836pjd.19.2019.08.01.00.55.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 00:55:55 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 13:25:54 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Doug Smythies <dsmythies@telus.net>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "v4 . 18+" <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: schedutil: Don't skip freq update when limits
+ change
+Message-ID: <20190801075554.ml6m7pqxsfdhiqom@vireshk-i7>
+References: <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com>
+ <20190724114327.apmx35c7a4tv3qt5@vireshk-i7>
+ <000c01d542fc$703ff850$50bfe8f0$@net>
+ <20190726065739.xjvyvqpkb3o6m4ty@vireshk-i7>
+ <000001d545e3$047d9750$0d78c5f0$@net>
+ <20190729083219.fe4xxq4ugmetzntm@vireshk-i7>
+ <CAJZ5v0gaW=ujtsDmewrVXL7V8K0YZysNqwu=qKLw+kPC86ydqA@mail.gmail.com>
+ <000b01d547fe$e7b51fd0$b71f5f70$@net>
+ <20190801061700.dl33rtilvg44obzu@vireshk-i7>
+ <CAJZ5v0h7GPT3Z_oWz=WfJon=wg3bgS3KVMOATEYvdTM2ywuHOA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0h7GPT3Z_oWz=WfJon=wg3bgS3KVMOATEYvdTM2ywuHOA@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/reset/reset-meson.c | 51 +------------------------------------
- 1 file changed, 1 insertion(+), 50 deletions(-)
+On 01-08-19, 09:47, Rafael J. Wysocki wrote:
+> On Thu, Aug 1, 2019 at 8:17 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 31-07-19, 17:20, Doug Smythies wrote:
+> > > Hi Viresh,
+> > >
+> > > Summary:
+> > >
+> > > The old way, using UINT_MAX had two purposes: first,
+> > > as a "need to do a frequency update" flag; but also second, to
+> > > force any subsequent old/new frequency comparison to NOT be "the same,
+> > > so why bother actually updating" (see: sugov_update_next_freq). All
+> > > patches so far have been dealing with the flag, but only partially
+> > > the comparisons. In a busy system, and when schedutil.c doesn't actually
+> > > know the currently set system limits, the new frequency is dominated by
+> > > values the same as the old frequency. So, when sugov_fast_switch calls
+> > > sugov_update_next_freq, false is usually returned.
+> >
+> > And finally we know "Why" :)
+> >
+> > Good work Doug. Thanks for taking it to the end.
+> >
+> > > However, if we move the resetting of the flag and add another condition
+> > > to the "no need to actually update" decision, then perhaps this patch
+> > > version 1 will be O.K. It seems to be. (see way later in this e-mail).
+> >
+> > > With all this new knowledge, how about going back to
+> > > version 1 of this patch, and then adding this:
+> > >
+> > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > > index 808d32b..f9156db 100644
+> > > --- a/kernel/sched/cpufreq_schedutil.c
+> > > +++ b/kernel/sched/cpufreq_schedutil.c
+> > > @@ -100,7 +100,12 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
+> > >  static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
+> > >                                    unsigned int next_freq)
+> > >  {
+> > > -       if (sg_policy->next_freq == next_freq)
+> > > +       /*
+> > > +        * Always force an update if the flag is set, regardless.
+> > > +        * In some implementations (intel_cpufreq) the frequency is clamped
+> > > +        * further downstream, and might not actually be different here.
+> > > +        */
+> > > +       if (sg_policy->next_freq == next_freq && !sg_policy->need_freq_update)
+> > >                 return false;
+> >
+> > This is not correct because this is an optimization we have in place
+> > to make things more efficient. And it was working by luck earlier and
+> > my patch broke it for good :)
+> 
+> OK, so since we know why it was wrong now, why don't we just revert
+> it?  Plus maybe add some comment explaining the rationale in there?
 
-diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
-index 5242e0679df7..7d05d766e1ea 100644
---- a/drivers/reset/reset-meson.c
-+++ b/drivers/reset/reset-meson.c
-@@ -1,58 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
- /*
-  * Amlogic Meson Reset Controller driver
-  *
-- * This file is provided under a dual BSD/GPLv2 license.  When using or
-- * redistributing this file, you may do so under either license.
-- *
-- * GPL LICENSE SUMMARY
-- *
-- * Copyright (c) 2016 BayLibre, SAS.
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, see <http://www.gnu.org/licenses/>.
-- * The full GNU General Public License is included in this distribution
-- * in the file called COPYING.
-- *
-- * BSD LICENSE
-- *
-  * Copyright (c) 2016 BayLibre, SAS.
-  * Author: Neil Armstrong <narmstrong@baylibre.com>
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- *
-- *   * Redistributions of source code must retain the above copyright
-- *     notice, this list of conditions and the following disclaimer.
-- *   * Redistributions in binary form must reproduce the above copyright
-- *     notice, this list of conditions and the following disclaimer in
-- *     the documentation and/or other materials provided with the
-- *     distribution.
-- *   * Neither the name of Intel Corporation nor the names of its
-- *     contributors may be used to endorse or promote products derived
-- *     from this software without specific prior written permission.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- #include <linux/err.h>
- #include <linux/init.h>
+Because the patch [1] which caused these issues was almost correct,
+just that it missed the busy accounting for single CPU case.
+
+The main idea behind the original patch [1] was to avoid any
+unwanted/hidden side-affects by overriding the value of next_freq.
+What we see above is exactly the case for that. Because we override
+the value of next_freq, we made intel-pstate work by chance,
+unintentionally. Which is wrong. And who knows what other side affects
+it had, we already found two (this one and the one fixed by [1]).
+
+I would strongly suggest that we don't override the value of next_freq
+with special meaning, as it is used at so many places we don't know
+what it may result in.
+
 -- 
-2.22.0
+viresh
 
+[1] ecd288429126 cpufreq: schedutil: Don't set next_freq to UINT_MAX
