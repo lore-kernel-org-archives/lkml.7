@@ -2,121 +2,108 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB05DC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AC2C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8163E206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3CE206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AdP6kqdB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wjf8pXaw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbfHAL2q (ORCPT
+        id S1731056AbfHAL31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:28:46 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37886 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHAL2p (ORCPT
+        Thu, 1 Aug 2019 07:29:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45814 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730946AbfHAL31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:28:45 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f17so62832770wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 04:28:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xqlL4i3gNjqYtXtO6TQlV20Xxo/VOCfNj1pkiBeVGDw=;
-        b=AdP6kqdBNqVzqPbTjcZqUCSeEuNZAZ0N2Hl7V0yyDQ97NwaxFQ3YPSdyfa5WscChBf
-         eQGOSebUDGwTIsy3ec9wtj4XhJSdNy2Nm7UQuj6m19HzgAcIqfK5QtKXngKhsE1bAzeh
-         Z8MDxuC/JtqX8MJIT/X74Qs9abmRPhqfAm5cJtPevPH0QqRG7ypBFY4LyQVHKu3J+qaA
-         Az3nbeoW6l241nTdt1fleedlEYCSx4Y7Xs61bGbsIt2U6eBnBODlCX0nRzxsXY2YSfmG
-         kNL4/CyfOJAdHhqkx81K3DomreRUeEF9m8TieokhBXNpFzz1ocBDIayWwDPw/PqD2BSX
-         2s0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xqlL4i3gNjqYtXtO6TQlV20Xxo/VOCfNj1pkiBeVGDw=;
-        b=VBTqbAMG/YUusZxDGGXVRjRZgnbIidfGQfV4w/jzrdHU2aKHfYbnMEH0WbPZFaYsFM
-         ITr912r30RI7MBQOBkZh5nDnRwJUDvI9akap+vQX1PnnH4sWlCFD7N1yHiATcvozqD0r
-         t/iAHFgTO7yA+3JQu5gEiAPrKL67IsMeFSZazecQbds1d39GcIBaVY2KCQrqLg1aLNwX
-         KQG8b5rsbsZIx/2HsQ+7kk1eW5zkMgL14Hz0+P1fTL5rGuIaVCsTTOnXZLpNcb/JkALK
-         HShCGnoZ+KHXhpOvvLCzUzu3Gyhbg0dgPyrMSV/DQcDGbeGCM7JCkA595ilJKbkjpeZ6
-         x43A==
-X-Gm-Message-State: APjAAAVFiKCPUuXiO687wcHwrMCI2khnChiw3DYRc7GqVW1LAT4heqs5
-        RwWe3qM5QmfamM9B3FtA/9OWhVR51SBW8iaeQOEFvg==
-X-Google-Smtp-Source: APXvYqwGETwdoashndHC330DdqucKEGLjf3h8H2eI2Z/vsG8Q0EpDPaNd2yf/onQdcky1xXqUBZxaQrJFZevg/rqT08=
-X-Received: by 2002:a1c:770d:: with SMTP id t13mr42679017wmi.79.1564658923216;
- Thu, 01 Aug 2019 04:28:43 -0700 (PDT)
+        Thu, 1 Aug 2019 07:29:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ksRJLOMTOIWRq2Nag2thMkKvE3lWaLrnStcxxBgysnw=; b=Wjf8pXawCgcKFVf3bV3iZbnJj
+        rX+WDMifwGDiVc6ecMzHbsMT/+jfAGFFMugdHvw6yBSTK2tn/Q2Syt1Nwxm9oCCVHkDM78I/RIZUk
+        2m7+IzAEQpvn/0rkMsTYP3zgSsxUxl05sRnKRrkqE9q2n46dcLvOao+xLjN4Q3wAYafVTbDxZFd7z
+        UmhJLhJPbpNXPZishSqd2zv3poZ1lQ1U0UsPMZ9mCaz9/iLnd/tJwBaSsLDdYfcOGixo7gWzMT8DD
+        Ff36e4PoTKL35KsJGZCYslDjYcnwWBiXJDap1Co63OVM8uSON30wBYA7ntBMnnquigXHA15H7/BFi
+        cOaFb6Z6w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1ht9GN-0001Zu-6n; Thu, 01 Aug 2019 11:28:51 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9B7432029F4C7; Thu,  1 Aug 2019 13:28:49 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 13:28:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.com>,
+        Theodore Tso <tytso@mit.edu>, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Joel Becker <jlbec@evilplan.org>, linux-ext4@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [patch V2 6/7] fs/jbd2: Make state lock a spinlock
+Message-ID: <20190801112849.GB31381@hirez.programming.kicks-ass.net>
+References: <20190801010126.245731659@linutronix.de>
+ <20190801010944.457499601@linutronix.de>
 MIME-Version: 1.0
-References: <CAG_fn=VBGE=YvkZX0C45qu29zqfvLMP10w_owj4vfFxPcK5iow@mail.gmail.com>
- <20190731193240.29477-1-labbott@redhat.com> <20190731193509.GG4700@bombadil.infradead.org>
- <201907311304.2AAF454F5C@keescook>
-In-Reply-To: <201907311304.2AAF454F5C@keescook>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Thu, 1 Aug 2019 13:28:31 +0200
-Message-ID: <CAG_fn=VJm7M0wzMTti5RoegW56CY2YpikjEZryt8gMN5nOiyqw@mail.gmail.com>
-Subject: Re: [PATCH] mm: slub: Fix slab walking for init_on_free
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Laura Abbott <labbott@redhat.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marco Elver <elver@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@01.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801010944.457499601@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 10:05 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Jul 31, 2019 at 12:35:09PM -0700, Matthew Wilcox wrote:
-> > On Wed, Jul 31, 2019 at 03:32:40PM -0400, Laura Abbott wrote:
-> > > Fix this by ensuring the value we set with set_freepointer is either =
-NULL
-> > > or another value in the chain.
-> > >
-> > > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > > Signed-off-by: Laura Abbott <labbott@redhat.com>
-> >
-> > Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=3D1 and ini=
-t_on_free=3D1 boot options")
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Alexander Potapenko <glider@google.com>
->
-> --
-> Kees Cook
+On Thu, Aug 01, 2019 at 03:01:32AM +0200, Thomas Gleixner wrote:
 
+> @@ -1931,7 +1932,7 @@ static void __jbd2_journal_temp_unlink_b
+>  	transaction_t *transaction;
+>  	struct buffer_head *bh = jh2bh(jh);
+>  
+> -	J_ASSERT_JH(jh, jbd_is_locked_bh_state(bh));
+> +	assert_spin_locked(&jh->state_lock);
+>  	transaction = jh->b_transaction;
+>  	if (transaction)
+>  		assert_spin_locked(&transaction->t_journal->j_list_lock);
 
+> @@ -2415,7 +2416,7 @@ void __jbd2_journal_file_buffer(struct j
+>  	int was_dirty = 0;
+>  	struct buffer_head *bh = jh2bh(jh);
+>  
+> -	J_ASSERT_JH(jh, jbd_is_locked_bh_state(bh));
+> +	assert_spin_locked(&jh->state_lock);
+>  	assert_spin_locked(&transaction->t_journal->j_list_lock);
+>  
+>  	J_ASSERT_JH(jh, jh->b_jlist < BJ_Types);
 
---=20
-Alexander Potapenko
-Software Engineer
+> @@ -2500,7 +2501,7 @@ void __jbd2_journal_refile_buffer(struct
+>  	int was_dirty, jlist;
+>  	struct buffer_head *bh = jh2bh(jh);
+>  
+> -	J_ASSERT_JH(jh, jbd_is_locked_bh_state(bh));
+> +	assert_spin_locked(&jh->state_lock);
+>  	if (jh->b_transaction)
+>  		assert_spin_locked(&jh->b_transaction->t_journal->j_list_lock);
+>  
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
+Do those want to be:
 
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+  lockdep_assert_held(&jh->state_lock);
+
+instead? The difference is of course that lockdep_assert_held() requires
+the current context to hold the lock, where assert_*_locked() merely
+checks _someone_ holds it.
