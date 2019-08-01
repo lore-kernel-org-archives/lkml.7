@@ -2,87 +2,86 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3CBC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051D7C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767A72087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63762087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="TenVpUmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbfHAKbG (ORCPT
+        id S1730905AbfHAKfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 06:31:06 -0400
-Received: from mailout-taastrup.gigahost.dk ([46.183.139.199]:58490 "EHLO
-        mailout-taastrup.gigahost.dk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729266AbfHAKbG (ORCPT
+        Thu, 1 Aug 2019 06:35:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46498 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729975AbfHAKfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 06:31:06 -0400
-X-Greylist: delayed 568 seconds by postgrey-1.27 at vger.kernel.org; Thu, 01 Aug 2019 06:31:05 EDT
-Received: from mailout.gigahost.dk (mailout.gigahost.dk [89.186.169.112])
-        by mailout-taastrup.gigahost.dk (Postfix) with ESMTP id 1CBAB18903FE;
-        Thu,  1 Aug 2019 10:21:26 +0000 (UTC)
-Received: from smtp.gigahost.dk (smtp.gigahost.dk [89.186.169.109])
-        by mailout.gigahost.dk (Postfix) with ESMTP id 46ABD782B5B;
-        Thu,  1 Aug 2019 10:21:35 +0000 (UTC)
-Received: by smtp.gigahost.dk (Postfix, from userid 1000)
-        id E57CE2721A8F; Thu,  1 Aug 2019 10:21:25 +0000 (UTC)
-X-Screener-Id: 5857e2a064aad267b6e1bd03c61cb04f8a07a3e3
-Received: from [10.0.0.207] (085083064049.dynamic.telenor.dk [85.83.64.49])
-        by smtp.gigahost.dk (Postfix) with ESMTPSA id 734332721A0D;
-        Thu,  1 Aug 2019 10:21:25 +0000 (UTC)
-Subject: Re: UDF filesystem image with Write-Once UDF Access Type
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
-        Jan Kara <jack@suse.cz>
-Cc:     "Steven J. Magnani" <steve.magnani@digidescorp.com>,
-        Jan Kara <jack@suse.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190712100224.s2chparxszlbnill@pali>
- <20190801073530.GA25064@quack2.suse.cz>
- <20190801084411.l4uv7xrb5ilouuje@pali>
-From:   Roald Strauss <mr_lou@dewfall.dk>
-Message-ID: <294d59b9-67e8-9984-b80b-0a7c44f1707c@dewfall.dk>
-Date:   Thu, 1 Aug 2019 12:21:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 1 Aug 2019 06:35:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id i10so29867112iol.13
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 03:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fF0do9wY3cyTRjOGDYpGmka2aPziK/+CZ1VE8F7DUC8=;
+        b=TenVpUmM6bUvbexacfk8sJuh56uipvsMM7q+VxUe4DOkUPtEq5koFfaUOR7qA0FfWn
+         EcT4YoOE6QFL/YfxbO1LnjjdwJz05Nq3KdpwW9H3TwROFJM31myL+qjzXZrMmlz7GWHv
+         kWikwnNZcRuYgeTxVtM9ntxnThgbwZ4m2FmVE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fF0do9wY3cyTRjOGDYpGmka2aPziK/+CZ1VE8F7DUC8=;
+        b=CaMYiIM7tpcxkrimc2QO3Uww5E40o34SHU4cI42DUw8Vogh4gOF3QZsRuYAtMJr5cA
+         LFNrd9wbpJbCuOJW2gasMmReDHupFJYfvMiPeMTCFDw33orDMbdio2Ps85X0vXh5PgQe
+         6L2KgezCSR1dHr1LjkcY6s9hrLWxmgIALfSzQrkNKk58N7h33U5uQ2mD2GNc6niju8xL
+         dYBLP+w1PhwL0ASYHr8BIOmvXKtAIoHL3UPlxkWrs8US8MoYZ1w4E/pR1ff1qEzarweg
+         1abZ4qvpKdaCftLJ+jYqzPQBTkmWDUrYXhmQOGdRFmQ+RMyIsvcq2h36qFj8cjSvRWhn
+         iTsw==
+X-Gm-Message-State: APjAAAWYpEeIzyQhtH5mBgg13RFmDwOvn8mGzyN4VMq1sIf+JSVHiVGB
+        agAnuAe5BLzDP8liLhRUHt2cm1v4tOVuzfZum90=
+X-Google-Smtp-Source: APXvYqxj0yaxuEmTXKenSnXaY/8xd4RXWC9zZFQtW0TVFTjoaY1r4goJ0orqWVClOITHQZ7OVVV7sUBj8YCoLSgOZIE=
+X-Received: by 2002:a6b:ba88:: with SMTP id k130mr2923170iof.212.1564655714393;
+ Thu, 01 Aug 2019 03:35:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190801084411.l4uv7xrb5ilouuje@pali>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190724094556.GA19383@deco.navytux.spb.ru>
+In-Reply-To: <20190724094556.GA19383@deco.navytux.spb.ru>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 1 Aug 2019 12:35:03 +0200
+Message-ID: <CAJfpegscn7B+TrD5hckXkpHEb_62m6O9-kFOOehWyC89CPFunw@mail.gmail.com>
+Subject: Re: [PATCH, RESEND3] fuse: require /dev/fuse reads to have enough
+ buffer capacity (take 2)
+To:     Kirill Smelkov <kirr@nexedi.com>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>, gluster-devel@gluster.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sander Eikelenboom <linux@eikelenboom.it>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Jakob Unterwurzacher <jakobunt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey all
-
-
-I'm a bit pressed for time these days, so I won't be able to do any 
-tests any time soon.
-
-Also have to admit that I lost interest in UDF a bit, since we ended up 
-looking towards hardware solutions for write-protections instead.
-
-But when/if mkudffs includes an option to create a write-once / 
-read-only filesystem while adding files to it at the same time (because 
-how else am I gonna put files onto my read-only filesystem?), then it 
-might become interesting again.
-
-
-- Roald
-
-
-
-
-Den 01/08/2019 kl. 10.44 skrev Pali Rohár:
-> On Thursday 01 August 2019 09:35:30 Jan Kara wrote:
->> On Fri 12-07-19 12:02:24, Pali Rohár  wrote:
->>> Also in git master of udftools has mkduffs now new option --read-only
->>> which creates UDF image with Read-Only Access Type.
->> I've tested this and the kernel properly mounts the image read-only.
-> Roald, can you test that problem which you described to me with
-> read-only access type is now correctly fixed?
+On Wed, Jul 24, 2019 at 11:46 AM Kirill Smelkov <kirr@nexedi.com> wrote:
 >
+> Miklos,
+>
+> I was sending this patch for ~1.5 month without any feedback from you[1,2,3].
+> The patch was tested by Sander Eikelenboom (original GlusterFS problem
+> reporter)[4], and you said that it will be ok to retry for next
+> cycle[5]. I was hoping for this patch to be picked up for 5.3 and queued
+> to Linus's tree, but in despite several resends from me (the same patch;
+> just reminders) nothing is happening. v5.3-rc1 came out on last Sunday,
+> which, in my understanding, denotes the close of 5.3 merge window. What
+> is going on? Could you please pick up the patch and handle it?
+
+Applied.
+
+Thanks,
+Miklos
