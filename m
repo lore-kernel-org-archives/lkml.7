@@ -2,97 +2,117 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE169C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CD7C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAE62087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:54:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ncXE6zvN"
+	by mail.kernel.org (Postfix) with ESMTP id 224BE2087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbfHAJyD (ORCPT
+        id S1729797AbfHAJzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:54:03 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44949 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfHAJyD (ORCPT
+        Thu, 1 Aug 2019 05:55:35 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46879 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfHAJzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:54:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k8so68530603edr.11;
-        Thu, 01 Aug 2019 02:54:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=HDwRl6vMRhD30oswVwKGH6WeVMSf2INQif24SRGDP2c=;
-        b=ncXE6zvNqssYaSBtVz2o73i4+Sauc+WG9+Qt1Z+IPy1qvlhJFNeo8oO8GHW8e+1VFV
-         Nq/OzDI1sqgVUkpDFiDx2LywcM81QcJXDJYqJhFsZ3qcRY9TNsxCbrTtZ29Q8AFoNJBw
-         KYcl1W6SI9/PsVoumuGvEYYXk1+C/sLzc36APO3UNG/lXGO7wAmuWblzog1JJdFeUiSS
-         90a4oJfhtG2IYddrTIU1eDtpp1sOiiVB8Afbm6do4AgYmfJv7s/u4jWNNNJ0SiX9s4TX
-         vaxTmD3XBQaIGme9cgpgHOoCJNHS57qmkZ/vNB0GThBMXDYDmrF1BNTwVapG1QNEkuPb
-         6CwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=HDwRl6vMRhD30oswVwKGH6WeVMSf2INQif24SRGDP2c=;
-        b=X3fbM5/3vFDG+M1XVsnZvZ7gEwODbuL6gP48vTTD5agzrKpq215K4dyS3CAeuY3VG6
-         2bESwcikuPuSXhjzfEc9iYZ4Md000j2lJ9V4ZlROJYBCbEyM5PV9lg6aMU4p0R6fRuvD
-         TFQOnbdJt/sa9nZYLIyhkEr55SZ/SIey9GLoTNxr8QWmTgft2cAUswXCO360tQpWlrNE
-         brVq51Yme/96W3dxAmDDauJjaHv1XBysR6c22YFlkLzkU9wEpLEG5td21p+r98DsfGXP
-         /3MMhPdZxV7tesl0c38SlYdOGfV6wcJSP6mmdMZ+mWNAu21dd30sERTUy31NBHUoDGBf
-         MlBQ==
-X-Gm-Message-State: APjAAAXjVfjxSgdkVkGc5qhwne/zaRzqgXSFGBs+8ZDiv8VXSR+MqAsQ
-        MO1rnfXxWiEy/b6pNiiR9OCCX0WuW0DtkNTnWmA=
-X-Google-Smtp-Source: APXvYqyVJSqfyVqgaEvKLfpb0FBbq10+iVMF8OkohUZJ6bEAFux1rtQ7UrYXuRH18vBGfWc4mQKsoq/T73utJe2PJvA=
-X-Received: by 2002:a17:906:81cb:: with SMTP id e11mr97605549ejx.37.1564653241450;
- Thu, 01 Aug 2019 02:54:01 -0700 (PDT)
+        Thu, 1 Aug 2019 05:55:35 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ht7o3-0000nO-Dh; Thu, 01 Aug 2019 11:55:31 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ht7o1-0006Fm-FK; Thu, 01 Aug 2019 11:55:29 +0200
+Date:   Thu, 1 Aug 2019 11:55:29 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>
+Subject: Re: [PATCH] serial: imx: Avoid probe failure in case of missing
+ gpiolib
+Message-ID: <20190801095529.dm3pvgts6cy6mbiq@pengutronix.de>
+References: <20190801081524.22577-1-frieder.schrempf@kontron.de>
+ <20190801084827.m42ci3amo37hmesi@pengutronix.de>
+ <0674d68b-99fa-3408-1dd1-22dc84144b43@kontron.de>
 MIME-Version: 1.0
-References: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com> <1564306219-17439-2-git-send-email-bmeng.cn@gmail.com>
-In-Reply-To: <1564306219-17439-2-git-send-email-bmeng.cn@gmail.com>
-From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Thu, 1 Aug 2019 17:53:50 +0800
-Message-ID: <CAEUhbmVjELVPKwW6R+W+V2hQbZ_Zj_5j2ogjnTsuCwnK1pT-og@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: pci: pci-msi: Correct the unit-address
- of the pci node name
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0674d68b-99fa-3408-1dd1-22dc84144b43@kontron.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 5:30 PM Bin Meng <bmeng.cn@gmail.com> wrote:
->
-> The unit-address must match the first address specified in the
-> reg property of the node.
->
-> Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
-> ---
->
->  Documentation/devicetree/bindings/pci/pci-msi.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
-> index 9b3cc81..b73d839 100644
-> --- a/Documentation/devicetree/bindings/pci/pci-msi.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
-> @@ -201,7 +201,7 @@ Example (5)
->                 #msi-cells = <1>;
->         };
->
-> -       pci: pci@c {
-> +       pci: pci@f {
->                 reg = <0xf 0x1>;
->                 compatible = "vendor,pcie-root-complex";
->                 device_type = "pci";
-> --
+On Thu, Aug 01, 2019 at 09:28:33AM +0000, Schrempf Frieder wrote:
+> Hi Uwe,
+> 
+> On 01.08.19 10:48, Uwe Kleine-König wrote:
+> > On Thu, Aug 01, 2019 at 08:18:05AM +0000, Schrempf Frieder wrote:
+> >> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >>
+> >> If CONFIG_GPIOLIB is not enabled, mctrl_gpio_init() will return
+> >> -ENOSYS and cause the probing of the imx UART to fail. As the
+> >> GPIOs are optional, we should continue probing in this case.
+> > 
+> > Is this really still the case? On which version did you hit this
+> > problem?
+> 
+> Yes, I think it is. I used v5.2.5, that already has d99482673f95.
+> 
+> > 
+> > I would expect that is gone with
+> > d99482673f950817b30caf3fcdfb31179b050ce1 if not earlier.
+> 
+> I think this is a different problem. If CONFIG_GPIOLIB is disabled, 
+> mctrl_gpio_init() returns -ENOSYS unconditionally here: [1]. The 
+> existing patch (d99482673f95) seems to handle the case when 
+> CONFIG_GPIOLIB is enabled, but no or not all GPIOs are given in the dtb.
 
-Ping?
+Ah, I see.
+
+I don't think we should handle this on a per-driver basis. So my
+suggestion is to drop the dummy implementation for mctrl_gpio if GPIOLIB
+is disabled. Then the behaviour should be consistant with the gpio stuff
+returning NULL in this case. (Or alternatively adapt the dummy
+implementation to shortcut and behave identically.)
+
+(Having said that I don't like gpiolib's behaviour of returning NULL for
+the optional calls if it's disabled, but having mctrl_gpio behave
+differently is worse.)
+
+> The sh-sci.c driver has a similar check to skip this case: [2].
+
+This should than be dropped, too.
+
+Best regards
+Uwe
+
+> [1] 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/tty/serial/serial_mctrl_gpio.h#n121
+> [2] 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/tty/serial/sh-sci.c#n3290
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
