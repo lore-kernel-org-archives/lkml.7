@@ -2,140 +2,84 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E22C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9FBC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCA8206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:43:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564702992;
-	bh=TCLYQ56bmlnQaH4Q8hXEL4LL6+Uw6/QkBbW1R90uKM0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T29iiuziPRUY24ZRtxTd83xE9ODV6wmpwGJK90XseSaLgCOSwh8MpH3yIbvUt0h89
-	 Z1ydfJC90rrfqAe3vnDFh3YgoBhriwjjYL6KGQ4sGV8oWPpU1kiBkcXcSalSrOBlUQ
-	 wjmLG+M6t0SA+92dZv/s/ByrCKmlv3VZWpjmcO5A=
+	by mail.kernel.org (Postfix) with ESMTP id 29410206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388572AbfHAXnK (ORCPT
+        id S2388580AbfHAXpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:43:10 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44102 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732215AbfHAXnK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:43:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UeFWpR2JBrWem/9wSROF50ByE9BuApCdhL94heuW2BI=; b=FYVwCyEd7AnlQexu483HI2L9k
-        DYlSzQ5esEFQ/VMRiooF73uvH+7gblU+e7zpBAgF9Libs4rQL6vl4nTrZJDV9s3zN7fRlZASzf+cR
-        d0pzhLiN1qGiRjqK+RNCWdEbr96Va3K2z8bpwT9/vNV8XEvWzgKnyIkajwxd8NcgWxl/s=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1htKiY-0005pu-GG; Thu, 01 Aug 2019 23:42:42 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id AC9EF2742E3A; Fri,  2 Aug 2019 00:42:41 +0100 (BST)
-Date:   Fri, 2 Aug 2019 00:42:41 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Thomas Preston <thomas.preston@codethink.co.uk>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Takashi Iwai <tiwai@suse.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-kernel@vger.kernel.org,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on
- diagnostic routine
-Message-ID: <20190801234241.GG5488@sirena.org.uk>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-4-thomas.preston@codethink.co.uk>
- <20190730141935.GF4264@sirena.org.uk>
- <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
- <20190730155027.GJ4264@sirena.org.uk>
- <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
+        Thu, 1 Aug 2019 19:45:19 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:32960 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732215AbfHAXpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 19:45:18 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1htKl2-0002MI-OY; Thu, 01 Aug 2019 17:45:17 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1htKl2-00025U-Aw; Thu, 01 Aug 2019 17:45:16 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu,  1 Aug 2019 17:45:09 -0600
+Message-Id: <20190801234514.7941-11-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190801234514.7941-1-logang@deltatee.com>
+References: <20190801234514.7941-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kjpMrWxdCilgNbo1"
-Content-Disposition: inline
-In-Reply-To: <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
-X-Cookie: Love thy neighbor, tune thy piano.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v7 10/14] nvmet-tcp: don't check data_len in nvmet_tcp_map_data()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With passthru, the data_len is no longer guaranteed to be set
+for all requests. Therefore, we should not check for it to be
+non-zero. Instead check if the SGL length is zero and map
+when appropriate.
 
---kjpMrWxdCilgNbo1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+None of the other transports check data_len which is verified
+in core code.
 
-On Tue, Jul 30, 2019 at 05:28:11PM +0100, Thomas Preston wrote:
-> On 30/07/2019 16:50, Mark Brown wrote:
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/nvme/target/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Like I say it's not just debugfs though, there's the standard driver
-> > interface too.
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index 69b83fa0c76c..db5bc5f444c4 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -320,7 +320,7 @@ static int nvmet_tcp_map_data(struct nvmet_tcp_cmd *cmd)
+ 	struct nvme_sgl_desc *sgl = &cmd->req.cmd->common.dptr.sgl;
+ 	u32 len = le32_to_cpu(sgl->length);
+ 
+-	if (!cmd->req.data_len)
++	if (!len)
+ 		return 0;
+ 
+ 	if (sgl->type == ((NVME_SGL_FMT_DATA_DESC << 4) |
+-- 
+2.20.1
 
-> Ah right, I understand. So if we run the turn-on diagnostics routine, the=
-re's
-> nothing stopping anyone from interacting with the device in other ways.
-
-> I guess there's no way to share that mutex with ALSA? In that case, it do=
-esn't
-> matter if this mutex is there or not - this feature is incompatible. How
-> compatible do debugfs interfaces have to be? I was under the impression a=
-nything
-> goes. I would argue that the debugfs is better off for having the mutex so
-> that no one re-reads "diagnostic" within the 5s poll timeout.
-
-It's not really something that's supported; like Charles says the DAPM
-mutex is exposed but if the regular controls would still be able to do
-stuff.  It is kind of a "you broke it, you fix it" thing but on the
-other hand it's better to make things safer if we can since it might not
-be obvious later on why things are broken.
-
-> Alternatively, this diagnostic feature could be handled with an external-=
-handler
-> kcontrol SOC_SINGLE_EXT? I'm not sure if this is an atomic interface eith=
-er.
->=20
-> What would be acceptable?
-
-Yes, that's definitely doable - we've got some other drivers with
-similar things like calibration triggers exposed that way.
-
---kjpMrWxdCilgNbo1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1DePAACgkQJNaLcl1U
-h9BbgAf9HMcTl/Pb+iJa1dDcV8qVUzhtY4Qcn3rqBYU+aGzm0J4NOtjtrA70Hdna
-sTNCLx5kaaX9kA5IKWbzwBC1qcf0S8io9cJUgJOYGHitLHliifYiZLX2KpJp/JFf
-GlSodNZf43W45fkhOO5+1xyiI5/KcDbu3U5IBYXVSmCSQsSeZWcydts0VhFTdXGC
-epXFQGet/BGcQ2yfZTuykkV+YepjF07Tk7KOm/4Gdbv7peiwv+dvI2Lef/x8d61y
-cUBhDvFOTToajfBJfwBhZ7dx7OgqLs2/DJdgvRZnE/q1VCq/1YyDl9uUXqvnAgCs
-2XlNTqpd0yH1IjQwz+/8lsGUht5MXA==
-=1ie6
------END PGP SIGNATURE-----
-
---kjpMrWxdCilgNbo1--
