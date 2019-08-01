@@ -2,76 +2,143 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B08C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819F8C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0F120838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:36:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PGunn+Yj"
+	by mail.kernel.org (Postfix) with ESMTP id 58A0E2084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564688220;
+	bh=lypMJbkrxUynjgnSEFuwofVmlVKCWiCa3c8E0G4VfEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=arxXgsMxC+rFqRsq9tnn9hwqTlLvTOYQ/7H9UNKUKkBkyzOWskak+uysyttTjMZNe
+	 3Lfr2+2xI+2aX2N342x3F6BcmovJHg1T1lB8gkmYUVlp5l9PYPw6O5L4zvuKmFlXeR
+	 b3o0MQ42TTYzM1YtJekdrj4OZJ/GUwtp9w+OK384=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388700AbfHATg2 (ORCPT
+        id S2388712AbfHATg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:36:28 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43994 "EHLO mail.skyhub.de"
+        Thu, 1 Aug 2019 15:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388668AbfHATg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:36:28 -0400
-Received: from zn.tnic (p200300EC2F159F00604C6CF9032D9ED3.dip0.t-ipconnect.de [IPv6:2003:ec:2f15:9f00:604c:6cf9:32d:9ed3])
+        id S2388609AbfHATg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 15:36:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 474D11EC074B;
-        Thu,  1 Aug 2019 21:36:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1564688186;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Wj8mRbobMSud+T3lGNLliqvBRTHfWGxvPzm0IzQzcmQ=;
-        b=PGunn+YjazMw/w+6oOlCIvfur7M+8Fhx4XWWeFQcrypfUdB5QIafb+T11S5lgzgMK/odR7
-        Yht5LDKnOWde3+lCrNutvl92KZ8ltY2l73xcpkT+RJO4+0HHaSC8cjPjLEIb6WJV4BvXSU
-        3buqKwW9vMMnEFhfICNDJmk74APHVZE=
-Date:   Thu, 1 Aug 2019 21:36:07 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] x86/asm: Add support for MOVDIR64B instruction
-Message-ID: <20190801193606.GA16031@zn.tnic>
-References: <20190730230554.8291-1-kirill.shutemov@linux.intel.com>
- <20190801095928.GA32138@nazgul.tnic>
- <20190801192030.GA11781@agluck-desk2.amr.corp.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2139520838;
+        Thu,  1 Aug 2019 19:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564688218;
+        bh=lypMJbkrxUynjgnSEFuwofVmlVKCWiCa3c8E0G4VfEA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hqnd451LmueSlcqobyaOj3Px3+5vctxxTbMIf2bZbHq6v8Cv8r4odS8S+vPi3lOtu
+         bON5FfervHBjLsYYb+LSR3gwalIPBmPD2hwq9XZI1PVyx4pvgWMBb88KXBaDYJD1To
+         whsURxIydlhyNIENR6hf6JH7TGu6ZUDx6DEbE96A=
+Date:   Thu, 1 Aug 2019 21:36:56 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tri Vo <trong@android.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
+Message-ID: <20190801193656.GB24916@kroah.com>
+References: <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com>
+ <6987393.M0uybTKmdI@kreacher>
+ <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com>
+ <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com>
+ <5d42281c.1c69fb81.bcda1.71f5@mx.google.com>
+ <5d423637.1c69fb81.62114.ca6f@mx.google.com>
+ <CAJZ5v0jkLXwqmXwyYtdZ9X2=W2KNKS4Ok_NrDew2yvvt1=4pgQ@mail.gmail.com>
+ <5d4305df.1c69fb81.c4013.1950@mx.google.com>
+ <CAJZ5v0hDE908XcreUyzZ8JGjFJbgVX1N1ELeMwf+n_ENxPA_DA@mail.gmail.com>
+ <5d433c91.1c69fb81.93f13.febc@mx.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801192030.GA11781@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5d433c91.1c69fb81.93f13.febc@mx.google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 12:20:30PM -0700, Luck, Tony wrote:
-> Just to get another of the non-controversial bits out of the
-> way before the main course arrives.
+On Thu, Aug 01, 2019 at 12:25:04PM -0700, Stephen Boyd wrote:
+> Quoting Rafael J. Wysocki (2019-08-01 10:21:44)
+> > On Thu, Aug 1, 2019 at 5:31 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > BTW, paths in /sys/devices aren't supposed to matter too much. In this
+> > > case, I'd expect to see userspace looking at the /sys/class/wakeup path
+> > > to follow the symlink to figure out what device triggered a wakeup. It
+> > > can look at the 'device' symlink inside the directory for the wakeup
+> > > device to figure out which one it is.
+> > 
+> > But if you go from the device, it would be good to be able to figure
+> > out which wakeup sources are associated with it and in the alarmtimer
+> > example you don't even see that it is a wakeup source without
+> > following the link.
+> 
+> Userspace shouldn't go from the device path (/sys/devices/.../rtc0 in
+> this example). That's incorrect. Instead, userspace should go from the
+> /sys/class/wakeup/... path. It should iterate over all the devices in
+> the class path and look at the device pointers instead.
+> 
+> # ls /sys/class/wakeup/*/device -l
+> lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/alarmtimer/device -> ../../rtc0
+> lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup0/device -> ../../../a6f8800.usb
+> lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup1/device -> ../../../a8f8800.usb
+> lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup2/device -> ../../../cros-ec-rtc.1.auto
+> lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup3/device -> ../../sbs-16-000b
+> lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup4/device -> ../../../a88000.spi:ec@0:keyboard-controller
+> lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup5/device -> ../../../spi10.0
+> lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup6/device -> ../../../gpio-keys
+> lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup7/device -> ../../../1-1.1
+> lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup8/device -> ../../../1-1.2.4.1
+> 
+> > 
+> > So the "wakeupN" virtual dev names for all wakeup source objects are
+> > less confusing IMO.
+> > 
+> > It would be good to avoid the glue dir creation in all cases somehow too.
+> 
+> I recall some differences between a bus_type and a class. Are you
+> suggesting to use a bus_type for the wakeup sources? I like the class
+> approach taken here to use different device names because it avoids the
+> name collisions, avoids making another attribute to express the name of
+> the wakeup source, and doesn't make a more heavyweight driver
+> abstraction on top of wakeup sources.
 
-Let's submit functions together with their respective users pls. Like we
-always do.
+This should be a class, as-is, not a bus type as these are all the same
+type of "interface" for many different individual devices.
 
-Thx.
+The difference between bus type and class is:
+	- class is almost always how userspace sees the device, and cuts
+	  across types of devices.  For example, a keyboard is a type of
+	  an input device, and it can be a serial, PS/2, bluetooth, or
+	  USB type of device.
+	- a bus is a common type of devices usually at the hardware
+	  level, where a driver is needed to send class-specific
+	  commands down to a specific hardware device.  Busses have
+	  drivers that bind a specific class to a specific device.
+	  For example, there is a USB bus, and it has USB drivers for
+	  things like a keyboard.  That USB keyboard driver knows how to
+	  talk to the specific USB commands for the hardware and
+	  translate them into specific input calls for the input class.
 
--- 
-Regards/Gruss,
-    Boris.
+Hope this helps explain things better.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+thanks,
+
+greg k-h
