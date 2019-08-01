@@ -2,109 +2,150 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDF6C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8526C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A714206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CFC206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:08:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="3xDAxEWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731660AbfHAQH7 (ORCPT
+        id S1732745AbfHAQIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:07:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:38504 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfHAQH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:07:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BEF84337;
-        Thu,  1 Aug 2019 09:07:58 -0700 (PDT)
-Received: from [10.32.8.205] (unknown [10.32.8.205])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B6A23F694;
-        Thu,  1 Aug 2019 09:07:55 -0700 (PDT)
-Subject: Re: [PATCH 5/8] arm64: use ZONE_DMA on DMA addressing limited devices
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     phill@raspberryi.org, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, f.fainelli@gmail.com,
-        frowand.list@gmail.com, eric@anholt.net, marc.zyngier@arm.com,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        robh+dt@kernel.org, wahrenst@gmx.net, mbrugger@suse.com,
-        akpm@linux-foundation.org, hch@lst.de,
-        linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
-References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
- <20190731154752.16557-6-nsaenzjulienne@suse.de>
- <20190731170742.GC17773@arrakis.emea.arm.com>
- <d8b4a7cb9c06824ca88a0602a5bf38b6324b43c0.camel@suse.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e35dd4a5-281b-d281-59c9-3fc7108eb8be@arm.com>
-Date:   Thu, 1 Aug 2019 17:07:54 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 1 Aug 2019 12:08:14 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:46889 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfHAQIN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:08:13 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71G82TJ010050
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 1 Aug 2019 09:08:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71G82TJ010050
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564675682;
+        bh=BeSO+XFfNYMZSS26kDLBaUm7Y96k9Dy2ppnatAp1m30=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=3xDAxEWpDxylUZCoVdm1J3o4ns+e7CKY6K6E76Pkd2pwWfIcsHQKBEPvSbJiv9TQv
+         1g2tyqYdi/YO0VhDSCmO1dCBpnUKJXZzZAlszFHrjnN2NHFnXMJ2ht4k6Lh8lKMdvD
+         Sb+k6AlDN5BaXVCChrquSKDtfvR3ZIgxoXJDkzMsUP+/dIEA1PgDo30+sl7O+jgyfW
+         1wxK7zKH0u1VZu25WyH/u1gt001yu5n7JDKOqDQviaim3nx77rRowAKmN1xc3kDnJJ
+         kP/orCMwkF7qFe2Pv/EALPwxQKx6nixGLCKWryiPM5DvwAHl/QKTZQ2aOC/XzLtKqG
+         Bv/5rj98QZltQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71G82U2010047;
+        Thu, 1 Aug 2019 09:08:02 -0700
+Date:   Thu, 1 Aug 2019 09:08:02 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-eb5d344194342c08406e0f04c224007ea7338c11@git.kernel.org>
+Cc:     tglx@linutronix.de, peterz@infradead.org, mingo@kernel.org,
+        bigeasy@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org
+Reply-To: tglx@linutronix.de, linux-kernel@vger.kernel.org,
+          mingo@kernel.org, peterz@infradead.org, hpa@zytor.com,
+          bigeasy@linutronix.de
+In-Reply-To: <20190730223828.965541887@linutronix.de>
+References: <20190730223828.965541887@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] posix-timers: Move rcu_head out of it union
+Git-Commit-ID: eb5d344194342c08406e0f04c224007ea7338c11
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <d8b4a7cb9c06824ca88a0602a5bf38b6324b43c0.camel@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-01 4:44 pm, Nicolas Saenz Julienne wrote:
-> On Wed, 2019-07-31 at 18:07 +0100, Catalin Marinas wrote:
->> On Wed, Jul 31, 2019 at 05:47:48PM +0200, Nicolas Saenz Julienne wrote:
->>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>> index 1c4ffabbe1cb..f5279ef85756 100644
->>> --- a/arch/arm64/mm/init.c
->>> +++ b/arch/arm64/mm/init.c
->>> @@ -50,6 +50,13 @@
->>>   s64 memstart_addr __ro_after_init = -1;
->>>   EXPORT_SYMBOL(memstart_addr);
->>>   
->>> +/*
->>> + * We might create both a ZONE_DMA and ZONE_DMA32. ZONE_DMA is needed if
->>> there
->>> + * are periferals unable to address the first naturally aligned 4GB of ram.
->>> + * ZONE_DMA32 will be expanded to cover the rest of that memory. If such
->>> + * limitations doesn't exist only ZONE_DMA32 is created.
->>> + */
->>
->> Shouldn't we instead only create ZONE_DMA to cover the whole 32-bit
->> range and leave ZONE_DMA32 empty? Can__GFP_DMA allocations fall back
->> onto ZONE_DMA32?
-> 
-> Hi Catalin, thanks for the review.
-> 
-> You're right, the GFP_DMA page allocation will fail with a nasty dmesg error if
-> ZONE_DMA is configured but empty. Unsurprisingly the opposite situation is fine
-> (GFP_DMA32 with an empty ZONE_DMA32).
+Commit-ID:  eb5d344194342c08406e0f04c224007ea7338c11
+Gitweb:     https://git.kernel.org/tip/eb5d344194342c08406e0f04c224007ea7338c11
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Wed, 31 Jul 2019 00:33:54 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 1 Aug 2019 17:46:42 +0200
 
-Was that tested on something other than RPi4 with more than 4GB of RAM? 
-(i.e. with a non-empty ZONE_NORMAL either way)
+posix-timers: Move rcu_head out of it union
 
-Robin.
+Timer deletion on PREEMPT_RT is prone to priority inversion and live
+locks. The hrtimer code has a synchronization mechanism for this. Posix CPU
+timers will grow one.
 
-> I switched to the scheme you're suggesting for the next version of the series.
-> The comment will be something the likes of this:
-> 
-> /*
->   * We create both a ZONE_DMA and ZONE_DMA32. ZONE_DMA's size is decided based
->   * on whether the SoC's peripherals are able to address the first naturally
->   * aligned 4 GB of ram.
->   *
->   * If limited, ZONE_DMA covers that area and ZONE_DMA32 the rest of that 32 bit
->   * addressable memory.
->   *
->   * If not ZONE_DMA is expanded to cover the whole 32 bit addressable memory and
->   * ZONE_DMA32 is left empty.
->   */
-> 
->   Regards,
->   Nicolas
-> 
-> 
+But that mechanism cannot be invoked while holding the k_itimer lock
+because that can deadlock against the running timer callback. So the lock
+must be dropped which allows the timer to be freed.
+
+The timer free can be prevented by taking RCU readlock before dropping the
+lock, but because the rcu_head is part of the 'it' union a concurrent free
+will overwrite the hrtimer on which the task is trying to synchronize.
+
+Move the rcu_head out of the union to prevent this.
+
+[ tglx: Fixed up kernel-doc. Rewrote changelog ]
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190730223828.965541887@linutronix.de
+
+---
+ include/linux/posix-timers.h | 5 +++--
+ kernel/time/posix-timers.c   | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
+index b20798fc5191..604cec0e41ba 100644
+--- a/include/linux/posix-timers.h
++++ b/include/linux/posix-timers.h
+@@ -85,7 +85,8 @@ static inline int clockid_to_fd(const clockid_t clk)
+  * @it_process:		The task to wakeup on clock_nanosleep (CPU timers)
+  * @sigq:		Pointer to preallocated sigqueue
+  * @it:			Union representing the various posix timer type
+- *			internals. Also used for rcu freeing the timer.
++ *			internals.
++ * @rcu:		RCU head for freeing the timer.
+  */
+ struct k_itimer {
+ 	struct list_head	list;
+@@ -114,8 +115,8 @@ struct k_itimer {
+ 		struct {
+ 			struct alarm	alarmtimer;
+ 		} alarm;
+-		struct rcu_head		rcu;
+ 	} it;
++	struct rcu_head		rcu;
+ };
+ 
+ void run_posix_cpu_timers(struct task_struct *task);
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index bbe8f9686a70..3e663f982c82 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -442,7 +442,7 @@ static struct k_itimer * alloc_posix_timer(void)
+ 
+ static void k_itimer_rcu_free(struct rcu_head *head)
+ {
+-	struct k_itimer *tmr = container_of(head, struct k_itimer, it.rcu);
++	struct k_itimer *tmr = container_of(head, struct k_itimer, rcu);
+ 
+ 	kmem_cache_free(posix_timers_cache, tmr);
+ }
+@@ -459,7 +459,7 @@ static void release_posix_timer(struct k_itimer *tmr, int it_id_set)
+ 	}
+ 	put_pid(tmr->it_pid);
+ 	sigqueue_free(tmr->sigq);
+-	call_rcu(&tmr->it.rcu, k_itimer_rcu_free);
++	call_rcu(&tmr->rcu, k_itimer_rcu_free);
+ }
+ 
+ static int common_timer_create(struct k_itimer *new_timer)
