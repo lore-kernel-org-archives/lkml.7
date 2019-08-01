@@ -4,59 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41113C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CF6C32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0502087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B432084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389766AbfHAWiS (ORCPT
+        id S2389777AbfHAWiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:38:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17310 "EHLO
+        Thu, 1 Aug 2019 18:38:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25496 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388221AbfHAWiR (ORCPT
+        by vger.kernel.org with ESMTP id S2389754AbfHAWiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:38:17 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71Mb4NV143647;
+        Thu, 1 Aug 2019 18:38:18 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71Mb2SR125196;
         Thu, 1 Aug 2019 18:37:49 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48hagxse-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u477ykns4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 01 Aug 2019 18:37:49 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71MbQNW144479;
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71MbWDT126063;
         Thu, 1 Aug 2019 18:37:49 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48hagxry-1
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u477yknrg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 01 Aug 2019 18:37:48 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MZMKn019580;
-        Thu, 1 Aug 2019 22:37:48 GMT
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MZIQ5026850;
+        Thu, 1 Aug 2019 22:37:47 GMT
 Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma02dal.us.ibm.com with ESMTP id 2u0e85xfuq-1
+        by ppma02wdc.us.ibm.com with ESMTP id 2u0e85w6n6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 22:37:48 +0000
+        Thu, 01 Aug 2019 22:37:47 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MblYj52232636
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MblaU44564954
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Thu, 1 Aug 2019 22:37:47 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 208BAB207A;
+        by IMSVA (Postfix) with ESMTP id 20C26B207B;
         Thu,  1 Aug 2019 22:37:47 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E4D47B2073;
+        by IMSVA (Postfix) with ESMTP id E7888B2075;
         Thu,  1 Aug 2019 22:37:46 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Thu,  1 Aug 2019 22:37:46 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 485E816C9A3A; Thu,  1 Aug 2019 15:37:48 -0700 (PDT)
+        id 4D12316C9A36; Thu,  1 Aug 2019 15:37:48 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -65,11 +64,10 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH tip/core/rcu 02/12] time/tick-broadcast: Fix tick_broadcast_offline() lockdep complaint
-Date:   Thu,  1 Aug 2019 15:37:37 -0700
-Message-Id: <20190801223747.15560-2-paulmck@linux.ibm.com>
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 03/12] rcu: Restore barrier() to rcu_read_lock() and rcu_read_unlock()
+Date:   Thu,  1 Aug 2019 15:37:38 -0700
+Message-Id: <20190801223747.15560-3-paulmck@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190801223708.GA14862@linux.ibm.com>
 References: <20190801223708.GA14862@linux.ibm.com>
@@ -77,7 +75,7 @@ X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_09:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=15 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908010238
@@ -86,250 +84,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TASKS03 and TREE04 rcutorture scenarios produce the following
-lockdep complaint:
+Commit bb73c52bad36 ("rcu: Don't disable preemption for Tiny and Tree
+RCU readers") removed the barrier() calls from rcu_read_lock() and
+rcu_write_lock() in CONFIG_PREEMPT=n&&CONFIG_PREEMPT_COUNT=n kernels.
+Within RCU, this commit was OK, but it failed to account for things like
+get_user() that can pagefault and that can be reordered by the compiler.
+Lack of the barrier() calls in rcu_read_lock() and rcu_read_unlock()
+can cause these page faults to migrate into RCU read-side critical
+sections, which in CONFIG_PREEMPT=n kernels could result in too-short
+grace periods and arbitrary misbehavior.  Please see commit 386afc91144b
+("spinlocks and preemption points need to be at least compiler barriers")
+and Linus's commit 66be4e66a7f4 ("rcu: locking and unlocking need to
+always be at least barriers"), this last of which restores the barrier()
+call to both rcu_read_lock() and rcu_read_unlock().
 
-------------------------------------------------------------------------
+This commit removes barrier() calls that are no longer needed given that
+the addition of them in Linus's commit noted above.  The combination of
+this commit and Linus's commit effectively reverts commit bb73c52bad36
+("rcu: Don't disable preemption for Tiny and Tree RCU readers").
 
-================================
-WARNING: inconsistent lock state
-5.2.0-rc1+ #513 Not tainted
---------------------------------
-inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-migration/1/14 [HC0[0]:SC0[0]:HE1:SE1] takes:
-(____ptrval____) (tick_broadcast_lock){?...}, at: tick_broadcast_offline+0xf/0x70
-{IN-HARDIRQ-W} state was registered at:
-  lock_acquire+0xb0/0x1c0
-  _raw_spin_lock_irqsave+0x3c/0x50
-  tick_broadcast_switch_to_oneshot+0xd/0x40
-  tick_switch_to_oneshot+0x4f/0xd0
-  hrtimer_run_queues+0xf3/0x130
-  run_local_timers+0x1c/0x50
-  update_process_times+0x1c/0x50
-  tick_periodic+0x26/0xc0
-  tick_handle_periodic+0x1a/0x60
-  smp_apic_timer_interrupt+0x80/0x2a0
-  apic_timer_interrupt+0xf/0x20
-  _raw_spin_unlock_irqrestore+0x4e/0x60
-  rcu_nocb_gp_kthread+0x15d/0x590
-  kthread+0xf3/0x130
-  ret_from_fork+0x3a/0x50
-irq event stamp: 171
-hardirqs last  enabled at (171): [<ffffffff8a201a37>] trace_hardirqs_on_thunk+0x1a/0x1c
-hardirqs last disabled at (170): [<ffffffff8a201a53>] trace_hardirqs_off_thunk+0x1a/0x1c
-softirqs last  enabled at (0): [<ffffffff8a264ee0>] copy_process.part.56+0x650/0x1cb0
-softirqs last disabled at (0): [<0000000000000000>] 0x0
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(tick_broadcast_lock);
-  <Interrupt>
-    lock(tick_broadcast_lock);
-
- *** DEADLOCK ***
-
-1 lock held by migration/1/14:
- #0: (____ptrval____) (clockevents_lock){+.+.}, at: tick_offline_cpu+0xf/0x30
-
-stack backtrace:
-CPU: 1 PID: 14 Comm: migration/1 Not tainted 5.2.0-rc1+ #513
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS Bochs 01/01/2011
-Call Trace:
- dump_stack+0x5e/0x8b
- print_usage_bug+0x1fc/0x216
- ? print_shortest_lock_dependencies+0x1b0/0x1b0
- mark_lock+0x1f2/0x280
- __lock_acquire+0x1e0/0x18f0
- ? __lock_acquire+0x21b/0x18f0
- ? _raw_spin_unlock_irqrestore+0x4e/0x60
- lock_acquire+0xb0/0x1c0
- ? tick_broadcast_offline+0xf/0x70
- _raw_spin_lock+0x33/0x40
- ? tick_broadcast_offline+0xf/0x70
- tick_broadcast_offline+0xf/0x70
- tick_offline_cpu+0x16/0x30
- take_cpu_down+0x7d/0xa0
- multi_cpu_stop+0xa2/0xe0
- ? cpu_stop_queue_work+0xc0/0xc0
- cpu_stopper_thread+0x6d/0x100
- smpboot_thread_fn+0x169/0x240
- kthread+0xf3/0x130
- ? sort_range+0x20/0x20
- ? kthread_cancel_delayed_work_sync+0x10/0x10
- ret_from_fork+0x3a/0x50
-
-------------------------------------------------------------------------
-
-To reproduce, run the following rcutorture test:
-
-        tools/testing/selftests/rcutorture/bin/kvm.sh --duration 5 --kconfig "CONFIG_DEBUG_LOCK_ALLOC=y CONFIG_PROVE_LOCKING=y" --configs "TASKS03 TREE04"
-
-It turns out that tick_broadcast_offline() was an innocent bystander.
-After all, interrupts are supposed to be disabled throughout
-take_cpu_down(), and therefore should have been disabled upon entry to
-tick_offline_cpu() and thus to tick_broadcast_offline().  This suggests
-that one of the CPU-hotplug notifiers was incorrectly enabling interrupts,
-and leaving them enabled on return.
-
-Some debugging code showed that the culprit was sched_cpu_dying().
-It had irqs enabled after return from sched_tick_stop().  Which in turn
-had irqs enabled after return from cancel_delayed_work_sync().  Which is a
-wrapper around __cancel_work_timer().  Which can sleep in the case where
-something else is concurrently trying to cancel the same delayed work,
-and as Thomas Gleixner pointed out on IRC, sleeping is a decidedly bad
-idea when you are invoked from take_cpu_down(), regardless of the state
-you leave interrupts in upon return.
-
-Code inspection located no reason why the delayed work absolutely
-needed to be canceled from sched_tick_stop():  The work is not
-bound to the outgoing CPU by design, given that the whole point is
-to collect statistics without disturbing the outgoing CPU.
-
-This commit therefore simply drops the cancel_delayed_work_sync() from
-sched_tick_stop().  Instead, a new ->state field is added to the tick_work
-structure so that the delayed-work handler function sched_tick_remote()
-can avoid reposting itself.  A cpu_is_offline() check is also added to
-sched_tick_remote() to avoid mucking with the state of an offlined CPU
-(though it does appear safe to do so).  The sched_tick_start() and
-sched_tick_stop() functions also update ->state, and sched_tick_start()
-also schedules the delayed work if ->state indicates that it is not
-already in flight.
-
+Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-[ paulmck: Apply Peter Zijlstra and Frederic Weisbecker atomics feedback. ]
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+[ paulmck: Fix embarrassing typo located by Alan Stern. ]
 ---
- kernel/sched/core.c | 57 ++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 49 insertions(+), 8 deletions(-)
+ .../RCU/Design/Requirements/Requirements.html | 71 +++++++++++++++++++
+ kernel/rcu/tree_plugin.h                      | 11 ---
+ 2 files changed, 71 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2b037f195473..0b22e55cebe8 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3486,8 +3486,36 @@ void scheduler_tick(void)
+diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
+index 5a9238a2883c..f04c467e55c5 100644
+--- a/Documentation/RCU/Design/Requirements/Requirements.html
++++ b/Documentation/RCU/Design/Requirements/Requirements.html
+@@ -2129,6 +2129,8 @@ Some of the relevant points of interest are as follows:
+ <li>	<a href="#Hotplug CPU">Hotplug CPU</a>.
+ <li>	<a href="#Scheduler and RCU">Scheduler and RCU</a>.
+ <li>	<a href="#Tracing and RCU">Tracing and RCU</a>.
++<li>	<a href="#Accesses to User Memory and RCU">
++Accesses to User Memory and RCU</a>.
+ <li>	<a href="#Energy Efficiency">Energy Efficiency</a>.
+ <li>	<a href="#Scheduling-Clock Interrupts and RCU">
+ 	Scheduling-Clock Interrupts and RCU</a>.
+@@ -2521,6 +2523,75 @@ cannot be used.
+ The tracing folks both located the requirement and provided the
+ needed fix, so this surprise requirement was relatively painless.
  
- struct tick_work {
- 	int			cpu;
-+	atomic_t		state;
- 	struct delayed_work	work;
- };
-+/* Values for ->state, see diagram below. */
-+#define TICK_SCHED_REMOTE_OFFLINE	0
-+#define TICK_SCHED_REMOTE_OFFLINING	1
-+#define TICK_SCHED_REMOTE_RUNNING	2
++<h3><a name="Accesses to User Memory and RCU">
++Accesses to User Memory and RCU</a></h3>
 +
-+/*
-+ * State diagram for ->state:
-+ *
-+ *
-+ *          TICK_SCHED_REMOTE_OFFLINE
-+ *                    |   ^
-+ *                    |   |
-+ *                    |   | sched_tick_remote()
-+ *                    |   |
-+ *                    |   |
-+ *                    +--TICK_SCHED_REMOTE_OFFLINING
-+ *                    |   ^
-+ *                    |   |
-+ * sched_tick_start() |   | sched_tick_stop()
-+ *                    |   |
-+ *                    V   |
-+ *          TICK_SCHED_REMOTE_RUNNING
-+ *
-+ *
-+ * Other transitions get WARN_ON_ONCE(), except that sched_tick_remote()
-+ * and sched_tick_start() are happy to leave the state in RUNNING.
-+ */
++<p>
++The kernel needs to access user-space memory, for example, to access
++data referenced by system-call parameters.
++The <tt>get_user()</tt> macro does this job.
++
++<p>
++However, user-space memory might well be paged out, which means
++that <tt>get_user()</tt> might well page-fault and thus block while
++waiting for the resulting I/O to complete.
++It would be a very bad thing for the compiler to reorder
++a <tt>get_user()</tt> invocation into an RCU read-side critical
++section.
++For example, suppose that the source code looked like this:
++
++<blockquote>
++<pre>
++ 1 rcu_read_lock();
++ 2 p = rcu_dereference(gp);
++ 3 v = p-&gt;value;
++ 4 rcu_read_unlock();
++ 5 get_user(user_v, user_p);
++ 6 do_something_with(v, user_v);
++</pre>
++</blockquote>
++
++<p>
++The compiler must not be permitted to transform this source code into
++the following:
++
++<blockquote>
++<pre>
++ 1 rcu_read_lock();
++ 2 p = rcu_dereference(gp);
++ 3 get_user(user_v, user_p); // BUG: POSSIBLE PAGE FAULT!!!
++ 4 v = p-&gt;value;
++ 5 rcu_read_unlock();
++ 6 do_something_with(v, user_v);
++</pre>
++</blockquote>
++
++<p>
++If the compiler did make this transformation in a
++<tt>CONFIG_PREEMPT=n</tt> kernel build, and if <tt>get_user()</tt> did
++page fault, the result would be a quiescent state in the middle
++of an RCU read-side critical section.
++This misplaced quiescent state could result in line&nbsp;4 being
++a use-after-free access, which could be bad for your kernel's
++actuarial statistics.
++Similar examples can be constructed with the call to <tt>get_user()</tt>
++preceding the <tt>rcu_read_lock()</tt>.
++
++<p>
++Unfortunately, <tt>get_user()</tt> doesn't have any particular
++ordering properties, and in some architectures the underlying <tt>asm</tt>
++isn't even marked <tt>volatile</tt>.
++And even if it was marked <tt>volatile</tt>, the above access to
++<tt>p-&gt;value</tt> is not volatile, so the compiler would not have any
++reason to keep those two accesses in order.
++
++<p>
++Therefore, the Linux-kernel definitions of <tt>rcu_read_lock()</tt>
++and <tt>rcu_read_unlock()</tt> must act as compiler barriers,
++at least for outermost instances of <tt>rcu_read_lock()</tt> and
++<tt>rcu_read_unlock()</tt> within a nested set of RCU read-side critical
++sections.
++
+ <h3><a name="Energy Efficiency">Energy Efficiency</a></h3>
  
- static struct tick_work __percpu *tick_work_cpu;
+ <p>
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index acb225023ed1..3f1b5041de9b 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -288,7 +288,6 @@ void rcu_note_context_switch(bool preempt)
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 	struct rcu_node *rnp;
  
-@@ -3500,6 +3528,7 @@ static void sched_tick_remote(struct work_struct *work)
- 	struct task_struct *curr;
- 	struct rq_flags rf;
- 	u64 delta;
-+	int os;
- 
- 	/*
- 	 * Handle the tick only if it appears the remote CPU is running in full
-@@ -3513,7 +3542,7 @@ static void sched_tick_remote(struct work_struct *work)
- 
- 	rq_lock_irq(rq, &rf);
- 	curr = rq->curr;
--	if (is_idle_task(curr))
-+	if (is_idle_task(curr) || cpu_is_offline(cpu))
- 		goto out_unlock;
- 
- 	update_rq_clock(rq);
-@@ -3533,13 +3562,18 @@ static void sched_tick_remote(struct work_struct *work)
- 	/*
- 	 * Run the remote tick once per second (1Hz). This arbitrary
- 	 * frequency is large enough to avoid overload but short enough
--	 * to keep scheduler internal stats reasonably up to date.
-+	 * to keep scheduler internal stats reasonably up to date.  But
-+	 * first update state to reflect hotplug activity if required.
- 	 */
--	queue_delayed_work(system_unbound_wq, dwork, HZ);
-+	os = atomic_fetch_add_unless(&twork->state, -1, TICK_SCHED_REMOTE_RUNNING);
-+	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_OFFLINE);
-+	if (os == TICK_SCHED_REMOTE_RUNNING)
-+		queue_delayed_work(system_unbound_wq, dwork, HZ);
+-	barrier(); /* Avoid RCU read-side critical sections leaking down. */
+ 	trace_rcu_utilization(TPS("Start context switch"));
+ 	lockdep_assert_irqs_disabled();
+ 	WARN_ON_ONCE(!preempt && t->rcu_read_lock_nesting > 0);
+@@ -340,7 +339,6 @@ void rcu_note_context_switch(bool preempt)
+ 	if (rdp->exp_deferred_qs)
+ 		rcu_report_exp_rdp(rdp);
+ 	trace_rcu_utilization(TPS("End context switch"));
+-	barrier(); /* Avoid RCU read-side critical sections leaking up. */
  }
+ EXPORT_SYMBOL_GPL(rcu_note_context_switch);
  
- static void sched_tick_start(int cpu)
+@@ -828,11 +826,6 @@ static void rcu_qs(void)
+  * dyntick-idle quiescent state visible to other CPUs, which will in
+  * some cases serve for expedited as well as normal grace periods.
+  * Either way, register a lightweight quiescent state.
+- *
+- * The barrier() calls are redundant in the common case when this is
+- * called externally, but just in case this is called from within this
+- * file.
+- *
+  */
+ void rcu_all_qs(void)
  {
-+	int os;
- 	struct tick_work *twork;
- 
- 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
-@@ -3548,15 +3582,20 @@ static void sched_tick_start(int cpu)
- 	WARN_ON_ONCE(!tick_work_cpu);
- 
- 	twork = per_cpu_ptr(tick_work_cpu, cpu);
--	twork->cpu = cpu;
--	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
--	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-+	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_RUNNING);
-+	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING);
-+	if (os == TICK_SCHED_REMOTE_OFFLINE) {
-+		twork->cpu = cpu;
-+		INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
-+		queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-+	}
- }
- 
- #ifdef CONFIG_HOTPLUG_CPU
- static void sched_tick_stop(int cpu)
- {
- 	struct tick_work *twork;
-+	int os;
- 
- 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
+@@ -847,14 +840,12 @@ void rcu_all_qs(void)
  		return;
-@@ -3564,7 +3603,10 @@ static void sched_tick_stop(int cpu)
- 	WARN_ON_ONCE(!tick_work_cpu);
- 
- 	twork = per_cpu_ptr(tick_work_cpu, cpu);
--	cancel_delayed_work_sync(&twork->work);
-+	/* There cannot be competing actions, but don't rely on stop-machine. */
-+	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_OFFLINING);
-+	WARN_ON_ONCE(os != TICK_SCHED_REMOTE_RUNNING);
-+	/* Don't cancel, as this would mess up the state machine. */
+ 	}
+ 	this_cpu_write(rcu_data.rcu_urgent_qs, false);
+-	barrier(); /* Avoid RCU read-side critical sections leaking down. */
+ 	if (unlikely(raw_cpu_read(rcu_data.rcu_need_heavy_qs))) {
+ 		local_irq_save(flags);
+ 		rcu_momentary_dyntick_idle();
+ 		local_irq_restore(flags);
+ 	}
+ 	rcu_qs();
+-	barrier(); /* Avoid RCU read-side critical sections leaking up. */
+ 	preempt_enable();
  }
- #endif /* CONFIG_HOTPLUG_CPU */
- 
-@@ -3572,7 +3614,6 @@ int __init sched_tick_offload_init(void)
+ EXPORT_SYMBOL_GPL(rcu_all_qs);
+@@ -864,7 +855,6 @@ EXPORT_SYMBOL_GPL(rcu_all_qs);
+  */
+ void rcu_note_context_switch(bool preempt)
  {
- 	tick_work_cpu = alloc_percpu(struct tick_work);
- 	BUG_ON(!tick_work_cpu);
--
- 	return 0;
+-	barrier(); /* Avoid RCU read-side critical sections leaking down. */
+ 	trace_rcu_utilization(TPS("Start context switch"));
+ 	rcu_qs();
+ 	/* Load rcu_urgent_qs before other flags. */
+@@ -877,7 +867,6 @@ void rcu_note_context_switch(bool preempt)
+ 		rcu_tasks_qs(current);
+ out:
+ 	trace_rcu_utilization(TPS("End context switch"));
+-	barrier(); /* Avoid RCU read-side critical sections leaking up. */
  }
+ EXPORT_SYMBOL_GPL(rcu_note_context_switch);
  
 -- 
 2.17.1
