@@ -2,95 +2,128 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB172C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00F4C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10502087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 748222087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731112AbfHALw5 (ORCPT
+        id S1731165AbfHALxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:52:57 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:53324 "EHLO inva020.nxp.com"
+        Thu, 1 Aug 2019 07:53:01 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:53776 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730514AbfHALw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:52:57 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 867A51A0105;
-        Thu,  1 Aug 2019 13:52:54 +0200 (CEST)
+        id S1730968AbfHALw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 07:52:58 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7683320023B;
+        Thu,  1 Aug 2019 13:52:56 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7A0F51A0074;
-        Thu,  1 Aug 2019 13:52:54 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 69B8B200099;
+        Thu,  1 Aug 2019 13:52:56 +0200 (CEST)
 Received: from fsr-ub1664-016.ea.freescale.net (fsr-ub1664-016.ea.freescale.net [10.171.71.216])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 14B04205E3;
-        Thu,  1 Aug 2019 13:52:54 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 03F7B205E3;
+        Thu,  1 Aug 2019 13:52:55 +0200 (CEST)
 From:   Claudiu Manoil <claudiu.manoil@nxp.com>
 To:     "David S . Miller" <davem@davemloft.net>
 Cc:     andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>,
         Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v5 0/5] enetc: Add mdio bus driver for the PCIe MDIO endpoint
-Date:   Thu,  1 Aug 2019 14:52:48 +0300
-Message-Id: <1564660373-4607-1-git-send-email-claudiu.manoil@nxp.com>
+Subject: [PATCH net-next v5 4/5] dt-bindings: net: fsl: enetc: Add bindings for the central MDIO PCIe endpoint
+Date:   Thu,  1 Aug 2019 14:52:52 +0300
+Message-Id: <1564660373-4607-5-git-send-email-claudiu.manoil@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564660373-4607-1-git-send-email-claudiu.manoil@nxp.com>
+References: <1564660373-4607-1-git-send-email-claudiu.manoil@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First patch fixes a sparse issue and cleans up accessors to avoid
-casting to __iomem.  The second one cleans up the Makefile, to make
-it easier to add new entries.
+The on-chip PCIe root complex that integrates the ENETC ethernet
+controllers also integrates a PCIe endpoint for the MDIO controller
+providing for centralized control of the ENETC mdio bus.
+Add bindings for this "central" MDIO Integrated PCIe Endpoint.
 
-Third patch just registers the PCIe endpoint device containing
-the MDIO registers as a standalone MDIO bus driver, to provide
-an alternative way to control the MDIO bus.  The same code used
-by the ENETC ports (eth controllers) to manage MDIO via local
-registers applies and is reused.
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+v1 - none
+v2 - none
+v3 - fixed spelling (commit message mostly)
+v4 - none
+v4 - none
 
-Bindings are provided for the new MDIO node, similarly to ENETC
-port nodes bindings.
+ .../devicetree/bindings/net/fsl-enetc.txt     | 42 +++++++++++++++++--
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
-Last patch enables the ENETC port 1 and its RGMII PHY on the
-LS1028A QDS board, where the MDIO muxing configuration relies
-on the MDIO support provided in the first patch.
-
-Changes since v0:
-v1 - fixed mdio bus allocation
-v2 - cleaned up accessors to avoid casting
-v3 - fixed spelling (mostly commit message)
-v4 - fixed err path check blunder
-v5 - fixed loadble module build, provided separate kbuild module
-     for the driver
-
-
-Claudiu Manoil (5):
-  enetc: Clean up local mdio bus allocation
-  enetc: Clean up makefile
-  enetc: Add mdio bus driver for the PCIe MDIO endpoint
-  dt-bindings: net: fsl: enetc: Add bindings for the central MDIO PCIe
-    endpoint
-  arm64: dts: fsl: ls1028a: Enable eth port1 on the ls1028a QDS board
-
- .../devicetree/bindings/net/fsl-enetc.txt     |  42 +++++++-
- .../boot/dts/freescale/fsl-ls1028a-qds.dts    |  40 +++++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   6 ++
- drivers/net/ethernet/freescale/enetc/Kconfig  |   9 ++
- drivers/net/ethernet/freescale/enetc/Makefile |  19 ++--
- .../net/ethernet/freescale/enetc/enetc_mdio.c |  97 ++++++++---------
- .../net/ethernet/freescale/enetc/enetc_mdio.h |  12 +++
- .../ethernet/freescale/enetc/enetc_pci_mdio.c | 101 ++++++++++++++++++
- .../net/ethernet/freescale/enetc/enetc_pf.c   |   5 +-
- 9 files changed, 264 insertions(+), 67 deletions(-)
- create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_mdio.h
- create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-
+diff --git a/Documentation/devicetree/bindings/net/fsl-enetc.txt b/Documentation/devicetree/bindings/net/fsl-enetc.txt
+index 25fc687419db..b7034ccbc1bd 100644
+--- a/Documentation/devicetree/bindings/net/fsl-enetc.txt
++++ b/Documentation/devicetree/bindings/net/fsl-enetc.txt
+@@ -11,7 +11,9 @@ Required properties:
+ 		  to parent node bindings.
+ - compatible	: Should be "fsl,enetc".
+ 
+-1) The ENETC external port is connected to a MDIO configurable phy:
++1. The ENETC external port is connected to a MDIO configurable phy
++
++1.1. Using the local ENETC Port MDIO interface
+ 
+ In this case, the ENETC node should include a "mdio" sub-node
+ that in turn should contain the "ethernet-phy" node describing the
+@@ -47,8 +49,42 @@ Example:
+ 		};
+ 	};
+ 
+-2) The ENETC port is an internal port or has a fixed-link external
+-connection:
++1.2. Using the central MDIO PCIe endpoint device
++
++In this case, the mdio node should be defined as another PCIe
++endpoint node, at the same level with the ENETC port nodes.
++
++Required properties:
++
++- reg		: Specifies PCIe Device Number and Function
++		  Number of the ENETC endpoint device, according
++		  to parent node bindings.
++- compatible	: Should be "fsl,enetc-mdio".
++
++The remaining required mdio bus properties are standard, their bindings
++already defined in Documentation/devicetree/bindings/net/mdio.txt.
++
++Example:
++
++	ethernet@0,0 {
++		compatible = "fsl,enetc";
++		reg = <0x000000 0 0 0 0>;
++		phy-handle = <&sgmii_phy0>;
++		phy-connection-type = "sgmii";
++	};
++
++	mdio@0,3 {
++		compatible = "fsl,enetc-mdio";
++		reg = <0x000300 0 0 0 0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		sgmii_phy0: ethernet-phy@2 {
++			reg = <0x2>;
++		};
++	};
++
++2. The ENETC port is an internal port or has a fixed-link external
++connection
+ 
+ In this case, the ENETC port node defines a fixed link connection,
+ as specified by Documentation/devicetree/bindings/net/fixed-link.txt.
 -- 
 2.17.1
 
