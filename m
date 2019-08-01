@@ -2,117 +2,183 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EB1C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCCCC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D299220449
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360CF2087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="VlByBvhv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oBd0jXTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725804AbfHARLa (ORCPT
+        id S1733261AbfHARMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 13:11:30 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37350 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfHARLa (ORCPT
+        Thu, 1 Aug 2019 13:12:02 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50174 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbfHARMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 13:11:30 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 19so34431251pfa.4
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 10:11:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=S5pAcAWsPPL0MV2KKFJY33gKzjahDxo4hJJq/wxTMVc=;
-        b=VlByBvhvRL+XmaFAU3VB8OborKi+m09XsvzhG9WU/pWtCUbQQ+E5NH79qqWsZa00LZ
-         jJ4RJmrvEmR7zeeOgNkLeNf89Gt4rmY0tRsf6KccJxr98X/AqTQQo1vlpeoMtphmSGnm
-         NK1ZKbZH+c8wowIfHC6do4T6UHziLYOJxIHNfTAwiYnxBVhBziQbkAL24FMnFp1R8MP1
-         KmcRY3F2+2C8iZBkCXD6A8J/RQ8CEUdesFlMRC9BP4rL1x/XU/xmBK/JL8irNrAhSspO
-         PSQ/0rzQj6VCfUWIZg1/DpoDJ7lV3NjnflJOyfWShiGixzr1Wy5TaQZbJHel9xjdroVx
-         gcFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=S5pAcAWsPPL0MV2KKFJY33gKzjahDxo4hJJq/wxTMVc=;
-        b=c2tsNaolKBDJY3PLSXIDLnX3iHCoUusxFMDKzYb40BjVbFgKdImMcvmgsepLNXe1fX
-         4VgEk43KSRLYji1u8DBeUsoUe+wEMT006xwXG6am2Zeki/F1CMX51U630D3LWQLMWp4s
-         uaVoibrpK3KrlBh8crCHJ0IoTrU1BDmvSoQ5+3hbDxNYPLU9LtK/tT/xFoSU+nGSDKxL
-         pkZyRzB6E+F9LKfA6z26cPVh31YQHIe7t6sRS4TMUSTC2REwOlyyU5sIVYCnzwe/7sR/
-         ZWFLww9/jA/o5XqJ/f+E9hZ5ijMO3AqZNqYx7r47IYpdG02dl5MiTmdHWnBs9FW8joWy
-         cVeA==
-X-Gm-Message-State: APjAAAWMuVTjRxvK3xLuGEEo+Ql573RaQi+kD80h5wEJMHmbCnISSAGu
-        OoY812toX+vb09nCfG8VgT1mlA==
-X-Google-Smtp-Source: APXvYqykClrbWkVs37QIGRuxgTaiZdW7Mkeb95+2ryFaT6ZIRFtDjFKWRRz+f2vMZYg2i7+zRfgqDA==
-X-Received: by 2002:a63:d315:: with SMTP id b21mr97212834pgg.326.1564679489621;
-        Thu, 01 Aug 2019 10:11:29 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b05c:1777:5b8:a455:199a:e2a8? ([2600:1010:b05c:1777:5b8:a455:199a:e2a8])
-        by smtp.gmail.com with ESMTPSA id r27sm79185309pgn.25.2019.08.01.10.11.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 10:11:28 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
+        Thu, 1 Aug 2019 13:12:01 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x71HApN7050476;
+        Thu, 1 Aug 2019 12:10:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564679451;
+        bh=dD7/0WiXM2Fbz3i5RnKq7tf9bBDBOzFjHTRPalRBNpA=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=oBd0jXTOv/5HQvQL5K495vveI1xDKf6GAIpKLZ4aaNqvmJoEo8n2ggyiUCIYn+dFB
+         4gKPpUscvp/7CGwsGnnMT0sielgkG/7uR/LJcp7YOA+7swNDLKykShjFXUaZwSd10k
+         8ed5eKO/42a6xa+nf0FBReMSm9mkomjzfbsXpPxw=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x71HApVF085880
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 1 Aug 2019 12:10:51 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 1 Aug
+ 2019 12:10:50 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 1 Aug 2019 12:10:50 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x71HAowW070786;
+        Thu, 1 Aug 2019 12:10:50 -0500
+From:   Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v2 4/6] irqchip/irq-pruss-intc: Add helper functions to
+ configure internal mapping
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        David Lechner <david@lechnology.com>,
+        Tony Lindgren <tony@atomide.com>,
+        "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190731224149.11153-1-s-anna@ti.com>
+ <20190731224149.11153-5-s-anna@ti.com>
+ <1a63eb50-7c5c-eb3d-3cbe-bd1cc59ce3fe@kernel.org>
+Message-ID: <89abc27f-5d02-a8ce-df0e-b185c2a647cd@ti.com>
+Date:   Thu, 1 Aug 2019 12:10:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1a63eb50-7c5c-eb3d-3cbe-bd1cc59ce3fe@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [patch 1/5] tracehook: Provide TIF_NOTIFY_RESUME handling for KVM
-Date:   Thu, 1 Aug 2019 10:02:38 -0700
-Message-Id: <05C28F0C-5D8C-4A77-8D1B-FAC91DCF1115@amacapital.net>
-References: <20190801143250.370326052@linutronix.de> <20190801143657.785902257@linutronix.de> <20190801144814.GC31398@hirez.programming.kicks-ass.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, kvm@vger.kernel.org,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-In-Reply-To: <20190801144814.GC31398@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: iPhone Mail (16F203)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Marc,
 
-> On Aug 1, 2019, at 7:48 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+On 8/1/19 3:45 AM, Marc Zyngier wrote:
+> On 31/07/2019 23:41, Suman Anna wrote:
+>> The PRUSS INTC receives a number of system input interrupt source events
+>> and supports individual control configuration and hardware prioritization.
+>> These input events can be mapped to some output interrupt lines through 2
+>> levels of many-to-one mapping i.e. events to channel mapping and channels
+>> to output interrupts.
+>>
+>> This mapping information is provided through the PRU firmware that is
+>> loaded onto a PRU core/s or through the device tree node of the PRU
+>> application. The mapping is configured by the PRU remoteproc driver, and
+>> is setup before the PRU core is started and cleaned up after the PRU core
+>> is stopped. This event mapping configuration logic programs the Channel
+>> Map Registers (CMRx) and Host-Interrupt Map Registers (HMRx) only when a
+>> new program is being loaded/started and the same events and interrupt
+>> channels are reset to zero when stopping a PRU.
+>>
+>> Add two helper functions: pruss_intc_configure() & pruss_intc_unconfigure()
+>> that the PRU remoteproc driver can use to configure the PRUSS INTC.
 > 
->> On Thu, Aug 01, 2019 at 04:32:51PM +0200, Thomas Gleixner wrote:
->> +#ifdef CONFIG_HAVE_ARCH_TRACEHOOK
->> +/**
->> + * tracehook_handle_notify_resume - Notify resume handling for virt
->> + *
->> + * Called with interrupts and preemption enabled from VMENTER/EXIT.
->> + */
->> +void tracehook_handle_notify_resume(void)
->> +{
->> +    local_irq_disable();
->> +    while (test_and_clear_thread_flag(TIF_NOTIFY_RESUME)) {
->> +        local_irq_enable();
->> +        tracehook_notify_resume(NULL);
->> +        local_irq_disable();
->> +    }
->> +    local_irq_enable();
+> So let me see if I correctly understand this: this adds yet another
+> firmware description parser, with a private interface to another
+> (undisclosed?) driver, bypassing the standard irqchip configuration
+> mechanism. It sounds great, doesn't it?
 > 
-> I'm confused by the IRQ state swizzling here, what is it doing?
+> What I cannot really infer from this message (-ETOOMUCHJARGON) is what
+> interrupts this affects:
+> 
+> - Interrupts from random devices to the PRUSS?
+> - Interrupts from the PRUSS to the host?
+> - Something else?
 
-Me too. Also, why is a loop needed?
+The interrupt sources (called system events) can be from internal PRUSS
+peripherals, SoC-level peripherals or just software triggering (limited
+to some events).
+
+So, the PRUSS INTC behaves as a funnel and is both an interrupt router
+and multiplexer. The INTC itself is part of the PRUSS, and all PRU
+application related interrupts/events that need to trigger an interrupt
+to either the PRU cores or other host processors (like DSP, ARM) have to
+go through this INTC, and routed out to a limited number of output
+interrupts that are then connected to different processors.
+
+The split of interrupt handling between a PRU and its peer host
+processor will be a application design choice (We can implement soft IPs
+like UARTs, ADCs, I2Cs etc using PRUs). Some of the input events
+themselves are multiplexed and controlled by a single MMR (outside of
+INTC) that feeds different sets of events into the INTC. The MMR
+configuration is outside of scope of this driver and will depend on the
+application/client driver being run.
 
 > 
->> +}
->> +EXPORT_SYMBOL_GPL(tracehook_handle_notify_resume);
->> +#endif
->> 
->> 
+> When does this happen? Under control of what? It isn't even clear why
+> this is part of this irqchip driver.
+
+The mapping configuration is per PRU application and firmware, and is
+done in line with acquiring and release a PRU which is treated as an
+exclusive resource. We establish the mapping for all events through this
+driver including the events that are to be routed to PRUs. This is done
+to save the tiny/limited Instruction RAM space that PRUs have.
+
+We have designed this as an irqchip driver (instead of some custom SoC
+driver exporting custom functions) to use standard Linux semantics/irq
+API and better integrate with Linux DT, but we need some semantics for
+establishing the routing at runtime depending on the PRU client driver
+we are running. The exported functions will be called only by the PRU
+remoteproc driver during a pru_rproc_get()/pru_rproc_put(), and are
+transparent to PRU client drivers.
+
+Please also see the discussion from v1 [1] on why we can't use an
+extended number of interrupt-cells infrastructure for achieving this.
+
+[1] https://patchwork.kernel.org/patch/11034563/
+
+
+> Depending what this does, there may be ways to fit it into the standard
+> interrupt configuration framework. After all, we already have standard
+> interfaces to route interrupts to virtual CPUs, effectively passing full
+> control of an interrupt to another entity. If you squint hard enough,
+> your PRUSS can fit that description.
+
+Yeah, I am open to suggestions if there is a better way of doing this.
+
+regards
+Suman
+
+> 
+> If that doesn't work, then we need to make the IRQ framework grok that
+> kind of requirement (hence my request for clarification). But I'm
+> strongly opposed to inventing a SoC-private way of configuring
+> interrupts behind the kernel's back.
+> 
+> Thanks,
+> 
+> 	M.
+> 
+
