@@ -2,169 +2,106 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7CEC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E382FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2316B20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564669030;
-	bh=HGLKtz9qN4jc0KK3e+I6/XpyZTIwJ7/OXBr+cEG9gxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c1lMX6qwQ2b44Jw7Hjwm0dsKYGbomNhAvzYNosEhtU3CLoDz6frK/qcCO5lwSmjj7
-	 K9AB6UXGQTvPOV3hZzrcVf7VTF1nDzk42U3R7xH9mYU4YIvIaFLzjNykrIUxK2t/IY
-	 IgUiMczTtJ7vfe+F0VoCUKzrIvs0kCA5Rg9SzJ/U=
+	by mail.kernel.org (Postfix) with ESMTP id B1E2F20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731903AbfHAORJ (ORCPT
+        id S1731913AbfHAOSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:17:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41121 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729149AbfHAORI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:17:08 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so70567718wrm.8;
-        Thu, 01 Aug 2019 07:17:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HKF3166gvz5+E0AYlc4TPktG4r3p+wz5j7C+OwZ5mY8=;
-        b=JtX6UHg+sGBahZBSiWFubFtOIUDyR0pQQs1DKZPQbdWIU4V764RqroT0+nHKYjhzvr
-         tJRIdef0yjoCUTdzzKNG7PPKK4dVP49PyZh64NaBJ6nnI5w+/J7LECdxUZQpzMX8oS9+
-         2j2o9/DnsG2zLMRGk9j/B/I74opfwsiGPyXRhNbggIeBhBDFK0q8sDiB5WblylkhfUIU
-         ncvymhGmOUckvmUSGSXpEP7qDvVAPxgRzDlzlYgS2ylaaCrqv+yM3AtiI8thYTiRmUGl
-         H+lwZGRH0lFqztBPdL1pk2bn5AtBPsIwd/Ot4+06av3Pt/BPsUiESbuAgbO3oUIh4B3x
-         /glQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HKF3166gvz5+E0AYlc4TPktG4r3p+wz5j7C+OwZ5mY8=;
-        b=WRLqhMrqNIjpXdOaa/jCg7ZnaR7HngLeQraOP7FGdYnS2femuhvATJgkZ7GmTYJlw4
-         PbnGFI4R/yMoyrTI1I8IAiT64I+pp0DeSQw8MRpr4F+QfixKHWJyqcfSDcVkBYJYsyZT
-         NteME+c4zlN1x4SqOIAl1gQMPyaJ00sh0spkOMoIbOA2VSFwcKPBZUruCAQm+xooUrwr
-         XdJyrYoTQ6qmhMwAxEADn0QL+g+GaVGC/SS0EFnvzXFH22Ww/vdS68irMaaqS3KONwPy
-         Hjk4llgG/Q0GVdElDTlUlK5AfBdLgK2rA+d5eeHM4eI/Ie3FAS8NSod/6xm3PP9T/QtS
-         Fy5Q==
-X-Gm-Message-State: APjAAAX8X5HEIXp9vmTTS5xBsd0AU5R7zuVFVLnQM8MgzzlkZxBDEKFW
-        CLeDzRA6pK+5AAEeWYQ1mE0=
-X-Google-Smtp-Source: APXvYqwaVSh2wfqR7ZJl9zgO332rafYDXj6QzlZhom3wr8XM08rG9eVv6iOzeEuki1e+ISyRdsb1dQ==
-X-Received: by 2002:a5d:6190:: with SMTP id j16mr2175499wru.49.1564669025577;
-        Thu, 01 Aug 2019 07:17:05 -0700 (PDT)
-Received: from rric.localdomain (x4e365c6b.dyn.telefonica.de. [78.54.92.107])
-        by smtp.gmail.com with ESMTPSA id p6sm78875566wrq.97.2019.08.01.07.17.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 01 Aug 2019 07:17:04 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 16:17:01 +0200
-From:   Robert Richter <rric@kernel.org>
-To:     "Hawa, Hanna" <hhhawa@amazon.com>
-Cc:     thor.thayer@linux.intel.com, bp@alien8.de, mchehab@kernel.org,
-        james.morse@arm.com, morbidrsa@gmail.com, ralf@linux-mips.org,
-        david.daney@cavium.com, andy.gross@linaro.org,
-        david.brown@linaro.org, ckadabi@codeaurora.org,
-        vnkgutta@codeaurora.org, jglauber@cavium.com,
-        khuong@os.amperecomputing.com, dwmw@amazon.co.uk, benh@amazon.com,
-        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
-        hanochu@amazon.com, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [RFC 1/1] edac: Add a counter parameter for
- edac_device_handle_ue/ce()
-Message-ID: <20190801141701.bmcken464mrqwhdg@rric.localdomain>
-References: <1563187987-5847-1-git-send-email-hhhawa@amazon.com>
- <20190801113548.7leooh57gihixen5@rric.localdomain>
- <7d6aac9e-20e5-3901-a423-d76ac917b251@amazon.com>
+        Thu, 1 Aug 2019 10:18:03 -0400
+Received: from mga09.intel.com ([134.134.136.24]:42140 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729149AbfHAOSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:18:03 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 07:18:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,334,1559545200"; 
+   d="scan'208";a="177831661"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga006.jf.intel.com with ESMTP; 01 Aug 2019 07:18:02 -0700
+Date:   Thu, 1 Aug 2019 07:18:02 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH 3/5] x86: KVM: svm: clear interrupt shadow on all paths
+ in skip_emulated_instruction()
+Message-ID: <20190801141802.GA6783@linux.intel.com>
+References: <20190801051418.15905-1-vkuznets@redhat.com>
+ <20190801051418.15905-4-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7d6aac9e-20e5-3901-a423-d76ac917b251@amazon.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190801051418.15905-4-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.08.19 15:29:03, Hawa, Hanna wrote:
-> On 8/1/2019 2:35 PM, Robert Richter wrote:
-> > On 15.07.19 13:53:07, Hanna Hawa wrote:
-> > > Add a counter parameter in order to avoid losing errors count for edac
-> > > device, the error count reports the number of errors reported by an edac
-> > > device similar to the way MC_EDAC do.
-> > > 
-> > > Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> > > ---
-> > >   drivers/edac/altera_edac.c      | 20 ++++++++++++--------
-> > >   drivers/edac/amd8111_edac.c     |  6 +++---
-> > >   drivers/edac/cpc925_edac.c      |  4 ++--
-> > >   drivers/edac/edac_device.c      | 18 ++++++++++--------
-> > >   drivers/edac/edac_device.h      |  8 ++++++--
-> > >   drivers/edac/highbank_l2_edac.c |  4 ++--
-> > >   drivers/edac/mpc85xx_edac.c     |  4 ++--
-> > >   drivers/edac/mv64x60_edac.c     |  4 ++--
-> > >   drivers/edac/octeon_edac-l2c.c  | 20 ++++++++++----------
-> > >   drivers/edac/octeon_edac-pc.c   |  6 +++---
-> > >   drivers/edac/qcom_edac.c        |  8 ++++----
-> > >   drivers/edac/thunderx_edac.c    | 10 +++++-----
-> > >   drivers/edac/xgene_edac.c       | 26 +++++++++++++-------------
-> > >   13 files changed, 74 insertions(+), 64 deletions(-)
-> > 
-> > > diff --git a/drivers/edac/edac_device.h b/drivers/edac/edac_device.h
-> > > index 1aaba74..cf1a1da 100644
-> > > --- a/drivers/edac/edac_device.h
-> > > +++ b/drivers/edac/edac_device.h
-> > > @@ -290,23 +290,27 @@ extern struct edac_device_ctl_info *edac_device_del_device(struct device *dev);
-> > >    *	perform a common output and handling of an 'edac_dev' UE event
-> > >    *
-> > >    * @edac_dev: pointer to struct &edac_device_ctl_info
-> > > + * @error_count: number of errors of the same type
-> > >    * @inst_nr: number of the instance where the UE error happened
-> > >    * @block_nr: number of the block where the UE error happened
-> > >    * @msg: message to be printed
-> > >    */
-> > >   extern void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
-> > > -				int inst_nr, int block_nr, const char *msg);
-> > > +				  u16 error_count, int inst_nr, int block_nr,
-> > > +				  const char *msg);
-> > >   /**
-> > >    * edac_device_handle_ce():
-> > >    *	perform a common output and handling of an 'edac_dev' CE event
-> > >    *
-> > >    * @edac_dev: pointer to struct &edac_device_ctl_info
-> > > + * @error_count: number of errors of the same type
-> > >    * @inst_nr: number of the instance where the CE error happened
-> > >    * @block_nr: number of the block where the CE error happened
-> > >    * @msg: message to be printed
-> > >    */
-> > >   extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-> > 
-> > How about renaming this to __edac_device_handle_ce() and then have 2
-> > macros for:
-> > 
-> >   * edac_device_handle_ce() to keep old i/f.
-> > 
-> >   * edac_device_handle_ce_count(), with count parameter added.
-> > 
-> > Same for uncorrectable errors.
-> > 
-> > Code of other driver can be kept as it is then.
+On Thu, Aug 01, 2019 at 07:14:16AM +0200, Vitaly Kuznetsov wrote:
+> Regardless of the way how we skip instruction, interrupt shadow needs to be
+> cleared.
 > 
-> Don't you think it'll be confused to have different APIs between EDAC_MC and
-> EDAC_DEVICE?
-> (in MC the count passed as part of edac_mc_handle_error())
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Reviewed-by: Jim Mattson <jmattson@google.com>
+> ---
+>  arch/x86/kvm/svm.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 80f576e05112..7c7dff3f461f 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -784,13 +784,15 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+>  				EMULATE_DONE)
+>  			pr_err_once("KVM: %s: unable to skip instruction\n",
+>  				    __func__);
+> -		return;
+> +		goto clear_int_shadow;
 
-I don't think edac_mc_handle_error() with 11 function arguments is a
-good reference for somethin we want to adopt. For the majority of
-drivers you just introduce another useless argument with the following
-pattern:
+A better fix would be to clear the interrupt shadow in x86_emulate_instruction()
+after updating RIP for EMULTYPE_SKIP.  VMX has this same flaw when running
+nested as handle_ept_misconfig() also expects the interrupt shadow to be
+handled by kvm_emulate_instruction().  Clearing the shadow if and only if
+the skipping is successful also means KVM isn't incorrectly zapping the
+shadow when emulation fails.
 
-	edac_device_handle_ce(edac_dev, 1, 0, 0, edac_dev_name);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 01e18caac825..f25521fb1c42 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6537,6 +6537,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+                kvm_rip_write(vcpu, ctxt->_eip);
+                if (ctxt->eflags & X86_EFLAGS_RF)
+                        kvm_set_rflags(vcpu, ctxt->eflags & ~X86_EFLAGS_RF);
++               kvm_x86_ops->set_interrupt_shadow(vcpu, 0);
+                return EMULATE_DONE;
+        }
 
-IMO, the api should be improved when touching it.
-
--Robert
+>  	}
+>  	if (svm->next_rip - kvm_rip_read(vcpu) > MAX_INST_SIZE)
+>  		printk(KERN_ERR "%s: ip 0x%lx next 0x%llx\n",
+>  		       __func__, kvm_rip_read(vcpu), svm->next_rip);
+>  
+>  	kvm_rip_write(vcpu, svm->next_rip);
+> +
+> +clear_int_shadow:
+>  	svm_set_interrupt_shadow(vcpu, 0);
+>  }
+>  
+> -- 
+> 2.20.1
+> 
