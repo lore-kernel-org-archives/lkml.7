@@ -4,29 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383E8C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B96C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C1D20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F7420838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388639AbfHAXpW (ORCPT
+        id S2388315AbfHAXqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:45:22 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:32972 "EHLO ale.deltatee.com"
+        Thu, 1 Aug 2019 19:46:37 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:32988 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732215AbfHAXpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:45:21 -0400
+        id S2388590AbfHAXpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 19:45:22 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1htKl2-0002MB-Of; Thu, 01 Aug 2019 17:45:19 -0600
+        id 1htKl2-0002MZ-Tp; Thu, 01 Aug 2019 17:45:21 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1htKl1-000259-Jn; Thu, 01 Aug 2019 17:45:15 -0600
+        id 1htKl2-00025g-Ol; Thu, 01 Aug 2019 17:45:16 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
@@ -35,19 +36,18 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu,  1 Aug 2019 17:45:02 -0600
-Message-Id: <20190801234514.7941-4-logang@deltatee.com>
+Date:   Thu,  1 Aug 2019 17:45:13 -0600
+Message-Id: <20190801234514.7941-15-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190801234514.7941-1-logang@deltatee.com>
 References: <20190801234514.7941-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v7 03/14] nvmet: add return value to  nvmet_add_async_event()
+Subject: [PATCH v7 14/14] nvmet-passthru: support block accounting
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,64 +55,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Support block disk accounting by setting the RQF_IO_STAT flag
+and gendisk in the request.
 
-Change the return value for nvmet_add_async_event().
+After this change, IO counts will be reflected correctly in
+/proc/diskstats for drives being used by passthru.
 
-This change is needed for the target passthru code to generate async
-events.
-
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-[logang@deltatee.com: fixed up commit message that was no
- longer accurate]
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/nvme/target/core.c  | 5 +++--
- drivers/nvme/target/nvmet.h | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/nvme/target/io-cmd-passthru.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 3a67e244e568..f7f25bdc4763 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -173,14 +173,14 @@ static void nvmet_async_event_work(struct work_struct *work)
- 	}
- }
+diff --git a/drivers/nvme/target/io-cmd-passthru.c b/drivers/nvme/target/io-cmd-passthru.c
+index 06a919283cc5..cb193b434545 100644
+--- a/drivers/nvme/target/io-cmd-passthru.c
++++ b/drivers/nvme/target/io-cmd-passthru.c
+@@ -441,6 +441,9 @@ static struct request *nvmet_passthru_blk_make_request(struct nvmet_req *req,
+ 	if (unlikely(IS_ERR(rq)))
+ 		return rq;
  
--void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
-+bool nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
- 		u8 event_info, u8 log_page)
- {
- 	struct nvmet_async_event *aen;
++	if (blk_queue_io_stat(q) && cmd->common.opcode != nvme_cmd_flush)
++		rq->rq_flags |= RQF_IO_STAT;
++
+ 	if (req->sg_cnt) {
+ 		ret = nvmet_passthru_map_sg(req, rq);
+ 		if (unlikely(ret)) {
+@@ -505,7 +508,7 @@ static void nvmet_passthru_execute_cmd(struct nvmet_req *req)
  
- 	aen = kmalloc(sizeof(*aen), GFP_KERNEL);
- 	if (!aen)
--		return;
-+		return false;
- 
- 	aen->event_type = event_type;
- 	aen->event_info = event_info;
-@@ -191,6 +191,7 @@ void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
- 	mutex_unlock(&ctrl->lock);
- 
- 	schedule_work(&ctrl->async_event_work);
-+	return true;
- }
- 
- static void nvmet_add_to_changed_ns_log(struct nvmet_ctrl *ctrl, __le32 nsid)
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index c51f8dd01dc4..217a787952e8 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -441,7 +441,7 @@ void nvmet_port_disc_changed(struct nvmet_port *port,
- 		struct nvmet_subsys *subsys);
- void nvmet_subsys_disc_changed(struct nvmet_subsys *subsys,
- 		struct nvmet_host *host);
--void nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
-+bool nvmet_add_async_event(struct nvmet_ctrl *ctrl, u8 event_type,
- 		u8 event_info, u8 log_page);
- 
- #define NVMET_QUEUE_SIZE	1024
+ 	rq->end_io_data = req;
+ 	if (req->sq->qid != 0) {
+-		blk_execute_rq_nowait(rq->q, NULL, rq, 0,
++		blk_execute_rq_nowait(rq->q, ns->disk, rq, 0,
+ 				      nvmet_passthru_req_done);
+ 	} else {
+ 		req->p.rq = rq;
 -- 
 2.20.1
 
