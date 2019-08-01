@@ -2,143 +2,190 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B2BC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C513C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B102064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:46:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564699607;
-	bh=UeLNpEixnXbKvwgJpTtAY8hdbUWhDwC44RHkWyuOxdo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=l77+M/oLf5hVOxHx4kNzS/IuYla/X0rj+WZ0b6NgeweQto1wsTkOYJWR3Pl/1fJNJ
-	 g5U2A+b5sxFhCamgXfCrTauizgdrVtYfjmansSxr3F4B0zI9kfF8qaPbX0i6SATK47
-	 QQ2eI1Ikc9WgT8GMW1vEZb40u4CYD4PfwrnPP4Mk=
+	by mail.kernel.org (Postfix) with ESMTP id 9799E206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:50:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="cbGOYfl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733052AbfHAWqq (ORCPT
+        id S2390042AbfHAWuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:46:46 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42294 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732187AbfHAWqp (ORCPT
+        Thu, 1 Aug 2019 18:50:14 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46341 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732058AbfHAWuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:46:45 -0400
-Received: by mail-ot1-f67.google.com with SMTP id l15so76089427otn.9;
-        Thu, 01 Aug 2019 15:46:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6/A0oFUJlLeWDW4iRfhcabTxuKQ2E0T/S9GKqy4yr6w=;
-        b=BRFT8UXsCmKc+OO2lHbV7mRLsfKRHlLFZnfbx3esM7Tvh0DSSG/njPGNhXFfdLtinR
-         H3CujCvYD6Fz3mUajjZiESx/yrdDpVbK2GI38lybPxxDQM4vYVAU4r2PsWUTRUkviw8l
-         e/09PQF21TUdQhvCLemgvD0S1RLprfovxqdWzRpUHfywYIl+rW3lZAzjY+PdFO2YOBPd
-         1TDEFK6hH4ApoOd9805eegNx7+op9SNenBQ33FywpxwB01QMsvXFuDWR/ycGxVIAmsr1
-         NdKkofCQ5DCnQYi1kYb6lEIyHQbJHjJnVLaOU98yxi9JKSAmgH7difzC9kxvUSFifhNV
-         qLHA==
-X-Gm-Message-State: APjAAAU5p098XhP2NOzaHG71tauh/i8/93cn5+sD5l4vJSSy9kS3VI4P
-        q3Sxquz8yhmZmTjZmczkYibAIWHkgrhmqDbASJfAIg==
-X-Google-Smtp-Source: APXvYqxSnifKD3zLTP20OF59FU7o3QBu7uY673X7OYVYnL7YJ6f84BMO1+q791T5S82mWIpAvyCQnCeyFRFn0MrxQMs=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr92227045otp.189.1564699604701;
- Thu, 01 Aug 2019 15:46:44 -0700 (PDT)
+        Thu, 1 Aug 2019 18:50:14 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 93F9E886BF;
+        Fri,  2 Aug 2019 10:50:10 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1564699810;
+        bh=A/JEprKOo3XQFYMzYvttJ9D89Rk+PL3gbi4n0kq+uZY=;
+        h=From:To:Cc:Subject:Date;
+        b=cbGOYfl38VKhW+sOjwodouRzMm10xVaFwlej6uzAqQiSiDFunF/khMVqybwYooplf
+         sMS/T6n9k5uO21DBeBZWPpz8O9g5JDOk1SGAmfQFXxQcvORKaeYt8/nZanAIp0PFlc
+         RIiYeZil627gx9p5LlDuzKHlhL+Y38z3vY6QBzzwtZP0tYtn5lMsQui2Tn5upyr4wh
+         tgNJXaXx4Y9dTfcT9ca6OOj7yG05LQ9XxCmbqzgWlOo4rYE53mk4lyyj12mL3svGaU
+         fZuJzMMePaJZo43UWeEroxjMQWRilKT7YHC3OsQW8LbcxBbIXtoNvBlhNByUxhvto8
+         CoNu30wwXXZqg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d436ca10000>; Fri, 02 Aug 2019 10:50:09 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by smtp (Postfix) with ESMTP id 6DED913EC73;
+        Fri,  2 Aug 2019 10:50:12 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 3657C1E0504; Fri,  2 Aug 2019 10:50:10 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        christophe.leroy@c-s.fr, malat@debian.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v3] powerpc: Support CMDLINE_EXTEND
+Date:   Fri,  2 Aug 2019 10:50:06 +1200
+Message-Id: <20190801225006.21952-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190731215514.212215-1-trong@android.com> <32598586.Mjd66ZhNnG@kreacher>
- <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com>
- <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com>
- <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com>
- <5d42281c.1c69fb81.bcda1.71f5@mx.google.com> <CANA+-vCoCuMtSKCfnav9NSwrzX7of9iLbppNX+pcymBp19kgQQ@mail.gmail.com>
- <5d434a23.1c69fb81.c4201.c65b@mx.google.com> <CANA+-vCt3QJDykzbZWBDZyaiaMiz_SOJ+Htv7+G0czjL07MjmQ@mail.gmail.com>
- <5d4363ae.1c69fb81.b621e.65ed@mx.google.com>
-In-Reply-To: <5d4363ae.1c69fb81.b621e.65ed@mx.google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 2 Aug 2019 00:46:33 +0200
-Message-ID: <CAJZ5v0jTviWeJhrWHGrtQHrVXAPoHDyFs6-06paJPHX-mH33bg@mail.gmail.com>
-Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Tri Vo <trong@android.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 12:11 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Tri Vo (2019-08-01 14:44:52)
-> > On Thu, Aug 1, 2019 at 1:23 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > >
-> > > I don't find it awkward or difficult. Just know what the name of the
-> > > /sys/class/wakeup/ path is and then extract the name from there if it
-> > > doesn't match wakeupN, otherwise read the 'device' symlink and run it
-> > > through basename.
-> >
-> > The concern was that having both "id" and "name" around might be
-> > confusing. I don't think that making the presence of "name"
-> > conditional helps here. And we have to maintain additional logic in
-> > both kernel and userspace to support this.
-> >
-> > Also, say, userspace grabs a wakelock named "wakeup0". In the current
-> > patch, this results in a name collision and an error. Even assuming
-> > that userspace doesn't have ill intent, it still needs to be aware of
-> > "wakeupN" naming pattern to avoid this error condition.
-> >
-> > All wakeup sources in the /sys/class/wakeup/ are in the same namespace
-> > regardless of where they originate from, i.e. we have to either (1)
-> > inspect the name of a wakeup source and make sure it's unique before
-> > using it as a directory name OR (2) generate the directory name on
-> > behalf of whomever is registering a wakeup source, which I think is a
-> > much simpler solution.
->
-> Ok. If the device name is going to be something generic like 'wakeupN',
-> then we need to make sure that the wakeup source name is unique.
-> Otherwise, I'm not able to see how userspace will differentiate between
-> two of the same named wakelocks. Before this patch the wakeup source
-> name looks to have been used for debugging, but now it's being used
-> programmatically to let userspace act upon it somehow.
+Bring powerpc in line with other architectures that support extending or
+overriding the bootloader provided command line.
 
-I'm not actually sure if this patch changes the situation with respect
-to wakeup source names.   User space still can use them for whatever
-it used to use the list in debugfs and that's it.
+The current behaviour is most like CMDLINE_FROM_BOOTLOADER where the
+bootloader command line is preferred but the kernel config can provide a
+fallback so CMDLINE_FROM_BOOTLOADER is the default. CMDLINE_EXTEND can
+be used to append the CMDLINE from the kernel config to the one provided
+by the bootloader.
 
-That's what I mean by retaining the names for "backwards compatibility only".
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+Changes in v3:
+- don't use BUG_ON in prom_strlcat
+- rearrange things to eliminate prom_strlcpy
 
-> Maybe it's for debug still, but I could see how userspace may want to hunt down the
-> wakelock that's created in userspace and penalize or kill the task
-> that's waking up the device.
+Changes in v2:
+- incorporate ideas from Christope's patch https://patchwork.ozlabs.org/p=
+atch/1074126/
+- support CMDLINE_FORCE
 
-It can't do that right now.
+ arch/powerpc/Kconfig            | 20 +++++++++++++++++-
+ arch/powerpc/kernel/prom_init.c | 36 ++++++++++++++++++++++-----------
+ 2 files changed, 43 insertions(+), 13 deletions(-)
 
-> I see that wakelock_lookup_add() already checks the list of wakelock
-> wakeup sources, but I don't see how I can't create an "alarmtimer"
-> wakelock again, but this time for userspace, by writing into
-> /sys/power/wake_lock.
->
-> What happens with namespaces here BTW? Can a wakelock be made in one
-> namespace and that is the same name as another wakelock in a different
-> namespace? Right now it doesn't look possible because of the global name
-> matching, but it probably makes sense to support this? Maybe we just
-> shouldn't make anything in sysfs for wake sources that can be any random
-> name created from the wakelock path right now. I don't see how it can be
-> traced back to the process that created it in any reasonable way.
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 77f6ebf97113..d413fe1b4058 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -852,15 +852,33 @@ config CMDLINE
+ 	  some command-line options at build time by entering them here.  In
+ 	  most cases you will need to specify the root device here.
+=20
++choice
++	prompt "Kernel command line type" if CMDLINE !=3D ""
++	default CMDLINE_FROM_BOOTLOADER
++
++config CMDLINE_FROM_BOOTLOADER
++	bool "Use bootloader kernel arguments if available"
++	help
++	  Uses the command-line options passed by the boot loader. If
++	  the boot loader doesn't provide any, the default kernel command
++	  string provided in CMDLINE will be used.
++
++config CMDLINE_EXTEND
++	bool "Extend bootloader kernel arguments"
++	help
++	  The command-line arguments provided by the boot loader will be
++	  appended to the default kernel command string.
++
+ config CMDLINE_FORCE
+ 	bool "Always use the default kernel command string"
+-	depends on CMDLINE_BOOL
+ 	help
+ 	  Always use the default kernel command string, even if the boot
+ 	  loader passes other arguments to the kernel.
+ 	  This is useful if you cannot or don't want to change the
+ 	  command-line options your boot loader passes to the kernel.
+=20
++endchoice
++
+ config EXTRA_TARGETS
+ 	string "Additional default image types"
+ 	help
+diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_i=
+nit.c
+index 514707ef6779..1c7010cc6ec9 100644
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -298,16 +298,24 @@ static char __init *prom_strstr(const char *s1, con=
+st char *s2)
+ 	return NULL;
+ }
+=20
+-static size_t __init prom_strlcpy(char *dest, const char *src, size_t si=
+ze)
+-{
+-	size_t ret =3D prom_strlen(src);
++static size_t __init prom_strlcat(char *dest, const char *src, size_t co=
+unt)
++{
++	size_t dsize =3D prom_strlen(dest);
++	size_t len =3D prom_strlen(src);
++	size_t res =3D dsize + len;
++
++	/* This would be a bug */
++	if (dsize >=3D count)
++		return count;
++
++	dest +=3D dsize;
++	count -=3D dsize;
++	if (len >=3D count)
++		len =3D count-1;
++	memcpy(dest, src, len);
++	dest[len] =3D 0;
++	return res;
+=20
+-	if (size) {
+-		size_t len =3D (ret >=3D size) ? size - 1 : ret;
+-		memcpy(dest, src, len);
+-		dest[len] =3D '\0';
+-	}
+-	return ret;
+ }
+=20
+ #ifdef CONFIG_PPC_PSERIES
+@@ -759,10 +767,14 @@ static void __init early_cmdline_parse(void)
+=20
+ 	prom_cmd_line[0] =3D 0;
+ 	p =3D prom_cmd_line;
+-	if ((long)prom.chosen > 0)
++
++	if (!IS_ENABLED(CONFIG_CMDLINE_FORCE) && (long)prom.chosen > 0)
+ 		l =3D prom_getprop(prom.chosen, "bootargs", p, COMMAND_LINE_SIZE-1);
+-	if (IS_ENABLED(CONFIG_CMDLINE_BOOL) && (l <=3D 0 || p[0] =3D=3D '\0')) =
+/* dbl check */
+-		prom_strlcpy(prom_cmd_line, CONFIG_CMDLINE, sizeof(prom_cmd_line));
++
++	if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) || l <=3D 0 || p[0] =3D=3D '\0')
++		prom_strlcat(prom_cmd_line, " " CONFIG_CMDLINE,
++			     sizeof(prom_cmd_line));
++
+ 	prom_printf("command line: %s\n", prom_cmd_line);
+=20
+ #ifdef CONFIG_PPC64
+--=20
+2.22.0
 
-It can't.
-
-The assumption was that there would be a "manager" process in user
-space controlling access to this interface and it would do its own
-tracking.  That predated namespaces though. :-)
