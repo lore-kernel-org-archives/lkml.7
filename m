@@ -2,219 +2,209 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DBAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0480EC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CF7214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:02:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dol+D83w"
+	by mail.kernel.org (Postfix) with ESMTP id BEAB920B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfHAFCK (ORCPT
+        id S1729293AbfHAFC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 01:02:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34309 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728774AbfHAFCK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 01:02:10 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w9so2710288wmd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 22:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lMqNv0u8vBtruasmPaSSkIba00POWJCMhQidPLWHY2M=;
-        b=dol+D83wA19zSVl89V10SNxHVy3VlznKnl5Umucz1gmDWVF7T8xfFC2TsjaHKxbd5p
-         MWqtlXDMw9eXmw49icqt8ZgKuwj6EkQkGCJZ2yeGvcEy9ofj0w0wSG3gk1nMsx14MEEo
-         zAv965eqloPiIVBPO2FOXLVcKgZlOupIwdZJky3vmh+gPvQhmxK459/wGlQ2S0RUzW8N
-         6U7n4UHPgVStZErjETjSp2udtUh+I7TLF5PveAGoONlFJzPlMKazI2ZHhWIMGWwgKzH3
-         X5T7KrYIUyMOcO3cYiej1UpibwurUn/vZVF8VPIn60bQwSZ6+r1RUOHl+Kj3tG1HnOM+
-         N4rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lMqNv0u8vBtruasmPaSSkIba00POWJCMhQidPLWHY2M=;
-        b=ckZ0ssF76rqyBN73AKIrg07F9deuBGbgFEQaSobuS3kRgggGMmJNPbdeng9PhdzJhM
-         L1L2EBJKNA6Mu31dzsWYsjMy2xe5mDz0heezAsfEmKGc//er21dLs5Ehg/CLzmD0l1DK
-         GG+bZkcfHzRpGTvd1pVn85hrHlVgK0ps2QzSiwePb6AUFkHCdmNqvXGMP7r8eYPWMr5z
-         /OZBc5M3YrHJJ2RdV6w1+dg5yRcQeyHFzzGgEh6EhMus1FCCiaP00vK1/vZx/x3Wen5K
-         5MeP7Vo6vlW2swVXACtRuHVUhInxGJ0bwFoVcdnEa7HiGMBS6y7BfnZXrcDlxkwDFIc5
-         rjzQ==
-X-Gm-Message-State: APjAAAWvl+NTc2D5WioruQG7/UAA80ablbx/Y2jGODYTxvjEzxGCxz4P
-        LKPl7Pm7t0IPnlmagXYzjyyp6PD5L/2A+UCPwPhUuQ==
-X-Google-Smtp-Source: APXvYqzW9Hm/OljmGnTNE3pQDpI/o8Ig99QXpNTASPVxDa38zfbVgd64ARE5k51pWFYGwCPqbIFwrAG+M8Ie4C+Isp4=
-X-Received: by 2002:a1c:b706:: with SMTP id h6mr110550423wmf.119.1564635726867;
- Wed, 31 Jul 2019 22:02:06 -0700 (PDT)
+        Thu, 1 Aug 2019 01:02:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54300 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728774AbfHAFC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 01:02:26 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 218028A004;
+        Thu,  1 Aug 2019 05:02:25 +0000 (UTC)
+Received: from [10.72.12.66] (ovpn-12-66.pek2.redhat.com [10.72.12.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CC4F4600C4;
+        Thu,  1 Aug 2019 05:02:19 +0000 (UTC)
+Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
+ with worker
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20190731084655.7024-1-jasowang@redhat.com>
+ <20190731084655.7024-8-jasowang@redhat.com> <20190731123935.GC3946@ziepe.ca>
+ <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
+ <20190731193057.GG3946@ziepe.ca>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
+Date:   Thu, 1 Aug 2019 13:02:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <13353.1564635114@turing-police>
-In-Reply-To: <13353.1564635114@turing-police>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 1 Aug 2019 08:01:54 +0300
-Message-ID: <CAKv+Gu8EF3R05hLWHh7mgbgkUyzBwELctdVvSFMq+6Crw6Tf4A@mail.gmail.com>
-Subject: Re: [PATCH] linux-next 20190731 - aegis128-core.c fails to build
-To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190731193057.GG3946@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 01 Aug 2019 05:02:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+ Arnd)
 
-On Thu, 1 Aug 2019 at 07:52, Valdis Kl=C4=93tnieks <valdis.kletnieks@vt.edu=
-> wrote:
->
-> The recent NEON SIMD patches break the build if CONFIG_CRYPTO_AEGIS128_SI=
-MD isn't set:
->
->   MODPOST 558 modules
-> ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefine=
-d!
-> ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
-> ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefine=
-d!
-> make[1]: *** [scripts/Makefile.modpost:105: modules-modpost] Error 1
-> make: *** [Makefile:1299: modules] Error 2
->
-> Add proper definitions and stubs to aegis.h so it builds both ways. This
-> necessitated moving other stuff from aegis128-core.c to aegis.h so things=
- were
-> defined in the proper order.
->
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+On 2019/8/1 上午3:30, Jason Gunthorpe wrote:
+> On Wed, Jul 31, 2019 at 09:28:20PM +0800, Jason Wang wrote:
+>> On 2019/7/31 下午8:39, Jason Gunthorpe wrote:
+>>> On Wed, Jul 31, 2019 at 04:46:53AM -0400, Jason Wang wrote:
+>>>> We used to use RCU to synchronize MMU notifier with worker. This leads
+>>>> calling synchronize_rcu() in invalidate_range_start(). But on a busy
+>>>> system, there would be many factors that may slow down the
+>>>> synchronize_rcu() which makes it unsuitable to be called in MMU
+>>>> notifier.
+>>>>
+>>>> A solution is SRCU but its overhead is obvious with the expensive full
+>>>> memory barrier. Another choice is to use seqlock, but it doesn't
+>>>> provide a synchronization method between readers and writers. The last
+>>>> choice is to use vq mutex, but it need to deal with the worst case
+>>>> that MMU notifier must be blocked and wait for the finish of swap in.
+>>>>
+>>>> So this patch switches use a counter to track whether or not the map
+>>>> was used. The counter was increased when vq try to start or finish
+>>>> uses the map. This means, when it was even, we're sure there's no
+>>>> readers and MMU notifier is synchronized. When it was odd, it means
+>>>> there's a reader we need to wait it to be even again then we are
+>>>> synchronized.
+>>> You just described a seqlock.
+>>
+>> Kind of, see my explanation below.
+>>
+>>
+>>> We've been talking about providing this as some core service from mmu
+>>> notifiers because nearly every use of this API needs it.
+>>
+>> That would be very helpful.
+>>
+>>
+>>> IMHO this gets the whole thing backwards, the common pattern is to
+>>> protect the 'shadow pte' data with a seqlock (usually open coded),
+>>> such that the mmu notififer side has the write side of that lock and
+>>> the read side is consumed by the thread accessing or updating the SPTE.
+>>
+>> Yes, I've considered something like that. But the problem is, mmu notifier
+>> (writer) need to wait for the vhost worker to finish the read before it can
+>> do things like setting dirty pages and unmapping page.  It looks to me
+>> seqlock doesn't provide things like this.
+> The seqlock is usually used to prevent a 2nd thread from accessing the
+> VA while it is being changed by the mm. ie you use something seqlocky
+> instead of the ugly mmu_notifier_unregister/register cycle.
 
-Which compiler version are you using? All references to the
-crypt_aegis128_xx_simd() routines should disappear if
-CONFIG_CRYPTO_AEGIS128_SIMD is not set (in which case have_simd will
-always be false and so the compiler should optimize away those calls).
+
+Yes, so we have two mappings:
+
+[1] vring address to VA
+[2] VA to PA
+
+And have several readers and writers
+
+1) set_vring_num_addr(): writer of both [1] and [2]
+2) MMU notifier: reader of [1] writer of [2]
+3) GUP: reader of [1] writer of [2]
+4) memory accessors: reader of [1] and [2]
+
+Fortunately, 1) 3) and 4) have already synchronized through vq->mutex. 
+We only need to deal with synchronization between 2) and each of the reset:
+Sync between 1) and 2): For mapping [1], I do 
+mmu_notifier_unregister/register. This help to avoid holding any lock to 
+do overlap check. Anyway we only care about one or three pages , but the 
+whole guest memory could be several TBs. For mapping [2], both 1) and 2) 
+are writers, so use spinlock (mmu_lock) to synchronize.
+Sync between 2) and 3): For mapping [1], both are readers, no need any 
+synchronization. For mapping [2], both 2) and 3) are writers, so 
+synchronize through spinlock (mmu_lock);
+Sync between 2) and 4): For mapping [1], both are readers, no need any 
+synchronization. For mapping [2], synchronize through RCU (or something 
+simliar to seqlock).
+
+You suggestion is about the synchronization of [1] which may make sense, 
+but it could be done on top as an optimization. What this path tries to 
+do is to not use RCU for [2]. Of course, the simplest way is to use vq 
+mutex in 2) but it means:
+- we must hold vq lock to check range overlap
+- since the critical section was increased, the worst case is to wait 
+guest memory to be swapped in, this could be even slower than 
+synchronize_rcu().
 
 
-> ---
-> diff --git a/crypto/aegis.h b/crypto/aegis.h
-> index 4d56a85aea49..50a7496ca4ae 100644
-> --- a/crypto/aegis.h
-> +++ b/crypto/aegis.h
-> @@ -13,6 +13,11 @@
->  #include <linux/bitops.h>
->  #include <linux/types.h>
 >
-> +#define AEGIS128_NONCE_SIZE 16
-> +#define AEGIS128_STATE_BLOCKS 5
-> +#define AEGIS128_KEY_SIZE 16
-> +#define AEGIS128_MIN_AUTH_SIZE 8
-> +#define AEGIS128_MAX_AUTH_SIZE 16
->  #define AEGIS_BLOCK_SIZE 16
+> You are supposed to use something simple like a spinlock or mutex
+> inside the invalidate_range_start to serialized tear down of the SPTEs
+> with their accessors.
+
+
+Technically yes, but we probably can't afford that for vhost fast path, 
+the atomics eliminate almost all the performance improvement brought by 
+this patch on a machine without SMAP.
+
+
 >
->  union aegis_block {
-> @@ -21,6 +26,39 @@ union aegis_block {
->         u8 bytes[AEGIS_BLOCK_SIZE];
->  };
+>> write_seqcount_begin()
+>>
+>> map = vq->map[X]
+>>
+>> write or read through map->addr directly
+>>
+>> write_seqcount_end()
+>>
+>>
+>> There's no rmb() in write_seqcount_begin(), so map could be read before
+>> write_seqcount_begin(), but it looks to me now that this doesn't harm at
+>> all, maybe we can try this way.
+> That is because it is a write side lock, not a read lock. IIRC
+> seqlocks have weaker barriers because the write side needs to be
+> serialized in some other way.
+
+
+Yes. Having a hard thought of the code, it looks to me 
+write_seqcount_begin()/end() is sufficient here:
+
+- Notifier will only assign NULL to map, so it doesn't harm to read map 
+before seq, then we will fallback to normal copy_from/to_user() slow 
+path earlier
+- if we write through map->addr, it should be done before increasing the 
+seqcount because of the smp_wmb() in write_seqcount_end()
+- if we read through map->addr which also contain a store to a pointer, 
+we have a good data dependency so smp_wmb() also work here.
+
+
 >
-> +struct aegis_state {
-> +       union aegis_block blocks[AEGIS128_STATE_BLOCKS];
-> +};
-> +
-> +struct aegis_ctx {
-> +       union aegis_block key;
-> +};
-> +
-> +struct aegis128_ops {
-> +       int (*skcipher_walk_init)(struct skcipher_walk *walk,
-> +                                 struct aead_request *req, bool atomic);
-> +
-> +       void (*crypt_chunk)(struct aegis_state *state, u8 *dst,
-> +                           const u8 *src, unsigned int size);
-> +};
-> +
-> +
-> +#ifdef CONFIG_CRYPTO_AEGIS128_SIMD
-> +bool crypto_aegis128_have_simd(void);
-> +void crypto_aegis128_update_simd(struct aegis_state *state, const void *=
-msg);
-> +void crypto_aegis128_encrypt_chunk_simd(struct aegis_state *state, u8 *d=
-st,
-> +                                       const u8 *src, unsigned int size)=
-;
-> +void crypto_aegis128_decrypt_chunk_simd(struct aegis_state *state, u8 *d=
-st,
-> +                                       const u8 *src, unsigned int size)=
-;
-> +#else
-> +static inline bool crypto_aegis128_have_simd(void) { return false; }
-> +static inline void crypto_aegis128_update_simd(struct aegis_state *state=
-, const void *msg) { }
-> +static inline void crypto_aegis128_encrypt_chunk_simd(struct aegis_state=
- *state, u8 *dst,
-> +                                       const u8 *src, unsigned int size)=
- { }
-> +static inline void crypto_aegis128_decrypt_chunk_simd(struct aegis_state=
- *state, u8 *dst,
-> +                                       const u8 *src, unsigned int size)=
- { }
-> +#endif
-> +
->  #define AEGIS_BLOCK_ALIGN (__alignof__(union aegis_block))
->  #define AEGIS_ALIGNED(p) IS_ALIGNED((uintptr_t)p, AEGIS_BLOCK_ALIGN)
+> The requirement I see is you need invalidate_range_start to block
+> until another thread exits its critical section (ie stops accessing
+> the SPTEs).
+
+
+Yes.
+
+
 >
-> diff --git a/crypto/aegis128-core.c b/crypto/aegis128-core.c
-> index f815b4685156..8b738128a921 100644
-> --- a/crypto/aegis128-core.c
-> +++ b/crypto/aegis128-core.c
-> @@ -20,37 +20,8 @@
+> That is a spinlock/mutex.
+
+
+Or a semantics similar to RCU.
+
+
 >
->  #include "aegis.h"
+> You just can't invent a faster spinlock by open coding something with
+> barriers, it doesn't work.
 >
-> -#define AEGIS128_NONCE_SIZE 16
-> -#define AEGIS128_STATE_BLOCKS 5
-> -#define AEGIS128_KEY_SIZE 16
-> -#define AEGIS128_MIN_AUTH_SIZE 8
-> -#define AEGIS128_MAX_AUTH_SIZE 16
-> -
-> -struct aegis_state {
-> -       union aegis_block blocks[AEGIS128_STATE_BLOCKS];
-> -};
-> -
-> -struct aegis_ctx {
-> -       union aegis_block key;
-> -};
-> -
-> -struct aegis128_ops {
-> -       int (*skcipher_walk_init)(struct skcipher_walk *walk,
-> -                                 struct aead_request *req, bool atomic);
-> -
-> -       void (*crypt_chunk)(struct aegis_state *state, u8 *dst,
-> -                           const u8 *src, unsigned int size);
-> -};
-> -
->  static bool have_simd;
->
-> -bool crypto_aegis128_have_simd(void);
-> -void crypto_aegis128_update_simd(struct aegis_state *state, const void *=
-msg);
-> -void crypto_aegis128_encrypt_chunk_simd(struct aegis_state *state, u8 *d=
-st,
-> -                                       const u8 *src, unsigned int size)=
-;
-> -void crypto_aegis128_decrypt_chunk_simd(struct aegis_state *state, u8 *d=
-st,
-> -                                       const u8 *src, unsigned int size)=
-;
-> -
->  static void crypto_aegis128_update(struct aegis_state *state)
->  {
->         union aegis_block tmp;
->
+> Jason
+
+
+If write_seqlock() works here, we can simply wait for seqcount to move 
+advance in MMU notifier. The original idea is to use RCU which solves 
+this perfectly. But as pointed out it could be slow.
+
+Thanks
+
