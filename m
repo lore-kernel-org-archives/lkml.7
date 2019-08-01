@@ -2,213 +2,168 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2487C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C350C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD122083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0B6206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="UtF/4RBO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gGahkqEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388464AbfHAXfg (ORCPT
+        id S2388512AbfHAXhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:35:36 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:26998 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388358AbfHAXfg (ORCPT
+        Thu, 1 Aug 2019 19:37:47 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33983 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731376AbfHAXhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:35:36 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71NYnCM020080
-        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 16:35:35 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=g/Rgv57lvtxG23ofGeQDm93gIRbsXPOoCEItv72iPRg=;
- b=UtF/4RBO9NZBzoW3hA/GQ+cMoTOJqaha2gcaVmntid4VG57wjzN84AQk3tzTQuPcWh7O
- L9/zm0uoB6Jq2WAiff2Z6F0iVvQvwK0PykAGOXPvbXHUACGwtvRaUgBflRqvjeqq5XS0
- 7NeoNyh/6cGf5gl3uuJAL3fU9YsZhQu93FY= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u485k0brn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 16:35:35 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 1 Aug 2019 16:35:34 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id D13D01528F19F; Thu,  1 Aug 2019 16:35:33 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH] mm: workingset: fix vmstat counters for shadow nodes
-Date:   Thu, 1 Aug 2019 16:35:32 -0700
-Message-ID: <20190801233532.138743-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 1 Aug 2019 19:37:47 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b13so34948572pfo.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 16:37:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=He4srDDjR3eOu8dQvJpFAh9KJKFadcANypNWpSDxupI=;
+        b=gGahkqEiD/gwzpQjrecPFZNK1Ra8oEc+fPFsOzTWK9BmHydhFK1WTpcp0YfWW4ouA0
+         noYn7SXtOWsQ3oGfWVJH+9N0HYhOrI/n0fLRo3szqgjd1MheOtz+5YzQu0CdTstNpEYi
+         dfCXmGxaRKlbWJMLj/JEwVkxTmOTjNj3ma03k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=He4srDDjR3eOu8dQvJpFAh9KJKFadcANypNWpSDxupI=;
+        b=bvDBNCMhxo52JZrpJGEChTSKFvHP8lBGue0wgS1H89vBnjhhFUurEW+K7InwMr68GG
+         284HqIYNihZjmojgG9pf1O9J9OjYh9/lxy+49QhbS6Y7yF2YY1HzrcBPcNTG1/DUBnfI
+         GU6FmkbDRxLvS1yKLEVMy8i+nFgPJFIXnq2A9AvZ+7Hdp+IzQ/m/KA8MT5B7Kpd6+eOI
+         2lLK3vZo3qIYwLXReqgUOwr5QvGbnmEuIHQ+Oca6R2ED7dRZRk4aCt+zrbEclj2+BIit
+         IbmKPHWD3WwvE/6suTf1+3IirdOu62UnncpnAH4dlHSMI50lUEwb89IxIJ6bewFj20Qg
+         OBWA==
+X-Gm-Message-State: APjAAAVo0uzBgs0rAZBibXWtKnc2R3XymSclF1VKAKHpXa+FZKG1QeQV
+        evU5vbL4zz7cjayUo4Dly4VTxQwgwS0=
+X-Google-Smtp-Source: APXvYqyCCWV1uR5H76mBpc5BuNYcsfoZX5cMSV+YgGnyn2ehfNLs7DPOdgwIjGme5n0bE5T+Y8fcqw==
+X-Received: by 2002:aa7:858b:: with SMTP id w11mr53899119pfn.68.1564702666329;
+        Thu, 01 Aug 2019 16:37:46 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id o14sm152127614pfh.153.2019.08.01.16.37.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 16:37:45 -0700 (PDT)
+Message-ID: <5d4377c9.1c69fb81.f1307.7bc5@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908010250
-X-FB-Internal: deliver
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CANA+-vBi6j5FSsfdqNZ7zQmH2OzsAEMyz=39-y-ygagscR7ZEA@mail.gmail.com>
+References: <20190731215514.212215-1-trong@android.com> <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com> <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com> <5d42281c.1c69fb81.bcda1.71f5@mx.google.com> <CANA+-vCoCuMtSKCfnav9NSwrzX7of9iLbppNX+pcymBp19kgQQ@mail.gmail.com> <5d434a23.1c69fb81.c4201.c65b@mx.google.com> <CANA+-vCt3QJDykzbZWBDZyaiaMiz_SOJ+Htv7+G0czjL07MjmQ@mail.gmail.com> <5d4363ae.1c69fb81.b621e.65ed@mx.google.com> <CANA+-vBi6j5FSsfdqNZ7zQmH2OzsAEMyz=39-y-ygagscR7ZEA@mail.gmail.com>
+Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+To:     Tri Vo <trong@android.com>
+User-Agent: alot/0.8.1
+Date:   Thu, 01 Aug 2019 16:37:44 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Memcg counters for shadow nodes are broken because the memcg pointer is
-obtained in a wrong way. The following approach is used:
-	virt_to_page(xa_node)->mem_cgroup
+Quoting Tri Vo (2019-08-01 15:44:40)
+> On Thu, Aug 1, 2019 at 3:11 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Tri Vo (2019-08-01 14:44:52)
+> > >
+> > > The concern was that having both "id" and "name" around might be
+> > > confusing. I don't think that making the presence of "name"
+> > > conditional helps here. And we have to maintain additional logic in
+> > > both kernel and userspace to support this.
+> > >
+> > > Also, say, userspace grabs a wakelock named "wakeup0". In the current
+> > > patch, this results in a name collision and an error. Even assuming
+> > > that userspace doesn't have ill intent, it still needs to be aware of
+> > > "wakeupN" naming pattern to avoid this error condition.
+> > >
+> > > All wakeup sources in the /sys/class/wakeup/ are in the same namespace
+> > > regardless of where they originate from, i.e. we have to either (1)
+> > > inspect the name of a wakeup source and make sure it's unique before
+> > > using it as a directory name OR (2) generate the directory name on
+> > > behalf of whomever is registering a wakeup source, which I think is a
+> > > much simpler solution.
+> >
+> > Ok. If the device name is going to be something generic like 'wakeupN',
+> > then we need to make sure that the wakeup source name is unique.
+>=20
+> If we could easily make sure that wakeup source names are unique, then
+> we wouldn't need to generate "wakeupN" ids :)
 
-Since commit 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup
-pointer for slab pages") page->mem_cgroup pointer isn't set for slab pages,
-so memcg_from_slab_page() should be used instead.
+It's not hard to make sure the device names are unique, we just use an
+IDA and we're done. The problem is making it easy for the user to
+understand what wakeup source it is. If the ws->name is duplicated that
+is harder. It's an orthogonal problem.
 
-Also I doubt that it ever worked correctly: virt_to_head_page() should be
-used instead of virt_to_page(). Otherwise objects residing on tail pages
-are not accounted, because only the head page contains a valid mem_cgroup
-pointer. That was a case since the introduction of these counters by the
-commit 68d48e6a2df5 ("mm: workingset: add vmstat counter for shadow nodes").
+>=20
+> > Otherwise, I'm not able to see how userspace will differentiate between
+> > two of the same named wakelocks. Before this patch the wakeup source
+> > name looks to have been used for debugging, but now it's being used
+> > programmatically to let userspace act upon it somehow. Maybe it's for
+> > debug still, but I could see how userspace may want to hunt down the
+> > wakelock that's created in userspace and penalize or kill the task
+> > that's waking up the device.
+>=20
+> Two wakelocks can't have the same name. So they are still
+> distinguishable from userspace. However, there is still no way to
+> figure out from userspace which process created which wake lock.
+> That's a weakness of /sys/power/wake_lock API, independent of this
+> patch.
 
-Fixes: 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages")
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
- include/linux/memcontrol.h | 19 +++++++++++++++++++
- mm/memcontrol.c            | 20 ++++++++++++++++++++
- mm/workingset.c            | 10 ++++------
- 3 files changed, 43 insertions(+), 6 deletions(-)
+Even without knowing the process, we can have a problem if kernelspace
+makes the same named wake source as one made in userspace through the
+wakelock APIs. We won't be able to distinguish the two. Sounds like
+we've never had this problem though, so I guess we ignore it.
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 2cbce1fe7780..40f30ea30925 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -683,6 +683,7 @@ static inline unsigned long lruvec_page_state_local(struct lruvec *lruvec,
- 
- void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 			int val);
-+void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val);
- 
- static inline void mod_lruvec_state(struct lruvec *lruvec,
- 				    enum node_stat_item idx, int val)
-@@ -1098,6 +1099,14 @@ static inline void mod_lruvec_page_state(struct page *page,
- 	mod_node_page_state(page_pgdat(page), idx, val);
- }
- 
-+static inline void __mod_lruvec_slab_state(void *p, enum node_stat_item idx,
-+					   int val)
-+{
-+	struct page *page = virt_to_head_page(p);
-+
-+	__mod_node_page_state(page_pgdat(page), idx, val);
-+}
-+
- static inline
- unsigned long mem_cgroup_soft_limit_reclaim(pg_data_t *pgdat, int order,
- 					    gfp_t gfp_mask,
-@@ -1185,6 +1194,16 @@ static inline void __dec_lruvec_page_state(struct page *page,
- 	__mod_lruvec_page_state(page, idx, -1);
- }
- 
-+static inline void __inc_lruvec_slab_state(void *p, enum node_stat_item idx)
-+{
-+	__mod_lruvec_slab_state(p, idx, 1);
-+}
-+
-+static inline void __dec_lruvec_slab_state(void *p, enum node_stat_item idx)
-+{
-+	__mod_lruvec_slab_state(p, idx, -1);
-+}
-+
- /* idx can be of type enum memcg_stat_item or node_stat_item */
- static inline void inc_memcg_state(struct mem_cgroup *memcg,
- 				   int idx)
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 5c7b9facb0eb..4fca83d51134 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -769,6 +769,26 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 	__this_cpu_write(pn->lruvec_stat_cpu->count[idx], x);
- }
- 
-+void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val)
-+{
-+	struct page *page = virt_to_head_page(p);
-+	pg_data_t *pgdat = page_pgdat(page);
-+	struct mem_cgroup *memcg;
-+	struct lruvec *lruvec;
-+
-+	rcu_read_lock();
-+	memcg = memcg_from_slab_page(page);
-+
-+	/* Untracked pages have no memcg, no lruvec. Update only the node */
-+	if (!memcg || memcg == root_mem_cgroup) {
-+		__mod_node_page_state(pgdat, idx, val);
-+	} else {
-+		lruvec = mem_cgroup_lruvec(pgdat, memcg);
-+		__mod_lruvec_state(lruvec, idx, val);
-+	}
-+	rcu_read_unlock();
-+}
-+
- /**
-  * __count_memcg_events - account VM events in a cgroup
-  * @memcg: the memory cgroup
-diff --git a/mm/workingset.c b/mm/workingset.c
-index e0b4edcb88c8..c963831d354f 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -380,14 +380,12 @@ void workingset_update_node(struct xa_node *node)
- 	if (node->count && node->count == node->nr_values) {
- 		if (list_empty(&node->private_list)) {
- 			list_lru_add(&shadow_nodes, &node->private_list);
--			__inc_lruvec_page_state(virt_to_page(node),
--						WORKINGSET_NODES);
-+			__inc_lruvec_slab_state(node, WORKINGSET_NODES);
- 		}
- 	} else {
- 		if (!list_empty(&node->private_list)) {
- 			list_lru_del(&shadow_nodes, &node->private_list);
--			__dec_lruvec_page_state(virt_to_page(node),
--						WORKINGSET_NODES);
-+			__dec_lruvec_slab_state(node, WORKINGSET_NODES);
- 		}
- 	}
- }
-@@ -480,7 +478,7 @@ static enum lru_status shadow_lru_isolate(struct list_head *item,
- 	}
- 
- 	list_lru_isolate(lru, item);
--	__dec_lruvec_page_state(virt_to_page(node), WORKINGSET_NODES);
-+	__dec_lruvec_slab_state(node, WORKINGSET_NODES);
- 
- 	spin_unlock(lru_lock);
- 
-@@ -503,7 +501,7 @@ static enum lru_status shadow_lru_isolate(struct list_head *item,
- 	 * shadow entries we were tracking ...
- 	 */
- 	xas_store(&xas, NULL);
--	__inc_lruvec_page_state(virt_to_page(node), WORKINGSET_NODERECLAIM);
-+	__inc_lruvec_slab_state(node, WORKINGSET_NODERECLAIM);
- 
- out_invalid:
- 	xa_unlock_irq(&mapping->i_pages);
--- 
-2.21.0
+> >
+> > I see that wakelock_lookup_add() already checks the list of wakelock
+> > wakeup sources, but I don't see how I can't create an "alarmtimer"
+> > wakelock again, but this time for userspace, by writing into
+> > /sys/power/wake_lock.
+>=20
+> Behind the scenes, writing "alarmtimer" to /sys/power/wake_lock
+> creates a wakeup source named "alarmtimer", which in turn creates a
+> directory /sys/class/wakeup/alarmtimer (in you patch), which is likely
+> already created by alarmtimer. This leads to an error. The error is
+> resolved if wakeup source's sysfs entry is /sys/class/wakeup/wakeupN
+> instead.
+
+Right.
+
+> >
+> > What happens with namespaces here BTW? Can a wakelock be made in one
+> > namespace and that is the same name as another wakelock in a different
+> > namespace? Right now it doesn't look possible because of the global name
+> > matching, but it probably makes sense to support this? Maybe we just
+> > shouldn't make anything in sysfs for wake sources that can be any random
+> > name created from the wakelock path right now. I don't see how it can be
+> > traced back to the process that created it in any reasonable way.
+>=20
+> It should be OK if we don't use the arbitrary wakelock name in the
+> path, but instead use the generated id "wakeupN".
+
+I'm more concerned about namespaces in general and how the wake_lock
+file in sysfs is supposed to work with it. It sounds like it just
+doesn't work and userspace has to be careful to not reuse the same name
+for some sort of wakelock and sit some daemon on top of the kernel
+interface.
 
