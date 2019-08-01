@@ -2,102 +2,87 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41B6C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6BBC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8736A20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B176B20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:02:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsX9h6v0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iByqbewt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388987AbfHAVB4 (ORCPT
+        id S2389026AbfHAVCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:01:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40177 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfHAVBz (ORCPT
+        Thu, 1 Aug 2019 17:02:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37624 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfHAVCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:01:55 -0400
-Received: by mail-io1-f65.google.com with SMTP id h6so22285638iom.7;
-        Thu, 01 Aug 2019 14:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hYk1p4XO50YHWglK7WQv5FDba8WVu0jGxZbnBmYxT0U=;
-        b=WsX9h6v0sWIw9UZqgWKwYoxbHzXP+O8GZHjEmu+fHjKraZiFxmywfBPowTassSYhrO
-         DZ+idaDNIsCqcPfR2dmLfLbFOSJlCCW+y+T32uR6n4SViSofTXsO4znvyykajmEsiELz
-         +TmZel3pzTimGJ2dvG0+8/J49RnFZcMEuy7ONdHdSh+046juGbhrhrvuIvPlagsuweff
-         xQE+KvsPYM7hRG9PquDIfUWD2LM7oIQR4qtFHyfprMjb5c7PkGCIhMr/JMvGzBTNa2jb
-         +4yIHF+1L1rTltWHsj1U3ES9fe8I80SbJp10bJD7A8mf1Co9qbNhfr+TDLhmpIZJT8Yf
-         8HbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hYk1p4XO50YHWglK7WQv5FDba8WVu0jGxZbnBmYxT0U=;
-        b=qPV66XewVwGQ3qNewkHPh+2jyeS1eCUgJu0IJSZzn97/DrF4rROPI8iXGo8pbBEhNk
-         pN+EHuy0B1ZtDA3j8ZZyUfooCvCN+y3Uicvq1sS2DFC1XxfhJ5Htn4mxtgPYBiCEU40/
-         0Wt1nHURAhcGNRvZxI/yw6PR/p1TU24GYVD8XbEXPBocRAzxyNErFo1PNw33oIo/oJdE
-         79ZhAKT0d+cE6qSwhf9WuZY8/Z9SpUNzvdQVFmt8WqawAC2XY60pscQMxcuNaJxR459r
-         1Hp5+35Qan7xr3FdfFyemSt5BTN5brnvroPXyJsqO/XFBSv8UIwHytior1imTNVJRkiq
-         IWQA==
-X-Gm-Message-State: APjAAAW9EmqElH/rSasCzmP6u7gIV/g+0u0eapNvGQUjTJThdYiboMsU
-        wXiaaU8duh44Pii6JMJxvRfoXIEpvYVkdw==
-X-Google-Smtp-Source: APXvYqx1qXNn4zrShRhEW4FJxoqRTY2+moF4vrJlebUUd+k14iJhk2BPtqeX3DTrTf/z245SC8LW2g==
-X-Received: by 2002:a5d:9642:: with SMTP id d2mr96884249ios.278.1564693314390;
-        Thu, 01 Aug 2019 14:01:54 -0700 (PDT)
-Received: from oc2825805254.ibm.com ([32.97.110.51])
-        by smtp.gmail.com with ESMTPSA id s2sm51429162ioj.8.2019.08.01.14.01.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 14:01:53 -0700 (PDT)
-From:   Ethan Hansen <1ethanhansen@gmail.com>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, paulmck@linux.ibm.com,
-        josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, Ethan Hansen <1ethanhansen@gmail.com>
-Subject: [PATCH tip/core/rcu 1/1] rcu: Remove unused function rcutorture_record_progress
-Date:   Thu,  1 Aug 2019 14:00:40 -0700
-Message-Id: <1564693240-13363-1-git-send-email-1ethanhansen@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 1 Aug 2019 17:02:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KMsX1I067RvRNUYw9CJeoatbWY3fZE8/7XDE1PlmR2w=; b=iByqbewtRsPhUGqwkOEFRueyc
+        c/ljbQS9LNGQMnqHzuUVNSToD7VLmVQ+d8aI/jd6Z/TkMqgRdgqB6VGDOC/3+7KWBsukkQpWPH+IW
+        XqojjWdP9qCHbFJykGd7cJHLi/x9GyTITewzQZtW9c00zQHezQBs55D7moSmpG2dZKC4a1foT/AMw
+        iqf0oAyGnzMpUXIwha/L0o/6tjKVzZzc/ENN8h/JxhriPPtsO7cyBCaX74pBuZ6Sk2xkupXr28el9
+        gb4fukq8iIzY3ip5ObMzpX0IHAAc8UjJLlzZmY2ACy0F0MdeqaA7FA5WlNrXPeSUgbqx/aIIeF5fX
+        biVlyw5fA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1htID8-0007uY-2f; Thu, 01 Aug 2019 21:02:06 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DE5BF2029F4C9; Thu,  1 Aug 2019 23:02:03 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 23:02:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/5] sched/pci: Reduce psimon FIFO priority
+Message-ID: <20190801210203.GA3578@hirez.programming.kicks-ass.net>
+References: <20190801111348.530242235@infradead.org>
+ <20190801111541.685367413@infradead.org>
+ <20190801174907.GA16554@cmpxchg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801174907.GA16554@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function rcutorture_record_progress is declared in rcu.h,
-but is never used. Remove rcutorture_record_progress to clean code.
+On Thu, Aug 01, 2019 at 01:49:07PM -0400, Johannes Weiner wrote:
+> On Thu, Aug 01, 2019 at 01:13:49PM +0200, Peter Zijlstra wrote:
+> > PSI defaults to a FIFO-99 thread, reduce this to FIFO-1.
+> > 
+> > FIFO-99 is the very highest priority available to SCHED_FIFO and
+> > it not a suitable default; it would indicate the psi work is the
+> > most important work on the machine.
+> > 
+> > Since Real-Time tasks will have pre-allocated memory and locked it in
+> > place, Real-Time tasks do not care about PSI. All it needs is to be
+> > above OTHER.
+> > 
+> > Cc: Suren Baghdasaryan <surenb@google.com>
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> 
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Signed-off-by: Ethan Hansen <1ethanhansen@gmail.com>
----
- kernel/rcu/rcu.h | 2 --
- 1 file changed, 2 deletions(-)
+Thanks!
 
-diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-index 8fd4f82..aeec70f 100644
---- a/kernel/rcu/rcu.h
-+++ b/kernel/rcu/rcu.h
-@@ -455,7 +455,6 @@ enum rcutorture_type {
- #if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
- void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
- 			    unsigned long *gp_seq);
--void rcutorture_record_progress(unsigned long vernum);
- void do_trace_rcu_torture_read(const char *rcutorturename,
- 			       struct rcu_head *rhp,
- 			       unsigned long secs,
-@@ -468,7 +467,6 @@ static inline void rcutorture_get_gp_data(enum rcutorture_type test_type,
- 	*flags = 0;
- 	*gp_seq = 0;
- }
--static inline void rcutorture_record_progress(unsigned long vernum) { }
- #ifdef CONFIG_RCU_TRACE
- void do_trace_rcu_torture_read(const char *rcutorturename,
- 			       struct rcu_head *rhp,
--- 
-1.8.3.1
+> Subject should be s/pci/psi/
 
+Yeah, already fixed that.. obviously one sees such typoes only after
+sending ;-)
