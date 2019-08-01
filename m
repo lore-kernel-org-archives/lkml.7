@@ -2,127 +2,132 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A9AC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B521C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0961620838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:16:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564661790;
-	bh=eWUXpesPjpfKZlq50R19WMAnjpRsyX8e4dc1+npLS18=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vGsfvziVrSe0BplGrUzcZBFtH3wQAfxaMElHNsE+pPUn6Vsgpf5dKNvOFX+kfcHmg
-	 BjISZKWLVfQYiRQAURiskikzV9r+0uBsnx/1VVVTHeHpIG6iODm89H2eQNka2WHsxF
-	 6r4GezkAiEn7GKjQR8J9uggu4nx2m6AHV4hBVROc=
+	by mail.kernel.org (Postfix) with ESMTP id 45AED216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbfHAMQ3 (ORCPT
+        id S1730514AbfHAMRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:16:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfHAMQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:16:28 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D9CD2064A;
-        Thu,  1 Aug 2019 12:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564661787;
-        bh=eWUXpesPjpfKZlq50R19WMAnjpRsyX8e4dc1+npLS18=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1TJVGwCetQUZaW3O2BkiB+MpMEfN6Ax9jFMvAEb5a8ovdjfO7RcnBZLBjov2V6qbL
-         U9dnx3qEHQ5JDb0lXe0SgZsdErruUNnSttEEH56wx6YhyiokkaVQ0VmFx3WQjmqOQO
-         nkSzliCzi4ZOwcgbNcQjn5SC7Z1sjjng1mOCevk8=
-Date:   Thu, 1 Aug 2019 13:16:22 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dan Rue <dan.rue@linaro.org>,
-        Daniel Diaz <daniel.diaz@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Matt Hart <matthew.hart@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/4] arm64: kprobes: Recover pstate.D in single-step
- exception handler
-Message-ID: <20190801121622.vs57a6e2syklyr3z@willie-the-truck>
-References: <156404254387.2020.886452004489353899.stgit@devnote2>
- <156404255444.2020.3301023170351823334.stgit@devnote2>
+        Thu, 1 Aug 2019 08:17:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:56032 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfHAMRN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:17:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a15so64418633wmj.5;
+        Thu, 01 Aug 2019 05:17:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RWLPyME/jAkVEQ5t9L+p96xi6wCaF4hZN+jKl5GuaSU=;
+        b=iaPKellIqry1urVGLGLZw4ECK83Qs7F4ud9GykT1F6hCB2YOFiiCtGqdLQReH4B6Bq
+         41i10VvgP/BxucTfj/LTuHz0Fd4or+VTgKGmsh3KSufmm6FFQJV9Ymz3GkdD3En+NQ8R
+         P5ULrf1pSyw336VUO5BHEr/t0GWlYJ0DDOAAQaCfsWnBvfKUgCF7yDdwZ84ARAr3YpK5
+         pk06I6HMEBiRjeTj1fCtOpdwjLcy95dxivucFFOVgVgXlXvrdNPq7zjdiIYPE4VSMJzm
+         OK8k4K21Nc9+VxPRZnNXlhbvxOF0q22avmBtOC16FU29HVV9K3tv1U4PbrGSaFOqKIJK
+         EbIg==
+X-Gm-Message-State: APjAAAVEkCon5HTXOW71NNtcYf/MMyf/1LjKQZMkVxTdW0DBbzYRBa60
+        /EmIPg9qQXQlFQDT0gvymmRuT25kFlHC0wtj92TLVCmv
+X-Google-Smtp-Source: APXvYqzpx/cJYpS36v0hwlYQJLzatqmdT+c3y247auU4r9Rk0kfrHFl0Ti8sUx1xFAeRY0I+yMm8s4oETnJTRSdV9/M=
+X-Received: by 2002:a7b:c310:: with SMTP id k16mr75092863wmj.133.1564661830932;
+ Thu, 01 Aug 2019 05:17:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <156404255444.2020.3301023170351823334.stgit@devnote2>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190801111348.530242235@infradead.org> <20190801111541.917256884@infradead.org>
+ <CAMuHMdU3D22PAWepGP6rMvDwJKVTfbxxH9J=kuo59PB7CCVKOA@mail.gmail.com> <20190801121209.GD31381@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190801121209.GD31381@hirez.programming.kicks-ass.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 1 Aug 2019 14:16:58 +0200
+Message-ID: <CAMuHMdXvq4ZDecpaiFHmQbETP=Z0Y2QVHsWpfDGU2bgaDDOA0A@mail.gmail.com>
+Subject: Re: [PATCH 5/5] spi: Reduce kthread priority
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 05:15:54PM +0900, Masami Hiramatsu wrote:
-> kprobes manipulates the interrupted PSTATE for single step, and
-> doesn't restore it. Thus, if we put a kprobe where the pstate.D
-> (debug) masked, the mask will be cleared after the kprobe hits.
-> 
-> Moreover, in the most complicated case, this can lead a kernel
-> crash with below message when a nested kprobe hits.
-> 
-> [  152.118921] Unexpected kernel single-step exception at EL1
-> 
-> When the 1st kprobe hits, do_debug_exception() will be called.
-> At this point, debug exception (= pstate.D) must be masked (=1).
-> But if another kprobes hits before single-step of the first kprobe
-> (e.g. inside user pre_handler), it unmask the debug exception
-> (pstate.D = 0) and return.
-> Then, when the 1st kprobe setting up single-step, it saves current
-> DAIF, mask DAIF, enable single-step, and restore DAIF.
-> However, since "D" flag in DAIF is cleared by the 2nd kprobe, the
-> single-step exception happens soon after restoring DAIF.
-> 
-> This has been introduced by commit 7419333fa15e ("arm64: kprobe:
-> Always clear pstate.D in breakpoint exception handler")
-> 
-> To solve this issue, this stores all DAIF bits and restore it
-> after single stepping.
-> 
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Fixes: commit 7419333fa15e ("arm64: kprobe: Always clear pstate.D in breakpoint exception handler")
-> Reviewed-by: James Morse <james.morse@arm.com>
-> Tested-by: James Morse <james.morse@arm.com>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->   Changes in v3:
->    - Update patch description
->    - move PSR_DAIF_MASK in daifflags.h
->   Changes in v2:
->    - Save and restore all DAIF flags.
->    - Operate pstate directly and remove spsr_set_debug_flag().
-> ---
->  arch/arm64/include/asm/daifflags.h |    2 ++
->  arch/arm64/kernel/probes/kprobes.c |   39 +++++-------------------------------
->  2 files changed, 7 insertions(+), 34 deletions(-)
+Hi Peter,
 
-I'm seeing an allmodconfig build failure with this:
+On Thu, Aug 1, 2019 at 2:12 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> On Thu, Aug 01, 2019 at 01:27:03PM +0200, Geert Uytterhoeven wrote:
+> > On Thu, Aug 1, 2019 at 1:18 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > The SPI thingies request FIFO-99 by default, reduce this to FIFO-50.
+> > >
+> > > FIFO-99 is the very highest priority available to SCHED_FIFO and
+> > > it not a suitable default; it would indicate the SPI work is the
+> > > most important work on the machine.
+> > >
+> > > Cc: Benson Leung <bleung@chromium.org>
+> > > Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > Cc: Guenter Roeck <groeck@chromium.org>
+> > > Cc: Mark Brown <broonie@kernel.org>
+> > > Cc: linux-spi@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > ---
+> > >  drivers/platform/chrome/cros_ec_spi.c |    2 +-
+> > >  drivers/spi/spi.c                     |    2 +-
+> > >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > --- a/drivers/platform/chrome/cros_ec_spi.c
+> > > +++ b/drivers/platform/chrome/cros_ec_spi.c
+> > > @@ -706,7 +706,7 @@ static int cros_ec_spi_devm_high_pri_all
+> > >                                            struct cros_ec_spi *ec_spi)
+> > >  {
+> > >         struct sched_param sched_priority = {
+> > > -               .sched_priority = MAX_RT_PRIO - 1,
+> > > +               .sched_priority = MAX_RT_PRIO / 2,
+> >
+> > include/linux/sched/prio.h says:
+> >
+> >  * Priority of a process goes from 0..MAX_PRIO-1, valid RT
+> >  * priority is 0..MAX_RT_PRIO-1, and SCHED_NORMAL/SCHED_BATCH
+> >  * tasks are in the range MAX_RT_PRIO..MAX_PRIO-1. Priority
+> >  * values are inverted: lower p->prio value means higher priority.
+> >
+> > So the new 50 is actually a higher priority than the old 99?
+> >
+> > Given I'm far from an RT expert, I must be missing something?
+> > Thanks!
+>
+> Ah; you found the confusion ;-)
+>
+> https://lkml.kernel.org/20190617122448.GA3436@hirez.programming.kicks-ass.net
 
-arch/arm64/kernel/probes/kprobes.c: In function ‘kprobes_save_local_irqflag’:
-arch/arm64/kernel/probes/kprobes.c:181:38: error: ‘DAIF_MASK’ undeclared (first use in this function); did you mean ‘BIT_MASK’?
-  kcb->saved_irqflag = regs->pstate & DAIF_MASK;
-                                      ^~~~~~~~~
-                                      BIT_MASK
-arch/arm64/kernel/probes/kprobes.c:181:38: note: each undeclared identifier is reported only once for each function it appears in
-arch/arm64/kernel/probes/kprobes.c: In function ‘kprobes_restore_local_irqflag’:
-arch/arm64/kernel/probes/kprobes.c:190:19: error: ‘DAIF_MASK’ undeclared (first use in this function); did you mean ‘BIT_MASK’?
-  regs->pstate &= ~DAIF_MASK;
-                   ^~~~~~~~~
-                   BIT_MASK
-make[2]: *** [scripts/Makefile.build:274: arch/arm64/kernel/probes/kprobes.o] Error 1
+/me adds /r after org/
+Thanks!
 
-Will
+> But basically, user-space prio is [1-99], while in-kernel prio is
+> [0-98]. The above is user prio (it basically uses the
+> sched_setscheduler() syscall).
+>
+> So 50 really is lower than 99.
+
+IC.
+
+BTW, what about having a #define for MAX_RT_PRIO / 2?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
