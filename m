@@ -2,120 +2,145 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4BFC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD859C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D850214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D3A20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:51:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="XL5l8TWu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o5EN+Drq"
+	dkim=pass (1024-bit key) header.d=kam.mff.cuni.cz header.i=@kam.mff.cuni.cz header.b="pvLWO7li"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfHANuv (ORCPT
+        id S1729423AbfHANvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:50:51 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:49165 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725930AbfHANuu (ORCPT
+        Thu, 1 Aug 2019 09:51:03 -0400
+Received: from nikam.ms.mff.cuni.cz ([195.113.20.16]:34562 "EHLO
+        nikam.ms.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfHANvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:50:50 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 47C8D43F;
-        Thu,  1 Aug 2019 09:50:49 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 01 Aug 2019 09:50:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=VD0+62PbXYEUtn3nWDeyLEdc1Uk
-        cObs+jXwJEZ9imi8=; b=XL5l8TWup11/3STFzR7FeSvbvt+oA0XRSm16xAqK+UI
-        +J1Np0f66xrbHY4zCea8Cx+bUs/d6DsB4/KR5v5uSOf6XtXoKW2FNBV6gLppNYX8
-        0OvQ1bltL8Z/Co6+exZx36hE/zrT/MvfM5gybzossmBhWKbWriyq3mW5CP+WEgGJ
-        bpZh5h0ZDY4bG+CQ2cVxt2qPw6DUUqNh64+pIwkGB/d0EzOOOBvLZR/9dOVY8CGF
-        zVrTizMk+ft48EAKGmT36pgPlkmMLfJtPmVtzeHhvYimKtUCXRRnvKdk0HyeKBVh
-        K9DsXFAKo2zS9AN10HDcSIJmJ1ZQP9CYGmXFKZe0J9w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=VD0+62
-        PbXYEUtn3nWDeyLEdc1UkcObs+jXwJEZ9imi8=; b=o5EN+DrqUd3XeC2qlsJKEw
-        THLsfg6/pjZU4AV6lOnDON7LxQPdmkmCLODaPXk4im4gYjSn7wfQnVZPjsRNuKUt
-        0MenDWGt+R/qaqlEe7wcJ4V6hxkSbhp9mDNMKqaop5pk4r7xdZmFP/bZ2kotrYGu
-        0sZUQcl2GY+UqsVg8bHxj83eCsVEze774dabczLiqI7b6r2ygW6p5RUdv1vZIGHC
-        16Sgs3I9l7fajimGfIy960P48jGJ1A6uJBQr7z0n9BU624DM8G1/YvrLvAIUqgok
-        eScDLxq26OHzuMMlPfz5k2wsCr57Qw05YBgohBN5bBgLAwkTR03CslqR0p/lbG5A
-        ==
-X-ME-Sender: <xms:OO5CXe58fVDB1Y-4wsdg5Ayynxd1j2VvdEjG-FjbZHlMyOJRhvAgZQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleejgdeikecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:OO5CXekqEv3fICIw9qvS_0Cr9VW5YjMICx1KXxm2CwVv3LHbcVPqjw>
-    <xmx:OO5CXXnDngUcH-x5bMdAp67_eq-rBCJHQPBlhG4H5lT4fwUO5MSFsA>
-    <xmx:OO5CXa7GqhyrEbuEOjrJOee6WJ9hbxA9-i5RRC2mGYzAxtLko5jRbw>
-    <xmx:OO5CXb6RaIXMZWT47YEkLtOuE3r3MSueMlY-gtHtdsDxd-CJiFov8A>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1328F380076;
-        Thu,  1 Aug 2019 09:50:47 -0400 (EDT)
-Date:   Thu, 1 Aug 2019 15:50:44 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Vladis Dronov <vdronov@redhat.com>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v5.3-rc2] Bluetooth: hci_uart: check for missing tty
- operations
-Message-ID: <20190801135044.GB24791@kroah.com>
-References: <20190730093345.25573-1-marcel@holtmann.org>
- <20190801133132.6BF30206A3@mail.kernel.org>
+        Thu, 1 Aug 2019 09:51:03 -0400
+X-Greylist: delayed 489 seconds by postgrey-1.27 at vger.kernel.org; Thu, 01 Aug 2019 09:51:00 EDT
+Received: by nikam.ms.mff.cuni.cz (Postfix, from userid 3081)
+        id 2A775281EE0; Thu,  1 Aug 2019 15:42:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kam.mff.cuni.cz;
+        s=gen1; t=1564666970;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=Tgtx8AU1eDvtzwgrnSCNWwtGnoWIuLmdAOsYfNaJttw=;
+        b=pvLWO7li2agCXnOPRX+RP+FfBG/H4UjD1Z36HStX9QXgqzBne9yrQdkyv4dwY6R/M8kvw6
+        psKsU6cNwkhptR0NCmhwUdYXyXXJS+CHvs7YUWjnVbYdszIp/dolw8ejrWNBHYW1QRG9IB
+        AEi4mT+wDS4rybhu1FxQzlzI6dAPZYI=
+Date:   Thu, 1 Aug 2019 15:42:50 +0200
+From:   Jan Hadrava <had@kam.mff.cuni.cz>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, wizards@kam.mff.cuni.cz
+Subject: [BUG]: mm/vmscan.c: shrink_slab does not work correctly with memcg
+ disabled via commandline
+Message-ID: <20190801134250.scbfnjewahbt5zui@kam.mff.cuni.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190801133132.6BF30206A3@mail.kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 01:31:31PM +0000, Sasha Levin wrote:
-> Hi,
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: .
-> 
-> The bot has tested the following trees: v5.2.4, v5.1.21, v4.19.62, v4.14.134, v4.9.186, v4.4.186.
-> 
-> v5.2.4: Build OK!
-> v5.1.21: Build OK!
-> v4.19.62: Build OK!
-> v4.14.134: Failed to apply! Possible dependencies:
->     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
-> 
-> v4.9.186: Failed to apply! Possible dependencies:
->     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
-> 
-> v4.4.186: Failed to apply! Possible dependencies:
->     162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
->     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
->     395174bb07c1 ("Bluetooth: hci_uart: Add Intel/AG6xx support")
->     9e69130c4efc ("Bluetooth: hci_uart: Add Nokia Protocol identifier")
-> 
-> 
-> NOTE: The patch will not be queued to stable trees until it is upstream.
-> 
-> How should we proceed with this patch?
+There seems to be a bug in mm/vmscan.c shrink_slab function when kernel is
+compilled with CONFIG_MEMCG=y and it is then disabled at boot with commandline
+parameter cgroup_disable=memory. SLABs are then not getting shrinked if the
+system memory is consumed by userspace.
 
-Already fixed up by hand and queued up, your automated email is a bit
-slow :)
+This issue is present in linux-stable 4.19 and all newer lines.
+    (tested on git tags v5.3-rc2 v5.2.5 v5.1.21 v4.19.63)
+And it is no not present in 4.14.135 (v4.14.135).
 
-greg k-h
+Git bisect is pointing to commit:
+	b0dedc49a2daa0f44ddc51fbf686b2ef012fccbf
+
+Particulary the last hunk seems to be causing it:
+
+@@ -585,13 +657,7 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
+                        .memcg = memcg,
+                };
+
+-               /*
+-                * If kernel memory accounting is disabled, we ignore
+-                * SHRINKER_MEMCG_AWARE flag and call all shrinkers
+-                * passing NULL for memcg.
+-                */
+-               if (memcg_kmem_enabled() &&
+-                   !!memcg != !!(shrinker->flags & SHRINKER_MEMCG_AWARE))
++               if (!!memcg != !!(shrinker->flags & SHRINKER_MEMCG_AWARE))
+                        continue;
+
+                if (!(shrinker->flags & SHRINKER_NUMA_AWARE))
+
+Following commit aeed1d325d429ac9699c4bf62d17156d60905519
+deletes conditional continue (and so it fixes the problem). But it is creating
+similar issue few lines earlier:
+
+@@ -644,7 +642,7 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
+        struct shrinker *shrinker;
+        unsigned long freed = 0;
+
+-       if (memcg && !mem_cgroup_is_root(memcg))
++       if (!mem_cgroup_is_root(memcg))
+                return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
+
+        if (!down_read_trylock(&shrinker_rwsem))
+@@ -657,9 +655,6 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
+                        .memcg = memcg,
+                };
+
+-               if (!!memcg != !!(shrinker->flags & SHRINKER_MEMCG_AWARE))
+-                       continue;
+-
+                if (!(shrinker->flags & SHRINKER_NUMA_AWARE))
+                        sc.nid = 0;
+
+
+How was the bisection done:
+
+ - Compile kernel with x86_64_defconfig + CONFIG_MEMCG=y
+ - Boot VM with cgroup_disable=memory and filesystem with 500k Inodes and run
+   simple script on it:
+   - Observe number of active objects of ext4_inode_cache
+     --> around 400, but anything under 1000 was accepted by the bisect script
+
+   - Call `find / > /dev/null`
+   - Again observe number of active objects of ext4_inode_cache
+     --> around 7000, but anything over 6000 was accepted by the script
+
+   - Consume whole memory by simple program `while(1){ malloc(1); }` until it
+     gets killed by oom-killer.
+   - Again observe number of active objects of ext4_inode_cache
+     --> around 7000, script threshold: >= 6000 --> bug is there
+     --> around 100, script threshold <= 1000 --> bug not present
+
+Real-world appearance:
+
+We encountered this issue after upgrading kernel from 4.9 to 4.19 on our backup
+server. (Debian Stretch userspace, upgrade to Debian Buster distribution kernel
+or custom build 4.19.60.) The server has around 12 M of used inodes and only
+4 GB of RAM. Whenever we run the backup, memory gets quickly consumed by kernel
+SLABs (mainly ext4_inode_cache). Userspace starts receiving a lot of hits by
+oom-killer after that so the server is completly unusable until reboot.
+
+We just removed the cgroup_disable=memory parameter on our server. Memory
+footprint of memcg is significantly smaller then it used to be in the time we
+started using this parameter. But i still think that mentioned behaviour is a
+bug and should be fixed.
+
+By the way, it seems like the raspberrypi kernel was fighting this issue as well:
+	https://github.com/raspberrypi/linux/issues/2829
+If I'm reading correctly: they disabled memcg via commandline due to some
+memory leaks. Month later: they hit this issue and reenabled memcg.
+
+
+Thanks,
+Jan
