@@ -2,112 +2,63 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75B3C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F258C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A285E214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A57206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbfHAL1R (ORCPT
+        id S1730916AbfHAL1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:27:17 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40704 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfHAL1R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:27:17 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r1so73157076wrl.7;
-        Thu, 01 Aug 2019 04:27:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JF7ywhFpFNuJZGA1xyx9jGrse3xaPHw4cmSqzNiI3vk=;
-        b=qZrk2KEbitOTgCcaTaW5k/XjAfij/uYC3YNS9eRXlAoSRHb6XF+9oQ8f1nv2cKvF70
-         msLLtb8OcFSM7qPCZfHi0xvByu9HQlvL5Y4D4opOlkosaa5yB4G19RfZ+udIpbVmtigM
-         qIIvMTIhj6vWJwWNksNYbZONQO/stkZk7chcEPn2XxKZetIrPYxYbw2XmUZGWZ8xCTwZ
-         dnbsCA54YdtCohdcf3wYdSdf5n4rYSkO/GY40R8ZKcLI6RISG2QnzXOzDRiegB/JzpQM
-         NivApK2jHpWsZO8dwMMsMdckwn4pPdlMtndzLhV/xvcMnKEnbErjz+sgNyza0hkAByXZ
-         KCPg==
-X-Gm-Message-State: APjAAAXpQ9jvbPnK5x6f1GMg/vu8CYvp8MPBQN4IW2ylNCnLrtPZc2OI
-        UFKzwaKMH8cIXygQxU7nmNRPxX+ZPkHCZc15vxQ=
-X-Google-Smtp-Source: APXvYqzZoh9lq4IJstoOg0/8lFzWL5HjArUiogjMPyBhpEsKUEJr7TttklW94tFumEIQdDSYZ7LjGuimsRYEK9ZHj30=
-X-Received: by 2002:a5d:4b91:: with SMTP id b17mr1404812wrt.57.1564658835072;
- Thu, 01 Aug 2019 04:27:15 -0700 (PDT)
+        Thu, 1 Aug 2019 07:27:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54120 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725790AbfHAL1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 07:27:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5F8B4AF8A;
+        Thu,  1 Aug 2019 11:27:37 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 31557DA7D9; Thu,  1 Aug 2019 13:28:11 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 13:28:10 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        arnd@arndb.de, y2038@lists.linaro.org,
+        David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 13/20] fs: affs: Initialize filesystem timestamp ranges
+Message-ID: <20190801112810.GR28208@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Deepa Dinamani <deepa.kernel@gmail.com>,
+        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        arnd@arndb.de, y2038@lists.linaro.org,
+        David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org
+References: <20190730014924.2193-1-deepa.kernel@gmail.com>
+ <20190730014924.2193-14-deepa.kernel@gmail.com>
 MIME-Version: 1.0
-References: <20190801111348.530242235@infradead.org> <20190801111541.917256884@infradead.org>
-In-Reply-To: <20190801111541.917256884@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 1 Aug 2019 13:27:03 +0200
-Message-ID: <CAMuHMdU3D22PAWepGP6rMvDwJKVTfbxxH9J=kuo59PB7CCVKOA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] spi: Reduce kthread priority
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730014924.2193-14-deepa.kernel@gmail.com>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Mon, Jul 29, 2019 at 06:49:17PM -0700, Deepa Dinamani wrote:
+> Fill in the appropriate limits to avoid inconsistencies
+> in the vfs cached inode times when timestamps are
+> outside the permitted range.
+> 
+> Also fix timestamp calculation to avoid overflow
+> while converting from days to seconds.
+> 
+> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> Cc: dsterba@suse.com
 
-On Thu, Aug 1, 2019 at 1:18 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> The SPI thingies request FIFO-99 by default, reduce this to FIFO-50.
->
-> FIFO-99 is the very highest priority available to SCHED_FIFO and
-> it not a suitable default; it would indicate the SPI work is the
-> most important work on the machine.
->
-> Cc: Benson Leung <bleung@chromium.org>
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: linux-spi@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  drivers/platform/chrome/cros_ec_spi.c |    2 +-
->  drivers/spi/spi.c                     |    2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> --- a/drivers/platform/chrome/cros_ec_spi.c
-> +++ b/drivers/platform/chrome/cros_ec_spi.c
-> @@ -706,7 +706,7 @@ static int cros_ec_spi_devm_high_pri_all
->                                            struct cros_ec_spi *ec_spi)
->  {
->         struct sched_param sched_priority = {
-> -               .sched_priority = MAX_RT_PRIO - 1,
-> +               .sched_priority = MAX_RT_PRIO / 2,
-
-include/linux/sched/prio.h says:
-
- * Priority of a process goes from 0..MAX_PRIO-1, valid RT
- * priority is 0..MAX_RT_PRIO-1, and SCHED_NORMAL/SCHED_BATCH
- * tasks are in the range MAX_RT_PRIO..MAX_PRIO-1. Priority
- * values are inverted: lower p->prio value means higher priority.
-
-So the new 50 is actually a higher priority than the old 99?
-
-Given I'm far from an RT expert, I must be missing something?
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Acked-by: David Sterba <dsterba@suse.com>
