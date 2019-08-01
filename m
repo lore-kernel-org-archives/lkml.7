@@ -2,150 +2,129 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F47C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A229DC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138F8206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:01:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQqJRk5f"
+	by mail.kernel.org (Postfix) with ESMTP id 7AC3B206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732291AbfHAPBn (ORCPT
+        id S1732318AbfHAPC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:01:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41337 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfHAPBn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:01:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so24011062pgg.8;
-        Thu, 01 Aug 2019 08:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j3+SbVpPKelvEjCYc5JFdKjnflgfhHUFgbni1JQLfug=;
-        b=ZQqJRk5fnVcG1ZOCbng7J1FYxp1NpriIQnPyrnpOaP3jNvwcRX1GGy4xoRsPPt8I0h
-         lGgnJmDeeBouSVcnowi5GED8tWCns2QB/l2DzNzmV2w0K0+gdfX7w9ZZxTncE/TSCKHU
-         lMS/327tLGJ28/j43VsHs6Ni+mbp4blBAKONcbgKWmAws97UhBh/9c7JJrk3oIx+Bk02
-         6SB2RgFOw5AIYlQTMq40Cl1JiIcwmeQ1BNr5CRlWfF1LUFMubPyoTfVDVBICVH9ECtGi
-         AjPygJoObpOjTO+tlgJ4RanDeXp+wT6YRMMy4t3JO6gdR+yMXCGgrve5yu7sFLc47+y8
-         ZfSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j3+SbVpPKelvEjCYc5JFdKjnflgfhHUFgbni1JQLfug=;
-        b=pD3FCSewQ/+xUQG1jbusjQduTdwKe7vsq0kDw8W1mm7gqmlYKNyU+5pGeKO/CHBa0B
-         9lPmyDawF9unVQkQ1QdqnsYYnbhgFvMu0z6l/xxjx7rP9IosKdg5hTHYoKI+12h1wX3H
-         L5e9+cbCQYalJSgjilnsol42RnOPDgnGYnaEdzmhaDXcpt2WxMAkMEJJ00VM0U8NOH+E
-         avt4PUsmRBtv+66GVoicfN8gVuQ/QOh2P0LEyDp9NKwTlp9H5mYhwW4xdzaV0nw7kb/6
-         aC23Ibp6lCoDuSRUAVfv0gP4LTn5EygDyq9eRuJQllT56em6yXaN9SrKN1QnaJuOCuN9
-         FQoA==
-X-Gm-Message-State: APjAAAVK5nd16RUL4e2mVK5bD/6Lk4edLMYy1tfMXRPaUm1hRrAmm6nF
-        J5agUYYjdkFTc42YC3HLj7uAmuYgBJeyUC7XXsI=
-X-Google-Smtp-Source: APXvYqzkEzQOIoAQkYZs2MqaRPgXLz6Zfkv0nVGVPl3rbKiRFFbjxuq3ZqweBfBqDY6+SR+kJXEgcACCbz4rf3wqnZo=
-X-Received: by 2002:a17:90a:7788:: with SMTP id v8mr9433611pjk.132.1564671702133;
- Thu, 01 Aug 2019 08:01:42 -0700 (PDT)
+        Thu, 1 Aug 2019 11:02:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44260 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbfHAPC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 11:02:58 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 687B43092409;
+        Thu,  1 Aug 2019 15:02:57 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-18.pek2.redhat.com [10.72.12.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 62C9A579B4;
+        Thu,  1 Aug 2019 15:02:53 +0000 (UTC)
+From:   lijiang <lijiang@redhat.com>
+Subject: crash: `kmem -s` reported "kmem: dma-kmalloc-512: slab:
+ ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e" on a dumped vmcore
+To:     "Lendacky, Thomas" <thomas.lendacky@amd.com>,
+        Dave Young <dyoung@redhat.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dave Anderson <anderson@redhat.com>
+Message-ID: <e640b50a-a962-8e56-33a2-2ba2eb76e813@redhat.com>
+Date:   Thu, 1 Aug 2019 23:02:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190726062115.16231-1-fe@dev.tdt.de> <d35c844e-4202-9710-dbe6-f10bebf75e3a@metux.net>
-In-Reply-To: <d35c844e-4202-9710-dbe6-f10bebf75e3a@metux.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 1 Aug 2019 18:01:30 +0300
-Message-ID: <CAHp75VfC+XhXDUe0NzoYRP9HTFPPKkV78JRMQXFskWaLeYD0PQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] platform/x86/pcengines-apuv2: add mpcie reset gpio export
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Florian Eckert <fe@dev.tdt.de>, Eckert.Florian@googlemail.com,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 01 Aug 2019 15:02:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 1:50 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
->
-> On 26.07.19 08:21, Florian Eckert wrote:
-> > On APUx we have also mpcie2/mpcie3 reset pins. To make it possible to reset
-> > the ports from the userspace, add the definition to this platform
-> > device. The gpio can then be exported by the legancy gpio subsystem to
-> > toggle the mpcie reset pin.
-> >
-> > Signed-off-by: Florian Eckert <fe@dev.tdt.de>
-> > ---
-> >
-> > v2:
-> >    Noting changed for this patch. Only resend because other patches of
-> >    the series where dropped or updated and resend by other people
-> >
-> >   drivers/platform/x86/pcengines-apuv2.c | 8 ++++++++
-> >   1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-> > index c1ca931e1fab..f6d8ed100cab 100644
-> > --- a/drivers/platform/x86/pcengines-apuv2.c
-> > +++ b/drivers/platform/x86/pcengines-apuv2.c
-> > @@ -32,6 +32,8 @@
-> >   #define APU2_GPIO_REG_LED3          AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
-> >   #define APU2_GPIO_REG_MODESW                AMD_FCH_GPIO_REG_GPIO32_GE1
-> >   #define APU2_GPIO_REG_SIMSWAP               AMD_FCH_GPIO_REG_GPIO33_GE2
-> > +#define APU2_GPIO_REG_MPCIE2         AMD_FCH_GPIO_REG_GPIO59_DEVSLP0
-> > +#define APU2_GPIO_REG_MPCIE3         AMD_FCH_GPIO_REG_GPIO51
-> >
-> >   /* order in which the gpio lines are defined in the register list */
-> >   #define APU2_GPIO_LINE_LED1         0
-> > @@ -39,6 +41,8 @@
-> >   #define APU2_GPIO_LINE_LED3         2
-> >   #define APU2_GPIO_LINE_MODESW               3
-> >   #define APU2_GPIO_LINE_SIMSWAP              4
-> > +#define APU2_GPIO_LINE_MPCIE2                5
-> > +#define APU2_GPIO_LINE_MPCIE3                6
-> >
-> >   /* gpio device */
-> >
-> > @@ -48,6 +52,8 @@ static int apu2_gpio_regs[] = {
-> >       [APU2_GPIO_LINE_LED3]           = APU2_GPIO_REG_LED3,
-> >       [APU2_GPIO_LINE_MODESW]         = APU2_GPIO_REG_MODESW,
-> >       [APU2_GPIO_LINE_SIMSWAP]        = APU2_GPIO_REG_SIMSWAP,
-> > +     [APU2_GPIO_LINE_MPCIE2]         = APU2_GPIO_REG_MPCIE2,
-> > +     [APU2_GPIO_LINE_MPCIE3]         = APU2_GPIO_REG_MPCIE3,
-> >   };
-> >
-> >   static const char * const apu2_gpio_names[] = {
-> > @@ -56,6 +62,8 @@ static const char * const apu2_gpio_names[] = {
-> >       [APU2_GPIO_LINE_LED3]           = "front-led3",
-> >       [APU2_GPIO_LINE_MODESW]         = "front-button",
-> >       [APU2_GPIO_LINE_SIMSWAP]        = "simswap",
-> > +     [APU2_GPIO_LINE_MPCIE2]         = "mpcie2_reset",
-> > +     [APU2_GPIO_LINE_MPCIE3]         = "mpcie3_reset",
-> >   };
-> >
-> >   static const struct amd_fch_gpio_pdata board_apu2 = {
-> >
->
-> Acked-by: Enrico Weigelt <info@metux.net>
+Hi, Tom
 
-Applied, thanks!
+Recently, i ran into a problem about SME and used crash tool to check the vmcore as follow: 
 
->
-> --
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+crash> kmem -s | grep -i invalid
+kmem: dma-kmalloc-512: slab: ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e
+kmem: dma-kmalloc-512: slab: ffffe192c0001000 invalid freepointer: e5ffef4e9a040b7e
+
+And the crash tool reported the above error, probably, the main reason is that kernel does not
+correctly handle the first 640k region when SME is enabled.
+
+When SME is enabled, the kernel and initramfs images are loaded into the decrypted memory, and
+the backup area(first 640k) is also mapped as decrypted, but the first 640k data is copied to
+the backup area in purgatory(). Please refer to this file: arch/x86/purgatory/purgatory.c
+......
+static int copy_backup_region(void)
+{
+        if (purgatory_backup_dest) {
+                memcpy((void *)purgatory_backup_dest,
+                       (void *)purgatory_backup_src, purgatory_backup_sz);
+        }
+        return 0;
+}
+......
+
+arch/x86/kernel/machine_kexec_64.c
+......
+machine_kexec_prepare()->
+arch_update_purgatory()->
+.....
+
+Actually, the firs 640k area is encrypted in the first kernel when SME is enabled, here kernel
+copies the first 640k data to the backup area in purgatory(), because the backup area is mapped
+as decrypted, this copying operation makes that the first 640k data is decrypted(decoded) and
+saved to the backup area, but probably kernel can not aware of SME in purgatory(), which causes
+kernel mistakenly read out the first 640k.
+
+In addition, i hacked kernel code as follow:
+
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 7bcc92add72c..a51631d36a7a 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -377,6 +378,16 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+                                            m->offset + m->size - *fpos,
+                                            buflen);
+                        start = m->paddr + *fpos - m->offset;
++                       if (m->paddr == 0x73f60000) {//the backup area's start address:0x73f60000
++                               tmp = read_from_oldmem(buffer, tsz, &start,
++                                               userbuf, false);
++                       } else
+                                tmp = read_from_oldmem(buffer, tsz, &start,
+                                               userbuf, mem_encrypt_active());
+                        if (tmp < 0)
+
+Here, i used the crash tool to check the vmcore, i can see that the backup area is decrypted,
+except for the dma-kmalloc-512. So i suspect that kernel did not correctly read out the first
+640k data to backup area. Do you happen to know how to deal with the first 640k area in purgatory()
+when SME is enabled? Any idea?
+
+BTW: I' curious the reason why the address of dma-kmalloc-512k always falls into the first 640k
+region, and i did not see the same issue on another machine.
+
+Machine:
+Serial Number 	diesel-sys9079-0001
+Model           AMD Diesel (A0C)
+CPU             AMD EPYC 7601 32-Core Processor
 
 
+Background:
+On x86_64, the first 640k region is special because of some historical reasons. And kdump kernel will
+reuse the first 640k region, so kernel will back up(copy) the first 640k region to a backup area in
+purgatory(), in order not to rewrite the old region(640k) in kdump kernel, which makes sure that kdump
+can read out the old memory from vmcore.
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+Thanks.
+Lianbo
