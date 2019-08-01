@@ -2,310 +2,178 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46424C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4A6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25BA20679
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC2F20679
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AafmOyh8"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="eVsneD2E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388211AbfHATFB (ORCPT
+        id S2388255AbfHATFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:05:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47613 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbfHATFB (ORCPT
+        Thu, 1 Aug 2019 15:05:24 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:34114 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727899AbfHATFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:05:01 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71J4mLv070891
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 1 Aug 2019 12:04:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71J4mLv070891
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564686288;
-        bh=ve9zScatH52h9RlXmmYhLSsE7qTEEzBPinx5zynVuxw=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=AafmOyh8lFRcC7FxZBNMWJenOUW8mK1dq0bt4Dfcf5bDHdeBaaSrcEKOkNSS3/w6T
-         Zmi++Q0kyaZuMQXiJLUNENRFnrqqT3ohBqC6OP+/XaehKGCE2tgGZW4UGlq0UwyMSh
-         kI8Mi8HK9A2k5ZoROiPgCit5FnkcFajrW11jreEkWvJ6gWqHokbRwu9iGlGbuVMZJY
-         1Z65X3/mrR31Mu4hToL8Fkc46GpiBMh80KLr2BM1GJinxNd6Z6A0mQmw6iXcHk6QxY
-         Hy9TPMzX+8v2wosMOdESEHOjIA5aU+YhXeaUoXFFUn6aG5a+I4R7dRprl0RiJBl4uy
-         FXiKG5629bGTA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71J4lDr070888;
-        Thu, 1 Aug 2019 12:04:47 -0700
-Date:   Thu, 1 Aug 2019 12:04:47 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Anna-Maria Gleixner <tipbot@zytor.com>
-Message-ID: <tip-030dcdd197d77374879bb5603d091eee7d8aba80@git.kernel.org>
-Cc:     bigeasy@linutronix.de, tglx@linutronix.de, hpa@zytor.com,
-        mingo@kernel.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, anna-maria@linutronix.de
-Reply-To: linux-kernel@vger.kernel.org, peterz@infradead.org,
-          anna-maria@linutronix.de, bigeasy@linutronix.de,
-          mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com
-In-Reply-To: <20190726185753.832418500@linutronix.de>
-References: <20190726185753.832418500@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] timers: Prepare support for PREEMPT_RT
-Git-Commit-ID: 030dcdd197d77374879bb5603d091eee7d8aba80
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 1 Aug 2019 15:05:24 -0400
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71J4cDL023475;
+        Thu, 1 Aug 2019 15:05:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=aMU0JvXRw/3R6ekqux0ut3/qPMlNPKpxNdWEUOqXXhI=;
+ b=eVsneD2EL5mhfpW1QFo3cXt8ALI+MSbfgyddEBHhkna+ZeXaIvWaUYFDuKFxK/iqhm5p
+ GyrKWLqavl5dE0iDR4vBLZ7cHF3BNOCReoCY6/lWAiPFJ1m12azP6lts6P21FIaihrWw
+ 4FzwuRBrLGzQjZr4C/lJqjAP9fZFoU+7xrzeLGXlwICnt2u0F3LJP/N+MFdt51NYp7jL
+ 4UYbm27J1cKSef0lE8d4zRrcd23SVQ9tlQkGaJ4GX28SSNtjTXVvWO1QbYOm3LdD/dtF
+ 2eZppdtmgFrd8mYo5izU9R0hF+/eC2puczJ0Y0uNpjCrnkooUud5+7iWK1EDSF+QKsn6 iw== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 2u3y16a2px-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Aug 2019 15:05:23 -0400
+Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71J3oSD058791;
+        Thu, 1 Aug 2019 15:05:22 -0400
+Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
+        by mx0b-00154901.pphosted.com with ESMTP id 2u45whr0vc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 01 Aug 2019 15:05:22 -0400
+X-LoopCount0: from 10.166.132.132
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="838852024"
+From:   <Mario.Limonciello@dell.com>
+To:     <rafael@kernel.org>, <kai.heng.feng@canonical.com>,
+        <kbusch@kernel.org>
+CC:     <keith.busch@intel.com>, <hch@lst.de>, <sagi@grimberg.me>,
+        <linux-nvme@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rajatja@google.com>
+Subject: RE: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+Thread-Topic: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+Thread-Index: AQHVQs6UiIesxZzK0UKkUWrQRuKoE6bbsW+A///PBcCAAGObgIAHcfaAgABB9YD//9WSkIAAb9eAgAAIQgD//8kpUAALdBYAADIaeYAAAeOLAAAAd84AABYXlgAAEZduAAAHfW7g
+Date:   Thu, 1 Aug 2019 19:05:20 +0000
+Message-ID: <38d4b4b107154454a932781acde0fa5a@AUSX13MPC105.AMER.DELL.COM>
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
+ <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
+ <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+ <20190730213114.GK13948@localhost.localdomain>
+ <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+ <20190731221956.GB15795@localhost.localdomain>
+ <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
+ <70D536BE-8DC7-4CA2-84A9-AFB067BA520E@canonical.com>
+ <CAJZ5v0hFYEv_+vFkrxaCn_pNAbyqmO_cLb5GOLNn_xxRRwjh2g@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hFYEv_+vFkrxaCn_pNAbyqmO_cLb5GOLNn_xxRRwjh2g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-08-01T19:05:19.2643793Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
+ aiplabel=External Public
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908010198
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908010199
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  030dcdd197d77374879bb5603d091eee7d8aba80
-Gitweb:     https://git.kernel.org/tip/030dcdd197d77374879bb5603d091eee7d8aba80
-Author:     Anna-Maria Gleixner <anna-maria@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 20:31:00 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 1 Aug 2019 20:51:22 +0200
-
-timers: Prepare support for PREEMPT_RT
-
-When PREEMPT_RT is enabled, the soft interrupt thread can be preempted.  If
-the soft interrupt thread is preempted in the middle of a timer callback,
-then calling del_timer_sync() can lead to two issues:
-
-  - If the caller is on a remote CPU then it has to spin wait for the timer
-    handler to complete. This can result in unbound priority inversion.
-
-  - If the caller originates from the task which preempted the timer
-    handler on the same CPU, then spin waiting for the timer handler to
-    complete is never going to end.
-
-To avoid these issues, add a new lock to the timer base which is held
-around the execution of the timer callbacks. If del_timer_sync() detects
-that the timer callback is currently running, it blocks on the expiry
-lock. When the callback is finished, the expiry lock is dropped by the
-softirq thread which wakes up the waiter and the system makes progress.
-
-This addresses both the priority inversion and the life lock issues.
-
-This mechanism is not used for timers which are marked IRQSAFE as for those
-preemption is disabled accross the callback and therefore this situation
-cannot happen. The callbacks for such timers need to be individually
-audited for RT compliance.
-
-The same issue can happen in virtual machines when the vCPU which runs a
-timer callback is scheduled out. If a second vCPU of the same guest calls
-del_timer_sync() it will spin wait for the other vCPU to be scheduled back
-in. The expiry lock mechanism would avoid that. It'd be trivial to enable
-this when paravirt spinlocks are enabled in a guest, but it's not clear
-whether this is an actual problem in the wild, so for now it's an RT only
-mechanism.
-
-As the softirq thread can be preempted with PREEMPT_RT=y, the SMP variant
-of del_timer_sync() needs to be used on UP as well.
-
-[ tglx: Refactored it for mainline ]
-
-Signed-off-by: Anna-Maria Gleixner <anna-maria@linutronix.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190726185753.832418500@linutronix.de
-
-
-
----
- include/linux/timer.h |   2 +-
- kernel/time/timer.c   | 103 ++++++++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 96 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 282e4f2a532a..1e6650ed066d 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -183,7 +183,7 @@ extern void add_timer(struct timer_list *timer);
- 
- extern int try_to_del_timer_sync(struct timer_list *timer);
- 
--#ifdef CONFIG_SMP
-+#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT)
-   extern int del_timer_sync(struct timer_list *timer);
- #else
- # define del_timer_sync(t)		del_timer(t)
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 343c7ba33b1c..673c6a0f0c45 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -196,6 +196,10 @@ EXPORT_SYMBOL(jiffies_64);
- struct timer_base {
- 	raw_spinlock_t		lock;
- 	struct timer_list	*running_timer;
-+#ifdef CONFIG_PREEMPT_RT
-+	spinlock_t		expiry_lock;
-+	atomic_t		timer_waiters;
-+#endif
- 	unsigned long		clk;
- 	unsigned long		next_expiry;
- 	unsigned int		cpu;
-@@ -1227,7 +1231,78 @@ int try_to_del_timer_sync(struct timer_list *timer)
- }
- EXPORT_SYMBOL(try_to_del_timer_sync);
- 
--#ifdef CONFIG_SMP
-+#ifdef CONFIG_PREEMPT_RT
-+static __init void timer_base_init_expiry_lock(struct timer_base *base)
-+{
-+	spin_lock_init(&base->expiry_lock);
-+}
-+
-+static inline void timer_base_lock_expiry(struct timer_base *base)
-+{
-+	spin_lock(&base->expiry_lock);
-+}
-+
-+static inline void timer_base_unlock_expiry(struct timer_base *base)
-+{
-+	spin_unlock(&base->expiry_lock);
-+}
-+
-+/*
-+ * The counterpart to del_timer_wait_running().
-+ *
-+ * If there is a waiter for base->expiry_lock, then it was waiting for the
-+ * timer callback to finish. Drop expiry_lock and reaquire it. That allows
-+ * the waiter to acquire the lock and make progress.
-+ */
-+static void timer_sync_wait_running(struct timer_base *base)
-+{
-+	if (atomic_read(&base->timer_waiters)) {
-+		spin_unlock(&base->expiry_lock);
-+		spin_lock(&base->expiry_lock);
-+	}
-+}
-+
-+/*
-+ * This function is called on PREEMPT_RT kernels when the fast path
-+ * deletion of a timer failed because the timer callback function was
-+ * running.
-+ *
-+ * This prevents priority inversion, if the softirq thread on a remote CPU
-+ * got preempted, and it prevents a life lock when the task which tries to
-+ * delete a timer preempted the softirq thread running the timer callback
-+ * function.
-+ */
-+static void del_timer_wait_running(struct timer_list *timer)
-+{
-+	u32 tf;
-+
-+	tf = READ_ONCE(timer->flags);
-+	if (!(tf & TIMER_MIGRATING)) {
-+		struct timer_base *base = get_timer_base(tf);
-+
-+		/*
-+		 * Mark the base as contended and grab the expiry lock,
-+		 * which is held by the softirq across the timer
-+		 * callback. Drop the lock immediately so the softirq can
-+		 * expire the next timer. In theory the timer could already
-+		 * be running again, but that's more than unlikely and just
-+		 * causes another wait loop.
-+		 */
-+		atomic_inc(&base->timer_waiters);
-+		spin_lock_bh(&base->expiry_lock);
-+		atomic_dec(&base->timer_waiters);
-+		spin_unlock_bh(&base->expiry_lock);
-+	}
-+}
-+#else
-+static inline void timer_base_init_expiry_lock(struct timer_base *base) { }
-+static inline void timer_base_lock_expiry(struct timer_base *base) { }
-+static inline void timer_base_unlock_expiry(struct timer_base *base) { }
-+static inline void timer_sync_wait_running(struct timer_base *base) { }
-+static inline void del_timer_wait_running(struct timer_list *timer) { }
-+#endif
-+
-+#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT)
- /**
-  * del_timer_sync - deactivate a timer and wait for the handler to finish.
-  * @timer: the timer to be deactivated
-@@ -1266,6 +1341,8 @@ EXPORT_SYMBOL(try_to_del_timer_sync);
-  */
- int del_timer_sync(struct timer_list *timer)
- {
-+	int ret;
-+
- #ifdef CONFIG_LOCKDEP
- 	unsigned long flags;
- 
-@@ -1283,12 +1360,17 @@ int del_timer_sync(struct timer_list *timer)
- 	 * could lead to deadlock.
- 	 */
- 	WARN_ON(in_irq() && !(timer->flags & TIMER_IRQSAFE));
--	for (;;) {
--		int ret = try_to_del_timer_sync(timer);
--		if (ret >= 0)
--			return ret;
--		cpu_relax();
--	}
-+
-+	do {
-+		ret = try_to_del_timer_sync(timer);
-+
-+		if (unlikely(ret < 0)) {
-+			del_timer_wait_running(timer);
-+			cpu_relax();
-+		}
-+	} while (ret < 0);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(del_timer_sync);
- #endif
-@@ -1360,10 +1442,13 @@ static void expire_timers(struct timer_base *base, struct hlist_head *head)
- 		if (timer->flags & TIMER_IRQSAFE) {
- 			raw_spin_unlock(&base->lock);
- 			call_timer_fn(timer, fn, baseclk);
-+			base->running_timer = NULL;
- 			raw_spin_lock(&base->lock);
- 		} else {
- 			raw_spin_unlock_irq(&base->lock);
- 			call_timer_fn(timer, fn, baseclk);
-+			base->running_timer = NULL;
-+			timer_sync_wait_running(base);
- 			raw_spin_lock_irq(&base->lock);
- 		}
- 	}
-@@ -1658,6 +1743,7 @@ static inline void __run_timers(struct timer_base *base)
- 	if (!time_after_eq(jiffies, base->clk))
- 		return;
- 
-+	timer_base_lock_expiry(base);
- 	raw_spin_lock_irq(&base->lock);
- 
- 	/*
-@@ -1684,8 +1770,8 @@ static inline void __run_timers(struct timer_base *base)
- 		while (levels--)
- 			expire_timers(base, heads + levels);
- 	}
--	base->running_timer = NULL;
- 	raw_spin_unlock_irq(&base->lock);
-+	timer_base_unlock_expiry(base);
- }
- 
- /*
-@@ -1930,6 +2016,7 @@ static void __init init_timer_cpu(int cpu)
- 		base->cpu = cpu;
- 		raw_spin_lock_init(&base->lock);
- 		base->clk = jiffies;
-+		timer_base_init_expiry_lock(base);
- 	}
- }
- 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYWZhZWwgSi4gV3lzb2NraSA8
+cmFmYWVsQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IFRodXJzZGF5LCBBdWd1c3QgMSwgMjAxOSAxMjoz
+MCBQTQ0KPiBUbzogS2FpLUhlbmcgRmVuZzsgS2VpdGggQnVzY2g7IExpbW9uY2llbGxvLCBNYXJp
+bw0KPiBDYzogS2VpdGggQnVzY2g7IENocmlzdG9waCBIZWxsd2lnOyBTYWdpIEdyaW1iZXJnOyBs
+aW51eC1udm1lOyBMaW51eCBQTTsgTGludXgNCj4gS2VybmVsIE1haWxpbmcgTGlzdDsgUmFqYXQg
+SmFpbg0KPiBTdWJqZWN0OiBSZTogW1JlZ3Jlc3Npb25dIENvbW1pdCAibnZtZS9wY2k6IFVzZSBo
+b3N0IG1hbmFnZWQgcG93ZXIgc3RhdGUgZm9yDQo+IHN1c3BlbmQiIGhhcyBwcm9ibGVtcw0KPiAN
+Cj4gDQo+IFtFWFRFUk5BTCBFTUFJTF0NCj4gDQo+IE9uIFRodSwgQXVnIDEsIDIwMTkgYXQgMTE6
+MDYgQU0gS2FpLUhlbmcgRmVuZw0KPiA8a2FpLmhlbmcuZmVuZ0BjYW5vbmljYWwuY29tPiB3cm90
+ZToNCj4gPg0KPiA+IGF0IDA2OjMzLCBSYWZhZWwgSi4gV3lzb2NraSA8cmFmYWVsQGtlcm5lbC5v
+cmc+IHdyb3RlOg0KPiA+DQo+ID4gPiBPbiBUaHUsIEF1ZyAxLCAyMDE5IGF0IDEyOjIyIEFNIEtl
+aXRoIEJ1c2NoIDxrYnVzY2hAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4gPj4gT24gV2VkLCBKdWwg
+MzEsIDIwMTkgYXQgMTE6MjU6NTFQTSArMDIwMCwgUmFmYWVsIEouIFd5c29ja2kgd3JvdGU6DQo+
+ID4gPj4+IEEgY291cGxlIG9mIHJlbWFya3MgaWYgeW91IHdpbGwuDQo+ID4gPj4+DQo+ID4gPj4+
+IEZpcnN0LCB3ZSBkb24ndCBrbm93IHdoaWNoIGNhc2UgaXMgdGhlIG1ham9yaXR5IGF0IHRoaXMg
+cG9pbnQuICBGb3INCj4gPiA+Pj4gbm93LCB0aGVyZSBpcyBvbmUgZXhhbXBsZSBvZiBlYWNoLCBi
+dXQgaXQgbWF5IHZlcnkgd2VsbCB0dXJuIG91dCB0aGF0DQo+ID4gPj4+IHRoZSBTSyBIeW5peCBC
+QzUwMSBhYm92ZSBuZWVkcyB0byBiZSBxdWlya2VkLg0KPiA+ID4+Pg0KPiA+ID4+PiBTZWNvbmQs
+IHRoZSByZWZlcmVuY2UgaGVyZSByZWFsbHkgaXMgNS4yLCBzbyBpZiB0aGVyZSBhcmUgYW55IHN5
+c3RlbXMNCj4gPiA+Pj4gdGhhdCBhcmUgbm90IGJldHRlciBvZmYgd2l0aCA1LjMtcmMgdGhhbiB0
+aGV5IHdlcmUgd2l0aCA1LjIsIHdlbGwsIHdlDQo+ID4gPj4+IGhhdmUgbm90IG1hZGUgcHJvZ3Jl
+c3MuICBIb3dldmVyLCBpZiB0aGVyZSBhcmUgc3lzdGVtcyB0aGF0IGFyZSB3b3JzZQ0KPiA+ID4+
+PiBvZmYgd2l0aCA1LjMsIHRoYXQncyBiYWQuICBJbiB0aGUgZmFjZSBvZiB0aGUgbGF0ZXN0IGZp
+bmRpbmdzIHRoZSBvbmx5DQo+ID4gPj4+IHdheSB0byBhdm9pZCB0aGF0IGlzIHRvIGJlIGJhY2t3
+YXJkcyBjb21wYXRpYmxlIHdpdGggNS4yIGFuZCB0aGF0J3MNCj4gPiA+Pj4gd2hlcmUgbXkgcGF0
+Y2ggaXMgZ29pbmcuICBUaGF0IGNhbm5vdCBiZSBhY2hpZXZlZCBieSBxdWlya2luZyBhbGwNCj4g
+PiA+Pj4gY2FzZXMgdGhhdCBhcmUgcmVwb3J0ZWQgYXMgImJhZCIsIGJlY2F1c2UgdGhlcmUgc3Rp
+bGwgbWF5IGJlDQo+ID4gPj4+IHVucmVwb3J0ZWQgb25lcy4NCj4gPiA+Pg0KPiA+ID4+IEkgaGF2
+ZSB0byBhZ3JlZS4gSSB0aGluayB5b3VyIHByb3Bvc2FsIG1heSBhbGxvdyBQQ0kgRDNjb2xkLA0K
+PiA+ID4NCj4gPiA+IFllcywgaXQgbWF5Lg0KPiA+DQo+ID4gU29tZWhvdyB0aGUgOTM4MCB3aXRo
+IFRvc2hpYmEgTlZNZSBuZXZlciBoaXRzIFNMUF9TMCB3aXRoIG9yIHdpdGhvdXQNCj4gPiBSYWZh
+ZWzigJlzIHBhdGNoLg0KPiA+IEJ1dCB0aGUg4oCccmVhbOKAnSBzMmlkbGUgcG93ZXIgY29uc3Vt
+cHRpb24gZG9lcyBpbXByb3ZlIHdpdGggdGhlIHBhdGNoLg0KPiANCj4gRG8geW91IG1lYW4gdGhp
+cyBwYXRjaDoNCj4gDQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXBtLzcwRDUzNkJF
+LThEQzctNENBMi04NEE5LQ0KPiBBRkIwNjdCQTUyMEVAY2Fub25pY2FsLmNvbS9ULyNtNDU2YWE1
+YzY5OTczYTNiNjhmMmNkZDQ3MTNhMWNlODNiZTUxNDUNCj4gOGYNCj4gDQo+IG9yIHRoZSAkc3Vi
+amVjdCBvbmUgd2l0aG91dCB0aGUgYWJvdmU/DQo+IA0KPiA+IENhbiB3ZSB1c2UgYSBETUkgYmFz
+ZWQgcXVpcmsgZm9yIHRoaXMgcGxhdGZvcm0/IEl0IHNlZW1zIGxpa2UgYSBwbGF0Zm9ybQ0KPiA+
+IHNwZWNpZmljIGlzc3VlLg0KPiANCj4gV2Ugc2VlbSB0byBzZWUgdG9vIG1hbnkgInBsYXRmb3Jt
+LXNwZWNpZmljIGlzc3VlcyIgaGVyZS4gOi0pDQo+IA0KPiBUbyBtZSwgdGhlIHN0YXR1cyBxdW8g
+KGllLiB3aGF0IHdlIGhhdmUgaW4gNS4zLXJjMikgaXMgbm90IGRlZmVuc2libGUuDQo+IFNvbWV0
+aGluZyBuZWVkcyB0byBiZSBkb25lIHRvIGltcHJvdmUgdGhlIHNpdHVhdGlvbi4NCg0KUmFmYWVs
+LCB3b3VsZCBpdCBiZSBwb3NzaWJsZSB0byB0cnkgcG9wcGluZyBvdXQgUEM0MDEgZnJvbSB0aGUg
+OTM4MCBhbmQgaW50byBhIDkzNjAgdG8NCmNvbmZpcm0gdGhlcmUgYWN0dWFsbHkgYmVpbmcgYSBw
+bGF0Zm9ybSBpbXBhY3Qgb3Igbm90Pw0KDQpJIHdhcyBob3BpbmcgdG8gaGF2ZSBzb21ldGhpbmcg
+dXNlZnVsIGZyb20gSHluaXggYnkgbm93IGJlZm9yZSByZXNwb25kaW5nLCBidXQgb2ggd2VsbC4N
+Cg0KSW4gdGVybXMgb2Ygd2hhdCBpcyB0aGUgbWFqb3JpdHksIEkgZG8ga25vdyB0aGF0IGJldHdl
+ZW4gZm9sa3MgYXQgRGVsbCwgR29vZ2xlLCBDb21wYWwsDQpXaXN0cm9uLCBDYW5vbmljYWwsIE1p
+Y3JvbiwgSHluaXgsIFRvc2hpYmEsIExpdGVPbiwgYW5kIFdlc3Rlcm4gRGlnaXRhbCB3ZSB0ZXN0
+ZWQgYSB3aWRlDQp2YXJpZXR5IG9mIFNTRHMgd2l0aCB0aGlzIHBhdGNoIHNlcmllcy4gIEkgd291
+bGQgbGlrZSB0byB0aGluayB0aGF0IHRoZXkgYXJlIHJlcHJlc2VudGF0aXZlIG9mDQp3aGF0J3Mg
+YmVpbmcgbWFudWZhY3R1cmVkIGludG8gbWFjaGluZXMgbm93Lg0KDQpOb3RhYmx5IHRoZSBMaXRl
+T24gQ0wxIHdhcyB0ZXN0ZWQgd2l0aCB0aGUgSE1CIGZsdXNoaW5nIHN1cHBvcnQgYW5kIA0KYW5k
+IEh5bml4IFBDNDAxIHdhcyB0ZXN0ZWQgd2l0aCBvbGRlciBmaXJtd2FyZSB0aG91Z2guDQoNCj4g
+DQo+ID4gPg0KPiA+ID4+IEluIHdoaWNoIGNhc2Ugd2UgZG8gbmVlZCB0byByZWludHJvZHVjZSB0
+aGUgSE1CIGhhbmRsaW5nLg0KPiA+ID4NCj4gPiA+IFJpZ2h0Lg0KPiA+DQo+ID4gVGhlIHBhdGNo
+IGFsb25lIGRvZXNu4oCZdCBicmVhayBITUIgVG9zaGliYSBOVk1lIEkgdGVzdGVkLiBCdXQgSSB0
+aGluayBpdOKAmXMNCj4gPiBzdGlsbCBzYWZlciB0byBkbyBwcm9wZXIgSE1CIGhhbmRsaW5nLg0K
+PiANCj4gV2VsbCwgc28gY2FuIGFueW9uZSBwbGVhc2UgcHJvcG9zZSBzb21ldGhpbmcgc3BlY2lm
+aWM/ICBMaWtlIGFuDQo+IGFsdGVybmF0aXZlIHBhdGNoPw0KDQpUaGlzIHdhcyBwcm9wb3NlZCBh
+IGZldyBkYXlzIGFnbzoNCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51
+eC1udm1lLzIwMTktSnVseS8wMjYwNTYuaHRtbA0KDQpIb3dldmVyIHdlJ3JlIHN0aWxsIG5vdCBz
+dXJlIHdoeSBpdCBpcyBuZWVkZWQsIGFuZCBpdCB3aWxsIHRha2Ugc29tZSB0aW1lIHRvIGdldA0K
+YSBwcm9wZXIgZmFpbHVyZSBhbmFseXNpcyBmcm9tIExpdGVPbiAgcmVnYXJkaW5nIHRoZSBDTDEu
+IA0K
