@@ -2,146 +2,113 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C04C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD75C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C702087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99C0214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:11:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJuAtUUy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730013AbfHALLA (ORCPT
+        id S1730406AbfHALLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:11:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:34160 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfHALK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:10:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DADC81570;
-        Thu,  1 Aug 2019 04:10:58 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 501603F575;
-        Thu,  1 Aug 2019 04:10:56 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 12:10:54 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-Cc:     cgroups@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Alessio Balsini <balsini@android.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Paul Turner <pjt@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v12 3/6] sched/core: uclamp: Propagate system defaults to
- root group
-Message-ID: <20190801111054.6izrad6eysfnw5ju@e110439-lin>
-References: <20190718181748.28446-1-patrick.bellasi@arm.com>
- <20190718181748.28446-4-patrick.bellasi@arm.com>
- <20190725114126.GA4130@blackbody.suse.cz>
+        Thu, 1 Aug 2019 07:11:38 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41340 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfHALLi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 07:11:38 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d24so68939362ljg.8;
+        Thu, 01 Aug 2019 04:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K8e4hrDcsp4be0Ory1S+uKZbjey4PHhTQwgmYUnn3bQ=;
+        b=CJuAtUUyxHmGNcvqWCtDUZe66p46usUOJRNj1NMEyZzaJy1o5StfVJazYYI13FVMtW
+         MSt4uHOFmXbl7mp1p2I5BjFTdKoKAst0nCrWqXuUXCyk1olBcKyUIZTaBUTeNK6HIr+g
+         htwigO9x8s4cB5o79esjbE/MCuRp8svV2xX919qCjEa4hnde6M9ODfs1rdA2A8oLooqk
+         netQ/Olv9nCI+N/3oBpVBk+yCn+6YLiSyTfsEZIYbHj5I+W+xz9v9cDz00GXqpcZHOA0
+         U876fVhjeWW/PIixTRqfVjifAL7a4njO/d0n8IxeUsJNI1p11g8E/dO4UHUEpcDdyOuu
+         vMUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K8e4hrDcsp4be0Ory1S+uKZbjey4PHhTQwgmYUnn3bQ=;
+        b=CmBsf8ov2NnTyN+8GwEpShUK/jwyZRICQjJBZ1kiXUwKiZZZHOW35UnnLdNr4HNhv/
+         KKceSgzVBUNlqeGvdRfLe8Gj8sX2IyKQUEeFhiVfEn2SACDg+8/Zudyj4VYCE0uX/BPV
+         HoNgjXJVpJS/xfNhl3KdRJ9EYMAn1j560eh8g83R1eycU+vEVQrb21K4oyxXzHLvhHx0
+         61eq9unhVvK2I2+TL3AVU7IkflpLEUq6mCbH2QPAsLDCvlNcOux/5kNGjVQ3tSpVfjGA
+         8DYwjsjaacUbMd5VcuN9HSLR3AiZlgTjlAC3MZROwWgP6BLRx42EBDvXmFFp3CqLG3nm
+         eRNg==
+X-Gm-Message-State: APjAAAVIkndf/ItsAzkkf2QMd40bDMGp7kd9t1BYqGPa3dqUnQVk9ggE
+        7ESWTW6zTpNQlJRhCKAMQynZ/4UO
+X-Google-Smtp-Source: APXvYqzkr+8EzGVav0VJvfDyIm0X2edu9GsTb/z7LUFnd/R5ZKRDADrd3k6/jDvjQlLNnNd9lQ8y1g==
+X-Received: by 2002:a2e:8802:: with SMTP id x2mr47065479ljh.200.1564657895466;
+        Thu, 01 Aug 2019 04:11:35 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id d21sm12194718lfc.73.2019.08.01.04.11.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 04:11:34 -0700 (PDT)
+Subject: Re: [PATCH v9 01/15] clk: tegra20/30: Add custom EMC clock
+ implementation
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190730165618.10122-1-digetx@gmail.com>
+ <20190730165618.10122-2-digetx@gmail.com>
+Message-ID: <ac9a29b2-d65e-9b20-ff47-c9e5eacae31b@gmail.com>
+Date:   Thu, 1 Aug 2019 14:10:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20190730165618.10122-2-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190725114126.GA4130@blackbody.suse.cz>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-Jul 13:41, Michal Koutn� wrote:
-> On Thu, Jul 18, 2019 at 07:17:45PM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-> > The clamp values are not tunable at the level of the root task group.
-> > That's for two main reasons:
-> > 
-> >  - the root group represents "system resources" which are always
-> >    entirely available from the cgroup standpoint.
-> > 
-> >  - when tuning/restricting "system resources" makes sense, tuning must
-> >    be done using a system wide API which should also be available when
-> >    control groups are not.
-> > 
-> > When a system wide restriction is available, cgroups should be aware of
-> > its value in order to know exactly how much "system resources" are
-> > available for the subgroups.
-> IIUC, the global default would apply in uclamp_eff_get(), so this
-> propagation isn't strictly necessary in order to apply to tasks (that's
-> how it works under !CONFIG_UCLAMP_TASK_GROUP).
+30.07.2019 19:56, Dmitry Osipenko пишет:
+> A proper External Memory Controller clock rounding and parent selection
+> functionality is required by the EMC drivers, it is not available using
+> the generic clock implementation because only the Memory Controller driver
+> is aware of what clock rates are actually available for a particular
+> device. EMC drivers will have to register a Tegra-specific CLK-API
+> callback which will perform rounding of a requested rate. EMC clock users
+> won't be able to request EMC clock by getting -EPROBE_DEFER until EMC
+> driver is probed and the callback is set up.
+> 
+> The functionality is somewhat similar to the clk-emc.c which serves
+> Tegra124+ SoCs. The later HW generations support more parent clock sources
+> and the HW configuration / integration with the EMC drivers differs a tad
+> from the older gens, hence it's not really worth to try to squash
+> everything into a single source file.
+> 
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
 
-That's right.
+Hello Stephen and Michael,
 
-> The reason is that effective value (which isn't exposed currently) in a
-> group takes into account this global restriction, right?
-
-Yep, well admittedly in this area things changed in a slightly confusing way.
-
-Up to v10:
- - effective values was exposed to userspace
- - system defaults was enforced only at enqueue time
-
-Now instead:
- - effective values are not exposed anymore (because of Tejun request)
- - system defaults are applied to the root group and propagated down
-   the hierarchy to all effective values
-
-Both solutions are functionally correct but, in the first case, the
-cgroup's effective values was not really reflecting what a task will
-get while, in the current solution, we force update all effective
-values while not exposing them anymore.
-
-However, I think this solution is better in keeping information more
-consistent and should create less confusion if in the future we decide
-to expose effective values to user-space.
-
-Thought?
-
-> > @@ -1043,12 +1063,17 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-> > [...]
-> > +	if (update_root_tg)
-> > +		uclamp_update_root_tg();
-> > +
-> >  	/*
-> >  	 * Updating all the RUNNABLE task is expensive, keep it simple and do
-> >  	 * just a lazy update at each next enqueue time.
-> Since uclamp_update_root_tg() traverses down to
-> uclamp_update_active_tasks() is this comment half true now?
-
-Right, this comment is now wrong. We update all RUNNABLE tasks on
-system default changes. However, despite the above command it's
-difficult to say how much expensive that operation can be.
-
-It really depends on how many RUNNABLE tasks we have, the number of
-CPUs and also how many tasks are not already clamped by a more
-restrictive "effective" value. Thus, for the time being, we can
-consider speculation the above statement and add in a simple change if
-in the future that should be reported as a real issue to justify a
-lazy update.
-
-The upside is that with the current implementation we have a more
-strict control on task. Even long running tasks can be clamped on
-sysadmin demand without waiting for them to sleep.
-
-Does that makes sense?
-
-If it does, I'll drop the above comment in v13.
-
-Cheers Patrick
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+The clk-driver changes are quite solid now, could you please take a look
+at the relevant patches once again and give an ACK if everything is good
+to you?
