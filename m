@@ -2,101 +2,91 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6219C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC45C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C179A216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF73214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbfHAIjK (ORCPT
+        id S1730699AbfHAIjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:39:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52760 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726368AbfHAIjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:39:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2B254B646;
-        Thu,  1 Aug 2019 08:39:09 +0000 (UTC)
-Date:   Thu, 1 Aug 2019 10:39:01 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        pasha.tatashin@soleen.com, mhocko@suse.com,
-        anshuman.khandual@arm.com, Jonathan.Cameron@huawei.com,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] Allocate memmap from hotadded memory
-Message-ID: <20190801083856.GA17316@linux>
-References: <20190725160207.19579-1-osalvador@suse.de>
- <20190801073931.GA16659@linux>
- <1e5776e4-d01e-fe86-57c3-1c3c27aae52f@redhat.com>
+        Thu, 1 Aug 2019 04:39:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40262 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfHAIjq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 04:39:46 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ht6cg-0004e0-3p; Thu, 01 Aug 2019 08:39:42 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][drm-next] drm/amd/powerplay: fix a few spelling mistakes
+Date:   Thu,  1 Aug 2019 09:39:41 +0100
+Message-Id: <20190801083941.4230-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e5776e4-d01e-fe86-57c3-1c3c27aae52f@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 10:17:23AM +0200, David Hildenbrand wrote:
-> I am not yet sure about two things:
-> 
-> 
-> 1. Checking uninitialized pages for PageVmemmap() when onlining. I
-> consider this very bad.
-> 
-> I wonder if it would be better to remember for each memory block the pfn
-> offset, which will be used when onlining/offlining.
-> 
-> I have some patches that convert online_pages() to
-> __online_memory_block(struct memory block *mem) - which fits perfect to
-> the current user. So taking the offset and processing only these pages
-> when onlining would be easy. To do the same for offline_pages(), we
-> first have to rework memtrace code. But when offlining, all memmaps have
-> already been initialized.
+From: Colin Ian King <colin.king@canonical.com>
 
-This is true, I did not really like that either, but was one of the things
-I came up.
-I already have some ideas how to avoid checking the page, I will work on it.
+There are a few spelling mistakes "unknow" -> "unknown" and
+"enabeld" -> "enabled". Fix these.
 
-> 2. Setting the Vmemmap pages to the zone of the online type. This would
-> mean we would have unmovable data on pages marked to belong to the
-> movable zone. I would suggest to always set them to the NORMAL zone when
-> onlining - and inititalize the vmemmap of the vmemmap pages directly
-> during add_memory() instead.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/powerplay/amdgpu_smu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-IMHO, having vmemmap pages in ZONE_MOVABLE do not matter that match.
-They are not counted as managed_pages, and they are not show-stopper for
-moving all the other data around (migrate), they are just skipped.
-Conceptually, they are not pages we can deal with.
-
-I thought they should lay wherever the range lays.
-Having said that, I do not oppose to place them in ZONE_NORMAL, as they might
-fit there better under the theory that ZONE_NORMAL have memory that might not be
-movable/migratable.
-
-As for initializing them in add_memory(), we cannot do that.
-First problem is that we first need sparse_mem_map_populate to create
-the mapping, and to take the pages from our altmap.
-
-Then, we can access and initialize those pages.
-So we cannot do that in add_memory() because that happens before.
-
-And I really think that it fits much better in __add_pages than in add_memory.
-
-Given said that, I would appreciate some comments in patches#3 and patches#4,
-specially patch#4.
-So I would like to collect some feedback in those before sending a new version.
-
-Thanks David
-
+diff --git a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
+index 13b2c8a60232..d029a99e600e 100644
+--- a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
++++ b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
+@@ -39,7 +39,7 @@ static const char* __smu_message_names[] = {
+ const char *smu_get_message_name(struct smu_context *smu, enum smu_message_type type)
+ {
+ 	if (type < 0 || type > SMU_MSG_MAX_COUNT)
+-		return "unknow smu message";
++		return "unknown smu message";
+ 	return __smu_message_names[type];
+ }
+ 
+@@ -52,7 +52,7 @@ static const char* __smu_feature_names[] = {
+ const char *smu_get_feature_name(struct smu_context *smu, enum smu_feature_mask feature)
+ {
+ 	if (feature < 0 || feature > SMU_FEATURE_COUNT)
+-		return "unknow smu feature";
++		return "unknown smu feature";
+ 	return __smu_feature_names[feature];
+ }
+ 
+@@ -79,7 +79,7 @@ size_t smu_sys_get_pp_feature_mask(struct smu_context *smu, char *buf)
+ 			       count++,
+ 			       smu_get_feature_name(smu, i),
+ 			       feature_index,
+-			       !!smu_feature_is_enabled(smu, i) ? "enabeld" : "disabled");
++			       !!smu_feature_is_enabled(smu, i) ? "enabled" : "disabled");
+ 	}
+ 
+ failed:
 -- 
-Oscar Salvador
-SUSE L3
+2.20.1
+
