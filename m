@@ -2,148 +2,104 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C98C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4BFC32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE4B214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8018C20644
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="I32ezHny"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uvyTgNPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732025AbfHAO25 (ORCPT
+        id S1732061AbfHAObQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:28:57 -0400
-Received: from mail-eopbgr60108.outbound.protection.outlook.com ([40.107.6.108]:15073
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729356AbfHAO2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:28:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eLQvL+lyUfefr78OUwZIm3pWtgkvJQPBPSgdF/LTACF2vDQIMKWeSdgzi3UHJDvI1VG7NuFIUoM4LS/n5VV813OqwbuXyrXnlhNb8jy6wNK5TKsP2BNrqUumACZ1rIZZf7fMRngvnymKFx/9Ommsb4LxvPirSUqnPRQWrPPOtTecJz/Y1jMLNtEhdvkn9CyDKAnrr4h5rXnzBct09bP5zp39tf2r3UOsdPnmSmfPsOfaDnya74MLJrXF7lLdrD4v8/rTVTJGKCV43ggPukFd5f/0UsH8Nc5D0UWAW0te7C7GNUS4UX/4TodXK4DQq+kw+JjvTM+BGghR5V3DtSUk8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wxOVxAI2ZY6bScTypA33szMg0by1dMkN9PfpwcD/y0k=;
- b=VtzxNGWp/Ev9mrHNyfRGJWyi6jzymDNi4Xxa01o9wmO3+Y4aR0OsbVvUQuRQ0iCA8mBurmrYjQkBJC6wGNzF5V5Lfo3IoY5YIlxZvvx0zQqXfQJCHzitvSWXzp9gXRlwuzelQnMk7MTdqhRA6HzHtTMItSQgt3ZndIsJcl18edIUhZBo3IN0HQT85bRRk3sK9DvNzB/XIkNxzfPqYBMYQfuGfUEih5PJihdaWDeTttrnhbyIp0TuAn5WXVAfVSOviM73n+xhZtHarszkPxQxSq95hv1yaL74f3kYEApHWQKDAQPzUL7+t/UdeZc1i2Ucw60BkKz/dGHWzZu1c+MtlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=habana.ai;dmarc=pass action=none
- header.from=habana.ai;dkim=pass header.d=habana.ai;arc=none
+        Thu, 1 Aug 2019 10:31:16 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:55541 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731284AbfHAObP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:31:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wxOVxAI2ZY6bScTypA33szMg0by1dMkN9PfpwcD/y0k=;
- b=I32ezHny9/SMy/69Xi9OV84kCsZWLlZ0NXNqn3yoY6tkpyCiVHD3kESszO55rS2Cm2oqw8pD0HqrqE6Vc7W0K5p1ObXnTbgXKyyW6DM65GzsjwT8c62m2NmbI6nE0iZmjE/Cy3aDLKhzphP9x+tlkTiLu3W6LfYQCVYGJ1EWoek=
-Received: from VI1PR02MB3054.eurprd02.prod.outlook.com (10.170.235.155) by
- VI1PR02MB3679.eurprd02.prod.outlook.com (52.134.26.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.15; Thu, 1 Aug 2019 14:28:46 +0000
-Received: from VI1PR02MB3054.eurprd02.prod.outlook.com
- ([fe80::30b7:2c9a:9b15:f88f]) by VI1PR02MB3054.eurprd02.prod.outlook.com
- ([fe80::30b7:2c9a:9b15:f88f%4]) with mapi id 15.20.2136.010; Thu, 1 Aug 2019
- 14:28:46 +0000
-From:   Tomer Tayar <ttayar@habana.ai>
-To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] habanalabs: Add descriptive name to PSOC app status
- register
-Thread-Topic: [PATCH 2/2] habanalabs: Add descriptive name to PSOC app status
- register
-Thread-Index: AQHVSHVt1wARYllfWUqa6yCScOeJ0A==
-Date:   Thu, 1 Aug 2019 14:28:45 +0000
-Message-ID: <20190801142834.329-2-ttayar@habana.ai>
-References: <20190801142834.329-1-ttayar@habana.ai>
-In-Reply-To: <20190801142834.329-1-ttayar@habana.ai>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0069.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1d::33) To VI1PR02MB3054.eurprd02.prod.outlook.com
- (2603:10a6:802:17::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ttayar@habana.ai; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [31.154.190.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: da5d0fbc-5122-4779-b437-08d7168c8fb4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR02MB3679;
-x-ms-traffictypediagnostic: VI1PR02MB3679:
-x-microsoft-antispam-prvs: <VI1PR02MB3679811117489A0F1848B97DD2DE0@VI1PR02MB3679.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1332;
-x-forefront-prvs: 01165471DB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(376002)(366004)(396003)(39850400004)(199004)(189003)(66946007)(5640700003)(66446008)(8936002)(53936002)(81166006)(81156014)(71190400001)(71200400001)(50226002)(66476007)(66556008)(64756008)(6512007)(305945005)(86362001)(478600001)(6486002)(5660300002)(2906002)(1076003)(2351001)(2501003)(6436002)(6116002)(3846002)(36756003)(476003)(11346002)(486006)(446003)(4326008)(186003)(66066001)(102836004)(26005)(52116002)(76176011)(386003)(6506007)(99286004)(7736002)(2616005)(25786009)(6916009)(14454004)(316002)(1361003)(256004)(19627235002)(68736007)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB3679;H:VI1PR02MB3054.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: habana.ai does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /LX+2WvuPmhDylRapMG3znktA9KisMeFxCpfJkoOS8TkC3CSirFI8jaOX8tRJXyllwnSWhXdsV11sBcnkU/y/tfBgDsbMyijZm3mXNkFC9JXmpzkAc30Ip1wOaEy/MLyMnB7uU6QD8o/dscPPA9BTT6Z54ysyS99yIOK7GQpz0LKkeFc0gxnhhQLbYMGjCWKKX4SQM7oqJT+pzuUx3y1LkwvR7uOSbX3lOzU/yl/aewmy9hMxmpWDWh2PuU8fYrzzUAc5lFV3GgTXPf5Y95V0SuEikw5ccFOgNGg6oF2WG5UtSwZGY7AKngkwmFPE4BzF93v+eubgluqYJDK1VDMQj3ETgQs03R2wcM+160S3qsnq7pPQBQBL95MpwHy8JR5fxeDpl1foLew156DPM+Y/WoYOQWWYThRwMFjC5AY2/0=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1564669873; x=1596205873;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=CYr97n4jQ+i8XoMJ1ptuHgHbqpfgmK1fn3mN/NxQ128=;
+  b=uvyTgNPUjMJ2SDB/3yzQcDNPpyeda2EGVu+gp2VrE8b0X+p60xC5w7YG
+   mS2kUCoSOxe9gDQNG5hZXlqOp4i3MQ6cuzR8OiFoCCrLg6Ptqm0AeKXDa
+   tIfHsNgIZ132ZQm3aCk0FP5iZEd3IR2IdGUown74YlVTSVnqYp/xZCuDl
+   g=;
+X-IronPort-AV: E=Sophos;i="5.64,334,1559520000"; 
+   d="scan'208";a="689971421"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 01 Aug 2019 14:31:07 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id 1C739A2077;
+        Thu,  1 Aug 2019 14:31:08 +0000 (UTC)
+Received: from EX13D21UWA002.ant.amazon.com (10.43.160.246) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 1 Aug 2019 14:31:07 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D21UWA002.ant.amazon.com (10.43.160.246) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 1 Aug 2019 14:31:07 +0000
+Received: from [10.107.3.19] (10.107.3.19) by mail-relay.amazon.com
+ (10.43.160.118) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Thu, 1 Aug 2019 14:31:01 +0000
+Subject: Re: [RFC 1/1] edac: Add a counter parameter for
+ edac_device_handle_ue/ce()
+To:     Robert Richter <rric@kernel.org>
+CC:     <thor.thayer@linux.intel.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <james.morse@arm.com>, <morbidrsa@gmail.com>,
+        <ralf@linux-mips.org>, <david.daney@cavium.com>,
+        <andy.gross@linaro.org>, <david.brown@linaro.org>,
+        <ckadabi@codeaurora.org>, <vnkgutta@codeaurora.org>,
+        <jglauber@cavium.com>, <khuong@os.amperecomputing.com>,
+        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mips@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+References: <1563187987-5847-1-git-send-email-hhhawa@amazon.com>
+ <20190801113548.7leooh57gihixen5@rric.localdomain>
+ <7d6aac9e-20e5-3901-a423-d76ac917b251@amazon.com>
+ <20190801141701.bmcken464mrqwhdg@rric.localdomain>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Message-ID: <045bb0dd-6a88-36ba-203f-d0dcb9ae5b62@amazon.com>
+Date:   Thu, 1 Aug 2019 17:30:59 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: da5d0fbc-5122-4779-b437-08d7168c8fb4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 14:28:45.9950
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ttayar@habana.ai
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB3679
+In-Reply-To: <20190801141701.bmcken464mrqwhdg@rric.localdomain>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a meaningful name to the general PSOC application status register
-which better describes its usage in keeping the HW state.
 
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
----
- drivers/misc/habanalabs/goya/goya.c                 | 4 ++--
- drivers/misc/habanalabs/include/goya/goya_reg_map.h | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/=
-goya/goya.c
-index 9699e7d4903e..6acda363983f 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -2468,7 +2468,7 @@ static int goya_hw_init(struct hl_device *hdev)
- 	 * we need to reset the chip before doing H/W init. This register is
- 	 * cleared by the H/W upon H/W reset
- 	 */
--	WREG32(mmPSOC_GLOBAL_CONF_APP_STATUS, HL_DEVICE_HW_STATE_DIRTY);
-+	WREG32(mmHW_STATE, HL_DEVICE_HW_STATE_DIRTY);
-=20
- 	rc =3D goya_init_cpu(hdev, GOYA_CPU_TIMEOUT_USEC);
- 	if (rc) {
-@@ -5023,7 +5023,7 @@ static int goya_get_eeprom_data(struct hl_device *hde=
-v, void *data,
-=20
- static enum hl_device_hw_state goya_get_hw_state(struct hl_device *hdev)
- {
--	return RREG32(mmPSOC_GLOBAL_CONF_APP_STATUS);
-+	return RREG32(mmHW_STATE);
- }
-=20
- static const struct hl_asic_funcs goya_funcs =3D {
-diff --git a/drivers/misc/habanalabs/include/goya/goya_reg_map.h b/drivers/=
-misc/habanalabs/include/goya/goya_reg_map.h
-index 554034f47317..cd89723c7f61 100644
---- a/drivers/misc/habanalabs/include/goya/goya_reg_map.h
-+++ b/drivers/misc/habanalabs/include/goya/goya_reg_map.h
-@@ -29,4 +29,6 @@
- #define mmUBOOT_OFFSET		mmPSOC_GLOBAL_CONF_SCRATCHPAD_30
- #define mmBTL_ID		mmPSOC_GLOBAL_CONF_SCRATCHPAD_31
-=20
-+#define mmHW_STATE		mmPSOC_GLOBAL_CONF_APP_STATUS
-+
- #endif /* GOYA_REG_MAP_H_ */
---=20
-2.17.1
+On 8/1/2019 5:17 PM, Robert Richter wrote:
+>> Don't you think it'll be confused to have different APIs between EDAC_MC and
+>> EDAC_DEVICE?
+>> (in MC the count passed as part of edac_mc_handle_error())
+> I don't think edac_mc_handle_error() with 11 function arguments is a
+> good reference for somethin we want to adopt. For the majority of
+> drivers you just introduce another useless argument with the following
+> pattern:
+> 
+> 	edac_device_handle_ce(edac_dev, 1, 0, 0, edac_dev_name);
+> 
+> IMO, the api should be improved when touching it.
 
+Got it, I'll update the patch as you suggested.
+
+Thanks,
+Hanna
+
+> 
+> -Robert
