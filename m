@@ -2,196 +2,166 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4983EC32751
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F712C433FF
 	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15922206B8
+	by mail.kernel.org (Postfix) with ESMTP id 42ADC214DA
 	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:52:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=valvesoftware.com header.i=@valvesoftware.com header.b="jrFKxKzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbfHABt5 (ORCPT
+        id S1729396AbfHABvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 21:49:57 -0400
-Received: from mga18.intel.com ([134.134.136.126]:3321 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfHABt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 21:49:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 18:49:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,332,1559545200"; 
-   d="scan'208";a="183988773"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 31 Jul 2019 18:49:54 -0700
-Cc:     baolu.lu@linux.intel.com, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Ran Rozenstein <ranro@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Maor Gottlieb <maorg@mellanox.com>
-Subject: Re: Failure to recreate virtual functions
-To:     Vlad Buslov <vladbu@mellanox.com>
-References: <vbf8sskwyiv.fsf@mellanox.com>
- <d4166595-ec4a-fc4a-3b5f-463b79c42936@linux.intel.com>
- <vbfzhkx9n32.fsf@mellanox.com>
- <838a00c4-d5bd-08db-e39c-5f00686858b5@linux.intel.com>
- <6ece232e-3fe8-4bd9-cd4b-c8d90a106a30@arm.com>
- <abba9e2b-4bd4-bca5-dd50-05ca9ad96d1f@linux.intel.com>
- <vbf36imsb79.fsf@mellanox.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <6c75bf67-cbcd-bded-2a57-9f537fe108c0@linux.intel.com>
-Date:   Thu, 1 Aug 2019 09:49:12 +0800
+        Wed, 31 Jul 2019 21:51:06 -0400
+Received: from us-smtp-delivery-172.mimecast.com ([216.205.24.172]:42799 "EHLO
+        us-smtp-delivery-172.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbfHABvG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 21:51:06 -0400
+X-Greylist: delayed 384 seconds by postgrey-1.27 at vger.kernel.org; Wed, 31 Jul 2019 21:51:04 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valvesoftware.com;
+        s=mc20150811; t=1564624264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ktBWQ7Dg2JkWHb4Wr0QSz+YEpRPFJ5RhEadMppEErJo=;
+        b=jrFKxKziF85H+lYERHXD33SZb7nLufuK4+GCMS15hFO38tkMYQ2REP/E30lqfDTlh0JfhK
+        D87N1PZE+tBvkytr4IWzhcVFTO3xZ+PbZQQ4ei2b24jbv3eDYtLhKmO7/kuRBod+SYujx2
+        C9op+zia+Pv6sG8xTXxNeY3v0Vhlv/U=
+Received: from smtp01.valvesoftware.com (smtp01.valvesoftware.com
+ [208.64.203.181]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-1Hghwc2rOtKf844kNt_97g-1; Wed, 31 Jul 2019 21:44:38 -0400
+Received: from [172.16.1.107] (helo=antispam.valve.org)
+        by smtp01.valvesoftware.com with esmtp (Exim 4.86_2)
+        (envelope-from <pgriffais@valvesoftware.com>)
+        id 1ht0ME-0004X6-PO
+        for linux-kernel@vger.kernel.org; Wed, 31 Jul 2019 18:58:18 -0700
+Received: from antispam.valve.org (127.0.0.1) id h8920a0171s3 for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 18:44:37 -0700 (envelope-from <pgriffais@valvesoftware.com>)
+Received: from mail1.valvemail.org ([172.16.144.22])
+        by antispam.valve.org ([172.16.1.107]) (SonicWALL 9.0.5.2081 )
+        with ESMTP id o201908010144370011552-5; Wed, 31 Jul 2019 18:44:37 -0700
+Received: from [172.18.23.31] (172.18.23.31) by mail1.valvemail.org
+ (172.16.144.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1415.2; Wed, 31 Jul
+ 2019 18:43:32 -0700
+Subject: Re: [PATCH RFC 2/2] futex: Implement mechanism to wait on any of
+ several futexes
+To:     Zebediah Figura <z.figura12@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+CC:     <mingo@redhat.com>, <peterz@infradead.org>, <dvhart@infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@collabora.com>,
+        Steven Noonan <steven@valvesoftware.com>
+References: <20190730220602.28781-1-krisman@collabora.com>
+ <20190730220602.28781-2-krisman@collabora.com>
+ <alpine.DEB.2.21.1908010039470.1788@nanos.tec.linutronix.de>
+ <31ad0ada-ecc7-60b3-e204-898460254be3@gmail.com>
+ <a7b54799-2fda-2e7b-821a-1ec9652e9596@gmail.com>
+From:   "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>
+Message-ID: <3af1586a-f5b8-9728-d140-4fc4709ba49c@valvesoftware.com>
+Date:   Wed, 31 Jul 2019 18:42:38 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.0
 MIME-Version: 1.0
-In-Reply-To: <vbf36imsb79.fsf@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <a7b54799-2fda-2e7b-821a-1ec9652e9596@gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: mail1.valvemail.org (172.16.144.22) To mail1.valvemail.org
+ (172.16.144.22)
+X-EXCLAIMER-MD-CONFIG: fe5cb8ea-1338-4c54-81e0-ad323678e037
+X-Mlf-CnxnMgmt-Allow: 172.16.144.22
+X-Mlf-Version: 9.0.5.2081
+X-Mlf-License: BSVKCAP__
+X-Mlf-UniqueId: o201908010144370011552
+X-MC-Unique: 1Hghwc2rOtKf844kNt_97g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 7/31/19 7:19 PM, Vlad Buslov wrote:
-> 
-> On Wed 31 Jul 2019 at 10:29, Lu Baolu <baolu.lu@linux.intel.com> wrote:
->> Hi,
->>
->> On 7/30/19 7:22 PM, Robin Murphy wrote:
->>> On 30/07/2019 05:28, Lu Baolu wrote:
->>>> Hi,
->>>>
->>>> On 7/29/19 6:05 PM, Vlad Buslov wrote:
->>>>> On Sat 27 Jul 2019 at 05:15, Lu Baolu<baolu.lu@linux.intel.com>  wrote:
->>>>>> Hi Vilad,
->>>>>>
->>>>>> On 7/27/19 12:30 AM, Vlad Buslov wrote:
->>>>>>> Hi Lu Baolu,
->>>>>>>
->>>>>>> Our mlx5 driver fails to recreate VFs when cmdline includes
->>>>>>> "intel_iommu=on iommu=pt" after recent merge of patch set "iommu/vt-d:
->>>>>>> Delegate DMA domain to generic iommu". I've bisected the failure to
->>>>>>> patch b7297783c2bb ("iommu/vt-d: Remove duplicated code for device
->>>>>>> hotplug"). Here is the dmesg log for following case: enable switchdev
->>>>>>> mode, set number of VFs to 0, then set it back to any value
->>>>>>>> 0.
->>>>>>> [  223.525282] mlx5_core 0000:81:00.0: E-Switch: E-Switch enable SRIOV:
->>>>>>> nvfs(2) mode (1)
->>>>>>> [  223.562027] mlx5_core 0000:81:00.0: E-Switch: SRIOV enabled: active
->>>>>>> vports(3)
->>>>>>> [  223.663766] pci 0000:81:00.2: [15b3:101a] type 00 class 0x020000
->>>>>>> [  223.663864] pci 0000:81:00.2: enabling Extended Tags
->>>>>>> [  223.665143] pci 0000:81:00.2: Adding to iommu group 52
->>>>>>> [  223.665215] pci 0000:81:00.2: Using iommu direct mapping
->>>>>>> [  223.665771] mlx5_core 0000:81:00.2: enabling device (0000 -> 0002)
->>>>>>> [  223.665890] mlx5_core 0000:81:00.2: firmware version: 16.26.148
->>>>>>> [  223.889908] mlx5_core 0000:81:00.2: Rate limit: 127 rates are
->>>>>>> supported, range: 0Mbps to 97656Mbps
->>>>>>> [  223.896438] mlx5_core 0000:81:00.2: MLX5E: StrdRq(1) RqSz(8)
->>>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>>> [  223.896636] mlx5_core 0000:81:00.2: Assigned random MAC address
->>>>>>> 56:1f:95:e0:51:d6
->>>>>>> [  224.012905] mlx5_core 0000:81:00.2 ens1f0v0: renamed from eth0
->>>>>>> [  224.041651] pci 0000:81:00.3: [15b3:101a] type 00 class 0x020000
->>>>>>> [  224.041711] pci 0000:81:00.3: enabling Extended Tags
->>>>>>> [  224.043660] pci 0000:81:00.3: Adding to iommu group 53
->>>>>>> [  224.043738] pci 0000:81:00.3: Using iommu direct mapping
->>>>>>> [  224.044196] mlx5_core 0000:81:00.3: enabling device (0000 -> 0002)
->>>>>>> [  224.044298] mlx5_core 0000:81:00.3: firmware version: 16.26.148
->>>>>>> [  224.268099] mlx5_core 0000:81:00.3: Rate limit: 127 rates are
->>>>>>> supported, range: 0Mbps to 97656Mbps
->>>>>>> [  224.274983] mlx5_core 0000:81:00.3: MLX5E: StrdRq(1) RqSz(8)
->>>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>>> [  224.275195] mlx5_core 0000:81:00.3: Assigned random MAC address
->>>>>>> a6:1e:56:0a:d9:f2
->>>>>>> [  224.388359] mlx5_core 0000:81:00.3 ens1f0v1: renamed from eth0
->>>>>>> [  236.325027] mlx5_core 0000:81:00.0: E-Switch: disable SRIOV: active
->>>>>>> vports(3) mode(1)
->>>>>>> [  236.362766] mlx5_core 0000:81:00.0: E-Switch: E-Switch enable SRIOV:
->>>>>>> nvfs(2) mode (2)
->>>>>>> [  237.290066] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8)
->>>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>>> [  237.350215] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8)
->>>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>>> [  237.373052] mlx5_core 0000:81:00.0 ens1f0: renamed from eth0
->>>>>>> [  237.390768] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8)
->>>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>>> [  237.447846] ens1f0_0: renamed from eth0
->>>>>>> [  237.460399] mlx5_core 0000:81:00.0: E-Switch: SRIOV enabled: active
->>>>>>> vports(3)
->>>>>>> [  237.526880] ens1f0_1: renamed from eth1
->>>>>>> [  248.953873] pci 0000:81:00.2: Removing from iommu group 52
->>>>>>> [  248.954114] pci 0000:81:00.3: Removing from iommu group 53
->>>>>>> [  249.960570] mlx5_core 0000:81:00.0: E-Switch: disable SRIOV: active
->>>>>>> vports(3) mode(2)
->>>>>>> [  250.319135] mlx5_core 0000:81:00.0: MLX5E: StrdRq(1) RqSz(8)
->>>>>>> StrdSz(2048) RxCqeCmprss(0)
->>>>>>> [  250.559431] mlx5_core 0000:81:00.0 ens1f0: renamed from eth0
->>>>>>> [  258.819162] mlx5_core 0000:81:00.0: E-Switch: E-Switch enable SRIOV:
->>>>>>> nvfs(2) mode (1)
->>>>>>> [  258.831625] mlx5_core 0000:81:00.0: E-Switch: SRIOV enabled: active
->>>>>>> vports(3)
->>>>>>> [  258.936160] pci 0000:81:00.2: [15b3:101a] type 00 class 0x020000
->>>>>>> [  258.936258] pci 0000:81:00.2: enabling Extended Tags
->>>>>>> [  258.937438] pci 0000:81:00.2: Failed to add to iommu group 52: -16
->>>>>> It seems that an EBUSY error returned from iommu_group_add_device(). Can
->>>>>> you please hack some debug messages in iommu_group_add_device() so that
->>>>>> we can know where the EBUSY returns?
->>>>>>
->>>>>> Best regards,
->>>>>> Baolu
->>>>> The error code is returned by __iommu_attach_device().
->>>>>
->>>>
->>>> Thanks!
->>>>
->>>> It looks like the system has already a domain for specific pci bdf
->>>> device. Does this VF share the bdf with other devices? Or has been
->>>> previously created, and system failed to get chance to remove it?
+On 7/31/19 6:32 PM, Zebediah Figura wrote:
+> On 7/31/19 8:22 PM, Zebediah Figura wrote:
+>> On 7/31/19 7:45 PM, Thomas Gleixner wrote:
+>>> If I assume a maximum of 65 futexes which got mentioned in one of the
+>>> replies then this will allocate 7280 bytes alone for the futex_q=20
+>>> array with
+>>> a stock debian config which has no debug options enabled which would=20
+>>> bloat
+>>> the struct. Adding the futex_wait_block array into the same allocation
+>>> becomes larger than 8K which already exceeds thelimit of SLUB kmem
+>>> caches and forces the whole thing into the page allocator directly.
 >>>
->>> At a glance, it looks like it might be down to intel_iommu_remove_device() not
->>> calling dmar_remove_one_dev_info() like the old notifier did. If the group is
->>> getting torn down and recreated, but the driver still has a stale pointer to
->>> the old default domain cached, which dmar_insert_one_dev_info() finds and
->>> returns, that would seem to explain the observed behaviour.
+>>> This sucks.
+>>>
+>>> Also I'm confused about the 64 maximum resulting in 65 futexes=20
+>>> comment in
+>>> one of the mails.
+>>>
+>>> Can you please explain what you are trying to do exatly on the user=20
+>>> space
+>>> side?
 >>
->> Yes agreed.
+>> The extra futex comes from the fact that there are a couple of, as it
+>> were, out-of-band ways to wake up a thread on Windows. [Specifically, a
+>> thread can enter an "alertable" wait in which case it will be woken up
+>> by a request from another thread to execute an "asynchronous procedure
+>> call".] It's easiest for us to just add another futex to the list in
+>> that case.
+>=20
+> To be clear, the 64/65 distinction is an implementation detail that's=20
+> pretty much outside the scope of this discussion. I should have just=20
+> said 65 directly. Sorry about that.
+>=20
 >>
->> Vlad,
+>> I'd also point out, for whatever it's worth, that while 64 is a hard
+>> limit, real applications almost never go nearly that high. By far the
+>> most common number of primitives to select on is one.
+>> Performance-critical code never tends to wait on more than three. The
+>> most I've ever seen is twelve.
 >>
->> Can you please try below change?
+>> If you'd like to see the user-side source, most of the relevant code is
+>> at [1], in particular the functions __fsync_wait_objects() [line 712]
+>> and do_single_wait [line 655]. Please feel free to ask for further
+>> clarification.
 >>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index baf21001c339..abffc520fe05 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -5575,6 +5575,8 @@ static void intel_iommu_remove_device(struct device *dev)
->>          if (!iommu)
->>                  return;
->>
->> +       dmar_remove_one_dev_info(dev);
->> +
->>          iommu_group_remove_device(dev);
->>
->>          iommu_device_unlink(&iommu->iommu, dev);
->>
->> Best regards,
->> Baolu
-> 
-> Hi Baolu,
-> 
-> This patch fixes the issue for me.
-> 
+>> [1]
+>> https://github.com/ValveSoftware/wine/blob/proton_4.11/dlls/ntdll/fsync.=
+c
 
-Great! Thanks for testing. I will submit a fix soon.
+In addition, here's an example of how I think it might be useful to=20
+expose it to apps at large in a way that's compatible with existing=20
+pthread mutexes:
 
-Best regards,
-Baolu
+https://github.com/Plagman/glibc/commit/3b01145fa25987f2f93e7eda7f3e7d0f2f7=
+7b290
+
+This patch hasn't received nearly as much testing as the Wine fsync code=20
+path, but that functionality would provide more CPU-efficient ways for=20
+thread pool code to sleep in our game engine. We also use eventfd today.
+
+For this, I think the expected upper bound for the per-op futex count=20
+would be in the same order of magnitude as the logical CPU count on the=20
+target machine, similar as the Wine use-case.
+
+Thanks,
+  - Pierre-Loup
+
+>>
+>>
+>>
+>>>
+>>> Thanks,
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0tglx
+>>>
+>>
+>=20
+
