@@ -2,345 +2,120 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539A9C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5E0C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFFC20644
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:50:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="snJYOCHQ"
+	by mail.kernel.org (Postfix) with ESMTP id 455B920B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564674653;
+	bh=mo2HdMSRCqt3TFJkQl9d7X3tKGeVpM+cbgnJbsSOiBU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QJ/SsUokyh+liYJzV0oce5rT9BG42VRzuIFyz06ERre0A1Q6h1q6Td3EIPt9vjBsH
+	 NaqFd/tQypttpujWfJ1FFqaqgnSebpCH+1KDAXtNFRrDUZoz2IZVTUz6TS0ElRFmsi
+	 gAOKoSLnCebSHrEtF+6Qq4iO/QO3C+svyAKjpdz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbfHAPuU (ORCPT
+        id S1731503AbfHAPuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:50:20 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42863 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbfHAPuU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:50:20 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71Fo00t004548
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 1 Aug 2019 08:50:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71Fo00t004548
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564674600;
-        bh=m4KVqtI2SUcGky4Jxc7W/8AIkBP6wvWLiUxze9by9p4=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=snJYOCHQL7wd/5oiFPe6/ePNNcfiPnY03AT7ahicIAIcYs2a5YyODgCmP3iB8Tllo
-         ktcOX65DucMEb6UWLNM7FQeLIyyVGiNy19ICGoFmKWUsyscv4Gxu1GtvJI4xuwEaU1
-         f/mf3H8RjkvIjeEGMCtDr29pGJ1T05uPGCBs1akE8SkCSFiehNEn5JO+h7ZIoIxOlm
-         rM6b277SQrPF7jsZdSjcObnLv9/sAO1y+OPD1YEPb/VrLUUJ3RStBRsTEDEwVvDBeO
-         mjRVLWRzhCvunqGsrVVoj6CCcxiX7/iDFfATo7zscMdd8cj3RdC/ZpsED9s5eZqAOn
-         FzySGZXXU6++g==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71FnxeK004545;
-        Thu, 1 Aug 2019 08:49:59 -0700
-Date:   Thu, 1 Aug 2019 08:49:59 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-dbc1625fc9deefb352f6ff26a575ae4b3ddef23a@git.kernel.org>
-Cc:     bigeasy@linutronix.de, hpa@zytor.com, tglx@linutronix.de,
-        peterz@infradead.org, mingo@kernel.org, anna-maria@linutronix.de,
-        linux-kernel@vger.kernel.org
-Reply-To: bigeasy@linutronix.de, hpa@zytor.com, tglx@linutronix.de,
-          peterz@infradead.org, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, anna-maria@linutronix.de
-In-Reply-To: <20190726185752.887468908@linutronix.de>
-References: <20190726185752.887468908@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] hrtimer: Consolidate hrtimer_init() +
- hrtimer_init_sleeper() calls
-Git-Commit-ID: dbc1625fc9deefb352f6ff26a575ae4b3ddef23a
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 1 Aug 2019 11:50:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731079AbfHAPuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 11:50:52 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 285B821773;
+        Thu,  1 Aug 2019 15:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564674651;
+        bh=mo2HdMSRCqt3TFJkQl9d7X3tKGeVpM+cbgnJbsSOiBU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NXLsozSYOIx9rgmDZGvJH1orQh3Sih5ok+LDLGRki2c9GNYyHcBujEiSfTrb4L0hE
+         Kq/zLCt7vLGKd95Jmjf+KBCOpxM7BmwGOZi5zcqTEOBKLZXpvIR9vZWaZOFuOFOAp4
+         nKbypj4GdUDLiW2dD2yPDj6ZdsQV8WJLxPGE3UsA=
+Received: by mail-qt1-f175.google.com with SMTP id k10so1562479qtq.1;
+        Thu, 01 Aug 2019 08:50:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAVyg7KFyXzeE7nAjgxIEhUb9rc3CuK/OEHuRDwbUAb+hdJkQbBi
+        GnMoegWd4iqSHVypdqjAKtBfSAoiPNd8TCTr7A==
+X-Google-Smtp-Source: APXvYqzqIDIJzp/P5UH50rteyQO1siPBt2WuomDxMcjKRkIu8XCHmururywkdwwVKhn5raiJ1jaTSLRgDcGehkVoih0=
+X-Received: by 2002:a0c:acef:: with SMTP id n44mr94852273qvc.39.1564674650265;
+ Thu, 01 Aug 2019 08:50:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190801005843.10343-1-atish.patra@wdc.com> <20190801005843.10343-6-atish.patra@wdc.com>
+In-Reply-To: <20190801005843.10343-6-atish.patra@wdc.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 1 Aug 2019 09:50:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLqxN1+fvrdD24Ho6s7gB+pGy-0sZaL-jJqkYZ2yC4JEA@mail.gmail.com>
+Message-ID: <CAL_JsqLqxN1+fvrdD24Ho6s7gB+pGy-0sZaL-jJqkYZ2yC4JEA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] dt-bindings: Update the riscv,isa string description
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Anup Patel <anup.patel@wdc.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>,
+        Gary Guo <gary@garyguo.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yangtao Li <tiny.windzz@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  dbc1625fc9deefb352f6ff26a575ae4b3ddef23a
-Gitweb:     https://git.kernel.org/tip/dbc1625fc9deefb352f6ff26a575ae4b3ddef23a
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 20:30:50 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 1 Aug 2019 17:43:15 +0200
+On Wed, Jul 31, 2019 at 6:58 PM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> Since the RISC-V specification states that ISA description strings are
+> case-insensitive, there's no functional difference between mixed-case,
+> upper-case, and lower-case ISA strings. Thus, to simplify parsing,
+> specify that the letters present in "riscv,isa" must be all lowercase.
+>
+> Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  Documentation/devicetree/bindings/riscv/cpus.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> index c899111aa5e3..4f0acb00185a 100644
+> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> @@ -46,10 +46,12 @@ properties:
+>            - rv64imafdc
+>      description:
+>        Identifies the specific RISC-V instruction set architecture
+> -      supported by the hart.  These are documented in the RISC-V
+> +      supported by the hart. These are documented in the RISC-V
+>        User-Level ISA document, available from
+>        https://riscv.org/specifications/
+>
+> +      Letters in the riscv,isa string must be all lowercase.
+> +
 
-hrtimer: Consolidate hrtimer_init() + hrtimer_init_sleeper() calls
+The schemas are case sensitive this looks pretty pointless without the
+context of the commit msg. Can you prefix with 'While the
+specification is case insensitive, "
 
-hrtimer_init_sleeper() calls require prior initialisation of the hrtimer
-object which is embedded into the hrtimer_sleeper.
+For some background, FDT generally always has been case sensitive too
+(dtc won't merge/override nodes/properties with differing case). It's
+really only some older true OF systems that were case insensitive. The
+kernel had a mixture of case sensitive and insensitive comparisons
+somewhat depending on the arch and whether of_prop_cmp/of_node_cmp or
+str*cmp functions were used. There's been a lot of clean-up and now
+most comparisons are case sensitive with only Sparc having some
+deviation.
 
-Combine the initialization and spare a function call. Fixup all call sites.
-
-This is also a preparatory change for PREEMPT_RT to do hrtimer sleeper
-specific initializations of the embedded hrtimer without modifying any of
-the call sites.
-
-No functional change.
-
-[ anna-maria: Minor cleanups ]
-[ tglx: Adopted to the removal of the task argument of
-  	hrtimer_init_sleeper() and trivial polishing.
-	Folded a fix from Stephen Rothwell for the vsoc code ]
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Anna-Maria Gleixner <anna-maria@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190726185752.887468908@linutronix.de
-
----
- block/blk-mq.c                 |  3 +--
- drivers/staging/android/vsoc.c |  6 ++----
- include/linux/hrtimer.h        | 17 ++++++++++++++---
- include/linux/wait.h           |  4 ++--
- kernel/futex.c                 |  8 +++-----
- kernel/time/hrtimer.c          | 43 +++++++++++++++++++++++++++++++-----------
- net/core/pktgen.c              |  4 +---
- 7 files changed, 55 insertions(+), 30 deletions(-)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 5f647cb8c695..df3fafbfe9a9 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3415,10 +3415,9 @@ static bool blk_mq_poll_hybrid_sleep(struct request_queue *q,
- 	kt = nsecs;
- 
- 	mode = HRTIMER_MODE_REL;
--	hrtimer_init_on_stack(&hs.timer, CLOCK_MONOTONIC, mode);
-+	hrtimer_init_sleeper_on_stack(&hs, CLOCK_MONOTONIC, mode);
- 	hrtimer_set_expires(&hs.timer, kt);
- 
--	hrtimer_init_sleeper(&hs);
- 	do {
- 		if (blk_mq_rq_state(rq) == MQ_RQ_COMPLETE)
- 			break;
-diff --git a/drivers/staging/android/vsoc.c b/drivers/staging/android/vsoc.c
-index ce480bcf20d2..2d6b3981afb8 100644
---- a/drivers/staging/android/vsoc.c
-+++ b/drivers/staging/android/vsoc.c
-@@ -437,12 +437,10 @@ static int handle_vsoc_cond_wait(struct file *filp, struct vsoc_cond_wait *arg)
- 			return -EINVAL;
- 		wake_time = ktime_set(arg->wake_time_sec, arg->wake_time_nsec);
- 
--		hrtimer_init_on_stack(&to->timer, CLOCK_MONOTONIC,
--				      HRTIMER_MODE_ABS);
-+		hrtimer_init_sleeper_on_stack(to, CLOCK_MONOTONIC,
-+					      HRTIMER_MODE_ABS);
- 		hrtimer_set_expires_range_ns(&to->timer, wake_time,
- 					     current->timer_slack_ns);
--
--		hrtimer_init_sleeper(to);
- 	}
- 
- 	while (1) {
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 3c74f89367c4..0df373bed3d7 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -347,10 +347,15 @@ DECLARE_PER_CPU(struct tick_device, tick_cpu_device);
- /* Initialize timers: */
- extern void hrtimer_init(struct hrtimer *timer, clockid_t which_clock,
- 			 enum hrtimer_mode mode);
-+extern void hrtimer_init_sleeper(struct hrtimer_sleeper *sl, clockid_t clock_id,
-+				 enum hrtimer_mode mode);
- 
- #ifdef CONFIG_DEBUG_OBJECTS_TIMERS
- extern void hrtimer_init_on_stack(struct hrtimer *timer, clockid_t which_clock,
- 				  enum hrtimer_mode mode);
-+extern void hrtimer_init_sleeper_on_stack(struct hrtimer_sleeper *sl,
-+					  clockid_t clock_id,
-+					  enum hrtimer_mode mode);
- 
- extern void destroy_hrtimer_on_stack(struct hrtimer *timer);
- #else
-@@ -360,6 +365,14 @@ static inline void hrtimer_init_on_stack(struct hrtimer *timer,
- {
- 	hrtimer_init(timer, which_clock, mode);
- }
-+
-+static inline void hrtimer_init_sleeper_on_stack(struct hrtimer_sleeper *sl,
-+						 clockid_t clock_id,
-+						 enum hrtimer_mode mode)
-+{
-+	hrtimer_init_sleeper(sl, clock_id, mode);
-+}
-+
- static inline void destroy_hrtimer_on_stack(struct hrtimer *timer) { }
- #endif
- 
-@@ -463,10 +476,8 @@ extern long hrtimer_nanosleep(const struct timespec64 *rqtp,
- 			      const enum hrtimer_mode mode,
- 			      const clockid_t clockid);
- 
--extern void hrtimer_init_sleeper(struct hrtimer_sleeper *sl);
--
- extern int schedule_hrtimeout_range(ktime_t *expires, u64 delta,
--						const enum hrtimer_mode mode);
-+				    const enum hrtimer_mode mode);
- extern int schedule_hrtimeout_range_clock(ktime_t *expires,
- 					  u64 delta,
- 					  const enum hrtimer_mode mode,
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index d57832774ca6..4707543ef575 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -488,8 +488,8 @@ do {										\
- 	int __ret = 0;								\
- 	struct hrtimer_sleeper __t;						\
- 										\
--	hrtimer_init_on_stack(&__t.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);	\
--	hrtimer_init_sleeper(&__t);						\
-+	hrtimer_init_sleeper_on_stack(&__t, CLOCK_MONOTONIC,			\
-+				      HRTIMER_MODE_REL);			\
- 	if ((timeout) != KTIME_MAX)						\
- 		hrtimer_start_range_ns(&__t.timer, timeout,			\
- 				       current->timer_slack_ns,			\
-diff --git a/kernel/futex.c b/kernel/futex.c
-index 5e9842ea4012..c8561aa5338e 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -487,11 +487,9 @@ futex_setup_timer(ktime_t *time, struct hrtimer_sleeper *timeout,
- 	if (!time)
- 		return NULL;
- 
--	hrtimer_init_on_stack(&timeout->timer, (flags & FLAGS_CLOCKRT) ?
--			      CLOCK_REALTIME : CLOCK_MONOTONIC,
--			      HRTIMER_MODE_ABS);
--	hrtimer_init_sleeper(timeout);
--
-+	hrtimer_init_sleeper_on_stack(timeout, (flags & FLAGS_CLOCKRT) ?
-+				      CLOCK_REALTIME : CLOCK_MONOTONIC,
-+				      HRTIMER_MODE_ABS);
- 	/*
- 	 * If range_ns is 0, calling hrtimer_set_expires_range_ns() is
- 	 * effectively the same as calling hrtimer_set_expires().
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index de895d86800c..bb55d62f631e 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -427,6 +427,17 @@ void hrtimer_init_on_stack(struct hrtimer *timer, clockid_t clock_id,
- }
- EXPORT_SYMBOL_GPL(hrtimer_init_on_stack);
- 
-+static void __hrtimer_init_sleeper(struct hrtimer_sleeper *sl,
-+				   clockid_t clock_id, enum hrtimer_mode mode);
-+
-+void hrtimer_init_sleeper_on_stack(struct hrtimer_sleeper *sl,
-+				   clockid_t clock_id, enum hrtimer_mode mode)
-+{
-+	debug_object_init_on_stack(&sl->timer, &hrtimer_debug_descr);
-+	__hrtimer_init_sleeper(sl, clock_id, mode);
-+}
-+EXPORT_SYMBOL_GPL(hrtimer_init_sleeper_on_stack);
-+
- void destroy_hrtimer_on_stack(struct hrtimer *timer)
- {
- 	debug_object_free(timer, &hrtimer_debug_descr);
-@@ -1639,11 +1650,27 @@ static enum hrtimer_restart hrtimer_wakeup(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
- }
- 
--void hrtimer_init_sleeper(struct hrtimer_sleeper *sl)
-+static void __hrtimer_init_sleeper(struct hrtimer_sleeper *sl,
-+				   clockid_t clock_id, enum hrtimer_mode mode)
- {
-+	__hrtimer_init(&sl->timer, clock_id, mode);
- 	sl->timer.function = hrtimer_wakeup;
- 	sl->task = current;
- }
-+
-+/**
-+ * hrtimer_init_sleeper - initialize sleeper to the given clock
-+ * @sl:		sleeper to be initialized
-+ * @clock_id:	the clock to be used
-+ * @mode:	timer mode abs/rel
-+ */
-+void hrtimer_init_sleeper(struct hrtimer_sleeper *sl, clockid_t clock_id,
-+			  enum hrtimer_mode mode)
-+{
-+	debug_init(&sl->timer, clock_id, mode);
-+	__hrtimer_init_sleeper(sl, clock_id, mode);
-+
-+}
- EXPORT_SYMBOL_GPL(hrtimer_init_sleeper);
- 
- int nanosleep_copyout(struct restart_block *restart, struct timespec64 *ts)
-@@ -1669,8 +1696,6 @@ static int __sched do_nanosleep(struct hrtimer_sleeper *t, enum hrtimer_mode mod
- {
- 	struct restart_block *restart;
- 
--	hrtimer_init_sleeper(t);
--
- 	do {
- 		set_current_state(TASK_INTERRUPTIBLE);
- 		hrtimer_start_expires(&t->timer, mode);
-@@ -1707,10 +1732,9 @@ static long __sched hrtimer_nanosleep_restart(struct restart_block *restart)
- 	struct hrtimer_sleeper t;
- 	int ret;
- 
--	hrtimer_init_on_stack(&t.timer, restart->nanosleep.clockid,
--				HRTIMER_MODE_ABS);
-+	hrtimer_init_sleeper_on_stack(&t, restart->nanosleep.clockid,
-+				      HRTIMER_MODE_ABS);
- 	hrtimer_set_expires_tv64(&t.timer, restart->nanosleep.expires);
--
- 	ret = do_nanosleep(&t, HRTIMER_MODE_ABS);
- 	destroy_hrtimer_on_stack(&t.timer);
- 	return ret;
-@@ -1728,7 +1752,7 @@ long hrtimer_nanosleep(const struct timespec64 *rqtp,
- 	if (dl_task(current) || rt_task(current))
- 		slack = 0;
- 
--	hrtimer_init_on_stack(&t.timer, clockid, mode);
-+	hrtimer_init_sleeper_on_stack(&t, clockid, mode);
- 	hrtimer_set_expires_range_ns(&t.timer, timespec64_to_ktime(*rqtp), slack);
- 	ret = do_nanosleep(&t, mode);
- 	if (ret != -ERESTART_RESTARTBLOCK)
-@@ -1927,11 +1951,8 @@ schedule_hrtimeout_range_clock(ktime_t *expires, u64 delta,
- 		return -EINTR;
- 	}
- 
--	hrtimer_init_on_stack(&t.timer, clock_id, mode);
-+	hrtimer_init_sleeper_on_stack(&t, clock_id, mode);
- 	hrtimer_set_expires_range_ns(&t.timer, *expires, delta);
--
--	hrtimer_init_sleeper(&t);
--
- 	hrtimer_start_expires(&t.timer, mode);
- 
- 	if (likely(t.task))
-diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-index 7f3cf2381f27..a5905975bc12 100644
---- a/net/core/pktgen.c
-+++ b/net/core/pktgen.c
-@@ -2156,7 +2156,7 @@ static void spin(struct pktgen_dev *pkt_dev, ktime_t spin_until)
- 	s64 remaining;
- 	struct hrtimer_sleeper t;
- 
--	hrtimer_init_on_stack(&t.timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	hrtimer_init_sleeper_on_stack(&t, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
- 	hrtimer_set_expires(&t.timer, spin_until);
- 
- 	remaining = ktime_to_ns(hrtimer_expires_remaining(&t.timer));
-@@ -2170,8 +2170,6 @@ static void spin(struct pktgen_dev *pkt_dev, ktime_t spin_until)
- 			end_time = ktime_get();
- 		} while (ktime_compare(end_time, spin_until) < 0);
- 	} else {
--		/* see do_nanosleep */
--		hrtimer_init_sleeper(&t);
- 		do {
- 			set_current_state(TASK_INTERRUPTIBLE);
- 			hrtimer_start_expires(&t.timer, HRTIMER_MODE_ABS);
+Rob
