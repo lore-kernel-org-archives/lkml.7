@@ -2,130 +2,113 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879C3C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A8FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E6E206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA75206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732209AbfHAXLM (ORCPT
+        id S1732369AbfHAXOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:11:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8208 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726014AbfHAXLM (ORCPT
+        Thu, 1 Aug 2019 19:14:17 -0400
+Received: from smtprelay0235.hostedemail.com ([216.40.44.235]:40226 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728834AbfHAXOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:11:12 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71N7o6Y027340
-        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 19:11:11 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48wn924m-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 19:11:10 -0400
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <leonardo@linux.ibm.com>;
-        Fri, 2 Aug 2019 00:11:10 +0100
-Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 2 Aug 2019 00:11:06 +0100
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71NB5nl44826960
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Aug 2019 23:11:05 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1857BC606E;
-        Thu,  1 Aug 2019 23:11:05 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4CE5AC6073;
-        Thu,  1 Aug 2019 23:11:02 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.147])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Aug 2019 23:11:01 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/1] pseries/hotplug-memory.c: Change rc variable to bool
-Date:   Thu,  1 Aug 2019 20:10:55 -0300
-X-Mailer: git-send-email 2.20.1
+        Thu, 1 Aug 2019 19:14:16 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 3B420180A814E;
+        Thu,  1 Aug 2019 23:14:15 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: baby46_24fe664d8034b
+X-Filterd-Recvd-Size: 3608
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  1 Aug 2019 23:14:14 +0000 (UTC)
+Message-ID: <c7601163ffde2b14df520ae230746e6b75ecc2ee.camel@perches.com>
+Subject: Re: [PATCH v2 2/2] linux/bits.h: Add compile time sanity check of
+ GENMASK inputs
+From:   Joe Perches <joe@perches.com>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     akpm@linux-foundation.org, johannes@sipsolutions.net,
+        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com
+Date:   Thu, 01 Aug 2019 16:14:12 -0700
+In-Reply-To: <20190801230358.4193-2-rikard.falkeborn@gmail.com>
+References: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
+         <20190801230358.4193-1-rikard.falkeborn@gmail.com>
+         <20190801230358.4193-2-rikard.falkeborn@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19080123-0016-0000-0000-000009D75B29
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011535; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01240745; UDB=6.00654301; IPR=6.01022169;
- MB=3.00028000; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-01 23:11:08
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080123-0017-0000-0000-000044429749
-Message-Id: <20190801231055.19603-1-leonardo@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=791 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908010244
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes the return variable to bool (as the return value) and
-avoids doing a ternary operation before returning.
+On Fri, 2019-08-02 at 01:03 +0200, Rikard Falkeborn wrote:
+> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+> as the first argument and the low bit as the second argument. Mixing
+> them will return a mask with zero bits set.
+> 
+> Recent commits show getting this wrong is not uncommon, see e.g.
+> commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+> commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+> macro").
+> 
+> To prevent such mistakes from appearing again, add compile time sanity
+> checking to the arguments of GENMASK() and GENMASK_ULL(). If both the
+> arguments are known at compile time, and the low bit is higher than the
+> high bit, break the build to detect the mistake immediately.
+> 
+> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
+> used instead of BUILD_BUG_ON(), and __is_constexpr() must be used instead
+> of __builtin_constant_p().
+> 
+> If successful, BUILD_BUG_OR_ZERO() returns 0 of type size_t. To avoid
+> problems with implicit conversions, cast the result of BUILD_BUG_OR_ZERO
+> to unsigned long.
+> 
+> Since both BUILD_BUG_ON_ZERO() and __is_constexpr() only uses sizeof()
+> on the arguments passed to them, neither of them evaluate the expression
+> unless it is a VLA. Therefore, GENMASK(1, x++) still behaves as
+> expected.
+> 
+> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+> available in assembly") made the macros in linux/bits.h available in
+> assembly. Since neither BUILD_BUG_OR_ZERO() or __is_constexpr() are asm
+> compatible, disable the checks if the file is included in an asm file.
+> 
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> ---
+> Changes in v2:
+>   - Add comment about why inputs are not checked when used in asm file
+>   - Use UL(0) instead of 0
+>   - Extract mask creation in a separate macro to improve readability
+>   - Use high and low instead of h and l (part of this was extracted to a
+>     separate patch)
+>   - Updated commit message
+> 
+> Joe Perches sent a series to fix the existing misuses of GENMASK() that
+> needs to be merged before this to avoid build failures. Currently, 6 of
+> the patches are not in Linus tree, and 2 are not in linux-next.
 
-Also, since rc will always be true, there is no need to do
-rc &= bool, as (true && X) will result in X.
+Thanks Rikard.
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- arch/powerpc/platforms/pseries/hotplug-memory.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+It wouldn't surprise me if this change finds more misuses
+as the compiler will perform substitutions on #define
+values where the search I did was just for decimal uses.
 
-diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-index 8e700390f3d6..392deb4855e5 100644
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -338,7 +338,7 @@ static int pseries_remove_mem_node(struct device_node *np)
- static bool lmb_is_removable(struct drmem_lmb *lmb)
- {
- 	int i, scns_per_block;
--	int rc = 1;
-+	bool rc = true;
- 	unsigned long pfn, block_sz;
- 	u64 phys_addr;
- 
-@@ -363,11 +363,11 @@ static bool lmb_is_removable(struct drmem_lmb *lmb)
- 		if (!pfn_present(pfn))
- 			continue;
- 
--		rc &= is_mem_section_removable(pfn, PAGES_PER_SECTION);
-+		rc = is_mem_section_removable(pfn, PAGES_PER_SECTION);
- 		phys_addr += MIN_MEMORY_BLOCK_SIZE;
- 	}
- 
--	return rc ? true : false;
-+	return rc;
- }
- 
- static int dlpar_add_lmb(struct drmem_lmb *);
--- 
-2.20.1
+For instance, this new macro should build error on:
+
+#define FOO	5
+#define BAR	6
+
+GENMASK(FOO, BAR)
+
 
