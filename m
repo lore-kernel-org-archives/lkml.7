@@ -2,203 +2,153 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A689C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D4EC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EEFA20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B15720665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lifoc/9S"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="atLlsRo/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732463AbfHAPXt (ORCPT
+        id S1732464AbfHAPYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:23:49 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36544 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731657AbfHAPXr (ORCPT
+        Thu, 1 Aug 2019 11:24:43 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36272 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfHAPYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:23:47 -0400
-Received: by mail-lj1-f194.google.com with SMTP id i21so69811178ljj.3;
-        Thu, 01 Aug 2019 08:23:45 -0700 (PDT)
+        Thu, 1 Aug 2019 11:24:43 -0400
+Received: by mail-qk1-f194.google.com with SMTP id g18so52318259qkl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 08:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=9ZCtRO1EfjMBdscr16tVWg4PD3vV4eXgXVgNm+QaIM8=;
-        b=Lifoc/9S+ScPBLNEdfgggcKBxgNayI/MmQY3QMeZ3YiCn51pH+DSbRjgFHbX3KXLuD
-         kT0ksoEbWbdJkTKbo96qtqrwYjua8wGANO8LPp6KW3cSwP5YcD8fChTQ5F48zsGGiLpw
-         zEToFI/V6Bd/EDqIePE6JgCy7GLwLRBMf4024LubyXZFVbcaSOpG6kpbGNksNUSXrdpZ
-         jd4MOZ9sVF9DKgN1Pd1x0cEfoPm20WG3AHu7k9ZyLTyHD0nGES3cHYVeJ65/eoOpkf2A
-         74tAZtou3FCvN4z+mRv3XeP/67Aw8uYFbgd/xEgWyGSZubZO64ch1Ahx8FHnyCTNJZg+
-         HaIg==
+        bh=Tv/fOnD6YC9u+5WmWm5gwywTsIsmHeTM0Q1GSWNKYUk=;
+        b=atLlsRo/HsLlYJHkAHesgcO9qfPaQjZk+gYOvxKZpX5zmCTxt7zu8tiCRhoteNN7dd
+         6HAmzBsFnGGSMNK2C1/2c095tMDLJ4ZXLXLn7i+ZEgdYwpo1qYHK/Q1xRHZwxOfakJw6
+         /7ct9TY6fVLVY5D3c86/4ePweUPMk5TKNh2ZI97gVVKUkfE3dvmvGGH5WFhqRYhDDdNj
+         MN0U1s86suOZc/o8BsUsL3OJ8/tYd9JgVijBxGQUq2ZZTq5MshwLKDUEHOPwOnM0CjpD
+         UlAySrOA8+Uey1c7x2oPbu2GeSyZevsm2xsSMvkzV3E2NKwjBTx9zLYFJGZQjyw6+Y/3
+         BOhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=9ZCtRO1EfjMBdscr16tVWg4PD3vV4eXgXVgNm+QaIM8=;
-        b=I8MQcDkPj2Q3uwZk+/7MZjfQNDWKX7xvupN46ep8+uT1WA/NFYqkh0rDhns0XXhHC4
-         s8yqOItCPsf96AecsSA8YPzacUxoinYUidZ2dqO6ocMdSdWBpORiEIrPAQm6ViSkMJXX
-         JsWK7U/uFQYLfTLO7SQ8GsMjq0js16Hf+MtZllcVBos/wsaD0kqZwu3puUTlhwOOL/0m
-         isgl6pd1hvppSfDTMIVxpkVsZb8+OYuA9sYdh5g0Uj5PH7Asy+NM5c7HtbuOMOktUZBV
-         SSvh0pPixANr00z5Nw65188gKiSuVC+mQisABwgkQlU11TxRSTugcCuGeY2jVnv9BuEq
-         UFxQ==
-X-Gm-Message-State: APjAAAWjfs78r11xgb/4QUWBYzMLsFYRZpbjj74O2t59ZodDKOfo7iRj
-        GtugcfokGfZTvtBaO4WTUJhPDA4b9PCBau0QQMk=
-X-Google-Smtp-Source: APXvYqwGiuDLdol7cPKanPh7gLZuN8kHymeW3nXF5KjmcZp7I5lJdCoUUigBeS+zkKE7PSU0buogsjBTll47EG9o8c4=
-X-Received: by 2002:a2e:868e:: with SMTP id l14mr20379185lji.16.1564673024673;
- Thu, 01 Aug 2019 08:23:44 -0700 (PDT)
+        bh=Tv/fOnD6YC9u+5WmWm5gwywTsIsmHeTM0Q1GSWNKYUk=;
+        b=aCGPhW3wjdoZJ0WFJXnpNbHC1M7kfV3Xq+phDeDgvvSWz1sMmV7vuFTjn1q1Vv6T/T
+         tp8VLq6MlENrIinfhhSO3G9qUJEKx4GQS8gOvNjwQTv3InIbxkAYIMauBx9KO4wUSSui
+         tnQ5A4UKpoWDpqnJoI+/oxpQq7QB0+apH3IWvYkuS+mti4mwg9kHHtfjbUYExo/OHfHV
+         zyMw03oNIP1sZwQ+YGlO/CiWI+CcZOc8FqXVk1ilT8qSUaGEVCar0dkvpEehchSCIU7n
+         Ufp7sMkEX9WYEK3Tr5bOdOJt6Ivzkg4aEqxaa6wO57sGmI9Uw6Il5HxS5CPL/VOBYyRs
+         Pycg==
+X-Gm-Message-State: APjAAAW95GVZmDP8raEVGHOI/lQigwT9tbOqxA1ECkudc0yuIcDH+sg/
+        fyLIk/4m7uF82P4jv/OLc1o8khKu
+X-Google-Smtp-Source: APXvYqzZD3a7tT1okA0boG+U3Hsp3SOLhKzDGE1jT3CDvSGW9wPow4/sMDwhXS8im+A6DBmuvHqQWA==
+X-Received: by 2002:a37:4dc6:: with SMTP id a189mr84646858qkb.41.1564673081928;
+        Thu, 01 Aug 2019 08:24:41 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id o5sm30899952qkf.10.2019.08.01.08.24.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 08:24:41 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        ebiederm@xmission.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org
+Subject: [PATCH v1 0/8] arm64: MMU enabled kexec relocation
+Date:   Thu,  1 Aug 2019 11:24:31 -0400
+Message-Id: <20190801152439.11363-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-From:   Phillip Lougher <phillip.lougher@gmail.com>
-Date:   Thu, 1 Aug 2019 16:23:33 +0100
-Message-ID: <CAB3wodfF=Gc3FbKedU4JBWi8hZLxcBPUtVPipsCVnaHdFXGk8Q@mail.gmail.com>
-Subject: Bug#921146: Program mksquashfs from squashfs-tools 1:4.3-11 does not
- make use all CPU cores
-To:     921146@bugs.debian.org
-Cc:     hartmans@debian.org, debian-ctte@lists.debian.org,
-        =?UTF-8?B?TMOhc3psw7MgQsO2c3rDtnJtw6lueWkgKEdDUyk=?= 
-        <gcs@debian.org>, Alexander Couzens <lynxis@fe80.eu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-embedded <linux-embedded@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 17:43:44 +0200 Alexander Couzens <lynxis@fe80.eu> wrote=
-:
-> Hi L=C3=A1szl=C3=B3,
->
-> > On Wed, Jul 31, 2019 at 3:06 AM Steven Shiau <steven@nchc.org.tw>
-> > wrote: [...]
-> >  As mentioned in the past, it's the
-> > 0016-remove-frag_deflator_thread.patch that needs either reverted or
-> > fixed by it's original author, Alexander Couzens (added to this mail).
->
-> Since I've full weeks ahead, I can not make any estimation when
-> I've time to look onto the performance issue.
->
+Enable MMU during kexec relocation in order to improve reboot performance.
 
-That patch is a laughable piece of rubbish.  I believe both you
-people (the Debian maintainer and author) are in total denial
-about your incompetence in this matter.  This is obviously just my
-opinion I've formed over the last couple of months, in case you want to
-claim that it is libellous.
+If kexec functionality is used for a fast system update, with a minimal
+downtime, the relocation of kernel + initramfs takes a significant portion
+of reboot.
 
-It is, obvious, from the patch where the problem lies.  You *remove*
-the parallel fragment compressor threads, and move the work onto the
-main thread.
+The reason for slow relocation is because it is done without MMU, and thus
+not benefiting from D-Cache.
 
-Now what do you think that does?  It completely removes a significant
-amount of the parallelism of Mksquashfs and makes the main thread
-a bottleneck.
+Performance data
+----------------
+For this experiment, the size of kernel plus initramfs is small, only 25M.
+If initramfs was larger, than the improvements would be greater, as time
+spent in relocation is proportional to the size of relocation.
 
-This is your fault and your problem, and it lies in your lack of
-understanding.
+Previously:
+kernel shutdown	0.022131328s
+relocation	0.440510736s
+kernel startup	0.294706768s
 
-Yet you continually blame your inability to make Mksquashfs work
-correctly on *my* code being old and unmaintained and badly written.
+Relocation was taking: 58.2% of reboot time
 
-This can be seen from the following excerpt from a post in this
-Debian bug thread made by the Debian maintainer.
+Now:
+kernel shutdown	0.032066576s
+relocation	0.022158152s
+kernel startup	0.296055880s
 
-"> First of all, as squashfs-tools wasn't written in the last years, when
-> reproducible builds became more famous. So it's not written
-> with reproducible building in mind.
-> For me is reproducible builds more important than using all cpu cores.
-> But I don't use it with gigabytes images.
- Yeah, it's quite an old software without real development in the recent ye=
-ars."
+Now: Relocation takes 6.3% of reboot time
 
-and
+Total reboot is x2.16 times faster.
 
-" This sounds more complex work than it can be achieved in this week.
-Maybe a complete rewrite would be better then on the long run."
+Previous approaches and discussions
+-----------------------------------
+https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
+reserve space for kexec to avoid relocation, involves changes to generic code
+to optimize a problem that exists on arm64 only:
 
-Constantly pointing the blame at my tools and my code.
+https://lore.kernel.org/lkml/20190716165641.6990-1-pasha.tatashin@soleen.com
+The first attempt to enable MMU, some bugs that prevented performance
+improvement. The page tables unnecessary configured idmap for the whole
+physical space.
 
-This is typical of the poor worker who chooses to blame everyone
-else but himself.
+https://lore.kernel.org/lkml/20190731153857.4045-1-pasha.tatashin@soleen.com
+No linear copy, bug with EL2 reboots.
 
-None of that is the case.  50% of the code-base of Squashfs-tools
-was (re-)written in the last 9 years as part of on-going improvements.
-It has also been maintained across that period.
+Pavel Tatashin (8):
+  kexec: quiet down kexec reboot
+  arm64, mm: transitional tables
+  arm64: hibernate: switch to transtional page tables.
+  kexec: add machine_kexec_post_load()
+  arm64, kexec: move relocation function setup and clean up
+  arm64, kexec: add expandable argument to relocation function
+  arm64, kexec: configure transitional page table for kexec
+  arm64, kexec: enable MMU during kexec relocation
 
-As for your specific claim that Mksquashfs can't be made to produce
-reproducible builds because it is old and written before reproducible
-builds became popular.  That is abject nonsense.
+ arch/arm64/Kconfig                     |   4 +
+ arch/arm64/include/asm/kexec.h         |  51 ++++-
+ arch/arm64/include/asm/pgtable-hwdef.h |   1 +
+ arch/arm64/include/asm/trans_table.h   |  68 ++++++
+ arch/arm64/kernel/asm-offsets.c        |  14 ++
+ arch/arm64/kernel/cpu-reset.S          |   4 +-
+ arch/arm64/kernel/cpu-reset.h          |   8 +-
+ arch/arm64/kernel/hibernate.c          | 261 ++++++-----------------
+ arch/arm64/kernel/machine_kexec.c      | 199 ++++++++++++++----
+ arch/arm64/kernel/relocate_kernel.S    | 196 +++++++++---------
+ arch/arm64/mm/Makefile                 |   1 +
+ arch/arm64/mm/trans_table.c            | 273 +++++++++++++++++++++++++
+ kernel/kexec.c                         |   4 +
+ kernel/kexec_core.c                    |   8 +-
+ kernel/kexec_file.c                    |   4 +
+ kernel/kexec_internal.h                |   2 +
+ 16 files changed, 758 insertions(+), 340 deletions(-)
+ create mode 100644 arch/arm64/include/asm/trans_table.h
+ create mode 100644 arch/arm64/mm/trans_table.c
 
-I added reproducible builds to Mksquashfs.  It took one weekend.
+-- 
+2.22.0
 
-https://github.com/plougher/squashfs-tools/commit/24da0c63c80be64e1adc3f24c=
-27459ebe18a19af
-
-> > > Or shall we gradually switch to squashfs-tools-ng is the upstream
-> > > is more active:
-> > > https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D931965
-> >  It's under investigation. I'm traveling and will only arrive back
-> > home on Sunday evening. Expect more details on this next week.
->
-> I also seen the upcoming squashfs-tools-ng rising and quite interested
-> to test it and reading the code.
-> Depending on tests & the code, I could imagine I'll put my effort and
-> time towards squashfs-tools-ng.
->
-> @L=C3=A1szl=C3=B3 It should be your call to revert or not. For sure there=
- are
-> also downstream users who need reproducible builds (e.g. tails) who
-> may also change to squashfs-tools-ng if -ng is the only reproducible
-> squashfs generator in debian.
->
-
-Upstream Squashfs-tools now produces reproducible builds.
-
-Squashfs-tools-ng, this is a rogue project masquerading as an
-official new upstream .  It is neither official nor a new upstream.  As
-Squashfs author and maintainer I completely disassociate that project
-with the Squashfs project.
-
-I also have publicly stated that this project is spreading falsehoods and
-that it is defamatory to me as the Squashfs author and maintainer.
-
-See:
-
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D931965#29
-
-and
-
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D931965#34
-
-I have lived for a couple of months with you two people bad-mouthing
-Squashfs tools, it's code-base and my maintenance.
-
-I have absolutely had enough.
-
-I have CC'd this to the Debian project leader and the Debian technical
-commitee, and also to linux-kernel, linux-fsdevel and linux-embedded
-for wider attention.
-
-What else do I have to do to make you stop bad-mouthing Squashfs?  Sue?
-
-Yours
-
-Dr. Phillip Lougher
-
-> Hopefully I'll find time to look into it.
->
-> Best Regards,
-> lynxis
-> --
-> Alexander Couzens
->
-> mail: lynxis@fe80.eu
-> jabber: lynxis@fe80.eu
-> gpg: 390D CF78 8BF9 AA50 4F8F  F1E2 C29E 9DA6 A0DF 8604
