@@ -2,310 +2,160 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F88C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEF2C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4460B2080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:04:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PS86srXD"
+	by mail.kernel.org (Postfix) with ESMTP id 7974B2080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389325AbfHAWEB (ORCPT
+        id S2389336AbfHAWFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:04:01 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34261 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728559AbfHAWEA (ORCPT
+        Thu, 1 Aug 2019 18:05:15 -0400
+Received: from hosting.gsystem.sk ([212.5.213.30]:59192 "EHLO
+        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbfHAWFP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:04:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so32809622plt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 15:04:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O7hLnC+GOiCgk4z8TAevBK2YUS9V2gISweOdp52qemw=;
-        b=PS86srXDaP4fTTf+RUB3qrKPYKv5VVImbD5sr2kp3apOfNZ0eWIzFc0Mv0njZFxFih
-         kIDPoa29TcWLjeGb1zylTG9tEJhsGTACwRaj6SaDNKYuk/UKYaAaiJJjHkiQvrgHK+lH
-         RHGzZEyajD813os98uy8cLCgzhZFoWeYOIKZE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O7hLnC+GOiCgk4z8TAevBK2YUS9V2gISweOdp52qemw=;
-        b=Wc/aP47D25Eiy7B0rp9lN16WaFVp99eSk61lUU4f28WB3YqztB4gyPKpvYbPwjJvtZ
-         jHhVZtSeYOfglZE2KBHjKcTsoObRC1R4tkHmhS1nTti9FdVE0jzIM9v5TNyI5Y9PReci
-         FrfEYflaQXp/E4+W8EckAwUCjOC3YYEasclOG5a0euaIgDFzuyBOTjIjHq0hUrWslNGw
-         iZyIFPctkmGhSHJNR7OPr6f6ugGYcpiGBu1damvuUzJ7x6BGXrrVFcDLw9YO1JzvDSZt
-         iZ4mfwFBC8UJ/aC5oxaZKn79r/44gnpxJOb643qQdE3mY4XTAVNtLF/kgkldjoP4ZBSM
-         uyOg==
-X-Gm-Message-State: APjAAAU0amkzuGnwiplj4AFwGVoz1AmKV9rwxfDCZUhmWZMBZy2/ulRt
-        1YLZGcxsFs84jIazSz2DUaGdGw==
-X-Google-Smtp-Source: APXvYqxQ7cTZ2SN8igestlUX5ILuYgeNHRyShGDtkVrlsOwVJu4l7U3wDMFfsEDwuJT3bLOSz/Aj3Q==
-X-Received: by 2002:a17:902:7288:: with SMTP id d8mr44455167pll.133.1564697039800;
-        Thu, 01 Aug 2019 15:03:59 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id g2sm89824740pfb.95.2019.08.01.15.03.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 15:03:59 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] ARM: dts: rockchip: Add pin names for rk3288-veyron fievel
-Date:   Thu,  1 Aug 2019 15:03:54 -0700
-Message-Id: <20190801220354.142933-1-mka@chromium.org>
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+        Thu, 1 Aug 2019 18:05:15 -0400
+X-Greylist: delayed 396 seconds by postgrey-1.27 at vger.kernel.org; Thu, 01 Aug 2019 18:05:14 EDT
+Received: from [192.168.0.2] (188-167-68-178.dynamic.chello.sk [188.167.68.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hosting.gsystem.sk (Postfix) with ESMTPSA id 043817A0215;
+        Thu,  1 Aug 2019 23:58:37 +0200 (CEST)
+From:   Ondrej Zary <linux@zary.sk>
+To:     Guenter Roeck <linux@roeck-us.net>
+Subject: Re: Marking legacy watchdog drivers as deprecated / obsolete
+Date:   Thu, 1 Aug 2019 23:58:34 +0200
+User-Agent: KMail/1.9.10
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-watchdog@cger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190729220720.GB5712@roeck-us.net> <CAK8P3a16dON3g-BzUOrdHu3ryCD+FyJn29EwcT_aQAdj-jvFnA@mail.gmail.com> <20190730155737.GA22593@roeck-us.net>
+In-Reply-To: <20190730155737.GA22593@roeck-us.net>
+X-KMail-QuotePrefix: > 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <201908012358.34991.linux@zary.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is like commit 0ca87bd5baa6 ("ARM: dts: rockchip: Add pin names
-for rk3288-veyron-jerry") and other similar commits, but for the
-veyron fievel board (and tiger, which includes the fievel .dtsi).
+On Tuesday 30 July 2019 17:57:37 Guenter Roeck wrote:
+> On Tue, Jul 30, 2019 at 10:00:36AM +0200, Arnd Bergmann wrote:
+> > On Tue, Jul 30, 2019 at 12:07 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> > >
+> > > Hi,
+> > >
+> > > we have recently seen a number of changes to legacy watchdog drivers,
+> > > mostly surrounding the coding style used some 10+ years ago, but also
+> > > fixing minor formatting or coding problems found by static analyzers.
+> > > This slowly rises above the level of background noise.
+> > >
+> > > Would it be acceptable to mark all those drivers as deprecated/obsolete,
+> > > warn users that the driver should be converted to use the watchdog
+> > > subsystem, and that it will otherwise be removed in a later Linux kernel
+> > > version ? This would give us an idea which drivers are still in use,
+> > > and it would enable us to remove the remaining drivers maybe 5 or 6
+> > > releases for now.
+> > >
+> > > Thoughts ?
+> > 
+> > I don't think an automated approach across 61 drivers is likely to work
+> > well. About half of the drivers appear to be for specific SoCs, and
+> > removing the watchdog driver while keeping the rest of the SoC support
+> > would not be helpful, it  just means we break one of the drivers for the
+> > last remaining users of an old SoC the next time they try to upgrade to
+> > a new kernel.
+> > 
+> 
+> The primary goal would be to identify drivers still in use, and to trigger
+> efforts to convert those drivers to the new infrastructure. Removal of
+> obsolete / unused drivers would be a separate decision, to be made at some
+> point in the future, and individually for each driver. I specifically wasn't
+> trying to suggest auto-removal.
+> 
+> Guenter
+> 
+> > It would probably be helpful to go through the list and see if any of
+> > the drivers
+> > are for platforms that are already gone. FWIW, here is the list of drivers that
+> > have their own .ioctl() method, taken from a patch I'm sending soon
+> > to add a .compat_ioctl handler:
+> > 
+> > arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+> > arch/um/drivers/harddog_kern.c
+> > drivers/char/ipmi/ipmi_watchdog.c
+> > drivers/hwmon/fschmd.c
+> > drivers/rtc/rtc-ds1374.c
+> > drivers/watchdog/acquirewdt.c
+> > drivers/watchdog/advantechwdt.c
+> > drivers/watchdog/alim1535_wdt.c
+> > drivers/watchdog/alim7101_wdt.c
+> > drivers/watchdog/ar7_wdt.c
+> > drivers/watchdog/at91rm9200_wdt.c
+> > drivers/watchdog/ath79_wdt.c
+> > drivers/watchdog/bcm63xx_wdt.c
+> > drivers/watchdog/cpu5wdt.c
+> > drivers/watchdog/eurotechwdt.c
+> > drivers/watchdog/f71808e_wdt.c
+> > drivers/watchdog/gef_wdt.c
+> > drivers/watchdog/geodewdt.c
+> > drivers/watchdog/ib700wdt.c
+> > drivers/watchdog/ibmasr.c
+> > drivers/watchdog/indydog.c
+> > drivers/watchdog/intel_scu_watchdog.c
+> > drivers/watchdog/iop_wdt.c
+> > drivers/watchdog/it8712f_wdt.c
+> > drivers/watchdog/ixp4xx_wdt.c
+> > drivers/watchdog/ks8695_wdt.c
+> > drivers/watchdog/m54xx_wdt.c
+> > drivers/watchdog/machzwd.c
+> > drivers/watchdog/mixcomwd.c
+> > drivers/watchdog/mtx-1_wdt.c
+> > drivers/watchdog/mv64x60_wdt.c
+> > drivers/watchdog/nuc900_wdt.c
+> > drivers/watchdog/nv_tco.c
+> > drivers/watchdog/pc87413_wdt.c
+> > drivers/watchdog/pcwd.c
+> > drivers/watchdog/pcwd_pci.c
+> > drivers/watchdog/pcwd_usb.c
+> > drivers/watchdog/pika_wdt.c
+> > drivers/watchdog/pnx833x_wdt.c
+> > drivers/watchdog/rc32434_wdt.c
+> > drivers/watchdog/rdc321x_wdt.c
+> > drivers/watchdog/riowd.c
+> > drivers/watchdog/sa1100_wdt.c
+> > drivers/watchdog/sb_wdog.c
+> > drivers/watchdog/sbc60xxwdt.c
+> > drivers/watchdog/sbc7240_wdt.c
+> > drivers/watchdog/sbc_epx_c3.c
+> > drivers/watchdog/sbc_fitpc2_wdt.c
+> > drivers/watchdog/sc1200wdt.c
+> > drivers/watchdog/sc520_wdt.c
+> > drivers/watchdog/sch311x_wdt.c
+> > drivers/watchdog/scx200_wdt.c
+> > drivers/watchdog/smsc37b787_wdt.c
+> > drivers/watchdog/w83877f_wdt.c
+> > drivers/watchdog/w83977f_wdt.c
+> > drivers/watchdog/wafer5823wdt.c
+> > drivers/watchdog/wdrtas.c
+> > drivers/watchdog/wdt.c
+> > drivers/watchdog/wdt285.c
+> > drivers/watchdog/wdt977.c
+> > drivers/watchdog/wdt_pci.c
+> > 
+> >       Arnd
+> 
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
- arch/arm/boot/dts/rk3288-veyron-fievel.dts | 214 +++++++++++++++++++++
- 1 file changed, 214 insertions(+)
+I have some older x86 boards so I probably could test some of them. Likely ALi chipset (alim1535_wdt.c and/or alim7101_wdt.c) and some super I/Os (it8712f_wdt.c, w83877f_wdt.c, w83977f_wdt.c).
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-fievel.dts b/arch/arm/boot/dts/rk3288-veyron-fievel.dts
-index 696566f72d30..5c14a8fa6574 100644
---- a/arch/arm/boot/dts/rk3288-veyron-fievel.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-fievel.dts
-@@ -198,6 +198,220 @@
- 	pinctrl-0 = <&drv_5v>;
- };
- 
-+&gpio0 {
-+	gpio-line-names = "PMIC_SLEEP_AP",
-+			  "DDRIO_PWROFF",
-+			  "DDRIO_RETEN",
-+			  "TS3A227E_INT_L",
-+			  "PMIC_INT_L",
-+			  "PWR_KEY_L",
-+			  "HUB_USB1_nFALUT",
-+			  "PHY_PMEB",
-+
-+			  "PHY_INT",
-+			  "REC_MODE_L",
-+			  "OTP_OUT",
-+			  "",
-+			  "USB_OTG_POWER_EN",
-+			  "AP_WARM_RESET_H",
-+			  "USB_OTG_nFALUT",
-+			  "I2C0_SDA_PMIC",
-+
-+			  "I2C0_SCL_PMIC",
-+			  "DEVMODE_L",
-+			  "USB_INT";
-+};
-+
-+&gpio2 {
-+	gpio-line-names = "CONFIG0",
-+			  "CONFIG1",
-+			  "CONFIG2",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "CONFIG3",
-+
-+			  "",
-+			  "EMMC_RST_L",
-+			  "",
-+			  "",
-+			  "BL_PWR_EN",
-+			  "",
-+			  "TOUCH_INT",
-+			  "TOUCH_RST",
-+
-+			  "I2C3_SCL_TP",
-+			  "I2C3_SDA_TP";
-+};
-+
-+&gpio3 {
-+	gpio-line-names = "FLASH0_D0",
-+			  "FLASH0_D1",
-+			  "FLASH0_D2",
-+			  "FLASH0_D3",
-+			  "FLASH0_D4",
-+			  "FLASH0_D5",
-+			  "FLASH0_D6",
-+			  "FLASH0_D7",
-+
-+			  "VCC5V_GOOD_H",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "FLASH0_CS2/EMMC_CMD",
-+			  "",
-+			  "FLASH0_DQS/EMMC_CLKO",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "PHY_TXD2",
-+			  "PHY_TXD3",
-+			  "MAC_RXD2",
-+			  "MAC_RXD3",
-+			  "PHY_TXD0",
-+			  "PHY_TXD1",
-+			  "MAC_RXD0",
-+			  "MAC_RXD1";
-+};
-+
-+&gpio4 {
-+	gpio-line-names = "MAC_MDC",
-+			  "MAC_RXDV",
-+			  "MAC_RXER",
-+			  "MAC_CLK",
-+			  "PHY_TXEN",
-+			  "MAC_MDIO",
-+			  "MAC_RXCLK",
-+			  "",
-+
-+			  "PHY_RST",
-+			  "PHY_TXCLK",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "UART0_RXD",
-+			  "UART0_TXD",
-+			  "UART0_CTS_L",
-+			  "UART0_RTS_L",
-+			  "SDIO0_D0",
-+			  "SDIO0_D1",
-+			  "SDIO0_D2",
-+			  "SDIO0_D3",
-+
-+			  "SDIO0_CMD",
-+			  "SDIO0_CLK",
-+			  "BT_DEV_WAKE",
-+			  "",
-+			  "WIFI_ENABLE_H",
-+			  "BT_ENABLE_L",
-+			  "WIFI_HOST_WAKE",
-+			  "BT_HOST_WAKE";
-+};
-+
-+&gpio5 {
-+	gpio-line-names = "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+			  "USB_OTG_CTL1",
-+			  "HUB_USB2_CTL1",
-+			  "HUB_USB2_PWR_EN",
-+			  "HUB_USB_ILIM_SEL",
-+
-+			  "USB_OTG_STATUS_L",
-+			  "HUB_USB1_CTL1",
-+			  "HUB_USB1_PWR_EN",
-+			  "VCC50_HDMI_EN";
-+};
-+
-+&gpio6 {
-+	gpio-line-names = "I2S0_SCLK",
-+			  "I2S0_LRCK_RX",
-+			  "I2S0_LRCK_TX",
-+			  "I2S0_SDI",
-+			  "I2S0_SDO0",
-+			  "HP_DET_H",
-+			  "",
-+			  "INT_CODEC",
-+
-+			  "I2S0_CLK",
-+			  "I2C2_SDA",
-+			  "I2C2_SCL",
-+			  "MICDET",
-+			  "",
-+			  "",
-+			  "",
-+			  "",
-+
-+			  "HUB_USB2_nFALUT",
-+			  "USB_OTG_ILIM_SEL";
-+};
-+
-+&gpio7 {
-+	gpio-line-names = "LCD_BL_PWM",
-+			  "PWM_LOG",
-+			  "BL_EN",
-+			  "PWR_LED1",
-+			  "TPM_INT_H",
-+			  "SPK_ON",
-+			  "FW_WP_AP",
-+			  "",
-+
-+			  "CPU_NMI",
-+			  "DVSOK",
-+			  "",
-+			  "EDP_HPD",
-+			  "DVS1",
-+			  "",
-+			  "LCD_EN",
-+			  "DVS2",
-+
-+			  "HDMI_CEC",
-+			  "I2C4_SDA",
-+			  "I2C4_SCL",
-+			  "I2C5_SDA_HDMI",
-+			  "I2C5_SCL_HDMI",
-+			  "5V_DRV",
-+			  "UART2_RXD",
-+			  "UART2_TXD";
-+};
-+
-+&gpio8 {
-+	gpio-line-names = "RAM_ID0",
-+			  "RAM_ID1",
-+			  "RAM_ID2",
-+			  "RAM_ID3",
-+			  "I2C1_SDA_TPM",
-+			  "I2C1_SCL_TPM",
-+			  "SPI2_CLK",
-+			  "SPI2_CS0",
-+
-+			  "SPI2_RXD",
-+			  "SPI2_TXD";
-+};
-+
- &pinctrl {
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <
 -- 
-2.22.0.770.g0f2c4a37fd-goog
-
+Ondrej Zary
