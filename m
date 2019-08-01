@@ -2,273 +2,331 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E338C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931C6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5FA2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564665065;
-	bh=ut74bdnc9ICz7ubnVsQUsEQVpVy6ko50AQu+aZx03Uk=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=rwG4ACbBx656CBaUkgUEcH8Dq5ESJZj47HAJApfzERBxhZFzlo2uYl4YEZ2L4qZ6f
-	 0gFlrzz/4ljbNzDNdGnECnrnhnwNQCyp6WKH0nc2Hz+G+sKyLtwenVJndtLYKW9/E+
-	 7tH8U4NUUkHenh31LhsPeh1fJ0qtqYSAnFWSotiM=
+	by mail.kernel.org (Postfix) with ESMTP id 602DA206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VlXrijV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731717AbfHANLD (ORCPT
+        id S1731726AbfHANLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:11:03 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54896 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731675AbfHANK4 (ORCPT
+        Thu, 1 Aug 2019 09:11:06 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:44903 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731693AbfHANLA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:10:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=3Y1PSNe5WA/A7Imne+0J5CrQXjZMJXjUC58p+OnEpUQ=; b=mxq8KTw4UpF9
-        usuWDYw5xLrigbTXwPztP7hFfbOrBtCoSo97o2x8A44d9LX7eqiuKK+XUBgd9t+7KAl5VKpIxf2gA
-        9BMu0ZEvIncojBKhXS0OoKvh7sqWaHWvzHi5cjfyWtOow4ME0K93bA3OVQkHM0XKv8h0WYsKfd8J7
-        CO3aI=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1htAqu-0004in-BN; Thu, 01 Aug 2019 13:10:40 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 724622742CFC; Thu,  1 Aug 2019 14:10:39 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: SOF: no need to check return value of debugfs_create functions" to the asoc tree
-In-Reply-To: <20190731131716.9764-3-gregkh@linuxfoundation.org>
-X-Patchwork-Hint: ignore
-Message-Id: <20190801131039.724622742CFC@ypsilon.sirena.org.uk>
-Date:   Thu,  1 Aug 2019 14:10:39 +0100 (BST)
+        Thu, 1 Aug 2019 09:11:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1564665060; x=1596201060;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=KxK99aHsrfUY1ldURwwrJsBib6TumCu4gqPM4mjUSHU=;
+  b=VlXrijV1+HuRd1WeEnb2sBHmXFWABtglTZP4AwvpMIc+1C7aTOAe/yEl
+   KtsvUtuBfQPdB025sx/3ebJvzhNB4FgY4tOBbMbnSh/JgNvU/HHevq1Zl
+   Wgg/OvQ3QzoP2yTmtiNtbXdeFLKKYl2ZwfmrVA22rOuRDqPXWF1WCLD9S
+   8=;
+X-IronPort-AV: E=Sophos;i="5.64,334,1559520000"; 
+   d="scan'208";a="777255709"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-8549039f.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 01 Aug 2019 13:10:55 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-8549039f.us-west-2.amazon.com (Postfix) with ESMTPS id 1A284A2418;
+        Thu,  1 Aug 2019 13:10:55 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 1 Aug 2019 13:10:54 +0000
+Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.161.219) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 1 Aug 2019 13:10:45 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+        <Jonathan.Cameron@huawei.com>, <nicolas.ferre@microchip.com>,
+        <paulmck@linux.ibm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <hhhawa@amazon.com>
+Subject: [PATCH v4 4/4] edac: Add support for Amazon's Annapurna Labs L2 EDAC
+Date:   Thu, 1 Aug 2019 14:09:56 +0100
+Message-ID: <20190801130956.26388-5-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190801130956.26388-1-hhhawa@amazon.com>
+References: <20190801130956.26388-1-hhhawa@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.219]
+X-ClientProxiedBy: EX13D16UWC004.ant.amazon.com (10.43.162.72) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
+report L2 errors.
 
-   ASoC: SOF: no need to check return value of debugfs_create functions
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 3ff3a4f657b3fab2d56247983c2ebed180ef2fbb Mon Sep 17 00:00:00 2001
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date: Wed, 31 Jul 2019 15:17:16 +0200
-Subject: [PATCH] ASoC: SOF: no need to check return value of debugfs_create
- functions
-
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
-
-Also, if a debugfs call fails, userspace is notified with an error in
-the log, so no need to log the error again.
-
-Because we no longer need to check the return value, there's no need to
-save the dentry returned by debugfs.  Just use the dentry in the file
-pointer if we really need to figure out the "name" of the file being
-opened.
-
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: alsa-devel@alsa-project.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Link: https://lore.kernel.org/r/20190731131716.9764-3-gregkh@linuxfoundation.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
 ---
- sound/soc/sof/debug.c    | 49 +++++++++++++++-------------------------
- sound/soc/sof/sof-priv.h |  1 -
- sound/soc/sof/trace.c    |  9 ++------
- 3 files changed, 20 insertions(+), 39 deletions(-)
+ MAINTAINERS               |   6 ++
+ drivers/edac/Kconfig      |   8 ++
+ drivers/edac/Makefile     |   1 +
+ drivers/edac/al_l2_edac.c | 189 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 204 insertions(+)
+ create mode 100644 drivers/edac/al_l2_edac.c
 
-diff --git a/sound/soc/sof/debug.c b/sound/soc/sof/debug.c
-index 2388477a965e..40940b2fe9d5 100644
---- a/sound/soc/sof/debug.c
-+++ b/sound/soc/sof/debug.c
-@@ -128,6 +128,7 @@ static ssize_t sof_dfsentry_write(struct file *file, const char __user *buffer,
- 	unsigned long ipc_duration_ms = 0;
- 	bool flood_duration_test = false;
- 	unsigned long ipc_count = 0;
-+	struct dentry *dentry;
- 	int err;
- #endif
- 	size_t size;
-@@ -149,11 +150,12 @@ static ssize_t sof_dfsentry_write(struct file *file, const char __user *buffer,
- 	 * ipc_duration_ms test floods the DSP for the time specified
- 	 * in the debugfs entry.
- 	 */
--	if (strcmp(dfse->dfsentry->d_name.name, "ipc_flood_count") &&
--	    strcmp(dfse->dfsentry->d_name.name, "ipc_flood_duration_ms"))
-+	dentry = file->f_path.dentry;
-+	if (strcmp(dentry->d_name.name, "ipc_flood_count") &&
-+	    strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
- 		return -EINVAL;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fd29ea62ba29..a6dcf3d8e12a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -749,6 +749,12 @@ S:	Maintained
+ F:	drivers/edac/al_l1_edac.c
+ F:	Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
  
--	if (!strcmp(dfse->dfsentry->d_name.name, "ipc_flood_duration_ms"))
-+	if (!strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
- 		flood_duration_test = true;
++AMAZON ANNAPURNA LABS L2 EDAC
++M:	Hanna Hawa <hhhawa@amazon.com>
++S:	Maintained
++F:	drivers/edac/al_l2_edac.c
++F:	Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
++
+ AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
+ M:	Talel Shenhar <talel@amazon.com>
+ S:	Maintained
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 58b92bcb39ce..8bbb745b84ed 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -82,6 +82,14 @@ config EDAC_AL_L1
+ 	  for Amazon's Annapurna Labs SoCs.
+ 	  This driver detects errors of L1 caches.
  
- 	/* test completion criterion */
-@@ -219,6 +221,7 @@ static ssize_t sof_dfsentry_read(struct file *file, char __user *buffer,
- {
- 	struct snd_sof_dfsentry *dfse = file->private_data;
- 	struct snd_sof_dev *sdev = dfse->sdev;
-+	struct dentry *dentry;
- 	loff_t pos = *ppos;
- 	size_t size_ret;
- 	int skip = 0;
-@@ -226,8 +229,9 @@ static ssize_t sof_dfsentry_read(struct file *file, char __user *buffer,
- 	u8 *buf;
++config EDAC_AL_L2
++	bool "Amazon's Annapurna Labs L2 EDAC"
++	depends on ARCH_ALPINE
++	help
++	  Support for L2 error detection and correction
++	  for Amazon's Annapurna Labs SoCs.
++	  This driver detects errors of L2 caches.
++
+ config EDAC_AMD64
+ 	tristate "AMD64 (Opteron, Athlon64)"
+ 	depends on AMD_NB && EDAC_DECODE_MCE
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index caa2dc91e8a0..60a6b8bbe2f8 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -23,6 +23,7 @@ edac_mce_amd-y				:= mce_amd.o
+ obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
  
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_DEBUG_IPC_FLOOD_TEST)
--	if ((!strcmp(dfse->dfsentry->d_name.name, "ipc_flood_count") ||
--	     !strcmp(dfse->dfsentry->d_name.name, "ipc_flood_duration_ms")) &&
-+	dentry = file->f_path.dentry;
-+	if ((!strcmp(dentry->d_name.name, "ipc_flood_count") ||
-+	     !strcmp(dentry->d_name.name, "ipc_flood_duration_ms")) &&
- 	    dfse->cache_buf) {
- 		if (*ppos)
- 			return 0;
-@@ -290,8 +294,7 @@ static ssize_t sof_dfsentry_read(struct file *file, char __user *buffer,
- 		if (!pm_runtime_active(sdev->dev) &&
- 		    dfse->access_type == SOF_DEBUGFS_ACCESS_D0_ONLY) {
- 			dev_err(sdev->dev,
--				"error: debugfs entry %s cannot be read in DSP D3\n",
--				dfse->dfsentry->d_name.name);
-+				"error: debugfs entry cannot be read in DSP D3\n");
- 			kfree(buf);
- 			return -EINVAL;
- 		}
-@@ -356,17 +359,11 @@ int snd_sof_debugfs_io_item(struct snd_sof_dev *sdev,
- 	}
- #endif
- 
--	dfse->dfsentry = debugfs_create_file(name, 0444, sdev->debugfs_root,
--					     dfse, &sof_dfs_fops);
--	if (!dfse->dfsentry) {
--		/* can't rely on debugfs, only log error and keep going */
--		dev_err(sdev->dev, "error: cannot create debugfs entry %s\n",
--			name);
--	} else {
--		/* add to dfsentry list */
--		list_add(&dfse->list, &sdev->dfsentry_list);
-+	debugfs_create_file(name, 0444, sdev->debugfs_root, dfse,
-+			    &sof_dfs_fops);
- 
--	}
-+	/* add to dfsentry list */
-+	list_add(&dfse->list, &sdev->dfsentry_list);
- 
- 	return 0;
- }
-@@ -402,16 +399,10 @@ int snd_sof_debugfs_buf_item(struct snd_sof_dev *sdev,
- 		return -ENOMEM;
- #endif
- 
--	dfse->dfsentry = debugfs_create_file(name, mode, sdev->debugfs_root,
--					     dfse, &sof_dfs_fops);
--	if (!dfse->dfsentry) {
--		/* can't rely on debugfs, only log error and keep going */
--		dev_err(sdev->dev, "error: cannot create debugfs entry %s\n",
--			name);
--	} else {
--		/* add to dfsentry list */
--		list_add(&dfse->list, &sdev->dfsentry_list);
--	}
-+	debugfs_create_file(name, mode, sdev->debugfs_root, dfse,
-+			    &sof_dfs_fops);
-+	/* add to dfsentry list */
-+	list_add(&dfse->list, &sdev->dfsentry_list);
- 
- 	return 0;
- }
-@@ -426,10 +417,6 @@ int snd_sof_dbg_init(struct snd_sof_dev *sdev)
- 
- 	/* use "sof" as top level debugFS dir */
- 	sdev->debugfs_root = debugfs_create_dir("sof", NULL);
--	if (IS_ERR_OR_NULL(sdev->debugfs_root)) {
--		dev_err(sdev->dev, "error: failed to create debugfs directory\n");
--		return 0;
--	}
- 
- 	/* init dfsentry list */
- 	INIT_LIST_HEAD(&sdev->dfsentry_list);
-diff --git a/sound/soc/sof/sof-priv.h b/sound/soc/sof/sof-priv.h
-index 983eadef4b30..1cec3f23f9cd 100644
---- a/sound/soc/sof/sof-priv.h
-+++ b/sound/soc/sof/sof-priv.h
-@@ -230,7 +230,6 @@ enum sof_debugfs_access_type {
- 
- /* FS entry for debug files that can expose DSP memories, registers */
- struct snd_sof_dfsentry {
--	struct dentry *dfsentry;
- 	size_t size;
- 	enum sof_dfsentry_type type;
- 	/*
-diff --git a/sound/soc/sof/trace.c b/sound/soc/sof/trace.c
-index befed975161c..4c3cff031fd6 100644
---- a/sound/soc/sof/trace.c
-+++ b/sound/soc/sof/trace.c
-@@ -148,13 +148,8 @@ static int trace_debugfs_create(struct snd_sof_dev *sdev)
- 	dfse->size = sdev->dmatb.bytes;
- 	dfse->sdev = sdev;
- 
--	dfse->dfsentry = debugfs_create_file("trace", 0444, sdev->debugfs_root,
--					     dfse, &sof_dfs_trace_fops);
--	if (!dfse->dfsentry) {
--		/* can't rely on debugfs, only log error and keep going */
--		dev_err(sdev->dev,
--			"error: cannot create debugfs entry for trace\n");
--	}
-+	debugfs_create_file("trace", 0444, sdev->debugfs_root, dfse,
-+			    &sof_dfs_trace_fops);
- 
- 	return 0;
- }
+ obj-$(CONFIG_EDAC_AL_L1)		+= al_l1_edac.o
++obj-$(CONFIG_EDAC_AL_L2)		+= al_l2_edac.o
+ obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
+ obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
+ obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
+diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
+new file mode 100644
+index 000000000000..6c6d37cf82ab
+--- /dev/null
++++ b/drivers/edac/al_l2_edac.c
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
++
++#include <asm/sysreg.h>
++#include <linux/bitfield.h>
++#include <linux/of.h>
++#include <linux/smp.h>
++
++#include "edac_device.h"
++#include "edac_module.h"
++
++#define DRV_NAME				"al_l2_edac"
++
++/* Same bit assignments of L2MERRSR_EL1 in ARM CA57/CA72 */
++#define ARM_CA57_L2MERRSR_EL1			sys_reg(3, 1, 15, 2, 3)
++#define ARM_CA57_L2MERRSR_RAMID			GENMASK(30, 24)
++#define  ARM_CA57_L2_TAG_RAM			0x10
++#define  ARM_CA57_L2_DATA_RAM			0x11
++#define  ARM_CA57_L2_SNOOP_RAM			0x12
++#define  ARM_CA57_L2_DIRTY_RAM			0x14
++#define  ARM_CA57_L2_INC_PF_RAM			0x18
++#define ARM_CA57_L2MERRSR_VALID			BIT(31)
++#define ARM_CA57_L2MERRSR_REPEAT		GENMASK_ULL(39, 32)
++#define ARM_CA57_L2MERRSR_OTHER			GENMASK_ULL(47, 40)
++#define ARM_CA57_L2MERRSR_FATAL			BIT_ULL(63)
++
++#define AL_L2_EDAC_MSG_MAX			256
++
++struct al_l2_edac {
++	cpumask_t cluster_cpus;
++};
++
++static void al_l2_edac_l2merrsr(void *arg)
++{
++	struct edac_device_ctl_info *edac_dev = arg;
++	int cpu, i;
++	u32 ramid, repeat, other, fatal;
++	u64 val = read_sysreg_s(ARM_CA57_L2MERRSR_EL1);
++	char msg[AL_L2_EDAC_MSG_MAX];
++	int space, count;
++	char *p;
++
++	if (!(FIELD_GET(ARM_CA57_L2MERRSR_VALID, val)))
++		return;
++
++	write_sysreg_s(0, ARM_CA57_L2MERRSR_EL1);
++
++	cpu = smp_processor_id();
++	ramid = FIELD_GET(ARM_CA57_L2MERRSR_RAMID, val);
++	repeat = FIELD_GET(ARM_CA57_L2MERRSR_REPEAT, val);
++	other = FIELD_GET(ARM_CA57_L2MERRSR_OTHER, val);
++	fatal = FIELD_GET(ARM_CA57_L2MERRSR_FATAL, val);
++
++	space = sizeof(msg);
++	p = msg;
++	count = scnprintf(p, space, "CPU%d L2 %serror detected", cpu,
++			  (fatal) ? "Fatal " : "");
++	p += count;
++	space -= count;
++
++	switch (ramid) {
++	case ARM_CA57_L2_TAG_RAM:
++		count = scnprintf(p, space, " RAMID='L2 Tag RAM'");
++		break;
++	case ARM_CA57_L2_DATA_RAM:
++		count = scnprintf(p, space, " RAMID='L2 Data RAM'");
++		break;
++	case ARM_CA57_L2_SNOOP_RAM:
++		count = scnprintf(p, space, " RAMID='L2 Snoop RAM'");
++		break;
++	case ARM_CA57_L2_DIRTY_RAM:
++		count = scnprintf(p, space, " RAMID='L2 Dirty RAM'");
++		break;
++	case ARM_CA57_L2_INC_PF_RAM:
++		count = scnprintf(p, space, " RAMID='L2 internal metadat'");
++		break;
++	default:
++		count = scnprintf(p, space, " RAMID='unknown'");
++		break;
++	}
++
++	p += count;
++	space -= count;
++
++	count = scnprintf(p, space,
++			  " repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)",
++			  repeat, other, val);
++
++	for (i = 0; i < repeat; i++) {
++		if (fatal)
++			edac_device_handle_ue(edac_dev, 0, 0, msg);
++		else
++			edac_device_handle_ce(edac_dev, 0, 0, msg);
++	}
++}
++
++static void al_l2_edac_check(struct edac_device_ctl_info *edac_dev)
++{
++	struct al_l2_edac *al_l2 = edac_dev->pvt_info;
++
++	smp_call_function_any(&al_l2->cluster_cpus, al_l2_edac_l2merrsr,
++			      edac_dev, 1);
++}
++
++static int al_l2_edac_probe(struct platform_device *pdev)
++{
++	struct edac_device_ctl_info *edac_dev;
++	struct al_l2_edac *al_l2;
++	struct device *dev = &pdev->dev;
++	int ret, i;
++
++	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2),
++					      (char *)dev_name(dev), 1, "L", 1,
++					      2, NULL, 0,
++					      edac_device_alloc_index());
++	if (IS_ERR_OR_NULL(edac_dev))
++		return -ENOMEM;
++
++	al_l2 = edac_dev->pvt_info;
++	edac_dev->edac_check = al_l2_edac_check;
++	edac_dev->dev = dev;
++	edac_dev->mod_name = DRV_NAME;
++	edac_dev->dev_name = dev_name(dev);
++	edac_dev->ctl_name = "L2 cache";
++	platform_set_drvdata(pdev, edac_dev);
++
++	for_each_online_cpu(i) {
++		struct device_node *cpu;
++		struct device_node *cpu_cache, *l2_cache;
++
++		cpu = of_get_cpu_node(i, NULL);
++		cpu_cache = of_find_next_cache_node(cpu);
++		l2_cache = of_parse_phandle(dev->of_node, "l2-cache", 0);
++
++		if (cpu_cache == l2_cache)
++			cpumask_set_cpu(i, &al_l2->cluster_cpus);
++	}
++
++	if (cpumask_empty(&al_l2->cluster_cpus)) {
++		dev_err(dev, "CPU mask is empty for this L2 cache\n");
++		ret = -EINVAL;
++		goto err;
++	}
++
++	ret = edac_device_add_device(edac_dev);
++	if (ret) {
++		dev_err(dev, "Failed to add L2 edac device\n");
++		goto err;
++	}
++
++	return 0;
++
++err:
++	edac_device_free_ctl_info(edac_dev);
++
++	return ret;
++}
++
++static int al_l2_edac_remove(struct platform_device *pdev)
++{
++	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
++
++	edac_device_del_device(edac_dev->dev);
++	edac_device_free_ctl_info(edac_dev);
++
++	return 0;
++}
++
++static const struct of_device_id al_l2_edac_of_match[] = {
++	{ .compatible = "amazon,al-l2-edac" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, al_l2_edac_of_match);
++
++static struct platform_driver al_l2_edac_driver = {
++	.probe = al_l2_edac_probe,
++	.remove = al_l2_edac_remove,
++	.driver = {
++		.name = DRV_NAME,
++		.of_match_table = al_l2_edac_of_match,
++	},
++};
++module_platform_driver(al_l2_edac_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
++MODULE_DESCRIPTION("Amazon's Annapurna Lab's L2 EDAC Driver");
 -- 
-2.20.1
+2.17.1
 
