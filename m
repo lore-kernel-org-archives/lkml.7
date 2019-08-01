@@ -2,105 +2,143 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B20C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3146C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6498A206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C420206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731186AbfHAJ2m (ORCPT
+        id S1731194AbfHAJdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:28:42 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:44982 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730887AbfHAJ2m (ORCPT
+        Thu, 1 Aug 2019 05:33:22 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:58668 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHAJdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:28:42 -0400
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 4533367A8D7;
-        Thu,  1 Aug 2019 11:28:34 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 1 Aug 2019
- 11:28:33 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Thu, 1 Aug 2019 11:28:33 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "NXP Linux Team" <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: Re: [PATCH] serial: imx: Avoid probe failure in case of missing
- gpiolib
-Thread-Topic: [PATCH] serial: imx: Avoid probe failure in case of missing
- gpiolib
-Thread-Index: AQHVSEGkENWr6+HjfEGe5le+et6Jcabl2bqAgAALMwA=
-Date:   Thu, 1 Aug 2019 09:28:33 +0000
-Message-ID: <0674d68b-99fa-3408-1dd1-22dc84144b43@kontron.de>
-References: <20190801081524.22577-1-frieder.schrempf@kontron.de>
- <20190801084827.m42ci3amo37hmesi@pengutronix.de>
-In-Reply-To: <20190801084827.m42ci3amo37hmesi@pengutronix.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6902432E5480BF48B377D0BC2FB45B09@snt-world.com>
-Content-Transfer-Encoding: base64
+        Thu, 1 Aug 2019 05:33:22 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x719W4wM024336;
+        Thu, 1 Aug 2019 17:32:04 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 70BBAA972B9FA8377304;
+        Thu,  1 Aug 2019 17:32:05 +0800 (CST)
+In-Reply-To: <20190801091310.035bc824@xps13>
+References: <1564631710-30276-1-git-send-email-masonccyang@mxic.com.tw> <1564631710-30276-3-git-send-email-masonccyang@mxic.com.tw> <20190801091310.035bc824@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
+        christophe.kerello@st.com, computersforpeace@gmail.com,
+        devicetree@vger.kernel.org, dwmw2@infradead.org,
+        juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, mark.rutland@arm.com, paul@crapouillou.net,
+        paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org,
+        stefan@agner.ch, vigneshr@ti.com
+Subject: Re: [PATCH v6 2/2] dt-bindings: mtd: Document Macronix raw NAND controller
+ bindings
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 4533367A8D7.AE7BB
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: festevam@gmail.com, gregkh@linuxfoundation.org,
-        jslaby@suse.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de
+X-KeepSent: 6FA21ABA:C0DF9C78-48258449:00331EB3;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF6FA21ABA.C0DF9C78-ON48258449.00331EB3-48258449.0034600D@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Thu, 1 Aug 2019 17:32:04 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/08/01 PM 05:32:05,
+        Serialize complete at 2019/08/01 PM 05:32:05
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x719W4wM024336
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVXdlLA0KDQpPbiAwMS4wOC4xOSAxMDo0OCwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+
-IE9uIFRodSwgQXVnIDAxLCAyMDE5IGF0IDA4OjE4OjA1QU0gKzAwMDAsIFNjaHJlbXBmIEZyaWVk
-ZXIgd3JvdGU6DQo+PiBGcm9tOiBGcmllZGVyIFNjaHJlbXBmIDxmcmllZGVyLnNjaHJlbXBmQGtv
-bnRyb24uZGU+DQo+Pg0KPj4gSWYgQ09ORklHX0dQSU9MSUIgaXMgbm90IGVuYWJsZWQsIG1jdHJs
-X2dwaW9faW5pdCgpIHdpbGwgcmV0dXJuDQo+PiAtRU5PU1lTIGFuZCBjYXVzZSB0aGUgcHJvYmlu
-ZyBvZiB0aGUgaW14IFVBUlQgdG8gZmFpbC4gQXMgdGhlDQo+PiBHUElPcyBhcmUgb3B0aW9uYWws
-IHdlIHNob3VsZCBjb250aW51ZSBwcm9iaW5nIGluIHRoaXMgY2FzZS4NCj4gDQo+IElzIHRoaXMg
-cmVhbGx5IHN0aWxsIHRoZSBjYXNlPyBPbiB3aGljaCB2ZXJzaW9uIGRpZCB5b3UgaGl0IHRoaXMN
-Cj4gcHJvYmxlbT8NCg0KWWVzLCBJIHRoaW5rIGl0IGlzLiBJIHVzZWQgdjUuMi41LCB0aGF0IGFs
-cmVhZHkgaGFzIGQ5OTQ4MjY3M2Y5NS4NCg0KPiANCj4gSSB3b3VsZCBleHBlY3QgdGhhdCBpcyBn
-b25lIHdpdGgNCj4gZDk5NDgyNjczZjk1MDgxN2IzMGNhZjNmY2RmYjMxMTc5YjA1MGNlMSBpZiBu
-b3QgZWFybGllci4NCg0KSSB0aGluayB0aGlzIGlzIGEgZGlmZmVyZW50IHByb2JsZW0uIElmIENP
-TkZJR19HUElPTElCIGlzIGRpc2FibGVkLCANCm1jdHJsX2dwaW9faW5pdCgpIHJldHVybnMgLUVO
-T1NZUyB1bmNvbmRpdGlvbmFsbHkgaGVyZTogWzFdLiBUaGUgDQpleGlzdGluZyBwYXRjaCAoZDk5
-NDgyNjczZjk1KSBzZWVtcyB0byBoYW5kbGUgdGhlIGNhc2Ugd2hlbiANCkNPTkZJR19HUElPTElC
-IGlzIGVuYWJsZWQsIGJ1dCBubyBvciBub3QgYWxsIEdQSU9zIGFyZSBnaXZlbiBpbiB0aGUgZHRi
-Lg0KDQpUaGUgc2gtc2NpLmMgZHJpdmVyIGhhcyBhIHNpbWlsYXIgY2hlY2sgdG8gc2tpcCB0aGlz
-IGNhc2U6IFsyXS4NCg0KUmVnYXJkcywNCkZyaWVkZXINCg0KWzFdIA0KaHR0cHM6Ly9naXQua2Vy
-bmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUv
-ZHJpdmVycy90dHkvc2VyaWFsL3NlcmlhbF9tY3RybF9ncGlvLmgjbjEyMQ0KWzJdIA0KaHR0cHM6
-Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXgu
-Z2l0L3RyZWUvZHJpdmVycy90dHkvc2VyaWFsL3NoLXNjaS5jI24zMjkw
+
+Hi Miquel,
+
+> > Document the bindings used by the Macronix raw NAND controller.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >  Documentation/devicetree/bindings/mtd/mxic-nand.txt | 19 
++++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >  create mode 100644 
+Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/
+> Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > new file mode 100644
+> > index 0000000..de37d60
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > @@ -0,0 +1,19 @@
+> > +Macronix Raw NAND Controller Device Tree Bindings
+> > +-------------------------------------------------
+> > +
+> > +Required properties:
+> > +- compatible: should be "mxicy,multi-itfc-v009-nand-morph"
+> > +- reg: should contain 1 entry for the registers
+> > +- interrupts: interrupt line connected to this raw NAND controller
+> > +- clock-names: should contain "ps", "send" and "send_dly"
+> > +- clocks: should contain 3 phandles for the "ps", "send" and
+> > +    "send_dly" clocks
+> > +
+> > +Example:
+> > +
+> > +   nand: nand-controller@43c30000 {
+> > +      compatible = "mxicy,multi-itfc-v009-nand-morph";
+> 
+> "mxicy" looks strange to me, I know it has been used in the past and
+> cannot be removed, but I don't think it is wise to continue using it
+> while your use "mxic" in all your other contributions. I would update
+> the prefix to mxic here and fill-in the relevant doc.
+> 
+> Also, what is nand-morph? I thought we were okay for
+> the "-nand-controller" suffix.
+> 
+
+I thought there is a node name "nand-controller@43c30000" and the
+"-nand-controller" suffix in compatible property seems repeated.
+
+In addition, I would like to indicate it's a multi function controller.
+
+nand-morph means this multi interface controller (multi-itfc) works in
+raw NAND controller.
+
+thanks & best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
