@@ -2,136 +2,159 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA51C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA97C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BA2216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:44:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="usboDGU6"
+	by mail.kernel.org (Postfix) with ESMTP id 81AA4206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 10:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbfHAKoP (ORCPT
+        id S1731127AbfHAKsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 06:44:15 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46703 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfHAKoP (ORCPT
+        Thu, 1 Aug 2019 06:48:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42677 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727956AbfHAKr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 06:44:15 -0400
-Received: by mail-lf1-f67.google.com with SMTP id z15so45612504lfh.13;
-        Thu, 01 Aug 2019 03:44:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A9cNcwd9IRgmvJyTlL5BGGVDEQhizQRLKM43NthiAE0=;
-        b=usboDGU6NGUK3qHYroj4RCdJOx+Sf10386/eHiQMaWkw9l/UnAHTCuDn1FQGSFcFkt
-         wUTR+IWoCevF1ZMWaD9o0nd66076Vx+sMiTpUczZR5eMTiTa/zwDnKfai13M31Troxp8
-         7rDzsJvvH0sVA2i4tIuL8IvwkB/5U5VQEMq1xJtFNSLF/mdxVOBzpaXBZj9w/q3nf2bL
-         LrhvBPaB1a4jX1FCuNV/4L/WiIoR1QsgqlnXIyFvMFG70s+sD/X7b8QBatsvKCIPcmjk
-         8a0AYuWuXlGypW7owZEV2eRZzAjWmtW3+UlHbW702h5ZQtJ3rWsokKpagTAY6vaBclUz
-         mKhw==
+        Thu, 1 Aug 2019 06:47:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x1so23154023wrr.9
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 03:47:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A9cNcwd9IRgmvJyTlL5BGGVDEQhizQRLKM43NthiAE0=;
-        b=uGiR4gKDy7Ksrwd44upBJVURO1IXTQdCFO9iptMZ3PbIrC/PoiTleD13Xe83clI88I
-         2RUQ0JyFEKSHRTE5Mhvg2HrOr+DQQVXr6ylz0r/2pG+YOqpuBgZPlPUXOKq6cDyTR82O
-         bLGzXn44xgU1Z1YZxi1q5Gt+G35JOcdvx5LbmMwXwe4Mn9POR4Sm+UFGFOgKE9jGbOj0
-         Hy9RplScVDDT28wWidYrWwvW1UBNKm1VFxOJGve60ZsrTwVWqHJAAdvOR+Na7Oe7Upcw
-         ByQC3JnTUtaO5zB1+NoEjdbtOz5ZW+VhOty4WY5BfiKZTR8twapnVBhNWolQ7ZNLHYiW
-         4GjQ==
-X-Gm-Message-State: APjAAAW4KcdBLl8eQ5zR3BmltN1UHkXZJ3VSAR6ouJOBpcsGKuAfWUNU
-        1ixL7vzOkLJflZx3k3litsJmEsIq
-X-Google-Smtp-Source: APXvYqz2Y9yO3DiF+D395+ZEnFkpJg59qBaSjGFWD2gYvgHURdqUCdJs91JgmbgjhhmlQ3qiOoz+2A==
-X-Received: by 2002:ac2:414d:: with SMTP id c13mr9975444lfi.47.1564656252635;
-        Thu, 01 Aug 2019 03:44:12 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id b6sm13533059lfa.54.2019.08.01.03.44.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 03:44:12 -0700 (PDT)
-Subject: Re: [PATCH v7 16/20] arm64: tegra: Enable wake from deep sleep on RTC
- alarm
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-17-git-send-email-skomatineni@nvidia.com>
- <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
- <d4709085-f705-2608-08a8-65b238ae8844@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4f8b9ee7-5402-6463-d6d2-7b00e274a185@gmail.com>
-Date:   Thu, 1 Aug 2019 13:43:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qw6j853wZUG0P4ng1fQNKfQUl03rC9IHR3/FL4fgPwk=;
+        b=oE3J/uzi3svl5i/pQjxL+2VX6F3MzFglL5VPeW8yuGkNmr+4zI1GEjGQUBDka9PbMP
+         T9J9iyrJODgWBTREQ382vDGjaMLuvQxTjtyuZVtUeJHuk35xMO1Q1NRHGuc4HeXZ6j7e
+         dKjiq57kkPD2qAITIDQ3iUNUPmw+Bu8pVBLWfl6w9u4wlAR1cY4gVmmE3ats81xE5lMM
+         GTl7gX2+L/TiHh7MBQQ5zcXJQ4k4oZlZlBL+yLg9NGaaqV93LUGWyGHc3ktKLQgRo4a9
+         uC8OipDigeztuKtG1jLvg49loRikTLNAJhzJbpmHrvC9hzS7RJdMuEKpNBw92+EWypC3
+         Khjg==
+X-Gm-Message-State: APjAAAXgMlUUPujBaZVtZzGOjshzb+Wf9u7+/xyztkvQOU9zdgdh+2zS
+        HJorsBRD9QGLjSC0xFNxCC+M0Q==
+X-Google-Smtp-Source: APXvYqxw85Z/h+/LijJBZKEF9X3Av4FcGm9GhgdFvPrI4Hc/B6vXckRANX/RaJawe7pCHRv8hHxJ0Q==
+X-Received: by 2002:adf:e8c8:: with SMTP id k8mr36986014wrn.285.1564656477234;
+        Thu, 01 Aug 2019 03:47:57 -0700 (PDT)
+Received: from steredhat (host122-201-dynamic.13-79-r.retail.telecomitalia.it. [79.13.201.122])
+        by smtp.gmail.com with ESMTPSA id h8sm75520711wmf.12.2019.08.01.03.47.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 03:47:56 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 12:47:54 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
+Message-ID: <20190801104754.lb3ju5xjfmnxioii@steredhat>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-2-sgarzare@redhat.com>
+ <20190729095956-mutt-send-email-mst@kernel.org>
+ <20190729153656.zk4q4rob5oi6iq7l@steredhat>
+ <20190729114302-mutt-send-email-mst@kernel.org>
+ <20190729161903.yhaj5rfcvleexkhc@steredhat>
+ <20190729165056.r32uzj6om3o6vfvp@steredhat>
+ <20190729143622-mutt-send-email-mst@kernel.org>
+ <20190730093539.dcksure3vrykir3g@steredhat>
+ <20190730163807-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <d4709085-f705-2608-08a8-65b238ae8844@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730163807-mutt-send-email-mst@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.08.2019 0:08, Sowjanya Komatineni пишет:
-> 
-> On 7/31/19 4:04 AM, Dmitry Osipenko wrote:
->> 31.07.2019 3:20, Sowjanya Komatineni пишет:
->>> This patch updates device tree for RTC and PMC to allow system wake
->>> from deep sleep on RTC alarm.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 ++++-
->>>   1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->>> b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->>> index 659753118e96..30a7c48385a2 100644
->>> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->>> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->>> @@ -768,7 +768,8 @@
->>>       rtc@7000e000 {
->>>           compatible = "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
->>>           reg = <0x0 0x7000e000 0x0 0x100>;
->>> -        interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
->>> +        interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
->>> +        interrupt-parent = <&pmc>;
->>>           clocks = <&tegra_car TEGRA210_CLK_RTC>;
->>>           clock-names = "rtc";
->>>       };
->>> @@ -778,6 +779,8 @@
->>>           reg = <0x0 0x7000e400 0x0 0x400>;
->>>           clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
->>>           clock-names = "pclk", "clk32k_in";
->>> +        #interrupt-cells = <2>;
->>> +        interrupt-controller;
->>>             powergates {
->>>               pd_audio: aud {
->>>
->> Is this a backwards-compatible change? Or it's not really worth to care
->> about the compatibility with older kernel versions, I'm not sure about
->> overall state of T210 in the upstream kernel.
-> I don't think its required to be backwards-compatible as SC7 entry/exit
-> implementation for T210 is with this patch series onwards..
+On Tue, Jul 30, 2019 at 04:42:25PM -0400, Michael S. Tsirkin wrote:
+> On Tue, Jul 30, 2019 at 11:35:39AM +0200, Stefano Garzarella wrote:
 
-The new device tree binary should work with older kernel versions, AFAIK
-this is the upstream rule. But if kernel support isn't in a very good
-shape and not much people are using it, then obviously it is not very
-important.
+(...)
+
+> > 
+> > The problem here is the compatibility. Before this series virtio-vsock
+> > and vhost-vsock modules had the RX buffer size hard-coded
+> > (VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE = 4K). So, if we send a buffer smaller
+> > of 4K, there might be issues.
+> 
+> Shouldn't be if they are following the spec. If not let's fix
+> the broken parts.
+> 
+> > 
+> > Maybe it is the time to add add 'features' to virtio-vsock device.
+> > 
+> > Thanks,
+> > Stefano
+> 
+> Why would a remote care about buffer sizes?
+> 
+> Let's first see what the issues are. If they exist
+> we can either fix the bugs, or code the bug as a feature in spec.
+> 
+
+The vhost_transport '.stream_enqueue' callback
+[virtio_transport_stream_enqueue()] calls the virtio_transport_send_pkt_info(),
+passing the user message. This function allocates a new packet, copying
+the user message, but (before this series) it limits the packet size to
+the VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE (4K):
+
+static int virtio_transport_send_pkt_info(struct vsock_sock *vsk,
+					  struct virtio_vsock_pkt_info *info)
+{
+ ...
+	/* we can send less than pkt_len bytes */
+	if (pkt_len > VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE)
+		pkt_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
+
+	/* virtio_transport_get_credit might return less than pkt_len credit */
+	pkt_len = virtio_transport_get_credit(vvs, pkt_len);
+
+	/* Do not send zero length OP_RW pkt */
+	if (pkt_len == 0 && info->op == VIRTIO_VSOCK_OP_RW)
+		return pkt_len;
+ ...
+}
+
+then it queues the packet for the TX worker calling .send_pkt()
+[vhost_transport_send_pkt() in the vhost_transport case]
+
+The main function executed by the TX worker is
+vhost_transport_do_send_pkt() that picks up a buffer from the virtqueue
+and it tries to copy the packet (up to 4K) on it.  If the buffer
+allocated from the guest will be smaller then 4K, I think here it will
+be discarded with an error:
+
+static void
+vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
+				struct vhost_virtqueue *vq)
+{
+ ...
+		nbytes = copy_to_iter(pkt->buf, pkt->len, &iov_iter);
+		if (nbytes != pkt->len) {
+			virtio_transport_free_pkt(pkt);
+			vq_err(vq, "Faulted on copying pkt buf\n");
+			break;
+		}
+ ...
+}
+
+
+This series changes this behavior since now we will split the packet in
+vhost_transport_do_send_pkt() depending on the buffer found in the
+virtqueue.
+
+We didn't change the buffer size in this series, so we still backward
+compatible, but if we will use buffers smaller than 4K, we should
+encounter the error described above.
+
+How do you suggest we proceed if we want to change the buffer size?
+Maybe adding a feature to "support any buffer size"?
+
+Thanks,
+Stefano
