@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A35C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80C4C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822BC2087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763332087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:25:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="VD36srcN"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="fnK3RdEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732546AbfHAPZF (ORCPT
+        id S1732490AbfHAPYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:25:05 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39050 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732506AbfHAPYw (ORCPT
+        Thu, 1 Aug 2019 11:24:48 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37601 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732466AbfHAPYq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:24:52 -0400
-Received: by mail-qk1-f194.google.com with SMTP id w190so52308161qkc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 08:24:52 -0700 (PDT)
+        Thu, 1 Aug 2019 11:24:46 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d15so52310917qkl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 08:24:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=TI08pAABernsFaEO6re+49u61n7MA9mutB/2zYVl+eU=;
-        b=VD36srcNf2VUG8H3tSx+ZSf/luOHis+lT5h4LMWGsogWCUh0OA41faN9JHbv0Qzvlt
-         hKnm0h6R7b+z8iTgMGEdw+uyGgZlTH3tCByd0zygw2SaMJuL6hMwWsz/RN92mbR9L+Xm
-         sBhYnGz7raEQeCaTl5O+wCWpjjjR3winlFB2utMk7eyk6M8cZYxDTcOvJRULNxfnqfES
-         YP1kYXRvw2yP1it5kKXkqVYH97Vi0FHWOaDE4cbo77aYv6cKu8pZarMzYscqw6MwHguG
-         BDzb+C44k1RXpq59EP976ZVoHjYoyN/yiYCL7+typwtJLLBtVZef0PWkcZW38r5pRdVR
-         r1aw==
+        bh=cfbTf7XpOgDMGOBWNQGy/KoNKGQummd6Pxykre8yXSk=;
+        b=fnK3RdEUL0bRBUM+gEskgMzqz4c9Ef2xVySuRpOFxG7dwAn/ntlB2cTyAguT7ovJj1
+         X2ld1C/kZO9ghWRAsj5Ldyh8S8MEyXxbndDuY7jnXqbsogZbajL28mKeAcMXZE6ACZKd
+         g4myFAIw6c3X08r/i+BvbpOukzeyuEgSGkWVYsgTuRtiQhBIEzaPRZeZmgKYPnnG6I4e
+         BgxfiPR0r/530a1QabbbSSqFyOcOvD8Mi41am/zEZDGAetnccnTydt/shai4J2Z6V0Fv
+         I/S+EdiXEC5m2V0D0FAG8VshyVgWsleuMXObwZGW+2SCSNQkosVD9fei6g1s8O8/Ya4/
+         fLeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TI08pAABernsFaEO6re+49u61n7MA9mutB/2zYVl+eU=;
-        b=rKW+dQAvdquXG9a3rs+1eLW9H6YONapJVkLikEM6/lcupIMr4zfoKJiQzr6E+GhqIK
-         vEiBuedgzzo1OHlgw9v7qfRNDJKFficFAqUvWx8dTMoVPi+MMv/+2Nwn5PzqLra5jW12
-         l3YBvgnC6JjJ1QpGJEVgSPq+zBEMYh7zJUsKhssV/G+B5SHZyafgsbTLAJ1PgD2NslQO
-         ue/0nz3dnV8uBJHwBy5sNgCJ/Sa0VstzdciqIBZGGOImCNu5H+lT0oM9/YzLa+E8v3Y/
-         Z538lrBLpOdWVTjWLUSOUD0W2DRLswZOOQYxQI7ye/6GwSIuttuofGOfuMCtCyQubuTj
-         YWqg==
-X-Gm-Message-State: APjAAAXQEeWpTbEwiKZTFBwG7Qn+gwc2wFUabXa6ovUomdt5E2tbJISp
-        CGDusS+xQ8laW0CVebcd1Ww=
-X-Google-Smtp-Source: APXvYqyVNeMV2pthJyVhFt1LEnqNY+v0Wh9vD1Cowy4owrD/G6PrQhPZwpyYWSndx4BtQo2MC72i4Q==
-X-Received: by 2002:ae9:e608:: with SMTP id z8mr84955133qkf.182.1564673091741;
-        Thu, 01 Aug 2019 08:24:51 -0700 (PDT)
+        bh=cfbTf7XpOgDMGOBWNQGy/KoNKGQummd6Pxykre8yXSk=;
+        b=av/FSvisnowuMFnfIi5Yg20SYHxSwdnYRK6amHf7ZQCKx19ko870kIWLYpWYexE1oI
+         I1aXaXC7NJTeQdoas+rwTIblEYJ+gO7AvcE/gV7Orlbu+0vA9C5XGbdR5lIa4H4/7dGh
+         kIts3/HwHn+y4Acj6QtowLg+EFB0wGpsBOsxAkYnllDV7cplx/hUs48hGhJHQWe4fte1
+         wARFSr9G89Brtd966grjh/JhCuW9+wRF9VtHtqg+pnxqwTgGa82RW4NY/KlsTc6F5Uh8
+         joy+qHWbCF/1o4sCHouD7g/FMQp99UewxMKqY9ju/+YlBvPQGHg6hxTsY8JXH6pVOZUA
+         jdjw==
+X-Gm-Message-State: APjAAAXZmhEo2nFODEsk5Fwk+jd11Dc+YTTmLXgbiINRB0vdTdtqZXkV
+        X5hkgvvzeet/F9ww/KqshmI=
+X-Google-Smtp-Source: APXvYqy4eV8S1anMZlqLRO0Q7ImEiIOUGiGudUCpbYFD7Jn7b6wIjKNl4KgAASpS4Vy1cCv6dAeR2A==
+X-Received: by 2002:a37:a744:: with SMTP id q65mr10294247qke.151.1564673084631;
+        Thu, 01 Aug 2019 08:24:44 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id o5sm30899952qkf.10.2019.08.01.08.24.50
+        by smtp.gmail.com with ESMTPSA id o5sm30899952qkf.10.2019.08.01.08.24.43
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 08:24:51 -0700 (PDT)
+        Thu, 01 Aug 2019 08:24:44 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -64,9 +64,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
         james.morse@arm.com, vladimir.murzin@arm.com,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org
-Subject: [PATCH v1 7/8] arm64, kexec: configure transitional page table for kexec
-Date:   Thu,  1 Aug 2019 11:24:38 -0400
-Message-Id: <20190801152439.11363-8-pasha.tatashin@soleen.com>
+Subject: [PATCH v1 2/8] arm64, mm: transitional tables
+Date:   Thu,  1 Aug 2019 11:24:33 -0400
+Message-Id: <20190801152439.11363-3-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190801152439.11363-1-pasha.tatashin@soleen.com>
 References: <20190801152439.11363-1-pasha.tatashin@soleen.com>
@@ -77,302 +77,419 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Configure a page table located in kexec-safe memory that has
-the following mappings:
+There are cases where normal kernel pages tables, i.e. idmap_pg_dir
+and swapper_pg_dir are not sufficient because they may be overwritten.
 
-1. identity mapping for text of relocation function with executable permission.
-2. identity mapping for argument for relocation function.
-3. linear mappings for all source ranges
-4. linear mappings for all destination ranges.
+This happens when we transition from one world to another: for example
+during kexec kernel relocation transition, and also during hibernate
+kernel restore transition.
 
-Also, configure el2_vector, that is used to jump to new kernel from EL2 on
-non-VHE kernels.
+In these cases, if MMU is needed, the page table memory must be allocated
+from a safe place. Transitional tables is intended to allow just that.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/kexec.h      |  32 +++++++
- arch/arm64/kernel/asm-offsets.c     |   6 ++
- arch/arm64/kernel/machine_kexec.c   | 129 ++++++++++++++++++++++++++--
- arch/arm64/kernel/relocate_kernel.S |  16 +++-
- 4 files changed, 174 insertions(+), 9 deletions(-)
+ arch/arm64/Kconfig                     |   4 +
+ arch/arm64/include/asm/pgtable-hwdef.h |   1 +
+ arch/arm64/include/asm/trans_table.h   |  68 ++++++
+ arch/arm64/mm/Makefile                 |   1 +
+ arch/arm64/mm/trans_table.c            | 273 +++++++++++++++++++++++++
+ 5 files changed, 347 insertions(+)
+ create mode 100644 arch/arm64/include/asm/trans_table.h
+ create mode 100644 arch/arm64/mm/trans_table.c
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index d5b79d4c7fae..450d8440f597 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -90,6 +90,23 @@ static inline void crash_prepare_suspend(void) {}
- static inline void crash_post_resume(void) {}
- #endif
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 3adcec05b1f6..91a7416ffe4e 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -999,6 +999,10 @@ config CRASH_DUMP
  
-+#if defined(CONFIG_KEXEC_CORE)
-+/* Global variables for the arm64_relocate_new_kernel routine. */
-+extern const unsigned char arm64_relocate_new_kernel[];
-+extern const unsigned long arm64_relocate_new_kernel_size;
+ 	  For more details see Documentation/admin-guide/kdump/kdump.rst
+ 
++config TRANS_TABLE
++	def_bool y
++	depends on HIBERNATION || KEXEC_CORE
 +
-+/* Body of the vector for escalating to EL2 from relocation routine */
-+extern const unsigned char kexec_el1_sync[];
-+extern const unsigned long kexec_el1_sync_size;
-+
-+#define KEXEC_EL2_VECTOR_TABLE_SIZE	2048
-+#define KEXEC_EL2_SYNC_OFFSET		(KEXEC_EL2_VECTOR_TABLE_SIZE / 2)
-+
-+#endif
-+
-+#define KEXEC_SRC_START	PAGE_OFFSET
-+#define KEXEC_DST_START	(PAGE_OFFSET + \
-+			((UL(0xffffffffffffffff) - PAGE_OFFSET) >> 1) + 1)
+ config XEN_DOM0
+ 	def_bool y
+ 	depends on XEN
+diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+index db92950bb1a0..dcb4f13c7888 100644
+--- a/arch/arm64/include/asm/pgtable-hwdef.h
++++ b/arch/arm64/include/asm/pgtable-hwdef.h
+@@ -110,6 +110,7 @@
+ #define PUD_TABLE_BIT		(_AT(pudval_t, 1) << 1)
+ #define PUD_TYPE_MASK		(_AT(pudval_t, 3) << 0)
+ #define PUD_TYPE_SECT		(_AT(pudval_t, 1) << 0)
++#define PUD_SECT_RDONLY		(_AT(pudval_t, 1) << 7)		/* AP[2] */
+ 
  /*
-  * kern_reloc_arg is passed to kernel relocation function as an argument.
-  * head		kimage->head, allows to traverse through relocation segments.
-@@ -97,6 +114,15 @@ static inline void crash_post_resume(void) {}
-  *		kernel, or purgatory entry address).
-  * kern_arg0	first argument to kernel is its dtb address. The other
-  *		arguments are currently unused, and must be set to 0
-+ * trans_ttbr0	idmap for relocation function and its argument
-+ * trans_ttbr1	linear map for source/destination addresses.
-+ * el2_vector	If present means that relocation routine will go to EL1
-+ *		from EL2 to do the copy, and then back to EL2 to do the jump
-+ *		to new world. This vector contains only the final jump
-+ *		instruction at KEXEC_EL2_SYNC_OFFSET.
-+ * src_addr	linear map for source pages.
-+ * dst_addr	linear map for destination pages.
-+ * copy_len	Number of bytes that need to be copied
-  */
- struct kern_reloc_arg {
- 	unsigned long	head;
-@@ -105,6 +131,12 @@ struct kern_reloc_arg {
- 	unsigned long	kern_arg1;
- 	unsigned long	kern_arg2;
- 	unsigned long	kern_arg3;
-+	unsigned long	trans_ttbr0;
-+	unsigned long	trans_ttbr1;
-+	unsigned long	el2_vector;
-+	unsigned long	src_addr;
-+	unsigned long	dst_addr;
-+	unsigned long	copy_len;
- };
- 
- #define ARCH_HAS_KIMAGE_ARCH
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 900394907fd8..7c2ba09a8ceb 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -135,6 +135,12 @@ int main(void)
-   DEFINE(KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, kern_arg1));
-   DEFINE(KRELOC_KERN_ARG2,	offsetof(struct kern_reloc_arg, kern_arg2));
-   DEFINE(KRELOC_KERN_ARG3,	offsetof(struct kern_reloc_arg, kern_arg3));
-+  DEFINE(KRELOC_TRANS_TTBR0,	offsetof(struct kern_reloc_arg, trans_ttbr0));
-+  DEFINE(KRELOC_TRANS_TTBR1,	offsetof(struct kern_reloc_arg, trans_ttbr1));
-+  DEFINE(KRELOC_EL2_VECTOR,	offsetof(struct kern_reloc_arg, el2_vector));
-+  DEFINE(KRELOC_SRC_ADDR,	offsetof(struct kern_reloc_arg, src_addr));
-+  DEFINE(KRELOC_DST_ADDR,	offsetof(struct kern_reloc_arg, dst_addr));
-+  DEFINE(KRELOC_COPY_LEN,	offsetof(struct kern_reloc_arg, copy_len));
- #endif
-   return 0;
- }
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index d745ea2051df..16f761fc50c8 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -20,13 +20,10 @@
- #include <asm/mmu.h>
- #include <asm/mmu_context.h>
- #include <asm/page.h>
-+#include <asm/trans_table.h>
- 
- #include "cpu-reset.h"
- 
--/* Global variables for the arm64_relocate_new_kernel routine. */
--extern const unsigned char arm64_relocate_new_kernel[];
--extern const unsigned long arm64_relocate_new_kernel_size;
--
- /**
-  * kexec_image_info - For debugging output.
-  */
-@@ -72,15 +69,128 @@ static void *kexec_page_alloc(void *arg)
- 	return page_address(page);
- }
- 
+  * Level 2 descriptor (PMD).
+diff --git a/arch/arm64/include/asm/trans_table.h b/arch/arm64/include/asm/trans_table.h
+new file mode 100644
+index 000000000000..c7aef70587a1
+--- /dev/null
++++ b/arch/arm64/include/asm/trans_table.h
+@@ -0,0 +1,68 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
 +/*
-+ * Map source segments starting from KEXEC_SRC_START, and map destination
-+ * segments starting from KEXEC_DST_START, and return size of copy in
-+ * *copy_len argument.
-+ * Relocation function essentially needs to do:
-+ * memcpy(KEXEC_DST_START, KEXEC_SRC_START, copy_len);
++ * Copyright (c) 2019, Microsoft Corporation.
++ * Pavel Tatashin <patatash@linux.microsoft.com>
 + */
-+static int map_segments(struct kimage *kimage, pgd_t *pgdp,
-+			struct trans_table_info *info,
-+			unsigned long *copy_len)
++
++#ifndef _ASM_TRANS_TABLE_H
++#define _ASM_TRANS_TABLE_H
++
++#include <linux/bits.h>
++#include <asm/pgtable-types.h>
++
++/*
++ * trans_alloc_page
++ *	- Allocator that should return exactly one uninitilaized page, if this
++ *	 allocator fails, trans_table returns -ENOMEM error.
++ *
++ * trans_alloc_arg
++ *	- Passed to trans_alloc_page as an argument
++ *
++ * trans_flags
++ *	- bitmap with flags that control how page table is filled.
++ *	  TRANS_MKWRITE: during page table copy make PTE, PME, and PUD page
++ *			 writeable by removing RDONLY flag from PTE.
++ *	  TRANS_MKVALID: during page table copy, if PTE present, but not valid,
++ *			 make it valid.
++ *	  TRANS_CHECKPFN: During page table copy, for every PTE entry check that
++ *			  PFN that this PTE points to is valid. Otherwise return
++ *			  -ENXIO
++ *	  TRANS_FORCEMAP: During page map, if translation exists, force
++ *			  overwrite it. Otherwise -ENXIO may be returned by
++ *			  trans_table_map_* functions if conflict is detected.
++ */
++
++#define	TRANS_MKWRITE	BIT(0)
++#define	TRANS_MKVALID	BIT(1)
++#define	TRANS_CHECKPFN	BIT(2)
++#define	TRANS_FORCEMAP	BIT(3)
++
++struct trans_table_info {
++	void * (*trans_alloc_page)(void *arg);
++	void *trans_alloc_arg;
++	unsigned long trans_flags;
++};
++
++/* Create and empty trans table. */
++int trans_table_create_empty(struct trans_table_info *info,
++			     pgd_t **trans_table);
++
++/*
++ * Create trans table and copy entries from from_table to trans_table in range
++ * [start, end)
++ */
++int trans_table_create_copy(struct trans_table_info *info, pgd_t **trans_table,
++			    pgd_t *from_table, unsigned long start,
++			    unsigned long end);
++
++/*
++ * Add map entry to trans_table for a base-size page at PTE level.
++ * page:	page to be mapped.
++ * dst_addr:	new VA address for the pages
++ * pgprot:	protection for the page.
++ */
++int trans_table_map_page(struct trans_table_info *info, pgd_t *trans_table,
++			 void *page, unsigned long dst_addr, pgprot_t pgprot);
++
++#endif /* _ASM_TRANS_TABLE_H */
+diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
+index 849c1df3d214..3794fff18659 100644
+--- a/arch/arm64/mm/Makefile
++++ b/arch/arm64/mm/Makefile
+@@ -6,6 +6,7 @@ obj-y				:= dma-mapping.o extable.o fault.o init.o \
+ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+ obj-$(CONFIG_ARM64_PTDUMP_CORE)	+= dump.o
+ obj-$(CONFIG_ARM64_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
++obj-$(CONFIG_TRANS_TABLE)	+= trans_table.o
+ obj-$(CONFIG_NUMA)		+= numa.o
+ obj-$(CONFIG_DEBUG_VIRTUAL)	+= physaddr.o
+ KASAN_SANITIZE_physaddr.o	+= n
+diff --git a/arch/arm64/mm/trans_table.c b/arch/arm64/mm/trans_table.c
+new file mode 100644
+index 000000000000..e3b8d4a2fa15
+--- /dev/null
++++ b/arch/arm64/mm/trans_table.c
+@@ -0,0 +1,273 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright (c) 2019, Microsoft Corporation.
++ * Pavel Tatashin <patatash@linux.microsoft.com>
++ */
++
++/*
++ * Transitional tables are used during system transferring from one world to
++ * another: such as during hibernate restore, and kexec reboots. During these
++ * phases one cannot rely on page table not being overwritten.
++ *
++ */
++
++#include <asm/trans_table.h>
++#include <asm/pgalloc.h>
++#include <asm/pgtable.h>
++
++static void *trans_alloc(struct trans_table_info *info)
 +{
-+	unsigned long *ptr = 0;
-+	unsigned long dest = 0;
-+	unsigned long src_va = KEXEC_SRC_START;
-+	unsigned long dst_va = KEXEC_DST_START;
-+	unsigned long len = 0;
-+	unsigned long entry, addr;
-+	int rc;
++	void *page = info->trans_alloc_page(info->trans_alloc_arg);
 +
-+	for (entry = kimage->head; !(entry & IND_DONE); entry = *ptr++) {
-+		addr = entry & PAGE_MASK;
++	if (page)
++		clear_page(page);
 +
-+		switch (entry & IND_FLAGS) {
-+		case IND_DESTINATION:
-+			dest = addr;
-+			break;
-+		case IND_INDIRECTION:
-+			ptr = __va(addr);
-+			if (rc)
-+				return rc;
-+			break;
-+		case IND_SOURCE:
-+			rc = trans_table_map_page(info, pgdp, __va(addr),
-+						  src_va, PAGE_KERNEL);
-+			if (rc)
-+				return rc;
-+			rc = trans_table_map_page(info, pgdp, __va(dest),
-+						  dst_va, PAGE_KERNEL);
-+			if (rc)
-+				return rc;
-+			dest += PAGE_SIZE;
-+			src_va += PAGE_SIZE;
-+			dst_va += PAGE_SIZE;
-+			len += PAGE_SIZE;
++	return page;
++}
++
++static int trans_table_copy_pte(struct trans_table_info *info, pte_t *dst_ptep,
++				pte_t *src_ptep, unsigned long start,
++				unsigned long end)
++{
++	unsigned long addr = start;
++	int i = pgd_index(addr);
++
++	do {
++		pte_t src_pte = READ_ONCE(src_ptep[i]);
++
++		if (pte_none(src_pte))
++			continue;
++		if (info->trans_flags & TRANS_MKWRITE)
++			src_pte = pte_mkwrite(src_pte);
++		if (info->trans_flags & TRANS_MKVALID)
++			src_pte = pte_mkpresent(src_pte);
++		if (info->trans_flags & TRANS_CHECKPFN) {
++			if (!pfn_valid(pte_pfn(src_pte)))
++				return -ENXIO;
 +		}
-+	}
-+	*copy_len = len;
++		set_pte(&dst_ptep[i], src_pte);
++	} while (addr += PAGE_SIZE, i++, addr != end && i < PTRS_PER_PTE);
 +
 +	return 0;
 +}
 +
-+static int mmu_relocate_setup(struct kimage *kimage, unsigned long kern_reloc,
-+			      struct kern_reloc_arg *kern_reloc_arg)
++static int trans_table_copy_pmd(struct trans_table_info *info, pmd_t *dst_pmdp,
++				pmd_t *src_pmdp, unsigned long start,
++				unsigned long end)
 +{
-+	struct trans_table_info info = {
-+		.trans_alloc_page	= kexec_page_alloc,
-+		.trans_alloc_arg	= kimage,
-+		.trans_flags		= 0,
-+	};
-+	pgd_t *trans_ttbr0, *trans_ttbr1;
++	unsigned long next;
++	unsigned long addr = start;
++	int i = pgd_index(addr);
 +	int rc;
 +
-+	rc = trans_table_create_empty(&info, &trans_ttbr0);
-+	if (rc)
-+		return rc;
++	do {
++		pmd_t src_pmd = READ_ONCE(src_pmdp[i]);
++		pmd_t dst_pmd = READ_ONCE(dst_pmdp[i]);
++		pte_t *dst_ptep, *src_ptep;
 +
-+	rc = trans_table_create_empty(&info, &trans_ttbr1);
-+	if (rc)
-+		return rc;
++		next = pmd_addr_end(addr, end);
++		if (pmd_none(src_pmd))
++			continue;
 +
-+	rc = map_segments(kimage, trans_ttbr1, &info,
-+			  &kern_reloc_arg->copy_len);
-+	if (rc)
-+		return rc;
++		if (!pmd_table(src_pmd)) {
++			if (info->trans_flags & TRANS_MKWRITE)
++				pmd_val(src_pmd) &= ~PMD_SECT_RDONLY;
++			set_pmd(&dst_pmdp[i], src_pmd);
++			continue;
++		}
 +
-+	/* Map relocation function va == pa */
-+	rc = trans_table_map_page(&info, trans_ttbr0,  __va(kern_reloc),
-+				  kern_reloc, PAGE_KERNEL_EXEC);
-+	if (rc)
-+		return rc;
++		if (pmd_none(dst_pmd)) {
++			pte_t *t = trans_alloc(info);
 +
-+	/* Map relocation function argument va == pa */
-+	rc = trans_table_map_page(&info, trans_ttbr0, kern_reloc_arg,
-+				  __pa(kern_reloc_arg), PAGE_KERNEL);
-+	if (rc)
-+		return rc;
++			if (!t)
++				return -ENOMEM;
 +
-+	kern_reloc_arg->trans_ttbr0 = phys_to_ttbr(__pa(trans_ttbr0));
-+	kern_reloc_arg->trans_ttbr1 = phys_to_ttbr(__pa(trans_ttbr1));
-+	kern_reloc_arg->src_addr = KEXEC_SRC_START;
-+	kern_reloc_arg->dst_addr = KEXEC_DST_START;
++			__pmd_populate(&dst_pmdp[i], __pa(t), PTE_TYPE_PAGE);
++			dst_pmd = READ_ONCE(dst_pmdp[i]);
++		}
++
++		src_ptep = __va(pmd_page_paddr(src_pmd));
++		dst_ptep = __va(pmd_page_paddr(dst_pmd));
++
++		rc = trans_table_copy_pte(info, dst_ptep, src_ptep, addr, next);
++		if (rc)
++			return rc;
++	} while (addr = next, i++, addr != end && i < PTRS_PER_PMD);
 +
 +	return 0;
 +}
 +
- int machine_kexec_post_load(struct kimage *kimage)
- {
-+	unsigned long el2_vector = 0;
- 	unsigned long kern_reloc;
- 	struct kern_reloc_arg *kern_reloc_arg;
-+	int rc = 0;
++static int trans_table_copy_pud(struct trans_table_info *info, pud_t *dst_pudp,
++				pud_t *src_pudp, unsigned long start,
++				unsigned long end)
++{
++	unsigned long next;
++	unsigned long addr = start;
++	int i = pgd_index(addr);
++	int rc;
 +
-+	/*
-+	 * Sanity check that relocation function + el2_vector fit into one
-+	 * page.
-+	 */
-+	if (arm64_relocate_new_kernel_size > KEXEC_EL2_VECTOR_TABLE_SIZE) {
-+		pr_err("can't fit relocation function and el2_vector in one page");
++	do {
++		pud_t src_pud = READ_ONCE(src_pudp[i]);
++		pud_t dst_pud = READ_ONCE(dst_pudp[i]);
++		pmd_t *dst_pmdp, *src_pmdp;
++
++		next = pud_addr_end(addr, end);
++		if (pud_none(src_pud))
++			continue;
++
++		if (!pud_table(src_pud)) {
++			if (info->trans_flags & TRANS_MKWRITE)
++				pud_val(src_pud) &= ~PUD_SECT_RDONLY;
++			set_pud(&dst_pudp[i], src_pud);
++			continue;
++		}
++
++		if (pud_none(dst_pud)) {
++			pmd_t *t = trans_alloc(info);
++
++			if (!t)
++				return -ENOMEM;
++
++			__pud_populate(&dst_pudp[i], __pa(t), PMD_TYPE_TABLE);
++			dst_pud = READ_ONCE(dst_pudp[i]);
++		}
++
++		src_pmdp = __va(pud_page_paddr(src_pud));
++		dst_pmdp = __va(pud_page_paddr(dst_pud));
++
++		rc = trans_table_copy_pmd(info, dst_pmdp, src_pmdp, addr, next);
++		if (rc)
++			return rc;
++	} while (addr = next, i++, addr != end && i < PTRS_PER_PUD);
++
++	return 0;
++}
++
++static int trans_table_copy_pgd(struct trans_table_info *info, pgd_t *dst_pgdp,
++				pgd_t *src_pgdp, unsigned long start,
++				unsigned long end)
++{
++	unsigned long next;
++	unsigned long addr = start;
++	int i = pgd_index(addr);
++	int rc;
++
++	do {
++		pgd_t src_pgd;
++		pgd_t dst_pgd;
++		pud_t *dst_pudp, *src_pudp;
++
++		src_pgd = READ_ONCE(src_pgdp[i]);
++		dst_pgd = READ_ONCE(dst_pgdp[i]);
++		next = pgd_addr_end(addr, end);
++		if (pgd_none(src_pgd))
++			continue;
++
++		if (pgd_none(dst_pgd)) {
++			pud_t *t = trans_alloc(info);
++
++			if (!t)
++				return -ENOMEM;
++
++			__pgd_populate(&dst_pgdp[i], __pa(t), PUD_TYPE_TABLE);
++			dst_pgd = READ_ONCE(dst_pgdp[i]);
++		}
++
++		src_pudp = __va(pgd_page_paddr(src_pgd));
++		dst_pudp = __va(pgd_page_paddr(dst_pgd));
++
++		rc = trans_table_copy_pud(info, dst_pudp, src_pudp, addr, next);
++		if (rc)
++			return rc;
++	} while (addr = next, i++, addr != end && i < PTRS_PER_PGD);
++
++	return 0;
++}
++
++int trans_table_create_empty(struct trans_table_info *info, pgd_t **trans_table)
++{
++	pgd_t *dst_pgdp = trans_alloc(info);
++
++	if (!dst_pgdp)
 +		return -ENOMEM;
++
++	*trans_table = dst_pgdp;
++
++	return 0;
++}
++
++int trans_table_create_copy(struct trans_table_info *info, pgd_t **trans_table,
++			    pgd_t *from_table, unsigned long start,
++			    unsigned long end)
++{
++	int rc;
++
++	rc = trans_table_create_empty(info, trans_table);
++	if (rc)
++		return rc;
++
++	return trans_table_copy_pgd(info, *trans_table, from_table, start, end);
++}
++
++int trans_table_map_page(struct trans_table_info *info, pgd_t *trans_table,
++			 void *page, unsigned long dst_addr, pgprot_t pgprot)
++{
++	int pgd_idx = pgd_index(dst_addr);
++	int pud_idx = pud_index(dst_addr);
++	int pmd_idx = pmd_index(dst_addr);
++	int pte_idx = pte_index(dst_addr);
++	pgd_t *pgdp = trans_table;
++	pgd_t pgd = READ_ONCE(pgdp[pgd_idx]);
++	pud_t *pudp, pud;
++	pmd_t *pmdp, pmd;
++	pte_t *ptep, pte;
++
++	if (pgd_none(pgd)) {
++		pud_t *t = trans_alloc(info);
++
++		if (!t)
++			return -ENOMEM;
++
++		__pgd_populate(&pgdp[pgd_idx], __pa(t), PUD_TYPE_TABLE);
++		pgd = READ_ONCE(pgdp[pgd_idx]);
 +	}
- 
- 	kern_reloc = page_to_phys(kimage->control_code_page);
- 	memcpy(__va(kern_reloc), arm64_relocate_new_kernel,
- 	       arm64_relocate_new_kernel_size);
- 
-+	/* Setup vector table only when EL2 is available, but no VHE */
-+	if (is_hyp_mode_available() && !is_kernel_in_hyp_mode()) {
-+		el2_vector = kern_reloc + KEXEC_EL2_VECTOR_TABLE_SIZE;
-+		memcpy(__va(el2_vector + KEXEC_EL2_SYNC_OFFSET), kexec_el1_sync,
-+		       kexec_el1_sync_size);
++
++	pudp = __va(pgd_page_paddr(pgd));
++	pud = READ_ONCE(pudp[pud_idx]);
++	if (pud_sect(pud) && !(info->trans_flags & TRANS_FORCEMAP)) {
++		return -ENXIO;
++	} else if (pud_none(pud) || pud_sect(pud)) {
++		pmd_t *t = trans_alloc(info);
++
++		if (!t)
++			return -ENOMEM;
++
++		__pud_populate(&pudp[pud_idx], __pa(t), PMD_TYPE_TABLE);
++		pud = READ_ONCE(pudp[pud_idx]);
 +	}
 +
- 	kern_reloc_arg = kexec_page_alloc(kimage);
- 	if (!kern_reloc_arg)
- 		return -ENOMEM;
-@@ -91,10 +201,19 @@ int machine_kexec_post_load(struct kimage *kimage)
- 
- 	kern_reloc_arg->head = kimage->head;
- 	kern_reloc_arg->entry_addr = kimage->start;
-+	kern_reloc_arg->el2_vector = el2_vector;
- 	kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
- 
-+	/*
-+	 * If relocation is not needed, we do not need to enable MMU in
-+	 * relocation routine, therefore do not create page tables for
-+	 * scenarios such as crash kernel
-+	 */
-+	if (!(kimage->head & IND_DONE))
-+		rc = mmu_relocate_setup(kimage, kern_reloc, kern_reloc_arg);
++	pmdp = __va(pud_page_paddr(pud));
++	pmd = READ_ONCE(pmdp[pmd_idx]);
++	if (pmd_sect(pmd) && !(info->trans_flags & TRANS_FORCEMAP)) {
++		return -ENXIO;
++	} else if (pmd_none(pmd) || pmd_sect(pmd)) {
++		pte_t *t = trans_alloc(info);
 +
- 	kexec_image_info(kimage);
--	return 0;
-+	return rc;
- }
- 
- /**
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index d352faf7cbe6..14243a678277 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -83,17 +83,25 @@ ENTRY(arm64_relocate_new_kernel)
- 	ldr	x1, [x0, #KRELOC_KERN_ARG1]
- 	ldr	x0, [x0, #KRELOC_KERN_ARG0]	/* x0 = dtb address */
- 	br	x4
-+.ltorg
-+.Larm64_relocate_new_kernel_end:
- END(arm64_relocate_new_kernel)
- 
--.ltorg
-+ENTRY(kexec_el1_sync)
-+	br	x4				/* Jump to new world from el2 */
-+.Lkexec_el1_sync_end:
-+END(kexec_el1_sync)
++		if (!t)
++			return -ENOMEM;
 +
- .align 3	/* To keep the 64-bit values below naturally aligned. */
--.Lcopy_end:
- .org	KEXEC_CONTROL_PAGE_SIZE
--
- /*
-  * arm64_relocate_new_kernel_size - Number of bytes to copy to the
-  * control_code_page.
-  */
- .globl arm64_relocate_new_kernel_size
- arm64_relocate_new_kernel_size:
--	.quad	.Lcopy_end - arm64_relocate_new_kernel
-+	.quad	.Larm64_relocate_new_kernel_end - arm64_relocate_new_kernel
++		__pmd_populate(&pmdp[pmd_idx], __pa(t), PTE_TYPE_PAGE);
++		pmd = READ_ONCE(pmdp[pmd_idx]);
++	}
 +
-+.globl kexec_el1_sync_size
-+kexec_el1_sync_size:
-+	.quad	.Lkexec_el1_sync_end - kexec_el1_sync
++	ptep = __va(pmd_page_paddr(pmd));
++	pte = READ_ONCE(ptep[pte_idx]);
++
++	if (!pte_none(pte) && !(info->trans_flags & TRANS_FORCEMAP))
++		return -ENXIO;
++
++	set_pte(&ptep[pte_idx], pfn_pte(virt_to_pfn(page), pgprot));
++
++	return 0;
++}
 -- 
 2.22.0
 
