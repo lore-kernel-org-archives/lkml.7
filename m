@@ -1,102 +1,102 @@
-Return-Path: <SRS0=cgli=V4=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0674DC32751
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B46FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CA7208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 31 Jul 2019 23:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6774820B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:00:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJ/PCl/h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbfGaX4j (ORCPT
+        id S1728045AbfHAAAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 19:56:39 -0400
-Received: from mga01.intel.com ([192.55.52.88]:41458 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfGaX4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 19:56:39 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 16:56:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,332,1559545200"; 
-   d="scan'208";a="196581614"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga004.fm.intel.com with ESMTP; 31 Jul 2019 16:56:38 -0700
-Date:   Wed, 31 Jul 2019 16:56:37 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH RFC 3/5] x86: KVM: svm: clear interrupt shadow on all
- paths in skip_emulated_instruction()
-Message-ID: <20190731235637.GB2845@linux.intel.com>
-References: <20190620110240.25799-1-vkuznets@redhat.com>
- <20190620110240.25799-4-vkuznets@redhat.com>
- <CALMp9eQ85h58NMDh-yOYvHN6_2f2T-wu63f+yLnNbwuG+p3Uvw@mail.gmail.com>
- <87ftmm71p3.fsf@vitty.brq.redhat.com>
- <36a9f411-f90c-3ffa-9ee3-6ebee13a763f@redhat.com>
- <CALMp9eQLCEzfdNzdhPtCf3bD-5c6HrSvJqP7idyoo4Gf3i5O1w@mail.gmail.com>
- <20190731233731.GA2845@linux.intel.com>
- <CALMp9eRRqCLKAL4FoZVMk=fHfnrN7EnTVxR___soiHUdrHLAMQ@mail.gmail.com>
+        Wed, 31 Jul 2019 20:00:54 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46356 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfHAAAx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 20:00:53 -0400
+Received: by mail-lf1-f65.google.com with SMTP id z15so44477134lfh.13
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 17:00:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UL3lL/rjWfes+fqBB30GeSXSR3w1JyhR+8U0f8P1eUw=;
+        b=TJ/PCl/hQElX3wQElbIdv9BNHS1NuixG7oAZ1vxbVQI1gHIpQ2dLcHWzSabCbNsIck
+         N+AN3yb/710sXZrzNBPNKg1cZUhxr5pbsDr2/6OsRwHQ/2eivwLtwI2Rgmn3HOgBStVO
+         oKQjm9mfVNxXCLTtbojX+1ZRACMN3Yg9PuLJeck8OD3typdwUOjDXisb13Kf5W9kh0cl
+         xOPr/c1T4x9zxRxb3ean0ZH331bALNvBdBTVvHNKCJtc6XCWtNkVdBsLvYNTFx0+1j8z
+         vBuwJo9HBVVy22IUjspo9icTkIlv369ddxDzivDujEy37iDyO2ZzGZqHU8LtDHCKbjEN
+         LTeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UL3lL/rjWfes+fqBB30GeSXSR3w1JyhR+8U0f8P1eUw=;
+        b=ownrlZ7WI2QpanNUN3rdd2hM2d3zhrZ5+fuNG+4aM25jBYhQVYoq/ltX1ApzQdDGt5
+         E9r3u3XmtduY+LqLaTvIWbFX+MWqFjZkZyjeNakirDOKW+tATFTzdlEq1fMm0YmGysLX
+         X4vIl3rUd0+EeGvgOhKgKg1FfMOkxyxNlT2wrfJ6ihVM8ynpnzhqQ/BKX2m1L/meqYT3
+         XLbICWIo3lQYcfxcUHFTM3vtE0RvpY1ROpnb2PHBQ73AngXtNpVmJ3h8YpzTJRGiSD4a
+         lT8nnlBANRC9ZJJizz0GDwnFpJIo1b7JThmR+/F5tsMdjkn1w4c+dJv30g5iUXTLHjl+
+         Cytg==
+X-Gm-Message-State: APjAAAUyVuSIFsxsjB9BMvNSiEiKcOGK9FZMY3lfJKBmeUItm5LwHmkf
+        RMQjMNHxvVnPW7z+QIH4BJPJKLyUgu7ZeoP1eeE=
+X-Google-Smtp-Source: APXvYqyVR9Jw2IEjs3RpzZhA9WGMXRPDZprpVZ03AGtFNzUueb8zofEXBp8yudB8I27SzDu4mUgXdSRgbd/JquIKk0I=
+X-Received: by 2002:ac2:46d5:: with SMTP id p21mr26506546lfo.133.1564617651943;
+ Wed, 31 Jul 2019 17:00:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eRRqCLKAL4FoZVMk=fHfnrN7EnTVxR___soiHUdrHLAMQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+ <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
+ <20190731171429.GA24222@amd> <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
+ <765E740C-4259-4835-A58D-432006628BAC@zytor.com> <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
+ <201907311301.EC1D84F@keescook> <CANiq72kMpP_PSBb0e5wMVNiuYvwSWdR+x_H_tPrEnQ_j1y7X+Q@mail.gmail.com>
+ <beb1762387a4132a2bb4c47397b737d77dd88742.camel@perches.com>
+In-Reply-To: <beb1762387a4132a2bb4c47397b737d77dd88742.camel@perches.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 1 Aug 2019 02:00:41 +0200
+Message-ID: <CANiq72nhw5tmd7zCAyAA32ekW01GYPqcJbTMCVeUpaeb7dWTKA@mail.gmail.com>
+Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
+ keyword for switch/case use
+To:     Joe Perches <joe@perches.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Pavel Machek <pavel@ucw.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 04:45:21PM -0700, Jim Mattson wrote:
-> On Wed, Jul 31, 2019 at 4:37 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> 
-> > At a glance, the full emulator models behavior correctly, e.g. see
-> > toggle_interruptibility() and setters of ctxt->interruptibility.
-> >
-> > I'm pretty sure that leaves the EPT misconfig MMIO and APIC access EOI
-> > fast paths as the only (VMX) path that would incorrectly handle a
-> > MOV/POP SS.  Reading the guest's instruction stream to detect MOV/POP SS
-> > would defeat the whole "fast path" thing, not to mention both paths aren't
-> > exactly architecturally compliant in the first place.
-> 
-> The proposed patch clears the interrupt shadow in the VMCB on all
-> paths through svm's skip_emulated_instruction. If this happens at the
-> tail end of emulation, it doesn't matter if the full emulator does the
-> right thing.
+On Thu, Aug 1, 2019 at 12:07 AM Joe Perches <joe@perches.com> wrote:
+>
+> Note also that this doesn't actually _use_ fallthrough
+> it just reserves it.
 
-Unless I'm missing something, skip_emulated_instruction() isn't called in
-the emulation case, x86_emulate_instruction() updates %rip directly, e.g.:
+If we are reserving it, we should be giving a compile error instead. I
+don't see how users will understand they shouldn't use it just yet (it
+is the same as adding it, which actually looks more like
+encouragement!).
 
-	if (writeback) {
-		unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
-		toggle_interruptibility(vcpu, ctxt->interruptibility);
-		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
-		kvm_rip_write(vcpu, ctxt->eip);
-		if (r == EMULATE_DONE && ctxt->tf)
-			kvm_vcpu_do_singlestep(vcpu, &r);
-		if (!ctxt->have_exception ||
-		    exception_type(ctxt->exception.vector) == EXCPT_TRAP)
-			__kvm_set_rflags(vcpu, ctxt->eflags);
-
-		/*
-		 * For STI, interrupts are shadowed; so KVM_REQ_EVENT will
-		 * do nothing, and it will be requested again as soon as
-		 * the shadow expires.  But we still need to check here,
-		 * because POPF has no interrupt shadow.
-		 */
-		if (unlikely((ctxt->eflags & ~rflags) & X86_EFLAGS_IF))
-			kvm_make_request(KVM_REQ_EVENT, vcpu);
-	}
+Cheers,
+Miguel
