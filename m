@@ -2,135 +2,206 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2332FC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115A2C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3D7206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC0ED214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:59:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sSXfHrLb"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ds1V6aYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730510AbfHAH6q (ORCPT
+        id S1730513AbfHAH7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:58:46 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42705 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729465AbfHAH6p (ORCPT
+        Thu, 1 Aug 2019 03:59:48 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:34902 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728528AbfHAH7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:58:45 -0400
-Received: by mail-lf1-f68.google.com with SMTP id s19so49507490lfb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 00:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7KXLQpVfkqV0NkCYw8UjiB+5rejcfZgxPXsUmGm7V/0=;
-        b=sSXfHrLbSWYOGs8KaK1hqPPLlLXMXxIBBJstsrMzQsi+667jQGLbwjDjxh3KfCrW0z
-         UaDglwbPR5kBydRmx7Ii16KtUJWRC0S8laKgopb2JG0n6aqt8i3JIG26mCejzCDl/D5Q
-         B8HBpZcM7oyex3pImWnL147wdh9OVEOWakkHgZPqJoW7iAipZyJqptfoDXg5Dwz8rLYN
-         ibL9nInRk4c2y7VpkUWY/YaLrpk7NtZKIkmwoi5GVJymVpIzl3VLb21mY01uTBkNoINk
-         Q9Eme1ddkFKjtiAvIQfyEDFFLuyYbm2t9cMc5NY9ZBFoUjWOeT2pVmazB3NNhsDnkP6l
-         ifXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7KXLQpVfkqV0NkCYw8UjiB+5rejcfZgxPXsUmGm7V/0=;
-        b=f0+1zddqDWDzAL6eCEY4mS7Qcm/kcx8r7YpvzU+wpg5C0fsHcKOD57YuMlWUgzc5Rg
-         D+SlVlDd5vdifPAMfTuG29i7Y6F8qyhc3ELc7QOPpV/MjZfcKvi14gk1bIric+r/XyGW
-         dThj7bSdeBRC36FtHQr4khoN8AQkyXpIgICJV6+M7gL9UfNteWs5JUTd9Cfe4u4cfCDT
-         cM5l+Jbl2mhxEIlWJkFes6Y3H8LW4j50XRxaH0ZWvlnhtRaUC9aZLm2lMgbUT1mrs6zG
-         5KZlDgcGKs3+1jcG2K8+clQpcz5J+ExP9GLcoOP3lU/ZY8cZDfsw5aBYfxAr/N0MkEfg
-         w+QQ==
-X-Gm-Message-State: APjAAAUvO1ri6jozWVG2BHQacaB34lVc5n8AwFGWJjYrwfe3ngadxlaO
-        4IAbZRRAMVnEEJb5pvfd4FMIRVZ9he0cyvnJF9vQ+Q==
-X-Google-Smtp-Source: APXvYqzXm1XrjRokfpgWPkB/SOz1fbBVy/r2Ctmt6xsQbSbqX8deM0MJ9AqgiLXstbE+nc9ZfgBbvIGVnLwZBWUdEY0=
-X-Received: by 2002:ac2:5337:: with SMTP id f23mr61398922lfh.15.1564646323439;
- Thu, 01 Aug 2019 00:58:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
- <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
- <CAFA6WYPJAzbPdcpBqioxjY=T8RLw-73B_hpzX4cGnwVvm5zpJw@mail.gmail.com>
- <CAE=Ncrb23q++z8R8UMbjDE2epEq4YVcNGzrRD31eH3JAooYejg@mail.gmail.com>
- <CAFA6WYOKcOzSwakHhgshZcebD8ZBMSi7xQdjWYFS79=Xc+odOg@mail.gmail.com>
- <CAE=NcrYz8bT9zDhS_ZcvY84fpeTDxZ-KhJKeQGGyf=o4pG2J-Q@mail.gmail.com>
- <19d9be198619e951750dedeb4d0a7f372083b42c.camel@pengutronix.de> <CAE=NcraqD9FNM0Gk9UGhPGi3heVzZrAKGc1gNZxoe1OnDaQ=pA@mail.gmail.com>
-In-Reply-To: <CAE=NcraqD9FNM0Gk9UGhPGi3heVzZrAKGc1gNZxoe1OnDaQ=pA@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 1 Aug 2019 13:28:32 +0530
-Message-ID: <CAFA6WYPt4q+jaJbaoauXKr2qKgBHvtQ663s4t=W3nuPJPe2xpw@mail.gmail.com>
-Subject: Re: [Tee-dev] [RFC v2 0/6] Introduce TEE based Trusted Keys support
-To:     Janne Karhunen <janne.karhunen@gmail.com>
-Cc:     Rouven Czerwinski <r.czerwinski@pengutronix.de>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, jejb@linux.ibm.com,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dhowells@redhat.com, linux-security-module@vger.kernel.org,
-        keyrings@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-integrity@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 1 Aug 2019 03:59:48 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190801075946euoutp02b2c706f3bbd0cca47c7d9974ebcb8451~2vZlJ6M6M0113301133euoutp02p
+        for <linux-kernel@vger.kernel.org>; Thu,  1 Aug 2019 07:59:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190801075946euoutp02b2c706f3bbd0cca47c7d9974ebcb8451~2vZlJ6M6M0113301133euoutp02p
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1564646386;
+        bh=uCq2MLxSrtJv6mtG5c2BOzfNDZhr5+amxgb65dHy6RI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ds1V6aYMuCCKMDH/NjpiXFm8lRbBr1Bu1QfnNfxwT3VHpuf0dQFP0ufzFAYxj/BC+
+         YB0yBchnYdgT3sCT8yZLu5OD0eZYRcAlKm2VH33MiPpyuRVqFtkc9ipMedlitc7UXD
+         hhYvqQHSHAvgB6MB63YFPifkdMIRXm44W8NDW+Cc=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190801075945eucas1p148c54c5c41f014ec4238e03d73209f3d~2vZkNXfay1104411044eucas1p1V;
+        Thu,  1 Aug 2019 07:59:45 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 88.6E.04377.1FB924D5; Thu,  1
+        Aug 2019 08:59:45 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190801075944eucas1p10f92b2f34172c4c8f85656983d335f64~2vZjRx4fk2237322373eucas1p15;
+        Thu,  1 Aug 2019 07:59:44 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190801075944eusmtrp24b52198052c3e8764b8e81666c050d5b~2vZjDhtfg0694206942eusmtrp2o;
+        Thu,  1 Aug 2019 07:59:44 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-b6-5d429bf12fd3
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 48.83.04140.0FB924D5; Thu,  1
+        Aug 2019 08:59:44 +0100 (BST)
+Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20190801075943eusmtip1f5f38bb917a2d719f295ac3ea68eae5d~2vZidr86Z1476114761eusmtip1I;
+        Thu,  1 Aug 2019 07:59:43 +0000 (GMT)
+Message-ID: <62557522be4924a01d3822d4734c30f2965c608b.camel@partner.samsung.com>
+Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
+ functionality to exynos-bus
+From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     krzk@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        m.szyprowski@samsung.com,
+        =?UTF-8?Q?Bart=C5=82omiej_?= =?UTF-8?Q?=C5=BBo=C5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>
+Date:   Thu, 01 Aug 2019 09:59:42 +0200
+In-Reply-To: <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMKsWRmVeSWpSXmKPExsWy7djP87ofZzvFGhz+KGqxccZ6VovrX56z
+        Wsw/co7V4srX92wW0/duYrOYdH8Ci8X58xvYLTY9vsZqcXnXHDaLz71HGC1mnN/HZLH2yF12
+        i9uNK9gsZkx+yebA57FpVSebx51re9g87ncfZ/LYvKTeo2/LKkaPz5vkAtiiuGxSUnMyy1KL
+        9O0SuDJ+H3rJWLBBpuLKcs8Gxh7xLkZODgkBE4mX23cwdTFycQgJrGCU2LvnNwuE84VRYsq3
+        VewQzmdGifam92xdjBxgLXdb+CHiyxklTv6fDlX0jFHiyp5TzCBzeQUCJC5dfcgKYgsLJEks
+        eHQRzGYTcJf49/wKK0iDiMAnRomzS2YzgjjMAh8ZJRp+tYN1swioSizt280EYnMK2En8vrWU
+        DeJaHYm3p/pYQM7gFRCU+LtDGCTMLCAv0bx1NjPIHAmBe+wSK6d0QNW7SPRtXMEOYQtLvDq+
+        BcqWkfi/cz4ThF0s8XTnfVaI5gZGiU3LjjBDJKwlDh8HOZsDaIOmxPpd+hBhR4m3fUeZIUHB
+        J3HjrSDEDXwSk7ZNhwrzSnS0CUGYWhILfkdDNEpINK2+BjXbQ6Ll0XP2CYyKsxB+mYXkl1kI
+        WxcwMq9iFE8tLc5NTy02ykst1ytOzC0uzUvXS87P3cQITFqn/x3/soNx15+kQ4wCHIxKPLwK
+        PY6xQqyJZcWVuYcYJTiYlUR4F4vbxwrxpiRWVqUW5ccXleakFh9ilOZgURLnrWZ4EC0kkJ5Y
+        kpqdmlqQWgSTZeLglGpgnLni6xnpLQGJwfNuRr/glW86JHIzhrupyPahbfujSf1e9SdyHi/q
+        eln+MmHF7w+ykyX/tOTYGFquef277K+5/9Q6/+DLhg7t7sq6X3r+JSos7TXcfKRfbq+zj9nD
+        m2V7Zn1MiHzuLdvymOvQidfta6fpCNRq8TblWbDf+eN4m6Pt0G9+3iwtJZbijERDLeai4kQA
+        C54i6lYDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJIsWRmVeSWpSXmKPExsVy+t/xu7ofZjvFGvT1iVpsnLGe1eL6l+es
+        FvOPnGO1uPL1PZvF9L2b2Cwm3Z/AYnH+/AZ2i02Pr7FaXN41h83ic+8RRosZ5/cxWaw9cpfd
+        4nbjCjaLGZNfsjnweWxa1cnmcefaHjaP+93HmTw2L6n36NuyitHj8ya5ALYoPZui/NKSVIWM
+        /OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYzfh14yFmyQqbiy3LOB
+        sUe8i5GDQ0LAROJuC38XIxeHkMBSRonvB9cydzFyAsUlJD6uv8EKYQtL/LnWxQZiCwk8YZTY
+        c50HxOYVCJC4dPUhWI2wQJLEgkcXwWw2AXeJf8+vsIIMFRH4zChxeNEnFpAEM4hzY1kOiM0i
+        oCqxtG83E4jNKWAn8fvWUjaIK1qZJK5N2ssK0aAp0br9NzvEFToSb0/1sYBczSsgKPF3hzBE
+        ibxE89bZzBMYBWch6ZiFUDULSdUCRuZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgdG47djP
+        LTsYu94FH2IU4GBU4uE90ekYK8SaWFZcmXuIUYKDWUmEd7G4fawQb0piZVVqUX58UWlOavEh
+        RlOgfyYyS4km5wMTRV5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6p
+        Bsb1q25rmmglLj/orXzOP+9HfIvQPAbDC5Vb7t53ZZXVUI1ecvfDntMdte1PzX9+8IlLKvud
+        sfBB5pYVUd8eq69unzHLuUn4/b1jbGcE//8O2yWb7rn54uRbdWaZvhNE3h60UPN/vsYs7ubD
+        2Defz29q8Fx288Sp2W/Yty4zWXwxbp+V6RqdA18TlViKMxINtZiLihMBIkRDMdwCAAA=
+X-CMS-MailID: 20190801075944eucas1p10f92b2f34172c4c8f85656983d335f64
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+        <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
+        <20190723122016.30279-10-a.swigon@partner.samsung.com>
+        <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019 at 13:00, Janne Karhunen <janne.karhunen@gmail.com> wrote:
->
-> On Thu, Aug 1, 2019 at 9:50 AM Rouven Czerwinski
-> <r.czerwinski@pengutronix.de> wrote:
->
-> > > I'm aware of it - I have implemented a large part of the GP TEE APIs
-> > > earlier (primarily the crypto functions). Does the TEE you work with
-> > > actually support GP properly? Can I take a look at the code?
-> >
-> > AFAIK Sumit is working with the OP-TEE implementation, which can be
-> > found on github: https://github.com/op-tee/optee_os
->
-> Thanks, I will take a look.
+Hi Georgi,
 
-For documentation, refer to: https://optee.readthedocs.io/
+On Fri, 2019-07-26 at 11:05 +0300, Georgi Djakov wrote:
+> Hi Artur,
+> 
+> On 7/23/19 15:20, Artur Świgoń wrote:
+> > This patch adds interconnect functionality to the exynos-bus devfreq
+> > driver.
+> > 
+> > The SoC topology is a graph (or, more specifically, a tree) and most of its
+> > edges are taken from the devfreq parent-child hierarchy (cf.
+> > Documentation/devicetree/bindings/devfreq/exynos-bus.txt). The previous
+> > patch adds missing edges to the DT (under the name 'parent'). Due to
+> > unspecified relative probing order, -EPROBE_DEFER may be propagated to
+> > guarantee that a child is probed before its parent.
+> > 
+> > Each bus is now an interconnect provider and an interconnect node as well
+> > (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
+> > itself as a node. Node IDs are not hardcoded but rather assigned at
+> > runtime, in probing order (subject to the above-mentioned exception
+> > regarding relative order). This approach allows for using this driver with
+> > various Exynos SoCs.
+> 
+> I am not familiar with the Exynos bus topology, but it seems to me that it's not
+> represented correctly. An interconnect provider with just a single node (port)
+> is odd. I would expect that each provider consists of multiple master and slave
+> nodes. This data would be used by a framework to understand what are the links
+> and how the traffic flows between the IP blocks and through which buses.
 
-> The fundamental problem with these things
-> is that there are infinite amount of ways how TEEs and ROTs can be
-> done in terms of the hardware and software. I really doubt there are 2
-> implementations in existence that are even remotely compatible in real
-> life.
+To summarize the exynos-bus topology[1] used by the devfreq driver: There are
+many data buses for data transfer in Samsung Exynos SoC. Every bus has its own
+clock. Buses often share power lines, in which case one of the buses on the
+power line is referred to as 'parent' (or as 'devfreq' in the DT). In the
+particular case of Exynos4412[1][2], the topology can be expressed as follows:
 
-I agree with you regarding implementation specific nature of TEE but
-having a standardized client interface does solves the problem.
+bus_dmc
+-- bus_acp
+-- bus_c2c
 
-> As such, all things TEE/ROT would logically really belong in the
-> userland and thanks to the bpfilter folks now the umh logic really
-> makes that possible ... I think. The key implementation I did was just
-> an RFC on the concept, what if we start to move the stuff that really
-> belongs in the userspace to this pseudo-userland. It's not kernel, but
-> it's not commonly accessible userland either. The shared memory would
-> also work without any modifications between the umh based TEE/ROT
-> driver and the userland if needed.
->
-> Anyway, just my .02c. I guess having any new support in the kernel for
-> new trust sources is good and improvement from the current state. I
-> can certainly make my stuff work with your setup as well, what ever
-> people think is the best.
+bus_leftbus
+-- bus_rightbus
+-- bus_display
+-- bus_fsys
+-- bus_peri
+-- bus_mfc
 
-Yes your implementation can very well fit under trusted keys
-abstraction framework without creating a new keytype: "ext-trusted".
+Where bus_dmc and bus_leftbus probably could be referred to as masters, and the
+following indented nodes as slaves. Patch 08/11 of this RFC additionally adds
+the following to the DT:
 
--Sumit
+bus_dmc
+-- bus_leftbus
 
->
->
-> --
-> Janne
+Which makes the topology a valid tree.
+
+The exynos-bus concept in devfreq[3] is designed in such a way that every bus is
+probed separately as a platform device, and is a largely independent entity.
+This RFC proposes an extension to the existing devfreq driver that basically
+provides a simple QoS to ensure minimum clock frequency for selected buses
+(possibly overriding devfreq governor calculations) using the interconnect
+framework.
+
+The hierarchy is modelled in such a way that every bus is an interconnect node.
+On the other hand, what is considered an interconnect provider here is quite
+arbitrary, but for the reasons mentioned in the above paragraph, this RFC
+assumes that every bus is a provider of itself as a node. Using an alternative
+singleton provider approach was deemed more complicated since the 'dev' field in
+'struct icc_provider' has to be set to something meaningful and we are tied to
+the 'samsung,exynos-bus' compatible string in the driver (and multiple instances
+of exynos-bus probed in indeterminate relative order).
+
+I'm looking forward to hearing any additional thoughts you may have on this
+topic.
+
+Best regards,
+-- 
+Artur Świgoń
+Samsung R&D Institute Poland
+Samsung Electronics
+
+[1] Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+[2]
+arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+[3] drivers/devfreq/exynos-bus.c
+(subject of this patch)
+
+
