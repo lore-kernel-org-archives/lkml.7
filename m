@@ -2,137 +2,76 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE97C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A637C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A757214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450E22087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731066AbfHAJGN (ORCPT
+        id S1731000AbfHAJHV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:06:13 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3930 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726185AbfHAJGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:06:13 -0400
-Received: from dggemi405-hub.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 1AF422B956612A72CA01;
-        Thu,  1 Aug 2019 17:06:11 +0800 (CST)
-Received: from DGGEMI423-HUB.china.huawei.com (10.1.199.152) by
- dggemi405-hub.china.huawei.com (10.3.17.143) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 1 Aug 2019 17:06:10 +0800
-Received: from DGGEMI524-MBX.china.huawei.com ([169.254.7.227]) by
- dggemi423-hub.china.huawei.com ([10.1.199.152]) with mapi id 14.03.0439.000;
- Thu, 1 Aug 2019 17:06:02 +0800
-From:   chengzhihao <chengzhihao1@huawei.com>
-To:     "richard@nod.at" <richard@nod.at>,
-        "zhangyi (F)" <yi.zhang@huawei.com>
-CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?gb2312?B?tPC4tDogW1JGQ10gdWJpOiB1Ymlfd2xfZ2V0X3BlYjogUmVwbGFjZSBhIGxp?=
- =?gb2312?B?bWl0ZWQgbnVtYmVyIG9mIGF0dGVtcHRzIHdpdGggcG9sbGluZyB3aGlsZSBn?=
- =?gb2312?Q?etting_PEB?=
-Thread-Topic: [RFC] ubi: ubi_wl_get_peb: Replace a limited number of
- attempts with polling while getting PEB
-Thread-Index: AQHVSEfLw0ApResN0UiZm+hnG/hjmKbl/81A
-Date:   Thu, 1 Aug 2019 09:06:02 +0000
-Message-ID: <0B80F9D4116B2F4484E7279D5A66984F7A85FB@dggemi524-mbx.china.huawei.com>
-References: <1564650469-130037-1-git-send-email-chengzhihao1@huawei.com>
-In-Reply-To: <1564650469-130037-1-git-send-email-chengzhihao1@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
+        Thu, 1 Aug 2019 05:07:21 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:44207 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfHAJHU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 05:07:20 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x7197CsK017672
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 1 Aug 2019 18:07:12 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7197CP4008465;
+        Thu, 1 Aug 2019 18:07:12 +0900
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7196QOn002648;
+        Thu, 1 Aug 2019 18:07:12 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-7309567; Thu, 1 Aug 2019 18:06:53 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Thu, 1
+ Aug 2019 18:06:52 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     Jane Chu <jane.chu@oracle.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+Subject: Re: [PATCH v3 1/2] mm/memory-failure.c clean up around tk
+ pre-allocation
+Thread-Topic: [PATCH v3 1/2] mm/memory-failure.c clean up around tk
+ pre-allocation
+Thread-Index: AQHVQzSRmIJeo+dcwUujsqrGBDWq6ablc6CA
+Date:   Thu, 1 Aug 2019 09:06:51 +0000
+Message-ID: <20190801090651.GC31767@hori.linux.bs1.fc.nec.co.jp>
+References: <1564092101-3865-1-git-send-email-jane.chu@oracle.com>
+ <1564092101-3865-2-git-send-email-jane.chu@oracle.com>
+In-Reply-To: <1564092101-3865-2-git-send-email-jane.chu@oracle.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.177.224.82]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+x-originating-ip: [10.34.125.150]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <1FD28E0D8B0232438C43D1B28666B164@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SSBkb24ndCBxdWl0ZSB1bmRlcnN0YW5kIHdoeSBhIGxpbWl0ZWQgbnVtYmVyIG9mIGF0dGVtcHRz
-IGhhdmUgYmVlbiBtYWRlIHRvIGdldCBhIGZyZWUgUEVCIGluIHViaV93bF9nZXRfcGViIChpbiBm
-YXN0bWFwLXdsLmMpLiBJIHByb3Bvc2VkIHRoaXMgUEFUQ0ggd2l0aCByZWZlcmVuY2UgdG8gdGhl
-IGltcGxlbWVudGF0aW9uIG9mIHViaV93bF9nZXRfcGViIChpbiB3bC5jKS4gQXMgZmFyIGFzIEkg
-a25vdywgZ2V0dGluZyBQRUIgYnkgcG9sbGluZyBwcm9iYWJseSB3b24ndCBmYWxsIGludG8gc29m
-dC1sb2NrdXAuDQp1YmlfdXBkYXRlX2Zhc3RtYXAgbWF5IGFkZCBuZXcgdGFza3MgKGluY2x1ZGlu
-ZyBlcmFzZSB0YXNrIG9yIHdsIHRhc2trLCB3bCB0YXNrcyBnZW5lcmFsbHkgZG8gbm90IGdlbmVy
-YXRlIGFkZGl0aW9uYWwgZnJlZSBQRUJzKSB0byB1YmktPndvcmtzLCBhbmQgcHJvZHVjZV9mcmVl
-X3BlYiB3aWxsIGV2ZW50dWFsbHkgY29tcGxldGUgYWxsIHRhc2tzIGluIHViaS0+d29ya3Mgb3Ig
-b2J0YWluIGFuIGZyZWUgUEVCIHRoYXQgY2FuIGJlIGZpbGxlZCBpbnRvIHBvb2wuDQoNCi0NCkNo
-ZW5nIHpoaWhhbw0KDQotLS0tLdPKvP7Urbz+LS0tLS0NCreivP7IyzogY2hlbmd6aGloYW8gDQq3
-osvNyrG85DogMjAxOcTqONTCMcjVIDE3OjA4DQrK1bz+yMs6IHJpY2hhcmRAbm9kLmF0OyB6aGFu
-Z3lpIChGKSA8eWkuemhhbmdAaHVhd2VpLmNvbT4NCrOty806IGxpbnV4LW10ZEBsaXN0cy5pbmZy
-YWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBjaGVuZ3poaWhhbyA8Y2hl
-bmd6aGloYW8xQGh1YXdlaS5jb20+DQrW98ziOiBbUkZDXSB1Ymk6IHViaV93bF9nZXRfcGViOiBS
-ZXBsYWNlIGEgbGltaXRlZCBudW1iZXIgb2YgYXR0ZW1wdHMgd2l0aCBwb2xsaW5nIHdoaWxlIGdl
-dHRpbmcgUEVCDQoNClJ1bm5pbmcgcHJlc3N1cmUgdGVzdCBpb19wYXJhbCAoQSBwcmVzc3VyZSB1
-YmkgdGVzdCBpbiBtdGQtdXRpbHMpIG9uIGFuIFVCSSBkZXZpY2Ugd2l0aCBmZXdlciBQRUJzIChm
-YXN0bWFwIGVuYWJsZWQpIG1heSBjYXVzZSBFTk9TUEMgZXJyb3JzIGFuZCBtYWtlIFVCSSBkZXZp
-Y2UgcmVhZC1vbmx5LCBidXQgdGhlcmUgYXJlIHN0aWxsIGZyZWUgUEVCcyBvbiB0aGUgVUJJIGRl
-dmljZS4gVGhpcyBwcm9ibGVtIGNhbiBiZSBlYXNpbHkgcmVwcm9kdWNlZCBieSBwZXJmb3JtaW5n
-IHRoZSBmb2xsb3dpbmcgc3RlcHMgb24gYSAyLWNvcmUgbWFjaGluZToNCiAgJCBtb2Rwcm9iZSBu
-YW5kc2ltIGZpcnN0X2lkX2J5dGU9MHgyMCBzZWNvbmRfaWRfYnl0ZT0weDMzIHBhcnRzPTgwDQog
-ICQgbW9kcHJvYmUgdWJpIG10ZD0iMCwwIiBmbV9hdXRvY29udmVydA0KICAkIC4vaW9fcGFyYWwg
-L2Rldi91YmkwDQoNCldlIG1heSBzZWUgdGhlIGZvbGxvd2luZyB2ZXJib3NlOg0KKG91dHB1dCkN
-CiAgW2lvX3BhcmFsXSB1cGRhdGVfdm9sdW1lKCk6MTA1OiBmdW5jdGlvbiB3cml0ZSgpIGZhaWxl
-ZCB3aXRoIGVycm9yIDMwDQogIChSZWFkLW9ubHkgZmlsZSBzeXN0ZW0pDQogIFtpb19wYXJhbF0g
-dXBkYXRlX3ZvbHVtZSgpOjEwODogZmFpbGVkIHRvIHdyaXRlIDM4MCBieXRlcyBhdCBvZmZzZXQN
-CiAgOTU5MjAgb2Ygdm9sdW1lIDINCiAgW2lvX3BhcmFsXSB1cGRhdGVfdm9sdW1lKCk6MTA5OiB1
-cGRhdGU6IDk3MDg4IGJ5dGVzDQogIFtpb19wYXJhbF0gd3JpdGVfdGhyZWFkKCk6MjI3OiBmdW5j
-dGlvbiBwd3JpdGUoKSBmYWlsZWQgd2l0aCBlcnJvciAyOA0KICAoTm8gc3BhY2UgbGVmdCBvbiBk
-ZXZpY2UpDQogIFtpb19wYXJhbF0gd3JpdGVfdGhyZWFkKCk6MjI5OiBjYW5ub3Qgd3JpdGUgMTU4
-NzIgYnl0ZXMgdG8gb2ZmcyAzMTc0NCwNCiAgd3JvdGUgLTENCihkbWVzZykNCiAgdWJpMCBlcnJv
-cjogdWJpX3dsX2dldF9wZWIgW3ViaV06IFVuYWJsZSB0byBnZXQgYSBmcmVlIFBFQiBmcm9tIHVz
-ZXIgV0wNCiAgcG9vbA0KICB1YmkwIHdhcm5pbmc6IHViaV9lYmFfd3JpdGVfbGViIFt1YmldOiBz
-d2l0Y2ggdG8gcmVhZC1vbmx5IG1vZGUNCiAgdWJpMCBlcnJvcjogdWJpX2lvX3dyaXRlIFt1Ymld
-OiByZWFkLW9ubHkgbW9kZQ0KICBDUFU6IDAgUElEOiAyMDI3IENvbW06IGlvX3BhcmFsIE5vdCB0
-YWludGVkIDUuMy4wLXJjMi0wMDAwMS1nNTk4NmNkMCAjOQ0KICB1YmkwIHdhcm5pbmc6IHRyeV93
-cml0ZV92aWRfYW5kX2RhdGEgW3ViaV06IGZhaWxlZCB0byB3cml0ZSBWSUQgaGVhZGVyDQogIHRv
-IExFQiAyOjUsIFBFQiAxOA0KICBIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChpNDQw
-RlggKyBQSUlYLCAxOTk2KSwgQklPUyByZWwtMS4xMi4wDQogIC0wLWdhNjk4Yzg5OTVmLXByZWJ1
-aWx0LnFlbXUub3JnIDA0LzAxLzIwMTQNCiAgQ2FsbCBUcmFjZToNCiAgIGR1bXBfc3RhY2srMHg4
-NS8weGJhDQogICB1YmlfZWJhX3dyaXRlX2xlYisweGExZS8weGE0MCBbdWJpXQ0KICAgdm9sX2Nk
-ZXZfd3JpdGUrMHgzMDcvMHg1MjAgW3ViaV0NCiAgdWJpMCBlcnJvcjogdm9sX2NkZXZfd3JpdGUg
-W3ViaV06IGNhbm5vdCBhY2NlcHQgbW9yZSAzODAgYnl0ZXMgb2YgZGF0YSwNCiAgZXJyb3IgLTMw
-DQogICB2ZnNfd3JpdGUrMHhmYS8weDI4MA0KICAga3N5c19wd3JpdGU2NCsweGM1LzB4ZTANCiAg
-IF9feDY0X3N5c19wd3JpdGU2NCsweDIyLzB4MzANCiAgIGRvX3N5c2NhbGxfNjQrMHhiZi8weDQ0
-MA0KDQpJbiBmdW5jdGlvbiB1Ymlfd2xfZ2V0X3BlYiwgdGhlIG9wZXJhdGlvbiBvZiBmaWxsaW5n
-IHRoZSBwb29sDQoodWJpX3VwZGF0ZV9mYXN0bWFwKSB3aXRoIGZyZWUgUEVCcyBhbmQgZmV0Y2hp
-bmcgYSBmcmVlIFBFQiBmcm9tIHRoZSBwb29sIGlzIG5vdCBhdG9taWMuIEFmdGVyIHRocmVhZCBB
-IGZpbGxpbmcgdGhlIHBvb2wgd2l0aCBmcmVlIFBFQiwgZnJlZSBQRUIgbWF5IGJlIHRha2VuIGF3
-YXkgYnkgdGhyZWFkIEIuIFdoZW4gdGhyZWFkIEEgY2hlY2tzIHRoZSBleHByZXNzaW9uIGFnYWlu
-LCB0aGUgY29uZGl0aW9uIGlzIHN0aWxsIHVuc2F0aXNmYWN0b3J5LiBBdCB0aGlzIHRpbWUsIHRo
-ZXJlIG1heSBzdGlsbCBiZSBmcmVlIFBFQnMgb24gVUJJIHRoYXQgY2FuIGJlIGZpbGxlZCBpbnRv
-IHRoZSBwb29sLg0KU28sIHViaV93bF9nZXRfcGViIChpbiBmYXN0bWFwLXdpbC5jKSBzaG91bGQg
-YmUgaW1wbGVtZW50ZWQgdG8gb2J0YWluIGEgZnJlZSBQRUIgYnkgcG9sbGluZyBtZXRob2QuIFRo
-ZSBwb2xsaW5nIGV4aXQgY29uZGl0aW9uIGlzIHRoYXQgdGhlcmUgaXMgbm8gZnJlZSBQRUJzIG9u
-IFVCSSwgbm8gZnJlZSBQRUJzIGluIHBvb2wsIGFuZCB1YmktPndvcmtzX2NvdW50IGlzIDAuDQoN
-ClNpZ25lZC1vZmYtYnk6IFpoaWhhbyBDaGVuZyA8Y2hlbmd6aGloYW8xQGh1YXdlaS5jb20+DQot
-LS0NCiBkcml2ZXJzL210ZC91YmkvZmFzdG1hcC13bC5jIHwgOSArKysrKy0tLS0NCiAxIGZpbGUg
-Y2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9tdGQvdWJpL2Zhc3RtYXAtd2wuYyBiL2RyaXZlcnMvbXRkL3ViaS9mYXN0bWFwLXds
-LmMgaW5kZXggZDllMmUzYS4uYzU1MTJjZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbXRkL3ViaS9m
-YXN0bWFwLXdsLmMNCisrKyBiL2RyaXZlcnMvbXRkL3ViaS9mYXN0bWFwLXdsLmMNCkBAIC0xOTYs
-NyArMTk2LDcgQEAgc3RhdGljIGludCBwcm9kdWNlX2ZyZWVfcGViKHN0cnVjdCB1YmlfZGV2aWNl
-ICp1YmkpDQogICovDQogaW50IHViaV93bF9nZXRfcGViKHN0cnVjdCB1YmlfZGV2aWNlICp1Ymkp
-ICB7DQotCWludCByZXQsIHJldHJpZWQgPSAwOw0KKwlpbnQgcmV0Ow0KIAlzdHJ1Y3QgdWJpX2Zt
-X3Bvb2wgKnBvb2wgPSAmdWJpLT5mbV9wb29sOw0KIAlzdHJ1Y3QgdWJpX2ZtX3Bvb2wgKndsX3Bv
-b2wgPSAmdWJpLT5mbV93bF9wb29sOw0KIA0KQEAgLTIyMCwxMyArMjIwLDE0IEBAIGludCB1Ymlf
-d2xfZ2V0X3BlYihzdHJ1Y3QgdWJpX2RldmljZSAqdWJpKQ0KIAl9DQogDQogCWlmIChwb29sLT51
-c2VkID09IHBvb2wtPnNpemUpIHsNCi0JCXNwaW5fdW5sb2NrKCZ1YmktPndsX2xvY2spOw0KLQkJ
-aWYgKHJldHJpZWQpIHsNCisJCWlmICghdWJpLT5mcmVlLnJiX25vZGUgJiYgdWJpLT53b3Jrc19j
-b3VudCA9PSAwKSB7DQogCQkJdWJpX2Vycih1YmksICJVbmFibGUgdG8gZ2V0IGEgZnJlZSBQRUIg
-ZnJvbSB1c2VyIFdMIHBvb2wiKTsNCisJCQl1YmlfYXNzZXJ0KGxpc3RfZW1wdHkoJnViaS0+d29y
-a3MpKTsNCisJCQlzcGluX3VubG9jaygmdWJpLT53bF9sb2NrKTsNCiAJCQlyZXQgPSAtRU5PU1BD
-Ow0KIAkJCWdvdG8gb3V0Ow0KIAkJfQ0KLQkJcmV0cmllZCA9IDE7DQorCQlzcGluX3VubG9jaygm
-dWJpLT53bF9sb2NrKTsNCiAJCXVwX3JlYWQoJnViaS0+Zm1fZWJhX3NlbSk7DQogCQlyZXQgPSBw
-cm9kdWNlX2ZyZWVfcGViKHViaSk7DQogCQlpZiAocmV0IDwgMCkgew0KLS0NCjIuNy40DQoNCg==
+On Thu, Jul 25, 2019 at 04:01:40PM -0600, Jane Chu wrote:
+> add_to_kill() expects the first 'tk' to be pre-allocated, it makes
+> subsequent allocations on need basis, this makes the code a bit
+> difficult to read. Move all the allocation internal to add_to_kill()
+> and drop the **tk argument.
+> 
+> Signed-off-by: Jane Chu <jane.chu@oracle.com>
+
+Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+
+# somehow I sent 2 acks to 2/2, sorry about the noise.
