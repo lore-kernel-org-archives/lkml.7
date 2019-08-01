@@ -2,207 +2,92 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724E1C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24C2C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 412E52087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8382087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbfHAFJT (ORCPT
+        id S1729199AbfHAFOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 01:09:19 -0400
-Received: from gofer.mess.org ([88.97.38.141]:35831 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfHAFJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 01:09:18 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 1C07160599; Thu,  1 Aug 2019 06:09:16 +0100 (BST)
-Date:   Thu, 1 Aug 2019 06:09:15 +0100
-From:   Sean Young <sean@mess.org>
-To:     Michael Ira Krufky <mkrufky@linuxtv.org>
-Cc:     Vandana BN <bnvandana@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tskd08@gmail.com, skhan@linuxfoundation.org,
-        gregkh@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] media:dvb-frontends:Remove dvb_pll_devcount and id
- module parameters.
-Message-ID: <20190801050915.bmv5xpbczixtaotf@gofer.mess.org>
-References: <20190717141204.19433-1-bnvandana@gmail.com>
- <20190720061302.24047-1-bnvandana@gmail.com>
- <20190724053635.4pl44glggvcnton2@gofer.mess.org>
+        Thu, 1 Aug 2019 01:14:23 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55434 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfHAFOX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 01:14:23 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a15so63144469wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 22:14:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lQl7edwn+BBaD98menQlIuR4CRzjnAz72gInVhmciPI=;
+        b=oxqycUPwUKdeiArSV9qLmmtwdd4CICdk+0ptYskbN/NuId4Uui/9UFpS5920JvSw2Y
+         fRqisjRG2tTJrjN3fOnJK41uT0Psv/GxzCSdkSWfdUYmsmBxb5DI+bX2doEwSf4Nb0Qf
+         tZy5L5WhHVw1VyQx33ZK1QSqIdgfbRzFxl+1HHHzrJ5anOAbVKjyTG+T8MrUIkR7AOCD
+         Dpumb/5lAS6vlLXKscZb6WcBeBqao0edAP4hdjVLLPG2iavDVfEwggjBEKqvhpRpt53N
+         wuaCP7xlBTFL/vCG/AzHnrtgwWqLdv/RrxoZlb68PbZZBSIJ2avPuaPXRuKmBkih/Qm+
+         SGmQ==
+X-Gm-Message-State: APjAAAW8rDw1HF3R75mM9GbxfUjVRDEjKtqlT8twuzaKm1FY8HFBU0qO
+        A8fU3Zxb9OHz8CsugRhMLgFpUg==
+X-Google-Smtp-Source: APXvYqxFEk5MxsMb9SRS0F9z/AOdjaxGzOmYxgzH33mkkzGt4IVLGLkSCjTMz3xWeerxX8qNq8kB9g==
+X-Received: by 2002:a7b:cb51:: with SMTP id v17mr111847194wmj.20.1564636461354;
+        Wed, 31 Jul 2019 22:14:21 -0700 (PDT)
+Received: from vitty.brq.redhat.com (ip-89-176-127-93.net.upcbroadband.cz. [89.176.127.93])
+        by smtp.gmail.com with ESMTPSA id a2sm73855351wmj.9.2019.07.31.22.14.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 31 Jul 2019 22:14:20 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: [PATCH 0/5] x86: KVM: svm: get rid of hardcoded instructions lengths
+Date:   Thu,  1 Aug 2019 07:14:13 +0200
+Message-Id: <20190801051418.15905-1-vkuznets@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724053635.4pl44glggvcnton2@gofer.mess.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 06:36:35AM +0100, Sean Young wrote:
-> On Sat, Jul 20, 2019 at 11:43:02AM +0530, Vandana BN wrote:
-> > Syzbot reported global-out-of-bounds Read in dvb_pll_attach, while
-> > accessing id[dvb_pll_devcount], because dvb_pll_devcount was 65,
-> > that is more than size of 'id' which is DVB_PLL_MAX(64).
-> > 
-> > Fix would be to check if DVB_PLL_MAX devices are attached and if so return
-> > NULL from dvb_pll_attach(). But this will put a limit on the number of
-> > devices that can be attached.
-> > Also dvb_pll_devcount and "id" module parameter are used for debugging
-> > purpose to override/force PLL type.
-> > So this patch removes these module parameters.
-> > 
-> > Reported-by: syz...@syzkaller.appspotmail.com
-> > 
-> > usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
-> > software demuxer
-> > dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
-> > usb 1-1: media controller created
-> > dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
-> > tc90522 0-0018: Toshiba TC90522 attached.
-> > usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
-> > module)...
-> > dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
-> > module' registered.
-> > ==================================================================
-> > BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
-> > drivers/media/dvb-frontends/dvb-pll.c:798
-> > Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
-> > 
-> > CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: usb_hub_wq hub_event
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
-> >   print_address_description+0x67/0x231 mm/kasan/report.c:188
-> >   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-> >   kasan_report+0xe/0x20 mm/kasan/common.c:614
-> >   dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
-> >   dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
-> >   i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
-> >   really_probe+0x281/0x660 drivers/base/dd.c:509
-> >   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-> >   __device_attach+0x217/0x360 drivers/base/dd.c:843
-> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-> >   device_add+0xae6/0x16f0 drivers/base/core.c:2111
-> >   i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
-> >   i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
-> >   dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
-> >   friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
-> >   dvb_usbv2_adapter_frontend_init
-> > drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
-> >   dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
-> > [inline]
-> >   dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
-> >   dvb_usbv2_probe.cold+0x24dc/0x255d
-> > drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
-> >   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-> >   really_probe+0x281/0x660 drivers/base/dd.c:509
-> >   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-> >   __device_attach+0x217/0x360 drivers/base/dd.c:843
-> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-> >   device_add+0xae6/0x16f0 drivers/base/core.c:2111
-> >   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-> >   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-> >   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-> >   really_probe+0x281/0x660 drivers/base/dd.c:509
-> >   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-> >   __device_attach+0x217/0x360 drivers/base/dd.c:843
-> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-> >   device_add+0xae6/0x16f0 drivers/base/core.c:2111
-> >   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
-> >   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-> >   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-> >   port_event drivers/usb/core/hub.c:5350 [inline]
-> >   hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
-> >   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-> >   process_scheduled_works kernel/workqueue.c:2331 [inline]
-> >   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-> >   kthread+0x30b/0x410 kernel/kthread.c:255
-> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > 
-> > The buggy address belongs to the variable:
-> >   id+0x100/0x120
-> > 
-> > Memory state around the buggy address:
-> >   ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
-> >   ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
-> >                                                         ^
-> >   ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-> >   ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-> > ==================================================================
-> > 
-> > Signed-off-by: Vandana BN <bnvandana@gmail.com>
-> > ---
-> >  drivers/media/dvb-frontends/dvb-pll.c | 19 +++----------------
-> >  1 file changed, 3 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
-> > index ba0c49107bd2..c3a04751e9cf 100644
-> > --- a/drivers/media/dvb-frontends/dvb-pll.c
-> > +++ b/drivers/media/dvb-frontends/dvb-pll.c
-> > @@ -33,19 +33,11 @@ struct dvb_pll_priv {
-> >  	u32 bandwidth;
-> >  };
-> > 
-> > -#define DVB_PLL_MAX 64
-> > -
-> > -static unsigned int dvb_pll_devcount;
-> > 
-> >  static int debug;
-> >  module_param(debug, int, 0644);
-> >  MODULE_PARM_DESC(debug, "enable verbose debug messages");
-> > 
-> > -static unsigned int id[DVB_PLL_MAX] =
-> > -	{ [ 0 ... (DVB_PLL_MAX-1) ] = DVB_PLL_UNDEFINED };
-> > -module_param_array(id, int, NULL, 0644);
-> > -MODULE_PARM_DESC(id, "force pll id to use (DEBUG ONLY)");
-> > -
-> 
-> Mike, you introduced this module parameter in:
-> 
-> commit 05a4611b5d71ad6f968fdeef092c24914570898b
-> Author:     Michael Krufky <mkrufky@linuxtv.org>
-> AuthorDate: Fri Sep 7 18:19:57 2007 -0300
-> 
->     V4L/DVB (6228): dvb-pll: add module option to specify rf input
->     
->     Add a module option to dvb-pll, called "input" to specify which rf
->     input to use on devices with multiple rf inputs.  If the module option
->     is not specified, then the driver will autoselect the rf input, as per
->     previous behavior.
->     
->     Signed-off-by: Michael Krufky <mkrufky@linuxtv.org>
->     Signed-off-by: Mauro Carvalho Chehab <mchehab@infradead.org>
-> 
-> What was your motivation?
+Changes since RFC (It's been awhile and I apologize for that):
+- Dropped ' + 3' from vmrun_interception() as well.
+- Added xsetbv's implementation to the emulator [Paolo Bonzini]
+- Added Jim's R-b tags to PATCHes 2 and 3. 
+- Tested with the newly added 'nrips' svm module parameter.
 
-dvb_pll_devcount only ever gets increased, so this only works for the
-first time a driver is loaded; after a usb replug or rmmod this does
-not work anymore since the dvb_pll_devcount will have moved on to the
-next entry. Considering it is broken maybe it should just be removed;
-also we have no answer from mkrufky yet.
+Original description:
 
-If this functionality is useful, then it should be implemented with
-an DEFINE_IDA() and ida_simpla_get(), but I'm not sure it's worth it
-when the functionality is probably unused. If it was used, someone
-would have noticed it was broken.
+Jim rightfully complains that hardcoding instuctions lengths is not always
+correct: additional (redundant) prefixes can be used. Luckily, the ugliness
+is mostly harmless: modern AMD CPUs support NRIP_SAVE feature but I'd like
+to clean things up and sacrifice speed in favor of correctness.
 
+Vitaly Kuznetsov (5):
+  x86: KVM: svm: don't pretend to advance RIP in case
+    wrmsr_interception() results in #GP
+  x86: KVM: svm: avoid flooding logs when skip_emulated_instruction()
+    fails
+  x86: KVM: svm: clear interrupt shadow on all paths in
+    skip_emulated_instruction()
+  x86: KVM: add xsetbv to the emulator
+  x86: KVM: svm: remove hardcoded instruction length from intercepts
 
-Sean
+ arch/x86/include/asm/kvm_emulate.h |  3 ++-
+ arch/x86/kvm/emulate.c             | 23 ++++++++++++++++++++++-
+ arch/x86/kvm/svm.c                 | 23 ++++++++---------------
+ arch/x86/kvm/x86.c                 |  6 ++++++
+ 4 files changed, 38 insertions(+), 17 deletions(-)
+
+-- 
+2.20.1
+
