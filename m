@@ -2,331 +2,176 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931C6C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EAAC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602DA206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VlXrijV1"
+	by mail.kernel.org (Postfix) with ESMTP id 0942C206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:11:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564665073;
+	bh=Pjfp5/FPJktZUmBdEwkYtGdpQNdHhkrH5WVL39P6TSo=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=yVhgG6QFKuDqo8IEn2pPMPSm3UDWQT1AoXx3oiKwWqhbFVrHP8+MBxKs1SYjQgiDX
+	 R4ej4eK52pZ8amorOUHItpph0aKR5V/x2S9O6aDgvWup8RBC98fztFEoVZapxS2MEG
+	 TY0mtLUS6r120F4VjCABnWtmKAq6AyzzweE/ECmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731726AbfHANLG (ORCPT
+        id S1731691AbfHANLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:11:06 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:44903 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731693AbfHANLA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 1 Aug 2019 09:11:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1564665060; x=1596201060;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=KxK99aHsrfUY1ldURwwrJsBib6TumCu4gqPM4mjUSHU=;
-  b=VlXrijV1+HuRd1WeEnb2sBHmXFWABtglTZP4AwvpMIc+1C7aTOAe/yEl
-   KtsvUtuBfQPdB025sx/3ebJvzhNB4FgY4tOBbMbnSh/JgNvU/HHevq1Zl
-   Wgg/OvQ3QzoP2yTmtiNtbXdeFLKKYl2ZwfmrVA22rOuRDqPXWF1WCLD9S
-   8=;
-X-IronPort-AV: E=Sophos;i="5.64,334,1559520000"; 
-   d="scan'208";a="777255709"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-8549039f.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 01 Aug 2019 13:10:55 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-8549039f.us-west-2.amazon.com (Postfix) with ESMTPS id 1A284A2418;
-        Thu,  1 Aug 2019 13:10:55 +0000 (UTC)
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 1 Aug 2019 13:10:54 +0000
-Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.161.219) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 1 Aug 2019 13:10:45 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
-        <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
-        <Jonathan.Cameron@huawei.com>, <nicolas.ferre@microchip.com>,
-        <paulmck@linux.ibm.com>
-CC:     <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-edac@vger.kernel.org>, <hhhawa@amazon.com>
-Subject: [PATCH v4 4/4] edac: Add support for Amazon's Annapurna Labs L2 EDAC
-Date:   Thu, 1 Aug 2019 14:09:56 +0100
-Message-ID: <20190801130956.26388-5-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190801130956.26388-1-hhhawa@amazon.com>
-References: <20190801130956.26388-1-hhhawa@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.219]
-X-ClientProxiedBy: EX13D16UWC004.ant.amazon.com (10.43.162.72) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54710 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731644AbfHANKu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 09:10:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=SIcw7oNKmi9/Oc/uKvmWuwiOyL3ZlEHWKaiCWsI5Vic=; b=CsMVNHLewrYU
+        GoAXdPWw6hVq4eBBZUcEtyfKsToI+qs6d2uDxXfgqtlMqtm5WaAjWpexFKyqaufpkPXFc2OaZfC+B
+        /krFVFC8QGkG2kvt8KB/Vhde1PD3h7Vc1OIDYu9Yf3hW2fmZC86Beupb1xQpFkX8OAC4uUv+j/KKv
+        jhqO8=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1htAqu-0004ip-Jr; Thu, 01 Aug 2019 13:10:40 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id EAD042742D2C; Thu,  1 Aug 2019 14:10:39 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: Intel: SoC: skylake: no need to check return value of debugfs_create functions" to the asoc tree
+In-Reply-To: <20190731131716.9764-1-gregkh@linuxfoundation.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20190801131039.EAD042742D2C@ypsilon.sirena.org.uk>
+Date:   Thu,  1 Aug 2019 14:10:39 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
-report L2 errors.
+The patch
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+   ASoC: Intel: SoC: skylake: no need to check return value of debugfs_create functions
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From d8701fae95c0e6cb587b293cb8e01acc96dd1095 Mon Sep 17 00:00:00 2001
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date: Wed, 31 Jul 2019 15:17:14 +0200
+Subject: [PATCH] ASoC: Intel: SoC: skylake: no need to check return value of
+ debugfs_create functions
+
+When calling debugfs functions, there is no need to ever check the
+return value.  The function can work or not, but the code logic should
+never do something different based on this.
+
+Also, if a debugfs call fails, userspace is notified with an error in
+the log, so no need to log the error again.
+
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+Cc: Jie Yang <yang.jie@linux.intel.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20190731131716.9764-1-gregkh@linuxfoundation.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- MAINTAINERS               |   6 ++
- drivers/edac/Kconfig      |   8 ++
- drivers/edac/Makefile     |   1 +
- drivers/edac/al_l2_edac.c | 189 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 204 insertions(+)
- create mode 100644 drivers/edac/al_l2_edac.c
+ sound/soc/intel/skylake/skl-debug.c | 28 +++++-----------------------
+ 1 file changed, 5 insertions(+), 23 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fd29ea62ba29..a6dcf3d8e12a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -749,6 +749,12 @@ S:	Maintained
- F:	drivers/edac/al_l1_edac.c
- F:	Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
+diff --git a/sound/soc/intel/skylake/skl-debug.c b/sound/soc/intel/skylake/skl-debug.c
+index fb232428109f..212370bf704c 100644
+--- a/sound/soc/intel/skylake/skl-debug.c
++++ b/sound/soc/intel/skylake/skl-debug.c
+@@ -164,10 +164,8 @@ void skl_debug_init_module(struct skl_debug *d,
+ 			struct snd_soc_dapm_widget *w,
+ 			struct skl_module_cfg *mconfig)
+ {
+-	if (!debugfs_create_file(w->name, 0444,
+-				d->modules, mconfig,
+-				&mcfg_fops))
+-		dev_err(d->dev, "%s: module debugfs init failed\n", w->name);
++	debugfs_create_file(w->name, 0444, d->modules, mconfig,
++			    &mcfg_fops);
+ }
  
-+AMAZON ANNAPURNA LABS L2 EDAC
-+M:	Hanna Hawa <hhhawa@amazon.com>
-+S:	Maintained
-+F:	drivers/edac/al_l2_edac.c
-+F:	Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
-+
- AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
- M:	Talel Shenhar <talel@amazon.com>
- S:	Maintained
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 58b92bcb39ce..8bbb745b84ed 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -82,6 +82,14 @@ config EDAC_AL_L1
- 	  for Amazon's Annapurna Labs SoCs.
- 	  This driver detects errors of L1 caches.
+ static ssize_t fw_softreg_read(struct file *file, char __user *user_buf,
+@@ -224,34 +222,18 @@ struct skl_debug *skl_debugfs_init(struct skl_dev *skl)
+ 		return NULL;
  
-+config EDAC_AL_L2
-+	bool "Amazon's Annapurna Labs L2 EDAC"
-+	depends on ARCH_ALPINE
-+	help
-+	  Support for L2 error detection and correction
-+	  for Amazon's Annapurna Labs SoCs.
-+	  This driver detects errors of L2 caches.
-+
- config EDAC_AMD64
- 	tristate "AMD64 (Opteron, Athlon64)"
- 	depends on AMD_NB && EDAC_DECODE_MCE
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index caa2dc91e8a0..60a6b8bbe2f8 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -23,6 +23,7 @@ edac_mce_amd-y				:= mce_amd.o
- obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
+ 	/* create the debugfs dir with platform component's debugfs as parent */
+-	d->fs = debugfs_create_dir("dsp",
+-				   skl->component->debugfs_root);
+-	if (IS_ERR(d->fs) || !d->fs) {
+-		dev_err(&skl->pci->dev, "debugfs root creation failed\n");
+-		return NULL;
+-	}
++	d->fs = debugfs_create_dir("dsp", skl->component->debugfs_root);
  
- obj-$(CONFIG_EDAC_AL_L1)		+= al_l1_edac.o
-+obj-$(CONFIG_EDAC_AL_L2)		+= al_l2_edac.o
- obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
- obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
- obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
-new file mode 100644
-index 000000000000..6c6d37cf82ab
---- /dev/null
-+++ b/drivers/edac/al_l2_edac.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include <asm/sysreg.h>
-+#include <linux/bitfield.h>
-+#include <linux/of.h>
-+#include <linux/smp.h>
-+
-+#include "edac_device.h"
-+#include "edac_module.h"
-+
-+#define DRV_NAME				"al_l2_edac"
-+
-+/* Same bit assignments of L2MERRSR_EL1 in ARM CA57/CA72 */
-+#define ARM_CA57_L2MERRSR_EL1			sys_reg(3, 1, 15, 2, 3)
-+#define ARM_CA57_L2MERRSR_RAMID			GENMASK(30, 24)
-+#define  ARM_CA57_L2_TAG_RAM			0x10
-+#define  ARM_CA57_L2_DATA_RAM			0x11
-+#define  ARM_CA57_L2_SNOOP_RAM			0x12
-+#define  ARM_CA57_L2_DIRTY_RAM			0x14
-+#define  ARM_CA57_L2_INC_PF_RAM			0x18
-+#define ARM_CA57_L2MERRSR_VALID			BIT(31)
-+#define ARM_CA57_L2MERRSR_REPEAT		GENMASK_ULL(39, 32)
-+#define ARM_CA57_L2MERRSR_OTHER			GENMASK_ULL(47, 40)
-+#define ARM_CA57_L2MERRSR_FATAL			BIT_ULL(63)
-+
-+#define AL_L2_EDAC_MSG_MAX			256
-+
-+struct al_l2_edac {
-+	cpumask_t cluster_cpus;
-+};
-+
-+static void al_l2_edac_l2merrsr(void *arg)
-+{
-+	struct edac_device_ctl_info *edac_dev = arg;
-+	int cpu, i;
-+	u32 ramid, repeat, other, fatal;
-+	u64 val = read_sysreg_s(ARM_CA57_L2MERRSR_EL1);
-+	char msg[AL_L2_EDAC_MSG_MAX];
-+	int space, count;
-+	char *p;
-+
-+	if (!(FIELD_GET(ARM_CA57_L2MERRSR_VALID, val)))
-+		return;
-+
-+	write_sysreg_s(0, ARM_CA57_L2MERRSR_EL1);
-+
-+	cpu = smp_processor_id();
-+	ramid = FIELD_GET(ARM_CA57_L2MERRSR_RAMID, val);
-+	repeat = FIELD_GET(ARM_CA57_L2MERRSR_REPEAT, val);
-+	other = FIELD_GET(ARM_CA57_L2MERRSR_OTHER, val);
-+	fatal = FIELD_GET(ARM_CA57_L2MERRSR_FATAL, val);
-+
-+	space = sizeof(msg);
-+	p = msg;
-+	count = scnprintf(p, space, "CPU%d L2 %serror detected", cpu,
-+			  (fatal) ? "Fatal " : "");
-+	p += count;
-+	space -= count;
-+
-+	switch (ramid) {
-+	case ARM_CA57_L2_TAG_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Tag RAM'");
-+		break;
-+	case ARM_CA57_L2_DATA_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Data RAM'");
-+		break;
-+	case ARM_CA57_L2_SNOOP_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Snoop RAM'");
-+		break;
-+	case ARM_CA57_L2_DIRTY_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 Dirty RAM'");
-+		break;
-+	case ARM_CA57_L2_INC_PF_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 internal metadat'");
-+		break;
-+	default:
-+		count = scnprintf(p, space, " RAMID='unknown'");
-+		break;
-+	}
-+
-+	p += count;
-+	space -= count;
-+
-+	count = scnprintf(p, space,
-+			  " repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)",
-+			  repeat, other, val);
-+
-+	for (i = 0; i < repeat; i++) {
-+		if (fatal)
-+			edac_device_handle_ue(edac_dev, 0, 0, msg);
-+		else
-+			edac_device_handle_ce(edac_dev, 0, 0, msg);
-+	}
-+}
-+
-+static void al_l2_edac_check(struct edac_device_ctl_info *edac_dev)
-+{
-+	struct al_l2_edac *al_l2 = edac_dev->pvt_info;
-+
-+	smp_call_function_any(&al_l2->cluster_cpus, al_l2_edac_l2merrsr,
-+			      edac_dev, 1);
-+}
-+
-+static int al_l2_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev;
-+	struct al_l2_edac *al_l2;
-+	struct device *dev = &pdev->dev;
-+	int ret, i;
-+
-+	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2),
-+					      (char *)dev_name(dev), 1, "L", 1,
-+					      2, NULL, 0,
-+					      edac_device_alloc_index());
-+	if (IS_ERR_OR_NULL(edac_dev))
-+		return -ENOMEM;
-+
-+	al_l2 = edac_dev->pvt_info;
-+	edac_dev->edac_check = al_l2_edac_check;
-+	edac_dev->dev = dev;
-+	edac_dev->mod_name = DRV_NAME;
-+	edac_dev->dev_name = dev_name(dev);
-+	edac_dev->ctl_name = "L2 cache";
-+	platform_set_drvdata(pdev, edac_dev);
-+
-+	for_each_online_cpu(i) {
-+		struct device_node *cpu;
-+		struct device_node *cpu_cache, *l2_cache;
-+
-+		cpu = of_get_cpu_node(i, NULL);
-+		cpu_cache = of_find_next_cache_node(cpu);
-+		l2_cache = of_parse_phandle(dev->of_node, "l2-cache", 0);
-+
-+		if (cpu_cache == l2_cache)
-+			cpumask_set_cpu(i, &al_l2->cluster_cpus);
-+	}
-+
-+	if (cpumask_empty(&al_l2->cluster_cpus)) {
-+		dev_err(dev, "CPU mask is empty for this L2 cache\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	ret = edac_device_add_device(edac_dev);
-+	if (ret) {
-+		dev_err(dev, "Failed to add L2 edac device\n");
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return ret;
-+}
-+
-+static int al_l2_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-+
-+	edac_device_del_device(edac_dev->dev);
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id al_l2_edac_of_match[] = {
-+	{ .compatible = "amazon,al-l2-edac" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, al_l2_edac_of_match);
-+
-+static struct platform_driver al_l2_edac_driver = {
-+	.probe = al_l2_edac_probe,
-+	.remove = al_l2_edac_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = al_l2_edac_of_match,
-+	},
-+};
-+module_platform_driver(al_l2_edac_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
-+MODULE_DESCRIPTION("Amazon's Annapurna Lab's L2 EDAC Driver");
+ 	d->skl = skl;
+ 	d->dev = &skl->pci->dev;
+ 
+ 	/* now create the module dir */
+ 	d->modules = debugfs_create_dir("modules", d->fs);
+-	if (IS_ERR(d->modules) || !d->modules) {
+-		dev_err(&skl->pci->dev, "modules debugfs create failed\n");
+-		goto err;
+-	}
+ 
+-	if (!debugfs_create_file("fw_soft_regs_rd", 0444, d->fs, d,
+-				 &soft_regs_ctrl_fops)) {
+-		dev_err(d->dev, "fw soft regs control debugfs init failed\n");
+-		goto err;
+-	}
++	debugfs_create_file("fw_soft_regs_rd", 0444, d->fs, d,
++			    &soft_regs_ctrl_fops);
+ 
+ 	return d;
+-
+-err:
+-	debugfs_remove_recursive(d->fs);
+-	return NULL;
+ }
+ 
+ void skl_debugfs_exit(struct skl_dev *skl)
 -- 
-2.17.1
+2.20.1
 
