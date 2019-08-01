@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F086DC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A580C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24C4206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8D5206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389624AbfHAWVl (ORCPT
+        id S2389663AbfHAWWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:21:41 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17438 "EHLO
+        Thu, 1 Aug 2019 18:22:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28172 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389565AbfHAWVT (ORCPT
+        by vger.kernel.org with ESMTP id S2389545AbfHAWVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:21:19 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71MH0aw140595;
-        Thu, 1 Aug 2019 18:21:00 -0400
+        Thu, 1 Aug 2019 18:21:17 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71MGvQg081202;
+        Thu, 1 Aug 2019 18:20:59 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u455v7tyf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 18:21:00 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71MHgHQ147106;
-        Thu, 1 Aug 2019 18:21:00 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u455v7txx-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u475rube1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 01 Aug 2019 18:20:59 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MJlVd026752;
-        Thu, 1 Aug 2019 22:20:58 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 2u0e87h3qk-1
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71MKxaf090739;
+        Thu, 1 Aug 2019 18:20:59 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u475rubda-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 22:20:58 +0000
+        Thu, 01 Aug 2019 18:20:59 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71MJmwV006635;
+        Thu, 1 Aug 2019 22:20:57 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma03wdc.us.ibm.com with ESMTP id 2u0e85w5pn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Aug 2019 22:20:57 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MKve535586494
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MKvk025756128
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Aug 2019 22:20:58 GMT
+        Thu, 1 Aug 2019 22:20:57 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D136BB2070;
+        by IMSVA (Postfix) with ESMTP id 557B7B2068;
         Thu,  1 Aug 2019 22:20:57 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD508B2071;
+        by IMSVA (Postfix) with ESMTP id 36B64B2067;
         Thu,  1 Aug 2019 22:20:57 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Thu,  1 Aug 2019 22:20:57 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C8DCD16C9A58; Thu,  1 Aug 2019 15:20:58 -0700 (PDT)
+        id 8D20D16C9A4D; Thu,  1 Aug 2019 15:20:58 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -64,9 +64,9 @@ Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
         npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
         luc.maranget@inria.fr, akiyks@gmail.com,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH RFC memory-model 14/31] tools/memory-model: Make runlitmus.sh generate .litmus.out for --hw
-Date:   Thu,  1 Aug 2019 15:20:39 -0700
-Message-Id: <20190801222056.12144-14-paulmck@linux.ibm.com>
+Subject: [PATCH RFC memory-model 03/31] tools/memory-model: Make cmplitmushist.sh note timeouts
+Date:   Thu,  1 Aug 2019 15:20:28 -0700
+Message-Id: <20190801222056.12144-3-paulmck@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190801222026.GA11315@linux.ibm.com>
 References: <20190801222026.GA11315@linux.ibm.com>
@@ -76,100 +76,70 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=959 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908010234
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the absence of "Result:" comments, the runlitmus.sh script relies on
-litmus.out files from prior LKMM runs.  This can be a bit user-hostile,
-so this commit makes runlitmus.sh generate any needed .litmus.out files
-that don't already exist.
+Currently, cmplitmushist.sh treats timeouts (as in the "--timeout"
+argument) as "Missing Observation line".  This can be misleading because
+it is quite possible that running the test longer would have produced
+a verification.  This commit therefore changes cmplitmushist.sh to check
+for timeouts and to report them with "Timed out".
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/runlitmus.sh | 54 ++++++++++++++-----------
- 1 file changed, 30 insertions(+), 24 deletions(-)
+ tools/memory-model/scripts/cmplitmushist.sh | 22 +++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/tools/memory-model/scripts/runlitmus.sh b/tools/memory-model/scripts/runlitmus.sh
-index 91af859c0e90..2865a9661b07 100755
---- a/tools/memory-model/scripts/runlitmus.sh
-+++ b/tools/memory-model/scripts/runlitmus.sh
-@@ -28,42 +28,48 @@ if test -f "$litmus" -a -r "$litmus"
- then
- 	:
- else
--	echo ' --- ' error: \"$litmus\" is not a readable file
-+	echo ' !!! ' error: \"$litmus\" is not a readable file
- 	exit 255
- fi
+diff --git a/tools/memory-model/scripts/cmplitmushist.sh b/tools/memory-model/scripts/cmplitmushist.sh
+index 0f498aeeccf5..b9c174dd8004 100755
+--- a/tools/memory-model/scripts/cmplitmushist.sh
++++ b/tools/memory-model/scripts/cmplitmushist.sh
+@@ -12,12 +12,30 @@ trap 'rm -rf $T' 0
+ mkdir $T
  
--if test -z "$LKMM_HW_MAP_FILE"
-+if test -z "$LKMM_HW_MAP_FILE" -o ! -e $LKMM_DESTDIR/$litmus.out
- then
- 	# LKMM run
- 	herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
- 	echo Herd options: $herdoptions > $LKMM_DESTDIR/$litmus.out
- 	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $litmus >> $LKMM_DESTDIR/$litmus.out 2>&1
--else
--	# Hardware run
-+	ret=$?
-+	if test -z "$LKMM_HW_MAP_FILE"
+ # comparetest oldpath newpath
++timedout=0
+ perfect=0
+ obsline=0
+ noobsline=0
+ obsresult=0
+ badcompare=0
+ comparetest () {
++	if grep -q '^Command exited with non-zero status 124' $1 ||
++	   grep -q '^Command exited with non-zero status 124' $2
 +	then
-+		exit $ret
++		if grep -q '^Command exited with non-zero status 124' $1 &&
++		   grep -q '^Command exited with non-zero status 124' $2
++		then
++			echo Both runs timed out: $2
++		elif grep -q '^Command exited with non-zero status 124' $1
++		then
++			echo Old run timed out: $2
++		elif grep -q '^Command exited with non-zero status 124' $2
++		then
++			echo New run timed out: $2
++		fi
++		timedout=`expr "$timedout" + 1`
++		return 0
 +	fi
-+	echo " --- " Automatically generated LKMM output for '"'--hw $LKMM_HW_MAP_FILE'"' run
-+fi
- 
--	T=/tmp/checklitmushw.sh.$$
--	trap 'rm -rf $T' 0 2
--	mkdir $T
-+# Hardware run
- 
--	# Generate filenames
--	catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
--	mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
--	themefile="$T/${LKMM_HW_MAP_FILE}.theme"
--	herdoptions="-model $LKMM_HW_CAT_FILE"
--	hwlitmus=`echo $litmus | sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`
--	hwlitmusfile=`echo $hwlitmus | sed -e 's,^.*/,,'`
-+T=/tmp/checklitmushw.sh.$$
-+trap 'rm -rf $T' 0 2
-+mkdir $T
- 
--	# Don't run on litmus tests with complex synchronization
--	if ! scripts/simpletest.sh $litmus
--	then
--		echo ' --- ' error: \"$litmus\" contains locking, RCU, or SRCU
--		exit 254
--	fi
-+# Generate filenames
-+catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
-+mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
-+themefile="$T/${LKMM_HW_MAP_FILE}.theme"
-+herdoptions="-model $LKMM_HW_CAT_FILE"
-+hwlitmus=`echo $litmus | sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`
-+hwlitmusfile=`echo $hwlitmus | sed -e 's,^.*/,,'`
- 
--	# Generate the assembly code and run herd on it.
--	gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
--	jingle7 -theme $themefile $litmus > $T/$hwlitmusfile 2> $T/$hwlitmusfile.jingle7.out
--	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $T/$hwlitmusfile > $LKMM_DESTDIR/$hwlitmus.out 2>&1
-+# Don't run on litmus tests with complex synchronization
-+if ! scripts/simpletest.sh $litmus
-+then
-+	echo ' --- ' error: \"$litmus\" contains locking, RCU, or SRCU
-+	exit 254
+ 	grep -v 'maxresident)k\|minor)pagefaults\|^Time' $1 > $T/oldout
+ 	grep -v 'maxresident)k\|minor)pagefaults\|^Time' $2 > $T/newout
+ 	if cmp -s $T/oldout $T/newout && grep -q '^Observation' $1
+@@ -78,6 +96,10 @@ if test "$obsresult" -ne 0
+ then
+ 	echo Matching Observation Always/Sometimes/Never result: $obsresult 1>&2
  fi
- 
-+# Generate the assembly code and run herd7 on it.
-+gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
-+jingle7 -theme $themefile $litmus > $T/$hwlitmusfile 2> $T/$hwlitmusfile.jingle7.out
-+/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $T/$hwlitmusfile > $LKMM_DESTDIR/$hwlitmus.out 2>&1
-+
- exit $?
++if test "$timedout" -ne 0
++then
++	echo "!!!" Timed out: $timedout 1>&2
++fi
+ if test "$badcompare" -ne 0
+ then
+ 	echo "!!!" Result changed: $badcompare 1>&2
 -- 
 2.17.1
 
