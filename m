@@ -2,108 +2,120 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B079C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEE4C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA775206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A38A20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564693931;
-	bh=Z3JBSEabCYqVERhucom6VoAMEjeEttCuwr//yqx2TY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EHKhA0J++CScZVYO1KwHZYbkF2zb6i0Ues225EqxMBeLte7BWXS0eRbKAXMk3f2mJ
-	 rIiQgZ2klizpOLMvTWWF2cX1QE3EiKenimDbimpRKF359Pa/tFgy01iyaMDHbYlOK4
-	 PmI0HIZ7/RLRFKJw07rkxx5ztbBysmJi6oaQS11M=
+	s=default; t=1564694091;
+	bh=n0IdgFG7Kos2nGnJ4DnkR9p1y4CCyIbJ6ZBAUiBNpN4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=klWJauwkPRkm/5v701g68mXrurJ1vGjv19hMOe5VURzTJjPlU8DF7dOCMDFKn1Ell
+	 T9hhe1eu0PhzGtaRFOHl46+8uoMWOGvqUlLj1D6dxZFjOaQMfn5LMooDJFYZCpwWtI
+	 ApjdP/uP8v1mwErFdEGHf+PAr0yqEeC1tWy0TD88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389085AbfHAVMJ (ORCPT
+        id S2389100AbfHAVOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:12:09 -0400
-Received: from mga11.intel.com ([192.55.52.93]:45634 "EHLO mga11.intel.com"
+        Thu, 1 Aug 2019 17:14:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732361AbfHAVMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:12:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 14:12:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,335,1559545200"; 
-   d="scan'208";a="348219613"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga005.jf.intel.com with ESMTP; 01 Aug 2019 14:12:08 -0700
-Date:   Thu, 1 Aug 2019 15:09:29 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        keith.busch@intel.com
-Subject: Re: [PATCH v4 2/7] PCI/ATS: Initialize PRI in pci_ats_init()
-Message-ID: <20190801210929.GE15795@localhost.localdomain>
-References: <cover.1562172836.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <744998862eebecfae79afd23c42d518264231a22.1562172836.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S1731215AbfHAVOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 17:14:49 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D3D7206A2;
+        Thu,  1 Aug 2019 21:14:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564694087;
+        bh=n0IdgFG7Kos2nGnJ4DnkR9p1y4CCyIbJ6ZBAUiBNpN4=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=mCeQAbdwzIbwLPOijpChQVFo4UiYoSWfSZsIgfoIrNYNDT1t+cF6inHSpvwbpaWEE
+         h3a75ihCGxnVfKz0yO5MH+8Z55L0rleQ67pJQ89uiV1jYfk7eCIm+wLogdHeiGG1J2
+         0oPUv74xqN1E4K+r3Bcp5gj1D6bBbIkaOl5oR1Jc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <744998862eebecfae79afd23c42d518264231a22.1562172836.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAFd5g473iFfvBnJs2pcwuJYgY+DpgD6RLzyDFL1otUuScgKUag@mail.gmail.com>
+References: <20190716175021.9CA412173C@mail.kernel.org> <20190719000834.GA3228@google.com> <20190722200347.261D3218C9@mail.kernel.org> <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com> <20190722235411.06C1320840@mail.kernel.org> <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz> <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com> <20190726083148.d4gf57w2nt5k7t6n@pathway.suse.cz> <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com> <CAFd5g473iFfvBnJs2pcwuJYgY+DpgD6RLzyDFL1otUuScgKUag@mail.gmail.com>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Petr Mladek <pmladek@suse.com>, Jeff Dike <jdike@addtoit.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@google.com>,
+        David Rientjes <rientjes@google.com>,
+        kunit-dev@googlegroups.com,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        wfg@linux.intel.com, Greg KH <gregkh@linuxfoundation.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Timothy Bird <Tim.Bird@sony.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+User-Agent: alot/0.8.1
+Date:   Thu, 01 Aug 2019 14:14:46 -0700
+Message-Id: <20190801211447.6D3D7206A2@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 01:46:19PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> +#ifdef CONFIG_PCI_PRI
-> +static void pci_pri_init(struct pci_dev *pdev)
-> +{
-> +	u32 max_requests;
-> +	int pos;
-> +
-> +	/*
-> +	 * As per PCIe r4.0, sec 9.3.7.11, only PF is permitted to
-> +	 * implement PRI and all associated VFs can only use it.
-> +	 * Since PF already initialized the PRI parameters there is
-> +	 * no need to proceed further.
-> +	 */
-> +	if (pdev->is_virtfn)
-> +		return;
-> +
-> +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
-> +	if (!pos)
-> +		return;
-> +
-> +	pci_read_config_dword(pdev, pos + PCI_PRI_MAX_REQ, &max_requests);
-> +
-> +	/*
-> +	 * Since PRI is a shared resource between PF and VF, we must not
-> +	 * configure Outstanding Page Allocation Quota as a per device
-> +	 * resource in pci_enable_pri(). So use maximum value possible
-> +	 * as default value.
-> +	 */
-> +	pci_write_config_dword(pdev, pos + PCI_PRI_ALLOC_REQ, max_requests);
-> +
-> +	pdev->pri_reqs_alloc = max_requests;
-> +	pdev->pri_cap = pos;
-> +}
-> +#endif
-> +
->  void pci_ats_init(struct pci_dev *dev)
->  {
->  	int pos;
-> @@ -28,6 +62,10 @@ void pci_ats_init(struct pci_dev *dev)
->  		return;
->  
->  	dev->ats_cap = pos;
-> +
-> +#ifdef CONFIG_PCI_PRI
-> +	pci_pri_init(dev);
-> +#endif
->  }
+Quoting Brendan Higgins (2019-08-01 11:59:57)
+> On Thu, Aug 1, 2019 at 11:55 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > On Fri, Jul 26, 2019 at 1:31 AM Petr Mladek <pmladek@suse.com> wrote:
+> >
+> > > To be honest I do not fully understand KUnit design. I am not
+> > > completely sure how the tested code is isolated from the running
+> > > system. Namely, I do not know if the tested code shares
+> > > the same locks with the system running the test.
+> >
+> > No worries, I don't expect printk to be the hang up in those cases. It
+> > sounds like KUnit has a long way to evolve before printk is going to
+> > be a limitation.
+>=20
+> So Stephen, what do you think?
+>=20
+> Do you want me to go forward with the new kunit_assert API wrapping
+> the string_stream as I have it now? Would you prefer to punt this to a
+> later patch? Or would you prefer something else?
+>=20
 
-Rather than surround the call to pci_pri_init() with the #ifdef, you
-should provide an empty function implementation when CONFIG_PCI_PRI is
-not defined. Same thing for the next patch adding PASID.
+I like the struct based approach. If anything, it can be adjusted to
+make the code throw some records into a spinlock later on and delay the
+formatting of the assertion if need be. Can you resend with that
+approach? I don't think I'll have any more comments after that.
+
