@@ -2,89 +2,97 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A141C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D58FC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAB620665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354AE20665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730968AbfHAM1i (ORCPT
+        id S1731233AbfHAM1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:27:38 -0400
-Received: from sauhun.de ([88.99.104.3]:52378 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbfHAM1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:27:38 -0400
-Received: from localhost (p54B333D2.dip0.t-ipconnect.de [84.179.51.210])
-        by pokefinder.org (Postfix) with ESMTPSA id 026C62C2817;
-        Thu,  1 Aug 2019 14:27:35 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 14:27:35 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v3 5/7] drivers: Introduce device lookup variants by
- ACPI_COMPANION device
-Message-ID: <20190801122735.GD1659@ninjato>
-References: <20190723221838.12024-1-suzuki.poulose@arm.com>
- <20190723221838.12024-6-suzuki.poulose@arm.com>
- <20190726202353.GA963@kunai>
- <20190801115856.GS23480@smile.fi.intel.com>
- <20190801120830.GA1659@ninjato>
- <20190801122106.GU23480@smile.fi.intel.com>
+        Thu, 1 Aug 2019 08:27:47 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3693 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728903AbfHAM1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:27:46 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 83F5B7044E6CEC3A93B0;
+        Thu,  1 Aug 2019 20:27:44 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 1 Aug 2019
+ 20:27:37 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <f.fainelli@gmail.com>, <andrew@lunn.ch>,
+        <vivien.didelot@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] net: dsa: b53: use devm_platform_ioremap_resource() to simplify code
+Date:   Thu, 1 Aug 2019 20:27:32 +0800
+Message-ID: <20190801122732.37216-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n2Pv11Ogg/Ox8ay5"
-Content-Disposition: inline
-In-Reply-To: <20190801122106.GU23480@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
---n2Pv11Ogg/Ox8ay5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/dsa/b53/b53_srab.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/dsa/b53/b53_srab.c b/drivers/net/dsa/b53/b53_srab.c
+index d9c56a7..0a1be52 100644
+--- a/drivers/net/dsa/b53/b53_srab.c
++++ b/drivers/net/dsa/b53/b53_srab.c
+@@ -536,7 +536,6 @@ static void b53_srab_mux_init(struct platform_device *pdev)
+ 	struct b53_device *dev = platform_get_drvdata(pdev);
+ 	struct b53_srab_priv *priv = dev->priv;
+ 	struct b53_srab_port_priv *p;
+-	struct resource *r;
+ 	unsigned int port;
+ 	u32 reg, off = 0;
+ 	int ret;
+@@ -544,8 +543,7 @@ static void b53_srab_mux_init(struct platform_device *pdev)
+ 	if (dev->pdata && dev->pdata->chip_id != BCM58XX_DEVICE_ID)
+ 		return;
+ 
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	priv->mux_config = devm_ioremap_resource(&pdev->dev, r);
++	priv->mux_config = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(priv->mux_config))
+ 		return;
+ 
+@@ -593,7 +591,6 @@ static int b53_srab_probe(struct platform_device *pdev)
+ 	const struct of_device_id *of_id = NULL;
+ 	struct b53_srab_priv *priv;
+ 	struct b53_device *dev;
+-	struct resource *r;
+ 
+ 	if (dn)
+ 		of_id = of_match_node(b53_srab_of_match, dn);
+@@ -610,8 +607,7 @@ static int b53_srab_probe(struct platform_device *pdev)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->regs = devm_ioremap_resource(&pdev->dev, r);
++	priv->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->regs))
+ 		return -ENOMEM;
+ 
+-- 
+2.7.4
 
 
-> It's again not Cc'ed to all parties.
-> But OK, looks good to me.
-> Tough may be Jarkko can test all this.
-
-To be fair, only Mika is listed as I2C ACPI maintainer. Feel free to add
-more :) I assume Mika doesn't mind.
-
-
---n2Pv11Ogg/Ox8ay5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1C2rcACgkQFA3kzBSg
-KbbC7g/+JDJ/wQtaEgLwko1svAEbCfU6wxRadTwM0jWd4adQgIpPuwceKEDRV5ap
-sdqUoIDjY4UInI7HeUYLRTY/VUIaOmQ4C0VkWvgYFnAsZoAU/GWKrGVnJ74C34oK
-L1n76meYZVFj1+kuOPce8PKPbZ1N6t2N0H5VHChczypiPldel2s/UiW5Myk18T5v
-ZBt/xDU/C+vn2IPRKu5ybKFWzsSGIeAq0D/LvrnsO6q7z3bu8nmOL8rNTQCOVVwl
-vG1B3arBO1jwtT5kVA3/1hQZDoDucaXlFNw/8oL/jSHCajH2kKf/Ux0D4gAjK18y
-XWexgt84CLU9Q1MIwuYoJ+yuB8jyeJVdWAEkDSBVS6qUSZRx+00arhni5AJKWKGG
-aXe/UHiDv1FAgyqekJDwerz3pRRULCqtiGTZ3H3IOlLc1FtTibJ5VJeDZ8dH/+4z
-+TeZiW+iLpNDufs3x8Sf6I+StIUB0bDWlvWyY2rdcL0YqozlUMYlQLvRfjOJLf9t
-3C1S9F4JB8pf9XOxPHKMIUgXpruGuWSLKm2m+rX7X49kQ3Ey4YRAhhVGT8PT9e3B
-1YtgOqFwsdaexAc3Y1LoVutgoLEARcqZ4q30pao5uIVzy7reLFmM/u3NRJDTKurR
-UxJH+EIkqg6UzLXABaZ5mTPYOFeiNDbjRAvLF7yBFENM9bBw2ZY=
-=K7Ly
------END PGP SIGNATURE-----
-
---n2Pv11Ogg/Ox8ay5--
