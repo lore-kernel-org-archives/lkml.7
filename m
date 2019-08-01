@@ -2,140 +2,261 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE64C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC636C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9078920679
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98D020838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:00:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="C1F2zOTk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pv0bAx16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733087AbfHAS7u (ORCPT
+        id S2387519AbfHATAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 14:59:50 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34987 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfHAS7t (ORCPT
+        Thu, 1 Aug 2019 15:00:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45926 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733281AbfHATAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 14:59:49 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71IxdhC068347
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 1 Aug 2019 11:59:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71IxdhC068347
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1564685980;
-        bh=law6ZTlI5ho8cu51jCOAD+nCQfJKWi5Iq8JmVYevSQ8=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=C1F2zOTkdelv/2dQFbfLAkf3phdwePnKrEWMY4GA1SGdaUCeljvahZxaedqvzkOoD
-         uz7XmsSboRsdPAwiuJxWr1TA0t1NRhvTnXMGJ861Ogl6NjoOr4ANokT2bYz6Sm54P4
-         mahkWYK4qLuITATKzipbkLX87UMJP0IYVLMBXhhn5+YRWjdUm2m+9Ik5R70wxSNQD1
-         Mx59O+6C4veijZBm6lj9hENVnXe8sc6kcSd3CuapblqXkA0clC6K+Y7fME+A0OQ/b3
-         fsXpmyQPOJLKYlaNmyC1MfMxaVUTOjeLDexMGsBcjQAfjAIOOhUpv4tkjteKZSYkY0
-         On0b0XMlmWWkw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71Ixd45068344;
-        Thu, 1 Aug 2019 11:59:39 -0700
-Date:   Thu, 1 Aug 2019 11:59:39 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-30f9028b6c43fd17c006550594ea3dbb87afbf80@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        tglx@linutronix.de, hpa@zytor.com, peterz@infradead.org,
-        mingo@kernel.org
-Reply-To: linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-          hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org,
-          peterz@infradead.org
-In-Reply-To: <20190726185753.169509224@linutronix.de>
-References: <20190726185753.169509224@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] perf/core: Mark hrtimers to expire in hard
- interrupt context
-Git-Commit-ID: 30f9028b6c43fd17c006550594ea3dbb87afbf80
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 1 Aug 2019 15:00:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so34584592pfq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 12:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aDxLBS4nbidlZaAtXYw0USt8/H/W+WG8684PWx5rwyQ=;
+        b=pv0bAx16eo2h6cETtsAYgENWK9M2bYvG+2Hz6A34FYrqmcynxgrW9FNs/525MND6gB
+         2g6kcjb+Wkd+pb0xI7ftHNd0BVOITtTiTdD56/FcKgN4Oo2+porzmf4U9X3Pqjv9ogM1
+         Z/kC+frcls4vFOv0a+Igy+yBfGaArcosyMDHDXjiNXpDaeofzOG5DOQcNazFjnvoRzuL
+         lMNAJ094wDYyEwWeRaNCuSip3QYCnNDMNHTTayzSCRSrzP0/lO3z9AfO8vlHbyMc08h0
+         L6e7CWilIk4y/ObfnP2JjpR9VQdXeLa/Y/zr+BG5epVgFfah7DysLVeveUDkPYm8KXFn
+         gqfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aDxLBS4nbidlZaAtXYw0USt8/H/W+WG8684PWx5rwyQ=;
+        b=OzrW8dStBqx83+DK85ClkYHqmPqRtJcYrWUpw3n8MkQT0AbnWs+slKkezxXQ8WKLVX
+         cFZFZzop6BYpFnxn3KmyYsAiPHlruCEpG9dNaWsW2kVr+XlhYPrUoAEheAmcCwtyCHLt
+         DlyKByJ2m1BMBrNdMrK8Io1Nc3HQZgt12HECG7HxTZq05zyamdvFMY66Dmz4SRI1Qb8a
+         +tHyNTnzxV1P/YUSaJ/C0XN0UdcBbB+yI0fRALerppgtJueZ06WDf/7iA0hLbCOda16m
+         v0Vj+8ODTV26x9CP+R5TXBZQ3e8milE2ZclpNX7VXKFdK6P+j1Y6gAYsJaj4zu6sdO7N
+         JG/Q==
+X-Gm-Message-State: APjAAAXsT1aHU7adtOx+y4UX7orvTJP4Gmdm6XTPGGaJLINBzmr4hfGR
+        TsJJjt9DLGRJbHRfpoc704V2GqStglTZvAqlSJz9Fw==
+X-Google-Smtp-Source: APXvYqwv+GK8Cv38wHfxPLEhDVQmFebg2D/gxuBYSy86PyxeYJ6WQOVIPvsR1azS2zoUo23aYbsoJojKwt0bn5jaZnM=
+X-Received: by 2002:a17:90a:ab0d:: with SMTP id m13mr268291pjq.84.1564686008520;
+ Thu, 01 Aug 2019 12:00:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190716175021.9CA412173C@mail.kernel.org> <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
+ <20190718175024.C3EC421019@mail.kernel.org> <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
+ <20190719000834.GA3228@google.com> <20190722200347.261D3218C9@mail.kernel.org>
+ <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
+ <20190722235411.06C1320840@mail.kernel.org> <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
+ <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
+ <20190726083148.d4gf57w2nt5k7t6n@pathway.suse.cz> <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com>
+In-Reply-To: <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 1 Aug 2019 11:59:57 -0700
+Message-ID: <CAFd5g473iFfvBnJs2pcwuJYgY+DpgD6RLzyDFL1otUuScgKUag@mail.gmail.com>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Petr Mladek <pmladek@suse.com>, Jeff Dike <jdike@addtoit.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@google.com>,
+        David Rientjes <rientjes@google.com>,
+        kunit-dev@googlegroups.com,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        wfg@linux.intel.com, Greg KH <gregkh@linuxfoundation.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Timothy Bird <Tim.Bird@sony.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  30f9028b6c43fd17c006550594ea3dbb87afbf80
-Gitweb:     https://git.kernel.org/tip/30f9028b6c43fd17c006550594ea3dbb87afbf80
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Fri, 26 Jul 2019 20:30:53 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 1 Aug 2019 20:51:20 +0200
+On Thu, Aug 1, 2019 at 11:55 AM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Fri, Jul 26, 2019 at 1:31 AM Petr Mladek <pmladek@suse.com> wrote:
+> >
+> > On Thu 2019-07-25 13:21:12, Brendan Higgins wrote:
+> > > On Wed, Jul 24, 2019 at 12:31 AM Petr Mladek <pmladek@suse.com> wrote:
+> > > >
+> > > > On Mon 2019-07-22 16:54:10, Stephen Boyd wrote:
+> > > > > Quoting Brendan Higgins (2019-07-22 15:30:49)
+> > > > > > On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > > > > >
+> > > > > > >
+> > > > > > > What's the calling context of the assertions and expectations? I still
+> > > > > > > don't like the fact that string stream needs to allocate buffers and
+> > > > > > > throw them into a list somewhere because the calling context matters
+> > > > > > > there.
+> > > > > >
+> > > > > > The calling context is the same as before, which is anywhere.
+> > > > >
+> > > > > Ok. That's concerning then.
+> > > > >
+> > > > > >
+> > > > > > > I'd prefer we just wrote directly to the console/log via printk
+> > > > > > > instead. That way things are simple because we use the existing
+> > > > > > > buffering path of printk, but maybe there's some benefit to the string
+> > > > > > > stream that I don't see? Right now it looks like it builds a string and
+> > > > > > > then dumps it to printk so I'm sort of lost what the benefit is over
+> > > > > > > just writing directly with printk.
+> > > > > >
+> > > > > > It's just buffering it so the whole string gets printed uninterrupted.
+> > > > > > If we were to print out piecemeal to printk, couldn't we have another
+> > > > > > call to printk come in causing it to garble the KUnit message we are
+> > > > > > in the middle of printing?
+> > > > >
+> > > > > Yes, printing piecemeal by calling printk many times could lead to
+> > > > > interleaving of messages if something else comes in such as an interrupt
+> > > > > printing something. Printk has some support to hold "records" but I'm
+> > > > > not sure how that would work here because KERN_CONT talks about only
+> > > > > being used early on in boot code. I haven't looked at printk in detail
+> > > > > though so maybe I'm all wrong and KERN_CONT just works?
+> > > >
+> > > > KERN_CONT does not guarantee that the message will get printed
+> > > > together. The pieces get interleaved with messages printed in
+> > > > parallel.
+> > > >
+> > > > Note that KERN_CONT was originally really meant to be used only during
+> > > > boot. It was later used more widely and ended in the best effort category.
+> > > >
+> > > > There were several attempts to make it more reliable. But it was
+> > > > always either too complicated or error prone or both.
+> > > >
+> > > > You need to use your own buffering if you rely want perfect output.
+> > > > The question is if it is really worth the complexity. Also note that
+> > > > any buffering reduces the chance that the messages will reach
+> > > > the console.
+> > >
+> > > Seems like that settles it then. Thanks!
+> > >
+> > > > BTW: There is a work in progress on a lockless printk ring buffer.
+> > > > It will make printk() more secure regarding deadlocks. But it might
+> > > > make transparent handling of continuous lines even more tricky.
+> > > >
+> > > > I guess that local buffering, before calling printk(), will be
+> > > > even more important then. Well, it might really force us to create
+> > > > an API for it.
+> > >
+> > > Cool! Can you CC me on that discussion?
+> >
+> > Adding John Oggness into CC.
+> >
+> > John, please CC Brendan Higgins on the patchsets eventually switching
+> > printk() into the lockless buffer. The test framework is going to
+> > do its own buffering to keep the related messages together.
+> >
+> > The lockless ringbuffer might make handling of related (partial)
+> > lines worse or better. It might justify KUnit's extra buffering
+> > or it might allow to get rid of it.
+>
+> Thanks for CC'ing me on the printk ringbuffer thread. It looks like it
+> actually probably won't affect my needs for KUnit logging. The biggest
+> reason I need some sort of buffering system is to be able to compose
+> messages piece meal into a single message that will be printed out to
+> the user as a single message with no messages from other printk
+> callers printed out in the middle of mine.
+>
+> The prb does look interesting; however, it appears that to get the
+> semantics that I need, I would have to put my entire message in a
+> single data block and would consequently need to know the size of my
+> message a priori, which is problematic. Consequently, it seems as
+> though I will probably need to compose my entire message using my own
+> buffering system.
+>
+> > > > Note that stroring the messages into the printk log is basically safe in any
+> > > > context. It uses temporary per-CPU buffers for recursive messages and
+> > > > in NMI. The only problem is panic() when some CPU gets stuck with the
+> > > > lock taken. This will get solved by the lockless ringbuffer. Also
+> > > > the temporary buffers will not be necessary any longer.
+> > >
+> > > Sure, I think Stephen's concern is all the supporting code that is
+> > > involved. Not printk specifically. It just means a lot more of KUnit
+> > > has to be IRQ safe.
+> >
+> > I see.
+> >
+> > BTW: I wonder if KUnit could reuse the existing seq_buf implementation
+> > for buffering messages.
+> >
+> > I am sorry if it has already been proposed and rejected for some
+> > reason. I might have missed it. Feel free to just point me to
+> > same older mail.
+>
+> Yeah, we discussed it briefly here:
+>
+> https://lkml.org/lkml/2019/5/17/497
+>
+> Looks like I forgot to include my reasoning in the commit text, sorry
+> about that.
+>
+> > > > Much bigger problems are with consoles. There are many of them. It
+> > > > means a lot of code and more locks involved, including scheduler
+> > > > locks. Note that console lock is a semaphore.
+> > >
+> > > That shouldn't affect us though, right? As long as we continue to use
+> > > the printk interface?
+> >
+> > I guess that it should not affect KUnit.
+> >
+> > The only problem might be if the testing framework calls printk()
+> > inside scheduler or console code. And only when the tested code
+> > uses the same locks that will be used by the called printk().
+>
+> Yeah, well printk will not be our only problem in those instances.
+>
+> > To be honest I do not fully understand KUnit design. I am not
+> > completely sure how the tested code is isolated from the running
+> > system. Namely, I do not know if the tested code shares
+> > the same locks with the system running the test.
+>
+> No worries, I don't expect printk to be the hang up in those cases. It
+> sounds like KUnit has a long way to evolve before printk is going to
+> be a limitation.
 
-perf/core: Mark hrtimers to expire in hard interrupt context
+So Stephen, what do you think?
 
-To guarantee that the multiplexing mechanism and the hrtimer driven events
-work on PREEMPT_RT enabled kernels it's required that the related hrtimers
-expire in hard interrupt context. Mark them so PREEMPT_RT kernels wont
-defer them to soft interrupt context.
+Do you want me to go forward with the new kunit_assert API wrapping
+the string_stream as I have it now? Would you prefer to punt this to a
+later patch? Or would you prefer something else?
 
-No functional change.
-
-[ tglx: Split out of larger combo patch. Added changelog ]
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190726185753.169509224@linutronix.de
-
-
-
----
- kernel/events/core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 026a14541a38..9d623e257a51 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1103,7 +1103,7 @@ static void __perf_mux_hrtimer_init(struct perf_cpu_context *cpuctx, int cpu)
- 	cpuctx->hrtimer_interval = ns_to_ktime(NSEC_PER_MSEC * interval);
- 
- 	raw_spin_lock_init(&cpuctx->hrtimer_lock);
--	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
-+	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
- 	timer->function = perf_mux_hrtimer_handler;
- }
- 
-@@ -1121,7 +1121,7 @@ static int perf_mux_hrtimer_restart(struct perf_cpu_context *cpuctx)
- 	if (!cpuctx->hrtimer_active) {
- 		cpuctx->hrtimer_active = 1;
- 		hrtimer_forward_now(timer, cpuctx->hrtimer_interval);
--		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED);
-+		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED_HARD);
- 	}
- 	raw_spin_unlock_irqrestore(&cpuctx->hrtimer_lock, flags);
- 
-@@ -9491,7 +9491,7 @@ static void perf_swevent_start_hrtimer(struct perf_event *event)
- 		period = max_t(u64, 10000, hwc->sample_period);
- 	}
- 	hrtimer_start(&hwc->hrtimer, ns_to_ktime(period),
--		      HRTIMER_MODE_REL_PINNED);
-+		      HRTIMER_MODE_REL_PINNED_HARD);
- }
- 
- static void perf_swevent_cancel_hrtimer(struct perf_event *event)
-@@ -9513,7 +9513,7 @@ static void perf_swevent_init_hrtimer(struct perf_event *event)
- 	if (!is_sampling_event(event))
- 		return;
- 
--	hrtimer_init(&hwc->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(&hwc->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	hwc->hrtimer.function = perf_swevent_hrtimer;
- 
- 	/*
+Cheers
