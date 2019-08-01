@@ -2,75 +2,113 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A609C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB8FC32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED13720B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF7E2087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732017AbfHAPr3 (ORCPT
+        id S1732033AbfHAPrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:47:29 -0400
-Received: from viti.kaiser.cx ([85.214.81.225]:38964 "EHLO viti.kaiser.cx"
+        Thu, 1 Aug 2019 11:47:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38252 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731757AbfHAPrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:47:12 -0400
-Received: from dslb-094-223-182-030.094.223.pools.vodafone-ip.de ([94.223.182.30] helo=martin-debian-1.paytec.ch)
-        by viti.kaiser.cx with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <martin@kaiser.cx>)
-        id 1htDIL-0008SJ-2X; Thu, 01 Aug 2019 17:47:09 +0200
-From:   Martin Kaiser <martin@kaiser.cx>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH 8/8] ARM: dts: imx25: mbimxsd25: native-mode is part of display-timings
-Date:   Thu,  1 Aug 2019 17:46:28 +0200
-Message-Id: <20190801154628.1624-9-martin@kaiser.cx>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190801154628.1624-1-martin@kaiser.cx>
-References: <20190801154628.1624-1-martin@kaiser.cx>
+        id S1730486AbfHAPrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 11:47:41 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 632D77A186;
+        Thu,  1 Aug 2019 15:47:41 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2D76019934;
+        Thu,  1 Aug 2019 15:47:40 +0000 (UTC)
+Message-ID: <3fefc2a4b2d1996f79a16e10a10f507e937c4023.camel@redhat.com>
+Subject: Re: [PATCH -next] RDMA/hns: remove set but not used variable
+ 'irq_num'
+From:   Doug Ledford <dledford@redhat.com>
+To:     Leon Romanovsky <leon@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Cc:     oulijun@huawei.com, xavier.huwei@huawei.com, jgg@ziepe.ca,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Date:   Thu, 01 Aug 2019 11:47:37 -0400
+In-Reply-To: <20190801101023.GI4832@mtr-leonro.mtl.com>
+References: <20190731073748.17664-1-yuehaibing@huawei.com>
+         <20190801101023.GI4832@mtr-leonro.mtl.com>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-ZBUAEfrpWwrAsrwkHr9d"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 01 Aug 2019 15:47:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the native-mode property inside the display-timings node.
 
-According to
-Documentation/devicetree/bindings/display/panel/display-timing.txt.
-native-mode is a property of the display-timings node.
+--=-ZBUAEfrpWwrAsrwkHr9d
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If it's located outside of display-timings, the native-mode setting is
-ignored and the first display timing is used (which is a problem only if
-someone adds another display timing).
+On Thu, 2019-08-01 at 13:10 +0300, Leon Romanovsky wrote:
+> On Wed, Jul 31, 2019 at 03:37:48PM +0800, YueHaibing wrote:
+> > Fixes gcc '-Wunused-but-set-variable' warning:
+> >=20
+> > drivers/infiniband/hw/hns/hns_roce_hw_v2.c: In function
+> > hns_roce_v2_cleanup_eq_table:
+> > drivers/infiniband/hw/hns/hns_roce_hw_v2.c:5920:6:
+> >  warning: variable irq_num set but not used [-Wunused-but-set-
+> > variable]
+> >=20
+> > It is not used since
+> > commit 33db6f94847c ("RDMA/hns: Refactor eq table init for hip08")
+> >=20
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > ---
+> >  drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 --
+> >  1 file changed, 2 deletions(-)
+> >=20
+>=20
+> I'm hitting this error too.
+>=20
+> Thanks,
+> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
 
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied to for-next, thanks.
 
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
-index d60d8f464ca9..24027a1fb46d 100644
---- a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
-@@ -14,8 +14,8 @@
- 		bits-per-pixel = <16>;
- 		fsl,pcr = <0xfa208b80>;
- 		bus-width = <18>;
--		native-mode = <&dvi_vga_timings>;
- 		display-timings {
-+			native-mode = <&dvi_vga_timings>;
- 			dvi_vga_timings: 640x480 {
- 				clock-frequency = <31250000>;
- 				hactive = <640>;
--- 
-2.11.0
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-ZBUAEfrpWwrAsrwkHr9d
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1DCZkACgkQuCajMw5X
+L91CRxAAk0lcshEW7kE4MksP6LfCupyx+1/iLbc1wvumIBUN6y9heglEogDzVrqG
+MLbacj8ij+nWf+Vz8sccgHeEMofex2dOiQy/IO6P2LZW/V5Lc3KapAbQ50yGGoRH
+KA1H2ue9pTFDQb8pmJqNQNh85Ns7jLImXd8cjQOS9UdK3qUhHiO81nmBL7PazNGD
+fUmeE+Qu7vgzp1pi8RKkXwatT3Gexx2AQXA//Am13hslSXWtHdqlVxH90lQn+vbt
+LLlRSeOvgrkECkwOtNGCe1BfrkIWvN/dku4e9yItfjOD0b2hRboG2Dtk8c1Cre0l
+MdduD2M6QL7FO61fkvDxoZ3jaux0Ao4tUKhyKZ4ixfCrNO95+OkN1uELpveoG0m9
+U7g+45pesorUzBYVfifIKJG4tuRzomztVY/URuWXH/27GLlcfjbeU5U17OdcXv1I
+zus8pqL2sHn6G3b2hWRfmAxnv8ZT19iRYMU+P4LkY2u1GkGZ5BLtPIjQaVMg12MC
+nAclnvD1oJ4d84Xg6/D8aCdl0xKe5qCMcmeUqA1AmMt2XviYxHBZmtNSrdmsH8/4
+SeE3bkCLWRhrX3rLBmMdLtR6hKmrErdCUc0s9SARLtbVhw9tCQWUnWJtxnwsrMNW
+CyKTXhTcYiytPnyslAFIbYsJeastIIoTupRL01SJF/K0Gy+bkDQ=
+=dD21
+-----END PGP SIGNATURE-----
+
+--=-ZBUAEfrpWwrAsrwkHr9d--
 
