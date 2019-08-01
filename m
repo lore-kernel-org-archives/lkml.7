@@ -2,79 +2,87 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD88C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FF1C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C21E620665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB5E204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731285AbfHAMaV (ORCPT
+        id S1731164AbfHAMbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:30:21 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34940 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729506AbfHAMaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:30:21 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 44C8151969F35F57FFE2;
-        Thu,  1 Aug 2019 20:30:18 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 1 Aug 2019
- 20:30:09 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <andrew@lunn.ch>,
-        <vivien.didelot@gmail.com>, <f.fainelli@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: dsa: bcm_sf2: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 1 Aug 2019 20:29:11 +0800
-Message-ID: <20190801122911.30992-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 1 Aug 2019 08:31:33 -0400
+Received: from sauhun.de ([88.99.104.3]:52418 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728800AbfHAMbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:31:33 -0400
+Received: from localhost (p54B333D2.dip0.t-ipconnect.de [84.179.51.210])
+        by pokefinder.org (Postfix) with ESMTPSA id 029702C2817;
+        Thu,  1 Aug 2019 14:31:30 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 14:31:30 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Ray Jui <ray.jui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v1 1/1] i2c: iproc: Fix i2c master read more than 63 bytes
+Message-ID: <20190801123130.GE1659@ninjato>
+References: <1563956907-21255-1-git-send-email-rayagonda.kokatanur@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2hMgfIw2X+zgXrFs"
+Content-Disposition: inline
+In-Reply-To: <1563956907-21255-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/dsa/bcm_sf2.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+--2hMgfIw2X+zgXrFs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 3811fdb..49f9943 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -1041,7 +1041,6 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 	struct b53_device *dev;
- 	struct dsa_switch *ds;
- 	void __iomem **base;
--	struct resource *r;
- 	unsigned int i;
- 	u32 reg, rev;
- 	int ret;
-@@ -1107,8 +1106,7 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 
- 	base = &priv->core;
- 	for (i = 0; i < BCM_SF2_REGS_NUM; i++) {
--		r = platform_get_resource(pdev, IORESOURCE_MEM, i);
--		*base = devm_ioremap_resource(&pdev->dev, r);
-+		*base = devm_platform_ioremap_resource(pdev, i);
- 		if (IS_ERR(*base)) {
- 			pr_err("unable to find register: %s\n", reg_names[i]);
- 			return PTR_ERR(*base);
--- 
-2.7.4
+On Wed, Jul 24, 2019 at 01:58:27PM +0530, Rayagonda Kokatanur wrote:
+> Use SMBUS_MASTER_DATA_READ.MASTER_RD_STATUS bit to check for RX
+> FIFO empty condition because SMBUS_MASTER_FIFO_CONTROL.MASTER_RX_PKT_COUNT
+> is not updated for read >=3D 64 bytes. This fixes the issue when trying to
+> read from the I2C slave more than 63 bytes.
+>=20
+> Fixes: c24b8d574b7c ("i2c: iproc: Extend I2C read up to 255 bytes")
+>=20
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+
+Applied to for-current, thanks!
 
 
+--2hMgfIw2X+zgXrFs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1C26IACgkQFA3kzBSg
+Kba85w//WB/fT1rfNyJzzedg2jVwLmdiaCcBYk4Y+Sz9sKRE3/SAdPulfp/wRUcb
+Q0YUiC2cRjunfZK0voZ5EUSFU+pBvM8dIRuTIWon/qdi1+6tDDAFIuXcswulFf1d
+09hBq1/aSOad318mNt2k4qJmUNyLvDaeYFHDCLwic1K48FWFqTWzgLpFn0idKxYq
+wIqINQz9dl6Qg0t81emc4xX0MB202LoaDriix4ERwHFjLsQuseqr4IeDrbXtGvLN
+7msFGGu7cgru2AUNXKPYWpZP3NItfZexR7AVhYKvuvDECy/jk/f+3DSyxj7qvrnS
+1Am4aRNQI6BQRzpfVCZwOEdOTpsx9SCQTEKpWkj6P5sde01ghq/oQzp8ENb9qoj7
+cuqGUJ3jf02dSLLFXusgfqywUEmLktGX+1gUvicURBykEYEecUV2xgCjnB3e7cTf
+v3/IJxTqDRpeCIbMkD0W4MN3WVoFISnn/Vl50oH7GiwoxVJ4TnFdNOZ8TmWfV1TG
+EoQf9yQR3vcmz13HUwyF8W27wJwWJ8u0iWLyqxeCgDaKtHRrL5HG8bEPu3rdLafE
+6n5ksnQpABRPshtd18hRQyGVqWaqNDUjKLJgGJVhqK3kbnvgGg0Z8qrcQHOA7tl+
+HMquJaDbDdS3AMUD3N0JHWqTr236PF05THzOH1X4hXIfsRtnPF0=
+=L7tj
+-----END PGP SIGNATURE-----
+
+--2hMgfIw2X+zgXrFs--
