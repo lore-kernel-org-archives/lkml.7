@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5797C41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D277C32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABBA217D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20FA206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:58:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YVL8hvki"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KsSwN8uG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbfHAA6x (ORCPT
+        id S1729267AbfHAA66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 20:58:53 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:61766 "EHLO
+        Wed, 31 Jul 2019 20:58:58 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:61763 "EHLO
         esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728364AbfHAA6k (ORCPT
+        with ESMTP id S1728242AbfHAA6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 31 Jul 2019 20:58:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1564621121; x=1596157121;
+  t=1564621120; x=1596157120;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=OremRQyuncth6RJmwcRirDjBWRulyVTwgRdrAhtDf+0=;
-  b=YVL8hvkicD80siH6Zjit5BY9kMgrKXBjxLePjERDB6eCEXpinCqpkDsf
-   agSgpbcRQN5wQ1lVUPEKR6IKYWU26yd3L/yZo78pYIQINCwP8j91UPC+R
-   IVrjAiiY/bhD20wc5zvqitOV2i7KutnJSszziJCv8K8SPUpLKPEwOPpUj
-   ah0A87esnjqnwf1zDFAgJ2KLPqNKRbNp+CYzUqjj/O1I/OVdpRwWkuTjO
-   xG/PGttlhGL5sL4m9sUR33nPvCqqxWrl2WigPOB3HmjpRDePpP/35TpRY
-   yN/SGtTusgwqEAM/DWfKFy+QAVp58caisu1eSoarcnwZ8vg3yvp9ues8h
-   g==;
-IronPort-SDR: 6wnYWqtZSU38gVjkgQxoDu6H5DygwCXBnFkdP+tQkEjVywPgosIzP3plPyB5ig9kTJa/m7aAX8
- QcvXEImx0OYwph4YfJ46AP5fxpJw1i/iBAAIbfN39GnPPEWZXiRzm03keZwShcUC929AvJnf1x
- yObh5AlipXLcpfjB7tv2AIwghTskBiZubz1JPg/I5WAg0KeBoWcFqX3A7gsWek2pIhC/1NonBL
- pvWPsEDPi95fDeTYTVaz8JcOGUOipx2S/Ph5wE78OmLiZ6jUGpM4Uq5DJGkCSvRiskF8O4NQsq
- sGE=
+  bh=EgHMt/UGrlopQ8ONP3bfsGEh2iUNdhTT7QH850cl4Xs=;
+  b=KsSwN8uGWskg1VV3VYwKjxblxk6c6f/wP7uhDtcaDeqxCrbRp9bS1NZa
+   wHapu66M7Sn29oxquSM+w3Fe+6Pb7mt21P27TElpAMV4C57srGDKYZNy5
+   ZgjQFL/eWJSjyuTN91LakoKSJx3R1/pAVA1cuyV8ulZakVEBz2hdbdn31
+   cJj9HkOoQ5LPjcZUfAbikYTIQJ1yzgaQL9oNlgcnClnaT53YFOub+TBwO
+   zX4BPN8YIK0mFpLZuNZ2veRjSOUNIQDO6ZsJKtmL3G/Bxwvlzncw3NaTU
+   xNEcDR0VvaF7Df9xxlW6Ym5KZbteF3a/En9cUA+MpSMAp5Po4VPqv6mpY
+   w==;
+IronPort-SDR: JrD0MhVqz+XXcTuf9B6Wb3Ic0pEZKQnHRIy3sTxea5fsxNGacykjk+Dlu+W9ST9gimboDXFYbQ
+ XrKB4f3ZywUouPYCLj1iLQqmbk9zwkYiqhRibNfzAROnhTrsd6TtjsNZwLLDH35wj9LDUP01TX
+ HHCdCSnxq6mEMLBC86i2E5vRE8ahl7FmzZdlrCDPbhpmfv/84005nan4Uo+bNNRnXI+IsKxNfZ
+ R/gmpa/ax7B8rTsap3hfd56lgNKPByUGJYxObT6X2ohC7HXv+hsQo4C+Hsct+/o83triXJY6ry
+ vC8=
 X-IronPort-AV: E=Sophos;i="5.64,332,1559491200"; 
-   d="scan'208";a="116247220"
+   d="scan'208";a="116247217"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
   by ob1.hgst.iphmx.com with ESMTP; 01 Aug 2019 08:58:40 +0800
-IronPort-SDR: P0jG0d87Vf+xI3jYLnOjh6+DOSBZHbtCPlXdAMLfz5GxhfyS7kASJGkdE3mI/z1VENwCFXI9Ln
- kFTjAfE0OJ6NfMlP8bsa2vH8Ae1u9fam9Qsr5GHT2VHRyEkoK+Ii/0cFe/7M9WxdLdvYxHMSSv
- Z/iJ5JuTfuRgd5KpyfgdCyDo1WEC1Ueb+jjYdwQaEIXiXwRwV6t93MOrTphgLXMNrc2Ytir6Mr
- yD6kx9V+YwrulVBjk1x8NCIX3WGk7ozoRChzEo/LI9rtfh5qhv18VQBtrEvEhW+J8B1pBV55dJ
- v7DAHDg4jTzxCEdlXGO7ruFo
+IronPort-SDR: hH5S7eDwyiSjwJ79G2KyY9K7ew7eYf5yP9aAwYCmteAfnkTaNfMb6M6PI14/tBYxYC1Bxau8hV
+ qcLB51zH5u2hLQ7bCstuDQMb72VavKIANbRZpD0R0B001UfTDKNwG/TwZcvDelcw56hV8IRFxg
+ ItS+QSXXJlFZcbx6H38nHn1xh8uV/laZd3rOM8tHMVpKlCfa85WvO23o6ogfT+gVs1NCCC886J
+ 52/vVsZdTEcSyBRiz4Ri6tJg25BjOw/se2eoerLHv72Wx7Rna9Zc7rmjIiGD0c6R6e7xYuIJvg
+ M37Qk9OVBp69hmqw0qlfz+7i
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 17:56:40 -0700
-IronPort-SDR: buJklJ1NZhn+ariLbhCXotWJ0iZLK9+V0P+ilob/EJ3b7KF0rougKipOcdZ48jxK65bn8oEu2P
- Zjg8UtNyIcrRjfTB/NiXIejCMibCPCfF43qg+YcUA3ZHDXSquSyQhjE5kqsStoZGkDt1wIvG34
- 4LJOzaxTWTVbMCRx1NFstKqIE1JzMDnPqy9AZsrZuoaSVwsAFWBaza8hM5aL/FoZjm3uca2zDs
- CsZXi0pKH1FhccbBXWHCTzWRHvnWGzaNxQZDORnH54HFQlJYdactsLGl17bgjITsftlly8lqIP
- F3Y=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 17:56:39 -0700
+IronPort-SDR: vB0wWq2g5VV0TXjRYxActlFjCpILQXjTEq4ugNlJDp2TqO/ZK2OOY0Dlhb009q/s7ft8HAdxBu
+ IhKw36nvIfY7stv34BJEtkttLD3H8bBhk3ZMUti3CMRVJgkX5Uups95qBb9dvX9InN9jqPFnon
+ tGcyUmGj3MZoYpfhq+g+GowPPHTq1b2YGxZveEKK0VM4OIAPCV2KViQcHw7ZBpZ+C2uvI+QxOf
+ phjgQoFz4bRa8s+eRujUlM2H32JPZC8Nk8g39aZbYOaOUE9k+/5suzpdl++3i0UUfc2p7FJnfF
+ ZME=
 Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
   by uls-op-cesaip01.wdc.com with ESMTP; 31 Jul 2019 17:58:39 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Atish Patra <atish.patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Allison Randal <allison@lohutok.net>,
         Anup Patel <anup.patel@wdc.com>,
@@ -74,12 +73,13 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         linux-riscv@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>,
         Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Rob Herring <robh+dt@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v3 5/5] dt-bindings: Update the riscv,isa string description
-Date:   Wed, 31 Jul 2019 17:58:43 -0700
-Message-Id: <20190801005843.10343-6-atish.patra@wdc.com>
+Subject: [PATCH v3 4/5] RISC-V: Export few kernel symbols
+Date:   Wed, 31 Jul 2019 17:58:42 -0700
+Message-Id: <20190801005843.10343-5-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190801005843.10343-1-atish.patra@wdc.com>
 References: <20190801005843.10343-1-atish.patra@wdc.com>
@@ -90,35 +90,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the RISC-V specification states that ISA description strings are
-case-insensitive, there's no functional difference between mixed-case,
-upper-case, and lower-case ISA strings. Thus, to simplify parsing,
-specify that the letters present in "riscv,isa" must be all lowercase.
+Export few symbols used by kvm module. Without this, kvm can not
+be compiled as a module.
 
-Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- Documentation/devicetree/bindings/riscv/cpus.yaml | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/smp.c  | 2 +-
+ arch/riscv/kernel/time.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index c899111aa5e3..4f0acb00185a 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -46,10 +46,12 @@ properties:
-           - rv64imafdc
-     description:
-       Identifies the specific RISC-V instruction set architecture
--      supported by the hart.  These are documented in the RISC-V
-+      supported by the hart. These are documented in the RISC-V
-       User-Level ISA document, available from
-       https://riscv.org/specifications/
+diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+index 5a9834503a2f..402979f575de 100644
+--- a/arch/riscv/kernel/smp.c
++++ b/arch/riscv/kernel/smp.c
+@@ -193,4 +193,4 @@ void smp_send_reschedule(int cpu)
+ {
+ 	send_ipi_message(cpumask_of(cpu), IPI_RESCHEDULE);
+ }
+-
++EXPORT_SYMBOL_GPL(smp_send_reschedule);
+diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
+index 541a2b885814..9dd1f2e64db1 100644
+--- a/arch/riscv/kernel/time.c
++++ b/arch/riscv/kernel/time.c
+@@ -9,6 +9,7 @@
+ #include <asm/sbi.h>
  
-+      Letters in the riscv,isa string must be all lowercase.
-+
-   timebase-frequency:
-     type: integer
-     minimum: 1
+ unsigned long riscv_timebase;
++EXPORT_SYMBOL_GPL(riscv_timebase);
+ 
+ void __init time_init(void)
+ {
 -- 
 2.21.0
 
