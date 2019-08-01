@@ -2,183 +2,145 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCCCC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9F3C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360CF2087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55461204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:12:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oBd0jXTO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kHyJz+m7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733261AbfHARMC (ORCPT
+        id S1733271AbfHARMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 13:12:02 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50174 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfHARMB (ORCPT
+        Thu, 1 Aug 2019 13:12:12 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35529 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbfHARML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 13:12:01 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x71HApN7050476;
-        Thu, 1 Aug 2019 12:10:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564679451;
-        bh=dD7/0WiXM2Fbz3i5RnKq7tf9bBDBOzFjHTRPalRBNpA=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=oBd0jXTOv/5HQvQL5K495vveI1xDKf6GAIpKLZ4aaNqvmJoEo8n2ggyiUCIYn+dFB
-         4gKPpUscvp/7CGwsGnnMT0sielgkG/7uR/LJcp7YOA+7swNDLKykShjFXUaZwSd10k
-         8ed5eKO/42a6xa+nf0FBReMSm9mkomjzfbsXpPxw=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x71HApVF085880
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 1 Aug 2019 12:10:51 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 1 Aug
- 2019 12:10:50 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 1 Aug 2019 12:10:50 -0500
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x71HAowW070786;
-        Thu, 1 Aug 2019 12:10:50 -0500
-From:   Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v2 4/6] irqchip/irq-pruss-intc: Add helper functions to
- configure internal mapping
-To:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Tony Lindgren <tony@atomide.com>,
-        "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190731224149.11153-1-s-anna@ti.com>
- <20190731224149.11153-5-s-anna@ti.com>
- <1a63eb50-7c5c-eb3d-3cbe-bd1cc59ce3fe@kernel.org>
-Message-ID: <89abc27f-5d02-a8ce-df0e-b185c2a647cd@ti.com>
-Date:   Thu, 1 Aug 2019 12:10:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 1 Aug 2019 13:12:11 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s1so28255089pgr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 10:12:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wcjmT1jOSVdsV93kLH8gtUAFCZgmRAp5z5U28nSu3es=;
+        b=kHyJz+m7BmumSB/lXMmIWdSeNfe0tZwSsJVXm23HuBNojk088JpKyAFkU3Zv01EKO4
+         ieGUBag0hyqYjHxfBVqXUkpXPZfwkmAqjlgcwQCp2KRu6T8v+Y5MURo7X+LJVfw8IQEc
+         TleAaC303hHw5NzUk7alhSbmDoS8QCe4uUWqM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wcjmT1jOSVdsV93kLH8gtUAFCZgmRAp5z5U28nSu3es=;
+        b=c4OPyw1yFOJppeHuixSeL6BXGevi1uiyK7a+bhttZ3P7WaYfHkpJYar3mQt3+ZImcj
+         1I3Pk6omRBdM1OG+P3R0l0aa7JaeFp/+/NOHyur3I56B2Pxns9k+lFY8LPX17KTetQpc
+         Uz3ewftSgj2qDlQmJlGgUWm7kvBFSs0XaB6ASlApnwF/bJlY9mkuEwMMekGphjS1Whr+
+         WhvOIPYa9OkoT7RekunRXcPFya5gxAcTEe5oyGAV/X2UR7n2ErB54iBB277dJj+XJ2zd
+         VqEgGWXn0ElL7Dj6zFqYNrHucOlmbXQccQOrPbRVTDoWmIeQbP6ktias3gPbA+oGYYJo
+         iAhQ==
+X-Gm-Message-State: APjAAAVU9FXHf1G9F7WrVdgp3oCbwvs89FfTlN/BZ/wS/tKvc8B/aQZo
+        dVRi68YKSSrF2jXC85II7vrtyQ==
+X-Google-Smtp-Source: APXvYqx1cQXEOiX/lyozSzHWzCxjT6GUENupJHLuvSbCfxgZdgdhtJmIjnRlQ01pJzKN5yfw7hOLuw==
+X-Received: by 2002:a17:90b:f0f:: with SMTP id br15mr9940132pjb.101.1564679530629;
+        Thu, 01 Aug 2019 10:12:10 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y22sm83985492pfo.39.2019.08.01.10.12.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 10:12:10 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+X-Google-Original-From: Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH] clk: Fix falling back to legacy parent string matching
+Date:   Thu,  1 Aug 2019 10:12:09 -0700
+Message-Id: <20190801171209.234546-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
 MIME-Version: 1.0
-In-Reply-To: <1a63eb50-7c5c-eb3d-3cbe-bd1cc59ce3fe@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Calls to clk_core_get() will return ERR_PTR(-EINVAL) if we've started
+migrating a clk driver to use the DT based style of specifying parents
+but we haven't made any DT updates yet. This happens when we pass a
+non-NULL value as the 'name' argument of of_parse_clkspec(). That
+function returns -EINVAL in such a situation, instead of -ENOENT like we
+expected. The return value comes back up to clk_core_fill_parent_index()
+which proceeds to skip calling clk_core_lookup() because the error
+pointer isn't equal to -ENOENT, it's -EINVAL.
 
-On 8/1/19 3:45 AM, Marc Zyngier wrote:
-> On 31/07/2019 23:41, Suman Anna wrote:
->> The PRUSS INTC receives a number of system input interrupt source events
->> and supports individual control configuration and hardware prioritization.
->> These input events can be mapped to some output interrupt lines through 2
->> levels of many-to-one mapping i.e. events to channel mapping and channels
->> to output interrupts.
->>
->> This mapping information is provided through the PRU firmware that is
->> loaded onto a PRU core/s or through the device tree node of the PRU
->> application. The mapping is configured by the PRU remoteproc driver, and
->> is setup before the PRU core is started and cleaned up after the PRU core
->> is stopped. This event mapping configuration logic programs the Channel
->> Map Registers (CMRx) and Host-Interrupt Map Registers (HMRx) only when a
->> new program is being loaded/started and the same events and interrupt
->> channels are reset to zero when stopping a PRU.
->>
->> Add two helper functions: pruss_intc_configure() & pruss_intc_unconfigure()
->> that the PRU remoteproc driver can use to configure the PRUSS INTC.
-> 
-> So let me see if I correctly understand this: this adds yet another
-> firmware description parser, with a private interface to another
-> (undisclosed?) driver, bypassing the standard irqchip configuration
-> mechanism. It sounds great, doesn't it?
-> 
-> What I cannot really infer from this message (-ETOOMUCHJARGON) is what
-> interrupts this affects:
-> 
-> - Interrupts from random devices to the PRUSS?
-> - Interrupts from the PRUSS to the host?
-> - Something else?
+Furthermore, we'll blindly overwrite the error pointer returned by
+clk_core_get() with NULL when there isn't a legacy .name member
+specified in the parent map. This isn't too bad right now because we
+don't really care to differentiate NULL from an error, but in the future
+we should only try to do a legacy lookup if we know we might find
+something so that DT lookups that fail don't try to lookup based on
+strings when there isn't any string to match, hiding the error.
 
-The interrupt sources (called system events) can be from internal PRUSS
-peripherals, SoC-level peripherals or just software triggering (limited
-to some events).
+Fix both these problems so that clk provider drivers can use the new
+style of parent mapping without having to also update their DT at the
+same time. This patch is based on an earlier patch from Taniya Das which
+checked for -EINVAL in addition to -ENOENT return values.
 
-So, the PRUSS INTC behaves as a funnel and is both an interrupt router
-and multiplexer. The INTC itself is part of the PRUSS, and all PRU
-application related interrupts/events that need to trigger an interrupt
-to either the PRU cores or other host processors (like DSP, ARM) have to
-go through this INTC, and routed out to a limited number of output
-interrupts that are then connected to different processors.
+Fixes: 601b6e93304a ("clk: Allow parents to be specified via clkspec index")
+Cc: Taniya Das <tdas@codeaurora.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Reported-by: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/clk.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-The split of interrupt handling between a PRU and its peer host
-processor will be a application design choice (We can implement soft IPs
-like UARTs, ADCs, I2Cs etc using PRUs). Some of the input events
-themselves are multiplexed and controlled by a single MMR (outside of
-INTC) that feeds different sets of events into the INTC. The MMR
-configuration is outside of scope of this driver and will depend on the
-application/client driver being run.
-
-> 
-> When does this happen? Under control of what? It isn't even clear why
-> this is part of this irqchip driver.
-
-The mapping configuration is per PRU application and firmware, and is
-done in line with acquiring and release a PRU which is treated as an
-exclusive resource. We establish the mapping for all events through this
-driver including the events that are to be routed to PRUs. This is done
-to save the tiny/limited Instruction RAM space that PRUs have.
-
-We have designed this as an irqchip driver (instead of some custom SoC
-driver exporting custom functions) to use standard Linux semantics/irq
-API and better integrate with Linux DT, but we need some semantics for
-establishing the routing at runtime depending on the PRU client driver
-we are running. The exported functions will be called only by the PRU
-remoteproc driver during a pru_rproc_get()/pru_rproc_put(), and are
-transparent to PRU client drivers.
-
-Please also see the discussion from v1 [1] on why we can't use an
-extended number of interrupt-cells infrastructure for achieving this.
-
-[1] https://patchwork.kernel.org/patch/11034563/
-
-
-> Depending what this does, there may be ways to fit it into the standard
-> interrupt configuration framework. After all, we already have standard
-> interfaces to route interrupts to virtual CPUs, effectively passing full
-> control of an interrupt to another entity. If you squint hard enough,
-> your PRUSS can fit that description.
-
-Yeah, I am open to suggestions if there is a better way of doing this.
-
-regards
-Suman
-
-> 
-> If that doesn't work, then we need to make the IRQ framework grok that
-> kind of requirement (hence my request for clarification). But I'm
-> strongly opposed to inventing a SoC-private way of configuring
-> interrupts behind the kernel's back.
-> 
-> Thanks,
-> 
-> 	M.
-> 
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index c0990703ce54..6587a70c271c 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -355,8 +355,9 @@ static struct clk_core *clk_core_lookup(const char *name)
+  *      };
+  *
+  * Returns: -ENOENT when the provider can't be found or the clk doesn't
+- * exist in the provider. -EINVAL when the name can't be found. NULL when the
+- * provider knows about the clk but it isn't provided on this system.
++ * exist in the provider or the name can't be found in the DT node or
++ * in a clkdev lookup. NULL when the provider knows about the clk but it
++ * isn't provided on this system.
+  * A valid clk_core pointer when the clk can be found in the provider.
+  */
+ static struct clk_core *clk_core_get(struct clk_core *core, u8 p_index)
+@@ -374,9 +375,9 @@ static struct clk_core *clk_core_get(struct clk_core *core, u8 p_index)
+ 	/*
+ 	 * If the DT search above couldn't find the provider or the provider
+ 	 * didn't know about this clk, fallback to looking up via clkdev based
+-	 * clk_lookups
++	 * clk_lookups.
+ 	 */
+-	if (PTR_ERR(hw) == -ENOENT && name)
++	if (IS_ERR(hw) && name)
+ 		hw = clk_find_hw(dev_id, name);
+ 
+ 	if (IS_ERR(hw))
+@@ -401,7 +402,7 @@ static void clk_core_fill_parent_index(struct clk_core *core, u8 index)
+ 			parent = ERR_PTR(-EPROBE_DEFER);
+ 	} else {
+ 		parent = clk_core_get(core, index);
+-		if (IS_ERR(parent) && PTR_ERR(parent) == -ENOENT)
++		if (IS_ERR(parent) && entry->name)
+ 			parent = clk_core_lookup(entry->name);
+ 	}
+ 
+-- 
+Sent by a computer through tubes
 
