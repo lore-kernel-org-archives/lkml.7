@@ -2,136 +2,95 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5D2C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD0FC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0264B20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0D3206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:49:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="TLGPm6Fp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hHM5nPFI"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="H1rBOX4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387766AbfHARs5 (ORCPT
+        id S2387782AbfHARtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 13:48:57 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:47131 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731061AbfHARs4 (ORCPT
+        Thu, 1 Aug 2019 13:49:11 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36626 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731061AbfHARtL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 13:48:56 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id E4FE6396;
-        Thu,  1 Aug 2019 13:48:52 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 01 Aug 2019 13:48:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=bX/6GL3MmE3TsjC8DdRXIIaWGw8
-        ZWwDpfqNZvIz+x50=; b=TLGPm6FpkwCkrXEnN681cRBxD8DR3f5HztHK941Hm3r
-        E9U8tj0cdDagkr5YtVKH6XGnZ2RW/SIyOWA+RwASMrUYKt4OUNuChZLb2xFcrqeI
-        YK/IeRzroBdwoKWgGMrSh72B4yseWbFgaRxscGkilfKeosG14yuLEPMH8DOzk4sX
-        78LHupKp93FaM4g5c6xMUaSF5JCTsU7YEpKLrDxCmMunVEs23QRocSnc+SCg6slC
-        M8+VAPGxPEPUXPzfCuSqIfKW+IvHSr+y9sFSLu6r2LRvByDpPEx2ftLDdf9ZMQEH
-        hlMslx33R7nvkGR5NvtOvSuTJiOMOlTOXQMNrXq75Jg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=bX/6GL
-        3MmE3TsjC8DdRXIIaWGw8ZWwDpfqNZvIz+x50=; b=hHM5nPFIKZmq4qZVxcGfms
-        XPLYsf6+/obWeyhSAvkVBI9727Y6RY0LOQJvdS67/9zMJaRKF3L3FjPv4vDaI26p
-        bEkVCovXdYlgX5MfGx/n85sY6r8A8ELd9NITXRypn7XToC8pne4o4Ya+DuXKKBno
-        nHh8KMnpglXpL2cEo9eKh48EY5N2u8jHi+fZ75OqbWiMWD5JVFd6t76S70yxYcU8
-        7EqbyLm96F85JDZoI7r/9Bqv863YvGDsvVsSDK0fKGp3RaWmygWzc7Ib2Hf0A2FY
-        WdV1VuLnUGmdpG8mUPwNL2xJFySgTi4XE5ufmbaMEtPBw6nKDX4ny5HePv1hu+bg
-        ==
-X-ME-Sender: <xms:AyZDXUQDjzU8sPlkQd-yVXHNJqyvOLmheWCD9bR4TQGyA5qjSuplZA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleejgdduudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlh
-    drohhrghenucfkphepkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:AyZDXVe99Dz8clGzgoNYIUgtdBZBdBq06aW8M_pnVYe1Q2qMdIAsLQ>
-    <xmx:AyZDXboiSB299FPC4RaicydBJnq7m3D2XLTEkKFq2mFd-5zkyvBRyw>
-    <xmx:AyZDXe9UT3p3PDNwM7C3NaJ0qGG_zawz8mYPJe_u90nb675zVtoSaA>
-    <xmx:BCZDXdEP4nZOVGZsRznaGeWIHIpAcgk6bGIwyNbYayLOV8WbPkjW4Q>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E01CB380084;
-        Thu,  1 Aug 2019 13:48:50 -0400 (EDT)
-Date:   Thu, 1 Aug 2019 19:48:49 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Vladis Dronov <vdronov@redhat.com>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v5.3-rc2] Bluetooth: hci_uart: check for missing tty
- operations
-Message-ID: <20190801174849.GA5048@kroah.com>
-References: <20190730093345.25573-1-marcel@holtmann.org>
- <20190801133132.6BF30206A3@mail.kernel.org>
- <20190801135044.GB24791@kroah.com>
- <20190801171639.GC17697@sasha-vm>
+        Thu, 1 Aug 2019 13:49:11 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so34494390pfl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 10:49:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y6hdHpqGEBI+iVGPp14PxolI5mp64P3aoDRclef1uXs=;
+        b=H1rBOX4e1UB8ZnKJ7SDE6klXGJFF3zsPjduSN8Z02OId7gY00conT5jk0RaL2uwfBx
+         aPVZxDsYAshkjMZ257WbkZfNRR7PdiePMxjFeWn2g93Q9sTPRv6V9OCXAIz971KnliG5
+         mhA5ONZyx7jNiWP5kYa2471dy4bF6cxu98jZbjlSPvg1DKgriB6dNbyIOHAMIAa8eJhK
+         jAx7Gx3scQVZDiEgnF4b0b99HuzHJIZaioGVMgPP5YA0Lq1VN2O5dlqfdXoN46xlllGH
+         pe2YPuV3WWwqiIBvMj3V7xpuM7RsPCjGIhJbaETmKoDsb4w/HJQ18qNCq3OPVaSwjUML
+         /OAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y6hdHpqGEBI+iVGPp14PxolI5mp64P3aoDRclef1uXs=;
+        b=EsbO3edZdTpMFpRujKU9xLoFFcZbPpafSSE7TFfdkvJGQ6B5dIQuDgNLYAx8Qgdudk
+         +dK4Xz4meCI7/EuV18uCIOC9EitQAuutg2YxLtt3LsuxTIkMezULKlMVqtAANZ929olm
+         vBZ4IQ1ELM5Q9qMI8NpBL/1Mjxwe0bjPVLysicIk0gC8v4p2scU+bVyBvnIznexKzIyf
+         yhoHmWgTsvpdu+/GqpzGCSi7t8G2UWuQH6wsdt+AV+94rPuimN8UiYvTN5Ktm9Ev48fv
+         hryR+RXJCy+lFi3jl6wUo4cld1rBvs8z84bJCwBIUoKEQmjaUZUfHmEYWpvuMox3zs76
+         Fmxg==
+X-Gm-Message-State: APjAAAVJ0HcC8f/pEGK0rbFrJaVWkUqhLa8qaQD1e1ZJ13XrKzy9FyjM
+        P9HX4MxHUfz8Y+N+Zv8aysI=
+X-Google-Smtp-Source: APXvYqwG6QCNgn3q8ZubpYM4sdBg+SifuSKIr4EsSNa27iacMuRB6yqyNVkq6uIotPklc5Bav20CHw==
+X-Received: by 2002:a63:4041:: with SMTP id n62mr49026346pga.312.1564681750112;
+        Thu, 01 Aug 2019 10:49:10 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:533])
+        by smtp.gmail.com with ESMTPSA id b136sm93410600pfb.73.2019.08.01.10.49.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 10:49:09 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 13:49:07 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/5] sched/pci: Reduce psimon FIFO priority
+Message-ID: <20190801174907.GA16554@cmpxchg.org>
+References: <20190801111348.530242235@infradead.org>
+ <20190801111541.685367413@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801171639.GC17697@sasha-vm>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190801111541.685367413@infradead.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 01:16:39PM -0400, Sasha Levin wrote:
-> On Thu, Aug 01, 2019 at 03:50:44PM +0200, Greg KH wrote:
-> > On Thu, Aug 01, 2019 at 01:31:31PM +0000, Sasha Levin wrote:
-> > > Hi,
-> > > 
-> > > [This is an automated email]
-> > > 
-> > > This commit has been processed because it contains a "Fixes:" tag,
-> > > fixing commit: .
-> > > 
-> > > The bot has tested the following trees: v5.2.4, v5.1.21, v4.19.62, v4.14.134, v4.9.186, v4.4.186.
-> > > 
-> > > v5.2.4: Build OK!
-> > > v5.1.21: Build OK!
-> > > v4.19.62: Build OK!
-> > > v4.14.134: Failed to apply! Possible dependencies:
-> > >     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
-> > > 
-> > > v4.9.186: Failed to apply! Possible dependencies:
-> > >     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
-> > > 
-> > > v4.4.186: Failed to apply! Possible dependencies:
-> > >     162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
-> > >     25a13e382de2 ("bluetooth: hci_qca: Replace GFP_ATOMIC with GFP_KERNEL")
-> > >     395174bb07c1 ("Bluetooth: hci_uart: Add Intel/AG6xx support")
-> > >     9e69130c4efc ("Bluetooth: hci_uart: Add Nokia Protocol identifier")
-> > > 
-> > > 
-> > > NOTE: The patch will not be queued to stable trees until it is upstream.
-> > > 
-> > > How should we proceed with this patch?
-> > 
-> > Already fixed up by hand and queued up, your automated email is a bit
-> > slow :)
+On Thu, Aug 01, 2019 at 01:13:49PM +0200, Peter Zijlstra wrote:
+> PSI defaults to a FIFO-99 thread, reduce this to FIFO-1.
 > 
-> /me scratches head
+> FIFO-99 is the very highest priority available to SCHED_FIFO and
+> it not a suitable default; it would indicate the psi work is the
+> most important work on the machine.
 > 
-> The patch went out two days ago:
-> https://lore.kernel.org/lkml/20190730093345.25573-1-marcel@holtmann.org/
+> Since Real-Time tasks will have pre-allocated memory and locked it in
+> place, Real-Time tasks do not care about PSI. All it needs is to be
+> above OTHER.
 > 
-> How did it make it upstream already?
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-It's in Linus's tree as b36a1552d731 ("Bluetooth: hci_uart: check for
-missing tty operations") now.
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-thanks,
-
-greg k-h
+Subject should be s/pci/psi/
