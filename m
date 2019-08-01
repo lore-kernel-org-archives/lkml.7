@@ -2,67 +2,69 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A250C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A689C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AAE20665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EEFA20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:23:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKHRDl7g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lifoc/9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732358AbfHAPXp (ORCPT
+        id S1732463AbfHAPXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:23:45 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40937 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730087AbfHAPXp (ORCPT
+        Thu, 1 Aug 2019 11:23:49 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36544 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731657AbfHAPXr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:23:45 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k8so69518201eds.7
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 08:23:44 -0700 (PDT)
+        Thu, 1 Aug 2019 11:23:47 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i21so69811178ljj.3;
+        Thu, 01 Aug 2019 08:23:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=npl7N80MmZBIHx6RTeaJpSZSlY3/u9gRYYg1tmf3W0Q=;
-        b=EKHRDl7gAACsadCtqApsW+xXKEyXy5TbF2hEya+9SJVGhWvdKErwWg0R1cXBf+CKt1
-         w7APcxQkvYMxwTGWsc/ZOx4E4pyvXrJrGjAGoK8l5S/bV7VsdctbeWXRKQSvwXeY6pyw
-         E7QLS7ymeG/YpP18y+Ee9XFPZlf7LlOwDo2gBk+smhXyHjfWr8DCY0YPX4Zeqnr0f68M
-         dC2WCrkyX5kmLd7E1Ibz6SS+L6T9ioOKAm8ZqTeBK8ZTVZEC+sxR+dx+vGMwO2kfJK6f
-         PxjGLOeAq4ZbzzSEf0+aqeR2ByzvbesEqXRwfe9VqCSElR3XpHI4+0wfa2UGiEIl1vSw
-         kYdA==
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=9ZCtRO1EfjMBdscr16tVWg4PD3vV4eXgXVgNm+QaIM8=;
+        b=Lifoc/9S+ScPBLNEdfgggcKBxgNayI/MmQY3QMeZ3YiCn51pH+DSbRjgFHbX3KXLuD
+         kT0ksoEbWbdJkTKbo96qtqrwYjua8wGANO8LPp6KW3cSwP5YcD8fChTQ5F48zsGGiLpw
+         zEToFI/V6Bd/EDqIePE6JgCy7GLwLRBMf4024LubyXZFVbcaSOpG6kpbGNksNUSXrdpZ
+         jd4MOZ9sVF9DKgN1Pd1x0cEfoPm20WG3AHu7k9ZyLTyHD0nGES3cHYVeJ65/eoOpkf2A
+         74tAZtou3FCvN4z+mRv3XeP/67Aw8uYFbgd/xEgWyGSZubZO64ch1Ahx8FHnyCTNJZg+
+         HaIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=npl7N80MmZBIHx6RTeaJpSZSlY3/u9gRYYg1tmf3W0Q=;
-        b=CPooi78JFD/CmHgBMidjlAqIBmobq4fz4Shf84WyqYPaqBWR5pdtgAIIUmEjyU1uCL
-         8EE+UGzkovQvKuniRCB3zIcbBv7boWl3f5z43yTQwPuW4AS2X5ZlTLw3UbfHRkkQcAZD
-         4FPjEB7l4zzENxfSV7O7W30mNagKbW/Lo83o68oycakBYMBo03o0G/Bq7IvU/WrPT6Zr
-         yeZgHl6yXTIeEHLALTo0YbR2c2IC4+KxVIQivXOgY6Mf4d3bX4A/Pt9AsoDee8XO9QP5
-         1S2e1PFUe70nA5mCfeUs4I5T1EVKQHVyRF9wFD+C/qqoJz2Xp5IToOSF/GpBi8Ce9ty4
-         fL6w==
-X-Gm-Message-State: APjAAAUMHh9ARHA319gLtwoN/4LYmMe6DgVOOHhbCXDd30gyB6gw3K2T
-        lDC0H1Ppgcdu9GxwGjsU2EtkgPonZIiljZj29EI=
-X-Google-Smtp-Source: APXvYqyht9DhYfAcKFAEDrHPxjp/V/bK/n4GyiPl/S+A58tLat15QfaQF9GcypqwNLxm96LHJuQke2ZS6IpGI3uH2Bc=
-X-Received: by 2002:aa7:cf8e:: with SMTP id z14mr114013981edx.40.1564673023905;
- Thu, 01 Aug 2019 08:23:43 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=9ZCtRO1EfjMBdscr16tVWg4PD3vV4eXgXVgNm+QaIM8=;
+        b=I8MQcDkPj2Q3uwZk+/7MZjfQNDWKX7xvupN46ep8+uT1WA/NFYqkh0rDhns0XXhHC4
+         s8yqOItCPsf96AecsSA8YPzacUxoinYUidZ2dqO6ocMdSdWBpORiEIrPAQm6ViSkMJXX
+         JsWK7U/uFQYLfTLO7SQ8GsMjq0js16Hf+MtZllcVBos/wsaD0kqZwu3puUTlhwOOL/0m
+         isgl6pd1hvppSfDTMIVxpkVsZb8+OYuA9sYdh5g0Uj5PH7Asy+NM5c7HtbuOMOktUZBV
+         SSvh0pPixANr00z5Nw65188gKiSuVC+mQisABwgkQlU11TxRSTugcCuGeY2jVnv9BuEq
+         UFxQ==
+X-Gm-Message-State: APjAAAWjfs78r11xgb/4QUWBYzMLsFYRZpbjj74O2t59ZodDKOfo7iRj
+        GtugcfokGfZTvtBaO4WTUJhPDA4b9PCBau0QQMk=
+X-Google-Smtp-Source: APXvYqwGiuDLdol7cPKanPh7gLZuN8kHymeW3nXF5KjmcZp7I5lJdCoUUigBeS+zkKE7PSU0buogsjBTll47EG9o8c4=
+X-Received: by 2002:a2e:868e:: with SMTP id l14mr20379185lji.16.1564673024673;
+ Thu, 01 Aug 2019 08:23:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190729151505.9660-1-hslester96@gmail.com> <5dee05d6cb8498b3e636f5e8a62da673334cb5a9.camel@perches.com>
-In-Reply-To: <5dee05d6cb8498b3e636f5e8a62da673334cb5a9.camel@perches.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Thu, 1 Aug 2019 23:23:33 +0800
-Message-ID: <CANhBUQ2RD065Dn8eGkbzSQxfie5XrR_kgaFQ1QgOS4cKNhAfPA@mail.gmail.com>
-Subject: Re: [PATCH 08/12] printk: Replace strncmp with str_has_prefix
-To:     Joe Perches <joe@perches.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+From:   Phillip Lougher <phillip.lougher@gmail.com>
+Date:   Thu, 1 Aug 2019 16:23:33 +0100
+Message-ID: <CAB3wodfF=Gc3FbKedU4JBWi8hZLxcBPUtVPipsCVnaHdFXGk8Q@mail.gmail.com>
+Subject: Bug#921146: Program mksquashfs from squashfs-tools 1:4.3-11 does not
+ make use all CPU cores
+To:     921146@bugs.debian.org
+Cc:     hartmans@debian.org, debian-ctte@lists.debian.org,
+        =?UTF-8?B?TMOhc3psw7MgQsO2c3rDtnJtw6lueWkgKEdDUyk=?= 
+        <gcs@debian.org>, Alexander Couzens <lynxis@fe80.eu>,
+        linux-fsdevel@vger.kernel.org,
+        linux-embedded <linux-embedded@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -71,66 +73,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe Perches <joe@perches.com> =E4=BA=8E2019=E5=B9=B47=E6=9C=8830=E6=97=A5=
-=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=888:16=E5=86=99=E9=81=93=EF=BC=9A
+On Wed, 31 Jul 2019 17:43:44 +0200 Alexander Couzens <lynxis@fe80.eu> wrote=
+:
+> Hi L=C3=A1szl=C3=B3,
 >
-> On Mon, 2019-07-29 at 23:15 +0800, Chuhong Yuan wrote:
-> > strncmp(str, const, len) is error-prone.
-> > We had better use newly introduced
-> > str_has_prefix() instead of it.
-> []
-> > diff --git a/kernel/printk/braille.c b/kernel/printk/braille.c
-> []
-> > @@ -11,10 +11,10 @@
-> >
-> >  int _braille_console_setup(char **str, char **brl_options)
-> >  {
-> > -     if (!strncmp(*str, "brl,", 4)) {
-> > +     if (str_has_prefix(*str, "brl,")) {
-> >               *brl_options =3D "";
-> >               *str +=3D 4;
-> > -     } else if (!strncmp(*str, "brl=3D", 4)) {
-> > +     } else if (str_has_prefix(*str, "brl=3D")) {
-> >               *brl_options =3D *str + 4;
+> > On Wed, Jul 31, 2019 at 3:06 AM Steven Shiau <steven@nchc.org.tw>
+> > wrote: [...]
+> >  As mentioned in the past, it's the
+> > 0016-remove-frag_deflator_thread.patch that needs either reverted or
+> > fixed by it's original author, Alexander Couzens (added to this mail).
 >
-> Better to get rid of the +=3D 4 uses too by storing the result
-> of str_has_prefix and using that as the addend.
->
-> Perhaps
->         size_t len;
->
->         if ((len =3D str_has_prefix(*str, "brl,"))) {
->                 *brl_options =3D "";
->                 *str +=3D len;
->         } else if ((len =3D str_has_prefix(*str, "brl=3D"))) {
->                 etc...
+> Since I've full weeks ahead, I can not make any estimation when
+> I've time to look onto the performance issue.
 >
 
-I find that checkpatch.pl forbids assignment in if condition.
-So this seems to be infeasible...
+That patch is a laughable piece of rubbish.  I believe both you
+people (the Debian maintainer and author) are in total denial
+about your incompetence in this matter.  This is obviously just my
+opinion I've formed over the last couple of months, in case you want to
+claim that it is libellous.
 
-> >               *str =3D strchr(*brl_options, ',');
-> >               if (!*str) {
-> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> []
-> > @@ -121,13 +121,13 @@ static int __control_devkmsg(char *str)
-> >       if (!str)
-> >               return -EINVAL;
-> >
-> > -     if (!strncmp(str, "on", 2)) {
-> > +     if (str_has_prefix(str, "on")) {
-> >               devkmsg_log =3D DEVKMSG_LOG_MASK_ON;
-> >               return 2;
-> > -     } else if (!strncmp(str, "off", 3)) {
-> > +     } else if (str_has_prefix(str, "off")) {
-> >               devkmsg_log =3D DEVKMSG_LOG_MASK_OFF;
-> >               return 3;
-> > -     } else if (!strncmp(str, "ratelimit", 9)) {
-> > +     } else if (str_has_prefix(str, "ratelimit")) {
-> >               devkmsg_log =3D DEVKMSG_LOG_MASK_DEFAULT;
-> >               return 9;
-> >       }
+It is, obvious, from the patch where the problem lies.  You *remove*
+the parallel fragment compressor threads, and move the work onto the
+main thread.
+
+Now what do you think that does?  It completely removes a significant
+amount of the parallelism of Mksquashfs and makes the main thread
+a bottleneck.
+
+This is your fault and your problem, and it lies in your lack of
+understanding.
+
+Yet you continually blame your inability to make Mksquashfs work
+correctly on *my* code being old and unmaintained and badly written.
+
+This can be seen from the following excerpt from a post in this
+Debian bug thread made by the Debian maintainer.
+
+"> First of all, as squashfs-tools wasn't written in the last years, when
+> reproducible builds became more famous. So it's not written
+> with reproducible building in mind.
+> For me is reproducible builds more important than using all cpu cores.
+> But I don't use it with gigabytes images.
+ Yeah, it's quite an old software without real development in the recent ye=
+ars."
+
+and
+
+" This sounds more complex work than it can be achieved in this week.
+Maybe a complete rewrite would be better then on the long run."
+
+Constantly pointing the blame at my tools and my code.
+
+This is typical of the poor worker who chooses to blame everyone
+else but himself.
+
+None of that is the case.  50% of the code-base of Squashfs-tools
+was (re-)written in the last 9 years as part of on-going improvements.
+It has also been maintained across that period.
+
+As for your specific claim that Mksquashfs can't be made to produce
+reproducible builds because it is old and written before reproducible
+builds became popular.  That is abject nonsense.
+
+I added reproducible builds to Mksquashfs.  It took one weekend.
+
+https://github.com/plougher/squashfs-tools/commit/24da0c63c80be64e1adc3f24c=
+27459ebe18a19af
+
+> > > Or shall we gradually switch to squashfs-tools-ng is the upstream
+> > > is more active:
+> > > https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D931965
+> >  It's under investigation. I'm traveling and will only arrive back
+> > home on Sunday evening. Expect more details on this next week.
 >
-> here too.
+> I also seen the upcoming squashfs-tools-ng rising and quite interested
+> to test it and reading the code.
+> Depending on tests & the code, I could imagine I'll put my effort and
+> time towards squashfs-tools-ng.
 >
+> @L=C3=A1szl=C3=B3 It should be your call to revert or not. For sure there=
+ are
+> also downstream users who need reproducible builds (e.g. tails) who
+> may also change to squashfs-tools-ng if -ng is the only reproducible
+> squashfs generator in debian.
 >
+
+Upstream Squashfs-tools now produces reproducible builds.
+
+Squashfs-tools-ng, this is a rogue project masquerading as an
+official new upstream .  It is neither official nor a new upstream.  As
+Squashfs author and maintainer I completely disassociate that project
+with the Squashfs project.
+
+I also have publicly stated that this project is spreading falsehoods and
+that it is defamatory to me as the Squashfs author and maintainer.
+
+See:
+
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D931965#29
+
+and
+
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D931965#34
+
+I have lived for a couple of months with you two people bad-mouthing
+Squashfs tools, it's code-base and my maintenance.
+
+I have absolutely had enough.
+
+I have CC'd this to the Debian project leader and the Debian technical
+commitee, and also to linux-kernel, linux-fsdevel and linux-embedded
+for wider attention.
+
+What else do I have to do to make you stop bad-mouthing Squashfs?  Sue?
+
+Yours
+
+Dr. Phillip Lougher
+
+> Hopefully I'll find time to look into it.
+>
+> Best Regards,
+> lynxis
+> --
+> Alexander Couzens
+>
+> mail: lynxis@fe80.eu
+> jabber: lynxis@fe80.eu
+> gpg: 390D CF78 8BF9 AA50 4F8F  F1E2 C29E 9DA6 A0DF 8604
