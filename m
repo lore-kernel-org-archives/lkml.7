@@ -2,90 +2,110 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB33C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FA4C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC39D2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DBF214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:37:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Irrr23fM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbfHAGg6 (ORCPT
+        id S1730036AbfHAGhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 02:36:58 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34050 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbfHAGg5 (ORCPT
+        Thu, 1 Aug 2019 02:37:02 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35249 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728884AbfHAGg6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 02:36:57 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C699C28A446;
-        Thu,  1 Aug 2019 07:36:55 +0100 (BST)
-Date:   Thu, 1 Aug 2019 08:36:52 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     <Tudor.Ambarus@microchip.com>
-Cc:     <marek.vasut@gmail.com>, <vigneshr@ti.com>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/6] mtd: spi_nor: Add nor->setup() method
-Message-ID: <20190801083652.52bffef5@collabora.com>
-In-Reply-To: <20190731091145.27374-5-tudor.ambarus@microchip.com>
-References: <20190731091145.27374-1-tudor.ambarus@microchip.com>
-        <20190731091145.27374-5-tudor.ambarus@microchip.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 1 Aug 2019 02:36:58 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x25so68265353ljh.2;
+        Wed, 31 Jul 2019 23:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X9ZQbHrGzFtjEODVBGVi3gOgXCwBSDCk0xPlVmAv39c=;
+        b=Irrr23fMhTG6al2CUIKvRGL5QX0PhtRLcRnbsblPKgEqQOxD8SJoM0uIVm3vH8a07y
+         sps88K+hpaaGuRLYTRBAE727L6SCNxZHl98YcWCGE2nZBlrKZCFqhQYnFQa3O46eY8lL
+         /DxLFOpm2FTCNqNU9snTg9au+8PRn02r+vYkQ8uFHGAqYPis0WcrgzH4YS4+SDBfQEoV
+         7J4/uuOHdv42lZlMfAfkuWhF1r6IfctmUnPGE8QearmzNB3FBL+pVJ7DCBccFWYyYHn4
+         IiZQ1ElUjB3Z1LOP9E4MADCJzJeaPW8qtNE1bgA7zqga8L4CC95+lpKWT1r1gq4voAWE
+         6ZVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X9ZQbHrGzFtjEODVBGVi3gOgXCwBSDCk0xPlVmAv39c=;
+        b=NpDDvPthk+qRlJgv2aSBvSwFoTO3c1qKXNcXYY2a/Rzt2TJ4I1jz6fmSE5Mjp8P0ka
+         SXHSo4Kpq9FnPNsGHlNN3TpCzamab0TwyV9YOAZM64/TLO0wJnS8vgVteBVjXAKYOb79
+         u+97/EVjZTXpY02Hg2nZLQ9QXuref1mzVVUqNpQlO2BUabyqH+5QKKiNVCKFQnN/fZOJ
+         m94CE75ahEa6bxUJ5IRPu9T+GXlvnF9rHxZjO3K8gqmXzNQny9GyA6VK3QQViPs0UmB7
+         PwKBTOQBRPiWPklaOq3V6GqKERTo4g/3zXer3Wd5873cuI/o+EaClUdKU6Weh5CPE4t8
+         MepQ==
+X-Gm-Message-State: APjAAAXPkYLGoxx6gr40BSrgGJqjVoBcEwth09DSpRZcfYol95v3h7PF
+        A/nCj3wpuLFFcssUuaDe0ocvHGh5zns7eSFKSvM=
+X-Google-Smtp-Source: APXvYqxL/s6TY+Lcm9PtMPnltGMxl9EapEj/9hC3l7HRYjwRx4X4cLUEHb7EUd4m82x93CeGKns2H6cCLt/hUSnHVmU=
+X-Received: by 2002:a2e:b1c1:: with SMTP id e1mr31450663lja.228.1564641416029;
+ Wed, 31 Jul 2019 23:36:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
+ <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
+ <CAFA6WYPJAzbPdcpBqioxjY=T8RLw-73B_hpzX4cGnwVvm5zpJw@mail.gmail.com>
+ <CAE=Ncrb23q++z8R8UMbjDE2epEq4YVcNGzrRD31eH3JAooYejg@mail.gmail.com> <CAFA6WYOKcOzSwakHhgshZcebD8ZBMSi7xQdjWYFS79=Xc+odOg@mail.gmail.com>
+In-Reply-To: <CAFA6WYOKcOzSwakHhgshZcebD8ZBMSi7xQdjWYFS79=Xc+odOg@mail.gmail.com>
+From:   Janne Karhunen <janne.karhunen@gmail.com>
+Date:   Thu, 1 Aug 2019 09:36:44 +0300
+Message-ID: <CAE=NcrYz8bT9zDhS_ZcvY84fpeTDxZ-KhJKeQGGyf=o4pG2J-Q@mail.gmail.com>
+Subject: Re: [RFC v2 0/6] Introduce TEE based Trusted Keys support
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, dhowells@redhat.com,
+        jejb@linux.ibm.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 09:12:14 +0000
-<Tudor.Ambarus@microchip.com> wrote:
+On Wed, Jul 31, 2019 at 5:23 PM Sumit Garg <sumit.garg@linaro.org> wrote:
+
+> > I guess my wording was wrong, tried to say that physical TEEs in the
+> > wild vary massively hardware wise. Generalizing these things is rough.
+> >
+>
+> There are already well defined GlobalPlatform Standards to generalize
+> the TEE interface. One of them is GlobalPlatform TEE Client API [1]
+> which provides the basis for this TEE interface.
+
+I'm aware of it - I have implemented a large part of the GP TEE APIs
+earlier (primarily the crypto functions). Does the TEE you work with
+actually support GP properly? Can I take a look at the code?
+
+Normally the TEE implementations are well-guarded secrets and the
+state of the implementation is quite random. In many cases keeping
+things secret is fine from my point of view, given that it is a RoT
+after all. The secrecy is the core business here. So, this is why I
+opted the userspace 'secret' route - no secrets in the kernel, but
+it's fine for the userspace. Umh was a logical fit to implement it.
 
 
->  static inline bool spi_nor_protocol_is_dtr(enum spi_nor_protocol proto)
->  {
->  	return !!(proto & SNOR_PROTO_IS_DTR);
-> @@ -384,6 +522,7 @@ struct flash_info;
->   *                      useful when pagesize is not a power-of-2
->   * @disable_write_protection: [FLASH-SPECIFIC] disable write protection during
->   *                            power-up
-> + * @setup:		[FLASH-SPECIFIC] configure the spi-nor memory
-
-Might be worth giving a example of the type of configuration that can
-be done here.
-
-The patch looks good otherwise.
-
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-
->   *			completely locked
-
-Looks like this 'completely locked' is a leftover from a previous move
-(lock functions were move to a separate _ops struct IIRC). Can you fix
-that?
-
->   * @priv:		the private data
->   */
-> @@ -427,6 +566,9 @@ struct spi_nor {
->  	int (*set_4byte)(struct spi_nor *nor, bool enable);
->  	u32 (*convert_addr)(struct spi_nor *nor, u32 addr);
->  	int (*disable_write_protection)(struct spi_nor *nor);
-> +	int (*setup)(struct spi_nor *nor,
-> +		     const struct spi_nor_flash_parameter *params,
-> +		     const struct spi_nor_hwcaps *hwcaps);
->  
->  	const struct spi_nor_locking_ops *locking_ops;
->  
-> @@ -486,81 +628,6 @@ static inline struct device_node *spi_nor_get_flash_node(struct spi_nor *nor)
->  }
->  
+--
+Janne
