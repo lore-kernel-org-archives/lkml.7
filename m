@@ -2,155 +2,304 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF707C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9295C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9AD20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A3F20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:18:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rKvrzp3S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389030AbfHAUSA (ORCPT
+        id S2389043AbfHAUSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 1 Aug 2019 16:18:03 -0400
+Received: from mail-eopbgr60061.outbound.protection.outlook.com ([40.107.6.61]:62694
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730955AbfHAUSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 1 Aug 2019 16:18:00 -0400
-Received: from mga14.intel.com ([192.55.52.115]:43706 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389014AbfHAUR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:17:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 13:17:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,335,1559545200"; 
-   d="scan'208";a="372728424"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by fmsmga006.fm.intel.com with ESMTP; 01 Aug 2019 13:17:55 -0700
-Received: from orsmsx160.amr.corp.intel.com (10.22.226.43) by
- ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 1 Aug 2019 13:17:55 -0700
-Received: from orsmsx122.amr.corp.intel.com ([169.254.11.68]) by
- ORSMSX160.amr.corp.intel.com ([169.254.13.251]) with mapi id 14.03.0439.000;
- Thu, 1 Aug 2019 13:17:54 -0700
-From:   "Schmauss, Erik" <erik.schmauss@intel.com>
-To:     Qian Cai <cai@lca.pw>, "Moore, Robert" <robert.moore@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-CC:     "jkim@FreeBSD.org" <jkim@FreeBSD.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "ndesaulniers@google.com" <ndesaulniers@google.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] acpica: fix -Wnull-pointer-arithmetic warnings
-Thread-Topic: [PATCH v2] acpica: fix -Wnull-pointer-arithmetic warnings
-Thread-Index: AQHVPaHqe/gnJU6NbEKNryIU7CFGuabdzLyAgAloioD//5trIA==
-Date:   Thu, 1 Aug 2019 20:17:55 +0000
-Message-ID: <CF6A88132359CE47947DB4C6E1709ED53C618109@ORSMSX122.amr.corp.intel.com>
-References: <20190718194846.1880-1-cai@lca.pw>
-         <94F2FBAB4432B54E8AACC7DFDE6C92E3B9661CBD@ORSMSX110.amr.corp.intel.com>
- <1564686979.11067.48.camel@lca.pw>
-In-Reply-To: <1564686979.11067.48.camel@lca.pw>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fy78kcop2n0chceBy1H/uVD8LNhJ1ql6z//K82UGimUt/quLnn2mq9PLZkbJ1b6NZZUjfUbCmrL3D7891Gjtnr6gRlw1XnsnFoMXgskK1eAilte9ZgHY9wCrC5JhK40XAJ34qNPpwrQkbIymUhMfaqXnzsKmx+R0nVoFtVzx6jyhRYKOidUA2r84D0FPUL7lwoLNcuWvHquayyIHlA6ll3mAnPhdZM/7EkiwevfmqL5pqcvv80D4bIPoTyz1DEjekuG/2cKo+6vsZhETgsfk7TTvA6WdamCORSKCtNnppJbBTi7Uf91n0IXg6knU+nTJyU1d756hjKHbLTtWjOsPJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=luj+G3Y26CleTSE5ajWP3D8q1SrKXpByCXPS52hsVfA=;
+ b=kr6jxIB3fR1RLuI/BYXAai1Jynvi/f4Ts/Dk23mKk6j+GWibSGPXHfcjo6a4VeoouqBrnkXXR32Yp3L+rurUqRvsYZkDduUXD04avDc0dR/zMq/9f55XkkWOF6a5v1A1Un/KAtUmFkJp+0W7yM+xubvw1cDZ9T0PSxE+77d2YzYK84yPFfTRDESKb0c9UAIYgEDxE/xOfsABMibBTh0x6r781sYNs0gIAM1oKyWh9qvlVAFVCQOGPZKcCMlXulsq4aJfNN4/GBZiowDXU+QPf/93Tg4NBaJCXjHUmlzqzCGPvxBJ0IpeUVepkuUg7kzAA7pN/FzgotEJZxGxCShWmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=luj+G3Y26CleTSE5ajWP3D8q1SrKXpByCXPS52hsVfA=;
+ b=rKvrzp3SJ5i86elNCrhTKoDDvGao0tMq2mwtEP1bzJzA/UfRjWP9pvSorN3ug6fp3QzI3D6rRNVK4uya39+bMBdRm5qWf/Rs8dgnR7bNoi65kWSXT7EpjjAgsiFyH7JpLHv209I3RoTvADU6ECuvw/YfxIl4AT/HRT2nPAPvkBk=
+Received: from VE1PR04MB6463.eurprd04.prod.outlook.com (20.179.233.20) by
+ VE1PR04MB6656.eurprd04.prod.outlook.com (20.179.235.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.10; Thu, 1 Aug 2019 20:16:53 +0000
+Received: from VE1PR04MB6463.eurprd04.prod.outlook.com
+ ([fe80::8fc:e04c:fbb6:4f1f]) by VE1PR04MB6463.eurprd04.prod.outlook.com
+ ([fe80::8fc:e04c:fbb6:4f1f%7]) with mapi id 15.20.2115.005; Thu, 1 Aug 2019
+ 20:16:53 +0000
+From:   Roy Pledge <roy.pledge@nxp.com>
+To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+CC:     Madalin-cristian Bucur <madalin.bucur@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>
+Subject: [PATCH v3 1/7] soc/fsl/qbman: Rework QBMan private memory setup
+Thread-Topic: [PATCH v3 1/7] soc/fsl/qbman: Rework QBMan private memory setup
+Thread-Index: AQHVSKYPJmyUpSA7bEOHwoc9Zbz4tQ==
+Date:   Thu, 1 Aug 2019 20:16:53 +0000
+Message-ID: <1564690599-29713-2-git-send-email-roy.pledge@nxp.com>
+References: <1564690599-29713-1-git-send-email-roy.pledge@nxp.com>
+In-Reply-To: <1564690599-29713-1-git-send-email-roy.pledge@nxp.com>
+Reply-To: Roy Pledge <roy.pledge@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODI2ZGY1OTItNDEyMS00ZGYzLWFiYjgtOTUzMDk4MzM4OWY5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiakVRcDFSYXhteXJsblwvTnFwZ3ZPcVwvQkJvQjh6bVZSRXBnTmt6dkhsbkViTU11SEl0SkZCY2NpZVU1MWdNbElkIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: SN4PR0501CA0130.namprd05.prod.outlook.com
+ (2603:10b6:803:42::47) To VE1PR04MB6463.eurprd04.prod.outlook.com
+ (2603:10a6:803:11d::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=roy.pledge@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [72.142.119.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fbfc0647-e0cb-4d13-739b-08d716bd3199
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6656;
+x-ms-traffictypediagnostic: VE1PR04MB6656:
+x-microsoft-antispam-prvs: <VE1PR04MB66565E47C49086E52BFBCC8286DE0@VE1PR04MB6656.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01165471DB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(366004)(199004)(189003)(386003)(6506007)(305945005)(7736002)(71200400001)(71190400001)(68736007)(14454004)(36756003)(54906003)(316002)(110136005)(6116002)(3846002)(486006)(186003)(66066001)(6436002)(256004)(26005)(2201001)(6636002)(3450700001)(44832011)(6486002)(102836004)(2906002)(14444005)(446003)(476003)(2616005)(50226002)(64756008)(66446008)(66476007)(25786009)(81166006)(66946007)(52116002)(5660300002)(11346002)(76176011)(478600001)(66556008)(8676002)(86362001)(81156014)(8936002)(99286004)(6512007)(4326008)(2501003)(53936002)(43066004);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6656;H:VE1PR04MB6463.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3rOswdnOFs2jQYIdCTjBaYAzFc0g/LLJDwoq83h7IF/RSfQRK+2c4ZePVJQbR4lVJ+ETjvTRZioOXucIQzjjbNxkNfyWw63JIsuT/ALHpjGYcKX6Ywjsr9RVEyGXwj06FcNGnO6pkxk64ylq1WbnloR6qXZPUlw7xcxp7uWMLBgrpUem5In3Fp3CVb5bdrdRg8o+dvXzmBDiolXG8VEIMLibe7tRdUc9YqIcE4KIrOJOTbbU5yxaR4H/FKOZb7Hek9+iedcgdmlVuG2J77nGRz+1lEed3z39TwvYhyJRkzTET/1o7Fbv/mcEodpPI+IW1kitBCrmHxnPdIkt8lMHSabkav4Ji1KsPTtwY/FYwxkWhQ817YH5X47veKCypuaFRrLEtFdGdL5x2Jq1NWKXTCXeBJIw+NnVZmOBO52XbQk=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbfc0647-e0cb-4d13-739b-08d716bd3199
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 20:16:53.4863
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: roy.pledge@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6656
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUWlhbiBDYWkgW21haWx0
-bzpjYWlAbGNhLnB3XQ0KPiBTZW50OiBUaHVyc2RheSwgQXVndXN0IDEsIDIwMTkgMTI6MTYgUE0N
-Cj4gVG86IE1vb3JlLCBSb2JlcnQgPHJvYmVydC5tb29yZUBpbnRlbC5jb20+OyBXeXNvY2tpLCBS
-YWZhZWwgSg0KPiA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+DQo+IENjOiBTY2htYXVzcywg
-RXJpayA8ZXJpay5zY2htYXVzc0BpbnRlbC5jb20+OyBqa2ltQEZyZWVCU0Qub3JnOw0KPiBsZW5i
-QGtlcm5lbC5vcmc7IG5kZXNhdWxuaWVyc0Bnb29nbGUuY29tOyBsaW51eC1hY3BpQHZnZXIua2Vy
-bmVsLm9yZzsNCj4gZGV2ZWxAYWNwaWNhLm9yZzsgY2xhbmctYnVpbHQtbGludXhAZ29vZ2xlZ3Jv
-dXBzLmNvbTsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCB2Ml0gYWNwaWNhOiBmaXggLVdudWxsLXBvaW50ZXItYXJpdGhtZXRpYyB3YXJuaW5n
-cw0KPiANCj4gT24gRnJpLCAyMDE5LTA3LTI2IGF0IDE5OjM1ICswMDAwLCBNb29yZSwgUm9iZXJ0
-IHdyb3RlOg0KPiA+IFdlJ3ZlIHRha2VuIHRoZSBjaGFuZ2UgdG8gQUNQSV9UT19QT0lOVEVSLg0K
-PiANCj4gSSBhbSBhIGJpdCBjb25mdXNlZCBoZXJlLiBJIHNhdyB0aGUgY29tbWl0IGluIHRoZSBh
-Y3BpYSByZXBvLg0KPiANCj4gaHR0cHM6Ly9naXRodWIuY29tL2FjcGljYS9hY3BpY2EvY29tbWl0
-LzAyYmJjYTUwNzBlNDJkMjk4YzliODI0MzAwYWEwDQo+IGViOGEwODJkNzk3DQo+IA0KPiBidXQg
-aG93IGRvZXMgdGhhdCBjaGFuZ2Ugd2lsbCBnbyBpbnRvIHRoZSBsaW51eCBrZXJuZWw/IFN1cHBv
-c2UgUmFmYWVsIHdpbGwNCj4gbmVlZCB0byBwaWNrIGl0IHVwIG1hbnVhbGx5Pw0KDQpJIGRvIHRo
-YXQgYWZ0ZXIgZXZlcnkgQUNQSUNBIHJlbGVhc2UNCg0KRXJpaw0KPiANCj4gPg0KPiA+DQo+ID4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBRaWFuIENhaSBbbWFpbHRvOmNh
-aUBsY2EucHddDQo+ID4gU2VudDogVGh1cnNkYXksIEp1bHkgMTgsIDIwMTkgMTI6NDkgUE0NCj4g
-PiBUbzogV3lzb2NraSwgUmFmYWVsIEogPHJhZmFlbC5qLnd5c29ja2lAaW50ZWwuY29tPg0KPiA+
-IENjOiBNb29yZSwgUm9iZXJ0IDxyb2JlcnQubW9vcmVAaW50ZWwuY29tPjsgU2NobWF1c3MsIEVy
-aWsNCj4gPiA8ZXJpay5zY2htYXVzc0BpbnRlIGwuY29tPjsgamtpbUBGcmVlQlNELm9yZzsgbGVu
-YkBrZXJuZWwub3JnOw0KPiA+IG5kZXNhdWxuaWVyc0Bnb29nbGUuY29tOyBsaW51eC1hY3BpIEB2
-Z2VyLmtlcm5lbC5vcmc7DQo+ID4gZGV2ZWxAYWNwaWNhLm9yZzsgY2xhbmctYnVpbHQtbGludXhA
-Z29vZ2xlZ3JvdXBzLmNvbTsgbGludXgtDQo+ID4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgUWlh
-biBDYWkgPGNhaUBsY2EucHc+DQo+ID4gU3ViamVjdDogW1BBVENIIHYyXSBhY3BpY2E6IGZpeCAt
-V251bGwtcG9pbnRlci1hcml0aG1ldGljIHdhcm5pbmdzDQo+ID4NCj4gPiBDbGFuZyBnZW5lcmF0
-ZSBxdWl0ZSBhIGZldyBvZiB0aG9zZSB3YXJuaW5ncy4NCj4gPg0KPiA+IGRyaXZlcnMvYWNwaS9z
-Y2FuLmM6NzU5OjI4OiB3YXJuaW5nOiBhcml0aG1ldGljIG9uIGEgbnVsbCBwb2ludGVyDQo+ID4g
-dHJlYXRlZCBhcyBhIGNhc3QgZnJvbSBpbnRlZ2VyIHRvIHBvaW50ZXIgaXMgYSBHTlUgZXh0ZW5z
-aW9uIFstV251bGwtcG9pbnRlci0NCj4gYXJpdGhtZXRpY10NCj4gPiAJCXN0YXR1cyA9IGFjcGlf
-Z2V0X2hhbmRsZShBQ1BJX1JPT1RfT0JKRUNULA0KPiA+IG9iai0+c3RyaW5nLnBvaW50ZXIsDQo+
-ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoF5+fn5+fn5+fn5+fn5+fn4NCj4gPiAuL2luY2x1
-ZGUvYWNwaS9hY3R5cGVzLmg6NDU4OjU2OiBub3RlOiBleHBhbmRlZCBmcm9tIG1hY3JvDQo+ICdB
-Q1BJX1JPT1RfT0JKRUNUJw0KPiA+IMKgI2RlZmluZSBBQ1BJX1JPT1RfT0JKRUNUwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAoKGFjcGlfaGFuZGxlKQ0KPiA+IEFDUElfVE9fUE9JTlRF
-Ug0KPiA+IChBQ1BJX01BWF9QVFIpKQ0KPiA+IAkJCQkJCQlefn5+fn5+fn5+fn5+fn4NCj4gPiAu
-L2luY2x1ZGUvYWNwaS9hY3R5cGVzLmg6NTA5OjQxOiBub3RlOiBleHBhbmRlZCBmcm9tIG1hY3Jv
-DQo+ICdBQ1BJX1RPX1BPSU5URVInDQo+ID4gwqAjZGVmaW5lIEFDUElfVE9fUE9JTlRFUihpKcKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBBQ1BJX0FERF9QVFIgKHZvaWQsICh2b2lkICopDQo+
-ID4gMCwNCj4gPiAoYWNwaV9zaXplKSAoaSkpDQo+ID4NCj4gPiBefn5+fn5+fn5+fn5+fn5+fn5+
-fn5+fn5+fn5+fn5+DQo+ID4gLi9pbmNsdWRlL2FjcGkvYWN0eXBlcy5oOjUwMzo4NDogbm90ZTog
-ZXhwYW5kZWQgZnJvbSBtYWNybyAnQUNQSV9BRERfUFRSJw0KPiA+IMKgI2RlZmluZSBBQ1BJX0FE
-RF9QVFIodCwgYSwgYinCoMKgwqDCoMKgwqDCoMKgwqDCoMKgQUNQSV9DQVNUX1BUUiAodCwNCj4g
-PiAoQUNQSV9DQVNUX1BUUiAodTgsIChhKSkgKyAoYWNwaV9zaXplKShiKSkpDQo+ID4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoF5+fn5+fn5+fn5+fn5+fn5+DQo+ID4gLi9pbmNsdWRlL2FjcGkv
-YWN0eXBlcy5oOjUwMTo2Njogbm90ZTogZXhwYW5kZWQgZnJvbSBtYWNybw0KPiAnQUNQSV9DQVNU
-X1BUUicNCj4gPiDCoCNkZWZpbmUgQUNQSV9DQVNUX1BUUih0LCBwKcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgKCh0ICopIChhY3BpX3VpbnRwdHJfdCkgKHApKQ0KPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqBeDQo+ID4gVGhpcyBpcyBiZWNhdXNlIHBvaW50ZXIgYXJpdGhtZXRpYyBvbiBhIHBvaW50ZXIg
-bm90IHBvaW50aW5nIHRvIGFuDQo+ID4gYXJyYXkgaXMgYW4gdW5kZWZpbmVkIGJlaGF2aW9yIChD
-MTEgNi41LjYsIGNvbnN0cmFpbnQgOCkuIEZpeCBpdCBieQ0KPiA+IGp1c3QgY2FzdGluZyB0aGUg
-Y29ycmVzcG9uZGluZyBwb2ludGVycyB1c2luZyBBQ1BJX0NBU1RfUFRSKCkgYW5kIHNraXANCj4g
-PiB0aGUgYXJpdGhtZXRpYy4gQWxzbywgZml4IGEgY2hlY2twYXRjaCB3YXJuaW5nIHRvZ2V0aGVy
-Lg0KPiA+DQo+ID4gRVJST1I6IE1hY3JvcyB3aXRoIGNvbXBsZXggdmFsdWVzIHNob3VsZCBiZSBl
-bmNsb3NlZCBpbiBwYXJlbnRoZXNlcw0KPiA+IMKgIzQ1OiBGSUxFOiBpbmNsdWRlL2FjcGkvYWN0
-eXBlcy5oOjUwOToNCj4gPiArI2RlZmluZSBBQ1BJX1RPX1BPSU5URVIoaSnCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgQUNQSV9DQVNUX1BUUiAodm9pZCwgaSkNCj4gPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IFFpYW4gQ2FpIDxjYWlAbGNhLnB3Pg0KPiA+IC0tLQ0KPiA+DQo+ID4gdjI6IFVzZSBB
-Q1BJX0NBU1RfUFRSKCkgaW4gQUNQSV9UT19QT0lOVEVSKCkgZGlyZWN0bHkgd2l0aG91dA0KPiA+
-IMKgwqDCoMKgYXJpdGhtZXRpYy4NCj4gPg0KPiA+IMKgaW5jbHVkZS9hY3BpL2FjdHlwZXMuaCB8
-IDIgKy0NCj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigt
-KQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvYWNwaS9hY3R5cGVzLmggYi9pbmNsdWRl
-L2FjcGkvYWN0eXBlcy5oIGluZGV4DQo+ID4gYWQ2ODkyYTI0MDE1Li4xNjMxODFlMmQ4ODQgMTAw
-NjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9hY3BpL2FjdHlwZXMuaA0KPiA+ICsrKyBiL2luY2x1ZGUv
-YWNwaS9hY3R5cGVzLmgNCj4gPiBAQCAtNTA2LDcgKzUwNiw3IEBAIHR5cGVkZWYgdTY0IGFjcGlf
-aW50ZWdlcjsNCj4gPg0KPiA+IMKgLyogUG9pbnRlci9JbnRlZ2VyIHR5cGUgY29udmVyc2lvbnMg
-Ki8NCj4gPg0KPiA+IC0jZGVmaW5lIEFDUElfVE9fUE9JTlRFUihpKcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqBBQ1BJX0FERF9QVFIgKHZvaWQsICh2b2lkICopDQo+ID4gMCwNCj4gPiAoYWNw
-aV9zaXplKSAoaSkpDQo+ID4gKyNkZWZpbmUgQUNQSV9UT19QT0lOVEVSKGkpwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoChBQ1BJX0NBU1RfUFRSICh2b2lkLCBpKSkNCj4gPiDCoCNkZWZpbmUg
-QUNQSV9UT19JTlRFR0VSKHApwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoEFDUElfUFRSX0RJ
-RkYgKHAsICh2b2lkICopIDApDQo+ID4gwqAjZGVmaW5lIEFDUElfT0ZGU0VUKGQsIGYpwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgQUNQSV9QVFJfRElGRiAoJigoKGQgKikNCj4gPiAwKS0+
-ZiksICh2b2lkDQo+ID4gKikgMCkNCj4gPiDCoCNkZWZpbmUgQUNQSV9QSFlTQUREUl9UT19QVFIo
-aSnCoMKgwqDCoMKgwqDCoMKgwqBBQ1BJX1RPX1BPSU5URVIoaSkNCj4gPiAtLQ0KPiA+IDIuMjAu
-MSAoQXBwbGUgR2l0LTExNykNCj4gPg0K
+Rework QBMan private memory setup so that the areas are not
+zeroed if the device was previously initialized
+
+If the QMan private memory was already initialized skip the PFDR
+initialization.
+
+Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
+---
+ drivers/soc/fsl/qbman/bman_ccsr.c | 26 +++++++++++++++++--
+ drivers/soc/fsl/qbman/dpaa_sys.c  |  7 +++--
+ drivers/soc/fsl/qbman/qman_ccsr.c | 54 +++++++++++++++++++++++++++++++++++=
+----
+ 3 files changed, 76 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman=
+_ccsr.c
+index 7c3cc96..dc6d7e5 100644
+--- a/drivers/soc/fsl/qbman/bman_ccsr.c
++++ b/drivers/soc/fsl/qbman/bman_ccsr.c
+@@ -97,17 +97,40 @@ static void bm_get_version(u16 *id, u8 *major, u8 *mino=
+r)
+ /* signal transactions for FBPRs with higher priority */
+ #define FBPR_AR_RPRIO_HI BIT(30)
+=20
+-static void bm_set_memory(u64 ba, u32 size)
++/* Track if probe has occurred and if cleanup is required */
++static int __bman_probed;
++static int __bman_requires_cleanup;
++
++
++static int bm_set_memory(u64 ba, u32 size)
+ {
++	u32 bar, bare;
+ 	u32 exp =3D ilog2(size);
+ 	/* choke if size isn't within range */
+ 	DPAA_ASSERT(size >=3D 4096 && size <=3D 1024*1024*1024 &&
+ 		   is_power_of_2(size));
+ 	/* choke if '[e]ba' has lower-alignment than 'size' */
+ 	DPAA_ASSERT(!(ba & (size - 1)));
++
++	/* Check to see if BMan has already been initialized */
++	bar =3D bm_ccsr_in(REG_FBPR_BAR);
++	if (bar) {
++		/* Maker sure ba =3D=3D what was programmed) */
++		bare =3D bm_ccsr_in(REG_FBPR_BARE);
++		if (bare !=3D upper_32_bits(ba) || bar !=3D lower_32_bits(ba)) {
++			pr_err("Attempted to reinitialize BMan with different BAR, got 0x%llx r=
+ead BARE=3D0x%x BAR=3D0x%x\n",
++			       ba, bare, bar);
++			return -ENOMEM;
++		}
++		pr_info("BMan BAR already configured\n");
++		__bman_requires_cleanup =3D 1;
++		return 1;
++	}
++
+ 	bm_ccsr_out(REG_FBPR_BARE, upper_32_bits(ba));
+ 	bm_ccsr_out(REG_FBPR_BAR, lower_32_bits(ba));
+ 	bm_ccsr_out(REG_FBPR_AR, exp - 1);
++	return 0;
+ }
+=20
+ /*
+@@ -120,7 +143,6 @@ static void bm_set_memory(u64 ba, u32 size)
+  */
+ static dma_addr_t fbpr_a;
+ static size_t fbpr_sz;
+-static int __bman_probed;
+=20
+ static int bman_fbpr(struct reserved_mem *rmem)
+ {
+diff --git a/drivers/soc/fsl/qbman/dpaa_sys.c b/drivers/soc/fsl/qbman/dpaa_=
+sys.c
+index e6d48dc..3e0a7f3 100644
+--- a/drivers/soc/fsl/qbman/dpaa_sys.c
++++ b/drivers/soc/fsl/qbman/dpaa_sys.c
+@@ -40,6 +40,7 @@ int qbman_init_private_mem(struct device *dev, int idx, d=
+ma_addr_t *addr,
+ 	int ret;
+ 	struct device_node *mem_node;
+ 	u64 size64;
++	struct reserved_mem *rmem;
+=20
+ 	ret =3D of_reserved_mem_device_init_by_idx(dev, dev->of_node, idx);
+ 	if (ret) {
+@@ -62,10 +63,8 @@ int qbman_init_private_mem(struct device *dev, int idx, =
+dma_addr_t *addr,
+ 		return -ENODEV;
+ 	}
+=20
+-	if (!dma_alloc_coherent(dev, *size, addr, 0)) {
+-		dev_err(dev, "DMA Alloc memory failed\n");
+-		return -ENODEV;
+-	}
++	rmem =3D of_reserved_mem_lookup(mem_node);
++	*addr =3D rmem->base;
+=20
+ 	/*
+ 	 * Disassociate the reserved memory area from the device
+diff --git a/drivers/soc/fsl/qbman/qman_ccsr.c b/drivers/soc/fsl/qbman/qman=
+_ccsr.c
+index a6bb430..a3edefa 100644
+--- a/drivers/soc/fsl/qbman/qman_ccsr.c
++++ b/drivers/soc/fsl/qbman/qman_ccsr.c
+@@ -274,6 +274,7 @@ static u32 __iomem *qm_ccsr_start;
+ /* A SDQCR mask comprising all the available/visible pool channels */
+ static u32 qm_pools_sdqcr;
+ static int __qman_probed;
++static int  __qman_requires_cleanup;
+=20
+ static inline u32 qm_ccsr_in(u32 offset)
+ {
+@@ -340,19 +341,55 @@ static void qm_get_version(u16 *id, u8 *major, u8 *mi=
+nor)
+ }
+=20
+ #define PFDR_AR_EN		BIT(31)
+-static void qm_set_memory(enum qm_memory memory, u64 ba, u32 size)
++static int qm_set_memory(enum qm_memory memory, u64 ba, u32 size)
+ {
++	void *ptr;
+ 	u32 offset =3D (memory =3D=3D qm_memory_fqd) ? REG_FQD_BARE : REG_PFDR_BA=
+RE;
+ 	u32 exp =3D ilog2(size);
++	u32 bar, bare;
+=20
+ 	/* choke if size isn't within range */
+ 	DPAA_ASSERT((size >=3D 4096) && (size <=3D 1024*1024*1024) &&
+ 		    is_power_of_2(size));
+ 	/* choke if 'ba' has lower-alignment than 'size' */
+ 	DPAA_ASSERT(!(ba & (size - 1)));
++
++	/* Check to see if QMan has already been initialized */
++	bar =3D qm_ccsr_in(offset + REG_offset_BAR);
++	if (bar) {
++		/* Maker sure ba =3D=3D what was programmed) */
++		bare =3D qm_ccsr_in(offset);
++		if (bare !=3D upper_32_bits(ba) || bar !=3D lower_32_bits(ba)) {
++			pr_err("Attempted to reinitialize QMan with different BAR, got 0x%llx r=
+ead BARE=3D0x%x BAR=3D0x%x\n",
++			       ba, bare, bar);
++			return -ENOMEM;
++		}
++		__qman_requires_cleanup =3D 1;
++		/* Return 1 to indicate memory was previously programmed */
++		return 1;
++	}
++	/* Need to temporarily map the area to make sure it is zeroed */
++	ptr =3D memremap(ba, size, MEMREMAP_WB);
++	if (!ptr) {
++		pr_crit("memremap() of QMan private memory failed\n");
++		return -ENOMEM;
++	}
++	memset(ptr, 0, size);
++
++#ifdef CONFIG_PPC
++	/*
++	 * PPC doesn't appear to flush the cache on memunmap() but the
++	 * cache must be flushed since QMan does non coherent accesses
++	 * to this memory
++	 */
++	flush_dcache_range((unsigned long) ptr, (unsigned long) ptr+size);
++#endif
++	memunmap(ptr);
++
+ 	qm_ccsr_out(offset, upper_32_bits(ba));
+ 	qm_ccsr_out(offset + REG_offset_BAR, lower_32_bits(ba));
+ 	qm_ccsr_out(offset + REG_offset_AR, PFDR_AR_EN | (exp - 1));
++	return 0;
+ }
+=20
+ static void qm_set_pfdr_threshold(u32 th, u8 k)
+@@ -571,12 +608,19 @@ static int qman_init_ccsr(struct device *dev)
+ 	int i, err;
+=20
+ 	/* FQD memory */
+-	qm_set_memory(qm_memory_fqd, fqd_a, fqd_sz);
++	err =3D qm_set_memory(qm_memory_fqd, fqd_a, fqd_sz);
++	if (err < 0)
++		return err;
+ 	/* PFDR memory */
+-	qm_set_memory(qm_memory_pfdr, pfdr_a, pfdr_sz);
+-	err =3D qm_init_pfdr(dev, 8, pfdr_sz / 64 - 8);
+-	if (err)
++	err =3D qm_set_memory(qm_memory_pfdr, pfdr_a, pfdr_sz);
++	if (err < 0)
+ 		return err;
++	/* Only initialize PFDRs if the QMan was not initialized before */
++	if (err =3D=3D 0) {
++		err =3D qm_init_pfdr(dev, 8, pfdr_sz / 64 - 8);
++		if (err)
++			return err;
++	}
+ 	/* thresholds */
+ 	qm_set_pfdr_threshold(512, 64);
+ 	qm_set_sfdr_threshold(128);
+--=20
+2.7.4
+
