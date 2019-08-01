@@ -2,148 +2,103 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A494EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B48C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A30204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:56:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K9AGRONn"
+	by mail.kernel.org (Postfix) with ESMTP id 97E69204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 17:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387934AbfHAR4K (ORCPT
+        id S2388074AbfHAR5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 13:56:10 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15554 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727508AbfHAR4K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 13:56:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4327c10006>; Thu, 01 Aug 2019 10:56:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 01 Aug 2019 10:56:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 01 Aug 2019 10:56:08 -0700
-Received: from [10.110.103.107] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 1 Aug
- 2019 17:56:08 +0000
-Subject: Re: [PATCH v7 16/20] arm64: tegra: Enable wake from deep sleep on RTC
- alarm
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-17-git-send-email-skomatineni@nvidia.com>
- <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
- <d4709085-f705-2608-08a8-65b238ae8844@nvidia.com>
- <4f8b9ee7-5402-6463-d6d2-7b00e274a185@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <1e2e6282-9d94-e322-c4ba-8a1f3b902860@nvidia.com>
-Date:   Thu, 1 Aug 2019 10:56:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 1 Aug 2019 13:57:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47102 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731930AbfHAR5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 13:57:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AB808AF3E;
+        Thu,  1 Aug 2019 17:57:21 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id EF9621E3F4D; Thu,  1 Aug 2019 19:57:03 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 19:57:03 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.com>,
+        Theodore Tso <tytso@mit.edu>, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Joel Becker <jlbec@evilplan.org>, linux-ext4@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [patch V2 6/7] fs/jbd2: Make state lock a spinlock
+Message-ID: <20190801175703.GH25064@quack2.suse.cz>
+References: <20190801010126.245731659@linutronix.de>
+ <20190801010944.457499601@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <4f8b9ee7-5402-6463-d6d2-7b00e274a185@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564682177; bh=/Kr2pcx6vn1qS0Jigkctrs95b9IuEFAYE1YBU+q2XCg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=K9AGRONnigxKygMWocLYmOZXrX3wIFO0HdwQ3/k48eW2psz9ZuREUdtb63831xuRk
-         GWKdweaw2ejdMgRpWhn/XB507/55eW3gi21NjZVxGDOLpte/eoyxFRWWcJfQRLKlCj
-         cOnxrzz7VPOK2AvwxTGoj3e9I8lIQuufjkGwvzrvdRlV1U8CTfqCYyQH5tX1EDNspT
-         GZyxDR3zHfL7qInPbxY4Ji1q8LNxHkk1LkqvYzn1ED3w9vqQMlkCLUvM0/mIoHtDCJ
-         QeEwrVZYvVll4HaEHlCwRubIRkWv4s9cjhAsjtE0fILErvPqpcbemX3emnQheJsHMp
-         xB3N9XYXicy2A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801010944.457499601@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 01-08-19 03:01:32, Thomas Gleixner wrote:
+> Bit-spinlocks are problematic on PREEMPT_RT if functions which might sleep
+> on RT, e.g. spin_lock(), alloc/free(), are invoked inside the lock held
+> region because bit spinlocks disable preemption even on RT.
+> 
+> A first attempt was to replace state lock with a spinlock placed in struct
+> buffer_head and make the locking conditional on PREEMPT_RT and
+> DEBUG_BIT_SPINLOCKS.
+> 
+> Jan pointed out that there is a 4 byte hole in struct journal_head where a
+> regular spinlock fits in and he would not object to convert the state lock
+> to a spinlock unconditionally.
+> 
+> Aside of solving the RT problem, this also gains lockdep coverage for the
+> journal head state lock (bit-spinlocks are not covered by lockdep as it's
+> hard to fit a lockdep map into a single bit).
+> 
+> The trivial change would have been to convert the jbd_*lock_bh_state()
+> inlines, but that comes with the downside that these functions take a
+> buffer head pointer which needs to be converted to a journal head pointer
+> which adds another level of indirection.
+> 
+> As almost all functions which use this lock have a journal head pointer
+> readily available, it makes more sense to remove the lock helper inlines
+> and write out spin_*lock() at all call sites.
+> 
+> Fixup all locking comments as well.
+> 
+> Suggested-by: Jan Kara <jack@suse.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: "Theodore Ts'o" <tytso@mit.edu>
+> Cc: Mark Fasheh <mark@fasheh.com>
+> Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
+> Cc: Joel Becker <jlbec@evilplan.org>
+> Cc: Jan Kara <jack@suse.com>
+> Cc: linux-ext4@vger.kernel.org
 
-On 8/1/19 3:43 AM, Dmitry Osipenko wrote:
-> 01.08.2019 0:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 7/31/19 4:04 AM, Dmitry Osipenko wrote:
->>> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> This patch updates device tree for RTC and PMC to allow system wake
->>>> from deep sleep on RTC alarm.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>  =C2=A0 arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 ++++-
->>>>  =C2=A0 1 file changed, 4 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->>>> b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->>>> index 659753118e96..30a7c48385a2 100644
->>>> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->>>> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
->>>> @@ -768,7 +768,8 @@
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc@7000e000 {
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D=
- "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x0 0=
-x7000e000 0x0 0x100>;
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupts =3D <GIC_SPI 2 =
-IRQ_TYPE_LEVEL_HIGH>;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupts =3D <16 IRQ_TYP=
-E_LEVEL_HIGH>;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupt-parent =3D <&pmc=
->;
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&t=
-egra_car TEGRA210_CLK_RTC>;
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =
-=3D "rtc";
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>>> @@ -778,6 +779,8 @@
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x0 0=
-x7000e400 0x0 0x400>;
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&t=
-egra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =
-=3D "pclk", "clk32k_in";
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #interrupt-cells =3D <2>;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupt-controller;
->>>>  =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 powerga=
-tes {
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 pd_audio: aud {
->>>>
->>> Is this a backwards-compatible change? Or it's not really worth to care
->>> about the compatibility with older kernel versions, I'm not sure about
->>> overall state of T210 in the upstream kernel.
->> I don't think its required to be backwards-compatible as SC7 entry/exit
->> implementation for T210 is with this patch series onwards..
-> The new device tree binary should work with older kernel versions, AFAIK
-> this is the upstream rule. But if kernel support isn't in a very good
-> shape and not much people are using it, then obviously it is not very
-> important.
+Just a heads up that I didn't miss this patch. Just it has some bugs and I
+figured that rather than explaining to you subtleties of jh lifetime it is
+easier to fix up the problems myself since you're probably not keen on
+becoming jbd2 developer ;)... which was more complex than I thought so I'm
+not completely done yet. Hopefuly tomorrow.
 
-Yes, my response to backwards-compatible was with respect to interrupt=20
-parent change as this will not be backward compatible and also there is=20
-no Tegra210 suspend/resume earlier. Other functionality wise, it is=20
-backward compatible.
-
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
