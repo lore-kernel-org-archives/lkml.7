@@ -2,167 +2,142 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011E1C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8F0C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B96E32080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4357620657
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:04:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fk0POyiO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="nKNSOHsH";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="mBUDCkSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390203AbfHAXEX (ORCPT
+        id S2390216AbfHAXEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:04:23 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40398 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390169AbfHAXEV (ORCPT
+        Thu, 1 Aug 2019 19:04:31 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:49765 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390169AbfHAXE1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:04:21 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m8so37396471lji.7
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 16:04:19 -0700 (PDT)
+        Thu, 1 Aug 2019 19:04:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1564700666; x=1596236666;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=MqBQQUd6DHFKduRJ3LeyM7a4nbVQglmWhUtFIbDn14c=;
+  b=nKNSOHsH17pqavaVCEIuUjsZXFbvd626tCXYDITAwtiiNV5ibNJ3RnhC
+   6lk6ELrEKeVc1Ija0tjxKCT+8K/e0mDnGkiAhNf21U/5NiKe8zQOCZYSh
+   Oeyu0CvUjvY1hQfZAWg7lFqtVTtmTIvwYv/TTLs+zR1pQAjBLS/RdrX1L
+   lMLTdxF7tAZSBzv0IKAgKDSg7N62EGz1+VoZICdVzsNETpihak9tp7wIz
+   QFtJQ1W4Dbh8qg0uGa5whOs8e3eGKXe1br7QQrnWy4TzOvDdAwfNrPD2Y
+   pAVFUNIprapwYOB12SU93ZiSb8NUiS90cjzs6iyvdOzl2zpyQuWykHZXS
+   g==;
+IronPort-SDR: 4GR+qDXklNEjk0+LfsP5tGHPAauGtTUOzKb7trzSqW1L0/3Ec7aAAHhdP0PKCNb7XAt3cz5K/E
+ 1hOu+Ys967S0VwXjLJr5QeKPIGd5+VZAhQDldz1MlZdJslCMb7muyrC+4dBC2DlHptl4j1BXV0
+ EQa6WRb8AHiyIIRv90lqE5StIUZ4BCfVfxA+/F+crkX4lvn06VKuYxOacD9VJv2qnS6xskq1G1
+ WHYX1iAWVjkUHZOj3jJCqrwkLNwZR8DqucvXw2Z0sAsh/N8j7f19Tv9LgPkCgo5pn4zd+Put9q
+ 1Io=
+X-IronPort-AV: E=Sophos;i="5.64,336,1559491200"; 
+   d="scan'208";a="221220800"
+Received: from mail-co1nam05lp2051.outbound.protection.outlook.com (HELO NAM05-CO1-obe.outbound.protection.outlook.com) ([104.47.48.51])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Aug 2019 07:04:25 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vo7Pfv2sLp4lF9lu4is/0PMz9v9KDydLbAkBZaEdycecbv+hnZUIGQJLGN8brxBDGIu5zZCL3e+DZVTIsgqvzATqmExnBN3WPyQj/vNJARfbjd1PwWjlT3jrFhUNAnuUgDWxrMae3U2N97BVEF0eiiMqT5rVEkHsLcQExUCN2QYVC26wi249Yl2Pt8e9P9dGjkhpW+5Btrg+S1ZBLPi1J6Vlob41JeWW3GXIQ9i3FcU89cSVJkl8LVTpNbd4jDgUlfGDUVwoXQnImhPZplOfm0SLCMJpq7FmuTgK9wZ8pRCeHmQxPeRreynjW2nltlA+lrOuLF2VL+CjM1ior1cI9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MqBQQUd6DHFKduRJ3LeyM7a4nbVQglmWhUtFIbDn14c=;
+ b=BG4bNEIjCJWNc9BNCkTGc6X33Mw9k6mt0BUTKSCZSmSEQdYwa0RKYaRvzXAen5Kcaz2+zHPqq58PBvEKn77vRaOYRlgOUvLTh+WJxtTUIVebvkXfkkRttuMnrq+2p9MQJH0YKibrldYdQ7CFRxivl5pl5lP3q54l2NGWr00yfhMNXzOtiQ4momqh0KTKFpruBXgKoluMVYg6g1XcBy30fUCgHj/spPMQTRYfwRt9bkPmhAlRuZJBAjBQlexzZTPxWrVwxt1Y9QPrpXe+shp5YdD8fZ+CjmSuDBXeYoonOdg1r/ylcRvd6ga4nm8DBk9g9lUusW+1loFfBKpnAlFRZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
+ header.d=wdc.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=75kyKOg+It2ehvAh8LlI8jSSftjjZmGeTxvfzWDereM=;
-        b=fk0POyiOICDm/J3V10ofJ2z62cGnewG3KDLraOqT3PcWNGFJJDbaQUgi5js47ned+S
-         OR/DQ9SHo0JTsD3QMKJLcvhlxbKwtSZs/t5CTNUozRa0LMFNAWuY9D7+d2PFFSwwIZlI
-         emD8MVZCz/JW/VEShCAbrIkKJ1KsulAIkF1vrTyKM6yJ7ceIlE0V5Ose1dLbGWlV7BGy
-         D8xXmSonwENBXAhMH3bUC4Dj33EPwEN+CdHqYxf/ja3nWi3QriiveH3MMZ6qo+flDqEu
-         xIEj/OoLB0ErnyZ1TGDQHXUKUJT1bRzmq1Uhq46KiA51Q+/MZSVq3/E/tgHsnxER7a6f
-         P78g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=75kyKOg+It2ehvAh8LlI8jSSftjjZmGeTxvfzWDereM=;
-        b=BV11bgfgAS1Qu2UaM9Tcj+wO9kgUOzAvoDwAseay94MPE/QdY1nzH01RYYlbYlk48Q
-         zeCqwZp68tB1O73FBCK9pqywu9HZ3T5SoHaF0llaFaChe0cH+COW2fPfi87CG5d13Hn+
-         5kPqZs4tHUtTMsxHovcMAcJi/z/YKIjUn5UuZ/Ad1ahSgH9Y558FLhUjcXwEDHrJ2Dbv
-         iire1/FkQu+Zs1dp9Uvi1RzjedzLe73Gw1qDO34saXoBpcvYjU8o4Xz7nwpdQxlSZJTF
-         VYGPzMKsCk5QdiCc6sqa05ie6Ev4Ob6bTgmt7woDOljqE1AydhZ/UvQIGFYwMgz2iKY8
-         dfOg==
-X-Gm-Message-State: APjAAAWlBv36ZtvIrXQrzqBJPYeJIZYT7KMA75R324ubNxrunNAK7IEy
-        swaEbZ2joae8sBNvd5DNrO0=
-X-Google-Smtp-Source: APXvYqyTor/K62SpWbbAIFNPE/LJMHIbpONLe+/+pMqv/f/8hplqYMmMKporLjhlyzV6a7pnQL5JZA==
-X-Received: by 2002:a2e:7f05:: with SMTP id a5mr7403781ljd.190.1564700659208;
-        Thu, 01 Aug 2019 16:04:19 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-186-115.NA.cust.bahnhof.se. [158.174.186.115])
-        by smtp.gmail.com with ESMTPSA id u18sm12377017lfe.65.2019.08.01.16.04.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 16:04:18 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     rikard.falkeborn@gmail.com
-Cc:     akpm@linux-foundation.org, joe@perches.com,
-        johannes@sipsolutions.net, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com
-Subject: [PATCH v2 2/2] linux/bits.h: Add compile time sanity check of GENMASK inputs
-Date:   Fri,  2 Aug 2019 01:03:58 +0200
-Message-Id: <20190801230358.4193-2-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190801230358.4193-1-rikard.falkeborn@gmail.com>
-References: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
- <20190801230358.4193-1-rikard.falkeborn@gmail.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MqBQQUd6DHFKduRJ3LeyM7a4nbVQglmWhUtFIbDn14c=;
+ b=mBUDCkSJj3ndSagfZquUxO54wOzUPjh4+9B2zoej7aqG1c/9RPOtadEmSKQK8/AYJV4v8CTllGtXsnJoTD2SuFUoZxbCXFbtAi7lrfFenHt+dgUTW6fYlYwm2izQ/7l51RUSGq8J6dREuLhFAsrfAcVUa1cpN7zJdckVaF+v1Po=
+Received: from BYAPR04MB3782.namprd04.prod.outlook.com (52.135.214.142) by
+ BYAPR04MB4901.namprd04.prod.outlook.com (52.135.232.206) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.15; Thu, 1 Aug 2019 23:04:23 +0000
+Received: from BYAPR04MB3782.namprd04.prod.outlook.com
+ ([fe80::ac9a:967e:70a5:e926]) by BYAPR04MB3782.namprd04.prod.outlook.com
+ ([fe80::ac9a:967e:70a5:e926%7]) with mapi id 15.20.2115.005; Thu, 1 Aug 2019
+ 23:04:23 +0000
+From:   Atish Patra <Atish.Patra@wdc.com>
+To:     "hch@infradead.org" <hch@infradead.org>
+CC:     "info@metux.net" <info@metux.net>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "johan@kernel.org" <johan@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>,
+        "gary@garyguo.net" <gary@garyguo.net>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH v3 4/5] RISC-V: Export few kernel symbols
+Thread-Topic: [PATCH v3 4/5] RISC-V: Export few kernel symbols
+Thread-Index: AQHVSAREFj9Iszk81EyAA4/1BVByWabmc1iAgAB3iAA=
+Date:   Thu, 1 Aug 2019 23:04:23 +0000
+Message-ID: <ebeee86fa72f16e9adf6fbec9907a3559a5cb31c.camel@wdc.com>
+References: <20190801005843.10343-1-atish.patra@wdc.com>
+         <20190801005843.10343-5-atish.patra@wdc.com>
+         <20190801155633.GA366@infradead.org>
+In-Reply-To: <20190801155633.GA366@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Atish.Patra@wdc.com; 
+x-originating-ip: [199.255.44.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7d7c8e1b-89bb-4631-3c2d-08d716d4983c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB4901;
+x-ms-traffictypediagnostic: BYAPR04MB4901:
+x-microsoft-antispam-prvs: <BYAPR04MB4901B53DEB936A889990CBACFADE0@BYAPR04MB4901.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01165471DB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(346002)(396003)(39860400002)(366004)(199004)(189003)(86362001)(54906003)(305945005)(486006)(2501003)(36756003)(76116006)(66476007)(66946007)(2906002)(66066001)(64756008)(4326008)(118296001)(2616005)(3846002)(6116002)(53936002)(66446008)(7416002)(5660300002)(11346002)(68736007)(446003)(476003)(66556008)(4744005)(6916009)(102836004)(76176011)(2351001)(81156014)(81166006)(6506007)(71200400001)(25786009)(478600001)(14454004)(6436002)(6486002)(8676002)(7736002)(71190400001)(1730700003)(6512007)(6246003)(5640700003)(186003)(229853002)(26005)(99286004)(256004)(316002)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4901;H:BYAPR04MB3782.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: L0QCVMgO9LJN59ppJLDQuEhkylTtMPdHHypKrwli6M4DSd9SYdMMhfJr42CcLcds4vvVc+48vamJY6YbrrJoPZLH18Mut0WBbiyu9GrTwFfxtdzrMtLqRmLcnSYNepuRrKvYNE5EP2rT3jnL2bCGn2lwtyM+LWG7CDWKojXlOxDtRq21j+zC4JyNIeptbXo3MG0iOTGqQLb9vgMnb094WPTu2O1QriF03PGTYFxgIfIG/5pPeImqgTW/ueiHprxhnGVPVanizF3U4n0Y7jNjgG8osSBdQaf1VV8aNTL7ussMW/jd74q+zKAMXJRrWlc00DIrPTSW0x+P7UpoM3q+feYGpfPai4XnlWsv3Hb87X3PgkrJ8KBEeR05iQ0GzSAXUS7HViY0aI5/exoWw679/GVokvrLaXr6MHTeiA4H+T0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5BB21D4A3293A14F80769E546E78DFB2@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d7c8e1b-89bb-4631-3c2d-08d716d4983c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 23:04:23.7877
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Atish.Patra@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4901
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
-as the first argument and the low bit as the second argument. Mixing
-them will return a mask with zero bits set.
-
-Recent commits show getting this wrong is not uncommon, see e.g.
-commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
-commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
-macro").
-
-To prevent such mistakes from appearing again, add compile time sanity
-checking to the arguments of GENMASK() and GENMASK_ULL(). If both the
-arguments are known at compile time, and the low bit is higher than the
-high bit, break the build to detect the mistake immediately.
-
-Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
-used instead of BUILD_BUG_ON(), and __is_constexpr() must be used instead
-of __builtin_constant_p().
-
-If successful, BUILD_BUG_OR_ZERO() returns 0 of type size_t. To avoid
-problems with implicit conversions, cast the result of BUILD_BUG_OR_ZERO
-to unsigned long.
-
-Since both BUILD_BUG_ON_ZERO() and __is_constexpr() only uses sizeof()
-on the arguments passed to them, neither of them evaluate the expression
-unless it is a VLA. Therefore, GENMASK(1, x++) still behaves as
-expected.
-
-Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-available in assembly") made the macros in linux/bits.h available in
-assembly. Since neither BUILD_BUG_OR_ZERO() or __is_constexpr() are asm
-compatible, disable the checks if the file is included in an asm file.
-
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
----
-Changes in v2:
-  - Add comment about why inputs are not checked when used in asm file
-  - Use UL(0) instead of 0
-  - Extract mask creation in a separate macro to improve readability
-  - Use high and low instead of h and l (part of this was extracted to a
-    separate patch)
-  - Updated commit message
-
-Joe Perches sent a series to fix the existing misuses of GENMASK() that
-needs to be merged before this to avoid build failures. Currently, 6 of
-the patches are not in Linus tree, and 2 are not in linux-next.
-
-
- include/linux/bits.h | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/bits.h b/include/linux/bits.h
-index d4466aa42a9c..955e9e43c4a5 100644
---- a/include/linux/bits.h
-+++ b/include/linux/bits.h
-@@ -18,12 +18,30 @@
-  * position @high. For example
-  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-  */
--#define GENMASK(high, low) \
-+#ifndef __ASSEMBLY__
-+#include <linux/build_bug.h>
-+#define GENMASK_INPUT_CHECK(high, low) \
-+	((unsigned long)BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-+		__is_constexpr(high) && __is_constexpr(low), \
-+		(low) > (high), UL(0))))
-+#else
-+/*
-+ * BUILD_BUG_ON_ZERO and __is_constexpr() are not available in h files
-+ * included from asm files, disable the input check if that is the case.
-+ */
-+#define GENMASK_INPUT_CHECK(high, low) UL(0)
-+#endif
-+
-+#define __GENMASK(high, low) \
- 	(((~UL(0)) - (UL(1) << (low)) + 1) & \
- 	 (~UL(0) >> (BITS_PER_LONG - 1 - (high))))
-+#define GENMASK(high, low) \
-+	(GENMASK_INPUT_CHECK(high, low) + __GENMASK(high, low))
- 
--#define GENMASK_ULL(high, low) \
-+#define __GENMASK_ULL(high, low) \
- 	(((~ULL(0)) - (ULL(1) << (low)) + 1) & \
- 	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (high))))
-+#define GENMASK_ULL(high, low) \
-+	(GENMASK_INPUT_CHECK(high, low) + __GENMASK_ULL(high, low))
- 
- #endif	/* __LINUX_BITS_H */
--- 
-2.22.0
-
+T24gVGh1LCAyMDE5LTA4LTAxIGF0IDA4OjU2IC0wNzAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
+ZToNCj4gT24gV2VkLCBKdWwgMzEsIDIwMTkgYXQgMDU6NTg6NDJQTSAtMDcwMCwgQXRpc2ggUGF0
+cmEgd3JvdGU6DQo+ID4gRXhwb3J0IGZldyBzeW1ib2xzIHVzZWQgYnkga3ZtIG1vZHVsZS4gV2l0
+aG91dCB0aGlzLCBrdm0gY2FuIG5vdA0KPiA+IGJlIGNvbXBpbGVkIGFzIGEgbW9kdWxlLg0KPiAN
+Cj4gUGxlYXNlIGFkZCB0aGlzIHRvIHRoZSBrdm0gc2VyaWVzIGluc3RlYWQgYXMgd2UgZG9uJ3Qg
+bWVyZ2UgZXhwb3J0cw0KPiB3aXRob3V0IHRoZWlyIHVzZXJzIGluIHRoZSBzYW1lIHNlcmllcy4N
+Cg0KU3VyZS4NCg0KUmVnYXJkcywNCkF0aXNoDQo=
