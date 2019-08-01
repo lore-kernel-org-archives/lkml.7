@@ -2,133 +2,175 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEDBC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BC6C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2BCD206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2ACC2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:53:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="JCfUKgCb"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IiiY0D1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732125AbfHAPxi (ORCPT
+        id S1732150AbfHAPxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:53:38 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38951 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732090AbfHAPxh (ORCPT
+        Thu, 1 Aug 2019 11:53:55 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38517 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732090AbfHAPxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:53:37 -0400
-Received: by mail-lf1-f66.google.com with SMTP id v85so50586527lfa.6
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 08:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jOies/q8GNu6zMRJDNga96FSVWyO2X9XensDmj1AZZY=;
-        b=JCfUKgCbIl3b8Om0ozKmxK3ZkAX7v5HdGpeskesaFuP4NVGJl/awlJnYAPCtEVSloc
-         lzcOj6CeND6AuD80dr4q1nJBDmRFU2KqlXk9+ptF9UyEfTbMir9PajC+w3TevrMU1QoH
-         5DhGRwdIMNBej8DEM2/cRH4RJvSjQ8ijfcZ6NPBCDsO/9awA61b+xRtL/izy/7RChYgz
-         xTwQzNHzisQ2LYNZskcc+ZWMrodoblpe5iCPH3IT6NXa5X/R9AccGBJEJPnLdMVO54Am
-         kK8utE4/RrvLlDgPlD3Taj9+1QnLV4AmRZXmPVkCyhvXdMHhxVJppbxOVcR7A9M2e9A2
-         zOAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=jOies/q8GNu6zMRJDNga96FSVWyO2X9XensDmj1AZZY=;
-        b=M+dzx3CzXKm9IsSjtsBq87ka9qCbXoYkhnteGsW6WLsMzxnBXWtX55vLpK+RJ3UDZM
-         r4pTpya7IAiLoGSGpkeTIrZCOmtV/39vBq+ATJWsHexoJaHrLgu0r+ZsJY2zBKK+8C3O
-         n8bQ9kALrBa43IzkWWDdmEKGuHxjZZTl0QTHBfVk560aCoU6FVIuFm9NbETnRiaA0QYL
-         DVqZqw9IHq00cdlGKy05R/D2mBisDSOsIRaoZe8VWEWaFem0UmDfbnZB2zxLz0Y1Ou1M
-         yVt4My/8/fgH2iQF4ASc7G1zArouwCVhbPKWXVwz6F9OnO/7p8u/4rox81pTmVJyPyte
-         3Rlg==
-X-Gm-Message-State: APjAAAUO+E6GaMCiUN9VyFVZJO0L3m/g3Q454RejnFUatb3D/33XmiuY
-        zvyDB/+zBDd69iJmfeFvO3um0b9DWwU=
-X-Google-Smtp-Source: APXvYqzp9NIlaxkTBvMmj+xKyDzpb+n9dCj96Ve4HvOBx6VdwDWSrusU3JCFMHB8k+qhxDs91gSPrA==
-X-Received: by 2002:a19:5f46:: with SMTP id a6mr63906353lfj.142.1564674814647;
-        Thu, 01 Aug 2019 08:53:34 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:6ee:d28:6484:8b6b:cce6:b9f0])
-        by smtp.gmail.com with ESMTPSA id q4sm16666213lje.99.2019.08.01.08.53.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 08:53:34 -0700 (PDT)
-Subject: Re: [PATCH v2 10/11] vsock_test: skip read() in test_stream*close
- tests on a VMCI host
-To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
-Cc:     kvm@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        virtualization@lists.linux-foundation.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        linux-kernel@vger.kernel.org
-References: <20190801152541.245833-1-sgarzare@redhat.com>
- <20190801152541.245833-11-sgarzare@redhat.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <79ffb2a6-8ed2-cce2-7704-ed872446c0fe@cogentembedded.com>
-Date:   Thu, 1 Aug 2019 18:53:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Thu, 1 Aug 2019 11:53:55 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71Friq3005185
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 1 Aug 2019 08:53:45 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71Friq3005185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564674825;
+        bh=8sIe0Pe1k8DGjdPypIw4hFFyohZ4oz0X6NY6IeHKxLA=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=IiiY0D1DLIHZkGaxtWGxu9EzkhlwLQ7pM6RJ6njMxra1D+nEAqI0Gl9VbVXGUBdsA
+         dl7US4bpK8JPuysqEK/A2Jb60U7Cr4B9AG7lZkG90B0RfkL4cKAW0Yegnsd/uDrsm7
+         o+Qa1n0i/EDc5AQSSn0JKvt0yqka9+tPGeFT/6+yJsSp8bZmsX1f//isOmG03QlZEU
+         vsr4v+XIXCK6LOOyREqrdKny+pNjQ7VlIAWfd5l/yeZFtmgPqIU7dJocuXxYKUzxfy
+         KN9HyZJlbQEzMcHNDFDonAN2CJ1cftz7dHw2bBYlHlBRkv4CBd0nDJupWh+xTAcxSd
+         /aTAXEhBFdzeg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71FriFL005182;
+        Thu, 1 Aug 2019 08:53:44 -0700
+Date:   Thu, 1 Aug 2019 08:53:44 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-8b74569a24cb61ed5406668a4e7b3cbdccba25f7@git.kernel.org>
+Cc:     mingo@kernel.org, peterz@infradead.org, bigeasy@linutronix.de,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de
+Reply-To: peterz@infradead.org, mingo@kernel.org, bigeasy@linutronix.de,
+          hpa@zytor.com, linux-kernel@vger.kernel.org, tglx@linutronix.de
+In-Reply-To: <20190726185753.077004842@linutronix.de>
+References: <20190726185753.077004842@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] sched: Mark hrtimers to expire in hard interrupt
+ context
+Git-Commit-ID: 8b74569a24cb61ed5406668a4e7b3cbdccba25f7
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190801152541.245833-11-sgarzare@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Commit-ID:  8b74569a24cb61ed5406668a4e7b3cbdccba25f7
+Gitweb:     https://git.kernel.org/tip/8b74569a24cb61ed5406668a4e7b3cbdccba25f7
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Fri, 26 Jul 2019 20:30:52 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 1 Aug 2019 17:43:17 +0200
 
-On 08/01/2019 06:25 PM, Stefano Garzarella wrote:
+sched: Mark hrtimers to expire in hard interrupt context
 
-> When VMCI transport is used, if the guest closes a connection,
-> all data is gone and EOF is returned, so we should skip the read
-> of data written by the peer before closing the connection.
-> 
-> Reported-by: Jorgen Hansen <jhansen@vmware.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  tools/testing/vsock/vsock_test.c | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-> index cb606091489f..64adf45501ca 100644
-> --- a/tools/testing/vsock/vsock_test.c
-> +++ b/tools/testing/vsock/vsock_test.c
-[...]
-> @@ -79,16 +80,27 @@ static void test_stream_client_close_server(const struct test_opts *opts)
->  		exit(EXIT_FAILURE);
->  	}
->  
-> +	local_cid = vsock_get_local_cid(fd);
-> +
->  	control_expectln("CLOSED");
->  
->  	send_byte(fd, -EPIPE);
-> -	recv_byte(fd, 1);
-> +
-> +	/* Skip the read of data wrote by the peer if we are on VMCI and
+The scheduler related hrtimers need to expire in hard interrupt context
+even on PREEMPT_RT enabled kernels. Mark then as such.
 
-   s/wrote/written/?
+No functional change.
 
-> +	 * we are on the host side, because when the guest closes a
-> +	 * connection, all data is gone and EOF is returned.
-> +	 */
-> +	if (!(opts->transport == TEST_TRANSPORT_VMCI &&
-> +	    local_cid == VMADDR_CID_HOST))
-> +		recv_byte(fd, 1);
-> +
->  	recv_byte(fd, 0);
->  	close(fd);
->  }
-[...]
+[ tglx: Split out from larger combo patch. Add changelog. ]
 
-MBR, Sergei
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190726185753.077004842@linutronix.de
+
+
+---
+ kernel/sched/core.c     | 6 +++---
+ kernel/sched/deadline.c | 4 ++--
+ kernel/sched/rt.c       | 7 ++++---
+ 3 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2b037f195473..389e0993fbb4 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -255,7 +255,7 @@ static void __hrtick_restart(struct rq *rq)
+ {
+ 	struct hrtimer *timer = &rq->hrtick_timer;
+ 
+-	hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED);
++	hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED_HARD);
+ }
+ 
+ /*
+@@ -314,7 +314,7 @@ void hrtick_start(struct rq *rq, u64 delay)
+ 	 */
+ 	delay = max_t(u64, delay, 10000LL);
+ 	hrtimer_start(&rq->hrtick_timer, ns_to_ktime(delay),
+-		      HRTIMER_MODE_REL_PINNED);
++		      HRTIMER_MODE_REL_PINNED_HARD);
+ }
+ #endif /* CONFIG_SMP */
+ 
+@@ -328,7 +328,7 @@ static void hrtick_rq_init(struct rq *rq)
+ 	rq->hrtick_csd.info = rq;
+ #endif
+ 
+-	hrtimer_init(&rq->hrtick_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_init(&rq->hrtick_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	rq->hrtick_timer.function = hrtick;
+ }
+ #else	/* CONFIG_SCHED_HRTICK */
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index ef5b9f6b1d42..0359612d5443 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -923,7 +923,7 @@ static int start_dl_timer(struct task_struct *p)
+ 	 */
+ 	if (!hrtimer_is_queued(timer)) {
+ 		get_task_struct(p);
+-		hrtimer_start(timer, act, HRTIMER_MODE_ABS);
++		hrtimer_start(timer, act, HRTIMER_MODE_ABS_HARD);
+ 	}
+ 
+ 	return 1;
+@@ -1053,7 +1053,7 @@ void init_dl_task_timer(struct sched_dl_entity *dl_se)
+ {
+ 	struct hrtimer *timer = &dl_se->dl_timer;
+ 
+-	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	timer->function = dl_task_timer;
+ }
+ 
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index a532558a5176..da3e85e61013 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -45,8 +45,8 @@ void init_rt_bandwidth(struct rt_bandwidth *rt_b, u64 period, u64 runtime)
+ 
+ 	raw_spin_lock_init(&rt_b->rt_runtime_lock);
+ 
+-	hrtimer_init(&rt_b->rt_period_timer,
+-			CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_init(&rt_b->rt_period_timer, CLOCK_MONOTONIC,
++		     HRTIMER_MODE_REL_HARD);
+ 	rt_b->rt_period_timer.function = sched_rt_period_timer;
+ }
+ 
+@@ -67,7 +67,8 @@ static void start_rt_bandwidth(struct rt_bandwidth *rt_b)
+ 		 * to update the period.
+ 		 */
+ 		hrtimer_forward_now(&rt_b->rt_period_timer, ns_to_ktime(0));
+-		hrtimer_start_expires(&rt_b->rt_period_timer, HRTIMER_MODE_ABS_PINNED);
++		hrtimer_start_expires(&rt_b->rt_period_timer,
++				      HRTIMER_MODE_ABS_PINNED_HARD);
+ 	}
+ 	raw_spin_unlock(&rt_b->rt_runtime_lock);
+ }
