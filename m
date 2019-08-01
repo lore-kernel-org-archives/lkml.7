@@ -2,205 +2,168 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F173C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F213AC32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F75D20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39E0216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:50:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qai+NTOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfHAChu (ORCPT
+        id S1727809AbfHACuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 22:37:50 -0400
-Received: from anchovy3.45ru.net.au ([203.30.46.155]:34562 "EHLO
-        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfHAChu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 22:37:50 -0400
-Received: (qmail 19867 invoked by uid 5089); 1 Aug 2019 02:37:47 -0000
-Received: by simscan 1.2.0 ppid: 19739, pid: 19743, t: 0.0566s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-Received: from unknown (HELO ?192.168.0.128?) (preid@electromag.com.au@203.59.235.95)
-  by anchovy2.45ru.net.au with ESMTPA; 1 Aug 2019 02:37:46 -0000
-Subject: Re: [PATCH v6 19/57] iio: Remove dev_err() usage after
- platform_get_irq()
-To:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-20-swboyd@chromium.org>
- <f28e8440-a57d-e269-f3a8-5bf5b9fcd41f@electromag.com.au>
- <5d41a66d.1c69fb81.6d372.4c72@mx.google.com>
-From:   Phil Reid <preid@electromag.com.au>
-Message-ID: <6dc9dbc0-c338-eb21-aeb3-70026bebfd41@electromag.com.au>
-Date:   Thu, 1 Aug 2019 10:37:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 22:50:13 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40559 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbfHACuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 22:50:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zZXK0vY4z9sMr;
+        Thu,  1 Aug 2019 12:50:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564627810;
+        bh=Vz4PbnGvp87fekQr8Axb0T3lKXfAHGX5+7DZxMwiTsE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qai+NTOjAghdddihkjQork1rjg5sA/onFT1l63P1d+xXvcnqjdnPG+LobkoGBsgCN
+         e114GOo3LM2yYHAKgh7T6+pyIUuY3C6QxoBpBf8TfNFB1Q73nNRqzveVgiHQQRxEYm
+         2UB92rK7D8sE8yUCT6jmHMwSbr1MHKZVwHZlGqBzfrberXpX6ekkwExH2j98PKPsLF
+         hwIRf5S8Pp5+iHDKv8SDaQcQoa1sleK37Flik66JWpPTVBEc7hJYNSU0UGWEyDBPd/
+         jzU6ONEE2txadkVi8Z/CdZolCbK2IfQrulmnLhQk66kgWzGNEzDb20fdVNGkUWeAly
+         8fEhEiKhwFAZA==
+Date:   Thu, 1 Aug 2019 12:50:08 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>
+Subject: linux-next: manual merge of the sound-asoc tree with the sound tree
+Message-ID: <20190801125008.4a533637@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <5d41a66d.1c69fb81.6d372.4c72@mx.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/Of7hYDvcZhZJ_+VWo=quPjd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-G'day Stephen,
+--Sig_/Of7hYDvcZhZJ_+VWo=quPjd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-One comment below.
+Hi all,
 
-On 31/07/2019 22:32, Stephen Boyd wrote:
-> Quoting Phil Reid (2019-07-30 23:42:16)
->> G'day Stephen,
->>
->> A comment unrelated to your change.
->>
->> On 31/07/2019 02:15, Stephen Boyd wrote:
->> ....
->>
->>> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
->>> index 32f1c4a33b20..abe99856c823 100644
->>> --- a/drivers/iio/adc/at91_adc.c
->>> +++ b/drivers/iio/adc/at91_adc.c
->>> @@ -1179,10 +1179,8 @@ static int at91_adc_probe(struct platform_device *pdev)
->>>        idev->info = &at91_adc_info;
->>>    
->>>        st->irq = platform_get_irq(pdev, 0);
->>> -     if (st->irq < 0) {
->>> -             dev_err(&pdev->dev, "No IRQ ID is designated\n");
->>> +     if (st->irq < 0)
->>>                return -ENODEV;
->> Should this be returning st->irq instead of -ENODEV?
->> eg: platform_get_irq can return -EPROBE_DEFER
->>
->> Pattern is repeated in a number of other places.
-> 
-> Probably? Here's a patch.
-> 
-> ----8<----
-> From: Stephen Boyd <swboyd@chromium.org>
-> Subject: [PATCH] iio: Return error values from platform_get_irq*()
-> 
-> Sometimes platform_get_irq*() can return -EPROBE_DEFER, so it's best to
-> return the actual error value from calling this function instead of
-> overriding the value to something like -EINVAL or -ENXIO. Except for in
-> the case when the irq value is 0 and the driver knows that irq 0 isn't
-> valid. In such a situation, return whatever error value was returned
-> before this change.
-> 
-> Reported-by: Phil Reid <preid@electromag.com.au>
-> Cc: Phil Reid <preid@electromag.com.au>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: linux-iio@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->   drivers/iio/adc/at91_adc.c      | 2 +-
->   drivers/iio/adc/bcm_iproc_adc.c | 2 +-
->   drivers/iio/adc/fsl-imx25-gcq.c | 4 +---
->   drivers/iio/adc/lpc32xx_adc.c   | 2 +-
->   drivers/iio/adc/npcm_adc.c      | 2 +-
->   drivers/iio/adc/spear_adc.c     | 2 +-
->   6 files changed, 6 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
-> index abe99856c823..2c604198c4b7 100644
-> --- a/drivers/iio/adc/at91_adc.c
-> +++ b/drivers/iio/adc/at91_adc.c
-> @@ -1180,7 +1180,7 @@ static int at91_adc_probe(struct platform_device *pdev)
->   
->   	st->irq = platform_get_irq(pdev, 0);
->   	if (st->irq < 0)
-> -		return -ENODEV;
-> +		return st->irq;
->   
->   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->   
-> diff --git a/drivers/iio/adc/bcm_iproc_adc.c b/drivers/iio/adc/bcm_iproc_adc.c
-> index 646ebdc0a8b4..6c05ea510c40 100644
-> --- a/drivers/iio/adc/bcm_iproc_adc.c
-> +++ b/drivers/iio/adc/bcm_iproc_adc.c
-> @@ -541,7 +541,7 @@ static int iproc_adc_probe(struct platform_device *pdev)
->   
->   	adc_priv->irqno = platform_get_irq(pdev, 0);
->   	if (adc_priv->irqno <= 0)
-> -		return -ENODEV;
-> +		return adc_priv->irqno;
+Today's linux-next merge of the sound-asoc tree got conflicts in:
 
-		return adc_priv->irqno ? : -ENODEV;
+  sound/soc/intel/skylake/skl-nhlt.c
+  sound/soc/intel/skylake/skl.h
 
->   
->   	ret = regmap_update_bits(adc_priv->regmap, IPROC_REGCTL2,
->   				IPROC_ADC_AUXIN_SCAN_ENA, 0);
-> diff --git a/drivers/iio/adc/fsl-imx25-gcq.c b/drivers/iio/adc/fsl-imx25-gcq.c
-> index fa71489195c6..ee20ab09abe5 100644
-> --- a/drivers/iio/adc/fsl-imx25-gcq.c
-> +++ b/drivers/iio/adc/fsl-imx25-gcq.c
-> @@ -340,9 +340,7 @@ static int mx25_gcq_probe(struct platform_device *pdev)
->   
->   	priv->irq = platform_get_irq(pdev, 0);
->   	if (priv->irq <= 0) {
-> -		ret = priv->irq;
-> -		if (!ret)
-> -			ret = -ENXIO;
-> +		ret = priv->irq ? : -ENXIO;
->   		goto err_clk_unprepare;
->   	}
->   
-> diff --git a/drivers/iio/adc/lpc32xx_adc.c b/drivers/iio/adc/lpc32xx_adc.c
-> index b896f7ff4572..edbb58212fba 100644
-> --- a/drivers/iio/adc/lpc32xx_adc.c
-> +++ b/drivers/iio/adc/lpc32xx_adc.c
-> @@ -173,7 +173,7 @@ static int lpc32xx_adc_probe(struct platform_device *pdev)
->   
->   	irq = platform_get_irq(pdev, 0);
->   	if (irq <= 0)
-> -		return -ENXIO;
-> +		return irq ? : -ENXIO;
->   
->   	retval = devm_request_irq(&pdev->dev, irq, lpc32xx_adc_isr, 0,
->   				  LPC32XXAD_NAME, st);
-> diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
-> index 910f3585fa54..1e54a64a4534 100644
-> --- a/drivers/iio/adc/npcm_adc.c
-> +++ b/drivers/iio/adc/npcm_adc.c
-> @@ -225,7 +225,7 @@ static int npcm_adc_probe(struct platform_device *pdev)
->   
->   	irq = platform_get_irq(pdev, 0);
->   	if (irq <= 0) {
-> -		ret = -EINVAL;
-> +		ret = irq ? : -EINVAL;
->   		goto err_disable_clk;
->   	}
->   
-> diff --git a/drivers/iio/adc/spear_adc.c b/drivers/iio/adc/spear_adc.c
-> index 592b97c464da..9b16717ac7e7 100644
-> --- a/drivers/iio/adc/spear_adc.c
-> +++ b/drivers/iio/adc/spear_adc.c
-> @@ -301,7 +301,7 @@ static int spear_adc_probe(struct platform_device *pdev)
->   
->   	irq = platform_get_irq(pdev, 0);
->   	if (irq <= 0) {
-> -		ret = -EINVAL;
-> +		ret = irq ? : -EINVAL;
->   		goto errout2;
->   	}
->   
-> 
+between commit:
 
+  1169cbf6b98e ("ASoC: Intel: Skylake: use common NHLT module")
 
--- 
-Regards
-Phil Reid
+from the sound tree and commit:
+
+  bcc2a2dc3ba8 ("ASoC: Intel: Skylake: Merge skl_sst and skl into skl_dev s=
+truct")
+
+from the sound-asoc tree.
+
+I fixed it up (I think, see below (I used the sound tree version of
+ound/soc/intel/skylake/skl-nhlt.c)) and can carry the fix as necessary.
+This is now fixed as far as linux-next is concerned, but any non
+trivial conflicts should be mentioned to your upstream maintainer when
+your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc sound/soc/intel/skylake/skl-nhlt.c
+index 6f57ceb9efb7,6fc3a190067e..000000000000
+--- a/sound/soc/intel/skylake/skl-nhlt.c
++++ b/sound/soc/intel/skylake/skl-nhlt.c
+diff --cc sound/soc/intel/skylake/skl.h
+index f4dd6c767993,600a61f79b0a..000000000000
+--- a/sound/soc/intel/skylake/skl.h
++++ b/sound/soc/intel/skylake/skl.h
+@@@ -16,7 -16,9 +16,8 @@@
+  #include <sound/hdaudio_ext.h>
+  #include <sound/hda_codec.h>
+  #include <sound/soc.h>
+ -#include "skl-nhlt.h"
+  #include "skl-ssp-clk.h"
++ #include "skl-sst-ipc.h"
+ =20
+  #define SKL_SUSPEND_DELAY 2000
+ =20
+@@@ -128,24 -167,27 +166,24 @@@ struct skl_dsp_ops=20
+  int skl_platform_unregister(struct device *dev);
+  int skl_platform_register(struct device *dev);
+ =20
+- struct nhlt_specific_cfg *skl_get_ep_blob(struct skl *skl, u32 instance,
+ -struct nhlt_acpi_table *skl_nhlt_init(struct device *dev);
+ -void skl_nhlt_free(struct nhlt_acpi_table *addr);
++ struct nhlt_specific_cfg *skl_get_ep_blob(struct skl_dev *skl, u32 instan=
+ce,
+  					u8 link_type, u8 s_fmt, u8 no_ch,
+  					u32 s_rate, u8 dirn, u8 dev_type);
+ =20
+- int skl_nhlt_update_topology_bin(struct skl *skl);
+- int skl_init_dsp(struct skl *skl);
+- int skl_free_dsp(struct skl *skl);
+- int skl_suspend_late_dsp(struct skl *skl);
+- int skl_suspend_dsp(struct skl *skl);
+- int skl_resume_dsp(struct skl *skl);
+- void skl_cleanup_resources(struct skl *skl);
+ -int skl_get_dmic_geo(struct skl_dev *skl);
++ int skl_nhlt_update_topology_bin(struct skl_dev *skl);
++ int skl_init_dsp(struct skl_dev *skl);
++ int skl_free_dsp(struct skl_dev *skl);
++ int skl_suspend_late_dsp(struct skl_dev *skl);
++ int skl_suspend_dsp(struct skl_dev *skl);
++ int skl_resume_dsp(struct skl_dev *skl);
++ void skl_cleanup_resources(struct skl_dev *skl);
+  const struct skl_dsp_ops *skl_get_dsp_ops(int pci_id);
+  void skl_update_d0i3c(struct device *dev, bool enable);
+- int skl_nhlt_create_sysfs(struct skl *skl);
+- void skl_nhlt_remove_sysfs(struct skl *skl);
+- void skl_get_clks(struct skl *skl, struct skl_ssp_clk *ssp_clks);
++ int skl_nhlt_create_sysfs(struct skl_dev *skl);
++ void skl_nhlt_remove_sysfs(struct skl_dev *skl);
++ void skl_get_clks(struct skl_dev *skl, struct skl_ssp_clk *ssp_clks);
+  struct skl_clk_parent_src *skl_get_parent_clk(u8 clk_id);
+- int skl_dsp_set_dma_control(struct skl_sst *ctx, u32 *caps,
++ int skl_dsp_set_dma_control(struct skl_dev *skl, u32 *caps,
+  				u32 caps_size, u32 node_id);
+ =20
+  struct skl_module_cfg;
+
+--Sig_/Of7hYDvcZhZJ_+VWo=quPjd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1CU2AACgkQAVBC80lX
+0Gx+Jgf6A9sBdThuP5HB4RNEfLuww0j7MwkSNFi/V4Ur1+70oJbE3elPkuy+VkrO
+JX4WOY0MXZ9j/b02nEkj3Tc5HAuKQlkPuSZcgNYOszHjw21ZbJRBS9OAbZ2wPp8i
+bGKpsMNjgDWyCrU9ef9hbtu0juMri/DIk6i1GtSuva6Z/dMH0iLc1MFG8w5kfmLS
+5gGZYmqKGOiW72Bt3QJhx9PaAiHyV4XQnp5Ru0u4YQkBCIwGEa0fXaHL8eTeXgX0
+3rMZmO5MuSq+I/3h1ev9AKHkA+KDokybFIuM1P39do69t/3KLdqQQkkyZtM9m9a5
+Tb9830pfCL7tTAGpMkdg0tgnGgDMkw==
+=S4cp
+-----END PGP SIGNATURE-----
+
+--Sig_/Of7hYDvcZhZJ_+VWo=quPjd--
