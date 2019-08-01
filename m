@@ -2,149 +2,453 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4576CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1F1C32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173092083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5F8206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:19:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bn1ZHG9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388063AbfHAXRf (ORCPT
+        id S2388310AbfHAXTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:17:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:65044 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387739AbfHAXRS (ORCPT
+        Thu, 1 Aug 2019 19:19:25 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:1104 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732215AbfHAXTY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:17:18 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71NDATN072139;
-        Thu, 1 Aug 2019 19:16:38 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48hahy5q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 19:16:38 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71NDPRH073359;
-        Thu, 1 Aug 2019 19:16:38 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48hahy4u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 19:16:37 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71NG23f024654;
-        Thu, 1 Aug 2019 23:16:37 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04dal.us.ibm.com with ESMTP id 2u0e879eee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 23:16:36 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71NGaG449414460
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Aug 2019 23:16:36 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 13A3CB2067;
-        Thu,  1 Aug 2019 23:16:36 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA765B2070;
-        Thu,  1 Aug 2019 23:16:35 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Aug 2019 23:16:35 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 2024316C9A50; Thu,  1 Aug 2019 16:16:37 -0700 (PDT)
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 09/10] rcu/nocb: Reduce ->nocb_lock contention with separate ->nocb_gp_lock
-Date:   Thu,  1 Aug 2019 16:16:34 -0700
-Message-Id: <20190801231636.23115-9-paulmck@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190801231619.GA22610@linux.ibm.com>
-References: <20190801231619.GA22610@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908010245
+        Thu, 1 Aug 2019 19:19:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4373830002>; Thu, 01 Aug 2019 16:19:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 01 Aug 2019 16:19:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 01 Aug 2019 16:19:22 -0700
+Received: from [10.110.103.107] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 1 Aug
+ 2019 23:19:21 +0000
+Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
+ support
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
+ <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
+ <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
+ <67cf6c13-688d-0305-61e2-c63c8e8b4729@nvidia.com>
+ <550de191-f982-4544-6fbc-bf16dfeae2c6@nvidia.com>
+ <c85ba067-af68-0b4a-d347-501ed7ed0ef9@gmail.com>
+ <a81b85a2-5634-cfa2-77c5-94c23c4847bd@nvidia.com>
+ <ef9e865f-359b-0873-a414-3d548bd4e590@gmail.com>
+ <50bad1d3-df41-d1e5-a7c7-4be9c661ed14@nvidia.com>
+ <62a5c6ed-21b1-8403-6fac-9c5d99b5a255@gmail.com>
+ <85cd5100-467e-d08e-0ae5-ae57a6de5312@nvidia.com>
+Message-ID: <61652889-2e77-8f1e-9ed4-b7e525a40b10@nvidia.com>
+Date:   Thu, 1 Aug 2019 16:19:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <85cd5100-467e-d08e-0ae5-ae57a6de5312@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564701571; bh=LjQ53hupFZlaXCSedOCNXF9MtvqPGkinxn0N24Q4kmA=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=bn1ZHG9Cih+dV2w22UCkhGims3KeBeIiFxsa5WvGqjrXXo41tD95/qSAPF+ixHoLf
+         aYevTnqMfUBQmk6xxRJIL3i2K8vaoXd96snWh9BGIL3hgXMKdW7LXkehsUYf/8S9Nw
+         hC+o0TyTQRmTwTDEfgxdp/pBBYpZYJkLSt1qQ0KOU06O6+KWaAl8bJRl7SgoCCMmON
+         qVHwDODLijQRwwjqtIeINxORdulWEeukInNB3OA1HAoNfSmS86AgCTmHtLsY3mSDeb
+         PRA7qX+iMRKH66zh6Y0ziEgY/I2Q7Csq+lmibJM7Mkv6n9Cy43RNK04FsurWEhqOUS
+         RRn8whQFPyt1g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sleep/wakeup of the no-CBs grace-period kthreads is synchronized
-using the ->nocb_lock of the first CPU corresponding to that kthread.
-This commit provides a separate ->nocb_gp_lock for this purpose, thus
-reducing contention on ->nocb_lock.
 
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
----
- kernel/rcu/tree.h        | 3 ++-
- kernel/rcu/tree_plugin.h | 9 +++++----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+On 8/1/19 2:30 PM, Sowjanya Komatineni wrote:
+>
+> On 8/1/19 1:54 PM, Dmitry Osipenko wrote:
+>> 01.08.2019 23:31, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> On 8/1/19 1:17 PM, Dmitry Osipenko wrote:
+>>>> 01.08.2019 22:42, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> On 8/1/19 12:00 PM, Dmitry Osipenko wrote:
+>>>>>> 01.08.2019 20:58, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>>>>>> On 7/31/19 4:09 PM, Sowjanya Komatineni wrote:
+>>>>>>>> On 7/31/19 3:44 AM, Dmitry Osipenko wrote:
+>>>>>>>>> 31.07.2019 12:50, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>>>>>> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+>>>>>>>>>>> This patch implements save and restore context for peripheral
+>>>>>>>>>>> fixed
+>>>>>>>>>>> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
+>>>>>>>>>>> peripheral clock ops.
+>>>>>>>>>>>
+>>>>>>>>>>> During system suspend, core power goes off and looses the=20
+>>>>>>>>>>> settings
+>>>>>>>>>>> of the Tegra CAR controller registers.
+>>>>>>>>>>>
+>>>>>>>>>>> So during suspend entry clock and reset state of peripherals is
+>>>>>>>>>>> saved
+>>>>>>>>>>> and on resume they are restored to have clocks back to same
+>>>>>>>>>>> rate and
+>>>>>>>>>>> state as before suspend.
+>>>>>>>>>>>
+>>>>>>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>>>>> ---
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 drivers/clk/tegra/clk-periph-fixed.c |=
+ 33
+>>>>>>>>>>> ++++++++++++++++++++++++++++++++
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 drivers/clk/tegra/clk-periph-gate.c=C2=
+=A0 | 34
+>>>>>>>>>>> +++++++++++++++++++++++++++++++++
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 drivers/clk/tegra/clk-periph.c=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 37
+>>>>>>>>>>> ++++++++++++++++++++++++++++++++++++
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 drivers/clk/tegra/clk-sdmmc-mux.c=C2=
+=A0=C2=A0=C2=A0 | 28
+>>>>>>>>>>> +++++++++++++++++++++++++++
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 +=
++++++
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 5 files changed, 138 insertions(+)
+>>>>>>>>>>>
+>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c
+>>>>>>>>>>> b/drivers/clk/tegra/clk-periph-fixed.c
+>>>>>>>>>>> index c088e7a280df..21b24530fa00 100644
+>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph-fixed.c
+>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
+>>>>>>>>>>> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct
+>>>>>>>>>>> clk_hw *hw,
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return (unsign=
+ed long)rate;
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 +static int tegra_clk_periph_fixed_sav=
+e_context(struct=20
+>>>>>>>>>>> clk_hw
+>>>>>>>>>>> *hw)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_fixed *fixed =3D
+>>>>>>>>>>> to_tegra_clk_periph_fixed(hw);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 mask =3D 1 << (fixed->num % 32);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fixed->enb_ctx =3D readl_relaxed(fixed->bas=
+e +
+>>>>>>>>>>> fixed->regs->enb_reg) &
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 mask;
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fixed->rst_ctx =3D readl_relaxed(fixed->bas=
+e +
+>>>>>>>>>>> fixed->regs->rst_reg) &
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 mask;
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>>>>>> +}
+>>>>>>>>>>> +
+>>>>>>>>>>> +static void tegra_clk_periph_fixed_restore_context(struct=20
+>>>>>>>>>>> clk_hw
+>>>>>>>>>>> *hw)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_fixed *fixed =3D
+>>>>>>>>>>> to_tegra_clk_periph_fixed(hw);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 mask =3D 1 << (fixed->num % 32);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (fixed->enb_ctx)
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed(mask=
+, fixed->base +
+>>>>>>>>>>> fixed->regs->enb_set_reg);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed(mask=
+, fixed->base +
+>>>>>>>>>>> fixed->regs->enb_clr_reg);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(2);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!fixed->rst_ctx) {
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 udelay(5); /* reset=
+ propogation delay */
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed(mask=
+, fixed->base +=20
+>>>>>>>>>>> fixed->regs->rst_reg);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>>>>>>> +}
+>>>>>>>>>>> +
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 static const struct clk_ops tegra_clk_=
+periph_fixed_ops =3D {
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .is_enabled =
+=3D tegra_clk_periph_fixed_is_enabled,
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .enable =3D te=
+gra_clk_periph_fixed_enable,
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .disable =3D t=
+egra_clk_periph_fixed_disable,
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .recalc_rate =
+=3D tegra_clk_periph_fixed_recalc_rate,
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .save_context =3D tegra_clk_periph_fixed_sa=
+ve_context,
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .restore_context =3D tegra_clk_periph_fixed=
+_restore_context,
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 };
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 struct clk *tegra_clk_register_=
+periph_fixed(const char
+>>>>>>>>>>> *name,
+>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-gate.c
+>>>>>>>>>>> b/drivers/clk/tegra/clk-periph-gate.c
+>>>>>>>>>>> index 4b31beefc9fc..6ba5b08e0787 100644
+>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph-gate.c
+>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-gate.c
+>>>>>>>>>>> @@ -25,6 +25,8 @@ static DEFINE_SPINLOCK(periph_ref_lock);
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 #define read_rst(gate) \
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 readl_relaxed(=
+gate->clk_base + (gate->regs->rst_reg))
+>>>>>>>>>>> +#define write_rst_set(val, gate) \
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 writel_relaxed(val, gate->clk_base +
+>>>>>>>>>>> (gate->regs->rst_set_reg))
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 #define write_rst_clr(val, gate) \
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed=
+(val, gate->clk_base +
+>>>>>>>>>>> (gate->regs->rst_clr_reg))
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 @@ -110,10 +112,42 @@ static void=20
+>>>>>>>>>>> clk_periph_disable(struct
+>>>>>>>>>>> clk_hw *hw)
+>>>>>>>>>>> spin_unlock_irqrestore(&periph_ref_lock, flags);
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 +static int clk_periph_gate_save_conte=
+xt(struct clk_hw=20
+>>>>>>>>>>> *hw)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_gate *gate =3D=20
+>>>>>>>>>>> to_clk_periph_gate(hw);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate->clk_state_ctx =3D read_enb(gate) &
+>>>>>>>>>>> periph_clk_to_bit(gate);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate->rst_state_ctx =3D read_rst(gate) &
+>>>>>>>>>>> periph_clk_to_bit(gate);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>>>>>> +}
+>>>>>>>>>>> +
+>>>>>>>>>>> +static void clk_periph_gate_restore_context(struct clk_hw *hw)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_gate *gate =3D=20
+>>>>>>>>>>> to_clk_periph_gate(hw);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (gate->clk_state_ctx)
+>>>>>>>>>>> + write_enb_set(periph_clk_to_bit(gate), gate);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
+>>>>>>>>>>> + write_enb_clr(periph_clk_to_bit(gate), gate);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(5);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(gate->flags & TEGRA_PERIPH_NO_RESET) =
+&&
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !(gate->flags & TEG=
+RA_PERIPH_MANUAL_RESET)) {
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (gate->rst_state=
+_ctx)
+>>>>>>>>>>> + write_rst_set(periph_clk_to_bit(gate), gate);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
+>>>>>>>>>>> + write_rst_clr(periph_clk_to_bit(gate), gate);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>>>>>>> +}
+>>>>>>>>>>> +
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 const struct clk_ops tegra_clk_periph_=
+gate_ops =3D {
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .is_enabled =
+=3D clk_periph_is_enabled,
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .enable =3D cl=
+k_periph_enable,
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .disable =3D c=
+lk_periph_disable,
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .save_context =3D clk_periph_gate_save_cont=
+ext,
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .restore_context =3D clk_periph_gate_restor=
+e_context,
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 };
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 struct clk *tegra_clk_register_=
+periph_gate(const char=20
+>>>>>>>>>>> *name,
+>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph.c
+>>>>>>>>>>> b/drivers/clk/tegra/clk-periph.c
+>>>>>>>>>>> index 58437da25156..06fb62955768 100644
+>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph.c
+>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph.c
+>>>>>>>>>>> @@ -99,6 +99,37 @@ static void clk_periph_disable(struct clk_hw
+>>>>>>>>>>> *hw)
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gate_ops->disa=
+ble(gate_hw);
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 +static int clk_periph_save_context(st=
+ruct clk_hw *hw)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph *periph =3D to_clk_=
+periph(hw);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *gate_ops =3D periph->=
+gate_ops;
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *gate_hw =3D &periph->gate.hw=
+;
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(periph->gate.flags & TEGRA_PERIPH_NO_=
+GATE))
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gate_ops->save_cont=
+ext(gate_hw);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 periph->parent_ctx =3D clk_periph_get_paren=
+t(hw);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>>>>>> +}
+>>>>>>>>>>> +
+>>>>>>>>>>> +static void clk_periph_restore_context(struct clk_hw *hw)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph *periph =3D to_clk_=
+periph(hw);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *gate_ops =3D periph->=
+gate_ops;
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *gate_hw =3D &periph->gate.hw=
+;
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *div_ops =3D periph->d=
+iv_ops;
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *div_hw =3D &periph->divider.=
+hw;
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_periph_set_parent(hw, periph->parent_ct=
+x);
+>>>>>>>>>>> +
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(periph->gate.flags & TEGRA_PERIPH_NO_=
+DIV))
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 div_ops->restore_co=
+ntext(div_hw);
+>>>>>>>>>> Could you please point to where the divider's save_context()
+>>>>>>>>>> happens?
+>>>>>>>>>> Because I can't see it.
+>>>>>>>>> Ah, I now see that there is no need to save the dividers context
+>>>>>>>>> because
+>>>>>>>>> clk itself has enough info that is needed for the context's
+>>>>>>>>> restoring
+>>>>>>>>> (like I pointed in the review to v6).
+>>>>>>>>>
+>>>>>>>>> Looks like you could also implement a new=20
+>>>>>>>>> clk_hw_get_parent_index()
+>>>>>>>>> generic helper to get the index instead of storing it manually.
+>>>>>>>> clk_periph_get_parent basically invokes existing clk_mux_ops
+>>>>>>>> get_parent() which is then saved in tegra_clk_periph.
+>>>>>>>>
+>>>>>>>> All existing drivers are using directly get_parent() from clk_mux
+>>>>>>>> which actually gets index from the register read.
+>>>>>>>>
+>>>>>>>> To have this more generic w.r.t save/restore context point of=20
+>>>>>>>> view,
+>>>>>>>> probably instead of implementing new get_parent_index helper, I=20
+>>>>>>>> think
+>>>>>>>> its better to implement save_context and restore_context to
+>>>>>>>> clk_mux_ops along with creating parent_index field into clk_mux to
+>>>>>>>> cache index during set_parent.
+>>>>>>>>
+>>>>>>>> So we just need to invoke mux_ops save_context and=20
+>>>>>>>> restore_context.
+>>>>>>>>
+>>>>>>> I hope its ok to add save/restore context to clk_mux_ops to be more
+>>>>>>> generic w.r.t save/restore context rather than get_parent_index=20
+>>>>>>> API.
+>>>>>>> Please confirm if you agree.
+>>>>>> Sounds like a good idea. I see that there is a 'restoring' helper=20
+>>>>>> for
+>>>>>> the generic clk_gate, seems something similar could be done for the
+>>>>>> clk_mux. And looks like anyway you'll need to associate the parent
+>>>>>> clock
+>>>>>> with the hw index in order to restore the muxing.
+>>>>> by 'restoring' helper for generic clk_gate, are you referring to
+>>>>> clk_gate_restore_context API?
+>>>> Yes.
+>>>>
+>>>>> clk_gate_restore_context is API that's any clk drivers can use for
+>>>>> clk_gate operation restore for custom gate clk_ops.
+>>>>>
+>>>>> But clk-periph is directly using generic clk_mux ops from clk_mux=20
+>>>>> so I
+>>>>> think we should add .restore_context to clk_mux_ops and then during
+>>>>> clk-periph restore need to invoke mux_ops->restore_context.
+>>>> I'm not sure whether it will be good for every driver that uses=20
+>>>> generic
+>>>> clk_mux ops. Should be more flexible to have a generic helper function
+>>>> that any driver could use in order to restore the clock's parent.
+>>>>
+>>>> The clk-periph restoring also includes case of combining divider and
+>>>> parent restoring, so generic helper could be useful in that case as=20
+>>>> well.
+>>>>
+>>>> It also looks like you could actually use the=20
+>>>> clk_gate_restore_context()
+>>>> instead of manually saving the clock's enable-state, couldn't you?
+>>> ok for clk_mux, can add generic clk_mux_restore_context API rather than
+>>> using restore_context in clk_ops and will invoke that during clk_periph
+>>> restore.
+>>>
+>>>
+>>> Reg clk_gate, looks like we cant use generic clk_gate_restore_context
+>>> for clk-periph as it calls enable/disable callbacks and
+>>> clk_periph_enable/disable in clk-periph-gate also updated refcnt and
+>>> depending on that actual enable/disable is set.
+>>>
+>>> During suspend, peripherals that are already enabled have their=20
+>>> refcnt >
+>>> 1, so they dont go thru enable/disable on restore if we use same
+>>> enable/disable callback.
+>> Looks like you could just decrement the gate's enable_refcnt on
+>> save_context, wouldn't that work?
+>>
+gate->enable_refcnt is within clk-periph-gate which gets updated when=20
+enable/disable callbacks get execute thru clk_core_enable/disable.
+But actual enable_count used in clk_gate_restore_context is the one=20
+which gets updated with in the clk core enable/disable functions which=20
+invokes these callbacks. Depending on this enable_count in clk core it=20
+invokes enable/disable.
 
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 7062f9d9c053..2c3e9068671c 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -202,7 +202,8 @@ struct rcu_data {
- 	struct timer_list nocb_timer;	/* Enforce finite deferral. */
- 
- 	/* The following fields are used by GP kthread, hence own cacheline. */
--	bool nocb_gp_sleep ____cacheline_internodealigned_in_smp;
-+	raw_spinlock_t nocb_gp_lock ____cacheline_internodealigned_in_smp;
-+	bool nocb_gp_sleep;
- 					/* Is the nocb GP thread asleep? */
- 	struct swait_queue_head nocb_gp_wq; /* For nocb kthreads to sleep on. */
- 	bool nocb_cb_sleep;		/* Is the nocb CB thread asleep? */
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 7fbf2c4411a1..af9cbc7d4784 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -1602,9 +1602,9 @@ static void wake_nocb_gp(struct rcu_data *rdp, bool force,
- 		del_timer(&rdp->nocb_timer);
- 		rcu_nocb_unlock_irqrestore(rdp, flags);
- 		smp_mb(); /* enqueue before ->nocb_gp_sleep. */
--		rcu_nocb_lock_irqsave(rdp_gp, flags);
-+		raw_spin_lock_irqsave(&rdp_gp->nocb_gp_lock, flags);
- 		WRITE_ONCE(rdp_gp->nocb_gp_sleep, false);
--		rcu_nocb_unlock_irqrestore(rdp_gp, flags);
-+		raw_spin_unlock_irqrestore(&rdp_gp->nocb_gp_lock, flags);
- 		wake_up_process(rdp_gp->nocb_gp_kthread);
- 	} else {
- 		rcu_nocb_unlock_irqrestore(rdp, flags);
-@@ -1759,9 +1759,9 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
- 		trace_rcu_this_gp(rnp, my_rdp, wait_gp_seq, TPS("EndWait"));
- 	}
- 	if (!rcu_nocb_poll) {
--		rcu_nocb_lock_irqsave(my_rdp, flags);
-+		raw_spin_lock_irqsave(&my_rdp->nocb_gp_lock, flags);
- 		WRITE_ONCE(my_rdp->nocb_gp_sleep, true);
--		rcu_nocb_unlock_irqrestore(my_rdp, flags);
-+		raw_spin_unlock_irqrestore(&my_rdp->nocb_gp_lock, flags);
- 	}
- 	WARN_ON(signal_pending(current));
- }
-@@ -1941,6 +1941,7 @@ static void __init rcu_boot_init_nocb_percpu_data(struct rcu_data *rdp)
- 	init_swait_queue_head(&rdp->nocb_cb_wq);
- 	init_swait_queue_head(&rdp->nocb_gp_wq);
- 	raw_spin_lock_init(&rdp->nocb_lock);
-+	raw_spin_lock_init(&rdp->nocb_gp_lock);
- 	timer_setup(&rdp->nocb_timer, do_nocb_deferred_wakeup_timer, 0);
- }
- 
--- 
-2.17.1
+So, this will cause mismatch if we handle refcnt during save/restore of=20
+tegra_clk_periph_gate_ops and also enable/disable thru this=20
+clk_gate_restore_context is based on enable_count from clk core.
+
+>>> Also to align exact reset state along with CLK (like for case where CLK
+>>> is enabled but peripheral might be in reset state), implemented
+>>> save/restore in tegra specific tegra_clk_periph_gate_ops
+>> I'm wondering whether instead of saving/restoring reset-state of every
+>> clock, you could simply save/restore the whole RST_DEV_x_SET register.
+>> Couldn't you?
+> Thats what I was doing in first version of patch. But later as we=20
+> moved to use clk_save_context and clk_restore_context, peripheral=20
+> clk_hw RST & CLK enables happen thru its corresponding save/restore=20
+> after source restore
+
+
+Also, to align both CLK & RST to the exact state of register, doing=20
+save/restore in tegra_clk_periph_gate_ops and invoking this after source=20
+restore for peripheral clock, seems cleaner to avoid any=20
+misconfiguration b/w rst & clk settings.
 
