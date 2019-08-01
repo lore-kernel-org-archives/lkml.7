@@ -2,115 +2,96 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E75C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73642C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204FF206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B83A214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564649150;
-	bh=VWpC2YvLTHsFpnTAcBRuCWOK1KuVHN32PSRn55o+22U=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=qKCDpusdwxlQuJbX6YbX9XePivosPxlqLpU/ovjrnzZko5pJGWRBQ7fe6mox8TVAk
-	 nIhjU0ZEnpbEoy5KYF76KFPHE56u8RQtIUh0DWHf2ouxf72caiqzlHolElQ9k9N499
-	 ZB3OqveO3s3uAOz0erZcWY2mx4bwifacuYABFdsY=
+	s=default; t=1564649287;
+	bh=4xrW53rvWPD3pPegD4ti28KqG5APQ7CQidIuoGRmFAc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KMv6S2g0wVD39HBQH+AB/m7K2SpbIXyZeVeQ3Viv4v4JF+aqdiZQ9HG01JJJdW1je
+	 svDHWByJvKTjJFAtbrmJNeYWjY9eYEzb2kG+g1W/xL5cYUrnsRujUodSSgvadZu92V
+	 gyhRKYcPUdS2s/QnXQ3bj930uhA0BuAhd5fwYq2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbfHAIps (ORCPT
+        id S1729913AbfHAIsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:45:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:60866 "EHLO foss.arm.com"
+        Thu, 1 Aug 2019 04:48:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfHAIps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:45:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F1B3337;
-        Thu,  1 Aug 2019 01:45:47 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9012E3F694;
-        Thu,  1 Aug 2019 01:45:45 -0700 (PDT)
-Subject: Re: [PATCH v2 4/6] irqchip/irq-pruss-intc: Add helper functions to
- configure internal mapping
-To:     Suman Anna <s-anna@ti.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Tony Lindgren <tony@atomide.com>,
-        "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190731224149.11153-1-s-anna@ti.com>
- <20190731224149.11153-5-s-anna@ti.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <1a63eb50-7c5c-eb3d-3cbe-bd1cc59ce3fe@kernel.org>
-Date:   Thu, 1 Aug 2019 09:45:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725946AbfHAIsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 04:48:05 -0400
+Received: from localhost (ip-213-127-251-216.ip.prioritytelecom.net [213.127.251.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31C9C206A3;
+        Thu,  1 Aug 2019 08:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564649284;
+        bh=4xrW53rvWPD3pPegD4ti28KqG5APQ7CQidIuoGRmFAc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E9v980GjYu7u0qo7sRMaSmu8g2MsZZclP0vxzIWxUokUf2ms9c05i9muY46zCRKwg
+         7Z/Db9Qpg2FeiFVHHqY83FYHPr+YoAsEhAuL1g6fjpfx+MnOS5HfF5VUWa7CYdC045
+         4jaM3Y1aZyrMl2veqV6efHroQwVVLyRbz5eEnDcc=
+Date:   Thu, 1 Aug 2019 10:47:59 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Jane Chu <jane.chu@oracle.com>
+Subject: Re: [PATCH 4.19 112/113] libnvdimm/bus: Stop holding
+ nvdimm_bus_list_mutex over __nd_ioctl()
+Message-ID: <20190801084759.GC1085@kroah.com>
+References: <20190729190655.455345569@linuxfoundation.org>
+ <20190729190721.610390670@linuxfoundation.org>
+ <20190731181444.GA821@amd>
+ <CAPcyv4iM3i3oBS3WRe8QHmD6zncAy0-CsgdbJ0WSt9RBiVgVqg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190731224149.11153-5-s-anna@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iM3i3oBS3WRe8QHmD6zncAy0-CsgdbJ0WSt9RBiVgVqg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/07/2019 23:41, Suman Anna wrote:
-> The PRUSS INTC receives a number of system input interrupt source events
-> and supports individual control configuration and hardware prioritization.
-> These input events can be mapped to some output interrupt lines through 2
-> levels of many-to-one mapping i.e. events to channel mapping and channels
-> to output interrupts.
+On Wed, Jul 31, 2019 at 12:31:07PM -0700, Dan Williams wrote:
+> On Wed, Jul 31, 2019 at 11:15 AM Pavel Machek <pavel@denx.de> wrote:
+> >
+> > On Mon 2019-07-29 21:23:19, Greg Kroah-Hartman wrote:
+> > > From: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > commit b70d31d054ee3a6fc1034b9d7fc0ae1e481aa018 upstream.
+> > >
+> > > In preparation for fixing a deadlock between wait_for_bus_probe_idle()
+> > > and the nvdimm_bus_list_mutex arrange for __nd_ioctl() without
+> > > nvdimm_bus_list_mutex held. This also unifies the 'dimm' and 'bus' level
+> > > ioctls into a common nd_ioctl() preamble implementation.
+> >
+> > Ok, so this is a preparation patch, not a fix...
+> >
+> > > Marked for -stable as it is a pre-requisite for a follow-on fix.
+> >
+> > ...but follow-on fixes are going to be applied for 5.2 but not
+> > 4.19. So perhaps this one should not be in 4.19, either?
 > 
-> This mapping information is provided through the PRU firmware that is
-> loaded onto a PRU core/s or through the device tree node of the PRU
-> application. The mapping is configured by the PRU remoteproc driver, and
-> is setup before the PRU core is started and cleaned up after the PRU core
-> is stopped. This event mapping configuration logic programs the Channel
-> Map Registers (CMRx) and Host-Interrupt Map Registers (HMRx) only when a
-> new program is being loaded/started and the same events and interrupt
-> channels are reset to zero when stopping a PRU.
-> 
-> Add two helper functions: pruss_intc_configure() & pruss_intc_unconfigure()
-> that the PRU remoteproc driver can use to configure the PRUSS INTC.
+> I plan to follow up with a backport of the series for 4.19. I have no
+> problem with v4.19 carrying this in the meantime, but if you want to
+> kick it out and wait for the backport, that's fine too.
 
-So let me see if I correctly understand this: this adds yet another
-firmware description parser, with a private interface to another
-(undisclosed?) driver, bypassing the standard irqchip configuration
-mechanism. It sounds great, doesn't it?
+I didn't mean to include this, I was going to go and remove it, my fault
+for keeping it in.  But, if you are going to send the series backported,
+I'll leave this in for now as that will make your work easier.
 
-What I cannot really infer from this message (-ETOOMUCHJARGON) is what
-interrupts this affects:
+thanks,
 
-- Interrupts from random devices to the PRUSS?
-- Interrupts from the PRUSS to the host?
-- Something else?
-
-When does this happen? Under control of what? It isn't even clear why
-this is part of this irqchip driver.
-
-Depending what this does, there may be ways to fit it into the standard
-interrupt configuration framework. After all, we already have standard
-interfaces to route interrupts to virtual CPUs, effectively passing full
-control of an interrupt to another entity. If you squint hard enough,
-your PRUSS can fit that description.
-
-If that doesn't work, then we need to make the IRQ framework grok that
-kind of requirement (hence my request for clarification). But I'm
-strongly opposed to inventing a SoC-private way of configuring
-interrupts behind the kernel's back.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead, it just smells funny...
+greg k-h
