@@ -2,137 +2,107 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1A6C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D101C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A50206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F314206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:04:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpQYBnfE"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iIcsdSOs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732614AbfHAQDZ (ORCPT
+        id S1732662AbfHAQET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:03:25 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35041 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731613AbfHAQDY (ORCPT
+        Thu, 1 Aug 2019 12:04:19 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51525 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732617AbfHAQES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:03:24 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w20so69650298edd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 09:03:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8bv7pMvKKkwIVkPngNqkQL32dHUrGECTsk1mbuiRZ6Y=;
-        b=cpQYBnfEwZGYGSuEI2Ta4BNuagzeeveyUz78G9FTN/tEe0rihxa0KsOcTqnGSxQNRf
-         dj4Cf9pzh7oWs8AYlaBz0ofguT7UGDU7TtKIT+WpbHaYXrC9s89pSKJ2WGlYdnQ7lOY/
-         KRAOd4GNhuLR+xbgjoWetjCgl//kZ55tckwtc0oHXCm8GCu7b+fG5t//mOtL5IrAb1bC
-         0LfUCA691M+CFnBBDYy48eNc4LflS+Oxz5WO4h4mO40KGl8daErq80zimXP8vyo65gox
-         FDvsLqNFNUo6YlMFC+Vke9U3nG6yVZBhdofiu2gdUP5cpecifP7ZOsqxar3TS2/rS9qK
-         Onlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8bv7pMvKKkwIVkPngNqkQL32dHUrGECTsk1mbuiRZ6Y=;
-        b=QXVUWzIAFQu7vnBfYymCHh4XpAAAkHQ832eF2t6sWMco2x2mxPB2OFrSuYCh9Moo6V
-         P/i6jSoZPa7XoDAUPTl/+s07pkf883cRaCAbvmnAuZoE0yRobBlxUHo6XKYcuKUyNiP2
-         JWq7hW7jkFUHkLebOOa5R+3UXCBm0n64MPc1ej7AJsPlR0k9qhGVSIuy/FdTbz+K/dwF
-         JvFau8OGKPPqooUOVA+O4nnRgJmePYuFoeFl/BlWIqYttAZieRgeFEdk8kvyjZYX+tNU
-         wP7BqNut6/cpmxwGr5te2eLDMS/GjaW2gGGRKOu/BF1o/I1iIA9KwAn9WVHRjZQTq42k
-         AMTA==
-X-Gm-Message-State: APjAAAX/hdqWOO8AMjjabir5CsY2/2UwFAtSqbCjRh5X4pCbdGjhlMeJ
-        1ISeubGxPCvJ4Sg4WDTXc0QoQGXg0YNm6NkDVBs=
-X-Google-Smtp-Source: APXvYqyGeWsq0Dm8RWkVsJdPxFY3QFmMuo8dBAKnYybjIiTjJZ5h1AzW8BLjHa9mjAuOwTiw16GRr4MzNTZoOO8pVdU=
-X-Received: by 2002:a17:906:6bc4:: with SMTP id t4mr103366912ejs.256.1564675074054;
- Thu, 01 Aug 2019 08:57:54 -0700 (PDT)
+        Thu, 1 Aug 2019 12:04:18 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71G48xv009346
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 1 Aug 2019 09:04:08 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71G48xv009346
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564675449;
+        bh=5UF6CQYe7Aj+bpxxaPuL9ABy/M0hWDaQ+7GVKUDRbQk=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=iIcsdSOsl0y7B0uEJ6ziRx0zpFOMHh+ZAuTrQRLGeWQ3VKMTO3k4+OTMuifBC+I8C
+         x6fLT242CUT3u+aXsSVpVBkoAXEiQl5/Cuf73vrCQfN2K/ygckj7O9tT24DhHaLlAH
+         b9NY/KZFv6ylG8tDEdUsEJ6UE4jDN/ogkCPUgFI7qSwvztWK3h8RH1MId6AKd75Va1
+         O0ywV9/mA/PopszANWrZpseSAIp5xsnLcN2hLihF8mox/aw2ddHKgsTqC4XGYxgKDm
+         5Iz7ZjXGljFs63ncqFUnXZwGBqTmwDHNn8CurAQAyHC800gVj2ZMZybR1/0QcFS9Rz
+         q8vjI9JWPbdYw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71G48xf009343;
+        Thu, 1 Aug 2019 09:04:08 -0700
+Date:   Thu, 1 Aug 2019 09:04:08 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Anna-Maria Gleixner <tipbot@zytor.com>
+Message-ID: <tip-1f8e8bd8b74c8089a43bc5f1f24e4bf0f855d760@git.kernel.org>
+Cc:     bigeasy@linutronix.de, anna-maria@linutronix.de,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
+        peterz@infradead.org, tglx@linutronix.de
+Reply-To: linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
+          anna-maria@linutronix.de, peterz@infradead.org,
+          tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com
+In-Reply-To: <20190730223828.508744705@linutronix.de>
+References: <20190730223828.508744705@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] alarmtimer: Prepare for PREEMPT_RT
+Git-Commit-ID: 1f8e8bd8b74c8089a43bc5f1f24e4bf0f855d760
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190717211542.30482-1-robdclark@gmail.com> <20190719092153.GJ15868@phenom.ffwll.local>
- <20190731192331.GT104440@art_vandelay> <156466322613.6045.7313079853087889718@skylake-alporthouse-com>
- <CAF6AEGu8K+PwRyY738aFyv+fdZ_UZDhY3XcFY-w4uLMW+w6X9Q@mail.gmail.com> <156467364918.6045.9820603183181141608@skylake-alporthouse-com>
-In-Reply-To: <156467364918.6045.9820603183181141608@skylake-alporthouse-com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 1 Aug 2019 08:57:42 -0700
-Message-ID: <CAF6AEGvZMxnvzBgzXTzgcJpuzGOE=YTt1-H09L2qSD==pBcPXQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/vgem: fix cache synchronization on arm/arm64
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     David Airlie <airlied@linux.ie>,
-        Deepak Sharma <deepak.sharma@amd.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Eric Anholt <eric@anholt.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 8:34 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
->
-> Quoting Rob Clark (2019-08-01 16:18:45)
-> > On Thu, Aug 1, 2019 at 5:40 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
-> > >
-> > > Quoting Sean Paul (2019-07-31 20:23:31)
-> > > > On Fri, Jul 19, 2019 at 11:21:53AM +0200, Daniel Vetter wrote:
-> > > > > On Wed, Jul 17, 2019 at 02:15:37PM -0700, Rob Clark wrote:
-> > > > > > From: Rob Clark <robdclark@chromium.org>
-> > > > > >
-> > > > > > drm_cflush_pages() is no-op on arm/arm64.  But instead we can use
-> > > > > > dma_sync API.
-> > > > > >
-> > > > > > Fixes failures w/ vgem_test.
-> > > > > >
-> > > > > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > > > > ---
-> > > > > > An alternative approach to the series[1] I sent yesterday
-> > > > > >
-> > > > > > On the plus side, it keeps the WC buffers and avoids any drm core
-> > > > > > changes.  On the minus side, I don't think it will work (at least
-> > > > > > on arm64) prior to v5.0[2], so the fix can't be backported very
-> > > > > > far.
-> > > > >
-> > > > > Yeah seems a lot more reasonable.
-> > > > >
-> > > > > Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > > >
-> > > > Applied to drm-misc-fixes, thanks!
-> > >
-> > > But it didn't actually fix the failures in CI.
-> >
-> > Hmm, that is unfortunate, I'd assumed that silence meant latest
-> > version was working in CI..
->
-> Ah, takes a intel-gfx@ for CI to pick up patches atm.
->
-> > dma_sync_sg_* doesn't work on x86?  It would be kinda unfortunate to
-> > have vgem only work on x86 *or* arm..  maybe bringing back
-> > drm_cflush_pages() could make it work in both cases
->
-> I think it stems from the expectation that vgem provides "device
-> coherency" for CPU access. From the testing perspective, it's nice to
-> emulate HW interactions; but maybe that is just beyond the general
-> capabilities and we cannot simply use vgem as we do currently. That
-> would leave a hole for mocking prime in CI that needs filling :(
+Commit-ID:  1f8e8bd8b74c8089a43bc5f1f24e4bf0f855d760
+Gitweb:     https://git.kernel.org/tip/1f8e8bd8b74c8089a43bc5f1f24e4bf0f855d760
+Author:     Anna-Maria Gleixner <anna-maria@linutronix.de>
+AuthorDate: Wed, 31 Jul 2019 00:33:49 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 1 Aug 2019 17:46:41 +0200
 
-yeah, being a "fake" device makes things a bit rough..  (I wonder if
-there is some way to do a VM w/ both virgl and i915/gvt to get some
-more "real" testing?)
+alarmtimer: Prepare for PREEMPT_RT
 
-OTOH, I kinda want to make drm_cache work on arm64, since dma-mapping
-is already problematic, which would make this patch unnecessary.  (I'm
-still not entirely sure what to do about 32b arm..)
+Use the hrtimer_cancel_wait_running() synchronization mechanism to prevent
+priority inversion and live locks on PREEMPT_RT.
 
-BR,
--R
+[ tglx: Split out of combo patch ]
+
+Signed-off-by: Anna-Maria Gleixner <anna-maria@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190730223828.508744705@linutronix.de
+
+---
+ kernel/time/alarmtimer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 57518efc3810..36947449dba2 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -432,7 +432,7 @@ int alarm_cancel(struct alarm *alarm)
+ 		int ret = alarm_try_to_cancel(alarm);
+ 		if (ret >= 0)
+ 			return ret;
+-		cpu_relax();
++		hrtimer_cancel_wait_running(&alarm->timer);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(alarm_cancel);
