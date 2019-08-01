@@ -2,100 +2,86 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0095C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46777C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83057206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:36:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="osy9CqRr"
+	by mail.kernel.org (Postfix) with ESMTP id 10985206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387590AbfHAUgX (ORCPT
+        id S1730970AbfHAUjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 16:36:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:51708 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725846AbfHAUgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:36:22 -0400
-Received: from zn.tnic (p200300EC2F159F00604C6CF9032D9ED3.dip0.t-ipconnect.de [IPv6:2003:ec:2f15:9f00:604c:6cf9:32d:9ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C1DBC1EC0586;
-        Thu,  1 Aug 2019 22:36:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1564691781;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=8WqPNaX/R+MXmdFukydmP/HNqTuX6Wi8vDecAZrApHg=;
-        b=osy9CqRrXKU9CR3+cYWy0XaDGNk99tLMQGwNJGwwCZrdIhdyj5ZnwC5tS8WauKzGy0JMEO
-        GEKjNumLpkqhYbL50FtrwyXUahSmfA56OCskVcqT+6gtWf2QOZ7gXn2MwsUMCzFq0sU2s3
-        GsSapU7AR+hjCnPTR9716prqpflk968=
-Date:   Thu, 1 Aug 2019 22:36:14 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-        jing.lin@intel.com, x86@kernel.org
-Subject: Re: [PATCH] x86/asm: Add support for MOVDIR64B instruction
-Message-ID: <20190801203614.GA16228@zn.tnic>
-References: <20190801194348.GA6059@avx2>
- <20190801194947.GA12033@agluck-desk2.amr.corp.intel.com>
- <20190801202808.e2cqlqetixie4gcu@box>
+        Thu, 1 Aug 2019 16:39:07 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40799 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbfHAUjH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 16:39:07 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1htHqp-0003ty-I9; Thu, 01 Aug 2019 22:39:03 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1htHqo-0001xt-8C; Thu, 01 Aug 2019 22:39:02 +0200
+Date:   Thu, 1 Aug 2019 22:39:02 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/3] serial: sh-sci: Remove check for specific
+ mctrl_gpio_init() return value
+Message-ID: <20190801203902.xie5dexnsoqxxlat@pengutronix.de>
+References: <20190801184505.17239-1-frieder.schrempf@kontron.de>
+ <20190801184505.17239-2-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190801202808.e2cqlqetixie4gcu@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190801184505.17239-2-frieder.schrempf@kontron.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 11:28:08PM +0300, Kirill A. Shutemov wrote:
-> On Thu, Aug 01, 2019 at 12:49:48PM -0700, Luck, Tony wrote:
-> > On Thu, Aug 01, 2019 at 10:43:48PM +0300, Alexey Dobriyan wrote:
-> > > > +static inline void movdir64b(void *dst, const void *src)
-> > > > +{
-> > > > +	/* movdir64b [rdx], rax */
-> > > > +	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
-> > > > +			: "=m" (*(char *)dst)
-> > >                                ^^^^^^^^^^
-> > > 
-> > > > +			: "d" (src), "a" (dst));
-> > > > +}
-> > > 
-> > > Probably needs fake 64-byte type, so that compiler knows what is dirty.
-> > 
-> > Would that be something like this?
-> > 
-> > static inline void movdir64b(void *dst, const void *src)
-> > {
-> > 	struct dstbytes {
-> > 		char pad[64];
-> > 	};
-> > 
-> > 	/* movdir64b [rdx], rax */
-> > 	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
-> > 		     : "=m" (*(struct dstbytes *)dst)
-> > 		     : "d" (src), "a" (dst));
-> > }
-> > 
-> > Or did you have something else in mind?
+On Thu, Aug 01, 2019 at 06:45:24PM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
 > 
-> Or should we add "memory" clobber instead, like we do for string
-> operations?
+> Now that the mctrl_gpio code returns NULL instead of ERR_PTR(-ENOSYS)
+> in cases when CONFIG_GPIOLIB is disabled, we can safely remove this
+> check.
 
-I think Tony's in the right direction. We already do dst "sizing" like
-that for the compiler in clwb().
+I would mention -ENOSYS in the Subject line. Something like:
+
+	serial: sh-sci: don't check for mctrl_gpio_init returning -ENOSYS
+
+	Now that the mctrl_gpio code returns NULL instead of
+	ERR_PTR(-ENOSYS) if CONFIG_GPIOLIB is disabled, we can safely
+	remove this check.
+
+Thanks
+Uwe
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
