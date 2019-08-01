@@ -2,104 +2,140 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C356C32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E22C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F5D206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:40:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GfQD9FxP"
+	by mail.kernel.org (Postfix) with ESMTP id 0CCA8206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:43:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564702992;
+	bh=TCLYQ56bmlnQaH4Q8hXEL4LL6+Uw6/QkBbW1R90uKM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T29iiuziPRUY24ZRtxTd83xE9ODV6wmpwGJK90XseSaLgCOSwh8MpH3yIbvUt0h89
+	 Z1ydfJC90rrfqAe3vnDFh3YgoBhriwjjYL6KGQ4sGV8oWPpU1kiBkcXcSalSrOBlUQ
+	 wjmLG+M6t0SA+92dZv/s/ByrCKmlv3VZWpjmcO5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388522AbfHAXke (ORCPT
+        id S2388572AbfHAXnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:40:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34125 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732215AbfHAXke (ORCPT
+        Thu, 1 Aug 2019 19:43:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44102 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732215AbfHAXnK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:40:34 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n9so28826034pgc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 16:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=JKIoLFzzkXibS5O3zhs4gTdyl9Ps1+sukQExcGJaYsY=;
-        b=GfQD9FxPIpykw+z4D8TSlVF/7q8v4ZmsP4UEn2Z8g8eP2JrYLJsiEugo+EGHUZys1/
-         tKSUeFkfmYkyg/rp/r1r7oWrz7UlNkK1hMyzc2+KK7BOynxJn6VLNJNUfRE64/cficll
-         daS5ql4z+Lk+3XFHDmErq2QSTvlcNnEkckyxU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=JKIoLFzzkXibS5O3zhs4gTdyl9Ps1+sukQExcGJaYsY=;
-        b=kfCCkk9MpC2cPMIyrcNV0/3CWrUMf43vL9CYP4TNqU9C6krK8r+RweGIypyXlRQLlj
-         B4qA1gDvvsQwh4xuvG2q/cpgBqxvXFD8y8tg71TPpzCxw6v28wwR3C888+OdzhHHxuSq
-         BuCgc/HicdzbUPA51U/+2RJ84k19E9SQu+MoYs+jCpIMyp9kBcXk7F7N3J6TEwsCLO8+
-         DaB+N+CaAj7vDBZxKdwsjp58EGcFGMzaKiSjBZFqEF+s5VfrpojU3OEshCoSXNhxaPJc
-         jN2EC36A1lSJLDj6ET77cVuttWoxo/gUaheSSUUboLK8z5+CNH9+K6MXUOxKgcSXjJWn
-         xj7Q==
-X-Gm-Message-State: APjAAAXCK09tzTTs6C3yRd80OrQlw79P04U2gizeD6SmRNGMhBm3wIzU
-        4NqdQIloFe79aJKfOkX3ooha4w==
-X-Google-Smtp-Source: APXvYqwSHduDv9EQjTdZzw6hWDoJb/3GyyfQf2Cb+rry3j/DqDdLwZVycOZknpu7GCutuOc8L2CWig==
-X-Received: by 2002:a63:c64b:: with SMTP id x11mr7215244pgg.319.1564702833651;
-        Thu, 01 Aug 2019 16:40:33 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id o14sm5833555pjp.29.2019.08.01.16.40.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 16:40:33 -0700 (PDT)
-Message-ID: <5d437871.1c69fb81.74806.02ea@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 1 Aug 2019 19:43:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UeFWpR2JBrWem/9wSROF50ByE9BuApCdhL94heuW2BI=; b=FYVwCyEd7AnlQexu483HI2L9k
+        DYlSzQ5esEFQ/VMRiooF73uvH+7gblU+e7zpBAgF9Libs4rQL6vl4nTrZJDV9s3zN7fRlZASzf+cR
+        d0pzhLiN1qGiRjqK+RNCWdEbr96Va3K2z8bpwT9/vNV8XEvWzgKnyIkajwxd8NcgWxl/s=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1htKiY-0005pu-GG; Thu, 01 Aug 2019 23:42:42 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id AC9EF2742E3A; Fri,  2 Aug 2019 00:42:41 +0100 (BST)
+Date:   Fri, 2 Aug 2019 00:42:41 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Thomas Preston <thomas.preston@codethink.co.uk>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Kirill Marinushkin <kmarinushkin@birdec.tech>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Annaliese McDermond <nh6z@nh6z.net>,
+        Takashi Iwai <tiwai@suse.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-kernel@vger.kernel.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on
+ diagnostic routine
+Message-ID: <20190801234241.GG5488@sirena.org.uk>
+References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
+ <20190730120937.16271-4-thomas.preston@codethink.co.uk>
+ <20190730141935.GF4264@sirena.org.uk>
+ <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
+ <20190730155027.GJ4264@sirena.org.uk>
+ <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJZ5v0jTviWeJhrWHGrtQHrVXAPoHDyFs6-06paJPHX-mH33bg@mail.gmail.com>
-References: <20190731215514.212215-1-trong@android.com> <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com> <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com> <5d42281c.1c69fb81.bcda1.71f5@mx.google.com> <CANA+-vCoCuMtSKCfnav9NSwrzX7of9iLbppNX+pcymBp19kgQQ@mail.gmail.com> <5d434a23.1c69fb81.c4201.c65b@mx.google.com> <CANA+-vCt3QJDykzbZWBDZyaiaMiz_SOJ+Htv7+G0czjL07MjmQ@mail.gmail.com> <5d4363ae.1c69fb81.b621e.65ed@mx.google.com> <CAJZ5v0jTviWeJhrWHGrtQHrVXAPoHDyFs6-06paJPHX-mH33bg@mail.gmail.com>
-Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Tri Vo <trong@android.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 01 Aug 2019 16:40:32 -0700
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kjpMrWxdCilgNbo1"
+Content-Disposition: inline
+In-Reply-To: <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
+X-Cookie: Love thy neighbor, tune thy piano.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rafael J. Wysocki (2019-08-01 15:46:33)
-> On Fri, Aug 2, 2019 at 12:11 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Ok. If the device name is going to be something generic like 'wakeupN',
-> > then we need to make sure that the wakeup source name is unique.
-> > Otherwise, I'm not able to see how userspace will differentiate between
-> > two of the same named wakelocks. Before this patch the wakeup source
-> > name looks to have been used for debugging, but now it's being used
-> > programmatically to let userspace act upon it somehow.
->=20
-> I'm not actually sure if this patch changes the situation with respect
-> to wakeup source names.   User space still can use them for whatever
-> it used to use the list in debugfs and that's it.
->=20
-> That's what I mean by retaining the names for "backwards compatibility on=
-ly".
->=20
 
-Ok, got it. Maybe one day the name attribute will become unimportant if
-we have a namespace and process aware wake lock API in userspace.
+--kjpMrWxdCilgNbo1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jul 30, 2019 at 05:28:11PM +0100, Thomas Preston wrote:
+> On 30/07/2019 16:50, Mark Brown wrote:
+
+> > Like I say it's not just debugfs though, there's the standard driver
+> > interface too.
+
+> Ah right, I understand. So if we run the turn-on diagnostics routine, the=
+re's
+> nothing stopping anyone from interacting with the device in other ways.
+
+> I guess there's no way to share that mutex with ALSA? In that case, it do=
+esn't
+> matter if this mutex is there or not - this feature is incompatible. How
+> compatible do debugfs interfaces have to be? I was under the impression a=
+nything
+> goes. I would argue that the debugfs is better off for having the mutex so
+> that no one re-reads "diagnostic" within the 5s poll timeout.
+
+It's not really something that's supported; like Charles says the DAPM
+mutex is exposed but if the regular controls would still be able to do
+stuff.  It is kind of a "you broke it, you fix it" thing but on the
+other hand it's better to make things safer if we can since it might not
+be obvious later on why things are broken.
+
+> Alternatively, this diagnostic feature could be handled with an external-=
+handler
+> kcontrol SOC_SINGLE_EXT? I'm not sure if this is an atomic interface eith=
+er.
+>=20
+> What would be acceptable?
+
+Yes, that's definitely doable - we've got some other drivers with
+similar things like calibration triggers exposed that way.
+
+--kjpMrWxdCilgNbo1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1DePAACgkQJNaLcl1U
+h9BbgAf9HMcTl/Pb+iJa1dDcV8qVUzhtY4Qcn3rqBYU+aGzm0J4NOtjtrA70Hdna
+sTNCLx5kaaX9kA5IKWbzwBC1qcf0S8io9cJUgJOYGHitLHliifYiZLX2KpJp/JFf
+GlSodNZf43W45fkhOO5+1xyiI5/KcDbu3U5IBYXVSmCSQsSeZWcydts0VhFTdXGC
+epXFQGet/BGcQ2yfZTuykkV+YepjF07Tk7KOm/4Gdbv7peiwv+dvI2Lef/x8d61y
+cUBhDvFOTToajfBJfwBhZ7dx7OgqLs2/DJdgvRZnE/q1VCq/1YyDl9uUXqvnAgCs
+2XlNTqpd0yH1IjQwz+/8lsGUht5MXA==
+=1ie6
+-----END PGP SIGNATURE-----
+
+--kjpMrWxdCilgNbo1--
