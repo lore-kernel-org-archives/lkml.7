@@ -2,187 +2,288 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A0CC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C00C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF0A2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:27:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrRacyXd"
+	by mail.kernel.org (Postfix) with ESMTP id 326172083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564698470;
+	bh=cqKGC0/Mmv+kicgsvExbiyIi13wzBUDWLZxBEbE2ZDg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z2H6iaGZ2D7zaRrDfa4yhCipyvYSne8ZFgAPBQ+i3DQFSmxm4SY4NKecufva+aYUR
+	 jqSANzmAuCzy9AmvMiYswsWSuTTWP0sH7O8a7ZaqcNJxxH3VK43ijoR6yQqhEescUu
+	 e+N2ro/PSuOB7d0by66ubl4CA8doNc/mtfr2xJGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733019AbfHAW1E (ORCPT
+        id S1733056AbfHAW1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:27:04 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37077 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfHAW1D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:27:03 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t76so55311932oih.4;
-        Thu, 01 Aug 2019 15:27:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=jjVaiL9PlJtpvUqKX80XgUrDQiaG4FJpJKI6tyDVArI=;
-        b=ZrRacyXdKI8lnbczd4//nr2xpTwQ3BkyvQbkNShzIE1E0SDVfeul5NXlmgkWqQfJTG
-         omf/6sfYJ95+PhEEsADPMGwTXt2GOvqIDxePdxXajthC8lzqpON1/ZHPp7/YI3F2HvtX
-         L/4pSxQvxeC40ffelKuabrC9d5+9G3Zca2k1WVIsj+pIK/8DrACq9tky0Ssc5t//qtZY
-         y27zx5mVNxtBnCOy3OpXcZ30VWvM8T6XyBiMJm853KEJlphOE6SDcZRM1STFMg1kQnUp
-         ej0iCu1ArOTU7GjQicbQAfy9u5GCQphYefiPdQ4vu406H8OIWTGJlpZTYn6TagPI927N
-         sXEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=jjVaiL9PlJtpvUqKX80XgUrDQiaG4FJpJKI6tyDVArI=;
-        b=aE849JX6mgc8fu0QkkKQbO3p6zaXhHqvr0vr24Ffm+Ej3D2/mqHheUsrxrAijbvaeO
-         F/7ETAIzAfMY0qjWr2gtNbSf6YpFSRAZIZrkWFZW5vyZHizb13UBYbFuon2tySqU7W+Z
-         TEJyYESHR0cpM82jGAVs2Q8X4ayPJ9ItemlFHxrPaToOnvkrvwaVT8vZeu/6CtMdfa2w
-         +3ZhFdHDmRUR1wv/gNugIuR10l2MNVO2vK8kvokAwNPUgxXcRtlLyLPOK20XYN14Z0IE
-         wRtsL8K478h9ZoIztHlGJCcGlta7HJXqRtSmIUKiaEwnCck2f3tuptBBQa5E4AN3hAmP
-         tNmw==
-X-Gm-Message-State: APjAAAV82Ep3qDxL32ZzYyYdXIgtBzO3NKYprhPqWNUIoi8UInKRsv8N
-        6fEEiF0XrNQrzL0yU8U4UkE=
-X-Google-Smtp-Source: APXvYqwz7cn/2YMdeMQ0x9s9lVejvU6i/X+Wfx1SCCjJ0F2gKCgp6QocGTmCTwFXuNThq4TZh5DfzQ==
-X-Received: by 2002:aca:bf54:: with SMTP id p81mr718285oif.1.1564698422089;
-        Thu, 01 Aug 2019 15:27:02 -0700 (PDT)
-Received: from localhost.localdomain (50-39-177-61.bvtn.or.frontiernet.net. [50.39.177.61])
-        by smtp.gmail.com with ESMTPSA id i19sm24559702oib.12.2019.08.01.15.27.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 15:27:01 -0700 (PDT)
-Subject: [PATCH v3 0/6] mm / virtio: Provide support for unused page
- reporting
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, willy@infradead.org,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-Date:   Thu, 01 Aug 2019 15:24:49 -0700
-Message-ID: <20190801222158.22190.96964.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 1 Aug 2019 18:27:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732928AbfHAW1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 18:27:48 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D40B206B8;
+        Thu,  1 Aug 2019 22:27:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564698467;
+        bh=cqKGC0/Mmv+kicgsvExbiyIi13wzBUDWLZxBEbE2ZDg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OTa3yXGDnFDQ7hXFPwssvSCPLBnnvP2X0LiBOP3VPYBc9DjFg5nkiOAr4OEgQ3EnF
+         GLC5f9kbRWoh6ZfGgRRvdq7vPB4834m7nX0TZW9h3XfNNvU4m8Vp+gtK5q/fqEbCpM
+         jPnx2DUnIHV/nkytTmrpqo48iG8HW/M7z1BUmyfQ=
+Date:   Thu, 1 Aug 2019 15:27:46 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH v2] f2fs: separate NOCoW and pinfile semantics
+Message-ID: <20190801222746.GA27597@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190719073903.9138-1-yuchao0@huawei.com>
+ <20190723023640.GC60778@jaegeuk-macbookpro.roam.corp.google.com>
+ <d4d064a2-2b3c-3536-6488-39e7cfdb1ea4@huawei.com>
+ <20190729055738.GA95664@jaegeuk-macbookpro.roam.corp.google.com>
+ <07cd3aba-3516-9ba5-286e-277abb98e244@huawei.com>
+ <20190730180231.GB76478@jaegeuk-macbookpro.roam.corp.google.com>
+ <00e70eb1-c4fa-a6c9-69d7-71ff995c7d6c@huawei.com>
+ <20190801041435.GB84433@jaegeuk-macbookpro.roam.corp.google.com>
+ <d35d5ad7-5622-fbf5-5853-e541f8c26670@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d35d5ad7-5622-fbf5-5853-e541f8c26670@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series provides an asynchronous means of reporting to a hypervisor
-that a guest page is no longer in use and can have the data associated
-with it dropped. To do this I have implemented functionality that allows
-for what I am referring to as unused page reporting
+On 08/01, Chao Yu wrote:
+> On 2019/8/1 12:14, Jaegeuk Kim wrote:
+> > On 07/31, Chao Yu wrote:
+> >> On 2019/7/31 2:02, Jaegeuk Kim wrote:
+> >>> On 07/29, Chao Yu wrote:
+> >>>> On 2019/7/29 13:57, Jaegeuk Kim wrote:
+> >>>>> On 07/23, Chao Yu wrote:
+> >>>>>> On 2019/7/23 10:36, Jaegeuk Kim wrote:
+> >>>>>>> On 07/19, Chao Yu wrote:
+> >>>>>>>> Pinning a file is heavy, because skipping pinned files make GC
+> >>>>>>>> running with heavy load or no effect.
+> >>>>>>>
+> >>>>>>> Pinned file is a part of NOCOW files, so I don't think we can simply drop it
+> >>>>>>> for backward compatibility.
+> >>>>>>
+> >>>>>> Yes,
+> >>>>>>
+> >>>>>> But what I concerned is that pin file is too heavy, so in order to satisfy below
+> >>>>>> demand, how about introducing pin_file_2 flag to triggering IPU only during
+> >>>>>> flush/writeback.
+> >>>>>
+> >>>>> That can be done by cold files?
+> >>>>
+> >>>> Then it may inherit property of cold type file, e.g. a) goes into cold area; b)
+> >>>> update with very low frequency.
+> >>>>
+> >>>> Actually pin_file_2 could be used by db-wal/log file, which are updated
+> >>>> frequently, and should go to hot/warm area, it does not match above two property.
+> >>>
+> >>> How about considering another name like "IPU-only mode"?
+> >>>
+> >>>               fallocate         write    Flag         GC
+> >>> Pin_file:     preallocate       IPU      FS_NOCOW_FL  Not allowed
+> >>> IPU_file:     Not preallocate   IPU      N/A          Default by temperature
+> >>
+> >> One question, do we need preallocate physical block address for IPU_file as
+> >> Pin_file? since it can enhance db file's sequential read performance, not sure,
+> >> db can handle random data in preallocated blocks.
+> > 
+> > db file will do atomic writes, which can not be used with this. -wal may be able
+> 
+> Now WAL mode were set by default in Android, so most of db file are -wal type now.
 
-The functionality for this is fairly simple. When enabled it will allocate
-statistics to track the number of reported pages in a given free area.
-When the number of free pages exceeds this value plus a high water value,
-currently 32, it will begin performing page reporting which consists of
-pulling pages off of free list and placing them into a scatter list. The
-scatterlist is then given to the page reporting device and it will perform
-the required action to make the pages "reported", in the case of
-virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-and as such they are forced out of the guest. After this they are placed
-back on the free list, and an additional bit is added if they are not
-merged indicating that they are a reported buddy page instead of a
-standard buddy page. The cycle then repeats with additional non-reported
-pages being pulled until the free areas all consist of reported pages.
+Will be back again tho.
 
-I am leaving a number of things hard-coded such as limiting the lowest
-order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
-determine what the limit is on how many pages it wants to allocate to
-process the hints. The upper limit for this is based on the size of the
-queue used to store the scatterlist.
+> 
+> > to preallocate blocks, but it can eat disk space unnecessarily.
+> 
+> I meant .db-wal file rather than .db.
+> 
+> Yes, that's ext4 style, that would bring better performance due to less holes in
+> block distribution.
+> 
+> I don't think we need to worry about space issue for db-wal file. I tracked
+> .db-wal file's update before:
+> - there are very frequently truncation and deletion, that means the preallocated
+> blocks won't exist for long time.
+> - and also there are very frequently append writes, I suspect there almost very
+> few preallocate block are not written.
+> - total db-wal file number is less.
 
-My primary testing has just been to verify the memory is being freed after
-allocation by running memhog 40g on a 40g guest and watching the total
-free memory via /proc/meminfo on the host. With this I have verified most
-of the memory is freed after each iteration. As far as performance I have
-been mainly focusing on the will-it-scale/page_fault1 test running with
-16 vcpus. With that I have seen up to a 2% difference between the base
-kernel without these patches and the patches with virtio-balloon enabled
-or disabled.
+Sometimes it can be large enough for system. If it's from user apps and short
+lived, why do we need preallocation?
 
-One side effect of these patches is that the guest becomes much more
-resilient in terms of NUMA locality. With the pages being freed and then
-reallocated when used it allows for the pages to be much closer to the
-active thread, and as a result there can be situations where this patch
-set will out-perform the stock kernel when the guest memory is not local
-to the guest vCPUs.
-
-Patch 4 is a bit on the large side at about 600 lines of change, however
-I really didn't see a good way to break it up since each piece feeds into
-the next. So I couldn't add the statistics by themselves as it didn't
-really make sense to add them without something that will either read or
-increment/decrement them, or add the Hinted state without something that
-would set/unset it. As such I just ended up adding the entire thing as
-one patch. It makes it a bit bigger but avoids the issues in the previous
-set where I was referencing things that had not yet been added.
-
-Changes from the RFC:
-https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-Moved aeration requested flag out of aerator and into zone->flags.
-Moved boundary out of free_area and into local variables for aeration.
-Moved aeration cycle out of interrupt and into workqueue.
-Left nr_free as total pages instead of splitting it between raw and aerated.
-Combined size and physical address values in virtio ring into one 64b value.
-
-Changes from v1:
-https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
-Dropped "waste page treatment" in favor of "page hinting"
-Renamed files and functions from "aeration" to "page_hinting"
-Moved from page->lru list to scatterlist
-Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
-Virtio now uses scatterlist directly instead of intermediate array
-Moved stats out of free_area, now in separate area and pointed to from zone
-Merged patch 5 into patch 4 to improve review-ability
-Updated various code comments throughout
-
-Changes from v2:
-https://lore.kernel.org/lkml/20190724165158.6685.87228.stgit@localhost.localdomain/
-Dropped "page hinting" in favor of "page reporting"
-Renamed files from "hinting" to "reporting"
-Replaced "Hinted" page type with "Reported" page flag
-Added support for page poisoning while hinting is active
-Add QEMU patch that implements PAGE_POISON feature
-
----
-
-Alexander Duyck (6):
-      mm: Adjust shuffle code to allow for future coalescing
-      mm: Move set/get_pcppage_migratetype to mmzone.h
-      mm: Use zone and order instead of free area in free_list manipulators
-      mm: Introduce Reported pages
-      virtio-balloon: Pull page poisoning config out of free page hinting
-      virtio-balloon: Add support for providing unused page reports to host
-
-
- drivers/virtio/Kconfig              |    1 
- drivers/virtio/virtio_balloon.c     |   75 ++++++++-
- include/linux/mmzone.h              |  116 ++++++++------
- include/linux/page-flags.h          |   11 +
- include/linux/page_reporting.h      |  138 ++++++++++++++++
- include/uapi/linux/virtio_balloon.h |    1 
- mm/Kconfig                          |    5 +
- mm/Makefile                         |    1 
- mm/internal.h                       |   18 ++
- mm/memory_hotplug.c                 |    1 
- mm/page_alloc.c                     |  238 ++++++++++++++++++++--------
- mm/page_reporting.c                 |  299 +++++++++++++++++++++++++++++++++++
- mm/shuffle.c                        |   24 ---
- mm/shuffle.h                        |   32 ++++
- 14 files changed, 821 insertions(+), 139 deletions(-)
- create mode 100644 include/linux/page_reporting.h
- create mode 100644 mm/page_reporting.c
-
---
+> 
+> > 
+> >>
+> >> Other behaviors looks good to me. :)
+> >>
+> >> I plan to use last bit in inode.i_inline to store this flag.
+> > 
+> > Why not using i_flag like FS_NOCOW_FL?
+> 
+> Oops, as you listed in last email, I can see you don't want to break
+> FS_NOCOW_FL's semantics for backward compatibility.
+> 
+> 			Flag
+> IPU_file		N/A			
+> 
+> If we plan to use FS_NOCOW_FL, that's what this patch has already did, you can
+> merge it directly... :P
+> 
+> > 
+> >>
+> >>> Cold_file:    Not preallocate   IPU      N/A          Move in cold area
+> >>> Hot_file:     Not preallocate   IPU/OPU  N/A          Move in hot area
+> >>
+> >> Should hot file be gced to hot area? That would mix new hot data with old 'hot'
+> >> data which actually become cold.
+> > 
+> > But, user explicitly specified this is hot.
+> 
+> With current implementation, GC will migrate data from hot/warm/cold area to
+> cold area.
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>>>
+> >>>> Thank,
+> >>>>
+> >>>>>
+> >>>>>>
+> >>>>>>>
+> >>>>>>>>
+> >>>>>>>> So that this patch propose to separate nocow and pinfile semantics:
+> >>>>>>>> - NOCoW flag can only be set on regular file.
+> >>>>>>>> - NOCoW file will only trigger IPU at common writeback/flush.
+> >>>>>>>> - NOCow file will do OPU during GC.
+> >>>>>>>>
+> >>>>>>>> For the demand of 1) avoid fragment of file's physical block and
+> >>>>>>>> 2) userspace don't care about file's specific physical address,
+> >>>>>>>> tagging file as NOCoW will be cheaper than pinned one.
+> >>>>>>
+> >>>>>> ^^^
+> >>>>>>
+> >>>>>> Thanks,
+> >>>>>>
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>>>>>>> ---
+> >>>>>>>> v2:
+> >>>>>>>> - rebase code to fix compile error.
+> >>>>>>>>  fs/f2fs/data.c |  3 ++-
+> >>>>>>>>  fs/f2fs/f2fs.h |  1 +
+> >>>>>>>>  fs/f2fs/file.c | 22 +++++++++++++++++++---
+> >>>>>>>>  3 files changed, 22 insertions(+), 4 deletions(-)
+> >>>>>>>>
+> >>>>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> >>>>>>>> index a2a28bb269bf..15fb8954c363 100644
+> >>>>>>>> --- a/fs/f2fs/data.c
+> >>>>>>>> +++ b/fs/f2fs/data.c
+> >>>>>>>> @@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
+> >>>>>>>>  
+> >>>>>>>>  bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
+> >>>>>>>>  {
+> >>>>>>>> -	if (f2fs_is_pinned_file(inode))
+> >>>>>>>> +	if (f2fs_is_pinned_file(inode) ||
+> >>>>>>>> +			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
+> >>>>>>>>  		return true;
+> >>>>>>>>  
+> >>>>>>>>  	/* if this is cold file, we should overwrite to avoid fragmentation */
+> >>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >>>>>>>> index 596ab3e1dd7b..f6c5a3d2e659 100644
+> >>>>>>>> --- a/fs/f2fs/f2fs.h
+> >>>>>>>> +++ b/fs/f2fs/f2fs.h
+> >>>>>>>> @@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
+> >>>>>>>>  #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
+> >>>>>>>>  #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
+> >>>>>>>>  #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
+> >>>>>>>> +#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
+> >>>>>>>>  #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+> >>>>>>>>  
+> >>>>>>>>  /* Flags that should be inherited by new inodes from their parent. */
+> >>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >>>>>>>> index 7ca545874060..ae0fec54cac6 100644
+> >>>>>>>> --- a/fs/f2fs/file.c
+> >>>>>>>> +++ b/fs/f2fs/file.c
+> >>>>>>>> @@ -1692,6 +1692,7 @@ static const struct {
+> >>>>>>>>  	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
+> >>>>>>>>  	{ F2FS_INDEX_FL,	FS_INDEX_FL },
+> >>>>>>>>  	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
+> >>>>>>>> +	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
+> >>>>>>>>  	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
+> >>>>>>>>  };
+> >>>>>>>>  
+> >>>>>>>> @@ -1715,7 +1716,8 @@ static const struct {
+> >>>>>>>>  		FS_NODUMP_FL |		\
+> >>>>>>>>  		FS_NOATIME_FL |		\
+> >>>>>>>>  		FS_DIRSYNC_FL |		\
+> >>>>>>>> -		FS_PROJINHERIT_FL)
+> >>>>>>>> +		FS_PROJINHERIT_FL |	\
+> >>>>>>>> +		FS_NOCOW_FL)
+> >>>>>>>>  
+> >>>>>>>>  /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
+> >>>>>>>>  static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
+> >>>>>>>> @@ -1753,8 +1755,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
+> >>>>>>>>  		fsflags |= FS_ENCRYPT_FL;
+> >>>>>>>>  	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
+> >>>>>>>>  		fsflags |= FS_INLINE_DATA_FL;
+> >>>>>>>> -	if (is_inode_flag_set(inode, FI_PIN_FILE))
+> >>>>>>>> -		fsflags |= FS_NOCOW_FL;
+> >>>>>>>>  
+> >>>>>>>>  	fsflags &= F2FS_GETTABLE_FS_FL;
+> >>>>>>>>  
+> >>>>>>>> @@ -1794,6 +1794,22 @@ static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
+> >>>>>>>>  	if (ret)
+> >>>>>>>>  		goto out;
+> >>>>>>>>  
+> >>>>>>>> +	if ((fsflags ^ old_fsflags) & FS_NOCOW_FL) {
+> >>>>>>>> +		if (!S_ISREG(inode->i_mode)) {
+> >>>>>>>> +			ret = -EINVAL;
+> >>>>>>>> +			goto out;
+> >>>>>>>> +		}
+> >>>>>>>> +
+> >>>>>>>> +		if (f2fs_should_update_outplace(inode, NULL)) {
+> >>>>>>>> +			ret = -EINVAL;
+> >>>>>>>> +			goto out;
+> >>>>>>>> +		}
+> >>>>>>>> +
+> >>>>>>>> +		ret = f2fs_convert_inline_inode(inode);
+> >>>>>>>> +		if (ret)
+> >>>>>>>> +			goto out;
+> >>>>>>>> +	}
+> >>>>>>>> +
+> >>>>>>>>  	ret = f2fs_setflags_common(inode, iflags,
+> >>>>>>>>  			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
+> >>>>>>>>  out:
+> >>>>>>>> -- 
+> >>>>>>>> 2.18.0.rc1
+> >>>>>>> .
+> >>>>>>>
+> >>>>> .
+> >>>>>
+> >>> .
+> >>>
+> > .
+> > 
