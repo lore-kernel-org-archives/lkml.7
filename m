@@ -1,144 +1,93 @@
 Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95C3C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4633FC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD05E206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:14:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uq2/cvkr"
+	by mail.kernel.org (Postfix) with ESMTP id 1DE71206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732438AbfHAPOm (ORCPT
+        id S1732447AbfHAPQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:14:42 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39082 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732399AbfHAPOc (ORCPT
+        Thu, 1 Aug 2019 11:16:31 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38639 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731067AbfHAPQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:14:32 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x71FEN6c106267;
-        Thu, 1 Aug 2019 10:14:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564672463;
-        bh=4KBp27jjz5yA6K5hHigsAsUREWOrkwoZoRT6PvQHkSw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uq2/cvkrg/hUulXloOrOLOTSzHIQlf5g0G/VMrAq793MxrLXz89dyrwv7Vi1ZlZU/
-         kiPGVlGcQcpA3pP0iRFF1ZTzqqH2kgmqK0Kk+4/Il+vy37PqewRZlcfX6hkoAARw/B
-         9gYwhBq5lOC7d934BOd6xYGX6ecnpikKSLB6BGjY=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x71FENHX121663
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 1 Aug 2019 10:14:23 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 1 Aug
- 2019 10:14:23 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 1 Aug 2019 10:14:23 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x71FEMQ6125814;
-        Thu, 1 Aug 2019 10:14:23 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <tony@atomide.com>,
-        <sre@kernel.org>, <nekit1000@gmail.com>, <mpartap@gmx.net>,
-        <merlijn@wizzup.org>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 3/3] leds: lm3532: Add full scale current configuration
-Date:   Thu, 1 Aug 2019 10:14:21 -0500
-Message-ID: <20190801151421.21486-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
-In-Reply-To: <20190801151421.21486-1-dmurphy@ti.com>
-References: <20190801151421.21486-1-dmurphy@ti.com>
+        Thu, 1 Aug 2019 11:16:30 -0400
+Received: by mail-io1-f65.google.com with SMTP id j6so25338045ioa.5
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 08:16:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A28GjhCVZJSUYeBqZVPzs9S8KLlBjDL+7h1oJI1m5Zc=;
+        b=KJoja6PIzIY6IVmbEyXxF/Okzr/MGoZDuY+5KOMwt6ZlcUudJ+diGFf1Chxq058cRF
+         nvbrMwkCkpNjLJd8Lvpn5uItcD/JYRDvWGTj1D0ABnwyJ5vQQbwD6qHIxWoe0fjGNv5i
+         heOrolGFVeSWLz5pSEKPeWPv7dsNc0YIDHp92k9s9vpV1FRREs0AOhsyOdsL9t5pfxm+
+         Ft1ZIPKvB7xx3KJBJIRyas2GsN1hJx6Z4ZOLbWg6x9YEbWGgINsgT/bOYgi1Tuzzjuff
+         hQFWM+904/6FcGFpXOpKZ3QmBERWSYGG+NHr41pZjw2BIuLPU2cg17HoaHzaEyttETEY
+         2aUA==
+X-Gm-Message-State: APjAAAX9Gd+PwWavg+/eFzcyoGI9lYkSKGiNUK8NU4ElKDUDK1pfLf9D
+        VTSGo2S9SY4yA0Ydj7GX+HIi8A==
+X-Google-Smtp-Source: APXvYqwTmTw8q3S7+wmnzW7nURycARh98zNdnxgSBMexZJS7aGzgjb/DA1XsBfQf+Ksr20eqb+nL8w==
+X-Received: by 2002:a5e:9314:: with SMTP id k20mr3543162iom.235.1564672589576;
+        Thu, 01 Aug 2019 08:16:29 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:5118:89b3:1f18:4090])
+        by smtp.gmail.com with ESMTPSA id j1sm64548891iop.14.2019.08.01.08.16.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 08:16:28 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 09:16:24 -0600
+From:   Raul Rangel <rrangel@chromium.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        hongjiefang <hongjiefang@asrmicro.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Kyle Roeschley <kyle.roeschley@ni.com>,
+        Avri Altman <avri.altman@wdc.com>
+Subject: Re: [RFC PATCH 1/2] mmc: sdhci: Manually check card status after
+ reset
+Message-ID: <20190801151624.GA155392@google.com>
+References: <20190501175457.195855-1-rrangel@chromium.org>
+ <CAPDyKFpL1nHt1E1zgS-iDZf_KDWk2CN32Lvr+5Nmo8CtB2VCWg@mail.gmail.com>
+ <20190607160553.GA185100@google.com>
+ <CAPDyKFout6AY2Q92pYQ-KPH0NENq1-SkYivkDxjjb=uB=tKXuQ@mail.gmail.com>
+ <20190610163252.GA227032@google.com>
+ <fcdf6cc4-2729-abe2-85c8-b0d04901c5ae@intel.com>
+ <20190619145625.GA50985@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619145625.GA50985@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow the full scale current to be configured at init.
-Valid rangles are 5mA->29.8mA.
+On Wed, Jun 19, 2019 at 08:56:25AM -0600, Raul Rangel wrote:
+> Your patch looks good. I tried it out and got over 57k insertion/removal
+> iterations. Do you want me to send out your patch, or do you want to do
+> it?
+> 
+> Just to recap, the patch you proposed + the AMD SDHCI specific patch fix
+> the problem.
+> 
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/leds/leds-lm3532.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Just pinging the thread again to see what you would prefer. I can send
+the patch with you in the Signed-off. Or if you would prefer to not
+update the sdhci driver at all, I can add the logic into the AMD
+specific patch.
 
-diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-index ff197adb2f22..114fea12ec21 100644
---- a/drivers/leds/leds-lm3532.c
-+++ b/drivers/leds/leds-lm3532.c
-@@ -91,6 +91,10 @@
- #define LM3532_NUM_AVG_VALS	8
- #define LM3532_NUM_IMP_VALS	32
- 
-+#define LM3532_FS_CURR_MIN	5000
-+#define LM3532_FS_CURR_MAX	29800
-+#define LM3532_FS_CURR_STEP	800
-+
- /*
-  * struct lm3532_als_data
-  * @config - value of ALS configuration register
-@@ -133,6 +137,7 @@ struct lm3532_led {
- 	int mode;
- 	int num_leds;
- 	int ctrl_brt_pointer;
-+	int full_scale_current;
- 	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
- 	char label[LED_MAX_NAME_SIZE];
- };
-@@ -362,6 +367,8 @@ static int lm3532_init_registers(struct lm3532_led *led)
- 	unsigned int output_cfg_mask = 0;
- 	int brightness_config_reg;
- 	int brightness_config_val;
-+	int fs_current_reg;
-+	int fs_current_val;
- 	int ret, i;
- 
- 	if (drvdata->enable_gpio)
-@@ -383,6 +390,16 @@ static int lm3532_init_registers(struct lm3532_led *led)
- 	if (ret)
- 		return ret;
- 
-+	if (led->full_scale_current) {
-+		fs_current_reg = LM3532_REG_CTRL_A_FS_CURR + led->control_bank * 2;
-+		fs_current_val = led->full_scale_current - LM3532_FS_CURR_MIN /
-+				 LM3532_FS_CURR_STEP;
-+		ret = regmap_write(drvdata->regmap, fs_current_reg,
-+				   fs_current_val);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	for (i = 0; i < led->num_leds; i++) {
- 		output_cfg_shift = led->led_strings[i] * 2;
- 		output_cfg_val |= (led->control_bank << output_cfg_shift);
-@@ -558,6 +575,12 @@ static int lm3532_parse_node(struct lm3532_data *priv)
- 			goto child_out;
- 		}
- 
-+		ret = fwnode_property_read_u32(child, "ti,fs-current",
-+					       &led->full_scale_current);
-+
-+		if (led->full_scale_current > LM3532_FS_CURR_MAX)
-+			led->full_scale_current = LM3532_FS_CURR_MAX;
-+
- 		if (led->mode == LM3532_BL_MODE_ALS) {
- 			led->mode = LM3532_ALS_CTRL;
- 			ret = lm3532_parse_als(priv);
--- 
-2.22.0.214.g8dca754b1e
+I would like to get this in so it lands by 5.4.
 
+Thanks,
+Raul
