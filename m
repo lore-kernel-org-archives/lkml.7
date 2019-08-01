@@ -2,134 +2,113 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551B4C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8668C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3386F2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE30E20665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BZlKvGge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbfHAFsH (ORCPT
+        id S1728123AbfHAFve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 01:48:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:58460 "EHLO foss.arm.com"
+        Thu, 1 Aug 2019 01:51:34 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37867 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728702AbfHAFsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 01:48:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC921337;
-        Wed, 31 Jul 2019 22:48:05 -0700 (PDT)
-Received: from [10.163.1.81] (unknown [10.163.1.81])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BE013F694;
-        Wed, 31 Jul 2019 22:50:07 -0700 (PDT)
-Subject: Re: [PATCH] fork: Improve error message for corrupted page tables
-To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     dave.hansen@intel.com, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190730221820.7738-1-sai.praneeth.prakhya@intel.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <56ad91b8-1ea0-6736-5bc5-eea0ced01054@arm.com>
-Date:   Thu, 1 Aug 2019 11:18:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725790AbfHAFve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 01:51:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zfYZ6r8Wz9sMr;
+        Thu,  1 Aug 2019 15:51:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564638691;
+        bh=/62k792BfxFERGOmjoiYc7ClHGXD9/CJUmCUrtuFKLQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BZlKvGge7miwFMRP7xN0Ct+hIuT97ZrJJ+Haxw2NTVNq99G0bxa+Z8JcNBdYJy92m
+         MyCMtRIDIN1+giKCxkn9WMNYkcdn2xKhcJjqXqIlUKlYh0ij4XAPRB73/FTqOBYQf0
+         Vf5qRXhqrKTi9l9Zne3XfMUqYZbZm4PsbfoliIic7DHUof8WyizE1ix6zoB8Iu8yPt
+         V9b3d3miMhUhboY6J/y3nLg2FA+xrFxIDduze02Sn85BsVCzVa664F3KAcGFsg8iaw
+         p2KtO1chCyRrBoDNBoOHOOAmDbC4ON1fdnz+DRPl6K5DwMqt8I/e5IkBm6PLZC8VNz
+         gPPTFwGh7xxRg==
+Date:   Thu, 1 Aug 2019 15:51:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Miles Chen <miles.chen@mediatek.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20190801155130.29a07b1b@canb.auug.org.au>
+In-Reply-To: <1564554484.28000.3.camel@mtkswgap22>
+References: <20190731161151.26ef081e@canb.auug.org.au>
+        <1564554484.28000.3.camel@mtkswgap22>
 MIME-Version: 1.0
-In-Reply-To: <20190730221820.7738-1-sai.praneeth.prakhya@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/cn_2R/.2_9jSH7EOBRcRI.J";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/cn_2R/.2_9jSH7EOBRcRI.J
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi Miles,
 
-On 07/31/2019 03:48 AM, Sai Praneeth Prakhya wrote:
-> When a user process exits, the kernel cleans up the mm_struct of the user
-> process and during cleanup, check_mm() checks the page tables of the user
-> process for corruption (E.g: unexpected page flags set/cleared). For
-> corrupted page tables, the error message printed by check_mm() isn't very
-> clear as it prints the loop index instead of page table type (E.g: Resident
-> file mapping pages vs Resident shared memory pages). Hence, improve the
-> error message so that it's more informative.
+On Wed, 31 Jul 2019 14:28:04 +0800 Miles Chen <miles.chen@mediatek.com> wro=
+te:
+>
+> On Wed, 2019-07-31 at 16:11 +1000, Stephen Rothwell wrote:
+> >=20
+> > After merging the akpm-current tree, today's linux-next build (powerpc
+> > ppc64_defconfig) produced this warning:
+> >=20
+> > mm/memcontrol.c: In function 'invalidate_reclaim_iterators':
+> > mm/memcontrol.c:1160:11: warning: suggest parentheses around assignment=
+ used as truth value [-Wparentheses]
+> >   } while (memcg =3D parent_mem_cgroup(memcg));
+> >            ^~~~~
+> >  =20
+>=20
+> Hi Stephen,
+>=20
+> Thanks for the telling me this. Sorry for the build warning.=20
+> Should I send patch v5 to the mailing list to fix this?=20
 
-The loop index in check_mm() also happens to be the index in rss_stat[] which
-represents individual memory type stats. But you are right, index value here
-in the print does not make any sense.
+You might as well (cc'ing Andrew, of course).
 
-> 
-> Without patch:
-> --------------
-> [  204.836425] mm/pgtable-generic.c:29: bad p4d 0000000089eb4e92(800000025f941467)
-> [  204.836544] BUG: Bad rss-counter state mm:00000000f75895ea idx:0 val:2
-> [  204.836615] BUG: Bad rss-counter state mm:00000000f75895ea idx:1 val:5
-> [  204.836685] BUG: non-zero pgtables_bytes on freeing mm: 20480
-> 
-> With patch:
-> -----------
-> [   69.815453] mm/pgtable-generic.c:29: bad p4d 0000000084653642(800000025ca37467)
-> [   69.815872] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_FILEPAGES val:2
-> [   69.815962] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_ANONPAGES val:5
-> [   69.816050] BUG: non-zero pgtables_bytes on freeing mm: 20480
+I would suggest finishing that loop like this:
 
-Yes, this is definitely better.
+		memcg =3D parent_mem_cgroup(memcg);
+	} while (memcg);
 
-> 
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Suggested-by/Acked-by: Dave Hansen <dave.hansen@intel.com>
+rather than adding a set of parentheses.
 
-Though I am not sure, should the above be two separate lines instead ?
+--=20
+Cheers,
+Stephen Rothwell
 
-> Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-> ---
->  include/linux/mm_types_task.h | 7 +++++++
->  kernel/fork.c                 | 4 ++--
->  2 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/mm_types_task.h b/include/linux/mm_types_task.h
-> index d7016dcb245e..881f4ea3a1b5 100644
-> --- a/include/linux/mm_types_task.h
-> +++ b/include/linux/mm_types_task.h
-> @@ -44,6 +44,13 @@ enum {
->  	NR_MM_COUNTERS
->  };
->  
-> +static const char * const resident_page_types[NR_MM_COUNTERS] = {
-> +	"MM_FILEPAGES",
-> +	"MM_ANONPAGES",
-> +	"MM_SWAPENTS",
-> +	"MM_SHMEMPAGES",
-> +};
+--Sig_/cn_2R/.2_9jSH7EOBRcRI.J
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Should index them to match respective typo macros.
+-----BEGIN PGP SIGNATURE-----
 
-	[MM_FILEPAGES] = "MM_FILEPAGES",
-	[MM_ANONPAGES] = "MM_ANONPAGES",
-	[MM_SWAPENTS] = "MM_SWAPENTS",
-	[MM_SHMEMPAGES] = "MM_SHMEMPAGES",
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1CfeIACgkQAVBC80lX
+0GwQowf7BtHd6N/Ql7+u/YSYkputgNQzecVwhI/kvO5/6qYvqqJNRd2sRhcOs6kG
+wyZMwf1WJAd8wglrKjvdo0Ib1DXGSUwbYDAIX7QAWCjMetfCnGtGY3bf806rOOEc
+Q0ZSgMiuIqYd3JZ1aSCy8kQgQyDWO4BugZwxevrxkhKMhPeJTlL6FeODBOBqvk3s
+A0DcoZ9cKZr1gHfzY0qvy2X90hG+3y871kg7sVU0pRF45w8fjIjhNS9F3u9/li1p
+VxAEv+xl55NJFvMbbwqNCbjhoD5KjqnhLU7vGQMWh7vBs/AamfUTyQ1dAWCHgt00
+G4laLXZuprNoceHSSicDZIX0ncB2Ig==
+=HXp9
+-----END PGP SIGNATURE-----
 
-> +
->  #if USE_SPLIT_PTE_PTLOCKS && defined(CONFIG_MMU)
->  #define SPLIT_RSS_COUNTING
->  /* per-thread cached information, */
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 2852d0e76ea3..6aef5842d4e0 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -649,8 +649,8 @@ static void check_mm(struct mm_struct *mm)
->  		long x = atomic_long_read(&mm->rss_stat.count[i]);
->  
->  		if (unlikely(x))
-> -			printk(KERN_ALERT "BUG: Bad rss-counter state "
-> -					  "mm:%p idx:%d val:%ld\n", mm, i, x);
-> +			pr_alert("BUG: Bad rss-counter state mm:%p type:%s val:%ld\n",
-> +				 mm, resident_page_types[i], x);
-It changes the print function as well, though very minor change but perhaps
-mention that in the commit message ?
+--Sig_/cn_2R/.2_9jSH7EOBRcRI.J--
