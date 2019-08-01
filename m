@@ -2,144 +2,146 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F397EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C04C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23CB2087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C702087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbfHALJ7 (ORCPT
+        id S1730013AbfHALLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:09:59 -0400
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:23949 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHALJ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:09:59 -0400
-Received: from localhost.localdomain ([176.167.121.156])
-        by mwinf5d09 with ME
-        id jn9q200093NZnML03n9qj6; Thu, 01 Aug 2019 13:09:56 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 01 Aug 2019 13:09:56 +0200
-X-ME-IP: 176.167.121.156
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        allison@lohutok.net, tglx@linutronix.de, clg@kaod.org,
-        groug@kaod.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] powerpc/xive: Add some error handling code to 'xive_spapr_init()'
-Date:   Thu,  1 Aug 2019 13:09:56 +0200
-Message-Id: <20190801110956.8517-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Thu, 1 Aug 2019 07:11:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:34160 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfHALK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 07:10:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DADC81570;
+        Thu,  1 Aug 2019 04:10:58 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 501603F575;
+        Thu,  1 Aug 2019 04:10:56 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 12:10:54 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+Cc:     cgroups@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Alessio Balsini <balsini@android.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Paul Turner <pjt@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v12 3/6] sched/core: uclamp: Propagate system defaults to
+ root group
+Message-ID: <20190801111054.6izrad6eysfnw5ju@e110439-lin>
+References: <20190718181748.28446-1-patrick.bellasi@arm.com>
+ <20190718181748.28446-4-patrick.bellasi@arm.com>
+ <20190725114126.GA4130@blackbody.suse.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190725114126.GA4130@blackbody.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'xive_irq_bitmap_add()' can return -ENOMEM.
-In this case, we should free the memory already allocated and return
-'false' to the caller.
+On 25-Jul 13:41, Michal Koutný wrote:
+> On Thu, Jul 18, 2019 at 07:17:45PM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+> > The clamp values are not tunable at the level of the root task group.
+> > That's for two main reasons:
+> > 
+> >  - the root group represents "system resources" which are always
+> >    entirely available from the cgroup standpoint.
+> > 
+> >  - when tuning/restricting "system resources" makes sense, tuning must
+> >    be done using a system wide API which should also be available when
+> >    control groups are not.
+> > 
+> > When a system wide restriction is available, cgroups should be aware of
+> > its value in order to know exactly how much "system resources" are
+> > available for the subgroups.
+> IIUC, the global default would apply in uclamp_eff_get(), so this
+> propagation isn't strictly necessary in order to apply to tasks (that's
+> how it works under !CONFIG_UCLAMP_TASK_GROUP).
 
-Also add an error path which undoes the 'tima = ioremap(...)'
+That's right.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-NOT compile tested (I don't have a cross compiler and won't install one).
-So if some correction or improvement are needed, feel free to propose and
-commit it directly.
----
- arch/powerpc/sysdev/xive/spapr.c | 36 +++++++++++++++++++++++++-------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+> The reason is that effective value (which isn't exposed currently) in a
+> group takes into account this global restriction, right?
 
-diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
-index 52198131c75e..b3ae0b76c433 100644
---- a/arch/powerpc/sysdev/xive/spapr.c
-+++ b/arch/powerpc/sysdev/xive/spapr.c
-@@ -64,6 +64,17 @@ static int xive_irq_bitmap_add(int base, int count)
- 	return 0;
- }
- 
-+static void xive_irq_bitmap_remove_all(void)
-+{
-+	struct xive_irq_bitmap *xibm, *tmp;
-+
-+	list_for_each_entry_safe(xibm, tmp, &xive_irq_bitmaps, list) {
-+		list_del(&xibm->list);
-+		kfree(xibm->bitmap);
-+		kfree(xibm);
-+	}
-+}
-+
- static int __xive_irq_bitmap_alloc(struct xive_irq_bitmap *xibm)
- {
- 	int irq;
-@@ -723,7 +734,7 @@ bool __init xive_spapr_init(void)
- 	u32 val;
- 	u32 len;
- 	const __be32 *reg;
--	int i;
-+	int i, err;
- 
- 	if (xive_spapr_disabled())
- 		return false;
-@@ -748,23 +759,26 @@ bool __init xive_spapr_init(void)
- 	}
- 
- 	if (!xive_get_max_prio(&max_prio))
--		return false;
-+		goto err_unmap;
- 
- 	/* Feed the IRQ number allocator with the ranges given in the DT */
- 	reg = of_get_property(np, "ibm,xive-lisn-ranges", &len);
- 	if (!reg) {
- 		pr_err("Failed to read 'ibm,xive-lisn-ranges' property\n");
--		return false;
-+		goto err_unmap;
- 	}
- 
- 	if (len % (2 * sizeof(u32)) != 0) {
- 		pr_err("invalid 'ibm,xive-lisn-ranges' property\n");
--		return false;
-+		goto err_unmap;
- 	}
- 
--	for (i = 0; i < len / (2 * sizeof(u32)); i++, reg += 2)
--		xive_irq_bitmap_add(be32_to_cpu(reg[0]),
--				    be32_to_cpu(reg[1]));
-+	for (i = 0; i < len / (2 * sizeof(u32)); i++, reg += 2) {
-+		err = xive_irq_bitmap_add(be32_to_cpu(reg[0]),
-+					  be32_to_cpu(reg[1]));
-+		if (err < 0)
-+			goto err_mem_free;
-+	}
- 
- 	/* Iterate the EQ sizes and pick one */
- 	of_property_for_each_u32(np, "ibm,xive-eq-sizes", prop, reg, val) {
-@@ -775,8 +789,14 @@ bool __init xive_spapr_init(void)
- 
- 	/* Initialize XIVE core with our backend */
- 	if (!xive_core_init(&xive_spapr_ops, tima, TM_QW1_OS, max_prio))
--		return false;
-+		goto err_mem_free;
- 
- 	pr_info("Using %dkB queues\n", 1 << (xive_queue_shift - 10));
- 	return true;
-+
-+err_mem_free:
-+	xive_irq_bitmap_remove_all();
-+err_unmap:
-+	iounmap(tima);
-+	return false;
- }
+Yep, well admittedly in this area things changed in a slightly confusing way.
+
+Up to v10:
+ - effective values was exposed to userspace
+ - system defaults was enforced only at enqueue time
+
+Now instead:
+ - effective values are not exposed anymore (because of Tejun request)
+ - system defaults are applied to the root group and propagated down
+   the hierarchy to all effective values
+
+Both solutions are functionally correct but, in the first case, the
+cgroup's effective values was not really reflecting what a task will
+get while, in the current solution, we force update all effective
+values while not exposing them anymore.
+
+However, I think this solution is better in keeping information more
+consistent and should create less confusion if in the future we decide
+to expose effective values to user-space.
+
+Thought?
+
+> > @@ -1043,12 +1063,17 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+> > [...]
+> > +	if (update_root_tg)
+> > +		uclamp_update_root_tg();
+> > +
+> >  	/*
+> >  	 * Updating all the RUNNABLE task is expensive, keep it simple and do
+> >  	 * just a lazy update at each next enqueue time.
+> Since uclamp_update_root_tg() traverses down to
+> uclamp_update_active_tasks() is this comment half true now?
+
+Right, this comment is now wrong. We update all RUNNABLE tasks on
+system default changes. However, despite the above command it's
+difficult to say how much expensive that operation can be.
+
+It really depends on how many RUNNABLE tasks we have, the number of
+CPUs and also how many tasks are not already clamped by a more
+restrictive "effective" value. Thus, for the time being, we can
+consider speculation the above statement and add in a simple change if
+in the future that should be reported as a real issue to justify a
+lazy update.
+
+The upside is that with the current implementation we have a more
+strict control on task. Even long running tasks can be clamped on
+sysadmin demand without waiting for them to sleep.
+
+Does that makes sense?
+
+If it does, I'll drop the above comment in v13.
+
+Cheers Patrick
+
 -- 
-2.20.1
+#include <best/regards.h>
 
+Patrick Bellasi
