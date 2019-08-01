@@ -2,91 +2,103 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B76BC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11719C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 641D92087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564672453;
-	bh=abPguqKEOMLTrCcU2P2/jVixA9k9aQ63IoisxRSIwBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PgzQTE7SOrJY/6fBrzJTRv4Lz5B4FC40T3dP5GhvgpRqZfkWaBcTRyO4bwdcghMyW
-	 f0KuHawkwq3eb10LhY2otsO7VephOmoloNUq4CJ+8aZweH6hwscTp6o8XdISkD3gc3
-	 GDdGBR3Q3VwrAZxhntN/IhifzvSm6rMJE8kugGVc=
+	by mail.kernel.org (Postfix) with ESMTP id D7630206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:14:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M3Rtfh41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732396AbfHAPOM (ORCPT
+        id S1732413AbfHAPOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:14:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727853AbfHAPOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:14:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9EBE206B8;
-        Thu,  1 Aug 2019 15:14:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564672451;
-        bh=abPguqKEOMLTrCcU2P2/jVixA9k9aQ63IoisxRSIwBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z49Q/dNnsW4m/Vs0lHcUASw5PJAlp8W6hfuITfIg0qpsCoo61kxziMx4EKLRiS8Y+
-         MzLxDr4ItWUbUotJgD6iWxhOa5FrJouUedzlKPOyoBj6bJ08i9j1APCM3tx22vGWBP
-         MqFH5lmLUbfbU13MnZ/Ik45s4tAkr37DSNfI2PcU=
-Date:   Thu, 1 Aug 2019 17:14:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-serial@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Jiri Slaby <jslaby@suse.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 00/23] LPUART fixes and improvements
-Message-ID: <20190801151409.GA4508@kroah.com>
-References: <20190731173045.11718-1-andrew.smirnov@gmail.com>
- <CAOMZO5BL1BO7XGNgwqZRRCeWNURemZEVzP26kVBacyw__0=RBA@mail.gmail.com>
+        Thu, 1 Aug 2019 11:14:33 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33780 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727853AbfHAPOc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 11:14:32 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x71FENOn066123;
+        Thu, 1 Aug 2019 10:14:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564672463;
+        bh=vT9TTA9+yJvY9rAaobu7P0YUoXflgY+8195JQIElkeU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=M3Rtfh41Py3G8PEm5bW+uyZWynRjC+FZyqNipU9MJlkycXPkxZP8xuXyw4b4gUztu
+         J362/+p+7VkRdMeT1JXuCvyibQu3tkXPrDirP6dgG2KMY0GbgpS4NrAOrCO6q8kZwr
+         +/FCW1w2VO6HpycPZQhuYiZIpNS1KGEldkPMmNOg=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x71FEN01121654
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 1 Aug 2019 10:14:23 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 1 Aug
+ 2019 10:14:22 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 1 Aug 2019 10:14:22 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x71FEMNL089261;
+        Thu, 1 Aug 2019 10:14:22 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <tony@atomide.com>,
+        <sre@kernel.org>, <nekit1000@gmail.com>, <mpartap@gmx.net>,
+        <merlijn@wizzup.org>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 2/3] dt: lm3532: Add property for full scale current.
+Date:   Thu, 1 Aug 2019 10:14:20 -0500
+Message-ID: <20190801151421.21486-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20190801151421.21486-1-dmurphy@ti.com>
+References: <20190801151421.21486-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5BL1BO7XGNgwqZRRCeWNURemZEVzP26kVBacyw__0=RBA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 02:59:59PM -0300, Fabio Estevam wrote:
-> Hi Andrey,
-> 
-> On Wed, Jul 31, 2019 at 2:53 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
-> >
-> > Everyone:
-> >
-> > This series contains fixes/improvements to LPUART dirver I came up
-> > with recently as well as fixes picked up from Toradex and NXP Vybrid
-> > repos.
-> >
-> > Feedback is welcome!
-> >
-> > Changes since [v1]:
-> 
-> Greg has already applied some of these patches:
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git/log/?h=tty-testing
-> 
-> Please rebase on his tree and send the remaining ones.
+Add a property for each control bank to configure the
+full scale current setting for the device.
 
-Yes, I can't drop patches I have already applied.  Andrey, just resend
-the ones that I have not applied.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/devicetree/bindings/leds/leds-lm3532.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-thanks,
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+index c087f85ddddc..d3498dd24e8e 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm3532.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+@@ -62,6 +62,9 @@ Optional LED child properties:
+ 	- label : see Documentation/devicetree/bindings/leds/common.txt
+ 	- linux,default-trigger :
+ 	   see Documentation/devicetree/bindings/leds/common.txt
++	- ti,fs-current : Defines the full scale current value for each control
++			  bank.  The range is from 5000uA-29800uA in increments
++			  of 800uA.
+ 
+ Example:
+ led-controller@38 {
+@@ -85,6 +88,7 @@ led-controller@38 {
+ 		reg = <0>;
+ 		led-sources = <2>;
+ 		ti,led-mode = <1>;
++		ti,fs-current = <21800>;
+ 		label = ":backlight";
+ 		linux,default-trigger = "backlight";
+ 	};
+-- 
+2.22.0.214.g8dca754b1e
 
-greg k-h
