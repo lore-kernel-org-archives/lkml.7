@@ -2,329 +2,241 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A34C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327A7C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A31F2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:33:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBtpkVwz"
+	by mail.kernel.org (Postfix) with ESMTP id E8FE82083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564698913;
+	bh=2xwTeuozhKDu9ZXUQkzg9TjF8inoPVa8SKAMpWPlR0o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FfRHeJJq9VHUMz1I4/uX2/AYnGgFIw6cSVFUvdzsYJpgjzF6X0sHMv9Z8ktIwt7kn
+	 nvzhQWSXYW9udo3qIeFIXSmTGNipORKLUKUBc4kGL3UpFP5gyWOd9VH6jNZF4kKrjB
+	 SO12/mXI5QaO2GffzCrCZgmSJCzEvM6x3t8aZ6h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387851AbfHAWdz (ORCPT
+        id S2387938AbfHAWfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:33:55 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33654 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfHAWdz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:33:55 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c14so32739476plo.0;
-        Thu, 01 Aug 2019 15:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=/ALyy5tBTJRj9deFR87ZUlllw72TrmFyWSdgPjQp4rM=;
-        b=ZBtpkVwzOe4eyGoq9QPqUpxtiZRKtqzBH/tyBWE8UnrimostlvcQjvVc/SXZMgbk9N
-         DYil48OxFec1bR3QcSym0HQF290WYdsxjQrKwJXFI7LkKkgljotO2z7gnhVmFcGw0q4W
-         RkcNEAOwyFAHZFD2x0fSSd5S048yDyryAyMpI/Tkf82RXjFdu4NHYfhK7lJPOOO83o7j
-         YgGxggzrRW1L//7xkten1pa/cAZ29ibGzFALKw6Oy5gBAU72fwwEJdrje9WIssnpI1qz
-         e4z+iprUrsN+jdd8nQcP0RVuSU6/DGQvYlI3GBZ7Ry9TuIc6mQiJjm2BhRjHgZrkPKPj
-         GB7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=/ALyy5tBTJRj9deFR87ZUlllw72TrmFyWSdgPjQp4rM=;
-        b=OSs5DnaJgV3YgmYdlxYnA+WRLLsFxC2qqSzKYuFyHWfXkJHoBiXegHLHUbpO9mYbvt
-         Y+Ywq+jBmJYSxELpxMBM1uYiH3+x673T/eVBFfKbGeCgwfcnw4/SYweL+pRrT5nM/Xod
-         sonIxH/C5WAdWWzJDg/m8s4r2RoeWYZChk+yBLPEU1b+uhF/TVXCxSDbBd90G5kHx6BZ
-         GH/UF6hk3gSGozv5eDFcxs2/hbj27MDbheLYv85GqChD0S2IXCZHXC5Ghfm9uKSiU+ep
-         Nx+0QrKw/CUKz4f8kcyOfR4TGYsYXTq1EeAHbV7WKtGJDrIT5lmX61Z2QbywbHvLXiRt
-         apTA==
-X-Gm-Message-State: APjAAAXGoI8ezMZRcHzKhD44G2YIXi3SCFhqLmpQgapJxFpYik+BW5Pv
-        Nccd4XWsMuyEXoPK50h9/vs=
-X-Google-Smtp-Source: APXvYqxlI/m+J1Vb1i+6OdKITlgM+lspjQ95MM8yt+CwgY55W8rjUhUi5OBsWSgJiUOC8m2kY4ICJA==
-X-Received: by 2002:a17:902:2ae7:: with SMTP id j94mr128150310plb.270.1564698834276;
-        Thu, 01 Aug 2019 15:33:54 -0700 (PDT)
-Received: from localhost.localdomain (50-39-177-61.bvtn.or.frontiernet.net. [50.39.177.61])
-        by smtp.gmail.com with ESMTPSA id x25sm104397434pfa.90.2019.08.01.15.33.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 15:33:53 -0700 (PDT)
-Subject: [PATCH v3 3/6] mm: Use zone and order instead of free area in
- free_list manipulators
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, willy@infradead.org,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-Date:   Thu, 01 Aug 2019 15:31:44 -0700
-Message-ID: <20190801223144.22190.30566.stgit@localhost.localdomain>
-In-Reply-To: <20190801222158.22190.96964.stgit@localhost.localdomain>
-References: <20190801222158.22190.96964.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 1 Aug 2019 18:35:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729432AbfHAWfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 18:35:11 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BEB1206B8;
+        Thu,  1 Aug 2019 22:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564698910;
+        bh=2xwTeuozhKDu9ZXUQkzg9TjF8inoPVa8SKAMpWPlR0o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S1IVpImnXz80mm9Iwp3RHSjheiBlqP4M5pPoLcVlpHR9CZiaqzqgS7CAlXlKISVjU
+         2qRwerJoMHK74fY4C0m5K2kNgbAAE2ZaaVxx4IB6gTcs7KBfLnenY9vfnkFT6PtQRU
+         om3wqi16AGzMriaVYgNMyPutyJrkfNh4S4x+O3aM=
+Date:   Thu, 1 Aug 2019 15:35:09 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 RESEND] f2fs: introduce sb.required_features to store
+ incompatible features
+Message-ID: <20190801223509.GB27597@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190729150351.12223-1-chao@kernel.org>
+ <20190730231850.GA7097@jaegeuk-macbookpro.roam.corp.google.com>
+ <c7232d80-a4d8-88ae-2eca-01290dd0e56a@huawei.com>
+ <20190801042215.GC84433@jaegeuk-macbookpro.roam.corp.google.com>
+ <345c55ea-01c2-a9d1-4367-716dbd08ae9d@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <345c55ea-01c2-a9d1-4367-716dbd08ae9d@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On 08/01, Chao Yu wrote:
+> On 2019/8/1 12:22, Jaegeuk Kim wrote:
+> > On 07/31, Chao Yu wrote:
+> >> On 2019/7/31 7:18, Jaegeuk Kim wrote:
+> >>> On 07/29, Chao Yu wrote:
+> >>>> From: Chao Yu <yuchao0@huawei.com>
+> >>>>
+> >>>> Later after this patch was merged, all new incompatible feature's
+> >>>> bit should be added into sb.required_features field, and define new
+> >>>> feature function with F2FS_INCOMPAT_FEATURE_FUNCS() macro.
+> >>>>
+> >>>> Then during mount, we will do sanity check with enabled features in
+> >>>> image, if there are features in sb.required_features that kernel can
+> >>>> not recognize, just fail the mount.
+> >>>>
+> >>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>>> ---
+> >>>> v3:
+> >>>> - change commit title.
+> >>>> - fix wrong macro name.
+> >>>>  fs/f2fs/f2fs.h          | 15 +++++++++++++++
+> >>>>  fs/f2fs/super.c         | 10 ++++++++++
+> >>>>  include/linux/f2fs_fs.h |  3 ++-
+> >>>>  3 files changed, 27 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >>>> index a6eb828af57f..b8e17d4ddb8d 100644
+> >>>> --- a/fs/f2fs/f2fs.h
+> >>>> +++ b/fs/f2fs/f2fs.h
+> >>>> @@ -163,6 +163,15 @@ struct f2fs_mount_info {
+> >>>>  #define F2FS_CLEAR_FEATURE(sbi, mask)					\
+> >>>>  	(sbi->raw_super->feature &= ~cpu_to_le32(mask))
+> >>>>  
+> >>>> +#define F2FS_INCOMPAT_FEATURES		0
+> >>>> +
+> >>>> +#define F2FS_HAS_INCOMPAT_FEATURE(sbi, mask)				\
+> >>>> +	((sbi->raw_super->required_features & cpu_to_le32(mask)) != 0)
+> >>>> +#define F2FS_SET_INCOMPAT_FEATURE(sbi, mask)				\
+> >>>> +	(sbi->raw_super->required_features |= cpu_to_le32(mask))
+> >>>> +#define F2FS_CLEAR_INCOMPAT_FEATURE(sbi, mask)				\
+> >>>> +	(sbi->raw_super->required_features &= ~cpu_to_le32(mask))
+> >>>> +
+> >>>>  /*
+> >>>>   * Default values for user and/or group using reserved blocks
+> >>>>   */
+> >>>> @@ -3585,6 +3594,12 @@ F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
+> >>>>  F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
+> >>>>  F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
+> >>>>  
+> >>>> +#define F2FS_INCOMPAT_FEATURE_FUNCS(name, flagname) \
+> >>>> +static inline int f2fs_sb_has_##name(struct f2fs_sb_info *sbi) \
+> >>>> +{ \
+> >>>> +	return F2FS_HAS_INCOMPAT_FEATURE(sbi, F2FS_FEATURE_##flagname); \
+> >>>> +}
+> >>>> +
+> >>>>  #ifdef CONFIG_BLK_DEV_ZONED
+> >>>>  static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+> >>>>  				    block_t blkaddr)
+> >>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> >>>> index 5540fee0fe3f..3701dcce90e6 100644
+> >>>> --- a/fs/f2fs/super.c
+> >>>> +++ b/fs/f2fs/super.c
+> >>>> @@ -2513,6 +2513,16 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+> >>>>  		return -EINVAL;
+> >>>>  	}
+> >>>>  
+> >>>> +	/* check whether current kernel supports all features on image */
+> >>>> +	if (le32_to_cpu(raw_super->required_features) &
+> >>>
+> >>> ...
+> >>> #define F2FS_FEATURE_VERITY	0x0400	/* reserved */
+> >>> ...
+> >>> #define F2FS_FEATURE_CASEFOLD	0x1000
+> >>> #define F2FS_FEATURE_SUPPORT	0x1BFF
+> >>>
+> >>> 	if (le32_to_cpu(raw_super->required_features) & ~F2FS_FEATURE_SUPPORT) {
+> >>> 		...
+> >>> 		return -EINVAL;
+> >>> 	}
+> >>
+> >> Um, I thought .required_features are used to store new feature flags from 0x0.
+> >>
+> >> All 'F2FS_FEATURE_SUPPORT' bits should be stored in sb.feature instead of
+> >> sb.required_features, I'm confused...
+> > 
+> > I'm thinking,
+> > 
+> > f2fs-tools     sb->required_features     f2fs    F2FS_FEATURE_SUPPORT
+> > v0             0                         v0      no_check -> ok
+> > v1             0x1BFF                    v0      no_check -> ok
+> > v0             0                         v1      0x1BFF -> ok
+> > v1             0x1BFF                    v1      0x1BFF -> ok
+> > v2             0x3BFF                    v1      0x1BFF -> fail
+> > v1             0x1BFF                    v2      0x3BFF -> ok
+> > v2             0x3BFF                    v2      0x3BFF -> ok
+> 
+> I see, it's a bit waste for 0x1FFF low bits in sb->required_features. Why not
+> leaving 0x0FFF in sb->feature w/o sanity check. And make all new incompatible
+> features (including casefold) adding into sb->required_features.
 
-In order to enable the use of the zone from the list manipulator functions
-I will need access to the zone pointer. As it turns out most of the
-accessors were always just being directly passed &zone->free_area[order]
-anyway so it would make sense to just fold that into the function itself
-and pass the zone and order as arguments instead of the free area.
+I don't think we can define like this, and we still have 32bits feature filed.
+This would give another confusion to understand. VERITY is reserved only now.
 
-In order to be able to reference the zone we need to move the declaration
-of the functions down so that we have the zone defined before we define the
-list manipulation functions.
+#define F2FS_FEATURE_CASEFOLD		0x0001
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- include/linux/mmzone.h |   70 ++++++++++++++++++++++++++----------------------
- mm/page_alloc.c        |   30 ++++++++-------------
- 2 files changed, 49 insertions(+), 51 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 738e9c758135..f0c68b6b6154 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -100,29 +100,6 @@ struct free_area {
- 	unsigned long		nr_free;
- };
- 
--/* Used for pages not on another list */
--static inline void add_to_free_area(struct page *page, struct free_area *area,
--			     int migratetype)
--{
--	list_add(&page->lru, &area->free_list[migratetype]);
--	area->nr_free++;
--}
--
--/* Used for pages not on another list */
--static inline void add_to_free_area_tail(struct page *page, struct free_area *area,
--				  int migratetype)
--{
--	list_add_tail(&page->lru, &area->free_list[migratetype]);
--	area->nr_free++;
--}
--
--/* Used for pages which are on another list */
--static inline void move_to_free_area(struct page *page, struct free_area *area,
--			     int migratetype)
--{
--	list_move(&page->lru, &area->free_list[migratetype]);
--}
--
- static inline struct page *get_page_from_free_area(struct free_area *area,
- 					    int migratetype)
- {
-@@ -130,15 +107,6 @@ static inline struct page *get_page_from_free_area(struct free_area *area,
- 					struct page, lru);
- }
- 
--static inline void del_page_from_free_area(struct page *page,
--		struct free_area *area)
--{
--	list_del(&page->lru);
--	__ClearPageBuddy(page);
--	set_page_private(page, 0);
--	area->nr_free--;
--}
--
- static inline bool free_area_empty(struct free_area *area, int migratetype)
- {
- 	return list_empty(&area->free_list[migratetype]);
-@@ -787,6 +755,44 @@ static inline bool pgdat_is_empty(pg_data_t *pgdat)
- 	return !pgdat->node_start_pfn && !pgdat->node_spanned_pages;
- }
- 
-+/* Used for pages not on another list */
-+static inline void add_to_free_list(struct page *page, struct zone *zone,
-+				    unsigned int order, int migratetype)
-+{
-+	struct free_area *area = &zone->free_area[order];
-+
-+	list_add(&page->lru, &area->free_list[migratetype]);
-+	area->nr_free++;
-+}
-+
-+/* Used for pages not on another list */
-+static inline void add_to_free_list_tail(struct page *page, struct zone *zone,
-+					 unsigned int order, int migratetype)
-+{
-+	struct free_area *area = &zone->free_area[order];
-+
-+	list_add_tail(&page->lru, &area->free_list[migratetype]);
-+	area->nr_free++;
-+}
-+
-+/* Used for pages which are on another list */
-+static inline void move_to_free_list(struct page *page, struct zone *zone,
-+				     unsigned int order, int migratetype)
-+{
-+	struct free_area *area = &zone->free_area[order];
-+
-+	list_move(&page->lru, &area->free_list[migratetype]);
-+}
-+
-+static inline void del_page_from_free_list(struct page *page, struct zone *zone,
-+					   unsigned int order)
-+{
-+	list_del(&page->lru);
-+	__ClearPageBuddy(page);
-+	set_page_private(page, 0);
-+	zone->free_area[order].nr_free--;
-+}
-+
- #include <linux/memory_hotplug.h>
- 
- void build_all_zonelists(pg_data_t *pgdat);
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 7cedc73953fd..71aadc7d5ff6 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -920,7 +920,6 @@ static inline void __free_one_page(struct page *page,
- 	struct capture_control *capc = task_capc(zone);
- 	unsigned long uninitialized_var(buddy_pfn);
- 	unsigned long combined_pfn;
--	struct free_area *area;
- 	unsigned int max_order;
- 	struct page *buddy;
- 
-@@ -957,7 +956,7 @@ static inline void __free_one_page(struct page *page,
- 		if (page_is_guard(buddy))
- 			clear_page_guard(zone, buddy, order, migratetype);
- 		else
--			del_page_from_free_area(buddy, &zone->free_area[order]);
-+			del_page_from_free_list(buddy, zone, order);
- 		combined_pfn = buddy_pfn & pfn;
- 		page = page + (combined_pfn - pfn);
- 		pfn = combined_pfn;
-@@ -991,12 +990,11 @@ static inline void __free_one_page(struct page *page,
- done_merging:
- 	set_page_order(page, order);
- 
--	area = &zone->free_area[order];
- 	if (is_shuffle_order(order) ? shuffle_add_to_tail() :
- 	    buddy_merge_likely(pfn, buddy_pfn, page, order))
--		add_to_free_area_tail(page, area, migratetype);
-+		add_to_free_list_tail(page, zone, order, migratetype);
- 	else
--		add_to_free_area(page, area, migratetype);
-+		add_to_free_list(page, zone, order, migratetype);
- }
- 
- /*
-@@ -2000,13 +1998,11 @@ void __init init_cma_reserved_pageblock(struct page *page)
-  * -- nyc
-  */
- static inline void expand(struct zone *zone, struct page *page,
--	int low, int high, struct free_area *area,
--	int migratetype)
-+	int low, int high, int migratetype)
- {
- 	unsigned long size = 1 << high;
- 
- 	while (high > low) {
--		area--;
- 		high--;
- 		size >>= 1;
- 		VM_BUG_ON_PAGE(bad_range(zone, &page[size]), &page[size]);
-@@ -2020,7 +2016,7 @@ static inline void expand(struct zone *zone, struct page *page,
- 		if (set_page_guard(zone, &page[size], high, migratetype))
- 			continue;
- 
--		add_to_free_area(&page[size], area, migratetype);
-+		add_to_free_list(&page[size], zone, high, migratetype);
- 		set_page_order(&page[size], high);
- 	}
- }
-@@ -2178,8 +2174,8 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
- 		page = get_page_from_free_area(area, migratetype);
- 		if (!page)
- 			continue;
--		del_page_from_free_area(page, area);
--		expand(zone, page, order, current_order, area, migratetype);
-+		del_page_from_free_list(page, zone, current_order);
-+		expand(zone, page, order, current_order, migratetype);
- 		set_pcppage_migratetype(page, migratetype);
- 		return page;
- 	}
-@@ -2187,7 +2183,6 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
- 	return NULL;
- }
- 
--
- /*
-  * This array describes the order lists are fallen back to when
-  * the free lists for the desirable migrate type are depleted
-@@ -2264,7 +2259,7 @@ static int move_freepages(struct zone *zone,
- 		}
- 
- 		order = page_order(page);
--		move_to_free_area(page, &zone->free_area[order], migratetype);
-+		move_to_free_list(page, zone, order, migratetype);
- 		page += 1 << order;
- 		pages_moved += 1 << order;
- 	}
-@@ -2380,7 +2375,6 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
- 		unsigned int alloc_flags, int start_type, bool whole_block)
- {
- 	unsigned int current_order = page_order(page);
--	struct free_area *area;
- 	int free_pages, movable_pages, alike_pages;
- 	int old_block_type;
- 
-@@ -2451,8 +2445,7 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
- 	return;
- 
- single_page:
--	area = &zone->free_area[current_order];
--	move_to_free_area(page, area, start_type);
-+	move_to_free_list(page, zone, current_order, start_type);
- }
- 
- /*
-@@ -3123,7 +3116,6 @@ void split_page(struct page *page, unsigned int order)
- 
- int __isolate_free_page(struct page *page, unsigned int order)
- {
--	struct free_area *area = &page_zone(page)->free_area[order];
- 	unsigned long watermark;
- 	struct zone *zone;
- 	int mt;
-@@ -3149,7 +3141,7 @@ int __isolate_free_page(struct page *page, unsigned int order)
- 
- 	/* Remove page from free list */
- 
--	del_page_from_free_area(page, area);
-+	del_page_from_free_list(page, zone, order);
- 
- 	/*
- 	 * Set the pageblock if the isolated page is at least half of a
-@@ -8560,7 +8552,7 @@ void zone_pcp_reset(struct zone *zone)
- 		pr_info("remove from free list %lx %d %lx\n",
- 			pfn, 1 << order, end_pfn);
- #endif
--		del_page_from_free_area(page, &zone->free_area[order]);
-+		del_page_from_free_list(page, zone, order);
- 		for (i = 0; i < (1 << order); i++)
- 			SetPageReserved((page+i));
- 		pfn += (1 << order);
-
+> 
+> Then that would be:
+> 
+> kernel	tool
+> v5.2 .. 1.12
+> #define	F2FS_FEATURE_SUPPORT		0x0000
+> 
+> v5.3 .. 1.13
+> #define F2FS_FEATURE_CASEFOLD		0x0001
+> #define	F2FS_FEATURE_SUPPORT		0x0001
+> 
+> v5.4 .. 1.14
+> #define F2FS_FEATURE_CASEFOLD		0x0001
+> #define F2FS_FEATURE_COMPRESS		0x0002
+> #define	F2FS_FEATURE_SUPPORT		0x0003
+> 
+> f2fs-tools	sb->required_features	f2fs	F2FS_FEATURE_SUPPORT
+> 
+> v1.12		0x0000			v5.2	no_check -> ok
+> v1.12		0x0000			v5.3	0x0001 -> ok
+> v1.12		0x0000			v5.4	0x0003 -> ok
+> 
+> v1.13		0x0001			v5.2	that's issue we need to fix
+> v1.13		0x0001			v5.3	0x0001 -> ok
+> v1.13		0x0001			v5.4	0x0003 -> ok
+> 
+> v1.14		0x0003			v5.2	that's issue we need to fix
+> v1.14		0x0003			v5.3	0x0001 -> fail
+> v1.14		0x0003			v5.4	0x0003 -> ok
+> 
+> And all compatible features can be added into sb->feature[_VERITY, ....].
+> 
+> Would that okay to you?
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>>
+> >>>> +			~F2FS_INCOMPAT_FEATURES) {
+> >>>> +		f2fs_info(sbi, "Unsupported feature: %x: supported: %x",
+> >>>> +			  le32_to_cpu(raw_super->required_features) ^
+> >>>> +			  F2FS_INCOMPAT_FEATURES,
+> >>>> +			  F2FS_INCOMPAT_FEATURES);
+> >>>> +		return -EINVAL;
+> >>>> +	}
+> >>>> +
+> >>>>  	/* Check checksum_offset and crc in superblock */
+> >>>>  	if (__F2FS_HAS_FEATURE(raw_super, F2FS_FEATURE_SB_CHKSUM)) {
+> >>>>  		crc_offset = le32_to_cpu(raw_super->checksum_offset);
+> >>>> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+> >>>> index a2b36b2e286f..4141be3f219c 100644
+> >>>> --- a/include/linux/f2fs_fs.h
+> >>>> +++ b/include/linux/f2fs_fs.h
+> >>>> @@ -117,7 +117,8 @@ struct f2fs_super_block {
+> >>>>  	__u8 hot_ext_count;		/* # of hot file extension */
+> >>>>  	__le16	s_encoding;		/* Filename charset encoding */
+> >>>>  	__le16	s_encoding_flags;	/* Filename charset encoding flags */
+> >>>> -	__u8 reserved[306];		/* valid reserved region */
+> >>>> +	__le32 required_features;       /* incompatible features to old kernel */
+> >>>> +	__u8 reserved[302];		/* valid reserved region */
+> >>>>  	__le32 crc;			/* checksum of superblock */
+> >>>>  } __packed;
+> >>>>  
+> >>>> -- 
+> >>>> 2.22.0
+> >>> .
+> >>>
+> > .
+> > 
