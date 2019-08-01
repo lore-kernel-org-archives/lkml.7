@@ -2,78 +2,129 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19E6C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB0CC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B614C214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:34:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564652093;
-	bh=SH6f21lmIyn+pd+VkvTBUkm1MkwdIZDLUdiyEmRNR+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=reNP/5j0EqL5d4WwOuFkRM5FB8gzM786XQ41a3SHIl7mjtULdRWIpi3GUoJQ6twZ/
-	 RPk7FC96berq2rM1JuQ0vHJSo0vzeTr0aT+fWh6o+ZJbfvC3tBpJFeJ9F4xYsaEzXo
-	 lwVY5HyK14lCpOhiE0tiw+WuRtD1SGfZxqeWrq34=
+	by mail.kernel.org (Postfix) with ESMTP id 123EB206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:35:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="L8Uvn5dg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbfHAJew (ORCPT
+        id S1731221AbfHAJf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:34:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43318 "EHLO mail.kernel.org"
+        Thu, 1 Aug 2019 05:35:28 -0400
+Received: from onstation.org ([52.200.56.107]:49232 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfHAJew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:34:52 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1725790AbfHAJf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 05:35:27 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD4F6206B8;
-        Thu,  1 Aug 2019 09:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564652091;
-        bh=SH6f21lmIyn+pd+VkvTBUkm1MkwdIZDLUdiyEmRNR+Q=;
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id A93DC3E910;
+        Thu,  1 Aug 2019 09:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1564652127;
+        bh=kfTmSsHjDSs4XpQs46UTlU71i6LS7tjQuHwr8ZEqdcQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=APCZAFFlcanmjLy4xSd1nHh5Ni/XshHjAKu46SH/sZy3tsn5F3WiPdQJNnaDQHxlw
-         QoxZ5r0DhvsYoN293Q5fmwjTiCNJ2GXZYpCigPypd0UkHNTLJ3F5yQtpoHgzzQFZw6
-         +I2aQwIlYyl5HGfv0bZ//1BgokAl2BsR13+3vmuA=
-Date:   Thu, 1 Aug 2019 10:34:47 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the arm64-fixes tree
-Message-ID: <20190801093447.ktpnc757fdqn4mzs@willie-the-truck>
-References: <20190801080621.18868050@canb.auug.org.au>
+        b=L8Uvn5dgi2tdehpfsCzTDQaHWI/bMUZB6hJLoMHPKBV0xjuRtAoMou1LCTbM3ULTQ
+         kAygZS7rVJuy81oUFCYol4R1YgxBuTIXFGRudYkzjrRXpBiZBqVqxQ7NFSsPSeARYK
+         +4Kb6IOdV8xl/BwaMCBlFryGz3VaB6GtYKUIL1CI=
+Date:   Thu, 1 Aug 2019 05:35:26 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] iio: tsl2772: Use devm_add_action_or_reset for
+ tsl2772_chip_off
+Message-ID: <20190801093526.GB27653@onstation.org>
+References: <20190801073605.9635-1-hslester96@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801080621.18868050@canb.auug.org.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190801073605.9635-1-hslester96@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 08:06:21AM +1000, Stephen Rothwell wrote:
-> In commit
+On Thu, Aug 01, 2019 at 03:36:05PM +0800, Chuhong Yuan wrote:
+> Use devm_add_action_or_reset to call tsl2772_chip_off
+> when the device is removed.
+> This also fixes the issue that the chip is turned off
+> before the device is unregistered.
 > 
->   97d5db366224 ("arm64: Lower priority mask for GIC_PRIO_IRQON")
-> 
-> Fixes tag
-> 
->   Fixes: bd82d4bd21880b7c ("arm64: Fix incorrect irqflag restore for
-> 
-> has these problem(s):
-> 
->   - Subject has leading but no trailing parentheses
->   - Subject has leading but no trailing quotes
-> 
-> Please do not split Fixes tags over more than one line.
+> Fixes: 4e24c1719f34 ("staging: iio: tsl2x7x: rename driver to tsl2772")
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-Thanks, will fix.
+Let's use this Fixes tag instead:
 
-Will
+Fixes: c06c4d793584 ("staging: iio: tsl2x7x/tsl2772: move out of staging")
+
+I'd wait and see if Jonathan wants you to resend out the series if he
+has any changes.
+
+Brian
+
+
+> ---
+> Changes in v4:
+>   - Split v3 into three patches.
+>   - Revise description to make it more precise.
+> 
+>  drivers/iio/light/tsl2772.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
+> index 29cfd8ae2700..e866ae40f157 100644
+> --- a/drivers/iio/light/tsl2772.c
+> +++ b/drivers/iio/light/tsl2772.c
+> @@ -860,6 +860,13 @@ static int tsl2772_chip_off(struct iio_dev *indio_dev)
+>  	return tsl2772_write_control_reg(chip, 0x00);
+>  }
+>  
+> +static void tsl2772_chip_off_action(void *data)
+> +{
+> +	struct iio_dev *indio_dev = data;
+> +
+> +	tsl2772_chip_off(indio_dev);
+> +}
+> +
+>  /**
+>   * tsl2772_invoke_change - power cycle the device to implement the user
+>   *                         parameters
+> @@ -1877,9 +1884,14 @@ static int tsl2772_probe(struct i2c_client *clientp,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	ret = devm_add_action_or_reset(&clientp->dev,
+> +					tsl2772_chip_off_action,
+> +					indio_dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	ret = iio_device_register(indio_dev);
+>  	if (ret) {
+> -		tsl2772_chip_off(indio_dev);
+>  		dev_err(&clientp->dev,
+>  			"%s: iio registration failed\n", __func__);
+>  		return ret;
+> @@ -1926,8 +1938,6 @@ static int tsl2772_remove(struct i2c_client *client)
+>  {
+>  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+>  
+> -	tsl2772_chip_off(indio_dev);
+> -
+>  	iio_device_unregister(indio_dev);
+>  
+>  	return 0;
+> -- 
+> 2.20.1
