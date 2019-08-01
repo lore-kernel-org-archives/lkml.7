@@ -7,64 +7,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B86C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AB0C32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B91206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3042E206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:58:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="jXMGTNLn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HjB+aHiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfHAA6l (ORCPT
+        id S1729110AbfHAA6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 20:58:41 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:61763 "EHLO
+        Wed, 31 Jul 2019 20:58:49 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:61766 "EHLO
         esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfHAA6j (ORCPT
+        with ESMTP id S1727370AbfHAA6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 20:58:39 -0400
+        Wed, 31 Jul 2019 20:58:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
   t=1564621120; x=1596157120;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+zY9hAEVm58gSXJfAJQWINzIbb639f01AsOcw7UEO4w=;
-  b=jXMGTNLn+NPfbHeKgEns6pGPNR2TumrTXoO3L2v2cyTMQyyWY3dM5f7a
-   hHe2KAGgq0kpSCsbsmDMIVcezxFWInjGmh3Dp31t/pn+VPHXTTSamIbu6
-   mCP0i9/egnf3ht+x6pfPi02c0L6YOLRv4rINaGDSFAhKpaPOICPF7ymH2
-   Cz0UipjxCBTWg1Psf0UfhBOPaiEMKTC/DEHZWejIZx0YqgbpiRPEIwUY7
-   KG4OWCtITdxz4RZQtKO7BwazXGb93Ps6IfF6OD0jlkiT60IcmPn65VZbj
-   5MS/8ZGW0y2zdd3rma9B6hJ8eiVVrxAv2xOd8D4h85FHmmkPjTpMXRoEj
+  bh=YwZBgjDKqJC0ZZ1pMUEYPgwPKNXhIZ+3mPkTf+XP88Q=;
+  b=HjB+aHiP05xeqfHgqoPMC7ja6m7GcWNt0qNB1BQv5sCVDt2/jhsRoUHb
+   +6WL93WKvcotJika2YMS1HtaY15CEABts7/weef7/5gdE7zgJKAFsNykY
+   ZgqX3l9OVQ19wpap9OASMUv9oSPLKVX74XBuUSaKblWLIdWrTzE9cNg4g
+   MJm+gFH3sel35DuGaJ7u4C6/+MC2hgsG81GMAIK4ku/OTqP5ZiMYxe7jJ
+   B6EcL8Mio1rSa7pwCPbpeaFB0WJpDHdfZDK0YkuhZSXiAWHhdU+A6UGY2
+   01mWkaYotXxnY2t9SRUdzSoUVUBNF5Dy7kW/cE054/q1VuArrks84kigz
    w==;
-IronPort-SDR: 8Xte4gZn8SizZ51vGiL2gS9nCy3RGWwGUXAwbsfSWKUPkSRZR+BEXWeIeQV/rNbg+Y5WBafBCd
- xUwXSddt+ywP2SpQHVTsj5ErI1lUFvGM+6oKtTxl+J/BYsiOOb1hEA84iC2su0676KyBNp/aRQ
- mlBZ+0VJK1GoKBzJnsaLevthB83J5XWDu7/vY5Ski3c2y74fIK7kEHEuvkwJFlMVU15wS0ozbD
- dMvmtEfP1x6j5zrod7acW7tVTkjomFs57YZS9x8cPV+VbvMfEAQd1hf6aH8d2h4rLuQ92TCc++
- yfU=
+IronPort-SDR: rOHM2/NdwKyhoADrQr6xmsGy23nLlMi25ZkCpP9C/OYuHcnV8b3Us/9EoLKLQT+akluBiyBtwc
+ F1zjZTwbH1tSc/zefZUwuy3QvHd0CO2JaH0pRye6aOCgL4X78Xx7s3Xw5ktqbwUtJPvTpL5TD0
+ wx23pM747VgnqmzpMTQI6WWKnkGLZKAGqsHJYkDEAG/rkcEyiptAzyCpZJKx0/xU8m+jlVhBh3
+ iJ32Lt9vRd6zwAStXeTtv2x41DSbMuSunEXzgeCBVmvpPrTtIAvzcBP8yzqP/HWGy+iP5V1gze
+ FEo=
 X-IronPort-AV: E=Sophos;i="5.64,332,1559491200"; 
-   d="scan'208";a="116247214"
+   d="scan'208";a="116247212"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 01 Aug 2019 08:58:40 +0800
-IronPort-SDR: J+ZG+bRmNQpySioU3qugfOU6n7N6Lgb/umSfSmC9EzbKPztV7oGqPrbmRIb8Xj5OdsmG+ZNmdQ
- 5dRUTZt9Y78htchK4Vw0XlIgzZPMYJClinQPoANQ012otwxfNwWn0173fFYpLRxg+4OXCp1Uvw
- 5guuSoB/sPjexN4bYtNmcJcmGLYONFXkFwxF3wrgvZgEyHqtEK4/709aJa0QrqwGijuXcG4kFR
- iDGX8dV3yrLJv0WJDaB1iZblhY/rl0U4ruGN7aHdBr+fztifGPILEgzG0RxXz+8Hb6K0g8uS21
- aCZWXjxdchSrZNrCCfDwoWYB
+  by ob1.hgst.iphmx.com with ESMTP; 01 Aug 2019 08:58:39 +0800
+IronPort-SDR: yNgY3SUWndxDXNUnG9G7TmKUcEmMauNvfPP/yzKTlCiapX6+IaUEsCXZio8PQf299YiqX/40oR
+ X4Q24vH2iFYf5I2Bur/Ev/jqFEDBBc4PlNUrbpzVrllMMoiglPSU/hHtb3S30LwcdAk+NqNQJB
+ whIZdZlo3rGe8mCNE5bgFBHn2eCx2bTDvAEURgosDQFxoeXUyVFvDZiYhR+Qxf9hHlI3Oyz5Xf
+ nX/zp7a5xS13VHnDsqhFGmylhWzNi/GrgjoVXM/E9mrcaaxMczLPDzEMxx0TpjVuQMSUceaxTM
+ Sq87PGoGb0SxEU0XHy+bVHRP
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 17:56:39 -0700
-IronPort-SDR: WfNKScKCSJLOm+bwKSqkTZLs6UXGdvplnSR2K1aC1Owz28W0cyBACGtINOxzf6kNaFOakw5sU7
- Jcht1d31lDGLyK+JEgOCCYQAOTkV34oz7QFcR85kYxv0LpE+vY8D/faTuV7lk2cA0SBtM5ZY7V
- 35dWVcunseKb27my3S42oddaIwPm2914UrNA4j2jDFOsOE/cYvnXWvVGcuK/0iIVu8SNzuF9IV
- 0SVjuBKV/swMjN+zDDrglszNuSuNk6LZ0vy5zlyoOX7QqD7Hd1PnpSBCueejD8PO/yAl7ZJIkt
- Aww=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2019 17:56:38 -0700
+IronPort-SDR: T1e0SzIcgbeidAWvNuNAvumncUxVHFgvFczii8DqmVoy1zBX2ca85sDt0rCgDOMxQrRYSX+HKO
+ efBEcAIq52JdipV1/Fm91RI8t24689ufuGuTcNBihFFFnfreVpC9XhebG4S+SPu7fGrT2D5+2l
+ bxLYDGQSf58/EzfB/WVCHKONjBgfuJ0zTuiVNKOOn/5FQ/fVaLhK1kEuKdKkTWNVw/80nbjeU7
+ qLyZfUErNvE5RlONJDFts1toTg3uTGG0UdaPOCLI4dqgA1Lac6v4VNz3rISwyJAvLjHrPS6Ihp
+ Tds=
 Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
   by uls-op-cesaip01.wdc.com with ESMTP; 31 Jul 2019 17:58:38 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
+Cc:     Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Allison Randal <allison@lohutok.net>,
-        Anup Patel <anup.patel@wdc.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>,
         Gary Guo <gary@garyguo.net>,
@@ -77,9 +76,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Rob Herring <robh+dt@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v3 3/5] RISC-V: Fix unsupported isa string info.
-Date:   Wed, 31 Jul 2019 17:58:41 -0700
-Message-Id: <20190801005843.10343-4-atish.patra@wdc.com>
+Subject: [PATCH v3 2/5] RISC-V: Add riscv_isa reprensenting ISA features common across CPUs
+Date:   Wed, 31 Jul 2019 17:58:40 -0700
+Message-Id: <20190801005843.10343-3-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190801005843.10343-1-atish.patra@wdc.com>
 References: <20190801005843.10343-1-atish.patra@wdc.com>
@@ -90,121 +89,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, kernel prints a info warning if any of the extensions
-from "mafdcsu" is missing in device tree. This is not entirely
-correct as Linux can boot with "f or d" extensions if kernel is
-configured accordingly. Moreover, it will continue to print the
-info string for future extensions such as hypervisor as well which
-is misleading. /proc/cpuinfo also doesn't print any other extensions
-except "mafdcsu".
+From: Anup Patel <anup.patel@wdc.com>
 
-Make sure that info log is only printed only if kernel is configured
-to have any mandatory extensions but device tree doesn't describe it.
-All the extensions present in device tree and follow the order
-described in the RISC-V specification (except 'S') are printed via
-/proc/cpuinfo always.
+This patch adds riscv_isa integer to represent ISA features common
+across all CPUs. The riscv_isa is not same as elf_hwcap because
+elf_hwcap will only have ISA features relevant for user-space apps
+whereas riscv_isa will have ISA features relevant to both kernel
+and user-space apps.
 
+One of the use case is KVM hypervisor where riscv_isa will be used
+to do following operations:
+
+1. Check whether hypervisor extension is available
+2. Find ISA features that need to be virtualized (e.g. floating
+   point support, vector extension, etc.)
+
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/riscv/kernel/cpu.c | 47 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 37 insertions(+), 10 deletions(-)
+ arch/riscv/include/asm/hwcap.h | 16 ++++++++++++++
+ arch/riscv/kernel/cpufeature.c | 39 +++++++++++++++++++++++++++++++---
+ 2 files changed, 52 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-index 7da3c6a93abd..9b1d4550fbe6 100644
---- a/arch/riscv/kernel/cpu.c
-+++ b/arch/riscv/kernel/cpu.c
-@@ -7,6 +7,7 @@
- #include <linux/seq_file.h>
- #include <linux/of.h>
+diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+index 7ecb7c6a57b1..717306780add 100644
+--- a/arch/riscv/include/asm/hwcap.h
++++ b/arch/riscv/include/asm/hwcap.h
+@@ -22,5 +22,21 @@ enum {
+ };
+ 
+ extern unsigned long elf_hwcap;
++
++#define RISCV_ISA_EXT_a		(1UL << ('a' - 'a'))
++#define RISCV_ISA_EXT_c		(1UL << ('c' - 'a'))
++#define RISCV_ISA_EXT_d		(1UL << ('d' - 'a'))
++#define RISCV_ISA_EXT_f		(1UL << ('f' - 'a'))
++#define RISCV_ISA_EXT_h		(1UL << ('h' - 'a'))
++#define RISCV_ISA_EXT_i		(1UL << ('i' - 'a'))
++#define RISCV_ISA_EXT_m		(1UL << ('m' - 'a'))
++#define RISCV_ISA_EXT_s		(1UL << ('s' - 'a'))
++#define RISCV_ISA_EXT_u		(1UL << ('u' - 'a'))
++
++extern unsigned long riscv_isa;
++
++#define riscv_isa_extension_available(ext_char)	\
++		(riscv_isa & RISCV_ISA_EXT_##ext_char)
++
+ #endif
+ #endif
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index b1ade9a49347..becc99272341 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -12,6 +12,9 @@
  #include <asm/smp.h>
-+#include <asm/hwcap.h>
  
- /*
-  * Returns the hart ID of the given device tree node, or -ENODEV if the node
-@@ -46,11 +47,14 @@ int riscv_of_processor_hartid(struct device_node *node)
- 
- #ifdef CONFIG_PROC_FS
- 
--static void print_isa(struct seq_file *f, const char *orig_isa)
-+static void print_isa(struct seq_file *f, const char *orig_isa,
-+		      unsigned long cpuid)
+ unsigned long elf_hwcap __read_mostly;
++unsigned long riscv_isa __read_mostly;
++EXPORT_SYMBOL_GPL(riscv_isa);
++
+ #ifdef CONFIG_FPU
+ bool has_fpu __read_mostly;
+ #endif
+@@ -20,7 +23,8 @@ void riscv_fill_hwcap(void)
  {
--	static const char *ext = "mafdcsu";
-+	static const char *mandatory_ext = "mafdcsu";
- 	const char *isa = orig_isa;
- 	const char *e;
-+	char unsupported_isa[26] = {0};
-+	int index = 0;
+ 	struct device_node *node;
+ 	const char *isa;
+-	size_t i;
++	char print_str[BITS_PER_LONG+1];
++	size_t i, j, isa_len;
+ 	static unsigned long isa2hwcap[256] = {0};
  
- 	/*
- 	 * Linux doesn't support rv32e or rv128i, and we only support booting
-@@ -70,27 +74,50 @@ static void print_isa(struct seq_file *f, const char *orig_isa)
- 	isa += 5;
+ 	isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
+@@ -31,9 +35,11 @@ void riscv_fill_hwcap(void)
+ 	isa2hwcap['c'] = isa2hwcap['C'] = COMPAT_HWCAP_ISA_C;
  
- 	/*
--	 * Check the rest of the ISA string for valid extensions, printing those
--	 * we find.  RISC-V ISA strings define an order, so we only print the
-+	 * RISC-V ISA strings define an order, so we only print all the
- 	 * extension bits when they're in order. Hide the supervisor (S)
- 	 * extension from userspace as it's not accessible from there.
-+	 * Throw a warning only if any mandatory extensions are not available
-+	 * and kernel is configured to have that mandatory extensions.
- 	 */
--	for (e = ext; *e != '\0'; ++e) {
--		if (isa[0] == e[0]) {
-+	for (e = mandatory_ext; *e != '\0'; ++e) {
-+		if (isa[0] != e[0]) {
-+#if defined(CONFIG_ISA_RISCV_C)
-+			if (isa[0] == 'c')
-+				continue;
-+#endif
-+#if defined(CONFIG_FP)
-+			if ((isa[0] == 'f') || (isa[0] == 'd'))
-+				continue;
-+#endif
-+			unsupported_isa[index] = e[0];
-+			index++;
-+		}
-+		/* Only write if part of isa string */
-+		if (isa[0] != '\0') {
- 			if (isa[0] != 's')
- 				seq_write(f, isa, 1);
--
- 			isa++;
+ 	elf_hwcap = 0;
++	riscv_isa = 0;
+ 
+ 	for_each_of_cpu_node(node) {
+ 		unsigned long this_hwcap = 0;
++		unsigned long this_isa = 0;
+ 
+ 		if (riscv_of_processor_hartid(node) < 0)
+ 			continue;
+@@ -43,8 +49,20 @@ void riscv_fill_hwcap(void)
+ 			continue;
  		}
- 	}
-+	if (isa[0] != '\0') {
-+		/* Add remainging isa strings */
-+		for (e = isa; *e != '\0'; ++e) {
-+#if !defined(CONFIG_VIRTUALIZATION)
-+			if (e[0] != 'h')
+ 
+-		for (i = 0; i < strlen(isa); ++i)
++		i = 0;
++		isa_len = strlen(isa);
++#if defined(CONFIG_32BIT)
++		if (!strncmp(isa, "rv32", 4))
++			i += 4;
++#elif defined(CONFIG_64BIT)
++		if (!strncmp(isa, "rv64", 4))
++			i += 4;
 +#endif
-+				seq_write(f, e, 1);
++		for (; i < isa_len; ++i) {
+ 			this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
++			if ('a' <= isa[i] && isa[i] <= 'z')
++				this_isa |= (1UL << (isa[i] - 'a'));
 +		}
-+	}
- 	seq_puts(f, "\n");
  
- 	/*
- 	 * If we were given an unsupported ISA in the device tree then print
- 	 * a bit of info describing what went wrong.
- 	 */
--	if (isa[0] != '\0')
--		pr_info("unsupported ISA \"%s\" in device tree\n", orig_isa);
-+	if (unsupported_isa[0])
-+		pr_info("unsupported ISA extensions \"%s\" in device tree for cpu [%ld]\n",
-+			unsupported_isa, cpuid);
- }
+ 		/*
+ 		 * All "okay" hart should have same isa. Set HWCAP based on
+@@ -55,6 +73,11 @@ void riscv_fill_hwcap(void)
+ 			elf_hwcap &= this_hwcap;
+ 		else
+ 			elf_hwcap = this_hwcap;
++
++		if (riscv_isa)
++			riscv_isa &= this_isa;
++		else
++			riscv_isa = this_isa;
+ 	}
  
- static void print_mmu(struct seq_file *f, const char *mmu_type)
-@@ -134,7 +161,7 @@ static int c_show(struct seq_file *m, void *v)
- 	seq_printf(m, "processor\t: %lu\n", cpu_id);
- 	seq_printf(m, "hart\t\t: %lu\n", cpuid_to_hartid_map(cpu_id));
- 	if (!of_property_read_string(node, "riscv,isa", &isa))
--		print_isa(m, isa);
-+		print_isa(m, isa, cpu_id);
- 	if (!of_property_read_string(node, "mmu-type", &mmu))
- 		print_mmu(m, mmu);
- 	if (!of_property_read_string(node, "compatible", &compat)
+ 	/* We don't support systems with F but without D, so mask those out
+@@ -64,7 +87,17 @@ void riscv_fill_hwcap(void)
+ 		elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
+ 	}
+ 
+-	pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
++	memset(print_str, 0, sizeof(print_str));
++	for (i = 0, j = 0; i < BITS_PER_LONG; i++)
++		if (riscv_isa & (1UL << i))
++			print_str[j++] = (char)('a' + i);
++	pr_info("riscv: ISA extensions %s\n", print_str);
++
++	memset(print_str, 0, sizeof(print_str));
++	for (i = 0, j = 0; i < BITS_PER_LONG; i++)
++		if (elf_hwcap & (1UL << i))
++			print_str[j++] = (char)('a' + i);
++	pr_info("riscv: ELF capabilities %s\n", print_str);
+ 
+ #ifdef CONFIG_FPU
+ 	if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
 -- 
 2.21.0
 
