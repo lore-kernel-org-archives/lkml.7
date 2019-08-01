@@ -2,97 +2,99 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461A7C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AB5C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0459D20657
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:54:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="heFvJM+J"
+	by mail.kernel.org (Postfix) with ESMTP id C1EEF20657
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732701AbfHAWyg (ORCPT
+        id S2388182AbfHAW5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:54:36 -0400
-Received: from ozlabs.org ([203.11.71.1]:36781 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbfHAWyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:54:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4605G14P6cz9sBF;
-        Fri,  2 Aug 2019 08:54:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564700074;
-        bh=vfB0PlSfZUaGhjdBBzcDVT9V+GFGFz0aXzxBSr5tYbI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=heFvJM+JgyliVVXnqA/92gpaH4ACiXuzUPiyrnRYmt9PJD0cPFdfs6ES3jGK7PoLZ
-         +QSBrVFwl/YC1gbBTyOqDggTGGCKAc70aGM3Bs0sR6Qt7hbfikfuH6CMH7OnyVBNLU
-         x3KE4b3gi7iwWd5mgZTTUCDyb/WUtJA9z9jM+ww6oXl9BChPSmWclD+KNkkLFxBT3i
-         ZuVRID6wLIZdC7rNBGIfX6//OccjT7xkGIByuiY002ivgpI8YIKPFJy3zL4XnbxM84
-         BR3PRbql+uFPeYleBOf4amYU6q03HV0GvA7nj/rj4QUdtTOAmihNe5nUghGvdBaBVc
-         5L0N9yGd4a36w==
-Date:   Fri, 2 Aug 2019 08:54:26 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jon Maloy <jon.maloy@ericsson.com>
-Subject: linux-next: Fixes tag needs some work in the net-next tree
-Message-ID: <20190802085426.66fb56f4@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/J0Lv5DcJQ6SDaZpXlB+mWzZ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Thu, 1 Aug 2019 18:57:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30778 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732775AbfHAW5T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 18:57:19 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71Mv9pf137001
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 18:57:18 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u45u879ns-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:57:17 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 1 Aug 2019 23:57:16 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 1 Aug 2019 23:57:11 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MvBEJ55902348
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 1 Aug 2019 22:57:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8550AE051;
+        Thu,  1 Aug 2019 22:57:10 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC172AE04D;
+        Thu,  1 Aug 2019 22:57:09 +0000 (GMT)
+Received: from dhcp-9-31-103-47.watson.ibm.com (unknown [9.31.103.47])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  1 Aug 2019 22:57:09 +0000 (GMT)
+Subject: Re: [PATCH] ima: Allow to import the blacklisted cert signed by
+ secondary CA cert
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Jia Zhang <zhang.jia@linux.alibaba.com>, dhowells@redhat.com,
+        dmitry.kasatkin@gmail.com
+Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Mark D. Baushke" <mdb@juniper.net>,
+        Petko Manolov <petkan@mip-labs.com>
+Date:   Thu, 01 Aug 2019 18:57:09 -0400
+In-Reply-To: <1564622625-112173-1-git-send-email-zhang.jia@linux.alibaba.com>
+References: <1564622625-112173-1-git-send-email-zhang.jia@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19080122-0012-0000-0000-00000338828B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080122-0013-0000-0000-000021723110
+Message-Id: <1564700229.11223.9.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908010242
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/J0Lv5DcJQ6SDaZpXlB+mWzZ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Jia,
 
-Hi all,
+On Thu, 2019-08-01 at 09:23 +0800, Jia Zhang wrote:
+> Similar to .ima, the cert imported to .ima_blacklist is able to be
+> authenticated by a secondary CA cert.
+> 
+> Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
 
-In commit
+The IMA blacklist, which is defined as experimental for a reason, was
+upstreamed prior to the system blacklist.  Any reason you're not using
+the system blacklist?  Before making this sort of change, I'd like
+some input from others.
 
-  7c5b42055964 ("tipc: reduce risk of wakeup queue starvation")
+thanks,
 
-Fixes tag
+Mimi
 
-  Fixes: 365ad35 ("tipc: reduce risk of user starvation during link congest=
-ion")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/J0Lv5DcJQ6SDaZpXlB+mWzZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1DbaIACgkQAVBC80lX
-0GyPhwf/Qk9AZcE6BYl31aA4dv5G6WA45FeOZMAFF/l9aepJduu3agdapST7gilf
-a4aJ94qky0fu8EMfwGZsfKoyAhpbF9aQr24hss259FF8RHioDe+mc3ynHrwaMf06
-1cCcj509ih9AZ9oRfOZzOjPtAXoxrGQ5GboUKGhnAcBde2r4Xrm9VBujuMl8Elq3
-rdUbi+09xTgQnj7plPW6HO5B+Mq33amc8EHLNyWNERHHTFPb6/yXCV2l8rvIhCbD
-SIZEzfR51BLoQ6MJifmpVJfIlc8riOTV0YaT/IWhZSCptIffSn8YsEy89RiPERlJ
-5BlPFaWUR0jm0Ka1EAgz0x8jKui0NQ==
-=kqED
------END PGP SIGNATURE-----
-
---Sig_/J0Lv5DcJQ6SDaZpXlB+mWzZ--
