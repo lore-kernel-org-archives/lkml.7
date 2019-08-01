@@ -2,87 +2,72 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F111EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D809C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC1C216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3413220838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:18:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WGHtRa0y"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="ArFvHgLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730789AbfHAMRW (ORCPT
+        id S1730836AbfHAMSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:17:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50324 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfHAMRW (ORCPT
+        Thu, 1 Aug 2019 08:18:03 -0400
+Received: from sender-pp-o92.zoho.com ([135.84.80.237]:25489 "EHLO
+        sender-pp-o92.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfHAMSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:17:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dee5olqt7XlPjLLePVsNMyNo/Zg/J+KeegX7G29ctJE=; b=WGHtRa0yUM09pDDHuuiKDR7pv
-        Pc3RFPJ1ikPHPGDtq379yWvLkjIGHBmehZWJjh1q2+0kKs/RxRzY+T0TOcGQRn8TXQ36H13My5gjU
-        CaPk/hQEQwfast7p/7GOiTo11kk9mbEb0xuNk6FCVMaf96BURliBjRWb6BqUuv2CA+4KOprotj4Q1
-        SCchH46ixelfj0caeUsXRSqGp/MwebEFEmqXRhaxoY8ugFwCTQ9DwLYH2R5X9L1JKE+xfk1GE7mQo
-        Reo+CvQJlxglqQP5ZtPVWT7j2pS2HVHOp6PqPm/FJ7p8Q3yTViiVKQJpXR/7851AamZGI0RFufw3W
-        5cpXbUERA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1htA1H-0007KB-VP; Thu, 01 Aug 2019 12:17:20 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 632452029F4C5; Thu,  1 Aug 2019 14:17:18 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 14:17:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        Doug Anderson <dianders@google.com>
-Subject: Re: [PATCH 5/5] spi: Reduce kthread priority
-Message-ID: <20190801121718.GE31381@hirez.programming.kicks-ass.net>
-References: <20190801111348.530242235@infradead.org>
- <20190801111541.917256884@infradead.org>
- <640721f8-8a20-b161-473f-98a9dbc053cc@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <640721f8-8a20-b161-473f-98a9dbc053cc@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 1 Aug 2019 08:18:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1564661852; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=MQX0XvzBAMLn2m2cyb05mDOsj4CZfCuyYdSt4Ym/sfAI7oka4wWAImv2uYEYIRZWOABPCbisWtmxCspxtdqZp20n2+MyBYZaVbph4AJ9NiHRq8TVOThi0ccuEamTe8SFFlujICXaU8ZCAtF0E+PWNs1R3kN1qawKfSwobscTFrg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1564661852; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
+        bh=kJKEr88bIEfPIQzI901c1rM9db7qmdDjtUh5J1gMv3I=; 
+        b=aVq3gqq7j3GHzbL2H1TVUcql2Uqy/zyFYbub5VCSCUGOk31FGKl0BheugEu4bu3gomjwAOa9syY+evBWrZHJarsv1Z4qV6CHGS5xF2K6RpxTufrjzBqfCT089/YpXR4u3RRMdG9W+Snk3m3scF7r46/JXhBlTmqWJ2145P9BmX8=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=mh5cTJAQ3xJYbtOdXBjWDfvQbK/g4c8+mf5mWkXuhe+F2x9vk2p3fAegIXSQL+8oAJ3nWAqlo5sw
+    95IH2a7RldDWcQZgsTE1P9XUCKIQxOA+J9gZYHmwvpSTAkD8xeCg  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1564661852;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; l=147;
+        bh=kJKEr88bIEfPIQzI901c1rM9db7qmdDjtUh5J1gMv3I=;
+        b=ArFvHgLE9StdNTNO7i/J8PF1RGzoH9hEL2IFFbn3gj/gI3cxdMVK9JkiB/K+KGm5
+        zNAz6jPRDevV73XAIw/SpH9939PJp8TQ+i6xY0H7qaWr7S1Pcg5Ud18optiH85tCbVG
+        wrxEEVGREj2hyff9xvsvbxcS1Ka6SLtJKIPQQMm4=
+Received: from localhost.localdomain (171.221.113.137 [171.221.113.137]) by mx.zohomail.com
+        with SMTPS id 15646618517311010.5135306108771; Thu, 1 Aug 2019 05:17:31 -0700 (PDT)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, ralf@linux-mips.org,
+        paul@crapouillou.net, paul.burton@mips.com, jhogan@kernel.org,
+        malat@debian.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
+        allison@lohutok.net, syq@debian.org, chenhc@lemote.com,
+        jiaxun.yang@flygoat.com
+Subject: MIPS: Ingenic: Fix bugs when detecting X1000's parameters v3
+Date:   Thu,  1 Aug 2019 20:16:29 +0800
+Message-Id: <1564661791-47731-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564498510-3751-1-git-send-email-zhouyanjie@zoho.com>
+References: <1564498510-3751-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 01:27:04PM +0200, Enric Balletbo i Serra wrote:
-> 
-> cc'ing Doug as he might be really interested on this patch
-> 
-> On 1/8/19 13:13, Peter Zijlstra wrote:
-> > The SPI thingies request FIFO-99 by default, reduce this to FIFO-50.
-> > 
-> 
-> You say below that is not a suitable default but there is any other reason? Did
-> you observed problems with this?
+v1->v2: Use "set_c0_config7(BIT(4))" to simplify code and add comment.
+v2->v3: Split patch and use "MIPS_CONF7_BTB_LOOP_EN" to instead "BIT(4)".
 
-I didn't observe any problems with it personally. But imagine your
-device is used to control something critical, like something leathal,
-say a bandsaw. And just as you stick your hand through the laser
-guarding it, your SPI device chirps and preempts the task that was about
-to pull the emergency break and save your hand.
-
-FIFO-99 is the highest possible prio (for SCHED_FIFO) and by using it
-you say your task is the utmost imporant task on the system.
-
-I'm thinking that isn't true 99% of the time, except of course when that
-bandsaw emergency break is attached through SPI, but in that case the
-admin can very well chrt the prio of this thread.
 
