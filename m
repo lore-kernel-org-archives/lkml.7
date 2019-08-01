@@ -7,61 +7,67 @@ X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813FDC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA2C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9BB21726
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F83206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="43DuNY+p"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CIUuwPXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbfHADtt (ORCPT
+        id S1729033AbfHADxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 23:49:49 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:52818 "EHLO vps0.lunn.ch"
+        Wed, 31 Jul 2019 23:53:25 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52852 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbfHADts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 23:49:48 -0400
+        id S1726817AbfHADxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 23:53:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=PCDCXPclZrwxUwVB2c1/+btvEFjLvl7BH9rUBUTKiAU=; b=43DuNY+pWH5AkPKI3hZaLtmM2U
-        x6RirTgfV4Xge3j5URn48cNp0djrarhSL5zqZAbwGguqU4QXejlwmWjJJId4nbUASuZ1jtL7qA4oS
-        L9b5XMeKTJsyjWcdA8EIJg6FCciYHmRS7CGu909sVJ0d/NSm4apIltL4eXgqXjG3YePM=;
+        bh=i+xiGwhXdJqGFKHqNYypzsb8d9FKCTcmAUxJJlCFCNI=; b=CIUuwPXn0RK28+cotr87ARLIvL
+        mS9mHR9aQTtLi8bLMfnrNg3BENvxGbcSp8+LRgyLGeQ67jlmHoXSvu2U7pDZCsvEA44gqmGIoj0Fu
+        1RhUrkitFjyGylmeRoH8fuwuppTxVQk7Y3NKHwhDKdMK4qEtH5bndaS58/EQ0DiznRTI=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
         (envelope-from <andrew@lunn.ch>)
-        id 1ht266-0001Ic-HX; Thu, 01 Aug 2019 05:49:46 +0200
-Date:   Thu, 1 Aug 2019 05:49:46 +0200
+        id 1ht29T-0001Lk-96; Thu, 01 Aug 2019 05:53:15 +0200
+Date:   Thu, 1 Aug 2019 05:53:15 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
-To:     Hubert Feurstein <h.feurstein@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Richard Cochran <richardcochran@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: Re: [PATCH net-next v2 6/6] net: dsa: mv88e6xxx: add PTP support for
- MV88E6250 family
-Message-ID: <20190801034946.GF2713@lunn.ch>
-References: <20190731082351.3157-1-h.feurstein@gmail.com>
- <20190731082351.3157-7-h.feurstein@gmail.com>
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, joel@jms.id.au, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 2/4] net: phy: Add mdio-aspeed
+Message-ID: <20190801035315.GG2713@lunn.ch>
+References: <20190731053959.16293-1-andrew@aj.id.au>
+ <20190731053959.16293-3-andrew@aj.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190731082351.3157-7-h.feurstein@gmail.com>
+In-Reply-To: <20190731053959.16293-3-andrew@aj.id.au>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 10:23:51AM +0200, Hubert Feurstein wrote:
-> This adds PTP support for the MV88E6250 family.
+On Wed, Jul 31, 2019 at 03:09:57PM +0930, Andrew Jeffery wrote:
+> The AST2600 design separates the MDIO controllers from the MAC, which is
+> where they were placed in the AST2400 and AST2500. Further, the register
+> interface is reworked again, so now we have three possible different
+> interface implementations, however this driver only supports the
+> interface provided by the AST2600. The AST2400 and AST2500 will continue
+> to be supported by the MDIO support embedded in the FTGMAC100 driver.
 > 
-> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
+> The hardware supports both C22 and C45 mode, but for the moment only C22
+> support is implemented.
+> 
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
