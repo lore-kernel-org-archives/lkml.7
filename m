@@ -2,176 +2,70 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A65C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D20C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B001A21726
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC8421726
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 03:46:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CpdAgIcn"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WGw5Zol7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbfHADqA (ORCPT
+        id S1730502AbfHADqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 23:46:00 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43505 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730119AbfHADpN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 23:45:13 -0400
-Received: by mail-pl1-f194.google.com with SMTP id 4so24505371pld.10
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 20:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=lvGyWsNyP9Bb7DvqACymLRZDyyMjKAZBXEluuc9xeZo=;
-        b=CpdAgIcnEs1v23uEn8j393vhUG7E5P7b2dTor0b0ONtrkdl+hYKhIpnkkCubMGKMZV
-         VOaAdqQKwfl87lx5n4WHIlP0bR4JOc2tetuKP68OFxD5m1APnFeoZCl3zU109lzr4Bm8
-         mBifG3ZBmjOFszCeB/XiWO8Z+5KdbK+61O+hql3YC7yQdXicqiLW36RXNA/mOBnZSpPh
-         mpuuaHrQ4I4LKbLf27A1tVEhOiAGSp5Uh5e5LN2vhwaKmyVhcIqto9sUnT+EEk/FFK9y
-         ze/JyJmacR+OS8H4uTNBDIzhHJ15RX5wqmBMNO5XSZ3A6ZyqWIlaesIfCqWSggdvJBFX
-         dvGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=lvGyWsNyP9Bb7DvqACymLRZDyyMjKAZBXEluuc9xeZo=;
-        b=s+VXrEaM5lrt2UsyIYhrxo/RX6LqTTEGZv8D9BA2v9FwzVlOIIvnKHxQfr00Lw8iMC
-         5WqVFTbOqKT+qcLknc3QjsZkAaUxS5yTbmis63WCn11SOa2f/cmtJsedy6vGObyJIDlm
-         ghUROBDK2kNMQjhCSyw5aRiKpcQfCYRz7aO7sfRebfm9GPL5hd7vwRzv4/Psc7GuDWuo
-         //prYQPSGthHRPfzZSaC1OWGyd+qwCMJKUDeGnLhOG27gJJre3e8dbjcwd31X63L+RXp
-         XdoX9r+vXXww2I/Q6ycoxEuhbolUOtod3RdSmTBOQQbj0Njsf15UXN2gM2BG2Pmxa1B8
-         pCew==
-X-Gm-Message-State: APjAAAWKaVwfOAJNPO5GJrM+LhlqbS6IIH8TXwusQZw/83iSYhC1ud+m
-        CO3RYrmao6bk7yP4k5e0VA9n0vBAqp8=
-X-Google-Smtp-Source: APXvYqylc9ummDBci5gA3r5mxBzsQHl8bSaQwM8mWZUpp1YAXcP9uhE5n/+pzVs3T0qqoxO5HW5crw==
-X-Received: by 2002:a17:902:724a:: with SMTP id c10mr115381435pll.298.1564631112233;
-        Wed, 31 Jul 2019 20:45:12 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id h70sm64775674pgc.36.2019.07.31.20.45.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 20:45:11 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Xu YiPing <xuyiping@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v3 17/26] drm: kirin: Move plane number and primay plane in driver data
-Date:   Thu,  1 Aug 2019 03:44:30 +0000
-Message-Id: <20190801034439.98227-18-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190801034439.98227-1-john.stultz@linaro.org>
-References: <20190801034439.98227-1-john.stultz@linaro.org>
+        Wed, 31 Jul 2019 23:46:06 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52784 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730413AbfHADp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 23:45:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=FTPM3csely9s2zFjlouoeuv0HtNJCvzMK22CfSdrkWk=; b=WGw5Zol78L39eiMcggNoSq52xq
+        ZCM69o62mAwiMmFqlWkIFlcWAoiYE2oeCfFit/7OS821z0Mz2Y9Ccp7Cd+2prQI7CEOYluus/kEBY
+        9QFJmmh1i+j0Q4cOk7MaH8Ef5ljXAld4nY0GBai1qVi+xa8r3u2mle2nSRu5VFJlhdPc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ht22N-0001Eg-EG; Thu, 01 Aug 2019 05:45:55 +0200
+Date:   Thu, 1 Aug 2019 05:45:55 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Hubert Feurstein <h.feurstein@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH net-next v2 3/6] net: dsa: mv88e6xxx: introduce
+ invalid_port_mask in mv88e6xxx_info
+Message-ID: <20190801034555.GD2713@lunn.ch>
+References: <20190731082351.3157-1-h.feurstein@gmail.com>
+ <20190731082351.3157-4-h.feurstein@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731082351.3157-4-h.feurstein@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu YiPing <xuyiping@hisilicon.com>
+On Wed, Jul 31, 2019 at 10:23:48AM +0200, Hubert Feurstein wrote:
+> With this it is possible to mark certain chip ports as invalid. This is
+> required for example for the MV88E6220 (which is in general a MV88E6250
+> with 7 ports) but the ports 2-4 are not routed to pins.
+> 
+> If a user configures an invalid port, an error is returned.
+> 
+> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
 
-As part of refactoring the kirin driver to better support
-different hardware revisions, this patch moves the number of
-planes and the primary plane value to the kirin_drm_data
-structure
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-This will make it easier to add support for new devices
-via a new kirin_drm_data structure.
-
-Cc: Rongrong Zou <zourongrong@gmail.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   | 21 ++++++++++++-------
- .../gpu/drm/hisilicon/kirin/kirin_drm_drv.h   |  2 ++
- 2 files changed, 15 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-index bca080e14009..fc0f4c04d1c9 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-@@ -35,7 +35,6 @@
- #include "kirin_drm_drv.h"
- #include "kirin_ade_reg.h"
- 
--#define PRIMARY_CH	ADE_CH1 /* primary plane */
- #define OUT_OVLY	ADE_OVLY2 /* output overlay compositor */
- #define ADE_DEBUG	1
- 
-@@ -991,7 +990,7 @@ static int ade_drm_init(struct platform_device *pdev)
- 	struct kirin_plane *kplane;
- 	enum drm_plane_type type;
- 	int ret;
--	int i;
-+	u32 ch;
- 
- 	ade = devm_kzalloc(dev->dev, sizeof(*ade), GFP_KERNEL);
- 	if (!ade) {
-@@ -1015,12 +1014,15 @@ static int ade_drm_init(struct platform_device *pdev)
- 	 * TODO: Now only support primary plane, overlay planes
- 	 * need to do.
- 	 */
--	for (i = 0; i < ADE_CH_NUM; i++) {
--		kplane = &ade->planes[i];
--		kplane->ch = i;
-+	for (ch = 0; ch < ade_driver_data.num_planes; ch++) {
-+		kplane = &ade->planes[ch];
-+		kplane->ch = ch;
- 		kplane->hw_ctx = ctx;
--		type = i == PRIMARY_CH ? DRM_PLANE_TYPE_PRIMARY :
--			DRM_PLANE_TYPE_OVERLAY;
-+
-+		if (ch == ade_driver_data.prim_plane)
-+			type = DRM_PLANE_TYPE_PRIMARY;
-+		else
-+			type = DRM_PLANE_TYPE_OVERLAY;
- 
- 		ret = ade_plane_init(dev, kplane, type);
- 		if (ret)
-@@ -1028,7 +1030,8 @@ static int ade_drm_init(struct platform_device *pdev)
- 	}
- 
- 	/* crtc init */
--	ret = ade_crtc_init(dev, &kcrtc->base, &ade->planes[PRIMARY_CH].base);
-+	ret = ade_crtc_init(dev, &kcrtc->base,
-+				&ade->planes[ade_driver_data.prim_plane].base);
- 	if (ret)
- 		return ret;
- 
-@@ -1047,6 +1050,8 @@ static const struct drm_mode_config_funcs ade_mode_config_funcs = {
- };
- 
- struct kirin_drm_data ade_driver_data = {
-+	.num_planes = ADE_CH_NUM,
-+	.prim_plane = ADE_CH1,
- 	.channel_formats = channel_formats,
- 	.channel_formats_cnt = ARRAY_SIZE(channel_formats),
- 	.crtc_helper_funcs = &ade_crtc_helper_funcs,
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-index ce9ddccc67a8..2b660df60293 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-@@ -37,6 +37,8 @@ struct kirin_plane {
- struct kirin_drm_data {
- 	const u32 *channel_formats;
- 	u32 channel_formats_cnt;
-+	u32 num_planes;
-+	u32 prim_plane;
- 
- 	const struct drm_crtc_helper_funcs *crtc_helper_funcs;
- 	const struct drm_crtc_funcs *crtc_funcs;
--- 
-2.17.1
-
+    Andrew
