@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428A6C32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3696C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8A020665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02B620665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732715AbfHAP0N (ORCPT
+        id S1732755AbfHAP0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:26:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58422 "EHLO mx1.redhat.com"
+        Thu, 1 Aug 2019 11:26:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38008 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731484AbfHAP0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:26:12 -0400
+        id S1732735AbfHAP0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 11:26:17 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EFE0B927BF;
-        Thu,  1 Aug 2019 15:26:11 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id EB6FE3179B5F;
+        Thu,  1 Aug 2019 15:26:16 +0000 (UTC)
 Received: from steredhat.redhat.com (ovpn-117-63.ams2.redhat.com [10.36.117.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ED24A600D1;
-        Thu,  1 Aug 2019 15:26:09 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CB2F5600D1;
+        Thu,  1 Aug 2019 15:26:14 +0000 (UTC)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     netdev@vger.kernel.org
 Cc:     kvm@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
@@ -35,76 +35,93 @@ Cc:     kvm@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jorgen Hansen <jhansen@vmware.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/11] VSOCK: add vsock_get_local_cid() test utility
-Date:   Thu,  1 Aug 2019 17:25:38 +0200
-Message-Id: <20190801152541.245833-9-sgarzare@redhat.com>
+Subject: [PATCH v2 10/11] vsock_test: skip read() in test_stream*close tests on a VMCI host
+Date:   Thu,  1 Aug 2019 17:25:40 +0200
+Message-Id: <20190801152541.245833-11-sgarzare@redhat.com>
 In-Reply-To: <20190801152541.245833-1-sgarzare@redhat.com>
 References: <20190801152541.245833-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 01 Aug 2019 15:26:12 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 01 Aug 2019 15:26:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds utility to get local CID, useful to
-understand if we are in the host or guest.
+When VMCI transport is used, if the guest closes a connection,
+all data is gone and EOF is returned, so we should skip the read
+of data written by the peer before closing the connection.
 
+Reported-by: Jorgen Hansen <jhansen@vmware.com>
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- tools/testing/vsock/util.c | 17 +++++++++++++++++
- tools/testing/vsock/util.h |  1 +
- 2 files changed, 18 insertions(+)
+ tools/testing/vsock/vsock_test.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
-index d46a6e079b96..41b94495ecb1 100644
---- a/tools/testing/vsock/util.c
-+++ b/tools/testing/vsock/util.c
-@@ -13,6 +13,7 @@
- #include <stdlib.h>
- #include <signal.h>
- #include <unistd.h>
-+#include <assert.h>
+diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+index cb606091489f..64adf45501ca 100644
+--- a/tools/testing/vsock/vsock_test.c
++++ b/tools/testing/vsock/vsock_test.c
+@@ -71,6 +71,7 @@ static void test_stream_client_close_client(const struct test_opts *opts)
  
- #include "timeout.h"
- #include "control.h"
-@@ -44,6 +45,22 @@ unsigned int parse_cid(const char *str)
- 	return n;
+ static void test_stream_client_close_server(const struct test_opts *opts)
+ {
++	unsigned int local_cid;
+ 	int fd;
+ 
+ 	fd = vsock_stream_accept(VMADDR_CID_ANY, 1234, NULL);
+@@ -79,16 +80,27 @@ static void test_stream_client_close_server(const struct test_opts *opts)
+ 		exit(EXIT_FAILURE);
+ 	}
+ 
++	local_cid = vsock_get_local_cid(fd);
++
+ 	control_expectln("CLOSED");
+ 
+ 	send_byte(fd, -EPIPE);
+-	recv_byte(fd, 1);
++
++	/* Skip the read of data wrote by the peer if we are on VMCI and
++	 * we are on the host side, because when the guest closes a
++	 * connection, all data is gone and EOF is returned.
++	 */
++	if (!(opts->transport == TEST_TRANSPORT_VMCI &&
++	    local_cid == VMADDR_CID_HOST))
++		recv_byte(fd, 1);
++
+ 	recv_byte(fd, 0);
+ 	close(fd);
  }
  
-+/* Get the local CID */
-+unsigned int vsock_get_local_cid(int fd)
-+{
-+	struct sockaddr_vm svm;
-+	socklen_t svm_len = sizeof(svm);
-+
-+	if (getsockname(fd, (struct sockaddr *) &svm, &svm_len)) {
-+		perror("getsockname");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	assert(svm.svm_family == AF_VSOCK);
-+
-+	return svm.svm_cid;
-+}
-+
- /* Connect to <cid, port> and return the file descriptor. */
- int vsock_stream_connect(unsigned int cid, unsigned int port)
+ static void test_stream_server_close_client(const struct test_opts *opts)
  {
-diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
-index fe524d393d67..379e02ab59bb 100644
---- a/tools/testing/vsock/util.h
-+++ b/tools/testing/vsock/util.h
-@@ -36,6 +36,7 @@ unsigned int parse_cid(const char *str);
- int vsock_stream_connect(unsigned int cid, unsigned int port);
- int vsock_stream_accept(unsigned int cid, unsigned int port,
- 			struct sockaddr_vm *clientaddrp);
-+unsigned int vsock_get_local_cid(int fd);
- void send_byte(int fd, int expected_ret);
- void recv_byte(int fd, int expected_ret);
- void run_tests(const struct test_case *test_cases,
++	unsigned int local_cid;
+ 	int fd;
+ 
+ 	fd = vsock_stream_connect(opts->peer_cid, 1234);
+@@ -97,10 +109,20 @@ static void test_stream_server_close_client(const struct test_opts *opts)
+ 		exit(EXIT_FAILURE);
+ 	}
+ 
++	local_cid = vsock_get_local_cid(fd);
++
+ 	control_expectln("CLOSED");
+ 
+ 	send_byte(fd, -EPIPE);
+-	recv_byte(fd, 1);
++
++	/* Skip the read of data wrote by the peer if we are on VMCI and
++	 * we are on the host side, because when the guest closes a
++	 * connection, all data is gone and EOF is returned.
++	 */
++	if (!(opts->transport == TEST_TRANSPORT_VMCI &&
++	    local_cid == VMADDR_CID_HOST))
++		recv_byte(fd, 1);
++
+ 	recv_byte(fd, 0);
+ 	close(fd);
+ }
 -- 
 2.20.1
 
