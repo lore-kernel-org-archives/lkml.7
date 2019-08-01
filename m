@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EECC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7743BC32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44764214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D4C20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730830AbfHAIks (ORCPT
+        id S1730876AbfHAIky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:40:48 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:46666 "EHLO inva021.nxp.com"
+        Thu, 1 Aug 2019 04:40:54 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:60360 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730766AbfHAIkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:40:45 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 58947200B50;
-        Thu,  1 Aug 2019 10:40:44 +0200 (CEST)
+        id S1728296AbfHAIko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 04:40:44 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CBC9C1A0306;
+        Thu,  1 Aug 2019 10:40:42 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F2067200B6B;
-        Thu,  1 Aug 2019 10:40:38 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6F4F41A029F;
+        Thu,  1 Aug 2019 10:40:37 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2712F402C4;
-        Thu,  1 Aug 2019 16:40:32 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 131D4402D7;
+        Thu,  1 Aug 2019 16:40:31 +0800 (SGT)
 From:   Chuanhua Han <chuanhua.han@nxp.com>
 To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         shawnguo@kernel.org, leoyang.li@nxp.com
 Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Chuanhua Han <chuanhua.han@nxp.com>
-Subject: [PATCH 3/3] arm64: dts: ls1088a-qds: Add the spi-flash nodes under the DSPI controller
-Date:   Thu,  1 Aug 2019 16:31:05 +0800
-Message-Id: <20190801083105.30102-3-chuanhua.han@nxp.com>
+Subject: [PATCH 2/3] arm64: dts: ls1088a: Add the DSPI controller node
+Date:   Thu,  1 Aug 2019 16:31:04 +0800
+Message-Id: <20190801083105.30102-2-chuanhua.han@nxp.com>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20190801083105.30102-1-chuanhua.han@nxp.com>
 References: <20190801083105.30102-1-chuanhua.han@nxp.com>
@@ -46,58 +46,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the spi-flash nodes under the DSPI controller for
-ls1088a-qds boards.
+This patch adds the DSPI controller node for ls1088a boards.
 
 Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts | 33 +++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-index 6f48d21..120e62d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-@@ -17,6 +17,39 @@
- 	compatible = "fsl,ls1088a-qds", "fsl,ls1088a";
- };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index dacd8cf..fe8f1bd 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -252,6 +252,19 @@
+ 			#thermal-sensor-cells = <1>;
+ 		};
  
-+&dspi {
-+	bus-num = <0>;
-+	status = "okay";
++		dspi: spi@2100000 {
++			compatible = "fsl,ls1088a-dspi",
++						"fsl,ls1021a-v1.0-dspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2100000 0x0 0x10000>;
++			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "dspi";
++			clocks = <&clockgen 4 1>;
++			spi-num-chipselects = <6>;
++			status = "disabled";
++		};
 +
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+	};
-+
-+	flash@1 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		spi-cpol;
-+		spi-cpha;
-+		spi-max-frequency = <3500000>;
-+		reg = <1>;
-+	};
-+
-+	flash@2 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		spi-cpol;
-+		spi-cpha;
-+		spi-max-frequency = <3500000>;
-+		reg = <2>;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
+ 		duart0: serial@21c0500 {
+ 			compatible = "fsl,ns16550", "ns16550a";
+ 			reg = <0x0 0x21c0500 0x0 0x100>;
 -- 
 2.9.5
 
