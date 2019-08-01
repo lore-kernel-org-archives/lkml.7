@@ -2,110 +2,127 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198ECC32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE37C32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A95206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF18206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbfHAGIC (ORCPT
+        id S1729096AbfHAGIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 02:08:02 -0400
-Received: from verein.lst.de ([213.95.11.211]:40460 "EHLO verein.lst.de"
+        Thu, 1 Aug 2019 02:08:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:58624 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfHAGIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 02:08:02 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9C9C468B05; Thu,  1 Aug 2019 08:07:55 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 08:07:55 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     john.hubbard@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v4 1/3] mm/gup: add make_dirty arg to
- put_user_pages_dirty_lock()
-Message-ID: <20190801060755.GA14893@lst.de>
-References: <20190730205705.9018-1-jhubbard@nvidia.com> <20190730205705.9018-2-jhubbard@nvidia.com>
+        id S1725790AbfHAGIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 02:08:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F57B337;
+        Wed, 31 Jul 2019 23:08:53 -0700 (PDT)
+Received: from [10.163.1.81] (unknown [10.163.1.81])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF2273F694;
+        Wed, 31 Jul 2019 23:10:46 -0700 (PDT)
+Subject: Re: [PATCH v9 10/21] mm: Add generic p?d_leaf() macros
+To:     Steven Price <steven.price@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-11-steven.price@arm.com>
+ <20190723094113.GA8085@lakrids.cambridge.arm.com>
+ <ce4e21f2-020f-6677-d79c-5432e3061d6e@arm.com>
+ <674bd809-f853-adb0-b1ab-aa4404093083@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <0979d4b4-7a97-2dc3-67cf-3aa6569bfdcd@arm.com>
+Date:   Thu, 1 Aug 2019 11:39:18 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730205705.9018-2-jhubbard@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <674bd809-f853-adb0-b1ab-aa4404093083@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 01:57:03PM -0700, john.hubbard@gmail.com wrote:
-> @@ -40,10 +40,7 @@
->  static void __qib_release_user_pages(struct page **p, size_t num_pages,
->  				     int dirty)
->  {
-> -	if (dirty)
-> -		put_user_pages_dirty_lock(p, num_pages);
-> -	else
-> -		put_user_pages(p, num_pages);
-> +	put_user_pages_dirty_lock(p, num_pages, dirty);
->  }
 
-__qib_release_user_pages should be removed now as a direct call to
-put_user_pages_dirty_lock is a lot more clear.
 
-> index 0b0237d41613..62e6ffa9ad78 100644
-> --- a/drivers/infiniband/hw/usnic/usnic_uiom.c
-> +++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
-> @@ -75,10 +75,7 @@ static void usnic_uiom_put_pages(struct list_head *chunk_list, int dirty)
->  		for_each_sg(chunk->page_list, sg, chunk->nents, i) {
->  			page = sg_page(sg);
->  			pa = sg_phys(sg);
-> -			if (dirty)
-> -				put_user_pages_dirty_lock(&page, 1);
-> -			else
-> -				put_user_page(page);
-> +			put_user_pages_dirty_lock(&page, 1, dirty);
->  			usnic_dbg("pa: %pa\n", &pa);
+On 07/29/2019 05:08 PM, Steven Price wrote:
+> On 28/07/2019 12:44, Anshuman Khandual wrote:
+>>
+>>
+>> On 07/23/2019 03:11 PM, Mark Rutland wrote:
+>>> On Mon, Jul 22, 2019 at 04:41:59PM +0100, Steven Price wrote:
+>>>> Exposing the pud/pgd levels of the page tables to walk_page_range() means
+>>>> we may come across the exotic large mappings that come with large areas
+>>>> of contiguous memory (such as the kernel's linear map).
+>>>>
+>>>> For architectures that don't provide all p?d_leaf() macros, provide
+>>>> generic do nothing default that are suitable where there cannot be leaf
+>>>> pages that that level.
+>>>>
+>>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>>
+>>> Not a big deal, but it would probably make sense for this to be patch 1
+>>> in the series, given it defines the semantic of p?d_leaf(), and they're
+>>> not used until we provide all the architectural implemetnations anyway.
+>>
+>> Agreed.
+>>
+>>>
+>>> It might also be worth pointing out the reasons for this naming, e.g.
+>>> p?d_large() aren't currently generic, and this name minimizes potential
+>>> confusion between p?d_{large,huge}().
+>>
+>> Agreed. But these fallback also need to first check non-availability of large
+>> pages. I am not sure whether CONFIG_HUGETLB_PAGE config being clear indicates
+>> that conclusively or not. Being a page table leaf entry has a broader meaning
+>> than a large page but that is really not the case today. All leaf entries here
+>> are large page entries from MMU perspective. This dependency can definitely be
+>> removed when there are other types of leaf entries but for now IMHO it feels
+>> bit problematic not to directly associate leaf entries with large pages in
+>> config restriction while doing exactly the same.
+> 
+> The intention here is that the page walkers are able to walk any type of
+> page table entry which the kernel may use. CONFIG_HUGETLB_PAGE only
+> controls whether "huge TLB pages" are used by user space processes. It's
+> quite possible that option to not be selected but the linear mapping to
+> have been mapped using "large pages" (i.e. leaf entries further up the
+> tree than normal).
 
-There is a pre-existing bug here, as this needs to use the sg_page
-iterator.  Probably worth throwing in a fix into your series while you
-are at it.
+I understand that kernel page table might use large pages where as user space
+never enabled HugeTLB. The point to make here was CONFIG_HUGETLB approximately
+indicates the presence of large pages though the absence of same does not
+conclusively indicate that large pages are really absent on the MMU. Perhaps it
+will requires something new like MMU_[LARGE|HUGE]_PAGES.
 
-> @@ -63,15 +63,7 @@ struct siw_mem *siw_mem_id2obj(struct siw_device *sdev, int stag_index)
->  static void siw_free_plist(struct siw_page_chunk *chunk, int num_pages,
->  			   bool dirty)
->  {
-> -	struct page **p = chunk->plist;
-> -
-> -	while (num_pages--) {
-> -		if (!PageDirty(*p) && dirty)
-> -			put_user_pages_dirty_lock(p, 1);
-> -		else
-> -			put_user_page(*p);
-> -		p++;
-> -	}
-> +	put_user_pages_dirty_lock(chunk->plist, num_pages, dirty);
+> 
+> One of the goals was to avoid tying the new functions to a configuration
+> option but instead match the hardware architecture. Of course this isn't
+> possible in the most general case (e.g. an architecture may have
+> multiple hardware page table formats). But to the extent that other
+> functions like p?d_none() work the desire is that p?d_leaf() should also
+> work.
 
-siw_free_plist should just go away now.
-
-Otherwise this looks good to me.
+It is fair enough to assume that a platform can decide wisely and provide
+accurate definition for p?d_leaf() functions. Anyways its okay not to make
+this more complex by tying with a new config option which does not exist.
