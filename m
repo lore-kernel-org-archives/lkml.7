@@ -4,29 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7840DC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C231C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F48E2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0191420838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:45:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388698AbfHAXpY (ORCPT
+        id S2403770AbfHAXpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:45:24 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:32976 "EHLO ale.deltatee.com"
+        Thu, 1 Aug 2019 19:45:32 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:33018 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388581AbfHAXpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:45:21 -0400
+        id S2388733AbfHAXpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 19:45:25 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1htKl2-0002M9-OZ; Thu, 01 Aug 2019 17:45:20 -0600
+        id 1htKl2-0002MG-On; Thu, 01 Aug 2019 17:45:24 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1htKl1-000253-ED; Thu, 01 Aug 2019 17:45:15 -0600
+        id 1htKl2-00025O-4D; Thu, 01 Aug 2019 17:45:16 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
@@ -35,18 +36,19 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu,  1 Aug 2019 17:45:00 -0600
-Message-Id: <20190801234514.7941-2-logang@deltatee.com>
+        Logan Gunthorpe <logang@deltatee.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Date:   Thu,  1 Aug 2019 17:45:07 -0600
+Message-Id: <20190801234514.7941-9-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190801234514.7941-1-logang@deltatee.com>
 References: <20190801234514.7941-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v7 01/14] nvme-core: introduce nvme_ctrl_get_by_path()
+Subject: [PATCH v7 08/14] nvmet-core: allow one host per passthru-ctrl
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,68 +56,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nvme_ctrl_get_by_path() is analagous to blkdev_get_by_path() except it
-gets a struct nvme_ctrl from the path to its char dev (/dev/nvme0).
-It makes use of filp_open() to open the file and uses the private
-data to obtain a pointer to the struct nvme_ctrl. If the fops of the
-file do not match, -EINVAL is returned.
+This patch rejects any new connection to the passthru-ctrl if this
+controller is already connected to a different host. At the time of
+allocating the controller we check if the subsys associated with
+the passthru ctrl is already connected to a host and reject it
+if the hostnqn differs.
 
-The purpose of this function is to support NVMe-OF target passthru.
+Connections from the same host (by hostnqn) are supported to allow
+for multipath.
 
+[chaitanya.kulkarni@wdc.com: based conceptually on a similar patch but
+  different implementation]
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/nvme/host/core.c | 24 ++++++++++++++++++++++++
- drivers/nvme/host/nvme.h |  2 ++
- 2 files changed, 26 insertions(+)
+ drivers/nvme/target/core.c            |  4 ++++
+ drivers/nvme/target/io-cmd-passthru.c | 31 +++++++++++++++++++++++++++
+ drivers/nvme/target/nvmet.h           |  7 ++++++
+ 3 files changed, 42 insertions(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index e6ee6f2a3da6..f72334f34a30 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2817,6 +2817,30 @@ static const struct file_operations nvme_dev_fops = {
- 	.compat_ioctl	= nvme_dev_ioctl,
- };
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 2e75968af7f4..c655f26db3da 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -1278,6 +1278,10 @@ u16 nvmet_alloc_ctrl(const char *subsysnqn, const char *hostnqn,
+ 	if (!ctrl->sqs)
+ 		goto out_free_cqs;
  
-+struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path)
++	ret = nvmet_passthru_alloc_ctrl(subsys, hostnqn);
++	if (ret)
++		goto out_free_sqs;
++
+ 	ret = ida_simple_get(&cntlid_ida,
+ 			     NVME_CNTLID_MIN, NVME_CNTLID_MAX,
+ 			     GFP_KERNEL);
+diff --git a/drivers/nvme/target/io-cmd-passthru.c b/drivers/nvme/target/io-cmd-passthru.c
+index b199785500ad..06a919283cc5 100644
+--- a/drivers/nvme/target/io-cmd-passthru.c
++++ b/drivers/nvme/target/io-cmd-passthru.c
+@@ -104,6 +104,37 @@ void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys)
+ 	mutex_unlock(&subsys->lock);
+ }
+ 
++int nvmet_passthru_alloc_ctrl(struct nvmet_subsys *subsys,
++			      const char *hostnqn)
 +{
-+	struct nvme_ctrl *ctrl;
-+	struct file *f;
++	struct nvmet_ctrl *ctrl;
 +
-+	f = filp_open(path, O_RDWR, 0);
-+	if (IS_ERR(f))
-+		return ERR_CAST(f);
++	/*
++	 * Check here if this subsystem is already connected to the passthru
++	 * ctrl. We allow only one host to connect to a given passthru
++	 * subsystem.
++	 */
++	int rc = 0;
 +
-+	if (f->f_op != &nvme_dev_fops) {
-+		ctrl = ERR_PTR(-EINVAL);
-+		goto out_close;
-+	}
++	mutex_lock(&subsys->lock);
 +
-+	ctrl = f->private_data;
-+	nvme_get_ctrl(ctrl);
++	if (!subsys->passthru_ctrl)
++		goto out;
 +
-+out_close:
-+	filp_close(f, NULL);
++	if (list_empty(&subsys->ctrls))
++		goto out;
 +
-+	return ctrl;
++	ctrl = list_first_entry(&subsys->ctrls, struct nvmet_ctrl,
++				subsys_entry);
++
++	if (strcmp(hostnqn, ctrl->hostnqn))
++		rc = -ENODEV;
++
++out:
++	mutex_unlock(&subsys->lock);
++	return rc;
 +}
-+EXPORT_SYMBOL_GPL(nvme_ctrl_get_by_path);
 +
- static ssize_t nvme_sysfs_reset(struct device *dev,
- 				struct device_attribute *attr, const char *buf,
- 				size_t count)
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index ecbd90c31d0d..7e827c9e892c 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -484,6 +484,8 @@ int nvme_get_log(struct nvme_ctrl *ctrl, u32 nsid, u8 log_page, u8 lsp,
- extern const struct attribute_group *nvme_ns_id_attr_groups[];
- extern const struct block_device_operations nvme_ns_head_ops;
- 
-+struct nvme_ctrl *nvme_ctrl_get_by_path(const char *path);
-+
- #ifdef CONFIG_NVME_MULTIPATH
- static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
+ static void nvmet_passthru_req_complete(struct nvmet_req *req,
+ 		struct request *rq, u16 status)
  {
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index aff4db03269d..6436cb990905 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -513,6 +513,8 @@ void nvmet_passthru_destroy(void);
+ void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys);
+ int nvmet_passthru_ctrl_enable(struct nvmet_subsys *subsys);
+ void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys);
++int nvmet_passthru_alloc_ctrl(struct nvmet_subsys *subsys,
++			      const char *hostnqn);
+ u16 nvmet_parse_passthru_cmd(struct nvmet_req *req);
+ 
+ static inline
+@@ -536,6 +538,11 @@ static inline void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys)
+ static inline void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys)
+ {
+ }
++static inline int nvmet_passthru_alloc_ctrl(struct nvmet_subsys *subsys,
++					    const char *hostnqn)
++{
++	return 0;
++}
+ static inline u16 nvmet_parse_passthru_cmd(struct nvmet_req *req)
+ {
+ 	return 0;
 -- 
 2.20.1
 
