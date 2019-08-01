@@ -2,166 +2,112 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 449FCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DA8C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1302620679
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A458206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:07:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="FL5OT1u4"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pWJVHDgs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388333AbfHATGc (ORCPT
+        id S2388347AbfHATHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:06:32 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:61870 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727616AbfHATGa (ORCPT
+        Thu, 1 Aug 2019 15:07:10 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59975 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727616AbfHATHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:06:30 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71J4bAL008217;
-        Thu, 1 Aug 2019 15:06:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=B1v8JXwk0MuhGn3zEyy1ZSeANdg/4igk7l7QlSKuk6o=;
- b=FL5OT1u4MzN+kdMELLtrlDJFmqr4LivW+U/3hZd/NSO5PcMqO1fT/rl7NZmaWhX4qUal
- 4SdqDjS3R4pEf/6ZD8e/JX5hQ44/SLTLvdFMAyE//bpDJd35P9w4Qbr/lHbyQKeqjpEL
- SOt6gk+d21SN2Z5t43ZefJP4zCOUwsw9/sW5rhDPPXtaVYJqico5j0/BxB5J5ON8s849
- KfDsRZ9bRh/+u5/VhtHQFMqed0OmeSnpkP7dTTlRph+B5bdbyR9WBmc9GTaH5RjfC9tb
- orA5LUZTB1nEpnXdlhET+wOEk/+9RSWUv0zBKy1xwu9XY2b6pWwaH8CpWcPJdylLDjNV sg== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 2u3vrb2m6t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 15:06:28 -0400
-Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71J3O9W136383;
-        Thu, 1 Aug 2019 15:06:28 -0400
-Received: from ausxipps306.us.dell.com (AUSXIPPS306.us.dell.com [143.166.148.156])
-        by mx0a-00154901.pphosted.com with ESMTP id 2u45a08kum-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 01 Aug 2019 15:06:28 -0400
-X-LoopCount0: from 10.166.132.128
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="355632777"
-From:   <Mario.Limonciello@dell.com>
-To:     <kai.heng.feng@canonical.com>, <rjw@rjwysocki.net>
-CC:     <linux-acpi@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mika.westerberg@linux.intel.com>, <helgaas@kernel.org>
-Subject: RE: [PATCH] ACPI: PM: Fix regression in acpi_device_set_power()
-Thread-Topic: [PATCH] ACPI: PM: Fix regression in acpi_device_set_power()
-Thread-Index: AQHVR/gLL0tkuMFPkka1OwBGYwDZZ6bmI6kAgACEsAA=
-Date:   Thu, 1 Aug 2019 19:06:25 +0000
-Message-ID: <9cdfa1cd722e48a789a114a3d805cdfa@AUSX13MPC105.AMER.DELL.COM>
-References: <4199592.UtrPOv3ZmA@kreacher>
- <27715F95-E729-4EF5-B2BA-03BA3C87AE29@canonical.com>
-In-Reply-To: <27715F95-E729-4EF5-B2BA-03BA3C87AE29@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-08-01T19:06:23.8715385Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 1 Aug 2019 15:07:10 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71J71MV071392
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 1 Aug 2019 12:07:01 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71J71MV071392
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564686421;
+        bh=/D0Uw0UCGxNsgjNO5hBuMC6mBXZzX4LZ5XVgmAgwfR0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=pWJVHDgsc7O/xYeaUWYZGASfp+fYBhmahquM8hBbWZSNwd7HyLObPLio4dmMn+TCv
+         lG81q4egMXbKmGeoeaDqVgUT1nGkUMIrPjXlh6wsoi++rrXoCgqH9RlhZQPdHxURn8
+         Bw8C63nluvRo7/YzLCVdXb1KEByUNvrckYdP689+MDrfdqG6VOih/pDhezCwitJYB7
+         FVPb0HxfV80ptDC2rBemOYFzQP+M0+ysmxQwOgaRGFhMQhgwk216zneOPJ9W+m3ItI
+         FvtfcfH2/K7+mp67Bz6tBakpgkXkaeIXYXIZRmMptY1mKfJ9Q6IfMyHbNalz1ZmoC0
+         9SXhHBTLxanDA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71J70tH071386;
+        Thu, 1 Aug 2019 12:07:00 -0700
+Date:   Thu, 1 Aug 2019 12:07:00 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Anna-Maria Gleixner <tipbot@zytor.com>
+Message-ID: <tip-a125ecc16453a4fe0ba865c7df87b9c722991fdf@git.kernel.org>
+Cc:     peterz@infradead.org, tglx@linutronix.de, bigeasy@linutronix.de,
+        anna-maria@linutronix.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org
+Reply-To: peterz@infradead.org, tglx@linutronix.de, bigeasy@linutronix.de,
+          mingo@kernel.org, anna-maria@linutronix.de,
+          linux-kernel@vger.kernel.org, hpa@zytor.com
+In-Reply-To: <20190730223828.600085866@linutronix.de>
+References: <20190730223828.600085866@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] timerfd: Prepare for PREEMPT_RT
+Git-Commit-ID: a125ecc16453a4fe0ba865c7df87b9c722991fdf
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908010198
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908010199
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Sent: Thursday, August 1, 2019 1:11 AM
-> To: Rafael J. Wysocki
-> Cc: Linux ACPI; Linux PM; Linux PCI; LKML; Mika Westerberg; Bjorn Helgaas=
-;
-> Limonciello, Mario
-> Subject: Re: [PATCH] ACPI: PM: Fix regression in acpi_device_set_power()
->=20
->=20
-> at 07:31, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->=20
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Commit f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in
-> > special cases") overlooked the fact that acpi_power_transition() may
-> > change the power.state value for the target device and if that
-> > happens, it may confuse acpi_device_set_power() and cause it to
-> > omit the _PS0 evaluation which on some systems is necessary to
-> > change power states of devices from low-power to D0.
-> >
-> > Fix that by saving the current value of power.state for the
-> > target device before passing it to acpi_power_transition() and
-> > using the saved value in a subsequent check.
-> >
-> > Fixes: f850a48a0799 ("ACPI: PM: Allow transitions to D0 to occur in
-> > special cases")
-> > Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > Reported-by: Mario Limonciello <mario.limonciello@dell.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->=20
-> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Commit-ID:  a125ecc16453a4fe0ba865c7df87b9c722991fdf
+Gitweb:     https://git.kernel.org/tip/a125ecc16453a4fe0ba865c7df87b9c722991fdf
+Author:     Anna-Maria Gleixner <anna-maria@linutronix.de>
+AuthorDate: Wed, 31 Jul 2019 00:33:50 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 1 Aug 2019 20:51:23 +0200
 
-Tested-by: Mario Limonciello <mario.limonciello@dell.com>
+timerfd: Prepare for PREEMPT_RT
 
->=20
-> > ---
-> >  drivers/acpi/device_pm.c |    4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > Index: linux-pm/drivers/acpi/device_pm.c
-> >
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =3D=3D=3D=3D=3D
-> > --- linux-pm.orig/drivers/acpi/device_pm.c
-> > +++ linux-pm/drivers/acpi/device_pm.c
-> > @@ -236,13 +236,15 @@ int acpi_device_set_power(struct acpi_de
-> >  		if (device->power.flags.power_resources)
-> >  			result =3D acpi_power_transition(device, target_state);
-> >  	} else {
-> > +		int cur_state =3D device->power.state;
-> > +
-> >  		if (device->power.flags.power_resources) {
-> >  			result =3D acpi_power_transition(device, ACPI_STATE_D0);
-> >  			if (result)
-> >  				goto end;
-> >  		}
-> >
-> > -		if (device->power.state =3D=3D ACPI_STATE_D0) {
-> > +		if (cur_state =3D=3D ACPI_STATE_D0) {
-> >  			int psc;
-> >
-> >  			/* Nothing to do here if _PSC is not present. */
->=20
+Use the hrtimer_cancel_wait_running() synchronization mechanism to prevent
+priority inversion and live locks on PREEMPT_RT.
 
+[ tglx: Split out of combo patch ]
+
+Signed-off-by: Anna-Maria Gleixner <anna-maria@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190730223828.600085866@linutronix.de
+
+
+---
+ fs/timerfd.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/fs/timerfd.c b/fs/timerfd.c
+index 6a6fc8aa1de7..48305ba41e3c 100644
+--- a/fs/timerfd.c
++++ b/fs/timerfd.c
+@@ -471,7 +471,11 @@ static int do_timerfd_settime(int ufd, int flags,
+ 				break;
+ 		}
+ 		spin_unlock_irq(&ctx->wqh.lock);
+-		cpu_relax();
++
++		if (isalarm(ctx))
++			hrtimer_cancel_wait_running(&ctx->t.alarm.timer);
++		else
++			hrtimer_cancel_wait_running(&ctx->t.tmr);
+ 	}
+ 
+ 	/*
