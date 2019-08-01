@@ -2,261 +2,203 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059E2C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743B6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E5F2087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:21:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NtiYtJVE"
+	by mail.kernel.org (Postfix) with ESMTP id 4B82D20644
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564669334;
+	bh=vULIrOd1ehcCy4iM3E99fM48cHPr2vPexsYqFK5z9tg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SPOkKXEgVbCahuo+ihrg5/w0bCdBu/87KeLcjH5M1RVv69T/+wAWOhU3uW7dC8rBj
+	 9XfS8SYnFGiLe6vayxfT9VYaordkcRALDCIwnnBXZo6MLBiZgr8RfplRwJOBLw0loS
+	 ABC5s75DPZdld/lBjEkQCccXWeuOjJMf+Ue01TeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731944AbfHAOVw (ORCPT
+        id S1731956AbfHAOWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:21:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48826 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfHAOVw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:21:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mpHyjnJR17EzfHojRb2JoLPTrVjdaNl1TnjSHWzORXw=; b=NtiYtJVEmDfDxmTbI5QbPew0xT
-        zEQbgiotyyVtl+/aNeJqPjLDkgyw4xpO15KvT7vfKK9pncilCrG1v7qLtwzbBn//rNMTVvBaozUJS
-        H5AzJslFkM8k8ljq1UrrfmIhWdKAXaLxQz9G6E0jUN8QLV1XUDdGEvV3HaANH/N5oU46TicGUJGXP
-        IbfJcEF0D32Wgd8ZSL0Zpu5bJEp12MEZLb5JIsiNCz3RptGT2CIrOj9qApxv0OGQsUkbxXBSj01B0
-        6JYc12+UjSGY9cHW/PJuj6m12u6LSGvygP9z1CPj7bq5yZn2XPNbk8jM86THnubHsqC5NBcPobQkK
-        Osll/wtQ==;
-Received: from [195.167.85.94] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1htBxT-0006Ja-DI; Thu, 01 Aug 2019 14:21:39 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org
-Cc:     Shawn Anastasio <shawn@anastas.io>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dma-mapping: fix page attributes for dma_mmap_*
-Date:   Thu,  1 Aug 2019 17:21:18 +0300
-Message-Id: <20190801142118.21225-2-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190801142118.21225-1-hch@lst.de>
-References: <20190801142118.21225-1-hch@lst.de>
+        Thu, 1 Aug 2019 10:22:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728129AbfHAOWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:22:12 -0400
+Received: from linux-8ccs (unknown [95.90.219.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FD3420644;
+        Thu,  1 Aug 2019 14:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564669331;
+        bh=vULIrOd1ehcCy4iM3E99fM48cHPr2vPexsYqFK5z9tg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mDdVcPmOglb7VfOP3ACFpX1kDMti1QwBqkMqLxaKnT4R3WQiUUHuj+2YIN68LUqeG
+         GVgGvf4AHcaBiytwRlmXp9MIenKq4hzTKLUvTYqdTm1zWSBt3LlOk0nu6YK3yNjXZo
+         qaXM61xDgz5cbbwCNNzfd2CKwbhnfHRAn7O/6640=
+Date:   Thu, 1 Aug 2019 16:21:58 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH V37 04/29] Enforce module signatures if the kernel is
+ locked down
+Message-ID: <20190801142157.GA5834@linux-8ccs>
+References: <20190731221617.234725-1-matthewgarrett@google.com>
+ <20190731221617.234725-5-matthewgarrett@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190731221617.234725-5-matthewgarrett@google.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the way back to introducing dma_common_mmap we've defaulyed to mark
-the pages as uncached.  But this is wrong for DMA coherent devices or
-if using DMA_ATTR_NON_CONSISTENT.  Later on DMA_ATTR_WRITE_COMBINE
-also got incorrect treatment as that flag is only treated special on
-the alloc side for non-coherent devices.
++++ Matthew Garrett [31/07/19 15:15 -0700]:
+>From: David Howells <dhowells@redhat.com>
+>
+>If the kernel is locked down, require that all modules have valid
+>signatures that we can verify.
+>
+>I have adjusted the errors generated:
+>
+> (1) If there's no signature (ENODATA) or we can't check it (ENOPKG,
+>     ENOKEY), then:
+>
+>     (a) If signatures are enforced then EKEYREJECTED is returned.
+>
+>     (b) If there's no signature or we can't check it, but the kernel is
+>	 locked down then EPERM is returned (this is then consistent with
+>	 other lockdown cases).
+>
+> (2) If the signature is unparseable (EBADMSG, EINVAL), the signature fails
+>     the check (EKEYREJECTED) or a system error occurs (eg. ENOMEM), we
+>     return the error we got.
+>
+>Note that the X.509 code doesn't check for key expiry as the RTC might not
+>be valid or might not have been transferred to the kernel's clock yet.
+>
+> [Modified by Matthew Garrett to remove the IMA integration. This will
+>  be replaced with integration with the IMA architecture policy
+>  patchset.]
+>
+>Signed-off-by: David Howells <dhowells@redhat.com>
+>Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
+>Reviewed-by: Kees Cook <keescook@chromium.org>
+>Cc: Jessica Yu <jeyu@kernel.org>
+>---
+> include/linux/security.h     |  1 +
+> kernel/module.c              | 37 +++++++++++++++++++++++++++++-------
+> security/lockdown/lockdown.c |  1 +
+> 3 files changed, 32 insertions(+), 7 deletions(-)
+>
+>diff --git a/include/linux/security.h b/include/linux/security.h
+>index 54a0532ec12f..8e70063074a1 100644
+>--- a/include/linux/security.h
+>+++ b/include/linux/security.h
+>@@ -103,6 +103,7 @@ enum lsm_event {
+>  */
+> enum lockdown_reason {
+> 	LOCKDOWN_NONE,
+>+	LOCKDOWN_MODULE_SIGNATURE,
+> 	LOCKDOWN_INTEGRITY_MAX,
+> 	LOCKDOWN_CONFIDENTIALITY_MAX,
+> };
+>diff --git a/kernel/module.c b/kernel/module.c
+>index cd8df516666d..318209889e26 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -2771,8 +2771,9 @@ static inline void kmemleak_load_module(const struct module *mod,
+> #ifdef CONFIG_MODULE_SIG
+> static int module_sig_check(struct load_info *info, int flags)
+> {
+>-	int err = -ENOKEY;
+>+	int err = -ENODATA;
+> 	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
+>+	const char *reason;
+> 	const void *mod = info->hdr;
+>
+> 	/*
+>@@ -2787,16 +2788,38 @@ static int module_sig_check(struct load_info *info, int flags)
+> 		err = mod_verify_sig(mod, info);
+> 	}
+>
+>-	if (!err) {
+>+	switch (err) {
+>+	case 0:
+> 		info->sig_ok = true;
+> 		return 0;
+>-	}
+>
+>-	/* Not having a signature is only an error if we're strict. */
+>-	if (err == -ENOKEY && !is_module_sig_enforced())
+>-		err = 0;
+>+		/* We don't permit modules to be loaded into trusted kernels
+>+		 * without a valid signature on them, but if we're not
+>+		 * enforcing, certain errors are non-fatal.
+>+		 */
+>+	case -ENODATA:
+>+		reason = "Loading of unsigned module";
+>+		goto decide;
+>+	case -ENOPKG:
+>+		reason = "Loading of module with unsupported crypto";
+>+		goto decide;
+>+	case -ENOKEY:
+>+		reason = "Loading of module with unavailable key";
+>+	decide:
+>+		if (is_module_sig_enforced()) {
+>+			pr_notice("%s is rejected\n", reason);
+>+			return -EKEYREJECTED;
+>+		}
+>
+>-	return err;
+>+		return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
+>+
+>+		/* All other errors are fatal, including nomem, unparseable
+>+		 * signatures and signature check failures - even if signatures
+>+		 * aren't required.
+>+		 */
+>+	default:
+>+		return err;
+>+	}
+> }
+> #else /* !CONFIG_MODULE_SIG */
+> static int module_sig_check(struct load_info *info, int flags)
 
-Introduce a new dma_mmap_pgprot helper that deals with the check
-for coherent devices and DMA_ATTR_NON_CONSISTENT so that only the
-remapping cases even reach arch_dma_mmap_pgprot and we thus ensure
-no aliasing of page attributes happens.
+Hi Matthew!
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/arm/mm/dma-mapping.c        |  4 +---
- arch/arm64/mm/dma-mapping.c      |  4 +---
- arch/powerpc/kernel/Makefile     |  3 +--
- arch/powerpc/kernel/dma-common.c | 17 -----------------
- drivers/iommu/dma-iommu.c        |  6 +++---
- include/linux/dma-mapping.h      |  1 +
- include/linux/dma-noncoherent.h  |  5 -----
- kernel/dma/mapping.c             | 11 ++++++++++-
- kernel/dma/remap.c               |  2 +-
- 9 files changed, 18 insertions(+), 35 deletions(-)
- delete mode 100644 arch/powerpc/kernel/dma-common.c
+Apologies if this was addressed in another patch in your series (I've
+only skimmed the first few), but what should happen if the kernel is
+locked down, but CONFIG_MODULE_SIG=n? Or shouldn't CONFIG_SECURITY_LOCKDOWN_LSM
+depend on CONFIG_MODULE_SIG? Otherwise I think we'll end up calling
+the empty !CONFIG_MODULE_SIG module_sig_check() stub even though
+lockdown is enabled.
 
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index 9c9a23e5600d..cfe44df169c5 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -2397,9 +2397,7 @@ long arch_dma_coherent_to_pfn(struct device *dev, void *cpu_addr,
- pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
- 		unsigned long attrs)
- {
--	if (!dev_is_dma_coherent(dev))
--		return __get_dma_pgprot(attrs, prot);
--	return prot;
-+	return __get_dma_pgprot(attrs, prot);
- }
- 
- void *arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
-diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-index 1d3f0b5a9940..bd2b039f43a6 100644
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -14,9 +14,7 @@
- pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
- 		unsigned long attrs)
- {
--	if (!dev_is_dma_coherent(dev) || (attrs & DMA_ATTR_WRITE_COMBINE))
--		return pgprot_writecombine(prot);
--	return prot;
-+	return pgprot_writecombine(prot);
- }
- 
- void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index ea0c69236789..56dfa7a2a6f2 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -49,8 +49,7 @@ obj-y				:= cputable.o ptrace.o syscalls.o \
- 				   signal.o sysfs.o cacheinfo.o time.o \
- 				   prom.o traps.o setup-common.o \
- 				   udbg.o misc.o io.o misc_$(BITS).o \
--				   of_platform.o prom_parse.o \
--				   dma-common.o
-+				   of_platform.o prom_parse.o
- obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o \
- 				   signal_64.o ptrace32.o \
- 				   paca.o nvram_64.o firmware.o
-diff --git a/arch/powerpc/kernel/dma-common.c b/arch/powerpc/kernel/dma-common.c
-deleted file mode 100644
-index dc7ef6b17b69..000000000000
---- a/arch/powerpc/kernel/dma-common.c
-+++ /dev/null
-@@ -1,17 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * Contains common dma routines for all powerpc platforms.
-- *
-- * Copyright (C) 2019 Shawn Anastasio.
-- */
--
--#include <linux/mm.h>
--#include <linux/dma-noncoherent.h>
--
--pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
--		unsigned long attrs)
--{
--	if (!dev_is_dma_coherent(dev))
--		return pgprot_noncached(prot);
--	return prot;
--}
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index a7f9c3edbcb2..703de9a7553f 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -574,7 +574,7 @@ static void *iommu_dma_alloc_remap(struct device *dev, size_t size,
- 	struct iova_domain *iovad = &cookie->iovad;
- 	bool coherent = dev_is_dma_coherent(dev);
- 	int ioprot = dma_info_to_prot(DMA_BIDIRECTIONAL, coherent, attrs);
--	pgprot_t prot = arch_dma_mmap_pgprot(dev, PAGE_KERNEL, attrs);
-+	pgprot_t prot = dma_mmap_pgprot(dev, PAGE_KERNEL, attrs);
- 	unsigned int count, min_size, alloc_sizes = domain->pgsize_bitmap;
- 	struct page **pages;
- 	struct sg_table sgt;
-@@ -975,7 +975,7 @@ static void *iommu_dma_alloc_pages(struct device *dev, size_t size,
- 		return NULL;
- 
- 	if (IS_ENABLED(CONFIG_DMA_REMAP) && (!coherent || PageHighMem(page))) {
--		pgprot_t prot = arch_dma_mmap_pgprot(dev, PAGE_KERNEL, attrs);
-+		pgprot_t prot = dma_mmap_pgprot(dev, PAGE_KERNEL, attrs);
- 
- 		cpu_addr = dma_common_contiguous_remap(page, alloc_size,
- 				VM_USERMAP, prot, __builtin_return_address(0));
-@@ -1035,7 +1035,7 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
- 	unsigned long pfn, off = vma->vm_pgoff;
- 	int ret;
- 
--	vma->vm_page_prot = arch_dma_mmap_pgprot(dev, vma->vm_page_prot, attrs);
-+	vma->vm_page_prot = dma_mmap_pgprot(dev, vma->vm_page_prot, attrs);
- 
- 	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
- 		return ret;
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 633dae466097..c61d7870277f 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -611,6 +611,7 @@ static inline void dma_sync_single_range_for_device(struct device *dev,
- #define dma_get_sgtable(d, t, v, h, s) dma_get_sgtable_attrs(d, t, v, h, s, 0)
- #define dma_mmap_coherent(d, v, c, h, s) dma_mmap_attrs(d, v, c, h, s, 0)
- 
-+pgprot_t dma_mmap_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs);
- extern int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
- 		void *cpu_addr, dma_addr_t dma_addr, size_t size,
- 		unsigned long attrs);
-diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
-index 3813211a9aad..9ae5cee543c4 100644
---- a/include/linux/dma-noncoherent.h
-+++ b/include/linux/dma-noncoherent.h
-@@ -42,13 +42,8 @@ void arch_dma_free(struct device *dev, size_t size, void *cpu_addr,
- 		dma_addr_t dma_addr, unsigned long attrs);
- long arch_dma_coherent_to_pfn(struct device *dev, void *cpu_addr,
- 		dma_addr_t dma_addr);
--
--#ifdef CONFIG_ARCH_HAS_DMA_MMAP_PGPROT
- pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
- 		unsigned long attrs);
--#else
--# define arch_dma_mmap_pgprot(dev, prot, attrs)	pgprot_noncached(prot)
--#endif
- 
- #ifdef CONFIG_DMA_NONCOHERENT_CACHE_SYNC
- void arch_dma_cache_sync(struct device *dev, void *vaddr, size_t size,
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 815446f76995..357ae5cdb91b 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -162,6 +162,15 @@ int dma_get_sgtable_attrs(struct device *dev, struct sg_table *sgt,
- }
- EXPORT_SYMBOL(dma_get_sgtable_attrs);
- 
-+pgprot_t dma_mmap_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
-+{
-+	if (dev_is_dma_coherent(dev) || (attrs & DMA_ATTR_NON_CONSISTENT))
-+		return prot;
-+	if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_MMAP_PGPROT))
-+		return arch_dma_mmap_pgprot(dev, prot, attrs);
-+	return pgprot_noncached(prot);
-+}
-+
- /*
-  * Create userspace mapping for the DMA-coherent memory.
-  */
-@@ -175,7 +184,7 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
- 	unsigned long pfn;
- 	int ret = -ENXIO;
- 
--	vma->vm_page_prot = arch_dma_mmap_pgprot(dev, vma->vm_page_prot, attrs);
-+	vma->vm_page_prot = dma_mmap_pgprot(dev, vma->vm_page_prot, attrs);
- 
- 	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
- 		return ret;
-diff --git a/kernel/dma/remap.c b/kernel/dma/remap.c
-index a594aec07882..3d75c79b124c 100644
---- a/kernel/dma/remap.c
-+++ b/kernel/dma/remap.c
-@@ -218,7 +218,7 @@ void *arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
- 
- 	/* create a coherent mapping */
- 	ret = dma_common_contiguous_remap(page, size, VM_USERMAP,
--			arch_dma_mmap_pgprot(dev, PAGE_KERNEL, attrs),
-+			dma_mmap_pgprot(dev, PAGE_KERNEL, attrs),
- 			__builtin_return_address(0));
- 	if (!ret) {
- 		__dma_direct_free_pages(dev, size, page);
--- 
-2.20.1
 
+Thanks,
+
+Jessica
+
+>diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+>index d30c4d254b5f..2c53fd9f5c9b 100644
+>--- a/security/lockdown/lockdown.c
+>+++ b/security/lockdown/lockdown.c
+>@@ -18,6 +18,7 @@ static enum lockdown_reason kernel_locked_down;
+>
+> static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+> 	[LOCKDOWN_NONE] = "none",
+>+	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
+> 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+> 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+> };
+>-- 
+>2.22.0.770.g0f2c4a37fd-goog
+>
