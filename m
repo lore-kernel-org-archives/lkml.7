@@ -2,102 +2,104 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE7FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C830C32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 006D7216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3350A20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:30:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llXl0uA6"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QaZhCL+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfHACWU (ORCPT
+        id S1728583AbfHACaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 22:22:20 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37580 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfHACWU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 22:22:20 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w13so67645227eds.4;
-        Wed, 31 Jul 2019 19:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sC9WSjHIf3YYqrZ48Ho9EQniwjdamSmLDkL+UgHsgsE=;
-        b=llXl0uA66CPHwc937gj8nqBMKzMjpnrttJor3IogjY5x4XNbctuL16+HpHVNLkvSHJ
-         dASGPohwTOLRrOIbesMNK7aHBkEj3ZGLJmG2FJnf4eRm1fHXUvgxzGkDftTIHc1VHDmZ
-         j5BqHd9erS6VkcaY97iG2yCqyRLY92B5zj0taBeypB+2Pbw7c+AnlTnxcwNWI3g5nydm
-         ABDm823hVpYbhF2Afs1V7P6h4O5mNUWpvvMtHv2cI9v0X4YNt5IYkPGbWuAqBHztDuXZ
-         k8BiSmE0GwfdAIM1X3RgZzDMiMxwDz2f5OG8kK/QwNmSt3WLqz9v8W+Jn8JK5CLYJ0w5
-         b3Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sC9WSjHIf3YYqrZ48Ho9EQniwjdamSmLDkL+UgHsgsE=;
-        b=tU0rgSE85FriElE0AXX7S5LqYbZzXII2mIk/pNthu77pZuRggi3ApPZzf+hfM+i1y2
-         C8sMlLYEejCEYGjNRet12HOs2atYFgbKOPYOkBwpyKQp0sLfKeRB9SKXwDaKDJmFXLZF
-         c985DMDr1/NEO2ugPqrK8EyZMQllJAwepKG972+WjH9sOX7pZdkw6ZlsdZEUQ58g9Ojw
-         A/9gx3iKH+MTANw6ctC9jmyXhqoyW3mg/qBwcYxc7tw6APIdYSJamW2U6biNoSCRLmW5
-         fj+GQVDtqrVW1CC8YWKGuBUxxWF754roMZ1TZhfHNP0QNT9cotuBkheiYXIlfLJLQSGp
-         3Ldw==
-X-Gm-Message-State: APjAAAWDB042oJcPAR4EyZ/p22sjS4Kphn4IMrWVNcnS18XGPQQHKeAP
-        Pt5UUEwYy97CherU6iImNCAYdtHu/7CAD1SIito=
-X-Google-Smtp-Source: APXvYqyQZSotBC5QpJ3UAQIVqYBxSYe/ET0fiP9HIck+vOonE/4njZIWinONYh1FY5DYJRQwr6Pbh5mNC4Vg8lC2aEk=
-X-Received: by 2002:a05:6402:896:: with SMTP id e22mr106635474edy.202.1564626138515;
- Wed, 31 Jul 2019 19:22:18 -0700 (PDT)
+        Wed, 31 Jul 2019 22:30:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52245 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726800AbfHACaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 22:30:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zZ596mjNz9sBF;
+        Thu,  1 Aug 2019 12:30:04 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564626608;
+        bh=F6yYrwA8wrWGh9l/at9G7REoMS60ygdsyKPlul1m6gI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QaZhCL+WBLqKyRiIv9LmrKpl6lnFiNtDPMGJjUMSdtQB5AlMbdwTBaGZToKG2k1KZ
+         TaJr26TJisLqZUDxc8IkpNs1ba5SnN7mTN/ImIzh6uDuOIWVMVZyIdfO4Eg8KB/Axf
+         ElH6m8mo/b5MTfuEAxx/4m3d/uo2O4ynHbto1kTGnzgnFdH11dj/DrebsXuz/9PYNP
+         B8nKHzGj9g7aeu30cMPwOijKPeQDMUtwSPPjLp1IbiKtRGDbWby9nFPRyKdS87NSYE
+         89+ZD7dRbn/ljDySH7NtC4YKAH7ANEkUs5mwRRzQLNzl2lQpjfps7656qoOZiMxceu
+         HJmQNdoVeUHeQ==
+Date:   Thu, 1 Aug 2019 12:30:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Emil Velikov <emil.velikov@collabora.com>
+Subject: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20190801123004.2aa5c658@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190731122224.1003-1-hslester96@gmail.com> <CACKFLinuFebDgJN=BgK5e-bNaFqNpk61teva0=2xMH6R_iT39g@mail.gmail.com>
-In-Reply-To: <CACKFLinuFebDgJN=BgK5e-bNaFqNpk61teva0=2xMH6R_iT39g@mail.gmail.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Thu, 1 Aug 2019 10:22:07 +0800
-Message-ID: <CANhBUQ1J8hXBZv4x3pJhG_08ZS1zR=9Uj2EUta2sgtyND_QKPw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] cnic: Use refcount_t for refcount
-To:     Michael Chan <michael.chan@broadcom.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/1rIQwGsme1TfqSXECl9f2.Z";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Chan <michael.chan@broadcom.com> =E4=BA=8E2019=E5=B9=B48=E6=9C=881=
-=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=881:58=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> On Wed, Jul 31, 2019 at 5:22 AM Chuhong Yuan <hslester96@gmail.com> wrote=
-:
->
-> >  static void cnic_ctx_wr(struct cnic_dev *dev, u32 cid_addr, u32 off, u=
-32 val)
-> > @@ -494,7 +494,7 @@ int cnic_register_driver(int ulp_type, struct cnic_=
-ulp_ops *ulp_ops)
-> >         }
-> >         read_unlock(&cnic_dev_lock);
-> >
-> > -       atomic_set(&ulp_ops->ref_count, 0);
-> > +       refcount_set(&ulp_ops->ref_count, 0);
-> >         rcu_assign_pointer(cnic_ulp_tbl[ulp_type], ulp_ops);
-> >         mutex_unlock(&cnic_lock);
-> >
->
-> Willem's comment applies here too.  The driver needs to be modified to
-> count from 1 to use refcount_t.
->
-> Thanks.
+--Sig_/1rIQwGsme1TfqSXECl9f2.Z
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I have revised this problem but find the other two refcounts -
-cnic_dev::ref_count
-and cnic_sock::ref_count have no set.
-I am not sure where to initialize them to 1.
+Hi all,
 
-Besides, should ulp_ops->ref_count be set to 0 when unregistered?
+After merging the drm-misc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+drivers/gpu/drm/radeon/radeon_connectors.c: In function 'radeon_add_legacy_=
+connector':
+drivers/gpu/drm/radeon/radeon_connectors.c:2433:5: error: 'ddc' undeclared =
+(first use in this function)
+     ddc =3D &radeon_connector->ddc_bus->adapter;
+     ^~~
+drivers/gpu/drm/radeon/radeon_connectors.c:2433:5: note: each undeclared id=
+entifier is reported only once for each function it appears in
+
+Caused by commit
+
+  bed7a2182de6 ("drm/radeon: Provide ddc symlink in connector sysfs directo=
+ry")
+
+I have used the drm-misc tree from next-20190731 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/1rIQwGsme1TfqSXECl9f2.Z
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1CTqwACgkQAVBC80lX
+0GwQFwf/bkQ4sQR7J6NB16AEgGu/p2R8lXhPjZa2XtdZY+zrfKDcD1fhlriYJaIf
+ZalH+q0oPJmGm53OhaeLMmTVF0lOWEoEtVZFto+YEtoqTILgMwRu47dXhanM4iJT
+qxe0Rq8haX/zCypvqrFMTStQmOzg0AZcRKYPWtvnrQBFx6PGwpr6A94ajjxIbW0o
+FMyXrW2deieI0Gx8PLD/Z3q29V30fKNcxVoHMCyLsvQaItqnTwYJTKR/iLDioaAM
+wSPsUMpNGDPTOWPe2+gItHWQTGDFua9tJB/iglf28rOi8rZSEFUuhlclg5fV97Ti
+GGXVLs46KPRtNUXiKaBdZVDkwtgegg==
+=2y3a
+-----END PGP SIGNATURE-----
+
+--Sig_/1rIQwGsme1TfqSXECl9f2.Z--
