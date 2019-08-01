@@ -6,49 +6,50 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10430C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E99C32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0624214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A952087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HjeriqX6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S2iVsB9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730392AbfHALSU (ORCPT
+        id S1730592AbfHALSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:18:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44196 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbfHALST (ORCPT
+        Thu, 1 Aug 2019 07:18:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50870 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730447AbfHALSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:18:19 -0400
+        Thu, 1 Aug 2019 07:18:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/BSdPIoCwgRhHfWOHPwPqGUqxLt3gcCsEyPPvDK5A6s=; b=HjeriqX6h1t0O+Mrqo9Zem9sSF
-        ULZLO+kJYkXvAlNBcB4M6ujRWYH5Lffth2MdkccIUPXfwjF4MkGSErTFitUqR+sglo+HxZbkWEIbj
-        5nfK/HY2sMh5Dth4MXPsrcFN1qUYG2GbD/L7XjK9ivniLKaQGdtHuNrTU0hE0OujrUlNMcZYQ5y5N
-        0cvavI11AxrJVt2QdEgfpzoc2ZIW9tqunHmkb5YpKQMsR4uGpp+cVmSSJ+lhkTZlXrSPGiB9AKCG0
-        S5EwE0GGQShYlgeMyYzA+tLf7cx4rdPqerZ0z7Eu3nO3Ko9MYP873E7GDVzf2xk0zMb7dq3xtELlP
-        +tOWc1TQ==;
+        bh=Ts7Wuhwdp6RUU0lWUdro44IST7FhRZuEKkrJRN/QhKM=; b=S2iVsB9TvL3c2A0C6BVu99iu8C
+        M4CYn3OLGZe/Kq2Z3wvLAEiNZiQdCq25GSXPjnY3goThBuRPh/1OOeNWTWG/JbG2FUKzGV3A0su4U
+        MraCsCcc+ZLreEhvH2+hg9GTVv1YN9BzFbP2RlYSM/LoMTmkhjMOUjErl7rPWyyF6aljEusK4HKZz
+        A814rOmCbId28UB+7qzPIBg/EtNIpAYMe/iJ2bKu4WDNIF1pc4OEz5wwA2sgyPZak8KEoF55VxaVg
+        kbINHdxSoCP9mXEns/GU9+dneG35Ys9fn+it/VTzNa1zGwH1aZBtx/vC47CMV5pUKogy104q4LPxt
+        F2OqzPrw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1ht966-0006Ue-Iq; Thu, 01 Aug 2019 11:18:14 +0000
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1ht968-0005fe-Ie; Thu, 01 Aug 2019 11:18:16 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 7C4F52029FA0E; Thu,  1 Aug 2019 13:18:12 +0200 (CEST)
-Message-Id: <20190801111541.685367413@infradead.org>
+        id 8E421202975E5; Thu,  1 Aug 2019 13:18:12 +0200 (CEST)
+Message-Id: <20190801111541.917256884@infradead.org>
 User-Agent: quilt/0.65
-Date:   Thu, 01 Aug 2019 13:13:49 +0200
+Date:   Thu, 01 Aug 2019 13:13:53 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org
 Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 1/5] sched/pci: Reduce psimon FIFO priority
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH 5/5] spi: Reduce kthread priority
 References: <20190801111348.530242235@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -57,34 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PSI defaults to a FIFO-99 thread, reduce this to FIFO-1.
+The SPI thingies request FIFO-99 by default, reduce this to FIFO-50.
 
 FIFO-99 is the very highest priority available to SCHED_FIFO and
-it not a suitable default; it would indicate the psi work is the
+it not a suitable default; it would indicate the SPI work is the
 most important work on the machine.
 
-Since Real-Time tasks will have pre-allocated memory and locked it in
-place, Real-Time tasks do not care about PSI. All it needs is to be
-above OTHER.
-
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Benson Leung <bleung@chromium.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Guenter Roeck <groeck@chromium.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/sched/psi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/chrome/cros_ec_spi.c |    2 +-
+ drivers/spi/spi.c                     |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1051,7 +1051,7 @@ struct psi_trigger *psi_trigger_create(s
+--- a/drivers/platform/chrome/cros_ec_spi.c
++++ b/drivers/platform/chrome/cros_ec_spi.c
+@@ -706,7 +706,7 @@ static int cros_ec_spi_devm_high_pri_all
+ 					   struct cros_ec_spi *ec_spi)
+ {
+ 	struct sched_param sched_priority = {
+-		.sched_priority = MAX_RT_PRIO - 1,
++		.sched_priority = MAX_RT_PRIO / 2,
+ 	};
+ 	int err;
  
- 	if (!rcu_access_pointer(group->poll_kworker)) {
- 		struct sched_param param = {
--			.sched_priority = MAX_RT_PRIO - 1,
-+			.sched_priority = 1,
- 		};
- 		struct kthread_worker *kworker;
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1434,7 +1434,7 @@ static void spi_pump_messages(struct kth
+  */
+ static void spi_set_thread_rt(struct spi_controller *ctlr)
+ {
+-	struct sched_param param = { .sched_priority = MAX_RT_PRIO - 1 };
++	struct sched_param param = { .sched_priority = MAX_RT_PRIO / 2 };
  
+ 	dev_info(&ctlr->dev,
+ 		"will run message pump with realtime priority\n");
 
 
