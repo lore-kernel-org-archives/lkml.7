@@ -2,104 +2,87 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4BFC32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252AAC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8018C20644
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:31:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uvyTgNPU"
+	by mail.kernel.org (Postfix) with ESMTP id DFB41206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732061AbfHAObQ (ORCPT
+        id S1732075AbfHAOb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:31:16 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:55541 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731284AbfHAObP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:31:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1564669873; x=1596205873;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=CYr97n4jQ+i8XoMJ1ptuHgHbqpfgmK1fn3mN/NxQ128=;
-  b=uvyTgNPUjMJ2SDB/3yzQcDNPpyeda2EGVu+gp2VrE8b0X+p60xC5w7YG
-   mS2kUCoSOxe9gDQNG5hZXlqOp4i3MQ6cuzR8OiFoCCrLg6Ptqm0AeKXDa
-   tIfHsNgIZ132ZQm3aCk0FP5iZEd3IR2IdGUown74YlVTSVnqYp/xZCuDl
-   g=;
-X-IronPort-AV: E=Sophos;i="5.64,334,1559520000"; 
-   d="scan'208";a="689971421"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 01 Aug 2019 14:31:07 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id 1C739A2077;
-        Thu,  1 Aug 2019 14:31:08 +0000 (UTC)
-Received: from EX13D21UWA002.ant.amazon.com (10.43.160.246) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 1 Aug 2019 14:31:07 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D21UWA002.ant.amazon.com (10.43.160.246) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 1 Aug 2019 14:31:07 +0000
-Received: from [10.107.3.19] (10.107.3.19) by mail-relay.amazon.com
- (10.43.160.118) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Thu, 1 Aug 2019 14:31:01 +0000
-Subject: Re: [RFC 1/1] edac: Add a counter parameter for
- edac_device_handle_ue/ce()
-To:     Robert Richter <rric@kernel.org>
-CC:     <thor.thayer@linux.intel.com>, <bp@alien8.de>,
-        <mchehab@kernel.org>, <james.morse@arm.com>, <morbidrsa@gmail.com>,
-        <ralf@linux-mips.org>, <david.daney@cavium.com>,
-        <andy.gross@linaro.org>, <david.brown@linaro.org>,
-        <ckadabi@codeaurora.org>, <vnkgutta@codeaurora.org>,
-        <jglauber@cavium.com>, <khuong@os.amperecomputing.com>,
-        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mips@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-References: <1563187987-5847-1-git-send-email-hhhawa@amazon.com>
- <20190801113548.7leooh57gihixen5@rric.localdomain>
- <7d6aac9e-20e5-3901-a423-d76ac917b251@amazon.com>
- <20190801141701.bmcken464mrqwhdg@rric.localdomain>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <045bb0dd-6a88-36ba-203f-d0dcb9ae5b62@amazon.com>
-Date:   Thu, 1 Aug 2019 17:30:59 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 1 Aug 2019 10:31:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37246 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731284AbfHAOb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:31:27 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 722C812BB;
+        Thu,  1 Aug 2019 14:31:26 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F75960A9F;
+        Thu,  1 Aug 2019 14:31:26 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 1C85C41F40;
+        Thu,  1 Aug 2019 14:31:26 +0000 (UTC)
+Date:   Thu, 1 Aug 2019 10:31:26 -0400 (EDT)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Greg KH <greg@kroah.com>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, stable@vger.kernel.org
+Message-ID: <2057215544.6298959.1564669886072.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190801140639.GB31375@kroah.com>
+References: <20190730093345.25573-1-marcel@holtmann.org> <20190801133132.6BF30206A3@mail.kernel.org> <20190801135044.GB24791@kroah.com> <1983583259.6283500.1564667755023.JavaMail.zimbra@redhat.com> <20190801140639.GB31375@kroah.com>
+Subject: Re: [PATCH v5.3-rc2] Bluetooth: hci_uart: check for missing tty
+ operations
 MIME-Version: 1.0
-In-Reply-To: <20190801141701.bmcken464mrqwhdg@rric.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.2.29, 10.4.195.22]
+Thread-Topic: Bluetooth: hci_uart: check for missing tty operations
+Thread-Index: C7jFpDH0teKpSIJuE8GzHUEFBMgj1g==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 01 Aug 2019 14:31:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello, Greg, all,
 
+I've just double-checked your backports, indeed, they are fine.
 
-On 8/1/2019 5:17 PM, Robert Richter wrote:
->> Don't you think it'll be confused to have different APIs between EDAC_MC and
->> EDAC_DEVICE?
->> (in MC the count passed as part of edac_mc_handle_error())
-> I don't think edac_mc_handle_error() with 11 function arguments is a
-> good reference for somethin we want to adopt. For the majority of
-> drivers you just introduce another useless argument with the following
-> pattern:
+Check for operations is not added for protocols which does not
+use these operations. Thanks!
+
+Best regards,
+Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
+
+----- Original Message -----
+> From: "Greg KH" <greg@kroah.com>
+> To: "Vladis Dronov" <vdronov@redhat.com>
+> Cc: "Sasha Levin" <sashal@kernel.org>, "Marcel Holtmann" <marcel@holtmann.org>, torvalds@linux-foundation.org,
+> linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, stable@vger.kernel.org
+> Sent: Thursday, August 1, 2019 4:06:39 PM
+> Subject: Re: [PATCH v5.3-rc2] Bluetooth: hci_uart: check for missing tty operations
 > 
-> 	edac_device_handle_ce(edac_dev, 1, 0, 0, edac_dev_name);
+> On Thu, Aug 01, 2019 at 09:55:55AM -0400, Vladis Dronov wrote:
+> > Thank you, Greg!
+> > 
+> > I've just noticed the patch landed in the upstream and was going to start
+> > stable
+> > backports, but it appeared you've already done this.
 > 
-> IMO, the api should be improved when touching it.
-
-Got it, I'll update the patch as you suggested.
-
-Thanks,
-Hanna
-
+> Verifying that I got the 4.4.y and 4.9.y and 4.14.y backports done
+> properly would be good, as I took a guess at them :)
 > 
-> -Robert
+> thanks,
+> 
+> greg k-h
