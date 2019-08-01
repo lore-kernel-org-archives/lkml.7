@@ -2,142 +2,154 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5DCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669A1C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CF020838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3476D20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ngdU8xy+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tCph01Fr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388630AbfHATZH (ORCPT
+        id S2388638AbfHAT2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:25:07 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34606 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388598AbfHATZG (ORCPT
+        Thu, 1 Aug 2019 15:28:16 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41334 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfHAT2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:25:06 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b13so34627832pfo.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 12:25:06 -0700 (PDT)
+        Thu, 1 Aug 2019 15:28:15 -0400
+Received: by mail-pf1-f193.google.com with SMTP id m30so34644255pff.8;
+        Thu, 01 Aug 2019 12:28:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:from:to:subject:user-agent:date;
-        bh=YaxBDmm4w6BxFdLcy1jn89PkJwYAWRGHPRdVfiDQRHM=;
-        b=ngdU8xy+iHRs7rlnaToJzNd5WH7HncGMsuD5TRZ7tEyyzGqqZFG7GFYIufuwz+VmxT
-         epuk93Kk1F0gG1Z2roZPQ4y3CoRWdi+sT/PZXv1BZXaBnl+covbf5XsLOLYHKlg7IB62
-         cWkYR/qEgz8laAMUe6DPHSe3cNMu/zCGkvtfE=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U4fqs+7fIVsIV0e3PRzwKf7VHBpCEy8xtJL+SJDtpmw=;
+        b=tCph01FrX08IAJGXNO3ZTGEgF0hjhzRupPshy7k4aBUHUpUaDN08gaqI0oDlDrZ8FY
+         DtTss+1scBgYjqNjGI00SclIHHyn596DL89HjEbn3I1T4RQoxB3zsq4HEvUfwlIN1BML
+         BKp/CE4Z8zZl5VzJ1NE87zk3t0bI0TU1XrYiaQwXXqTpWjCrelSbtGzCldQ4Zjo8yUxz
+         hkZBiTDuAMzxbeu+9Ae2+dm3mZ8wu32rDTLkbnFbHQeEySoHb/GSfV1q5d5d96R03XXb
+         YxV9Sb05YnYNfMr8VTa610wdUrnE7/Ybqc8PwjLetu53hE/U5HJY/m8hwUKPY1eTov5f
+         +YsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:from:to:subject
-         :user-agent:date;
-        bh=YaxBDmm4w6BxFdLcy1jn89PkJwYAWRGHPRdVfiDQRHM=;
-        b=BK6XfWDM2a9t1xzBCtM2OoxrEpy5K8N1QYt0ZuMa3qb1cawvdb9gakyDzS0Yx+Ug5H
-         3noftJ2V+V89tygCl+TQhce7Ap9g97r5kuGpmynsbex9Z5HxPGD9mopg4u20egw9409u
-         fwwb1n6wCy75z44r7f8wpW3NAAhDoDj3nzG9Aw26sR2Gq/dsjC6Q/kMG/Ifw39/yoD9p
-         fPYpIBgalvLbp8oRhZKoMLICg0eypxFsxhOETraHr5b4TKM3HJAgJcUtgHNCI+ZRqENu
-         NmiGqZQBCgo16CUrF0iy6q77mqGpthMigw8btd7MEOv9P0EdqHJjaTXCnowkHhAa7Rau
-         94iQ==
-X-Gm-Message-State: APjAAAWePDMbAK9nPkNAZSo4AH+r//G0ldDx2h9SnYQEcojYDmsIWY+d
-        4E1jwJ0MmCeraqcGe0QJE26GbA==
-X-Google-Smtp-Source: APXvYqxdgdlnp7cMvSt/ZUjqO9dvf+s5hQC0iB9FgVdGgYleySugtl6eoS1EjZoCYW6HFRx3+s5GKg==
-X-Received: by 2002:a17:90a:cb87:: with SMTP id a7mr392002pju.130.1564687506224;
-        Thu, 01 Aug 2019 12:25:06 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id t9sm6136860pji.18.2019.08.01.12.25.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 12:25:05 -0700 (PDT)
-Message-ID: <5d433c91.1c69fb81.93f13.febc@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U4fqs+7fIVsIV0e3PRzwKf7VHBpCEy8xtJL+SJDtpmw=;
+        b=YzIG3k+LFyxvvZFmCDcKh/96hKIO3J8RX5ZFQdlgVX0hfHPQqGO1JPPpfFLgMJTP0C
+         XX4yUMTKwa8JU2u5/twRSSMzfJ+qn22KmbEzt3KxjzUVEUmVtEQw8RFKtihnAWJpvcCy
+         DoIiQjwarEEwebmAPF/eM1VZMPo1Yhz7OPVBcEWikMRukc1ueWGWGNWwOLK5NblOXwda
+         1gHYbD3In/U4QKS/6yU1dL6ozY3YvYV7YYiO+xFmRsOInF1BePoC0es7rLIizcpirjb1
+         yZqe4J63PNOS2Gy3i1pTh1f/wAfADVvyUzwyPt73yd4scCNoCcvYk4Phndh0wI3rHJhD
+         yK+Q==
+X-Gm-Message-State: APjAAAWXIk3DY3e367WyfLPYz1nSUcX1cQrD/OQG1R4zMHZ+9ipvBFIv
+        9NwPI5pfzIl5H/ekjpJ5P2s=
+X-Google-Smtp-Source: APXvYqyafako6ZUoYO2ZC0gv32JQYkTg9Hvxeabrsg5mOPma+cs21PGmyZfob+3/upeUe8ljpIbJww==
+X-Received: by 2002:a63:290:: with SMTP id 138mr28121312pgc.402.1564687695005;
+        Thu, 01 Aug 2019 12:28:15 -0700 (PDT)
+Received: from [192.168.1.70] (c-73-231-235-122.hsd1.ca.comcast.net. [73.231.235.122])
+        by smtp.gmail.com with ESMTPSA id e11sm85899814pfm.35.2019.08.01.12.28.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 12:28:14 -0700 (PDT)
+Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe
+ ordering
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Collins <collinsd@codeaurora.org>,
+        kernel-team@android.com
+References: <20190731221721.187713-1-saravanak@google.com>
+ <20190801061209.GA3570@kroah.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <5a1e785d-075e-19a0-7d3d-949e1b65d726@gmail.com>
+Date:   Thu, 1 Aug 2019 12:28:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJZ5v0hDE908XcreUyzZ8JGjFJbgVX1N1ELeMwf+n_ENxPA_DA@mail.gmail.com>
-References: <20190731215514.212215-1-trong@android.com> <CANA+-vDTDq__LnLBpM5u_VHHvpFA--K5Du63vPB7HfaKzBsPtg@mail.gmail.com> <6987393.M0uybTKmdI@kreacher> <CANA+-vAPpXF1=z1=OjOhr8HWQ=Qn39qtQ3+8bUeXNTuFFTxoJQ@mail.gmail.com> <CAJZ5v0go-qOTyQV4D2Sj_xQxT831PxJZP0uay67rG73Q3K2pHQ@mail.gmail.com> <5d42281c.1c69fb81.bcda1.71f5@mx.google.com> <5d423637.1c69fb81.62114.ca6f@mx.google.com> <CAJZ5v0jkLXwqmXwyYtdZ9X2=W2KNKS4Ok_NrDew2yvvt1=4pgQ@mail.gmail.com> <5d4305df.1c69fb81.c4013.1950@mx.google.com> <CAJZ5v0hDE908XcreUyzZ8JGjFJbgVX1N1ELeMwf+n_ENxPA_DA@mail.gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tri Vo <trong@android.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v6] PM / wakeup: show wakeup sources stats in sysfs
-User-Agent: alot/0.8.1
-Date:   Thu, 01 Aug 2019 12:25:04 -0700
+In-Reply-To: <20190801061209.GA3570@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rafael J. Wysocki (2019-08-01 10:21:44)
-> On Thu, Aug 1, 2019 at 5:31 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > BTW, paths in /sys/devices aren't supposed to matter too much. In this
-> > case, I'd expect to see userspace looking at the /sys/class/wakeup path
-> > to follow the symlink to figure out what device triggered a wakeup. It
-> > can look at the 'device' symlink inside the directory for the wakeup
-> > device to figure out which one it is.
->=20
-> But if you go from the device, it would be good to be able to figure
-> out which wakeup sources are associated with it and in the alarmtimer
-> example you don't even see that it is a wakeup source without
-> following the link.
+Hi Greg,
 
-Userspace shouldn't go from the device path (/sys/devices/.../rtc0 in
-this example). That's incorrect. Instead, userspace should go from the
-/sys/class/wakeup/... path. It should iterate over all the devices in
-the class path and look at the device pointers instead.
+On 7/31/19 11:12 PM, Greg Kroah-Hartman wrote:
+> On Wed, Jul 31, 2019 at 03:17:13PM -0700, Saravana Kannan wrote:
+>> Add device-links to track functional dependencies between devices
+>> after they are created (but before they are probed) by looking at
+>> their common DT bindings like clocks, interconnects, etc.
+>>
+>> Having functional dependencies automatically added before the devices
+>> are probed, provides the following benefits:
+>>
+>> - Optimizes device probe order and avoids the useless work of
+>>   attempting probes of devices that will not probe successfully
+>>   (because their suppliers aren't present or haven't probed yet).
+>>
+>>   For example, in a commonly available mobile SoC, registering just
+>>   one consumer device's driver at an initcall level earlier than the
+>>   supplier device's driver causes 11 failed probe attempts before the
+>>   consumer device probes successfully. This was with a kernel with all
+>>   the drivers statically compiled in. This problem gets a lot worse if
+>>   all the drivers are loaded as modules without direct symbol
+>>   dependencies.
+>>
+>> - Supplier devices like clock providers, interconnect providers, etc
+>>   need to keep the resources they provide active and at a particular
+>>   state(s) during boot up even if their current set of consumers don't
+>>   request the resource to be active. This is because the rest of the
+>>   consumers might not have probed yet and turning off the resource
+>>   before all the consumers have probed could lead to a hang or
+>>   undesired user experience.
+>>
+>>   Some frameworks (Eg: regulator) handle this today by turning off
+>>   "unused" resources at late_initcall_sync and hoping all the devices
+>>   have probed by then. This is not a valid assumption for systems with
+>>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>>   this due to the lack of a clear signal for when they can turn off
+>>   resources. This leads to downstream hacks to handle cases like this
+>>   that can easily be solved in the upstream kernel.
+>>
+>>   By linking devices before they are probed, we give suppliers a clear
+>>   count of the number of dependent consumers. Once all of the
+>>   consumers are active, the suppliers can turn off the unused
+>>   resources without making assumptions about the number of consumers.
+>>
+>> By default we just add device-links to track "driver presence" (probe
+>> succeeded) of the supplier device. If any other functionality provided
+>> by device-links are needed, it is left to the consumer/supplier
+>> devices to change the link when they probe.
+> 
+> All now queued up in my driver-core-testing branch, and if 0-day is
+> happy with this, will move it to my "real" driver-core-next branch in a
+> day or so to get included in linux-next.
 
-# ls /sys/class/wakeup/*/device -l
-lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/alarmtimer/device =
--> ../../rtc0
-lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup0/device -> =
-../../../a6f8800.usb
-lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup1/device -> =
-../../../a8f8800.usb
-lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup2/device -> =
-../../../cros-ec-rtc.1.auto
-lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup3/device -> =
-../../sbs-16-000b
-lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup4/device -> =
-../../../a88000.spi:ec@0:keyboard-controller
-lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup5/device -> =
-../../../spi10.0
-lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup6/device -> =
-../../../gpio-keys
-lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup7/device -> =
-../../../1-1.1
-lrwxrwxrwx. 1 root root 0 Aug  1 12:13 /sys/class/wakeup/wakeup8/device -> =
-../../../1-1.2.4.1
+I have been slow in getting my review out.
 
->=20
-> So the "wakeupN" virtual dev names for all wakeup source objects are
-> less confusing IMO.
->=20
-> It would be good to avoid the glue dir creation in all cases somehow too.
+This patch series is not yet ready for sending to Linus, so if putting
+this in linux-next implies that it will be in your next pull request
+to Linus, please do not put it in linux-next.
 
-I recall some differences between a bus_type and a class. Are you
-suggesting to use a bus_type for the wakeup sources? I like the class
-approach taken here to use different device names because it avoids the
-name collisions, avoids making another attribute to express the name of
-the wakeup source, and doesn't make a more heavyweight driver
-abstraction on top of wakeup sources.
+Thanks,
 
-In fact, that ls command above pretty much sums up the wakeup source
-name and the device that it's associated with. Whatever goes on inside
-/sys/devices/... with respect to where the devices go and how they're
-structured is not important, at least to me. Why is it important to you?
+Frank
+
+> 
+> thanks for sticking with this!
+> 
+> greg k-h
+> 
 
