@@ -2,121 +2,118 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC443C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55948C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9262720838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2683820838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:12:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kJGfQtm2";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SaorWJN2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ofDukxc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729914AbfHAMMH (ORCPT
+        id S1729996AbfHAMMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:12:07 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37740 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbfHAMMG (ORCPT
+        Thu, 1 Aug 2019 08:12:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37750 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbfHAMMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:12:06 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0635B60E40; Thu,  1 Aug 2019 12:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564661526;
-        bh=/Uh0/D+m6kv8+YXdEyt+v1OkXzm8Qmlq1aKxE0Tu1jM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kJGfQtm2ju01E9JUxixAeNcBZaTChFZb0F+ZXb6OmSv6fSBYYCTyu6XhuPdtQfRd7
-         3TNe7iZwbY4in6sKzI0u9TPRks832x8Bo89M5yKucypNPZUerCknExileJUWzKFjKa
-         V/IDMn3jsiQ/CkM11/fzFLnVD4ETOAlKBtDhrLsM=
-Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2AED860A97;
-        Thu,  1 Aug 2019 12:12:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564661525;
-        bh=/Uh0/D+m6kv8+YXdEyt+v1OkXzm8Qmlq1aKxE0Tu1jM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SaorWJN2VqM3pGx1QTKwRzujfhsCyHXwPgUokmyAfnGoUzf1mrXM+j8s+6TU+wcX+
-         qAqnFVma+W6I7wMzSzJOxwMCT5+Ttka8O3SzOzmxBwLIaBLxEIHCcpRc95IiPkhaXF
-         8FJIA+3M9y9KzfNrbGMNcqmVG1YZNi1pO/wsQgzE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2AED860A97
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-To:     agross@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org
-Cc:     jslaby@suse.com, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH 1/1] tty: serial: qcom_geni_serial: Update the oversampling rate
-Date:   Thu,  1 Aug 2019 17:41:53 +0530
-Message-Id: <20190801121153.10613-1-vivek.gautam@codeaurora.org>
-X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
+        Thu, 1 Aug 2019 08:12:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=t9wQCPXDBSJ5U4TlAQQU+HRbE5Tc6JjxUxLV++Qf7eM=; b=ofDukxc2Byu76WKM0t8KljwuH
+        fEW+W/rICtF1Zim2BdvEG0nhfQNuCsMn8XM2cqI5bq3uPnSPgmSL9cEUc8M1qVX4xzFj8oFdpPN6t
+        3+rlBzLwbuM+Y6RR3ah0Ikh8NzkR9Mj/fmO2s8WgxJXe49qv9Z0x2Eq/ufGd4mfIFXWSFXjj6VcFJ
+        ld2VUDlS0JXaXPVyeBPlv0rFaqHeTuTIavTDjfgsxwAvI7gty9Jqeibpay2N4R3YMohBv0vAmpVEt
+        7bAQxAba5GgZhxE0oOCnJlSfLAO/yH7YfDEnD5U2dEd1aqFhvWNcpF/6gJCYaPKXog+nyUstRTes5
+        Yttril/Nw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1ht9wJ-0002b3-1f; Thu, 01 Aug 2019 12:12:11 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6D7DF2029F4C5; Thu,  1 Aug 2019 14:12:09 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 14:12:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Subject: Re: [PATCH 5/5] spi: Reduce kthread priority
+Message-ID: <20190801121209.GD31381@hirez.programming.kicks-ass.net>
+References: <20190801111348.530242235@infradead.org>
+ <20190801111541.917256884@infradead.org>
+ <CAMuHMdU3D22PAWepGP6rMvDwJKVTfbxxH9J=kuo59PB7CCVKOA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdU3D22PAWepGP6rMvDwJKVTfbxxH9J=kuo59PB7CCVKOA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For QUP IP versions 2.5 and above the oversampling rate is halved
-from 32 to 16. Update this rate after reading hardware version
-register, so that the clock divider value is correctly set to
-achieve required baud rate.
+On Thu, Aug 01, 2019 at 01:27:03PM +0200, Geert Uytterhoeven wrote:
+> Hi Peter,
+> 
+> On Thu, Aug 1, 2019 at 1:18 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > The SPI thingies request FIFO-99 by default, reduce this to FIFO-50.
+> >
+> > FIFO-99 is the very highest priority available to SCHED_FIFO and
+> > it not a suitable default; it would indicate the SPI work is the
+> > most important work on the machine.
+> >
+> > Cc: Benson Leung <bleung@chromium.org>
+> > Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > Cc: Guenter Roeck <groeck@chromium.org>
+> > Cc: Mark Brown <broonie@kernel.org>
+> > Cc: linux-spi@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  drivers/platform/chrome/cros_ec_spi.c |    2 +-
+> >  drivers/spi/spi.c                     |    2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > --- a/drivers/platform/chrome/cros_ec_spi.c
+> > +++ b/drivers/platform/chrome/cros_ec_spi.c
+> > @@ -706,7 +706,7 @@ static int cros_ec_spi_devm_high_pri_all
+> >                                            struct cros_ec_spi *ec_spi)
+> >  {
+> >         struct sched_param sched_priority = {
+> > -               .sched_priority = MAX_RT_PRIO - 1,
+> > +               .sched_priority = MAX_RT_PRIO / 2,
+> 
+> include/linux/sched/prio.h says:
+> 
+>  * Priority of a process goes from 0..MAX_PRIO-1, valid RT
+>  * priority is 0..MAX_RT_PRIO-1, and SCHED_NORMAL/SCHED_BATCH
+>  * tasks are in the range MAX_RT_PRIO..MAX_PRIO-1. Priority
+>  * values are inverted: lower p->prio value means higher priority.
+> 
+> So the new 50 is actually a higher priority than the old 99?
+> 
+> Given I'm far from an RT expert, I must be missing something?
+> Thanks!
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
----
- drivers/tty/serial/qcom_geni_serial.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+Ah; you found the confusion ;-)
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 35e5f9c5d5be..318f811585cc 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -920,12 +920,13 @@ static unsigned long get_clk_cfg(unsigned long clk_freq)
- 	return 0;
- }
- 
--static unsigned long get_clk_div_rate(unsigned int baud, unsigned int *clk_div)
-+static unsigned long get_clk_div_rate(unsigned int baud,
-+			unsigned int sampling_rate, unsigned int *clk_div)
- {
- 	unsigned long ser_clk;
- 	unsigned long desired_clk;
- 
--	desired_clk = baud * UART_OVERSAMPLING;
-+	desired_clk = baud * sampling_rate;
- 	ser_clk = get_clk_cfg(desired_clk);
- 	if (!ser_clk) {
- 		pr_err("%s: Can't find matching DFS entry for baud %d\n",
-@@ -951,12 +952,20 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
- 	u32 ser_clk_cfg;
- 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
- 	unsigned long clk_rate;
-+	u32 ver, sampling_rate;
- 
- 	qcom_geni_serial_stop_rx(uport);
- 	/* baud rate */
- 	baud = uart_get_baud_rate(uport, termios, old, 300, 4000000);
- 	port->baud = baud;
--	clk_rate = get_clk_div_rate(baud, &clk_div);
-+
-+	sampling_rate = UART_OVERSAMPLING;
-+	/* Sampling rate is halved for IP versions >= 2.5 */
-+	ver = geni_se_get_qup_hw_version(&port->se);
-+	if (GENI_SE_VERSION_MAJOR(ver) >= 2 && GENI_SE_VERSION_MINOR(ver) >= 5)
-+		sampling_rate /= 2;
-+
-+	clk_rate = get_clk_div_rate(baud, sampling_rate, &clk_div);
- 	if (!clk_rate)
- 		goto out_restart_rx;
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+https://lkml.kernel.org/20190617122448.GA3436@hirez.programming.kicks-ass.net
 
+But basically, user-space prio is [1-99], while in-kernel prio is
+[0-98]. The above is user prio (it basically uses the
+sched_setscheduler() syscall).
+
+So 50 really is lower than 99.
