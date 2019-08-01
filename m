@@ -2,96 +2,115 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC139C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0364BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9283B20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C994B2087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564677858;
+	bh=luxeEe+sNcMiUEJZddOmw2LCtZnw/7cP+2BTlvtj75g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cxef6gkd27ruJ/dnRHCPYTwGT3FCn043WiiLnenvWuAZcj6SpFK46cjuk4Og0lNTs
+	 iw43Z/c90zNFdOrJZIw4kvT37BliLBMvsj2Zx1dvbKUscu4Fa6dGvf542UOWFEBHhC
+	 t0M7ZwJlA7qnZsSklJzTHtdzdeBo/vK/jEmQHo8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733104AbfHAQmo (ORCPT
+        id S1732145AbfHAQoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:42:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:27139 "EHLO mga14.intel.com"
+        Thu, 1 Aug 2019 12:44:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729082AbfHAQmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:42:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 09:42:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,334,1559545200"; 
-   d="scan'208";a="324299006"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.145.65]) ([10.249.145.65])
-  by orsmga004.jf.intel.com with ESMTP; 01 Aug 2019 09:42:37 -0700
-Subject: Re: [PATCH v1] drivers/acpi/scan.c: Document why we don't need the
- device_hotplug_lock
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-acpi@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190731135306.31524-1-david@redhat.com>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <cf1b5664-af9f-2c0e-3c84-473dd18cb285@intel.com>
-Date:   Thu, 1 Aug 2019 18:42:36 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729082AbfHAQoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:44:17 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A272C20838;
+        Thu,  1 Aug 2019 16:44:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564677856;
+        bh=luxeEe+sNcMiUEJZddOmw2LCtZnw/7cP+2BTlvtj75g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1vCYTqrWNpzwy70+mDDkDyYbXSINihdTQt827ZNZ38BqrocpuTP/5twuQPWb+gghN
+         +bl+z5TixFmhDdNjnDx+Eh8sSH8KshmaqVzUor7b7NSq1e0PiUUaxnmgdxPhdn1229
+         Armf1YNDTLI9lVu8j9VV+a1Qdb+UMV3aZU2PBKDY=
+Date:   Thu, 1 Aug 2019 17:44:12 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma-mapping: fix page attributes for dma_mmap_*
+Message-ID: <20190801164411.kmsl4japtfkgvzxe@willie-the-truck>
+References: <20190801142118.21225-1-hch@lst.de>
+ <20190801142118.21225-2-hch@lst.de>
+ <20190801162305.3m32chycsdjmdejk@willie-the-truck>
+ <20190801163457.GB26588@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190731135306.31524-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801163457.GB26588@lst.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/2019 3:53 PM, David Hildenbrand wrote:
-> Let's document why the lock is not needed in acpi_scan_init(), right now
-> this is not really obvious.
->
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Thu, Aug 01, 2019 at 06:34:57PM +0200, Christoph Hellwig wrote:
+> On Thu, Aug 01, 2019 at 05:23:06PM +0100, Will Deacon wrote:
+> > > -	if (!dev_is_dma_coherent(dev) || (attrs & DMA_ATTR_WRITE_COMBINE))
+> > > -		return pgprot_writecombine(prot);
+> > > -	return prot;
+> > > +	return pgprot_writecombine(prot);
+> > >  }
+> > 
+> > Seems like a sensible cleanup to me:
+> > 
+> > Acked-by: Will Deacon <will@kernel.org>
+> > 
+> > Although arch_dma_mmap_pgprot() is a bit of a misnomer now that it only
+> > gets involved in the non-coherent case.
+> 
+> A better name is welcome.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+How about arch_dma_noncoherent_mmap_pgprot() ? Too long?
 
+> My other idea would be to just remove it entirely and do something like:
+> 
+> #ifndef pgprot_dmacoherent
+> #define pgprot_dmacoherent pgprot_noncached
+> #endif
+> 
+> pgprot_t dma_mmap_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
+> {
+> 	if (dev_is_dma_coherent(dev) || (attrs & DMA_ATTR_NON_CONSISTENT))
+> 		return prot;
+> #ifdef pgprot_writecombine
+> 	if (attrs & DMA_ATTR_WRITE_COMBINE)
+> 		return pgprot_writecombine(prot);
+> #endif
+> 	return pgprot_dmacoherent(prot);
+> }
 
-> ---
->
-> @Andrew, can you drop "drivers/acpi/scan.c: acquire device_hotplug_lock in
-> acpi_scan_init()" and add this patch instead? Thanks
->
-> ---
->   drivers/acpi/scan.c | 6 ++++++
->   1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 0e28270b0fd8..8444af6cd514 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -2204,6 +2204,12 @@ int __init acpi_scan_init(void)
->   	acpi_gpe_apply_masked_gpes();
->   	acpi_update_all_gpes();
->   
-> +	/*
-> +	 * Although we call__add_memory() that is documented to require the
-> +	 * device_hotplug_lock, it is not necessary here because this is an
-> +	 * early code when userspace or any other code path cannot trigger
-> +	 * hotplug/hotunplug operations.
-> +	 */
->   	mutex_lock(&acpi_scan_lock);
->   	/*
->   	 * Enumerate devices in the ACPI namespace.
+Oh, I prefer that!
 
+> But my worry is how this interacts with architectures that have an
+> uncached segment (mips, nios2, microblaze, extensa) where we'd have
+> the kernel access DMA_ATTR_WRITE_COMBINE mappigns using the uncached
+> segment, and userspace mmaps using pgprot_writecombine, which could
+> lead to aliasing issues.  But then again mips already supports
+> DMA_ATTR_WRITE_COMBINE, so this must be ok somehow.  I guess I'll
+> need to field that question to the relevant parties.
 
+Or it's always been busted and happens to work out in practice...
+
+Will
