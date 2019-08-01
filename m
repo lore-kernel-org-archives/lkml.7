@@ -2,363 +2,477 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3523C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812CBC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB5020838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EFE206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:58:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sIgeVCGf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhB9RSk2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388975AbfHAUyl (ORCPT
+        id S2388818AbfHAU6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 16:54:41 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43506 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730600AbfHAUyl (ORCPT
+        Thu, 1 Aug 2019 16:58:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41046 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728669AbfHAU6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:54:41 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c19so51295390lfm.10;
-        Thu, 01 Aug 2019 13:54:38 -0700 (PDT)
+        Thu, 1 Aug 2019 16:58:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id m30so34763675pff.8;
+        Thu, 01 Aug 2019 13:58:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fGQy5uGUCjFO4yFB0ai2lEXuPLV8s/5hQynXT8LY9nA=;
-        b=sIgeVCGfg+10MC5xKrquvRGOnxUzGYF0YQlKc2PttL0NpiWnoAlLP7TcpGpw9ppPqX
-         ikgr5ovtcB8Gf9ZpwXtoGvtEnK9jxloYr3ir+2kh8/jxwat14XaeVdZfWzXWPMn3sFY5
-         NbSkF8VZO4M6PvQ/9LIeRRcR29DHFc1nmoTj82c+TRAZcwiZz+0/wrauue17HD/ZrK6G
-         /kPpRtSsCU0rpzghEhnr29JFcWwrn+mXOyjQZuSllXHQkEqtMg5CW9qHTvaodruue32g
-         kIJJhvy8580P85PzJbVRN2sODCJcBb+zJPCxyv9mawIuyNX93sR3PLU23cGhgejpsKhA
-         NzvA==
+        h=from:to:cc:subject:date:message-id;
+        bh=WYyR2bYXed0QuZdNZYwYmS0w5vYhoD2p09J36Ydsq50=;
+        b=jhB9RSk22TPYT4M9ZlhGdQaxoLrL0udQkPMD3LHK3Yx4Z0SOzM25PJHJOc5sElJFH7
+         v9TZ3yYMqRrIgrfG/bhsoNwItZbKv8gEe5D+VOENWVuVccLX4ke7Co9u2kFDzGId5/cr
+         TyHmIYPE/5pao8ujZFq8+3tzUSvu/II3fexODlc09Icn4VEVVThD2a/0QuNhE9LcNAAN
+         xSuiqLJ6T+ZW8VrImzTjUcCF7oiSYKA1JzrGxBTnDwzcEFKIzXkOaSP9W2JpEbONx9kt
+         jerDL1flDhSIw6ho/W4uDq3jyVMFNjeewduAMootjNwUA/KxrMDOIvtGsDmH007WmTo6
+         wpGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fGQy5uGUCjFO4yFB0ai2lEXuPLV8s/5hQynXT8LY9nA=;
-        b=eR3kV8duxxTiW2DbyewlgNSZR6G7YdtG8EJv+HIeEVyY3bun5otth7EB6qrCxuVqgV
-         R8atjAI88//bRmSj803Xp7+fJN4Gn6MripEWKRSkfiRVfDVllhdZqjlKaT9mfOdir2ms
-         R5CJQpzQvsBrNP9QL61QKmgrj9HD49p58X1cZgHRMydlRuiDeow5WqBuSJsHQQ2HFa6x
-         FqAmhEO2xqscmgbKYfMx/niaueic92cPaANia/E7dvZBCGHEQRaRk5AEFA4C4GH3Xixm
-         kTAdTppwg5oIR4honpyZVfDK3b7xWB6LlhSEXPRVkCFgwGDgvRmWGffQIlKCpn6g22ta
-         aAuw==
-X-Gm-Message-State: APjAAAX7nXo42BMVDIs/ZkCuI2cW+je+tBfszNWGiWJchOWPeBBhCjfD
-        X4KqgxzpI6iAOOmdUlwMV+3M5o0x
-X-Google-Smtp-Source: APXvYqywtXgQcg2bCbU1F8F+qQSndOaYrhvMu1cjl5u+F63L/s3PqxOnaqZg/dJ7hV69/9XcqESgIQ==
-X-Received: by 2002:ac2:4152:: with SMTP id c18mr12073539lfi.144.1564692877397;
-        Thu, 01 Aug 2019 13:54:37 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id d16sm14764976ljc.96.2019.08.01.13.54.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 13:54:36 -0700 (PDT)
-Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
- support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
- <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
- <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
- <67cf6c13-688d-0305-61e2-c63c8e8b4729@nvidia.com>
- <550de191-f982-4544-6fbc-bf16dfeae2c6@nvidia.com>
- <c85ba067-af68-0b4a-d347-501ed7ed0ef9@gmail.com>
- <a81b85a2-5634-cfa2-77c5-94c23c4847bd@nvidia.com>
- <ef9e865f-359b-0873-a414-3d548bd4e590@gmail.com>
- <50bad1d3-df41-d1e5-a7c7-4be9c661ed14@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <62a5c6ed-21b1-8403-6fac-9c5d99b5a255@gmail.com>
-Date:   Thu, 1 Aug 2019 23:54:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <50bad1d3-df41-d1e5-a7c7-4be9c661ed14@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WYyR2bYXed0QuZdNZYwYmS0w5vYhoD2p09J36Ydsq50=;
+        b=fovYuIBI1ic8FrRj5AGYTlQBdeVnnVtnPQdiOUzAHvsijt9uxX6h3TsoF842xYFxOC
+         gL2K9Y5S/gr/gHZsxD/85fT/62IZ5Z2efbd9ZHBXJaUKi0zcQMl05ZMAf8ou1LD7WCc7
+         c+txuUs8qJB/ATO5tYPI/fxAEPV/EUDLlgP4Uih4R/k068ld9cafHuBufJ79pNI34JK1
+         3ujxhsto/niB19ucXmx7aKUsKJETCxuGTK1iMg+IORyt2QicfWjcwktLGa4a4H3Ni75T
+         GhLE8iRPd8x6byziS/++YI+6J6j0s6cmG61UVsIE1YGWjsts6aMo2V4JiQx0ZMN/ocdN
+         I22A==
+X-Gm-Message-State: APjAAAXPGfO3ulJvzDgIaZPHYKoLUd7ym5DP9kIcFxFVZgwfYJF8Df+y
+        pzWwMiuLWUVHqRoxz5S59fM=
+X-Google-Smtp-Source: APXvYqw5OgpFbbuBcgL2UAti1/+kdi3Y7D2OmvheNUdXDf7B2+srqxBVbsiGftQxSYg5VjV6KBtU0w==
+X-Received: by 2002:a17:90a:9b08:: with SMTP id f8mr705288pjp.103.1564693119732;
+        Thu, 01 Aug 2019 13:58:39 -0700 (PDT)
+Received: from localhost.localdomain (d206-116-172-62.bchsia.telus.net. [206.116.172.62])
+        by smtp.gmail.com with ESMTPSA id b16sm117971113pfo.54.2019.08.01.13.58.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 13:58:39 -0700 (PDT)
+From:   Mark Balantzyan <mbalant3@gmail.com>
+To:     linux@roeck-us.net
+Cc:     mbalant3@gmail.com, wim@linux-watchdog.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: [PATCH v2] watchdog: alim1535: Rewriting of alim1535 to use watchdog subsystem
+Date:   Thu,  1 Aug 2019 13:58:34 -0700
+Message-Id: <20190801205834.20956-1-mbalant3@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.08.2019 23:31, Sowjanya Komatineni пишет:
-> 
-> On 8/1/19 1:17 PM, Dmitry Osipenko wrote:
->> 01.08.2019 22:42, Sowjanya Komatineni пишет:
->>> On 8/1/19 12:00 PM, Dmitry Osipenko wrote:
->>>> 01.08.2019 20:58, Sowjanya Komatineni пишет:
->>>>> On 7/31/19 4:09 PM, Sowjanya Komatineni wrote:
->>>>>> On 7/31/19 3:44 AM, Dmitry Osipenko wrote:
->>>>>>> 31.07.2019 12:50, Dmitry Osipenko пишет:
->>>>>>>> 31.07.2019 3:20, Sowjanya Komatineni пишет:
->>>>>>>>> This patch implements save and restore context for peripheral
->>>>>>>>> fixed
->>>>>>>>> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
->>>>>>>>> peripheral clock ops.
->>>>>>>>>
->>>>>>>>> During system suspend, core power goes off and looses the settings
->>>>>>>>> of the Tegra CAR controller registers.
->>>>>>>>>
->>>>>>>>> So during suspend entry clock and reset state of peripherals is
->>>>>>>>> saved
->>>>>>>>> and on resume they are restored to have clocks back to same
->>>>>>>>> rate and
->>>>>>>>> state as before suspend.
->>>>>>>>>
->>>>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>> ---
->>>>>>>>>     drivers/clk/tegra/clk-periph-fixed.c | 33
->>>>>>>>> ++++++++++++++++++++++++++++++++
->>>>>>>>>     drivers/clk/tegra/clk-periph-gate.c  | 34
->>>>>>>>> +++++++++++++++++++++++++++++++++
->>>>>>>>>     drivers/clk/tegra/clk-periph.c       | 37
->>>>>>>>> ++++++++++++++++++++++++++++++++++++
->>>>>>>>>     drivers/clk/tegra/clk-sdmmc-mux.c    | 28
->>>>>>>>> +++++++++++++++++++++++++++
->>>>>>>>>     drivers/clk/tegra/clk.h              |  6 ++++++
->>>>>>>>>     5 files changed, 138 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>> b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>> index c088e7a280df..21b24530fa00 100644
->>>>>>>>> --- a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct
->>>>>>>>> clk_hw *hw,
->>>>>>>>>         return (unsigned long)rate;
->>>>>>>>>     }
->>>>>>>>>     +static int tegra_clk_periph_fixed_save_context(struct clk_hw
->>>>>>>>> *hw)
->>>>>>>>> +{
->>>>>>>>> +    struct tegra_clk_periph_fixed *fixed =
->>>>>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>>>>> +    u32 mask = 1 << (fixed->num % 32);
->>>>>>>>> +
->>>>>>>>> +    fixed->enb_ctx = readl_relaxed(fixed->base +
->>>>>>>>> fixed->regs->enb_reg) &
->>>>>>>>> +             mask;
->>>>>>>>> +    fixed->rst_ctx = readl_relaxed(fixed->base +
->>>>>>>>> fixed->regs->rst_reg) &
->>>>>>>>> +             mask;
->>>>>>>>> +
->>>>>>>>> +    return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static void tegra_clk_periph_fixed_restore_context(struct clk_hw
->>>>>>>>> *hw)
->>>>>>>>> +{
->>>>>>>>> +    struct tegra_clk_periph_fixed *fixed =
->>>>>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>>>>> +    u32 mask = 1 << (fixed->num % 32);
->>>>>>>>> +
->>>>>>>>> +    if (fixed->enb_ctx)
->>>>>>>>> +        writel_relaxed(mask, fixed->base +
->>>>>>>>> fixed->regs->enb_set_reg);
->>>>>>>>> +    else
->>>>>>>>> +        writel_relaxed(mask, fixed->base +
->>>>>>>>> fixed->regs->enb_clr_reg);
->>>>>>>>> +
->>>>>>>>> +    udelay(2);
->>>>>>>>> +
->>>>>>>>> +    if (!fixed->rst_ctx) {
->>>>>>>>> +        udelay(5); /* reset propogation delay */
->>>>>>>>> +        writel_relaxed(mask, fixed->base + fixed->regs->rst_reg);
->>>>>>>>> +    }
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>>     static const struct clk_ops tegra_clk_periph_fixed_ops = {
->>>>>>>>>         .is_enabled = tegra_clk_periph_fixed_is_enabled,
->>>>>>>>>         .enable = tegra_clk_periph_fixed_enable,
->>>>>>>>>         .disable = tegra_clk_periph_fixed_disable,
->>>>>>>>>         .recalc_rate = tegra_clk_periph_fixed_recalc_rate,
->>>>>>>>> +    .save_context = tegra_clk_periph_fixed_save_context,
->>>>>>>>> +    .restore_context = tegra_clk_periph_fixed_restore_context,
->>>>>>>>>     };
->>>>>>>>>       struct clk *tegra_clk_register_periph_fixed(const char
->>>>>>>>> *name,
->>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>> b/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>> index 4b31beefc9fc..6ba5b08e0787 100644
->>>>>>>>> --- a/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>> @@ -25,6 +25,8 @@ static DEFINE_SPINLOCK(periph_ref_lock);
->>>>>>>>>       #define read_rst(gate) \
->>>>>>>>>         readl_relaxed(gate->clk_base + (gate->regs->rst_reg))
->>>>>>>>> +#define write_rst_set(val, gate) \
->>>>>>>>> +    writel_relaxed(val, gate->clk_base +
->>>>>>>>> (gate->regs->rst_set_reg))
->>>>>>>>>     #define write_rst_clr(val, gate) \
->>>>>>>>>         writel_relaxed(val, gate->clk_base +
->>>>>>>>> (gate->regs->rst_clr_reg))
->>>>>>>>>     @@ -110,10 +112,42 @@ static void clk_periph_disable(struct
->>>>>>>>> clk_hw *hw)
->>>>>>>>>         spin_unlock_irqrestore(&periph_ref_lock, flags);
->>>>>>>>>     }
->>>>>>>>>     +static int clk_periph_gate_save_context(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +    struct tegra_clk_periph_gate *gate = to_clk_periph_gate(hw);
->>>>>>>>> +
->>>>>>>>> +    gate->clk_state_ctx = read_enb(gate) &
->>>>>>>>> periph_clk_to_bit(gate);
->>>>>>>>> +    gate->rst_state_ctx = read_rst(gate) &
->>>>>>>>> periph_clk_to_bit(gate);
->>>>>>>>> +
->>>>>>>>> +    return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static void clk_periph_gate_restore_context(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +    struct tegra_clk_periph_gate *gate = to_clk_periph_gate(hw);
->>>>>>>>> +
->>>>>>>>> +    if (gate->clk_state_ctx)
->>>>>>>>> +        write_enb_set(periph_clk_to_bit(gate), gate);
->>>>>>>>> +    else
->>>>>>>>> +        write_enb_clr(periph_clk_to_bit(gate), gate);
->>>>>>>>> +
->>>>>>>>> +    udelay(5);
->>>>>>>>> +
->>>>>>>>> +    if (!(gate->flags & TEGRA_PERIPH_NO_RESET) &&
->>>>>>>>> +        !(gate->flags & TEGRA_PERIPH_MANUAL_RESET)) {
->>>>>>>>> +        if (gate->rst_state_ctx)
->>>>>>>>> +            write_rst_set(periph_clk_to_bit(gate), gate);
->>>>>>>>> +        else
->>>>>>>>> +            write_rst_clr(periph_clk_to_bit(gate), gate);
->>>>>>>>> +    }
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>>     const struct clk_ops tegra_clk_periph_gate_ops = {
->>>>>>>>>         .is_enabled = clk_periph_is_enabled,
->>>>>>>>>         .enable = clk_periph_enable,
->>>>>>>>>         .disable = clk_periph_disable,
->>>>>>>>> +    .save_context = clk_periph_gate_save_context,
->>>>>>>>> +    .restore_context = clk_periph_gate_restore_context,
->>>>>>>>>     };
->>>>>>>>>       struct clk *tegra_clk_register_periph_gate(const char *name,
->>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph.c
->>>>>>>>> b/drivers/clk/tegra/clk-periph.c
->>>>>>>>> index 58437da25156..06fb62955768 100644
->>>>>>>>> --- a/drivers/clk/tegra/clk-periph.c
->>>>>>>>> +++ b/drivers/clk/tegra/clk-periph.c
->>>>>>>>> @@ -99,6 +99,37 @@ static void clk_periph_disable(struct clk_hw
->>>>>>>>> *hw)
->>>>>>>>>         gate_ops->disable(gate_hw);
->>>>>>>>>     }
->>>>>>>>>     +static int clk_periph_save_context(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +    struct tegra_clk_periph *periph = to_clk_periph(hw);
->>>>>>>>> +    const struct clk_ops *gate_ops = periph->gate_ops;
->>>>>>>>> +    struct clk_hw *gate_hw = &periph->gate.hw;
->>>>>>>>> +
->>>>>>>>> +    if (!(periph->gate.flags & TEGRA_PERIPH_NO_GATE))
->>>>>>>>> +        gate_ops->save_context(gate_hw);
->>>>>>>>> +
->>>>>>>>> +    periph->parent_ctx = clk_periph_get_parent(hw);
->>>>>>>>> +
->>>>>>>>> +    return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static void clk_periph_restore_context(struct clk_hw *hw)
->>>>>>>>> +{
->>>>>>>>> +    struct tegra_clk_periph *periph = to_clk_periph(hw);
->>>>>>>>> +    const struct clk_ops *gate_ops = periph->gate_ops;
->>>>>>>>> +    struct clk_hw *gate_hw = &periph->gate.hw;
->>>>>>>>> +    const struct clk_ops *div_ops = periph->div_ops;
->>>>>>>>> +    struct clk_hw *div_hw = &periph->divider.hw;
->>>>>>>>> +
->>>>>>>>> +    clk_periph_set_parent(hw, periph->parent_ctx);
->>>>>>>>> +
->>>>>>>>> +    if (!(periph->gate.flags & TEGRA_PERIPH_NO_DIV))
->>>>>>>>> +        div_ops->restore_context(div_hw);
->>>>>>>> Could you please point to where the divider's save_context()
->>>>>>>> happens?
->>>>>>>> Because I can't see it.
->>>>>>> Ah, I now see that there is no need to save the dividers context
->>>>>>> because
->>>>>>> clk itself has enough info that is needed for the context's
->>>>>>> restoring
->>>>>>> (like I pointed in the review to v6).
->>>>>>>
->>>>>>> Looks like you could also implement a new clk_hw_get_parent_index()
->>>>>>> generic helper to get the index instead of storing it manually.
->>>>>> clk_periph_get_parent basically invokes existing clk_mux_ops
->>>>>> get_parent() which is then saved in tegra_clk_periph.
->>>>>>
->>>>>> All existing drivers are using directly get_parent() from clk_mux
->>>>>> which actually gets index from the register read.
->>>>>>
->>>>>> To have this more generic w.r.t save/restore context point of view,
->>>>>> probably instead of implementing new get_parent_index helper, I think
->>>>>> its better to implement save_context and restore_context to
->>>>>> clk_mux_ops along with creating parent_index field into clk_mux to
->>>>>> cache index during set_parent.
->>>>>>
->>>>>> So we just need to invoke mux_ops save_context and restore_context.
->>>>>>
->>>>> I hope its ok to add save/restore context to clk_mux_ops to be more
->>>>> generic w.r.t save/restore context rather than get_parent_index API.
->>>>> Please confirm if you agree.
->>>> Sounds like a good idea. I see that there is a 'restoring' helper for
->>>> the generic clk_gate, seems something similar could be done for the
->>>> clk_mux. And looks like anyway you'll need to associate the parent
->>>> clock
->>>> with the hw index in order to restore the muxing.
->>> by 'restoring' helper for generic clk_gate, are you referring to
->>> clk_gate_restore_context API?
->> Yes.
->>
->>> clk_gate_restore_context is API that's any clk drivers can use for
->>> clk_gate operation restore for custom gate clk_ops.
->>>
->>> But clk-periph is directly using generic clk_mux ops from clk_mux so I
->>> think we should add .restore_context to clk_mux_ops and then during
->>> clk-periph restore need to invoke mux_ops->restore_context.
->> I'm not sure whether it will be good for every driver that uses generic
->> clk_mux ops. Should be more flexible to have a generic helper function
->> that any driver could use in order to restore the clock's parent.
->>
->> The clk-periph restoring also includes case of combining divider and
->> parent restoring, so generic helper could be useful in that case as well.
->>
->> It also looks like you could actually use the clk_gate_restore_context()
->> instead of manually saving the clock's enable-state, couldn't you?
-> 
-> ok for clk_mux, can add generic clk_mux_restore_context API rather than
-> using restore_context in clk_ops and will invoke that during clk_periph
-> restore.
-> 
-> 
-> Reg clk_gate, looks like we cant use generic clk_gate_restore_context
-> for clk-periph as it calls enable/disable callbacks and
-> clk_periph_enable/disable in clk-periph-gate also updated refcnt and
-> depending on that actual enable/disable is set.
-> 
-> During suspend, peripherals that are already enabled have their refcnt >
-> 1, so they dont go thru enable/disable on restore if we use same
-> enable/disable callback.
+This patch rewrites the alim1535_wdt driver to use the watchdog subsystem. By virtue of this, it also fixes a potential race condition between ali_timeout_bits and ali_settimer().
 
-Looks like you could just decrement the gate's enable_refcnt on
-save_context, wouldn't that work?
+Signed-off-by: Mark Balantzyan <mbalant3@gmail.com>
 
-> 
-> Also to align exact reset state along with CLK (like for case where CLK
-> is enabled but peripheral might be in reset state), implemented
-> save/restore in tegra specific tegra_clk_periph_gate_ops
+---
+ drivers/watchdog/Kconfig        |   1 +
+ drivers/watchdog/alim1535_wdt.c | 275 +++++---------------------------
+ 2 files changed, 37 insertions(+), 239 deletions(-)
 
-I'm wondering whether instead of saving/restoring reset-state of every
-clock, you could simply save/restore the whole RST_DEV_x_SET register.
-Couldn't you?
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 9af07fd9..980b0c90 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -853,6 +853,7 @@ config ADVANTECH_WDT
+ 
+ config ALIM1535_WDT
+ 	tristate "ALi M1535 PMU Watchdog Timer"
++	select WATCHDOG_CORE
+ 	depends on X86 && PCI
+ 	---help---
+ 	  This is the driver for the hardware watchdog on the ALi M1535 PMU.
+diff --git a/drivers/watchdog/alim1535_wdt.c b/drivers/watchdog/alim1535_wdt.c
+index 60f0c2eb..55648ba8 100644
+--- a/drivers/watchdog/alim1535_wdt.c
++++ b/drivers/watchdog/alim1535_wdt.c
+@@ -12,26 +12,18 @@
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/types.h>
+-#include <linux/miscdevice.h>
+ #include <linux/watchdog.h>
+ #include <linux/ioport.h>
+-#include <linux/notifier.h>
+-#include <linux/reboot.h>
+-#include <linux/init.h>
+-#include <linux/fs.h>
+-#include <linux/pci.h>
+ #include <linux/uaccess.h>
+ #include <linux/io.h>
++#include <linux/pci.h>
+ 
+ #define WATCHDOG_NAME "ALi_M1535"
+ #define WATCHDOG_TIMEOUT 60	/* 60 sec default timeout */
+ 
+ /* internal variables */
+-static unsigned long ali_is_open;
+-static char ali_expect_release;
+ static struct pci_dev *ali_pci;
+ static u32 ali_timeout_bits;		/* stores the computed timeout */
+-static DEFINE_SPINLOCK(ali_lock);	/* Guards the hardware */
+ 
+ /* module parameters */
+ static int timeout = WATCHDOG_TIMEOUT;
+@@ -53,18 +45,15 @@ MODULE_PARM_DESC(nowayout,
+  *	configuration set.
+  */
+ 
+-static void ali_start(void)
++static int ali_start(struct watchdog_device *wdd)
+ {
+ 	u32 val;
+ 
+-	spin_lock(&ali_lock);
+-
+ 	pci_read_config_dword(ali_pci, 0xCC, &val);
+ 	val &= ~0x3F;	/* Mask count */
+ 	val |= (1 << 25) | ali_timeout_bits;
+ 	pci_write_config_dword(ali_pci, 0xCC, val);
+-
+-	spin_unlock(&ali_lock);
++	return 0;
+ }
+ 
+ /*
+@@ -73,18 +62,15 @@ static void ali_start(void)
+  *	Stop the ALi watchdog countdown
+  */
+ 
+-static void ali_stop(void)
++static int ali_stop(struct watchdog_device *wdd)
+ {
+ 	u32 val;
+ 
+-	spin_lock(&ali_lock);
+-
+ 	pci_read_config_dword(ali_pci, 0xCC, &val);
+ 	val &= ~0x3F;		/* Mask count to zero (disabled) */
+ 	val &= ~(1 << 25);	/* and for safety mask the reset enable */
+ 	pci_write_config_dword(ali_pci, 0xCC, val);
+-
+-	spin_unlock(&ali_lock);
++	return 0;
+ }
+ 
+ /*
+@@ -93,32 +79,24 @@ static void ali_stop(void)
+  *	Send a keepalive to the timer (actually we restart the timer).
+  */
+ 
+-static void ali_keepalive(void)
++static int ali_keepalive(struct watchdog_device *wdd)
+ {
+-	ali_start();
++	ali_start(wdd);
++	return 0;
+ }
+ 
+ /*
+- *	ali_settimer	-	compute the timer reload value
++ *	ali_set_timeout	-	compute the timer reload value
+  *	@t: time in seconds
+  *
+  *	Computes the timeout values needed
+  */
+ 
+-static int ali_settimer(int t)
++static int ali_set_timeout(struct watchdog_device *wdd, unsigned int t)
+ {
+-	if (t < 0)
+-		return -EINVAL;
+-	else if (t < 60)
+-		ali_timeout_bits = t|(1 << 6);
+-	else if (t < 3600)
+-		ali_timeout_bits = (t / 60)|(1 << 7);
+-	else if (t < 18000)
+-		ali_timeout_bits = (t / 300)|(1 << 6)|(1 << 7);
+-	else
+-		return -EINVAL;
+-
+-	timeout = t;
++	wdd->max_timeout = 60;
++	wdd->min_timeout = 1;
++	wdd->timeout = t;
+ 	return 0;
+ }
+ 
+@@ -126,172 +104,6 @@ static int ali_settimer(int t)
+  *	/dev/watchdog handling
+  */
+ 
+-/*
+- *	ali_write	-	writes to ALi watchdog
+- *	@file: file from VFS
+- *	@data: user address of data
+- *	@len: length of data
+- *	@ppos: pointer to the file offset
+- *
+- *	Handle a write to the ALi watchdog. Writing to the file pings
+- *	the watchdog and resets it. Writing the magic 'V' sequence allows
+- *	the next close to turn off the watchdog.
+- */
+-
+-static ssize_t ali_write(struct file *file, const char __user *data,
+-						size_t len, loff_t *ppos)
+-{
+-	/* See if we got the magic character 'V' and reload the timer */
+-	if (len) {
+-		if (!nowayout) {
+-			size_t i;
+-
+-			/* note: just in case someone wrote the
+-			   magic character five months ago... */
+-			ali_expect_release = 0;
+-
+-			/* scan to see whether or not we got
+-			   the magic character */
+-			for (i = 0; i != len; i++) {
+-				char c;
+-				if (get_user(c, data + i))
+-					return -EFAULT;
+-				if (c == 'V')
+-					ali_expect_release = 42;
+-			}
+-		}
+-
+-		/* someone wrote to us, we should reload the timer */
+-		ali_start();
+-	}
+-	return len;
+-}
+-
+-/*
+- *	ali_ioctl	-	handle watchdog ioctls
+- *	@file: VFS file pointer
+- *	@cmd: ioctl number
+- *	@arg: arguments to the ioctl
+- *
+- *	Handle the watchdog ioctls supported by the ALi driver. Really
+- *	we want an extension to enable irq ack monitoring and the like
+- */
+-
+-static long ali_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+-{
+-	void __user *argp = (void __user *)arg;
+-	int __user *p = argp;
+-	static const struct watchdog_info ident = {
+-		.options =		WDIOF_KEEPALIVEPING |
+-					WDIOF_SETTIMEOUT |
+-					WDIOF_MAGICCLOSE,
+-		.firmware_version =	0,
+-		.identity =		"ALi M1535 WatchDog Timer",
+-	};
+-
+-	switch (cmd) {
+-	case WDIOC_GETSUPPORT:
+-		return copy_to_user(argp, &ident, sizeof(ident)) ? -EFAULT : 0;
+-
+-	case WDIOC_GETSTATUS:
+-	case WDIOC_GETBOOTSTATUS:
+-		return put_user(0, p);
+-	case WDIOC_SETOPTIONS:
+-	{
+-		int new_options, retval = -EINVAL;
+-
+-		if (get_user(new_options, p))
+-			return -EFAULT;
+-		if (new_options & WDIOS_DISABLECARD) {
+-			ali_stop();
+-			retval = 0;
+-		}
+-		if (new_options & WDIOS_ENABLECARD) {
+-			ali_start();
+-			retval = 0;
+-		}
+-		return retval;
+-	}
+-	case WDIOC_KEEPALIVE:
+-		ali_keepalive();
+-		return 0;
+-	case WDIOC_SETTIMEOUT:
+-	{
+-		int new_timeout;
+-		if (get_user(new_timeout, p))
+-			return -EFAULT;
+-		if (ali_settimer(new_timeout))
+-			return -EINVAL;
+-		ali_keepalive();
+-	}
+-		/* fall through */
+-	case WDIOC_GETTIMEOUT:
+-		return put_user(timeout, p);
+-	default:
+-		return -ENOTTY;
+-	}
+-}
+-
+-/*
+- *	ali_open	-	handle open of ali watchdog
+- *	@inode: inode from VFS
+- *	@file: file from VFS
+- *
+- *	Open the ALi watchdog device. Ensure only one person opens it
+- *	at a time. Also start the watchdog running.
+- */
+-
+-static int ali_open(struct inode *inode, struct file *file)
+-{
+-	/* /dev/watchdog can only be opened once */
+-	if (test_and_set_bit(0, &ali_is_open))
+-		return -EBUSY;
+-
+-	/* Activate */
+-	ali_start();
+-	return nonseekable_open(inode, file);
+-}
+-
+-/*
+- *	ali_release	-	close an ALi watchdog
+- *	@inode: inode from VFS
+- *	@file: file from VFS
+- *
+- *	Close the ALi watchdog device. Actual shutdown of the timer
+- *	only occurs if the magic sequence has been set.
+- */
+-
+-static int ali_release(struct inode *inode, struct file *file)
+-{
+-	/*
+-	 *      Shut off the timer.
+-	 */
+-	if (ali_expect_release == 42)
+-		ali_stop();
+-	else {
+-		pr_crit("Unexpected close, not stopping watchdog!\n");
+-		ali_keepalive();
+-	}
+-	clear_bit(0, &ali_is_open);
+-	ali_expect_release = 0;
+-	return 0;
+-}
+-
+-/*
+- *	ali_notify_sys	-	System down notifier
+- *
+- *	Notifier for system down
+- */
+-
+-
+-static int ali_notify_sys(struct notifier_block *this,
+-					unsigned long code, void *unused)
+-{
+-	if (code == SYS_DOWN || code == SYS_HALT)
+-		ali_stop();		/* Turn the WDT off */
+-	return NOTIFY_DONE;
+-}
+-
+ /*
+  *	Data for PCI driver interface
+  *
+@@ -361,23 +173,17 @@ static int __init ali_find_watchdog(void)
+  *	Kernel Interfaces
+  */
+ 
+-static const struct file_operations ali_fops = {
+-	.owner		=	THIS_MODULE,
+-	.llseek		=	no_llseek,
+-	.write		=	ali_write,
+-	.unlocked_ioctl =	ali_ioctl,
+-	.open		=	ali_open,
+-	.release	=	ali_release,
++static struct watchdog_ops alim1535wdt_ops = {
++	.owner = THIS_MODULE,
++	.start = ali_start,
++	.stop = ali_stop,
++	.ping = ali_keepalive,
++	.set_timeout = ali_set_timeout,
+ };
+ 
+-static struct miscdevice ali_miscdev = {
+-	.minor =	WATCHDOG_MINOR,
+-	.name =		"watchdog",
+-	.fops =		&ali_fops,
+-};
+-
+-static struct notifier_block ali_notifier = {
+-	.notifier_call =	ali_notify_sys,
++static struct watchdog_device alim1535wdt_wdd = {
++	.ops = &alim1535wdt_ops,
++	.status = WATCHDOG_NOWAYOUT_INIT_STATUS,
+ };
+ 
+ /*
+@@ -403,30 +209,25 @@ static int __init watchdog_init(void)
+ 			timeout);
+ 	}
+ 
+-	/* Calculate the watchdog's timeout */
+-	ali_settimer(timeout);
++	watchdog_stop_on_reboot(&alim1535wdt_wdd);
++
++	watchdog_init_timeout(&alim1535wdt_wdd, timeout, NULL);
++
++	watchdog_set_nowayout(&alim1535wdt_wdd, nowayout);
+ 
+-	ret = register_reboot_notifier(&ali_notifier);
+-	if (ret != 0) {
+-		pr_err("cannot register reboot notifier (err=%d)\n", ret);
+-		goto out;
+-	}
++	ret = watchdog_register_device(&alim1535wdt_wdd);
+ 
+-	ret = misc_register(&ali_miscdev);
+ 	if (ret != 0) {
+-		pr_err("cannot register miscdev on minor=%d (err=%d)\n",
+-		       WATCHDOG_MINOR, ret);
+-		goto unreg_reboot;
++		goto reboot_unreg;
+ 	}
+ 
+-	pr_info("initialized. timeout=%d sec (nowayout=%d)\n",
+-		timeout, nowayout);
++	/* Calculate the watchdog's timeout */
++	ali_set_timeout(&alim1535wdt_wdd, timeout);
++
++	return 0;
+ 
+-out:
++reboot_unreg:
+ 	return ret;
+-unreg_reboot:
+-	unregister_reboot_notifier(&ali_notifier);
+-	goto out;
+ }
+ 
+ /*
+@@ -437,12 +238,8 @@ unreg_reboot:
+ 
+ static void __exit watchdog_exit(void)
+ {
+-	/* Stop the timer before we leave */
+-	ali_stop();
+-
+ 	/* Deregister */
+-	misc_deregister(&ali_miscdev);
+-	unregister_reboot_notifier(&ali_notifier);
++	watchdog_unregister_device(&alim1535wdt_wdd);
+ 	pci_dev_put(ali_pci);
+ }
+ 
+@@ -451,4 +248,4 @@ module_exit(watchdog_exit);
+ 
+ MODULE_AUTHOR("Alan Cox");
+ MODULE_DESCRIPTION("ALi M1535 PMU Watchdog Timer driver");
+-MODULE_LICENSE("GPL");
++MODULE_LICENSE("GPL");
+-- 
+2.17.1
+
