@@ -2,119 +2,131 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329B7C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B021C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0838520838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:04:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hoOY+r66"
+	by mail.kernel.org (Postfix) with ESMTP id 4D9B2214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbfHAIES (ORCPT
+        id S1730561AbfHAIFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:04:18 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55078 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbfHAIEQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:04:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x717wwaS173578;
-        Thu, 1 Aug 2019 08:03:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=uqjHMdgaF7LuDAF9oZsHnLrTeE15VIi9x0+twPBjRhg=;
- b=hoOY+r66LbPdS7EdDSgz2aQO1m3ADA6xCt8ord1HLpK++3iX5/LwIjypy+f8KCoHL3RR
- m4lRyOaCOq1XGMGDvgs3S6MPO0JbuL3Vyyhrw30VXWsliZQ1sarPvD1KqR+2TeX9wPiw
- ZFcm/CJzNV/85TnFTm4KBpMzNkN3l8LiAeygwVQ2f6amFXc2fUrUrYNttqk2HEOzKYK9
- knPVV/wV+Jxe66J3bC7ebeYFX/TPbV6I+7tIx3tkagPzBFHvpg/W22AYqJpTzylLGp2V
- N2ajCzDN6rrN9dIH8Xh9JnGy4jcvp01v1v07DDpnScUayvZmHY6m01J3IqHsE1aWf0yy jg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2u0e1u28de-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 01 Aug 2019 08:03:56 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x71831bA179061;
-        Thu, 1 Aug 2019 08:03:56 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2u3mbtw5ea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 01 Aug 2019 08:03:56 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7183qwu000621;
-        Thu, 1 Aug 2019 08:03:52 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 01 Aug 2019 01:03:51 -0700
-Date:   Thu, 1 Aug 2019 11:03:43 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     =?iso-8859-1?Q?Aur=E9lien?= Aptel <aaptel@suse.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        samba-technical@lists.samba.org, Steve French <sfrench@samba.org>,
-        kernel-janitors@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cifs: remove redundant assignment to variable rc
-Message-ID: <20190801080343.GA1935@kadam>
-References: <20190731090526.27245-1-colin.king@canonical.com>
- <87r266seg4.fsf@suse.com>
- <20190731122841.GA1974@kadam>
- <87lfwerze8.fsf@suse.com>
+        Thu, 1 Aug 2019 04:05:08 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40504 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725790AbfHAIFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 04:05:07 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7E83CA1EA9312ABEAB26;
+        Thu,  1 Aug 2019 16:04:42 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 1 Aug 2019
+ 16:04:39 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix livelock in swapfile writes
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190731204353.62056-1-jaegeuk@kernel.org>
+ <f500dafa-19f4-78ff-2645-2239fbf43eab@huawei.com>
+ <20190801042650.GD84433@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <cd771dfe-19bd-c183-101b-d6d0327a76c2@huawei.com>
+Date:   Thu, 1 Aug 2019 16:04:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87lfwerze8.fsf@suse.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9335 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908010082
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9335 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908010081
+In-Reply-To: <20190801042650.GD84433@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 05:34:39PM +0200, Aurélien Aptel wrote:
-> "Dan Carpenter" <dan.carpenter@oracle.com> writes:
-> > You're just turning off GCC's static analysis (and introducing false
-> > positives) when you do that.  We have seen bugs caused by this and never
-> > seen any bugs prevented by this style.
+On 2019/8/1 12:26, Jaegeuk Kim wrote:
+> On 08/01, Chao Yu wrote:
+>> On 2019/8/1 4:43, Jaegeuk Kim wrote:
+>>> This patch fixes livelock in the below call path when writing swap pages.
+>>>
+>>> [46374.617256] c2    701  __switch_to+0xe4/0x100
+>>> [46374.617265] c2    701  __schedule+0x80c/0xbc4
+>>> [46374.617273] c2    701  schedule+0x74/0x98
+>>> [46374.617281] c2    701  rwsem_down_read_failed+0x190/0x234
+>>> [46374.617291] c2    701  down_read+0x58/0x5c
+>>> [46374.617300] c2    701  f2fs_map_blocks+0x138/0x9a8
+>>> [46374.617310] c2    701  get_data_block_dio_write+0x74/0x104
+>>> [46374.617320] c2    701  __blockdev_direct_IO+0x1350/0x3930
+>>> [46374.617331] c2    701  f2fs_direct_IO+0x55c/0x8bc
+>>> [46374.617341] c2    701  __swap_writepage+0x1d0/0x3e8
+>>> [46374.617351] c2    701  swap_writepage+0x44/0x54
+>>> [46374.617360] c2    701  shrink_page_list+0x140/0xe80
+>>> [46374.617371] c2    701  shrink_inactive_list+0x510/0x918
+>>> [46374.617381] c2    701  shrink_node_memcg+0x2d4/0x804
+>>> [46374.617391] c2    701  shrink_node+0x10c/0x2f8
+>>> [46374.617400] c2    701  do_try_to_free_pages+0x178/0x38c
+>>> [46374.617410] c2    701  try_to_free_pages+0x348/0x4b8
+>>> [46374.617419] c2    701  __alloc_pages_nodemask+0x7f8/0x1014
+>>> [46374.617429] c2    701  pagecache_get_page+0x184/0x2cc
+>>> [46374.617438] c2    701  f2fs_new_node_page+0x60/0x41c
+>>> [46374.617449] c2    701  f2fs_new_inode_page+0x50/0x7c
+>>> [46374.617460] c2    701  f2fs_init_inode_metadata+0x128/0x530
+>>> [46374.617472] c2    701  f2fs_add_inline_entry+0x138/0xd64
+>>> [46374.617480] c2    701  f2fs_do_add_link+0xf4/0x178
+>>> [46374.617488] c2    701  f2fs_create+0x1e4/0x3ac
+>>> [46374.617497] c2    701  path_openat+0xdc0/0x1308
+>>> [46374.617507] c2    701  do_filp_open+0x78/0x124
+>>> [46374.617516] c2    701  do_sys_open+0x134/0x248
+>>> [46374.617525] c2    701  SyS_openat+0x14/0x20
+>>>
+>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>> ---
+>>>  fs/f2fs/data.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>>> index abbf14e9bd72..f49f243fd54f 100644
+>>> --- a/fs/f2fs/data.c
+>>> +++ b/fs/f2fs/data.c
+>>> @@ -1372,7 +1372,7 @@ static int get_data_block_dio_write(struct inode *inode, sector_t iblock,
+>>>  	return __get_data_block(inode, iblock, bh_result, create,
+>>>  				F2FS_GET_BLOCK_DIO, NULL,
+>>>  				f2fs_rw_hint_to_seg_type(inode->i_write_hint),
+>>> -				true);
+>>> +				IS_SWAPFILE(inode) ? false : true);
+>>
+>> I suspect that we should use node_change for swapfile rather than just changing
+>> may_write field to skip lock.
 > 
-> You've never seen bugs prevented by initializing uninitialized
-> variables? Code can change overtime and I don't think coverity is
-> checked as often as it could be, meaning the var could end up being used
-> while uninitialized in the future.
+> Swap write should not change the node page.
 
-Of course, we wouldn't see bugs that were prevented so that wasn't
-entirely fair.
+You're right.
 
-There is a several year old bug in GCC where it sometimes initializes
-these to zero and doesn't warn about the uninitialized variable so it
-is actually possible to prevent a bug by initializing it to an error
-code.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-Smatch also warns about uninitialized variables.  I normally run Smatch
-on linux-next every day but I have been out of office for the past
-month and my config doesn't cover everything.
+Thanks,
 
-We haven't been able to enable this "redundant assignment" warning
-because of all the false positives like this.  It mostly finds dead code
-but it also does find some bugs where we forget to check the error code
-or we use the wrong variable.
-
-regards,
-dan carpenter
-
+> 
+>>
+>> __do_map_lock()
+>> if (flag == F2FS_GET_BLOCK_PRE_AIO || IS_SWAPFILE(inode)) {
+>> 	...
+>> } else {
+>> 	...
+>> }
+>>
+>> Thanks,
+>>
+>>
+>>>  }
+>>>  
+>>>  static int get_data_block_dio(struct inode *inode, sector_t iblock,
+>>>
+> .
+> 
