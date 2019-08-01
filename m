@@ -2,70 +2,147 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EE3C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B539CC32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B8020693
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819D7217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 01:11:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfHABC5 (ORCPT
+        id S1729004AbfHABLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 21:02:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34234 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfHABC4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 21:02:56 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b13so32853710pfo.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 18:02:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GbYit1a5D8rEwLMyMArcrhnCQRGQCS4YYQcJAe/0Ln4=;
-        b=CXP/Q1/nzc10B0Aa660Q9xIkHkjRlgl+pFMLzIabxQdcAwnmY7ebOmQGAP0zHXlt8H
-         NEP08VqBTcv36RmrwssfScBma5tAIqUXuk5ahh8WhW89CoKRa5QpHc+zwxuyQWMX+mva
-         KekrPzOSo9DlitroF1YNFhCboKprxKAHBVJUBbk5PzUsH/HfbO/TMn9GOs1weI1rL4SA
-         ZDmuqAeWLyRw54p0lw5H3zqPMA2NGuWBE8P4HhMpLZqM47g/UAjtQtzeTZqreC5IMoil
-         ox3evAQ2v2vTE4mSrOrx47+JLaPlob/bV46C86kyniTB8xOUvAuAvPQuM7TFtC4e836/
-         cgnQ==
-X-Gm-Message-State: APjAAAXnzCWv4pDoMIEQ62DCJP1N/ZjtwyeE/c4+2hdqgOcAEYp+44rJ
-        LN+j+LdR01Fa9OlRKopwYzc=
-X-Google-Smtp-Source: APXvYqzgSwGraMxmkyeBlFGqAmY8qdlWkjCvi9suIm/XDMg4NNq2vYm+NG3ihoumu0Zh6a2ZEucHKA==
-X-Received: by 2002:a63:188:: with SMTP id 130mr114842632pgb.231.1564621376041;
-        Wed, 31 Jul 2019 18:02:56 -0700 (PDT)
-Received: from ?IPv6:2601:647:4800:973f:45eb:53c1:ba3f:2a0a? ([2601:647:4800:973f:45eb:53c1:ba3f:2a0a])
-        by smtp.gmail.com with ESMTPSA id z63sm43268250pfb.98.2019.07.31.18.02.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 18:02:55 -0700 (PDT)
-Subject: Re: [PATCH v3 0/4] Varios NVMe Fixes
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>
-References: <20190731233534.4841-1-logang@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <3f9c1d7d-edb0-f4b5-dc48-fe0f061b1e17@grimberg.me>
-Date:   Wed, 31 Jul 2019 18:02:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 31 Jul 2019 21:11:22 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34548 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725942AbfHABLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 21:11:22 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6295B2C0F960B1BEB31C;
+        Thu,  1 Aug 2019 09:11:19 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 1 Aug 2019
+ 09:11:14 +0800
+Subject: Re: [PATCH v4 3/3] f2fs: Support case-insensitive file name lookups
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Daniel Rosenberg <drosen@google.com>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <kernel-team@android.com>
+References: <20190723230529.251659-1-drosen@google.com>
+ <20190723230529.251659-4-drosen@google.com>
+ <20190731175748.GA48637@archlinux-threadripper>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <5d6c5da8-ad1e-26e2-0a3d-84949cd4e9aa@huawei.com>
+Date:   Thu, 1 Aug 2019 09:11:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190731233534.4841-1-logang@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190731175748.GA48637@archlinux-threadripper>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Nathan,
+
+Thanks for the report! :)
+
+On 2019/8/1 1:57, Nathan Chancellor wrote:
+> Hi all,
+> 
+> <snip>
+> 
+>> diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
+>> index cc82f142f811f..99e79934f5088 100644
+>> --- a/fs/f2fs/hash.c
+>> +++ b/fs/f2fs/hash.c
+>> @@ -14,6 +14,7 @@
+>>  #include <linux/f2fs_fs.h>
+>>  #include <linux/cryptohash.h>
+>>  #include <linux/pagemap.h>
+>> +#include <linux/unicode.h>
+>>  
+>>  #include "f2fs.h"
+>>  
+>> @@ -67,7 +68,7 @@ static void str2hashbuf(const unsigned char *msg, size_t len,
+>>  		*buf++ = pad;
+>>  }
+>>  
+>> -f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
+>> +static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
+>>  				struct fscrypt_name *fname)
+>>  {
+>>  	__u32 hash;
+>> @@ -103,3 +104,35 @@ f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
+>>  	f2fs_hash = cpu_to_le32(hash & ~F2FS_HASH_COL_BIT);
+>>  	return f2fs_hash;
+>>  }
+>> +
+>> +f2fs_hash_t f2fs_dentry_hash(const struct inode *dir,
+>> +		const struct qstr *name_info, struct fscrypt_name *fname)
+>> +{
+>> +#ifdef CONFIG_UNICODE
+>> +	struct f2fs_sb_info *sbi = F2FS_SB(dir->i_sb);
+>> +	const struct unicode_map *um = sbi->s_encoding;
+>> +	int r, dlen;
+>> +	unsigned char *buff;
+>> +	struct qstr *folded;
+>> +
+>> +	if (name_info->len && IS_CASEFOLDED(dir)) {
+>> +		buff = f2fs_kzalloc(sbi, sizeof(char) * PATH_MAX, GFP_KERNEL);
+>> +		if (!buff)
+>> +			return -ENOMEM;
+>> +
+>> +		dlen = utf8_casefold(um, name_info, buff, PATH_MAX);
+>> +		if (dlen < 0) {
+>> +			kvfree(buff);
+>> +			goto opaque_seq;
+>> +		}
+>> +		folded->name = buff;
+>> +		folded->len = dlen;
+>> +		r = __f2fs_dentry_hash(folded, fname);
+>> +
+>> +		kvfree(buff);
+>> +		return r;
+>> +	}
+>> +opaque_seq:
+>> +#endif
+>> +	return __f2fs_dentry_hash(name_info, fname);
+>> +}
+> 
+> Clang now warns:
+> 
+> fs/f2fs/hash.c:128:3: warning: variable 'folded' is uninitialized when used here [-Wuninitialized]
+>                 folded->name = buff;
+>                 ^~~~~~
+> fs/f2fs/hash.c:116:21: note: initialize the variable 'folded' to silence this warning
+>         struct qstr *folded;
+>                            ^
+>                             = NULL
+> 1 warning generated.
+> 
+> I assume that it wants to be initialized with f2fs_kzalloc as well but
+> I am not familiar with this code and what it expects to do.
+> 
+> Please look into this when you get a chance!
+
+That should be a bug, it needs to define a struct qstr type variable rather than
+a pointer there.
+
+Jaegeuk, could you fix this in you branch?
+
 Thanks,
 
-applied to nvme-5.3-rc
+> Nathan
+> .
+> 
