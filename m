@@ -2,134 +2,109 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE346C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE25C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF7920657
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2E4216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564665956;
+	bh=o84hDh3hwjL6t8ptSiw35wgSF/zfVCYYjL1H/pzZd8Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=egtu6E+RVRCveZ7jhjonYublKAfk3DSk2ecSrQ3KTmzAY1yCO/3t3TF45lHXGi4KV
+	 xkpDVqhJcc4PAwpifvjnabijZKzB+a6khGEB6toVfkdItEmRvjZoGKKclQ/zVFCC+L
+	 g1RB8idYJMBT5UawrxXFRpQmo48oTazk34JDApAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbfHANZm (ORCPT
+        id S1731184AbfHANZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:25:42 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:38808 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730706AbfHANZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:25:42 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x71DNfDm032295
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Thu, 1 Aug 2019 06:24:18 -0700
-Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 1 Aug
- 2019 06:23:40 -0700
-Subject: Re: [PATCH] tipc: compat: allow tipc commands without arguments
-To:     Taras Kondratiuk <takondra@cisco.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <tipc-discussion@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <xe-linux-external@cisco.com>,
-        <stable@vger.kernel.org>
-References: <20190729221507.48893-1-takondra@cisco.com>
-From:   Ying Xue <ying.xue@windriver.com>
-Message-ID: <605b6a6e-8bdd-c95f-ac00-9dd895fcc6a3@windriver.com>
-Date:   Thu, 1 Aug 2019 21:12:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 1 Aug 2019 09:25:55 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41624 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730344AbfHANZz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 09:25:55 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 62so45377973lfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 06:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iedXLBO81OU3hcXhff2G+cwDQH73BKJzI4/klgD8xJA=;
+        b=gDYeHq/ogPb75MyGO6PFbzPmjAEdLAChmOzpYR6uroQtyUCboqkM2/HMUiu+CaiXyA
+         Jp/Vss+HnXIkGQNgBuT3Ja2d4Y+/0xtq2/Syo4cVzXdHfgHvVXRf4qVVkCNi5iTFa2oY
+         3tRPr0FtC36H9KKtz9IsTelh6TKdBlg/KppPI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iedXLBO81OU3hcXhff2G+cwDQH73BKJzI4/klgD8xJA=;
+        b=iGhQali8aaKrGjUoKjN57WMnmFAYHm5fcDQVb95t+L5EBG/cytqiIkcy1dvaYkMgK1
+         Ergk87dgLvkgMcz+qbsfwAvRDGVs0C5q+gGJR+hvs44iavZhXXGlwpQWG4/AxRGOMJAy
+         wFmjfBm7K4W2nhZArjEc1PH14CHtcgmAZ3tP8nC6QmcSuoE5237HLHkestuMLAl8GWRf
+         gMUdxZGFUk56/Y0GoltZDGpJzieTmUzcQj/i6qii69tReBuhIJrKDS9Z5dj9qpdEN53P
+         SFS7l2mWdatQVVSvJEd/yxseNWmMZyLWYop5B/+TfZOyDMHphrRrHDSO0lmLugVg2BDz
+         eZ4A==
+X-Gm-Message-State: APjAAAVXsHbBrdssqmdWFzWOMufOKqCNFAvkoopAl4RKOI9FGFaR51Hp
+        0EEcxf5YV3omy7u9HeuvQH5jEcDmwK8=
+X-Google-Smtp-Source: APXvYqxCPUZqw0XNfhNROtMFoyLaOiMrhDOoubevYCmzCkynliWvWy5fJINs6RxE0nnidyCWFY8QnA==
+X-Received: by 2002:a05:6512:484:: with SMTP id v4mr43080602lfq.66.1564665952714;
+        Thu, 01 Aug 2019 06:25:52 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id x137sm12215096lff.23.2019.08.01.06.25.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 06:25:51 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id 62so45377895lfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 06:25:51 -0700 (PDT)
+X-Received: by 2002:ac2:5601:: with SMTP id v1mr20711108lfd.106.1564665951390;
+ Thu, 01 Aug 2019 06:25:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190729221507.48893-1-takondra@cisco.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [128.224.155.90]
+References: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
+In-Reply-To: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 1 Aug 2019 06:25:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com>
+Message-ID: <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com>
+Subject: Re: [GIT PULL] SafeSetID MAINTAINERS file update for v5.3
+To:     Micah Morton <mortonm@chromium.org>
+Cc:     linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/19 6:15 AM, Taras Kondratiuk wrote:
-> Commit 2753ca5d9009 ("tipc: fix uninit-value in tipc_nl_compat_doit")
-> broke older tipc tools that use compat interface (e.g. tipc-config from
-> tipcutils package):
-> 
-> % tipc-config -p
-> operation not supported
-> 
-> The commit started to reject TIPC netlink compat messages that do not
-> have attributes. It is too restrictive because some of such messages are
-> valid (they don't need any arguments):
-> 
-> % grep 'tx none' include/uapi/linux/tipc_config.h
-> #define  TIPC_CMD_NOOP              0x0000    /* tx none, rx none */
-> #define  TIPC_CMD_GET_MEDIA_NAMES   0x0002    /* tx none, rx media_name(s) */
-> #define  TIPC_CMD_GET_BEARER_NAMES  0x0003    /* tx none, rx bearer_name(s) */
-> #define  TIPC_CMD_SHOW_PORTS        0x0006    /* tx none, rx ultra_string */
-> #define  TIPC_CMD_GET_REMOTE_MNG    0x4003    /* tx none, rx unsigned */
-> #define  TIPC_CMD_GET_MAX_PORTS     0x4004    /* tx none, rx unsigned */
-> #define  TIPC_CMD_GET_NETID         0x400B    /* tx none, rx unsigned */
-> #define  TIPC_CMD_NOT_NET_ADMIN     0xC001    /* tx none, rx none */
-> 
-> This patch relaxes the original fix and rejects messages without
-> arguments only if such arguments are expected by a command (reg_type is
-> non zero).
-> 
-> Fixes: 2753ca5d9009 ("tipc: fix uninit-value in tipc_nl_compat_doit")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Taras Kondratiuk <takondra@cisco.com>
+On Wed, Jul 31, 2019 at 2:30 PM Micah Morton <mortonm@chromium.org> wrote:
+>
+> You mentioned a couple weeks ago it would be good if I added myself to
+> the MAINTAINERS file for the SafeSetID LSM. Here's the pull request
+> for v5.3.
 
-Acked-by: Ying Xue <ying.xue@windriver.com>
+There's a lot more than the maintainer ID in there. You've rebased old
+patches that I already had etc:
 
-> ---
-> The patch is based on v5.3-rc2.
-> 
->  net/tipc/netlink_compat.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
-> index d86030ef1232..e135d4e11231 100644
-> --- a/net/tipc/netlink_compat.c
-> +++ b/net/tipc/netlink_compat.c
-> @@ -55,6 +55,7 @@ struct tipc_nl_compat_msg {
->  	int rep_type;
->  	int rep_size;
->  	int req_type;
-> +	int req_size;
->  	struct net *net;
->  	struct sk_buff *rep;
->  	struct tlv_desc *req;
-> @@ -257,7 +258,8 @@ static int tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
->  	int err;
->  	struct sk_buff *arg;
->  
-> -	if (msg->req_type && !TLV_CHECK_TYPE(msg->req, msg->req_type))
-> +	if (msg->req_type && (!msg->req_size ||
-> +			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
->  		return -EINVAL;
->  
->  	msg->rep = tipc_tlv_alloc(msg->rep_size);
-> @@ -354,7 +356,8 @@ static int tipc_nl_compat_doit(struct tipc_nl_compat_cmd_doit *cmd,
->  {
->  	int err;
->  
-> -	if (msg->req_type && !TLV_CHECK_TYPE(msg->req, msg->req_type))
-> +	if (msg->req_type && (!msg->req_size ||
-> +			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
->  		return -EINVAL;
->  
->  	err = __tipc_nl_compat_doit(cmd, msg);
-> @@ -1278,8 +1281,8 @@ static int tipc_nl_compat_recv(struct sk_buff *skb, struct genl_info *info)
->  		goto send;
->  	}
->  
-> -	len = nlmsg_attrlen(req_nlh, GENL_HDRLEN + TIPC_GENL_HDRLEN);
-> -	if (!len || !TLV_OK(msg.req, len)) {
-> +	msg.req_size = nlmsg_attrlen(req_nlh, GENL_HDRLEN + TIPC_GENL_HDRLEN);
-> +	if (msg.req_size && !TLV_OK(msg.req, msg.req_size)) {
->  		msg.rep = tipc_get_err_tlv(TIPC_CFG_NOT_SUPPORTED);
->  		err = -EOPNOTSUPP;
->  		goto send;
-> 
+  Jann Horn (10):
+      LSM: SafeSetID: fix pr_warn() to include newline
+      LSM: SafeSetID: fix check for setresuid(new1, new2, new3)
+      LSM: SafeSetID: refactor policy hash table
+      LSM: SafeSetID: refactor safesetid_security_capable()
+      LSM: SafeSetID: refactor policy parsing
+      LSM: SafeSetID: fix userns handling in securityfs
+      LSM: SafeSetID: rewrite userspace API to atomic updates
+      LSM: SafeSetID: add read handler
+      LSM: SafeSetID: verify transitive constrainedness
+      LSM: SafeSetID: fix use of literal -1 in capable hook
+
+  Micah Morton (2):
+      Merge commit 'v5.3-rc2^0'
+      Add entry in MAINTAINERS file for SafeSetID LSM
+
+Not pulled.
+
+                  Linus
