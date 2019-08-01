@@ -2,146 +2,113 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC7BC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130EAC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378C5206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C35206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:44:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S/P5gz+a"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mSw/yP4y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732107AbfHAVn6 (ORCPT
+        id S1732212AbfHAVoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:43:58 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41508 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731433AbfHAVn4 (ORCPT
+        Thu, 1 Aug 2019 17:44:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40706 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728791AbfHAVoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:43:56 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m9so32644779pls.8
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 14:43:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tRJWWqPxe4v7OGh5SzFgwfV47CyOeIABo0H7U+M+pdg=;
-        b=S/P5gz+a9jUw7SwOiz84JEbZSB3baAlVLSphUNs8eZlN3ZPowtpH0MpNodRchncDaL
-         h/pwktm3ZoMM5ur9uIqRsyskaBqjhXhPvxaJG//b32Uphj0PG1ynA9CUTm1TW0sAsjm6
-         HvrHFAepLSyokzes/1ht5wjMSnlrEgSRbO09yXW02SG1IbAd8mAQKhoiLKJYr6VkLWg+
-         7rO55CqVAf6utB/oO5cCFpNjfcdHsW2PZ6e5nZCbdexwb5KuZDKGxSTHr3F16NHksaHQ
-         xyoTxMhvtaSYfpReQiXJpspTpAAqnNeKDN71dNMH70NnoXLk5zU84jZ89voAQsdAyikW
-         53ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tRJWWqPxe4v7OGh5SzFgwfV47CyOeIABo0H7U+M+pdg=;
-        b=pnGcuUIjb+z+M2TWRMkKUoiMmi5qP4OoROstbW0FSXN3lHrg2V53OzJzMuxM87jLRR
-         1l2RanKZV/tGiQbyHUCen9ytCLIk3OWqB0rsRWZB4XZYlFzmQaaCJQGs9/0OZlhlUeAs
-         ajOpsuTF9u7tUG2HX886hG4eUnqm8H3VQ+YMmbdCz0XiVuuajkx8lnB0ZyWRedpjPewV
-         rVf8QZpvSHgYNm9Zai0385QbDY6/boAw+slgQK0YzZxVJvBVQd9hQXIV6rYdIWTs2TNz
-         I9JrqxRcWSak2c6G9+Rrl3f0pdgmoUIUd5KnsBheen+WI3uYdJuvCBksK/ZpR5ZT4+Ap
-         zx0g==
-X-Gm-Message-State: APjAAAWGmAlQgXyoL4iv4VT4zCK7yDutn/lE0YL4pjci+zaU5QB61l0+
-        +d++fhWJ/fFCslCTBUVEqS7qfe52nRbTMrHTbPpAig==
-X-Google-Smtp-Source: APXvYqyQJ3oYuIkR4HxnjqcvX8HB7OCTCVhJ4Fku+hNPqOUYjGToK6i2G0j1xWhCd4v39RwFH1V7C/0k5dVHTOnW45I=
-X-Received: by 2002:a17:902:347:: with SMTP id 65mr32846391pld.232.1564695834770;
- Thu, 01 Aug 2019 14:43:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190716175021.9CA412173C@mail.kernel.org> <20190719000834.GA3228@google.com>
- <20190722200347.261D3218C9@mail.kernel.org> <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
- <20190722235411.06C1320840@mail.kernel.org> <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
- <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
- <20190726083148.d4gf57w2nt5k7t6n@pathway.suse.cz> <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com>
- <CAFd5g473iFfvBnJs2pcwuJYgY+DpgD6RLzyDFL1otUuScgKUag@mail.gmail.com> <20190801211447.6D3D7206A2@mail.kernel.org>
-In-Reply-To: <20190801211447.6D3D7206A2@mail.kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 1 Aug 2019 14:43:42 -0700
-Message-ID: <CAFd5g47tk8x5iet=xfPVO6MphD3SsLtYQLrCi5O2h0bvdXwHtA@mail.gmail.com>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Petr Mladek <pmladek@suse.com>, Jeff Dike <jdike@addtoit.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
+        Thu, 1 Aug 2019 17:44:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1ar96WJvg+rUGDQFzZ4pf3M5QiEtuEbzxYYlSwg9wfw=; b=mSw/yP4yyNvayFNRYt37k8U0h
+        YLMBlZZE4pCYSr8csebvJ9B9G80lFC9+fLMhveGNH29x36ufG1GzxF0ozU4ZdcWLL+6pa8fhTw0CJ
+        wrarjVa7P19K4hNdI7xJ2DjuT81crKkFOiqfKLmVw5GPD4d9IodFMXfiMqJb4bY+WMeUowQc8c04K
+        1fhc94dc5Cx6QYQdfFy09k7Gh4hIootp5sTyuMOKU3lglbqXfjMXVToT2+aWR36cN0mSxY9z60dY0
+        utpENwwrpa8D88fZf63usTj/YaFxHbdpRg4Zq4Im8xA+mki59qKoadXgs9NyCFDYDMZrGh0CZDtPV
+        RgIk84eBQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1htIrv-0002tf-BU; Thu, 01 Aug 2019 21:44:15 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 93D3F202953BA; Thu,  1 Aug 2019 23:44:13 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 23:44:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@google.com>,
-        David Rientjes <rientjes@google.com>,
-        kunit-dev@googlegroups.com,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        wfg@linux.intel.com, Greg KH <gregkh@linuxfoundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Timothy Bird <Tim.Bird@sony.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Julia Cartwright <julia@ni.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>, kvm@vger.kernel.org,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [patch 2/5] x86/kvm: Handle task_work on VMENTER/EXIT
+Message-ID: <20190801214413.GA2332@hirez.programming.kicks-ass.net>
+References: <20190801143250.370326052@linutronix.de>
+ <20190801143657.887648487@linutronix.de>
+ <20190801162451.GE31538@redhat.com>
+ <alpine.DEB.2.21.1908012025100.1789@nanos.tec.linutronix.de>
+ <20190801213550.GE6783@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801213550.GE6783@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 2:14 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Brendan Higgins (2019-08-01 11:59:57)
-> > On Thu, Aug 1, 2019 at 11:55 AM Brendan Higgins
-> > <brendanhiggins@google.com> wrote:
-> > >
-> > > On Fri, Jul 26, 2019 at 1:31 AM Petr Mladek <pmladek@suse.com> wrote:
-> > >
-> > > > To be honest I do not fully understand KUnit design. I am not
-> > > > completely sure how the tested code is isolated from the running
-> > > > system. Namely, I do not know if the tested code shares
-> > > > the same locks with the system running the test.
-> > >
-> > > No worries, I don't expect printk to be the hang up in those cases. It
-> > > sounds like KUnit has a long way to evolve before printk is going to
-> > > be a limitation.
-> >
-> > So Stephen, what do you think?
-> >
-> > Do you want me to go forward with the new kunit_assert API wrapping
-> > the string_stream as I have it now? Would you prefer to punt this to a
-> > later patch? Or would you prefer something else?
-> >
->
-> I like the struct based approach. If anything, it can be adjusted to
-> make the code throw some records into a spinlock later on and delay the
-> formatting of the assertion if need be.
+On Thu, Aug 01, 2019 at 02:35:50PM -0700, Sean Christopherson wrote:
+> On Thu, Aug 01, 2019 at 08:34:53PM +0200, Thomas Gleixner wrote:
+> > On Thu, 1 Aug 2019, Oleg Nesterov wrote:
+> > > On 08/01, Thomas Gleixner wrote:
+> > > >
+> > > > @@ -8172,6 +8174,10 @@ static int vcpu_run(struct kvm_vcpu *vcp
+> > > >  			++vcpu->stat.signal_exits;
+> > > >  			break;
+> > > >  		}
+> > > > +
+> > > > +		if (notify_resume_pending())
+> > > > +			tracehook_handle_notify_resume();
+> > > 
+> > > shouldn't you drop kvm->srcu before tracehook_handle_notify_resume() ?
+> > > 
+> > > I don't understand this code at all, but vcpu_run() does this even before
+> > > cond_resched().
+> > 
+> > Yeah, I noticed that it's dropped around cond_resched().
+> > 
+> > My understanding is that for voluntary giving up the CPU via cond_resched()
+> > it needs to be dropped.
+> > 
+> > For involuntary preemption (CONFIG_PREEMPT=y) it's not required as the
+> > whole code section after preempt_enable() is fully preemptible.
+> > 
+> > Now the 1Mio$ question is whether any of the notify functions invokes
+> > cond_resched() and whether that really matters. Paolo?
+> 
+> cond_resched() is called via tracehook_notify_resume()->task_work_run(),
+> and "kernel code can only call cond_resched() in places where it ...
+> cannot hold references to any RCU-protected data structures" according to
+> https://lwn.net/Articles/603252/.
 
-That's a fair point.
-
-> Can you resend with that
-> approach? I don't think I'll have any more comments after that.
-
-Cool, will do.
-
-Thanks!
+This is SRCU, you can reschedule while holding that just fine. It will
+just delay some kvm operations, like the memslot stuff. I don't think it
+is terrible to keep it, but people more versed in KVM might know of a
+good reason to drop it anyway.
