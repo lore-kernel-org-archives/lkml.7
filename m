@@ -2,55 +2,125 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FA5C32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC43C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F772089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862F22089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:06:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KA02C6/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfHAHEn (ORCPT
+        id S1728150AbfHAHGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:04:43 -0400
-Received: from verein.lst.de ([213.95.11.211]:40870 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbfHAHEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:04:43 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D24CC68AFE; Thu,  1 Aug 2019 09:04:38 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 09:04:38 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 13/13] mm: allow HMM_MIRROR on all architectures with
- MMU
-Message-ID: <20190801070438.GC15404@lst.de>
-References: <20190730055203.28467-1-hch@lst.de> <20190730055203.28467-14-hch@lst.de> <20190730180346.GR24038@mellanox.com> <20190730180452.GS24038@mellanox.com>
+        Thu, 1 Aug 2019 03:06:43 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37510 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfHAHGn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 03:06:43 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d1so775428pgp.4;
+        Thu, 01 Aug 2019 00:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sFn82hxl87C8fXjzpueTy3TJLhnUknUHXDSSwlywkZM=;
+        b=KA02C6/qRIwz7yk/cKlSKNW3Uh+6uNkHC4I3NyeEDdsrwD6UNzo/7hpOrKkiMs6XJy
+         liwhh/Nh1bWSAZ/7DK6JfdNt/BKoNm1up/PxL/FbPZLhcHM+/XggJl3nfBOyIdTTAUUO
+         +zeChb37ERCZdxksbacxo8JtVEDROXM9npygMwVbKkCXIABR4Tsk+UljplGXBVF/ltqj
+         Hm8N/dFoSBvVJMphXknCnKTuUKdAHX+6IgKpt4BR6YnD08YXbBje2sMzDuwns0p1CHiR
+         ZLc8Aba3rn9TvVuoyFRi/Z5EMWOxj1k5lN4zSxIO6H7Q9Qb+x7Va/S+gsdg3g693EdgZ
+         BWzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sFn82hxl87C8fXjzpueTy3TJLhnUknUHXDSSwlywkZM=;
+        b=Gq2GdODuFnbcbx0bLnnBSOmi7AZDZdJGa3FZyfHDo1zcMQhvlIWQa6ul/2FJ8fIY9m
+         v31KioxxkAnu13js4GDmHaVv5kS0+IHBvvnbZWpoTXVJ4dk8rsOnbY2hOLybhS6MDyUK
+         b+9Ko3qWIXBYuPKtt3/4wNdi9MDLZfxWQCt2hUOY3nE/lBqHraoMmB+sxrc/kdYikaAj
+         CHgTYqv9wLmkWPgGCnlef49XAjUdu9uGzGFLOg9+5bLq5Up6YodzlRGCBjooQTQ5a7wI
+         Khi4zJ3WiGfVgiwH0RpWw8uqjVGms265+ttYy64FY50AbLWdLaiFnuiZDSkNkUSrrv6u
+         H5FA==
+X-Gm-Message-State: APjAAAUfO3bqmxNjJRM0hofxLzwMcz3rKvLi6e5asrJXZEiaFNT5nUSD
+        mgUZNAb9N3GzG2JJVmUvo+XYnVXG4bQ=
+X-Google-Smtp-Source: APXvYqyn219JPDPAJnEN8l24Z8CENaXeYWt1+yJwSOyfhTF9EIK66+hk9n2gnvhVYiytQzdxdpGY7A==
+X-Received: by 2002:a63:3ec7:: with SMTP id l190mr120885775pga.334.1564643202178;
+        Thu, 01 Aug 2019 00:06:42 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id j6sm9688175pjd.19.2019.08.01.00.06.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 01 Aug 2019 00:06:41 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: [PATCH] cpuidle-haltpoll: Enable kvm guest polling when dedicated physical CPUs are available
+Date:   Thu,  1 Aug 2019 15:06:36 +0800
+Message-Id: <1564643196-7797-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190730180452.GS24038@mellanox.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 06:04:56PM +0000, Jason Gunthorpe wrote:
-> Oh, can we make this into a non-user selectable option now? 
-> 
-> ie have the drivers that use the API select it?
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Sure, I'll throw in another patch for that.
+The downside of guest side polling is that polling is performed even 
+with other runnable tasks in the host. However, even if poll in kvm 
+can aware whether or not other runnable tasks in the same pCPU, it 
+can still incur extra overhead in over-subscribe scenario. Now we can 
+just enable guest polling when dedicated pCPUs are available.
+
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ drivers/cpuidle/cpuidle-haltpoll.c   | 3 ++-
+ drivers/cpuidle/governors/haltpoll.c | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+index 9ac093d..7aee38a 100644
+--- a/drivers/cpuidle/cpuidle-haltpoll.c
++++ b/drivers/cpuidle/cpuidle-haltpoll.c
+@@ -53,7 +53,8 @@ static int __init haltpoll_init(void)
+ 
+ 	cpuidle_poll_state_init(drv);
+ 
+-	if (!kvm_para_available())
++	if (!kvm_para_available() ||
++		!kvm_para_has_hint(KVM_HINTS_REALTIME))
+ 		return 0;
+ 
+ 	ret = cpuidle_register(&haltpoll_driver, NULL);
+diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/governors/haltpoll.c
+index 797477b..685c7007 100644
+--- a/drivers/cpuidle/governors/haltpoll.c
++++ b/drivers/cpuidle/governors/haltpoll.c
+@@ -141,7 +141,7 @@ static struct cpuidle_governor haltpoll_governor = {
+ 
+ static int __init init_haltpoll(void)
+ {
+-	if (kvm_para_available())
++	if (kvm_para_available() && kvm_para_has_hint(KVM_HINTS_REALTIME))
+ 		return cpuidle_register_governor(&haltpoll_governor);
+ 
+ 	return 0;
+-- 
+2.7.4
+
