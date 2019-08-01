@@ -2,229 +2,183 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915C2C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661BEC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7C6216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:32:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWFYV5rx"
+	by mail.kernel.org (Postfix) with ESMTP id 3771E214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564637554;
+	bh=QLmvjH5tbhGx/6o/ScL4re6wjm5zhxZw6SGUDPBxV4Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hrlig7NQuv5qyzFjfwzJ+Bn9i3EMpMqdVaPH3zvvwGQ1k6KN8bb1yOty65B5NXH22
+	 PKG4OY/dlMmgBxEOAvhcFw+iUJUxcvGi7RcH8ExUEFnILhUM/uS0JOEIWjpSlZvKXq
+	 Bw5UgBx5yR5lEE6qar8DP0ATejRCQWfQXfY9OPM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbfHAFcC (ORCPT
+        id S1728419AbfHAFcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 01:32:02 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44297 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfHAFcB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 01:32:01 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so72081990wrf.11
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 22:31:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=huNfAOKjl+kk+4Jtq0u6/qi6NLR+RYJid7AxvJTx6iY=;
-        b=FWFYV5rxxlAYxAyoz/kKo31BDIaLqpIqBrNWI0UIl/b7/S4FYjmih8RX2OMahtJZ0P
-         8su1AOW2vd6neyowrzCnQzv1dFWesGMLkemIjw/yETxa1X/2DXRPUr9JtSnSFMfgBsuU
-         wlsEtfODcgAQ079oIj/sHHVU+6k3s9j8Lur5KGllD1lDFPmDO+MYO4ZojPr3gQq+GQtX
-         NNy8zD4WNZO8+9Os0mlEw4IbovjIfQ6NoXG1JsVxiyNau5fs86qT8Ff8eJe034BW10Yz
-         QldOQUWCevUbtw1eUE3LU83A8qzYOi1/rjPJ78QJDQUHbtOVRN2nlhS9pdGjO2ps+Ncg
-         bLuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=huNfAOKjl+kk+4Jtq0u6/qi6NLR+RYJid7AxvJTx6iY=;
-        b=CkvuUIlOZoRQErT19NBE9SWRWHpywTLMu5kgH4+BOUmt/HdmFPLgrbW3zlglHYVNzQ
-         A+8mLVF/BUMyYw03PPJJqId0WBoE9UQ2jSr0EerQRzQUMHEdtdAYYKcFtRqUhRea32tM
-         f61sCDaplb6hyz6Hte8/1poXy5bHLWeLBWjCQQnCklGVLBe7apdY4H+s9DdzFIr4fGmd
-         8eVmSdcwAB9rLOkMm6g5HpYAJyU7yAeevFml4DK8KYBi/iiHBQhvOZH4jfYjc9/DANm4
-         H/rxYsTfxc7puMDeJ2SRsh0VWayt3aIReN3cJYELdrD3GAgPBWIQPft3VmCPmnrEa8NU
-         J5pg==
-X-Gm-Message-State: APjAAAVX8KEIw4WGQ/oAlsNodeveOTcxclbWJ+mbXRXWhVET17P/C415
-        wL8dhRoUlQY7+9Vyv9Jh2eg=
-X-Google-Smtp-Source: APXvYqzGfkEtAIaSRDZ/5FHdZBBGE9LyWinhe6pQxrmSPYLcwZ/eZiDN2S5PQ04+spdYxBWXDX0+Kw==
-X-Received: by 2002:a5d:4085:: with SMTP id o5mr136182150wrp.101.1564637518192;
-        Wed, 31 Jul 2019 22:31:58 -0700 (PDT)
-Received: from jernej-laptop.localnet (cpe-194-152-11-237.cable.triera.net. [194.152.11.237])
-        by smtp.gmail.com with ESMTPSA id o7sm61277403wmf.43.2019.07.31.22.31.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 31 Jul 2019 22:31:57 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     linux-sunxi@googlegroups.com, maxime.ripard@bootlin.com
-Cc:     codekipper@gmail.com, Christopher Obbard <chris@64studio.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
-Subject: Re: [linux-sunxi] Re: [PATCH v4 6/9] ASoC: sun4i-i2s: Add multi-lane functionality
-Date:   Thu, 01 Aug 2019 07:31:55 +0200
-Message-ID: <1589203.0AjJVEASy3@jernej-laptop>
-In-Reply-To: <20190731122953.2u3iabd6gkn7jv7k@flea>
-References: <20190603174735.21002-1-codekipper@gmail.com> <2092329.vleAuWJ0xl@jernej-laptop> <20190731122953.2u3iabd6gkn7jv7k@flea>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 1 Aug 2019 01:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfHAFcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 01:32:32 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A9EC206A3;
+        Thu,  1 Aug 2019 05:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564637551;
+        bh=QLmvjH5tbhGx/6o/ScL4re6wjm5zhxZw6SGUDPBxV4Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iYXXL8qCH1h7VUK+sx+0j9I5vg5cluYfgzkDF7VPdmiShGaJLBTZgR6ATdhl4EqBE
+         hhIrnyB5t8CiJ92MUlPKi1cCoTwmvtUAg88YYA0xMDMSG0x7cO2+KjZeUAVoAvhvO+
+         OB3jRXcULO+gWOFtL+7SZpK4Oy7zXlG7oodXmABc=
+Date:   Thu, 1 Aug 2019 14:32:25 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dan Rue <dan.rue@linaro.org>,
+        Daniel Diaz <daniel.diaz@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-kernel@vger.kernel.org, Matt Hart <matthew.hart@linaro.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 3/4] arm64: Make debug exception handlers visible
+ from RCU
+Message-Id: <20190801143225.e61e38ce7a701407b19f8008@kernel.org>
+In-Reply-To: <20190731172602.36hdk3yb3w6uihbu@willie-the-truck>
+References: <156404254387.2020.886452004489353899.stgit@devnote2>
+        <156404257493.2020.7940525305482369976.stgit@devnote2>
+        <20190731172602.36hdk3yb3w6uihbu@willie-the-truck>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne sreda, 31. julij 2019 ob 14:29:53 CEST je Maxime Ripard napisal(a):
-> On Tue, Jul 30, 2019 at 07:57:10PM +0200, Jernej =C5=A0krabec wrote:
-> > Dne torek, 04. junij 2019 ob 11:38:44 CEST je Code Kipper napisal(a):
-> > > On Tue, 4 Jun 2019 at 11:02, Christopher Obbard <chris@64studio.com>=
-=20
-wrote:
-> > > > On Tue, 4 Jun 2019 at 09:43, Code Kipper <codekipper@gmail.com> wro=
-te:
-> > > > > On Tue, 4 Jun 2019 at 09:58, Maxime Ripard
-> > > > > <maxime.ripard@bootlin.com>
-> >=20
-> > wrote:
-> > > > > > On Mon, Jun 03, 2019 at 07:47:32PM +0200, codekipper@gmail.com=
-=20
-wrote:
-> > > > > > > From: Marcus Cooper <codekipper@gmail.com>
-> > > > > > >=20
-> > > > > > > The i2s block supports multi-lane i2s output however this
-> > > > > > > functionality
-> > > > > > > is only possible in earlier SoCs where the pins are exposed a=
-nd
-> > > > > > > for
-> > > > > > > the i2s block used for HDMI audio on the later SoCs.
-> > > > > > >=20
-> > > > > > > To enable this functionality, an optional property has been
-> > > > > > > added to
-> > > > > > > the bindings.
-> > > > > > >=20
-> > > > > > > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > > > > >=20
-> > > > > > I'd like to have Mark's input on this, but I'm really worried
-> > > > > > about
-> > > > > > the interaction with the proper TDM support.
-> > > > > >=20
-> > > > > > Our fundamental issue is that the controller can have up to 8
-> > > > > > channels, but either on 4 lines (instead of 1), or 8 channels o=
-n 1
-> > > > > > (like proper TDM) (or any combination between the two, but that
-> > > > > > should
-> > > > > > be pretty rare).
-> > > > >=20
-> > > > > I understand...maybe the TDM needs to be extended to support this=
- to
-> > > > > consider channel mapping and multiple transfer lines. I was think=
-ing
-> > > > > about the later when someone was requesting support on IIRC a whi=
-le
-> > > > > ago, I thought masking might of been a solution. These can wait as
-> > > > > the
-> > > > > only consumer at the moment is LibreELEC and we can patch it ther=
-e.
-> > > >=20
-> > > > Hi Marcus,
-> > > >=20
-> > > > FWIW, the TI McASP driver has support for TDM & (i think?) multiple
-> > > > transfer lines which are called serializers.
-> > > > Maybe this can help with inspiration?
-> > > > see
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-tre
-> > > > e/s
-> > > > ound/soc/ti/davinci-mcasp.c sample DTS:
-> > > >=20
-> > > > &mcasp0 {
-> > > >=20
-> > > >     #sound-dai-cells =3D <0>;
-> > > >     status =3D "okay";
-> > > >     pinctrl-names =3D "default";
-> > > >     pinctrl-0 =3D <&mcasp0_pins>;
-> > > >    =20
-> > > >     op-mode =3D <0>;
-> > > >     tdm-slots =3D <8>;
-> > > >     serial-dir =3D <
-> > > >    =20
-> > > >         2 0 1 0
-> > > >         0 0 0 0
-> > > >         0 0 0 0
-> > > >         0 0 0 0
-> > > >     >
-> > > >     >;
-> > > >    =20
-> > > >     tx-num-evt =3D <1>;
-> > > >     rx-num-evt =3D <1>;
-> > > >=20
-> > > > };
-> > > >=20
-> > > > Cheers!
-> > >=20
-> > > Thanks, this looks good.
-> >=20
-> > I would really like to see this issue resolved, because HDMI audio supp=
-ort
-> > in mainline Linux for those SoCs is long overdue.
-> >=20
-> > However, there is a possibility to still add HDMI audio suport (stereo
-> > only) even if this issue is not completely solved. If we agree that
-> > configuration of channels would be solved with additional property as
-> > Christopher suggested, support for >2 channels can be left for a later
-> > time when support for that property would be implemented. Currently,
-> > stereo HDMI audio support can be added with a few patches.
-> >=20
-> > I think all I2S cores are really the same, no matter if internally
-> > connected to HDMI controller or routed to pins, so it would make sense =
-to
-> > use same compatible for all of them. It's just that those I2S cores whi=
-ch
-> > are routed to pins can use only one lane and >2 channels can be used on=
-ly
-> > in TDM mode of operation, if I understand this correctly.
-> >=20
-> > New property would have to be optional, so it's omission would result in
-> > same channel configuration as it is already present, to preserve
-> > compatibility with old device trees. And this mode is already sufficient
-> > for stereo HDMI audio support.
->=20
-> Yeah, it looks like a good plan.
->=20
-> > Side note: HDMI audio with current sun4i-i2s driver has a delay (about a
-> > second), supposedly because DW HDMI controller automatically generates =
-CTS
-> > value based on I2S clock (auto CTS value generation is enabled per
-> > DesignWare recomendation for DW HDMI I2S interface).
->=20
-> Is that a constant delay during the audio playback, or only at startup?
+Hi Will,
 
-I think it's just at startup, e.g. if you're watching movie, audio is in sy=
-nc,=20
-it's just that first second or so is silent.
+On Wed, 31 Jul 2019 18:26:03 +0100
+Will Deacon <will@kernel.org> wrote:
 
->=20
-> > I2S driver from BSP Linux solves that by having I2S clock output
-> > enabled all the time. Should this be flagged with some additional
-> > property in DT?
->=20
-> I'd say that if the codec has that requirement, then it should be
-> between the codec and the DAI, the DT doesn't really have anything to
-> do with this.
+> On Thu, Jul 25, 2019 at 05:16:15PM +0900, Masami Hiramatsu wrote:
+> > Make debug exceptions visible from RCU so that synchronize_rcu()
+> > correctly track the debug exception handler.
+> > 
+> > This also introduces sanity checks for user-mode exceptions as same
+> > as x86's ist_enter()/ist_exit().
+> > 
+> > The debug exception can interrupt in idle task. For example, it warns
+> > if we put a kprobe on a function called from idle task as below.
+> > The warning message showed that the rcu_read_lock() caused this
+> > problem. But actually, this means the RCU is lost the context which
+> > is already in NMI/IRQ.
+> > 
+> >   /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events
+> >   /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable
+> >   /sys/kernel/debug/tracing # [  135.122237]
+> >   [  135.125035] =============================
+> >   [  135.125310] WARNING: suspicious RCU usage
+> >   [  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
+> >   [  135.125904] -----------------------------
+> >   [  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
+> >   [  135.126839]
+> >   [  135.126839] other info that might help us debug this:
+> >   [  135.126839]
+> >   [  135.127410]
+> >   [  135.127410] RCU used illegally from idle CPU!
+> >   [  135.127410] rcu_scheduler_active = 2, debug_locks = 1
+> >   [  135.128114] RCU used illegally from extended quiescent state!
+> >   [  135.128555] 1 lock held by swapper/0/0:
+> >   [  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
+> >   [  135.130499]
+> >   [  135.130499] stack backtrace:
+> >   [  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
+> >   [  135.131841] Hardware name: linux,dummy-virt (DT)
+> >   [  135.132224] Call trace:
+> >   [  135.132491]  dump_backtrace+0x0/0x140
+> >   [  135.132806]  show_stack+0x24/0x30
+> >   [  135.133133]  dump_stack+0xc4/0x10c
+> >   [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
+> >   [  135.134171]  call_break_hook+0x170/0x178
+> >   [  135.134486]  brk_handler+0x28/0x68
+> >   [  135.134792]  do_debug_exception+0x90/0x150
+> >   [  135.135051]  el1_dbg+0x18/0x8c
+> >   [  135.135260]  default_idle_call+0x0/0x44
+> >   [  135.135516]  cpu_startup_entry+0x2c/0x30
+> >   [  135.135815]  rest_init+0x1b0/0x280
+> >   [  135.136044]  arch_call_rest_init+0x14/0x1c
+> >   [  135.136305]  start_kernel+0x4d4/0x500
+> >   [  135.136597]
+> > 
+> > So make debug exception visible to RCU can fix this warning.
+> > 
+> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  Changes in v3:
+> >   - Make a comment for debug_exception_enter() clearer.
+> > ---
+> >  arch/arm64/mm/fault.c |   40 ++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 40 insertions(+)
+> > 
+> > diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> > index 9568c116ac7f..ed6c55c87fdc 100644
+> > --- a/arch/arm64/mm/fault.c
+> > +++ b/arch/arm64/mm/fault.c
+> > @@ -777,6 +777,42 @@ void __init hook_debug_fault_code(int nr,
+> >  	debug_fault_info[nr].name	= name;
+> >  }
+> >  
+> > +/*
+> > + * In debug exception context, we explicitly disable preemption.
+> 
+> Maybe add "despite having interrupts disabled"?
 
-Ok, but how to communicate that fact to I2S driver then? BSP driver solves=
-=20
-that by using different compatible, but as I said before, I2S cores are not=
-=20
-really different, so this seems wrong.
+OK, I'll add it.
 
-Best regards,
-Jernej
+> > + * This serves two purposes: it makes it much less likely that we would
+> > + * accidentally schedule in exception context and it will force a warning
+> > + * if we somehow manage to schedule by accident.
+> > + */
+> > +static void debug_exception_enter(struct pt_regs *regs)
+> > +{
+> > +	if (user_mode(regs)) {
+> > +		RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+> > +	} else {
+> > +		/*
+> > +		 * We might have interrupted pretty much anything.  In
+> > +		 * fact, if we're a debug exception, we can even interrupt
+> > +		 * NMI processing. We don't want this code makes in_nmi()
+> > +		 * to return true, but we need to notify RCU.
+> > +		 */
+> > +		rcu_nmi_enter();
+> > +	}
+> > +
+> > +	preempt_disable();
+> 
+> If you're addingt new functions for entry/exit, maybe move the
+> trace_hardirqs_{on,off}() calls in here too?
+
+OK, let's move it in these functions.
+
+Thank you!
+
+> 
+> Will
 
 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
