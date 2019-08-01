@@ -2,158 +2,97 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3283CC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461A7C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6F620657
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0459D20657
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 22:54:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="heFvJM+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731189AbfHAWx3 (ORCPT
+        id S1732701AbfHAWyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 18:53:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62854 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727008AbfHAWx2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 18:53:28 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71Mpwob130204
-        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 18:53:27 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u486f1yxb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:53:27 -0400
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <leonardo@linux.ibm.com>;
-        Thu, 1 Aug 2019 23:53:26 +0100
-Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 1 Aug 2019 23:53:22 +0100
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71MrLxn63504856
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Aug 2019 22:53:21 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5461A78060;
-        Thu,  1 Aug 2019 22:53:21 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64CDD7805E;
-        Thu,  1 Aug 2019 22:53:18 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.147])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Aug 2019 22:53:18 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/1] pseries/hotplug-memory.c: Replace nested ifs by switch-case
-Date:   Thu,  1 Aug 2019 19:52:51 -0300
-X-Mailer: git-send-email 2.20.1
+        Thu, 1 Aug 2019 18:54:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:36781 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727008AbfHAWyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 18:54:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4605G14P6cz9sBF;
+        Fri,  2 Aug 2019 08:54:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564700074;
+        bh=vfB0PlSfZUaGhjdBBzcDVT9V+GFGFz0aXzxBSr5tYbI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=heFvJM+JgyliVVXnqA/92gpaH4ACiXuzUPiyrnRYmt9PJD0cPFdfs6ES3jGK7PoLZ
+         +QSBrVFwl/YC1gbBTyOqDggTGGCKAc70aGM3Bs0sR6Qt7hbfikfuH6CMH7OnyVBNLU
+         x3KE4b3gi7iwWd5mgZTTUCDyb/WUtJA9z9jM+ww6oXl9BChPSmWclD+KNkkLFxBT3i
+         ZuVRID6wLIZdC7rNBGIfX6//OccjT7xkGIByuiY002ivgpI8YIKPFJy3zL4XnbxM84
+         BR3PRbql+uFPeYleBOf4amYU6q03HV0GvA7nj/rj4QUdtTOAmihNe5nUghGvdBaBVc
+         5L0N9yGd4a36w==
+Date:   Fri, 2 Aug 2019 08:54:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jon Maloy <jon.maloy@ericsson.com>
+Subject: linux-next: Fixes tag needs some work in the net-next tree
+Message-ID: <20190802085426.66fb56f4@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19080122-0016-0000-0000-000009D75A7B
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011535; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01240739; UDB=6.00654298; IPR=6.01022164;
- MB=3.00028000; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-01 22:53:26
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080122-0017-0000-0000-000044428B7C
-Message-Id: <20190801225251.17864-1-leonardo@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=767 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908010241
+Content-Type: multipart/signed; boundary="Sig_/J0Lv5DcJQ6SDaZpXlB+mWzZ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I noticed these nested ifs can be easily replaced by switch-cases,
-which can improve readability.
+--Sig_/J0Lv5DcJQ6SDaZpXlB+mWzZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- .../platforms/pseries/hotplug-memory.c        | 26 +++++++++++++------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+Hi all,
 
-diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-index 46d0d35b9ca4..8e700390f3d6 100644
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -880,34 +880,44 @@ int dlpar_memory(struct pseries_hp_errorlog *hp_elog)
- 
- 	switch (hp_elog->action) {
- 	case PSERIES_HP_ELOG_ACTION_ADD:
--		if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_COUNT) {
-+		switch (hp_elog->id_type) {
-+		case PSERIES_HP_ELOG_ID_DRC_COUNT:
- 			count = hp_elog->_drc_u.drc_count;
- 			rc = dlpar_memory_add_by_count(count);
--		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_INDEX) {
-+			break;
-+		case PSERIES_HP_ELOG_ID_DRC_INDEX:
- 			drc_index = hp_elog->_drc_u.drc_index;
- 			rc = dlpar_memory_add_by_index(drc_index);
--		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_IC) {
-+			break;
-+		case PSERIES_HP_ELOG_ID_DRC_IC:
- 			count = hp_elog->_drc_u.ic.count;
- 			drc_index = hp_elog->_drc_u.ic.index;
- 			rc = dlpar_memory_add_by_ic(count, drc_index);
--		} else {
-+			break;
-+		default:
- 			rc = -EINVAL;
-+			break;
- 		}
- 
- 		break;
- 	case PSERIES_HP_ELOG_ACTION_REMOVE:
--		if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_COUNT) {
-+		switch (hp_elog->id_type) {
-+		case PSERIES_HP_ELOG_ID_DRC_COUNT:
- 			count = hp_elog->_drc_u.drc_count;
- 			rc = dlpar_memory_remove_by_count(count);
--		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_INDEX) {
-+			break;
-+		case PSERIES_HP_ELOG_ID_DRC_INDEX:
- 			drc_index = hp_elog->_drc_u.drc_index;
- 			rc = dlpar_memory_remove_by_index(drc_index);
--		} else if (hp_elog->id_type == PSERIES_HP_ELOG_ID_DRC_IC) {
-+			break;
-+		case PSERIES_HP_ELOG_ID_DRC_IC:
- 			count = hp_elog->_drc_u.ic.count;
- 			drc_index = hp_elog->_drc_u.ic.index;
- 			rc = dlpar_memory_remove_by_ic(count, drc_index);
--		} else {
-+			break;
-+		default:
- 			rc = -EINVAL;
-+			break;
- 		}
- 
- 		break;
--- 
-2.20.1
+In commit
 
+  7c5b42055964 ("tipc: reduce risk of wakeup queue starvation")
+
+Fixes tag
+
+  Fixes: 365ad35 ("tipc: reduce risk of user starvation during link congest=
+ion")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/J0Lv5DcJQ6SDaZpXlB+mWzZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1DbaIACgkQAVBC80lX
+0GyPhwf/Qk9AZcE6BYl31aA4dv5G6WA45FeOZMAFF/l9aepJduu3agdapST7gilf
+a4aJ94qky0fu8EMfwGZsfKoyAhpbF9aQr24hss259FF8RHioDe+mc3ynHrwaMf06
+1cCcj509ih9AZ9oRfOZzOjPtAXoxrGQ5GboUKGhnAcBde2r4Xrm9VBujuMl8Elq3
+rdUbi+09xTgQnj7plPW6HO5B+Mq33amc8EHLNyWNERHHTFPb6/yXCV2l8rvIhCbD
+SIZEzfR51BLoQ6MJifmpVJfIlc8riOTV0YaT/IWhZSCptIffSn8YsEy89RiPERlJ
+5BlPFaWUR0jm0Ka1EAgz0x8jKui0NQ==
+=kqED
+-----END PGP SIGNATURE-----
+
+--Sig_/J0Lv5DcJQ6SDaZpXlB+mWzZ--
