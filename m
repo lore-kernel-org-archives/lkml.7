@@ -2,120 +2,338 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37EBC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D72C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E7C2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:45:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="c3dr1lWk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JsKzzgmp"
+	by mail.kernel.org (Postfix) with ESMTP id 265FA2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 05:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfHAFpY (ORCPT
+        id S1728921AbfHAFqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 01:45:24 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:35431 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726157AbfHAFpY (ORCPT
+        Thu, 1 Aug 2019 01:46:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33422 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728413AbfHAFqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 01:45:24 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id A69C0207E1;
-        Thu,  1 Aug 2019 01:45:23 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 01 Aug 2019 01:45:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=ikk9XWI/PaloHpfzYfJtJOTFwmWnC+0
-        JCdYs26D7ubs=; b=c3dr1lWkMo5FSBT8lrLsCneT0ER9KaOWAen1lPJ/wlWkYD+
-        F3Kmfml5a07j1yCb4s8Viy1CUWnpejg8CDu0KA5iTw0nSF3qC7NQqTV657E5hVap
-        pSQR1Pf8Wgou7XoLYuZ4qudaorYvMy2xrptaEvXmVTht1kW1w+Mlojv60ywB12bb
-        fG3Ty3Chl/dMWLtjwoB60usxxKlck9JuHYL/HAknm5ol2jNCRQ5QTYFofGMDSADH
-        Ac94iEGVdzLwoG2YqlB6AaaGfl2OrzOspnvLtYBwBnn6hLF/M4ka+HvB4iDZ747J
-        zM/CB4CEMMtecKqqIkfgoBojRQWHoJpIvIbgVzA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ikk9XW
-        I/PaloHpfzYfJtJOTFwmWnC+0JCdYs26D7ubs=; b=JsKzzgmpM0pAwDfOFWmIwy
-        e/gkpP11y8xh4J5E+5Un3MJJvj6+kBcaPZP6NDENM20ed/dJYPGZFeLMRjC9jV9X
-        Dqrzgn1S25oXgX+lx3hf9cO9axVEH4ivwRWfGifTyqdwomgpZaCAnnG4eYzh6scC
-        WIpjXLemDL50BI5V42NeIsfdrFSHHHPKA0FMw9/q9JMWSnVRRIJDTq/vTUWsrFkc
-        YV0dqm+NLi3r7DQRmDFYyBAl9XobaJM7ZdBMhEBMGsy7REetXwiVStDKkEooTKHq
-        ChEcckQ+d2OGXGZEJoz//Q4vQqVL5ncl0+2LNP122XoQgPiLUHWgzSIMRn873jkw
-        ==
-X-ME-Sender: <xms:cnxCXZVcGZ-455p_bs-LgSCuUcxEUsQjAFwH5XFLyD8cPPPD-UFwCw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleeigdeliecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:cnxCXVQZ-SI3cyKIbEqkpWS00qvrgEQGxGZ91gMOKDy0EMzP2EVh8Q>
-    <xmx:cnxCXQGaiX7f4V_3p0_o7VOwBTVPNBIzU41xNJjUBySxz-berHYqVQ>
-    <xmx:cnxCXdS_CSb-UN8ZrY2Xcmzsmy8hJzu_ASfyRT9L9fSYSMOPNs8M3A>
-    <xmx:c3xCXYeXDra6wsCCxx5QzKiSgLq2LCV_21ukNLHu4uHAyrtgDo0zLA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 67318E00A1; Thu,  1 Aug 2019 01:45:22 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-799-g925e343-fmstable-20190729v1
-Mime-Version: 1.0
-Message-Id: <3691f6cb-2451-43f7-9f00-d5693071ba59@www.fastmail.com>
-In-Reply-To: <9d0f2b20-e6f6-419c-a866-c4a0dd92aa63@www.fastmail.com>
-References: <20190724081313.12934-1-andrew@aj.id.au>
- <CACRpkdapypySGPrLgSMSNy1fzkca2BfMUGzf3koFWQZ-M5VOvg@mail.gmail.com>
- <9d0f2b20-e6f6-419c-a866-c4a0dd92aa63@www.fastmail.com>
-Date:   Thu, 01 Aug 2019 15:15:42 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "Lee Jones" <lee.jones@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 0/3] ARM: dts: aspeed: Deprecate g[45]-style compatibles
-Content-Type: text/plain
+        Thu, 1 Aug 2019 01:46:52 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8A2BF28BF70;
+        Thu,  1 Aug 2019 06:46:50 +0100 (BST)
+Date:   Thu, 1 Aug 2019 07:46:47 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH v3 1/3] mtd: spi-nor: always use bounce buffer for
+ register read/writes
+Message-ID: <20190801074647.792479c1@collabora.com>
+In-Reply-To: <20190801043052.30192-2-vigneshr@ti.com>
+References: <20190801043052.30192-1-vigneshr@ti.com>
+        <20190801043052.30192-2-vigneshr@ti.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 1 Aug 2019 10:00:50 +0530
+Vignesh Raghavendra <vigneshr@ti.com> wrote:
 
-
-On Tue, 30 Jul 2019, at 10:27, Andrew Jeffery wrote:
+> spi-mem layer expects all buffers passed to it to be DMA'able. But
+> spi-nor layer mostly allocates buffers on stack for reading/writing to
+> registers and therefore are not DMA'able. Introduce bounce buffer to be
+> used to read/write to registers. This ensures that buffer passed to
+> spi-mem layer during register read/writes is DMA'able. With this change
+> nor->cmd-buf is no longer used, so drop it.
 > 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+> v3: new patch
 > 
-> On Tue, 30 Jul 2019, at 07:23, Linus Walleij wrote:
-> > On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > 
-> > > It's probably best if we push the three patches all through one tree rather
-> > > than fragmenting. Is everyone happy if Joel applies them to the aspeed tree?
-> > 
-> > If you are sure it will not collide with parallell work in the
-> > pinctrl tree, yes.
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > 
-> > (If it does collide I'd prefer to take the pinctrl patches and fix the
-> > conflicts in my tree.)
+>  drivers/mtd/spi-nor/spi-nor.c | 71 ++++++++++++++++++++---------------
+>  include/linux/mtd/spi-nor.h   |  7 +++-
+>  2 files changed, 46 insertions(+), 32 deletions(-)
 > 
-> Fair enough, I don't know the answer so I'll poke around. I don't 
-> really mind
-> where the series goes in, I just want to avoid landing only part of it 
-> if I split it up.
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 03cc788511d5..8685e4ab6a25 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -296,15 +296,14 @@ struct flash_info {
+>  static int read_sr(struct spi_nor *nor)
+>  {
+>  	int ret;
+> -	u8 val;
+>  
+> -	ret = nor->read_reg(nor, SPINOR_OP_RDSR, &val, 1);
+> +	ret = nor->read_reg(nor, SPINOR_OP_RDSR, nor->bouncebuf, 1);
+>  	if (ret < 0) {
+>  		pr_err("error %d reading SR\n", (int) ret);
+>  		return ret;
+>  	}
+>  
+> -	return val;
+> +	return nor->bouncebuf[0];
+>  }
+>  
+>  /*
+> @@ -315,15 +314,14 @@ static int read_sr(struct spi_nor *nor)
+>  static int read_fsr(struct spi_nor *nor)
+>  {
+>  	int ret;
+> -	u8 val;
+>  
+> -	ret = nor->read_reg(nor, SPINOR_OP_RDFSR, &val, 1);
+> +	ret = nor->read_reg(nor, SPINOR_OP_RDFSR, nor->bouncebuf, 1);
+>  	if (ret < 0) {
+>  		pr_err("error %d reading FSR\n", ret);
+>  		return ret;
+>  	}
+>  
+> -	return val;
+> +	return nor->bouncebuf[0];
+>  }
+>  
+>  /*
+> @@ -334,15 +332,14 @@ static int read_fsr(struct spi_nor *nor)
+>  static int read_cr(struct spi_nor *nor)
+>  {
+>  	int ret;
+> -	u8 val;
+>  
+> -	ret = nor->read_reg(nor, SPINOR_OP_RDCR, &val, 1);
+> +	ret = nor->read_reg(nor, SPINOR_OP_RDCR, nor->bouncebuf, 1);
+>  	if (ret < 0) {
+>  		dev_err(nor->dev, "error %d reading CR\n", ret);
+>  		return ret;
+>  	}
+>  
+> -	return val;
+> +	return nor->bouncebuf[0];
+>  }
+>  
+>  /*
+> @@ -351,8 +348,8 @@ static int read_cr(struct spi_nor *nor)
+>   */
+>  static int write_sr(struct spi_nor *nor, u8 val)
+>  {
+> -	nor->cmd_buf[0] = val;
+> -	return nor->write_reg(nor, SPINOR_OP_WRSR, nor->cmd_buf, 1);
+> +	nor->bouncebuf[0] = val;
+> +	return nor->write_reg(nor, SPINOR_OP_WRSR, nor->bouncebuf, 1);
+>  }
+>  
+>  /*
+> @@ -500,31 +497,31 @@ static int set_4byte(struct spi_nor *nor, bool enable)
+>  			 * We must clear the register to enable normal behavior.
+>  			 */
+>  			write_enable(nor);
+> -			nor->cmd_buf[0] = 0;
+> -			nor->write_reg(nor, SPINOR_OP_WREAR, nor->cmd_buf, 1);
+> +			nor->bouncebuf[0] = 0;
+> +			nor->write_reg(nor, SPINOR_OP_WREAR,
+> +				       nor->bouncebuf, 1);
+>  			write_disable(nor);
+>  		}
+>  
+>  		return status;
+>  	default:
+>  		/* Spansion style */
+> -		nor->cmd_buf[0] = enable << 7;
+> -		return nor->write_reg(nor, SPINOR_OP_BRWR, nor->cmd_buf, 1);
+> +		nor->bouncebuf[0] = enable << 7;
+> +		return nor->write_reg(nor, SPINOR_OP_BRWR, nor->bouncebuf, 1);
+>  	}
+>  }
+>  
+>  static int s3an_sr_ready(struct spi_nor *nor)
+>  {
+>  	int ret;
+> -	u8 val;
+>  
+> -	ret = nor->read_reg(nor, SPINOR_OP_XRDSR, &val, 1);
+> +	ret = nor->read_reg(nor, SPINOR_OP_XRDSR, nor->bouncebuf, 1);
+>  	if (ret < 0) {
+>  		dev_err(nor->dev, "error %d reading XRDSR\n", (int) ret);
+>  		return ret;
+>  	}
+>  
+> -	return !!(val & XSR_RDY);
+> +	return !!(nor->bouncebuf[0] & XSR_RDY);
+>  }
+>  
+>  static int spi_nor_sr_ready(struct spi_nor *nor)
+> @@ -683,7 +680,6 @@ static loff_t spi_nor_s3an_addr_convert(struct spi_nor *nor, unsigned int addr)
+>   */
+>  static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
+>  {
+> -	u8 buf[SPI_NOR_MAX_ADDR_WIDTH];
+>  	int i;
+>  
+>  	if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
+> @@ -697,11 +693,12 @@ static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
+>  	 * control
+>  	 */
+>  	for (i = nor->addr_width - 1; i >= 0; i--) {
+> -		buf[i] = addr & 0xff;
+> +		nor->bouncebuf[i] = addr & 0xff;
+>  		addr >>= 8;
+>  	}
+>  
+> -	return nor->write_reg(nor, nor->erase_opcode, buf, nor->addr_width);
+> +	return nor->write_reg(nor, nor->erase_opcode, nor->bouncebuf,
+> +			      nor->addr_width);
+>  }
+>  
+>  /**
+> @@ -1404,9 +1401,11 @@ static int write_sr_cr(struct spi_nor *nor, u8 *sr_cr)
+>  {
+>  	int ret;
+>  
+> +	memcpy(nor->bouncebuf, sr_cr, 2);
+> +
+>  	write_enable(nor);
+>  
+> -	ret = nor->write_reg(nor, SPINOR_OP_WRSR, sr_cr, 2);
+> +	ret = nor->write_reg(nor, SPINOR_OP_WRSR, nor->bouncebuf, 2);
+>  	if (ret < 0) {
+>  		dev_err(nor->dev,
+>  			"error while writing configuration register\n");
+> @@ -1599,22 +1598,22 @@ static int spansion_read_cr_quad_enable(struct spi_nor *nor)
+>   */
+>  static int sr2_bit7_quad_enable(struct spi_nor *nor)
+>  {
+> -	u8 sr2;
+> +	u8 *sr2 = nor->bouncebuf;
+>  	int ret;
+>  
+>  	/* Check current Quad Enable bit value. */
+> -	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, &sr2, 1);
+> +	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, sr2, 1);
+>  	if (ret)
+>  		return ret;
+> -	if (sr2 & SR2_QUAD_EN_BIT7)
+> +	if (*sr2 & SR2_QUAD_EN_BIT7)
+>  		return 0;
+>  
+>  	/* Update the Quad Enable bit. */
+> -	sr2 |= SR2_QUAD_EN_BIT7;
+> +	*sr2 |= SR2_QUAD_EN_BIT7;
+>  
+>  	write_enable(nor);
+>  
+> -	ret = nor->write_reg(nor, SPINOR_OP_WRSR2, &sr2, 1);
+> +	ret = nor->write_reg(nor, SPINOR_OP_WRSR2, sr2, 1);
+>  	if (ret < 0) {
+>  		dev_err(nor->dev, "error while writing status register 2\n");
+>  		return -EINVAL;
+> @@ -1627,8 +1626,8 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
+>  	}
+>  
+>  	/* Read back and check it. */
+> -	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, &sr2, 1);
+> -	if (!(ret > 0 && (sr2 & SR2_QUAD_EN_BIT7))) {
+> +	ret = nor->read_reg(nor, SPINOR_OP_RDSR2, sr2, 1);
+> +	if (!(ret > 0 && (*sr2 & SR2_QUAD_EN_BIT7))) {
+>  		dev_err(nor->dev, "SR2 Quad bit not set\n");
+>  		return -EINVAL;
+>  	}
+> @@ -2180,11 +2179,13 @@ static const struct flash_info *spi_nor_read_id(struct spi_nor *nor)
+>  	u8			id[SPI_NOR_MAX_ID_LEN];
+>  	const struct flash_info	*info;
+>  
+> -	tmp = nor->read_reg(nor, SPINOR_OP_RDID, id, SPI_NOR_MAX_ID_LEN);
+> +	tmp = nor->read_reg(nor, SPINOR_OP_RDID, nor->bouncebuf,
+> +			    SPI_NOR_MAX_ID_LEN);
+>  	if (tmp < 0) {
+>  		dev_err(nor->dev, "error %d reading JEDEC ID\n", tmp);
+>  		return ERR_PTR(tmp);
+>  	}
+> +	memcpy(id, nor->bouncebuf, SPI_NOR_MAX_ID_LEN);
 
-Okay, it currently conflicts with my cleanup-devicetree-warnings series.
+Why not directly including the change you have in patch 2 (id is a
+pointer that points directly to ->bouncebuf) so you can get rid of this
+memcpy() here?
 
-Joel, do you mind if Linus takes this series through the pinctrl tree, given
-the fix to the devicetrees is patch 1/3?
+>  
+>  	for (tmp = 0; tmp < ARRAY_SIZE(spi_nor_ids) - 1; tmp++) {
+>  		info = &spi_nor_ids[tmp];
+> @@ -4121,6 +4122,16 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+>  	nor->read_proto = SNOR_PROTO_1_1_1;
+>  	nor->write_proto = SNOR_PROTO_1_1_1;
+>  
+> +	/*
+> +	 * We need the bounce buffer early to read/write registers when going
+> +	 * through the spi-mem layer (buffers have to be DMA-able).
 
-Andrew
+You should probably extend this comment in patch 2 to explain why 4k
+should be enough for regular read/write operations.
+
+The patch looks good otherwise.
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+> +	 */
+> +	nor->bouncebuf_size = PAGE_SIZE;
+> +	nor->bouncebuf = devm_kmalloc(dev, nor->bouncebuf_size,
+> +				      GFP_KERNEL);
+> +	if (!nor->bouncebuf)
+> +		return -ENOMEM;
+> +
+>  	if (name)
+>  		info = spi_nor_match_id(name);
+>  	/* Try to auto-detect if chip name wasn't specified or not found */
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index 9f57cdfcc93d..6b5956a7a65a 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -344,6 +344,9 @@ struct flash_info;
+>   * @mtd:		point to a mtd_info structure
+>   * @lock:		the lock for the read/write/erase/lock/unlock operations
+>   * @dev:		point to a spi device, or a spi nor controller device.
+> + * @bouncebuf:		bounce buffer used when the buffer passed by the MTD
+> + *                      layer is not DMA-able
+> + * @bouncebuf_size:	size of the bounce buffer
+>   * @info:		spi-nor part JDEC MFR id and other info
+>   * @page_size:		the page size of the SPI NOR
+>   * @addr_width:		number of address bytes
+> @@ -356,7 +359,6 @@ struct flash_info;
+>   * @read_proto:		the SPI protocol for read operations
+>   * @write_proto:	the SPI protocol for write operations
+>   * @reg_proto		the SPI protocol for read_reg/write_reg/erase operations
+> - * @cmd_buf:		used by the write_reg
+>   * @erase_map:		the erase map of the SPI NOR
+>   * @prepare:		[OPTIONAL] do some preparations for the
+>   *			read/write/erase/lock/unlock operations
+> @@ -382,6 +384,8 @@ struct spi_nor {
+>  	struct mtd_info		mtd;
+>  	struct mutex		lock;
+>  	struct device		*dev;
+> +	u8			*bouncebuf;
+> +	size_t			bouncebuf_size;
+>  	const struct flash_info	*info;
+>  	u32			page_size;
+>  	u8			addr_width;
+> @@ -394,7 +398,6 @@ struct spi_nor {
+>  	enum spi_nor_protocol	reg_proto;
+>  	bool			sst_write_second;
+>  	u32			flags;
+> -	u8			cmd_buf[SPI_NOR_MAX_CMD_SIZE];
+>  	struct spi_nor_erase_map	erase_map;
+>  
+>  	int (*prepare)(struct spi_nor *nor, enum spi_nor_ops ops);
+
