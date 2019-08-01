@@ -2,87 +2,98 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252AAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F34C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB41206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6A6206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:35:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ukzC1YlM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732075AbfHAOb2 (ORCPT
+        id S1732087AbfHAOfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:31:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37246 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731284AbfHAOb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:31:27 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 722C812BB;
-        Thu,  1 Aug 2019 14:31:26 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F75960A9F;
-        Thu,  1 Aug 2019 14:31:26 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 1C85C41F40;
-        Thu,  1 Aug 2019 14:31:26 +0000 (UTC)
-Date:   Thu, 1 Aug 2019 10:31:26 -0400 (EDT)
-From:   Vladis Dronov <vdronov@redhat.com>
-To:     Greg KH <greg@kroah.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, stable@vger.kernel.org
-Message-ID: <2057215544.6298959.1564669886072.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190801140639.GB31375@kroah.com>
-References: <20190730093345.25573-1-marcel@holtmann.org> <20190801133132.6BF30206A3@mail.kernel.org> <20190801135044.GB24791@kroah.com> <1983583259.6283500.1564667755023.JavaMail.zimbra@redhat.com> <20190801140639.GB31375@kroah.com>
-Subject: Re: [PATCH v5.3-rc2] Bluetooth: hci_uart: check for missing tty
- operations
+        Thu, 1 Aug 2019 10:35:08 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46528 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732076AbfHAOfH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:35:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c3so11050016pfa.13
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 07:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DBbtWFIFaoHfS1Xw8mVY2gGo1qmmgDJlGuvygEHXUSo=;
+        b=ukzC1YlMrKl2Zkd5ltLu7k38qHxpiayU5PA7l4B3HV4Ggt7CMpLcPXepfvfa4mCAx6
+         hsDWKt/DJD1zmpEooC/6Jfx9xzftaBHk92AXK9e4HivbgwDr73UwFaluSm6Gy1uAtI7H
+         FUjGfO93eEafY6Kw9UYJN+aib0XGSsR1s2jJn53hob72yPf3Sx7GqVrObZlPQrJITD17
+         ezgCxQoiSyqF/lwBINmAVySErBakC4cjvvZ4x4lBIHS02tRcPdUPLMhaWRXkbptlX99U
+         CJPnu53ZP5q+XqIhpb742rx3MqeaNAFfi0Jh1f1X7Hoc8kmv513sBhnSQ8lVXA4u0q4r
+         w8FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DBbtWFIFaoHfS1Xw8mVY2gGo1qmmgDJlGuvygEHXUSo=;
+        b=IjaV4Ci7X6wjEAY6quiySROQmUxXbVPj21kXnCYYRCSye1HhjHSxDnkamZordQGt/i
+         khFE4sUz+y7BSTuMf6YQcvQDDe1SFjUz+xOrukBapE9ZiYLt4TuOlOK3FTlmmpY81vaf
+         HvSccbuWjVA3Qj6QhwUdBzm4JiS+I+YJLvPTzxLiHqr4MQwNoxPb9OeVdOnfVFjm3NdG
+         G1jnnM647hyS1jJmS2ZqIHbBHloXpFWlXYXecGZjNjgMWcEXLuaSNh6URy3x3PQJ31it
+         Dc6T5OmrE7ZhkNUF+aSsJAMOBdRYphZXdHGQXS2zjyGeg0AycUIkYe4j3H8vvmphxOxi
+         fxeA==
+X-Gm-Message-State: APjAAAUIeswi7NKgCU9CrsJoq3SThe5F7byjFAcfkNmarruPqskaApDu
+        eyRewQQ8e7lJXThbTgKQY0fkqQ==
+X-Google-Smtp-Source: APXvYqwXjf/7RCgtzVuCUVWsIvbZmbJwE7lAnb0Yae4AD1ql1RRC/pTcWA7lSmMxEe40EKRwaGIa+A==
+X-Received: by 2002:a62:1b0c:: with SMTP id b12mr53059309pfb.17.1564670107026;
+        Thu, 01 Aug 2019 07:35:07 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id o14sm5101778pjp.29.2019.08.01.07.35.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 07:35:06 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 07:36:37 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jitendra Sharma <shajit@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: Add SC7180 pinctrl driver
+Message-ID: <20190801143637.GY7234@tuxbook-pro>
+References: <20190801100717.23333-1-rnayak@codeaurora.org>
+ <20190801100717.23333-2-rnayak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.2.29, 10.4.195.22]
-Thread-Topic: Bluetooth: hci_uart: check for missing tty operations
-Thread-Index: C7jFpDH0teKpSIJuE8GzHUEFBMgj1g==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 01 Aug 2019 14:31:27 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801100717.23333-2-rnayak@codeaurora.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Greg, all,
+On Thu 01 Aug 03:07 PDT 2019, Rajendra Nayak wrote:
 
-I've just double-checked your backports, indeed, they are fine.
+[..]
+> +static const struct msm_pingroup sc7180_groups[] = {
+> +	[0] = PINGROUP(0, SOUTH, qup01, cri_trng, _, phase_flag, _, _, _, _, _),
+> +	[1] = PINGROUP(1, SOUTH, qup01, cri_trng, _, phase_flag, _, _, _, _, _),
+> +	[2] = PINGROUP(2, SOUTH, qup01, cri_trng, _, phase_flag, _, _, _, _, _),
+> +	[3] = PINGROUP(3, SOUTH, qup01, sp_cmu, dbg_out, qdss_cti, _, _, _, _, _),
+> +	[4] = PINGROUP(4, NORTH, sdc1_tb, _, qdss_cti, _, _, _, _, _, _), [5] = PINGROUP(5, NORTH, sdc2_tb, _, _, _, _, _, _, _, _),
+> +	[6] = PINGROUP(6, NORTH, qup11, qup11, _, _, _, _, _, _, _), [7] = PINGROUP(7, NORTH, qup11, qup11, ddr_bist, _, _, _, _, _, _),
 
-Check for operations is not added for protocols which does not
-use these operations. Thanks!
+5 and 7 deserve to be on their own line :)
 
-Best regards,
-Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
+Apart from that:
 
------ Original Message -----
-> From: "Greg KH" <greg@kroah.com>
-> To: "Vladis Dronov" <vdronov@redhat.com>
-> Cc: "Sasha Levin" <sashal@kernel.org>, "Marcel Holtmann" <marcel@holtmann.org>, torvalds@linux-foundation.org,
-> linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, stable@vger.kernel.org
-> Sent: Thursday, August 1, 2019 4:06:39 PM
-> Subject: Re: [PATCH v5.3-rc2] Bluetooth: hci_uart: check for missing tty operations
-> 
-> On Thu, Aug 01, 2019 at 09:55:55AM -0400, Vladis Dronov wrote:
-> > Thank you, Greg!
-> > 
-> > I've just noticed the patch landed in the upstream and was going to start
-> > stable
-> > backports, but it appeared you've already done this.
-> 
-> Verifying that I got the 4.4.y and 4.9.y and 4.14.y backports done
-> properly would be good, as I took a guess at them :)
-> 
-> thanks,
-> 
-> greg k-h
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
