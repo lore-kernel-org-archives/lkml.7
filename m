@@ -2,230 +2,134 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3884C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7259C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69F0214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D6B216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:47:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="AAy+jPnO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="y/Aa/Y+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbfHANqH convert rfc822-to-8bit (ORCPT
+        id S1729662AbfHANro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:46:07 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33106 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728698AbfHANqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:46:07 -0400
-Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 4D82E2A6FF4387D75594;
-        Thu,  1 Aug 2019 14:46:05 +0100 (IST)
-Received: from LHREML524-MBS.china.huawei.com ([169.254.2.132]) by
- lhreml704-cah.china.huawei.com ([10.201.108.45]) with mapi id 14.03.0415.000;
- Thu, 1 Aug 2019 14:46:02 +0100
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     Eric Auger <eric.auger@redhat.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "hch@infradead.org" <hch@infradead.org>
-Subject: RE: [PATCH] iommu: revisit iommu_insert_resv_region() implementation
-Thread-Topic: [PATCH] iommu: revisit iommu_insert_resv_region()
- implementation
-Thread-Index: AQHVRt9EwXI06tl+a0iF8fJk/6TXR6bmTwBg
-Date:   Thu, 1 Aug 2019 13:46:02 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA83F33E69F@lhreml524-mbs.china.huawei.com>
-References: <20190730140055.9998-1-eric.auger@redhat.com>
-In-Reply-To: <20190730140055.9998-1-eric.auger@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.202.227.237]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 1 Aug 2019 09:47:44 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:40981 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725930AbfHANrn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 09:47:43 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 95FA3405;
+        Thu,  1 Aug 2019 09:47:39 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Thu, 01 Aug 2019 09:47:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=HxNgJJg2nhiPwmgNt7+DyzeN6pL
+        3GbnAaqp3b9wUFk4=; b=AAy+jPnO/oVUFq4jUmE3x97NZJYdTPaqtNJUf7nwz4N
+        9AdlhiaxrugfOl9/aL2MZs7a5ojdwqNJBpQH0b0pODxu8assB4upmc3K/8Uaw/7a
+        EDWxkklm5A1xiZPR5HyyMFS6PRSDewL7cuYQk5IQTTKH6XQQJlKoW8uwT/Dm0wkK
+        EQ5Gv3GqAC+FEP+DsPTI/HLHEDcR1yUggE6N/8h2cqoX13iis1jumIbzsuwyVJPC
+        VLXLvL/H8KhCzg+LMPdFoj+QauZKEIoS+sUE5lPmMAkVS9iTgXBsZz7sXnUfSvpb
+        28kUzRNUZ9nYc0sSiLK1x2bugmb3PhtsfbAcZjywTEQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=HxNgJJ
+        g2nhiPwmgNt7+DyzeN6pL3GbnAaqp3b9wUFk4=; b=y/Aa/Y+NgfYU+fo/Tzn4oY
+        /wi9dVZE9Kq3W/nJ+pqxkJu5IfqS4B+Ss6bCd2P6n1rO68+3BU4ECB1Y1mOxeBGv
+        G1pgAwbDcWd3P//lrm+WoCFwdup3S0Olh4DlsR7+AAJkW7NceSFjgmNANP8B1KaM
+        3yigh/KDCmim0/8IrRDrz02gG2T2WOJiiIw3+mqu5VbFVsKeQ63SUY4sc3MPNScK
+        +X66uvIzYK8bMFLgwae6xxq+3hnkX/9uIh5MQJD5xgsmMpviTZsTn8yTwEqAoYLm
+        wa2yo2tdK0/hNU0yhDe+vT6qAZo9t6NA3C50vzohep3sRMjxu9pvFHCnJnxk+CEg
+        ==
+X-ME-Sender: <xms:eu1CXTJ3D6noxacELy3qEukfzFIgpgQrciOUfXwoezAVSAHRNp9I3w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrleejgdeijecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:eu1CXWtDbL5upCIHa0CnQAqT6PjLHVEBLWCwg2-B7xze5oT-yiVWvA>
+    <xmx:eu1CXSInz_iX1dsHVJz1vpEOr5jvLBIi1WVFzouU_xPVMxqfzrRuhA>
+    <xmx:eu1CXb8DgB6HtttgXY1UTrLzVoyZPCts3AnGf_oV2CBqBtUQco9edg>
+    <xmx:e-1CXfgEu_lo7EqH29CmOZdrWg_bpyYNjEOZrLF1dNJDHiZmpNhlyw>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B456A380079;
+        Thu,  1 Aug 2019 09:47:37 -0400 (EDT)
+Date:   Thu, 1 Aug 2019 15:47:33 +0200
+From:   Greg KH <greg@kroah.com>
+To:     walter harms <wharms@bfs.de>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        jikos@kernel.org, benjamin.tissoires@redhat.com,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] HID: usbhid: Use GFP_KERNEL instead of GFP_ATOMIC when
+ applicable
+Message-ID: <20190801134733.GA24791@kroah.com>
+References: <20190801074759.32738-1-christophe.jaillet@wanadoo.fr>
+ <5D42B98B.40900@bfs.de>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5D42B98B.40900@bfs.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
-
-> -----Original Message-----
-> From: Eric Auger [mailto:eric.auger@redhat.com]
-> Sent: 30 July 2019 15:01
-> To: eric.auger.pro@gmail.com; eric.auger@redhat.com; joro@8bytes.org;
-> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
-> dwmw2@infradead.org; alex.williamson@redhat.com;
-> robin.murphy@arm.com; hch@infradead.org
-> Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-> Subject: [PATCH] iommu: revisit iommu_insert_resv_region() implementation
+On Thu, Aug 01, 2019 at 12:06:03PM +0200, walter harms wrote:
 > 
-> Current implementation is recursive and in case of allocation
-> failure the existing @regions list is altered. A non recursive
-> version looks better for maintainability and simplifies the
-> error handling. We use a separate stack for overlapping segment
-> merging.
 > 
-> Note this new implementation may change the region order of
-> appearance in /sys/kernel/iommu_groups/<n>/reserved_regions
-> files but this order has never been documented, see
-> commit bc7d12b91bd3 ("iommu: Implement reserved_regions
-> iommu-group sysfs file"). Previously the regions were sorted
-> by start address. Now they are first sorted by type and within
-> a type they are sorted by start address.
-
-I had a quick run with this patch on one of our boards(D05) where we
-actually have an untranslated HW MSI region.
-
-Before..
-estuary:/$ cat /sys/kernel/iommu_groups/3/reserved_regions
-0x0000000008000000 0x00000000080fffff msi
-0x00000000c6010000 0x00000000c601ffff msi 
-
-After...
-estuary:/$ cat /sys/kernel/iommu_groups/3/reserved_regions
-0x00000000c6010000 0x00000000c601ffff msi
-0x0000000008000000 0x00000000080fffff msi
-
-I think the order is reversed now because they are both different types, but are 
-called "msi". Slightly confusing, but not sure it's a good idea to change the
-description to something more obvious. 
-
-Cheers,
-Shameer
-
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> Am 01.08.2019 09:47, schrieb Christophe JAILLET:
+> > There is no need to use GFP_ATOMIC when calling 'usb_alloc_coherent()'
+> > here. These calls are done from probe functions and using GFP_KERNEL should
+> > be safe.
+> > The memory itself is used within some interrupts, but it is not a
+> > problem, once it has been allocated.
+> > 
+> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > ---
+> >  drivers/hid/usbhid/usbkbd.c   | 4 ++--
+> >  drivers/hid/usbhid/usbmouse.c | 2 +-
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/hid/usbhid/usbkbd.c b/drivers/hid/usbhid/usbkbd.c
+> > index d5b7a696a68c..63e8ef8beb45 100644
+> > --- a/drivers/hid/usbhid/usbkbd.c
+> > +++ b/drivers/hid/usbhid/usbkbd.c
+> > @@ -239,11 +239,11 @@ static int usb_kbd_alloc_mem(struct usb_device *dev, struct usb_kbd *kbd)
+> >  		return -1;
+> >  	if (!(kbd->led = usb_alloc_urb(0, GFP_KERNEL)))
+> >  		return -1;
+> > -	if (!(kbd->new = usb_alloc_coherent(dev, 8, GFP_ATOMIC, &kbd->new_dma)))
+> > +	if (!(kbd->new = usb_alloc_coherent(dev, 8, GFP_KERNEL, &kbd->new_dma)))
+> >  		return -1;
+> >  	if (!(kbd->cr = kmalloc(sizeof(struct usb_ctrlrequest), GFP_KERNEL)))
+> >  		return -1;
+> > -	if (!(kbd->leds = usb_alloc_coherent(dev, 1, GFP_ATOMIC, &kbd->leds_dma)))
+> > +	if (!(kbd->leds = usb_alloc_coherent(dev, 1, GFP_KERNEL, &kbd->leds_dma)))
+> >  		return -1;
+> >  
 > 
-> ---
-> ---
->  drivers/iommu/iommu.c | 96 ++++++++++++++++++++++---------------------
->  1 file changed, 50 insertions(+), 46 deletions(-)
+> the kernel style is usually:
+>  kbd->new = usb_alloc_coherent(dev, 8, GFP_ATOMIC, &kbd->new_dma);
+>  if (!kbd->new)
+> 	return -1;
 > 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 0c674d80c37f..7479f3d38e61 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -229,60 +229,64 @@ static ssize_t iommu_group_show_name(struct
-> iommu_group *group, char *buf)
->   * @new: new region to insert
->   * @regions: list of regions
->   *
-> - * The new element is sorted by address with respect to the other
-> - * regions of the same type. In case it overlaps with another
-> - * region of the same type, regions are merged. In case it
-> - * overlaps with another region of different type, regions are
-> - * not merged.
-> + * Elements are sorted by region type and elements of the same
-> + * type are sorted by start address. Overlapping segments of the
-> + * same type are merged.
->   */
->  static int iommu_insert_resv_region(struct iommu_resv_region *new,
->  				    struct list_head *regions)
->  {
-> -	struct iommu_resv_region *region;
-> -	phys_addr_t start = new->start;
-> -	phys_addr_t end = new->start + new->length - 1;
-> -	struct list_head *pos = regions->next;
-> +	struct iommu_resv_region *iter, *tmp, *nr, *top;
-> +	struct list_head low, high, stack;
-> +	bool added = false;
 > 
-> -	while (pos != regions) {
-> -		struct iommu_resv_region *entry =
-> -			list_entry(pos, struct iommu_resv_region, list);
-> -		phys_addr_t a = entry->start;
-> -		phys_addr_t b = entry->start + entry->length - 1;
-> -		int type = entry->type;
-> +	INIT_LIST_HEAD(&low);
-> +	INIT_LIST_HEAD(&high);
-> +	INIT_LIST_HEAD(&stack);
-> 
-> -		if (end < a) {
-> -			goto insert;
-> -		} else if (start > b) {
-> -			pos = pos->next;
-> -		} else if ((start >= a) && (end <= b)) {
-> -			if (new->type == type)
-> -				return 0;
-> -			else
-> -				pos = pos->next;
-> -		} else {
-> -			if (new->type == type) {
-> -				phys_addr_t new_start = min(a, start);
-> -				phys_addr_t new_end = max(b, end);
-> -				int ret;
-> -
-> -				list_del(&entry->list);
-> -				entry->start = new_start;
-> -				entry->length = new_end - new_start + 1;
-> -				ret = iommu_insert_resv_region(entry, regions);
-> -				kfree(entry);
-> -				return ret;
-> -			} else {
-> -				pos = pos->next;
-> -			}
-> -		}
-> -	}
-> -insert:
-> -	region = iommu_alloc_resv_region(new->start, new->length,
-> -					 new->prot, new->type);
-> -	if (!region)
-> +	nr = iommu_alloc_resv_region(new->start, new->length,
-> +				     new->prot, new->type);
-> +	if (!nr)
->  		return -ENOMEM;
-> 
-> -	list_add_tail(&region->list, pos);
-> +	/*
-> +	 * Elements are dispatched into 3 lists: low/high contain
-> +	 * segments of lower/higher types than @new; only segments
-> +	 * with same type as @new remain in @regions, including @new
-> +	 * ordered inserted by start address
-> +	 */
-> +	list_for_each_entry_safe(iter, tmp, regions, list) {
-> +		if (iter->type < nr->type) {
-> +			list_move_tail(&iter->list, &low);
-> +		} else if (iter->type > nr->type) {
-> +			list_move_tail(&iter->list, &high);
-> +		} else if (nr->start <= iter->start && !added) {
-> +			list_add_tail(&nr->list, &iter->list);
-> +			added = true;
-> +		}
-> +	}
-> +	if (!added)
-> +		list_add_tail(&nr->list, regions);
-> +
-> +	/* Merge overlapping segments in @regions, if any */
-> +	list_move(regions->next, &stack); /* move the 1st elt to the stack */
-> +	list_for_each_entry_safe(iter, tmp, regions, list) {
-> +		phys_addr_t top_end, iter_end = iter->start + iter->length - 1;
-> +
-> +		top = list_last_entry(&stack, struct iommu_resv_region, list);
-> +		top_end = top->start + top->length - 1;
-> +
-> +		if (iter->start > top_end + 1) {
-> +			list_move(&iter->list, &top->list);
-> +		} else {
-> +			top->length = max(top_end, iter_end) - top->start + 1;
-> +			list_del(&iter->list);
-> +			kfree(iter);
-> +		}
-> +	}
-> +	list_splice(&stack, regions);
-> +	list_splice(&low, regions);
-> +	list_splice_tail(&high, regions);
->  	return 0;
->  }
-> 
-> --
-> 2.20.1
+> in usbmouse.c this is done, any reason for the change here ?
 
+If you want to be extra-correct, don't return -1, return -ENOMEM.
+
+thanks,
+
+greg k-h
