@@ -2,403 +2,229 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 159B7C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13427C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5B020B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAF620B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:43:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Jeyt/5sY";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Jeyt/5sY"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="hcBl2Z1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731071AbfHALhr (ORCPT
+        id S1730652AbfHALn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:37:47 -0400
-Received: from mail-eopbgr70043.outbound.protection.outlook.com ([40.107.7.43]:10830
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729316AbfHALhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:37:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2B3kRhxDKN309WlgD0F4Z17E9I1IFbdDJKdWWR1UfrI=;
- b=Jeyt/5sYkSf0oPa0TD/SHq8fC1B4tx/XSern2gwgdmvU9G1XmWQ8QE5KiqU22P0jpbPMTFA1yCiA+t5l6bWj7qrR+CmMLeML4zZ78FKLz/DfkZuV2NejGUkQpI82W8NV+1WC13jXunJ3tM/OOTHEBDphZc4nX9up1t0NyVf9zJk=
-Received: from VI1PR0802CA0047.eurprd08.prod.outlook.com
- (2603:10a6:800:a9::33) by DB6PR0801MB1845.eurprd08.prod.outlook.com
- (2603:10a6:4:39::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2115.14; Thu, 1 Aug
- 2019 11:37:35 +0000
-Received: from VE1EUR03FT059.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e09::206) by VI1PR0802CA0047.outlook.office365.com
- (2603:10a6:800:a9::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.12 via Frontend
- Transport; Thu, 1 Aug 2019 11:37:35 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=temperror action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT059.mail.protection.outlook.com (10.152.19.60) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2052.18 via Frontend Transport; Thu, 1 Aug 2019 11:37:33 +0000
-Received: ("Tessian outbound 71602e13cd49:v26"); Thu, 01 Aug 2019 11:37:24 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 91774eda1974e065
-X-CR-MTA-TID: 64aa7808
-Received: from 6ae7899e46a2.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.5.52])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 90B8A925-0D84-40E3-B445-75FCBB61EF7B.1;
-        Thu, 01 Aug 2019 11:37:18 +0000
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com (mail-he1eur02lp2052.outbound.protection.outlook.com [104.47.5.52])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 6ae7899e46a2.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
-    Thu, 01 Aug 2019 11:37:18 +0000
+        Thu, 1 Aug 2019 07:43:58 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:39794 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725930AbfHALn6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 07:43:58 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71BhPAQ004769;
+        Thu, 1 Aug 2019 07:43:32 -0400
+Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2053.outbound.protection.outlook.com [104.47.33.53])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2u3hrnj2nk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Aug 2019 07:43:31 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ICS8VHzsCL7roMXesHcMsxFYaDnnUCMrLYkXTlmAEMIA4TUDcKGf9ierVLfyoTxIkNG8x4NHRfGbsfhK9ew5iVA+opSg4w+iJEMvZJkDPkeliSdqLfkFBARdt2/NjTtIuRSixaoe6h2rHIup4sG3/5xVge+IFXaHd0B6ek+LqeKxSkgj3HHHDTrtTTme5BF8sDlkwFYI7cD6noDNAzvTMkyJVRXyiWVRqabYX7hZgrGp7EQsNMn8EtG1ryiQB+Isdzlr8lEHLSGoP5742Y4aPBZQqOmEKcE1TizJdm5bBnxJg/5n0SZ7DmkBEwvAOHISk7fPL4gMNucHzJRQ/qA1tA==
+ b=NTNf1n9252D8pyBr7oTu4xLXQlxXylcaNX+eS7rUQ6q6a51OURVMew9ZIg+WRJfdtVPeiX+iM1agTsomf3W6lDBor7kVdPo0XnkSZM7nyItACQ2Mq+ceC9uSjHpc4eI7S+611EPZrbizgLvp9U2X86PYn9aoOUc1181ipwEyx48eEVPW1qbXefRJQ4lNw9DIwKHGEkHD7Cua2I+VbNMgAW7/j7Gq2kFZjHEQ6BRO7sQx8FcUaI4l9PoPYVv4WrGxdy2p672bmLJwPKKD+3bOwBQ+UdVZyvfe8lRcQDFoaipYaEd+HhrwY5vNSioT/44JWC9KZUMo9/aMeUYuMxRwOQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2B3kRhxDKN309WlgD0F4Z17E9I1IFbdDJKdWWR1UfrI=;
- b=XbkPgVW+xe5ebIRYv7WZh5YtzKLTjgi4bJmP9Oi69t6MjchlKPo+CkQayKvPUjlm0oolaCi981MSTnTgLtWgmK73pZ3+hZliyd32tFH0n56lZ9mTWPd1yRGNQtB7OuvXjAEpHgL179dGqVN8DYW2G+m0FCgln3OX//LcQBUIUYR1/rIb3+LKuxyYIOoEak2yWtHwBGn9HcWGpIHDFhLUVTyl7aM1Z/UTx2t864FDhmBGH5rHLIPQYz7+0BJy72scSOMKErulIe5PFjQT8kHmxP2r7QZlK4OgoSCtAz7mVrC+6W/TZCimv+1/42yTiT/EDEzPR5QNdLIpmBVScKvIMw==
+ bh=8+Bhcy+RZOAPDVSfE+/yx/7AWxFtOKpem3NUTyuqJNQ=;
+ b=FqrUgjPb98mb8iw+FY1xSrSTBnkcOuzJDTfERdAPx3QrNydnZQ3HxcATYKTYqQ0rIdXPaua0tdUeUPItUDbQmhkJmJcGcYABMB5laJToQEcze4rW3orJPEx32G4YTRBIj+8pk9gzC5aVy2NC2uNPEobbX2uHsn2EuizzFMVAPmrhagvoBwMhE9kIYyzweSDTYdpAxReguLP2CPM8T8R3oOgDeTcGOcUT/f5M34N1Lz1Ts0cSyb9JIXooG4WChM25dDKapc7JHTNX+lr1/g2RTI9Ho9oXHNusB3Izhdg9b+oce/xkRbGTLs6DfKk3Ck97yR/PZsWc+T3yAGuHV8389Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=arm.com;dmarc=pass action=none header.from=arm.com;dkim=pass
- header.d=arm.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
+ smtp.mailfrom=analog.com;dmarc=pass action=none
+ header.from=analog.com;dkim=pass header.d=analog.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2B3kRhxDKN309WlgD0F4Z17E9I1IFbdDJKdWWR1UfrI=;
- b=Jeyt/5sYkSf0oPa0TD/SHq8fC1B4tx/XSern2gwgdmvU9G1XmWQ8QE5KiqU22P0jpbPMTFA1yCiA+t5l6bWj7qrR+CmMLeML4zZ78FKLz/DfkZuV2NejGUkQpI82W8NV+1WC13jXunJ3tM/OOTHEBDphZc4nX9up1t0NyVf9zJk=
-Received: from AM7PR08MB5477.eurprd08.prod.outlook.com (10.141.174.204) by
- AM7PR08MB5528.eurprd08.prod.outlook.com (10.141.175.147) with Microsoft SMTP
+ bh=8+Bhcy+RZOAPDVSfE+/yx/7AWxFtOKpem3NUTyuqJNQ=;
+ b=hcBl2Z1CZSx8WwmzxwNc21U9aCY32MgpsyzepB+OG6hCS754QP+n9QCC9enPygWYYqCHjT7kPqQMfahkAymdYWPYzvvfbVqfhz3C24S2CAhRgCYrPtaR69JCUiRrfXN9EMVyH83hy6fUSLLA9CLQeOMIf3GYdAunhTSHQwxhxnU=
+Received: from BN8PR03MB4770.namprd03.prod.outlook.com (20.179.64.223) by
+ BN8PR03MB4881.namprd03.prod.outlook.com (20.179.64.15) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.13; Thu, 1 Aug 2019 11:37:16 +0000
-Received: from AM7PR08MB5477.eurprd08.prod.outlook.com
- ([fe80::a8b8:cc18:ded9:6fdb]) by AM7PR08MB5477.eurprd08.prod.outlook.com
- ([fe80::a8b8:cc18:ded9:6fdb%3]) with mapi id 15.20.2136.010; Thu, 1 Aug 2019
- 11:37:16 +0000
-From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+ 15.20.2115.13; Thu, 1 Aug 2019 11:43:29 +0000
+Received: from BN8PR03MB4770.namprd03.prod.outlook.com
+ ([fe80::d096:6c2e:91ac:39bb]) by BN8PR03MB4770.namprd03.prod.outlook.com
+ ([fe80::d096:6c2e:91ac:39bb%6]) with mapi id 15.20.2115.005; Thu, 1 Aug 2019
+ 11:43:29 +0000
+From:   "Togorean, Bogdan" <Bogdan.Togorean@analog.com>
+To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>
+CC:     "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
         "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>
-CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: [PATCH] drm/komeda: Adds error event print functionality
-Thread-Topic: [PATCH] drm/komeda: Adds error event print functionality
-Thread-Index: AQHVSF13B+//d/diR06VTAGnMwmj+A==
-Date:   Thu, 1 Aug 2019 11:37:15 +0000
-Message-ID: <1564659415-14548-1-git-send-email-lowry.li@arm.com>
-Accept-Language: zh-CN, en-US
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "matt.redfearn@thinci.com" <matt.redfearn@thinci.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] drm: bridge: adv7511: Add support for ADV7535
+Thread-Topic: [PATCH 2/2] drm: bridge: adv7511: Add support for ADV7535
+Thread-Index: AQHVRtlIY4jkERMGvEuZA9MbwGut16bkWT0AgAHVuIA=
+Date:   Thu, 1 Aug 2019 11:43:28 +0000
+Message-ID: <6714fb6a454e8085ada559b085db2557befdeeb4.camel@analog.com>
+References: <20190730131736.30187-1-bogdan.togorean@analog.com>
+         <20190730131736.30187-3-bogdan.togorean@analog.com>
+         <797f1c00-b76d-fef8-93d2-a2b52d266065@baylibre.com>
+In-Reply-To: <797f1c00-b76d-fef8-93d2-a2b52d266065@baylibre.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR02CA0158.apcprd02.prod.outlook.com
- (2603:1096:201:1f::18) To AM7PR08MB5477.eurprd08.prod.outlook.com
- (2603:10a6:20b:10f::12)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.9.1
+x-originating-ip: [137.71.226.54]
 x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: 478afb0d-a78a-40f7-91b0-08d71674a522
-X-MS-Office365-Filtering-HT: Tenant
-X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM7PR08MB5528;
-X-MS-TrafficTypeDiagnostic: AM7PR08MB5528:|DB6PR0801MB1845:
-X-Microsoft-Antispam-PRVS: <DB6PR0801MB184511197C29CEAE3EE943DA9FDE0@DB6PR0801MB1845.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:6430;OLM:6430;
+x-ms-office365-filtering-correlation-id: 10143390-9f29-4d16-add0-08d7167578f7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BN8PR03MB4881;
+x-ms-traffictypediagnostic: BN8PR03MB4881:
+x-microsoft-antispam-prvs: <BN8PR03MB48810775022B5CE8285920559BDE0@BN8PR03MB4881.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 01165471DB
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(366004)(39860400002)(396003)(199004)(189003)(6506007)(386003)(66066001)(52116002)(102836004)(14454004)(26005)(186003)(50226002)(81156014)(55236004)(2501003)(99286004)(6436002)(54906003)(316002)(81166006)(8936002)(8676002)(53936002)(6486002)(3846002)(6116002)(6636002)(110136005)(6512007)(478600001)(66476007)(66946007)(66556008)(64756008)(66446008)(86362001)(25786009)(4326008)(2906002)(2201001)(305945005)(7736002)(71190400001)(71200400001)(5660300002)(68736007)(14444005)(36756003)(2616005)(476003)(486006)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR08MB5528;H:AM7PR08MB5477.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(366004)(136003)(396003)(376002)(199004)(189003)(446003)(305945005)(5660300002)(36756003)(486006)(2616005)(25786009)(6246003)(256004)(26005)(53546011)(66066001)(71200400001)(118296001)(14444005)(53936002)(5024004)(14454004)(4326008)(7416002)(71190400001)(478600001)(11346002)(64756008)(76116006)(229853002)(7736002)(66946007)(91956017)(66556008)(66476007)(476003)(99286004)(316002)(2501003)(6486002)(8936002)(66446008)(2906002)(3846002)(6116002)(76176011)(81166006)(86362001)(102836004)(186003)(6506007)(68736007)(6512007)(6436002)(110136005)(8676002)(54906003)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR03MB4881;H:BN8PR03MB4770.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info-Original: D7Nkfxd+7gYRkfR0toDWqukx6MQirT1+MnZ2dlheVYnNAiFqTWqAGKuCnnP7cMkIv0hgEHNLKJ5uk2gZunPs4lcXpPlta3bUOqpLhlwFN73CUNiKgSKUTRwDHGRcyolsIS9NtiYkUlmGB//4Ty04UvGVP0h01ufDbBdWiopRLngmuDC4nawVYV3J2eUq8ACL5TiLOM7uc1oMt00ws8K6KCbYd+ygCfh5WN6thxKDTKF4HDuv8MISuF31KxCmxloAn4q+YkVc4IZUbWdl/19p7Bzm56z0DAHRnoVrEM332hbvVF0h5D65vsMRqAmhDB93jh0yLahLyLoRspaG2yTF7i9t5nm9mozbHtDgQFACftoVwewvfatSJKgc/JQ+W6yF8PI2kk3apkF7MyIuKsVXTH34ksvowKcju/3QxNj60FQ=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /THtYCM2MczkFqRHR9aneTISHGJW3KDZRFsRzSclnEXCh9fOdNVMjfLGzK2Hq38O16p6NLzqIAP4wrKknx0wFELTYt7bWY+XnrIlTyX/FioebSEuy/XR652KSFXHlIBfoBWSqnf47hVi4gJIxeuLNfNP/XOFDStzSUhm1H+Q4qurYnmCZzdWX+oBjMPHLeIvMSGzCKGep037PqZ7zAmME7Lw6X657eQMvemealnQz4hkyS7ajTdExBu9U2/MI57fgHaNiz7LvEB5BgW20UR2gMARDs3gwbarbHQelw1K5HkBSXE++xD07aYKxF+jaunJf4vwAfZmWg2SinodG56Kckmxxe2lV65X4y9PK+j9V/NjpHq2JzmTR0H/10k1gKcv9OX+/Wgf6kvz2xsokOtm5LZCzTGCh6Ah8+TDLgVFLq0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B98D33588907A143A4C47A4511EA6C24@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5528
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT059.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(136003)(396003)(2980300002)(199004)(189003)(76130400001)(14444005)(336012)(2201001)(4326008)(5660300002)(81166006)(2616005)(110136005)(50466002)(2501003)(36906005)(102836004)(47776003)(70206006)(70586007)(54906003)(66066001)(126002)(36756003)(316002)(86362001)(63350400001)(2906002)(486006)(476003)(63370400001)(81156014)(356004)(50226002)(3846002)(6116002)(478600001)(6486002)(25786009)(26826003)(99286004)(8676002)(23756003)(6506007)(14454004)(7736002)(26005)(6512007)(8746002)(305945005)(386003)(6636002)(8936002)(22756006)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0801MB1845;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: bd442fc2-e183-49d7-18f4-08d716749a54
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(710020)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB6PR0801MB1845;
-NoDisclaimer: True
-X-Forefront-PRVS: 01165471DB
-X-Microsoft-Antispam-Message-Info: pTyXLP4e8UGXJKBc2J5P5ZO+U2BRFFrQMHyKwGGF4KuwC37LCgEETHSrlFP2gvaXcmLwEk7ogoFBtpbQuARMf9h8HFS4TXJxl7DTPOIpuRekrI00BD7Hr3QrxlW8pq8Htjrb5v5I2RRdoQAVmcXV8UssAlwCP1G7ZlmvX9yZhHkhaNu/yivKZdN4TSMQEPzumxzYM9hereMKozOtbMNKcC7kOcSVbYzwTj9gIu3iYnj36+Px8d5+k4DKX6wVlxj8A8TVsDhrpbOgVW1rsx7/8EvlxoB64h7e1baN4sgaMZA3w7TPGq55/h0tjpRpbLz7dNDeztJXnjw9o9924ZfK8VJSnX9PI6eC1GUyGtTzR1b02OFzwHMQPJrCzRTWl8/sT+wDYJCRESBEN+aQp67Fc0C3hXIlbLcUKlvimn1AS7c=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2019 11:37:33.7076
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10143390-9f29-4d16-add0-08d7167578f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 11:43:29.1127
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 478afb0d-a78a-40f7-91b0-08d71674a522
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB1845
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Bogdan.Togorean@analog.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB4881
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908010124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-
-Adds to print the event message when error happens and the same event
-will not be printed until next vsync.
-
-Changes since v1:
-1. Handling the event print by CONFIG_KOMEDA_ERROR_PRINT;
-2. Changing the max string size to 256.
-
-Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
----
- drivers/gpu/drm/arm/display/Kconfig               |   6 +
- drivers/gpu/drm/arm/display/komeda/Makefile       |   2 +
- drivers/gpu/drm/arm/display/komeda/komeda_dev.h   |  15 +++
- drivers/gpu/drm/arm/display/komeda/komeda_event.c | 141 ++++++++++++++++++=
-++++
- drivers/gpu/drm/arm/display/komeda/komeda_kms.c   |   4 +
- 5 files changed, 168 insertions(+)
- create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_event.c
-
-diff --git a/drivers/gpu/drm/arm/display/Kconfig b/drivers/gpu/drm/arm/disp=
-lay/Kconfig
-index cec0639..e87ff86 100644
---- a/drivers/gpu/drm/arm/display/Kconfig
-+++ b/drivers/gpu/drm/arm/display/Kconfig
-@@ -12,3 +12,9 @@ config DRM_KOMEDA
- 	  Processor driver. It supports the D71 variants of the hardware.
-=20
- 	  If compiled as a module it will be called komeda.
-+
-+config DRM_KOMEDA_ERROR_PRINT
-+	bool "Enable komeda error print"
-+	depends on DRM_KOMEDA
-+	help
-+	  Choose this option to enable error printing.
-diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile b/drivers/gpu/drm/=
-arm/display/komeda/Makefile
-index 5c3900c..f095a1c 100644
---- a/drivers/gpu/drm/arm/display/komeda/Makefile
-+++ b/drivers/gpu/drm/arm/display/komeda/Makefile
-@@ -22,4 +22,6 @@ komeda-y +=3D \
- 	d71/d71_dev.o \
- 	d71/d71_component.o
-=20
-+komeda-$(CONFIG_DRM_KOMEDA_ERROR_PRINT) +=3D komeda_event.o
-+
- obj-$(CONFIG_DRM_KOMEDA) +=3D komeda.o
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/=
-drm/arm/display/komeda/komeda_dev.h
-index d1c86b6..e28e7e6 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-@@ -40,6 +40,17 @@
- #define KOMEDA_ERR_TTNG			BIT_ULL(30)
- #define KOMEDA_ERR_TTF			BIT_ULL(31)
-=20
-+#define KOMEDA_ERR_EVENTS	\
-+	(KOMEDA_EVENT_URUN	| KOMEDA_EVENT_IBSY	| KOMEDA_EVENT_OVR |\
-+	KOMEDA_ERR_TETO		| KOMEDA_ERR_TEMR	| KOMEDA_ERR_TITR |\
-+	KOMEDA_ERR_CPE		| KOMEDA_ERR_CFGE	| KOMEDA_ERR_AXIE |\
-+	KOMEDA_ERR_ACE0		| KOMEDA_ERR_ACE1	| KOMEDA_ERR_ACE2 |\
-+	KOMEDA_ERR_ACE3		| KOMEDA_ERR_DRIFTTO	| KOMEDA_ERR_FRAMETO |\
-+	KOMEDA_ERR_ZME		| KOMEDA_ERR_MERR	| KOMEDA_ERR_TCF |\
-+	KOMEDA_ERR_TTNG		| KOMEDA_ERR_TTF)
-+
-+#define KOMEDA_WARN_EVENTS	KOMEDA_ERR_CSCE
-+
- /* malidp device id */
- enum {
- 	MALI_D71 =3D 0,
-@@ -207,4 +218,8 @@ struct komeda_dev {
-=20
- struct komeda_dev *dev_to_mdev(struct device *dev);
-=20
-+#ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
-+void komeda_print_events(struct komeda_events *evts);
-+#endif
-+
- #endif /*_KOMEDA_DEV_H_*/
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_event.c b/drivers/gp=
-u/drm/arm/display/komeda/komeda_event.c
-new file mode 100644
-index 0000000..57b60cd
---- /dev/null
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
-@@ -0,0 +1,141 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * (C) COPYRIGHT 2019 ARM Limited. All rights reserved.
-+ * Author: James.Qian.Wang <james.qian.wang@arm.com>
-+ *
-+ */
-+#include <drm/drm_print.h>
-+
-+#include "komeda_dev.h"
-+
-+struct komeda_str {
-+	char *str;
-+	u32 sz;
-+	u32 len;
-+};
-+
-+/* return 0 on success,  < 0 on no space.
-+ */
-+static int komeda_sprintf(struct komeda_str *str, const char *fmt, ...)
-+{
-+	va_list args;
-+	int num, free_sz;
-+	int err;
-+
-+	free_sz =3D str->sz - str->len;
-+	if (free_sz <=3D 0)
-+		return -ENOSPC;
-+
-+	va_start(args, fmt);
-+
-+	num =3D vsnprintf(str->str + str->len, free_sz, fmt, args);
-+
-+	va_end(args);
-+
-+	if (num <=3D free_sz) {
-+		str->len +=3D num;
-+		err =3D 0;
-+	} else {
-+		str->len =3D str->sz;
-+		err =3D -ENOSPC;
-+	}
-+
-+	return err;
-+}
-+
-+static void evt_sprintf(struct komeda_str *str, u64 evt, const char *msg)
-+{
-+	if (evt)
-+		komeda_sprintf(str, msg);
-+}
-+
-+static void evt_str(struct komeda_str *str, u64 events)
-+{
-+	if (events =3D=3D 0ULL) {
-+		evt_sprintf(str, 1, "None");
-+		return;
-+	}
-+
-+	evt_sprintf(str, events & KOMEDA_EVENT_VSYNC, "VSYNC|");
-+	evt_sprintf(str, events & KOMEDA_EVENT_FLIP, "FLIP|");
-+	evt_sprintf(str, events & KOMEDA_EVENT_EOW, "EOW|");
-+	evt_sprintf(str, events & KOMEDA_EVENT_MODE, "OP-MODE|");
-+
-+	evt_sprintf(str, events & KOMEDA_EVENT_URUN, "UNDERRUN|");
-+	evt_sprintf(str, events & KOMEDA_EVENT_OVR, "OVERRUN|");
-+
-+	/* GLB error */
-+	evt_sprintf(str, events & KOMEDA_ERR_MERR, "MERR|");
-+	evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
-+
-+	/* DOU error */
-+	evt_sprintf(str, events & KOMEDA_ERR_DRIFTTO, "DRIFTTO|");
-+	evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
-+	evt_sprintf(str, events & KOMEDA_ERR_TETO, "TETO|");
-+	evt_sprintf(str, events & KOMEDA_ERR_CSCE, "CSCE|");
-+
-+	/* LPU errors or events */
-+	evt_sprintf(str, events & KOMEDA_EVENT_IBSY, "IBSY|");
-+	evt_sprintf(str, events & KOMEDA_ERR_AXIE, "AXIE|");
-+	evt_sprintf(str, events & KOMEDA_ERR_ACE0, "ACE0|");
-+	evt_sprintf(str, events & KOMEDA_ERR_ACE1, "ACE1|");
-+	evt_sprintf(str, events & KOMEDA_ERR_ACE2, "ACE2|");
-+	evt_sprintf(str, events & KOMEDA_ERR_ACE3, "ACE3|");
-+
-+	/* LPU TBU errors*/
-+	evt_sprintf(str, events & KOMEDA_ERR_TCF, "TCF|");
-+	evt_sprintf(str, events & KOMEDA_ERR_TTNG, "TTNG|");
-+	evt_sprintf(str, events & KOMEDA_ERR_TITR, "TITR|");
-+	evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
-+	evt_sprintf(str, events & KOMEDA_ERR_TTF, "TTF|");
-+
-+	/* CU errors*/
-+	evt_sprintf(str, events & KOMEDA_ERR_CPE, "COPROC|");
-+	evt_sprintf(str, events & KOMEDA_ERR_ZME, "ZME|");
-+	evt_sprintf(str, events & KOMEDA_ERR_CFGE, "CFGE|");
-+	evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
-+
-+	if (str->len > 0 && (str->str[str->len - 1] =3D=3D '|')) {
-+		str->str[str->len - 1] =3D 0;
-+		str->len--;
-+	}
-+}
-+
-+static bool is_new_frame(struct komeda_events *a)
-+{
-+	return (a->pipes[0] | a->pipes[1]) &
-+	       (KOMEDA_EVENT_FLIP | KOMEDA_EVENT_EOW);
-+}
-+
-+void komeda_print_events(struct komeda_events *evts)
-+{
-+	u64 print_evts =3D KOMEDA_ERR_EVENTS;
-+	static bool en_print =3D true;
-+
-+	/* reduce the same msg print, only print the first evt for one frame */
-+	if (evts->global || is_new_frame(evts))
-+		en_print =3D true;
-+	if (!en_print)
-+		return;
-+
-+	if ((evts->global | evts->pipes[0] | evts->pipes[1]) & print_evts) {
-+		#define STR_SZ		256
-+		char msg[STR_SZ];
-+		struct komeda_str str;
-+
-+		str.str =3D msg;
-+		str.sz  =3D STR_SZ;
-+		str.len =3D 0;
-+
-+		komeda_sprintf(&str, "gcu: ");
-+		evt_str(&str, evts->global);
-+		komeda_sprintf(&str, ", pipes[0]: ");
-+		evt_str(&str, evts->pipes[0]);
-+		komeda_sprintf(&str, ", pipes[1]: ");
-+		evt_str(&str, evts->pipes[1]);
-+
-+		DRM_ERROR("err detect: %s\n", msg);
-+
-+		en_print =3D false;
-+	}
-+}
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/=
-drm/arm/display/komeda/komeda_kms.c
-index 419a8b0..0fafc36 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-@@ -47,6 +47,10 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void =
-*data)
- 	memset(&evts, 0, sizeof(evts));
- 	status =3D mdev->funcs->irq_handler(mdev, &evts);
-=20
-+#ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
-+	komeda_print_events(&evts);
-+#endif
-+
- 	/* Notify the crtc to handle the events */
- 	for (i =3D 0; i < kms->n_crtcs; i++)
- 		komeda_crtc_handle_event(&kms->crtcs[i], &evts);
---=20
-1.9.1
-
+SGkgTmVpbCwNCg0KVGhhbmsgeW91IGZvciByZXZpZXcuDQoNCk9uIFdlZCwgMjAxOS0wNy0zMSBh
+dCAwOTo0MiArMDIwMCwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6DQo+IFtFeHRlcm5hbF0NCj4gDQo+
+IEhpIEJvZ2RhbiwNCj4gDQo+IE9uIDMwLzA3LzIwMTkgMTU6MTcsIEJvZ2RhbiBUb2dvcmVhbiB3
+cm90ZToNCj4gPiBBRFY3NTM1IGlzIGEgRFNJIHRvIEhETUkgYnJpZGdlIGNoaXAgbGlrZSBBRFY3
+NTMzIGJ1dCBpdCBhbGxvd3MNCj4gPiAxMDgwcEA2MEh6LiB2MXAyIGlzIGZpeGVkIHRvIDEuOFYg
+b24gQURWNzUzNSBidXQgb24gQURWNzUzMyBjYW4gYmUNCj4gPiAxLjJWDQo+ID4gb3IgMS44ViBh
+bmQgaXMgY29uZmlndXJhYmxlIGluIGEgcmVnaXN0ZXIuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1i
+eTogQm9nZGFuIFRvZ29yZWFuIDxib2dkYW4udG9nb3JlYW5AYW5hbG9nLmNvbT4NCj4gPiAtLS0N
+Cj4gPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hZHY3NTExL2Fkdjc1MTEuaCAgICAgfCAgMiAr
+Kw0KPiA+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEvYWR2NzUxMV9kcnYuYyB8IDMx
+ICsrKysrKysrKysrKysrKy0NCj4gPiAtLS0tDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjUgaW5z
+ZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL2JyaWRnZS9hZHY3NTExL2Fkdjc1MTEuaA0KPiA+IGIvZHJpdmVycy9ncHUvZHJt
+L2JyaWRnZS9hZHY3NTExL2Fkdjc1MTEuaA0KPiA+IGluZGV4IDUyYjJhZGZkYzg3Ny4uNzAyNDMy
+NjE1ZWM4IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2NzUxMS9h
+ZHY3NTExLmgNCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEvYWR2NzUx
+MS5oDQo+ID4gQEAgLTkxLDYgKzkxLDcgQEANCj4gPiAgI2RlZmluZSBBRFY3NTExX1JFR19BUkNf
+Q1RSTAkJCTB4ZGYNCj4gPiAgI2RlZmluZSBBRFY3NTExX1JFR19DRUNfSTJDX0FERFIJCTB4ZTEN
+Cj4gPiAgI2RlZmluZSBBRFY3NTExX1JFR19DRUNfQ1RSTAkJCTB4ZTINCj4gPiArI2RlZmluZSBB
+RFY3NTExX1JFR19TVVBQTFlfU0VMRUNUCQkweGU0DQo+ID4gICNkZWZpbmUgQURWNzUxMV9SRUdf
+Q0hJUF9JRF9ISUdICQkweGY1DQo+ID4gICNkZWZpbmUgQURWNzUxMV9SRUdfQ0hJUF9JRF9MT1cJ
+CQkweGY2DQo+ID4gIA0KPiA+IEBAIC0zMjAsNiArMzIxLDcgQEAgc3RydWN0IGFkdjc1MTFfdmlk
+ZW9fY29uZmlnIHsNCj4gPiAgZW51bSBhZHY3NTExX3R5cGUgew0KPiA+ICAJQURWNzUxMSwNCj4g
+PiAgCUFEVjc1MzMsDQo+ID4gKwlBRFY3NTM1LA0KPiA+ICB9Ow0KPiA+ICANCj4gPiAgI2RlZmlu
+ZSBBRFY3NTExX01BWF9BRERSUyAzDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9i
+cmlkZ2UvYWR2NzUxMS9hZHY3NTExX2Rydi5jDQo+ID4gYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L2Fkdjc1MTEvYWR2NzUxMV9kcnYuYw0KPiA+IGluZGV4IGY2ZDI2ODFmNjkyNy4uOTQxMDcyZGVj
+YjczIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2NzUxMS9hZHY3
+NTExX2Rydi5jDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hZHY3NTExL2Fkdjc1
+MTFfZHJ2LmMNCj4gPiBAQCAtMzY3LDcgKzM2Nyw3IEBAIHN0YXRpYyB2b2lkIGFkdjc1MTFfcG93
+ZXJfb24oc3RydWN0IGFkdjc1MTENCj4gPiAqYWR2NzUxMSkNCj4gPiAgCSAqLw0KPiA+ICAJcmVn
+Y2FjaGVfc3luYyhhZHY3NTExLT5yZWdtYXApOw0KPiA+ICANCj4gPiAtCWlmIChhZHY3NTExLT50
+eXBlID09IEFEVjc1MzMpDQo+ID4gKwlpZiAoYWR2NzUxMS0+dHlwZSA9PSBBRFY3NTMzIHx8IGFk
+djc1MTEtPnR5cGUgPT0gQURWNzUzNSkNCj4gPiAgCQlhZHY3NTMzX2RzaV9wb3dlcl9vbihhZHY3
+NTExKTsNCj4gPiAgCWFkdjc1MTEtPnBvd2VyZWQgPSB0cnVlOw0KPiA+ICB9DQo+ID4gQEAgLTM4
+Nyw3ICszODcsNyBAQCBzdGF0aWMgdm9pZCBfX2Fkdjc1MTFfcG93ZXJfb2ZmKHN0cnVjdCBhZHY3
+NTExDQo+ID4gKmFkdjc1MTEpDQo+ID4gIHN0YXRpYyB2b2lkIGFkdjc1MTFfcG93ZXJfb2ZmKHN0
+cnVjdCBhZHY3NTExICphZHY3NTExKQ0KPiA+ICB7DQo+ID4gIAlfX2Fkdjc1MTFfcG93ZXJfb2Zm
+KGFkdjc1MTEpOw0KPiA+IC0JaWYgKGFkdjc1MTEtPnR5cGUgPT0gQURWNzUzMykNCj4gPiArCWlm
+IChhZHY3NTExLT50eXBlID09IEFEVjc1MzMgfHwgYWR2NzUxMS0+dHlwZSA9PSBBRFY3NTM1KQ0K
+PiA+ICAJCWFkdjc1MzNfZHNpX3Bvd2VyX29mZihhZHY3NTExKTsNCj4gPiAgCWFkdjc1MTEtPnBv
+d2VyZWQgPSBmYWxzZTsNCj4gPiAgfQ0KPiA+IEBAIC03NjEsNyArNzYxLDcgQEAgc3RhdGljIHZv
+aWQgYWR2NzUxMV9tb2RlX3NldChzdHJ1Y3QgYWR2NzUxMQ0KPiA+ICphZHY3NTExLA0KPiA+ICAJ
+cmVnbWFwX3VwZGF0ZV9iaXRzKGFkdjc1MTEtPnJlZ21hcCwgMHgxNywNCj4gPiAgCQkweDYwLCAo
+dnN5bmNfcG9sYXJpdHkgPDwgNikgfCAoaHN5bmNfcG9sYXJpdHkgPDwgNSkpOw0KPiA+ICANCj4g
+PiAtCWlmIChhZHY3NTExLT50eXBlID09IEFEVjc1MzMpDQo+ID4gKwlpZiAoYWR2NzUxMS0+dHlw
+ZSA9PSBBRFY3NTMzIHx8IGFkdjc1MTEtPnR5cGUgPT0gQURWNzUzNSkNCj4gPiAgCQlhZHY3NTMz
+X21vZGVfc2V0KGFkdjc1MTEsIGFkal9tb2RlKTsNCj4gPiAgDQo+ID4gIAlkcm1fbW9kZV9jb3B5
+KCZhZHY3NTExLT5jdXJyX21vZGUsIGFkal9tb2RlKTsNCj4gPiBAQCAtODc0LDcgKzg3NCw3IEBA
+IHN0YXRpYyBpbnQgYWR2NzUxMV9icmlkZ2VfYXR0YWNoKHN0cnVjdA0KPiA+IGRybV9icmlkZ2Ug
+KmJyaWRnZSkNCj4gPiAgCQkJCSAmYWR2NzUxMV9jb25uZWN0b3JfaGVscGVyX2Z1bmNzKTsNCj4g
+PiAgCWRybV9jb25uZWN0b3JfYXR0YWNoX2VuY29kZXIoJmFkdi0+Y29ubmVjdG9yLCBicmlkZ2Ut
+PmVuY29kZXIpOw0KPiA+ICANCj4gPiAtCWlmIChhZHYtPnR5cGUgPT0gQURWNzUzMykNCj4gPiAr
+CWlmIChhZHYtPnR5cGUgPT0gQURWNzUzMyB8fCBhZHYtPnR5cGUgPT0gQURWNzUzNSkNCj4gPiAg
+CQlyZXQgPSBhZHY3NTMzX2F0dGFjaF9kc2koYWR2KTsNCj4gPiAgDQo+ID4gIAlpZiAoYWR2LT5p
+MmNfbWFpbi0+aXJxKQ0KPiA+IEBAIC05NTIsNyArOTUyLDcgQEAgc3RhdGljIGJvb2wNCj4gPiBh
+ZHY3NTExX2NlY19yZWdpc3Rlcl92b2xhdGlsZShzdHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVk
+IGludCByZWcpDQo+ID4gIAlzdHJ1Y3QgaTJjX2NsaWVudCAqaTJjID0gdG9faTJjX2NsaWVudChk
+ZXYpOw0KPiA+ICAJc3RydWN0IGFkdjc1MTEgKmFkdjc1MTEgPSBpMmNfZ2V0X2NsaWVudGRhdGEo
+aTJjKTsNCj4gPiAgDQo+ID4gLQlpZiAoYWR2NzUxMS0+dHlwZSA9PSBBRFY3NTMzKQ0KPiA+ICsJ
+aWYgKGFkdjc1MTEtPnR5cGUgPT0gQURWNzUzMyB8fCBhZHY3NTExLT50eXBlID09IEFEVjc1MzUp
+DQo+ID4gIAkJcmVnIC09IEFEVjc1MzNfUkVHX0NFQ19PRkZTRVQ7DQo+ID4gIA0KPiA+ICAJc3dp
+dGNoIChyZWcpIHsNCj4gPiBAQCAtOTk0LDcgKzk5NCw3IEBAIHN0YXRpYyBpbnQgYWR2NzUxMV9p
+bml0X2NlY19yZWdtYXAoc3RydWN0DQo+ID4gYWR2NzUxMSAqYWR2KQ0KPiA+ICAJCWdvdG8gZXJy
+Ow0KPiA+ICAJfQ0KPiA+ICANCj4gPiAtCWlmIChhZHYtPnR5cGUgPT0gQURWNzUzMykgew0KPiA+
+ICsJaWYgKGFkdi0+dHlwZSA9PSBBRFY3NTMzIHx8IGFkdi0+dHlwZSA9PSBBRFY3NTM1KSB7DQo+
+ID4gIAkJcmV0ID0gYWR2NzUzM19wYXRjaF9jZWNfcmVnaXN0ZXJzKGFkdik7DQo+ID4gIAkJaWYg
+KHJldCkNCj4gPiAgCQkJZ290byBlcnI7DQo+ID4gQEAgLTEwOTQsOCArMTA5NCw5IEBAIHN0YXRp
+YyBpbnQgYWR2NzUxMV9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudA0KPiA+ICppMmMsIGNvbnN0IHN0
+cnVjdCBpMmNfZGV2aWNlX2lkICppZCkNCj4gPiAgCXN0cnVjdCBhZHY3NTExX2xpbmtfY29uZmln
+IGxpbmtfY29uZmlnOw0KPiA+ICAJc3RydWN0IGFkdjc1MTEgKmFkdjc1MTE7DQo+ID4gIAlzdHJ1
+Y3QgZGV2aWNlICpkZXYgPSAmaTJjLT5kZXY7DQo+ID4gKwlzdHJ1Y3QgcmVndWxhdG9yICpyZWdf
+djFwMjsNCj4gPiAgCXVuc2lnbmVkIGludCB2YWw7DQo+ID4gLQlpbnQgcmV0Ow0KPiA+ICsJaW50
+IHJldCwgcmVnX3YxcDJfdVY7DQo+ID4gIA0KPiA+ICAJaWYgKCFkZXYtPm9mX25vZGUpDQo+ID4g
+IAkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gQEAgLTExNjMsNiArMTE2NCwxOCBAQCBzdGF0aWMgaW50
+IGFkdjc1MTFfcHJvYmUoc3RydWN0IGkyY19jbGllbnQNCj4gPiAqaTJjLCBjb25zdCBzdHJ1Y3Qg
+aTJjX2RldmljZV9pZCAqaWQpDQo+ID4gIAlpZiAocmV0KQ0KPiA+ICAJCWdvdG8gdW5pbml0X3Jl
+Z3VsYXRvcnM7DQo+ID4gIA0KPiA+ICsJaWYgKGFkdjc1MTEtPnR5cGUgPT0gQURWNzUzMykgew0K
+PiA+ICsJCXJldCA9IG1hdGNoX3N0cmluZyhhZHY3NTMzX3N1cHBseV9uYW1lcywgYWR2NzUxMS0N
+Cj4gPiA+bnVtX3N1cHBsaWVzLA0KPiA+ICsJCQkJCQkJCQkNCj4gPiAidjFwMiIpOw0KPiA+ICsJ
+CXJlZ192MXAyID0gYWR2NzUxMS0+c3VwcGxpZXNbcmV0XS5jb25zdW1lcjsNCj4gPiArCQlyZWdf
+djFwMl91ViA9IHJlZ3VsYXRvcl9nZXRfdm9sdGFnZShyZWdfdjFwMik7DQo+ID4gKw0KPiA+ICsJ
+CWlmIChyZWdfdjFwMl91ViA9PSAxMjAwMDAwKSB7DQo+ID4gKwkJCXJlZ21hcF91cGRhdGVfYml0
+cyhhZHY3NTExLT5yZWdtYXAsDQo+ID4gKwkJCQlBRFY3NTExX1JFR19TVVBQTFlfU0VMRUNULCAw
+eDgwLCAweDgwKTsNCj4gPiArCQl9DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICAJYWR2NzUxMV9wYWNr
+ZXRfZGlzYWJsZShhZHY3NTExLCAweGZmZmYpOw0KPiA+ICANCj4gPiAgCWFkdjc1MTEtPmkyY19l
+ZGlkID0gaTJjX25ld19zZWNvbmRhcnlfZGV2aWNlKGkyYywgImVkaWQiLA0KPiA+IEBAIC0xMjQy
+LDcgKzEyNTUsNyBAQCBzdGF0aWMgaW50IGFkdjc1MTFfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50
+DQo+ID4gKmkyYykNCj4gPiAgew0KPiA+ICAJc3RydWN0IGFkdjc1MTEgKmFkdjc1MTEgPSBpMmNf
+Z2V0X2NsaWVudGRhdGEoaTJjKTsNCj4gPiAgDQo+ID4gLQlpZiAoYWR2NzUxMS0+dHlwZSA9PSBB
+RFY3NTMzKQ0KPiA+ICsJaWYgKGFkdjc1MTEtPnR5cGUgPT0gQURWNzUzMyB8fCBhZHY3NTExLT50
+eXBlID09IEFEVjc1MzUpDQo+ID4gIAkJYWR2NzUzM19kZXRhY2hfZHNpKGFkdjc1MTEpOw0KPiA+
+ICAJaTJjX3VucmVnaXN0ZXJfZGV2aWNlKGFkdjc1MTEtPmkyY19jZWMpOw0KPiA+ICAJaWYgKGFk
+djc1MTEtPmNlY19jbGspDQo+ID4gQEAgLTEyNjgsNiArMTI4MSw3IEBAIHN0YXRpYyBjb25zdCBz
+dHJ1Y3QgaTJjX2RldmljZV9pZA0KPiA+IGFkdjc1MTFfaTJjX2lkc1tdID0gew0KPiA+ICAJeyAi
+YWR2NzUxMyIsIEFEVjc1MTEgfSwNCj4gPiAgI2lmZGVmIENPTkZJR19EUk1fSTJDX0FEVjc1MzMN
+Cj4gPiAgCXsgImFkdjc1MzMiLCBBRFY3NTMzIH0sDQo+ID4gKwl7ICJhZHY3NTM1IiwgQURWNzUz
+NSB9LA0KPiANCj4gTWF5YmUgeW91IHNob3VsZCBhZGQgYSBuZXcgQ09ORklHX0RSTV9JMkNfQURW
+NzUzNSBvciB1cGRhdGUgdGhlDQo+IGN1cnJlbnQgQ09ORklHX0RSTV9JMkNfQURWNzUzMyBkZXNj
+cmlwdGlvbi4NCkknbGwgcmVuYW1lIHRoZSBjb25maWcgb3B0aW9uIGFzIExhdXJlbnQgYWxzbyBz
+dWdnZXN0ZWQgdG8NCkNPTkZJR19EUk1fSTJDX0FEVjc1M1ggYW5kIHVwZGF0ZSBpdHMgZGVzY3Jp
+cHRpb24uIA0KPiANCj4gPiAgI2VuZGlmDQo+ID4gIAl7IH0NCj4gPiAgfTsNCj4gPiBAQCAtMTI3
+OSw2ICsxMjkzLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQNCj4gPiBhZHY3
+NTExX29mX2lkc1tdID0gew0KPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJhZGksYWR2NzUxMyIsIC5k
+YXRhID0gKHZvaWQgKilBRFY3NTExIH0sDQo+ID4gICNpZmRlZiBDT05GSUdfRFJNX0kyQ19BRFY3
+NTMzDQo+ID4gIAl7IC5jb21wYXRpYmxlID0gImFkaSxhZHY3NTMzIiwgLmRhdGEgPSAodm9pZCAq
+KUFEVjc1MzMgfSwNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiYWRpLGFkdjc1MzUiLCAuZGF0YSA9
+ICh2b2lkICopQURWNzUzNSB9LA0KPiANCj4gRGl0dG8NCj4gDQo+IEknbSBub3QgYSBhZHY3NXh4
+IGV4cGVydCBidXQgaXQgbG9va3Mgc2FuZS4NCj4gDQo+IE5laWwNCj4gDQo+ID4gICNlbmRpZg0K
+PiA+ICAJeyB9DQo+ID4gIH07DQo+ID4gDQo=
