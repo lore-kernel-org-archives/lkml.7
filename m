@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FD6C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC934C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68B220B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA78120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732154AbfHAOiV (ORCPT
+        id S1732168AbfHAOi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:38:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36218 "EHLO
+        Thu, 1 Aug 2019 10:38:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36227 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731467AbfHAOiU (ORCPT
+        with ESMTP id S1731467AbfHAOiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:38:20 -0400
+        Thu, 1 Aug 2019 10:38:24 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1htCDX-0000mF-Rw; Thu, 01 Aug 2019 16:38:07 +0200
-Message-Id: <20190801143658.166001448@linutronix.de>
+        id 1htCDW-0000m7-KX; Thu, 01 Aug 2019 16:38:06 +0200
+Message-Id: <20190801143657.980489544@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 01 Aug 2019 16:32:55 +0200
+Date:   Thu, 01 Aug 2019 16:32:53 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
@@ -43,7 +43,7 @@ Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
         John Stultz <john.stultz@linaro.org>,
         Andy Lutomirski <luto@kernel.org>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [patch 5/5] x86: Select POSIX_CPU_TIMERS_TASK_WORK
+Subject: [patch 3/5] posix-cpu-timers: Split run_posix_cpu_timers()
 References: <20190801143250.370326052@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -52,23 +52,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-X86 handles task work in KVM now. Enable the delegation of posix cpu timer
-expiry into task work.
+Split run_posix_cpu_timers() into two pieces, the hard interrupt context
+part and the actual timer evaluation/expiry part.
+
+The hard interrupt context part contains only the lockless fast path check
+and for now calls the expiry part as before.
+
+No functional change. Preparatory change to move the expiry part into task
+context.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+Cc: Oleg Nesterov <oleg@redhat.com>
 
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -213,6 +213,7 @@ config X86
- 	select NEED_SG_DMA_LENGTH
- 	select PCI_DOMAINS			if PCI
- 	select PCI_LOCKLESS_CONFIG		if PCI
-+	select POSIX_CPU_TIMERS_TASK_WORK
- 	select PERF_EVENTS
- 	select RTC_LIB
- 	select RTC_MC146818_LIB
+---
+ kernel/time/posix-cpu-timers.c |   37 +++++++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
+
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -1127,25 +1127,11 @@ static inline int fastpath_timer_check(s
+ 	return 0;
+ }
+ 
+-/*
+- * This is called from the timer interrupt handler.  The irq handler has
+- * already updated our counts.  We need to check if any timers fire now.
+- * Interrupts are disabled.
+- */
+-void run_posix_cpu_timers(struct task_struct *tsk)
++static void __run_posix_cpu_timers(struct task_struct *tsk)
+ {
+-	LIST_HEAD(firing);
+ 	struct k_itimer *timer, *next;
+ 	unsigned long flags;
+-
+-	lockdep_assert_irqs_disabled();
+-
+-	/*
+-	 * The fast path checks that there are no expired thread or thread
+-	 * group timers.  If that's so, just return.
+-	 */
+-	if (!fastpath_timer_check(tsk))
+-		return;
++	LIST_HEAD(firing);
+ 
+ 	if (!lock_task_sighand(tsk, &flags))
+ 		return;
+@@ -1193,6 +1179,25 @@ void run_posix_cpu_timers(struct task_st
+ }
+ 
+ /*
++ * This is called from the timer interrupt handler.  The irq handler has
++ * already updated our counts.  We need to check if any timers fire now.
++ * Interrupts are disabled.
++ */
++void run_posix_cpu_timers(struct task_struct *tsk)
++{
++	lockdep_assert_irqs_disabled();
++
++	/*
++	 * The fast path checks that there are no expired thread or thread
++	 * group timers.  If that's so, just return.
++	 */
++	if (!fastpath_timer_check(tsk))
++		return;
++
++	__run_posix_cpu_timers(tsk);
++}
++
++/*
+  * Set one of the process-wide special case CPU timers or RLIMIT_CPU.
+  * The tsk->sighand->siglock must be held by the caller.
+  */
 
 
