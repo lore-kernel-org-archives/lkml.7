@@ -2,111 +2,102 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD7AC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41B6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9137920838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8736A20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uStsrgDN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsX9h6v0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388936AbfHAVBH (ORCPT
+        id S2388987AbfHAVB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:01:07 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38252 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfHAVBG (ORCPT
+        Thu, 1 Aug 2019 17:01:56 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40177 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfHAVBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:01:06 -0400
-Received: by mail-qt1-f193.google.com with SMTP id n11so71745055qtl.5;
-        Thu, 01 Aug 2019 14:01:06 -0700 (PDT)
+        Thu, 1 Aug 2019 17:01:55 -0400
+Received: by mail-io1-f65.google.com with SMTP id h6so22285638iom.7;
+        Thu, 01 Aug 2019 14:01:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=At1IZWoUrcjzoFBo6+pPU11vzH0qsCf+6x4oe65bvIg=;
-        b=uStsrgDNX3A3NRNPBmsfEftPfszUtOF9JqpdBbxcAseb2Cp1nI6QJ4BVFu5H/rIZ8v
-         rbzDuskZ1BvP68LPeL0zq8ZjO/V5OD40IDX9ZX4jz0s3j6TiVwylL6qxzXVjoGygHzq9
-         NmtbEwgot5NskVLQwlSiyq0FuDuFiySrUDL+272PF2AvoPl6l1u6DBsQ8OlznD+uFli4
-         4OHGxfrZaIQUIYT2PfKT1uatEHmlFCJQpUua+5gcsJt6g8M0BXkEO+QPsDrI1K3I16L/
-         aTcKdJV9yk1ZrIuhzinYwy3k623M0pkPpqHfW8HbwvMAGxoiGTdSRxSA1LN1rg9S3KDA
-         /nmQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=hYk1p4XO50YHWglK7WQv5FDba8WVu0jGxZbnBmYxT0U=;
+        b=WsX9h6v0sWIw9UZqgWKwYoxbHzXP+O8GZHjEmu+fHjKraZiFxmywfBPowTassSYhrO
+         DZ+idaDNIsCqcPfR2dmLfLbFOSJlCCW+y+T32uR6n4SViSofTXsO4znvyykajmEsiELz
+         +TmZel3pzTimGJ2dvG0+8/J49RnFZcMEuy7ONdHdSh+046juGbhrhrvuIvPlagsuweff
+         xQE+KvsPYM7hRG9PquDIfUWD2LM7oIQR4qtFHyfprMjb5c7PkGCIhMr/JMvGzBTNa2jb
+         +4yIHF+1L1rTltWHsj1U3ES9fe8I80SbJp10bJD7A8mf1Co9qbNhfr+TDLhmpIZJT8Yf
+         8HbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=At1IZWoUrcjzoFBo6+pPU11vzH0qsCf+6x4oe65bvIg=;
-        b=asO6aDk2EJl6o6j7nzIcbGXZsoLRDcw836K0s+GuGY6scCSEwGmDxGH0bLIo2PVm86
-         nSPIEQCsk6RwM5QdqbBT6Vub3OS8U09Qc/YLytKlYmx/jEI3kwEPs6EqijIIcH/wZQP1
-         i+RJ4mJPm6077rKDVnjujXSlAXo8OfSwhLzcZucfkKI7eYZhz/z1m2H69X+DxR6A8LkM
-         NRIhoVUNSRN+DSeFZoOJ4FTYnh/phKcTiYVSWPTe3wv63UJhEr8ezPholZ+uq9imjsEv
-         3YFxL0ZtvzJaZ4XvE/oyaTxsScjtak7Yh7sSsM7lueUuCM6hADCF/RAJocWhV/nzygwE
-         iTnw==
-X-Gm-Message-State: APjAAAVaPOCP/PN+42shtcnt9wWJbpgaPxOEtmVz9PjiDAO2iavuK76s
-        YkP+eQmWKj2XhYzkLxnDB7ftgmrZZA3ZTXXfO4g=
-X-Google-Smtp-Source: APXvYqx0U8hwjSfrfGv5PCv/q1e/Y06r9RaTrs0m4NDxmC1Gv/TW5z0Gt4fs9Rq2NhPg85DUKv7yZUyFkk37Ay5yXaQ=
-X-Received: by 2002:ac8:2646:: with SMTP id v6mr91139076qtv.205.1564693265783;
- Thu, 01 Aug 2019 14:01:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <156431697805.3170.6377599347542228221.stgit@buzz>
- <20190729091738.GF9330@dhcp22.suse.cz> <3d6fc779-2081-ba4b-22cf-be701d617bb4@yandex-team.ru>
- <20190729103307.GG9330@dhcp22.suse.cz> <CAHbLzkrdj-O2uXwM8ujm90OcgjyR4nAiEbFtRGe7SOoY_fs=BA@mail.gmail.com>
- <20190729184850.GH9330@dhcp22.suse.cz>
-In-Reply-To: <20190729184850.GH9330@dhcp22.suse.cz>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Thu, 1 Aug 2019 14:00:51 -0700
-Message-ID: <CAHbLzkp9xFV2sE0TdKfWNRVcAwaYNKwDugRiBBoEKx6A_Hr3Jw@mail.gmail.com>
-Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
- in get_user_pages loop
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        cgroups@vger.kernel.org, Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hYk1p4XO50YHWglK7WQv5FDba8WVu0jGxZbnBmYxT0U=;
+        b=qPV66XewVwGQ3qNewkHPh+2jyeS1eCUgJu0IJSZzn97/DrF4rROPI8iXGo8pbBEhNk
+         pN+EHuy0B1ZtDA3j8ZZyUfooCvCN+y3Uicvq1sS2DFC1XxfhJ5Htn4mxtgPYBiCEU40/
+         0Wt1nHURAhcGNRvZxI/yw6PR/p1TU24GYVD8XbEXPBocRAzxyNErFo1PNw33oIo/oJdE
+         79ZhAKT0d+cE6qSwhf9WuZY8/Z9SpUNzvdQVFmt8WqawAC2XY60pscQMxcuNaJxR459r
+         1Hp5+35Qan7xr3FdfFyemSt5BTN5brnvroPXyJsqO/XFBSv8UIwHytior1imTNVJRkiq
+         IWQA==
+X-Gm-Message-State: APjAAAW9EmqElH/rSasCzmP6u7gIV/g+0u0eapNvGQUjTJThdYiboMsU
+        wXiaaU8duh44Pii6JMJxvRfoXIEpvYVkdw==
+X-Google-Smtp-Source: APXvYqx1qXNn4zrShRhEW4FJxoqRTY2+moF4vrJlebUUd+k14iJhk2BPtqeX3DTrTf/z245SC8LW2g==
+X-Received: by 2002:a5d:9642:: with SMTP id d2mr96884249ios.278.1564693314390;
+        Thu, 01 Aug 2019 14:01:54 -0700 (PDT)
+Received: from oc2825805254.ibm.com ([32.97.110.51])
+        by smtp.gmail.com with ESMTPSA id s2sm51429162ioj.8.2019.08.01.14.01.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 14:01:53 -0700 (PDT)
+From:   Ethan Hansen <1ethanhansen@gmail.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, paulmck@linux.ibm.com,
+        josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, Ethan Hansen <1ethanhansen@gmail.com>
+Subject: [PATCH tip/core/rcu 1/1] rcu: Remove unused function rcutorture_record_progress
+Date:   Thu,  1 Aug 2019 14:00:40 -0700
+Message-Id: <1564693240-13363-1-git-send-email-1ethanhansen@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 11:48 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Mon 29-07-19 10:28:43, Yang Shi wrote:
-> [...]
-> > I don't worry too much about scale since the scale issue is not unique
-> > to background reclaim, direct reclaim may run into the same problem.
->
-> Just to clarify. By scaling problem I mean 1:1 kswapd thread to memcg.
-> You can have thousands of memcgs and I do not think we really do want
-> to create one kswapd for each. Once we have a kswapd thread pool then we
-> get into a tricky land where a determinism/fairness would be non trivial
-> to achieve. Direct reclaim, on the other hand is bound by the workload
-> itself.
+The function rcutorture_record_progress is declared in rcu.h,
+but is never used. Remove rcutorture_record_progress to clean code.
 
-Yes, I agree thread pool would introduce more latency than dedicated
-kswapd thread. But, it looks not that bad in our test. When memory
-allocation is fast, even though dedicated kswapd thread can't catch
-up. So, such background reclaim is best effort, not guaranteed.
+Signed-off-by: Ethan Hansen <1ethanhansen@gmail.com>
+---
+ kernel/rcu/rcu.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-I don't quite get what you mean about fairness. Do you mean they may
-spend excessive cpu time then cause other processes starvation? I
-think this could be mitigated by properly organizing and setting
-groups. But, I agree this is tricky.
+diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+index 8fd4f82..aeec70f 100644
+--- a/kernel/rcu/rcu.h
++++ b/kernel/rcu/rcu.h
+@@ -455,7 +455,6 @@ enum rcutorture_type {
+ #if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+ void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
+ 			    unsigned long *gp_seq);
+-void rcutorture_record_progress(unsigned long vernum);
+ void do_trace_rcu_torture_read(const char *rcutorturename,
+ 			       struct rcu_head *rhp,
+ 			       unsigned long secs,
+@@ -468,7 +467,6 @@ static inline void rcutorture_get_gp_data(enum rcutorture_type test_type,
+ 	*flags = 0;
+ 	*gp_seq = 0;
+ }
+-static inline void rcutorture_record_progress(unsigned long vernum) { }
+ #ifdef CONFIG_RCU_TRACE
+ void do_trace_rcu_torture_read(const char *rcutorturename,
+ 			       struct rcu_head *rhp,
+-- 
+1.8.3.1
 
-Typically, the processes are placed into different cgroups according
-to their importance and priority. For example, in our cluster, system
-processes would go to system group, then latency sensitive jobs and
-batch jobs (they are usually second class citizens) go to different
-groups. The memcg kswapd would be enabled for latency sensitive groups
-only. The memcg kswapd threads would have the same priority with
-global kswapd.
-
-> --
-> Michal Hocko
-> SUSE Labs
