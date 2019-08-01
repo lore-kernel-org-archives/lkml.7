@@ -2,150 +2,98 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF873C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B8EC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C57206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6535C206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 19:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iu1CH4To"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzXZu0u6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388549AbfHATMf (ORCPT
+        id S2388557AbfHATOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 15:12:35 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44200 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbfHATMf (ORCPT
+        Thu, 1 Aug 2019 15:14:19 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37968 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388408AbfHATOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 15:12:35 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t14so32600380plr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 12:12:35 -0700 (PDT)
+        Thu, 1 Aug 2019 15:14:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f5so25906007pgu.5
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 12:14:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=u3M46kJjAPF4b1mqVIN/QqF1xk0nbqKlZydzEhZoL6s=;
-        b=Iu1CH4ToXYW90mTOdeHkqHqps0H4/Jt6nXnjawYRwpFRpCQ3R+FOjlvAHtsf0q+cca
-         g/GwPjYINrkuM0M27UfcxGN0Hpzq1z+zbIQRr9A8cLNBE6045TW8YO5B1jv+3zrSM+AI
-         RwmR2ijMX/YKSlorl4qZN6W9VRTC6OW7Mk6NYDrjpVniQ6cLad/+XzqpNwinuFtcNb6o
-         GTdsYR1aNvUhF9KHd0BLzgdnZis8Y+VjfG/T5HxcorMnvqNAW8q864HiIsdjCkh4XWvu
-         mGmSsJd4vy/0+OKrbqrS2lRjhwOvHCzqJiDH6nI0GAHQ2FHm8Lic/V7jrb83izS6/2/D
-         KuMw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RGSi6Vfvu4xt0lLiUw2AuELaVvHeG9XlGKbiRKRhs5s=;
+        b=CzXZu0u6zSFO45D6jZX0nRg0HDilucTrINpsfUkqhuwfKSdUyaiS8FoUrotxfcFC1D
+         CZcSsbgMpzwFLos8rns9y+RV5ZCPq5heIDIbutaCOQTUImxu/hU4uGZdlM9m17LCn4Y1
+         atjG3HAy6kdHQ0vfg4AlaPUnKlxIDyg2rCSoBmABrruO18JlNC5ntmSZCkLV4qMj+zXZ
+         YbPcKslxsBTQOCLWZi6dNy7dNWONL36W+p1gp8eSxgVL/Jh+ccXCtp9jI5WSXMGgxsPg
+         F37sSBs4esooLnu4zuX9CP7JQf/NiCC8UfzcZaThO/3LKGJpsmdAPu4NvvtlxALaCPUr
+         kdiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u3M46kJjAPF4b1mqVIN/QqF1xk0nbqKlZydzEhZoL6s=;
-        b=kQHtRwOYpbt5+gDRN340b1WfRms/9Fz9zSIC3DC4EKSw421Myjurs5TXXo5bkn+VLp
-         9L8deoVKLt0ZPLuDery0omsPierBkbCVY/IuxGCCoHQP9tTY7/H16qeFnCB3A1456ZEi
-         6X+KSZ7MdQSu9sw+tGGqkEGabFMs7Q4EMP783xJbGo0IF+o1cHX8blCUyhFSzWzb1HLp
-         oM6fY0OUQ3TOYl2DmTRCrwdOspHEv4VrLVFOwIsybaMlWa0L3ochTTnoWY+o4sp4zYMi
-         AcuE/ypP6u0naZLALwNLlpQkm9dRNL23szZSuIJJ7+uwaNyu4VjzFDfqJ4VAm+1sFPgm
-         +E0A==
-X-Gm-Message-State: APjAAAVtdcR3mLTnfSb2Upa+yiYxSHGRa5ZeqcZIq7X1X8vTIQ6BxwK/
-        DEUNvBdyTWhRHMdM60QUcgAHuw==
-X-Google-Smtp-Source: APXvYqyXQfNjDuCkBrlF9sH4WaQpLYB6kh01jQJmr+SAa0EdEbp3B9CGOkSzrUP/hpK0bXspTKw35A==
-X-Received: by 2002:a17:902:d90a:: with SMTP id c10mr124505738plz.208.1564686753720;
-        Thu, 01 Aug 2019 12:12:33 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q4sm5434151pjq.27.2019.08.01.12.12.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 12:12:33 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 12:14:03 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Fabien Dessenne <fabien.dessenne@st.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH 0/6] hwspinlock: allow sharing of hwspinlocks
-Message-ID: <20190801191403.GA7234@tuxbook-pro>
-References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RGSi6Vfvu4xt0lLiUw2AuELaVvHeG9XlGKbiRKRhs5s=;
+        b=Pezp6C5Zx89TDlyAVd0VOmP0yY1C9l1M8kfcU8ArgG2O9szJDqhdcwjORRJstHUC+A
+         C/MukQSq4w2eiUPukSlCxsJWB3icjE3pJ8bdjgc8XILI5k6vdbZ/i3pUU0mqYdu9djWI
+         D1SrA2jPy4rhDG7AOTAjh9pbc4zU9DWXIfez2FEH1hTfDSQtbprt0xVSEbP6ZAtfijwV
+         iVvNoDMhIi6Aa+7Lq0hWmrpu+zbqgnLln+iYFUYNmvV3Nto/dibXc9armE5RlY1XxFfz
+         R8LFJagOrrNyh+ban3u6Q+08otdwPAdauVg1FeyQgm9CK1NQZFPc7Cb3Rg3Y9rZnD4RL
+         yz2w==
+X-Gm-Message-State: APjAAAUJfDbYMwFl4iUXZu8kutl1RAUY6XCA3BXa4PJ/c80GYhcrJorr
+        Gigq97zYk11hJMTwZFtoPCU=
+X-Google-Smtp-Source: APXvYqzK958XAnyAAlJUQgc40czLAt5NvUHZo5mDFkLq1+OxnV7vajasz+Bhp8jPmXLYYMRbUQQS/g==
+X-Received: by 2002:a17:90a:26ef:: with SMTP id m102mr354581pje.50.1564686857848;
+        Thu, 01 Aug 2019 12:14:17 -0700 (PDT)
+Received: from localhost.localdomain ([223.191.5.161])
+        by smtp.gmail.com with ESMTPSA id bo20sm4625811pjb.23.2019.08.01.12.14.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 12:14:17 -0700 (PDT)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH 1/3] parport: Add missing newline at end of file
+Date:   Thu,  1 Aug 2019 20:14:06 +0100
+Message-Id: <20190801191408.10977-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 13 Mar 08:50 PDT 2019, Fabien Dessenne wrote:
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> The current implementation does not allow two different devices to use
-> a common hwspinlock. This patch set proposes to have, as an option, some
-> hwspinlocks shared between several users.
-> 
-> Below is an example that explain the need for this:
-> 	exti: interrupt-controller@5000d000 {
-> 		compatible = "st,stm32mp1-exti", "syscon";
-> 		interrupt-controller;
-> 		#interrupt-cells = <2>;
-> 		reg = <0x5000d000 0x400>;
-> 		hwlocks = <&hsem 1>;
-> 	};
-> The two drivers (stm32mp1-exti and syscon) refer to the same hwlock.
-> With the current hwspinlock implementation, only the first driver succeeds
-> in requesting (hwspin_lock_request_specific) the hwlock. The second request
-> fails.
-> 
-> 
-> The proposed approach does not modify the API, but extends the DT 'hwlocks'
-> property with a second optional parameter (the first one identifies an
-> hwlock) that specifies whether an hwlock is requested for exclusive usage
-> (current behavior) or can be shared between several users.
-> Examples:
-> 	hwlocks = <&hsem 8>;	Ref to hwlock #8 for exclusive usage
-> 	hwlocks = <&hsem 8 0>;	Ref to hwlock #8 for exclusive (0) usage
-> 	hwlocks = <&hsem 8 1>;	Ref to hwlock #8 for shared (1) usage
-> 
-> As a constraint, the #hwlock-cells value must be 1 or 2.
-> In the current implementation, this can have theorically any value but:
-> - all of the exisiting drivers use the same value : 1.
-> - the framework supports only one value : 1 (see implementation of
->   of_hwspin_lock_simple_xlate())
-> Hence, it shall not be a problem to restrict this value to 1 or 2 since
-> it won't break any driver.
-> 
+"git diff" says:
 
-Hi Fabien,
+    \ No newline at end of file
 
-Your series looks good, but it makes me wonder why the hardware locks
-should be an exclusive resource.
+after modifying the file.
 
-How about just making all (specific) locks shared?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ drivers/parport/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-Bjorn
+diff --git a/drivers/parport/Makefile b/drivers/parport/Makefile
+index 6fa41f8173b6..022c566c0f32 100644
+--- a/drivers/parport/Makefile
++++ b/drivers/parport/Makefile
+@@ -19,4 +19,4 @@ obj-$(CONFIG_PARPORT_ATARI)	+= parport_atari.o
+ obj-$(CONFIG_PARPORT_SUNBPP)	+= parport_sunbpp.o
+ obj-$(CONFIG_PARPORT_GSC)	+= parport_gsc.o
+ obj-$(CONFIG_PARPORT_AX88796)	+= parport_ax88796.o
+-obj-$(CONFIG_PARPORT_IP32)	+= parport_ip32.o
+\ No newline at end of file
++obj-$(CONFIG_PARPORT_IP32)	+= parport_ip32.o
+-- 
+2.11.0
 
-> Fabien Dessenne (6):
->   dt-bindings: hwlock: add support of shared locks
->   hwspinlock: allow sharing of hwspinlocks
->   dt-bindings: hwlock: update STM32 #hwlock-cells value
->   ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
->   ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
->   ARM: dts: stm32: hwlocks for GPIO for stm32mp157
-> 
->  .../devicetree/bindings/hwlock/hwlock.txt          | 27 +++++--
->  .../bindings/hwlock/st,stm32-hwspinlock.txt        |  6 +-
->  Documentation/hwspinlock.txt                       | 10 ++-
->  arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          |  2 +
->  arch/arm/boot/dts/stm32mp157c.dtsi                 | 10 +++
->  drivers/hwspinlock/hwspinlock_core.c               | 82 +++++++++++++++++-----
->  drivers/hwspinlock/hwspinlock_internal.h           |  2 +
->  7 files changed, 108 insertions(+), 31 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
