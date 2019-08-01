@@ -2,254 +2,336 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62C0C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC594C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9113520838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:53:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564696424;
-	bh=zj83okLyIYavnGvsyCan0qr/OGuCk8648E33+ERiAa4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r2DJ0pF8zEYVnLVPe5OIyohVuVXboiYcHJbqhRBY4fs8lhNb75Ut+uhQAMXBCMSbP
-	 27plghifmIAqX3aqCqxg1w5OpzIH3VB9+1rmYzPbRLknb9sS9iB80x8rD+j12QApEo
-	 Vdh4IUSlwcK+6f9/OgpRBChUv7Gu57ZyPV7rDXr8=
+	by mail.kernel.org (Postfix) with ESMTP id 8757F20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732717AbfHAVxn (ORCPT
+        id S1732738AbfHAVyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:53:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36948 "EHLO mail.kernel.org"
+        Thu, 1 Aug 2019 17:54:22 -0400
+Received: from mga14.intel.com ([192.55.52.115]:50538 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732503AbfHAVxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:53:43 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 450972080C;
-        Thu,  1 Aug 2019 21:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564696421;
-        bh=zj83okLyIYavnGvsyCan0qr/OGuCk8648E33+ERiAa4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jTCb/6QUQUiIh/v25/hntXLRXzgDYnHALtUZ9xcbddsq6gA4oSrtmkUwKiCQ+W43w
-         0c47fiu13qk/q/LwZehd+y7VbH9RvtASAs/vJgyLxHEVgagvwaescR7NOB/9NQPQrS
-         JXi1cjcYKopH1h4qprA7QAFoT8kuMoxZnmi5eQ+c=
-Date:   Thu, 1 Aug 2019 16:53:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
-        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
- downstream component
-Message-ID: <20190801215339.GF151852@google.com>
-References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
- <20190703133953.GK128603@google.com>
- <20190703150341.GW2640@lahna.fi.intel.com>
+        id S1730419AbfHAVyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 17:54:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 14:54:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,335,1559545200"; 
+   d="gz'50?scan'50,208,50";a="173043383"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Aug 2019 14:54:06 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1htJ1S-0004Rj-EN; Fri, 02 Aug 2019 05:54:06 +0800
+Date:   Fri, 2 Aug 2019 05:53:25 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [rcu:dev.2019.07.31a 63/123] htmldocs: kernel/rcu/update.c:95:
+ warning: Function parameter or member 'ret' not described in
+ 'rcu_read_lock_held_common'
+Message-ID: <201908020558.xIUwDFcH%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="GvXjxJ+pjyke8COw"
 Content-Disposition: inline
-In-Reply-To: <20190703150341.GW2640@lahna.fi.intel.com>
+X-Patchwork-Hint: ignore
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc FPGA folks, just FYI; I'm pretty sure PCI could do a much better
-job supporting FPGAs, so any input is welcome!]
 
-On Wed, Jul 03, 2019 at 06:03:41PM +0300, Mika Westerberg wrote:
-> On Wed, Jul 03, 2019 at 08:39:53AM -0500, Bjorn Helgaas wrote:
-> > On Wed, May 29, 2019 at 01:49:42PM +0300, Mika Westerberg wrote:
-> > > PCIe root and downstream ports have link control register that can be
-> > > used disable the link from software. This can be useful for instance
-> > > when performing "software" hotplug on systems that do not support real
-> > > PCIe/ACPI hotplug.
-> > > 
-> > > For example when used with FPGA card we can burn a new FPGA image
-> > > without need to reboot the system.
-> > > 
-> > > First we remove the FGPA device from Linux PCI stack:
-> > > 
-> > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/0000:02:00.0/remove
-> > > 
-> > > Then we disable the link:
-> > > 
-> > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/link_disable
-> > > 
-> > > By doing this we prevent the kernel from accessing the hardware while we
-> > > burn the new FPGA image. 
-> > 
-> > What is the case where the kernel accesses the hardware?  You've
-> > already done the remove, so the pci_dev is gone.  Is this to protect
-> > against another user doing a rescan?  Or is there some spurious event
-> > during the FPGA update that causes an interrupt that causes pciehp to
-> > rescan?  Something else?
-> 
-> Protect against another user doing rescan.
+--GvXjxJ+pjyke8COw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm not 100% sure this is enough of an issue to warrant a new sysfs
-file.  The file is visible all the time to everybody, but it only
-protects root from shooting him/herself in the foot.
+tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.07.31a
+head:   71cf692f482ff45802352cf85a8880035fca9e52
+commit: ad881cd95e792a050dc860f2ee49b73d9804f42d [63/123] rcu: Add support for consolidated-RCU reader checking
+reproduce: make htmldocs
 
-> > I guess this particular FPGA update must be done via some side channel
-> > (not the PCIe link)?  I assume there are other FPGA arrangements where
-> > the update *would* be done via the PCIe link, and we would just do a
-> > reset to make the update take effect.
-> 
-> In this setup the FPGA is programmed using side channel. I haven't seen
-> the actual system but I think it is some sort of FPGA programmer
-> connected to another system.
-> 
-> > > Once the new FPGA is burned we can re-enable
-> > > the link and rescan the new and possibly different device:
-> > > 
-> > >   # echo 0 > /sys/bus/pci/devices/0000:00:01.1/link_disable
-> > >   # echo 1 > /sys/bus/pci/devices/0000:00:01.1/rescan
-> > > 
-> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > ---
-> > >  Documentation/ABI/testing/sysfs-bus-pci |  8 +++
-> > >  drivers/pci/pci-sysfs.c                 | 65 ++++++++++++++++++++++++-
-> > >  2 files changed, 72 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> > > index 8bfee557e50e..c93d6b9ab580 100644
-> > > --- a/Documentation/ABI/testing/sysfs-bus-pci
-> > > +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> > > @@ -324,6 +324,14 @@ Description:
-> > >  		This is similar to /sys/bus/pci/drivers_autoprobe, but
-> > >  		affects only the VFs associated with a specific PF.
-> > >  
-> > > +What:		/sys/bus/pci/devices/.../link_disable
-> > > +Date:		September 2019
-> > > +Contact:	Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > +Description:
-> > > +		PCIe root and downstream ports have this attribute. Writing
-> > > +		1 causes the link to downstream component be disabled.
-> > > +		Re-enabling the link happens by writing 0 instead.
-> > > +
-> > >  What:		/sys/bus/pci/devices/.../p2pmem/size
-> > >  Date:		November 2017
-> > >  Contact:	Logan Gunthorpe <logang@deltatee.com>
-> > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > index 6d27475e39b2..dfcd21745192 100644
-> > > --- a/drivers/pci/pci-sysfs.c
-> > > +++ b/drivers/pci/pci-sysfs.c
-> > > @@ -218,6 +218,56 @@ static ssize_t current_link_width_show(struct device *dev,
-> > >  }
-> > >  static DEVICE_ATTR_RO(current_link_width);
-> > >  
-> > > +static ssize_t link_disable_show(struct device *dev,
-> > > +				 struct device_attribute *attr, char *buf)
-> > > +{
-> > > +	struct pci_dev *pci_dev = to_pci_dev(dev);
-> > > +	u16 linkctl;
-> > > +	int ret;
-> > > +
-> > > +	ret = pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &linkctl);
-> > > +	if (ret)
-> > > +		return -EINVAL;
-> > > +
-> > > +	return sprintf(buf, "%d\n", !!(linkctl & PCI_EXP_LNKCTL_LD));
-> > > +}
-> > > +
-> > > +static ssize_t link_disable_store(struct device *dev,
-> > > +				  struct device_attribute *attr,
-> > > +				  const char *buf, size_t count)
-> > > +{
-> > > +	struct pci_dev *pci_dev = to_pci_dev(dev);
-> > > +	u16 linkctl;
-> > > +	bool disable;
-> > > +	int ret;
-> > > +
-> > > +	ret = kstrtobool(buf, &disable);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ret = pcie_capability_read_word(pci_dev, PCI_EXP_LNKCTL, &linkctl);
-> > > +	if (ret)
-> > > +		return -EINVAL;
-> > > +
-> > > +	if (disable) {
-> > > +		if (linkctl & PCI_EXP_LNKCTL_LD)
-> > > +			goto out;
-> > > +		linkctl |= PCI_EXP_LNKCTL_LD;
-> > > +	} else {
-> > > +		if (!(linkctl & PCI_EXP_LNKCTL_LD))
-> > > +			goto out;
-> > > +		linkctl &= ~PCI_EXP_LNKCTL_LD;
-> > > +	}
-> > > +
-> > > +	ret = pcie_capability_write_word(pci_dev, PCI_EXP_LNKCTL, linkctl);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +out:
-> > > +	return count;
-> > > +}
-> > > +static DEVICE_ATTR_RW(link_disable);
-> > > +
-> > >  static ssize_t secondary_bus_number_show(struct device *dev,
-> > >  					 struct device_attribute *attr,
-> > >  					 char *buf)
-> > > @@ -785,6 +835,7 @@ static struct attribute *pcie_dev_attrs[] = {
-> > >  	&dev_attr_current_link_width.attr,
-> > >  	&dev_attr_max_link_width.attr,
-> > >  	&dev_attr_max_link_speed.attr,
-> > > +	&dev_attr_link_disable.attr,
-> > >  	NULL,
-> > >  };
-> > >  
-> > > @@ -1656,8 +1707,20 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
-> > >  	struct device *dev = kobj_to_dev(kobj);
-> > >  	struct pci_dev *pdev = to_pci_dev(dev);
-> > >  
-> > > -	if (pci_is_pcie(pdev))
-> > > +	if (pci_is_pcie(pdev)) {
-> > > +		if (a == &dev_attr_link_disable.attr) {
-> > > +			switch (pci_pcie_type(pdev)) {
-> > > +			case PCI_EXP_TYPE_ROOT_PORT:
-> > > +			case PCI_EXP_TYPE_DOWNSTREAM:
-> > 
-> > This is actually not completely reliable because there are weird
-> > systems that don't identify upstream/downstream ports correctly, e.g.,
-> > see d0751b98dfa3 ("PCI: Add dev->has_secondary_link to track
-> > downstream PCIe links") and c8fc9339409d ("PCI/ASPM: Use
-> > dev->has_secondary_link to find downstream links").
-> 
-> D'oh!
-> 
-> It never came to my mind that using pci_pcie_type() would not be
-> reliable. Thanks for pointing it out.
-> 
-> > I think I suggested the dev->has_secondary_link approach, but I now
-> > think that was a mistake because it means we have to remember to look
-> > at has_secondary_link instead of doing the obvious thing like your
-> > code.
-> > 
-> > set_pcie_port_type() detects those unusual topologies, and I think it
-> > would probably be better for it to just change the cached caps reg
-> > used by pci_pcie_type() so checking for PCI_EXP_TYPE_DOWNSTREAM does
-> > the right thing.
-> 
-> You mean modify set_pcie_port_type() to correct the type if it finds:
-> 
->   type == PCI_EXP_TYPE_UPSTREAM && !pdev->has_secondary_link => type = PCI_EXP_TYPE_DOWNSTREAM
-> 
-> or
-> 
->   type == PCI_EXP_TYPE_DOWNSTREAM && pdev->has_secondary_link => type = PCI_EXP_TYPE_UPSTREAM
-> 
-> ? Assuming my understanding of pdev->has_secondary_link is correct.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-I was hoping we could get rid of "has_secondary_link" completely if we
-corrected the type, but I'm not sure that's possible.
+All warnings (new ones prefixed by >>):
 
-Bjorn
+   Warning: The Sphinx 'sphinx_rtd_theme' HTML theme was not found. Make sure you have the theme installed to produce pretty HTML output. Falling back to the default theme.
+   Documentation/sphinx/kfigure.py:174: RemovedInSphinx20Warning: app.verbose() is now deprecated. Use sphinx.util.logging instead.
+     app.verbose("kfigure: check installed tools ...")
+   Documentation/sphinx/kfigure.py:182: RemovedInSphinx20Warning: app.warning() is now deprecated. Use sphinx.util.logging instead.
+     app.warn("dot(1) not found, for better output quality install "
+   WARNING: dot(1) not found, for better output quality install graphviz from http://www.graphviz.org
+   Documentation/sphinx/kfigure.py:188: RemovedInSphinx20Warning: app.warning() is now deprecated. Use sphinx.util.logging instead.
+     "convert(1) not found, for SVG to PDF conversion install "
+   WARNING: convert(1) not found, for SVG to PDF conversion install ImageMagick (https://www.imagemagick.org)
+   Documentation/sphinx/kerneldoc.py:93: RemovedInSphinx20Warning: app.verbose() is now deprecated. Use sphinx.util.logging instead.
+     env.app.verbose('calling kernel-doc \'%s\'' % (" ".join(cmd)))
+   Documentation/sphinx/kerneldoc.py:125: RemovedInSphinx20Warning: AutodocReporter is now deprecated. Use sphinx.util.docutils.switch_source_input() instead.
+     self.state.memo.reporter = AutodocReporter(result, self.state.memo.reporter)
+   include/linux/generic-radix-tree.h:1: warning: no structured comments found
+   lib/sort.c:59: warning: Excess function parameter 'size' description in 'swap_words_32'
+   lib/sort.c:83: warning: Excess function parameter 'size' description in 'swap_words_64'
+   lib/sort.c:110: warning: Excess function parameter 'size' description in 'swap_bytes'
+   block/genhd.c:540: warning: Function parameter or member 'devt' not described in 'blk_invalidate_devt'
+   kernel/rcu/tree_plugin.h:1: warning: no structured comments found
+>> kernel/rcu/update.c:95: warning: Function parameter or member 'ret' not described in 'rcu_read_lock_held_common'
+   include/linux/rculist.h:374: warning: Excess function parameter 'cond' description in 'list_for_each_entry_rcu'
+   include/linux/rculist.h:651: warning: Excess function parameter 'cond' description in 'hlist_for_each_entry_rcu'
+   include/net/cfg80211.h:1074: warning: Function parameter or member 'txpwr' not described in 'station_parameters'
+   include/net/mac80211.h:4037: warning: Function parameter or member 'sta_set_txpwr' not described in 'ieee80211_ops'
+   include/net/mac80211.h:2004: warning: Function parameter or member 'txpwr' not described in 'ieee80211_sta'
+   kernel/rcu/tree_plugin.h:1: warning: no structured comments found
+   include/linux/firmware/intel/stratix10-svc-client.h:1: warning: no structured comments found
+   Error: Cannot open file drivers/counter/generic-counter.c
+   Error: Cannot open file drivers/counter/generic-counter.c
+   Documentation/sphinx/kerneldoc.py:103: RemovedInSphinx20Warning: app.warning() is now deprecated. Use sphinx.util.logging instead.
+     env.app.warn('kernel-doc \'%s\' failed with return code %d' % (" ".join(cmd), p.returncode))
+   include/linux/gpio/driver.h:374: warning: Function parameter or member 'init_valid_mask' not described in 'gpio_chip'
+   include/linux/i2c.h:343: warning: Function parameter or member 'init_irq' not described in 'i2c_client'
+   include/linux/iio/hw-consumer.h:1: warning: no structured comments found
+   drivers/base/node.c:78: warning: Function parameter or member 'hmem_attrs' not described in 'node_access_nodes'
+   drivers/base/node.c:690: warning: Function parameter or member 'mem_nid' not described in 'register_memory_node_under_compute_node'
+   drivers/base/node.c:690: warning: Function parameter or member 'cpu_nid' not described in 'register_memory_node_under_compute_node'
+   drivers/base/node.c:690: warning: Excess function parameter 'mem_node' description in 'register_memory_node_under_compute_node'
+   drivers/base/node.c:690: warning: Excess function parameter 'cpu_node' description in 'register_memory_node_under_compute_node'
+   include/linux/input/sparse-keymap.h:46: warning: Function parameter or member 'sw' not described in 'key_entry'
+   include/linux/regulator/machine.h:199: warning: Function parameter or member 'max_uV_step' not described in 'regulation_constraints'
+   include/linux/regulator/driver.h:228: warning: Function parameter or member 'resume' not described in 'regulator_ops'
+   drivers/slimbus/stream.c:1: warning: no structured comments found
+   include/linux/spi/spi.h:188: warning: Function parameter or member 'driver_override' not described in 'spi_device'
+   drivers/target/target_core_device.c:1: warning: no structured comments found
+   drivers/usb/typec/bus.c:1: warning: no structured comments found
+   drivers/usb/typec/class.c:1: warning: no structured comments found
+   include/linux/w1.h:281: warning: Function parameter or member 'of_match_table' not described in 'w1_family'
+   fs/direct-io.c:257: warning: Excess function parameter 'offset' description in 'dio_complete'
+   fs/file_table.c:1: warning: no structured comments found
+   fs/libfs.c:479: warning: Excess function parameter 'available' description in 'simple_write_end'
+   fs/posix_acl.c:646: warning: Function parameter or member 'inode' not described in 'posix_acl_update_mode'
+   fs/posix_acl.c:646: warning: Function parameter or member 'mode_p' not described in 'posix_acl_update_mode'
+   fs/posix_acl.c:646: warning: Function parameter or member 'acl' not described in 'posix_acl_update_mode'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:294: warning: Excess function parameter 'mm' description in 'amdgpu_mn_invalidate_range_start_hsa'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:294: warning: Excess function parameter 'start' description in 'amdgpu_mn_invalidate_range_start_hsa'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:294: warning: Excess function parameter 'end' description in 'amdgpu_mn_invalidate_range_start_hsa'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:343: warning: Excess function parameter 'mm' description in 'amdgpu_mn_invalidate_range_end'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:343: warning: Excess function parameter 'start' description in 'amdgpu_mn_invalidate_range_end'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:343: warning: Excess function parameter 'end' description in 'amdgpu_mn_invalidate_range_end'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:183: warning: Function parameter or member 'blockable' not described in 'amdgpu_mn_read_lock'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:295: warning: Function parameter or member 'range' not described in 'amdgpu_mn_invalidate_range_start_hsa'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:295: warning: Excess function parameter 'mm' description in 'amdgpu_mn_invalidate_range_start_hsa'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:295: warning: Excess function parameter 'start' description in 'amdgpu_mn_invalidate_range_start_hsa'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:295: warning: Excess function parameter 'end' description in 'amdgpu_mn_invalidate_range_start_hsa'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:344: warning: Function parameter or member 'range' not described in 'amdgpu_mn_invalidate_range_end'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:344: warning: Excess function parameter 'mm' description in 'amdgpu_mn_invalidate_range_end'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:344: warning: Excess function parameter 'start' description in 'amdgpu_mn_invalidate_range_end'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c:344: warning: Excess function parameter 'end' description in 'amdgpu_mn_invalidate_range_end'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:347: warning: cannot understand function prototype: 'struct amdgpu_vm_pt_cursor '
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:348: warning: cannot understand function prototype: 'struct amdgpu_vm_pt_cursor '
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:494: warning: Function parameter or member 'start' not described in 'amdgpu_vm_pt_first_dfs'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'adev' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'vm' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'start' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'cursor' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:546: warning: Function parameter or member 'entry' not described in 'for_each_amdgpu_vm_pt_dfs_safe'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:823: warning: Function parameter or member 'level' not described in 'amdgpu_vm_bo_param'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'params' not described in 'amdgpu_vm_update_flags'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'bo' not described in 'amdgpu_vm_update_flags'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'level' not described in 'amdgpu_vm_update_flags'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'pe' not described in 'amdgpu_vm_update_flags'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'addr' not described in 'amdgpu_vm_update_flags'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'count' not described in 'amdgpu_vm_update_flags'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'incr' not described in 'amdgpu_vm_update_flags'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:1285: warning: Function parameter or member 'flags' not described in 'amdgpu_vm_update_flags'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:2812: warning: Function parameter or member 'pasid' not described in 'amdgpu_vm_make_compute'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c:375: warning: Excess function parameter 'entry' description in 'amdgpu_irq_dispatch'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c:376: warning: Function parameter or member 'ih' not described in 'amdgpu_irq_dispatch'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c:376: warning: Excess function parameter 'entry' description in 'amdgpu_irq_dispatch'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c:1: warning: no structured comments found
+   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:128: warning: Incorrect use of kernel-doc format:          * @atomic_obj
+   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:210: warning: Function parameter or member 'atomic_obj' not described in 'amdgpu_display_manager'
+   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:210: warning: Function parameter or member 'backlight_link' not described in 'amdgpu_display_manager'
+   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:210: warning: Function parameter or member 'backlight_caps' not described in 'amdgpu_display_manager'
+   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:210: warning: Function parameter or member 'freesync_module' not described in 'amdgpu_display_manager'
+   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:210: warning: Function parameter or member 'fw_dmcu' not described in 'amdgpu_display_manager'
+   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h:210: warning: Function parameter or member 'dmcu_fw_version' not described in 'amdgpu_display_manager'
+   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:1: warning: no structured comments found
+   include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_pin' not described in 'drm_driver'
+   include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_unpin' not described in 'drm_driver'
+   include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_res_obj' not described in 'drm_driver'
+   include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_get_sg_table' not described in 'drm_driver'
+   include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_import_sg_table' not described in 'drm_driver'
+   include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_vmap' not described in 'drm_driver'
+   include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_vunmap' not described in 'drm_driver'
+   include/drm/drm_drv.h:722: warning: Function parameter or member 'gem_prime_mmap' not described in 'drm_driver'
+   include/drm/drm_modeset_helper_vtables.h:1004: warning: Function parameter or member 'prepare_writeback_job' not described in 'drm_connector_helper_funcs'
+   include/drm/drm_modeset_helper_vtables.h:1004: warning: Function parameter or member 'cleanup_writeback_job' not described in 'drm_connector_helper_funcs'
+   include/drm/drm_atomic_state_helper.h:1: warning: no structured comments found
+   drivers/gpu/drm/scheduler/sched_main.c:419: warning: Function parameter or member 'full_recovery' not described in 'drm_sched_start'
+   drivers/gpu/drm/i915/i915_vma.h:50: warning: cannot understand function prototype: 'struct i915_vma '
+   drivers/gpu/drm/i915/i915_vma.h:1: warning: no structured comments found
+   drivers/gpu/drm/i915/intel_guc_fwif.h:536: warning: cannot understand function prototype: 'struct guc_log_buffer_state '
+   drivers/gpu/drm/i915/i915_trace.h:1: warning: no structured comments found
+   drivers/gpu/drm/i915/i915_reg.h:156: warning: bad line: 
+   include/linux/interconnect.h:1: warning: no structured comments found
+   include/linux/skbuff.h:897: warning: Function parameter or member 'dev_scratch' not described in 'sk_buff'
+   include/linux/skbuff.h:897: warning: Function parameter or member 'list' not described in 'sk_buff'
+   include/linux/skbuff.h:897: warning: Function parameter or member 'ip_defrag_offset' not described in 'sk_buff'
+
+vim +95 kernel/rcu/update.c
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+--GvXjxJ+pjyke8COw
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+05doAAA=
+
+--GvXjxJ+pjyke8COw--
