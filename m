@@ -4,95 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06050C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAC1C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1DA214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C93214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:01:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731380AbfHALBv (ORCPT
+        id S1731409AbfHALB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:01:51 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:3039 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726227AbfHALBq (ORCPT
+        Thu, 1 Aug 2019 07:01:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44077 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731362AbfHALBt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:01:46 -0400
-X-UUID: 6f54a5301c2e4239b0b53d9f2b010548-20190801
-X-UUID: 6f54a5301c2e4239b0b53d9f2b010548-20190801
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <ran.bi@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1259157827; Thu, 01 Aug 2019 19:01:36 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 1 Aug 2019 19:01:38 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 1 Aug 2019 19:01:37 +0800
-From:   Ran Bi <ran.bi@mediatek.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Alessandro Zummo <a.zummo@towertech.it>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, YT Shen <yt.shen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Flora Fu <flora.fu@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Ran Bi <ran.bi@mediatek.com>
-Subject: [PATCH v2 3/4] arm64: dts: add RTC nodes for MT2712
-Date:   Thu, 1 Aug 2019 19:01:21 +0800
-Message-ID: <20190801110122.26834-4-ran.bi@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190801110122.26834-1-ran.bi@mediatek.com>
-References: <20190801110122.26834-1-ran.bi@mediatek.com>
+        Thu, 1 Aug 2019 07:01:49 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ht8q9-0006Mm-Fl; Thu, 01 Aug 2019 11:01:45 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Le Ma <le.ma@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][drm-next] drm/amdgpu: fix unsigned variable instance compared to less than zero
+Date:   Thu,  1 Aug 2019 12:01:45 +0100
+Message-Id: <20190801110145.10803-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add device node for MT2712 RTC.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+Currenly the error check on variable instance is always false because
+it is a uint32_t type and this is never less than zero. Fix this by
+making it an int type.
+
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 7d0e6329dfdc ("drm/amdgpu: update more sdma instances irq support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-index 43307bad3f0d..31166c17c39a 100644
---- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-@@ -303,6 +303,12 @@
- 		status = "disabled";
- 	};
+diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
+index a33bd867287e..92257f2bf171 100644
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
+@@ -1962,7 +1962,8 @@ static int sdma_v4_0_process_trap_irq(struct amdgpu_device *adev,
+ static int sdma_v4_0_process_ras_data_cb(struct amdgpu_device *adev,
+ 		struct amdgpu_iv_entry *entry)
+ {
+-	uint32_t instance, err_source;
++	uint32_t err_source;
++	int instance;
  
-+	rtc: rtc@10011000 {
-+		compatible = "mediatek,mt2712-rtc";
-+		reg = <0 0x10011000 0 0x1000>;
-+		interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
- 	spis1: spi@10013000 {
- 		compatible = "mediatek,mt2712-spi-slave";
- 		reg = <0 0x10013000 0 0x100>;
+ 	instance = sdma_v4_0_irq_id_to_seq(entry->client_id);
+ 	if (instance < 0)
 -- 
-2.21.0
+2.20.1
 
