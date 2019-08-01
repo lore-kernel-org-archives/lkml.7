@@ -2,171 +2,189 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E952C32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB407C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C92620838
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2AA2087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 18:42:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F+YmTNZN"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="G7iqMIII"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732777AbfHASmq (ORCPT
+        id S1732833AbfHASmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 14:42:46 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40157 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfHASmp (ORCPT
+        Thu, 1 Aug 2019 14:42:55 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:40330 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731751AbfHASmy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 14:42:45 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m8so36795822lji.7;
-        Thu, 01 Aug 2019 11:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HpAJm7JHif5wEh1Zz0Hmfl8/tOLT+/K6NfvF69ElWR0=;
-        b=F+YmTNZNrSMPL8XzF/2MZhiQFdTC1Iq+gdvZ/Wh8RzZND+J7dqAL/AcoAh+lYGXMeN
-         hf53jSzKUtnC7VkRmiVSVOxtjc/k7cGyUgVDNZGO9AYwUZtzFLFzB2mNAZP442bDE6//
-         oIxcEb3rk8vmcS6Dl3fVgHr7EYWax6ltM0QoD2tDqDiUW/JA7Ho6djgrWWZ+3IcifXKp
-         Qv3JLYCWjEPmTHaAvd3EJZ5ZbGGUPiizAtCHIm/b4crNQGUfQaXBMAIacfCCUsCB8U1B
-         RTqdw88jy/O5b7rQJ2cTEQARUOvykdt0NeEDQoA08hcKitNIjo1j4imBowW8VRXKQ5Rl
-         84hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HpAJm7JHif5wEh1Zz0Hmfl8/tOLT+/K6NfvF69ElWR0=;
-        b=Lvi0HYKf10YK2opaLnpHByCdl/0rwoIySLY0m77E5YWW/TG0DWTH6FrPhRrfsYTCEB
-         cbTWPelvB3cRol3s+1RgzkE+pRwxj1k/Fv4MCTmizrtJjsrJHOVSWcT7rnMCYqbrA4TD
-         U0LWnGb3cDUvOjNzVFAXa73DvgFQbkUVYb+G4BWgXNZsG7fZuZ+nLngmySqqIOU3Y6Z+
-         x31iK0kTgunPUW0wMqQ3XFQGGknhRykl4OGCqW8VYeEZqEaJebg2+taFBuVmpxsFY9El
-         34HhtfJRyJHfOFwALMW1Ggz+0pUW3hyANvm6JhVRsznMP1eijEUJejZ+qUPI/IBLTaEU
-         SvhA==
-X-Gm-Message-State: APjAAAVXyuZymHkCXQ/dWQ5NQXyZvmMy03kpw6IDc+1gT7bGNPmAw5s3
-        APiso1mRCjfXrxWTTDXYtIxpOsyH
-X-Google-Smtp-Source: APXvYqyc1PCaVxJmFQAEk7HeDZylAweK0JgWoEF4iIE2xbLpiEqWoHs2fIqi/JWCxW4bZioMV7RgGw==
-X-Received: by 2002:a2e:9dc1:: with SMTP id x1mr12872416ljj.0.1564684961383;
-        Thu, 01 Aug 2019 11:42:41 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id s19sm14520493lji.38.2019.08.01.11.42.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 11:42:40 -0700 (PDT)
-Subject: Re: [PATCH v7 06/20] clk: tegra: Support for OSC context save and
- restore
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
- <16cca6aa-1034-f38a-49d1-d87b37fb6bbb@gmail.com>
- <b5a58bfc-c777-886f-d902-f499ec38e2ae@nvidia.com>
- <3b55a112-42a6-212b-beea-10b64d5341d9@gmail.com>
- <cd9c5116-4235-758c-7a09-d7185d52b22b@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c873d974-f594-d5eb-5c88-c487b8049e3d@gmail.com>
-Date:   Thu, 1 Aug 2019 21:42:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 1 Aug 2019 14:42:54 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x71Icx4o003778
+        for <linux-kernel@vger.kernel.org>; Thu, 1 Aug 2019 11:42:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=NW8BKXx5lCR6jtZRhKIXx1ZmLTOMfwbNocTFcul3hxg=;
+ b=G7iqMIIIe4DVCG3FNT5l3VmYTykhgH1J3KhbE/LjeCUWZ+EnGcFSej68ZEiiMRQhD2od
+ m6goFnJbTZDr9QoNYa/ObdobCEExXIKq1pZbHWM3WlnZSazGmKIgbaJJlwk1218KrAfC
+ e4LJCoh2rxIG18+DeJ8AJhD/A1DEAJsnHaM= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2u43h7rjsa-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 11:42:53 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 1 Aug 2019 11:42:50 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 6523D62E1E18; Thu,  1 Aug 2019 11:42:50 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
+        <kernel-team@fb.com>, <william.kucharski@oracle.com>,
+        <akpm@linux-foundation.org>, <hdanton@sina.com>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v10 0/7] Enable THP for text section of non-shmem files
+Date:   Thu, 1 Aug 2019 11:42:37 -0700
+Message-ID: <20190801184244.3169074-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-In-Reply-To: <cd9c5116-4235-758c-7a09-d7185d52b22b@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908010193
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.08.2019 21:06, Sowjanya Komatineni пишет:
-> 
-> On 8/1/19 3:53 AM, Dmitry Osipenko wrote:
->> 01.08.2019 0:04, Sowjanya Komatineni пишет:
->>> On 7/31/19 4:11 AM, Dmitry Osipenko wrote:
->>>> 31.07.2019 3:20, Sowjanya Komatineni пишет:
->>>>> This patch adds support for saving OSC clock frequency and the
->>>>> drive-strength during OSC clock init and creates an API to restore
->>>>> OSC control register value from the saved context.
->>>>>
->>>>> This API is invoked by Tegra210 clock driver during system resume
->>>>> to restore the  OSC clock settings.
->>>>>
->>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>> ---
->>>>>    drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
->>>>>    drivers/clk/tegra/clk.h             |  1 +
->>>>>    2 files changed, 16 insertions(+)
->>>>>
->>>>> diff --git a/drivers/clk/tegra/clk-tegra-fixed.c
->>>>> b/drivers/clk/tegra/clk-tegra-fixed.c
->>>>> index 8d91b2b191cf..7c6c8abfcde6 100644
->>>>> --- a/drivers/clk/tegra/clk-tegra-fixed.c
->>>>> +++ b/drivers/clk/tegra/clk-tegra-fixed.c
->>>>> @@ -17,6 +17,10 @@
->>>>>    #define OSC_CTRL            0x50
->>>>>    #define OSC_CTRL_OSC_FREQ_SHIFT        28
->>>>>    #define OSC_CTRL_PLL_REF_DIV_SHIFT    26
->>>>> +#define OSC_CTRL_MASK            (0x3f2 |    \
->>>>> +                    (0xf << OSC_CTRL_OSC_FREQ_SHIFT))
->>>>> +
->>>>> +static u32 osc_ctrl_ctx;
->>>>>      int __init tegra_osc_clk_init(void __iomem *clk_base, struct
->>>>> tegra_clk *clks,
->>>>>                      unsigned long *input_freqs, unsigned int num,
->>>>> @@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem
->>>>> *clk_base, struct tegra_clk *clks,
->>>>>        unsigned osc_idx;
->>>>>          val = readl_relaxed(clk_base + OSC_CTRL);
->>>>> +    osc_ctrl_ctx = val & OSC_CTRL_MASK;
->>>>>        osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
->>>>>          if (osc_idx < num)
->>>>> @@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk
->>>>> *tegra_clks)
->>>>>            *dt_clk = clk;
->>>>>        }
->>>>>    }
->>>>> +
->>>>> +void tegra_clk_osc_resume(void __iomem *clk_base)
->>>>> +{
->>>>> +    u32 val;
->>>>> +
->>>>> +    val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
->>>>> +    val |= osc_ctrl_ctx;
->>>>> +    writel_relaxed(val, clk_base + OSC_CTRL);
->>>> Why a full raw u32 OSC_CTRL value couldn't be simply saved and
->>>> restored?
->>> Storing and restoring only required fields to avoid accidental
->>> misconfiguration.
->>>
->>> OSC_CTRL register has other bits (PLL_REF_DIV) which are configured by
->>> BR depending on OSC_FREQ and also setting PLL_REF_DIV while PLLS are in
->>> use is not safe.
->> I'm looking at the clk-driver sources and see that none of the Tegra
->> drivers ever change the OSC_CTRL configuration, T30/114 even have
->> #defines for the OSC_CTRL that are unused.
->>
->> So, this leads to a question.. does any bootloader really ever change
->> the OSC_CTRL such that it differs after resume from suspend in
->> comparison to the value at the time of kernel's booting up?
-> 
-> For Tegra210, bootloader programs OSC_CTRL register for drivestrength
-> programming.
-> 
-> These settings need to be restored to the same on SC7 exit as they gets
-> reset during SC7 entry.
+Changes v9 => v10:
+1. Update check for page->mapping in pagecache_get_page() (Johannes)
+2. Refactor code in collapse_file() so it is easy to understand (Johannes)
+3. Don't call try_to_release() in khugepaged_scan_file() (Johannes)
+4. Rebase.
 
-Okay, thank you for the clarification.
+Changes v8 => v9:
+1. Fix bad use of IS_ENABLED (kbuild test robot)
+
+Changes v7 => v8:
+1. Use IS_ENABLED wherever possible (Kirill A. Shutemov);
+2. Improve handling of !PageUptodate case (Kirill A. Shutemov);
+3. Add comment for calling lru_add_drain (Kirill A. Shutemov);
+4. Add more information about DENYWRITE dynamic (Johannes Weiner).
+
+Changes v6 => v7:
+1. Avoid accessing vma without holding mmap_sem (Hillf Dayton)
+2. In collapse_file() use readahead API instead of gup API. This matches
+   better with existing logic for shmem.
+3. Add inline documentation for @nr_thps (kbuild test robot)
+
+Changes v5 => v6:
+1. Improve THP stats in 3/6, (Kirill).
+
+Changes v4 => v5:
+1. Move the logic to drop THP from pagecache to open() path (Rik).
+2. Revise description of CONFIG_READ_ONLY_THP_FOR_FS.
+
+Changes v3 => v4:
+1. Put the logic to drop THP from pagecache in a separate function (Rik).
+2. Move the function to drop THP from pagecache to exit_mmap().
+3. Revise confusing commit log 6/6.
+
+Changes v2 => v3:
+1. Removed the limitation (cannot write to file with THP) by truncating
+   whole file during sys_open (see 6/6);
+2. Fixed a VM_BUG_ON_PAGE() in filemap_fault() (see 2/6);
+3. Split function rename to a separate patch (Rik);
+4. Updated condition in hugepage_vma_check() (Rik).
+
+Changes v1 => v2:
+1. Fixed a missing mem_cgroup_commit_charge() for non-shmem case.
+
+This set follows up discussion at LSF/MM 2019. The motivation is to put
+text section of an application in THP, and thus reduces iTLB miss rate and
+improves performance. Both Facebook and Oracle showed strong interests to
+this feature.
+
+To make reviews easier, this set aims a mininal valid product. Current
+version of the work does not have any changes to file system specific
+code. This comes with some limitations (discussed later).
+
+This set enables an application to "hugify" its text section by simply
+running something like:
+
+          madvise(0x600000, 0x80000, MADV_HUGEPAGE);
+
+Before this call, the /proc/<pid>/maps looks like:
+
+    00400000-074d0000 r-xp 00000000 00:27 2006927     app
+
+After this call, part of the text section is split out and mapped to
+THP:
+
+    00400000-00425000 r-xp 00000000 00:27 2006927     app
+    00600000-00e00000 r-xp 00200000 00:27 2006927     app   <<< on THP
+    00e00000-074d0000 r-xp 00a00000 00:27 2006927     app
+
+Limitations:
+
+1. This only works for text section (vma with VM_DENYWRITE).
+2. Original limitation #2 is removed in v3.
+
+We gated this feature with an experimental config, READ_ONLY_THP_FOR_FS.
+Once we get better support on the write path, we can remove the config and
+enable it by default.
+
+Tested cases:
+1. Tested with btrfs and ext4.
+2. Tested with real work application (memcache like caching service).
+3. Tested with "THP aware uprobe":
+   https://patchwork.kernel.org/project/linux-mm/list/?series=131339
+
+This set (plus a few uprobe patches) is also available at
+
+   https://github.com/liu-song-6/linux/tree/uprobe-thp
+
+Please share your comments and suggestions on this.
+
+Thanks!
+
+Song Liu (7):
+  filemap: check compound_head(page)->mapping in filemap_fault()
+  filemap: check compound_head(page)->mapping in pagecache_get_page()
+  filemap: update offset check in filemap_fault()
+  mm,thp: stats for file backed THP
+  khugepaged: rename collapse_shmem() and khugepaged_scan_shmem()
+  mm,thp: add read-only THP support for (non-shmem) FS
+  mm,thp: avoid writes to file with THP in pagecache
+
+ drivers/base/node.c    |   6 ++
+ fs/inode.c             |   3 +
+ fs/open.c              |   8 ++
+ fs/proc/meminfo.c      |   4 +
+ fs/proc/task_mmu.c     |   4 +-
+ include/linux/fs.h     |  32 ++++++++
+ include/linux/mmzone.h |   2 +
+ mm/Kconfig             |  11 +++
+ mm/filemap.c           |  11 +--
+ mm/khugepaged.c        | 172 ++++++++++++++++++++++++++++-------------
+ mm/rmap.c              |  12 ++-
+ mm/vmstat.c            |   2 +
+ 12 files changed, 204 insertions(+), 63 deletions(-)
+
+--
+2.17.1
