@@ -2,142 +2,74 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4DFC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AD8C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F0F2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:53:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bEpVM8CB"
+	by mail.kernel.org (Postfix) with ESMTP id 82DE4214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:54:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564667698;
+	bh=b6VWoGqdheqRkM9OnmHqVVLtc9wh2RvzqyHz1w64wq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dsz5z1LzcHaEmFGZ2UkFceTMYW8pTR/nvEAWbyoGNgRjsEkhYyPk3i3wrLsV/dzyn
+	 31phEDzuQvTxJnFG4H+R17P2SDxwxkiHZ4R92DMBMzgpLPM9mtf7w9x/JX6zbaiMpZ
+	 Hs0GzXIDiW0cvD84l4fOHViPXdLV8dYNKuPh3LII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbfHANxO (ORCPT
+        id S1730280AbfHANy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:53:14 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42751 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729244AbfHANxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:53:13 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h18so70281324qtm.9
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 06:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=GOOUHqMAJNavjh4iBb/nfJRnmkoHSovDN9/qa8ZYaqg=;
-        b=bEpVM8CBXO1py9oqb/KmhvF46cmDUAB1PYD8JcD482Vkj2CNVR/NfOmQf4Kp+Be4bx
-         IV5DDIvDlb/sVgWCJPnCdcuhT3cIm/P4xcIlU6x6ykBpwWmrVcwWecP0ckZHxsukxffr
-         3PJzVZHabdvLvUY65bwkuDiR0LFwWJtZgpqubhZW2mTITBZM1nISpjjnOu3Isv1DCL5W
-         l3oy710k+Y1IIlQEsVcOJvovE8IT6ZEEBNK4/07q8121qJRyaoUcLxokDSmgntQONY25
-         gVGVLEbBnPOSZitYrKUFDeHIxtYxBgDk160NtYuBHWYjESCp4w4GYNKfxQ+q4r76HD9i
-         Vpdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GOOUHqMAJNavjh4iBb/nfJRnmkoHSovDN9/qa8ZYaqg=;
-        b=fYVWpUmGxm74zV4Ilf9bPUrDot3PPBNb6omd1N3kZRdYZmySszNOAX9xe+PsvW4eNa
-         UErQl63sHh0CrAOf9Z2B8o55kisvAjzfZZfXAgNRCnV4pVEbn9Z+bkM6j14aUn6RZMYl
-         USxCkRrnrzql9GAooqBBePWHI0w7gixDS7kLBb5ou07YLWMwrf4ApDABjuMY4rw+9qq6
-         f1EkSOrECaJWkwJGKQPzcWfPLXlMklGelGJrWo8PVYrepNrHuVbWoutZV+9cFsDR36Vs
-         TbTRZKYJt3qouSeoxIRwRUtKSx7D88dl4GEaFszF3fyLgs2SGtCyNTq9rH+Hk8qYdyq5
-         2eAQ==
-X-Gm-Message-State: APjAAAWtCnKSbFP1Jlgj6aHZuZ2D3P0ohd2o292Uyl6p1PLD8XOEWJ4O
-        OmPgPN0seFjA2A6tNBK/8Hx1mQ==
-X-Google-Smtp-Source: APXvYqzmvdiYgCaNk/Yz+gbe7oNfFDqe0wURnfCNuFEHKGuwE3yol4RVqwU9utglEwBQz1egeTJ56Q==
-X-Received: by 2002:ac8:4412:: with SMTP id j18mr92082065qtn.165.1564667592464;
-        Thu, 01 Aug 2019 06:53:12 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id f132sm29393640qke.88.2019.08.01.06.53.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 06:53:11 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     saeedm@mellanox.com, tariqt@mellanox.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] net/mlx5e: always initialize frag->last_in_page
-Date:   Thu,  1 Aug 2019 09:52:54 -0400
-Message-Id: <1564667574-31542-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 1 Aug 2019 09:54:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729149AbfHANy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 09:54:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED99520838;
+        Thu,  1 Aug 2019 13:54:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564667696;
+        bh=b6VWoGqdheqRkM9OnmHqVVLtc9wh2RvzqyHz1w64wq8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ItM6GyEuTDTexWouEuvuE6yqgoBCQNWyua7TBMBO6PF2GzVp/QJSJqbhLf1LMJBgf
+         UApupRrrFtyoh4vLBmX04+Rg9Cz+IQr++Jhj/Comxf3sgZ+T4sACWMmzerV3ZeGa3t
+         6N3lhwhcqAJ1l9Q2q8Ee4LATS0aeIj69ZpnOhpDk=
+Date:   Thu, 1 Aug 2019 15:54:51 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        sfr@canb.auug.org.au, lkp@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/3] i2c: Revert incorrect conversion to use generic
+ helper
+Message-ID: <20190801135451.GA26585@kroah.com>
+References: <20190801061042.GA1132@kroah.com>
+ <20190801102026.27312-1-suzuki.poulose@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801102026.27312-1-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 069d11465a80 ("net/mlx5e: RX, Enhance legacy Receive Queue
-memory scheme") introduced an undefined behaviour below due to
-"frag->last_in_page" is only initialized in mlx5e_init_frags_partition()
-when,
+On Thu, Aug 01, 2019 at 11:20:24AM +0100, Suzuki K Poulose wrote:
+> The patch "drivers: Introduce device lookup variants by ACPI_COMPANION device"
+> converted an incorrect instance in i2c driver to a new helper. Revert this
+> change.
+> 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-if (next_frag.offset + frag_info[f].frag_stride > PAGE_SIZE)
+Fixes: 00500147cbd3 ("drivers: Introduce device lookup variants by ACPI_COMPANION device")
 
-or after bailed out the loop,
-
-for (i = 0; i < mlx5_wq_cyc_get_size(&rq->wqe.wq); i++)
-
-As the result, there could be some "frag" have uninitialized
-value of "last_in_page".
-
-Later, get_frag() obtains those "frag" and check "frag->last_in_page" in
-mlx5e_put_rx_frag() and triggers the error during boot. Fix it by always
-initializing "frag->last_in_page" to "false" in
-mlx5e_init_frags_partition().
-
-UBSAN: Undefined behaviour in
-drivers/net/ethernet/mellanox/mlx5/core/en_rx.c:325:12
-load of value 170 is not a valid value for type 'bool' (aka '_Bool')
-Call trace:
- dump_backtrace+0x0/0x264
- show_stack+0x20/0x2c
- dump_stack+0xb0/0x104
- __ubsan_handle_load_invalid_value+0x104/0x128
- mlx5e_handle_rx_cqe+0x8e8/0x12cc [mlx5_core]
- mlx5e_poll_rx_cq+0xca8/0x1a94 [mlx5_core]
- mlx5e_napi_poll+0x17c/0xa30 [mlx5_core]
- net_rx_action+0x248/0x940
- __do_softirq+0x350/0x7b8
- irq_exit+0x200/0x26c
- __handle_domain_irq+0xc8/0x128
- gic_handle_irq+0x138/0x228
- el1_irq+0xb8/0x140
- arch_cpu_idle+0x1a4/0x348
- do_idle+0x114/0x1b0
- cpu_startup_entry+0x24/0x28
- rest_init+0x1ac/0x1dc
- arch_call_rest_init+0x10/0x18
- start_kernel+0x4d4/0x57c
-
-Fixes: 069d11465a80 ("net/mlx5e: RX, Enhance legacy Receive Queue memory scheme")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
-
-v2: zero-init the whole struct instead per Tariq.
-
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 47eea6b3a1c3..e1810c03a510 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -331,12 +331,11 @@ static inline u64 mlx5e_get_mpwqe_offset(struct mlx5e_rq *rq, u16 wqe_ix)
- 
- static void mlx5e_init_frags_partition(struct mlx5e_rq *rq)
- {
--	struct mlx5e_wqe_frag_info next_frag, *prev;
-+	struct mlx5e_wqe_frag_info next_frag = {};
-+	struct mlx5e_wqe_frag_info *prev = NULL;
- 	int i;
- 
- 	next_frag.di = &rq->wqe.di[0];
--	next_frag.offset = 0;
--	prev = NULL;
- 
- 	for (i = 0; i < mlx5_wq_cyc_get_size(&rq->wqe.wq); i++) {
- 		struct mlx5e_rq_frag_info *frag_info = &rq->wqe.info.arr[0];
--- 
-1.8.3.1
-
+I'll go add this...
