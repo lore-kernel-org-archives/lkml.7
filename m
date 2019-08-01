@@ -2,125 +2,135 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CEAC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FCFC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32CBD216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A00620665
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:24:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=silverblocksystems-net.20150623.gappssmtp.com header.i=@silverblocksystems-net.20150623.gappssmtp.com header.b="RSLcPoae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731300AbfHAMWk (ORCPT
+        id S1730190AbfHAMYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:22:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:35084 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731239AbfHAMWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:22:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 879161570;
-        Thu,  1 Aug 2019 05:22:34 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF0683F575;
-        Thu,  1 Aug 2019 05:22:31 -0700 (PDT)
-Subject: Re: [PATCH v9 10/21] mm: Add generic p?d_leaf() macros
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190722154210.42799-1-steven.price@arm.com>
- <20190722154210.42799-11-steven.price@arm.com>
- <20190723094113.GA8085@lakrids.cambridge.arm.com>
- <ce4e21f2-020f-6677-d79c-5432e3061d6e@arm.com>
- <674bd809-f853-adb0-b1ab-aa4404093083@arm.com>
- <0979d4b4-7a97-2dc3-67cf-3aa6569bfdcd@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <ae073f1f-7c39-7e6d-0e6b-54978f0d3fdf@arm.com>
-Date:   Thu, 1 Aug 2019 13:22:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 1 Aug 2019 08:24:25 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35867 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfHAMYZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:24:25 -0400
+Received: by mail-qk1-f194.google.com with SMTP id g18so51796648qkl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 05:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=silverblocksystems-net.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=0fBH6l9BLYbOCzrs817yKQIIa9zIlv8DLrTZC4IffaM=;
+        b=RSLcPoaeJAAfB67bUYIqah/OaGmFpMbgJwj7DV167LybGd7QKyr8uQMAQ5hbwPP5fe
+         oDVhneA/BOjmAHr8YDUq6d4XcMhrqAnpK4A5/Ly5Oj3y3XkcS+4C+OuOqyoRREuQJ2Jw
+         +G1n1TNnBpvr2TgvlgvNy3eXYmhsaCCwtoE/s6gz2LkDZCqv+R9fgqCd8nTUg/rFi5q2
+         /lXNMgdJfU+3uxbjquwY05kN1LBZlSgte1TIJ71mQwqhi2VrOXSVR+Chx1kEPupNzUUJ
+         kEqvfuj7W+9SjYdrKiOMb3QhAqZqHZM/PCqvNMnPba7g9hQf6t2zs/ZG95arhXt0cFRF
+         QS4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=0fBH6l9BLYbOCzrs817yKQIIa9zIlv8DLrTZC4IffaM=;
+        b=NAJLyulq3BJdg7sJv16rJCQyq2uHoFOFxowmjgeHOOBOuL12lxowlehg1WrKsoUQZt
+         4gnS5qoPXQxddobHMUx66MtgQWATvsZ26vdAsYxJ3vE4+D4M7EvNIxUPnSCyhdcR0BHL
+         KzrTM551ZYfEmDgm+iXgCrix13owcT9CgECSQNvJUdgFYxIy3Nr2UQYGm9fgJo59J7LJ
+         +vfU6dj/bOx1GI4mSRGVK999yMwwRpNAcHlhypRETriUO+GjeGPjGbW1JVc5amHWiBHu
+         YR/zz/1u0W9nNYiGSZAbiibZRARg/9tZUdLQaIAV6mz/iYyPeBjFlukcWf5ofvUBR19Z
+         Qjxw==
+X-Gm-Message-State: APjAAAUD2/usTnrEK8i77TLhka6e/7DLlGlgUbVT4tj5IdMx+3NFyGi2
+        BMuICcRh4EX6dXCWpUWU18c=
+X-Google-Smtp-Source: APXvYqzkeNPzSavZYxUiinFMf15Rmke7hDUbYCslQnV5GTuD3Ej7QWvc13oXJOLjhttmRXoNhgIpfw==
+X-Received: by 2002:a05:620a:1310:: with SMTP id o16mr1144022qkj.196.1564662264096;
+        Thu, 01 Aug 2019 05:24:24 -0700 (PDT)
+Received: from localhost.localdomain (static-72-9-14-85.md.cpe.atlanticbb.net. [72.9.14.85])
+        by smtp.gmail.com with ESMTPSA id r189sm31309054qkc.60.2019.08.01.05.24.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 05:24:23 -0700 (PDT)
+Message-ID: <7970f0e30d1eb83e7067225d07b923863bf1ac50.camel@silverblocksystems.net>
+Subject: Re: [PATCH 4/5] media/ivtv: Reduce default FIFO priority
+From:   Andy Walls <andy@silverblocksystems.net>
+To:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Andy Walls <awalls@md.metrocast.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Date:   Thu, 01 Aug 2019 08:24:22 -0400
+In-Reply-To: <20190801111541.858088180@infradead.org>
+References: <20190801111348.530242235@infradead.org>
+         <20190801111541.858088180@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <0979d4b4-7a97-2dc3-67cf-3aa6569bfdcd@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/08/2019 07:09, Anshuman Khandual wrote:
-> 
-> 
-> On 07/29/2019 05:08 PM, Steven Price wrote:
->> On 28/07/2019 12:44, Anshuman Khandual wrote:
->>>
->>>
->>> On 07/23/2019 03:11 PM, Mark Rutland wrote:
->>>> On Mon, Jul 22, 2019 at 04:41:59PM +0100, Steven Price wrote:
->>>>> Exposing the pud/pgd levels of the page tables to walk_page_range() means
->>>>> we may come across the exotic large mappings that come with large areas
->>>>> of contiguous memory (such as the kernel's linear map).
->>>>>
->>>>> For architectures that don't provide all p?d_leaf() macros, provide
->>>>> generic do nothing default that are suitable where there cannot be leaf
->>>>> pages that that level.
->>>>>
->>>>> Signed-off-by: Steven Price <steven.price@arm.com>
->>>>
->>>> Not a big deal, but it would probably make sense for this to be patch 1
->>>> in the series, given it defines the semantic of p?d_leaf(), and they're
->>>> not used until we provide all the architectural implemetnations anyway.
->>>
->>> Agreed.
->>>
->>>>
->>>> It might also be worth pointing out the reasons for this naming, e.g.
->>>> p?d_large() aren't currently generic, and this name minimizes potential
->>>> confusion between p?d_{large,huge}().
->>>
->>> Agreed. But these fallback also need to first check non-availability of large
->>> pages. I am not sure whether CONFIG_HUGETLB_PAGE config being clear indicates
->>> that conclusively or not. Being a page table leaf entry has a broader meaning
->>> than a large page but that is really not the case today. All leaf entries here
->>> are large page entries from MMU perspective. This dependency can definitely be
->>> removed when there are other types of leaf entries but for now IMHO it feels
->>> bit problematic not to directly associate leaf entries with large pages in
->>> config restriction while doing exactly the same.
->>
->> The intention here is that the page walkers are able to walk any type of
->> page table entry which the kernel may use. CONFIG_HUGETLB_PAGE only
->> controls whether "huge TLB pages" are used by user space processes. It's
->> quite possible that option to not be selected but the linear mapping to
->> have been mapped using "large pages" (i.e. leaf entries further up the
->> tree than normal).
-> 
-> I understand that kernel page table might use large pages where as user space
-> never enabled HugeTLB. The point to make here was CONFIG_HUGETLB approximately
-> indicates the presence of large pages though the absence of same does not
-> conclusively indicate that large pages are really absent on the MMU. Perhaps it
-> will requires something new like MMU_[LARGE|HUGE]_PAGES.
+Hi Peter:
 
-CONFIG_HUGETLB doesn't necessarily mean leaf entries can appear anywhere
-other than PTE. Some architectures always have a full tree of page
-tables, but can program their TLBs with larger entries - I think all the
-architectures I've come across have software page table walking, but in
-theory the arm64 contiguous hint bit could be considered similar.
+On Thu, 2019-08-01 at 13:13 +0200, Peter Zijlstra wrote:
+> The ivtv driver creates a FIFO-99 thread by default, reduce this to
+> FIFO-1.
+> 
+> FIFO-99 is the very highest priority available to SCHED_FIFO and
+> it not a suitable default; it would indicate the ivtv work is the
+> most important work on the machine.
 
-Steve
+ivtv based boards are legacy, convential PCI boards.  At this point,
+these old boards are generally installed in boxes dedicated to video
+capture (e.g. MythTV setups) or boxes dedicated to capturing VBI
+information, like closed captioning, for business intelligence.
+
+For boxes dedicated to video or VBI capture, the ivtv work may very
+well be close to the most important work on the machine, to avoid
+dropping video frames or VBI data.
+
+
+> FIFO-1 gets it above all OTHER tasks, which seems high enough lacking
+> better justification.
+
+I agree that FIFO-99 is the wrong default level.
+
+However, in my opinion, threads responsible for real time data
+acquisition should have higher priority than the other kernel driver
+threads normally running at FIFO-50.
+
+How about FIFO-51 as the default?
+
+Regards,
+Andy
+
+> Cc: Andy Walls <awalls@md.metrocast.net>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  drivers/media/pci/ivtv/ivtv-driver.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/drivers/media/pci/ivtv/ivtv-driver.c
+> +++ b/drivers/media/pci/ivtv/ivtv-driver.c
+> @@ -738,7 +738,7 @@ static void ivtv_process_options(struct
+>   */
+>  static int ivtv_init_struct1(struct ivtv *itv)
+>  {
+> -	struct sched_param param = { .sched_priority = 99 };
+> +	struct sched_param param = { .sched_priority = 1 };
+>  
+>  	itv->base_addr = pci_resource_start(itv->pdev, 0);
+>  	itv->enc_mbox.max_mbox = 2; /* the encoder has 3 mailboxes (0-
+> 2) */
+> 
+> 
+
