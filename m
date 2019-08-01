@@ -3,95 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD8FC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8A3C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF4ED206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E9E2084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="lxeb6aed"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2DtJQPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388855AbfHAUE2 (ORCPT
+        id S2388879AbfHAUIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 16:04:28 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40437 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388633AbfHAUE2 (ORCPT
+        Thu, 1 Aug 2019 16:08:21 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46224 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387891AbfHAUIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:04:28 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b17so51225015lff.7
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 13:04:27 -0700 (PDT)
+        Thu, 1 Aug 2019 16:08:20 -0400
+Received: by mail-qk1-f193.google.com with SMTP id r4so52971000qkm.13;
+        Thu, 01 Aug 2019 13:08:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G8kSafWLVCKIynBiOq3kftW6ud+zrU/Ah+bFDI9XyRw=;
-        b=lxeb6aedLfL0QNVbLio6Rq2M7BN0MFRHlDRJsfc17kkNEgsuJKRk3nVxI8BcXGwtS2
-         RBg+diMAvn31GiFoCO952Op1PAxJgBcBLze2mzdgOlqgtJ23XCls4jK+ou43QzPNd4K/
-         kkl1wacjh8wfiEb8AEzHoH07rMubTPG847lpQ=
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=B+yDfdKT+RmatLe61Ax4/UEmkLt8JT8gE8mDRLs1ASo=;
+        b=F2DtJQPVW600MwUqAoGNDBJim0olwalXuP0oaVzNa0fuigELEEjv1TPS9O2t4zW1XQ
+         pXpruzdZOB/VBi3a/Ru2xZqOapjbUY0dPt4Dayk+xHSRgZZVajTvGk70Z2HIA5Y5cMwl
+         ambxZXgnsb/qDkp7nYq3cJFgRehXf/PvlySs2VBmdpH+M5ZDNJxP9VCfgdVNdKV17ZGT
+         ES8W4E3m+l2EhVQavzX1ZQ+2ImO1izjQsAj5HIa8nYb0s2XUwvrhRfs4a+oxfu/a5Z1X
+         VDRc8KtlnltBx/XBJhhIbBM1tf19KqXDgLfg7P/EJ+wO60b9kMWEw1/tLyFLRY/BaNsl
+         MQaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G8kSafWLVCKIynBiOq3kftW6ud+zrU/Ah+bFDI9XyRw=;
-        b=M7Z8t4IKOsFdKX+76igjJkPjJTGbbsJtHgNBiTpI7dzkFUuUTh8gcKUxcO0ZtugeqE
-         m80trZa9WKGaeJflk2fJ6U5QYBgaGD2TgGc+Qp8ZHvBiIYmeHeNK6Zb+qEBcLMf96sbm
-         fRHRQyDqCEnpKHirpZGhqsxOCYXUWt1ipt4TA9w2omR30/hnydTX8/FlSu3cqBCR2yzm
-         VlNzI3dxUMrRZkuC6Bkw9R9hp+8DUhkKvG7z6bMdb5EQRh6TXpN6bNICzdsRX8h74iel
-         oyLkKqRwVtvqCBOuPXE8BDo5slbEHTMutElb28xiqdtzUl1jy78UCykGxPv8KcYupVPs
-         kBgA==
-X-Gm-Message-State: APjAAAVrOHWr4oxaHZ14mI1+3k6YW5khfSMkL5V+w/jUnEtVZQYdJer+
-        UUnE/17dFmgjH9ZuxbLkdlkTEQudn+txczwfKyw=
-X-Google-Smtp-Source: APXvYqwBImzbg+Nph0vje0uPb5oNfvjiwYe7SVdjs1n5uadpbW2oUzKRrgwcvKlryi/d4M8MxfTMwRjVA54YK2GaJa4=
-X-Received: by 2002:a19:ccc6:: with SMTP id c189mr61580827lfg.160.1564689866209;
- Thu, 01 Aug 2019 13:04:26 -0700 (PDT)
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=B+yDfdKT+RmatLe61Ax4/UEmkLt8JT8gE8mDRLs1ASo=;
+        b=tzFMZAqFY6Z+tpYUWi3cNkkiME2slEhp9tvMYtuGe6g+kSMLqXIUWAxiUjAelqEANg
+         0bmgslLtaeJALEuhXWCPMBi4yHz6zu2EbA+mM0jCfEVxzQ6lXTF2mqv5SPabTTWDMtiP
+         fXNQf1oFhzQzUPmlxOkYZXdr5loc28WNYLVJbc4EFcPab10EI3xZpRZ4vfSDfalIk0Lg
+         3kEMJGy+9Y8eZo1wBFvKmns/A87mWuRORAp/iYA2q8Sl8ou8BABsfe5IQ+ArvuO+D6Tz
+         EgOn5ZiqIocCPiKURSVErxZkquYk88rzT3DD+gRYs8ZtUce0/IvUyGy6ld49aa0NJpj1
+         /MUw==
+X-Gm-Message-State: APjAAAWhm6LLaZJiI5IRZZQtx6RMNKVcUK4UOwbXB2Sq5C2HpwKKy0D1
+        pIpNH+iTk5eV9HBrq3++tLs=
+X-Google-Smtp-Source: APXvYqxqpChOnoBfs+GBxQM4vK6z+sYjBISy2ym7G3Sq1RF3r0v+c1tE3tcbulGCOi3Xo0MFPdQASA==
+X-Received: by 2002:a37:680e:: with SMTP id d14mr88871406qkc.207.1564690099390;
+        Thu, 01 Aug 2019 13:08:19 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id q73sm17611144qke.90.2019.08.01.13.08.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 01 Aug 2019 13:08:18 -0700 (PDT)
+Date:   Thu, 1 Aug 2019 16:08:17 -0400
+Message-ID: <20190801160817.GB9619@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
+        davem@davemloft.net, bridge@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        allan.nielsen@microchip.com
+Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
+In-Reply-To: <20190801194801.rqv5jvb5vxjo2dor@soft-dev3.microsemi.net>
+References: <1564055044-27593-1-git-send-email-horatiu.vultur@microchip.com>
+ <20190801151739.GB32290@t480s.localdomain>
+ <20190801194801.rqv5jvb5vxjo2dor@soft-dev3.microsemi.net>
 MIME-Version: 1.0
-References: <20190801181411.96429-1-joel@joelfernandes.org> <20190801195832.GP5913@linux.ibm.com>
-In-Reply-To: <20190801195832.GP5913@linux.ibm.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Thu, 1 Aug 2019 16:04:15 -0400
-Message-ID: <CAEXW_YQ-JnuZGj7zUtmvY0Cn4swoHXoR6UD=iPKw56N55CL3-Q@mail.gmail.com>
-Subject: Re: [PATCH 0/9] Apply new rest conversion patches to /dev branch
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, rcu <rcu@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 3:58 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
->
-> On Thu, Aug 01, 2019 at 02:14:02PM -0400, Joel Fernandes (Google) wrote:
-> > This series fixes the rcu/dev branch so it can apply the new ReST conversion patches.
-> >
-> > Patches based on "00ec8f46465e  rcu/nohz: Make multi_cpu_stop() enable tick on
-> > all online CPUs"
-> >
-> > The easiest was to do this is to revert the patches that conflict and then
-> > applying the doc patches, and then applying them again. But in the
-> > re-application, we convert the documentation
-> >
-> > No manual fix ups were done in this process, other than to documentation.
->
-> Ah, I was expecting that you would forward-port the conversion, but
-> yes, that could be painful and error prone.
->
-> But given that there are some dependencies on these patches, could you
-> please use the following alternative procedure for the patches that
-> touch both code and documentation?
->
-> o       Revert only the documentation portion of each commit.  I will
->         then merge the partial reverts with the original commits.
->
-> o       Apply the documentation conversion.
->
-> o       Reapply the documentation portions on top of the conversion.
+Hi Horatiu,
 
-Sure, this would be better. I will do this in the evening and send it
-to you. Thanks,
+On Thu, 1 Aug 2019 21:48:02 +0200, Horatiu Vultur <horatiu.vultur@microchip.com> wrote:
+> > I'm a bit late in the conversation. Isn't this what you want?
+> > 
+> >     ip address add <multicast IPv4 address> dev br0 autojoin
+> > 
+> 
+> Not really, I was looking in a way to register the ports to link layer
+> multicast address. Sorry for the confusion, my description of the patch
+> was totally missleaning.
+> 
+> If you follow this thread you will get a better idea what we wanted to
+> achive. We got some really good comments and based on these we send a
+> RFC[1]. 
 
- - Joel
+OK great! Keep me in the loop, I enjoy bridge and multicast very much ;-)
+
+
+Thanks,
+
+	Vivien
