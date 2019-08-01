@@ -2,83 +2,119 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A51FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2F3C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29E0206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A63214DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 06:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564640286;
+	bh=P7+ACBH9J5mTnDheikQW7WOAS+HoMLWPjzJygxs6sMA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GKRHcKBvfSBqopfwDdGRWvXpc8M8wZavKE9K8/cqDKcQI4dTC5mQ2Eoh3omnm57f8
+	 zpCGWXve/tvFTrOewVK7gHHC4Umvb3XbIykwxwhc6ZwYRGgcG5AEgyhk6zyp07bnks
+	 Hr0QDkWaMe6iQiNA7+aFnFpHQlmRQBmLneuYKzkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbfHAGR3 (ORCPT
+        id S1729865AbfHAGSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 02:17:29 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40217 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728884AbfHAGR3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 02:17:29 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r1so72174903wrl.7;
-        Wed, 31 Jul 2019 23:17:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MqnGgjVQ38lM7U2cszPbg8rUFcVR6uGjnDxtuRKJL08=;
-        b=AohG6MDTwkXlE7ea/7G4qLTmlP0asrDbjhuQGmZqLE0MgRSWRw1XklMstv3waMF8Oa
-         7MgtOU1OSLhCY7SXgOaWWkn80UsdVylc7dUa0frFxcaWLzSGUfGRMc58g9AU7Eg+NLji
-         q9mSni4M5BXl18c6zg89ZbvOU2GYuLSd321azSiGDP7dmnIxspa0mfD5AmY91qPB9wLc
-         Hb8jLrhJ+i2BKKJXZcdgbi9x0c6gCfIGl1lG87KK0CDhbmLa/xFWyB0zjbNawasbOhtS
-         sQLwEJVdBYFqy0NlmS5NCIBd21hnIj14h3zY3yM/dVF2/otzYFCpwp6nywXZDJ2h+oBF
-         /KJQ==
-X-Gm-Message-State: APjAAAVb8Yu+y9Aae6/dWj9UQGh5V5Z1z2Izy4EtzCMHiyH+gotUulAz
-        P0Yc33UOw3NLtTXISprkg7GDvQRe09o=
-X-Google-Smtp-Source: APXvYqwis1vN1L96JjOt7SEvJZa8aeFnBWtqgg5RItTYIzUQRtJs3bIZ1EYjdaCgC50Wa3fc6hPq8Q==
-X-Received: by 2002:adf:e541:: with SMTP id z1mr46249972wrm.48.1564640247154;
-        Wed, 31 Jul 2019 23:17:27 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id 15sm49480720wmk.34.2019.07.31.23.17.26
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 31 Jul 2019 23:17:26 -0700 (PDT)
-Subject: Re: [PATCH v4] modpost: check for static EXPORT_SYMBOL* functions
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190714152817.24693-1-efremov@linux.com>
- <20190730181146.6507-1-efremov@linux.com>
- <CAK7LNASW87=sWqEdPChiwxzS3Wwmtr7kO_=XLToLHYO6mDjotw@mail.gmail.com>
- <CAK7LNARrA7dKWaqqtbNUS2yOJfkign4CNvcn_bp2BLyvVAj2FQ@mail.gmail.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <ad31b3a8-f662-ef14-148b-347f3671e7d3@linux.com>
-Date:   Thu, 1 Aug 2019 09:17:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 1 Aug 2019 02:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728884AbfHAGSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 02:18:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EDBC206A3;
+        Thu,  1 Aug 2019 06:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564640283;
+        bh=P7+ACBH9J5mTnDheikQW7WOAS+HoMLWPjzJygxs6sMA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gpc+lB55+mtiUztM8rfj9Me584E3lPqEIfzL0dMJfaRla1hs1CZsZz7iQFjdiJzfU
+         wv3d8zKZ0NSuxjK/IRpQBTGnJ0OeSpcIxKFpWFtpY99JupeJ93Ba0skNlYsMOJewoz
+         yc5sOggjdNqt405T59V7d9QAnkynqcHVMmi05D0s=
+Date:   Thu, 1 Aug 2019 08:18:01 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 2/3] firmware: add offset to request_firmware_into_buf
+Message-ID: <20190801061801.GA4338@kroah.com>
+References: <20190523025113.4605-1-scott.branden@broadcom.com>
+ <20190523025113.4605-3-scott.branden@broadcom.com>
+ <20190523055233.GB22946@kroah.com>
+ <15c47e4d-e70d-26bb-9747-0ad0aa81597b@broadcom.com>
+ <20190523165424.GA21048@kroah.com>
+ <44282070-ddaf-3afb-9bdc-4751e3f197ac@broadcom.com>
+ <20190524052258.GB28229@kroah.com>
+ <2f67db0a-27c3-d13c-bbe0-0af5edd4f0da@broadcom.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNARrA7dKWaqqtbNUS2yOJfkign4CNvcn_bp2BLyvVAj2FQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2f67db0a-27c3-d13c-bbe0-0af5edd4f0da@broadcom.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.08.2019 05:20, Masahiro Yamada wrote:
+On Wed, Jul 31, 2019 at 05:18:32PM -0700, Scott Branden wrote:
+> Hi Greg,
 > 
-> The build time impact is very limited.
-> I guess this measurement is unnecessary in the commit log.
+> I am now back from leave to continue this patch.  Comment below.
 > 
+> On 2019-05-23 10:22 p.m., Greg Kroah-Hartman wrote:
+> > On Thu, May 23, 2019 at 10:01:38PM -0700, Scott Branden wrote:
+> > > On 2019-05-23 9:54 a.m., Greg Kroah-Hartman wrote:
+> > > > On Thu, May 23, 2019 at 09:36:02AM -0700, Scott Branden wrote:
+> > > > > Hi Greg,
+> > > > > 
+> > > > > On 2019-05-22 10:52 p.m., Greg Kroah-Hartman wrote:
+> > > > > > On Wed, May 22, 2019 at 07:51:12PM -0700, Scott Branden wrote:
+> > > > > > > Add offset to request_firmware_into_buf to allow for portions
+> > > > > > > of firmware file to be read into a buffer.  Necessary where firmware
+> > > > > > > needs to be loaded in portions from file in memory constrained systems.
+> > > > > > > 
+> > > > > > > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> > > > > > > ---
+> > > > > > >     drivers/base/firmware_loader/firmware.h |  5 +++
+> > > > > > >     drivers/base/firmware_loader/main.c     | 49 +++++++++++++++++--------
+> > > > > > >     include/linux/firmware.h                |  8 +++-
+> > > > > > >     3 files changed, 45 insertions(+), 17 deletions(-)
+> > > > > > No new firmware test for this new option?  How do we know it even works?
+> > > > > I was unaware there are existing firmware tests.  Please let me know where
+> > > > > these tests exists and I can add a test for this new option.
+> > > > tools/testing/selftests/firmware/
+> > > Unfortunately, there doesn't seem to be a test for the existing
+> > > request_firmware_into_buf api.
+> > Are you sure?  The test is for userspace functionality, there isn't
+> > kernel unit tests here.  You need to verify that you didn't break
+> > existing functionality as well as verify that your new functionality
+> > works.
+> 
+> I managed to figure out how to build and run
+> tools/testing/selftest/firmware/fw_run_tests.sh
+> 
+> and my changes don't break existing functionality.
+> 
+> But, I find no use of request_firmware_into_buf in lib/test_firmware.c
+> (triggered by fw_run_tests.sh).
+> 
+> Is there another test for request_firmware_into_buf?
 
-Thank you for your observations! It was not easy for me to guess to do
-it this way because of my limited knowledge about kbuild && modpost
-work. In v5 I've only updated commit log: measurements removed, "The
-build time impact is very limited and is almost at the unnoticeable
-level (< 1 sec)" added instead. Fell free to edit it if you want.
+I have no idea, sorry.
 
-Denis
+greg k-h
