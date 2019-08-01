@@ -2,110 +2,142 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D48C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E717FC32753
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96EB206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE3E216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 00:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JCFsLphC"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fpE60V0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbfHAARc (ORCPT
+        id S1729310AbfHAASh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 20:17:32 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38909 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfHAARb (ORCPT
+        Wed, 31 Jul 2019 20:18:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39165 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbfHAASh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 20:17:31 -0400
-Received: by mail-io1-f66.google.com with SMTP id j6so20571880ioa.5
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 17:17:31 -0700 (PDT)
+        Wed, 31 Jul 2019 20:18:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u17so32898659pgi.6
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jul 2019 17:18:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5OGNJ2zIkCd2eyV8mt8HLf/hU6G3Prg746o+XeDun8g=;
-        b=JCFsLphCWpry/6Z2MYbxZsoelgfg0dW6fPui5qNa86PZh7AC//uOmL1tF5DM0fWcws
-         uVCWw7Gg5nO4WE12kTufLugnDNzFoToiSR5Kt7yBOVeK2bA5ME/qMOv+jcsbSex/54dE
-         7H/wS8SOiUp9UGXC98OBEZDAmbeqjQep+T0MWjoGujTGJOOL9c/eMnJECmN+Ytt6gxyJ
-         wgP4f8kweiH1k8wEvp4jF/KNc2Jh298x0TlgadHwnAap/nzwvIfBrHnAeKE2vPZFXHrB
-         X/JIYcd6D4xrL9N14F89a13JYqFnzkne9eCIkAQR+T5HjRl9whFTOY1AQgXm1Y5HZ/DD
-         OJEg==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=HguRxYDESCL5JmD3/mYii286Ot+gL1zw7cuRbKsoMmY=;
+        b=fpE60V0Oz7+mBNKiTOcj4EUkxAetGX/wmNJhgK4ernSenYAJPgh+Ij9N3u2nOr/yav
+         NH48nKJBwoWl3+blv163A+p196VP5Hu+cUjnQF57+psVoBGxe2ppL9fUSyRc3iqFZTqo
+         2TdQNowkt631FKm0f0i4Lz2ILGPWArk8W4iCE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5OGNJ2zIkCd2eyV8mt8HLf/hU6G3Prg746o+XeDun8g=;
-        b=hmnzXNecVKnA68+0MldtDLbHHx59utAV8O5NpJH0HM+kx0H66JL3fUdMJSpjl/eaKn
-         7H9L1f9Q1rcLSd+/tOOzLEj7dSVQq+zp2jJ0sdppAV0hZRDNtLu/yLvE4FKelOkhqTDQ
-         MGPQhwkb44JDZQHcPHsVzTt5hfxMzx5fZs/BahZQbEkMxofqyWFshRGFf0NyhqkVpY2u
-         b7gDfq6mVHUHtWAEnXeFAQzg/jbjVQaf5WrpBDRXUb16meWD46/D9S+LwHa1BrXa3kaA
-         5d2BBaTxmJOcrtNuNHeTzDEPoZ+3exh2U08btOFpUhpBrq1DkY4en2LTu/8ddvkvKe8o
-         0U2Q==
-X-Gm-Message-State: APjAAAXlZmp1FiCHVRdNPrNsq0+KlvB7uww/VzYIZ8N46QDEwlZN2Un1
-        a3PfQO6qNszlj/vKuOsasVGWrljaZnvOynxehra2Zw==
-X-Google-Smtp-Source: APXvYqyFFqBV4DEKqLfGZ756X6zAkYSLEDdAzTvUc0fwEV47BgUGQsmryHFzasj08Mxw4FPOOGKkCfE0xT8+JctkT14=
-X-Received: by 2002:a6b:f906:: with SMTP id j6mr32237818iog.26.1564618650462;
- Wed, 31 Jul 2019 17:17:30 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=HguRxYDESCL5JmD3/mYii286Ot+gL1zw7cuRbKsoMmY=;
+        b=qkJKtU52oqWcF8q5S689a0Z/cWcbUkzOJl7ERMbDxOs+YWnmrlk/iXo0DmBvNfpWUN
+         HK6w+ktPeLsc01FR3cI7T+14dAjV5ASg68m6s/kFRordvmvvZxyvUY3ap/Bc984ikhF9
+         s2K3XDEvyFd57JlZq1cBOSB66qfoOx0jo/jkkQunoJlVjoLQj/4VXaoJD4X4xe4nXHpf
+         MRZfx/cKPjuagtBkk3ml+ILGB+mmQIOcFtagnXJUUAhdSCOwgQV3udGpUQHsYe0Advy0
+         jpqdn/y8cqQc9n2+MxNW2IeRpwvdq4uQJcn00pn291UxTmJgRdz3hlAKIdMh3KQbE8aO
+         QCfA==
+X-Gm-Message-State: APjAAAVhfgix2B0P5igVkUU/JbZwPPq4oLdKkeui+sU3quKODF4RO3mM
+        PzyU6SYFKRtIsuIPK7rgZK/4Ww==
+X-Google-Smtp-Source: APXvYqxNJ8MduqZ6+7rAkIRQV7GUlEBbBgSe1TDlqW2OygUA1oI+kELge96nIbD9kxuGgjuJeTil1w==
+X-Received: by 2002:a63:784c:: with SMTP id t73mr119574658pgc.268.1564618716666;
+        Wed, 31 Jul 2019 17:18:36 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id u23sm72272436pfn.140.2019.07.31.17.18.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 17:18:36 -0700 (PDT)
+Subject: Re: [PATCH 2/3] firmware: add offset to request_firmware_into_buf
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>
+References: <20190523025113.4605-1-scott.branden@broadcom.com>
+ <20190523025113.4605-3-scott.branden@broadcom.com>
+ <20190523055233.GB22946@kroah.com>
+ <15c47e4d-e70d-26bb-9747-0ad0aa81597b@broadcom.com>
+ <20190523165424.GA21048@kroah.com>
+ <44282070-ddaf-3afb-9bdc-4751e3f197ac@broadcom.com>
+ <20190524052258.GB28229@kroah.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <2f67db0a-27c3-d13c-bbe0-0af5edd4f0da@broadcom.com>
+Date:   Wed, 31 Jul 2019 17:18:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190620110240.25799-1-vkuznets@redhat.com> <20190620110240.25799-4-vkuznets@redhat.com>
- <CALMp9eQ85h58NMDh-yOYvHN6_2f2T-wu63f+yLnNbwuG+p3Uvw@mail.gmail.com>
- <87ftmm71p3.fsf@vitty.brq.redhat.com> <36a9f411-f90c-3ffa-9ee3-6ebee13a763f@redhat.com>
- <CALMp9eQLCEzfdNzdhPtCf3bD-5c6HrSvJqP7idyoo4Gf3i5O1w@mail.gmail.com>
- <20190731233731.GA2845@linux.intel.com> <CALMp9eRRqCLKAL4FoZVMk=fHfnrN7EnTVxR___soiHUdrHLAMQ@mail.gmail.com>
- <20190731235637.GB2845@linux.intel.com> <46f3cf18-f167-f66e-18b4-b66c8551dcd8@redhat.com>
-In-Reply-To: <46f3cf18-f167-f66e-18b4-b66c8551dcd8@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 31 Jul 2019 17:17:18 -0700
-Message-ID: <CALMp9eS7W_n8Gk5bsGCre0pTr19mGiRhYLq5O5NkRct+AUJOPQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/5] x86: KVM: svm: clear interrupt shadow on all
- paths in skip_emulated_instruction()
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190524052258.GB28229@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 5:13 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 01/08/19 01:56, Sean Christopherson wrote:
-> > On Wed, Jul 31, 2019 at 04:45:21PM -0700, Jim Mattson wrote:
-> >> On Wed, Jul 31, 2019 at 4:37 PM Sean Christopherson
-> >> <sean.j.christopherson@intel.com> wrote:
-> >>
-> >>> At a glance, the full emulator models behavior correctly, e.g. see
-> >>> toggle_interruptibility() and setters of ctxt->interruptibility.
-> >>>
-> >>> I'm pretty sure that leaves the EPT misconfig MMIO and APIC access EOI
-> >>> fast paths as the only (VMX) path that would incorrectly handle a
-> >>> MOV/POP SS.  Reading the guest's instruction stream to detect MOV/POP SS
-> >>> would defeat the whole "fast path" thing, not to mention both paths aren't
-> >>> exactly architecturally compliant in the first place.
-> >>
-> >> The proposed patch clears the interrupt shadow in the VMCB on all
-> >> paths through svm's skip_emulated_instruction. If this happens at the
-> >> tail end of emulation, it doesn't matter if the full emulator does the
-> >> right thing.
-> >
-> > Unless I'm missing something, skip_emulated_instruction() isn't called in
-> > the emulation case, x86_emulate_instruction() updates %rip directly, e.g.:
->
-> Indeed.  skip_emulated_instruction() is only used when the vmexit code
-> takes care of emulation directly.
+Hi Greg,
 
-Mea culpa. I had incorrectly assumed that "skip_emulated_instruction"
-was used when an instruction was emulated. I retract my objection.
-Having now been twice bitten by misleading function names, I'll be
-more careful in the future.
+I am now back from leave to continue this patch.  Comment below.
+
+On 2019-05-23 10:22 p.m., Greg Kroah-Hartman wrote:
+> On Thu, May 23, 2019 at 10:01:38PM -0700, Scott Branden wrote:
+>> On 2019-05-23 9:54 a.m., Greg Kroah-Hartman wrote:
+>>> On Thu, May 23, 2019 at 09:36:02AM -0700, Scott Branden wrote:
+>>>> Hi Greg,
+>>>>
+>>>> On 2019-05-22 10:52 p.m., Greg Kroah-Hartman wrote:
+>>>>> On Wed, May 22, 2019 at 07:51:12PM -0700, Scott Branden wrote:
+>>>>>> Add offset to request_firmware_into_buf to allow for portions
+>>>>>> of firmware file to be read into a buffer.  Necessary where firmware
+>>>>>> needs to be loaded in portions from file in memory constrained systems.
+>>>>>>
+>>>>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>>>>>> ---
+>>>>>>     drivers/base/firmware_loader/firmware.h |  5 +++
+>>>>>>     drivers/base/firmware_loader/main.c     | 49 +++++++++++++++++--------
+>>>>>>     include/linux/firmware.h                |  8 +++-
+>>>>>>     3 files changed, 45 insertions(+), 17 deletions(-)
+>>>>> No new firmware test for this new option?  How do we know it even works?
+>>>> I was unaware there are existing firmware tests.  Please let me know where
+>>>> these tests exists and I can add a test for this new option.
+>>> tools/testing/selftests/firmware/
+>> Unfortunately, there doesn't seem to be a test for the existing
+>> request_firmware_into_buf api.
+> Are you sure?  The test is for userspace functionality, there isn't
+> kernel unit tests here.  You need to verify that you didn't break
+> existing functionality as well as verify that your new functionality
+> works.
+
+I managed to figure out how to build and run 
+tools/testing/selftest/firmware/fw_run_tests.sh
+
+and my changes don't break existing functionality.
+
+But, I find no use of request_firmware_into_buf in lib/test_firmware.c 
+(triggered by fw_run_tests.sh).
+
+Is there another test for request_firmware_into_buf?
+
+>>>> We have tested this with a new driver in development which requires the
+>>>> firmware file to be read in portions into memory.  I can add my tested-by
+>>>> and others to the commit message if desired.
+>>> I can't take new apis without an in-kernel user, you all know this...
+>> OK, It will have to wait then as I was hoping to get this in before my
+>> leave.
+> Throwing new code over the wall and running away is a sure way to ensure
+> that your code will be ignored :)
+>
+> thanks,
+>
+> greg k-h
