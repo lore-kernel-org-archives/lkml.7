@@ -2,221 +2,105 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDC7C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B75C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF69A216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9107216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbfHAIR3 (ORCPT
+        id S1730977AbfHAISO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:17:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49684 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726783AbfHAIR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:17:28 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 1 Aug 2019 04:18:14 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:46986 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730229AbfHAISO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 04:18:14 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A49BD4A6FB;
-        Thu,  1 Aug 2019 08:17:27 +0000 (UTC)
-Received: from [10.36.116.245] (ovpn-116-245.ams2.redhat.com [10.36.116.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AD1045C205;
-        Thu,  1 Aug 2019 08:17:24 +0000 (UTC)
-Subject: Re: [PATCH v3 0/5] Allocate memmap from hotadded memory
-To:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org
-Cc:     dan.j.williams@intel.com, pasha.tatashin@soleen.com,
-        mhocko@suse.com, anshuman.khandual@arm.com,
-        Jonathan.Cameron@huawei.com, vbabka@suse.cz, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190725160207.19579-1-osalvador@suse.de>
- <20190801073931.GA16659@linux>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <1e5776e4-d01e-fe86-57c3-1c3c27aae52f@redhat.com>
-Date:   Thu, 1 Aug 2019 10:17:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190801073931.GA16659@linux>
-Content-Type: text/plain; charset=utf-8
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 1BCB46274CE;
+        Thu,  1 Aug 2019 10:18:06 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 1 Aug 2019
+ 10:18:05 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Thu, 1 Aug 2019 10:18:05 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "NXP Linux Team" <linux-imx@nxp.com>
+CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] serial: imx: Avoid probe failure in case of missing gpiolib
+Thread-Topic: [PATCH] serial: imx: Avoid probe failure in case of missing
+ gpiolib
+Thread-Index: AQHVSEGkENWr6+HjfEGe5le+et6JcQ==
+Date:   Thu, 1 Aug 2019 08:18:05 +0000
+Message-ID: <20190801081524.22577-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 01 Aug 2019 08:17:28 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 1BCB46274CE.A071D
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: festevam@gmail.com, gregkh@linuxfoundation.org,
+        jslaby@suse.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.08.19 09:39, Oscar Salvador wrote:
-> On Thu, Jul 25, 2019 at 06:02:02PM +0200, Oscar Salvador wrote:
->> Here we go with v3.
->>
->> v3 -> v2:
->>         * Rewrite about vmemmap pages handling.
->>           Prior to this version, I was (ab)using hugepages fields
->>           from struct page, while here I am officially adding a new
->>           sub-page type with the fields I need.
->>
->>         * Drop MHP_MEMMAP_{MEMBLOCK,DEVICE} in favor of MHP_MEMMAP_ON_MEMORY.
->>           While I am still not 100% if this the right decision, and while I
->>           still see some gaining in having MHP_MEMMAP_{MEMBLOCK,DEVICE},
->>           having only one flag ease the code.
->>           If the user wants to allocate memmaps per memblock, it'll
->>           have to call add_memory() variants with memory-block granularity.
->>
->>           If we happen to have a more clear usecase MHP_MEMMAP_MEMBLOCK
->>           flag in the future, so user does not have to bother about the way
->>           it calls add_memory() variants, but only pass a flag, we can add it.
->>           Actually, I already had the code, so add it in the future is going to be
->>           easy.
->>
->>         * Granularity check when hot-removing memory.
->>           Just checking that the granularity is the same.
->>
->> [Testing]
->>
->>  - x86_64: small and large memblocks (128MB, 1G and 2G)
->>
->> So far, only acpi memory hotplug uses the new flag.
->> The other callers can be changed depending on their needs.
->>
->> [Coverletter]
->>
->> This is another step to make memory hotplug more usable. The primary
->> goal of this patchset is to reduce memory overhead of the hot-added
->> memory (at least for SPARSEMEM_VMEMMAP memory model). The current way we use
->> to populate memmap (struct page array) has two main drawbacks:
->>
->> a) it consumes an additional memory until the hotadded memory itself is
->>    onlined and
->> b) memmap might end up on a different numa node which is especially true
->>    for movable_node configuration.
->>
->> a) it is a problem especially for memory hotplug based memory "ballooning"
->>    solutions when the delay between physical memory hotplug and the
->>    onlining can lead to OOM and that led to introduction of hacks like auto
->>    onlining (see 31bc3858ea3e ("memory-hotplug: add automatic onlining
->>    policy for the newly added memory")).
->>
->> b) can have performance drawbacks.
->>
->> One way to mitigate all these issues is to simply allocate memmap array
->> (which is the largest memory footprint of the physical memory hotplug)
->> from the hot-added memory itself. SPARSEMEM_VMEMMAP memory model allows
->> us to map any pfn range so the memory doesn't need to be online to be
->> usable for the array. See patch 3 for more details.
->> This feature is only usable when CONFIG_SPARSEMEM_VMEMMAP is set.
->>
->> [Overall design]:
->>
->> Implementation wise we reuse vmem_altmap infrastructure to override
->> the default allocator used by vmemap_populate. Once the memmap is
->> allocated we need a way to mark altmap pfns used for the allocation.
->> If MHP_MEMMAP_ON_MEMORY flag was passed, we set up the layout of the
->> altmap structure at the beginning of __add_pages(), and then we call
->> mark_vmemmap_pages().
->>
->> MHP_MEMMAP_ON_MEMORY flag parameter will specify to allocate memmaps
->> from the hot-added range.
->> If callers wants memmaps to be allocated per memory block, it will
->> have to call add_memory() variants in memory-block granularity
->> spanning the whole range, while if it wants to allocate memmaps
->> per whole memory range, just one call will do.
->>
->> Want to add 384MB (3 sections, 3 memory-blocks)
->> e.g:
->>
->> add_memory(0x1000, size_memory_block);
->> add_memory(0x2000, size_memory_block);
->> add_memory(0x3000, size_memory_block);
->>
->> or
->>
->> add_memory(0x1000, size_memory_block * 3);
->>
->> One thing worth mention is that vmemmap pages residing in movable memory is not a
->> show-stopper for that memory to be offlined/migrated away.
->> Vmemmap pages are just ignored in that case and they stick around until sections
->> referred by those vmemmap pages are hot-removed.
-> 
-> Gentle ping :-)
-> 
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-I am not yet sure about two things:
+If CONFIG_GPIOLIB is not enabled, mctrl_gpio_init() will return
+-ENOSYS and cause the probing of the imx UART to fail. As the
+GPIOs are optional, we should continue probing in this case.
 
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ drivers/tty/serial/imx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-1. Checking uninitialized pages for PageVmemmap() when onlining. I
-consider this very bad.
-
-I wonder if it would be better to remember for each memory block the pfn
-offset, which will be used when onlining/offlining.
-
-I have some patches that convert online_pages() to
-__online_memory_block(struct memory block *mem) - which fits perfect to
-the current user. So taking the offset and processing only these pages
-when onlining would be easy. To do the same for offline_pages(), we
-first have to rework memtrace code. But when offlining, all memmaps have
-already been initialized.
-
-
-2. Setting the Vmemmap pages to the zone of the online type. This would
-mean we would have unmovable data on pages marked to belong to the
-movable zone. I would suggest to always set them to the NORMAL zone when
-onlining - and inititalize the vmemmap of the vmemmap pages directly
-during add_memory() instead.
-
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 10db3e54ac9e..51714498dacf 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -2237,7 +2237,9 @@ static int imx_uart_probe(struct platform_device *pdev)
+ 	timer_setup(&sport->timer, imx_uart_timeout, 0);
+ 
+ 	sport->gpios = mctrl_gpio_init(&sport->port, 0);
+-	if (IS_ERR(sport->gpios))
++	if (PTR_ERR(sport->gpios) == -ENOSYS)
++		sport->gpios = NULL;
++	else if (IS_ERR(sport->gpios))
+ 		return PTR_ERR(sport->gpios);
+ 
+ 	sport->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
 -- 
-
-Thanks,
-
-David / dhildenb
+2.17.1
