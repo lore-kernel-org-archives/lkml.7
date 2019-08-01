@@ -2,156 +2,96 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63731C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D1BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3586D205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:01:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564668084;
-	bh=Gxug7njdErsR51Wm/lCiKFbDknIoaA5ax5ShtzOj3t0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ec5X1Y1wbYoUMQaepivjEncZ5Hm6z9Ve5VNuwQbqjUSqP3xRasCK/Sd0lnE7CCNcV
-	 +wkoYa9o3f75Wvw50i4M9lbwqz9P8P3IDqp3umiBoO2RJzAiXQ2U7Cm56Oygx5N+t4
-	 d2nwQuAEuO/cKAbyzYCGDzGA/6R9rAVrT3ZEuIHg=
+	by mail.kernel.org (Postfix) with ESMTP id 29DB220838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:02:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WANPQy//"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbfHAOBX (ORCPT
+        id S1731569AbfHAOC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
+        Thu, 1 Aug 2019 10:02:58 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49765 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731338AbfHAOBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:01:22 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730581AbfHAOC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:02:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B93920838;
-        Thu,  1 Aug 2019 14:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564668082;
-        bh=Gxug7njdErsR51Wm/lCiKFbDknIoaA5ax5ShtzOj3t0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LHSHPZYM33wqzB+zVpkuUIMD3ccwF7O7CrAon4B0XDSJfhEY2WP1zNsNSB2zdX++K
-         R7wnTmmjadqmPOyhOmXnU5c6AHnZaFzJw2eS2zuJgiExcU244nL4wkSQv5BGwFTL1N
-         +zISzmcuSk+nQoYUm00WHbHvE+E5shaOfarVDQEI=
-Date:   Thu, 1 Aug 2019 23:01:17 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2 00/12] tracing/probe: Add multi-probes per event
- support
-Message-Id: <20190801230117.c415b1052cb271fcd4eb56b6@kernel.org>
-In-Reply-To: <20190731112539.1efac604@gandalf.local.home>
-References: <156095682948.28024.14190188071338900568.stgit@devnote2>
-        <20190731112539.1efac604@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zsSZ4zSHz9sNF;
+        Fri,  2 Aug 2019 00:02:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564668174;
+        bh=KaOu0pNHY5+26M59K8KsMYTVi0e6TEXkyEzO16nGB+I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WANPQy//ZggJX7/2BPl1/1Cvws4saO5yatNGnbXuHwnUQ2/Q3Ut31vBBMRGN94HVv
+         mWoS2GexWWfItkcU33NVuus0N1C13liv+YxCkL3GV3+la7uf+nYYZHh5jkryAqcxx0
+         rpilufMcT8p2lh6ADVFrrxgz02OB+84pAdGCqPw9lm8hOJkZmPRopRZIFv80jTUpaD
+         ApswPyXOQrdsi39GaD9sQ31btdCDe8F5sd9hCCjJl213Q3Q9qxfDFT6JCkWyhyW93O
+         FJG3rEWc1vEQ1cXljcSIjW4gKitPS2PXPdPXyzTFqUU0Vh8hN2L/H0951uOGDM0gYr
+         OJ4i/Xsyux6hw==
+Date:   Fri, 2 Aug 2019 00:02:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?TWljaGHFgiBNaXJv?= =?UTF-8?B?c8WCYXc=?= 
+        <mirq-linux@rere.qmqm.pl>
+Subject: linux-next: Fixes tag needs some work in the i2c tree
+Message-ID: <20190802000252.74ada349@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/BIDD=rbU1y6V9dnDOxyDujI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 31 Jul 2019 11:25:39 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+--Sig_/BIDD=rbU1y6V9dnDOxyDujI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, 20 Jun 2019 00:07:09 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > Hello,
-> > 
-> > This is the 2nd version of multi-probes per event support on ftrace
-> > and perf-tools.
-> > 
-> > Previous version is here;
-> > https://lkml.org/lkml/2019/5/31/573
-> > 
-> > >From this version, I omitted first 9 patches which has been picked  
-> > to Steve's tree.
-> > In this version, I've fixed some bugs and hardened some unexpected
-> > error cases according to Steve's comment.
-> > Here are changes in this version:
-> > 
-> >  - [1/12] This have below changes. 
-> >     - Warn if the primary trace_probe does not exist.
-> >     - Fix enable_trace_kprobe() to not return error if the any probes
-> >       are "gone" state. If all probes have gone or any other error
-> >       reason, the event can not be enabled and return error.
-> >     - Fix trace_probe_enable() to roll back all enabled uprobe if
-> >       any one of uprobe is failed to enable.
-> >  - [7/12] Swap the checking order of filename for avoiding unexpected
-> >      memory access.
-> > 
-> > 
-> > ====
-> > For trace-event, we can insert same trace-event on several places
-> > on the code, and those can record similar information as a same event
-> > with same format.
-> > 
-> > This series implements similar feature on probe-event. Since the probe
-> > event is based on the compiled binary, sometimes we find that the target
-> > source line is complied into several different addresses, e.g. inlined
-> > function, unrolled loop, etc. In those cases, it is useful to put a
-> > same probe-event on different addresses.
-> > 
-> > With this series, we can append multi probes on one event as below
-> > 
-> >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
-> >   # echo p:testevent fork_idle r1=%ax r2=%cx >> kprobe_events
-> >   # kprobe_events
-> >   p:kprobes/testevent _do_fork r1=%ax r2=%dx
-> >   p:kprobes/testevent fork_idle r1=%ax r2=%cx
-> > 
-> > This means testevent is hit on both of _do_fork and fork_idle.
-> > As you can see, the appended event must have same number of arguments
-> > and those must have same 'type' and 'name' as original one. This is like
-> > a function signature, it checks whether the appending event has the same
-> > type and name of event arguments and same probe type, but doesn't care
-> > about the assignment.
-> > 
-> > So, below appending commands will be rejected.
-> > 
-> >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
-> >   # echo p:testevent fork_idle r1=%ax >> kprobe_events
-> >   (No 2nd argument)
-> >   # echo p:testevent fork_idle r1=%ax r2=%ax:x8 >> kprobe_events
-> >   (The type of 2nd argument is different)
-> > 
-> > If one inlined code has an argument on a register, but another
-> > inlined code has fixed value (as a result of optimization),
-> > you can also specify the fixed immediate value, e.g.
-> > 
-> >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
-> >   # echo p:testevent fork_idle r1=%ax r2=\1 >> kprobe_events
-> > 
-> > 
-> 
-> 
-> Hi Masami,
-> 
-> I applied this patch set to my queue. Nice feature! I'll probably be
-> testing it a bit more. I wont be pushing it to my repo until v5.3-rc3
-> comes out, as I'll plan on rebasing my for-next branch on that.
+Hi all,
 
-Thanks! if there is any issue, please let me know.
-I also start working on perf probe part to support this.
+In commit
 
-Thank you,
+  9c5718e14b81 ("i2c: at91: disable TXRDY interrupt after sending data")
 
-> 
-> Thanks!
-> 
-> -- Steve
+Fixes tag
 
+  Fixes: fac368a0404 ("i2c: at91: add new driver")
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/BIDD=rbU1y6V9dnDOxyDujI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1C8QwACgkQAVBC80lX
+0GzpWwf/cQrD/DceF8UpeGm0e4O0tVNdZIyUTec+nBEv5BVy9ADA31ebuNTbl/wy
+vYydkBhzHE2pZhtG5o2hdDkqjK8VLj9w8vqwE7leZd9HmDcSSwjPenLmXOX/v34I
+otnVUZl4vfJrh0n0CSVfhz6ktpMI4umzjxVuHvwX1wg1P4PefXj8kMO9X1QE5Di6
+StJ3DYoJ+AyVpP+nQgLM4wb6HDsDep0hRphbQeZgIiPH2jrLfP6zfQSlLDZFxNP0
+KLkgbplkRphvF8pNi4Bv0moDDE1xQ/MNHsPF41fpSdS4ktbt58ACOsqNMU0IAisq
+KM4na/UCW+xw+kRJK2mAhBmJy34GPA==
+=rIKQ
+-----END PGP SIGNATURE-----
+
+--Sig_/BIDD=rbU1y6V9dnDOxyDujI--
