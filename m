@@ -2,122 +2,132 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1696FC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8582C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E909620644
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C739720644
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 09:06:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfHAJE3 (ORCPT
+        id S1731055AbfHAJGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 05:04:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33058 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729084AbfHAJE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 05:04:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1AEA5AC63;
-        Thu,  1 Aug 2019 09:04:27 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 4EC4E1E3F4D; Thu,  1 Aug 2019 11:04:26 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 11:04:26 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>, linux-ext4@vger.kernel.org,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.com>,
-        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Joel Becker <jlbec@evilplan.org>
-Subject: Re: [patch V2 5/7] fs/jbd2: Simplify journal_unmap_buffer()
-Message-ID: <20190801090426.GF25064@quack2.suse.cz>
-References: <20190801010126.245731659@linutronix.de>
- <20190801010944.364767635@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801010944.364767635@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 1 Aug 2019 05:06:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40700 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfHAJGC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 05:06:02 -0400
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1ht728-0007Tj-20
+        for linux-kernel@vger.kernel.org; Thu, 01 Aug 2019 09:06:00 +0000
+Received: by mail-pg1-f199.google.com with SMTP id h3so44757813pgc.19
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 02:05:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CE/jIvfMb8MGoIQ8tRgk5BgnN9f/9L2WwMekkyWaOOI=;
+        b=Bkt9Y3gkRSxC0CJNLMICB2hwsc5glSocnB8WIG4XccAerUaP18GJAPKbMkrQ9xJrMy
+         gQF6xMk/rmiKljVV5wYkZyrx8upnWyXqB1PfMcxwVdT2VTZk82VRQt9JiWS54aS8cfrT
+         EqNE8WRLwH0tLmu0Ff5xtBj6EBIbIvg8wE/z3ImM8GrFKt5A3eua3UMBKwAe7IujcIME
+         OyAsP74BhMOJtZku30qxNGo7r3tYMRauDush+wKxLCwv5moVP4x3R/obtX4Cvde8uOEC
+         K69Td+LNX1Btv1GbNDLYNqYf7xHbcjT+Ae1JQ7fXDPftqth+gr4mAziLzTUZPFU8irp0
+         tQmw==
+X-Gm-Message-State: APjAAAWPDk8oEl0DeOh3Gs2HILPBZXJiTJR9ScPDHldz/Mg6gpESe3M1
+        yUMMEJDfLHsLAllkrOJPQ1HhYbY+OmUjzgJ/TCV0U437Jc1/J9afSgXSOw8mKvydqvTUmOWJtdc
+        mlxD4sw2V51bWwHu1080K5HdGOOPJWOHVBWI2+RnOOQ==
+X-Received: by 2002:a17:902:23:: with SMTP id 32mr37995693pla.34.1564650358686;
+        Thu, 01 Aug 2019 02:05:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwAXl4RJjTfmo0Fjo42W3mWvcZyKw/aanim8XYIpsdISoCCH8mQj5GW8+GFyrYPLhWNDtgylw==
+X-Received: by 2002:a17:902:23:: with SMTP id 32mr37995661pla.34.1564650358329;
+        Thu, 01 Aug 2019 02:05:58 -0700 (PDT)
+Received: from 2001-b011-380f-37d3-ac53-c2c3-6814-e821.dynamic-ip6.hinet.net (2001-b011-380f-37d3-ac53-c2c3-6814-e821.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:ac53:c2c3:6814:e821])
+        by smtp.gmail.com with ESMTPSA id s7sm3536097pjn.28.2019.08.01.02.05.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 02:05:57 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
+Date:   Thu, 1 Aug 2019 17:05:54 +0800
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <70D536BE-8DC7-4CA2-84A9-AFB067BA520E@canonical.com>
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
+ <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
+ <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+ <20190730213114.GK13948@localhost.localdomain>
+ <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+ <20190731221956.GB15795@localhost.localdomain>
+ <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 01-08-19 03:01:31, Thomas Gleixner wrote:
-> journal_unmap_buffer() checks first whether the buffer head is a journal.
-> If so it takes locks and then invokes jbd2_journal_grab_journal_head()
-> followed by another check whether this is journal head buffer.
-> 
-> The double checking is pointless.
-> 
-> Replace the initial check with jbd2_journal_grab_journal_head() which
-> alredy checks whether the buffer head is actually a journal.
-> 
-> Allows also early access to the journal head pointer for the upcoming
-> conversion of state lock to a regular spinlock.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-ext4@vger.kernel.org
-> Cc: "Theodore Ts'o" <tytso@mit.edu>
-> Cc: Jan Kara <jack@suse.com>
+at 06:33, Rafael J. Wysocki <rafael@kernel.org> wrote:
 
-Nice simplification. You can add:
+> On Thu, Aug 1, 2019 at 12:22 AM Keith Busch <kbusch@kernel.org> wrote:
+>> On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
+>>> A couple of remarks if you will.
+>>>
+>>> First, we don't know which case is the majority at this point.  For
+>>> now, there is one example of each, but it may very well turn out that
+>>> the SK Hynix BC501 above needs to be quirked.
+>>>
+>>> Second, the reference here really is 5.2, so if there are any systems
+>>> that are not better off with 5.3-rc than they were with 5.2, well, we
+>>> have not made progress.  However, if there are systems that are worse
+>>> off with 5.3, that's bad.  In the face of the latest findings the only
+>>> way to avoid that is to be backwards compatible with 5.2 and that's
+>>> where my patch is going.  That cannot be achieved by quirking all
+>>> cases that are reported as "bad", because there still may be
+>>> unreported ones.
+>>
+>> I have to agree. I think your proposal may allow PCI D3cold,
+>
+> Yes, it may.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Somehow the 9380 with Toshiba NVMe never hits SLP_S0 with or without  
+Rafael’s patch.
+But the “real” s2idle power consumption does improve with the patch.
 
-								Honza
+Can we use a DMI based quirk for this platform? It seems like a platform  
+specific issue.
 
-> ---
-> V2: New patch
-> ---
->  fs/jbd2/transaction.c |    8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> --- a/fs/jbd2/transaction.c
-> +++ b/fs/jbd2/transaction.c
-> @@ -2196,7 +2196,8 @@ static int journal_unmap_buffer(journal_
->  	 * holding the page lock. --sct
->  	 */
->  
-> -	if (!buffer_jbd(bh))
-> +	jh = jbd2_journal_grab_journal_head(bh);
-> +	if (!jh)
->  		goto zap_buffer_unlocked;
->  
->  	/* OK, we have data buffer in journaled mode */
-> @@ -2204,10 +2205,6 @@ static int journal_unmap_buffer(journal_
->  	jbd_lock_bh_state(bh);
->  	spin_lock(&journal->j_list_lock);
->  
-> -	jh = jbd2_journal_grab_journal_head(bh);
-> -	if (!jh)
-> -		goto zap_buffer_no_jh;
-> -
->  	/*
->  	 * We cannot remove the buffer from checkpoint lists until the
->  	 * transaction adding inode to orphan list (let's call it T)
-> @@ -2329,7 +2326,6 @@ static int journal_unmap_buffer(journal_
->  	 */
->  	jh->b_modified = 0;
->  	jbd2_journal_put_journal_head(jh);
-> -zap_buffer_no_jh:
->  	spin_unlock(&journal->j_list_lock);
->  	jbd_unlock_bh_state(bh);
->  	write_unlock(&journal->j_state_lock);
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>
+>> In which case we do need to reintroduce the HMB handling.
+>
+> Right.
+
+The patch alone doesn’t break HMB Toshiba NVMe I tested. But I think it’s  
+still safer to do proper HMB handling.
+
+Kai-Heng
+
