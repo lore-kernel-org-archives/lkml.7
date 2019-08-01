@@ -2,124 +2,84 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48B6C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33069C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD828206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F389220B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 16:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564678630;
+	bh=4ezqwlPAovpVuLlfTDzS1AWwDrqX++zYUnYp2p9b17s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pAkdZT4Tn5vgnNX4aj168h8DOVxrihHd5KbXNnf1MCy5WPr5f+ZUzBktXW6jIqfmt
+	 cn36gPY7iusQbjnleJAzVmA6X5xtrM6wYpRHcj0exec0Twr2kKB67efBqEzFVmG73Q
+	 yRzlcivY47gz/OLu+bvmLkehUNHak2VsxCEuyJI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733223AbfHAQzM (ORCPT
+        id S1731354AbfHAQ5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 12:55:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34102 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733208AbfHAQzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:55:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6893DAECA;
-        Thu,  1 Aug 2019 16:55:10 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 6CC5D1E3F4D; Thu,  1 Aug 2019 11:22:23 +0200 (CEST)
-Date:   Thu, 1 Aug 2019 11:22:23 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.com>,
-        linux-ext4@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Joel Becker <jlbec@evilplan.org>
-Subject: Re: [patch V2 7/7] fs/jbd2: Free journal head outside of locked
- region
-Message-ID: <20190801092223.GG25064@quack2.suse.cz>
-References: <20190801010126.245731659@linutronix.de>
- <20190801010944.549462805@linutronix.de>
+        Thu, 1 Aug 2019 12:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725804AbfHAQ5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 12:57:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E632064A;
+        Thu,  1 Aug 2019 16:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564678628;
+        bh=4ezqwlPAovpVuLlfTDzS1AWwDrqX++zYUnYp2p9b17s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q1WUKMDY3IL927TyRZwS7f3cRNOL2/DXVLQ+l59r43JrdhEuA+JvbMqeohhpPkBdx
+         nJvgax8KDyIsfdyhEQQKyhCmL8cobgwK5sJfEO5liDwipVQeCbsQBRR8eSZPbFopkq
+         Xn31aLfYr1p+KwmYrTHZlHG8Ci5LD29j5OoBfJ9o=
+Date:   Thu, 1 Aug 2019 18:57:05 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     torvalds@linux-foundation.org, aarcange@redhat.com,
+        hughd@google.com, dave.hansen@intel.com, mgorman@suse.de,
+        riel@redhat.com, mhocko@suse.cz, jannh@google.com,
+        linux-kernel@vger.kernel.org, stable@kernel.org,
+        stable@vger.kernel.org, srivatsab@vmware.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
+        bvikas@vmware.com, srostedt@vmware.com
+Subject: Re: [PATCH 0/8] Backported fixes for 4.4 stable tree
+Message-ID: <20190801165705.GA29730@kroah.com>
+References: <1563880111-19058-1-git-send-email-akaher@vmware.com>
+ <20190724120627.GF3244@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801010944.549462805@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190724120627.GF3244@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 01-08-19 03:01:33, Thomas Gleixner wrote:
-> On PREEMPT_RT bit-spinlocks have the same semantics as on PREEMPT_RT=n,
-> i.e. they disable preemption. That means functions which are not safe to be
-> called in preempt disabled context on RT trigger a might_sleep() assert.
+On Wed, Jul 24, 2019 at 02:06:27PM +0200, Greg KH wrote:
+> On Tue, Jul 23, 2019 at 04:38:23PM +0530, Ajay Kaher wrote:
+> > These patches include few backported fixes for the 4.4 stable
+> > tree.
+> > I would appreciate if you could kindly consider including them in the
+> > next release.
 > 
-> The journal head bit spinlock is mostly held for short code sequences with
-> trivial RT safe functionality, except for one place:
+> Why are these needed?  From what I remember, the last patch here is only
+> needed for machines that are "HUGE" and for those, you shouldn't be
+> using 4.4.y anymore anyway, right?  You just end up saving so much more
+> speed and energy using a newer kernel, why would you want to waste it
+> using an older one?
 > 
-> jbd2_journal_put_journal_head() invokes __journal_remove_journal_head()
-> with the journal head bit spinlock held. __journal_remove_journal_head()
-> invokes kmem_cache_free() which must not be called with preemption disabled
-> on RT.
-> 
-> Jan suggested to rework the removal function so the actual free happens
-> outside the bit-spinlocked region.
-> 
-> Split it into two parts:
-> 
->   - Do the sanity checks and the buffer head detach under the lock
-> 
->   - Do the actual free after dropping the lock
-> 
-> There is error case handling in the free part which needs to dereference
-> the b_size field of the now detached buffer head. Due to paranoia (caused
-> by ignorance) the size is retrieved in the detach function and handed into
-> the free function. Might be over-engineered, but better safe than sorry.
-> 
-> This makes the journal head bit-spinlock usage RT compliant and also avoids
-> nested locking which is not covered by lockdep.
-> 
-> Suggested-by: Jan Kara <jack@suse.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-ext4@vger.kernel.org
-> Cc: "Theodore Ts'o" <tytso@mit.edu>
-> Cc: Jan Kara <jack@suse.com>
+> So I need a really good reason why to accept these :)
 
-Looks mostly good. Just a small suggestion for simplification below:
+It's been a week, so I'm dropping this from my queue now.  Please resend
+with this information if you still want these in the tree.
 
-> @@ -2559,11 +2568,14 @@ void jbd2_journal_put_journal_head(struc
->  	J_ASSERT_JH(jh, jh->b_jcount > 0);
->  	--jh->b_jcount;
->  	if (!jh->b_jcount) {
-> -		__journal_remove_journal_head(bh);
-> +		size_t b_size = __journal_remove_journal_head(bh);
-> +
->  		jbd_unlock_bh_journal_head(bh);
-> +		journal_release_journal_head(jh, b_size);
->  		__brelse(bh);
+thanks,
 
-The bh is pinned until you call __brelse(bh) above and bh->b_size doesn't
-change during the lifetime of the buffer. So there's no need of
-fetching bh->b_size in __journal_remove_journal_head() and passing it back.
-You can just:
-
-		journal_release_journal_head(jh, bh->b_size);
-
-> -	} else
-> +	} else {
->  		jbd_unlock_bh_journal_head(bh);
-> +	}
->  }
->  
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+greg k-h
