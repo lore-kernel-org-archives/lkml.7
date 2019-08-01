@@ -2,104 +2,107 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C830C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD91C32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3350A20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D45520449
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QaZhCL+W"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mobgdh1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbfHACaM (ORCPT
+        id S1728748AbfHACbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 22:30:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52245 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbfHACaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 22:30:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45zZ596mjNz9sBF;
-        Thu,  1 Aug 2019 12:30:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564626608;
-        bh=F6yYrwA8wrWGh9l/at9G7REoMS60ygdsyKPlul1m6gI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QaZhCL+WBLqKyRiIv9LmrKpl6lnFiNtDPMGJjUMSdtQB5AlMbdwTBaGZToKG2k1KZ
-         TaJr26TJisLqZUDxc8IkpNs1ba5SnN7mTN/ImIzh6uDuOIWVMVZyIdfO4Eg8KB/Axf
-         ElH6m8mo/b5MTfuEAxx/4m3d/uo2O4ynHbto1kTGnzgnFdH11dj/DrebsXuz/9PYNP
-         B8nKHzGj9g7aeu30cMPwOijKPeQDMUtwSPPjLp1IbiKtRGDbWby9nFPRyKdS87NSYE
-         89+ZD7dRbn/ljDySH7NtC4YKAH7ANEkUs5mwRRzQLNzl2lQpjfps7656qoOZiMxceu
-         HJmQNdoVeUHeQ==
-Date:   Thu, 1 Aug 2019 12:30:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Emil Velikov <emil.velikov@collabora.com>
-Subject: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20190801123004.2aa5c658@canb.auug.org.au>
+        Wed, 31 Jul 2019 22:31:37 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:34521 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfHACbg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 31 Jul 2019 22:31:36 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x712VLkp031078;
+        Thu, 1 Aug 2019 11:31:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x712VLkp031078
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1564626682;
+        bh=v7tebXzVuIjpWij2FCnUZC9VfqyHCstSxtXYGo/JQaw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mobgdh1A6L2xfO1H1LK+ttHQHvmieoWnB8xVVqAPVDnlPAoZOpuY41Jel/Z0kW2gA
+         ZyhrSvTPOUVXvRe4x6ZRyz6fmJlF0xUw7wiSEtgG1LIysPezoH1XecZaD6XbHRPYQt
+         HsIRY2/XDLW2XA+qwexWJD+03XctuWm8okpJrwx2k/xZ5foAmVeDnPhZdLmdjmknn/
+         169Fld+e8p2+VQdV7KHzhetEFZbsZSLJm2X6/hPAi18OXQ8eSI6PmXTXFREf0QmjWh
+         2AQBdP8jz7jWmI87kwaEUoe7AXZis0+RFc9+O87OwgIpf7QmVf9qOj2MbgFbZqhhu/
+         /Mb2LlfAkskBQ==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id a97so27793115uaa.9;
+        Wed, 31 Jul 2019 19:31:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAXJqG5FEKYkEMSqnlmojUn5O/TZXnifu88NmlMv7GHAn/GGufmF
+        vq8gFgUw+jHfRzs/86J+QEr6eW0fcpMAZkHAbvM=
+X-Google-Smtp-Source: APXvYqye+xSiOZooqZfZiBZrjUaqPJGNZgygtAZnjxFm+XMhDELoSbERP2u2elHRRY+h2JYNWrxNWScvA7PtWnS+grw=
+X-Received: by 2002:ab0:234e:: with SMTP id h14mr8749337uao.25.1564626680940;
+ Wed, 31 Jul 2019 19:31:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1rIQwGsme1TfqSXECl9f2.Z";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190617162123.24920-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190617162123.24920-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 1 Aug 2019 11:30:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
+Message-ID: <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
+Subject: Re: [PATCH] libfdt: reduce the number of headers included from libfdt_env.h
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1rIQwGsme1TfqSXECl9f2.Z
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 18, 2019 at 1:21 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Currently, libfdt_env.h includes <linux/kernel.h> just for INT_MAX.
+>
+> <linux/kernel.h> pulls in a lots of broat.
+>
+> Thanks to commit 54d50897d544 ("linux/kernel.h: split *_MAX and *_MIN
+> macros into <linux/limits.h>"), <linux/kernel.h> can be replaced with
+> <linux/limits.h>.
+>
+> This saves including dozens of headers.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-Hi all,
+ping?
 
-After merging the drm-misc tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
 
-drivers/gpu/drm/radeon/radeon_connectors.c: In function 'radeon_add_legacy_=
-connector':
-drivers/gpu/drm/radeon/radeon_connectors.c:2433:5: error: 'ddc' undeclared =
-(first use in this function)
-     ddc =3D &radeon_connector->ddc_bus->adapter;
-     ^~~
-drivers/gpu/drm/radeon/radeon_connectors.c:2433:5: note: each undeclared id=
-entifier is reported only once for each function it appears in
+>  include/linux/libfdt_env.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+> index edb0f0c30904..2231eb855e8f 100644
+> --- a/include/linux/libfdt_env.h
+> +++ b/include/linux/libfdt_env.h
+> @@ -2,7 +2,7 @@
+>  #ifndef LIBFDT_ENV_H
+>  #define LIBFDT_ENV_H
+>
+> -#include <linux/kernel.h>      /* For INT_MAX */
+> +#include <linux/limits.h>      /* For INT_MAX */
+>  #include <linux/string.h>
+>
+>  #include <asm/byteorder.h>
+> --
+> 2.17.1
+>
 
-Caused by commit
 
-  bed7a2182de6 ("drm/radeon: Provide ddc symlink in connector sysfs directo=
-ry")
-
-I have used the drm-misc tree from next-20190731 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/1rIQwGsme1TfqSXECl9f2.Z
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1CTqwACgkQAVBC80lX
-0GwQFwf/bkQ4sQR7J6NB16AEgGu/p2R8lXhPjZa2XtdZY+zrfKDcD1fhlriYJaIf
-ZalH+q0oPJmGm53OhaeLMmTVF0lOWEoEtVZFto+YEtoqTILgMwRu47dXhanM4iJT
-qxe0Rq8haX/zCypvqrFMTStQmOzg0AZcRKYPWtvnrQBFx6PGwpr6A94ajjxIbW0o
-FMyXrW2deieI0Gx8PLD/Z3q29V30fKNcxVoHMCyLsvQaItqnTwYJTKR/iLDioaAM
-wSPsUMpNGDPTOWPe2+gItHWQTGDFua9tJB/iglf28rOi8rZSEFUuhlclg5fV97Ti
-GGXVLs46KPRtNUXiKaBdZVDkwtgegg==
-=2y3a
------END PGP SIGNATURE-----
-
---Sig_/1rIQwGsme1TfqSXECl9f2.Z--
+-- 
+Best Regards
+Masahiro Yamada
