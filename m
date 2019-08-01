@@ -2,110 +2,60 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A406C32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4F0C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7C22087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:30:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVeh8Jw9"
+	by mail.kernel.org (Postfix) with ESMTP id 648D82087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 08:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbfHAIaU (ORCPT
+        id S1730126AbfHAIbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 04:30:20 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46008 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfHAIaU (ORCPT
+        Thu, 1 Aug 2019 04:31:50 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:53143 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbfHAIbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 04:30:20 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u10so10820542lfm.12;
-        Thu, 01 Aug 2019 01:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2xNohy2xyMAt9HM3Gyk3aetZhs8G9eF7ELJFgFiK0/I=;
-        b=KVeh8Jw9S5Hs+wIxrPmvLbiA/a8qd2ZozSyly4TxKurfCOo1wsw0V1V4FfYAeJ2wAl
-         hX+8KRVyClJNg+3FptaphJmcdmM9LnzOh6gagbOFy1eMrZjqDl8bcVFvxVo1dAiR9p+b
-         FgdFqaoPZgECEcYJFHKHAoCypPwq4VSG353KdX7BgFGul9ORNUmXLocQaAQdLdRYnRab
-         T20nnn0f6BhIpOqtJKrlqaa9f6Yn6/vlQQ1nLKTFluF8kJjAcp5eNSoiPczaPKAQJHFy
-         DDP/HFLbIHCTMQOK6z+FkUHrlVi24L40YmEl1myxFuqnS8aWTlzma/wECZhp/dCoKJv3
-         W0sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2xNohy2xyMAt9HM3Gyk3aetZhs8G9eF7ELJFgFiK0/I=;
-        b=LzNOOLJ8i1HHyeTpxE2+GpVdssv8bCiSKiOTnQAdQlI8miOya3BBc4LIBfvHtJGC7r
-         ALQRVHHiY8H8dDNkFQ7AeYC9QqEAz42yH7zN05PYFoI32Yw5dlf8lhG2ectZ5Cgf1b/K
-         RNP7jdLBOkBBhalOvOneQhubnWbg+XyLUWRFgWGphRltCQLE6+KCq4LLSRlxJo2MoKxK
-         j05d1rSCt3hCq+HVXKbThoOpk3VcpPCDnHMNX9tt7QayBBO2ZsZ45iimK08J8mHzp6us
-         Mf1qyeUWVuGK4lXxyGk+sMipfaysxbV38mWNuTYZX40/fdWec54Nd1Y7CnkjCxMYcmmi
-         nQiA==
-X-Gm-Message-State: APjAAAV6Rp+/Wkaudm7wMdKKATfevRsTpz0ZWkmjSDZ00A7YoDAjpx7q
-        x56J4fXo+pcpyh//iIf3XYAYG7QlIK1fYBBP4v4=
-X-Google-Smtp-Source: APXvYqzzD88SDt0GVEYWnLJkJRlwD14+HIfeihD4WoOdeKaL/6vYosJryMtEFIiIAgKt+K60XVbK4UMpvkES4vMcWVE=
-X-Received: by 2002:a19:f806:: with SMTP id a6mr47249319lff.102.1564648217496;
- Thu, 01 Aug 2019 01:30:17 -0700 (PDT)
+        Thu, 1 Aug 2019 04:31:49 -0400
+Received: from localhost.localdomain ([176.167.121.156])
+        by mwinf5d80 with ME
+        id jkXg2000Y3NZnML03kXgAC; Thu, 01 Aug 2019 10:31:48 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 01 Aug 2019 10:31:48 +0200
+X-ME-IP: 176.167.121.156
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        allison@lohutok.net, tglx@linutronix.de, clg@kaod.org,
+        groug@kaod.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 0/2] powerpc/xive: 2 small tweaks in 'xive_irq_bitmap_add()'
+Date:   Thu,  1 Aug 2019 10:31:44 +0200
+Message-Id: <cover.1564647619.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
- <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
- <CAFA6WYPJAzbPdcpBqioxjY=T8RLw-73B_hpzX4cGnwVvm5zpJw@mail.gmail.com>
- <CAE=Ncrb23q++z8R8UMbjDE2epEq4YVcNGzrRD31eH3JAooYejg@mail.gmail.com>
- <CAFA6WYOKcOzSwakHhgshZcebD8ZBMSi7xQdjWYFS79=Xc+odOg@mail.gmail.com>
- <CAE=NcrYz8bT9zDhS_ZcvY84fpeTDxZ-KhJKeQGGyf=o4pG2J-Q@mail.gmail.com>
- <19d9be198619e951750dedeb4d0a7f372083b42c.camel@pengutronix.de>
- <CAE=NcraqD9FNM0Gk9UGhPGi3heVzZrAKGc1gNZxoe1OnDaQ=pA@mail.gmail.com> <CAFA6WYPt4q+jaJbaoauXKr2qKgBHvtQ663s4t=W3nuPJPe2xpw@mail.gmail.com>
-In-Reply-To: <CAFA6WYPt4q+jaJbaoauXKr2qKgBHvtQ663s4t=W3nuPJPe2xpw@mail.gmail.com>
-From:   Janne Karhunen <janne.karhunen@gmail.com>
-Date:   Thu, 1 Aug 2019 11:30:05 +0300
-Message-ID: <CAE=NcrbujsM8wYJXq+s=o5Vy1xY1b0uKYBGvp6UP5ex70HrB2Q@mail.gmail.com>
-Subject: Re: [Tee-dev] [RFC v2 0/6] Introduce TEE based Trusted Keys support
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Rouven Czerwinski <r.czerwinski@pengutronix.de>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, jejb@linux.ibm.com,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dhowells@redhat.com, linux-security-module@vger.kernel.org,
-        keyrings@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-integrity@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 10:58 AM Sumit Garg <sumit.garg@linaro.org> wrote:
+The first patch uses GFP_KERNEL instead of GFP_ATOMIC.
+The 2nd adds a check for memory allocation failure.
 
-> > Anyway, just my .02c. I guess having any new support in the kernel for
-> > new trust sources is good and improvement from the current state. I
-> > can certainly make my stuff work with your setup as well, what ever
-> > people think is the best.
->
-> Yes your implementation can very well fit under trusted keys
-> abstraction framework without creating a new keytype: "ext-trusted".
+Christophe JAILLET (2):
+  powerpc/xive: Use GFP_KERNEL instead of GFP_ATOMIC in
+    'xive_irq_bitmap_add()'
+  powerpc/xive: Add a check for memory allocation failure
 
-The fundamental problem with the 'standardized kernel tee' still
-exists - it will never be generic in real life. Getting all this in
-the kernel will solve your problem and sell this particular product,
-but it is quite unlikely to help that many users. If the security is
-truly important to you, would you really trust any of this code to
-someone else? In this day and age, I really doubt many do. Everyone
-does their own thing, so this is why I really see all that as a
-userspace problem.
+ arch/powerpc/sysdev/xive/spapr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
+-- 
+2.20.1
 
---
-Janne
