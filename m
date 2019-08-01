@@ -2,212 +2,205 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99160C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0CFC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBDC2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564670183;
-	bh=gNavx9bU2HfWoYxCWFKAghweKbumZo3LkXjbFk543Fs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eYv2NwOmdB4SWtSoSdIkYzkz3WQLXtCI1z8SNEfGE6LzLlgKxYMMCTg+umoq47Jsa
-	 odwG2elCnBAsw+2RMo7t6p7S0hIWS04MYQQIReHqFUEZurg9MdDpGks4nFbLjaIwBu
-	 jSAdI8djL41I1yXs/xFeCLi2AVxr6rYYvqczm7iY=
+	by mail.kernel.org (Postfix) with ESMTP id 7997F216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 14:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WyJXrGsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732120AbfHAOgW (ORCPT
+        id S1732130AbfHAOg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 10:36:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731397AbfHAOgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 10:36:21 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38C68214DA;
-        Thu,  1 Aug 2019 14:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564670179;
-        bh=gNavx9bU2HfWoYxCWFKAghweKbumZo3LkXjbFk543Fs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j86hI4avSMlrEkB2xUPvszkv+w/kjcNG3MznkbXhgGqAl3nbzUtO7g9XaExXEWayk
-         uNlvALJ1Yx7/xWfdAfbLHJkh/+f1+qyknXC+qijbBpFrMqhUvGq8TcqQfNBgngARL3
-         6eOQYpcJoUoDWsUWqK/aJmWkqz/8SFP1W5ri8XKQ=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Dan Rue <dan.rue@linaro.org>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Daniel Diaz <daniel.diaz@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH v4] arm64: Make debug exception handlers visible from RCU
-Date:   Thu,  1 Aug 2019 23:36:14 +0900
-Message-Id: <156467017472.19457.9270489483493488031.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190801073737.wrhespf5xh3qudil@willie-the-truck>
-References: <20190801073737.wrhespf5xh3qudil@willie-the-truck>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 1 Aug 2019 10:36:29 -0400
+Received: from mail-eopbgr40076.outbound.protection.outlook.com ([40.107.4.76]:60521
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731397AbfHAOg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:36:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CYr2meXM69npODDLpXFK2I9B2npkCPXNSX6HmMpdgLAXbyDf+xxP6Qf3O4zyKnBzDGroP5sQTt8YgNAK9PkZbpC8nYCCeh3FYU7UrFuOPrQnn/0iLUq87ZL/e4SMVfmQeMkoDQtFbXY9ePTCVCTrmXGD1GZVa5DtV9NjlHzDy+LyOCNyRPUgAuKVHN0UTipdGn/ECsjxaWKOV9Lz5tpyFeCSsWMmD/54RAEudofd2XUCMJxU2tUljI+TvLK2idhayzYVYz7We5yYRDTQni2loR2+fp5ANgPaQymo/yHw0bS7H8OPBImW+0PNgAP4MoK/VZD46o4+yFXDk4H8hvqPiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R1j/xWNjVhtuG2exxoTdvMOB9LNEHw7+0yc17MrH46Y=;
+ b=BZ4C5h4x87Vskxygq3frV3XK6+h0C3d39jLUi9pwlLSNFH/kDZxWy6f59MdDRQLi2cgurXBw0RhPnKoF/I8OOrOSsklf3Rl4Ci8uJrYmvpzHxZMEvgXzNoUxFq6s4P1Itzelwm9KoVdCpbdlaf/OOCW8Kw0GIRf7qyiV1Av/YKwmHEkEzhBvmJl+h4Hq5+Q0vPnx40e044jIUq2EBHAjyH/vX7r8Lp/HPx/Ba86AD6/LZ2qyZI28pYzLXzz3BmHIpriSw8JsSVZgT9T+VLbQf7YTxx94N+FRK810DDPtv9gIinl3fHaXKWMB1QHqez4X+tcoEIbi7eko2OSq1m788g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R1j/xWNjVhtuG2exxoTdvMOB9LNEHw7+0yc17MrH46Y=;
+ b=WyJXrGsmn4FXQQJhe3tXVQLg5uWoTsJmf4S0nhZYY/9TSRaLjqcCphEq3808cIbbmP48SDyX81D1VXVRDlBfYtDSXd54c+1yJCBL/4z++HM+sPZj1tFCzKU6BFQmF4Tgl5Zb30XAEwwTD3hpJixZjtHOYxKxI1XmY6IxBUFvrjI=
+Received: from VI1PR0401MB2463.eurprd04.prod.outlook.com (10.168.61.13) by
+ VI1PR0401MB2560.eurprd04.prod.outlook.com (10.168.66.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.14; Thu, 1 Aug 2019 14:36:23 +0000
+Received: from VI1PR0401MB2463.eurprd04.prod.outlook.com
+ ([fe80::49dc:1671:b13b:e382]) by VI1PR0401MB2463.eurprd04.prod.outlook.com
+ ([fe80::49dc:1671:b13b:e382%9]) with mapi id 15.20.2115.005; Thu, 1 Aug 2019
+ 14:36:23 +0000
+From:   Diana Madalina Craciun <diana.craciun@nxp.com>
+To:     Jason Yan <yanaijie@huawei.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "npiggin@gmail.com" <npiggin@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
+        "yebin10@huawei.com" <yebin10@huawei.com>,
+        "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>,
+        "jingxiangfeng@huawei.com" <jingxiangfeng@huawei.com>,
+        "fanchengyang@huawei.com" <fanchengyang@huawei.com>,
+        "zhaohongjiang@huawei.com" <zhaohongjiang@huawei.com>
+Subject: Re: [PATCH v3 00/10] implement KASLR for powerpc/fsl_booke/32
+Thread-Topic: [PATCH v3 00/10] implement KASLR for powerpc/fsl_booke/32
+Thread-Index: AQHVR4IOWsHaCjD120G4pOTxFRhTEA==
+Date:   Thu, 1 Aug 2019 14:36:23 +0000
+Message-ID: <VI1PR0401MB2463844DD4A35EB3F0959C22FFDE0@VI1PR0401MB2463.eurprd04.prod.outlook.com>
+References: <20190731094318.26538-1-yanaijie@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=diana.craciun@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 72743461-46de-4921-e1ec-08d7168da0c2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0401MB2560;
+x-ms-traffictypediagnostic: VI1PR0401MB2560:
+x-microsoft-antispam-prvs: <VI1PR0401MB2560E5A77FDEDC43B55E37F3FFDE0@VI1PR0401MB2560.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01165471DB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(366004)(136003)(376002)(199004)(189003)(2906002)(53936002)(446003)(9686003)(14454004)(55016002)(74316002)(4326008)(476003)(3846002)(14444005)(66946007)(76176011)(6116002)(66476007)(25786009)(486006)(86362001)(68736007)(91956017)(66556008)(66446008)(64756008)(53546011)(2501003)(478600001)(7416002)(76116006)(6506007)(2201001)(52536014)(316002)(229853002)(6436002)(66066001)(6246003)(26005)(33656002)(110136005)(54906003)(99286004)(305945005)(71190400001)(5660300002)(102836004)(81166006)(7736002)(256004)(8936002)(71200400001)(186003)(8676002)(7696005)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2560;H:VI1PR0401MB2463.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: rDDQTg5OvWA7GSwZ05UaGnO4tNwVcZjyxgAueL6sf9TB/zng76XdJTcgSgAC1lexmiHoh0ZWIqDdUCPpRNOqltcdgZI+ckVsd4kgMPdD+8nH/9cqvQ9GKCZGJzKBmEzVhZykBqakuP07s5p+b9DGBa8CvWxaKvpCIRjoAGnojtDLnsIC7tpOJHfk7rtlEPSjV05xGJC7z7FoZIwv/2gswU0e/WCVL8F22jHXN9fEugFPmAvcnGBzH6b+M1TSKPQqAlInvzHgw3FLtrdvllGAw+SMXrPyCP0bnKzTZzCLC3ftotIhdnl29gIZ2t8Aastd6FjWeZjOt+9X557j9eIR1+MqfXq9irHQzcJb312shWHMW23V+XqENTSyaA5p3exRSlQ9yhto90LVgU1hNOB0+t91aaf5lLH+JJmPTfNyxZc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72743461-46de-4921-e1ec-08d7168da0c2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2019 14:36:23.8810
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: diana.craciun@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2560
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make debug exceptions visible from RCU so that synchronize_rcu()
-correctly track the debug exception handler.
-
-This also introduces sanity checks for user-mode exceptions as same
-as x86's ist_enter()/ist_exit().
-
-The debug exception can interrupt in idle task. For example, it warns
-if we put a kprobe on a function called from idle task as below.
-The warning message showed that the rcu_read_lock() caused this
-problem. But actually, this means the RCU is lost the context which
-is already in NMI/IRQ.
-
-  /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events
-  /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable
-  /sys/kernel/debug/tracing # [  135.122237]
-  [  135.125035] =============================
-  [  135.125310] WARNING: suspicious RCU usage
-  [  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
-  [  135.125904] -----------------------------
-  [  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
-  [  135.126839]
-  [  135.126839] other info that might help us debug this:
-  [  135.126839]
-  [  135.127410]
-  [  135.127410] RCU used illegally from idle CPU!
-  [  135.127410] rcu_scheduler_active = 2, debug_locks = 1
-  [  135.128114] RCU used illegally from extended quiescent state!
-  [  135.128555] 1 lock held by swapper/0/0:
-  [  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
-  [  135.130499]
-  [  135.130499] stack backtrace:
-  [  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
-  [  135.131841] Hardware name: linux,dummy-virt (DT)
-  [  135.132224] Call trace:
-  [  135.132491]  dump_backtrace+0x0/0x140
-  [  135.132806]  show_stack+0x24/0x30
-  [  135.133133]  dump_stack+0xc4/0x10c
-  [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
-  [  135.134171]  call_break_hook+0x170/0x178
-  [  135.134486]  brk_handler+0x28/0x68
-  [  135.134792]  do_debug_exception+0x90/0x150
-  [  135.135051]  el1_dbg+0x18/0x8c
-  [  135.135260]  default_idle_call+0x0/0x44
-  [  135.135516]  cpu_startup_entry+0x2c/0x30
-  [  135.135815]  rest_init+0x1b0/0x280
-  [  135.136044]  arch_call_rest_init+0x14/0x1c
-  [  135.136305]  start_kernel+0x4d4/0x500
-  [  135.136597]
-
-So make debug exception visible to RCU can fix this warning.
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- Changes in v4:
-  - Update comment of debug_exception_enter().
-  - Move trace_hardirqs_off/on() into debug_exception_enter/exit().
- Changes in v3:
-  - Make a comment for debug_exception_enter() clearer.
----
- arch/arm64/mm/fault.c |   57 ++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 49 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index 9568c116ac7f..cfd65b63f36f 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -777,6 +777,53 @@ void __init hook_debug_fault_code(int nr,
- 	debug_fault_info[nr].name	= name;
- }
- 
-+/*
-+ * In debug exception context, we explicitly disable preemption despite
-+ * having interrupts disabled.
-+ * This serves two purposes: it makes it much less likely that we would
-+ * accidentally schedule in exception context and it will force a warning
-+ * if we somehow manage to schedule by accident.
-+ */
-+static void debug_exception_enter(struct pt_regs *regs)
-+{
-+	/*
-+	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
-+	 * already disabled to preserve the last enabled/disabled addresses.
-+	 */
-+	if (interrupts_enabled(regs))
-+		trace_hardirqs_off();
-+
-+	if (user_mode(regs)) {
-+		RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-+	} else {
-+		/*
-+		 * We might have interrupted pretty much anything.  In
-+		 * fact, if we're a debug exception, we can even interrupt
-+		 * NMI processing. We don't want this code makes in_nmi()
-+		 * to return true, but we need to notify RCU.
-+		 */
-+		rcu_nmi_enter();
-+	}
-+
-+	preempt_disable();
-+
-+	/* This code is a bit fragile.  Test it. */
-+	RCU_LOCKDEP_WARN(!rcu_is_watching(), "exception_enter didn't work");
-+}
-+NOKPROBE_SYMBOL(debug_exception_enter);
-+
-+static void debug_exception_exit(struct pt_regs *regs)
-+{
-+	preempt_enable_no_resched();
-+
-+	if (!user_mode(regs))
-+		rcu_nmi_exit();
-+
-+	if (interrupts_enabled(regs))
-+		trace_hardirqs_on();
-+}
-+NOKPROBE_SYMBOL(debug_exception_exit);
-+
- #ifdef CONFIG_ARM64_ERRATUM_1463225
- DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
- 
-@@ -817,12 +864,7 @@ asmlinkage void __exception do_debug_exception(unsigned long addr_if_watchpoint,
- 	if (cortex_a76_erratum_1463225_debug_handler(regs))
- 		return;
- 
--	/*
--	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
--	 * already disabled to preserve the last enabled/disabled addresses.
--	 */
--	if (interrupts_enabled(regs))
--		trace_hardirqs_off();
-+	debug_exception_enter(regs);
- 
- 	if (user_mode(regs) && !is_ttbr0_addr(pc))
- 		arm64_apply_bp_hardening();
-@@ -832,7 +874,6 @@ asmlinkage void __exception do_debug_exception(unsigned long addr_if_watchpoint,
- 				 inf->sig, inf->code, (void __user *)pc, esr);
- 	}
- 
--	if (interrupts_enabled(regs))
--		trace_hardirqs_on();
-+	debug_exception_exit(regs);
- }
- NOKPROBE_SYMBOL(do_debug_exception);
-
+Hi Jason,=0A=
+=0A=
+I have tested these series on a P4080 platform.=0A=
+=0A=
+Regards,=0A=
+Diana=0A=
+=0A=
+=0A=
+On 7/31/2019 12:26 PM, Jason Yan wrote:=0A=
+> This series implements KASLR for powerpc/fsl_booke/32, as a security=0A=
+> feature that deters exploit attempts relying on knowledge of the location=
+=0A=
+> of kernel internals.=0A=
+>=0A=
+> Since CONFIG_RELOCATABLE has already supported, what we need to do is=0A=
+> map or copy kernel to a proper place and relocate. Freescale Book-E=0A=
+> parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1=0A=
+> entries are not suitable to map the kernel directly in a randomized=0A=
+> region, so we chose to copy the kernel to a proper place and restart to=
+=0A=
+> relocate.=0A=
+>=0A=
+> Entropy is derived from the banner and timer base, which will change ever=
+y=0A=
+> build and boot. This not so much safe so additionally the bootloader may=
+=0A=
+> pass entropy via the /chosen/kaslr-seed node in device tree.=0A=
+>=0A=
+> We will use the first 512M of the low memory to randomize the kernel=0A=
+> image. The memory will be split in 64M zones. We will use the lower 8=0A=
+> bit of the entropy to decide the index of the 64M zone. Then we chose a=
+=0A=
+> 16K aligned offset inside the 64M zone to put the kernel in.=0A=
+>=0A=
+>     KERNELBASE=0A=
+>=0A=
+>         |-->   64M   <--|=0A=
+>         |               |=0A=
+>         +---------------+    +----------------+---------------+=0A=
+>         |               |....|    |kernel|    |               |=0A=
+>         +---------------+    +----------------+---------------+=0A=
+>         |                         |=0A=
+>         |----->   offset    <-----|=0A=
+>=0A=
+>                               kimage_vaddr=0A=
+>=0A=
+> We also check if we will overlap with some areas like the dtb area, the=
+=0A=
+> initrd area or the crashkernel area. If we cannot find a proper area,=0A=
+> kaslr will be disabled and boot from the original kernel.=0A=
+>=0A=
+> Changes since v2:=0A=
+>  - Remove unnecessary #ifdef=0A=
+>  - Use SZ_64M instead of0x4000000=0A=
+>  - Call early_init_dt_scan_chosen() to init boot_command_line=0A=
+>  - Rename kaslr_second_init() to kaslr_late_init()=0A=
+>=0A=
+> Changes since v1:=0A=
+>  - Remove some useless 'extern' keyword.=0A=
+>  - Replace EXPORT_SYMBOL with EXPORT_SYMBOL_GPL=0A=
+>  - Improve some assembly code=0A=
+>  - Use memzero_explicit instead of memset=0A=
+>  - Use boot_command_line and remove early_command_line=0A=
+>  - Do not print kaslr offset if kaslr is disabled=0A=
+>=0A=
+> Jason Yan (10):=0A=
+>   powerpc: unify definition of M_IF_NEEDED=0A=
+>   powerpc: move memstart_addr and kernstart_addr to init-common.c=0A=
+>   powerpc: introduce kimage_vaddr to store the kernel base=0A=
+>   powerpc/fsl_booke/32: introduce create_tlb_entry() helper=0A=
+>   powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper=0A=
+>   powerpc/fsl_booke/32: implement KASLR infrastructure=0A=
+>   powerpc/fsl_booke/32: randomize the kernel image offset=0A=
+>   powerpc/fsl_booke/kaslr: clear the original kernel if randomized=0A=
+>   powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter=0A=
+>   powerpc/fsl_booke/kaslr: dump out kernel offset information on panic=0A=
+>=0A=
+>  arch/powerpc/Kconfig                          |  11 +=0A=
+>  arch/powerpc/include/asm/nohash/mmu-book3e.h  |  10 +=0A=
+>  arch/powerpc/include/asm/page.h               |   7 +=0A=
+>  arch/powerpc/kernel/Makefile                  |   1 +=0A=
+>  arch/powerpc/kernel/early_32.c                |   2 +-=0A=
+>  arch/powerpc/kernel/exceptions-64e.S          |  10 -=0A=
+>  arch/powerpc/kernel/fsl_booke_entry_mapping.S |  23 +-=0A=
+>  arch/powerpc/kernel/head_fsl_booke.S          |  55 ++-=0A=
+>  arch/powerpc/kernel/kaslr_booke.c             | 427 ++++++++++++++++++=
+=0A=
+>  arch/powerpc/kernel/machine_kexec.c           |   1 +=0A=
+>  arch/powerpc/kernel/misc_64.S                 |   5 -=0A=
+>  arch/powerpc/kernel/setup-common.c            |  19 +=0A=
+>  arch/powerpc/mm/init-common.c                 |   7 +=0A=
+>  arch/powerpc/mm/init_32.c                     |   5 -=0A=
+>  arch/powerpc/mm/init_64.c                     |   5 -=0A=
+>  arch/powerpc/mm/mmu_decl.h                    |  10 +=0A=
+>  arch/powerpc/mm/nohash/fsl_booke.c            |   8 +-=0A=
+>  17 files changed, 558 insertions(+), 48 deletions(-)=0A=
+>  create mode 100644 arch/powerpc/kernel/kaslr_booke.c=0A=
+>=0A=
+=0A=
