@@ -2,96 +2,146 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA666C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC7BC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3550206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378C5206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 21:43:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S/P5gz+a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731997AbfHAVmI (ORCPT
+        id S1732107AbfHAVn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 17:42:08 -0400
-Received: from mga18.intel.com ([134.134.136.126]:22989 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729708AbfHAVmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 17:42:08 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 14:42:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,335,1559545200"; 
-   d="scan'208";a="175382650"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 01 Aug 2019 14:42:07 -0700
-Date:   Thu, 1 Aug 2019 14:42:07 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: Unconditionally call x86 ops that are always
- implemented
-Message-ID: <20190801214207.GF6783@linux.intel.com>
-References: <20190801164606.20777-1-sean.j.christopherson@intel.com>
- <3337d56f-de99-6879-96c2-0255db68541d@oracle.com>
+        Thu, 1 Aug 2019 17:43:58 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41508 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731433AbfHAVn4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 17:43:56 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m9so32644779pls.8
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 14:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tRJWWqPxe4v7OGh5SzFgwfV47CyOeIABo0H7U+M+pdg=;
+        b=S/P5gz+a9jUw7SwOiz84JEbZSB3baAlVLSphUNs8eZlN3ZPowtpH0MpNodRchncDaL
+         h/pwktm3ZoMM5ur9uIqRsyskaBqjhXhPvxaJG//b32Uphj0PG1ynA9CUTm1TW0sAsjm6
+         HvrHFAepLSyokzes/1ht5wjMSnlrEgSRbO09yXW02SG1IbAd8mAQKhoiLKJYr6VkLWg+
+         7rO55CqVAf6utB/oO5cCFpNjfcdHsW2PZ6e5nZCbdexwb5KuZDKGxSTHr3F16NHksaHQ
+         xyoTxMhvtaSYfpReQiXJpspTpAAqnNeKDN71dNMH70NnoXLk5zU84jZ89voAQsdAyikW
+         53ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tRJWWqPxe4v7OGh5SzFgwfV47CyOeIABo0H7U+M+pdg=;
+        b=pnGcuUIjb+z+M2TWRMkKUoiMmi5qP4OoROstbW0FSXN3lHrg2V53OzJzMuxM87jLRR
+         1l2RanKZV/tGiQbyHUCen9ytCLIk3OWqB0rsRWZB4XZYlFzmQaaCJQGs9/0OZlhlUeAs
+         ajOpsuTF9u7tUG2HX886hG4eUnqm8H3VQ+YMmbdCz0XiVuuajkx8lnB0ZyWRedpjPewV
+         rVf8QZpvSHgYNm9Zai0385QbDY6/boAw+slgQK0YzZxVJvBVQd9hQXIV6rYdIWTs2TNz
+         I9JrqxRcWSak2c6G9+Rrl3f0pdgmoUIUd5KnsBheen+WI3uYdJuvCBksK/ZpR5ZT4+Ap
+         zx0g==
+X-Gm-Message-State: APjAAAWGmAlQgXyoL4iv4VT4zCK7yDutn/lE0YL4pjci+zaU5QB61l0+
+        +d++fhWJ/fFCslCTBUVEqS7qfe52nRbTMrHTbPpAig==
+X-Google-Smtp-Source: APXvYqyQJ3oYuIkR4HxnjqcvX8HB7OCTCVhJ4Fku+hNPqOUYjGToK6i2G0j1xWhCd4v39RwFH1V7C/0k5dVHTOnW45I=
+X-Received: by 2002:a17:902:347:: with SMTP id 65mr32846391pld.232.1564695834770;
+ Thu, 01 Aug 2019 14:43:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3337d56f-de99-6879-96c2-0255db68541d@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190716175021.9CA412173C@mail.kernel.org> <20190719000834.GA3228@google.com>
+ <20190722200347.261D3218C9@mail.kernel.org> <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
+ <20190722235411.06C1320840@mail.kernel.org> <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
+ <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
+ <20190726083148.d4gf57w2nt5k7t6n@pathway.suse.cz> <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com>
+ <CAFd5g473iFfvBnJs2pcwuJYgY+DpgD6RLzyDFL1otUuScgKUag@mail.gmail.com> <20190801211447.6D3D7206A2@mail.kernel.org>
+In-Reply-To: <20190801211447.6D3D7206A2@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 1 Aug 2019 14:43:42 -0700
+Message-ID: <CAFd5g47tk8x5iet=xfPVO6MphD3SsLtYQLrCi5O2h0bvdXwHtA@mail.gmail.com>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Petr Mladek <pmladek@suse.com>, Jeff Dike <jdike@addtoit.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@google.com>,
+        David Rientjes <rientjes@google.com>,
+        kunit-dev@googlegroups.com,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        wfg@linux.intel.com, Greg KH <gregkh@linuxfoundation.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Timothy Bird <Tim.Bird@sony.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 02:39:38PM -0700, Krish Sadhukhan wrote:
-> 
-> 
-> On 08/01/2019 09:46 AM, Sean Christopherson wrote:
-> >Remove two stale checks for non-NULL ops now that they're implemented by
-> >both VMX and SVM.
+On Thu, Aug 1, 2019 at 2:14 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-08-01 11:59:57)
+> > On Thu, Aug 1, 2019 at 11:55 AM Brendan Higgins
+> > <brendanhiggins@google.com> wrote:
+> > >
+> > > On Fri, Jul 26, 2019 at 1:31 AM Petr Mladek <pmladek@suse.com> wrote:
+> > >
+> > > > To be honest I do not fully understand KUnit design. I am not
+> > > > completely sure how the tested code is isolated from the running
+> > > > system. Namely, I do not know if the tested code shares
+> > > > the same locks with the system running the test.
+> > >
+> > > No worries, I don't expect printk to be the hang up in those cases. It
+> > > sounds like KUnit has a long way to evolve before printk is going to
+> > > be a limitation.
 > >
-> >Fixes: 74f169090b6f ("kvm/svm: Setup MCG_CAP on AMD properly")
-> >Fixes: b31c114b82b2 ("KVM: X86: Provide a capability to disable PAUSE intercepts")
-> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >---
-> >  arch/x86/kvm/x86.c | 8 ++------
-> >  1 file changed, 2 insertions(+), 6 deletions(-)
+> > So Stephen, what do you think?
 > >
-> >diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> >index 01e18caac825..2c25a19d436f 100644
-> >--- a/arch/x86/kvm/x86.c
-> >+++ b/arch/x86/kvm/x86.c
-> >@@ -3506,8 +3506,7 @@ static int kvm_vcpu_ioctl_x86_setup_mce(struct kvm_vcpu *vcpu,
-> >  	for (bank = 0; bank < bank_num; bank++)
-> >  		vcpu->arch.mce_banks[bank*4] = ~(u64)0;
-> >-	if (kvm_x86_ops->setup_mce)
-> >-		kvm_x86_ops->setup_mce(vcpu);
-> >+	kvm_x86_ops->setup_mce(vcpu);
-> >  out:
-> >  	return r;
-> >  }
-> >@@ -9313,10 +9312,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
-> >  	kvm_page_track_init(kvm);
-> >  	kvm_mmu_init_vm(kvm);
-> >-	if (kvm_x86_ops->vm_init)
-> >-		return kvm_x86_ops->vm_init(kvm);
-> >-
-> >-	return 0;
-> >+	return kvm_x86_ops->vm_init(kvm);
-> >  }
-> >  static void kvm_unload_vcpu_mmu(struct kvm_vcpu *vcpu)
-> 
-> The following two ops are also implemented by both VMX and SVM:
-> 
->         update_cr8_intercept
->         update_pi_irte
+> > Do you want me to go forward with the new kunit_assert API wrapping
+> > the string_stream as I have it now? Would you prefer to punt this to a
+> > later patch? Or would you prefer something else?
+> >
+>
+> I like the struct based approach. If anything, it can be adjusted to
+> make the code throw some records into a spinlock later on and delay the
+> formatting of the assertion if need be.
 
-Drat, I didn't think to grep for !kvm_x86_ops.  I'll spin a v2.  Thanks!
+That's a fair point.
+
+> Can you resend with that
+> approach? I don't think I'll have any more comments after that.
+
+Cool, will do.
+
+Thanks!
