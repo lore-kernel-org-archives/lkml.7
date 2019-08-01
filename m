@@ -2,120 +2,131 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5E0C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E371C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 455B920B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564674653;
-	bh=mo2HdMSRCqt3TFJkQl9d7X3tKGeVpM+cbgnJbsSOiBU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QJ/SsUokyh+liYJzV0oce5rT9BG42VRzuIFyz06ERre0A1Q6h1q6Td3EIPt9vjBsH
-	 NaqFd/tQypttpujWfJ1FFqaqgnSebpCH+1KDAXtNFRrDUZoz2IZVTUz6TS0ElRFmsi
-	 gAOKoSLnCebSHrEtF+6Qq4iO/QO3C+svyAKjpdz8=
+	by mail.kernel.org (Postfix) with ESMTP id 6EABB206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 15:52:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="T+//7okF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbfHAPuw (ORCPT
+        id S1731562AbfHAPwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 11:50:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731079AbfHAPuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 11:50:52 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 285B821773;
-        Thu,  1 Aug 2019 15:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564674651;
-        bh=mo2HdMSRCqt3TFJkQl9d7X3tKGeVpM+cbgnJbsSOiBU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NXLsozSYOIx9rgmDZGvJH1orQh3Sih5ok+LDLGRki2c9GNYyHcBujEiSfTrb4L0hE
-         Kq/zLCt7vLGKd95Jmjf+KBCOpxM7BmwGOZi5zcqTEOBKLZXpvIR9vZWaZOFuOFOAp4
-         nKbypj4GdUDLiW2dD2yPDj6ZdsQV8WJLxPGE3UsA=
-Received: by mail-qt1-f175.google.com with SMTP id k10so1562479qtq.1;
-        Thu, 01 Aug 2019 08:50:51 -0700 (PDT)
-X-Gm-Message-State: APjAAAVyg7KFyXzeE7nAjgxIEhUb9rc3CuK/OEHuRDwbUAb+hdJkQbBi
-        GnMoegWd4iqSHVypdqjAKtBfSAoiPNd8TCTr7A==
-X-Google-Smtp-Source: APXvYqzqIDIJzp/P5UH50rteyQO1siPBt2WuomDxMcjKRkIu8XCHmururywkdwwVKhn5raiJ1jaTSLRgDcGehkVoih0=
-X-Received: by 2002:a0c:acef:: with SMTP id n44mr94852273qvc.39.1564674650265;
- Thu, 01 Aug 2019 08:50:50 -0700 (PDT)
+        Thu, 1 Aug 2019 11:52:24 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39083 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728404AbfHAPwY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 11:52:24 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x71FqFqu005035
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 1 Aug 2019 08:52:15 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x71FqFqu005035
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564674735;
+        bh=V81xyc1CKtZZ0EXikPqyhZhJimH7JUJHZlBrjH8C1qE=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=T+//7okFVJ6B/CZSScoFc+A9vYpe8ZeTl+zZPOpPH/5rc7+L5SqKKj6Qp6HO9JvK6
+         iz6thKXN2z1pJMuVgo0uCF3v92mcbBerB0TTraL9LboMjayoYimknrGU/99U8iuCPz
+         KXo36mw5IWHOWY/bOSR/o9bJlfmbDazKYcPVZ0F2onDv9b2htAT0tw9wqGX/czmBVV
+         jtI+8RuNzmkQzdPRAwGahnWXJYTW0m0yNcJSGev4dIOFAL1bdEqx3iqI5Lnp9LcJ5e
+         EQieK03b6OvHNFLljPdPAvsID8jVqBPBOPknRleTD3Ia8eMEN29Y1q33UlgsOvw0bj
+         LoFs5YMtEbR2A==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x71FqExN005032;
+        Thu, 1 Aug 2019 08:52:14 -0700
+Date:   Thu, 1 Aug 2019 08:52:14 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-ae6683d815895c2be1e60e1942630fa99488055b@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        bigeasy@linutronix.de, tglx@linutronix.de, mingo@kernel.org,
+        hpa@zytor.com
+Reply-To: tglx@linutronix.de, mingo@kernel.org, peterz@infradead.org,
+          bigeasy@linutronix.de, hpa@zytor.com,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190726185752.981398465@linutronix.de>
+References: <20190726185752.981398465@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] hrtimer: Introduce HARD expiry mode
+Git-Commit-ID: ae6683d815895c2be1e60e1942630fa99488055b
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190801005843.10343-1-atish.patra@wdc.com> <20190801005843.10343-6-atish.patra@wdc.com>
-In-Reply-To: <20190801005843.10343-6-atish.patra@wdc.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 1 Aug 2019 09:50:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLqxN1+fvrdD24Ho6s7gB+pGy-0sZaL-jJqkYZ2yC4JEA@mail.gmail.com>
-Message-ID: <CAL_JsqLqxN1+fvrdD24Ho6s7gB+pGy-0sZaL-jJqkYZ2yC4JEA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] dt-bindings: Update the riscv,isa string description
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Allison Randal <allison@lohutok.net>,
-        Anup Patel <anup.patel@wdc.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>,
-        Gary Guo <gary@garyguo.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yangtao Li <tiny.windzz@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 6:58 PM Atish Patra <atish.patra@wdc.com> wrote:
->
-> Since the RISC-V specification states that ISA description strings are
-> case-insensitive, there's no functional difference between mixed-case,
-> upper-case, and lower-case ISA strings. Thus, to simplify parsing,
-> specify that the letters present in "riscv,isa" must be all lowercase.
->
-> Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  Documentation/devicetree/bindings/riscv/cpus.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> index c899111aa5e3..4f0acb00185a 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> @@ -46,10 +46,12 @@ properties:
->            - rv64imafdc
->      description:
->        Identifies the specific RISC-V instruction set architecture
-> -      supported by the hart.  These are documented in the RISC-V
-> +      supported by the hart. These are documented in the RISC-V
->        User-Level ISA document, available from
->        https://riscv.org/specifications/
->
-> +      Letters in the riscv,isa string must be all lowercase.
-> +
+Commit-ID:  ae6683d815895c2be1e60e1942630fa99488055b
+Gitweb:     https://git.kernel.org/tip/ae6683d815895c2be1e60e1942630fa99488055b
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Fri, 26 Jul 2019 20:30:51 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 1 Aug 2019 17:43:16 +0200
 
-The schemas are case sensitive this looks pretty pointless without the
-context of the commit msg. Can you prefix with 'While the
-specification is case insensitive, "
+hrtimer: Introduce HARD expiry mode
 
-For some background, FDT generally always has been case sensitive too
-(dtc won't merge/override nodes/properties with differing case). It's
-really only some older true OF systems that were case insensitive. The
-kernel had a mixture of case sensitive and insensitive comparisons
-somewhat depending on the arch and whether of_prop_cmp/of_node_cmp or
-str*cmp functions were used. There's been a lot of clean-up and now
-most comparisons are case sensitive with only Sparc having some
-deviation.
+On PREEMPT_RT not all hrtimers can be expired in hard interrupt context
+even if that is perfectly fine on a PREEMPT_RT=n kernel, e.g. because they
+take regular spinlocks. Also for latency reasons PREEMPT_RT tries to defer
+most hrtimers' expiry into soft interrupt context.
 
-Rob
+But there are hrtimers which must be expired in hard interrupt context even
+when PREEMPT_RT is enabled:
+
+  - hrtimers which must expiry in hard interrupt context, e.g. scheduler,
+    perf, watchdog related hrtimers
+
+  - latency critical hrtimers, e.g. nanosleep, ..., kvm lapic timer
+
+Add a new mode flag HRTIMER_MODE_HARD which allows to mark these timers so
+PREEMPT_RT will not move them into softirq expiry mode.
+
+[ tglx: Split out of a larger combo patch. Added changelog ]
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190726185752.981398465@linutronix.de
+
+
+---
+ include/linux/hrtimer.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 24072a0942c0..15c2ba6b6316 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -38,6 +38,7 @@ enum hrtimer_mode {
+ 	HRTIMER_MODE_REL	= 0x01,
+ 	HRTIMER_MODE_PINNED	= 0x02,
+ 	HRTIMER_MODE_SOFT	= 0x04,
++	HRTIMER_MODE_HARD	= 0x08,
+ 
+ 	HRTIMER_MODE_ABS_PINNED = HRTIMER_MODE_ABS | HRTIMER_MODE_PINNED,
+ 	HRTIMER_MODE_REL_PINNED = HRTIMER_MODE_REL | HRTIMER_MODE_PINNED,
+@@ -48,6 +49,11 @@ enum hrtimer_mode {
+ 	HRTIMER_MODE_ABS_PINNED_SOFT = HRTIMER_MODE_ABS_PINNED | HRTIMER_MODE_SOFT,
+ 	HRTIMER_MODE_REL_PINNED_SOFT = HRTIMER_MODE_REL_PINNED | HRTIMER_MODE_SOFT,
+ 
++	HRTIMER_MODE_ABS_HARD	= HRTIMER_MODE_ABS | HRTIMER_MODE_HARD,
++	HRTIMER_MODE_REL_HARD	= HRTIMER_MODE_REL | HRTIMER_MODE_HARD,
++
++	HRTIMER_MODE_ABS_PINNED_HARD = HRTIMER_MODE_ABS_PINNED | HRTIMER_MODE_HARD,
++	HRTIMER_MODE_REL_PINNED_HARD = HRTIMER_MODE_REL_PINNED | HRTIMER_MODE_HARD,
+ };
+ 
+ /*
