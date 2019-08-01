@@ -2,118 +2,171 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF9FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF5CC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81123214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:30:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzX7Ppc2"
+	by mail.kernel.org (Postfix) with ESMTP id 7DC11216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 07:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbfHAHaV (ORCPT
+        id S1729920AbfHAHbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 03:30:21 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34679 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfHAHaV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 03:30:21 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p17so68339621ljg.1;
-        Thu, 01 Aug 2019 00:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rdlu4Ad817zx+iOTcsjqQM76adHXpOWbEydNxUMSAfU=;
-        b=UzX7Ppc2TrBZ0COGTnbdhjA8/92a3SmUDMUBe7LHJnt7UzjMivXlt5ctFlFa8oCssU
-         SYmn0SU0YmBzG+xH1D7Xm6LwZdeQI4DMIuCFZ2apRvrxooP1XuUSa4h0cqvLb+yZ84WV
-         gzhVlRU7mA0IUpLblx7J9CW2e26MxMXKOvypsTKT7OA+spMddfGXtcyN9dJUUq1oZ3L2
-         WXvXffxmd9eeUSa0XCpuLJgrwP5q0Njaz9GFOXVxMiAPzbRBN62y8b/zTpo9Vvq+4wem
-         H3/6ktlq9TuBKIZYLltyIKoSiqKgUj5S5PLdGFqXB4oRQrT7eg2cwmMCz/P449szEX0W
-         H97A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rdlu4Ad817zx+iOTcsjqQM76adHXpOWbEydNxUMSAfU=;
-        b=hNkzAwrdbRsfJhStlM5KWPM6IHEqTqlT31w7Y2vQVHfkv5EOmYrKuNf0uv+9UnqLUP
-         JDkfs5TfYgJHtCvgF7d7dGVaO9EkfU0FNZT92K0qEnqYZuyL+MTr+/Fvd1DNgCfWsOFY
-         9DW5DAh3ZIflDF5nCRzVH7DwDR4u5MSsT5bXuBJ4v/SjTQc+xw5X6mozi6zhxlfA1Pjl
-         zH2esaCyhlp7FXXNrHby9YSW6RwqXtU5tM3nvg2Kg5Q2gMWjlzmjkDhrILJw5pDHngDD
-         HHSIYKS8B1QYJRQY2+R2zCKIjGLTKfRPGjPFz2klAM2m4vb3yNpNiSGrUfns0KnTZkAE
-         4kXw==
-X-Gm-Message-State: APjAAAU/ZXp8pPwlYi6lk4+neztU55IIbSdYv/xBVNVCh92bF3gmGhqU
-        /m0LDSjwG/TdnxAdGkMYQK6y33tzBuFIrvVeQXI=
-X-Google-Smtp-Source: APXvYqzD4VpesQpUb8MYg+Q5e04vCOtwoAClw957rRW1FlaRZEsQmMx74W0N61umpEVSCQWDHKBhpRkvaPwaSWsWw1Q=
-X-Received: by 2002:a2e:1290:: with SMTP id 16mr64210069ljs.88.1564644618088;
- Thu, 01 Aug 2019 00:30:18 -0700 (PDT)
+        Thu, 1 Aug 2019 03:31:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46148 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbfHAHbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 03:31:15 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 47F593B71F;
+        Thu,  1 Aug 2019 07:31:13 +0000 (UTC)
+Received: from [10.36.116.245] (ovpn-116-245.ams2.redhat.com [10.36.116.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C4B25D6A7;
+        Thu,  1 Aug 2019 07:31:10 +0000 (UTC)
+Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
+From:   David Hildenbrand <david@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Rashmica Gupta <rashmica.g@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        pasha.tatashin@soleen.com, Jonathan.Cameron@huawei.com,
+        anshuman.khandual@arm.com, Vlastimil Babka <vbabka@suse.cz>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <2750c11a-524d-b248-060c-49e6b3eb8975@redhat.com>
+ <20190626081516.GC30863@linux>
+ <887b902e-063d-a857-d472-f6f69d954378@redhat.com>
+ <9143f64391d11aa0f1988e78be9de7ff56e4b30b.camel@gmail.com>
+ <20190702074806.GA26836@linux>
+ <CAC6rBskRyh5Tj9L-6T4dTgA18H0Y8GsMdC-X5_0Jh1SVfLLYtg@mail.gmail.com>
+ <20190731120859.GJ9330@dhcp22.suse.cz>
+ <4ddee0dd719abd50350f997b8089fa26f6004c0c.camel@gmail.com>
+ <20190801071709.GE11627@dhcp22.suse.cz>
+ <9bcbd574-7e23-5cfe-f633-646a085f935a@redhat.com>
+ <20190801072430.GF11627@dhcp22.suse.cz>
+ <e654aa97-6ab1-4069-60e6-fc099539729e@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <5e6137c9-5269-5756-beaa-d116652be8b9@redhat.com>
+Date:   Thu, 1 Aug 2019 09:31:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
- <CAE=Ncrb63dQLe-nDQyO9OPv7XjwM_9mzL9SrcLiUi2Dr10cD4A@mail.gmail.com>
- <CAFA6WYPJAzbPdcpBqioxjY=T8RLw-73B_hpzX4cGnwVvm5zpJw@mail.gmail.com>
- <CAE=Ncrb23q++z8R8UMbjDE2epEq4YVcNGzrRD31eH3JAooYejg@mail.gmail.com>
- <CAFA6WYOKcOzSwakHhgshZcebD8ZBMSi7xQdjWYFS79=Xc+odOg@mail.gmail.com>
- <CAE=NcrYz8bT9zDhS_ZcvY84fpeTDxZ-KhJKeQGGyf=o4pG2J-Q@mail.gmail.com> <19d9be198619e951750dedeb4d0a7f372083b42c.camel@pengutronix.de>
-In-Reply-To: <19d9be198619e951750dedeb4d0a7f372083b42c.camel@pengutronix.de>
-From:   Janne Karhunen <janne.karhunen@gmail.com>
-Date:   Thu, 1 Aug 2019 10:30:06 +0300
-Message-ID: <CAE=NcraqD9FNM0Gk9UGhPGi3heVzZrAKGc1gNZxoe1OnDaQ=pA@mail.gmail.com>
-Subject: Re: [Tee-dev] [RFC v2 0/6] Introduce TEE based Trusted Keys support
-To:     Rouven Czerwinski <r.czerwinski@pengutronix.de>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, jejb@linux.ibm.com,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dhowells@redhat.com, linux-security-module@vger.kernel.org,
-        keyrings@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-integrity@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e654aa97-6ab1-4069-60e6-fc099539729e@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 01 Aug 2019 07:31:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 9:50 AM Rouven Czerwinski
-<r.czerwinski@pengutronix.de> wrote:
+On 01.08.19 09:26, David Hildenbrand wrote:
+> On 01.08.19 09:24, Michal Hocko wrote:
+>> On Thu 01-08-19 09:18:47, David Hildenbrand wrote:
+>>> On 01.08.19 09:17, Michal Hocko wrote:
+>>>> On Thu 01-08-19 09:06:40, Rashmica Gupta wrote:
+>>>>> On Wed, 2019-07-31 at 14:08 +0200, Michal Hocko wrote:
+>>>>>> On Tue 02-07-19 18:52:01, Rashmica Gupta wrote:
+>>>>>> [...]
+>>>>>>>> 2) Why it was designed, what is the goal of the interface?
+>>>>>>>> 3) When it is supposed to be used?
+>>>>>>>>
+>>>>>>>>
+>>>>>>> There is a hardware debugging facility (htm) on some power chips.
+>>>>>>> To use
+>>>>>>> this you need a contiguous portion of memory for the output to be
+>>>>>>> dumped
+>>>>>>> to - and we obviously don't want this memory to be simultaneously
+>>>>>>> used by
+>>>>>>> the kernel.
+>>>>>>
+>>>>>> How much memory are we talking about here? Just curious.
+>>>>>
+>>>>> From what I've seen a couple of GB per node, so maybe 2-10GB total.
+>>>>
+>>>> OK, that is really a lot to keep around unused just in case the
+>>>> debugging is going to be used.
+>>>>
+>>>> I am still not sure the current approach of (ab)using memory hotplug is
+>>>> ideal. Sure there is some overlap but you shouldn't really need to
+>>>> offline the required memory range at all. All you need is to isolate the
+>>>> memory from any existing user and the page allocator. Have you checked
+>>>> alloc_contig_range?
+>>>>
+>>>
+>>> Rashmica mentioned somewhere in this thread that the virtual mapping
+>>> must not be in place, otherwise the HW might prefetch some of this
+>>> memory, leading to errors with memtrace (which checks that in HW).
+>>
+>> Does anything prevent from unmapping the pfn range from the direct
+>> mapping?
+> 
+> I am not sure about the implications of having
+> pfn_valid()/pfn_present()/pfn_online() return true but accessing it
+> results in crashes. (suspend, kdump, whatever other technology touches
+> online memory)
 
-> > I'm aware of it - I have implemented a large part of the GP TEE APIs
-> > earlier (primarily the crypto functions). Does the TEE you work with
-> > actually support GP properly? Can I take a look at the code?
->
-> AFAIK Sumit is working with the OP-TEE implementation, which can be
-> found on github: https://github.com/op-tee/optee_os
+(oneidea: we could of course go ahead and mark the pages PG_offline
+before unmapping the pfn range to work around these issues)
 
-Thanks, I will take a look. The fundamental problem with these things
-is that there are infinite amount of ways how TEEs and ROTs can be
-done in terms of the hardware and software. I really doubt there are 2
-implementations in existence that are even remotely compatible in real
-life. As such, all things TEE/ROT would logically really belong in the
-userland and thanks to the bpfilter folks now the umh logic really
-makes that possible ... I think. The key implementation I did was just
-an RFC on the concept, what if we start to move the stuff that really
-belongs in the userspace to this pseudo-userland. It's not kernel, but
-it's not commonly accessible userland either. The shared memory would
-also work without any modifications between the umh based TEE/ROT
-driver and the userland if needed.
-
-Anyway, just my .02c. I guess having any new support in the kernel for
-new trust sources is good and improvement from the current state. I
-can certainly make my stuff work with your setup as well, what ever
-people think is the best.
+> 
+> (sounds more like a hack to me than just going ahead and
+> removing/readding the memory via a clean interface we have)
+> 
 
 
---
-Janne
+-- 
+
+Thanks,
+
+David / dhildenb
