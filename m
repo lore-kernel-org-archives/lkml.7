@@ -3,114 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644BAC32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE7FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E88F20665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 006D7216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 02:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="2ZH+KXG0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llXl0uA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfHACVv (ORCPT
+        id S1728515AbfHACWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 31 Jul 2019 22:21:51 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:57106 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfHACVv (ORCPT
+        Wed, 31 Jul 2019 22:22:20 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37580 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfHACWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 31 Jul 2019 22:21:51 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x712LZNg004188;
-        Thu, 1 Aug 2019 11:21:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x712LZNg004188
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564626096;
-        bh=ImezOrOFRv8W55zMlcFjiaKjT+vV5SqiZobKDdu5voc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2ZH+KXG06dYMo6hvewKZCVMY5ZvXL/VDkJRwn/B2EFQ+oRJTFjjss/etPxRjhD15A
-         4y72yZ9PrsDxE8LBh5fRcUndpOmPqD4ltiDMz8BWfnZrxGltYfemcARgtbN4ZODtI5
-         SLAkTgXzoez9LuVvm5lJfJPCiuQizLta9DbrzFEscLqbHTfdtu5do95n1/JWJ8jPTw
-         KT9C4HD3dhTMkAVLxKZHxjGKlihlAy5dQKy1Lb+mlrXDKReQjZAadju8D/CyKKJS6l
-         5bk+Y1SiOGDZyVipk0q/SV1qC5R8mioCsOFcK5pFm0NCL4Fhlz7xibwsTxGrs/mf4E
-         tluHGPBsMdr7g==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id r3so47753992vsr.13;
-        Wed, 31 Jul 2019 19:21:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAUwyoTnarXf5VcJhUFabfv6uLW9oK+VGt9Jzq8zyiOavWpE3m3n
-        khKHOkVMFhiwz5NSMuZ7Qc9VF47b2qM5TK/AMzw=
-X-Google-Smtp-Source: APXvYqzEztzxoyF2rJMs2hYfy5+w/c1qqbycGIswhSz6Sd9tg8o1rvaCYSMzaDFTLhu2t3v0AxyFZ7lEy5cLnWBTiiE=
-X-Received: by 2002:a67:fc45:: with SMTP id p5mr18943935vsq.179.1564626095385;
- Wed, 31 Jul 2019 19:21:35 -0700 (PDT)
+        Wed, 31 Jul 2019 22:22:20 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w13so67645227eds.4;
+        Wed, 31 Jul 2019 19:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sC9WSjHIf3YYqrZ48Ho9EQniwjdamSmLDkL+UgHsgsE=;
+        b=llXl0uA66CPHwc937gj8nqBMKzMjpnrttJor3IogjY5x4XNbctuL16+HpHVNLkvSHJ
+         dASGPohwTOLRrOIbesMNK7aHBkEj3ZGLJmG2FJnf4eRm1fHXUvgxzGkDftTIHc1VHDmZ
+         j5BqHd9erS6VkcaY97iG2yCqyRLY92B5zj0taBeypB+2Pbw7c+AnlTnxcwNWI3g5nydm
+         ABDm823hVpYbhF2Afs1V7P6h4O5mNUWpvvMtHv2cI9v0X4YNt5IYkPGbWuAqBHztDuXZ
+         k8BiSmE0GwfdAIM1X3RgZzDMiMxwDz2f5OG8kK/QwNmSt3WLqz9v8W+Jn8JK5CLYJ0w5
+         b3Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sC9WSjHIf3YYqrZ48Ho9EQniwjdamSmLDkL+UgHsgsE=;
+        b=tU0rgSE85FriElE0AXX7S5LqYbZzXII2mIk/pNthu77pZuRggi3ApPZzf+hfM+i1y2
+         C8sMlLYEejCEYGjNRet12HOs2atYFgbKOPYOkBwpyKQp0sLfKeRB9SKXwDaKDJmFXLZF
+         c985DMDr1/NEO2ugPqrK8EyZMQllJAwepKG972+WjH9sOX7pZdkw6ZlsdZEUQ58g9Ojw
+         A/9gx3iKH+MTANw6ctC9jmyXhqoyW3mg/qBwcYxc7tw6APIdYSJamW2U6biNoSCRLmW5
+         fj+GQVDtqrVW1CC8YWKGuBUxxWF754roMZ1TZhfHNP0QNT9cotuBkheiYXIlfLJLQSGp
+         3Ldw==
+X-Gm-Message-State: APjAAAWDB042oJcPAR4EyZ/p22sjS4Kphn4IMrWVNcnS18XGPQQHKeAP
+        Pt5UUEwYy97CherU6iImNCAYdtHu/7CAD1SIito=
+X-Google-Smtp-Source: APXvYqyQZSotBC5QpJ3UAQIVqYBxSYe/ET0fiP9HIck+vOonE/4njZIWinONYh1FY5DYJRQwr6Pbh5mNC4Vg8lC2aEk=
+X-Received: by 2002:a05:6402:896:: with SMTP id e22mr106635474edy.202.1564626138515;
+ Wed, 31 Jul 2019 19:22:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190714152817.24693-1-efremov@linux.com> <20190730181146.6507-1-efremov@linux.com>
- <CAK7LNASW87=sWqEdPChiwxzS3Wwmtr7kO_=XLToLHYO6mDjotw@mail.gmail.com>
-In-Reply-To: <CAK7LNASW87=sWqEdPChiwxzS3Wwmtr7kO_=XLToLHYO6mDjotw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 1 Aug 2019 11:20:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARrA7dKWaqqtbNUS2yOJfkign4CNvcn_bp2BLyvVAj2FQ@mail.gmail.com>
-Message-ID: <CAK7LNARrA7dKWaqqtbNUS2yOJfkign4CNvcn_bp2BLyvVAj2FQ@mail.gmail.com>
-Subject: Re: [PATCH v4] modpost: check for static EXPORT_SYMBOL* functions
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190731122224.1003-1-hslester96@gmail.com> <CACKFLinuFebDgJN=BgK5e-bNaFqNpk61teva0=2xMH6R_iT39g@mail.gmail.com>
+In-Reply-To: <CACKFLinuFebDgJN=BgK5e-bNaFqNpk61teva0=2xMH6R_iT39g@mail.gmail.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Thu, 1 Aug 2019 10:22:07 +0800
+Message-ID: <CANhBUQ1J8hXBZv4x3pJhG_08ZS1zR=9Uj2EUta2sgtyND_QKPw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] cnic: Use refcount_t for refcount
+To:     Michael Chan <michael.chan@broadcom.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 5:54 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+Michael Chan <michael.chan@broadcom.com> =E4=BA=8E2019=E5=B9=B48=E6=9C=881=
+=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=881:58=E5=86=99=E9=81=93=EF=BC=
+=9A
 >
-> Hi.
+> On Wed, Jul 31, 2019 at 5:22 AM Chuhong Yuan <hslester96@gmail.com> wrote=
+:
 >
+> >  static void cnic_ctx_wr(struct cnic_dev *dev, u32 cid_addr, u32 off, u=
+32 val)
+> > @@ -494,7 +494,7 @@ int cnic_register_driver(int ulp_type, struct cnic_=
+ulp_ops *ulp_ops)
+> >         }
+> >         read_unlock(&cnic_dev_lock);
+> >
+> > -       atomic_set(&ulp_ops->ref_count, 0);
+> > +       refcount_set(&ulp_ops->ref_count, 0);
+> >         rcu_assign_pointer(cnic_ulp_tbl[ulp_type], ulp_ops);
+> >         mutex_unlock(&cnic_lock);
+> >
 >
+> Willem's comment applies here too.  The driver needs to be modified to
+> count from 1 to use refcount_t.
 >
-> On Wed, Jul 31, 2019 at 3:12 AM Denis Efremov <efremov@linux.com> wrote:
-> >
-> > This patch adds a check to warn about static EXPORT_SYMBOL* functions
-> > during the modpost. In most of the cases, a static symbol marked for
-> > exporting is an odd combination that should be fixed either by deleting
-> > the exporting mark or by removing the static attribute and adding the
-> > appropriate declaration to headers.
-> >
-> > This check could help to detect the following problems:
-> > 1. 550113d4e9f5 ("i2c: add newly exported functions to the header, too")
-> > 2. 54638c6eaf44 ("net: phy: make exported variables non-static")
-> > 3. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
-> > 4. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
-> > 5. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
-> > 6. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
-> > 7. 14b4c48bb1ce ("gve: Remove the exporting of gve_probe")
-> > 8. 9b79ee9773a8 ("scsi: libsas: remove the exporting of sas_wait_eh")
-> > 9. ...
-> >
-> > Build time impact, allmodconfig, Dell XPS 15 9570 (measurements 3x):
-> > $ make mrproper; make allmodconfig; time make -j12; \
-> >   git checkout HEAD~1; \
-> >   make mrproper; make allmodconfig; time make -j12
-> > 1.
-> >    (with patch) 17635,94s user 1895,54s system 1085% cpu 29:59,22 total
-> >    (w/o  patch) 17275,42s user 1803,87s system 1112% cpu 28:35,66 total
-> > 2.
-> >    (with patch) 17369,51s user 1763,28s system 1111% cpu 28:41,47 total
-> >    (w/o  patch) 16880,50s user 1670,93s system 1113% cpu 27:46,56 total
-> > 3.
-> >    (with patch) 17937,88s user 1842,53s system 1109% cpu 29:42,26 total
-> >    (w/o  patch) 17267,55s user 1725,09s system 1111% cpu 28:28,17 total
-> >
-> > The check adds less than a minute to a usual build.
+> Thanks.
 
-The build time impact is very limited.
-I guess this measurement is unnecessary in the commit log.
+I have revised this problem but find the other two refcounts -
+cnic_dev::ref_count
+and cnic_sock::ref_count have no set.
+I am not sure where to initialize them to 1.
 
-
--- 
-Best Regards
-Masahiro Yamada
+Besides, should ulp_ops->ref_count be set to 0 when unregistered?
