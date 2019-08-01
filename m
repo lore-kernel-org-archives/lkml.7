@@ -2,170 +2,94 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37DCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72134C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83BF3214DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:19:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUu2NGVr"
+	by mail.kernel.org (Postfix) with ESMTP id 51DA0206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 13:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbfHANTg (ORCPT
+        id S1729969AbfHANTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 09:19:36 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39913 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728592AbfHANTf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 09:19:35 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v18so69309236ljh.6;
-        Thu, 01 Aug 2019 06:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RC6wKO1Isy8ssplnFFBZCldnnaBxZKmxUbojPji9Nn8=;
-        b=KUu2NGVrF3CsroBiTb6xu1ZVx93LkXrT1peKf0dykpEFlk4TXLXA7TsWvS53RT4lTo
-         K4juM7BZMtb6SDbbYkdwqh1AgseBQOTuTLGUQqm1vROI5EC+TR9avlR+2A/5WE/Qx8Qb
-         XWc6+IL5OyWftImZreXB9VDAxlRk4GhtGSuE3eShxQ5CmYP7YV9SFJpsposFOODrqH/M
-         XMddEgfFPqbmw+rwydtEpbADNt+2pztRm/8V4eNqKyDwtpRXa1tsw0GhJtxeCoHvevVw
-         4YUexJXuE2KX2Dta84W+JPUzjl0DL9dlC4VnMLXsFy/fq4RrYFWAzwMLTM+5t4+IXl/5
-         9EYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RC6wKO1Isy8ssplnFFBZCldnnaBxZKmxUbojPji9Nn8=;
-        b=CSKL8XS6jDHXd4EmHUCbRSaKztj9GgwGYsbcTpDUDE7Fmzr+gWCX0oDtItNyrEaJ7p
-         viZX0ZH0/5MwOHxmE8oZfTet0VSdHrV+DqKEzCSvlgvPqe2O1wYBFV1fwwd2d1lRKkWI
-         Tui2n8uWrh5O8j11irt9YnlNxwYBXPUDZWu6Nr/ZxOd3hOruZcZPdO73DB5zYB89rSN0
-         2DElOtIIBb8xz4ccwDAqB4k58qicqR54OkX7kKN7yzuhgv75JeDu/7HJMqP8xnmhvZmn
-         9qL4Mfxm+qIdN0pFteXhzlbxhY4r8Y/f09KhsoGwXDUWbeuEfYoX03NqpVgd45d3IItg
-         Ob7Q==
-X-Gm-Message-State: APjAAAW47cSuq3ZVqeG72r1XtsqXbo9upphDgey+1VXvARSat0gNSEnJ
-        7znu4ma4t/zaUSW/TaR8KsjBtwpjFSVhGpDBsjw=
-X-Google-Smtp-Source: APXvYqxUbh1cL9LgQJwJqmT3uKcr+dkk4jgpEBFMs3ohuwPYtfrWNXPxJw2IeNHF6fA+Gt5UlsJw2+1zolwkPA+X8KM=
-X-Received: by 2002:a2e:5d1:: with SMTP id 200mr68535653ljf.10.1564665573273;
- Thu, 01 Aug 2019 06:19:33 -0700 (PDT)
+        Thu, 1 Aug 2019 09:19:40 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3080 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729782AbfHANTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 09:19:39 -0400
+Received: from dggemi402-hub.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id AC0A2AF970FA64ACEA6D;
+        Thu,  1 Aug 2019 21:19:36 +0800 (CST)
+Received: from DGGEMI524-MBX.china.huawei.com ([169.254.7.227]) by
+ dggemi402-hub.china.huawei.com ([10.3.17.135]) with mapi id 14.03.0439.000;
+ Thu, 1 Aug 2019 21:19:28 +0800
+From:   chengzhihao <chengzhihao1@huawei.com>
+To:     Richard Weinberger <richard@nod.at>
+CC:     "zhangyi (F)" <yi.zhang@huawei.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTogW1BBVENIIFJGQ10gdWJpOiB1Ymlf?=
+ =?utf-8?B?d2xfZ2V0X3BlYjogUmVwbGFjZSBhIGxpbWl0ZWQgbnVtYmVyIG9mIGF0dGVt?=
+ =?utf-8?Q?pts_with_polling_while_getting_PEB?=
+Thread-Topic: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRDSCBSRkNdIHViaTogdWJpX3dsX2dldF9w?=
+ =?utf-8?B?ZWI6IFJlcGxhY2UgYSBsaW1pdGVkIG51bWJlciBvZiBhdHRlbXB0cyB3aXRo?=
+ =?utf-8?Q?_polling_while_getting_PEB?=
+Thread-Index: AQHVSEkuRooM7Daz00mNhjuG43MDw6bmAggAJrEe1mz+ynmUUMDzNiElvw0MLiA=
+Date:   Thu, 1 Aug 2019 13:19:28 +0000
+Message-ID: <0B80F9D4116B2F4484E7279D5A66984F7A8ACF@dggemi524-mbx.china.huawei.com>
+References: <1564651065-4585-1-git-send-email-chengzhihao1@huawei.com>
+ <0B80F9D4116B2F4484E7279D5A66984F7A8A13@dggemi524-mbx.china.huawei.com>
+ <1515821930.55881.1564651254907.JavaMail.zimbra@nod.at>
+ <0B80F9D4116B2F4484E7279D5A66984F7A8A3A@dggemi524-mbx.china.huawei.com>
+ <699614206.55882.1564652413789.JavaMail.zimbra@nod.at>
+In-Reply-To: <699614206.55882.1564652413789.JavaMail.zimbra@nod.at>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.224.82]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190801124446.15703-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20190801124446.15703-1-frieder.schrempf@kontron.de>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 1 Aug 2019 10:19:45 -0300
-Message-ID: <CAOMZO5BPRNDQG_6PunUTxK7P=NF1DqjxvM+xEVMzX+rGd=h9hA@mail.gmail.com>
-Subject: Re: [PATCH] serial: mctrl_gpio: Avoid probe failures in case of
- missing gpiolib
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Schrempf,
-
-On Thu, Aug 1, 2019 at 9:47 AM Schrempf Frieder
-<frieder.schrempf@kontron.de> wrote:
->
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
->
-> If CONFIG_GPIOLIB is not enabled, mctrl_gpio_init() and
-> mctrl_gpio_init_noauto() will currently return an error pointer with
-> -ENOSYS. As the mctrl GPIOs are usually optional, drivers need to
-> check for this condition to allow continue probing.
->
-> To avoid the need for this check in each driver, we return NULL
-> instead, as all the mctrl_gpio_*() functions are skipped anyway.
-> We also adapt mctrl_gpio_to_gpiod() to be in line with this change.
->
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-
-Looks good to me:
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-
-Also adding Geert on Cc as the patch touches sh-sci.
-
-Thanks
-
-
-> ---
->  drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
->  drivers/tty/serial/serial_mctrl_gpio.h | 6 +++---
->  drivers/tty/serial/sh-sci.c            | 2 +-
->  3 files changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
-> index 2b400189be91..54c43e02e375 100644
-> --- a/drivers/tty/serial/serial_mctrl_gpio.c
-> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
-> @@ -61,6 +61,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
->  struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
->                                       enum mctrl_gpio_idx gidx)
->  {
-> +       if (gpios == NULL)
-> +               return NULL;
-> +
->         return gpios->gpio[gidx];
->  }
->  EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
-> diff --git a/drivers/tty/serial/serial_mctrl_gpio.h b/drivers/tty/serial/serial_mctrl_gpio.h
-> index b7d3cca48ede..1b2ff503b2c2 100644
-> --- a/drivers/tty/serial/serial_mctrl_gpio.h
-> +++ b/drivers/tty/serial/serial_mctrl_gpio.h
-> @@ -114,19 +114,19 @@ static inline
->  struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
->                                       enum mctrl_gpio_idx gidx)
->  {
-> -       return ERR_PTR(-ENOSYS);
-> +       return NULL;
->  }
->
->  static inline
->  struct mctrl_gpios *mctrl_gpio_init(struct uart_port *port, unsigned int idx)
->  {
-> -       return ERR_PTR(-ENOSYS);
-> +       return NULL;
->  }
->
->  static inline
->  struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
->  {
-> -       return ERR_PTR(-ENOSYS);
-> +       return NULL;
->  }
->
->  static inline
-> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-> index d18c680aa64b..249325b65ee0 100644
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -3287,7 +3287,7 @@ static int sci_probe_single(struct platform_device *dev,
->                 return ret;
->
->         sciport->gpios = mctrl_gpio_init(&sciport->port, 0);
-> -       if (IS_ERR(sciport->gpios) && PTR_ERR(sciport->gpios) != -ENOSYS)
-> +       if (IS_ERR(sciport->gpios))
->                 return PTR_ERR(sciport->gpios);
->
->         if (sciport->has_rtscts) {
-> --
-> 2.17.1
+SSBoYXZlIHRlc3RlZCB0aGlzIGV4dHJlbWUgY2FzZShObyBmcmVlIFBFQnMgbGVmdCBhZnRlciBj
+cmVhdGluZyB0ZXN0IHZvbHVtZXMpIG9uIGRpZmZlcmVudCB0eXBlIG9mIG1hY2hpbmVzIGZvciAx
+MDAgdGltZXMuIFRoZSBiaWdnZXN0IG51bWJlciBvZiBhdHRlbXB0cyBhcmUgc2hvd24gYmVsb3c6
+DQoNCiAgICAgICAgICAgeDg2XzY0ICAgICBhcm02NA0KMi1jb3JlICAgICAgICA0ICAgICAgICAg
+NA0KNC1jb3JlICAgICAgICA4ICAgICAgICAgNA0KOC1jb3JlICAgICAgICA0ICAgICAgICAgNA0K
+DQpTbywgc2V0dGluZyB0aGUgbnVtYmVyIG9mIGF0dGVtcHRzIHRvIDEwIGlzIGZpbmUuIE1heSBJ
+IHNlbmQgYW5vdGhlciBQQVRDSCB0byBpbXByb3ZlIGl0Pw0KDQpQbGFubmVkIHJldmlzaW9uczoN
+Ci0tLSBhL2RyaXZlcnMvbXRkL3ViaS9mYXN0bWFwLXdsLmMNCisrKyBiL2RyaXZlcnMvbXRkL3Vi
+aS9mYXN0bWFwLXdsLmMNCkBAIC0yMjEsMTIgKzIyMSwxMiBAQCBpbnQgdWJpX3dsX2dldF9wZWIo
+c3RydWN0IHViaV9kZXZpY2UgKnViaSkNCiANCiAgICAgICAgaWYgKHBvb2wtPnVzZWQgPT0gcG9v
+bC0+c2l6ZSkgew0KICAgICAgICAgICAgICAgIHNwaW5fdW5sb2NrKCZ1YmktPndsX2xvY2spOw0K
+LSAgICAgICAgICAgICAgIGlmIChyZXRyaWVkKSB7DQorICAgICAgICAgICAgICAgcmV0cmllZCsr
+Ow0KKyAgICAgICAgICAgICAgIGlmIChyZXRyaWVkID09IDEwKSB7DQogICAgICAgICAgICAgICAg
+ICAgICAgICB1YmlfZXJyKHViaSwgIlVuYWJsZSB0byBnZXQgYSBmcmVlIFBFQiBmcm9tIHVzZXIg
+V0wgcG9vbCIpOw0KICAgICAgICAgICAgICAgICAgICAgICAgcmV0ID0gLUVOT1NQQzsNCiAgICAg
+ICAgICAgICAgICAgICAgICAgIGdvdG8gb3V0Ow0KICAgICAgICAgICAgICAgIH0NCi0gICAgICAg
+ICAgICAgICByZXRyaWVkID0gMTsNCiAgICAgICAgICAgICAgICB1cF9yZWFkKCZ1YmktPmZtX2Vi
+YV9zZW0pOw0KICAgICAgICAgICAgICAgIHJldCA9IHByb2R1Y2VfZnJlZV9wZWIodWJpKTsNCiAg
+ICAgICAgICAgICAgICBpZiAocmV0IDwgMCkgew0KDQotLS0tLemCruS7tuWOn+S7ti0tLS0tDQrl
+j5Hku7bkuro6IFJpY2hhcmQgV2VpbmJlcmdlciBbbWFpbHRvOnJpY2hhcmRAbm9kLmF0XSANCuWP
+kemAgeaXtumXtDogMjAxOeW5tDjmnIgx5pelIDE3OjQwDQrmlLbku7bkuro6IGNoZW5nemhpaGFv
+IDxjaGVuZ3poaWhhbzFAaHVhd2VpLmNvbT4NCuaKhOmAgTogemhhbmd5aSAoRikgPHlpLnpoYW5n
+QGh1YXdlaS5jb20+OyBsaW51eC1tdGQgPGxpbnV4LW10ZEBsaXN0cy5pbmZyYWRlYWQub3JnPjsg
+bGludXgta2VybmVsIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPg0K5Li76aKYOiBSZTog
+562U5aSNOiDnrZTlpI06IFtQQVRDSCBSRkNdIHViaTogdWJpX3dsX2dldF9wZWI6IFJlcGxhY2Ug
+YSBsaW1pdGVkIG51bWJlciBvZiBhdHRlbXB0cyB3aXRoIHBvbGxpbmcgd2hpbGUgZ2V0dGluZyBQ
+RUINCg0KLS0tLS0gVXJzcHLDvG5nbGljaGUgTWFpbCAtLS0tLQ0KPj4gRG8geW91IGhhdmUgbnVt
+YmVycyBob3cgbWFueSBhdHRlbXB0cyB3ZXJlIG5lZWRlZCB0byBnZXQgYSBmcmVlIGJsb2NrPw0K
+PiBJIHRlc3RlZCBpdCBkb3plbnMgb2YgdGltZXMuIFRoZSBiaWdnZXN0IG51bWJlciBvZiBhdHRl
+bXB0cyBJJ3ZlIGV2ZXIgDQo+IGhhZCBzbyBmYXIgaXMgNi4gSW4gbW9zdCBjYXNlcywgaXQgb25s
+eSB0YWtlcyAyIG9yIDMgdGltZXMuDQoNClNvIHJhaXNpbmcgdGhlIHJldHJ5IGNvdW50IHRvLCBs
+ZXQncyBzYXksIDEwIHdvdWxkIHdvcmsgdG9vPw0KSGF2aW5nIGl0IHVuYm91bmQgZmVlbHMgZGFu
+Z2Vyb3VzIGJlY2F1c2UgaXQgbWF5IGhpZGUgb3RoZXIgcHJvYmxlbXMuDQoNClRoYW5rcywNCi8v
+cmljaGFyZA0K
