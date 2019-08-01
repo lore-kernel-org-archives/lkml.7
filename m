@@ -2,96 +2,125 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6ACEC19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CEAC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C658620665
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32CBD216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 12:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbfHAMWg (ORCPT
+        id S1731300AbfHAMWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 08:22:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52218 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728791AbfHAMWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 08:22:33 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CB7B23117771CD2C9A52;
-        Thu,  1 Aug 2019 20:22:31 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 1 Aug 2019
- 20:22:21 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <antoine.tenart@bootlin.com>,
-        <maxime.chevallier@bootlin.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] mvpp2: use devm_platform_ioremap_resource() to simplify code
-Date:   Thu, 1 Aug 2019 20:22:02 +0800
-Message-ID: <20190801122202.7800-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 1 Aug 2019 08:22:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:35084 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731239AbfHAMWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 08:22:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 879161570;
+        Thu,  1 Aug 2019 05:22:34 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF0683F575;
+        Thu,  1 Aug 2019 05:22:31 -0700 (PDT)
+Subject: Re: [PATCH v9 10/21] mm: Add generic p?d_leaf() macros
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-11-steven.price@arm.com>
+ <20190723094113.GA8085@lakrids.cambridge.arm.com>
+ <ce4e21f2-020f-6677-d79c-5432e3061d6e@arm.com>
+ <674bd809-f853-adb0-b1ab-aa4404093083@arm.com>
+ <0979d4b4-7a97-2dc3-67cf-3aa6569bfdcd@arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <ae073f1f-7c39-7e6d-0e6b-54978f0d3fdf@arm.com>
+Date:   Thu, 1 Aug 2019 13:22:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <0979d4b4-7a97-2dc3-67cf-3aa6569bfdcd@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On 01/08/2019 07:09, Anshuman Khandual wrote:
+> 
+> 
+> On 07/29/2019 05:08 PM, Steven Price wrote:
+>> On 28/07/2019 12:44, Anshuman Khandual wrote:
+>>>
+>>>
+>>> On 07/23/2019 03:11 PM, Mark Rutland wrote:
+>>>> On Mon, Jul 22, 2019 at 04:41:59PM +0100, Steven Price wrote:
+>>>>> Exposing the pud/pgd levels of the page tables to walk_page_range() means
+>>>>> we may come across the exotic large mappings that come with large areas
+>>>>> of contiguous memory (such as the kernel's linear map).
+>>>>>
+>>>>> For architectures that don't provide all p?d_leaf() macros, provide
+>>>>> generic do nothing default that are suitable where there cannot be leaf
+>>>>> pages that that level.
+>>>>>
+>>>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>>>
+>>>> Not a big deal, but it would probably make sense for this to be patch 1
+>>>> in the series, given it defines the semantic of p?d_leaf(), and they're
+>>>> not used until we provide all the architectural implemetnations anyway.
+>>>
+>>> Agreed.
+>>>
+>>>>
+>>>> It might also be worth pointing out the reasons for this naming, e.g.
+>>>> p?d_large() aren't currently generic, and this name minimizes potential
+>>>> confusion between p?d_{large,huge}().
+>>>
+>>> Agreed. But these fallback also need to first check non-availability of large
+>>> pages. I am not sure whether CONFIG_HUGETLB_PAGE config being clear indicates
+>>> that conclusively or not. Being a page table leaf entry has a broader meaning
+>>> than a large page but that is really not the case today. All leaf entries here
+>>> are large page entries from MMU perspective. This dependency can definitely be
+>>> removed when there are other types of leaf entries but for now IMHO it feels
+>>> bit problematic not to directly associate leaf entries with large pages in
+>>> config restriction while doing exactly the same.
+>>
+>> The intention here is that the page walkers are able to walk any type of
+>> page table entry which the kernel may use. CONFIG_HUGETLB_PAGE only
+>> controls whether "huge TLB pages" are used by user space processes. It's
+>> quite possible that option to not be selected but the linear mapping to
+>> have been mapped using "large pages" (i.e. leaf entries further up the
+>> tree than normal).
+> 
+> I understand that kernel page table might use large pages where as user space
+> never enabled HugeTLB. The point to make here was CONFIG_HUGETLB approximately
+> indicates the presence of large pages though the absence of same does not
+> conclusively indicate that large pages are really absent on the MMU. Perhaps it
+> will requires something new like MMU_[LARGE|HUGE]_PAGES.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+CONFIG_HUGETLB doesn't necessarily mean leaf entries can appear anywhere
+other than PTE. Some architectures always have a full tree of page
+tables, but can program their TLBs with larger entries - I think all the
+architectures I've come across have software page table walking, but in
+theory the arm64 contiguous hint bit could be considered similar.
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 937e4b9..e9d8ffe 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -5014,7 +5014,6 @@ static int mvpp2_port_probe(struct platform_device *pdev,
- 	struct device_node *port_node = to_of_node(port_fwnode);
- 	netdev_features_t features;
- 	struct net_device *dev;
--	struct resource *res;
- 	struct phylink *phylink;
- 	char *mac_from = "";
- 	unsigned int ntxqs, nrxqs, thread;
-@@ -5118,8 +5117,7 @@ static int mvpp2_port_probe(struct platform_device *pdev,
- 	port->comphy = comphy;
- 
- 	if (priv->hw_version == MVPP21) {
--		res = platform_get_resource(pdev, IORESOURCE_MEM, 2 + id);
--		port->base = devm_ioremap_resource(&pdev->dev, res);
-+		port->base = devm_platform_ioremap_resource(pdev, 2 + id);
- 		if (IS_ERR(port->base)) {
- 			err = PTR_ERR(port->base);
- 			goto err_free_irq;
-@@ -5551,14 +5549,12 @@ static int mvpp2_probe(struct platform_device *pdev)
- 	if (priv->hw_version == MVPP21)
- 		queue_mode = MVPP2_QDIST_SINGLE_MODE;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(&pdev->dev, res);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
- 	if (priv->hw_version == MVPP21) {
--		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--		priv->lms_base = devm_ioremap_resource(&pdev->dev, res);
-+		priv->lms_base = devm_platform_ioremap_resource(pdev, 1);
- 		if (IS_ERR(priv->lms_base))
- 			return PTR_ERR(priv->lms_base);
- 	} else {
--- 
-2.7.4
-
-
+Steve
