@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B123EC32753
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF17BC19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4302171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA3122087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 11:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731274AbfHALxI (ORCPT
+        id S1731302AbfHALxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 07:53:08 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:53382 "EHLO inva020.nxp.com"
+        Thu, 1 Aug 2019 07:53:22 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:53396 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730826AbfHALw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 07:52:57 -0400
+        id S1731098AbfHALw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 07:52:59 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7E3FD1A02A9;
-        Thu,  1 Aug 2019 13:52:55 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EBFCD1A0085;
+        Thu,  1 Aug 2019 13:52:56 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 715C61A01FC;
-        Thu,  1 Aug 2019 13:52:55 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E00571A0074;
+        Thu,  1 Aug 2019 13:52:56 +0200 (CEST)
 Received: from fsr-ub1664-016.ea.freescale.net (fsr-ub1664-016.ea.freescale.net [10.171.71.216])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0C39C205E3;
-        Thu,  1 Aug 2019 13:52:55 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7B32C205E3;
+        Thu,  1 Aug 2019 13:52:56 +0200 (CEST)
 From:   Claudiu Manoil <claudiu.manoil@nxp.com>
 To:     "David S . Miller" <davem@davemloft.net>
 Cc:     andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>,
         Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v5 2/5] enetc: Clean up makefile
-Date:   Thu,  1 Aug 2019 14:52:50 +0300
-Message-Id: <1564660373-4607-3-git-send-email-claudiu.manoil@nxp.com>
+Subject: [PATCH net-next v5 5/5] arm64: dts: fsl: ls1028a: Enable eth port1 on the ls1028a QDS board
+Date:   Thu,  1 Aug 2019 14:52:53 +0300
+Message-Id: <1564660373-4607-6-git-send-email-claudiu.manoil@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1564660373-4607-1-git-send-email-claudiu.manoil@nxp.com>
 References: <1564660373-4607-1-git-send-email-claudiu.manoil@nxp.com>
@@ -46,49 +46,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clean up overcomplicated makefile to make it more maintainable.
-Basically, there's a set of common objects shared between
-the PF and VF driver modules.  This can be implemented in a
-simpler way, without conditionals, less repetition, allowing
-also for easier updates in the future.
+LS1028a has one Ethernet management interface. On the QDS board, the
+MDIO signals are multiplexed to either on-board AR8035 PHY device or
+to 4 PCIe slots allowing for SGMII cards.
+To enable the Ethernet ENETC Port 1, which can only be connected to a
+RGMII PHY, the multiplexer needs to be configured to route the MDIO to
+the AR8035 PHY.  The MDIO/MDC routing is controlled by bits 7:4 of FPGA
+board config register 0x54, and value 0 selects the on-board RGMII PHY.
+The FPGA board config registers are accessible on the i2c bus, at address
+0x66.
 
+The PF3 MDIO PCIe integrated endpoint device allows for centralized access
+to the MDIO bus.  Add the corresponding devicetree node and set it to be
+the MDIO bus parent.
+
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
 Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
-v5 - added this patch
+v1-v5 - none
 
- drivers/net/ethernet/freescale/enetc/Makefile | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ .../boot/dts/freescale/fsl-ls1028a-qds.dts    | 40 +++++++++++++++++++
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
+ 2 files changed, 46 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/Makefile b/drivers/net/ethernet/freescale/enetc/Makefile
-index 7139e414dccf..164453a5dc1d 100644
---- a/drivers/net/ethernet/freescale/enetc/Makefile
-+++ b/drivers/net/ethernet/freescale/enetc/Makefile
-@@ -1,19 +1,13 @@
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index de6ef39f3118..663c4b728c07 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -85,6 +85,26 @@
+ 			system-clock-frequency = <25000000>;
+ 		};
+ 	};
 +
-+common-objs := enetc.o enetc_cbdr.o enetc_ethtool.o
++	mdio-mux {
++		compatible = "mdio-mux-multiplexer";
++		mux-controls = <&mux 0>;
++		mdio-parent-bus = <&enetc_mdio_pf3>;
++		#address-cells=<1>;
++		#size-cells = <0>;
 +
- obj-$(CONFIG_FSL_ENETC) += fsl-enetc.o
--fsl-enetc-$(CONFIG_FSL_ENETC) += enetc.o enetc_cbdr.o enetc_ethtool.o \
--				 enetc_mdio.o
-+fsl-enetc-y := enetc_pf.o enetc_mdio.o $(common-objs)
- fsl-enetc-$(CONFIG_PCI_IOV) += enetc_msg.o
--fsl-enetc-objs := enetc_pf.o $(fsl-enetc-y)
++		/* on-board RGMII PHY */
++		mdio@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			qds_phy1: ethernet-phy@5 {
++				/* Atheros 8035 */
++				reg = <5>;
++			};
++		};
++	};
+ };
  
- obj-$(CONFIG_FSL_ENETC_VF) += fsl-enetc-vf.o
--
--ifeq ($(CONFIG_FSL_ENETC)$(CONFIG_FSL_ENETC_VF), yy)
--fsl-enetc-vf-objs := enetc_vf.o
--else
--fsl-enetc-vf-$(CONFIG_FSL_ENETC_VF) += enetc.o enetc_cbdr.o \
--				       enetc_ethtool.o
--fsl-enetc-vf-objs := enetc_vf.o $(fsl-enetc-vf-y)
--endif
-+fsl-enetc-vf-y := enetc_vf.o $(common-objs)
+ &duart0 {
+@@ -164,6 +184,26 @@
+ 			};
+ 		};
+ 	};
++
++	fpga@66 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "fsl,ls1028aqds-fpga", "fsl,fpga-qixis-i2c",
++			     "simple-mfd";
++		reg = <0x66>;
++
++		mux: mux-controller {
++			compatible = "reg-mux";
++			#mux-control-cells = <1>;
++			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
++		};
++	};
++
++};
++
++&enetc_port1 {
++	phy-handle = <&qds_phy1>;
++	phy-connection-type = "rgmii-id";
+ };
  
- obj-$(CONFIG_FSL_ENETC_PTP_CLOCK) += fsl-enetc-ptp.o
--fsl-enetc-ptp-$(CONFIG_FSL_ENETC_PTP_CLOCK) += enetc_ptp.o
-+fsl-enetc-ptp-y := enetc_ptp.o
+ &sai1 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 7975519b4f56..de71153fda00 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -536,6 +536,12 @@
+ 				compatible = "fsl,enetc";
+ 				reg = <0x000100 0 0 0 0>;
+ 			};
++			enetc_mdio_pf3: mdio@0,3 {
++				compatible = "fsl,enetc-mdio";
++				reg = <0x000300 0 0 0 0>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
+ 			ethernet@0,4 {
+ 				compatible = "fsl,enetc-ptp";
+ 				reg = <0x000400 0 0 0 0>;
 -- 
 2.17.1
 
