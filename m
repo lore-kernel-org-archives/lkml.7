@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF864C19759
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20896C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC25206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51022083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 23:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731799AbfHAXJF (ORCPT
+        id S2390376AbfHAXJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 19:09:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63274 "EHLO
+        Thu, 1 Aug 2019 19:09:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51670 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388027AbfHAXI6 (ORCPT
+        by vger.kernel.org with ESMTP id S2388237AbfHAXI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 19:08:58 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71N7C4d059428;
+        Thu, 1 Aug 2019 19:08:59 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71N7vQg041884;
         Thu, 1 Aug 2019 19:08:14 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48hahr3y-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u477ymeeb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 19:08:13 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71N7jgv061137;
+        Thu, 01 Aug 2019 19:08:14 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x71N8Dss043140;
         Thu, 1 Aug 2019 19:08:13 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u48hahr2h-1
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u477ymedu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 01 Aug 2019 19:08:13 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71N590P013067;
-        Thu, 1 Aug 2019 23:08:11 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02wdc.us.ibm.com with ESMTP id 2u0e85w7aj-1
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x71N50Px006222;
+        Thu, 1 Aug 2019 23:08:12 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma02dal.us.ibm.com with ESMTP id 2u0e85xgns-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Aug 2019 23:08:11 +0000
+        Thu, 01 Aug 2019 23:08:12 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71N8A3U14353072
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71N8Bw850528762
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Thu, 1 Aug 2019 23:08:11 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC004B206B;
-        Thu,  1 Aug 2019 23:08:10 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 52433B2077;
+        Thu,  1 Aug 2019 23:08:11 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD0F1B2064;
-        Thu,  1 Aug 2019 23:08:10 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 244D8B2068;
+        Thu,  1 Aug 2019 23:08:11 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Aug 2019 23:08:10 +0000 (GMT)
+        Thu,  1 Aug 2019 23:08:11 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 1A02216C9A3D; Thu,  1 Aug 2019 16:08:12 -0700 (PDT)
+        id 41E4016C9A50; Thu,  1 Aug 2019 16:08:12 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -65,9 +65,9 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 02/18] rcu/nocb: Use separate flag to indicate offloaded ->cblist
-Date:   Thu,  1 Aug 2019 16:07:54 -0700
-Message-Id: <20190801230810.21570-2-paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 09/18] rcu/nocb: Leave ->cblist enabled for no-CBs CPUs
+Date:   Thu,  1 Aug 2019 16:08:01 -0700
+Message-Id: <20190801230810.21570-9-paulmck@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190801230744.GA19115@linux.ibm.com>
 References: <20190801230744.GA19115@linux.ibm.com>
@@ -77,170 +77,157 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=716 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908010244
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RCU callback processing currently uses rcu_is_nocb_cpu() to determine
-whether or not the current CPU's callbacks are to be offloaded.
-This works, but it is not so good for cache locality.  Plus use of
-->cblist for offloaded callbacks will greatly increase the frequency
-of these checks.  This commit therefore adds a ->offloaded flag to the
-rcu_segcblist structure to provide a more flexible and cache-friendly
-means of checking for callback offloading.
+As a first step towards making no-CBs CPUs use the ->cblist, this commit
+leaves the ->cblist enabled for these CPUs.  The main reason to make
+no-CBs CPUs use ->cblist is to take advantage of callback numbering,
+which will reduce the effects of missed grace periods which in turn will
+reduce forward-progress problems for no-CBs CPUs.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- include/linux/rcu_segcblist.h |  1 +
- kernel/rcu/rcu_segcblist.c    | 12 ++++++++++++
- kernel/rcu/rcu_segcblist.h    |  7 +++++++
- kernel/rcu/tree.c             | 10 ++++++----
- kernel/rcu/tree_plugin.h      | 11 +++++++----
- 5 files changed, 33 insertions(+), 8 deletions(-)
+ kernel/rcu/rcu_segcblist.c |  3 ---
+ kernel/rcu/rcu_segcblist.h |  2 +-
+ kernel/rcu/tree.c          |  5 +++--
+ kernel/rcu/tree.h          |  1 -
+ kernel/rcu/tree_plugin.h   | 35 +++++++----------------------------
+ 5 files changed, 11 insertions(+), 35 deletions(-)
 
-diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
-index f48888040332..82977726da29 100644
---- a/include/linux/rcu_segcblist.h
-+++ b/include/linux/rcu_segcblist.h
-@@ -68,6 +68,7 @@ struct rcu_segcblist {
- 	long len;
- 	long len_lazy;
- 	u8 enabled;
-+	u8 offloaded;
- };
- 
- #define RCU_SEGCBLIST_INITIALIZER(n) \
 diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-index b305dcac34c9..700779f4c0cb 100644
+index 06435a368be5..9ac28f175627 100644
 --- a/kernel/rcu/rcu_segcblist.c
 +++ b/kernel/rcu/rcu_segcblist.c
-@@ -73,6 +73,18 @@ void rcu_segcblist_disable(struct rcu_segcblist *rsclp)
- 	rsclp->enabled = 0;
+@@ -79,9 +79,6 @@ void rcu_segcblist_disable(struct rcu_segcblist *rsclp)
+  */
+ void rcu_segcblist_offload(struct rcu_segcblist *rsclp)
+ {
+-	WARN_ON_ONCE(!rcu_segcblist_empty(rsclp));
+-	WARN_ON_ONCE(rcu_segcblist_n_cbs(rsclp));
+-	WARN_ON_ONCE(rcu_segcblist_n_lazy_cbs(rsclp));
+ 	rsclp->offloaded = 1;
  }
  
-+/*
-+ * Mark the specified rcu_segcblist structure as offloaded.  This
-+ * structure must be empty.
-+ */
-+void rcu_segcblist_offload(struct rcu_segcblist *rsclp)
-+{
-+	WARN_ON_ONCE(!rcu_segcblist_empty(rsclp));
-+	WARN_ON_ONCE(rcu_segcblist_n_cbs(rsclp));
-+	WARN_ON_ONCE(rcu_segcblist_n_lazy_cbs(rsclp));
-+	rsclp->offloaded = 1;
-+}
-+
- /*
-  * Does the specified rcu_segcblist structure contain callbacks that
-  * are ready to be invoked?
 diff --git a/kernel/rcu/rcu_segcblist.h b/kernel/rcu/rcu_segcblist.h
-index b2de7b32da29..8f3783391075 100644
+index d9142b3590a8..ed3fcece39a9 100644
 --- a/kernel/rcu/rcu_segcblist.h
 +++ b/kernel/rcu/rcu_segcblist.h
-@@ -66,6 +66,12 @@ static inline bool rcu_segcblist_is_enabled(struct rcu_segcblist *rsclp)
- 	return rsclp->enabled;
- }
+@@ -59,7 +59,7 @@ static inline long rcu_segcblist_n_nonlazy_cbs(struct rcu_segcblist *rsclp)
  
-+/* Is the specified rcu_segcblist offloaded?  */
-+static inline bool rcu_segcblist_is_offloaded(struct rcu_segcblist *rsclp)
-+{
-+	return rsclp->offloaded;
-+}
-+
  /*
-  * Are all segments following the specified segment of the specified
-  * rcu_segcblist structure empty of callbacks?  (The specified
-@@ -78,6 +84,7 @@ static inline bool rcu_segcblist_restempty(struct rcu_segcblist *rsclp, int seg)
- 
- void rcu_segcblist_init(struct rcu_segcblist *rsclp);
- void rcu_segcblist_disable(struct rcu_segcblist *rsclp);
-+void rcu_segcblist_offload(struct rcu_segcblist *rsclp);
- bool rcu_segcblist_ready_cbs(struct rcu_segcblist *rsclp);
- bool rcu_segcblist_pend_cbs(struct rcu_segcblist *rsclp);
- struct rcu_head *rcu_segcblist_first_cb(struct rcu_segcblist *rsclp);
+  * Is the specified rcu_segcblist enabled, for example, not corresponding
+- * to an offline or callback-offloaded CPU?
++ * to an offline CPU?
+  */
+ static inline bool rcu_segcblist_is_enabled(struct rcu_segcblist *rsclp)
+ {
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index a14e5fbbea46..6f5c96c4f9a3 100644
+index f1a25d17e3a0..2917ce379b23 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -2858,10 +2858,11 @@ void rcu_barrier(void)
- 	 * corresponding CPU's preceding callbacks have been invoked.
- 	 */
- 	for_each_possible_cpu(cpu) {
--		if (!cpu_online(cpu) && !rcu_is_nocb_cpu(cpu))
--			continue;
- 		rdp = per_cpu_ptr(&rcu_data, cpu);
--		if (rcu_is_nocb_cpu(cpu)) {
-+		if (!cpu_online(cpu) &&
-+		    !rcu_segcblist_is_offloaded(&rdp->cblist))
-+			continue;
-+		if (rcu_segcblist_is_offloaded(&rdp->cblist)) {
- 			if (!rcu_nocb_cpu_needs_barrier(cpu)) {
- 				rcu_barrier_trace(TPS("OfflineNoCB"), cpu,
- 						   rcu_state.barrier_sequence);
-@@ -3155,7 +3156,8 @@ void rcutree_migrate_callbacks(int cpu)
- 	struct rcu_node *rnp_root = rcu_get_root();
- 	bool needwake;
- 
--	if (rcu_is_nocb_cpu(cpu) || rcu_segcblist_empty(&rdp->cblist))
-+	if (rcu_segcblist_is_offloaded(&rdp->cblist) ||
-+	    rcu_segcblist_empty(&rdp->cblist))
- 		return;  /* No callbacks to migrate. */
- 
- 	local_irq_save(flags);
+@@ -2964,7 +2964,8 @@ rcu_boot_init_percpu_data(int cpu)
+  * Initializes a CPU's per-CPU RCU data.  Note that only one online or
+  * offline event can be happening at a given time.  Note also that we can
+  * accept some slop in the rsp->gp_seq access due to the fact that this
+- * CPU cannot possibly have any RCU callbacks in flight yet.
++ * CPU cannot possibly have any non-offloaded RCU callbacks in flight yet.
++ * And any offloaded callbacks are being numbered elsewhere.
+  */
+ int rcutree_prepare_cpu(unsigned int cpu)
+ {
+@@ -2978,7 +2979,7 @@ int rcutree_prepare_cpu(unsigned int cpu)
+ 	rdp->n_force_qs_snap = rcu_state.n_force_qs;
+ 	rdp->blimit = blimit;
+ 	if (rcu_segcblist_empty(&rdp->cblist) && /* No early-boot CBs? */
+-	    !init_nocb_callback_list(rdp))
++	    !rcu_segcblist_is_offloaded(&rdp->cblist))
+ 		rcu_segcblist_init(&rdp->cblist);  /* Re-enable callbacks. */
+ 	rdp->dynticks_nesting = 1;	/* CPU not up, no tearing. */
+ 	rcu_dynticks_eqs_online();
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index dc3c53cb9608..8d9cfcac6757 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -438,7 +438,6 @@ static void __init rcu_spawn_nocb_kthreads(void);
+ #ifdef CONFIG_RCU_NOCB_CPU
+ static void __init rcu_organize_nocb_kthreads(void);
+ #endif /* #ifdef CONFIG_RCU_NOCB_CPU */
+-static bool init_nocb_callback_list(struct rcu_data *rdp);
+ static unsigned long rcu_get_n_cbs_nocb_cpu(struct rcu_data *rdp);
+ static void rcu_bind_gp_kthread(void);
+ static bool rcu_nohz_full_cpu(void);
 diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index b8a43cf9bb4e..fc6133eed50a 100644
+index 9936a66b80bb..2d37fd3fa0d4 100644
 --- a/kernel/rcu/tree_plugin.h
 +++ b/kernel/rcu/tree_plugin.h
-@@ -1382,7 +1382,7 @@ static void rcu_prepare_for_idle(void)
- 	int tne;
- 
- 	lockdep_assert_irqs_disabled();
--	if (rcu_is_nocb_cpu(smp_processor_id()))
-+	if (rcu_segcblist_is_offloaded(&rdp->cblist))
- 		return;
- 
- 	/* Handle nohz enablement switches conservatively. */
-@@ -1431,8 +1431,10 @@ static void rcu_prepare_for_idle(void)
-  */
- static void rcu_cleanup_after_idle(void)
+@@ -2007,6 +2007,7 @@ void __init rcu_init_nohz(void)
  {
-+	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-+
- 	lockdep_assert_irqs_disabled();
--	if (rcu_is_nocb_cpu(smp_processor_id()))
-+	if (rcu_segcblist_is_offloaded(&rdp->cblist))
- 		return;
- 	if (rcu_try_advance_all_cbs())
- 		invoke_rcu_core();
-@@ -1694,7 +1696,7 @@ static bool __call_rcu_nocb(struct rcu_data *rdp, struct rcu_head *rhp,
- 			    bool lazy, unsigned long flags)
- {
+ 	int cpu;
+ 	bool need_rcu_nocb_mask = false;
++	struct rcu_data *rdp;
  
--	if (!rcu_is_nocb_cpu(rdp->cpu))
-+	if (!rcu_segcblist_is_offloaded(&rdp->cblist))
- 		return false;
- 	__call_rcu_nocb_enqueue(rdp, rhp, &rhp->next, 1, lazy, flags);
- 	if (__is_kfree_rcu_offset((unsigned long)rhp->func))
-@@ -1729,7 +1731,7 @@ static bool __maybe_unused rcu_nocb_adopt_orphan_cbs(struct rcu_data *my_rdp,
- 						     unsigned long flags)
- {
- 	lockdep_assert_irqs_disabled();
--	if (!rcu_is_nocb_cpu(smp_processor_id()))
-+	if (!rcu_segcblist_is_offloaded(&my_rdp->cblist))
- 		return false; /* Not NOCBs CPU, caller must migrate CBs. */
- 	__call_rcu_nocb_enqueue(my_rdp, rcu_segcblist_head(&rdp->cblist),
- 				rcu_segcblist_tail(&rdp->cblist),
-@@ -2192,6 +2194,7 @@ static bool init_nocb_callback_list(struct rcu_data *rdp)
- 	}
- 	rcu_segcblist_init(&rdp->cblist);
- 	rcu_segcblist_disable(&rdp->cblist);
-+	rcu_segcblist_offload(&rdp->cblist);
- 	return true;
+ #if defined(CONFIG_NO_HZ_FULL)
+ 	if (tick_nohz_full_running && cpumask_weight(tick_nohz_full_mask))
+@@ -2040,8 +2041,12 @@ void __init rcu_init_nohz(void)
+ 	if (rcu_nocb_poll)
+ 		pr_info("\tPoll for callbacks from no-CBs CPUs.\n");
+ 
+-	for_each_cpu(cpu, rcu_nocb_mask)
+-		init_nocb_callback_list(per_cpu_ptr(&rcu_data, cpu));
++	for_each_cpu(cpu, rcu_nocb_mask) {
++		rdp = per_cpu_ptr(&rcu_data, cpu);
++		if (rcu_segcblist_empty(&rdp->cblist))
++			rcu_segcblist_init(&rdp->cblist);
++		rcu_segcblist_offload(&rdp->cblist);
++	}
+ 	rcu_organize_nocb_kthreads();
  }
  
+@@ -2167,27 +2172,6 @@ static void __init rcu_organize_nocb_kthreads(void)
+ 	}
+ }
+ 
+-/* Prevent __call_rcu() from enqueuing callbacks on no-CBs CPUs */
+-static bool init_nocb_callback_list(struct rcu_data *rdp)
+-{
+-	if (!rcu_is_nocb_cpu(rdp->cpu))
+-		return false;
+-
+-	/* If there are early-boot callbacks, move them to nocb lists. */
+-	if (!rcu_segcblist_empty(&rdp->cblist)) {
+-		rdp->nocb_head = rcu_segcblist_head(&rdp->cblist);
+-		rdp->nocb_tail = rcu_segcblist_tail(&rdp->cblist);
+-		atomic_long_set(&rdp->nocb_q_count,
+-				rcu_segcblist_n_cbs(&rdp->cblist));
+-		atomic_long_set(&rdp->nocb_q_count_lazy,
+-				rcu_segcblist_n_lazy_cbs(&rdp->cblist));
+-	}
+-	rcu_segcblist_init(&rdp->cblist);
+-	rcu_segcblist_disable(&rdp->cblist);
+-	rcu_segcblist_offload(&rdp->cblist);
+-	return true;
+-}
+-
+ /*
+  * Bind the current task to the offloaded CPUs.  If there are no offloaded
+  * CPUs, leave the task unbound.  Splat if the bind attempt fails.
+@@ -2263,11 +2247,6 @@ static void __init rcu_spawn_nocb_kthreads(void)
+ {
+ }
+ 
+-static bool init_nocb_callback_list(struct rcu_data *rdp)
+-{
+-	return false;
+-}
+-
+ static unsigned long rcu_get_n_cbs_nocb_cpu(struct rcu_data *rdp)
+ {
+ 	return 0;
 -- 
 2.17.1
 
