@@ -2,102 +2,110 @@ Return-Path: <SRS0=wo+8=V5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8A3C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4D0C19759
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67E9E2084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2371420838
+	for <linux-kernel@archiver.kernel.org>; Thu,  1 Aug 2019 20:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2DtJQPV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iUHmxtJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388879AbfHAUIV (ORCPT
+        id S2388859AbfHAUMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 16:08:21 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46224 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387891AbfHAUIU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 16:08:20 -0400
-Received: by mail-qk1-f193.google.com with SMTP id r4so52971000qkm.13;
-        Thu, 01 Aug 2019 13:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=B+yDfdKT+RmatLe61Ax4/UEmkLt8JT8gE8mDRLs1ASo=;
-        b=F2DtJQPVW600MwUqAoGNDBJim0olwalXuP0oaVzNa0fuigELEEjv1TPS9O2t4zW1XQ
-         pXpruzdZOB/VBi3a/Ru2xZqOapjbUY0dPt4Dayk+xHSRgZZVajTvGk70Z2HIA5Y5cMwl
-         ambxZXgnsb/qDkp7nYq3cJFgRehXf/PvlySs2VBmdpH+M5ZDNJxP9VCfgdVNdKV17ZGT
-         ES8W4E3m+l2EhVQavzX1ZQ+2ImO1izjQsAj5HIa8nYb0s2XUwvrhRfs4a+oxfu/a5Z1X
-         VDRc8KtlnltBx/XBJhhIbBM1tf19KqXDgLfg7P/EJ+wO60b9kMWEw1/tLyFLRY/BaNsl
-         MQaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=B+yDfdKT+RmatLe61Ax4/UEmkLt8JT8gE8mDRLs1ASo=;
-        b=tzFMZAqFY6Z+tpYUWi3cNkkiME2slEhp9tvMYtuGe6g+kSMLqXIUWAxiUjAelqEANg
-         0bmgslLtaeJALEuhXWCPMBi4yHz6zu2EbA+mM0jCfEVxzQ6lXTF2mqv5SPabTTWDMtiP
-         fXNQf1oFhzQzUPmlxOkYZXdr5loc28WNYLVJbc4EFcPab10EI3xZpRZ4vfSDfalIk0Lg
-         3kEMJGy+9Y8eZo1wBFvKmns/A87mWuRORAp/iYA2q8Sl8ou8BABsfe5IQ+ArvuO+D6Tz
-         EgOn5ZiqIocCPiKURSVErxZkquYk88rzT3DD+gRYs8ZtUce0/IvUyGy6ld49aa0NJpj1
-         /MUw==
-X-Gm-Message-State: APjAAAWhm6LLaZJiI5IRZZQtx6RMNKVcUK4UOwbXB2Sq5C2HpwKKy0D1
-        pIpNH+iTk5eV9HBrq3++tLs=
-X-Google-Smtp-Source: APXvYqxqpChOnoBfs+GBxQM4vK6z+sYjBISy2ym7G3Sq1RF3r0v+c1tE3tcbulGCOi3Xo0MFPdQASA==
-X-Received: by 2002:a37:680e:: with SMTP id d14mr88871406qkc.207.1564690099390;
-        Thu, 01 Aug 2019 13:08:19 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id q73sm17611144qke.90.2019.08.01.13.08.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 13:08:18 -0700 (PDT)
-Date:   Thu, 1 Aug 2019 16:08:17 -0400
-Message-ID: <20190801160817.GB9619@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
-        davem@davemloft.net, bridge@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        allan.nielsen@microchip.com
-Subject: Re: [PATCH] net: bridge: Allow bridge to joing multicast groups
-In-Reply-To: <20190801194801.rqv5jvb5vxjo2dor@soft-dev3.microsemi.net>
-References: <1564055044-27593-1-git-send-email-horatiu.vultur@microchip.com>
- <20190801151739.GB32290@t480s.localdomain>
- <20190801194801.rqv5jvb5vxjo2dor@soft-dev3.microsemi.net>
+        Thu, 1 Aug 2019 16:12:47 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:46339 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726901AbfHAUMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 16:12:46 -0400
+Received: from [IPv6:2601:646:8600:3281:64ef:cfa3:750f:866d] ([IPv6:2601:646:8600:3281:64ef:cfa3:750f:866d])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x71K9YiF090729
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Thu, 1 Aug 2019 13:09:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x71K9YiF090729
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1564690177;
+        bh=rM4lWDrtjJrYshuh5CEHcUwsospG0nTbZo8JOhmC+VU=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=iUHmxtJazLLBAtfR7YM8rRWRMsALvSlELpgRRO7IGuF92yvajSVl3+PlXdBMACOe8
+         dhz2Xir/LmbykJ82Lr93w5qJtdMaq2NASZkFHqoRvk0AVe/qT07ARrKvLjRXGy6TtS
+         WlKX7TkIJ6Yt5+0U9EbYb1e5EEsKLS67klpHtZQDfrIDKuMLH0UYmVGhAPR0TR+31e
+         MkMXFh9EeILapy567PXoRvR4bAOHSldoXrn6b+Sv+1rcBrZiH+hD4sbg2F88AbvFzQ
+         ZTlUcq5xmkhO61Uo3ZmL9vlrtknXb9ggzUNkeWUs3AzH9HobsrchE9uRdBNK4MDC64
+         a2ztNLDLjpsKQ==
+Date:   Thu, 01 Aug 2019 13:09:24 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190801122429.GY31398@hirez.programming.kicks-ass.net>
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com> <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com> <20190731171429.GA24222@amd> <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com> <765E740C-4259-4835-A58D-432006628BAC@zytor.com> <20190731184832.GZ31381@hirez.programming.kicks-ass.net> <F1AB2846-CA91-41ED-B8E7-3799895DCF06@zytor.com> <CANiq72=s1nu9=R9ypFwL+J4NGT_yUkwahpgOOOXzezvNfDrx5g@mail.gmail.com> <F2529DE6-B500-44DC-AE72-45A304AD719B@zytor.com> <20190801122429.GY31398@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo keyword for switch/case use
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Joe Perches <joe@perches.com>, Pavel Machek <pavel@ucw.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+From:   hpa@zytor.com
+Message-ID: <0BCDEED9-0B72-4412-909F-76C20D54983E@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Horatiu,
+On August 1, 2019 5:24:29 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg> w=
+rote:
+>On Wed, Jul 31, 2019 at 11:10:36PM -0700, hpa@zytor=2Ecom wrote:
+>> On July 31, 2019 4:55:47 PM PDT, Miguel Ojeda
+><miguel=2Eojeda=2Esandonis@gmail=2Ecom> wrote:
+>> >On Wed, Jul 31, 2019 at 11:01 PM <hpa@zytor=2Ecom> wrote:
+>> >>
+>> >> The standard is moving toward adding this as an attribute with the
+>> >[[fallthrough]] syntax; it is in C++17, not sure when it will be in
+>C
+>> >be if it isn't already=2E
+>> >
+>> >Not yet, but it seems to be coming:
+>> >
+>> >  http://www=2Eopen-std=2Eorg/jtc1/sc22/wg14/www/docs/n2268=2Epdf
+>> >
+>> >However, even if C2x gets it, it will be quite a while until the GCC
+>> >minimum version gets bumped up to that, so=2E=2E=2E
+>> >
+>> >Cheers,
+>> >Miguel
+>>=20
+>> The point was that we should plan ahead in whatever we end up doing=2E
+>
+>By reserving 'fallthrough' as a keyword we do exactly that=2E We can then
+>define it to whatever the compiler/tool at hand requires=2E
+>
+>Once GCC gains support for that [[attribute]] nonsense, we can detector
+>that and use that over the __attribute__(())
+>
+>[ Also the Cxx attribute syntax is an abomination -- just a lesser one
+>than reading actual comments :-) ]
 
-On Thu, 1 Aug 2019 21:48:02 +0200, Horatiu Vultur <horatiu.vultur@microchip.com> wrote:
-> > I'm a bit late in the conversation. Isn't this what you want?
-> > 
-> >     ip address add <multicast IPv4 address> dev br0 autojoin
-> > 
-> 
-> Not really, I was looking in a way to register the ports to link layer
-> multicast address. Sorry for the confusion, my description of the patch
-> was totally missleaning.
-> 
-> If you follow this thread you will get a better idea what we wanted to
-> achive. We got some really good comments and based on these we send a
-> RFC[1]. 
+I'm not disagreeing=2E=2E=2E I think using a macro makes sense=2E
 
-OK great! Keep me in the loop, I enjoy bridge and multicast very much ;-)
-
-
-Thanks,
-
-	Vivien
+Not sure if I agree about the syntax=2E=2E=2E I think it's rather friendly=
+ compared to gcc's ;)
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
