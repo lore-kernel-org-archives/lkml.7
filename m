@@ -7,51 +7,60 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B352C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73E9C32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51442064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977542064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739628;
-	bh=QILDKNKUsCB7MGS6pvXRQMzrf1Z7JOKOwAAxfGEIO0w=;
+	s=default; t=1564739631;
+	bh=Sm0PfBeQceiwqseCtOSoS8UIGDHm40DFx14/1Oj12PQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGu3xWtIQ03D3yGt5/Eorht9QtOVQYU9czB8QfLkF5DiY4Ctw7i9xWm5rPkn2Ci+R
-	 OzbcnDfboJzs/JVk3dZEZQCNLTUrUCTX+TSl0k5xZuc6D038yNrqDyuQYjchkByB8T
-	 j5wJlW6O/EpHTPq1RFbC9U7aflI1LDRJqrbZkaak=
+	b=TvTIfyO9Pc/TigQkQmYL+D0EJK5/W6txgxK4ABOKfgpeFg9gtRJqhEogHW9bkK2Tw
+	 QsYNb85MOYtof7p3Owd9g3jKOspgOfLyMQB/WLVWOs3jvDqvqzgwJn9/AT/G9YBeVX
+	 E508Zo1cB7Uv48Uu4O68U2CjulIozv8wl87NIyqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406334AbfHBJxq (ORCPT
+        id S2406311AbfHBJxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:53:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:53:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406300AbfHBJxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:53:44 -0400
+        id S2406287AbfHBJxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:53:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C2232086A;
-        Fri,  2 Aug 2019 09:53:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FD212064A;
+        Fri,  2 Aug 2019 09:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739623;
-        bh=QILDKNKUsCB7MGS6pvXRQMzrf1Z7JOKOwAAxfGEIO0w=;
+        s=default; t=1564739616;
+        bh=Sm0PfBeQceiwqseCtOSoS8UIGDHm40DFx14/1Oj12PQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hw5DJoNUMQN4lHIgR2szTa2RQ02OufwgEu6mTBSkOIcLkkBBlV/OWMQTDWb+CbgQ4
-         8AhN5VEahq3pyVc+vITHyBDaloABBJhEaC/OHQnXDSZvA/MGR1pS5lYfYgglT1OWW/
-         2c0YB8Y1XDx1oAPDnmKSQm6Dqu0DfPB0MkQearec=
+        b=wG/CU7libzsDJu67gArl15r5SSjXXcjQrazmbx6PjvpbbRnJWFqrPsq2z2nX5Yy3s
+         a1TNdkmiO0u7mHaoGrhQCcxkmA35onibitGsYVEI7EqgERZIz8f0Zm6ttcCYTctbTF
+         MMMYdwSiZiIRBXYvDDAn8IeClD2hBBqct7aWujrA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+357d86bcb4cca1a2f572@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 11/25] media: au0828: fix null dereference in error path
-Date:   Fri,  2 Aug 2019 11:39:43 +0200
-Message-Id: <20190802092103.210012158@linuxfoundation.org>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        Greg KH <greg@kroah.com>, Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 210/223] access: avoid the RCU grace period for the temporary subjective credentials
+Date:   Fri,  2 Aug 2019 11:37:15 +0200
+Message-Id: <20190802092250.490319974@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
-References: <20190802092058.428079740@linuxfoundation.org>
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+References: <20190802092238.692035242@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,49 +70,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 6d0d1ff9ff21fbb06b867c13a1d41ce8ddcd8230 upstream.
+commit d7852fbd0f0423937fa287a598bfde188bb68c22 upstream.
 
-au0828_usb_disconnect() gets the au0828_dev struct via usb_get_intfdata,
-so it needs to set up for the error paths.
+It turns out that 'access()' (and 'faccessat()') can cause a lot of RCU
+work because it installs a temporary credential that gets allocated and
+freed for each system call.
 
-Reported-by: syzbot+357d86bcb4cca1a2f572@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+The allocation and freeing overhead is mostly benign, but because
+credentials can be accessed under the RCU read lock, the freeing
+involves a RCU grace period.
+
+Which is not a huge deal normally, but if you have a lot of access()
+calls, this causes a fair amount of seconday damage: instead of having a
+nice alloc/free patterns that hits in hot per-CPU slab caches, you have
+all those delayed free's, and on big machines with hundreds of cores,
+the RCU overhead can end up being enormous.
+
+But it turns out that all of this is entirely unnecessary.  Exactly
+because access() only installs the credential as the thread-local
+subjective credential, the temporary cred pointer doesn't actually need
+to be RCU free'd at all.  Once we're done using it, we can just free it
+synchronously and avoid all the RCU overhead.
+
+So add a 'non_rcu' flag to 'struct cred', which can be set by users that
+know they only use it in non-RCU context (there are other potential
+users for this).  We can make it a union with the rcu freeing list head
+that we need for the RCU case, so this doesn't need any extra storage.
+
+Note that this also makes 'get_current_cred()' clear the new non_rcu
+flag, in case we have filesystems that take a long-term reference to the
+cred and then expect the RCU delayed freeing afterwards.  It's not
+entirely clear that this is required, but it makes for clear semantics:
+the subjective cred remains non-RCU as long as you only access it
+synchronously using the thread-local accessors, but you _can_ use it as
+a generic cred if you want to.
+
+It is possible that we should just remove the whole RCU markings for
+->cred entirely.  Only ->real_cred is really supposed to be accessed
+through RCU, and the long-term cred copies that nfs uses might want to
+explicitly re-enable RCU freeing if required, rather than have
+get_current_cred() do it implicitly.
+
+But this is a "minimal semantic changes" change for the immediate
+problem.
+
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Jan Glauber <jglauber@marvell.com>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/au0828/au0828-core.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/open.c            |   19 +++++++++++++++++++
+ include/linux/cred.h |    7 ++++++-
+ kernel/cred.c        |   21 +++++++++++++++++++--
+ 3 files changed, 44 insertions(+), 3 deletions(-)
 
---- a/drivers/media/usb/au0828/au0828-core.c
-+++ b/drivers/media/usb/au0828/au0828-core.c
-@@ -623,6 +623,12 @@ static int au0828_usb_probe(struct usb_i
- 	/* Setup */
- 	au0828_card_setup(dev);
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -380,6 +380,25 @@ SYSCALL_DEFINE3(faccessat, int, dfd, con
+ 				override_cred->cap_permitted;
+ 	}
  
 +	/*
-+	 * Store the pointer to the au0828_dev so it can be accessed in
-+	 * au0828_usb_disconnect
++	 * The new set of credentials can *only* be used in
++	 * task-synchronous circumstances, and does not need
++	 * RCU freeing, unless somebody then takes a separate
++	 * reference to it.
++	 *
++	 * NOTE! This is _only_ true because this credential
++	 * is used purely for override_creds() that installs
++	 * it as the subjective cred. Other threads will be
++	 * accessing ->real_cred, not the subjective cred.
++	 *
++	 * If somebody _does_ make a copy of this (using the
++	 * 'get_current_cred()' function), that will clear the
++	 * non_rcu field, because now that other user may be
++	 * expecting RCU freeing. But normal thread-synchronous
++	 * cred accesses will keep things non-RCY.
 +	 */
-+	usb_set_intfdata(interface, dev);
++	override_cred->non_rcu = 1;
 +
- 	/* Analog TV */
- 	retval = au0828_analog_register(dev, interface);
- 	if (retval) {
-@@ -641,12 +647,6 @@ static int au0828_usb_probe(struct usb_i
- 	/* Remote controller */
- 	au0828_rc_register(dev);
+ 	old_cred = override_creds(override_cred);
+ retry:
+ 	res = user_path_at(dfd, filename, lookup_flags, &path);
+--- a/include/linux/cred.h
++++ b/include/linux/cred.h
+@@ -144,7 +144,11 @@ struct cred {
+ 	struct user_struct *user;	/* real user ID subscription */
+ 	struct user_namespace *user_ns; /* user_ns the caps and keyrings are relative to. */
+ 	struct group_info *group_info;	/* supplementary groups for euid/fsgid */
+-	struct rcu_head	rcu;		/* RCU deletion hook */
++	/* RCU deletion */
++	union {
++		int non_rcu;			/* Can we skip RCU deletion? */
++		struct rcu_head	rcu;		/* RCU deletion hook */
++	};
+ };
  
--	/*
--	 * Store the pointer to the au0828_dev so it can be accessed in
--	 * au0828_usb_disconnect
--	 */
--	usb_set_intfdata(interface, dev);
--
- 	pr_info("Registered device AU0828 [%s]\n",
- 		dev->board.name == NULL ? "Unset" : dev->board.name);
+ extern void __put_cred(struct cred *);
+@@ -242,6 +246,7 @@ static inline const struct cred *get_cre
+ {
+ 	struct cred *nonconst_cred = (struct cred *) cred;
+ 	validate_creds(cred);
++	nonconst_cred->non_rcu = 0;
+ 	return get_new_cred(nonconst_cred);
+ }
  
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -146,7 +146,10 @@ void __put_cred(struct cred *cred)
+ 	BUG_ON(cred == current->cred);
+ 	BUG_ON(cred == current->real_cred);
+ 
+-	call_rcu(&cred->rcu, put_cred_rcu);
++	if (cred->non_rcu)
++		put_cred_rcu(&cred->rcu);
++	else
++		call_rcu(&cred->rcu, put_cred_rcu);
+ }
+ EXPORT_SYMBOL(__put_cred);
+ 
+@@ -257,6 +260,7 @@ struct cred *prepare_creds(void)
+ 	old = task->cred;
+ 	memcpy(new, old, sizeof(struct cred));
+ 
++	new->non_rcu = 0;
+ 	atomic_set(&new->usage, 1);
+ 	set_cred_subscribers(new, 0);
+ 	get_group_info(new->group_info);
+@@ -536,7 +540,19 @@ const struct cred *override_creds(const
+ 
+ 	validate_creds(old);
+ 	validate_creds(new);
+-	get_cred(new);
++
++	/*
++	 * NOTE! This uses 'get_new_cred()' rather than 'get_cred()'.
++	 *
++	 * That means that we do not clear the 'non_rcu' flag, since
++	 * we are only installing the cred into the thread-synchronous
++	 * '->cred' pointer, not the '->real_cred' pointer that is
++	 * visible to other threads under RCU.
++	 *
++	 * Also note that we did validate_creds() manually, not depending
++	 * on the validation in 'get_cred()'.
++	 */
++	get_new_cred((struct cred *)new);
+ 	alter_cred_subscribers(new, 1);
+ 	rcu_assign_pointer(current->cred, new);
+ 	alter_cred_subscribers(old, -1);
+@@ -619,6 +635,7 @@ struct cred *prepare_kernel_cred(struct
+ 	validate_creds(old);
+ 
+ 	*new = *old;
++	new->non_rcu = 0;
+ 	atomic_set(&new->usage, 1);
+ 	set_cred_subscribers(new, 0);
+ 	get_uid(new->user);
 
 
