@@ -2,55 +2,55 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA085C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7042AC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16FF217F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EAB217D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738300;
-	bh=leisaepSVJkzorCkSQ48wKuQW5CkpQ/yTefoWGUaz9Q=;
+	s=default; t=1564738305;
+	bh=EGq9TCZEoJrQDvJeAATuthGaRngDdhyVKAPjo5n3gWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lI8JHNaDI9QULERpVqS2c1QRLB8fJVaPKKNBDy4+tKwbg8g4X+LYNJr7rguRu1gwK
-	 XvLgQJ4/t4v32kYac304nrOvPaZmeEwVC5Vbj/Qk/cS5rYjVClM7gsh2xC5B205Txn
-	 vtsDNlMEQf49sZyn4K07/djtReAn+WAHgAQ88zxM=
+	b=GNvW/Y6hXO/QO8VuNYLQ5zLBbZNISxR66391aVtS6uMqPsaF4mWHW5si586uxuT/i
+	 N/Ymuws1PC60e1Hi36eFu7KgTVsOS0wGfhHOywCTwmAqktxIQKVnkhJnccgg+WYB7c
+	 +SYwsFMFryyZ7G1oZawxcRHinpH7r9k1tC9stI90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404718AbfHBJbj (ORCPT
+        id S2389894AbfHBJbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57904 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:31:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404701AbfHBJbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:31:36 -0400
+        id S2404701AbfHBJbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:31:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA802217D6;
-        Fri,  2 Aug 2019 09:31:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D664D21783;
+        Fri,  2 Aug 2019 09:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738295;
-        bh=leisaepSVJkzorCkSQ48wKuQW5CkpQ/yTefoWGUaz9Q=;
+        s=default; t=1564738300;
+        bh=EGq9TCZEoJrQDvJeAATuthGaRngDdhyVKAPjo5n3gWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DloISP7jzoSCzqy4CFpmSaGFu5rv7qXnYy9AvegzZ6QI3AjZ3FPrkU9yUOfBd4uHS
-         MxuPW21sNi1irpPgZzgJAbFKfPSF6iX/vN/B7+Qfqzbfb6vks+i6HrojZA7ZFIouWY
-         9W3Z3bSu4R1zp2GPjS7umotzEGPgJofhFT9Zg71g=
+        b=isFDxq8ycLYVduXA49UF3ZecnIk9gIPQ+0nXI8aK1HmhxlbEEHPffudg1nvkHut6k
+         jN5XxnMyrL0XFlZUqLSryz4yW65lsFw5BLrqICzD33fOb3sY3NTKGQaiO0zrJ4QAx+
+         oBJuTihDjvFHYWgXYKcbclpcAJTZWpS76O71Fs1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 048/158] ixgbe: Check DDM existence in transceiver before access
-Date:   Fri,  2 Aug 2019 11:27:49 +0200
-Message-Id: <20190802092213.808825843@linuxfoundation.org>
+Subject: [PATCH 4.4 033/158] perf evsel: Make perf_evsel__name() accept a NULL argument
+Date:   Fri,  2 Aug 2019 11:27:34 +0200
+Message-Id: <20190802092210.515232601@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -63,61 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 655c91414579d7bb115a4f7898ee726fc18e0984 ]
+[ Upstream commit fdbdd7e8580eac9bdafa532746c865644d125e34 ]
 
-Some transceivers may comply with SFF-8472 but not implement the Digital
-Diagnostic Monitoring (DDM) interface described in it. The existence of
-such area is specified by bit 6 of byte 92, set to 1 if implemented.
+In which case it simply returns "unknown", like when it can't figure out
+the evsel->name value.
 
-Currently, due to not checking this bit ixgbe fails trying to read SFP
-module's eeprom with the follow message:
+This makes this code more robust and fixes a problem in 'perf trace'
+where a NULL evsel was being passed to a routine that only used the
+evsel for printing its name when a invalid syscall id was passed.
 
-ethtool -m enP51p1s0f0
-Cannot get Module EEPROM data: Input/output error
-
-Because it fails to read the additional 256 bytes in which it was assumed
-to exist the DDM data.
-
-This issue was noticed using a Mellanox Passive DAC PN 01FT738. The eeprom
-data was confirmed by Mellanox as correct and present in other Passive
-DACs in from other manufacturers.
-
-Signed-off-by: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
-Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Reported-by: Leo Yan <leo.yan@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-f30ztaasku3z935cn3ak3h53@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 3 ++-
- drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h     | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-index d681273bd39d..9d38634071a4 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-@@ -3133,7 +3133,8 @@ static int ixgbe_get_module_info(struct net_device *dev,
- 		page_swap = true;
- 	}
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 97fde9275f42..a8507fee654b 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -491,6 +491,9 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
+ {
+ 	char bf[128];
  
--	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap) {
-+	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap ||
-+	    !(addr_mode & IXGBE_SFF_DDM_IMPLEMENTED)) {
- 		/* We have a SFP, but it does not support SFF-8472 */
- 		modinfo->type = ETH_MODULE_SFF_8079;
- 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-index 5abd66c84d00..7b7dc6d7d159 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-@@ -70,6 +70,7 @@
- #define IXGBE_SFF_SOFT_RS_SELECT_10G		0x8
- #define IXGBE_SFF_SOFT_RS_SELECT_1G		0x0
- #define IXGBE_SFF_ADDRESSING_MODE		0x4
-+#define IXGBE_SFF_DDM_IMPLEMENTED		0x40
- #define IXGBE_SFF_QSFP_DA_ACTIVE_CABLE		0x1
- #define IXGBE_SFF_QSFP_DA_PASSIVE_CABLE		0x8
- #define IXGBE_SFF_QSFP_CONNECTOR_NOT_SEPARABLE	0x23
++	if (!evsel)
++		goto out_unknown;
++
+ 	if (evsel->name)
+ 		return evsel->name;
+ 
+@@ -527,7 +530,10 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
+ 
+ 	evsel->name = strdup(bf);
+ 
+-	return evsel->name ?: "unknown";
++	if (evsel->name)
++		return evsel->name;
++out_unknown:
++	return "unknown";
+ }
+ 
+ const char *perf_evsel__group_name(struct perf_evsel *evsel)
 -- 
 2.20.1
 
