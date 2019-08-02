@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EAEC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B763C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8BD82064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCC020665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739524;
-	bh=dfXs1z5XmGDEC3fDgVnCAUbO9RAXsb+CwBDGcx1hE2k=;
+	s=default; t=1564739527;
+	bh=ur8nRVmVhP1WaR5+Nsi2TyNFb9kDDc3oWmRJ9xTVwME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S1gClkN0LfnYuwNwTMjLWDS6AJTP1pXn/dkfKRh6YebwG6PpaEzd5G4Wp2O7zJhs8
-	 1kH3EzUUxEj1tScgugPf/Qwf+1kwnvdWY7s5mJg0PWA7DFBuxfR+H3+RuEXokwg82v
-	 nKgFTegVqrjg9GXl7dYfRq52oFMJn5QV6JrUIeO8=
+	b=NdOE6OYtDCIwl1enLv7D/JfCEzEbB5cMYfGlMmHOeuyUqI3usj/x5o+OWVkwvYyuH
+	 KW8X+bs3OEay+yAGKLp7eL7whbrs/Y1bWZPyAhbmIgqCts+pmgPXrYUadseCoT7GNd
+	 2I1JPZqkWmzIe7Men/760C8f6wmxSI2BPIcq7fXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392153AbfHBJwD (ORCPT
+        id S2392170AbfHBJwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:52:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57448 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:52:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392043AbfHBJwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:52:02 -0400
+        id S2392154AbfHBJwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:52:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 487932064A;
-        Fri,  2 Aug 2019 09:52:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D662D206A2;
+        Fri,  2 Aug 2019 09:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739520;
-        bh=dfXs1z5XmGDEC3fDgVnCAUbO9RAXsb+CwBDGcx1hE2k=;
+        s=default; t=1564739523;
+        bh=ur8nRVmVhP1WaR5+Nsi2TyNFb9kDDc3oWmRJ9xTVwME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IDPfM2eX+JtHMJGpPCY+G2N81exO0jIxLOyAmjjYJOwqkwErG9K8yFeC3LpgyTLms
-         HMhXpsF9RmgfHIPNo465JectXssWcqA2Hh40Nh7Mqwh2IIjnHhBA/kzMs2fJMv+oPm
-         IUrN37hGXgumIZp4R+oMyFHpLUsGttB7UDvuzSZQ=
+        b=D+o9F8zqvACYP2Fzdfd57F4wBA9mMAOMumhVw9QNxXpgHv62Fad900TlmcY/DumlA
+         ekZEb36YWSWbZX5lyVXfasyyejvWxLr2r5ZkbSfRYKJRr1FpmtsCZMJscZgbLNaXvH
+         hJdsTliFj09N1aeu84GuXoZ+0xtnocmJhFIdSoTc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 184/223] um: Silence lockdep complaint about mmap_sem
-Date:   Fri,  2 Aug 2019 11:36:49 +0200
-Message-Id: <20190802092249.501566231@linuxfoundation.org>
+Subject: [PATCH 4.9 185/223] powerpc/4xx/uic: clear pending interrupt after irq type/pol change
+Date:   Fri,  2 Aug 2019 11:36:50 +0200
+Message-Id: <20190802092249.538706632@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,109 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 80bf6ceaf9310b3f61934c69b382d4912deee049 ]
+[ Upstream commit 3ab3a0689e74e6aa5b41360bc18861040ddef5b1 ]
 
-When we get into activate_mm(), lockdep complains that we're doing
-something strange:
+When testing out gpio-keys with a button, a spurious
+interrupt (and therefore a key press or release event)
+gets triggered as soon as the driver enables the irq
+line for the first time.
 
-    WARNING: possible circular locking dependency detected
-    5.1.0-10252-gb00152307319-dirty #121 Not tainted
-    ------------------------------------------------------
-    inside.sh/366 is trying to acquire lock:
-    (____ptrval____) (&(&p->alloc_lock)->rlock){+.+.}, at: flush_old_exec+0x703/0x8d7
+This patch clears any potential bogus generated interrupt
+that was caused by the switching of the associated irq's
+type and polarity.
 
-    but task is already holding lock:
-    (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
-
-    which lock already depends on the new lock.
-
-    the existing dependency chain (in reverse order) is:
-
-    -> #1 (&mm->mmap_sem){++++}:
-           [...]
-           __lock_acquire+0x12ab/0x139f
-           lock_acquire+0x155/0x18e
-           down_write+0x3f/0x98
-           flush_old_exec+0x748/0x8d7
-           load_elf_binary+0x2ca/0xddb
-           [...]
-
-    -> #0 (&(&p->alloc_lock)->rlock){+.+.}:
-           [...]
-           __lock_acquire+0x12ab/0x139f
-           lock_acquire+0x155/0x18e
-           _raw_spin_lock+0x30/0x83
-           flush_old_exec+0x703/0x8d7
-           load_elf_binary+0x2ca/0xddb
-           [...]
-
-    other info that might help us debug this:
-
-     Possible unsafe locking scenario:
-
-           CPU0                    CPU1
-           ----                    ----
-      lock(&mm->mmap_sem);
-                                   lock(&(&p->alloc_lock)->rlock);
-                                   lock(&mm->mmap_sem);
-      lock(&(&p->alloc_lock)->rlock);
-
-     *** DEADLOCK ***
-
-    2 locks held by inside.sh/366:
-     #0: (____ptrval____) (&sig->cred_guard_mutex){+.+.}, at: __do_execve_file+0x12d/0x869
-     #1: (____ptrval____) (&mm->mmap_sem){++++}, at: flush_old_exec+0x6c5/0x8d7
-
-    stack backtrace:
-    CPU: 0 PID: 366 Comm: inside.sh Not tainted 5.1.0-10252-gb00152307319-dirty #121
-    Stack:
-     [...]
-    Call Trace:
-     [<600420de>] show_stack+0x13b/0x155
-     [<6048906b>] dump_stack+0x2a/0x2c
-     [<6009ae64>] print_circular_bug+0x332/0x343
-     [<6009c5c6>] check_prev_add+0x669/0xdad
-     [<600a06b4>] __lock_acquire+0x12ab/0x139f
-     [<6009f3d0>] lock_acquire+0x155/0x18e
-     [<604a07e0>] _raw_spin_lock+0x30/0x83
-     [<60151e6a>] flush_old_exec+0x703/0x8d7
-     [<601a8eb8>] load_elf_binary+0x2ca/0xddb
-     [...]
-
-I think it's because in exec_mmap() we have
-
-	down_read(&old_mm->mmap_sem);
-...
-        task_lock(tsk);
-...
-	activate_mm(active_mm, mm);
-	(which does down_write(&mm->mmap_sem))
-
-I'm not really sure why lockdep throws in the whole knowledge
-about the task lock, but it seems that old_mm and mm shouldn't
-ever be the same (and it doesn't deadlock) so tell lockdep that
-they're different.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/include/asm/mmu_context.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/sysdev/uic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
-index 1a60e1328e2f..6aca4c90aa1a 100644
---- a/arch/um/include/asm/mmu_context.h
-+++ b/arch/um/include/asm/mmu_context.h
-@@ -56,7 +56,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
- 	 * when the new ->mm is used for the first time.
- 	 */
- 	__switch_mm(&new->context.id);
--	down_write(&new->mmap_sem);
-+	down_write_nested(&new->mmap_sem, 1);
- 	uml_setup_stubs(new);
- 	up_write(&new->mmap_sem);
- }
+diff --git a/arch/powerpc/sysdev/uic.c b/arch/powerpc/sysdev/uic.c
+index a00949f3e378..a8ebc96dfed2 100644
+--- a/arch/powerpc/sysdev/uic.c
++++ b/arch/powerpc/sysdev/uic.c
+@@ -158,6 +158,7 @@ static int uic_set_irq_type(struct irq_data *d, unsigned int flow_type)
+ 
+ 	mtdcr(uic->dcrbase + UIC_PR, pr);
+ 	mtdcr(uic->dcrbase + UIC_TR, tr);
++	mtdcr(uic->dcrbase + UIC_SR, ~mask);
+ 
+ 	raw_spin_unlock_irqrestore(&uic->lock, flags);
+ 
 -- 
 2.20.1
 
