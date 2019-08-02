@@ -2,108 +2,104 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12B0C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956D6C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839AC21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65CAA20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G2sxycFA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pZKC6tyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406636AbfHBOYu (ORCPT
+        id S2394188AbfHBO0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:24:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52950 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731067AbfHBOYt (ORCPT
+        Fri, 2 Aug 2019 10:26:50 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45668 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbfHBO0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:24:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jvuzp+6FCROkRR+waxcd/xSBD2jk0LdlEwwlmE/QRVo=; b=G2sxycFAx+YSXemaZWFj5rBoO
-        L5W+suRd87Fzi03i9UbUkz+K/l4OLA7u4vdCzpFKd8kbKkpNT5POJKTjl3Y9NgF+IfuEQiw+Ya9sZ
-        Uz98GhfWAglGYt98RBvfBnca/15T9G/n1hhy4hthNjlrIrfsKUlfX1Lr9suoRAYQ/pICfFJo13kmR
-        L+hbvfVY5BZygvFEilaamnzYAdT/2P4dTNkPPWEPWi3WZyJpk4mE3pZYxvO4hCe5QB9xougEB5c3g
-        IV0U5HMFOk+fqAqk6ui4QqQV5LiDqQxBtFq8kG3bamWa6AZ5dtGBvDFf6uxZiiuQmelcNvOe6qNsg
-        wQg03COuw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1htYU7-0007La-VU; Fri, 02 Aug 2019 14:24:43 +0000
-Date:   Fri, 2 Aug 2019 07:24:43 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Michal Hocko <mhocko@kernel.org>, john.hubbard@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
-Message-ID: <20190802142443.GB5597@bombadil.infradead.org>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802091244.GD6461@dhcp22.suse.cz>
- <20190802124146.GL25064@quack2.suse.cz>
+        Fri, 2 Aug 2019 10:26:49 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m23so72957431lje.12;
+        Fri, 02 Aug 2019 07:26:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=paaIbNir/NXEYjAZm+URauHUBEaBn2jQk4/QxgIRZ+o=;
+        b=pZKC6tyyWabSE6TsKqa54hlpapPQfb7LgC4gz0bBydO8emtZjmttwbz+6rFxVSyS2T
+         tWPkDTi5IqaQzgFPx4DvsoeHFCP8/3WaBEeV0QpNa1nI/LyC00XhW/z3HohK4GYmKwBU
+         p+f0qmqoOPiSNurp2YFa4SJkJJBMSkwtzgrbtygNRlTz3m1/Q19Y3ZkEphFUUNYCJJ4c
+         YfEF84E/QWWWQXh3rzXR943vi6Q8U6err0p8MkAFb8If28dJar+F4TN+86bqfGsQ1Gx6
+         gVQ2w+2mSsGC4U0x+0Qcvmchb/N398hiMW56xFjobwREFu4nlKk8SdcT66Ps05dZ9ezH
+         KWMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=paaIbNir/NXEYjAZm+URauHUBEaBn2jQk4/QxgIRZ+o=;
+        b=j/VjsiZz3eSxuhlI9vpQOqaZxoG86AAtqZ1biZ1iw8RQzxcg03HBoLvzO9k/7BlM/g
+         UCDn2WiEOsfiJQU/4QHQwT+i1FRPsUhwmDIQrCrIe1KB9ez/lzWw4S3kbJz9ol4JVMW3
+         VnqcV2kACGJZULLRLGOzLtl6HbfqIK3zf3OmPtsgRF0alhGX9PAlFhLJGAnwOHkZS0O+
+         kfnIu5hbSL1ChjsGiocuXI27VEpGgGnQz7HWkdAbfbAM6DuL+4U2cB1pfTqT4hQIB2Fa
+         krEnryKEVrGLHEhKUs7ZuE5V9nMTZ1+DX+tqvZK5HqLgQMWtf67E37SnAVeUVizF6lD3
+         EmgA==
+X-Gm-Message-State: APjAAAVXPT1GWs3U7CHz0G1IEMDaPkiv185MTtEPxSQqp4J5lk8B4amS
+        UG4NiGG916+AaHBHZpuuCK93XW5+
+X-Google-Smtp-Source: APXvYqwGvrtuWlVEebCedmJ17hnOi4Og3etQ4F1pMYoIqdinhoWnRFZFsTqQefSjID8BKgfP8y5/jQ==
+X-Received: by 2002:a2e:301a:: with SMTP id w26mr70064844ljw.76.1564756007452;
+        Fri, 02 Aug 2019 07:26:47 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id q21sm12829914lfc.96.2019.08.02.07.26.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 07:26:46 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] soc/tegra: pmc: Query PCLK clock rate at probe
+ time
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190730174020.15878-1-digetx@gmail.com>
+ <20190802133846.GC3883@pdeschrijver-desktop.Nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <218c3d60-1a56-7ee8-840b-7d0559cd8c8e@gmail.com>
+Date:   Fri, 2 Aug 2019 17:26:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802124146.GL25064@quack2.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190802133846.GC3883@pdeschrijver-desktop.Nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 02:41:46PM +0200, Jan Kara wrote:
-> On Fri 02-08-19 11:12:44, Michal Hocko wrote:
-> > On Thu 01-08-19 19:19:31, john.hubbard@gmail.com wrote:
-> > [...]
-> > > 2) Convert all of the call sites for get_user_pages*(), to
-> > > invoke put_user_page*(), instead of put_page(). This involves dozens of
-> > > call sites, and will take some time.
-> > 
-> > How do we make sure this is the case and it will remain the case in the
-> > future? There must be some automagic to enforce/check that. It is simply
-> > not manageable to do it every now and then because then 3) will simply
-> > be never safe.
-> > 
-> > Have you considered coccinele or some other scripted way to do the
-> > transition? I have no idea how to deal with future changes that would
-> > break the balance though.
+02.08.2019 16:38, Peter De Schrijver пишет:
+> On Tue, Jul 30, 2019 at 08:40:19PM +0300, Dmitry Osipenko wrote:
+>> The PCLK clock is running off SCLK, which is a critical clock that is
+>> very unlikely to randomly change its rate. It is possible to get a
+>> lockup if kernel decides to enter LP2 cpuidle from a clk-notifier, which
+>> happens occasionally in a case of Tegra30 EMC driver that waits for the
+>> clk-change event in the clk-notify handler, because CCF's 'prepare' mutex
+>> in kept locked and thus clk_get_rate() wants to sleep with interrupts
+>> being disabled.
+>>
 > 
-> Yeah, that's why I've been suggesting at LSF/MM that we may need to create
-> a gup wrapper - say vaddr_pin_pages() - and track which sites dropping
-> references got converted by using this wrapper instead of gup. The
-> counterpart would then be more logically named as unpin_page() or whatever
-> instead of put_user_page().  Sure this is not completely foolproof (you can
-> create new callsite using vaddr_pin_pages() and then just drop refs using
-> put_page()) but I suppose it would be a high enough barrier for missed
-> conversions... Thoughts?
+> I don't think this is the right solution. Eventually we will want to
+> scale sclk and pclk because the clock tree power of those is not
+> insignificant. Maybe register a notifier which updates the PMC timer
+> values when pclk changes?
 
-I think the API we really need is get_user_bvec() / put_user_bvec(),
-and I know Christoph has been putting some work into that.  That avoids
-doing refcount operations on hundreds of pages if the page in question is
-a huge page.  Once people are switched over to that, they won't be tempted
-to manually call put_page() on the individual constituent pages of a bvec.
+I also had a thought about the notifier for pclk, but wasn't sure if
+it's really worthwhile right now since there is no real use-case and
+it's not obvious when such case will materialize. So, I'd say that
+solution is correct but incomplete.
+
+I'll make a v4 with the notifier, since you're asking about it. Thanks
+for the review!
