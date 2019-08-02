@@ -2,229 +2,123 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F08EC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FDFC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD2A206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F644206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:13:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AIOHUpof";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AIOHUpof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388529AbfHBGKQ (ORCPT
+        id S2388554AbfHBGNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 02:10:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33608 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727403AbfHBGKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 02:10:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 95267B634;
-        Fri,  2 Aug 2019 06:10:09 +0000 (UTC)
-Subject: Re: [PATCH 20/34] xen: convert put_page() to put_user_page*()
-To:     John Hubbard <jhubbard@nvidia.com>, john.hubbard@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     devel@driverdev.osuosl.org, Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
-        linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, devel@lists.orangefs.org,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        rds-devel@oss.oracle.com,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, ceph-devel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802022005.5117-21-jhubbard@nvidia.com>
- <4471e9dc-a315-42c1-0c3c-55ba4eeeb106@suse.com>
- <d5140833-e9ee-beb5-ff0a-2d13a4fe819f@nvidia.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <d4931311-db01-e8c3-0f8c-d64685dc2143@suse.com>
-Date:   Fri, 2 Aug 2019 08:10:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 02:13:34 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33842 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730060AbfHBGNd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 02:13:33 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BFC296083C; Fri,  2 Aug 2019 06:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564726412;
+        bh=glIM38y3+Njxa7zJSCHLYPzXsz9PiLzkjioQ1AjybJw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AIOHUpofaCW9WVIq9EhOhcWNcUniiiMBKXuSHR86Kj2XfOGZ20Ooch3LXAGmMGJVl
+         0a9z2g5RvNzPjuT1/WfCcRpjpNLCAbW2UvPbYBAwzJPvYX2L6Sd+ui3Dpx+MCqrZVM
+         +h9V6vCVVh556bpatTo0kQUz8P6jNr3LfGol4C+M=
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ECE75607B9;
+        Fri,  2 Aug 2019 06:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564726412;
+        bh=glIM38y3+Njxa7zJSCHLYPzXsz9PiLzkjioQ1AjybJw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AIOHUpofaCW9WVIq9EhOhcWNcUniiiMBKXuSHR86Kj2XfOGZ20Ooch3LXAGmMGJVl
+         0a9z2g5RvNzPjuT1/WfCcRpjpNLCAbW2UvPbYBAwzJPvYX2L6Sd+ui3Dpx+MCqrZVM
+         +h9V6vCVVh556bpatTo0kQUz8P6jNr3LfGol4C+M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ECE75607B9
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f51.google.com with SMTP id w13so71361613eds.4;
+        Thu, 01 Aug 2019 23:13:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAUM3ETOvffHwMGlYTYyLqTUc1Im5e/HUj0BGarW5tPJJNEB+QNh
+        xZQehBsrcrlNlamE28bbGUYD00lvSAgiXHAff/I=
+X-Google-Smtp-Source: APXvYqxJ5J+Kl4Ow20mbj1jqpkh4wO4uZDw1bBJ6e9VZGCKbz4hjX/5bF1KjrQmSZJSn0mG8VRG00kfvWhhfPHNpKsY=
+X-Received: by 2002:aa7:d68e:: with SMTP id d14mr117447530edr.253.1564726410672;
+ Thu, 01 Aug 2019 23:13:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d5140833-e9ee-beb5-ff0a-2d13a4fe819f@nvidia.com>
-Content-Type: multipart/mixed;
- boundary="------------8BBD3C4A32BE2A4FA02D8356"
-Content-Language: de-DE
+References: <20190718130238.11324-1-vivek.gautam@codeaurora.org>
+In-Reply-To: <20190718130238.11324-1-vivek.gautam@codeaurora.org>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Fri, 2 Aug 2019 11:43:19 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iE7224G4k8XE6Oz1S82iMgSza-n_zMN-ppOUWnuz+hFLQ@mail.gmail.com>
+Message-ID: <CAFp+6iE7224G4k8XE6Oz1S82iMgSza-n_zMN-ppOUWnuz+hFLQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] soc: qcom: llcc cleanups
+To:     Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>, rishabhb@codeaurora.org,
+        Evan Green <evgreen@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------8BBD3C4A32BE2A4FA02D8356
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+On Thu, Jul 18, 2019 at 6:33 PM Vivek Gautam
+<vivek.gautam@codeaurora.org> wrote:
+>
+> To better support future versions of llcc, consolidating the
+> driver to llcc-qcom driver file, and taking care of the dependencies.
+> v1 series is availale at:
+> https://lore.kernel.org/patchwork/patch/1099573/
+>
+> Changes since v1:
+> Addressing Bjorn's comments -
+>  * Not using llcc-plat as the platform driver rather using a single
+>    driver file now - llcc-qcom.
+>  * Removed SCT_ENTRY macro.
+>  * Moved few structure definitions from include/linux path to llcc-qcom
+>    driver as they are not exposed to other subsystems.
 
-On 02.08.19 07:48, John Hubbard wrote:
-> On 8/1/19 9:36 PM, Juergen Gross wrote:
->> On 02.08.19 04:19, john.hubbard@gmail.com wrote:
->>> From: John Hubbard <jhubbard@nvidia.com>
-> ...
->>> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
->>> index 2f5ce7230a43..29e461dbee2d 100644
->>> --- a/drivers/xen/privcmd.c
->>> +++ b/drivers/xen/privcmd.c
->>> @@ -611,15 +611,10 @@ static int lock_pages(
->>>   static void unlock_pages(struct page *pages[], unsigned int nr_pages)
->>>   {
->>> -    unsigned int i;
->>> -
->>>       if (!pages)
->>>           return;
->>> -    for (i = 0; i < nr_pages; i++) {
->>> -        if (pages[i])
->>> -            put_page(pages[i]);
->>> -    }
->>> +    put_user_pages(pages, nr_pages);
->>
->> You are not handling the case where pages[i] is NULL here. Or am I
->> missing a pending patch to put_user_pages() here?
->>
-> 
-> Hi Juergen,
-> 
-> You are correct--this no longer handles the cases where pages[i]
-> is NULL. It's intentional, though possibly wrong. :)
-> 
-> I see that I should have added my standard blurb to this
-> commit description. I missed this one, but some of the other patches
-> have it. It makes the following, possibly incorrect claim:
-> 
-> "This changes the release code slightly, because each page slot in the
-> page_list[] array is no longer checked for NULL. However, that check
-> was wrong anyway, because the get_user_pages() pattern of usage here
-> never allowed for NULL entries within a range of pinned pages."
-> 
-> The way I've seen these page arrays used with get_user_pages(),
-> things are either done single page, or with a contiguous range. So
-> unless I'm missing a case where someone is either
-> 
-> a) releasing individual pages within a range (and thus likely messing
-> up their count of pages they have), or
-> 
-> b) allocating two gup ranges within the same pages[] array, with a
-> gap between the allocations,
-> 
-> ...then it should be correct. If so, then I'll add the above blurb
-> to this patch's commit description.
-> 
-> If that's not the case (both here, and in 3 or 4 other patches in this
-> series, then as you said, I should add NULL checks to put_user_pages()
-> and put_user_pages_dirty_lock().
+Hi Bjorn,
 
-In this case it is not correct, but can easily be handled. The NULL case
-can occur only in an error case with the pages array filled partially or
-not at all.
+How does this cleanup look now? Let me know if there are any
+improvements to make here.
 
-I'd prefer something like the attached patch here.
+Best Regards
+Vivek
+>
+> Vivek Gautam (3):
+>   soc: qcom: llcc cleanup to get rid of sdm845 specific driver file
+>   soc: qcom: Rename llcc-slice to llcc-qcom
+>   soc: qcom: Make llcc-qcom a generic driver
+>
+>  drivers/soc/qcom/Kconfig                       |  14 +--
+>  drivers/soc/qcom/Makefile                      |   3 +-
+>  drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} | 155 +++++++++++++++++++++++--
+>  drivers/soc/qcom/llcc-sdm845.c                 | 100 ----------------
+>  include/linux/soc/qcom/llcc-qcom.h             | 104 -----------------
+>  5 files changed, 152 insertions(+), 224 deletions(-)
+>  rename drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} (64%)
+>  delete mode 100644 drivers/soc/qcom/llcc-sdm845.c
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
 
 
-Juergen
-
---------------8BBD3C4A32BE2A4FA02D8356
-Content-Type: text/x-patch;
- name="gup.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="gup.patch"
-
-diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-index 2f5ce7230a43..12bd3154126d 100644
---- a/drivers/xen/privcmd.c
-+++ b/drivers/xen/privcmd.c
-@@ -582,10 +582,11 @@ static long privcmd_ioctl_mmap_batch(
- 
- static int lock_pages(
- 	struct privcmd_dm_op_buf kbufs[], unsigned int num,
--	struct page *pages[], unsigned int nr_pages)
-+	struct page *pages[], unsigned int *nr_pages)
- {
--	unsigned int i;
-+	unsigned int i, free = *nr_pages;
- 
-+	*nr_pages = 0;
- 	for (i = 0; i < num; i++) {
- 		unsigned int requested;
- 		int pinned;
-@@ -593,35 +594,22 @@ static int lock_pages(
- 		requested = DIV_ROUND_UP(
- 			offset_in_page(kbufs[i].uptr) + kbufs[i].size,
- 			PAGE_SIZE);
--		if (requested > nr_pages)
-+		if (requested > free)
- 			return -ENOSPC;
- 
- 		pinned = get_user_pages_fast(
- 			(unsigned long) kbufs[i].uptr,
--			requested, FOLL_WRITE, pages);
-+			requested, FOLL_WRITE, pages + *nr_pages);
- 		if (pinned < 0)
- 			return pinned;
- 
--		nr_pages -= pinned;
--		pages += pinned;
-+		free -= pinned;
-+		*nr_pages += pinned;
- 	}
- 
- 	return 0;
- }
- 
--static void unlock_pages(struct page *pages[], unsigned int nr_pages)
--{
--	unsigned int i;
--
--	if (!pages)
--		return;
--
--	for (i = 0; i < nr_pages; i++) {
--		if (pages[i])
--			put_page(pages[i]);
--	}
--}
--
- static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
- {
- 	struct privcmd_data *data = file->private_data;
-@@ -681,11 +669,12 @@ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
- 
- 	xbufs = kcalloc(kdata.num, sizeof(*xbufs), GFP_KERNEL);
- 	if (!xbufs) {
-+		nr_pages = 0;
- 		rc = -ENOMEM;
- 		goto out;
- 	}
- 
--	rc = lock_pages(kbufs, kdata.num, pages, nr_pages);
-+	rc = lock_pages(kbufs, kdata.num, pages, &nr_pages);
- 	if (rc)
- 		goto out;
- 
-@@ -699,7 +688,8 @@ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
- 	xen_preemptible_hcall_end();
- 
- out:
--	unlock_pages(pages, nr_pages);
-+	if (pages)
-+		put_user_pages(pages, nr_pages);
- 	kfree(xbufs);
- 	kfree(pages);
- 	kfree(kbufs);
-
---------------8BBD3C4A32BE2A4FA02D8356--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
