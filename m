@@ -2,120 +2,115 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F9DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1474C32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 838C32064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7808E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405191AbfHBMyn (ORCPT
+        id S2405324AbfHBMyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:54:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39686 "EHLO mx1.suse.de"
+        Fri, 2 Aug 2019 08:54:47 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3715 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404889AbfHBMyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:54:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 983BEAD85;
-        Fri,  2 Aug 2019 12:54:39 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 14:54:38 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Linux I2C <linux-i2c@vger.kernel.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
-        Andrew Cooks <acooks@rationali.st>, linux-acpi@vger.kernel.org,
-        platypus-sw@opengear.com, "Tobin C . Harding" <me@tobin.cc>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Will Wagner <willw@carallon.com>
-Subject: [PATCH v5 2/3] i2c: piix4: Fix probing of reserved ports on AMD
- Family 16h Model 30h
-Message-ID: <20190802145438.601c9a8c@endymion>
-In-Reply-To: <20190802145109.38dd4045@endymion>
-References: <20190802145109.38dd4045@endymion>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        id S2405199AbfHBMyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:54:44 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D4EF8F2800FD38757019;
+        Fri,  2 Aug 2019 20:54:42 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
+ 20:54:33 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v6 19/24] erofs: add erofs_allocpage()
+Date:   Fri, 2 Aug 2019 20:53:42 +0800
+Message-ID: <20190802125347.166018-20-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190802125347.166018-1-gaoxiang25@huawei.com>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prevent bus timeouts and resets on Family 16h Model 30h by not probing
-reserved Ports 3 and 4.
+This patch introduces an temporary _on-stack_ page
+pool to reuse the freed page directly as much as
+it can for better performance and release all pages
+at a time, it also slightly reduces the possibility of
+the potential memory allocation failure.
 
-According to the AMD BIOS and Kernel Developer's Guides (BKDG), Port 3
-and Port 4 are reserved on the following devices:
- - Family 15h Model 60h-6Fh
- - Family 15h Model 70h-7Fh
- - Family 16h Model 30h-3Fh
-
-Based on earlier work by Andrew Cooks.
-
-Reported-by: Andrew Cooks <andrew.cooks@opengear.com>
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
-Changes since v4:
- * Fix subject line
- * Drop local variable port_count, use piix4_adapter_count
-   everywhere to represent the maximum number of main SMBus ports
- * Exclude early Hudson2 implementations from this change
+ fs/erofs/internal.h |  2 ++
+ fs/erofs/utils.c    | 14 ++++++++++++++
+ 2 files changed, 16 insertions(+)
 
- drivers/i2c/busses/i2c-piix4.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
---- linux-5.2.orig/drivers/i2c/busses/i2c-piix4.c	2019-08-02 14:08:17.003820098 +0200
-+++ linux-5.2/drivers/i2c/busses/i2c-piix4.c	2019-08-02 14:15:38.284423549 +0200
-@@ -72,7 +72,8 @@
- #define PIIX4_BLOCK_DATA	0x14
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 19694886dda9..1a322304560f 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -489,6 +489,8 @@ int erofs_namei(struct inode *dir, struct qstr *name,
+ extern const struct file_operations erofs_dir_fops;
  
- /* Multi-port constants */
--#define PIIX4_MAX_ADAPTERS 4
-+#define PIIX4_MAX_ADAPTERS	4
-+#define HUDSON2_MAIN_PORTS	2 /* HUDSON2, KERNCZ reserves ports 3, 4 */
- 
- /* SB800 constants */
- #define SB800_PIIX4_SMB_IDX		0xcd6
-@@ -806,6 +807,7 @@ MODULE_DEVICE_TABLE (pci, piix4_ids);
- 
- static struct i2c_adapter *piix4_main_adapters[PIIX4_MAX_ADAPTERS];
- static struct i2c_adapter *piix4_aux_adapter;
-+static int piix4_adapter_count;
- 
- static int piix4_add_adapter(struct pci_dev *dev, unsigned short smba,
- 			     bool sb800_main, u8 port, bool notify_imc,
-@@ -865,7 +867,15 @@ static int piix4_add_adapters_sb800(stru
- 	int port;
- 	int retval;
- 
--	for (port = 0; port < PIIX4_MAX_ADAPTERS; port++) {
-+	if (dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS ||
-+	    (dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS &&
-+	     dev->revision >= 0x1F)) {
-+		piix4_adapter_count = HUDSON2_MAIN_PORTS;
-+	} else {
-+		piix4_adapter_count = PIIX4_MAX_ADAPTERS;
-+	}
+ /* utils.c */
++struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp, bool nofail);
 +
-+	for (port = 0; port < piix4_adapter_count; port++) {
- 		retval = piix4_add_adapter(dev, smba, true, port, notify_imc,
- 					   piix4_main_port_names_sb800[port],
- 					   &piix4_main_adapters[port]);
-@@ -987,7 +997,7 @@ static void piix4_adap_remove(struct i2c
+ #if (EROFS_PCPUBUF_NR_PAGES > 0)
+ void *erofs_get_pcpubuf(unsigned int pagenr);
+ #define erofs_put_pcpubuf(buf) do { \
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index f3eed9af24d6..ae6362abed67 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -9,6 +9,20 @@
+ #include "internal.h"
+ #include <linux/pagevec.h>
  
- static void piix4_remove(struct pci_dev *dev)
- {
--	int port = PIIX4_MAX_ADAPTERS;
-+	int port = piix4_adapter_count;
- 
- 	while (--port >= 0) {
- 		if (piix4_main_adapters[port]) {
-
++struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp, bool nofail)
++{
++	struct page *page;
++
++	if (!list_empty(pool)) {
++		page = lru_to_page(pool);
++		DBG_BUGON(page_ref_count(page) != 1);
++		list_del(&page->lru);
++	} else {
++		page = alloc_pages(gfp | (nofail ? __GFP_NOFAIL : 0), 0);
++	}
++	return page;
++}
++
+ #if (EROFS_PCPUBUF_NR_PAGES > 0)
+ static struct {
+ 	u8 data[PAGE_SIZE * EROFS_PCPUBUF_NR_PAGES];
 -- 
-Jean Delvare
-SUSE L3 Support
+2.17.1
+
