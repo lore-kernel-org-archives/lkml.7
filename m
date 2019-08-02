@@ -2,146 +2,99 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A3BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61078C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B452821773
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367D02087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:09:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="x/8NUPy9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389560AbfHBQJ0 (ORCPT
+        id S2389641AbfHBQJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:09:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46572 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 12:09:31 -0400
+Received: from vern.gendns.com ([98.142.107.122]:42544 "EHLO vern.gendns.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729142AbfHBQJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:09:23 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEDEE21783;
-        Fri,  2 Aug 2019 16:09:21 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 12:09:20 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jiping Ma <jiping.ma2@windriver.com>
-Cc:     <mingo@redhat.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <joel@joelfernandes.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3] tracing: Function stack size and its name mismatch
- in arm64
-Message-ID: <20190802120920.3b1f4351@gandalf.local.home>
-In-Reply-To: <20190802112259.0530a648@gandalf.local.home>
-References: <20190802094103.163576-1-jiping.ma2@windriver.com>
-        <20190802112259.0530a648@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S2389527AbfHBQJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:09:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=5lPK0SoTI4WivVBlQ9V5Or5hsa5f4C2zi5txmZLiDXk=; b=x/8NUPy9GYoK/3ZMnIU7rsBH5Q
+        FK/PnJoOW2As+ToVB3LSg2p5I2uuuCxaIJ/FdaFyEp/MM2FfqDXZQi2Y0yZrPFuDdslFV0yXEQrEo
+        Yekp0W7LVivL+2P0VBAmFUM4/mrXEJXHt0Ij0+7jlu4V2Pwtuuu0XpaIo1VqscTa4rPCQGHrcGagF
+        UEmVsh/sCBBBKPbQNrDZL3KKjG8O+22SM/SPMIdkcG3UYq/jYkNo7bWUym+8Vk1fDtQxxyTQ0XXBw
+        F9VLKz9Kj+t+kLTpQ3KcwMZ7liFDK+aBKKSXW0wNQPot+o7ZUfYwiu1JtOTioRcsgmRMM+gUNAsk/
+        ei8pnOpg==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:42682 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1hta7P-004v16-AL; Fri, 02 Aug 2019 12:09:23 -0400
+Subject: Re: [PATCH 2/4] counter: new TI eQEP driver
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+References: <20190722154538.5314-1-david@lechnology.com>
+ <20190722154538.5314-3-david@lechnology.com> <20190802092727.GB30522@icarus>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <f45ec1f4-6463-12d9-9459-35fe7b46671a@lechnology.com>
+Date:   Fri, 2 Aug 2019 11:09:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="MP_/H_zswQr7OwRjASX6FA341vN"
+In-Reply-To: <20190802092727.GB30522@icarus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---MP_/H_zswQr7OwRjASX6FA341vN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-On Fri, 2 Aug 2019 11:22:59 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> I think you are not explaining the issue correctly. From looking at the
-> document, I think what you want to say is that the LR is saved *after*
-> the data for the function. Is that correct? If so, then yes, it would
-> cause the stack tracing algorithm to be incorrect.
+On 8/2/19 4:27 AM, William Breathitt Gray wrote:
+>> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>> index a7e57516959e..ddcbb8573894 100644
+>> --- a/drivers/pwm/Kconfig
+>> +++ b/drivers/pwm/Kconfig
+>> @@ -499,7 +499,7 @@ config  PWM_TIEHRPWM
+>>   
+>>   config  PWM_TIPWMSS
+>>   	bool
+>> -	default y if (ARCH_OMAP2PLUS) && (PWM_TIECAP || PWM_TIEHRPWM)
+>> +	default y if (ARCH_OMAP2PLUS) && (PWM_TIECAP || PWM_TIEHRPWM || TI_EQEP)
+>>   	help
+>>   	  PWM Subsystem driver support for AM33xx SOC.
+> I was surprised to see this pwm Kconfig change in this patch. Is
+> PWM_TIPWMSS required for TI_EQEP to work? If not required, then this
+> could be a separate patch; otherwise, put in a mention about why in the
+> commit message so that the purpose of this change is clearer.
 > 
 
-[..]
-
-> Can someone confirm that this is the real issue?
-
-Does this patch fix your issue?
-
--- Steve
-
-diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-index 5ab5200b2bdc..13a4832cfb00 100644
---- a/arch/arm64/include/asm/ftrace.h
-+++ b/arch/arm64/include/asm/ftrace.h
-@@ -13,6 +13,7 @@
- #define HAVE_FUNCTION_GRAPH_FP_TEST
- #define MCOUNT_ADDR		((unsigned long)_mcount)
- #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
-+#define ARCH_RET_ADDR_AFTER_LOCAL_VARS 1
- 
- #ifndef __ASSEMBLY__
- #include <linux/compat.h>
-diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-index 5d16f73898db..050c6bd9beac 100644
---- a/kernel/trace/trace_stack.c
-+++ b/kernel/trace/trace_stack.c
-@@ -158,6 +158,18 @@ static void check_stack(unsigned long ip, unsigned long *stack)
- 			i++;
- 	}
- 
-+#ifdef ARCH_RET_ADDR_AFTER_LOCAL_VARS
-+	/*
-+	 * Most archs store the return address before storing the
-+	 * function's local variables. But some archs do this backwards.
-+	 */
-+	if (x > 1) {
-+		memmove(&stack_trace_index[0], &stack_trace_index[1],
-+			sizeof(stack_trace_index[0]) * (x - 1));
-+		x--;
-+	}
-+#endif
-+
- 	stack_trace_nr_entries = x;
- 
- 	if (task_stack_end_corrupted(current)) {
-
---MP_/H_zswQr7OwRjASX6FA341vN
-Content-Type: text/x-patch
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename=f.patch
-
-diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-index 5ab5200b2bdc..13a4832cfb00 100644
---- a/arch/arm64/include/asm/ftrace.h
-+++ b/arch/arm64/include/asm/ftrace.h
-@@ -13,6 +13,7 @@
- #define HAVE_FUNCTION_GRAPH_FP_TEST
- #define MCOUNT_ADDR		((unsigned long)_mcount)
- #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
-+#define ARCH_RET_ADDR_AFTER_LOCAL_VARS 1
- 
- #ifndef __ASSEMBLY__
- #include <linux/compat.h>
-diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-index 5d16f73898db..050c6bd9beac 100644
---- a/kernel/trace/trace_stack.c
-+++ b/kernel/trace/trace_stack.c
-@@ -158,6 +158,18 @@ static void check_stack(unsigned long ip, unsigned long *stack)
- 			i++;
- 	}
- 
-+#ifdef ARCH_RET_ADDR_AFTER_LOCAL_VARS
-+	/*
-+	 * Most archs store the return address before storing the
-+	 * function's local variables. But some archs do this backwards.
-+	 */
-+	if (x > 1) {
-+		memmove(&stack_trace_index[0], &stack_trace_index[1],
-+			sizeof(stack_trace_index[0]) * (x - 1));
-+		x--;
-+	}
-+#endif
-+
- 	stack_trace_nr_entries = x;
- 
- 	if (task_stack_end_corrupted(current)) {
-
---MP_/H_zswQr7OwRjASX6FA341vN--
+This enables the parent bus for power management. Since this is the second
+comment about this, I wonder if it would make sense to move this out of the
+PWM subsystem and into drivers/bus/ since it is no longer exclusive to PWM
+devices.
