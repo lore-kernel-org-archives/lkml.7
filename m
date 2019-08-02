@@ -2,101 +2,97 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5667DC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC5DC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 253E3217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DCD217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731009AbfHBMDy (ORCPT
+        id S2388474AbfHBMEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:03:54 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47819 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfHBMDy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:03:54 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1htWHk-0006HX-Oz; Fri, 02 Aug 2019 14:03:48 +0200
-Message-ID: <1564747425.3090.1.camel@pengutronix.de>
-Subject: Re: [PATCH] drm/imx: Drop unused imx-ipuv3-crtc.o build
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Fabio Estevam <festevam@gmail.com>,
-        Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 02 Aug 2019 14:03:45 +0200
-In-Reply-To: <CAOMZO5BipmSPR1jz3ov8ESSJPsHMViMw42di-WKOdqhyONLK6Q@mail.gmail.com>
-References: <e5484fa33bffec220fd0590b502a962da17c9c72.1564743270.git.agx@sigxcpu.org>
-         <CAOMZO5BipmSPR1jz3ov8ESSJPsHMViMw42di-WKOdqhyONLK6Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 2 Aug 2019 08:04:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41414 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731018AbfHBMEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:04:12 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CD98330821A0;
+        Fri,  2 Aug 2019 12:04:11 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id AC4DA5D704;
+        Fri,  2 Aug 2019 12:04:08 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri,  2 Aug 2019 14:04:11 +0200 (CEST)
+Date:   Fri, 2 Aug 2019 14:04:07 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>, kvm@vger.kernel.org,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [patch 2/5] x86/kvm: Handle task_work on VMENTER/EXIT
+Message-ID: <20190802120407.GB20111@redhat.com>
+References: <20190801143250.370326052@linutronix.de>
+ <20190801143657.887648487@linutronix.de>
+ <20190801162451.GE31538@redhat.com>
+ <alpine.DEB.2.21.1908012025100.1789@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908012025100.1789@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 02 Aug 2019 12:04:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guido, Fabio,
+On 08/01, Thomas Gleixner wrote:
+>
+> On Thu, 1 Aug 2019, Oleg Nesterov wrote:
+> > On 08/01, Thomas Gleixner wrote:
+> > >
+> > > @@ -8172,6 +8174,10 @@ static int vcpu_run(struct kvm_vcpu *vcp
+> > >  			++vcpu->stat.signal_exits;
+> > >  			break;
+> > >  		}
+> > > +
+> > > +		if (notify_resume_pending())
+> > > +			tracehook_handle_notify_resume();
+> >
+> > shouldn't you drop kvm->srcu before tracehook_handle_notify_resume() ?
+> >
+> > I don't understand this code at all, but vcpu_run() does this even before
+> > cond_resched().
+>
+> Yeah, I noticed that it's dropped around cond_resched().
+>
+> My understanding is that for voluntary giving up the CPU via cond_resched()
+> it needs to be dropped.
 
-On Fri, 2019-08-02 at 08:03 -0300, Fabio Estevam wrote:
-> Hi Guido,
-> 
-> Good catch!
-> 
-> On Fri, Aug 2, 2019 at 7:55 AM Guido Günther <agx@sigxcpu.org> wrote:
-> > 
-> > Since
-> > 
-> > commit 3d1df96ad468 ("drm/imx: merge imx-drm-core and ipuv3-crtc in one module")
-> > 
-> > imx-ipuv3-crtc.o is built via imxdrm-objs. So there's no need to keep an
-> 
-> Actually, it is ipuv3-crtc.o that is built via imxdrm-objs, not
-> imx-ipuv3-crtc.o.
-> 
-> Apart from that:
-> 
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+I am not sure it really needs, but this doesn't matter.
 
-Thank you, applied to imx-drm/next with Fabio's R-b, and added Fixes:
-tag, and the commit message changed as follows:
+tracehook_handle_notify_resume() can do "anything", say it can run the
+works queued by systemtap. I don't think it should delay synchronize_srcu().
+And may be this is simply unsafe, even if I don't think a task_work can
+ever call synchronize_srcu(kvm->srcu) directly.
 
-    drm/imx: Drop unused imx-ipuv3-crtc.o build
-    
-    Since
-    
-    commit 3d1df96ad468 ("drm/imx: merge imx-drm-core and ipuv3-crtc in one module")
-    
-    the former contents of imx-ipuv3-crtc.o are built via imxdrm-objs. So
-    there's no need to keep an extra entry with a non existing config value
-    (CONFIG_DRM_IMX_IPUV3).
-    
-    Fixes: 3d1df96ad468 ("drm/imx: merge imx-drm-core and ipuv3-crtc in one module")
-    Signed-off-by: Guido Günther <agx@sigxcpu.org>
-    Reviewed-by: Fabio Estevam <festevam@gmail.com>
-    Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Oleg.
 
-no action necessary if you agree, otherwise just send a v2 and I'll
-replace it.
-
-regards
-Philipp
