@@ -4,125 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80968C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79453C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5811321850
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4545121855
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752362;
-	bh=3+3SkkMBHEMSFQDtS8RPkLMKlM2yZGf4+h0XychGT3o=;
+	s=default; t=1564752368;
+	bh=aE0TKsg51/5VkLP6Htp7RfyjY1oMIPRIOqwFzbnlpls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FB8NnLcBYoWSkZXBO1+Gsn7+KQtZEP0T9c4wiygUjT5D/vuPU5ft9YKSTzYUwD02n
-	 JDCYfCILAi+JdEFWVdnBNRy8oGya7CocQAatHcAz1dLZH9tkQ8kmc770NbtiZ4TuZS
-	 u6XQ7B+2KMbYIOqVy6hlZBp6J+fzXskG7kSwQd6U=
+	b=VeYzHyjLpMHxeohCaDB3ZkFwZzxCym64ue/ILPPUCnucN3Mrs/rcPJte60q8e2B8f
+	 hY+64XvnyHdQvD65b+rdLo89zzaJE0FMZ5gB+3PNwrWQfRCdrefy+FqMDDqvU7DOVU
+	 q5JJv9dbNpzoT7ZHOU5Bud+gMWX5T0pEvGFsQR4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394455AbfHBN0B (ORCPT
+        id S2394484AbfHBN0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:26:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36660 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:26:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390136AbfHBNZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:25:59 -0400
+        id S2394459AbfHBN0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6006E217D4;
-        Fri,  2 Aug 2019 13:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1F2E217D4;
+        Fri,  2 Aug 2019 13:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752357;
-        bh=3+3SkkMBHEMSFQDtS8RPkLMKlM2yZGf4+h0XychGT3o=;
+        s=default; t=1564752361;
+        bh=aE0TKsg51/5VkLP6Htp7RfyjY1oMIPRIOqwFzbnlpls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pgqw9ah8fCt6XEys/ScUwfCCsHuCwZWfmwUYC8MnovxBWbyu+m+51KZtXBRTb/eTG
-         AyIn/BlxS7TL4q+etQOwJKBBPbx4fEn+3u+/eSzf6yr8zAZrMIrI5jmL0RH6I6YKyt
-         wKpReMFKfqvBUwE16xgXx1qxKZzJ1eW9PspExPbA=
+        b=T3uRXzH8ElgI8yZl3vNyl5dCoLjkxnErybt/T9IHNNK/Rfk5VURGRmXcgHghSYJOU
+         4XLax0fV6j7lfGLmjH3hjDjc90PY0/+kNo+/dxbAElA/DF1y7ummLF6JzJ37C/dLS+
+         pUWOayxymro4bTYXgUSOJjeLUU/4spaK6VE8xOD0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Tai <thomas.tai@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 02/22] iscsi_ibft: make ISCSI_IBFT dependson ACPI instead of ISCSI_IBFT_FIND
-Date:   Fri,  2 Aug 2019 09:25:26 -0400
-Message-Id: <20190802132547.14517-2-sashal@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B6rn=20Gerhart?= <gerhart@posteo.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 04/22] hwmon: (nct6775) Fix register address and added missed tolerance for nct6106
+Date:   Fri,  2 Aug 2019 09:25:28 -0400
+Message-Id: <20190802132547.14517-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132547.14517-1-sashal@kernel.org>
 References: <20190802132547.14517-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Tai <thomas.tai@oracle.com>
+From: Björn Gerhart <gerhart@posteo.de>
 
-[ Upstream commit 94bccc34071094c165c79b515d21b63c78f7e968 ]
+[ Upstream commit f3d43e2e45fd9d44ba52d20debd12cd4ee9c89bf ]
 
-iscsi_ibft can use ACPI to find the iBFT entry during bootup,
-currently, ISCSI_IBFT depends on ISCSI_IBFT_FIND which is
-a X86 legacy way to find the iBFT by searching through the
-low memory. This patch changes the dependency so that other
-arch like ARM64 can use ISCSI_IBFT as long as the arch supports
-ACPI.
+Fixed address of third NCT6106_REG_WEIGHT_DUTY_STEP, and
+added missed NCT6106_REG_TOLERANCE_H.
 
-ibft_init() needs to use the global variable ibft_addr declared
-in iscsi_ibft_find.c. A #ifndef CONFIG_ISCSI_IBFT_FIND is needed
-to declare the variable if CONFIG_ISCSI_IBFT_FIND is not selected.
-Moving ibft_addr into the iscsi_ibft.c does not work because if
-ISCSI_IBFT is selected as a module, the arch/x86/kernel/setup.c won't
-be able to find the variable at compile time.
-
-Signed-off-by: Thomas Tai <thomas.tai@oracle.com>
-Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Fixes: 6c009501ff200 ("hwmon: (nct6775) Add support for NCT6102D/6106D")
+Signed-off-by: Bjoern Gerhart <gerhart@posteo.de>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/Kconfig      | 5 +++--
- drivers/firmware/iscsi_ibft.c | 4 ++++
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ drivers/hwmon/nct6775.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index bca172d42c743..854df538ae01e 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -144,7 +144,7 @@ config DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
+index 2b31b84d0a5b9..006f090c1b0a7 100644
+--- a/drivers/hwmon/nct6775.c
++++ b/drivers/hwmon/nct6775.c
+@@ -698,7 +698,7 @@ static const u16 NCT6106_REG_TARGET[] = { 0x111, 0x121, 0x131 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_SEL[] = { 0x168, 0x178, 0x188 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_STEP[] = { 0x169, 0x179, 0x189 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_STEP_TOL[] = { 0x16a, 0x17a, 0x18a };
+-static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x17c };
++static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x18b };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_BASE[] = { 0x16c, 0x17c, 0x18c };
+ static const u16 NCT6106_REG_WEIGHT_DUTY_BASE[] = { 0x16d, 0x17d, 0x18d };
  
- config ISCSI_IBFT_FIND
- 	bool "iSCSI Boot Firmware Table Attributes"
--	depends on X86 && ACPI
-+	depends on X86 && ISCSI_IBFT
- 	default n
- 	help
- 	  This option enables the kernel to find the region of memory
-@@ -155,7 +155,8 @@ config ISCSI_IBFT_FIND
- config ISCSI_IBFT
- 	tristate "iSCSI Boot Firmware Table Attributes module"
- 	select ISCSI_BOOT_SYSFS
--	depends on ISCSI_IBFT_FIND && SCSI && SCSI_LOWLEVEL
-+	select ISCSI_IBFT_FIND if X86
-+	depends on ACPI && SCSI && SCSI_LOWLEVEL
- 	default	n
- 	help
- 	  This option enables support for detection and exposing of iSCSI
-diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
-index 132b9bae4b6aa..220bbc91cebdb 100644
---- a/drivers/firmware/iscsi_ibft.c
-+++ b/drivers/firmware/iscsi_ibft.c
-@@ -93,6 +93,10 @@ MODULE_DESCRIPTION("sysfs interface to BIOS iBFT information");
- MODULE_LICENSE("GPL");
- MODULE_VERSION(IBFT_ISCSI_VERSION);
- 
-+#ifndef CONFIG_ISCSI_IBFT_FIND
-+struct acpi_table_ibft *ibft_addr;
-+#endif
-+
- struct ibft_hdr {
- 	u8 id;
- 	u8 version;
+@@ -3481,6 +3481,7 @@ static int nct6775_probe(struct platform_device *pdev)
+ 		data->REG_FAN_TIME[0] = NCT6106_REG_FAN_STOP_TIME;
+ 		data->REG_FAN_TIME[1] = NCT6106_REG_FAN_STEP_UP_TIME;
+ 		data->REG_FAN_TIME[2] = NCT6106_REG_FAN_STEP_DOWN_TIME;
++		data->REG_TOLERANCE_H = NCT6106_REG_TOLERANCE_H;
+ 		data->REG_PWM[0] = NCT6106_REG_PWM;
+ 		data->REG_PWM[1] = NCT6106_REG_FAN_START_OUTPUT;
+ 		data->REG_PWM[2] = NCT6106_REG_FAN_STOP_OUTPUT;
 -- 
 2.20.1
 
