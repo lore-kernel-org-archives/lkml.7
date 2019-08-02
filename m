@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2BFC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993ECC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896B42067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D7B2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740193;
-	bh=BhjJmWsPWXbSRj2VJ9rEfGZ74XRLKw1Y3CmhvhAgwbk=;
+	s=default; t=1564740199;
+	bh=ARtThotik/fI83JySmVBSkBR1V/J+IsDANpmGcqlpV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k+pkEh0vkhhA+rst3qpmvrW9T2ipa/k0ELkqdiKzOsoSGBYh3Jxe6fF94vY7A05dn
-	 Mouoj67wpuypxfIx+cXTbHR8xbiXjlq6Q816ydTcf8cJ3NjLzT/mdnkODvIMX3N/mF
-	 RQFVKvGcDtb2Afz5RvANLe0RK+KZ5ItR7u157bzU=
+	b=z8BJWwa9+lxV7ScJodqAGN9fMPGO5m6VtW1ygZeMmZDK2l+06W8N7Bt/al7RZXD+k
+	 dYAV8ef47uIyOVdSpe28FQb/qBnYKUxRqJm1PuFKB/KiyipUfmVKTXfevxG40vkPQf
+	 WJ0NA/MsyoMFu5/aon4yP6wmHrfDnOHS4Y4xv0ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407168AbfHBKDM (ORCPT
+        id S2407174AbfHBKDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:03:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43678 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 06:03:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404895AbfHBJls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:41:48 -0400
+        id S2404702AbfHBJln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:41:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63F0D20B7C;
-        Fri,  2 Aug 2019 09:41:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F8A920880;
+        Fri,  2 Aug 2019 09:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738907;
-        bh=BhjJmWsPWXbSRj2VJ9rEfGZ74XRLKw1Y3CmhvhAgwbk=;
+        s=default; t=1564738902;
+        bh=ARtThotik/fI83JySmVBSkBR1V/J+IsDANpmGcqlpV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rjtvzupNjNIfNkR7QbM1RpTRzggagUL6R/zJDNxWrevr787uEdBcM/y13Qh29YsVO
-         sx/+YjtKjO2HwtaOZMDIqNdVCHl+NlfQIDSS3mFBFBenwSoaHWNPNvryb++oXpsQDQ
-         QQtdrnZJ6Mtq286xp2qWj6vcVpaabQZUOA61ZmYY=
+        b=Tx+cj7infDOy9omR17yW29FU4T4pw9cgDSekWHBdq2OSvm6HnUE08yP+cMlgqOnDA
+         FpdTdVqNgbee0B2Q1tVHtOMQc9vq6cBkK49K7APv/qQeZuE5aQQU2SSQ3/bR0GPRkb
+         8EcfmuYOM57gCyXKAEMB/8JOK3S20LKImQ8ZY4LA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 042/223] vhost_net: disable zerocopy by default
-Date:   Fri,  2 Aug 2019 11:34:27 +0200
-Message-Id: <20190802092241.708015732@linuxfoundation.org>
+Subject: [PATCH 4.9 040/223] xfrm: fix sa selector validation
+Date:   Fri,  2 Aug 2019 11:34:25 +0200
+Message-Id: <20190802092241.585589553@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,41 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 098eadce3c622c07b328d0a43dda379b38cf7c5e ]
+[ Upstream commit b8d6d0079757cbd1b69724cfd1c08e2171c68cee ]
 
-Vhost_net was known to suffer from HOL[1] issues which is not easy to
-fix. Several downstream disable the feature by default. What's more,
-the datapath was split and datacopy path got the support of batching
-and XDP support recently which makes it faster than zerocopy part for
-small packets transmission.
+After commit b38ff4075a80, the following command does not work anymore:
+$ ip xfrm state add src 10.125.0.2 dst 10.125.0.1 proto esp spi 34 reqid 1 \
+  mode tunnel enc 'cbc(aes)' 0xb0abdba8b782ad9d364ec81e3a7d82a1 auth-trunc \
+  'hmac(sha1)' 0xe26609ebd00acb6a4d51fca13e49ea78a72c73e6 96 flag align4
 
-It looks to me that disable zerocopy by default is more
-appropriate. It cold be enabled by default again in the future if we
-fix the above issues.
+In fact, the selector is not mandatory, allow the user to provide an empty
+selector.
 
-[1] https://patchwork.kernel.org/patch/3787671/
-
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b38ff4075a80 ("xfrm: Fix xfrm sel prefix length validation")
+CC: Anirudh Gupta <anirudh.gupta@sophos.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/net.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/xfrm/xfrm_user.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 681d0eade82f..75e1089dfb01 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -30,7 +30,7 @@
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index df4b7fc721f6..f3e9d500fa5a 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -166,6 +166,9 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
+ 	}
  
- #include "vhost.h"
- 
--static int experimental_zcopytx = 1;
-+static int experimental_zcopytx = 0;
- module_param(experimental_zcopytx, int, 0444);
- MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
- 		                       " 1 -Enable; 0 - Disable");
+ 	switch (p->sel.family) {
++	case AF_UNSPEC:
++		break;
++
+ 	case AF_INET:
+ 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
+ 			goto out;
 -- 
 2.20.1
 
