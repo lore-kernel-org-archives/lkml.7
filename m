@@ -2,199 +2,108 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A1EC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A44C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01179206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB95A206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SQWSgrE/"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YcqN5tXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731889AbfHBEk5 (ORCPT
+        id S1731936AbfHBEss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 00:40:57 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:23384 "EHLO pegase1.c-s.fr"
+        Fri, 2 Aug 2019 00:48:48 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40771 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728157AbfHBEk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 00:40:57 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 460Dxf3rcfz9vBfl;
-        Fri,  2 Aug 2019 06:40:54 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=SQWSgrE/; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id KfJWhfY0sfA6; Fri,  2 Aug 2019 06:40:54 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 460Dxf2QKRz9vBfh;
-        Fri,  2 Aug 2019 06:40:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1564720854; bh=YVDDzj8B4DGCz9r9FVryORzEAke42zI+5//nPWDVDj4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SQWSgrE/cUDu7kEjGalYXASJk6NCNOOglvCvsYrF5UFxk3YnebVBHL/Jifxp95zb0
-         1EvPPxbQgDrrJe47XuYKvRZikI6Fpqo9m41LHsyOPa9HP3fn+7mrodcTZfB916eQVm
-         cmAvQT34zcrk+ymNv7Ebi2Gafvf2ymACdBLE7iOo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 290C38B795;
-        Fri,  2 Aug 2019 06:40:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id h5b4XEIPAbyQ; Fri,  2 Aug 2019 06:40:55 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5B6AF8B74C;
-        Fri,  2 Aug 2019 06:40:54 +0200 (CEST)
-Subject: Re: [PATCH v3] powerpc: Support CMDLINE_EXTEND
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        malat@debian.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190801225006.21952-1-chris.packham@alliedtelesis.co.nz>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <9262a291-161f-e172-9d13-88a717da9de4@c-s.fr>
-Date:   Fri, 2 Aug 2019 06:40:54 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728157AbfHBEss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 00:48:48 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 460F6j1x5fz9s7T;
+        Fri,  2 Aug 2019 14:48:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564721325;
+        bh=fvg7BcTA+nfVBNPckHnwFUybVoaL8/VIweZ6p0SgTlU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YcqN5tXupvdoxbnh+LzR+L2wmMCvORjlqpcvUITfQb/f1zseWLUYic94Xs5DF3m+N
+         O+CSJzxJX/FnnGt6J7QBomx8eJZ8LZF/b8J7Y9Bh7rR33j/gTGsogdBtUuueUz1eEW
+         9hn+cRQjBEoZyzZeXUzVdUq77sLNPqhLRTNGQTLnx1cqSWTvKhtYO34BZd8YEGBJG7
+         31vvc7YTm0tLbTS8ZWNQ2FaFXnUrPqPR4WayhqY0PQGKq8Z5nNBVFiOSAXD+zIeXCp
+         ehwgXuCT24cG0G1EliQ9sz7KV66R2O3t1byId8gdTP4r7En8rRGnKQAH52b08sJDpG
+         lOf6tYYIhnpkw==
+Date:   Fri, 2 Aug 2019 14:48:44 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Patrick Steuer <steuer@linux.ibm.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
+Message-ID: <20190802144844.43508be1@canb.auug.org.au>
+In-Reply-To: <20190802031414.GB14879@gondor.apana.org.au>
+References: <20190731163915.3fdfcb14@canb.auug.org.au>
+        <20190731085819.GA3488@osiris>
+        <20190731110816.GA20753@gondor.apana.org.au>
+        <20190731111520.GC3488@osiris>
+        <20190731113216.GA21068@gondor.apana.org.au>
+        <20190731114453.GD3488@osiris>
+        <20190801122849.GB4163@osiris>
+        <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
+        <20190802102019.6a789c51@canb.auug.org.au>
+        <20190802031414.GB14879@gondor.apana.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190801225006.21952-1-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/WV=Ll5clhjs7L92CiGDoOM6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/WV=Ll5clhjs7L92CiGDoOM6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi Herbert,
 
-Le 02/08/2019 à 00:50, Chris Packham a écrit :
-> Bring powerpc in line with other architectures that support extending or
-> overriding the bootloader provided command line.
-> 
-> The current behaviour is most like CMDLINE_FROM_BOOTLOADER where the
-> bootloader command line is preferred but the kernel config can provide a
-> fallback so CMDLINE_FROM_BOOTLOADER is the default. CMDLINE_EXTEND can
-> be used to append the CMDLINE from the kernel config to the one provided
-> by the bootloader.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+On Fri, 2 Aug 2019 13:14:14 +1000 Herbert Xu <herbert@gondor.apana.org.au> =
+wrote:
+>
+> For now I'm going to back out those two specific patches as the
+> rest seem to be valid by themselves.
 
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+I have applied the top commit from your tree to linux-next today just
+to help with building and testing over the weekend (I had already
+merged your tree before you added the revert).
 
-> ---
-> Changes in v3:
-> - don't use BUG_ON in prom_strlcat
-> - rearrange things to eliminate prom_strlcpy
-> 
-> Changes in v2:
-> - incorporate ideas from Christope's patch https://patchwork.ozlabs.org/patch/1074126/
-> - support CMDLINE_FORCE
-> 
->   arch/powerpc/Kconfig            | 20 +++++++++++++++++-
->   arch/powerpc/kernel/prom_init.c | 36 ++++++++++++++++++++++-----------
->   2 files changed, 43 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 77f6ebf97113..d413fe1b4058 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -852,15 +852,33 @@ config CMDLINE
->   	  some command-line options at build time by entering them here.  In
->   	  most cases you will need to specify the root device here.
->   
-> +choice
-> +	prompt "Kernel command line type" if CMDLINE != ""
-> +	default CMDLINE_FROM_BOOTLOADER
-> +
-> +config CMDLINE_FROM_BOOTLOADER
-> +	bool "Use bootloader kernel arguments if available"
-> +	help
-> +	  Uses the command-line options passed by the boot loader. If
-> +	  the boot loader doesn't provide any, the default kernel command
-> +	  string provided in CMDLINE will be used.
-> +
-> +config CMDLINE_EXTEND
-> +	bool "Extend bootloader kernel arguments"
-> +	help
-> +	  The command-line arguments provided by the boot loader will be
-> +	  appended to the default kernel command string.
-> +
->   config CMDLINE_FORCE
->   	bool "Always use the default kernel command string"
-> -	depends on CMDLINE_BOOL
->   	help
->   	  Always use the default kernel command string, even if the boot
->   	  loader passes other arguments to the kernel.
->   	  This is useful if you cannot or don't want to change the
->   	  command-line options your boot loader passes to the kernel.
->   
-> +endchoice
-> +
->   config EXTRA_TARGETS
->   	string "Additional default image types"
->   	help
-> diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-> index 514707ef6779..1c7010cc6ec9 100644
-> --- a/arch/powerpc/kernel/prom_init.c
-> +++ b/arch/powerpc/kernel/prom_init.c
-> @@ -298,16 +298,24 @@ static char __init *prom_strstr(const char *s1, const char *s2)
->   	return NULL;
->   }
->   
-> -static size_t __init prom_strlcpy(char *dest, const char *src, size_t size)
-> -{
-> -	size_t ret = prom_strlen(src);
-> +static size_t __init prom_strlcat(char *dest, const char *src, size_t count)
-> +{
-> +	size_t dsize = prom_strlen(dest);
-> +	size_t len = prom_strlen(src);
-> +	size_t res = dsize + len;
-> +
-> +	/* This would be a bug */
-> +	if (dsize >= count)
-> +		return count;
-> +
-> +	dest += dsize;
-> +	count -= dsize;
-> +	if (len >= count)
-> +		len = count-1;
-> +	memcpy(dest, src, len);
-> +	dest[len] = 0;
-> +	return res;
->   
-> -	if (size) {
-> -		size_t len = (ret >= size) ? size - 1 : ret;
-> -		memcpy(dest, src, len);
-> -		dest[len] = '\0';
-> -	}
-> -	return ret;
->   }
->   
->   #ifdef CONFIG_PPC_PSERIES
-> @@ -759,10 +767,14 @@ static void __init early_cmdline_parse(void)
->   
->   	prom_cmd_line[0] = 0;
->   	p = prom_cmd_line;
-> -	if ((long)prom.chosen > 0)
-> +
-> +	if (!IS_ENABLED(CONFIG_CMDLINE_FORCE) && (long)prom.chosen > 0)
->   		l = prom_getprop(prom.chosen, "bootargs", p, COMMAND_LINE_SIZE-1);
-> -	if (IS_ENABLED(CONFIG_CMDLINE_BOOL) && (l <= 0 || p[0] == '\0')) /* dbl check */
-> -		prom_strlcpy(prom_cmd_line, CONFIG_CMDLINE, sizeof(prom_cmd_line));
-> +
-> +	if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) || l <= 0 || p[0] == '\0')
-> +		prom_strlcat(prom_cmd_line, " " CONFIG_CMDLINE,
-> +			     sizeof(prom_cmd_line));
-> +
->   	prom_printf("command line: %s\n", prom_cmd_line);
->   
->   #ifdef CONFIG_PPC64
-> 
+Thanks
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/WV=Ll5clhjs7L92CiGDoOM6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1DwKwACgkQAVBC80lX
+0Gx4KAgAiV9cuFhIGVwQAfbUj4A9D69fl2gB+ggN5Tg6pyo4CrosPziIsPG1bEkj
+d0RCgB60EJb3You7yESMfn6LMAx15gLTq4UyIImnZiGbgKlpeQNbOGpJ4J5T3UEK
+yuXf73EGoh608Mx5guggDqPzk3Ww4BeqUgwZYvLSK9JC/GG73aGkziXPeZSoE9Ta
+oz5GRxCXLlHxBsLWry97jZ1d43CIhlio2Z4QLvyOK8cwLRNrb1Hd+qDNog9BvAK3
+J+b5Zgj01vCKpuwn8AW3VecydnbQa3UBqiWnjXXrDNRPrPEtRUOXUdmIN0WCppYy
+7flo7JAwQqsIx5shJLoh+nsE7xKANw==
+=GAVZ
+-----END PGP SIGNATURE-----
+
+--Sig_/WV=Ll5clhjs7L92CiGDoOM6--
