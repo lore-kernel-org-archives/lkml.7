@@ -2,131 +2,208 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76632C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C74C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460902087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:03:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="Vxg/Q6NT"
+	by mail.kernel.org (Postfix) with ESMTP id C4DC4206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564743864;
+	bh=+UUhvWOiQOoMMsBf8o97nKDGuGBXbSDJ1OlPHZDsmdY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Woq2tgrWq+mDzbw6sWR3KQ7KO5V2jA60SMN87Fex2GOOv2OmoLn3cLYUxtFbVFptp
+	 T4E8MYyMNgfanb37JvJgNqhNY995i3PzZRIxLxlG832Bc07vck6qYmgMO49i7Z93hU
+	 2vc30ywudD4qxbFVEj9FRILLjALRihG9/FgPLI2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392283AbfHBLDT (ORCPT
+        id S2392292AbfHBLEX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 07:03:19 -0400
-Received: from mail-eopbgr40124.outbound.protection.outlook.com ([40.107.4.124]:61829
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729311AbfHBLDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 07:03:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=beolhqq434iEcZuvYtKxGVBMJQr/7FMBHfb9Fire2ZFTMLoObmdX3J1zZSwWPx0daq1VSdQQ+5H6/hxDIp3+udV6LjH1SifRnhkfzGUgHuZcvyGz8h2FCD36ihOs122n6xgPw32ufum2/O0RmYEkljBzW9+Ad9B5w81oyjomriG7hnT8M0I+h9c6muGo91KDf01kKbBaiFvUj6xGwTtpeMkqUi+4kyXlCjC1HaWsMZRicDsTqF8S3xuhi7aftobSdZ0iP/COG6AiUVSmtPHMB8QhVy2XZ6JoRzv69q0lmvLxPcVDBNM0Sf86J0zn5UnuO/83zffxxgiMtFvPN6lCFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c3Wvn93P2G2RxATzXAkQFRuzQWQXzzhf8Ip15GzXj6s=;
- b=iXdsV35pAY7x2O8DRyQhV/mKvo0sOERPiuni73QX6rGGXchjcQyuDLtQa7SzNbb2nST/JoXp+SGo0Z4UjaExAkZ7+Mf1b8m/lGysRzD2qHf3KSdpa+O5OclCDseREpQkib7USsVbsL/RdBlt6kguZCcV7pNvpJomKg39fX3J5i/hwUaaQ7p6hNQBt/BDoPntwrojX+jr1lu+GdfwHeq4S9fHjVFIJuDxh+m14g3wxz7QDoHThhV67yCSTRY03RgdWi6DQqvB1LM/a3oA1Nv6eeEuIwQ74gb0YMgsxYeqccRS8y/VVzDSLQsFbHTVIvTP7/PTU0CLJ/uX0V1RnjW5ew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nokia.com;dmarc=pass action=none
- header.from=nokia.com;dkim=pass header.d=nokia.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c3Wvn93P2G2RxATzXAkQFRuzQWQXzzhf8Ip15GzXj6s=;
- b=Vxg/Q6NTCI6LmKum1KpYW6FL7HOf9BXoFfwL+C/qUtZfQ3yRc4k9ILugAPvzqVexBgAV7krDpZtZKaWtwtnVPY1mvAP47aI70OkgcRVNqBZFEJqjTtm2e4kz+74LRNBPlnD39guhMwXlw6cmN/bV3PmOg7X/dS3T2jQ6twCMUBY=
-Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com (52.133.6.141) by
- HE1PR0702MB3772.eurprd07.prod.outlook.com (52.133.7.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.10; Fri, 2 Aug 2019 11:03:15 +0000
-Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com
- ([fe80::d90c:c96:8d6a:362d]) by HE1PR0702MB3675.eurprd07.prod.outlook.com
- ([fe80::d90c:c96:8d6a:362d%6]) with mapi id 15.20.2157.001; Fri, 2 Aug 2019
- 11:03:15 +0000
-From:   "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "lucien.xin@gmail.com" <lucien.xin@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "syzbot+a43d8d4e7e8a7a9e149e@syzkaller.appspotmail.com" 
-        <syzbot+a43d8d4e7e8a7a9e149e@syzkaller.appspotmail.com>,
-        "syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com" 
-        <syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com>,
-        "syzbot+a47c5f4c6c00fc1ed16e@syzkaller.appspotmail.com" 
-        <syzbot+a47c5f4c6c00fc1ed16e@syzkaller.appspotmail.com>,
-        "syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com" 
-        <syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "syzbot+0290d2290a607e035ba1@syzkaller.appspotmail.com" 
-        <syzbot+0290d2290a607e035ba1@syzkaller.appspotmail.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com" 
-        <syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com>
-Subject: Re: [PATCH 4.14 43/43] tipc: pass tunnel dev as NULL to
- udp_tunnel(6)_xmit_skb
-Thread-Topic: [PATCH 4.14 43/43] tipc: pass tunnel dev as NULL to
- udp_tunnel(6)_xmit_skb
-Thread-Index: AQHVMK2k4G4Q5DhZpEC+QWpFsSOawKbmQ0kAgAFjJACAADv5gA==
-Date:   Fri, 2 Aug 2019 11:03:15 +0000
-Message-ID: <88c88ec44e93c07170891bdf391d2b6251c7041a.camel@nokia.com>
-References: <20190702080123.904399496@linuxfoundation.org>
-         <20190702080126.138655706@linuxfoundation.org>
-         <0f105a3696611dc10aa4d7c5c22ffac031b3c098.camel@nokia.com>
-         <20190802072834.GC26174@kroah.com>
-In-Reply-To: <20190802072834.GC26174@kroah.com>
-Accept-Language: fi-FI, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tommi.t.rantala@nokia.com; 
-x-originating-ip: [131.228.2.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bb455002-29c2-445b-f47c-08d7173904ae
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:HE1PR0702MB3772;
-x-ms-traffictypediagnostic: HE1PR0702MB3772:
-x-microsoft-antispam-prvs: <HE1PR0702MB3772765DB81074B1AC6ECCFDB4D90@HE1PR0702MB3772.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 011787B9DD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39860400002)(396003)(366004)(346002)(376002)(199004)(189003)(4744005)(66476007)(66556008)(64756008)(26005)(66446008)(71200400001)(71190400001)(76116006)(305945005)(68736007)(99286004)(66946007)(6116002)(8936002)(86362001)(446003)(3846002)(7736002)(11346002)(7416002)(476003)(2616005)(25786009)(36756003)(186003)(229853002)(8676002)(6486002)(316002)(486006)(2351001)(118296001)(4326008)(6436002)(256004)(6916009)(5640700003)(54906003)(1730700003)(81166006)(81156014)(6246003)(102836004)(6512007)(2906002)(53936002)(478600001)(6506007)(14454004)(2501003)(66066001)(76176011)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR0702MB3772;H:HE1PR0702MB3675.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: f38mZP0OfrQGCfZuxL5zKerU1wFqtE+IKOX9dtf81//fVL6jTgbrNagfiWTF7wB3cY+uqaJnU6q5rTbkcwbPeoUdjDGodhaeDTznqbqi6P0UHUA1ww+xcwmqylQXhvp625fVLS6T7pKdz7rtrrCD8KnSNBTqfgplQElDP4tkK0w+LII0EHSQpbnYmM8vQ5MUxaX4V6iPWAZ5upXXSqM5Qo/uhyH6oyxEOEi9t/U2Ph6udgdOKE+gSym7eDmxZNAVrdf0RltHEB5PLtg3Ysjyl4p79luGQlcEmq9gzBv6ZXI21Iqzbn7wN99GCzavL1h4pzNnCpAOqU9yVdfgAjW+xsWf1r2nxl3SoW0tpELS1mHzNaek474NIkG3aymmN1kVRtbBuoQKsYkrrXXHOTFJQxl1C/pUy/7BDk6g7nx70T8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D8A2C05A4250FF43B957BB76450D3871@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 2 Aug 2019 07:04:23 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45786 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729311AbfHBLEX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 07:04:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id x21so12226400otq.12;
+        Fri, 02 Aug 2019 04:04:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=w0DyH4xksTCHeFXBznMTiBORDsUdB4NA4Cc7BNCtCH8=;
+        b=Sj/WWVU1rdZoZMfSAETgl2WwKAikqaRZaNpUlyz3VpQhHB2XqWSteGljhCSlYfrKb+
+         HnRAm2QrCE02FrIrzcbv2uScIMiA4R4Z1CcC1L+uv+u2mAgU0CcoDYvza3zPBmlvmaku
+         fZ71zEopli2QaBk9w8ZNpH3t6Cx/Ip/T3qiIEe0BfdWkwTwXRCf5GDagRlG/T1AFM9Ti
+         ybQw/RLPc94xAJDeWtqIaeuVMC3ZL70sR1bbYk8I2XMndO8mlDXL1yBmQjhnIyeZD5RB
+         toUnur1C/I5OfMz/5GIUqvjwHvJiF4RgNYnghVrjIpQaNS7r8wprXlQgpQ/8kpyS88Lo
+         kjzw==
+X-Gm-Message-State: APjAAAX/BJSz9a6OaGE686PBJ3251axVoHuWj3Mdp0QokMde86GG7w+9
+        KBHCsop78v6lDYT6vCd9T02rGIvHJa1au3sHlEk=
+X-Google-Smtp-Source: APXvYqz/YAfVVpOT1+gorX7uqK+xUCSw3KhSVS8Oct1H0bKTEnpnV/SUZnEVKAT3kOXN9vMIb+xvv7QaWE3Ovjg8g10=
+X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr69319291oto.167.1564743861921;
+ Fri, 02 Aug 2019 04:04:21 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb455002-29c2-445b-f47c-08d7173904ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 11:03:15.3834
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OWYrgl4djVM5uuvwUed73FbFgpomrAMWczDRcTBO9rTZbrzNYFk5hxeAaQnCKjDXQI4iCqZA1J45pAWGd1z7ftpp6QvReuFSfALZ/BhP1kc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0702MB3772
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com>
+ <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+ <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+ <20190731221956.GB15795@localhost.localdomain> <CAJZ5v0hxYGBXau39sb80MQ8jbZZCzH0JU2DYZvn9JOtYT2+30g@mail.gmail.com>
+ <70D536BE-8DC7-4CA2-84A9-AFB067BA520E@canonical.com> <CAJZ5v0hFYEv_+vFkrxaCn_pNAbyqmO_cLb5GOLNn_xxRRwjh2g@mail.gmail.com>
+ <38d4b4b107154454a932781acde0fa5a@AUSX13MPC105.AMER.DELL.COM>
+ <CAJZ5v0jmO4FMOVYs62wkvPrUW81scD2H7cJyRc+tfoj+vODVbQ@mail.gmail.com> <43A8DF53-8463-4314-9E8E-47A7D3C5A709@canonical.com>
+In-Reply-To: <43A8DF53-8463-4314-9E8E-47A7D3C5A709@canonical.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 2 Aug 2019 13:04:09 +0200
+Message-ID: <CAJZ5v0ipG-MJjERBL9fjx29QktaYEKSmMCbWiEGPHsbF=Xfxtw@mail.gmail.com>
+Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for
+ suspend" has problems
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA4LTAyIGF0IDA5OjI4ICswMjAwLCBncmVna2hAbGludXhmb3VuZGF0aW9u
-Lm9yZyB3cm90ZToNCj4gT24gVGh1LCBBdWcgMDEsIDIwMTkgYXQgMTA6MTc6MzBBTSArMDAwMCwg
-UmFudGFsYSwgVG9tbWkgVC4gKE5va2lhIC0NCj4gRkkvRXNwb28pIHdyb3RlOg0KPiA+IEhpLA0K
-PiA+IA0KPiA+IFRoaXMgdGlwYyBwYXRjaCBhZGRlZCBpbiA0LjE0LjEzMiBpcyB0cmlnZ2VyaW5n
-IGEgY3Jhc2ggZm9yIG1lLA0KPiA+IHJldmVydA0KPiA+IGZpeGVzIGl0Lg0KPiA+IA0KPiA+IEFu
-eW9uZSBoYXZlIGlkZWFzIGlmIHNvbWUgb3RoZXIgY29tbWl0cyBtaXNzaW5nIGluIDQuMTQueCB0
-byBtYWtlDQo+ID4gdGhpcw0KPiA+IHdvcmsuLi4/DQo+IA0KPiBEbyB5b3UgYWxzbyBoYXYgYSBw
-cm9ibGVtIHdpdGggNC4xOS55PyAgSG93IGFib3V0IDUuMi55PyAgSWYgbm90LCBjYW4NCj4geW91
-IGRvICdnaXQgYmlzZWN0JyB0byBmaW5kIHRoZSBwYXRjaCB0aGF0IGZpeGVzIHRoZSBpc3N1ZT8N
-Cj4gDQo+IHRoYW5rcywNCj4gDQo+IGdyZWcgay1oDQoNCkhpLCBwbGVhc2UgcGljayB0aGlzIHRv
-IDQuMTQueSBhbmQgNC4xOS55LCB0ZXN0ZWQgdGhhdCBpdCBmaXhlcyB0aGUNCmNyYXNoIGluIGJv
-dGg6DQoNCmNvbW1pdCA1Njg0YWJmNzAyMGRmYzVmMGI2YmExZDY4ZWRhMzY2Mzg3MWZjZTUyDQpB
-dXRob3I6IFhpbiBMb25nIDxsdWNpZW4ueGluQGdtYWlsLmNvbT4NCkRhdGU6ICAgTW9uIEp1biAx
-NyAyMTozNDoxMyAyMDE5ICswODAwDQoNCiAgICBpcF90dW5uZWw6IGFsbG93IG5vdCB0byBjb3Vu
-dCBwa3RzIG9uIHRzdGF0cyBieSBzZXR0aW5nIHNrYidzIGRldg0KdG8gTlVMTA0KDQoNCkZvciA1
-LjIueSBub3RoaW5nIGlzIG5lZWRlZCwgdGhlc2UgY29tbWl0cyB3ZXJlIGluIHY1LjItcmM2IGFs
-cmVhZHkuDQoNCi1Ub21taQ0KDQo=
+On Fri, Aug 2, 2019 at 12:55 PM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> at 06:26, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> > On Thu, Aug 1, 2019 at 9:05 PM <Mario.Limonciello@dell.com> wrote:
+> >>> -----Original Message-----
+> >>> From: Rafael J. Wysocki <rafael@kernel.org>
+> >>> Sent: Thursday, August 1, 2019 12:30 PM
+> >>> To: Kai-Heng Feng; Keith Busch; Limonciello, Mario
+> >>> Cc: Keith Busch; Christoph Hellwig; Sagi Grimberg; linux-nvme; Linux
+> >>> PM; Linux
+> >>> Kernel Mailing List; Rajat Jain
+> >>> Subject: Re: [Regression] Commit "nvme/pci: Use host managed power
+> >>> state for
+> >>> suspend" has problems
+> >>>
+> >>>
+> >>> [EXTERNAL EMAIL]
+> >>>
+> >>> On Thu, Aug 1, 2019 at 11:06 AM Kai-Heng Feng
+> >>> <kai.heng.feng@canonical.com> wrote:
+> >>>> at 06:33, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >>>>
+> >>>>> On Thu, Aug 1, 2019 at 12:22 AM Keith Busch <kbusch@kernel.org> wrote:
+> >>>>>> On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
+> >>>>>>> A couple of remarks if you will.
+> >>>>>>>
+> >>>>>>> First, we don't know which case is the majority at this point.  For
+> >>>>>>> now, there is one example of each, but it may very well turn out that
+> >>>>>>> the SK Hynix BC501 above needs to be quirked.
+> >>>>>>>
+> >>>>>>> Second, the reference here really is 5.2, so if there are any systems
+> >>>>>>> that are not better off with 5.3-rc than they were with 5.2, well, we
+> >>>>>>> have not made progress.  However, if there are systems that are worse
+> >>>>>>> off with 5.3, that's bad.  In the face of the latest findings the
+> >>>>>>> only
+> >>>>>>> way to avoid that is to be backwards compatible with 5.2 and that's
+> >>>>>>> where my patch is going.  That cannot be achieved by quirking all
+> >>>>>>> cases that are reported as "bad", because there still may be
+> >>>>>>> unreported ones.
+> >>>>>>
+> >>>>>> I have to agree. I think your proposal may allow PCI D3cold,
+> >>>>>
+> >>>>> Yes, it may.
+> >>>>
+> >>>> Somehow the 9380 with Toshiba NVMe never hits SLP_S0 with or without
+> >>>> Rafael’s patch.
+> >>>> But the “real” s2idle power consumption does improve with the patch.
+> >>>
+> >>> Do you mean this patch:
+> >>>
+> >>> https://lore.kernel.org/linux-pm/70D536BE-8DC7-4CA2-84A9-
+> >>> AFB067BA520E@canonical.com/T/#m456aa5c69973a3b68f2cdd4713a1ce83be5145
+> >>> 8f
+> >>>
+> >>> or the $subject one without the above?
+> >>>
+> >>>> Can we use a DMI based quirk for this platform? It seems like a platform
+> >>>> specific issue.
+> >>>
+> >>> We seem to see too many "platform-specific issues" here. :-)
+> >>>
+> >>> To me, the status quo (ie. what we have in 5.3-rc2) is not defensible.
+> >>> Something needs to be done to improve the situation.
+> >>
+> >> Rafael, would it be possible to try popping out PC401 from the 9380 and
+> >> into a 9360 to
+> >> confirm there actually being a platform impact or not?
+> >
+> > Not really, sorry.
+> >
+> >> I was hoping to have something useful from Hynix by now before
+> >> responding, but oh well.
+> >>
+> >> In terms of what is the majority, I do know that between folks at Dell,
+> >> Google, Compal,
+> >> Wistron, Canonical, Micron, Hynix, Toshiba, LiteOn, and Western Digital
+> >> we tested a wide
+> >> variety of SSDs with this patch series.  I would like to think that they
+> >> are representative of
+> >> what's being manufactured into machines now.
+> >
+> > Well, what about drives already in the field?  My concern is mostly
+> > about those ones.
+> >
+> >> Notably the LiteOn CL1 was tested with the HMB flushing support and
+> >> and Hynix PC401 was tested with older firmware though.
+> >>
+> >>>>>> In which case we do need to reintroduce the HMB handling.
+> >>>>>
+> >>>>> Right.
+> >>>>
+> >>>> The patch alone doesn’t break HMB Toshiba NVMe I tested. But I think
+> >>>> it’s
+> >>>> still safer to do proper HMB handling.
+> >>>
+> >>> Well, so can anyone please propose something specific?  Like an
+> >>> alternative patch?
+> >>
+> >> This was proposed a few days ago:
+> >> http://lists.infradead.org/pipermail/linux-nvme/2019-July/026056.html
+> >>
+> >> However we're still not sure why it is needed, and it will take some
+> >> time to get
+> >> a proper failure analysis from LiteOn  regarding the CL1.
+> >
+> > Thanks for the update, but IMO we still need to do something before
+> > final 5.3 while the investigation continues.
+> >
+> > Honestly, at this point I would vote for going back to the 5.2
+> > behavior at least by default and only running the new code on the
+> > drives known to require it (because they will block PC10 otherwise).
+> >
+> > Possibly (ideally) with an option for users who can't get beyond PC3
+> > to test whether or not the new code helps them.
+>
+> I just found out that the XPS 9380 at my hand never reaches SLP_S0 but only
+> PC10.
+
+That's the case for me too.
+
+> This happens with or without putting the device to D3.
+
+On my system, though, it only can get to PC3 without putting the NVMe
+into D3 (as reported previously).
