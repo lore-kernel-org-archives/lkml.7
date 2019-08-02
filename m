@@ -2,114 +2,305 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80057C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12463C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D3821726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F432173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Z8BqG/0y"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="MGo76k6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436633AbfHBOJO (ORCPT
+        id S2436643AbfHBOJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:09:14 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:38968 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732817AbfHBOJN (ORCPT
+        Fri, 2 Aug 2019 10:09:17 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36281 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436610AbfHBOJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:09:13 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72E6uLF014555;
-        Fri, 2 Aug 2019 16:09:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=V4Oy0E5gbwyi1cbiRiVoGW45+5zWyza++ydGz4D477E=;
- b=Z8BqG/0ydEYKorRq6uN7BstyvNz9rvTzsNTLIiUk0O/KLzdXaVrhf3fKJhOL+XEeruk1
- dGUUYZ4gXS3ohGtP7MiUizl4oLWZ+3EVWP2e5syGLv5FHVEzscdE5QRYsQOizAfJ3arT
- If/qqA0CWJFToyr79Oo1fW+TyDtXUPqoCjCri19Zu2UKJOzafaDMbPx4oM+cc3YbTcgq
- FdYxSHDdY1A1zlMjTW4MURJTjducO/Wg9zL1r6gc++okNND+3dMKEHtGkOU+dfm4N5OJ
- vrzrvZf/IH6fEAqSaggQGi8n5GCeCFmQ5c9+eKAk8Q7L+qYSDlwvbGiC2Hggumm9od11 vQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2u0c2yvs6w-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 02 Aug 2019 16:09:00 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 537F634;
-        Fri,  2 Aug 2019 14:09:00 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3CEE72C4581;
-        Fri,  2 Aug 2019 16:09:00 +0200 (CEST)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
- 16:09:00 +0200
-Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019 16:08:59
- +0200
-From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH] ARM: dts: stm32: move ltdc pinctrl on stm32mp157a dk1 board
-Date:   Fri, 2 Aug 2019 16:08:51 +0200
-Message-ID: <1564754931-13861-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 2 Aug 2019 10:09:15 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k21so72523319edq.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 07:09:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xhuCYjOAgunkYjz+QlONFENP4HYNbDmyCVNLWObuIlI=;
+        b=MGo76k6gKSmW1ADZbTtUMDQr5VwmTyo/MH72jvlFhkQWgqxWroyu/ApKeVsTnbocrn
+         yt0QLimX9M1h8KHElBL+G0gfyZR8TqTpXIQ8HO8CzEGoRbWBGIiEcR/bkrD0rbYnfGdT
+         rjHWiyrCyttLuPVQrU8vj52s/9RwGzR9JIyrU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=xhuCYjOAgunkYjz+QlONFENP4HYNbDmyCVNLWObuIlI=;
+        b=dPiphQzzCt+KJvGZ5Q28NT20ObnnjFGK/J0kR7B+/IHBU0uF1UBqFWPhVaWmLSlfBg
+         sAHCiucD31s46v7d8+AaXzLlCpxGywjskvW5NEaVV9US3Wbrl1/exI/L2jzsDGS9ZIrw
+         EWcsxjsGiuP3GR3S7IN+SXorRXUIBJeCg8bUOn7Sme4dyiwPcPfXp8cHiPcSmo82Xkd6
+         WrX3NgoPIiHisg6//jjdjldpEDqZri9UNXNbsdl/maPm+k588tq+d8RSFDSxif2/w0ZQ
+         fcbIcBJIl5HrfvpM/MZYauIHgpJlprMxQ/IwGWCdUOYgHl0It6XRue25GPSLEHuUAzGd
+         1Gjg==
+X-Gm-Message-State: APjAAAXoEStTJaxuu7Lz/V5A5fOVZf960/50vmBY9axVL7enGsOn1TzU
+        Lp6+5AX4/2VZNOXinkJkMVo=
+X-Google-Smtp-Source: APXvYqzaolmvMese/Nu4+FfdS0NaNgzFgrv/cB9pE/Xf9NoQ28479+wgA7MPoU+3voB4/2PJto65Gw==
+X-Received: by 2002:aa7:c753:: with SMTP id c19mr119683899eds.81.1564754952824;
+        Fri, 02 Aug 2019 07:09:12 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id a1sm17537648edq.29.2019.08.02.07.09.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 07:09:12 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 16:09:10 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Brian Starkey <Brian.Starkey@arm.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, nd <nd@arm.com>
+Subject: Re: drm/komeda: Add support for generation of CRC data per frame.
+Message-ID: <20190802140910.GN7444@phenom.ffwll.local>
+Mail-Followup-To: Brian Starkey <Brian.Starkey@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, nd <nd@arm.com>
+References: <20190801104231.23938-1-Liviu.Dudau@arm.com>
+ <20190802093908.7tt4navdtdnfvksf@DESKTOP-E1NTVVP.localdomain>
+ <CAKMK7uF83+jbqqog9skkyqefAjzG0FbWtKQLKhBP0PqHj=aasg@mail.gmail.com>
+ <20190802101303.s6vod63363nnbjgv@DESKTOP-E1NTVVP.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.201.23.97]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_06:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802101303.s6vod63363nnbjgv@DESKTOP-E1NTVVP.localdomain>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ltdc pinctrl must be in the display controller node and
-not in the peripheral node (hdmi bridge).
+On Fri, Aug 02, 2019 at 10:13:03AM +0000, Brian Starkey wrote:
+> Hi Daniel,
+> 
+> On Fri, Aug 02, 2019 at 11:52:11AM +0200, Daniel Vetter wrote:
+> > On Fri, Aug 2, 2019 at 11:39 AM Brian Starkey <Brian.Starkey@arm.com> wrote:
+> > >
+> > > Hi Liviu,
+> > >
+> > > On Thu, Aug 01, 2019 at 11:42:31AM +0100, Liviu Dudau wrote:
+> > > > Komeda has support to generate per-frame CRC values in the DOU
+> > > > backend subsystem. Implement necessary hooks to expose the CRC
+> > > > "control" and "data" file over debugfs and program the DOUx_BS
+> > > > accordingly.
+> > > >
+> > > > This patch makes use of PL1 (programmable line 1) interrupt to
+> > > > know when the CRC generation has finished.
+> > > >
+> > > > Patch is also dependent on the series that adds dual-link support
+> > > > for komeda: https://patchwork.freedesktop.org/series/62280/
+> > > >
+> > > > Cc: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+> > > > Signed-off-by: Liviu Dudau <liviu.dudau@arm.com>
+> > > > ---
+> > > >  .../arm/display/komeda/d71/d71_component.c    |  2 +-
+> > > >  .../gpu/drm/arm/display/komeda/d71/d71_dev.c  | 29 ++++++++-
+> > > >  .../gpu/drm/arm/display/komeda/komeda_crtc.c  | 61 ++++++++++++++++++-
+> > > >  .../gpu/drm/arm/display/komeda/komeda_dev.h   |  2 +
+> > > >  .../gpu/drm/arm/display/komeda/komeda_kms.h   |  3 +
+> > > >  .../drm/arm/display/komeda/komeda_pipeline.h  |  1 +
+> > > >  6 files changed, 94 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > > > index 55a8cc94808a1..3c45468848ee4 100644
+> > > > --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > > > +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > > > @@ -1061,7 +1061,7 @@ static void d71_timing_ctrlr_update(struct komeda_component *c,
+> > > >       malidp_write32(reg, BS_PREFETCH_LINE, D71_DEFAULT_PREPRETCH_LINE);
+> > > >
+> > > >       /* configure bs control register */
+> > > > -     value = BS_CTRL_EN | BS_CTRL_VM;
+> > > > +     value = BS_CTRL_EN | BS_CTRL_VM | BS_CTRL_CRC;
+> > > >       if (c->pipeline->dual_link) {
+> > > >               malidp_write32(reg, BS_DRIFT_TO, hfront_porch + 16);
+> > > >               value |= BS_CTRL_DL;
+> > > > diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
+> > > > index d567ab7ed314e..05bfd9891c540 100644
+> > > > --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
+> > > > +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
+> > > > @@ -115,6 +115,8 @@ static u64 get_dou_event(struct d71_pipeline *d71_pipeline)
+> > > >       raw_status = malidp_read32(reg, BLK_IRQ_RAW_STATUS);
+> > > >       if (raw_status & DOU_IRQ_PL0)
+> > > >               evts |= KOMEDA_EVENT_VSYNC;
+> > > > +     if (raw_status & DOU_IRQ_PL1)
+> > > > +             evts |= KOMEDA_EVENT_CRCDONE;
+> > > >       if (raw_status & DOU_IRQ_UND)
+> > > >               evts |= KOMEDA_EVENT_URUN;
+> > > >
+> > > > @@ -149,7 +151,7 @@ static u64 get_dou_event(struct d71_pipeline *d71_pipeline)
+> > > >
+> > > >  static u64 get_pipeline_event(struct d71_pipeline *d71_pipeline, u32 gcu_status)
+> > > >  {
+> > > > -     u32 evts = 0ULL;
+> > > > +     u64 evts = 0ULL;
+> > > >
+> > > >       if (gcu_status & (GLB_IRQ_STATUS_LPU0 | GLB_IRQ_STATUS_LPU1))
+> > > >               evts |= get_lpu_event(d71_pipeline);
+> > > > @@ -163,6 +165,26 @@ static u64 get_pipeline_event(struct d71_pipeline *d71_pipeline, u32 gcu_status)
+> > > >       return evts;
+> > > >  }
+> > > >
+> > > > +static void get_frame_crcs(struct d71_pipeline *d71_pipeline, u32 pipe,
+> > > > +                        struct komeda_events *evts)
+> > > > +{
+> > > > +     if (evts->pipes[pipe] & KOMEDA_EVENT_CRCDONE) {
+> > > > +             struct komeda_component *c;
+> > > > +
+> > > > +             c = komeda_pipeline_get_component(&d71_pipeline->base,
+> > > > +                                               KOMEDA_COMPONENT_TIMING_CTRLR);
+> > > > +             if (!c)
+> > > > +                     return;
+> > > > +
+> > > > +             evts->crcs[pipe][0] = malidp_read32(c->reg, BS_CRC0_LOW);
+> > > > +             evts->crcs[pipe][1] = malidp_read32(c->reg, BS_CRC0_HIGH);
+> > > > +             if (d71_pipeline->base.dual_link) {
+> > > > +                     evts->crcs[pipe][2] = malidp_read32(c->reg, BS_CRC1_LOW);
+> > > > +                     evts->crcs[pipe][3] = malidp_read32(c->reg, BS_CRC1_HIGH);
+> > > > +             }
+> > > > +     }
+> > > > +}
+> > > > +
+> > > >  static irqreturn_t
+> > > >  d71_irq_handler(struct komeda_dev *mdev, struct komeda_events *evts)
+> > > >  {
+> > > > @@ -195,6 +217,9 @@ d71_irq_handler(struct komeda_dev *mdev, struct komeda_events *evts)
+> > > >       if (gcu_status & GLB_IRQ_STATUS_PIPE1)
+> > > >               evts->pipes[1] |= get_pipeline_event(d71->pipes[1], gcu_status);
+> > > >
+> > > > +     get_frame_crcs(d71->pipes[0], 0, evts);
+> > > > +     get_frame_crcs(d71->pipes[1], 1, evts);
+> > > > +
+> > > >       return gcu_status ? IRQ_HANDLED : IRQ_NONE;
+> > > >  }
+> > > >
+> > > > @@ -202,7 +227,7 @@ d71_irq_handler(struct komeda_dev *mdev, struct komeda_events *evts)
+> > > >                                GCU_IRQ_MODE | GCU_IRQ_ERR)
+> > > >  #define ENABLED_LPU_IRQS     (LPU_IRQ_IBSY | LPU_IRQ_ERR | LPU_IRQ_EOW)
+> > > >  #define ENABLED_CU_IRQS              (CU_IRQ_OVR | CU_IRQ_ERR)
+> > > > -#define ENABLED_DOU_IRQS     (DOU_IRQ_UND | DOU_IRQ_ERR)
+> > > > +#define ENABLED_DOU_IRQS     (DOU_IRQ_UND | DOU_IRQ_ERR | DOU_IRQ_PL1)
+> > > >
+> > > >  static int d71_enable_irq(struct komeda_dev *mdev)
+> > > >  {
+> > > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > > > index fa9a4593bb375..4b9f5d33e999d 100644
+> > > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > > > @@ -207,10 +207,13 @@ void komeda_crtc_handle_event(struct komeda_crtc   *kcrtc,
+> > > >                       drm_crtc_send_vblank_event(crtc, event);
+> > > >               } else {
+> > > >                       DRM_WARN("CRTC[%d]: FLIP happen but no pending commit.\n",
+> > > > -                              drm_crtc_index(&kcrtc->base));
+> > > > +                              drm_crtc_index(crtc));
+> > > >               }
+> > > >               spin_unlock_irqrestore(&crtc->dev->event_lock, flags);
+> > > >       }
+> > > > +
+> > > > +     if ((kcrtc->crc_enabled) && (events & KOMEDA_EVENT_CRCDONE))
+> > > > +             drm_crtc_add_crc_entry(crtc, false, 0, evts->crcs[kcrtc->master->id]);
+> > > >  }
+> > > >
+> > > >  static void
+> > > > @@ -487,6 +490,59 @@ static void komeda_crtc_vblank_disable(struct drm_crtc *crtc)
+> > > >       mdev->funcs->on_off_vblank(mdev, kcrtc->master->id, false);
+> > > >  }
+> > > >
+> > > > +static const char * const komeda_pipe_crc_sources[] = {"auto"};
+> > > > +
+> > > > +static const char *const *komeda_crtc_get_crc_sources(struct drm_crtc *crtc,
+> > > > +                                                   size_t *count)
+> > > > +{
+> > > > +     *count = ARRAY_SIZE(komeda_pipe_crc_sources);
+> > > > +     return komeda_pipe_crc_sources;
+> > > > +}
+> > > > +
+> > > > +static int komeda_crtc_parse_crc_source(const char *source)
+> > > > +{
+> > > > +     if (!source)
+> > > > +             return 0;
+> > > > +     if (strcmp(source, "auto") == 0)
+> > > > +             return 1;
+> > > > +
+> > > > +     return -EINVAL;
+> > > > +}
+> > > > +
+> > > > +static int komeda_crtc_verify_crc_source(struct drm_crtc *crtc,
+> > > > +                                      const char *source_name,
+> > > > +                                      size_t *values_count)
+> > > > +{
+> > > > +     struct komeda_crtc *kcrtc = to_kcrtc(crtc);
+> > > > +     int source = komeda_crtc_parse_crc_source(source_name);
+> > > > +
+> > > > +     if (source < 0) {
+> > > > +             DRM_DEBUG_DRIVER("Unknown or invalid CRC source for CRTC%d\n",
+> > > > +                              drm_crtc_index(crtc));
+> > > > +             return -EINVAL;
+> > > > +     }
+> > > > +
+> > > > +     *values_count = kcrtc->master->dual_link ? 4 : 2;
+> > >
+> > > Can CRC generation continue across a modeset? If so I think we could
+> > > end up with a case where dual_link changes while CRC is active. Maybe
+> > > we should just always return 4 values, but set the third and fourth
+> > > values to 0 in the event handler, if dual-link isn't active.
+> > 
+> > Modeset is allowed to destry the crc setup. Maybe not the smartest
+> > decision (it prevents us from making sure the first frame is perfect),
+> > but pretty deeply in-grained into tests by now. If we want to move
+> > this I think first step would be to add new basic testcases to igt to
+> > validate crc generation against modesets (maybe start with dpms
+> > off/on, then suspend/resume, then full modesets). Really not sure
+> > there's a need, and I've seen too many cases like this where crc
+> > generation changes depending upon modeset (bpp, routing, ...) to
+> > assume we can just make it work.
+> > 
+> > I'd not bother and leave things as-is.
+> 
+> OK good, glad we're not alone. Do we need to do anything specific to
+> stop/reconfigure generation over modeset, or we just rely on userspace
+> to reconfigure?
 
-Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
----
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Expectation is:
+- userspace configures mode
+- userspace selects crc source and enables it (this might internally do a
+  full modeset to get the pipeline back into a shape were we can capture
+  crcs - some of the low power modes in i915 bypass the crc block ...
+  yay).
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index f3f0e37..1285cfc 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -99,9 +99,6 @@
- 		reset-gpios = <&gpioa 10 GPIO_ACTIVE_LOW>;
- 		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
- 		interrupt-parent = <&gpiog>;
--		pinctrl-names = "default", "sleep";
--		pinctrl-0 = <&ltdc_pins_a>;
--		pinctrl-1 = <&ltdc_pins_sleep_a>;
- 		status = "okay";
- 
- 		ports {
-@@ -276,6 +273,9 @@
- };
- 
- &ltdc {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&ltdc_pins_a>;
-+	pinctrl-1 = <&ltdc_pins_sleep_a>;
- 	status = "okay";
- 
- 	port {
+So nothing to do for you. I think the rough rule is that crc generation
+should continue working as long as you don't do anything which requires an
+ALLOW_MODESET commit.
+
+Care to type a kerneldoc patch to clarify this, since I think current docs
+are lacking?
+-Daniel
+
+> 
+> Thanks,
+> -Brian
+> 
+> > -Daniel
+> > >
+> > > Cheers,
+> > > -Brian
+> > >
+
 -- 
-2.7.4
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
