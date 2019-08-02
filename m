@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFD5C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C94C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7C021851
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A18217D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752664;
-	bh=EcsuI+g39qTBmjUcacw7kMGLcPEQ3i7hCV+lyVy9SMM=;
+	s=default; t=1564752668;
+	bh=LKco+Ml/mXlTaYOYivdcpiSyFipxOrOj1dGMu4fxzos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aePBvYuYHY65OtIq7yPHUYVi4/S/8U/S4z9cbj9ifKbEwcGtjxlY1p7y9Gs3EMZ/5
-	 bk3EdGLoKFYXeqxNh20XuWdsaJImKu3y7ilBKg/1LerbbvCMh0e3ug9Ff586x4ukFV
-	 cUbA9eTf1ut7ShyKsH21mbBUmgXbPt++LD1WX/a8=
+	b=nOXB5HgFWzNznTPEv3073agUWeLjCQDgII/ZKbwngLb0dLqAex0JDx/jMWcBtnpn2
+	 j1DmNaT9VxQS36SP1L9AE3rDCCJ91C/TVK4VNP15O85oBtD5pYtIk6jTBlFOW65YjC
+	 rjPetaZ+oEFclYFymqX9qTTitkr8W+mP3r2Ig5Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394127AbfHBNYR (ORCPT
+        id S2404384AbfHBNbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:24:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34634 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394082AbfHBNYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:00 -0400
+        id S2394124AbfHBNYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30ABF21850;
-        Fri,  2 Aug 2019 13:23:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC34A21773;
+        Fri,  2 Aug 2019 13:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752240;
-        bh=EcsuI+g39qTBmjUcacw7kMGLcPEQ3i7hCV+lyVy9SMM=;
+        s=default; t=1564752255;
+        bh=LKco+Ml/mXlTaYOYivdcpiSyFipxOrOj1dGMu4fxzos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CAGVg/RPMwnMoJ7GmfK0FtjGZJ9QiFUI10M3Wd4e49MZbwBmf11MFNuTHmAwxxZA2
-         iF9+kh8ienyz7UwrYrNSLTa3g0ujKfrQdNuKHwas8vnfwR/P0AEL17XSbJOie5QQCc
-         nBv2HM2G+HqPU8WjXDR1PN1p0OC3MCuLcrCtcWDY=
+        b=dPK/b148+btOzu8t2VuozUHmWM0u8vexwVcX7YdPtGz31W934fnvC0waoid5LG7yt
+         RPOxEEoJ+86VRK1D3UyLWJlOzViTP5xnHrfj9hsoMCLcmbuXvDe0/0posmYE+Gd0UF
+         7LZji9Q8vkENsmBQ6m7GW6V0HiiFTaFXh8uHNSRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marta Rybczynska <mrybczyn@kalray.eu>,
-        Marta Rybczynska <marta.rybczynska@kalray.eu>,
-        Jean-Baptiste Riaux <jbriaux@kalray.eu>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 31/42] nvme: fix multipath crash when ANA is deactivated
-Date:   Fri,  2 Aug 2019 09:22:51 -0400
-Message-Id: <20190802132302.13537-31-sashal@kernel.org>
+Cc:     Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 39/42] sched/fair: Use RCU accessors consistently for ->numa_group
+Date:   Fri,  2 Aug 2019 09:22:59 -0400
+Message-Id: <20190802132302.13537-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 References: <20190802132302.13537-1-sashal@kernel.org>
@@ -61,125 +64,390 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marta Rybczynska <mrybczyn@kalray.eu>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 66b20ac0a1a10769d059d6903202f53494e3d902 ]
+[ Upstream commit cb361d8cdef69990f6b4504dc1fd9a594d983c97 ]
 
-Fix a crash with multipath activated. It happends when ANA log
-page is larger than MDTS and because of that ANA is disabled.
-The driver then tries to access unallocated buffer when connecting
-to a nvme target. The signature is as follows:
+The old code used RCU annotations and accessors inconsistently for
+->numa_group, which can lead to use-after-frees and NULL dereferences.
 
-[  300.433586] nvme nvme0: ANA log page size (8208) larger than MDTS (8192).
-[  300.435387] nvme nvme0: disabling ANA support.
-[  300.437835] nvme nvme0: creating 4 I/O queues.
-[  300.459132] nvme nvme0: new ctrl: NQN "nqn.0.0.0", addr 10.91.0.1:8009
-[  300.464609] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-[  300.466342] #PF error: [normal kernel read fault]
-[  300.467385] PGD 0 P4D 0
-[  300.467987] Oops: 0000 [#1] SMP PTI
-[  300.468787] CPU: 3 PID: 50 Comm: kworker/u8:1 Not tainted 5.0.20kalray+ #4
-[  300.470264] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[  300.471532] Workqueue: nvme-wq nvme_scan_work [nvme_core]
-[  300.472724] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
-[  300.474038] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
-[  300.477374] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
-[  300.478334] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
-[  300.479784] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
-[  300.481488] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
-[  300.483203] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
-[  300.484928] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
-[  300.486626] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
-[  300.488538] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  300.489907] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
-[  300.491612] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  300.493303] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  300.494991] Call Trace:
-[  300.495645]  nvme_mpath_add_disk+0x5c/0xb0 [nvme_core]
-[  300.496880]  nvme_validate_ns+0x2ef/0x550 [nvme_core]
-[  300.498105]  ? nvme_identify_ctrl.isra.45+0x6a/0xb0 [nvme_core]
-[  300.499539]  nvme_scan_work+0x2b4/0x370 [nvme_core]
-[  300.500717]  ? __switch_to_asm+0x35/0x70
-[  300.501663]  process_one_work+0x171/0x380
-[  300.502340]  worker_thread+0x49/0x3f0
-[  300.503079]  kthread+0xf8/0x130
-[  300.503795]  ? max_active_store+0x80/0x80
-[  300.504690]  ? kthread_bind+0x10/0x10
-[  300.505502]  ret_from_fork+0x35/0x40
-[  300.506280] Modules linked in: nvme_tcp nvme_rdma rdma_cm iw_cm ib_cm ib_core nvme_fabrics nvme_core xt_physdev ip6table_raw ip6table_mangle ip6table_filter ip6_tables xt_comment iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xt_CHECKSUM iptable_mangle iptable_filter veth ebtable_filter ebtable_nat ebtables iptable_raw vxlan ip6_udp_tunnel udp_tunnel sunrpc joydev pcspkr virtio_balloon br_netfilter bridge stp llc ip_tables xfs libcrc32c ata_generic pata_acpi virtio_net virtio_console net_failover virtio_blk failover ata_piix serio_raw libata virtio_pci virtio_ring virtio
-[  300.514984] CR2: 0000000000000008
-[  300.515569] ---[ end trace faa2eefad7e7f218 ]---
-[  300.516354] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
-[  300.517330] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
-[  300.520353] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
-[  300.521229] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
-[  300.522399] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
-[  300.523560] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
-[  300.524734] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
-[  300.525915] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
-[  300.527084] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
-[  300.528396] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  300.529440] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
-[  300.530739] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  300.531989] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  300.533264] Kernel panic - not syncing: Fatal exception
-[  300.534338] Kernel Offset: 0x17c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[  300.536227] ---[ end Kernel panic - not syncing: Fatal exception ]---
+Let all accesses to ->numa_group use proper RCU helpers to prevent such
+issues.
 
-Condition check refactoring from Christoph Hellwig.
-
-Signed-off-by: Marta Rybczynska <marta.rybczynska@kalray.eu>
-Tested-by: Jean-Baptiste Riaux <jbriaux@kalray.eu>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Fixes: 8c8a743c5087 ("sched/numa: Use {cpu, pid} to create task groups for shared faults")
+Link: https://lkml.kernel.org/r/20190716152047.14424-3-jannh@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 8 ++------
- drivers/nvme/host/nvme.h      | 6 +++++-
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ include/linux/sched.h |  10 +++-
+ kernel/sched/fair.c   | 120 ++++++++++++++++++++++++++++--------------
+ 2 files changed, 90 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 260248fbb8feb..a11e210d173e4 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -20,11 +20,6 @@ module_param(multipath, bool, 0444);
- MODULE_PARM_DESC(multipath,
- 	"turn on native support for multiple controllers per subsystem");
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 5dc024e283979..20f5ba262cc0d 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1023,7 +1023,15 @@ struct task_struct {
+ 	u64				last_sum_exec_runtime;
+ 	struct callback_head		numa_work;
  
--inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
--{
--	return multipath && ctrl->subsys && (ctrl->subsys->cmic & (1 << 3));
--}
--
- /*
-  * If multipathing is enabled we need to always use the subsystem instance
-  * number for numbering our devices to avoid conflicts between subsystems that
-@@ -516,7 +511,8 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- {
- 	int error;
+-	struct numa_group		*numa_group;
++	/*
++	 * This pointer is only modified for current in syscall and
++	 * pagefault context (and for tasks being destroyed), so it can be read
++	 * from any of the following contexts:
++	 *  - RCU read-side critical section
++	 *  - current->numa_group from everywhere
++	 *  - task's runqueue locked, task not running
++	 */
++	struct numa_group __rcu		*numa_group;
  
--	if (!nvme_ctrl_use_ana(ctrl))
-+	/* check if multipath is enabled and we have the capability */
-+	if (!multipath || !ctrl->subsys || !(ctrl->subsys->cmic & (1 << 3)))
- 		return 0;
+ 	/*
+ 	 * numa_faults is an array split into four regions:
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 34b998678b97d..75f322603d442 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1053,6 +1053,21 @@ struct numa_group {
+ 	unsigned long faults[0];
+ };
  
- 	ctrl->anacap = id->anacap;
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index e82cdaec81c9c..d5e29b57eb340 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -464,7 +464,11 @@ extern const struct attribute_group nvme_ns_id_attr_group;
- extern const struct block_device_operations nvme_ns_head_ops;
- 
- #ifdef CONFIG_NVME_MULTIPATH
--bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl);
-+static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
++/*
++ * For functions that can be called in multiple contexts that permit reading
++ * ->numa_group (see struct task_struct for locking rules).
++ */
++static struct numa_group *deref_task_numa_group(struct task_struct *p)
 +{
-+	return ctrl->ana_log_buf != NULL;
++	return rcu_dereference_check(p->numa_group, p == current ||
++		(lockdep_is_held(&task_rq(p)->lock) && !READ_ONCE(p->on_cpu)));
 +}
 +
- void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
- 			struct nvme_ctrl *ctrl, int *flags);
- void nvme_failover_req(struct request *req);
++static struct numa_group *deref_curr_numa_group(struct task_struct *p)
++{
++	return rcu_dereference_protected(p->numa_group, p == current);
++}
++
+ static inline unsigned long group_faults_priv(struct numa_group *ng);
+ static inline unsigned long group_faults_shared(struct numa_group *ng);
+ 
+@@ -1096,10 +1111,12 @@ static unsigned int task_scan_start(struct task_struct *p)
+ {
+ 	unsigned long smin = task_scan_min(p);
+ 	unsigned long period = smin;
++	struct numa_group *ng;
+ 
+ 	/* Scale the maximum scan period with the amount of shared memory. */
+-	if (p->numa_group) {
+-		struct numa_group *ng = p->numa_group;
++	rcu_read_lock();
++	ng = rcu_dereference(p->numa_group);
++	if (ng) {
+ 		unsigned long shared = group_faults_shared(ng);
+ 		unsigned long private = group_faults_priv(ng);
+ 
+@@ -1107,6 +1124,7 @@ static unsigned int task_scan_start(struct task_struct *p)
+ 		period *= shared + 1;
+ 		period /= private + shared + 1;
+ 	}
++	rcu_read_unlock();
+ 
+ 	return max(smin, period);
+ }
+@@ -1115,13 +1133,14 @@ static unsigned int task_scan_max(struct task_struct *p)
+ {
+ 	unsigned long smin = task_scan_min(p);
+ 	unsigned long smax;
++	struct numa_group *ng;
+ 
+ 	/* Watch for min being lower than max due to floor calculations */
+ 	smax = sysctl_numa_balancing_scan_period_max / task_nr_scan_windows(p);
+ 
+ 	/* Scale the maximum scan period with the amount of shared memory. */
+-	if (p->numa_group) {
+-		struct numa_group *ng = p->numa_group;
++	ng = deref_curr_numa_group(p);
++	if (ng) {
+ 		unsigned long shared = group_faults_shared(ng);
+ 		unsigned long private = group_faults_priv(ng);
+ 		unsigned long period = smax;
+@@ -1153,7 +1172,7 @@ void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
+ 	p->numa_scan_period		= sysctl_numa_balancing_scan_delay;
+ 	p->numa_work.next		= &p->numa_work;
+ 	p->numa_faults			= NULL;
+-	p->numa_group			= NULL;
++	RCU_INIT_POINTER(p->numa_group, NULL);
+ 	p->last_task_numa_placement	= 0;
+ 	p->last_sum_exec_runtime	= 0;
+ 
+@@ -1200,7 +1219,16 @@ static void account_numa_dequeue(struct rq *rq, struct task_struct *p)
+ 
+ pid_t task_numa_group_id(struct task_struct *p)
+ {
+-	return p->numa_group ? p->numa_group->gid : 0;
++	struct numa_group *ng;
++	pid_t gid = 0;
++
++	rcu_read_lock();
++	ng = rcu_dereference(p->numa_group);
++	if (ng)
++		gid = ng->gid;
++	rcu_read_unlock();
++
++	return gid;
+ }
+ 
+ /*
+@@ -1225,11 +1253,13 @@ static inline unsigned long task_faults(struct task_struct *p, int nid)
+ 
+ static inline unsigned long group_faults(struct task_struct *p, int nid)
+ {
+-	if (!p->numa_group)
++	struct numa_group *ng = deref_task_numa_group(p);
++
++	if (!ng)
+ 		return 0;
+ 
+-	return p->numa_group->faults[task_faults_idx(NUMA_MEM, nid, 0)] +
+-		p->numa_group->faults[task_faults_idx(NUMA_MEM, nid, 1)];
++	return ng->faults[task_faults_idx(NUMA_MEM, nid, 0)] +
++		ng->faults[task_faults_idx(NUMA_MEM, nid, 1)];
+ }
+ 
+ static inline unsigned long group_faults_cpu(struct numa_group *group, int nid)
+@@ -1367,12 +1397,13 @@ static inline unsigned long task_weight(struct task_struct *p, int nid,
+ static inline unsigned long group_weight(struct task_struct *p, int nid,
+ 					 int dist)
+ {
++	struct numa_group *ng = deref_task_numa_group(p);
+ 	unsigned long faults, total_faults;
+ 
+-	if (!p->numa_group)
++	if (!ng)
+ 		return 0;
+ 
+-	total_faults = p->numa_group->total_faults;
++	total_faults = ng->total_faults;
+ 
+ 	if (!total_faults)
+ 		return 0;
+@@ -1386,7 +1417,7 @@ static inline unsigned long group_weight(struct task_struct *p, int nid,
+ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
+ 				int src_nid, int dst_cpu)
+ {
+-	struct numa_group *ng = p->numa_group;
++	struct numa_group *ng = deref_curr_numa_group(p);
+ 	int dst_nid = cpu_to_node(dst_cpu);
+ 	int last_cpupid, this_cpupid;
+ 
+@@ -1592,13 +1623,14 @@ static bool load_too_imbalanced(long src_load, long dst_load,
+ static void task_numa_compare(struct task_numa_env *env,
+ 			      long taskimp, long groupimp, bool maymove)
+ {
++	struct numa_group *cur_ng, *p_ng = deref_curr_numa_group(env->p);
+ 	struct rq *dst_rq = cpu_rq(env->dst_cpu);
++	long imp = p_ng ? groupimp : taskimp;
+ 	struct task_struct *cur;
+ 	long src_load, dst_load;
+-	long load;
+-	long imp = env->p->numa_group ? groupimp : taskimp;
+-	long moveimp = imp;
+ 	int dist = env->dist;
++	long moveimp = imp;
++	long load;
+ 
+ 	if (READ_ONCE(dst_rq->numa_migrate_on))
+ 		return;
+@@ -1637,21 +1669,22 @@ static void task_numa_compare(struct task_numa_env *env,
+ 	 * If dst and source tasks are in the same NUMA group, or not
+ 	 * in any group then look only at task weights.
+ 	 */
+-	if (cur->numa_group == env->p->numa_group) {
++	cur_ng = rcu_dereference(cur->numa_group);
++	if (cur_ng == p_ng) {
+ 		imp = taskimp + task_weight(cur, env->src_nid, dist) -
+ 		      task_weight(cur, env->dst_nid, dist);
+ 		/*
+ 		 * Add some hysteresis to prevent swapping the
+ 		 * tasks within a group over tiny differences.
+ 		 */
+-		if (cur->numa_group)
++		if (cur_ng)
+ 			imp -= imp / 16;
+ 	} else {
+ 		/*
+ 		 * Compare the group weights. If a task is all by itself
+ 		 * (not part of a group), use the task weight instead.
+ 		 */
+-		if (cur->numa_group && env->p->numa_group)
++		if (cur_ng && p_ng)
+ 			imp += group_weight(cur, env->src_nid, dist) -
+ 			       group_weight(cur, env->dst_nid, dist);
+ 		else
+@@ -1749,11 +1782,12 @@ static int task_numa_migrate(struct task_struct *p)
+ 		.best_imp = 0,
+ 		.best_cpu = -1,
+ 	};
++	unsigned long taskweight, groupweight;
+ 	struct sched_domain *sd;
++	long taskimp, groupimp;
++	struct numa_group *ng;
+ 	struct rq *best_rq;
+-	unsigned long taskweight, groupweight;
+ 	int nid, ret, dist;
+-	long taskimp, groupimp;
+ 
+ 	/*
+ 	 * Pick the lowest SD_NUMA domain, as that would have the smallest
+@@ -1799,7 +1833,8 @@ static int task_numa_migrate(struct task_struct *p)
+ 	 *   multiple NUMA nodes; in order to better consolidate the group,
+ 	 *   we need to check other locations.
+ 	 */
+-	if (env.best_cpu == -1 || (p->numa_group && p->numa_group->active_nodes > 1)) {
++	ng = deref_curr_numa_group(p);
++	if (env.best_cpu == -1 || (ng && ng->active_nodes > 1)) {
+ 		for_each_online_node(nid) {
+ 			if (nid == env.src_nid || nid == p->numa_preferred_nid)
+ 				continue;
+@@ -1832,7 +1867,7 @@ static int task_numa_migrate(struct task_struct *p)
+ 	 * A task that migrated to a second choice node will be better off
+ 	 * trying for a better one later. Do not set the preferred node here.
+ 	 */
+-	if (p->numa_group) {
++	if (ng) {
+ 		if (env.best_cpu == -1)
+ 			nid = env.src_nid;
+ 		else
+@@ -2127,6 +2162,7 @@ static void task_numa_placement(struct task_struct *p)
+ 	unsigned long total_faults;
+ 	u64 runtime, period;
+ 	spinlock_t *group_lock = NULL;
++	struct numa_group *ng;
+ 
+ 	/*
+ 	 * The p->mm->numa_scan_seq field gets updated without
+@@ -2144,8 +2180,9 @@ static void task_numa_placement(struct task_struct *p)
+ 	runtime = numa_get_avg_runtime(p, &period);
+ 
+ 	/* If the task is part of a group prevent parallel updates to group stats */
+-	if (p->numa_group) {
+-		group_lock = &p->numa_group->lock;
++	ng = deref_curr_numa_group(p);
++	if (ng) {
++		group_lock = &ng->lock;
+ 		spin_lock_irq(group_lock);
+ 	}
+ 
+@@ -2186,7 +2223,7 @@ static void task_numa_placement(struct task_struct *p)
+ 			p->numa_faults[cpu_idx] += f_diff;
+ 			faults += p->numa_faults[mem_idx];
+ 			p->total_numa_faults += diff;
+-			if (p->numa_group) {
++			if (ng) {
+ 				/*
+ 				 * safe because we can only change our own group
+ 				 *
+@@ -2194,14 +2231,14 @@ static void task_numa_placement(struct task_struct *p)
+ 				 * nid and priv in a specific region because it
+ 				 * is at the beginning of the numa_faults array.
+ 				 */
+-				p->numa_group->faults[mem_idx] += diff;
+-				p->numa_group->faults_cpu[mem_idx] += f_diff;
+-				p->numa_group->total_faults += diff;
+-				group_faults += p->numa_group->faults[mem_idx];
++				ng->faults[mem_idx] += diff;
++				ng->faults_cpu[mem_idx] += f_diff;
++				ng->total_faults += diff;
++				group_faults += ng->faults[mem_idx];
+ 			}
+ 		}
+ 
+-		if (!p->numa_group) {
++		if (!ng) {
+ 			if (faults > max_faults) {
+ 				max_faults = faults;
+ 				max_nid = nid;
+@@ -2212,8 +2249,8 @@ static void task_numa_placement(struct task_struct *p)
+ 		}
+ 	}
+ 
+-	if (p->numa_group) {
+-		numa_group_count_active_nodes(p->numa_group);
++	if (ng) {
++		numa_group_count_active_nodes(ng);
+ 		spin_unlock_irq(group_lock);
+ 		max_nid = preferred_group_nid(p, max_nid);
+ 	}
+@@ -2247,7 +2284,7 @@ static void task_numa_group(struct task_struct *p, int cpupid, int flags,
+ 	int cpu = cpupid_to_cpu(cpupid);
+ 	int i;
+ 
+-	if (unlikely(!p->numa_group)) {
++	if (unlikely(!deref_curr_numa_group(p))) {
+ 		unsigned int size = sizeof(struct numa_group) +
+ 				    4*nr_node_ids*sizeof(unsigned long);
+ 
+@@ -2283,7 +2320,7 @@ static void task_numa_group(struct task_struct *p, int cpupid, int flags,
+ 	if (!grp)
+ 		goto no_join;
+ 
+-	my_grp = p->numa_group;
++	my_grp = deref_curr_numa_group(p);
+ 	if (grp == my_grp)
+ 		goto no_join;
+ 
+@@ -2354,7 +2391,8 @@ static void task_numa_group(struct task_struct *p, int cpupid, int flags,
+  */
+ void task_numa_free(struct task_struct *p, bool final)
+ {
+-	struct numa_group *grp = p->numa_group;
++	/* safe: p either is current or is being freed by current */
++	struct numa_group *grp = rcu_dereference_raw(p->numa_group);
+ 	unsigned long *numa_faults = p->numa_faults;
+ 	unsigned long flags;
+ 	int i;
+@@ -2434,7 +2472,7 @@ void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
+ 	 * actively using should be counted as local. This allows the
+ 	 * scan rate to slow down when a workload has settled down.
+ 	 */
+-	ng = p->numa_group;
++	ng = deref_curr_numa_group(p);
+ 	if (!priv && !local && ng && ng->active_nodes > 1 &&
+ 				numa_is_active_node(cpu_node, ng) &&
+ 				numa_is_active_node(mem_node, ng))
+@@ -10234,18 +10272,22 @@ void show_numa_stats(struct task_struct *p, struct seq_file *m)
+ {
+ 	int node;
+ 	unsigned long tsf = 0, tpf = 0, gsf = 0, gpf = 0;
++	struct numa_group *ng;
+ 
++	rcu_read_lock();
++	ng = rcu_dereference(p->numa_group);
+ 	for_each_online_node(node) {
+ 		if (p->numa_faults) {
+ 			tsf = p->numa_faults[task_faults_idx(NUMA_MEM, node, 0)];
+ 			tpf = p->numa_faults[task_faults_idx(NUMA_MEM, node, 1)];
+ 		}
+-		if (p->numa_group) {
+-			gsf = p->numa_group->faults[task_faults_idx(NUMA_MEM, node, 0)],
+-			gpf = p->numa_group->faults[task_faults_idx(NUMA_MEM, node, 1)];
++		if (ng) {
++			gsf = ng->faults[task_faults_idx(NUMA_MEM, node, 0)],
++			gpf = ng->faults[task_faults_idx(NUMA_MEM, node, 1)];
+ 		}
+ 		print_numa_stats(m, node, tsf, tpf, gsf, gpf);
+ 	}
++	rcu_read_unlock();
+ }
+ #endif /* CONFIG_NUMA_BALANCING */
+ #endif /* CONFIG_SCHED_DEBUG */
 -- 
 2.20.1
 
