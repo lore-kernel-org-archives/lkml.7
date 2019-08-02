@@ -2,105 +2,129 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6DAC32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAB2C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 282A4205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:18:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564737488;
-	bh=lwxmIkY4LWmEOBtj3Sj7Yrar5jz1Woi5O92vwkULX2s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=z3MuPFqJkjwCGONfuwF4KaGLWGKT8fQjCETuVG5sToSojsnoO64/PQh2NZ90+j3vD
-	 lx9sLBk2YEIsCZ3ncLXU/rlhnyr2O11vMAIMqqelI+hX4FfkLphIFSgIOqwvTijmNM
-	 rm9J/s6SBTOdXs3CXjHPbQAZEmAmqoyqIn5jKOeI=
+	by mail.kernel.org (Postfix) with ESMTP id 3F565205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733156AbfHBJSH (ORCPT
+        id S2387875AbfHBJT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:18:07 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40430 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbfHBJSG (ORCPT
+        Fri, 2 Aug 2019 05:19:29 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34531 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728904AbfHBJT2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:18:06 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w196so34983470oie.7;
-        Fri, 02 Aug 2019 02:18:06 -0700 (PDT)
+        Fri, 2 Aug 2019 05:19:28 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 31so76448694wrm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 02:19:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xkFiSdpHUnfyoWjiC0O20PFSo9ZFj78rh5jCNoeTnAA=;
-        b=BQFz+2GF1t7sEohOqsiXJ36+8/nQQdkp1RPuto3z1P/QTcPE1EvKwPLJ63GLuGaX+N
-         KkLK+xeH7O165HsWrHiPFaYOPYxO/Q3haKyhcQ/jQ+kcx1SE/OQZ4EREPgpPSYDU7SjL
-         c6SoCb52Wdx9DYTHP3MV07CtoGZM5VnPRxSK36D6l7haeknoHmQt5UvmdUrWBGMYzUWg
-         F5TTfUdnDa448AxOQFK7+bWlTvi+zuY1en85c4c3KM28QqOE2q4714K08lRIAvpc7Mgp
-         ByWFaKD6rSy67b4en6/Oh7ZAK+aj0vP8a75PKkYC/tnvqRlE940f26oULge74g29ucJ4
-         tfuA==
-X-Gm-Message-State: APjAAAUahhI8BFfeojURGMipjBJyP1mmqJqNr1R2qUXXQ4iHOP2WNmi8
-        FTAxwiAy5upXKzBwGFFXPlw/VBf6OG/kWkvQlWM=
-X-Google-Smtp-Source: APXvYqyZS9QZ2kNW1W+zc/Px9C3QI2WFuduW3A8Nk8BTEuK5oQ9wdhdvZBRBfJARZ59KGV8kJCdtOk4AoB8lN+iBQtM=
-X-Received: by 2002:aca:edc8:: with SMTP id l191mr2172033oih.103.1564737485809;
- Fri, 02 Aug 2019 02:18:05 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rryOV1whaDt5qbcW76oYyWTCHfociKUQe7uUrG+FL04=;
+        b=cAABzNIs+SyBwn205V12uXKyjKhzgHksrLrAN51TegQeO0rW2727G1AnFs+1uWKRg1
+         88h15zPAoKx3U4e05fCsHezg1GlJJj9yQ3gT4srQgwaDpDa1jqFn3gxWWPVuQNl1w6f+
+         GMrK1amHEWumuRjbioZo7DHo+sZl+VHL45uJDwU2smmyN/GV5wOQv0Biih9HX3DsA/jr
+         1BoBHoYnznFwJjKazvdEvtkIMljIoFED+uo0HNslENkbC/6VwKT4+Hk69+5jmJZuzOku
+         iZuXJrMqYxy//law4I8Qlho6qriF9kW7PAq7OeDxkIfqjSbtMpbuVmzAubDa5Fyh8k6n
+         +PZg==
+X-Gm-Message-State: APjAAAUMgXVMsOVerFyduNrlhg/rB/YL2/qESZntfHWTSPpaX1EwL9AA
+        92ro9VjtV8stFGo9kaliltQv+ZwNxis=
+X-Google-Smtp-Source: APXvYqza/LpvBZeOyX5mCSYBuS884KevJyp6R0c0GnF4OO2UtCcL/e+zxFkWcQbl0keeDPdzL8UUmg==
+X-Received: by 2002:a5d:5510:: with SMTP id b16mr109465347wrv.267.1564737566565;
+        Fri, 02 Aug 2019 02:19:26 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:4013:e920:9388:c3ff? ([2001:b07:6468:f312:4013:e920:9388:c3ff])
+        by smtp.gmail.com with ESMTPSA id v4sm75315899wmg.22.2019.08.02.02.19.25
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 02:19:26 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 11/19] RISC-V: KVM: Implement VMID allocator
+To:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190802074620.115029-1-anup.patel@wdc.com>
+ <20190802074620.115029-12-anup.patel@wdc.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <ef688903-ff49-ffeb-1f95-ef995942d5dc@redhat.com>
+Date:   Fri, 2 Aug 2019 11:19:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <7dedb6bd157b8183c693bb578e25e313cf4f451d.1564724511.git.viresh.kumar@linaro.org>
- <23e3dee8688f5a9767635b686bb7a9c0e09a4438.1564724511.git.viresh.kumar@linaro.org>
-In-Reply-To: <23e3dee8688f5a9767635b686bb7a9c0e09a4438.1564724511.git.viresh.kumar@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 2 Aug 2019 11:17:55 +0200
-Message-ID: <CAJZ5v0iqztRWyxf1cgiAN1dK4qTGwy9raaGOx5u3tfBTGUKOng@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] cpufreq: intel_pstate: Implement ->resolve_freq()
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "v4 . 18+" <stable@vger.kernel.org>,
-        Doug Smythies <doug.smythies@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190802074620.115029-12-anup.patel@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> Intel pstate driver exposes min_perf_pct and max_perf_pct sysfs files,
-> which can be used to force a limit on the min/max P state of the driver.
-> Though these files eventually control the min/max frequencies that the
-> CPUs will run at, they don't make a change to policy->min/max values.
+On 02/08/19 09:48, Anup Patel wrote:
+> +struct kvm_vmid {
+> +	unsigned long vmid_version;
+> +	unsigned long vmid;
+> +};
+> +
 
-That's correct.
+Please document that both fields are written under vmid_lock, and read
+outside it.
 
-> When the values of these files are changed (in passive mode of the
-> driver), it leads to calling ->limits() callback of the cpufreq
-> governors, like schedutil. On a call to it the governors shall
-> forcefully update the frequency to come within the limits.
+> +		/*
+> +		 * On SMP we know no other CPUs can use this CPU's or
+> +		 * each other's VMID after forced exit returns since the
+> +		 * vmid_lock blocks them from re-entry to the guest.
+> +		 */
+> +		force_exit_and_guest_tlb_flush(cpu_all_mask);
 
-OK, so the problem is that it is a bug to invoke the governor's ->limits()
-callback without updating policy->min/max, because that's what
-"limits" mean to the governors.
+Please use kvm_flush_remote_tlbs(kvm) instead.  All you need to do to
+support it is check for KVM_REQ_TLB_FLUSH and handle it by calling
+__kvm_riscv_hfence_gvma_all.  Also, since your spinlock is global you
+probably should release it around the call to kvm_flush_remote_tlbs.
+(Think of an implementation that has a very small number of VMID bits).
 
-Fair enough.
+> +	if (unlikely(vmid_next == 0)) {
+> +		WRITE_ONCE(vmid_version, READ_ONCE(vmid_version) + 1);
+> +		vmid_next = 1;
+> +		/*
+> +		 * On SMP we know no other CPUs can use this CPU's or
+> +		 * each other's VMID after forced exit returns since the
+> +		 * vmid_lock blocks them from re-entry to the guest.
+> +		 */
+> +		force_exit_and_guest_tlb_flush(cpu_all_mask);
+> +	}
+> +
+> +	vmid->vmid = vmid_next;
+> +	vmid_next++;
+> +	vmid_next &= (1 << vmid_bits) - 1;
+> +
+> +	/* Ensure VMID next update is completed */
+> +	smp_wmb();
 
-> For getting the value within limits, the schedutil governor calls
-> cpufreq_driver_resolve_freq(), which eventually tries to call
-> ->resolve_freq() callback for this driver. Since the callback isn't
-> present, the schedutil governor fails to get the target freq within
-> limit and sometimes aborts the update believing that the frequency is
-> already set to the target value.
->
-> This patch implements the resolve_freq() callback, so the correct target
-> frequency can be returned by the driver and the schedutil governor gets
-> the frequency within limits immediately.
+This barrier is not necessary.  Writes to vmid->vmid need not be ordered
+with writes to vmid->vmid_version, because the accesses happen in
+completely different places.
 
-So the problem is that ->resolve_freq() adds overhead and it adds that
-overhead even if the limits don't change.  It just sits there and computes
-things every time even if that is completely redundant.
+(As a rule of thumb, each smp_wmb() should have a matching smp_rmb()
+somewhere, and this one doesn't).
 
-So no, this is not the right way to fix it IMO.
+Paolo
+
+> +	WRITE_ONCE(vmid->vmid_version, READ_ONCE(vmid_version));
+> +
