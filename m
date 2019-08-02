@@ -2,115 +2,131 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6D0C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BA4C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A094920880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740074;
-	bh=ANVUNEMAe1jn6TZ1TL+1KmUas0lezeRrXvXkB9h6ki8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pAs7USqLdUisNa/qb1MI1pdcWPWiG/Q/ecVzB/bbKNUL9mtifrliailNYH1sw5nue
-	 BYmqiXfTfZnudEHher8JGk1r33yDdNzcnsy5HmWPIzfPLqYbjUYVs9Avs0dtRVmBSZ
-	 lV0+IqzikeN/ojaewl5La8D0dqAQ0Bq4IpANdKW0=
+	by mail.kernel.org (Postfix) with ESMTP id 352B020665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="moNr7gZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407097AbfHBKBN (ORCPT
+        id S2407105AbfHBKBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:01:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405225AbfHBJoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:44:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CD49206A2;
-        Fri,  2 Aug 2019 09:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739060;
-        bh=ANVUNEMAe1jn6TZ1TL+1KmUas0lezeRrXvXkB9h6ki8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNl9bSuAKp8PzD2ZPn71l9XX76zY82cFpbfSANiunDsMbMuehK0cRgUQJfBOMETtu
-         CTodjy83u0Llq1vByh0dFKsS56WrJZu7OZwTBq4x5LgLhhGqdbzz0OuzZ3+z9GK/g7
-         yzXJm+F2gFz86GtbK4F3JbxTwY0HfqsDl8AqOgFs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        linux-crypto@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 082/223] crypto: crypto4xx - fix a potential double free in ppc4xx_trng_probe
-Date:   Fri,  2 Aug 2019 11:35:07 +0200
-Message-Id: <20190802092244.274402583@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
-References: <20190802092238.692035242@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 2 Aug 2019 06:01:17 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:59604 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2407093AbfHBKBO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:01:14 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id B6E762E1531;
+        Fri,  2 Aug 2019 13:01:08 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id HOPkayq66P-18ZKcidf;
+        Fri, 02 Aug 2019 13:01:08 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1564740068; bh=7bbzX4NqS7tPlZl7gqOBotqgWDukNiS3yB34/LQpZj4=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=moNr7gZ0cw46pUWpD6Kc7KZit/7vWlq/+bm9aSLLfyTHajQxFIF6NO0eZbtRnQnlt
+         8/3f6xX2AE9lAZha1WwiDSi+7GkhRjLEfbfSQzeoRWg2vKQ12/g+secRmysS7PnKgh
+         txBLBlys7Azw5kyL63Cc1ZWr+j7i4olh1Dv57I8A=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:6454:ac35:2758:ad6a])
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id tiugwYi2cZ-18Q82FIR;
+        Fri, 02 Aug 2019 13:01:08 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
+ in get_user_pages loop
+To:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, Vladimir Davydov <vdavydov.dev@gmail.com>
+References: <156431697805.3170.6377599347542228221.stgit@buzz>
+ <20190729154952.GC21958@cmpxchg.org> <20190729185509.GI9330@dhcp22.suse.cz>
+ <20190802094028.GG6461@dhcp22.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <105a2f1f-de5c-7bac-3aa5-87bd1dbcaed9@yandex-team.ru>
+Date:   Fri, 2 Aug 2019 13:01:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190802094028.GG6461@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
-
-commit 95566aa75cd6b3b404502c06f66956b5481194b3 upstream.
-
-There is a possible double free issue in ppc4xx_trng_probe():
-
-85:	dev->trng_base = of_iomap(trng, 0);
-86:	of_node_put(trng);          ---> released here
-87:	if (!dev->trng_base)
-88:		goto err_out;
-...
-110:	ierr_out:
-111:		of_node_put(trng);  ---> double released here
-...
-
-This issue was detected by using the Coccinelle software.
-We fix it by removing the unnecessary of_node_put().
-
-Fixes: 5343e674f32f ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: <stable@vger.kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Armijn Hemel <armijn@tjaldur.nl>
-Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Julia Lawall <julia.lawall@lip6.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/crypto/amcc/crypto4xx_trng.c |    1 -
- 1 file changed, 1 deletion(-)
-
---- a/drivers/crypto/amcc/crypto4xx_trng.c
-+++ b/drivers/crypto/amcc/crypto4xx_trng.c
-@@ -111,7 +111,6 @@ void ppc4xx_trng_probe(struct crypto4xx_
- 	return;
- 
- err_out:
--	of_node_put(trng);
- 	iounmap(dev->trng_base);
- 	kfree(rng);
- 	dev->trng_base = NULL;
 
 
+On 02.08.2019 12:40, Michal Hocko wrote:
+> On Mon 29-07-19 20:55:09, Michal Hocko wrote:
+>> On Mon 29-07-19 11:49:52, Johannes Weiner wrote:
+>>> On Sun, Jul 28, 2019 at 03:29:38PM +0300, Konstantin Khlebnikov wrote:
+>>>> --- a/mm/gup.c
+>>>> +++ b/mm/gup.c
+>>>> @@ -847,8 +847,11 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
+>>>>   			ret = -ERESTARTSYS;
+>>>>   			goto out;
+>>>>   		}
+>>>> -		cond_resched();
+>>>>   
+>>>> +		/* Reclaim memory over high limit before stocking too much */
+>>>> +		mem_cgroup_handle_over_high(true);
+>>>
+>>> I'd rather this remained part of the try_charge() call. The code
+>>> comment in try_charge says this:
+>>>
+>>> 	 * We can perform reclaim here if __GFP_RECLAIM but let's
+>>> 	 * always punt for simplicity and so that GFP_KERNEL can
+>>> 	 * consistently be used during reclaim.
+>>>
+>>> The simplicity argument doesn't hold true anymore once we have to add
+>>> manual calls into allocation sites. We should instead fix try_charge()
+>>> to do synchronous reclaim for __GFP_RECLAIM and only punt to userspace
+>>> return when actually needed.
+>>
+>> Agreed. If we want to do direct reclaim on the high limit breach then it
+>> should go into try_charge same way we do hard limit reclaim there. I am
+>> not yet sure about how/whether to scale the excess. The only reason to
+>> move reclaim to return-to-userspace path was GFP_NOWAIT charges. As you
+>> say, maybe we should start by always performing the reclaim for
+>> sleepable contexts first and only defer for non-sleeping requests.
+> 
+> In other words. Something like patch below (completely untested). Could
+> you give it a try Konstantin?
+
+This should work but also eliminate all benefits from deferred reclaim:
+bigger batching and running without of any locks.
+
+After that gap between high and max will work just as reserve for atomic allocations.
+
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index ba9138a4a1de..53a35c526e43 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2429,8 +2429,12 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+>   				schedule_work(&memcg->high_work);
+>   				break;
+>   			}
+> -			current->memcg_nr_pages_over_high += batch;
+> -			set_notify_resume(current);
+> +			if (gfpflags_allow_blocking(gfp_mask)) {
+> +				reclaim_high(memcg, nr_pages, GFP_KERNEL);
+> +			} else {
+> +				current->memcg_nr_pages_over_high += batch;
+> +				set_notify_resume(current);
+> +			}
+>   			break;
+>   		}
+>   	} while ((memcg = parent_mem_cgroup(memcg)));
+> 
