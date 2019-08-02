@@ -7,87 +7,95 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4475FC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B09C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF4721849
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F4F21850
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752045;
-	bh=H/CvaLx9qSHM45AxIiO3zI7n5QsrUsdQZsskzB+VZNc=;
+	s=default; t=1564752048;
+	bh=xzIse9m8MD7RHJdqfokzO9o+wEwCWbSYJdxi+SXs9uA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QFkxAkjIxe+9uKfJhmH2cBtP1d4c0cBYQvHEeaoFm0LdOK25xTOfaixx79krRFLBT
-	 SFsJitydEZ4Uj/9VtVvTSJ5cPBqT9f1IKWJvpCCbLu5aV1hY4e3uO3KhYgvTSDgF4y
-	 YIVan0rjQCyeOT+0A1uYWNDhU11EhlisGNO+npPU=
+	b=ht2vOdvw4tq0/fOUYb//YBl47ZUFbDEJmBlqYqjkGrDIcD3qdJ+vCdOx+reeQ6V69
+	 Z2tX11FVLp0i1DuoFvwNCDjhfp9CE3YzSKPhzfa6RRfGKi2ProMzj/TjlO7TnGsE5G
+	 ZorgiIuopmjTYe6blAhwhXZ7Wl8OrORC1Mno9DeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393446AbfHBNUn (ORCPT
+        id S2393469AbfHBNUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59104 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:20:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393420AbfHBNUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:39 -0400
+        id S2393451AbfHBNUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F1A2173E;
-        Fri,  2 Aug 2019 13:20:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C55D321841;
+        Fri,  2 Aug 2019 13:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752038;
-        bh=H/CvaLx9qSHM45AxIiO3zI7n5QsrUsdQZsskzB+VZNc=;
+        s=default; t=1564752044;
+        bh=xzIse9m8MD7RHJdqfokzO9o+wEwCWbSYJdxi+SXs9uA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pAyBkujlGM2wBPmJCRtbkBl8NNZ5T8U4HqpdjV294DcsCHDYbO0HL2+Www1xGd3Tf
-         lJniBTtTpUneCNjiEsUYEbeVf2aiK1aQ0RrHJyCf5W7Rv2c7kwILaof8JpeaA1h2oR
-         n/RnfVJIHdVEtwvsi9c6cgTcfpU1FLMRiXBGvVZo=
+        b=RBWIeYS0S70+754BryL2FU7lbytZrfJpkrIIHYWDkIh8nDIixJnXnBga42/2RK0mP
+         o4RA5D/krtkUnMxDioCJ0EZqdmEboBoLoY3XsVG7Gt1L+GeWYBXx2V2SpuLbcThnAQ
+         XMxJkJPagRC9S+XpTRG4YiO3frRFmgL6LHCG2U9I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 30/76] allocate_flower_entry: should check for null deref
-Date:   Fri,  2 Aug 2019 09:19:04 -0400
-Message-Id: <20190802131951.11600-30-sashal@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B6rn=20Gerhart?= <gerhart@posteo.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 32/76] hwmon: (nct6775) Fix register address and added missed tolerance for nct6106
+Date:   Fri,  2 Aug 2019 09:19:06 -0400
+Message-Id: <20190802131951.11600-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Björn Gerhart <gerhart@posteo.de>
 
-[ Upstream commit bb1320834b8a80c6ac2697ab418d066981ea08ba ]
+[ Upstream commit f3d43e2e45fd9d44ba52d20debd12cd4ee9c89bf ]
 
-allocate_flower_entry does not check for allocation success, but tries
-to deref the result. I only moved the spin_lock under null check, because
- the caller is checking allocation's status at line 652.
+Fixed address of third NCT6106_REG_WEIGHT_DUTY_STEP, and
+added missed NCT6106_REG_TOLERANCE_H.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 6c009501ff200 ("hwmon: (nct6775) Add support for NCT6102D/6106D")
+Signed-off-by: Bjoern Gerhart <gerhart@posteo.de>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c | 3 ++-
+ drivers/hwmon/nct6775.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
-index cfaf8f618d1f3..56742fa0c1af6 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
-@@ -67,7 +67,8 @@ static struct ch_tc_pedit_fields pedits[] = {
- static struct ch_tc_flower_entry *allocate_flower_entry(void)
- {
- 	struct ch_tc_flower_entry *new = kzalloc(sizeof(*new), GFP_KERNEL);
--	spin_lock_init(&new->lock);
-+	if (new)
-+		spin_lock_init(&new->lock);
- 	return new;
- }
+diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
+index e7dff5febe161..d42bc0883a32b 100644
+--- a/drivers/hwmon/nct6775.c
++++ b/drivers/hwmon/nct6775.c
+@@ -852,7 +852,7 @@ static const u16 NCT6106_REG_TARGET[] = { 0x111, 0x121, 0x131 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_SEL[] = { 0x168, 0x178, 0x188 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_STEP[] = { 0x169, 0x179, 0x189 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_STEP_TOL[] = { 0x16a, 0x17a, 0x18a };
+-static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x17c };
++static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x18b };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_BASE[] = { 0x16c, 0x17c, 0x18c };
+ static const u16 NCT6106_REG_WEIGHT_DUTY_BASE[] = { 0x16d, 0x17d, 0x18d };
  
+@@ -3764,6 +3764,7 @@ static int nct6775_probe(struct platform_device *pdev)
+ 		data->REG_FAN_TIME[0] = NCT6106_REG_FAN_STOP_TIME;
+ 		data->REG_FAN_TIME[1] = NCT6106_REG_FAN_STEP_UP_TIME;
+ 		data->REG_FAN_TIME[2] = NCT6106_REG_FAN_STEP_DOWN_TIME;
++		data->REG_TOLERANCE_H = NCT6106_REG_TOLERANCE_H;
+ 		data->REG_PWM[0] = NCT6106_REG_PWM;
+ 		data->REG_PWM[1] = NCT6106_REG_FAN_START_OUTPUT;
+ 		data->REG_PWM[2] = NCT6106_REG_FAN_STOP_OUTPUT;
 -- 
 2.20.1
 
