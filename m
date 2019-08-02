@@ -2,132 +2,92 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391D1C32754
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AA6C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1153A2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:46:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MRMA2whm"
+	by mail.kernel.org (Postfix) with ESMTP id ABA612087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389699AbfHBMqP (ORCPT
+        id S2389744AbfHBMrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:46:15 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33831 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728567AbfHBMqP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:46:15 -0400
-Received: by mail-qk1-f193.google.com with SMTP id t8so54635611qkt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 05:46:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6ql0O82ncHZU71SnaUyYlbcaPGtvlWm+BrLQDkFEDbY=;
-        b=MRMA2whmjpLNxlhbDl5mBbGm/wxr+mnLnwdUEiOzNBsQbTy974xui1zcbJXuaVeMgi
-         +e6pAPXNKqJ5FLrB5btG3fWEwJOZCNVqx7WhXgNhnlz2EhhnCC/jrtDsn55I0rQrPbEs
-         kTXxKo2YuV2bT1/e1Z1A6Wf8qvRURa8Gr3WBc9QO7dijfCQypZgeANqmpaiWdSJoUCtu
-         VXKmwcx2rj/qqL+7cWXldCjZ59ch1b87c5iVVd4Ql5AT2hWXZoJ7MKekKjw5eD86xgli
-         DTGd7yg7MsSW0a1wLwfpAvBC9sgR49+QmZEGlFoYAgcWlKpxKOv19D6RuAJw4q09e1/M
-         Xu1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6ql0O82ncHZU71SnaUyYlbcaPGtvlWm+BrLQDkFEDbY=;
-        b=LQ2IxTzQMILqAQa8vfp5T39iLuQH20ijmrj8LWc3znuhf864CASQDgc6bbFB3U8FLp
-         giUhmYy/KuT36hRVURwNXXyooRHJGUGGJ9QzJd/bScGbNdnt/l1jYcj51u7KrSz/+CGh
-         LCjKjLgKYclI7fv4CVSMCpvdDEc6zt3Rm90Dc46Tv4yp3+r/yH+G65kVFYvQeg6Rk2Mp
-         bnBkPD1+RTaX/yHJceAA147Jo4qUC5byBJR/ifvqlqpBFNQ2dF+j2pVQdLNbZIMluhQJ
-         z6kjKxxHfnrrwk0QU5jPfXvQ9gkVaxYj25qrFvaVHqZ/H9fKEizsve0lTb7YPMwBz2M/
-         N3YA==
-X-Gm-Message-State: APjAAAWcBGQYMMqeX+9X0PJ6la1zKymLdi/ZfzuL3hwx/sQMf8buC+KF
-        6/v+JHSUKoDdzSpM+Lh//X53tA==
-X-Google-Smtp-Source: APXvYqxtz2vM6y/fN8WSSWPve6vWs8cD8+KUQAMGJTQIxCltGAZYGzTtsZ3uymeGSjZYIgEaLwJYTg==
-X-Received: by 2002:a37:bc03:: with SMTP id m3mr89369627qkf.199.1564749974287;
-        Fri, 02 Aug 2019 05:46:14 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id l19sm41561137qtb.6.2019.08.02.05.46.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 02 Aug 2019 05:46:13 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1htWwn-0003D2-5A; Fri, 02 Aug 2019 09:46:13 -0300
-Date:   Fri, 2 Aug 2019 09:46:13 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
- with worker
-Message-ID: <20190802124613.GA11245@ziepe.ca>
-References: <20190731084655.7024-1-jasowang@redhat.com>
- <20190731084655.7024-8-jasowang@redhat.com>
- <20190731123935.GC3946@ziepe.ca>
- <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
- <20190731193057.GG3946@ziepe.ca>
- <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
- <20190801141512.GB23899@ziepe.ca>
- <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
+        Fri, 2 Aug 2019 08:47:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53230 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730003AbfHBMrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:47:42 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BEFE1C027339;
+        Fri,  2 Aug 2019 12:47:41 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 69753608C2;
+        Fri,  2 Aug 2019 12:47:39 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri,  2 Aug 2019 14:47:41 +0200 (CEST)
+Date:   Fri, 2 Aug 2019 14:47:38 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelianov <xemul@virtuozzo.com>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v2 1/2] fork: extend clone3() to support CLONE_SET_TID
+Message-ID: <20190802124738.GC20111@redhat.com>
+References: <20190731161223.2928-1-areber@redhat.com>
+ <20190731174135.GA30225@redhat.com>
+ <20190802072511.GD18263@dcbz.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190802072511.GD18263@dcbz.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 02 Aug 2019 12:47:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 05:40:07PM +0800, Jason Wang wrote:
-> > This must be a proper barrier, like a spinlock, mutex, or
-> > synchronize_rcu.
-> 
-> 
-> I start with synchronize_rcu() but both you and Michael raise some
-> concern.
+On 08/02, Adrian Reber wrote:
+>
+> On Wed, Jul 31, 2019 at 07:41:36PM +0200, Oleg Nesterov wrote:
+> > But the main question is how it can really help if ns->level > 0, unlikely
+> > CRIU will ever need to clone the process with the same pid_nr == set_tid
+> > in the ns->parent chain.
+>
+> Not sure I understand what you mean. For CRIU only the PID in the PID
+> namespace is relevant.
 
-I've also idly wondered if calling synchronize_rcu() under the various
-mm locks is a deadlock situation.
+If it runs "inside" this namespace. But in this case alloc_pid() should
+use nr == set_tid only once in the main loop, when i == ns->level.
 
-> Then I try spinlock and mutex:
-> 
-> 1) spinlock: add lots of overhead on datapath, this leads 0 performance
-> improvement.
+It doesn't need to have the same pid_nr in the parent pid namespace.
 
-I think the topic here is correctness not performance improvement
+And in fact we should not allow criu (or anything else) to control the child's
+pid_nr in the parent(s) namespace.
 
-> 2) SRCU: full memory barrier requires on srcu_read_lock(), which still leads
-> little performance improvement
- 
-> 3) mutex: a possible issue is need to wait for the page to be swapped in (is
-> this unacceptable ?), another issue is that we need hold vq lock during
-> range overlap check.
+Right?
 
-I have a feeling that mmu notififers cannot safely become dependent on
-progress of swap without causing deadlock. You probably should avoid
-this.
+> > So may be kernel_clone_args->set_tid should be pid_t __user *set_tid_array?
+> > Or I missed something ?
+>
+> Not sure why and how an array would be needed. Could you give me some
+> more details why you think this is needed.
 
-> > And, again, you can't re-invent a spinlock with open coding and get
-> > something better.
-> 
-> So the question is if waiting for swap is considered to be unsuitable for
-> MMU notifiers. If not, it would simplify codes. If not, we still need to
-> figure out a possible solution.
-> 
-> Btw, I come up another idea, that is to disable preemption when vhost thread
-> need to access the memory. Then register preempt notifier and if vhost
-> thread is preempted, we're sure no one will access the memory and can do the
-> cleanup.
+IIURC, criu can restore the process tree along with nested pid namespaces.
 
-I think you should use the spinlock so at least the code is obviously
-functionally correct and worry about designing some properly justified
-performance change after.
+how can this patch help in this case?
 
-Jason
+But again, perhaps I missed something. I forgot everything about criu.
+
+Oleg.
+
