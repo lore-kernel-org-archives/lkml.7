@@ -2,63 +2,59 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55501C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41481C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B4B2067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194AD2064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739999;
-	bh=Sus13iWclroigCwhhejUjmR7RmySRV/rrlISLxwdSts=;
+	s=default; t=1564740014;
+	bh=cc+PpYXY8wQ9cF1G23aXSTEdh27NousCqZZ3bCOIbro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hXswf3VzSkKs/l38ufthhwhckcHDGVdgkTsRS7Pwg93RUjFw1mtL9QLBo2CTDQ13h
-	 98tPVfH9dZB6k0fr/pdCOp5aBgPQVy0uQBA6TttiEZt1JtpNvWBztCkdqYRveCbKKU
-	 9zdVL+/KIql52LPJiD/8pgDpmo0ByXq5EiQQd7ws=
+	b=QJMa47Oboilem3LxLphvV/2FJyzyq+qgrC3f+38qUO3Dw/dXkftZNYlLfTaZ4rQBj
+	 Lf6dZEKZO0tEztza3V2Dt/iRJbB4XzfSEQMV3a4p1BHtmsyd8ZeFOkMewR115X2ljt
+	 znkrlL6SbrDlZxITTjEyGi93Mn2sAmkWL6AXZd/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407152AbfHBJ75 (ORCPT
+        id S2405389AbfHBJwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:59:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33646 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:52:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406473AbfHBJzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:55:13 -0400
+        id S2406056AbfHBJwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:52:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 193542064A;
-        Fri,  2 Aug 2019 09:55:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F3B620665;
+        Fri,  2 Aug 2019 09:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739712;
-        bh=Sus13iWclroigCwhhejUjmR7RmySRV/rrlISLxwdSts=;
+        s=default; t=1564739561;
+        bh=cc+PpYXY8wQ9cF1G23aXSTEdh27NousCqZZ3bCOIbro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=llh4ey3vgA0xZMxapsyJxpXN0WCBjAAzx39k3ZN2ZawDDFSCJkVRPOAZ0+uZ2Y+UM
-         8eyUymIfCRWYwePTs1hhl8+5KbCRgFuhLG9NKOHE9+3cyfpaDXltOM5SpV1J9Ap/Ug
-         0IA93hMSeydbLsbmsBZTzBO6Y0JyubWrn0UlYU+0=
+        b=y87zscoWsUZRMjiuEuFUHQ9/4o7X80NTPotYrUs1zSsITlkKHfvRHO9g0CDW+X55Z
+         DuFHrslkIyHbTTipP6p/O6QxDkXrCWZtsKmvRv0l3I+avXWJX7MmP5dIf1c8Eb76Nh
+         UFKMSDTsV8NmBFO/HgiAc2GrJEMKk95W0wFfuenQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Steve McIntyre <steve.mcintyre@arm.com>,
-        Steve McIntyre <93sam@debian.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.14 08/25] arm64: compat: Provide definition for COMPAT_SIGMINSTKSZ
-Date:   Fri,  2 Aug 2019 11:39:40 +0200
-Message-Id: <20190802092101.747842064@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 199/223] mm/mmu_notifier: use hlist_add_head_rcu()
+Date:   Fri,  2 Aug 2019 11:37:04 +0200
+Message-Id: <20190802092250.064816132@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092058.428079740@linuxfoundation.org>
-References: <20190802092058.428079740@linuxfoundation.org>
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+References: <20190802092238.692035242@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -68,39 +64,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+[ Upstream commit 543bdb2d825fe2400d6e951f1786d92139a16931 ]
 
-commit 24951465cbd279f60b1fdc2421b3694405bcff42 upstream.
+Make mmu_notifier_register() safer by issuing a memory barrier before
+registering a new notifier.  This fixes a theoretical bug on weakly
+ordered CPUs.  For example, take this simplified use of notifiers by a
+driver:
 
-arch/arm/ defines a SIGMINSTKSZ of 2k, so we should use the same value
-for compat tasks.
+	my_struct->mn.ops = &my_ops; /* (1) */
+	mmu_notifier_register(&my_struct->mn, mm)
+		...
+		hlist_add_head(&mn->hlist, &mm->mmu_notifiers); /* (2) */
+		...
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Reviewed-by: Dave Martin <Dave.Martin@arm.com>
-Reported-by: Steve McIntyre <steve.mcintyre@arm.com>
-Tested-by: Steve McIntyre <93sam@debian.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Once mmu_notifier_register() releases the mm locks, another thread can
+invalidate a range:
 
+	mmu_notifier_invalidate_range()
+		...
+		hlist_for_each_entry_rcu(mn, &mm->mmu_notifiers, hlist) {
+			if (mn->ops->invalidate_range)
+
+The read side relies on the data dependency between mn and ops to ensure
+that the pointer is properly initialized.  But the write side doesn't have
+any dependency between (1) and (2), so they could be reordered and the
+readers could dereference an invalid mn->ops.  mmu_notifier_register()
+does take all the mm locks before adding to the hlist, but those have
+acquire semantics which isn't sufficient.
+
+By calling hlist_add_head_rcu() instead of hlist_add_head() we update the
+hlist using a store-release, ensuring that readers see prior
+initialization of my_struct.  This situation is better illustated by
+litmus test MP+onceassign+derefonce.
+
+Link: http://lkml.kernel.org/r/20190502133532.24981-1-jean-philippe.brucker@arm.com
+Fixes: cddb8a5c14aa ("mmu-notifiers: core")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/compat.h |    1 +
- 1 file changed, 1 insertion(+)
+ mm/mmu_notifier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/compat.h
-+++ b/arch/arm64/include/asm/compat.h
-@@ -234,6 +234,7 @@ static inline compat_uptr_t ptr_to_compa
- }
+diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+index f4259e496f83..7a66e37efb4d 100644
+--- a/mm/mmu_notifier.c
++++ b/mm/mmu_notifier.c
+@@ -286,7 +286,7 @@ static int do_mmu_notifier_register(struct mmu_notifier *mn,
+ 	 * thanks to mm_take_all_locks().
+ 	 */
+ 	spin_lock(&mm->mmu_notifier_mm->lock);
+-	hlist_add_head(&mn->hlist, &mm->mmu_notifier_mm->list);
++	hlist_add_head_rcu(&mn->hlist, &mm->mmu_notifier_mm->list);
+ 	spin_unlock(&mm->mmu_notifier_mm->lock);
  
- #define compat_user_stack_pointer() (user_stack_pointer(task_pt_regs(current)))
-+#define COMPAT_MINSIGSTKSZ	2048
- 
- static inline void __user *arch_compat_alloc_user_space(long len)
- {
+ 	mm_drop_all_locks(mm);
+-- 
+2.20.1
+
 
 
