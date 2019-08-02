@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E41C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1D4C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711A72067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E712086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739873;
-	bh=mBtojOTp1hg0hXz5A1TBIU10LPdZxGISLBS/m3vpjFk=;
+	s=default; t=1564739877;
+	bh=MmQFR9nW3lLglYcyNkyalTFjgmjOqs3o5NdCYhQBnAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dlwr+0kwdzA7ZaAENFkeE4Aqzjuq/FHu8MzcC/Tl8ycY5agzZIA5nU6FOQGJW61ab
-	 dtgbHj3h4ytUTy/SZ1EiB4k2WlX8QWA/3BXi+Abql3NywP1achhdMLHHNoMgSVX/wu
-	 WI123muDXKmERJB+hmXtKumK3Gx/PFEj5TGJQUrU=
+	b=Ara6qPEk+K3awOWT8LjER7W/jXt0Ylym5hef1JKMag83M6z5JPAb1eEwKRMU5rUEp
+	 M9DnPEIVU2+4PTSrSPM9gCwidldzW3Zsr83XYV/IuG6i1G+GHhJmTLIUYZHSDLdBGp
+	 RwhbRNytiGUGXsnd/sBq9+TwitxdorDwbtd40CRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406458AbfHBJ5w (ORCPT
+        id S2407003AbfHBJ5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:57:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:57:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406642AbfHBJ5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:57:45 -0400
+        id S2406988AbfHBJ5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:57:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5C8B2064A;
-        Fri,  2 Aug 2019 09:57:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E311E2064A;
+        Fri,  2 Aug 2019 09:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739865;
-        bh=mBtojOTp1hg0hXz5A1TBIU10LPdZxGISLBS/m3vpjFk=;
+        s=default; t=1564739870;
+        bh=MmQFR9nW3lLglYcyNkyalTFjgmjOqs3o5NdCYhQBnAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vUtLbBU70A5DAEluoCvZX8wvtTAXecI+1AJmZj/IuwvV/jDOtv8GsleXjd7SSc5dp
-         g2r7F0Ixrhv7h4/SbVluPUGE4u+dnv2CDq8NR7itTl7uXMcLkBuTG95vf8wYUx7GCI
-         gFKBpSkUNRmVeb5DJqe9SNJSTO3gn0YxisuvsWfw=
+        b=pzYBXvki7bO1exrVqM/fv1dN5WI2Xzbiee35vtkjnMIxf2UCGHPgjvJX6pio1dHFU
+         eEaLRtvFv+w7ohlYvzC7QBT+/PR1cCmUv3RZKFXRZ+p9/tymgp8i7jIEDN2CjvoAPg
+         r5L6DzjOP2WacfGjZ3pm1shMMr86sLaPD3hPzt/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com,
-        Phong Tran <tranmanphong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 02/20] ISDN: hfcsusb: checking idx of ep configuration
-Date:   Fri,  2 Aug 2019 11:39:56 +0200
-Message-Id: <20190802092057.454840463@linuxfoundation.org>
+        syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 03/20] ALSA: usb-audio: Sanity checks for each pipe and EP types
+Date:   Fri,  2 Aug 2019 11:39:57 +0200
+Message-Id: <20190802092058.248343532@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092055.131876977@linuxfoundation.org>
 References: <20190802092055.131876977@linuxfoundation.org>
@@ -61,45 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit f384e62a82ba5d85408405fdd6aeff89354deaa9 upstream.
+commit 801ebf1043ae7b182588554cc9b9ad3c14bc2ab5 upstream.
 
-The syzbot test with random endpoint address which made the idx is
-overflow in the table of endpoint configuations.
+The recent USB core code performs sanity checks for the given pipe and
+EP types, and it can be hit by manipulated USB descriptors by syzbot.
+For making syzbot happier, this patch introduces a local helper for a
+sanity check in the driver side and calls it at each place before the
+message handling, so that we can avoid the WARNING splats.
 
-this adds the checking for fixing the error report from
-syzbot
-
-KASAN: stack-out-of-bounds Read in hfcsusb_probe [1]
-The patch tested by syzbot [2]
-
-Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
-
-[1]:
-https://syzkaller.appspot.com/bug?id=30a04378dac680c5d521304a00a86156bb913522
-[2]:
-https://groups.google.com/d/msg/syzkaller-bugs/_6HBdge8F3E/OJn7wVNpBAAJ
-
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/usb/helper.c |   17 +++++++++++++++++
+ sound/usb/helper.h |    1 +
+ sound/usb/quirks.c |   18 +++++++++++++++---
+ 3 files changed, 33 insertions(+), 3 deletions(-)
 
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1955,6 +1955,9 @@ hfcsusb_probe(struct usb_interface *intf
+--- a/sound/usb/helper.c
++++ b/sound/usb/helper.c
+@@ -63,6 +63,20 @@ void *snd_usb_find_csint_desc(void *buff
+ 	return NULL;
+ }
  
- 				/* get endpoint base */
- 				idx = ((ep_addr & 0x7f) - 1) * 2;
-+				if (idx > 15)
-+					return -EIO;
++/* check the validity of pipe and EP types */
++int snd_usb_pipe_sanity_check(struct usb_device *dev, unsigned int pipe)
++{
++	static const int pipetypes[4] = {
++		PIPE_CONTROL, PIPE_ISOCHRONOUS, PIPE_BULK, PIPE_INTERRUPT
++	};
++	struct usb_host_endpoint *ep;
 +
- 				if (ep_addr & 0x80)
- 					idx++;
- 				attr = ep->desc.bmAttributes;
++	ep = usb_pipe_endpoint(dev, pipe);
++	if (usb_pipetype(pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
++		return -EINVAL;
++	return 0;
++}
++
+ /*
+  * Wrapper for usb_control_msg().
+  * Allocates a temp buffer to prevent dmaing from/to the stack.
+@@ -75,6 +89,9 @@ int snd_usb_ctl_msg(struct usb_device *d
+ 	void *buf = NULL;
+ 	int timeout;
+ 
++	if (snd_usb_pipe_sanity_check(dev, pipe))
++		return -EINVAL;
++
+ 	if (size > 0) {
+ 		buf = kmemdup(data, size, GFP_KERNEL);
+ 		if (!buf)
+--- a/sound/usb/helper.h
++++ b/sound/usb/helper.h
+@@ -7,6 +7,7 @@ unsigned int snd_usb_combine_bytes(unsig
+ void *snd_usb_find_desc(void *descstart, int desclen, void *after, u8 dtype);
+ void *snd_usb_find_csint_desc(void *descstart, int desclen, void *after, u8 dsubtype);
+ 
++int snd_usb_pipe_sanity_check(struct usb_device *dev, unsigned int pipe);
+ int snd_usb_ctl_msg(struct usb_device *dev, unsigned int pipe,
+ 		    __u8 request, __u8 requesttype, __u16 value, __u16 index,
+ 		    void *data, __u16 size);
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -828,11 +828,13 @@ static int snd_usb_novation_boot_quirk(s
+ static int snd_usb_accessmusic_boot_quirk(struct usb_device *dev)
+ {
+ 	int err, actual_length;
+-
+ 	/* "midi send" enable */
+ 	static const u8 seq[] = { 0x4e, 0x73, 0x52, 0x01 };
++	void *buf;
+ 
+-	void *buf = kmemdup(seq, ARRAY_SIZE(seq), GFP_KERNEL);
++	if (snd_usb_pipe_sanity_check(dev, usb_sndintpipe(dev, 0x05)))
++		return -EINVAL;
++	buf = kmemdup(seq, ARRAY_SIZE(seq), GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 	err = usb_interrupt_msg(dev, usb_sndintpipe(dev, 0x05), buf,
+@@ -857,7 +859,11 @@ static int snd_usb_accessmusic_boot_quir
+ 
+ static int snd_usb_nativeinstruments_boot_quirk(struct usb_device *dev)
+ {
+-	int ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
++	int ret;
++
++	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
++		return -EINVAL;
++	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+ 				  0xaf, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+ 				  1, 0, NULL, 0, 1000);
+ 
+@@ -964,6 +970,8 @@ static int snd_usb_axefx3_boot_quirk(str
+ 
+ 	dev_dbg(&dev->dev, "Waiting for Axe-Fx III to boot up...\n");
+ 
++	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
++		return -EINVAL;
+ 	/* If the Axe-Fx III has not fully booted, it will timeout when trying
+ 	 * to enable the audio streaming interface. A more generous timeout is
+ 	 * used here to detect when the Axe-Fx III has finished booting as the
+@@ -996,6 +1004,8 @@ static int snd_usb_motu_microbookii_comm
+ {
+ 	int err, actual_length;
+ 
++	if (snd_usb_pipe_sanity_check(dev, usb_sndintpipe(dev, 0x01)))
++		return -EINVAL;
+ 	err = usb_interrupt_msg(dev, usb_sndintpipe(dev, 0x01), buf, *length,
+ 				&actual_length, 1000);
+ 	if (err < 0)
+@@ -1006,6 +1016,8 @@ static int snd_usb_motu_microbookii_comm
+ 
+ 	memset(buf, 0, buf_size);
+ 
++	if (snd_usb_pipe_sanity_check(dev, usb_rcvintpipe(dev, 0x82)))
++		return -EINVAL;
+ 	err = usb_interrupt_msg(dev, usb_rcvintpipe(dev, 0x82), buf, buf_size,
+ 				&actual_length, 1000);
+ 	if (err < 0)
 
 
