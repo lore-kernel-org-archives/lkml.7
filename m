@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D348C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51317C32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0639F20679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228A62086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738694;
-	bh=51dwQdeJ27vzn3osMTwYOUqm5QismICrmB7ZLxWYF00=;
+	s=default; t=1564738697;
+	bh=aEJf6KCW5crpWfxYJqdtY135r5x4Qx1nMJ6a1u3C6iM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aR7LFkieBZhFPsYx0iNoyWGqbT5t5HehdSahOvNOpooAm+LBWbnk6OlVLZPy65cSH
-	 Ph+3jUx5P6u94AoYa/Xjfca+IgkJEjPT99fHLZe+i0NEWc1v9YeCFLi98QUTFjhA9U
-	 DfauolzPYgn4XAfcifpjbOTIsBOZqKLWlkUKzIx8=
+	b=SxwQiM2SMNDgygoqXQzQDSHjVT6yHZOFFGfKpW2wC5MHxA2CLaltLLNYDIbfpItnz
+	 vBzP9h0Qa4J3taRYq4UJQc8o7PS40Za43pPYCE/10K2YjxnZPc8vBFxKRvKhHmGv2V
+	 DjKOYWViwwBb8X0OtmWYrodP1nOLmcFi4GDhQAd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390855AbfHBJiM (ORCPT
+        id S2391612AbfHBJfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:38:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35584 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:35:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727455AbfHBJfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:35:13 -0400
+        id S2391601AbfHBJfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:35:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09FF3217D6;
-        Fri,  2 Aug 2019 09:35:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C8C02182B;
+        Fri,  2 Aug 2019 09:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738512;
-        bh=51dwQdeJ27vzn3osMTwYOUqm5QismICrmB7ZLxWYF00=;
+        s=default; t=1564738504;
+        bh=aEJf6KCW5crpWfxYJqdtY135r5x4Qx1nMJ6a1u3C6iM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBKwf+1fkQ07XmH4hhAW7HM/eVCl7b6AwrZovNB/ZvQVda0jW9n6CQ6N22I+RwUR5
-         sR1n/yJ+wKgkTbDgVmVJYJcO8h3RxVwooBkp4Z6VDHlwxY9uYoN8db0HInicgunl7v
-         dIfVegXW8cKxdjE8KH+tjnT8OsTedIrE4RPLba48=
+        b=CAqM0mLUd3mNx9sMMnKTkq/4dwmz39urGKic3wh1u6PKDdNM2iRK9M/WB8Ryx1yq+
+         PUnNXR8tvNjFvEXt8rp01QJXwyKj2svk2YRYdpr4A6aziGtT998aYWYaBU/FyT2EDB
+         mgn0b0V2iRJbBH3xH071feszpZCvzZhyU46fdGto=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Inki Dae <inki.dae@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 133/158] sh: prevent warnings when using iounmap
-Date:   Fri,  2 Aug 2019 11:29:14 +0200
-Message-Id: <20190802092230.373880256@linuxfoundation.org>
+Subject: [PATCH 4.4 113/158] tty: serial: msm_serial: avoid system lockup condition
+Date:   Fri,  2 Aug 2019 11:28:54 +0200
+Message-Id: <20190802092227.032983819@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -68,60 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 733f0025f0fb43e382b84db0930ae502099b7e62 ]
+[ Upstream commit ba3684f99f1b25d2a30b6956d02d339d7acb9799 ]
 
-When building drm/exynos for sh, as part of an allmodconfig build, the
-following warning triggered:
+The function msm_wait_for_xmitr can be taken with interrupts
+disabled. In order to avoid a potential system lockup - demonstrated
+under stress testing conditions on SoC QCS404/5 - make sure we wait
+for a bounded amount of time.
 
-  exynos7_drm_decon.c: In function `decon_remove':
-  exynos7_drm_decon.c:769:24: warning: unused variable `ctx'
-    struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
+Tested on SoC QCS404.
 
-The ctx variable is only used as argument to iounmap().
-
-In sh - allmodconfig CONFIG_MMU is not defined
-so it ended up in:
-
-\#define __iounmap(addr)	do { } while (0)
-\#define iounmap		__iounmap
-
-Fix the warning by introducing a static inline function for iounmap.
-
-This is similar to several other architectures.
-
-Link: http://lkml.kernel.org/r/20190622114208.24427-1-sam@ravnborg.org
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Inki Dae <inki.dae@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/asm/io.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/tty/serial/msm_serial.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
-index 3280a6bfa503..b2592c3864ad 100644
---- a/arch/sh/include/asm/io.h
-+++ b/arch/sh/include/asm/io.h
-@@ -370,7 +370,11 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
+diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+index 5f0ded6fc4e9..eaeb098b5d6a 100644
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -222,10 +222,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
  
- #define ioremap_nocache	ioremap
- #define ioremap_uc	ioremap
--#define iounmap		__iounmap
+ static inline void msm_wait_for_xmitr(struct uart_port *port)
+ {
++	unsigned int timeout = 500000;
 +
-+static inline void iounmap(void __iomem *addr)
-+{
-+	__iounmap(addr);
-+}
- 
- /*
-  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
+ 	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
+ 		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
+ 			break;
+ 		udelay(1);
++		if (!timeout--)
++			break;
+ 	}
+ 	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
+ }
 -- 
 2.20.1
 
