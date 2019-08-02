@@ -2,100 +2,143 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E058C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68B0C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADEB20657
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D1020657
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EK6uwC16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388888AbfHBGqY convert rfc822-to-8bit (ORCPT
+        id S2388938AbfHBGsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 02:46:24 -0400
-Received: from mga06.intel.com ([134.134.136.31]:16775 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388295AbfHBGqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 02:46:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Aug 2019 23:46:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,337,1559545200"; 
-   d="scan'208";a="167149268"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by orsmga008.jf.intel.com with ESMTP; 01 Aug 2019 23:46:23 -0700
-Received: from orsmsx157.amr.corp.intel.com (10.22.240.23) by
- ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 1 Aug 2019 23:46:23 -0700
-Received: from orsmsx114.amr.corp.intel.com ([169.254.8.96]) by
- ORSMSX157.amr.corp.intel.com ([169.254.9.94]) with mapi id 14.03.0439.000;
- Thu, 1 Aug 2019 23:46:23 -0700
-From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: RE: [PATCH] fork: Improve error message for corrupted page tables
-Thread-Topic: [PATCH] fork: Improve error message for corrupted page tables
-Thread-Index: AQHVSCCBTlnukuaks0aiZwfZ/9aV0qbnaerQ
-Date:   Fri, 2 Aug 2019 06:46:23 +0000
-Message-ID: <FFF73D592F13FD46B8700F0A279B802F4F9D61B5@ORSMSX114.amr.corp.intel.com>
-References: <20190730221820.7738-1-sai.praneeth.prakhya@intel.com>
-        <20190731152753.b17d9c4418f4bf6815a27ad8@linux-foundation.org>
-        <a05920e5994fb74af480255471a6c3f090f29b27.camel@intel.com>
- <20190731212052.5c262ad084cbd6cf475df005@linux-foundation.org>
-In-Reply-To: <20190731212052.5c262ad084cbd6cf475df005@linux-foundation.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTA1ZTgzNWMtZTdlZS00NjAxLWEzYWEtNDMxMDE2NzU0MDQyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiXC9vODNtelwvV0pQeHloZ2YzM0czTnRRSVYrRXNoVzlSU3hZWDRPa1RYcmppbkN2NjVUQmRUcVJaSHRGdld4cVljIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 2 Aug 2019 02:48:06 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39343 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388894AbfHBGsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 02:48:06 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x4so22814042wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 23:48:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ie25Aco59RAcbLsPsgaVJSlOnwnSodpgokjBm4b1WRc=;
+        b=EK6uwC16+FJTCVcCfE027a0FgSGvcrFAJVj+PXAcZwTYDO6/S7dWMn1Hz6uG469T6C
+         fuGAhRjmnjHfT3XCoS2jeCPrHyOkX7FIlF7A8YiF/KNKE0Mvor4RGo2Y5Jqru0qdXDMY
+         MjjRKlCU1kaC+yP/wI1QDZMU+YP4tFyEQrgcloz3hWnO7kpIhcfhBLNLaOsQx3Z4Jr/5
+         TSb392J0X+5KTwhnDOpD8Y2cR6Ie6t3kQeBLDIjZOE95Al1TBn6qYW81T8ITKz78C7UY
+         Mypox5XTKOHl/HUADQWHFJrIrJu4FqRO6TPRfAhEiIY1u58qSBxExLibEWtk6lwVC8c4
+         ZmBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ie25Aco59RAcbLsPsgaVJSlOnwnSodpgokjBm4b1WRc=;
+        b=CVh0p5Q706pAnhmAhAzYynUor7QwUHxTIIaU4rm/36FIeW5aY2jq31fSsWXU7C+vZ4
+         tMhO3ElLgKjtFWVLX1SscegrnR+MZO8CEitIzKFGw95EUO4hzOwBMePGS30wJt7HIjMS
+         WiQPnItOjginInIoxYMEFAMu5F+bmKNa8qpHJYSxWXEZmn+zTIhUtarKoJ3kQOGkefhx
+         WH3Xk3sMqLJwdDW92uRUs4oo6uPReoKBYfn2up/vSSrYO/e/MfdI0tD2xEfHYqVMyOdv
+         UloSABc6RNJCjGa12cFFrdiVQ6CO2Ny0Kkh/prKoykOMmJaXqr+s1Iv9dRg9Gb4AMLMm
+         uG+A==
+X-Gm-Message-State: APjAAAXSuzlC3kzit6l1IGxGbfBC+CzirRAsM7Wd0jqB1L6MfQM9kuo9
+        HnaxB2kxwijUs8MA/wGYtMY5U+0LmRq6jmbvMYCSvI9u3Io=
+X-Google-Smtp-Source: APXvYqwIgfgWAs7cMuANCq9jUGsqMY8at2of2TpDvrk8i9NVPyY7XkCOPJWvg8zz8NiKtxiwYkTSvhTMeUqFR7KVnUs=
+X-Received: by 2002:adf:9ccf:: with SMTP id h15mr3286056wre.241.1564728483656;
+ Thu, 01 Aug 2019 23:48:03 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190731163915.3fdfcb14@canb.auug.org.au> <20190731085819.GA3488@osiris>
+ <20190731110816.GA20753@gondor.apana.org.au> <20190731111520.GC3488@osiris>
+ <20190731113216.GA21068@gondor.apana.org.au> <20190731114453.GD3488@osiris>
+ <20190801122849.GB4163@osiris> <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
+ <20190802102019.6a789c51@canb.auug.org.au>
+In-Reply-To: <20190802102019.6a789c51@canb.auug.org.au>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 2 Aug 2019 09:47:52 +0300
+Message-ID: <CAKv+Gu-Tui6+HEOK0Axgn9kWTxOPpenCSefTuxSek0PpNh9HzQ@mail.gmail.com>
+Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Patrick Steuer <steuer@linux.ibm.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > +static const char * const resident_page_types[NR_MM_COUNTERS] = {
-> > > > +	"MM_FILEPAGES",
-> > > > +	"MM_ANONPAGES",
-> > > > +	"MM_SWAPENTS",
-> > > > +	"MM_SHMEMPAGES",
-> > > > +};
+On Fri, 2 Aug 2019 at 03:20, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Herbert,
+>
+> On Thu, 1 Aug 2019 20:28:56 +0300 Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> >
+> > On Thu, 1 Aug 2019 at 15:28, Heiko Carstens <heiko.carstens@de.ibm.com> wrote:
 > > >
-> > > But please let's not put this in a header file.  We're asking the
-> > > compiler to put a copy of all of this into every compilation unit
-> > > which includes the header.  Presumably the compiler is smart enough
-> > > not to do that, but it's not good practice.
+> > > On Wed, Jul 31, 2019 at 01:44:54PM +0200, Heiko Carstens wrote:
+> > > > On Wed, Jul 31, 2019 at 09:32:16PM +1000, Herbert Xu wrote:
+> > > > > On Wed, Jul 31, 2019 at 01:15:20PM +0200, Heiko Carstens wrote:
+> > > > > >
+> > > > > > However that doesn't fix the simd.h header file breakage with the
+> > > > > > second patch :)
+> > > > >
+> > > > > That fix should be there now too.
+> > > >
+> > > > Yes, works now. Thank you!
+> > >
+> > > Still not... with linux-next as of today I get this (s390 defconfig):
+> > >
+> > > ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefined!
+> > > ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
+> > > ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefined!
+> > > scripts/Makefile.modpost:105: recipe for target 'modules-modpost' failed
+> > >
 > >
-> > Thanks for the explanation. Makes sense to me.
+> > Hello Heiko,
 > >
-> > Just wanted to check before sending V2, Is it OK if I add this to
-> > kernel/fork.c? or do you have something else in mind?
-> 
-> I was thinking somewhere like mm/util.c so the array could be used by other
-> code.  But it seems there is no such code.  Perhaps it's best to just leave fork.c as
-> it is now.
+> > Apologies for the breakage. The first two fixes addressed obvious
+> > shortcomings in my code, but with this issue, I'm a bit puzzled tbh.
+> > The calls to these missing functions should be optimized away, since
+> > have_simd never gets assigned if CONFIG_CRYPTO_AEGIS128_SIMD is not
+> > defined, but for some reason, this isn't working. Which version of GCC
+> > are you using?
+> >
+> > Also, could you please try whether the patch below fixes the problem? Thanks
+> >
+> > https://lore.kernel.org/linux-crypto/20190729074434.21064-1-ard.biesheuvel@linaro.org/
+>
+> It might be time to revert all this series and try again.  The
+> implementation seems to have not been well thought through from a kernel
+> building point of view.  For a start the two commits
+>
+>   7cdc0ddbf74a ("crypto: aegis128 - add support for SIMD acceleration")
+>   ecc8bc81f2fb ("crypto: aegis128 - provide a SIMD implementation based on NEON intrinsics")
+>
+> seem to be in the wrong order (function used in the first before being
+> defined in the second).  There are a series of declarations of external
+> functions in crypto/aegis128-core.c that should be in a header file.
+> And there was the assumption that asm/simd.h was available everywhere.
+>
+> Also crypto_aegis128_decrypt_chunk_simd() is referenced in a structure
+> initialisation (unprotected by any CONFIG_ variable - and so will be
+> referenced even if it does not exist).  The compiler will have a hard
+> time knowing that "have_simd" is effectively a constant zero (and
+> crypto_simd_usable() is not constant).
 
-Ok, so does that mean have the struct in header file itself?
-Sorry! for too many questions. I wanted to check with you before changing 
-because it's *the* fork.c file (I presume random changes will not be encouraged here)
-
-I am not yet clear on what's the right thing to do here :(
-So, could you please help me in deciding.
-
-Regards,
-Sai
+The only assignment to have_simd is guarded by a if
+(IS_ENABLED(CONFIG_xxx)) conditional, which is optimized away if the
+Kconfig symbol is not set. Usually, the compiler uses this information
+to infer that have_simd is a compile time constant '0', and optimizes
+away all the code that depends on have_simd being true. I haven't
+figured out yet why this doesn't work as expected on some versions of
+GCC, since it is a very common pattern throughout the kernel.
