@@ -2,54 +2,53 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A06C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669EFC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D5520880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DC4206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739297;
-	bh=ddcEfqeo6v3OSjK2Q2P8/JvVXUdCv5mMfd3jq3ExwGA=;
+	s=default; t=1564739298;
+	bh=7IWG8TuhT4R5+XGGcFt1xYMtCoyUQsfDNejMvWZnSAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2iedkA+7hsoc1Qg2JdjqQBpcwNqD6SnvQYGVajJ9y7t05Ctd6PTGVX2V2vFGY72iC
-	 a56Qqd8XLB2hJMtn3d3IzO4tSgy3f5IupIGDYlou8Vwz8QaPK/Une1gO8qGklF1e6B
-	 5jYMP8wB/38XBwFnhx3FC6X6PP0zFNclXj7Bjaks=
+	b=Nz9EU5DsPlQWo1yE8hpCKqNiqzJzim3e6YV9RDwMNAdWVP7i5jNPVyEiYbizUgAcL
+	 l+iT94FaUY5I3J/9dc6Cc0OqTo4BUGxYQM2Ubhi333id1NegBtmDUz2eukqg0Ok+0f
+	 66EcLTvX9EFHzGO64Y3BBczLuAx4FQAHjt0nPGrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405839AbfHBJsQ (ORCPT
+        id S2405849AbfHBJsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:48:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53552 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:48:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405817AbfHBJsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:48:13 -0400
+        id S2405831AbfHBJsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:48:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9D3F20880;
-        Fri,  2 Aug 2019 09:48:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 730D92086A;
+        Fri,  2 Aug 2019 09:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739292;
-        bh=ddcEfqeo6v3OSjK2Q2P8/JvVXUdCv5mMfd3jq3ExwGA=;
+        s=default; t=1564739294;
+        bh=7IWG8TuhT4R5+XGGcFt1xYMtCoyUQsfDNejMvWZnSAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tD/78nnJTYVwZjWhgxXML2KpOngaWJMffUd7WcvVEZQ9TOowM3+8ahOGhYNQ8Qvkj
-         3qzxEVYRhfk0nWtW6O/PWzR2uwTDTZa82B1gLO7/uXfBslyP4XkVVj28qgmNaBnw4R
-         tdR3XevltTVzGrVy6liPUMvwq6Ay7TGArHpew8Pg=
+        b=ACrWCmb5jjPLYBRWZJF0QgH3k26B7KCR3gynniCs9QLbExhoK2UnziXF/ehtgxNIh
+         xWym9v9RkK/2ccWbwYW861X8RbNsUGW7gylRzw8CtjI5buMP+ctX2r/7/K4dxs4kxT
+         OSPWmTYvjAq9gOnpHqbww6EQXHO9/b0mBENhurqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Smith <peter.smith@linaro.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 177/223] kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS
-Date:   Fri,  2 Aug 2019 11:36:42 +0200
-Message-Id: <20190802092249.235107260@linuxfoundation.org>
+Subject: [PATCH 4.9 178/223] PCI: xilinx-nwl: Fix Multi MSI data programming
+Date:   Fri,  2 Aug 2019 11:36:43 +0200
+Message-Id: <20190802092249.274158991@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -62,61 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 589834b3a0097a4908f4112eac0ca2feb486fa32 ]
+[ Upstream commit 181fa434d0514e40ebf6e9721f2b72700287b6e2 ]
 
-In commit ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI
-drift"), the arm64 Makefile added -Wno-psabi to KBUILD_CFLAGS, which is
-a GCC only option so clang rightfully complains:
+According to the PCI Local Bus specification Revision 3.0,
+section 6.8.1.3 (Message Control for MSI), endpoints that
+are Multiple Message Capable as defined by bits [3:1] in
+the Message Control for MSI can request a number of vectors
+that is power of two aligned.
 
-warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+As specified in section 6.8.1.6 "Message data for MSI", the Multiple
+Message Enable field (bits [6:4] of the Message Control register)
+defines the number of low order message data bits the function is
+permitted to modify to generate its system software allocated
+vectors.
 
-https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
+The MSI controller in the Xilinx NWL PCIe controller supports a number
+of MSI vectors specified through a bitmap and the hwirq number for an
+MSI, that is the value written in the MSI data TLP is determined by
+the bitmap allocation.
 
-However, by default, this is merely a warning so the build happily goes
-on with a slew of these warnings in the process.
+For instance, in a situation where two endpoints sitting on
+the PCI bus request the following MSI configuration, with
+the current PCI Xilinx bitmap allocation code (that does not
+align MSI vector allocation on a power of two boundary):
 
-Commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
-support clang") worked around this behavior in cc-option by adding
--Werror so that unknown flags cause an error. However, this all happens
-silently and when an unknown flag is added to the build unconditionally
-like -Wno-psabi, cc-option will always fail because there is always an
-unknown flag in the list of flags. This manifested as link time failures
-in the arm64 libstub because -fno-stack-protector didn't get added to
-KBUILD_CFLAGS.
+Endpoint #1: Requesting 1 MSI vector - allocated bitmap bits 0
+Endpoint #2: Requesting 2 MSI vectors - allocated bitmap bits [1,2]
 
-To avoid these weird cryptic failures in the future, make clang behave
-like gcc and immediately error when it encounters an unknown flag by
-adding -Werror=unknown-warning-option to CLANG_FLAGS. This can be added
-unconditionally for clang because it is supported by at least 3.0.0,
-according to godbolt [1] and 4.0.0, according to its documentation [2],
-which is far earlier than we typically support.
+The bitmap value(s) corresponds to the hwirq number that is programmed
+into the Message Data for MSI field in the endpoint MSI capability
+and is detected by the root complex to fire the corresponding
+MSI irqs. The value written in Message Data for MSI field corresponds
+to the first bit allocated in the bitmap for Multi MSI vectors.
 
-[1]: https://godbolt.org/z/7F7rm3
-[2]: https://releases.llvm.org/4.0.0/tools/clang/docs/DiagnosticsReference.html#wunknown-warning-option
+The current Xilinx NWL MSI allocation code allows a bitmap allocation
+that is not a power of two boundaries, so endpoint #2, is allowed to
+toggle Message Data bit[0] to differentiate between its two vectors
+(meaning that the MSI data will be respectively 0x0 and 0x1 for the two
+vectors allocated to endpoint #2).
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/511
-Link: https://github.com/ClangBuiltLinux/linux/issues/517
-Suggested-by: Peter Smith <peter.smith@linaro.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+This clearly aliases with the Endpoint #1 vector allocation, resulting
+in a broken Multi MSI implementation.
+
+Update the code to allocate MSI bitmap ranges with a power of two
+alignment, fixing the bug.
+
+Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe Host Controller")
+Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+[lorenzo.pieralisi@arm.com: updated commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/host/pcie-xilinx-nwl.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 1ab22a85118f..03ff09d789b4 100644
---- a/Makefile
-+++ b/Makefile
-@@ -515,6 +515,7 @@ ifneq ($(GCC_TOOLCHAIN),)
- CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
- endif
- CLANG_FLAGS	+= -no-integrated-as
-+CLANG_FLAGS	+= -Werror=unknown-warning-option
- KBUILD_CFLAGS	+= $(CLANG_FLAGS)
- KBUILD_AFLAGS	+= $(CLANG_FLAGS)
- endif
+diff --git a/drivers/pci/host/pcie-xilinx-nwl.c b/drivers/pci/host/pcie-xilinx-nwl.c
+index 94fdd295aae2..3bba87af0b6b 100644
+--- a/drivers/pci/host/pcie-xilinx-nwl.c
++++ b/drivers/pci/host/pcie-xilinx-nwl.c
+@@ -456,15 +456,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 	int i;
+ 
+ 	mutex_lock(&msi->lock);
+-	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+-					 nr_irqs, 0);
+-	if (bit >= INT_PCI_MSI_NR) {
++	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
++				      get_count_order(nr_irqs));
++	if (bit < 0) {
+ 		mutex_unlock(&msi->lock);
+ 		return -ENOSPC;
+ 	}
+ 
+-	bitmap_set(msi->bitmap, bit, nr_irqs);
+-
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
+ 				domain->host_data, handle_simple_irq,
+@@ -482,7 +480,8 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 	struct nwl_msi *msi = &pcie->msi;
+ 
+ 	mutex_lock(&msi->lock);
+-	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
++	bitmap_release_region(msi->bitmap, data->hwirq,
++			      get_count_order(nr_irqs));
+ 	mutex_unlock(&msi->lock);
+ }
+ 
 -- 
 2.20.1
 
