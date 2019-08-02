@@ -2,133 +2,96 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC90C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45323C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B08217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752632;
-	bh=CRT6hjYjLu1G9zSoUf8J0kz6L/Cb4arX6stNuAGgddA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=r5SW6m7q8BoxgAT/laGauXe2jTNkhUSJwwmvySZAJHr8gTHUN98k5wqeUeUXRSCaU
-	 QWC8enAudmllIDroDHM4VdZXpmAHIrVVDmP6nMLXsIgk0gUq+XoZW+52RfcGxvFkED
-	 g2I8cYbMYi9qEb59E0zDP5e9UUnWjnC2WO34Qp64=
+	by mail.kernel.org (Postfix) with ESMTP id 1617E217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404176AbfHBNab (ORCPT
+        id S2404221AbfHBNak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:30:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35156 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:30:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50806 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394164AbfHBNYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:25 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729469AbfHBNYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:23 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2BC820880;
-        Fri,  2 Aug 2019 13:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752264;
-        bh=CRT6hjYjLu1G9zSoUf8J0kz6L/Cb4arX6stNuAGgddA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0/a/k4Mx924kLYZ+YkteEC8IxlgAWcBLSAJCihrR1uidOT6sn0PcpBBY5Qk+1mgWJ
-         vTn6oEQ4mEdZGI+Aw0SB+hQCG5Bc/WbZwYcn4XUTtwD6v+vTn2Im9yyyAgzsJjRDyR
-         KFTEbU0i+DvxovTdJRtUjDxwAIH0TMze4ydOUjPc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Thomas Jarosch <thomas.jarosch@intra2net.com>,
-        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/30] netfilter: nfnetlink: avoid deadlock due to synchronous request_module
-Date:   Fri,  2 Aug 2019 09:23:53 -0400
-Message-Id: <20190802132422.13963-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        by mx1.redhat.com (Postfix) with ESMTPS id DDD0E307D90E;
+        Fri,  2 Aug 2019 13:24:22 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id E9F0560BF4;
+        Fri,  2 Aug 2019 13:24:20 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri,  2 Aug 2019 15:24:22 +0200 (CEST)
+Date:   Fri, 2 Aug 2019 15:24:20 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelianov <xemul@virtuozzo.com>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v2 1/2] fork: extend clone3() to support CLONE_SET_TID
+Message-ID: <20190802132419.GD20111@redhat.com>
+References: <20190731161223.2928-1-areber@redhat.com>
+ <20190731174135.GA30225@redhat.com>
+ <20190802072511.GD18263@dcbz.redhat.com>
+ <20190802124738.GC20111@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802124738.GC20111@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 02 Aug 2019 13:24:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+On 08/02, Oleg Nesterov wrote:
+>
+> On 08/02, Adrian Reber wrote:
+> >
+> > On Wed, Jul 31, 2019 at 07:41:36PM +0200, Oleg Nesterov wrote:
+> > > But the main question is how it can really help if ns->level > 0, unlikely
+> > > CRIU will ever need to clone the process with the same pid_nr == set_tid
+> > > in the ns->parent chain.
+> >
+> > Not sure I understand what you mean. For CRIU only the PID in the PID
+> > namespace is relevant.
+>
+> If it runs "inside" this namespace. But in this case alloc_pid() should
+> use nr == set_tid only once in the main loop, when i == ns->level.
 
-[ Upstream commit 1b0890cd60829bd51455dc5ad689ed58c4408227 ]
+and I just noticed that your patch does exactly this, it clears set_tid
+after the 1st usage when i == ns->level.
 
-Thomas and Juliana report a deadlock when running:
+> > > So may be kernel_clone_args->set_tid should be pid_t __user *set_tid_array?
+> > > Or I missed something ?
+> >
+> > Not sure why and how an array would be needed. Could you give me some
+> > more details why you think this is needed.
+>
+> IIURC, criu can restore the process tree along with nested pid namespaces.
+>
+> how can this patch help in this case?
+>
+> But again, perhaps I missed something. I forgot everything about criu.
 
-(rmmod nf_conntrack_netlink/xfrm_user)
+Yes... I guess in this case it can "safely" modify ns_last_pid in the child
+namespaces it needs to create.
 
-  conntrack -e NEW -E &
-  modprobe -v xfrm_user
+So Adrian, sorry for confusion, I think your patch is fine.
 
-They provided following analysis:
-
-conntrack -e NEW -E
-    netlink_bind()
-        netlink_lock_table() -> increases "nl_table_users"
-            nfnetlink_bind()
-            # does not unlock the table as it's locked by netlink_bind()
-                __request_module()
-                    call_usermodehelper_exec()
-
-This triggers "modprobe nf_conntrack_netlink" from kernel, netlink_bind()
-won't return until modprobe process is done.
-
-"modprobe xfrm_user":
-    xfrm_user_init()
-        register_pernet_subsys()
-            -> grab pernet_ops_rwsem
-                ..
-                netlink_table_grab()
-                    calls schedule() as "nl_table_users" is non-zero
-
-so modprobe is blocked because netlink_bind() increased
-nl_table_users while also holding pernet_ops_rwsem.
-
-"modprobe nf_conntrack_netlink" runs and inits nf_conntrack_netlink:
-    ctnetlink_init()
-        register_pernet_subsys()
-            -> blocks on "pernet_ops_rwsem" thanks to xfrm_user module
-
-both modprobe processes wait on one another -- neither can make
-progress.
-
-Switch netlink_bind() to "nowait" modprobe -- this releases the netlink
-table lock, which then allows both modprobe instances to complete.
-
-Reported-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
-Reported-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/netfilter/nfnetlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/netfilter/nfnetlink.c b/net/netfilter/nfnetlink.c
-index 733d3e4a30d85..2cee032af46d2 100644
---- a/net/netfilter/nfnetlink.c
-+++ b/net/netfilter/nfnetlink.c
-@@ -530,7 +530,7 @@ static int nfnetlink_bind(struct net *net, int group)
- 	ss = nfnetlink_get_subsys(type << 8);
- 	rcu_read_unlock();
- 	if (!ss)
--		request_module("nfnetlink-subsys-%d", type);
-+		request_module_nowait("nfnetlink-subsys-%d", type);
- 	return 0;
- }
- #endif
--- 
-2.20.1
+Oleg.
 
