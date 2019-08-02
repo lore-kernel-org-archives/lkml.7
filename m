@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D71CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF3DC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0776721726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC932086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739616;
-	bh=ZD/d7wEanQe31gJ/K5UdbGiLfybN+idHdUps5k0IfR8=;
+	s=default; t=1564739619;
+	bh=sYkRc7CabslKUDeXZrJllkXGu9BYtuDCILacWPdqq4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkz6cLEYheXiDAMliWb9jXYwAf0e9W7eACpQKBeNpl5A9+Z1wLS1VY9dYKjCI8pd0
-	 6ztI6CM3D6QntNvcYhQnspKsEdZ2K7JAWhD5+B/e6WH6C/dEw1UaW3GP8O112qINai
-	 HXGL/FftWoYDyP93xwqDbzeqdBgOvDpDqY7ayzb0=
+	b=MYv1DnmAs7o4eTSoGMAfITxxnF4pU2nVgH6Pc9FRaTPek+jWoLVgijlKdosBSHkKf
+	 89tFwCJCggYXINgIpXTOoEIb1G0ZyTV+e/OGn1fyn4nLypIecQ3//iebtTsLQ9HP82
+	 GcP7+cSZwrVIlpdDaC10N0RezIEumdhlrys1CqgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406285AbfHBJxe (ORCPT
+        id S2406299AbfHBJxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:53:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59640 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406198AbfHBJx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:53:29 -0400
+        id S1730273AbfHBJxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:53:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDCEE2086A;
-        Fri,  2 Aug 2019 09:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 193FC2086A;
+        Fri,  2 Aug 2019 09:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739608;
-        bh=ZD/d7wEanQe31gJ/K5UdbGiLfybN+idHdUps5k0IfR8=;
+        s=default; t=1564739613;
+        bh=sYkRc7CabslKUDeXZrJllkXGu9BYtuDCILacWPdqq4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdTov3dQJlhTETZxwZIreIsmzqtDxUlcwZGn1/Tv4phuUbcxOd61TNMxPvjFL64qL
-         OGKwsCNrbhGuWFVTQxeqDSkLzkSxhj0JVteINABOP5SpQx5jwVeA4laBQOP9jxM3yE
-         5qtRKeNUukQwkHU4jhWlLOLtU5Sn1OZMnhvrAmd0=
+        b=T8NcMmBfDjiJwTmBGzn+E+KoGpCzwOiE3ahqcwbZLvbtC2xtv6D7yF0pFeJ2R+eO9
+         bICtaZrMBMI31lr6+8DkcfD3ZfcBfcLNpDIf0V38gPClHV9UdKzorsfH9itMGA9pzf
+         gTcq2LSzAo3KbZ37ymAISGR+CRnlwyyCxe7/Ffs4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+357d86bcb4cca1a2f572@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.9 217/223] media: au0828: fix null dereference in error path
-Date:   Fri,  2 Aug 2019 11:37:22 +0200
-Message-Id: <20190802092250.761351262@linuxfoundation.org>
+        Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 219/223] media: radio-raremono: change devm_k*alloc to k*alloc
+Date:   Fri,  2 Aug 2019 11:37:24 +0200
+Message-Id: <20190802092250.836612085@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,49 +62,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
 
-commit 6d0d1ff9ff21fbb06b867c13a1d41ce8ddcd8230 upstream.
+commit c666355e60ddb4748ead3bdd983e3f7f2224aaf0 upstream.
 
-au0828_usb_disconnect() gets the au0828_dev struct via usb_get_intfdata,
-so it needs to set up for the error paths.
+Change devm_k*alloc to k*alloc to manually allocate memory
 
-Reported-by: syzbot+357d86bcb4cca1a2f572@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
+The manual allocation and freeing of memory is necessary because when
+the USB radio is disconnected, the memory associated with devm_k*alloc
+is freed. Meaning if we still have unresolved references to the radio
+device, then we get use-after-free errors.
+
+This patch fixes this by manually allocating memory, and freeing it in
+the v4l2.release callback that gets called when the last radio device
+exits.
+
+Reported-and-tested-by: syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
+
+Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: cleaned up two small checkpatch.pl warnings]
+[hverkuil-cisco@xs4all.nl: prefix subject with driver name]
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/au0828/au0828-core.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/media/radio/radio-raremono.c |   30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
---- a/drivers/media/usb/au0828/au0828-core.c
-+++ b/drivers/media/usb/au0828/au0828-core.c
-@@ -630,6 +630,12 @@ static int au0828_usb_probe(struct usb_i
- 	/* Setup */
- 	au0828_card_setup(dev);
+--- a/drivers/media/radio/radio-raremono.c
++++ b/drivers/media/radio/radio-raremono.c
+@@ -283,6 +283,14 @@ static int vidioc_g_frequency(struct fil
+ 	return 0;
+ }
  
-+	/*
-+	 * Store the pointer to the au0828_dev so it can be accessed in
-+	 * au0828_usb_disconnect
-+	 */
-+	usb_set_intfdata(interface, dev);
++static void raremono_device_release(struct v4l2_device *v4l2_dev)
++{
++	struct raremono_device *radio = to_raremono_dev(v4l2_dev);
 +
- 	/* Analog TV */
- 	retval = au0828_analog_register(dev, interface);
- 	if (retval) {
-@@ -647,12 +653,6 @@ static int au0828_usb_probe(struct usb_i
- 	/* Remote controller */
- 	au0828_rc_register(dev);
++	kfree(radio->buffer);
++	kfree(radio);
++}
++
+ /* File system interface */
+ static const struct v4l2_file_operations usb_raremono_fops = {
+ 	.owner		= THIS_MODULE,
+@@ -307,12 +315,14 @@ static int usb_raremono_probe(struct usb
+ 	struct raremono_device *radio;
+ 	int retval = 0;
  
--	/*
--	 * Store the pointer to the au0828_dev so it can be accessed in
--	 * au0828_usb_disconnect
--	 */
--	usb_set_intfdata(interface, dev);
+-	radio = devm_kzalloc(&intf->dev, sizeof(struct raremono_device), GFP_KERNEL);
+-	if (radio)
+-		radio->buffer = devm_kmalloc(&intf->dev, BUFFER_LENGTH, GFP_KERNEL);
 -
- 	pr_info("Registered device AU0828 [%s]\n",
- 		dev->board.name == NULL ? "Unset" : dev->board.name);
+-	if (!radio || !radio->buffer)
++	radio = kzalloc(sizeof(*radio), GFP_KERNEL);
++	if (!radio)
++		return -ENOMEM;
++	radio->buffer = kmalloc(BUFFER_LENGTH, GFP_KERNEL);
++	if (!radio->buffer) {
++		kfree(radio);
+ 		return -ENOMEM;
++	}
+ 
+ 	radio->usbdev = interface_to_usbdev(intf);
+ 	radio->intf = intf;
+@@ -336,7 +346,8 @@ static int usb_raremono_probe(struct usb
+ 	if (retval != 3 ||
+ 	    (get_unaligned_be16(&radio->buffer[1]) & 0xfff) == 0x0242) {
+ 		dev_info(&intf->dev, "this is not Thanko's Raremono.\n");
+-		return -ENODEV;
++		retval = -ENODEV;
++		goto free_mem;
+ 	}
+ 
+ 	dev_info(&intf->dev, "Thanko's Raremono connected: (%04X:%04X)\n",
+@@ -345,7 +356,7 @@ static int usb_raremono_probe(struct usb
+ 	retval = v4l2_device_register(&intf->dev, &radio->v4l2_dev);
+ 	if (retval < 0) {
+ 		dev_err(&intf->dev, "couldn't register v4l2_device\n");
+-		return retval;
++		goto free_mem;
+ 	}
+ 
+ 	mutex_init(&radio->lock);
+@@ -357,6 +368,7 @@ static int usb_raremono_probe(struct usb
+ 	radio->vdev.ioctl_ops = &usb_raremono_ioctl_ops;
+ 	radio->vdev.lock = &radio->lock;
+ 	radio->vdev.release = video_device_release_empty;
++	radio->v4l2_dev.release = raremono_device_release;
+ 
+ 	usb_set_intfdata(intf, &radio->v4l2_dev);
+ 
+@@ -372,6 +384,10 @@ static int usb_raremono_probe(struct usb
+ 	}
+ 	dev_err(&intf->dev, "could not register video device\n");
+ 	v4l2_device_unregister(&radio->v4l2_dev);
++
++free_mem:
++	kfree(radio->buffer);
++	kfree(radio);
+ 	return retval;
+ }
  
 
 
