@@ -2,43 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19265C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E10C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04522087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3212087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393709AbfHBTxA (ORCPT
+        id S2393817AbfHBTzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 15:53:00 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:40467 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732050AbfHBTw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 15:52:59 -0400
-Received: from [10.0.101.109] (unknown [62.214.191.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7F5DE201A3C37;
-        Fri,  2 Aug 2019 21:52:56 +0200 (CEST)
-Subject: Re: Kernel 4.14 + has 100 times higher IO latency than Kernel 4.4
- with raid1
-To:     Jinpu Wang <jinpu.wang@cloud.ionos.com>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org
-Cc:     Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>
-References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de>
-Date:   Fri, 2 Aug 2019 21:52:56 +0200
+        Fri, 2 Aug 2019 15:55:21 -0400
+Received: from smtp4-g21.free.fr ([212.27.42.4]:59716 "EHLO smtp4-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732050AbfHBTzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 15:55:21 -0400
+Received: from [192.168.1.91] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 9469819F59E;
+        Fri,  2 Aug 2019 21:54:57 +0200 (CEST)
+Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
+ <619d2559-6d88-e795-76e0-3078236933ef@free.fr>
+ <20190612172501.GY4814@minitux>
+ <3570d880-2b76-88ae-8721-e75cf5acec4c@free.fr>
+ <5b252fe6-9435-2aad-d0db-f6170a07b5e9@free.fr>
+ <f52774d3-d1ad-9cc4-af23-feb10d9f4b9f@free.fr>
+Message-ID: <bdf95b27-6ff1-8cc0-83cb-b3ec5986a08e@free.fr>
+Date:   Fri, 2 Aug 2019 21:54:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <f52774d3-d1ad-9cc4-af23-feb10d9f4b9f@free.fr>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,113 +55,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Jinpu,
+On 23/07/2019 12:31, Marc Gonzalez wrote:
 
+> On 19/07/2019 17:50, Marc Gonzalez wrote:
+> 
+>> On 13/06/2019 11:10, Marc Gonzalez wrote:
+>>
+>>> Here are my observations for a 8998 board:
+>>>
+>>> 1) If I apply only the readl_poll_timeout() fix (not the mask_pcs_ready fixup)
+>>> qcom_pcie_probe() fails with a timeout in phy_init.
+>>> => this is in line with your regression analysis.
+>>>
+>>> 2) Your patch also fixes a long-standing bug in UFS init whereby sending
+>>> lots of information to the console during phy init would lead to an
+>>> incorrectly diagnosed time-out.
+>>>
+>>> Good stuff!
+>>>
+>>> Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+>>> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+>>
+>> It looks like this patch fixed UFS, but broke PCIe and USB3 ^_^
+>>
+>> qcom-qmp-phy 1c06000.phy: Registered Qcom-QMP phy
+>> qcom-qmp-phy c010000.phy: Registered Qcom-QMP phy
+>> qcom-qmp-phy 1da7000.phy: Registered Qcom-QMP phy
+>>
+>> qcom-qmp-phy 1c06000.phy: BEFORE=000000a6 AFTER=000000a6
+>> qcom-qmp-phy 1c06000.phy: phy initialization timed-out
+>> phy phy-1c06000.phy.0: phy init failed --> -110
+>> qcom-pcie: probe of 1c00000.pci failed with error -110
+>>
+>> qcom-qmp-phy 1da7000.phy: BEFORE=00000040 AFTER=0000000d
+>>
+>> qcom-qmp-phy c010000.phy: BEFORE=69696969 AFTER=b7b7b7b7
+>> qcom-qmp-phy c010000.phy: phy initialization timed-out
+>> phy phy-c010000.phy.1: phy init failed --> -110
+>> dwc3 a800000.dwc3: failed to initialize core: -110
+>> dwc3: probe of a800000.dwc3 failed with error -110
+>>
+>>
+>> Downstream code for PCIe is:
+>>
+>> static bool pcie_phy_is_ready(struct msm_pcie_dev_t *dev)
+>> {
+>> 	if (dev->phy_ver >= 0x20) {
+>> 		if (readl_relaxed(dev->phy + PCIE_N_PCS_STATUS(dev->rc_idx, dev->common_phy)) &	BIT(6))
+>> 			return false;
+>> 		else
+>> 			return true;
+>> 	}
+>>
+>> 	if (!(readl_relaxed(dev->phy + PCIE_COM_PCS_READY_STATUS) & 0x1))
+>> 		return false;
+>> 	else
+>> 		return true;
+>> }
+>>
+>> AFAICT:
+>> PCIe and USB3 QMP PHYs are ready when PHYSTATUS=BIT(6) goes to 0.
+>> But UFS is ready when PCS_READY=BIT(0) goes to 1.
+>>
+>>
+>> Can someone verify that USB3 is broken on 845 with 885bd765963b?
+> 
+> Suggested fix:
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 34ff6434da8f..11c1b02f0206 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -1447,6 +1447,11 @@ static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
+>  	return 0;
+>  }
+>  
+> +static bool phy_is_ready(unsigned int val, unsigned int mask)
+> +{
+> +	return mask == PCS_READY ? val & mask : !(val & mask);
+> +}
+> +
+>  static int qcom_qmp_phy_enable(struct phy *phy)
+>  {
+>  	struct qmp_phy *qphy = phy_get_drvdata(phy);
+> @@ -1548,7 +1553,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+>  	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+>  	mask = cfg->mask_pcs_ready;
+>  
+> -	ret = readl_poll_timeout(status, val, val & mask, 10,
+> +	ret = readl_poll_timeout(status, val, phy_is_ready(val, mask), 10,
+>  				 PHY_INIT_COMPLETE_TIMEOUT);
+>  	if (ret) {
+>  		dev_err(qmp->dev, "phy initialization timed-out\n");
+> 
 
-On 02.08.19 16:48, Jinpu Wang wrote:
+It seems there is a problem. This patch made its way to stable,
+even though it appears to break (at least) msm8998, and possibly
+sdm845. Could someone with access to one or both platforms confirm
+that the patch broke something, and that the proposed fix actually
+fixes the issue?
 
-> We found a problem regarding much higher IO latency when running
-> kernel 4.4.131 compare to 4.14.133, tried with latest upstream
-> 5.3-rc2, same result.
-> 
-> Reproducer:
-> 1 create md raid1 with 2 ram disks:
-> sudo mdadm -C /dev/md0 -l1 -n2 -e1.2 --bitmap=internal /dev/ram[0-1]
-> 2 run fio command with rate_iops:
-> fio  --rw=write --ioengine=libaio --iodepth=32  --size=1000MB
-> --rate_iops=5000 --direct=1 --numjobs=1 --runtime=20 --time_based
-> --name=write-test --filename=/dev/md0
-> 
-> result on 4.4 kernel:
-> root@ib2:~# fio  --rw=write --ioengine=libaio --iodepth=32
-> --size=1000MB --rate_iops=5000 --direct=1 --numjobs=1 --runtime=20
-> --time_based --name=write-test --filename=/dev/md0
-> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
-> fio-2.2.10
-> Starting 1 process
-> Jobs: 1 (f=1), CR=5000/0 IOPS: [W(1)] [100.0% done] [0KB/20008KB/0KB
-> /s] [0/5002/0 iops] [eta 00m:00s]
-> write-test: (groupid=0, jobs=1): err= 0: pid=3351: Fri Aug  2 15:31:26 2019
->    write: io=400004KB, bw=19999KB/s, iops=4999, runt= 20001msec
->      slat (usec): min=3, max=26, avg= 3.12, stdev= 0.36
->      clat (usec): min=0, max=116, avg= 2.04, stdev= 1.33
->       lat (usec): min=3, max=141, avg= 5.19, stdev= 1.39
->      clat percentiles (usec):
->       |  1.00th=[    1],  5.00th=[    2], 10.00th=[    2], 20.00th=[    2],
->       | 30.00th=[    2], 40.00th=[    2], 50.00th=[    2], 60.00th=[    2],
->       | 70.00th=[    2], 80.00th=[    2], 90.00th=[    2], 95.00th=[    3],
->       | 99.00th=[    3], 99.50th=[    3], 99.90th=[    3], 99.95th=[    3],
->       | 99.99th=[   86]
->      bw (KB  /s): min=20000, max=20008, per=100.00%, avg=20005.54, stdev= 3.74
->      lat (usec) : 2=3.37%, 4=96.60%, 10=0.01%, 20=0.01%, 50=0.01%
->      lat (usec) : 100=0.01%, 250=0.01%
->    cpu          : usr=4.25%, sys=0.00%, ctx=198550, majf=0, minf=11
->    IO depths    : 1=100.0%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=0.0%
->       submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->       complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->       issued    : total=r=0/w=100001/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
->       latency   : target=0, window=0, percentile=100.00%, depth=32
-> 
-> Run status group 0 (all jobs):
->    WRITE: io=400004KB, aggrb=19999KB/s, minb=19999KB/s, maxb=19999KB/s,
-> mint=20001msec, maxt=20001msec
-> 
-> Disk stats (read/write):
->      md0: ios=61/99539, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
-> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
-> aggrutil=0.00%
-> 
-> result on 5.3 kernel
-> root@ib1:/home/jwang# fio  --rw=write --ioengine=libaio --iodepth=32
-> --size=1000MB --rate_iops=5 --direct=1 --numjobs=1 --runtime=20
-> --time_based --name=write-test --filename=/dev/md0
-> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
-> fio-2.2.10
-> Starting 1 process
-> Jobs: 1 (f=1), CR=5/0 IOPS: [W(1)] [100.0% done] [0KB/20KB/0KB /s]
-> [0/5/0 iops] [eta 00m:00s]
-> write-test: (groupid=0, jobs=1): err= 0: pid=1651: Fri Aug  2 17:16:18 2019
->    write: io=413696B, bw=20683B/s, iops=5, runt= 20001msec
->      slat (usec): min=2, max=51803, avg=1028.62, stdev=7250.96
->      clat (usec): min=0, max=91, avg=17.76, stdev=28.07
->       lat (usec): min=3, max=51892, avg=1046.50, stdev=7254.89
->      clat percentiles (usec):
->       |  1.00th=[    0],  5.00th=[    0], 10.00th=[    0], 20.00th=[    0],
->       | 30.00th=[    1], 40.00th=[    1], 50.00th=[    1], 60.00th=[    1],
->       | 70.00th=[   19], 80.00th=[   44], 90.00th=[   68], 95.00th=[   80],
->       | 99.00th=[   88], 99.50th=[   91], 99.90th=[   91], 99.95th=[   91],
->       | 99.99th=[   91]
->      bw (KB  /s): min=   20, max=   21, per=100.00%, avg=20.04, stdev= 0.21
->      lat (usec) : 2=67.33%, 10=0.99%, 20=1.98%, 50=11.88%, 100=17.82%
->    cpu          : usr=0.00%, sys=0.00%, ctx=77, majf=0, minf=10
->    IO depths    : 1=68.3%, 2=2.0%, 4=4.0%, 8=7.9%, 16=15.8%, 32=2.0%, >=64=0.0%
->       submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->       complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
->       issued    : total=r=0/w=101/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
->       latency   : target=0, window=0, percentile=100.00%, depth=32
-> 
-> Run status group 0 (all jobs):
->    WRITE: io=404KB, aggrb=20KB/s, minb=20KB/s, maxb=20KB/s,
-> mint=20001msec, maxt=20001msec
-> 
-> Disk stats (read/write):
->      md0: ios=0/100, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
-> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
-> aggrutil=0.00%
->    ram0: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
->    ram1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
-> 
-> During the tests the following kernel parameters are applied:
-> processor.max_cstate=0 idle=poll mitigations=off
-> 
-> Could anyone give us a hint, what could lead to such a huge difference?
-
-Sorry, I have no idea, but as you can easily reproduce it with RAM 
-disks, bisecting the commit causing this quite easily.
-
-Your tests should also be added to some test suite (kselftest)?
-
-
-Kind regards,
-
-Paul
+Regards.
