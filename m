@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D5BC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97805C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C73E2183F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61CE32173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752118;
-	bh=9dH5jADkYDsCkjIEADRk5oylykPvsymkT97XQDf6TNE=;
+	s=default; t=1564752122;
+	bh=ND1hno1Qb4xeyaLty/5xL69EBHwl0fpRMM3p558OdPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rksDei8JXGe/Ox97d6mJKWjRFTJjMPQPlptDYqituLdCHPIAKIN/b8DZZDGxZ99sW
-	 N5hgOJf45si5OuAwnItFBqlq8BY6ONM3u/4O0l/trKJoWJrD6gYdBLBNtMCBbfDcRk
-	 3MjKGZsg3okFbh4ezoPLcXLPJgfeK/eZVmUfKHKo=
+	b=NT0egoWJTqtOUd64yQsjqMeZ64/hADcivnFRNJ1TiHUcJX9xR1TCaiCLIxLB8l5YS
+	 OZ9tHx07OYNiEgiOjZE+SwylEJ58UiV/F4z1aWr3h4y552noijYfN8pjT+sQNDOeGZ
+	 iR0YIs/IStQUKHtJAj/XTNB6Bpq9Zosm2XRuOYgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393665AbfHBNV5 (ORCPT
+        id S2393679AbfHBNWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:21:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60434 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:22:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393644AbfHBNVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:21:55 -0400
+        id S2393664AbfHBNV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:21:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C4262173E;
-        Fri,  2 Aug 2019 13:21:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0929021850;
+        Fri,  2 Aug 2019 13:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752113;
-        bh=9dH5jADkYDsCkjIEADRk5oylykPvsymkT97XQDf6TNE=;
+        s=default; t=1564752116;
+        bh=ND1hno1Qb4xeyaLty/5xL69EBHwl0fpRMM3p558OdPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PkgqBEOxs7eBGaPTfJVuOu74PQe4+xMrmfVgcAfHIolvYCC4FUVrtuZOBFKp3zX32
-         jMh8Kr9Gl6jY1sDaZmooi0Ertr7WtCn5Ticd9fr+FOCXrQ1RscZQQtm8BYhzAcF2C4
-         Xr4e227K7XKvHgCsVDUy54OvufhRucb4yd0OeWRE=
+        b=C1m3V+vP+/1Ji651vQ7e4V+is3H5BZXaEnk30HyAqW+lM6CAfXg3p33/Oedbo+IYD
+         b7yQgHKEcOKKi3osdh3y4PwgEmPcamiWJkx32K1n00Ti+RNqfvDKZ0Ssmqysu6/2eh
+         aYqeBZXSwZNEe2dRGh3f+OwoYJOzt2WmjzmxR8Mo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
         Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 48/76] ALSA: compress: Fix regression on compressed capture streams
-Date:   Fri,  2 Aug 2019 09:19:22 -0400
-Message-Id: <20190802131951.11600-48-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 50/76] ALSA: compress: Don't allow paritial drain operations on capture streams
+Date:   Fri,  2 Aug 2019 09:19:24 -0400
+Message-Id: <20190802131951.11600-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -61,80 +61,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit 4475f8c4ab7b248991a60d9c02808dbb813d6be8 ]
+[ Upstream commit a70ab8a8645083f3700814e757f2940a88b7ef88 ]
 
-A previous fix to the stop handling on compressed capture streams causes
-some knock on issues. The previous fix updated snd_compr_drain_notify to
-set the state back to PREPARED for capture streams. This causes some
-issues however as the handling for snd_compr_poll differs between the
-two states and some user-space applications were relying on the poll
-failing after the stream had been stopped.
+Partial drain and next track are intended for gapless playback and
+don't really have an obvious interpretation for a capture stream, so
+makes sense to not allow those operations on capture streams.
 
-To correct this regression whilst still fixing the original problem the
-patch was addressing, update the capture handling to skip the PREPARED
-state rather than skipping the SETUP state as it has done until now.
-
-Fixes: 4f2ab5e1d13d ("ALSA: compress: Fix stop handling on compressed capture streams")
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Acked-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/compress_driver.h |  5 +----
- sound/core/compress_offload.c   | 16 +++++++++++-----
- 2 files changed, 12 insertions(+), 9 deletions(-)
+ sound/core/compress_offload.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
-index c5188ff724d12..bc88d6f964da9 100644
---- a/include/sound/compress_driver.h
-+++ b/include/sound/compress_driver.h
-@@ -173,10 +173,7 @@ static inline void snd_compr_drain_notify(struct snd_compr_stream *stream)
- 	if (snd_BUG_ON(!stream))
- 		return;
- 
--	if (stream->direction == SND_COMPRESS_PLAYBACK)
--		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
--	else
--		stream->runtime->state = SNDRV_PCM_STATE_PREPARED;
-+	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
- 
- 	wake_up(&stream->runtime->sleep);
- }
 diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 99b8821587053..d79aee6b9edd2 100644
+index 40dae723c59db..6cf5b8440cf30 100644
 --- a/sound/core/compress_offload.c
 +++ b/sound/core/compress_offload.c
-@@ -574,10 +574,7 @@ snd_compr_set_params(struct snd_compr_stream *stream, unsigned long arg)
- 		stream->metadata_set = false;
- 		stream->next_track = false;
- 
--		if (stream->direction == SND_COMPRESS_PLAYBACK)
--			stream->runtime->state = SNDRV_PCM_STATE_SETUP;
--		else
--			stream->runtime->state = SNDRV_PCM_STATE_PREPARED;
-+		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
- 	} else {
+@@ -834,6 +834,10 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
+ 	if (stream->runtime->state != SNDRV_PCM_STATE_RUNNING)
  		return -EPERM;
- 	}
-@@ -693,8 +690,17 @@ static int snd_compr_start(struct snd_compr_stream *stream)
- {
- 	int retval;
  
--	if (stream->runtime->state != SNDRV_PCM_STATE_PREPARED)
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_SETUP:
-+		if (stream->direction != SND_COMPRESS_CAPTURE)
-+			return -EPERM;
-+		break;
-+	case SNDRV_PCM_STATE_PREPARED:
-+		break;
-+	default:
- 		return -EPERM;
-+	}
++	/* next track doesn't have any meaning for capture streams */
++	if (stream->direction == SND_COMPRESS_CAPTURE)
++		return -EPERM;
 +
- 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_START);
- 	if (!retval)
- 		stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
+ 	/* you can signal next track if this is intended to be a gapless stream
+ 	 * and current track metadata is set
+ 	 */
+@@ -861,6 +865,10 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+ 		break;
+ 	}
+ 
++	/* partial drain doesn't have any meaning for capture streams */
++	if (stream->direction == SND_COMPRESS_CAPTURE)
++		return -EPERM;
++
+ 	/* stream can be drained only when next track has been signalled */
+ 	if (stream->next_track == false)
+ 		return -EPERM;
 -- 
 2.20.1
 
