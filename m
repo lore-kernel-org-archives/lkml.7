@@ -2,110 +2,145 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C11C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB7CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B274A2067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:40:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T0GLzLcz"
+	by mail.kernel.org (Postfix) with ESMTP id 1F469216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564774861;
+	bh=WiQohTwdjNs2nhpJWkvzqSmwuYyHvaf+sHB+D1spqu8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G2Ba4jjylvusBNZ7UIkecZidY8/UTNIEaES+GcRKASxBJtqXJKBIqNPOBrfkEOTZq
+	 SFyWqej4xJyd/7F4NMUoHFrGUes0NcaTy0YP4NX8QepJ0AuelkQFcWFIuevdrDgryI
+	 fXznSBGlrWmLqvNyH7xYM1bkL22WZkkWqVkHvRiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406210AbfHBTki (ORCPT
+        id S2406254AbfHBTlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 15:40:38 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43867 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406158AbfHBTkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 15:40:37 -0400
-Received: by mail-pl1-f193.google.com with SMTP id 4so27011630pld.10
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 12:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hZZ6FWmMn+OS2bgjBLcjFysPFZH4K2Ou5+WcqYSmM1U=;
-        b=T0GLzLczX9JeZaCYF3d+arvpokN7gqmeqIcSa5X8K5HpiZ9pMedgFLFCOhH5MhZbEU
-         R/Ks68/S4SYlVgXjjn0veWCf1fq8AHaCM/QzTgGCyzq1AHqrFHYcq0jgnSd0EG3Gsk4l
-         GmSJ/W7A5UNYdIJ29Hyjcwj8QFZM5JRFofH6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hZZ6FWmMn+OS2bgjBLcjFysPFZH4K2Ou5+WcqYSmM1U=;
-        b=frpDGFQ9F+z/4KeRxifGqh3VaXraWMzCr8mgSadDD4RL61zuQvQxUZeGDjxGgrFckK
-         lY9Jy5RVfshSicA6893z8H2JbFcuIQVv21aLUAkcjtg6WGZtq0yUnIOW+nDsOfrkD85r
-         00Oj93+0NCzZMxtNanUkcqpalJFHIatWeESvlzPoooIFBYLaTWNlF9L754+UexUXllhV
-         ME9vmuSYl0GALUVtoI7cptGJ/W1Z0YbmAH9eeQ7LokRPhyqnQz139UqkKODG2R2TjTM0
-         AOsgfPHfz8BoNaTdgPRmR1vu24WYjZNZZ6pE2X38vCZBUBbteL9NIX2sUCnWPz7oxmrZ
-         5Kmg==
-X-Gm-Message-State: APjAAAV1dKKJhd4MqvOG9giYMX4/llRzXOhP2bbrETNbufESfiYD8oe3
-        iTE3YB4xARNMqUU505uwM5mVOg==
-X-Google-Smtp-Source: APXvYqzFkdKYNEfPiPn7V9aHNxl6ViCr+8qHSEL6P4IEQbxCcnI4kxCbl60R+Sf1NyoJ2l1UeYB2pg==
-X-Received: by 2002:a17:902:9a95:: with SMTP id w21mr49481675plp.126.1564774836706;
-        Fri, 02 Aug 2019 12:40:36 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id y12sm86453517pfn.187.2019.08.02.12.40.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 12:40:36 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 12:40:32 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 4/4] net: phy: realtek: configure RTL8211E LEDs
-Message-ID: <20190802194032.GM250418@google.com>
-References: <20190801190759.28201-1-mka@chromium.org>
- <20190801190759.28201-5-mka@chromium.org>
- <20190802181840.GP2099@lunn.ch>
+        Fri, 2 Aug 2019 15:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406158AbfHBTk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 15:40:58 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6262920B7C;
+        Fri,  2 Aug 2019 19:40:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564774857;
+        bh=WiQohTwdjNs2nhpJWkvzqSmwuYyHvaf+sHB+D1spqu8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QUsBRKRWYzLfCeXsS6GiwNhtsEX7cZ4/deEYSQbShEjDdg5AQCe0hJQdmMJasAXkL
+         uGdQuNPSn6njNM9u3rOBE0gF5dgrwOSS9c1ZYKi3rRX9nKRIQNv2Ns7pMRQgM5vllh
+         2RzkOn5+cLcnW0/Xgx/2zgGZFfQNtTbpHlR6SMRs=
+Date:   Fri, 2 Aug 2019 14:40:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: Re: [PATCH] PCI: hv: Fix panic by calling hv_pci_remove_slots()
+ earlier
+Message-ID: <20190802194053.GL151852@google.com>
+References: <PU1P153MB0169DBCFEE7257F5BB93580ABFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802181840.GP2099@lunn.ch>
+In-Reply-To: <PU1P153MB0169DBCFEE7257F5BB93580ABFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Hi Dexuan,
 
-On Fri, Aug 02, 2019 at 08:18:40PM +0200, Andrew Lunn wrote:
-> On Thu, Aug 01, 2019 at 12:07:59PM -0700, Matthias Kaehlcke wrote:
-> > Configure the RTL8211E LEDs behavior when the device tree property
-> > 'realtek,led-modes' is specified.
+The subject line only describes the mechanical code change, which is
+obvious from the patch.  It would be better if we could say something
+about *why* we need this.
 
-note to self: update commit message
-
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Fri, Aug 02, 2019 at 01:32:28AM +0000, Dexuan Cui wrote:
 > 
-> Hi Matthias
+> When a slot is removed, the pci_dev must still exist.
 > 
-> I was more thinking of adding a new driver call to the PHY driver API,
-> to configure an LED. Something like
+> pci_remove_root_bus() removes and free all the pci_devs, so
+> hv_pci_remove_slots() must be called before pci_remove_root_bus(),
+> otherwise a general protection fault can happen, if the kernel is built
+
+"general protection fault" is an x86 term that doesn't really say what
+the issue is.  I suspect this would be a "use-after-free" problem.
+
+> with the memory debugging options.
 > 
-> rtl8211e_config_leds(phydev, int led, struct phy_led_config cfg);
+> Fixes: 15becc2b56c6 ("PCI: hv: Add hv_pci_remove_slots() when we unload the driver")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Cc: stable@vger.kernel.org
+> 
+> ---
+> 
+> When pci-hyperv is unloaded, this panic can happen:
+> 
+>  general protection fault:
+>  CPU: 2 PID: 1091 Comm: rmmod Not tainted 5.2.0+
+>  RIP: 0010:pci_slot_release+0x30/0xd0
+>  Call Trace:
+>   kobject_release+0x65/0x190
+>   pci_destroy_slot+0x25/0x60
+>   hv_pci_remove+0xec/0x110 [pci_hyperv]
+>   vmbus_remove+0x20/0x30 [hv_vmbus]
+>   device_release_driver_internal+0xd5/0x1b0
+>   driver_detach+0x44/0x7c
+>   bus_remove_driver+0x75/0xc7
+>   vmbus_driver_unregister+0x50/0xbd [hv_vmbus]
+>   __x64_sys_delete_module+0x136/0x200
+>   do_syscall_64+0x5e/0x220
+> 
+>  drivers/pci/controller/pci-hyperv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 6b9cc6e60a..68c611d 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2757,8 +2757,8 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  		/* Remove the bus from PCI's point of view. */
+>  		pci_lock_rescan_remove();
+>  		pci_stop_root_bus(hbus->pci_bus);
+> -		pci_remove_root_bus(hbus->pci_bus);
+>  		hv_pci_remove_slots(hbus);
+> +		pci_remove_root_bus(hbus->pci_bus);
 
-I guess it sould be singular ('_config_led') if it configures a single
-LED.
+I'm curious about why we need hv_pci_remove_slots() at all.  None of
+the other callers of pci_stop_root_bus() and pci_remove_root_bus() do
+anything similar to hv_pci_remove_slots().
 
-> It would be called by the phylib core after config_init(). But also,
-> thinking ahead to generic linux LED support, it could be called later
-> to reconfigure the LEDs to use a different trigger. The standard LED
-> sysfs interface would be used.
+Surely some of those callers also support slots, so there must be some
+other path that calls pci_destroy_slot() in those cases.  Can we use a
+similar strategy here?
 
-I'll look into the phylib part.
-
-Thanks
-
-Matthias
+>  		pci_unlock_rescan_remove();
+>  		hbus->state = hv_pcibus_removed;
+>  	}
+> -- 
+> 1.8.3.1
+> 
