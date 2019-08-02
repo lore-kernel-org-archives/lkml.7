@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B39C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08500C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F12217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B4021773
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738559;
-	bh=4e7K11PfMIhXOu7QlSmT0dlreo4YuwrOLP/AMEUugM4=;
+	s=default; t=1564738561;
+	bh=8hNcU2/YruSlTsxfKXdmj3zugrN0AYsWwLBaCccHRoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBnFpnR7rm/bdF5pa2iCCJ2n5EUWeGOKlWU8IlG4wgYv7Sz/GRSKEl9GrILy6s30l
-	 0tK2ahhvjR5o4zTbdwBXvAHoUMUtLCCNlPHYSsPSEwnQ/XY6+5XP/H+oz4eYqbJJBU
-	 fCDdDg3xfGOb8fKy4DuzuswhR4gqIvxHuXb/tkJg=
+	b=uRzfwLNK1JJD2NAThIrGQqoEZmO7gt/8R4lLEWUOHVhjBzSzQvRGN8aHHcXg4eiyT
+	 /OYOAKlsVjQrx2AvLmJihMgOWItZHzfQcxB+yYcVzXeTRR9fyowRNQox4ued27W3Jf
+	 e4752TxShfpFDykKDh0j4BD4YfvIuyTIH/hluThQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404792AbfHBJf6 (ORCPT
+        id S2404794AbfHBJgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:35:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36546 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:36:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404041AbfHBJfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:35:54 -0400
+        id S2404102AbfHBJf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:35:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E67B217D4;
-        Fri,  2 Aug 2019 09:35:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21111217D7;
+        Fri,  2 Aug 2019 09:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738553;
-        bh=4e7K11PfMIhXOu7QlSmT0dlreo4YuwrOLP/AMEUugM4=;
+        s=default; t=1564738555;
+        bh=8hNcU2/YruSlTsxfKXdmj3zugrN0AYsWwLBaCccHRoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uoit9m0mXCo9DBxljWwBqKHWX+xsg0fkw7DE/Hcsjys/QyHnlzWUT14r3ovU/WQ5V
-         6VIPxLV4kdZupRWVRWmisQb65Gt2aCo27LExMdW/5o/f2fhZu+3YpXZ12pu3JKFNa1
-         YmArtb7MroRcu4aFBd+Y69vsI0tmzpQzAoozNh/E=
+        b=Z/K7epDnQzQ4nRq+td6rXviw58Rq54T9XdizEjgJ4h24EkAGl+hQ1MSQTSTzwpnXj
+         aa/RhPkQvZTJGScOd/m9F1y5OIFAkMd8uRryuKegbZEPseShCnQcA9+q1RY+0xIjRJ
+         YioxxynrpyGDhW6mknggJtiBsff6eC2gdzBRBh6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 132/158] powerpc/eeh: Handle hugepages in ioremap space
-Date:   Fri,  2 Aug 2019 11:29:13 +0200
-Message-Id: <20190802092230.213182896@linuxfoundation.org>
+Subject: [PATCH 4.4 123/158] mfd: core: Set fwnode for created devices
+Date:   Fri,  2 Aug 2019 11:29:04 +0200
+Message-Id: <20190802092228.758008951@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,66 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33439620680be5225c1b8806579a291e0d761ca0 ]
+[ Upstream commit c176c6d7e932662668bcaec2d763657096589d85 ]
 
-In commit 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap
-space") support for using hugepages in the vmalloc and ioremap areas was
-enabled for radix. Unfortunately this broke EEH MMIO error checking.
+The logic for setting the of_node on devices created by mfd did not set
+the fwnode pointer to match, which caused fwnode-based APIs to
+malfunction on these devices since the fwnode pointer was null. Fix
+this.
 
-Detection works by inserting a hook which checks the results of the
-ioreadXX() set of functions.  When a read returns a 0xFFs response we
-need to check for an error which we do by mapping the (virtual) MMIO
-address back to a physical address, then mapping physical address to a
-PCI device via an interval tree.
-
-When translating virt -> phys we currently assume the ioremap space is
-only populated by PAGE_SIZE mappings. If a hugepage mapping is found we
-emit a WARN_ON(), but otherwise handles the check as though a normal
-page was found. In pathalogical cases such as copying a buffer
-containing a lot of 0xFFs from BAR memory this can result in the system
-not booting because it's too busy printing WARN_ON()s.
-
-There's no real reason to assume huge pages can't be present and we're
-prefectly capable of handling them, so do that.
-
-Fixes: 4a7b06c157a2 ("powerpc/eeh: Handle hugepages in ioremap space")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190710150517.27114-1-oohall@gmail.com
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/mfd/mfd-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
-index 6696c1986844..16193d7b0635 100644
---- a/arch/powerpc/kernel/eeh.c
-+++ b/arch/powerpc/kernel/eeh.c
-@@ -363,10 +363,19 @@ static inline unsigned long eeh_token_to_phys(unsigned long token)
- 					   NULL, &hugepage_shift);
- 	if (!ptep)
- 		return token;
--	WARN_ON(hugepage_shift);
--	pa = pte_pfn(*ptep) << PAGE_SHIFT;
- 
--	return pa | (token & (PAGE_SIZE-1));
-+	pa = pte_pfn(*ptep);
-+
-+	/* On radix we can do hugepage mappings for io, so handle that */
-+	if (hugepage_shift) {
-+		pa <<= hugepage_shift;
-+		pa |= token & ((1ul << hugepage_shift) - 1);
-+	} else {
-+		pa <<= PAGE_SHIFT;
-+		pa |= token & (PAGE_SIZE - 1);
-+	}
-+
-+	return pa;
- }
- 
- /*
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index 022c9374ce8b..215bb5eeb5ac 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -178,6 +178,7 @@ static int mfd_add_device(struct device *parent, int id,
+ 		for_each_child_of_node(parent->of_node, np) {
+ 			if (of_device_is_compatible(np, cell->of_compatible)) {
+ 				pdev->dev.of_node = np;
++				pdev->dev.fwnode = &np->fwnode;
+ 				break;
+ 			}
+ 		}
 -- 
 2.20.1
 
