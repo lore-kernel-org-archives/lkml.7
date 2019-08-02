@@ -2,150 +2,344 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17516C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B235DC32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB55720679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C47920679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390802AbfHBIQa (ORCPT
+        id S2390834AbfHBIQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:16:30 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:35880 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390790AbfHBIQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:16:30 -0400
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id 9453D608E7;
-        Fri,  2 Aug 2019 10:16:27 +0200 (CEST)
-From:   Rolf Eike Beer <eb@emlix.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org,
-        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
-Date:   Fri, 02 Aug 2019 10:16:23 +0200
-Message-ID: <1730571.CeeFRff0Br@devpool35>
-Organization: emlix GmbH
-In-Reply-To: <20190802080942.GA27595@archlinux-threadripper>
-References: <779905244.a0lJJiZRjM@devpool35> <20190802075745.GI26174@kroah.com> <20190802080942.GA27595@archlinux-threadripper>
+        Fri, 2 Aug 2019 04:16:53 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49870 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390805AbfHBIQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:16:52 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 683B550D049FEE854F42;
+        Fri,  2 Aug 2019 16:16:50 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 2 Aug 2019 16:16:44 +0800
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <linux-crypto@vger.kernel.org>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+Subject: [PATCH v3 2/7] crypto: hisilicon - add hardware SGL support
+Date:   Fri, 2 Aug 2019 15:57:51 +0800
+Message-ID: <1564732676-35987-3-git-send-email-wangzhou1@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1564732676-35987-1-git-send-email-wangzhou1@hisilicon.com>
+References: <1564732676-35987-1-git-send-email-wangzhou1@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5118905.V6sjJquZsO"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart5118905.V6sjJquZsO
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+HiSilicon accelerators in Hip08 use same hardware scatterlist for data format.
+We support it in this module.
 
-Nathan Chancellor wrote:
-> On Fri, Aug 02, 2019 at 09:57:45AM +0200, Greg KH wrote:
-> > On Thu, Jun 06, 2019 at 09:11:00AM +0200, Rolf Eike Beer wrote:
-> > > Nick Desaulniers wrote:
-> > > > On Wed, Jun 5, 2019 at 10:27 AM Nick Desaulniers
-> > > >=20
-> > > > <ndesaulniers@google.com> wrote:
-> > > > > On Wed, Jun 5, 2019 at 9:26 AM Greg KH <gregkh@linuxfoundation.or=
-g>=20
-wrote:
-> > > > > > On Wed, Jun 05, 2019 at 05:19:40PM +0200, Rolf Eike Beer wrote:
-> > > > > > > I decided to dig out a toy project which uses a DragonBoard
-> > > > > > > 410c. This
-> > > > > > > has
-> > > > > > > been "running" with kernel 4.9, which I would keep this way f=
-or
-> > > > > > > unrelated
-> > > > > > > reasons. The vanilla 4.9 kernel wasn't bootable back then, but
-> > > > > > > it was
-> > > > > > > buildable, which was good enough.
-> > > > > > >=20
-> > > > > > > Upgrading the kernel to 4.9.180 caused the boot to suddenly
-> > > > > > > fail:
-> > > > > > >=20
-> > > > > > > aarch64-unknown-linux-gnueabi-ld:
-> > > > > > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): in
-> > > > > > > function
-> > > > > > > `handle_kernel_image':
-> > > > > > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm6=
-4-s
-> > > > > > > tub.c:
-> > > > > > > 63:
-> > > > > > > undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_'
-> > > > > > > aarch64-unknown-linux-gnueabi-ld:
-> > > > > > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o):
-> > > > > > > relocation
-> > > > > > > R_AARCH64_ADR_PREL_PG_HI21 against symbol
-> > > > > > > `__efistub__GLOBAL_OFFSET_TABLE_' which may bind externally c=
-an
-> > > > > > > not
-> > > > > > > be used when making a shared object; recompile with -fPIC
-> > > > > > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm6=
-4-s
-> > > > > > > tub.c:
-> > > > > > > 63:
-> > > > > > > (.init.text+0xc): dangerous relocation: unsupported relocation
-> > > > > > > /tmp/e2/build/linux-4.9.139/Makefile:1001: recipe for target
-> > > > > > > 'vmlinux'
-> > > > > > > failed -make[1]: *** [vmlinux] Error 1
-> > > > > > >=20
-> > > > > > > This is caused by commit
-> > > > > > > 27b5ebf61818749b3568354c64a8ec2d9cd5ecca from
-> > > > > > > linux-4.9.y (which is 91ee5b21ee026c49e4e7483de69b55b8b47042b=
-e),
-> > > > > > > reverting
-> > > > > > > this commit fixes the build.
+Specific accelerator drivers can use hisi_acc_create_sgl_pool to allocate
+hardware SGLs ahead. Then use hisi_acc_sg_buf_map_to_hw_sgl to get one
+hardware SGL and pass related information to hardware SGL.
 
-> > Did this ever get resolved, or is it still an issue?
->=20
-> This appears to have been resolved by commit 8fca3c364683 ("efi/libstub:
-> Unify command line param parsing") in 4.9.181. I can build defconfig +
-> CONFIG_RANDOMIZE_BASE without any issues.
+The DMA address of mapped hardware SGL can be passed to SGL src/dst field
+in QM SQE.
 
-I can confirm that 4.9.186 builds without issues with my original config.
+Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+---
+ drivers/crypto/hisilicon/Kconfig  |   8 ++
+ drivers/crypto/hisilicon/Makefile |   1 +
+ drivers/crypto/hisilicon/sgl.c    | 214 ++++++++++++++++++++++++++++++++++++++
+ drivers/crypto/hisilicon/sgl.h    |  24 +++++
+ 4 files changed, 247 insertions(+)
+ create mode 100644 drivers/crypto/hisilicon/sgl.c
+ create mode 100644 drivers/crypto/hisilicon/sgl.h
 
-Thanks for paying attention.
-
-Eike
-=2D-=20
-Rolf Eike Beer, emlix GmbH, http://www.emlix.com
-=46on +49 551 30664-0, Fax +49 551 30664-11
-Gothaer Platz 3, 37083 G=C3=B6ttingen, Germany
-Sitz der Gesellschaft: G=C3=B6ttingen, Amtsgericht G=C3=B6ttingen HR B 3160
-Gesch=C3=A4ftsf=C3=BChrung: Heike Jordan, Dr. Uwe Kracke =E2=80=93 Ust-IdNr=
-=2E: DE 205 198 055
-
-emlix - smart embedded open source
---nextPart5118905.V6sjJquZsO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCXUPxVwAKCRCr5FH7Xu2t
-/CXdBACxv6k3WGP20X7pZkaOIHLo5u8V/uU0Iq5J+12F91cswWsFojaI8ZtGp9vT
-mluIljCRzuKTSHs0hw+gJVZdjK4z9vLkhdGrZl788pAgJKzqnOsBsxCWl5Gyq/lB
-lyTJcLp5s7uyFCXwNi0Hzpc91wHyy4Zm1WLeFjYwqHBFqOKWiw==
-=f8g+
------END PGP SIGNATURE-----
-
---nextPart5118905.V6sjJquZsO--
-
-
+diff --git a/drivers/crypto/hisilicon/Kconfig b/drivers/crypto/hisilicon/Kconfig
+index b79be8d..457d9bc 100644
+--- a/drivers/crypto/hisilicon/Kconfig
++++ b/drivers/crypto/hisilicon/Kconfig
+@@ -19,3 +19,11 @@ config CRYPTO_DEV_HISI_QM
+ 	help
+ 	  HiSilicon accelerator engines use a common queue management
+ 	  interface. Specific engine driver may use this module.
++
++config CRYPTO_HISI_SGL
++	tristate
++	depends on ARM64
++	help
++	  HiSilicon accelerator engines use a common hardware scatterlist
++	  interface for data format. Specific engine driver may use this
++	  module.
+diff --git a/drivers/crypto/hisilicon/Makefile b/drivers/crypto/hisilicon/Makefile
+index 05e9052..96cb913 100644
+--- a/drivers/crypto/hisilicon/Makefile
++++ b/drivers/crypto/hisilicon/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_CRYPTO_DEV_HISI_SEC) += sec/
+ obj-$(CONFIG_CRYPTO_DEV_HISI_QM) += qm.o
++obj-$(CONFIG_CRYPTO_HISI_SGL) += sgl.o
+diff --git a/drivers/crypto/hisilicon/sgl.c b/drivers/crypto/hisilicon/sgl.c
+new file mode 100644
+index 0000000..8ef7679
+--- /dev/null
++++ b/drivers/crypto/hisilicon/sgl.c
+@@ -0,0 +1,214 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2019 HiSilicon Limited. */
++#include <linux/dma-mapping.h>
++#include <linux/module.h>
++#include "./sgl.h"
++
++#define HISI_ACC_SGL_SGE_NR_MIN		1
++#define HISI_ACC_SGL_SGE_NR_MAX		255
++#define HISI_ACC_SGL_SGE_NR_DEF		10
++#define HISI_ACC_SGL_NR_MAX		256
++#define HISI_ACC_SGL_ALIGN_SIZE		64
++
++static int acc_sgl_sge_set(const char *val, const struct kernel_param *kp)
++{
++	int ret;
++	u32 n;
++
++	if (!val)
++		return -EINVAL;
++
++	ret = kstrtou32(val, 10, &n);
++	if (ret != 0 || n > HISI_ACC_SGL_SGE_NR_MAX || n == 0)
++		return -EINVAL;
++
++	return param_set_int(val, kp);
++}
++
++static const struct kernel_param_ops acc_sgl_sge_ops = {
++	.set = acc_sgl_sge_set,
++	.get = param_get_int,
++};
++
++static u32 acc_sgl_sge_nr = HISI_ACC_SGL_SGE_NR_DEF;
++module_param_cb(acc_sgl_sge_nr, &acc_sgl_sge_ops, &acc_sgl_sge_nr, 0444);
++MODULE_PARM_DESC(acc_sgl_sge_nr, "Number of sge in sgl(1-255)");
++
++struct acc_hw_sge {
++	dma_addr_t buf;
++	void *page_ctrl;
++	__le32 len;
++	__le32 pad;
++	__le32 pad0;
++	__le32 pad1;
++};
++
++/* use default sgl head size 64B */
++struct hisi_acc_hw_sgl {
++	dma_addr_t next_dma;
++	__le16 entry_sum_in_chain;
++	__le16 entry_sum_in_sgl;
++	__le16 entry_length_in_sgl;
++	__le16 pad0;
++	__le64 pad1[5];
++	struct hisi_acc_hw_sgl *next;
++	struct acc_hw_sge sge_entries[];
++} __aligned(1);
++
++/**
++ * hisi_acc_create_sgl_pool() - Create a hw sgl pool.
++ * @dev: The device which hw sgl pool belongs to.
++ * @pool: Pointer of pool.
++ * @count: Count of hisi_acc_hw_sgl in pool.
++ *
++ * This function creates a hw sgl pool, after this user can get hw sgl memory
++ * from it.
++ */
++int hisi_acc_create_sgl_pool(struct device *dev,
++			     struct hisi_acc_sgl_pool *pool, u32 count)
++{
++	u32 sgl_size;
++	u32 size;
++
++	if (!dev || !pool || !count)
++		return -EINVAL;
++
++	sgl_size = sizeof(struct acc_hw_sge) * acc_sgl_sge_nr +
++		   sizeof(struct hisi_acc_hw_sgl);
++	size = sgl_size * count;
++
++	pool->sgl = dma_alloc_coherent(dev, size, &pool->sgl_dma, GFP_KERNEL);
++	if (!pool->sgl)
++		return -ENOMEM;
++
++	pool->size = size;
++	pool->count = count;
++	pool->sgl_size = sgl_size;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(hisi_acc_create_sgl_pool);
++
++/**
++ * hisi_acc_free_sgl_pool() - Free a hw sgl pool.
++ * @dev: The device which hw sgl pool belongs to.
++ * @pool: Pointer of pool.
++ *
++ * This function frees memory of a hw sgl pool.
++ */
++void hisi_acc_free_sgl_pool(struct device *dev, struct hisi_acc_sgl_pool *pool)
++{
++	dma_free_coherent(dev, pool->size, pool->sgl, pool->sgl_dma);
++	memset(pool, 0, sizeof(struct hisi_acc_sgl_pool));
++}
++EXPORT_SYMBOL_GPL(hisi_acc_free_sgl_pool);
++
++struct hisi_acc_hw_sgl *acc_get_sgl(struct hisi_acc_sgl_pool *pool, u32 index,
++				    dma_addr_t *hw_sgl_dma)
++{
++	if (!pool || !hw_sgl_dma || index >= pool->count || !pool->sgl)
++		return ERR_PTR(-EINVAL);
++
++	*hw_sgl_dma = pool->sgl_dma + pool->sgl_size * index;
++	return (void *)pool->sgl + pool->sgl_size * index;
++}
++
++void acc_put_sgl(struct hisi_acc_sgl_pool *pool, u32 index) {}
++
++static void sg_map_to_hw_sg(struct scatterlist *sgl,
++			    struct acc_hw_sge *hw_sge)
++{
++	hw_sge->buf = sgl->dma_address;
++	hw_sge->len = sgl->dma_length;
++}
++
++static void inc_hw_sgl_sge(struct hisi_acc_hw_sgl *hw_sgl)
++{
++	hw_sgl->entry_sum_in_sgl++;
++}
++
++static void update_hw_sgl_sum_sge(struct hisi_acc_hw_sgl *hw_sgl, u16 sum)
++{
++	hw_sgl->entry_sum_in_chain = sum;
++}
++
++/**
++ * hisi_acc_sg_buf_map_to_hw_sgl - Map a scatterlist to a hw sgl.
++ * @dev: The device which hw sgl belongs to.
++ * @sgl: Scatterlist which will be mapped to hw sgl.
++ * @pool: Pool which hw sgl memory will be allocated in.
++ * @index: Index of hisi_acc_hw_sgl in pool.
++ * @hw_sgl_dma: The dma address of allocated hw sgl.
++ *
++ * This function builds hw sgl according input sgl, user can use hw_sgl_dma
++ * as src/dst in its BD. Only support single hw sgl currently.
++ */
++struct hisi_acc_hw_sgl *
++hisi_acc_sg_buf_map_to_hw_sgl(struct device *dev,
++			      struct scatterlist *sgl,
++			      struct hisi_acc_sgl_pool *pool,
++			      u32 index, dma_addr_t *hw_sgl_dma)
++{
++	struct hisi_acc_hw_sgl *curr_hw_sgl;
++	dma_addr_t curr_sgl_dma;
++	struct acc_hw_sge *curr_hw_sge;
++	struct scatterlist *sg;
++	int sg_n = sg_nents(sgl);
++	int i, ret;
++
++	if (!dev || !sgl || !pool || !hw_sgl_dma || sg_n > acc_sgl_sge_nr)
++		return ERR_PTR(-EINVAL);
++
++	ret = dma_map_sg(dev, sgl, sg_n, DMA_BIDIRECTIONAL);
++	if (!ret)
++		return ERR_PTR(-EINVAL);
++
++	curr_hw_sgl = acc_get_sgl(pool, index, &curr_sgl_dma);
++	if (!curr_hw_sgl) {
++		ret = -ENOMEM;
++		goto err_unmap_sg;
++	}
++	curr_hw_sgl->entry_length_in_sgl = acc_sgl_sge_nr;
++	curr_hw_sge = curr_hw_sgl->sge_entries;
++
++	for_each_sg(sgl, sg, sg_n, i) {
++		sg_map_to_hw_sg(sg, curr_hw_sge);
++		inc_hw_sgl_sge(curr_hw_sgl);
++		curr_hw_sge++;
++	}
++
++	update_hw_sgl_sum_sge(curr_hw_sgl, acc_sgl_sge_nr);
++	*hw_sgl_dma = curr_sgl_dma;
++
++	return curr_hw_sgl;
++
++err_unmap_sg:
++	dma_unmap_sg(dev, sgl, sg_n, DMA_BIDIRECTIONAL);
++	return ERR_PTR(ret);
++}
++EXPORT_SYMBOL_GPL(hisi_acc_sg_buf_map_to_hw_sgl);
++
++/**
++ * hisi_acc_sg_buf_unmap() - Unmap allocated hw sgl.
++ * @dev: The device which hw sgl belongs to.
++ * @sgl: Related scatterlist.
++ * @hw_sgl: Virtual address of hw sgl.
++ * @hw_sgl_dma: DMA address of hw sgl.
++ * @pool: Pool which hw sgl is allocated in.
++ *
++ * This function unmaps allocated hw sgl.
++ */
++void hisi_acc_sg_buf_unmap(struct device *dev, struct scatterlist *sgl,
++			   struct hisi_acc_hw_sgl *hw_sgl)
++{
++	dma_unmap_sg(dev, sgl, sg_nents(sgl), DMA_BIDIRECTIONAL);
++
++	hw_sgl->entry_sum_in_chain = 0;
++	hw_sgl->entry_sum_in_sgl = 0;
++	hw_sgl->entry_length_in_sgl = 0;
++}
++EXPORT_SYMBOL_GPL(hisi_acc_sg_buf_unmap);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Zhou Wang <wangzhou1@hisilicon.com>");
++MODULE_DESCRIPTION("HiSilicon Accelerator SGL support");
+diff --git a/drivers/crypto/hisilicon/sgl.h b/drivers/crypto/hisilicon/sgl.h
+new file mode 100644
+index 0000000..3ac8871
+--- /dev/null
++++ b/drivers/crypto/hisilicon/sgl.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2019 HiSilicon Limited. */
++#ifndef HISI_ACC_SGL_H
++#define HISI_ACC_SGL_H
++
++struct hisi_acc_sgl_pool {
++	struct hisi_acc_hw_sgl *sgl;
++	dma_addr_t sgl_dma;
++	size_t size;
++	u32 count;
++	size_t sgl_size;
++};
++
++struct hisi_acc_hw_sgl *
++hisi_acc_sg_buf_map_to_hw_sgl(struct device *dev,
++			      struct scatterlist *sgl,
++			      struct hisi_acc_sgl_pool *pool,
++			      u32 index, dma_addr_t *hw_sgl_dma);
++void hisi_acc_sg_buf_unmap(struct device *dev, struct scatterlist *sgl,
++			   struct hisi_acc_hw_sgl *hw_sgl);
++int hisi_acc_create_sgl_pool(struct device *dev, struct hisi_acc_sgl_pool *pool,
++			     u32 count);
++void hisi_acc_free_sgl_pool(struct device *dev, struct hisi_acc_sgl_pool *pool);
++#endif
+-- 
+2.8.1
 
