@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A90C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D65C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C4E2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B592086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738614;
-	bh=tMP1iJw4R/ilJTuPZrzm0aasosLSjSN9Pf7iVjwKK30=;
+	s=default; t=1564738621;
+	bh=BiALBVb/N8Fsm4R+469HhuEF45AObVBncms9OQ4TZjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QdOfAyAwoMUhXQ0BzmeCuWbSukPzWgoooebskx1HBlhfixZo7N1AZt+B7bJmdPkC8
-	 LgVOwFcH1f1vuM3C5eEN8E/cOpf42L6ZQo7ssb/Y1Vzr3uvcNsu/1LiIyZVXZmGmw7
-	 yLBPSMih4ZH1p7InLOU8L5gg9f5p/sLMJm1g0lrc=
+	b=GEFf5CDsHD2+vL+URf222IXfcE4Lx1siKVDTavnSS55+ZTniKivVDSv5k0ZJWVRMv
+	 1SerPkdqmfW+oS8JDnf3mJLF3Q5Xcx6xnpR6V6gX5c90gNPVtdYkCzbNUHKM2XpJJf
+	 FYRcuxo4IsHCtns6s3SMo0MVzHPq0tWELEa/huAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404030AbfHBJgx (ORCPT
+        id S2404308AbfHBJhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:36:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37480 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:37:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404180AbfHBJgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:36:32 -0400
+        id S2404462AbfHBJgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:36:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 622952087E;
-        Fri,  2 Aug 2019 09:36:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAF36217D7;
+        Fri,  2 Aug 2019 09:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738590;
-        bh=tMP1iJw4R/ilJTuPZrzm0aasosLSjSN9Pf7iVjwKK30=;
+        s=default; t=1564738583;
+        bh=BiALBVb/N8Fsm4R+469HhuEF45AObVBncms9OQ4TZjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c9SFx8jrmJC2i41Pi3T4UXdR9umRL005R8lf9i3VI+Jw9jcmdZlMX1FoNNmQdfiNb
-         3qA5slOU29VX+SCwxdK7uFbawK28/Ivk65mX4NFTb1uZomk7pc5etkaX10Ve9JrTcV
-         1olInAV+E6hWEYM1mOLv+BXhDgzX0VatugNtjFis=
+        b=uDsm8dAuxOEXz7EZ+Ixrj00e2/iXl2UxshYDS3bqjCaB0E/HjbySyk2XccobR9PRb
+         JzAD0D9rmXG/CC1kb77t7HXDHGisau/oB42ZC+3QfTC2idXQa4F+iwts5BHMoW+k+N
+         3CFZMZeTmuFWPbLSJ71OetcZeaRbh38l13YeJM2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Mike Galbraith <umgwanakikbuti@gmail.com>,
-        Christoph Lameter <cl@linux.com>,
-        Mike Galbraith <mgalbraith@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Wagner <wagi@monom.org>
-Subject: [PATCH 4.4 149/158] mm, vmstat: make quiet_vmstat lighter
-Date:   Fri,  2 Aug 2019 11:29:30 +0200
-Message-Id: <20190802092232.534784882@linuxfoundation.org>
+        stable@vger.kernel.org, Praveen Pandey <Praveen.Pandey@in.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 146/158] powerpc/tm: Fix oops on sigreturn on systems without TM
+Date:   Fri,  2 Aug 2019 11:29:27 +0200
+Message-Id: <20190802092232.161854071@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -64,175 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
+From: Michael Neuling <mikey@neuling.org>
 
-commit f01f17d3705bb6081c9e5728078f64067982be36 upstream.
+commit f16d80b75a096c52354c6e0a574993f3b0dfbdfe upstream.
 
-Mike has reported a considerable overhead of refresh_cpu_vm_stats from
-the idle entry during pipe test:
+On systems like P9 powernv where we have no TM (or P8 booted with
+ppc_tm=off), userspace can construct a signal context which still has
+the MSR TS bits set. The kernel tries to restore this context which
+results in the following crash:
 
-    12.89%  [kernel]       [k] refresh_cpu_vm_stats.isra.12
-     4.75%  [kernel]       [k] __schedule
-     4.70%  [kernel]       [k] mutex_unlock
-     3.14%  [kernel]       [k] __switch_to
-
-This is caused by commit 0eb77e988032 ("vmstat: make vmstat_updater
-deferrable again and shut down on idle") which has placed quiet_vmstat
-into cpu_idle_loop.  The main reason here seems to be that the idle
-entry has to get over all zones and perform atomic operations for each
-vmstat entry even though there might be no per cpu diffs.  This is a
-pointless overhead for _each_ idle entry.
-
-Make sure that quiet_vmstat is as light as possible.
-
-First of all it doesn't make any sense to do any local sync if the
-current cpu is already set in oncpu_stat_off because vmstat_update puts
-itself there only if there is nothing to do.
-
-Then we can check need_update which should be a cheap way to check for
-potential per-cpu diffs and only then do refresh_cpu_vm_stats.
-
-The original patch also did cancel_delayed_work which we are not doing
-here.  There are two reasons for that.  Firstly cancel_delayed_work from
-idle context will blow up on RT kernels (reported by Mike):
-
-  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.5.0-rt3 #7
-  Hardware name: MEDION MS-7848/MS-7848, BIOS M7848W08.20C 09/23/2013
+  Unexpected TM Bad Thing exception at c0000000000022fc (msr 0x8000000102a03031) tm_scratch=800000020280f033
+  Oops: Unrecoverable exception, sig: 6 [#1]
+  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+  Modules linked in:
+  CPU: 0 PID: 1636 Comm: sigfuz Not tainted 5.2.0-11043-g0a8ad0ffa4 #69
+  NIP:  c0000000000022fc LR: 00007fffb2d67e48 CTR: 0000000000000000
+  REGS: c00000003fffbd70 TRAP: 0700   Not tainted  (5.2.0-11045-g7142b497d8)
+  MSR:  8000000102a03031 <SF,VEC,VSX,FP,ME,IR,DR,LE,TM[E]>  CR: 42004242  XER: 00000000
+  CFAR: c0000000000022e0 IRQMASK: 0
+  GPR00: 0000000000000072 00007fffb2b6e560 00007fffb2d87f00 0000000000000669
+  GPR04: 00007fffb2b6e728 0000000000000000 0000000000000000 00007fffb2b6f2a8
+  GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+  GPR12: 0000000000000000 00007fffb2b76900 0000000000000000 0000000000000000
+  GPR16: 00007fffb2370000 00007fffb2d84390 00007fffea3a15ac 000001000a250420
+  GPR20: 00007fffb2b6f260 0000000010001770 0000000000000000 0000000000000000
+  GPR24: 00007fffb2d843a0 00007fffea3a14a0 0000000000010000 0000000000800000
+  GPR28: 00007fffea3a14d8 00000000003d0f00 0000000000000000 00007fffb2b6e728
+  NIP [c0000000000022fc] rfi_flush_fallback+0x7c/0x80
+  LR [00007fffb2d67e48] 0x7fffb2d67e48
   Call Trace:
-    dump_stack+0x49/0x67
-    ___might_sleep+0xf5/0x180
-    rt_spin_lock+0x20/0x50
-    try_to_grab_pending+0x69/0x240
-    cancel_delayed_work+0x26/0xe0
-    quiet_vmstat+0x75/0xa0
-    cpu_idle_loop+0x38/0x3e0
-    cpu_startup_entry+0x13/0x20
-    start_secondary+0x114/0x140
+  Instruction dump:
+  e96a0220 e96a02a8 e96a0330 e96a03b8 394a0400 4200ffdc 7d2903a6 e92d0c00
+  e94d0c08 e96d0c10 e82d0c18 7db242a6 <4c000024> 7db243a6 7db142a6 f82d0c18
 
-And secondly, even on !RT kernels it might add some non trivial overhead
-which is not necessary.  Even if the vmstat worker wakes up and preempts
-idle then it will be most likely a single shot noop because the stats
-were already synced and so it would end up on the oncpu_stat_off anyway.
-We just need to teach both vmstat_shepherd and vmstat_update to stop
-scheduling the worker if there is nothing to do.
+The problem is the signal code assumes TM is enabled when
+CONFIG_PPC_TRANSACTIONAL_MEM is enabled. This may not be the case as
+with P9 powernv or if `ppc_tm=off` is used on P8.
 
-[mgalbraith@suse.de: cancel pending work of the cpu_stat_off CPU]
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Reported-by: Mike Galbraith <umgwanakikbuti@gmail.com>
-Acked-by: Christoph Lameter <cl@linux.com>
-Signed-off-by: Mike Galbraith <mgalbraith@suse.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Daniel Wagner <wagi@monom.org>
+This means any local user can crash the system.
+
+Fix the problem by returning a bad stack frame to the user if they try
+to set the MSR TS bits with sigreturn() on systems where TM is not
+supported.
+
+Found with sigfuz kernel selftest on P9.
+
+This fixes CVE-2019-13648.
+
+Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
+Cc: stable@vger.kernel.org # v3.9
+Reported-by: Praveen Pandey <Praveen.Pandey@in.ibm.com>
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190719050502.405-1-mikey@neuling.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmstat.c |   68 ++++++++++++++++++++++++++++++++++++++++--------------------
- 1 file changed, 46 insertions(+), 22 deletions(-)
+ arch/powerpc/kernel/signal_32.c |    3 +++
+ arch/powerpc/kernel/signal_64.c |    5 +++++
+ 2 files changed, 8 insertions(+)
 
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1395,10 +1395,15 @@ static void vmstat_update(struct work_st
- 		 * Counters were updated so we expect more updates
- 		 * to occur in the future. Keep on running the
- 		 * update worker thread.
-+		 * If we were marked on cpu_stat_off clear the flag
-+		 * so that vmstat_shepherd doesn't schedule us again.
- 		 */
--		queue_delayed_work_on(smp_processor_id(), vmstat_wq,
--			this_cpu_ptr(&vmstat_work),
--			round_jiffies_relative(sysctl_stat_interval));
-+		if (!cpumask_test_and_clear_cpu(smp_processor_id(),
-+						cpu_stat_off)) {
-+			queue_delayed_work_on(smp_processor_id(), vmstat_wq,
-+				this_cpu_ptr(&vmstat_work),
-+				round_jiffies_relative(sysctl_stat_interval));
-+		}
- 	} else {
- 		/*
- 		 * We did not update any counters so the app may be in
-@@ -1416,18 +1421,6 @@ static void vmstat_update(struct work_st
-  * until the diffs stay at zero. The function is used by NOHZ and can only be
-  * invoked when tick processing is not active.
-  */
--void quiet_vmstat(void)
--{
--	if (system_state != SYSTEM_RUNNING)
--		return;
--
--	do {
--		if (!cpumask_test_and_set_cpu(smp_processor_id(), cpu_stat_off))
--			cancel_delayed_work(this_cpu_ptr(&vmstat_work));
--
--	} while (refresh_cpu_vm_stats(false));
--}
--
- /*
-  * Check if the diffs for a certain cpu indicate that
-  * an update is needed.
-@@ -1451,6 +1444,30 @@ static bool need_update(int cpu)
- 	return false;
- }
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -1261,6 +1261,9 @@ long sys_rt_sigreturn(int r3, int r4, in
+ 			goto bad;
  
-+void quiet_vmstat(void)
-+{
-+	if (system_state != SYSTEM_RUNNING)
-+		return;
+ 		if (MSR_TM_ACTIVE(msr_hi<<32)) {
++			/* Trying to start TM on non TM system */
++			if (!cpu_has_feature(CPU_FTR_TM))
++				goto bad;
+ 			/* We only recheckpoint on return if we're
+ 			 * transaction.
+ 			 */
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -695,6 +695,11 @@ int sys_rt_sigreturn(unsigned long r3, u
+ 	if (MSR_TM_ACTIVE(msr)) {
+ 		/* We recheckpoint on return. */
+ 		struct ucontext __user *uc_transact;
 +
-+	/*
-+	 * If we are already in hands of the shepherd then there
-+	 * is nothing for us to do here.
-+	 */
-+	if (cpumask_test_and_set_cpu(smp_processor_id(), cpu_stat_off))
-+		return;
++		/* Trying to start TM on non TM system */
++		if (!cpu_has_feature(CPU_FTR_TM))
++			goto badframe;
 +
-+	if (!need_update(smp_processor_id()))
-+		return;
-+
-+	/*
-+	 * Just refresh counters and do not care about the pending delayed
-+	 * vmstat_update. It doesn't fire that often to matter and canceling
-+	 * it would be too expensive from this path.
-+	 * vmstat_shepherd will take care about that for us.
-+	 */
-+	refresh_cpu_vm_stats(false);
-+}
-+
- 
- /*
-  * Shepherd worker thread that checks the
-@@ -1468,18 +1485,25 @@ static void vmstat_shepherd(struct work_
- 
- 	get_online_cpus();
- 	/* Check processors whose vmstat worker threads have been disabled */
--	for_each_cpu(cpu, cpu_stat_off)
--		if (need_update(cpu) &&
--			cpumask_test_and_clear_cpu(cpu, cpu_stat_off))
--
--			queue_delayed_work_on(cpu, vmstat_wq,
--				&per_cpu(vmstat_work, cpu), 0);
-+	for_each_cpu(cpu, cpu_stat_off) {
-+		struct delayed_work *dw = &per_cpu(vmstat_work, cpu);
- 
-+		if (need_update(cpu)) {
-+			if (cpumask_test_and_clear_cpu(cpu, cpu_stat_off))
-+				queue_delayed_work_on(cpu, vmstat_wq, dw, 0);
-+		} else {
-+			/*
-+			 * Cancel the work if quiet_vmstat has put this
-+			 * cpu on cpu_stat_off because the work item might
-+			 * be still scheduled
-+			 */
-+			cancel_delayed_work(dw);
-+		}
-+	}
- 	put_online_cpus();
- 
- 	schedule_delayed_work(&shepherd,
- 		round_jiffies_relative(sysctl_stat_interval));
--
- }
- 
- static void __init start_shepherd_timer(void)
+ 		if (__get_user(uc_transact, &uc->uc_link))
+ 			goto badframe;
+ 		if (restore_tm_sigcontexts(regs, &uc->uc_mcontext,
 
 
