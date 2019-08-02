@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A45DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99E1C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114B7217D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83BCC217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738277;
-	bh=IvQTKsAHQBW1ffWs3lHtklXfvczBLirdNW2sGj4IkGs=;
+	s=default; t=1564738280;
+	bh=YqByTQJY/F4PMvJGRFZbFmkbM46/euWui8UiP/V6lCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xWTvFEZySPBulObZwC2cl9CfbiuDGT0ukbuRRVB2tbazBY3nMuNPSI5FmKP7/cvfS
-	 c5ItFRVmScOuspYQ/oJion2LjBpT/Y1Odk1ayTEAezgBj7HOLuaf0tRqMXXIxKPTP5
-	 Ns5Pcyc8QRfgZ6aGxAQyvqU2IUBRY4plQ263I6iw=
+	b=Ny8B5zEBZs9WXrFknXwgNuvfQ14J/mzNsYyRRDdN+O83pHeu30pTI+Rf33ZZVa64Z
+	 T/2ilruaHL7EmhA4OCGhLBJw9Au/KtCO9B7nneBfnjM7jzqJgcvlCMHueU/sW7lMEz
+	 F5npHLMiM9hAOcxs+lAQqsgENCiH/uim/7fDCFEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404674AbfHBJbP (ORCPT
+        id S2391041AbfHBJbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57174 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:31:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404656AbfHBJbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:31:12 -0400
+        id S2404671AbfHBJbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:31:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A4C221783;
-        Fri,  2 Aug 2019 09:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 344EC217F5;
+        Fri,  2 Aug 2019 09:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738272;
-        bh=IvQTKsAHQBW1ffWs3lHtklXfvczBLirdNW2sGj4IkGs=;
+        s=default; t=1564738274;
+        bh=YqByTQJY/F4PMvJGRFZbFmkbM46/euWui8UiP/V6lCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLkCY6lQj38l38/eA6zkmVF2mM20W6d9uFyfHp7X7fLIvi9ZHPKnN3M1py8rtwWR3
-         J3if43bouP8+rVQqc0jR4Ri/Q93wLyo5DQX/mTM2A1EqAmMRDMh9tx2Iv3bqlEByTW
-         nAWyNErDT1cjBscPsdOOotAPXyZqDYWfVLhav9Uw=
+        b=WwBMTOHW+8aKlPWo1pyGP84jfz1usgh2J/eDc8L7Zl66eI+zoFbnwyhtGBHe7UbdR
+         80GSp+XSlBltxw6u4PttCqH/1ddzSqpeK8fUGzTwafb+Zkz9MdFG29HmENigjkBeIP
+         TRCCeKiHC927NWTppKjGr0dBQNKn+xyePruGiqYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 031/158] rcu: Force inlining of rcu_read_lock()
-Date:   Fri,  2 Aug 2019 11:27:32 +0200
-Message-Id: <20190802092210.058371912@linuxfoundation.org>
+Subject: [PATCH 4.4 040/158] media: coda: fix mpeg2 sequence number handling
+Date:   Fri,  2 Aug 2019 11:27:41 +0200
+Message-Id: <20190802092212.157343108@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,53 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6da9f775175e516fc7229ceaa9b54f8f56aa7924 ]
+[ Upstream commit 56d159a4ec6d8da7313aac6fcbb95d8fffe689ba ]
 
-When debugging options are turned on, the rcu_read_lock() function
-might not be inlined. This results in lockdep's print_lock() function
-printing "rcu_read_lock+0x0/0x70" instead of rcu_read_lock()'s caller.
-For example:
+Sequence number handling assumed that the BIT processor frame number
+starts counting at 1, but this is not true for the MPEG-2 decoder,
+which starts at 0. Fix the sequence counter offset detection to handle
+this.
 
-[   10.579995] =============================
-[   10.584033] WARNING: suspicious RCU usage
-[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
-[   10.593162] -----------------------------
-[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
-RCU read-side critical section!
-[   10.606220]
-[   10.606220] other info that might help us debug this:
-[   10.606220]
-[   10.614280]
-[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
-[   10.620853] 3 locks held by systemd/1:
-[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
-[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
-[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
-
-These "rcu_read_lock+0x0/0x70" strings are not providing any useful
-information.  This commit therefore forces inlining of the rcu_read_lock()
-function so that rcu_read_lock()'s caller is instead shown.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rcupdate.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/coda/coda-bit.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index addd03641e1a..0a93e9d1708e 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -852,7 +852,7 @@ static inline void rcu_preempt_sleep_check(void)
-  * read-side critical sections may be preempted and they may also block, but
-  * only when acquiring spinlocks that are subject to priority inheritance.
-  */
--static inline void rcu_read_lock(void)
-+static __always_inline void rcu_read_lock(void)
- {
- 	__rcu_read_lock();
- 	__acquire(RCU);
+diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
+index a4639813cf35..a7ed2dba7a0e 100644
+--- a/drivers/media/platform/coda/coda-bit.c
++++ b/drivers/media/platform/coda/coda-bit.c
+@@ -1581,6 +1581,7 @@ static int __coda_start_decoding(struct coda_ctx *ctx)
+ 		coda_write(dev, 0, CODA_REG_BIT_BIT_STREAM_PARAM);
+ 		return -ETIMEDOUT;
+ 	}
++	ctx->sequence_offset = ~0U;
+ 	ctx->initialized = 1;
+ 
+ 	/* Update kfifo out pointer from coda bitstream read pointer */
+@@ -1971,7 +1972,9 @@ static void coda_finish_decode(struct coda_ctx *ctx)
+ 		v4l2_err(&dev->v4l2_dev,
+ 			 "decoded frame index out of range: %d\n", decoded_idx);
+ 	} else {
+-		val = coda_read(dev, CODA_RET_DEC_PIC_FRAME_NUM) - 1;
++		val = coda_read(dev, CODA_RET_DEC_PIC_FRAME_NUM);
++		if (ctx->sequence_offset == -1)
++			ctx->sequence_offset = val;
+ 		val -= ctx->sequence_offset;
+ 		spin_lock_irqsave(&ctx->buffer_meta_lock, flags);
+ 		if (!list_empty(&ctx->buffer_meta_list)) {
 -- 
 2.20.1
 
