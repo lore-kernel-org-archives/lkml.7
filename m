@@ -2,159 +2,123 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC55EC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEAFC0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963A92067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D71E620B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="K7UQc5TL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TS9vAWJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437313AbfHBWu2 (ORCPT
+        id S2392543AbfHBWuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:50:28 -0400
-Received: from mail-eopbgr1310111.outbound.protection.outlook.com ([40.107.131.111]:24992
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728242AbfHBWu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:50:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jZpj3xiYWqAXJYkfFSg66zoQp+TP3xNGNWX02d7JhW2WO9MPJcH/btcq3u7fm9sO+gBzj51aQx6E50lSKxvOqXCi1rCE33VjDTKKV8nv+Vsd5IGnbJObVTcKtgMPv/L/3RMBqWUN3zHRKwfVOVD+eHB/GxzqqzMMYnid8wlaZBSUGqlwM1/RP5hXPy4c2911eNVmaeB4G81m9ugh73BdEQxCQW/fDpZsNj8AIMmv12bz4VygwC+sqMBpWmnibS3srcQbPaEOKuzBQ+dPRN7Olz0MzS2wU5XJUX5YE0eYT2/fxa3cQThDkmabhgmnNzjRAFaxzZWKmfCRhB2iOED29w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SEoVPnmO3JxhE0nF6jREGy77cqKv65QzLFWHO2SQY74=;
- b=aJYCXeIzqWQxQU4kpzL29Zu1Qa2u6Pe2MUHAj6Ahgy8VxcY71y0PeDWzahFosA77EueQhBN8R8EMVya+xpBagxYAPeO955QLoChnxv3jOUAuO57Znlpv77T/HBjSngogGdXbWTDlMogU4Rylx9/dRQD8f86MBMCD+Jjn9AVVD6wlF8NSdKaOrF0bMWoPQITckbwRuU4zmm7AQJCIdiqrtWx0Lh8ib6RhRSXYQUuFfgpnuJyFglmhh2HGrrOgl8czblMMA8MnnGCCfEoOZJdr3WEOd2YXUzfGebXHKkftyJjBMb+Lta0VMvWxbdroHgPBbjoL665agdd+OaToo3ZhaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SEoVPnmO3JxhE0nF6jREGy77cqKv65QzLFWHO2SQY74=;
- b=K7UQc5TLGPg5Dvcd8DjQO9siXzY8WuTn67VKEV1AieoFQIfn0Chj78swZDfBg7yXN2+xfHJxs8cRSoeobpA1ZDbID85Hm3tisyFCAWiU5eeSYmXxXfF9GSXV4d+iato/aKn6S17c7Q9vBDW9NeYa0olBbZ52fijP9avBZTF36Vk=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0105.APCP153.PROD.OUTLOOK.COM (10.170.188.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Fri, 2 Aug 2019 22:50:21 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Fri, 2 Aug 2019
- 22:50:21 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v2] PCI: hv: Fix panic by calling hv_pci_remove_slots()
- earlier
-Thread-Topic: [PATCH v2] PCI: hv: Fix panic by calling hv_pci_remove_slots()
- earlier
-Thread-Index: AdVJg/VErstT3ocmRgK9bYa/R2iIzA==
-Date:   Fri, 2 Aug 2019 22:50:20 +0000
-Message-ID: <PU1P153MB01693F32F6BB02F9655CC84EBFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-02T22:50:18.0174061Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=72f415c9-f574-414f-b43f-00fa1f90d651;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:71c8:ee0a:27d:d7aa]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a14aa9b9-639c-43f7-597e-08d7179bcc68
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0105;
-x-ms-traffictypediagnostic: PU1P153MB0105:|PU1P153MB0105:
-x-ms-exchange-transport-forked: True
-x-ms-exchange-purlcount: 2
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB0105CC9A7F7A1EAF38AD6E16BFD90@PU1P153MB0105.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 011787B9DD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(396003)(136003)(346002)(189003)(199004)(54534003)(14454004)(486006)(5660300002)(52536014)(8676002)(966005)(478600001)(10090500001)(8936002)(4326008)(2201001)(10290500003)(71200400001)(74316002)(64756008)(33656002)(7696005)(53936002)(102836004)(66446008)(2501003)(99286004)(66556008)(186003)(66946007)(6636002)(6506007)(81156014)(81166006)(7736002)(55016002)(1511001)(68736007)(256004)(14444005)(107886003)(2906002)(66476007)(76116006)(6306002)(9686003)(7416002)(110136005)(8990500004)(6436002)(305945005)(25786009)(476003)(54906003)(316002)(6116002)(46003)(86362001)(22452003)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0105;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cmjGBKpE/l+VDInHfIMOQDyOdGLFpnPNg8G9nQo2S0f55/fdd9hugEVGAPeV8LUM26hAsZkt0+KoAr+nr9EyjlL2uepR/pkrP8LzHrHpQTreDeaXJ+w3p3tGw3APbQL4eYHHqx+2IGJhcXrBY8T2sXU7Dn0KLSliviKjNuB6z0ER61Bgh+MgER64te8BDsAXmIi1Ab1/8uCQswqRAUBlAGm9zL/rZ07244MUCx5/+wbcJCUtMqKFcD0uRVLVCtdYpwtynQl7t46N21gZv34oW9GtHQNY5SpCf52Yaugpma+RFB4OPqwH12QzxDBhQRA0cb/Non8F87uyDNH5ZWYXg89VlOlrRsY1dQvC653WrmIAQgMEDgyc/AJpU65It4NpTPrFDtcOi1FFxguBrW3cT7URDpVVlBDL9rxGPYGKOmc=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 2 Aug 2019 18:50:50 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37947 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392522AbfHBWuu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:50:50 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f5so27928928pgu.5
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 15:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=sXQ0BKzSp5Bptj9KeGCTuwE2we871dDx6C7SldYlGLw=;
+        b=TS9vAWJI7uCOK3lIDDY06BHC2SU9jVPvgGZh7ucSu1sPJkLeahqYiuIv9WsuM9tIhO
+         eu43t4v19IQjoosdxhPYVAdhJnI6xkDmRO4boUEedx5RIjIH8HaCS4NaZ8+BzQlJpojR
+         R5IfJBexqJsJ6dAeReSg6ssv8fBlHY+RM7MXc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=sXQ0BKzSp5Bptj9KeGCTuwE2we871dDx6C7SldYlGLw=;
+        b=ufxxOcmjpk9Hn+5bfO1fC6HP4E6ODkie6d7125LIfclQjY5T0Agt0QXGPizCzImiiL
+         Z7NyqTa+9CUtu4SbE5sUrBTRFfZGaXH3gajS1C6xTJaupAXz77LQW3oZMluby9wYVeL1
+         gRAM7VGuKncOr1QWm9JVuvpnkGUH7LNEswfCRREM+is8ZZ3Qneh9fs6+LY8nBeLUhWF+
+         8i0quhKRQx7SNEmqtfvQQaAtqrd65U+cqgVIyBxD6fI3mIuD4chQ3DqYiG3rT++vjU2M
+         tqUdURZryiMbUuSjeNOQBGEZgGXZWlA86pi9EfQDihmf/Ft4N12mEm8dPF5aw+AYuBuw
+         JGHw==
+X-Gm-Message-State: APjAAAVqOAm8hx78r+sVduejU2Aq+w2FcZz8M2km3LHl8Z+L7UHpK50F
+        CEnDLujMymUidVnN4PD5Bp3Y4XQrqSc=
+X-Google-Smtp-Source: APXvYqyoiPnSF1BqK7yJw4hJLDH4R41i/VJWmhEUS/PRtoalaM4/f8sPwAojO9sGngCZ9vk5FcfxdQ==
+X-Received: by 2002:a65:6093:: with SMTP id t19mr46551080pgu.79.1564786249619;
+        Fri, 02 Aug 2019 15:50:49 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 143sm117330886pgc.6.2019.08.02.15.50.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 15:50:49 -0700 (PDT)
+Message-ID: <5d44be49.1c69fb81.8078a.4d08@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a14aa9b9-639c-43f7-597e-08d7179bcc68
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 22:50:20.8477
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jjAFy6/HYkz/NnbomXVaBxtYA46fm8x6UfEx5VvkuJHaj5unJPtrdAQORuUHvMJ53UgQY2L3lH8ITZ4RTDL9gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0105
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <5d2f54db.1c69fb81.5720c.dc05@mx.google.com>
+References: <20190716224518.62556-1-swboyd@chromium.org> <20190716224518.62556-2-swboyd@chromium.org> <20190717113956.GA12119@ziepe.ca> <5d2f4ff9.1c69fb81.3c314.ab00@mx.google.com> <20190717165011.GI12119@ziepe.ca> <5d2f54db.1c69fb81.5720c.dc05@mx.google.com>
+Subject: Re: [PATCH v2 1/6] hwrng: core: Freeze khwrng thread during suspend
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+User-Agent: alot/0.8.1
+Date:   Fri, 02 Aug 2019 15:50:48 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Stephen Boyd (2019-07-17 10:03:22)
+> Quoting Jason Gunthorpe (2019-07-17 09:50:11)
+> > On Wed, Jul 17, 2019 at 09:42:32AM -0700, Stephen Boyd wrote:
+>=20
+> Yes. That's exactly my point. A hwrng that's suspended will fail here
+> and it's better to just not try until it's guaranteed to have resumed.
+>=20
+> >=20
+> > It just seems weird to do this, what about all the other tpm API
+> > users? Do they have a racy problem with suspend too?
+>=20
+> I haven't looked at them. Are they being called from suspend/resume
+> paths? I don't think anything for the userspace API can be a problem
+> because those tasks are all frozen. The only problem would be some
+> kernel internal API that TPM API exposes. I did a quick grep and I see
+> things like IMA or the trusted keys APIs that might need a closer look.
+>=20
+> Either way, trying to hold off a TPM operation from the TPM API when
+> we're suspended isn't really possible. If something like IMA needs to
+> get TPM data from deep suspend path and it fails because the device is
+> suspended, all we can do is return an error from TPM APIs and hope the
+> caller can recover. The fix is probably going to be to change the code
+> to not call into the TPM API until the hardware has resumed by avoiding
+> doing anything with the TPM until resume is over. So we're at best able
+> to make same sort of band-aid here in the TPM API where all we can do is
+> say -EAGAIN but we can't tell the caller when to try again.
+>=20
 
-The slot must be removed before the pci_dev is removed, otherwise a panic
-can happen due to use-after-free.
+Andrey talked to me a little about this today. Andrey would prefer we
+don't just let the TPM go into a wonky state if it's used during
+suspend/resume so that it can stay resilient to errors. Sounds OK to me,
+but my point still stands that we need to fix the callers.
 
-Fixes: 15becc2b56c6 ("PCI: hv: Add hv_pci_remove_slots() when we unload the=
- driver")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Cc: stable@vger.kernel.org
----
+I'll resurrect the IS_SUSPENDED flag and make it set generically by the
+tpm_pm_suspend() and tpm_pm_resume() functions and then spit out a big
+WARN_ON() and return an error value like -EAGAIN if the TPM functions
+are called when the TPM is suspended. I hope we don't hit the warning
+message, but if we do then at least we can track it down rather quickly
+and figure out how to fix the caller instead of just silently returning
+-EAGAIN and hoping for that to be visible to the user.
 
-Changes in v2:
-  Improved the changelog accordign to the discussion with Bjorn Helgaas:
-	  https://lkml.org/lkml/2019/8/1/1173
-	  https://lkml.org/lkml/2019/8/2/1559
-
- drivers/pci/controller/pci-hyperv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
-ci-hyperv.c
-index 6b9cc6e60a..68c611d 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2757,8 +2757,8 @@ static int hv_pci_remove(struct hv_device *hdev)
- 		/* Remove the bus from PCI's point of view. */
- 		pci_lock_rescan_remove();
- 		pci_stop_root_bus(hbus->pci_bus);
--		pci_remove_root_bus(hbus->pci_bus);
- 		hv_pci_remove_slots(hbus);
-+		pci_remove_root_bus(hbus->pci_bus);
- 		pci_unlock_rescan_remove();
- 		hbus->state =3D hv_pcibus_removed;
- 	}
---=20
-1.8.3.1
+This patch will still be required to avoid the WARN message, so I'll
+resend with the Cc to crypto list so it can be picked up.
 
