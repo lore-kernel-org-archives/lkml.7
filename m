@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ABDC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E11C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFB720578
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59182064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739786;
-	bh=TZyC/e3XWGinl9VbLp32LC4zDGiye8OtkVuPC0YrCuY=;
+	s=default; t=1564739789;
+	bh=IBrnpmj4G0HAPtsbrI5Ax2fDDioBBv/uhBTEH6vXM/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yqxdj+IR3KAbo2aE5lysPMvJNPpXI7/OUu0nUdzhjiOa53TA5IMMPAzay2hcYTnUK
-	 9XJBMhRHPk212gtz0K0u/hRUgEY0rUQbZ7njXaZLAnKIJfZrBs64O7IOX/3XDXzPPm
-	 Z8fXnV46lAk7A/rjEdK+8kzCrcagLMs8WOnhAJwk=
+	b=OY3zrb5KVSk1JngfnejfSLDK9BgDZLhuAs6Pq7/9hbOwtbqbI5cx2DS8dh5HL2liE
+	 Jub8nmrK1nIWch4vvaVMxUvacCeBjobeJWBGQ89N5U1gcey7GG5+6cblM/8a2OCBPp
+	 tQXfMQYsRZU/liPZYSbdqFBTKLFK0ksqIXuCVSMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406732AbfHBJ4Y (ORCPT
+        id S2406705AbfHBJ4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:56:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:56:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406713AbfHBJ4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:56:16 -0400
+        id S2406686AbfHBJ4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:56:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 805432064A;
-        Fri,  2 Aug 2019 09:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05BE52064A;
+        Fri,  2 Aug 2019 09:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739776;
-        bh=TZyC/e3XWGinl9VbLp32LC4zDGiye8OtkVuPC0YrCuY=;
+        s=default; t=1564739768;
+        bh=IBrnpmj4G0HAPtsbrI5Ax2fDDioBBv/uhBTEH6vXM/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I2gQdk93RCDDpAzTQO/DBEAmBgusyW/DXt5snZZymcg2PbHWU9+YnNA3KvHXGJN8b
-         8VB+uta3i+ZAz7Kq5WP+bXcPzkHU8TTY++tv0gcAlm6+ysCBn8EqXF7gklJ1roFi6x
-         x7GF/yaCXX6rKfGDGvFwcuBb+WGIxcwmZQtpt0cE=
+        b=n026s2uFFOooSJnALxJiALqOjvx1zRfIk+LWY6SWO6yl00ntipKeBlWLv3vyymrDB
+         352fQLLsbO3OAW4JmODAlz4kJkBxZ3QRAhxYo6/K43eKO0QGKPl5otffYztA1jrMEg
+         +1X9ug9s9qybLycjLptElAP+nW+9WHqKXBMb0GJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>
-Subject: [PATCH 4.19 09/32] binder: fix possible UAF when freeing buffer
-Date:   Fri,  2 Aug 2019 11:39:43 +0200
-Message-Id: <20190802092104.545353007@linuxfoundation.org>
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Amit Pundir <amit.pundir@linaro.org>
+Subject: [PATCH 4.19 06/32] usb: dwc2: Disable all EPs on disconnect
+Date:   Fri,  2 Aug 2019 11:39:40 +0200
+Message-Id: <20190802092103.571518377@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -58,62 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
 
-commit a370003cc301d4361bae20c9ef615f89bf8d1e8a upstream.
+commit dccf1bad4be7eaa096c1f3697bd37883f9a08ecb upstream.
 
-There is a race between the binder driver cleaning
-up a completed transaction via binder_free_transaction()
-and a user calling binder_ioctl(BC_FREE_BUFFER) to
-release a buffer. It doesn't matter which is first but
-they need to be protected against running concurrently
-which can result in a UAF.
+Disabling all EP's allow to reset EP's to initial state.
+On disconnect disable all EP's instead of just killing
+all requests. Because of some platform didn't catch
+disconnect event, same stuff added to
+dwc2_hsotg_core_init_disconnected() function when USB
+reset detected on the bus.
 
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Cc: stable <stable@vger.kernel.org>
+Changed from version 1:
+Changed lock acquire flow in dwc2_hsotg_ep_disable()
+function.
+
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
-
 ---
- drivers/android/binder.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/usb/dwc2/gadget.c |   30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -1960,8 +1960,18 @@ static struct binder_thread *binder_get_
- 
- static void binder_free_transaction(struct binder_transaction *t)
- {
--	if (t->buffer)
--		t->buffer->transaction = NULL;
-+	struct binder_proc *target_proc = t->to_proc;
-+
-+	if (target_proc) {
-+		binder_inner_proc_lock(target_proc);
-+		if (t->buffer)
-+			t->buffer->transaction = NULL;
-+		binder_inner_proc_unlock(target_proc);
-+	}
-+	/*
-+	 * If the transaction has no target_proc, then
-+	 * t->buffer->transaction has already been cleared.
-+	 */
- 	kfree(t);
- 	binder_stats_deleted(BINDER_STAT_TRANSACTION);
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -3107,6 +3107,8 @@ static void kill_all_requests(struct dwc
+ 		dwc2_hsotg_txfifo_flush(hsotg, ep->fifo_index);
  }
-@@ -3484,10 +3494,12 @@ static int binder_thread_write(struct bi
- 				     buffer->debug_id,
- 				     buffer->transaction ? "active" : "finished");
  
-+			binder_inner_proc_lock(proc);
- 			if (buffer->transaction) {
- 				buffer->transaction->buffer = NULL;
- 				buffer->transaction = NULL;
- 			}
-+			binder_inner_proc_unlock(proc);
- 			if (buffer->async_transaction && buffer->target_node) {
- 				struct binder_node *buf_node;
- 				struct binder_work *w;
++static int dwc2_hsotg_ep_disable(struct usb_ep *ep);
++
+ /**
+  * dwc2_hsotg_disconnect - disconnect service
+  * @hsotg: The device state.
+@@ -3125,13 +3127,12 @@ void dwc2_hsotg_disconnect(struct dwc2_h
+ 	hsotg->connected = 0;
+ 	hsotg->test_mode = 0;
+ 
++	/* all endpoints should be shutdown */
+ 	for (ep = 0; ep < hsotg->num_of_eps; ep++) {
+ 		if (hsotg->eps_in[ep])
+-			kill_all_requests(hsotg, hsotg->eps_in[ep],
+-					  -ESHUTDOWN);
++			dwc2_hsotg_ep_disable(&hsotg->eps_in[ep]->ep);
+ 		if (hsotg->eps_out[ep])
+-			kill_all_requests(hsotg, hsotg->eps_out[ep],
+-					  -ESHUTDOWN);
++			dwc2_hsotg_ep_disable(&hsotg->eps_out[ep]->ep);
+ 	}
+ 
+ 	call_gadget(hsotg, disconnect);
+@@ -3189,13 +3190,23 @@ void dwc2_hsotg_core_init_disconnected(s
+ 	u32 val;
+ 	u32 usbcfg;
+ 	u32 dcfg = 0;
++	int ep;
+ 
+ 	/* Kill any ep0 requests as controller will be reinitialized */
+ 	kill_all_requests(hsotg, hsotg->eps_out[0], -ECONNRESET);
+ 
+-	if (!is_usb_reset)
++	if (!is_usb_reset) {
+ 		if (dwc2_core_reset(hsotg, true))
+ 			return;
++	} else {
++		/* all endpoints should be shutdown */
++		for (ep = 1; ep < hsotg->num_of_eps; ep++) {
++			if (hsotg->eps_in[ep])
++				dwc2_hsotg_ep_disable(&hsotg->eps_in[ep]->ep);
++			if (hsotg->eps_out[ep])
++				dwc2_hsotg_ep_disable(&hsotg->eps_out[ep]->ep);
++		}
++	}
+ 
+ 	/*
+ 	 * we must now enable ep0 ready for host detection and then
+@@ -3996,6 +4007,7 @@ static int dwc2_hsotg_ep_disable(struct
+ 	unsigned long flags;
+ 	u32 epctrl_reg;
+ 	u32 ctrl;
++	int locked;
+ 
+ 	dev_dbg(hsotg->dev, "%s(ep %p)\n", __func__, ep);
+ 
+@@ -4011,7 +4023,9 @@ static int dwc2_hsotg_ep_disable(struct
+ 
+ 	epctrl_reg = dir_in ? DIEPCTL(index) : DOEPCTL(index);
+ 
+-	spin_lock_irqsave(&hsotg->lock, flags);
++	locked = spin_is_locked(&hsotg->lock);
++	if (!locked)
++		spin_lock_irqsave(&hsotg->lock, flags);
+ 
+ 	ctrl = dwc2_readl(hsotg, epctrl_reg);
+ 
+@@ -4035,7 +4049,9 @@ static int dwc2_hsotg_ep_disable(struct
+ 	hs_ep->fifo_index = 0;
+ 	hs_ep->fifo_size = 0;
+ 
+-	spin_unlock_irqrestore(&hsotg->lock, flags);
++	if (!locked)
++		spin_unlock_irqrestore(&hsotg->lock, flags);
++
+ 	return 0;
+ }
+ 
 
 
