@@ -2,114 +2,79 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FC9C19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDE0C19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FBC2080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:23:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vSUWD0y6"
+	by mail.kernel.org (Postfix) with ESMTP id 3FCCC2080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbfHBBXY (ORCPT
+        id S1730668AbfHBBYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 21:23:24 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.31]:40572 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728112AbfHBBXY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 21:23:24 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 60C3573B1
-        for <linux-kernel@vger.kernel.org>; Thu,  1 Aug 2019 20:23:23 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id tMHzhVKJ6iQertMHzhtomJ; Thu, 01 Aug 2019 20:23:23 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=PyIxTuo3Q1FmZoMfrad16Zm5et086ZfT9Fbkw6cUKF8=; b=vSUWD0y67/E+mYWoTLaLfPgtgF
-        vQr+eAzntBM3oJVYsXpEnu/2DdYWkJm/BIjYy2DC7Qbv1NnbkM372ZDMhWOKUSNdtPy7AgNeKBRnL
-        +cIt8tquHHdl24C+DuB5Uylw7VKosqSi5+ezJP9BEJ7LnSkqG58dT17XK9p0ZFhVVxfSow+SYAnXq
-        xqK2W+JeXj9m9tdifMzqx43FR8WVXYNVk/ifpy7o+tDWZxKokg8qpGVEr6tPnOPvq2wtISP7zuicC
-        UnbZkuLiU0zRdRs3gTePfByYAKCB0oiy425jtCBUKC+WHZ/QK68Pb9qRN6MVz4wU5LEXvS1dkYe6C
-        tF3B1Xtw==;
-Received: from [187.192.11.120] (port=53894 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1htMHy-002DcS-Bq; Thu, 01 Aug 2019 20:23:22 -0500
-Date:   Thu, 1 Aug 2019 20:22:48 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] PCI: Mark expected switch fall-through
-Message-ID: <20190802012248.GA22622@embeddedor>
+        Thu, 1 Aug 2019 21:24:39 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3696 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726974AbfHBBYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 21:24:38 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 09B61C6E263045241A3D;
+        Fri,  2 Aug 2019 09:24:37 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 2 Aug 2019 09:24:25 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        "Rob Clark" <robdclark@chromium.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        "Eric Biggers" <ebiggers@google.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sean Paul <seanpaul@chromium.org>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] drm/vgem: Fix wrong pointer passed to PTR_ERR()
+Date:   Fri, 2 Aug 2019 01:29:20 +0000
+Message-ID: <20190802012920.60344-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1htMHy-002DcS-Bq
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:53894
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+PTR_ERR should access the value just tested by IS_ERR, otherwise
+the wrong error code will be returned.
 
-This patch fixes the following warning (Building: allmodconfig i386):
-
-drivers/pci/hotplug/ibmphp_res.c: In function ‘update_bridge_ranges’:
-drivers/pci/hotplug/ibmphp_res.c:1943:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
-       function = 0x8;
-       ~~~~~~~~~^~~~~
-drivers/pci/hotplug/ibmphp_res.c:1944:6: note: here
-      case PCI_HEADER_TYPE_MULTIBRIDGE:
-      ^~~~
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Fixes: 7e9e5ead55be ("drm/vgem: fix cache synchronization on arm/arm64")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 ---
- drivers/pci/hotplug/ibmphp_res.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/vgem/vgem_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/hotplug/ibmphp_res.c b/drivers/pci/hotplug/ibmphp_res.c
-index 5e8caf7a4452..1e1ba66cfd1e 100644
---- a/drivers/pci/hotplug/ibmphp_res.c
-+++ b/drivers/pci/hotplug/ibmphp_res.c
-@@ -1941,6 +1941,7 @@ static int __init update_bridge_ranges(struct bus_node **bus)
- 						break;
- 					case PCI_HEADER_TYPE_BRIDGE:
- 						function = 0x8;
-+						/* Fall through */
- 					case PCI_HEADER_TYPE_MULTIBRIDGE:
- 						/* We assume here that only 1 bus behind the bridge
- 						   TO DO: add functionality for several:
--- 
-2.22.0
+diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
+index b98689fb0d5d..ef52546f48c4 100644
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -304,10 +304,10 @@ static struct page **pin_and_sync(struct drm_vgem_gem_object *bo)
+ 	if (IS_ERR(sgt)) {
+ 		dev_err(dev->dev,
+ 			"failed to allocate sgt: %ld\n",
+-			PTR_ERR(bo->table));
++			PTR_ERR(sgt));
+ 		drm_gem_put_pages(&bo->base, pages, false, false);
+ 		mutex_unlock(&bo->pages_lock);
+-		return ERR_CAST(bo->table);
++		return ERR_CAST(sgt);
+ 	}
+ 
+ 	/*
+
+
 
