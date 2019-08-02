@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0B6C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1107AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E85217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD992217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738455;
-	bh=t+dt9i0XkcotkLFFiOBjf8HzBorm0ZgOFiq+RG5jY10=;
+	s=default; t=1564738461;
+	bh=7m3ruUCgKo9KO242W+P8KIiIhfOU3zmmj6FT3Ptvf7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lr7Z1FH27ulvq4+JwneVyjrXDiCOy0e4wwSWM051VedFnCUya9Mqf9WbaT5yksnIQ
-	 T71JTnB5XN8k5trGtMkpck1tHJaTL6hkH8On8j/r0OcbG08S1wII5IPAu5c6Vb24wC
-	 NhgNaPNqKDTCAqa7tRJBbwug1SGVAriZbPHAilfI=
+	b=HtXu+SAglJkY4kov7BK7dLXCaZ4jiU58n3GAFNJVsv4xBf72Y7CJ1Jhe7DX1LrubT
+	 xSUeq4a9uxRW8GYF4l/6FJpY/NFlGVoGq8IjQ33ZlqOitTZZKmdgi5f5rWJQQzqp45
+	 n5vfq6RQNdy5SW+T596nRmIaAy3bC2R0JHMSzfmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391498AbfHBJeN (ORCPT
+        id S2390485AbfHBJeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33932 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390206AbfHBJeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:12 -0400
+        id S1729449AbfHBJeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDAD421773;
-        Fri,  2 Aug 2019 09:34:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6B5A2183F;
+        Fri,  2 Aug 2019 09:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738451;
-        bh=t+dt9i0XkcotkLFFiOBjf8HzBorm0ZgOFiq+RG5jY10=;
+        s=default; t=1564738456;
+        bh=7m3ruUCgKo9KO242W+P8KIiIhfOU3zmmj6FT3Ptvf7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BVAFoGws6aWrsvSoTFiFsyyC4F5nW3hppDac+GY9puSU/bmNbRH1XWnFqs1T/GWlR
-         JWOZcIf61CgjPHF5Lij1O9BHfBcRgX2VzgXVbrxTJPX0Y8fLfoX/vZRBHbT9Yld6G3
-         JWOUhqmazt9EbXqqo1XykZ4TORgtM6C/RwUL2TvQ=
+        b=sVSBKqqsDepKPjDGo8cqS73XuDKsOzuCn2xIsidVCigEAwVr+6tj/ucu1p7tajCHl
+         F26EG+IgTNdjjtB9UNksCbxS/vSI7f6dCgMZ8X2uIGMdMpKVTa1PMTErdZLxC1pYL7
+         4BQWH11o32yBXQyNdPAOwxfvkVLZmXyIP3FZUKfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
         Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com,
-        syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com,
-        syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com,
-        syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 094/158] netrom: hold sock when setting skb->destructor
-Date:   Fri,  2 Aug 2019 11:28:35 +0200
-Message-Id: <20190802092223.511536567@linuxfoundation.org>
+        syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 096/158] bonding: validate ip header before check IPPROTO_IGMP
+Date:   Fri,  2 Aug 2019 11:28:37 +0200
+Message-Id: <20190802092223.896649587@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -66,37 +65,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 4638faac032756f7eab5524be7be56bee77e426b ]
+[ Upstream commit 9d1bc24b52fb8c5d859f9a47084bf1179470e04c ]
 
-sock_efree() releases the sock refcnt, if we don't hold this refcnt
-when setting skb->destructor to it, the refcnt would not be balanced.
-This leads to several bug reports from syzbot.
+bond_xmit_roundrobin() checks for IGMP packets but it parses
+the IP header even before checking skb->protocol.
 
-I have checked other users of sock_efree(), all of them hold the
-sock refcnt.
+We should validate the IP header with pskb_may_pull() before
+using iph->protocol.
 
-Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
-Reported-and-tested-by: <syzbot+622bdabb128acc33427d@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com>
-Reported-and-tested-by: <syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
+Reported-and-tested-by: syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
+Fixes: a2fd940f4cff ("bonding: fix broken multicast with round-robin mode")
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Cc: Veaceslav Falico <vfalico@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
 Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netrom/af_netrom.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/bonding/bond_main.c |   37 +++++++++++++++++++++++--------------
+ 1 file changed, 23 insertions(+), 14 deletions(-)
 
---- a/net/netrom/af_netrom.c
-+++ b/net/netrom/af_netrom.c
-@@ -968,6 +968,7 @@ int nr_rx_frame(struct sk_buff *skb, str
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3714,8 +3714,8 @@ static u32 bond_rr_gen_slave_id(struct b
+ static int bond_xmit_roundrobin(struct sk_buff *skb, struct net_device *bond_dev)
+ {
+ 	struct bonding *bond = netdev_priv(bond_dev);
+-	struct iphdr *iph = ip_hdr(skb);
+ 	struct slave *slave;
++	int slave_cnt;
+ 	u32 slave_id;
  
- 	window = skb->data[20];
+ 	/* Start with the curr_active_slave that joined the bond as the
+@@ -3724,23 +3724,32 @@ static int bond_xmit_roundrobin(struct s
+ 	 * send the join/membership reports.  The curr_active_slave found
+ 	 * will send all of this type of traffic.
+ 	 */
+-	if (iph->protocol == IPPROTO_IGMP && skb->protocol == htons(ETH_P_IP)) {
+-		slave = rcu_dereference(bond->curr_active_slave);
+-		if (slave)
+-			bond_dev_queue_xmit(bond, skb, slave->dev);
+-		else
+-			bond_xmit_slave_id(bond, skb, 0);
+-	} else {
+-		int slave_cnt = ACCESS_ONCE(bond->slave_cnt);
++	if (skb->protocol == htons(ETH_P_IP)) {
++		int noff = skb_network_offset(skb);
++		struct iphdr *iph;
++
++		if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
++			goto non_igmp;
  
-+	sock_hold(make);
- 	skb->sk             = make;
- 	skb->destructor     = sock_efree;
- 	make->sk_state	    = TCP_ESTABLISHED;
+-		if (likely(slave_cnt)) {
+-			slave_id = bond_rr_gen_slave_id(bond);
+-			bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
+-		} else {
+-			bond_tx_drop(bond_dev, skb);
++		iph = ip_hdr(skb);
++		if (iph->protocol == IPPROTO_IGMP) {
++			slave = rcu_dereference(bond->curr_active_slave);
++			if (slave)
++				bond_dev_queue_xmit(bond, skb, slave->dev);
++			else
++				bond_xmit_slave_id(bond, skb, 0);
++			return NETDEV_TX_OK;
+ 		}
+ 	}
+ 
++non_igmp:
++	slave_cnt = ACCESS_ONCE(bond->slave_cnt);
++	if (likely(slave_cnt)) {
++		slave_id = bond_rr_gen_slave_id(bond);
++		bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
++	} else {
++		bond_tx_drop(bond_dev, skb);
++	}
+ 	return NETDEV_TX_OK;
+ }
+ 
 
 
