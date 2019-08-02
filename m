@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36519C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B67C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B99A2064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDF92064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392845AbfHBM4e (ORCPT
+        id S2392851AbfHBM4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:56:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3708 "EHLO huawei.com"
+        Fri, 2 Aug 2019 08:56:40 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3704 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392055AbfHBMy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:54:27 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B23971C86082BC56FCE7;
-        Fri,  2 Aug 2019 20:54:22 +0800 (CST)
+        id S2390119AbfHBMyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:54:25 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 72F41D89589D6F7DCAAD;
+        Fri,  2 Aug 2019 20:54:17 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
- 20:54:12 +0800
+ 20:54:08 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -45,9 +45,9 @@ CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         Li Guifu <bluce.liguifu@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v6 04/24] erofs: add raw address_space operations
-Date:   Fri, 2 Aug 2019 20:53:27 +0800
-Message-ID: <20190802125347.166018-5-gaoxiang25@huawei.com>
+Subject: [PATCH v6 01/24] erofs: add on-disk layout
+Date:   Fri, 2 Aug 2019 20:53:24 +0800
+Message-ID: <20190802125347.166018-2-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190802125347.166018-1-gaoxiang25@huawei.com>
 References: <20190802125347.166018-1-gaoxiang25@huawei.com>
@@ -60,444 +60,352 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds functions for meta and raw data, and also
-provides address_space_operations for raw data access.
+This commit adds the on-disk layout header file of erofs.
+On-disk format is compatible with erofs-staging added in 4.19.
+
+In addition, add EROFS_SUPER_MAGIC_V1 to magic.h.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- fs/erofs/data.c | 423 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 423 insertions(+)
- create mode 100644 fs/erofs/data.c
+ fs/erofs/erofs_fs.h        | 316 +++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/magic.h |   1 +
+ 2 files changed, 317 insertions(+)
+ create mode 100644 fs/erofs/erofs_fs.h
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
 new file mode 100644
-index 000000000000..9bb18fba773a
+index 000000000000..b307060dd220
 --- /dev/null
-+++ b/fs/erofs/data.c
-@@ -0,0 +1,423 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/fs/erofs/erofs_fs.h
+@@ -0,0 +1,316 @@
++/* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
 +/*
-+ * linux/fs/erofs/data.c
++ * linux/fs/erofs/erofs_fs.h
 + *
 + * Copyright (C) 2017-2018 HUAWEI, Inc.
 + *             http://www.huawei.com/
 + * Created by Gao Xiang <gaoxiang25@huawei.com>
 + */
-+#include "internal.h"
-+#include <linux/prefetch.h>
++#ifndef __EROFS_FS_H
++#define __EROFS_FS_H
 +
-+#include <trace/events/erofs.h>
-+
-+static inline void read_endio(struct bio *bio)
-+{
-+	struct super_block *const sb = bio->bi_private;
-+	struct bio_vec *bvec;
-+	blk_status_t err = bio->bi_status;
-+	struct bvec_iter_all iter_all;
-+
-+	if (time_to_inject(EROFS_SB(sb), FAULT_READ_IO)) {
-+		erofs_show_injection_info(FAULT_READ_IO);
-+		err = BLK_STS_IOERR;
-+	}
-+
-+	bio_for_each_segment_all(bvec, bio, iter_all) {
-+		struct page *page = bvec->bv_page;
-+
-+		/* page is already locked */
-+		DBG_BUGON(PageUptodate(page));
-+
-+		if (unlikely(err))
-+			SetPageError(page);
-+		else
-+			SetPageUptodate(page);
-+
-+		unlock_page(page);
-+		/* page could be reclaimed now */
-+	}
-+	bio_put(bio);
-+}
-+
-+/* prio -- true is used for dir */
-+struct page *__erofs_get_meta_page(struct super_block *sb,
-+				   erofs_blk_t blkaddr, bool prio, bool nofail)
-+{
-+	struct inode *const bd_inode = sb->s_bdev->bd_inode;
-+	struct address_space *const mapping = bd_inode->i_mapping;
-+	/* prefer retrying in the allocator to blindly looping below */
-+	const gfp_t gfp = mapping_gfp_constraint(mapping, ~__GFP_FS) |
-+		(nofail ? __GFP_NOFAIL : 0);
-+	unsigned int io_retries = nofail ? EROFS_IO_MAX_RETRIES_NOFAIL : 0;
-+	struct page *page;
-+	int err;
-+
-+repeat:
-+	page = find_or_create_page(mapping, blkaddr, gfp);
-+	if (unlikely(!page)) {
-+		DBG_BUGON(nofail);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	DBG_BUGON(!PageLocked(page));
-+
-+	if (!PageUptodate(page)) {
-+		struct bio *bio;
-+
-+		bio = erofs_grab_bio(sb, blkaddr, 1, sb, read_endio, nofail);
-+		if (IS_ERR(bio)) {
-+			DBG_BUGON(nofail);
-+			err = PTR_ERR(bio);
-+			goto err_out;
-+		}
-+
-+		err = bio_add_page(bio, page, PAGE_SIZE, 0);
-+		if (unlikely(err != PAGE_SIZE)) {
-+			err = -EFAULT;
-+			goto err_out;
-+		}
-+
-+		__submit_bio(bio, REQ_OP_READ,
-+			     REQ_META | (prio ? REQ_PRIO : 0));
-+
-+		lock_page(page);
-+
-+		/* this page has been truncated by others */
-+		if (unlikely(page->mapping != mapping)) {
-+unlock_repeat:
-+			unlock_page(page);
-+			put_page(page);
-+			goto repeat;
-+		}
-+
-+		/* more likely a read error */
-+		if (unlikely(!PageUptodate(page))) {
-+			if (io_retries) {
-+				--io_retries;
-+				goto unlock_repeat;
-+			}
-+			err = -EIO;
-+			goto err_out;
-+		}
-+	}
-+	return page;
-+
-+err_out:
-+	unlock_page(page);
-+	put_page(page);
-+	return ERR_PTR(err);
-+}
-+
-+static int erofs_map_blocks_flatmode(struct inode *inode,
-+				     struct erofs_map_blocks *map,
-+				     int flags)
-+{
-+	int err = 0;
-+	erofs_blk_t nblocks, lastblk;
-+	u64 offset = map->m_la;
-+	struct erofs_vnode *vi = EROFS_V(inode);
-+
-+	trace_erofs_map_blocks_flatmode_enter(inode, map, flags);
-+
-+	nblocks = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
-+	lastblk = nblocks - is_inode_flat_inline(inode);
-+
-+	if (unlikely(offset >= inode->i_size)) {
-+		/* leave out-of-bound access unmapped */
-+		map->m_flags = 0;
-+		map->m_plen = 0;
-+		goto out;
-+	}
-+
-+	/* there is no hole in flatmode */
-+	map->m_flags = EROFS_MAP_MAPPED;
-+
-+	if (offset < blknr_to_addr(lastblk)) {
-+		map->m_pa = blknr_to_addr(vi->raw_blkaddr) + map->m_la;
-+		map->m_plen = blknr_to_addr(lastblk) - offset;
-+	} else if (is_inode_flat_inline(inode)) {
-+		/* 2 - inode inline B: inode, [xattrs], inline last blk... */
-+		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
-+
-+		map->m_pa = iloc(sbi, vi->nid) + vi->inode_isize +
-+			vi->xattr_isize + erofs_blkoff(map->m_la);
-+		map->m_plen = inode->i_size - offset;
-+
-+		/* inline data should locate in one meta block */
-+		if (erofs_blkoff(map->m_pa) + map->m_plen > PAGE_SIZE) {
-+			DBG_BUGON(1);
-+			err = -EIO;
-+			goto err_out;
-+		}
-+
-+		map->m_flags |= EROFS_MAP_META;
-+	} else {
-+		errln("internal error @ nid: %llu (size %llu), m_la 0x%llx",
-+		      vi->nid, inode->i_size, map->m_la);
-+		DBG_BUGON(1);
-+		err = -EIO;
-+		goto err_out;
-+	}
-+
-+out:
-+	map->m_llen = map->m_plen;
-+
-+err_out:
-+	trace_erofs_map_blocks_flatmode_exit(inode, map, flags, 0);
-+	return err;
-+}
-+
-+int erofs_map_blocks(struct inode *inode,
-+		     struct erofs_map_blocks *map, int flags)
-+{
-+	if (is_inode_layout_compression(inode))
-+		return -ENOTSUPP;
-+
-+	return erofs_map_blocks_flatmode(inode, map, flags);
-+}
-+
-+static inline struct bio *erofs_read_raw_page(struct bio *bio,
-+					      struct address_space *mapping,
-+					      struct page *page,
-+					      erofs_off_t *last_block,
-+					      unsigned int nblocks,
-+					      bool ra)
-+{
-+	struct inode *const inode = mapping->host;
-+	struct super_block *const sb = inode->i_sb;
-+	erofs_off_t current_block = (erofs_off_t)page->index;
-+	int err;
-+
-+	DBG_BUGON(!nblocks);
-+
-+	if (PageUptodate(page)) {
-+		err = 0;
-+		goto has_updated;
-+	}
-+
-+	if (cleancache_get_page(page) == 0) {
-+		err = 0;
-+		SetPageUptodate(page);
-+		goto has_updated;
-+	}
-+
-+	/* note that for readpage case, bio also equals to NULL */
-+	if (bio &&
-+	    /* not continuous */
-+	    *last_block + 1 != current_block) {
-+submit_bio_retry:
-+		__submit_bio(bio, REQ_OP_READ, 0);
-+		bio = NULL;
-+	}
-+
-+	if (!bio) {
-+		struct erofs_map_blocks map = {
-+			.m_la = blknr_to_addr(current_block),
-+		};
-+		erofs_blk_t blknr;
-+		unsigned int blkoff;
-+
-+		err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-+		if (unlikely(err))
-+			goto err_out;
-+
-+		/* zero out the holed page */
-+		if (unlikely(!(map.m_flags & EROFS_MAP_MAPPED))) {
-+			zero_user_segment(page, 0, PAGE_SIZE);
-+			SetPageUptodate(page);
-+
-+			/* imply err = 0, see erofs_map_blocks */
-+			goto has_updated;
-+		}
-+
-+		/* for RAW access mode, m_plen must be equal to m_llen */
-+		DBG_BUGON(map.m_plen != map.m_llen);
-+
-+		blknr = erofs_blknr(map.m_pa);
-+		blkoff = erofs_blkoff(map.m_pa);
-+
-+		/* deal with inline page */
-+		if (map.m_flags & EROFS_MAP_META) {
-+			void *vsrc, *vto;
-+			struct page *ipage;
-+
-+			DBG_BUGON(map.m_plen > PAGE_SIZE);
-+
-+			ipage = erofs_get_meta_page(inode->i_sb, blknr, 0);
-+
-+			if (IS_ERR(ipage)) {
-+				err = PTR_ERR(ipage);
-+				goto err_out;
-+			}
-+
-+			vsrc = kmap_atomic(ipage);
-+			vto = kmap_atomic(page);
-+			memcpy(vto, vsrc + blkoff, map.m_plen);
-+			memset(vto + map.m_plen, 0, PAGE_SIZE - map.m_plen);
-+			kunmap_atomic(vto);
-+			kunmap_atomic(vsrc);
-+			flush_dcache_page(page);
-+
-+			SetPageUptodate(page);
-+			/* TODO: could we unlock the page earlier? */
-+			unlock_page(ipage);
-+			put_page(ipage);
-+
-+			/* imply err = 0, see erofs_map_blocks */
-+			goto has_updated;
-+		}
-+
-+		/* pa must be block-aligned for raw reading */
-+		DBG_BUGON(erofs_blkoff(map.m_pa));
-+
-+		/* max # of continuous pages */
-+		if (nblocks > DIV_ROUND_UP(map.m_plen, PAGE_SIZE))
-+			nblocks = DIV_ROUND_UP(map.m_plen, PAGE_SIZE);
-+		if (nblocks > BIO_MAX_PAGES)
-+			nblocks = BIO_MAX_PAGES;
-+
-+		bio = erofs_grab_bio(sb, blknr, nblocks, sb,
-+				     read_endio, false);
-+		if (IS_ERR(bio)) {
-+			err = PTR_ERR(bio);
-+			bio = NULL;
-+			goto err_out;
-+		}
-+	}
-+
-+	err = bio_add_page(bio, page, PAGE_SIZE, 0);
-+	/* out of the extent or bio is full */
-+	if (err < PAGE_SIZE)
-+		goto submit_bio_retry;
-+
-+	*last_block = current_block;
-+
-+	/* shift in advance in case of it followed by too many gaps */
-+	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
-+		/* err should reassign to 0 after submitting */
-+		err = 0;
-+		goto submit_bio_out;
-+	}
-+
-+	return bio;
-+
-+err_out:
-+	/* for sync reading, set page error immediately */
-+	if (!ra) {
-+		SetPageError(page);
-+		ClearPageUptodate(page);
-+	}
-+has_updated:
-+	unlock_page(page);
-+
-+	/* if updated manually, continuous pages has a gap */
-+	if (bio)
-+submit_bio_out:
-+		__submit_bio(bio, REQ_OP_READ, 0);
-+
-+	return unlikely(err) ? ERR_PTR(err) : NULL;
-+}
++/* Enhanced(Extended) ROM File System */
++#define EROFS_SUPER_OFFSET      1024
 +
 +/*
-+ * since we dont have write or truncate flows, so no inode
-+ * locking needs to be held at the moment.
++ * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
++ * incompatible with this kernel version.
 + */
-+static int erofs_raw_access_readpage(struct file *file, struct page *page)
-+{
-+	erofs_off_t last_block;
-+	struct bio *bio;
++#define EROFS_REQUIREMENT_LZ4_0PADDING	0x00000001
++#define EROFS_ALL_REQUIREMENTS		0
 +
-+	trace_erofs_readpage(page, true);
++struct erofs_super_block {
++/*  0 */__le32 magic;           /* in the little endian */
++/*  4 */__le32 checksum;        /* crc32c(super_block) */
++/*  8 */__le32 features;        /* (aka. feature_compat) */
++/* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
++/* 13 */__u8 reserved;
 +
-+	bio = erofs_read_raw_page(NULL, page->mapping,
-+				  page, &last_block, 1, false);
++/* 14 */__le16 root_nid;
++/* 16 */__le64 inos;            /* total valid ino # (== f_files - f_favail) */
 +
-+	if (IS_ERR(bio))
-+		return PTR_ERR(bio);
++/* 24 */__le64 build_time;      /* inode v1 time derivation */
++/* 32 */__le32 build_time_nsec;
++/* 36 */__le32 blocks;          /* used for statfs */
++/* 40 */__le32 meta_blkaddr;
++/* 44 */__le32 xattr_blkaddr;
++/* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
++/* 64 */__u8 volume_name[16];   /* volume name */
++/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
 +
-+	DBG_BUGON(bio);	/* since we have only one bio -- must be NULL */
-+	return 0;
-+}
++/* 84 */__u8 reserved2[44];
++} __packed;                     /* 128 bytes */
 +
-+static int erofs_raw_access_readpages(struct file *filp,
-+				      struct address_space *mapping,
-+				      struct list_head *pages,
-+				      unsigned int nr_pages)
-+{
-+	erofs_off_t last_block;
-+	struct bio *bio = NULL;
-+	gfp_t gfp = readahead_gfp_mask(mapping);
-+	struct page *page = list_last_entry(pages, struct page, lru);
-+
-+	trace_erofs_readpages(mapping->host, page, nr_pages, true);
-+
-+	for (; nr_pages; --nr_pages) {
-+		page = list_entry(pages->prev, struct page, lru);
-+
-+		prefetchw(&page->flags);
-+		list_del(&page->lru);
-+
-+		if (!add_to_page_cache_lru(page, mapping, page->index, gfp)) {
-+			bio = erofs_read_raw_page(bio, mapping, page,
-+						  &last_block, nr_pages, true);
-+
-+			/* all the page errors are ignored when readahead */
-+			if (IS_ERR(bio)) {
-+				pr_err("%s, readahead error at page %lu of nid %llu\n",
-+				       __func__, page->index,
-+				       EROFS_V(mapping->host)->nid);
-+
-+				bio = NULL;
-+			}
-+		}
-+
-+		/* pages could still be locked */
-+		put_page(page);
-+	}
-+	DBG_BUGON(!list_empty(pages));
-+
-+	/* the rare case (end in gaps) */
-+	if (unlikely(bio))
-+		__submit_bio(bio, REQ_OP_READ, 0);
-+	return 0;
-+}
-+
-+static int erofs_get_block(struct inode *inode, sector_t iblock,
-+			   struct buffer_head *bh, int create)
-+{
-+	struct erofs_map_blocks map = {
-+		.m_la = iblock << 9,
-+	};
-+	int err;
-+
-+	err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-+	if (err)
-+		return err;
-+
-+	if (map.m_flags & EROFS_MAP_MAPPED)
-+		bh->b_blocknr = erofs_blknr(map.m_pa);
-+
-+	return err;
-+}
-+
-+static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
-+{
-+	struct inode *inode = mapping->host;
-+
-+	if (is_inode_flat_inline(inode)) {
-+		erofs_blk_t blks = i_size_read(inode) >> LOG_BLOCK_SIZE;
-+
-+		if (block >> LOG_SECTORS_PER_BLOCK >= blks)
-+			return 0;
-+	}
-+
-+	return generic_block_bmap(mapping, block, erofs_get_block);
-+}
-+
-+/* for uncompressed (aligned) files and raw access for other files */
-+const struct address_space_operations erofs_raw_access_aops = {
-+	.readpage = erofs_raw_access_readpage,
-+	.readpages = erofs_raw_access_readpages,
-+	.bmap = erofs_bmap,
++/*
++ * erofs inode data mapping:
++ * 0 - inode plain without inline data A:
++ * inode, [xattrs], ... | ... | no-holed data
++ * 1 - inode VLE compression B (legacy):
++ * inode, [xattrs], extents ... | ...
++ * 2 - inode plain with inline data C:
++ * inode, [xattrs], last_inline_data, ... | ... | no-holed data
++ * 3 - inode compression D:
++ * inode, [xattrs], map_header, extents ... | ...
++ * 4~7 - reserved
++ */
++enum {
++	EROFS_INODE_FLAT_PLAIN,
++	EROFS_INODE_FLAT_COMPRESSION_LEGACY,
++	EROFS_INODE_FLAT_INLINE,
++	EROFS_INODE_FLAT_COMPRESSION,
++	EROFS_INODE_LAYOUT_MAX
 +};
 +
++static bool erofs_inode_is_data_compressed(unsigned int datamode)
++{
++	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
++		return true;
++	return datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY;
++}
++
++/* bit definitions of inode i_advise */
++#define EROFS_I_VERSION_BITS            1
++#define EROFS_I_DATA_MAPPING_BITS       3
++
++#define EROFS_I_VERSION_BIT             0
++#define EROFS_I_DATA_MAPPING_BIT        1
++
++struct erofs_inode_v1 {
++/*  0 */__le16 i_advise;
++
++/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
++/*  2 */__le16 i_xattr_icount;
++/*  4 */__le16 i_mode;
++/*  6 */__le16 i_nlink;
++/*  8 */__le32 i_size;
++/* 12 */__le32 i_reserved;
++/* 16 */union {
++		/* file total compressed blocks for data mapping 1 */
++		__le32 compressed_blocks;
++		__le32 raw_blkaddr;
++
++		/* for device files, used to indicate old/new device # */
++		__le32 rdev;
++	} i_u __packed;
++/* 20 */__le32 i_ino;           /* only used for 32-bit stat compatibility */
++/* 24 */__le16 i_uid;
++/* 26 */__le16 i_gid;
++/* 28 */__le32 i_reserved2;
++} __packed;
++
++/* 32 bytes on-disk inode */
++#define EROFS_INODE_LAYOUT_V1   0
++/* 64 bytes on-disk inode */
++#define EROFS_INODE_LAYOUT_V2   1
++
++struct erofs_inode_v2 {
++/*  0 */__le16 i_advise;
++
++/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
++/*  2 */__le16 i_xattr_icount;
++/*  4 */__le16 i_mode;
++/*  6 */__le16 i_reserved;
++/*  8 */__le64 i_size;
++/* 16 */union {
++		/* file total compressed blocks for data mapping 1 */
++		__le32 compressed_blocks;
++		__le32 raw_blkaddr;
++
++		/* for device files, used to indicate old/new device # */
++		__le32 rdev;
++	} i_u __packed;
++
++	/* only used for 32-bit stat compatibility */
++/* 20 */__le32 i_ino;
++
++/* 24 */__le32 i_uid;
++/* 28 */__le32 i_gid;
++/* 32 */__le64 i_ctime;
++/* 40 */__le32 i_ctime_nsec;
++/* 44 */__le32 i_nlink;
++/* 48 */__u8   i_reserved2[16];
++} __packed;                     /* 64 bytes */
++
++#define EROFS_MAX_SHARED_XATTRS         (128)
++/* h_shared_count between 129 ... 255 are special # */
++#define EROFS_SHARED_XATTR_EXTENT       (255)
++
++/*
++ * inline xattrs (n == i_xattr_icount):
++ * erofs_xattr_ibody_header(1) + (n - 1) * 4 bytes
++ *          12 bytes           /                   \
++ *                            /                     \
++ *                           /-----------------------\
++ *                           |  erofs_xattr_entries+ |
++ *                           +-----------------------+
++ * inline xattrs must starts in erofs_xattr_ibody_header,
++ * for read-only fs, no need to introduce h_refcount
++ */
++struct erofs_xattr_ibody_header {
++	__le32 h_reserved;
++	__u8   h_shared_count;
++	__u8   h_reserved2[7];
++	__le32 h_shared_xattrs[0];      /* shared xattr id array */
++} __packed;
++
++/* Name indexes */
++#define EROFS_XATTR_INDEX_USER              1
++#define EROFS_XATTR_INDEX_POSIX_ACL_ACCESS  2
++#define EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT 3
++#define EROFS_XATTR_INDEX_TRUSTED           4
++#define EROFS_XATTR_INDEX_LUSTRE            5
++#define EROFS_XATTR_INDEX_SECURITY          6
++
++/* xattr entry (for both inline & shared xattrs) */
++struct erofs_xattr_entry {
++	__u8   e_name_len;      /* length of name */
++	__u8   e_name_index;    /* attribute name index */
++	__le16 e_value_size;    /* size of attribute value */
++	/* followed by e_name and e_value */
++	char   e_name[0];       /* attribute name */
++} __packed;
++
++#define ondisk_xattr_ibody_size(count)	({\
++	u32 __count = le16_to_cpu(count); \
++	((__count) == 0) ? 0 : \
++	sizeof(struct erofs_xattr_ibody_header) + \
++		sizeof(__u32) * ((__count) - 1); })
++
++#define EROFS_XATTR_ALIGN(size) round_up(size, sizeof(struct erofs_xattr_entry))
++#define EROFS_XATTR_ENTRY_SIZE(entry) EROFS_XATTR_ALIGN( \
++	sizeof(struct erofs_xattr_entry) + \
++	(entry)->e_name_len + le16_to_cpu((entry)->e_value_size))
++
++/* available compression algorithm types */
++enum {
++	Z_EROFS_COMPRESSION_LZ4,
++	Z_EROFS_COMPRESSION_MAX
++};
++
++/*
++ * bit 0 : COMPACTED_2B indexes (0 - off; 1 - on)
++ *  e.g. for 4k logical cluster size,      4B        if compacted 2B is off;
++ *                                  (4B) + 2B + (4B) if compacted 2B is on.
++ */
++#define Z_EROFS_ADVISE_COMPACTED_2B_BIT         0
++
++#define Z_EROFS_ADVISE_COMPACTED_2B     (1 << Z_EROFS_ADVISE_COMPACTED_2B_BIT)
++
++struct z_erofs_map_header {
++	__le32	h_reserved1;
++	__le16	h_advise;
++	/*
++	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
++	 * bit 4-7 : algorithm type of head 2 (logical cluster type 11).
++	 */
++	__u8	h_algorithmtype;
++	/*
++	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
++	 * bit 3-4 : (physical - logical) cluster bits of head 1:
++	 *       For example, if logical clustersize = 4096, 1 for 8192.
++	 * bit 5-7 : (physical - logical) cluster bits of head 2.
++	 */
++	__u8	h_clusterbits;
++};
++
++#define Z_EROFS_VLE_LEGACY_HEADER_PADDING       8
++
++/*
++ * Z_EROFS Variable-sized Logical Extent cluster type:
++ *    0 - literal (uncompressed) cluster
++ *    1 - compressed cluster (for the head logical cluster)
++ *    2 - compressed cluster (for the other logical clusters)
++ *
++ * In detail,
++ *    0 - literal (uncompressed) cluster,
++ *        di_advise = 0
++ *        di_clusterofs = the literal data offset of the cluster
++ *        di_blkaddr = the blkaddr of the literal cluster
++ *
++ *    1 - compressed cluster (for the head logical cluster)
++ *        di_advise = 1
++ *        di_clusterofs = the decompressed data offset of the cluster
++ *        di_blkaddr = the blkaddr of the compressed cluster
++ *
++ *    2 - compressed cluster (for the other logical clusters)
++ *        di_advise = 2
++ *        di_clusterofs =
++ *           the decompressed data offset in its own head cluster
++ *        di_u.delta[0] = distance to its corresponding head cluster
++ *        di_u.delta[1] = distance to its corresponding tail cluster
++ *                (di_advise could be 0, 1 or 2)
++ */
++enum {
++	Z_EROFS_VLE_CLUSTER_TYPE_PLAIN,
++	Z_EROFS_VLE_CLUSTER_TYPE_HEAD,
++	Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD,
++	Z_EROFS_VLE_CLUSTER_TYPE_RESERVED,
++	Z_EROFS_VLE_CLUSTER_TYPE_MAX
++};
++
++#define Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS        2
++#define Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT         0
++
++struct z_erofs_vle_decompressed_index {
++	__le16 di_advise;
++	/* where to decompress in the head cluster */
++	__le16 di_clusterofs;
++
++	union {
++		/* for the head cluster */
++		__le32 blkaddr;
++		/*
++		 * for the rest clusters
++		 * eg. for 4k page-sized cluster, maximum 4K*64k = 256M)
++		 * [0] - pointing to the head cluster
++		 * [1] - pointing to the tail cluster
++		 */
++		__le16 delta[2];
++	} di_u __packed;		/* 8 bytes */
++} __packed;
++
++#define Z_EROFS_VLE_LEGACY_INDEX_ALIGN(size) \
++	(round_up(size, sizeof(struct z_erofs_vle_decompressed_index)) + \
++	 sizeof(struct z_erofs_map_header) + Z_EROFS_VLE_LEGACY_HEADER_PADDING)
++
++/* dirent sorts in alphabet order, thus we can do binary search */
++struct erofs_dirent {
++	__le64 nid;     /*  0, node number */
++	__le16 nameoff; /*  8, start offset of file name */
++	__u8 file_type; /* 10, file type */
++	__u8 reserved;  /* 11, reserved */
++} __packed;
++
++/* file types used in inode_info->flags */
++enum {
++	EROFS_FT_UNKNOWN,
++	EROFS_FT_REG_FILE,
++	EROFS_FT_DIR,
++	EROFS_FT_CHRDEV,
++	EROFS_FT_BLKDEV,
++	EROFS_FT_FIFO,
++	EROFS_FT_SOCK,
++	EROFS_FT_SYMLINK,
++	EROFS_FT_MAX
++};
++
++#define EROFS_NAME_LEN      255
++
++/* check the EROFS on-disk layout strictly at compile time */
++static inline void erofs_check_ondisk_layout_definitions(void)
++{
++	BUILD_BUG_ON(sizeof(struct erofs_super_block) != 128);
++	BUILD_BUG_ON(sizeof(struct erofs_inode_v1) != 32);
++	BUILD_BUG_ON(sizeof(struct erofs_inode_v2) != 64);
++	BUILD_BUG_ON(sizeof(struct erofs_xattr_ibody_header) != 12);
++	BUILD_BUG_ON(sizeof(struct erofs_xattr_entry) != 4);
++	BUILD_BUG_ON(sizeof(struct z_erofs_map_header) != 8);
++	BUILD_BUG_ON(sizeof(struct z_erofs_vle_decompressed_index) != 8);
++	BUILD_BUG_ON(sizeof(struct erofs_dirent) != 12);
++
++	BUILD_BUG_ON(BIT(Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) <
++		     Z_EROFS_VLE_CLUSTER_TYPE_MAX - 1);
++}
++
++#endif
++
+diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
+index 1274c692e59c..903cc2d2750b 100644
+--- a/include/uapi/linux/magic.h
++++ b/include/uapi/linux/magic.h
+@@ -19,6 +19,7 @@
+ #define SQUASHFS_MAGIC		0x73717368
+ #define ECRYPTFS_SUPER_MAGIC	0xf15f
+ #define EFS_SUPER_MAGIC		0x414A53
++#define EROFS_SUPER_MAGIC_V1	0xE0F5E1E2
+ #define EXT2_SUPER_MAGIC	0xEF53
+ #define EXT3_SUPER_MAGIC	0xEF53
+ #define XENFS_SUPER_MAGIC	0xabba1974
 -- 
 2.17.1
 
