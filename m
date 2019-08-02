@@ -2,173 +2,143 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8411DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C475AC32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543A02171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985C9216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dIZIhWEt"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dj10JLqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392183AbfHBTPw (ORCPT
+        id S2404389AbfHBTWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 15:15:52 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16559 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391984AbfHBTPu (ORCPT
+        Fri, 2 Aug 2019 15:22:55 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:28822 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2403874AbfHBTWy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 15:15:50 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d448be40000>; Fri, 02 Aug 2019 12:15:49 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 02 Aug 2019 12:15:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 02 Aug 2019 12:15:47 -0700
-Received: from [10.2.171.217] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 2 Aug
- 2019 19:15:46 +0000
-Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
-To:     Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>
-CC:     Michal Hocko <mhocko@kernel.org>, <john.hubbard@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <amd-gfx@lists.freedesktop.org>, <ceph-devel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <devel@lists.orangefs.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-block@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-xfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <rds-devel@oss.oracle.com>, <sparclinux@vger.kernel.org>,
-        <x86@kernel.org>, <xen-devel@lists.xenproject.org>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802091244.GD6461@dhcp22.suse.cz>
- <20190802124146.GL25064@quack2.suse.cz>
- <20190802142443.GB5597@bombadil.infradead.org>
- <20190802145227.GQ25064@quack2.suse.cz>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <076e7826-67a5-4829-aae2-2b90f302cebd@nvidia.com>
-Date:   Fri, 2 Aug 2019 12:14:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 15:22:54 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72JJqFm022956
+        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 12:22:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=19Ja20qRJPcfJ8p53GQiWI0ZYQb3kQ8wKj9C14D15zo=;
+ b=dj10JLqr4TfBGwCeyDo/3BMpKggBGMOPO+uvDx1zGiGrxvKvORY5RcF/eebwabL4khdX
+ KUGZg43cUkrqp0VajwiIkwPNtKUFyyRNgJ9kfnis1SdSSRq4mUVLf09M9lo8sKdw0CIB
+ 019IhIbD7iDU9LacYmcloNto77/2U8Abrdo= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2u4s2tgj9n-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 12:22:53 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Fri, 2 Aug 2019 12:22:51 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 6989B153186A0; Fri,  2 Aug 2019 12:22:47 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Hillf Danton <hdanton@sina.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2] mm: memcontrol: switch to rcu protection in drain_all_stock()
+Date:   Fri, 2 Aug 2019 12:22:41 -0700
+Message-ID: <20190802192241.3253165-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-In-Reply-To: <20190802145227.GQ25064@quack2.suse.cz>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564773349; bh=Ykr8zuBl8qD6qRk+6CuJmCvWs6y/6SnwmHdkeYBJDDI=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=dIZIhWEtL/6DtZGzemgJsDJsVLyADAMaN//lJ1grJLFkCmFOkzTj/rs0FvLfEl2Hi
-         oGzaotnI6n/OU/9zhZLMfdrrUHRJGxX7AYLyG2WZvgX4Lg54c2pU4PjbkWrNUgOXfI
-         uv8TTyv/DF3hYu24iq7PnVxsiQftZ7SHYqoH7NBkU536G72MURkyt2TZuU0HsMwqx1
-         3Glf+aCLRqZtZbMei0ZGioStTFz2Vyclh08xm02uGWhgBmLM1you/SeWFTun4O+4QV
-         968ZBWSTwuYIseJKnsPYve06ID75kz8N2rJE61L933vzLxD+Ru7sU6sLx/7LpcpGPg
-         O3OFkZJZEBCjA==
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=915 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020203
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/2/19 7:52 AM, Jan Kara wrote:
-> On Fri 02-08-19 07:24:43, Matthew Wilcox wrote:
->> On Fri, Aug 02, 2019 at 02:41:46PM +0200, Jan Kara wrote:
->>> On Fri 02-08-19 11:12:44, Michal Hocko wrote:
->>>> On Thu 01-08-19 19:19:31, john.hubbard@gmail.com wrote:
->>>> [...]
->>>>> 2) Convert all of the call sites for get_user_pages*(), to
->>>>> invoke put_user_page*(), instead of put_page(). This involves dozens of
->>>>> call sites, and will take some time.
->>>>
->>>> How do we make sure this is the case and it will remain the case in the
->>>> future? There must be some automagic to enforce/check that. It is simply
->>>> not manageable to do it every now and then because then 3) will simply
->>>> be never safe.
->>>>
->>>> Have you considered coccinele or some other scripted way to do the
->>>> transition? I have no idea how to deal with future changes that would
->>>> break the balance though.
+Commit 72f0184c8a00 ("mm, memcg: remove hotplug locking from try_charge")
+introduced css_tryget()/css_put() calls in drain_all_stock(),
+which are supposed to protect the target memory cgroup from being
+released during the mem_cgroup_is_descendant() call.
 
-Hi Michal,
+However, it's not completely safe. In theory, memcg can go away
+between reading stock->cached pointer and calling css_tryget().
 
-Yes, I've thought about it, and coccinelle falls a bit short (it's not smart
-enough to know which put_page()'s to convert). However, there is a debug
-option planned: a yet-to-be-posted commit [1] uses struct page extensions
-(obviously protected by CONFIG_DEBUG_GET_USER_PAGES_REFERENCES) to add
-a redundant counter. That allows:
+This can happen if drain_all_stock() races with drain_local_stock()
+performed on the remote cpu as a result of a work, scheduled
+by the previous invocation of drain_all_stock().
 
-void __put_page(struct page *page)
-{
-	...
-	/* Someone called put_page() instead of put_user_page() */
-	WARN_ON_ONCE(atomic_read(&page_ext->pin_count) > 0);
+The race is a bit theoretical and there are few chances to trigger
+it, but the current code looks a bit confusing, so it makes sense
+to fix it anyway. The code looks like as if css_tryget() and
+css_put() are used to protect stocks drainage. It's not necessary
+because stocked pages are holding references to the cached cgroup.
+And it obviously won't work for works, scheduled on other cpus.
 
->>>
->>> Yeah, that's why I've been suggesting at LSF/MM that we may need to create
->>> a gup wrapper - say vaddr_pin_pages() - and track which sites dropping
->>> references got converted by using this wrapper instead of gup. The
->>> counterpart would then be more logically named as unpin_page() or whatever
->>> instead of put_user_page().  Sure this is not completely foolproof (you can
->>> create new callsite using vaddr_pin_pages() and then just drop refs using
->>> put_page()) but I suppose it would be a high enough barrier for missed
->>> conversions... Thoughts?
+So, let's read the stock->cached pointer and evaluate the memory
+cgroup inside a rcu read section, and get rid of
+css_tryget()/css_put() calls.
 
-The debug option above is still a bit simplistic in its implementation (and maybe
-not taking full advantage of the data it has), but I think it's preferable,
-because it monitors the "core" and WARNs.
+v2: added some explanations to the commit message, no code changes
 
-Instead of the wrapper, I'm thinking: documentation and the passage of time,
-plus the debug option (perhaps enhanced--probably once I post it someone will
-notice opportunities), yes?
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Hillf Danton <hdanton@sina.com>
+---
+ mm/memcontrol.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
->>
->> I think the API we really need is get_user_bvec() / put_user_bvec(),
->> and I know Christoph has been putting some work into that.  That avoids
->> doing refcount operations on hundreds of pages if the page in question is
->> a huge page.  Once people are switched over to that, they won't be tempted
->> to manually call put_page() on the individual constituent pages of a bvec.
-> 
-> Well, get_user_bvec() is certainly a good API for one class of users but
-> just looking at the above series, you'll see there are *many* places that
-> just don't work with bvecs at all and you need something for those.
-> 
-
-Yes, there are quite a few places that don't involve _bvec, as we can see
-right here. So we need something. Andrew asked for a debug option some time
-ago, and several people (Dave Hansen, Dan Williams, Jerome) had the idea
-of vmap-ing gup pages separately, so you can definitely tell where each
-page came from. I'm hoping not to have to go to that level of complexity
-though.
-
-
-[1] "mm/gup: debug tracking of get_user_pages() references" :
-https://github.com/johnhubbard/linux/commit/21ff7d6161ec2a14d3f9d17c98abb00cc969d4d6
-
-thanks,
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 5c7b9facb0eb..d856b64426b7 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2235,21 +2235,22 @@ static void drain_all_stock(struct mem_cgroup *root_memcg)
+ 	for_each_online_cpu(cpu) {
+ 		struct memcg_stock_pcp *stock = &per_cpu(memcg_stock, cpu);
+ 		struct mem_cgroup *memcg;
++		bool flush = false;
+ 
++		rcu_read_lock();
+ 		memcg = stock->cached;
+-		if (!memcg || !stock->nr_pages || !css_tryget(&memcg->css))
+-			continue;
+-		if (!mem_cgroup_is_descendant(memcg, root_memcg)) {
+-			css_put(&memcg->css);
+-			continue;
+-		}
+-		if (!test_and_set_bit(FLUSHING_CACHED_CHARGE, &stock->flags)) {
++		if (memcg && stock->nr_pages &&
++		    mem_cgroup_is_descendant(memcg, root_memcg))
++			flush = true;
++		rcu_read_unlock();
++
++		if (flush &&
++		    !test_and_set_bit(FLUSHING_CACHED_CHARGE, &stock->flags)) {
+ 			if (cpu == curcpu)
+ 				drain_local_stock(&stock->work);
+ 			else
+ 				schedule_work_on(cpu, &stock->work);
+ 		}
+-		css_put(&memcg->css);
+ 	}
+ 	put_cpu();
+ 	mutex_unlock(&percpu_charge_mutex);
 -- 
-John Hubbard
-NVIDIA
+2.21.0
+
