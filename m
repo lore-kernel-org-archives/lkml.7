@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390BAC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77239C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11BFB217F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 509D12182B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738503;
-	bh=NyiIAODgi67SoAGH9ft/V6UUhfzqoyu7bgemhXXdjTg=;
+	s=default; t=1564738507;
+	bh=1l0EAHHLvUwKDNyHuZOGsTVAkJXPM1btSYpS8ZVJubE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XY7WVqkm28korVI5u0cIj8aly5Fp01ErTapqGCXFjjOdlfuUV+cHhefQEkSavr1y3
-	 Nvn6qcsV9pTcGyIvompqVj4WcmGNWt7P1qWgJNQTAUqWwzileZfcOfENNUOLJVjM/0
-	 uqbhG5fz4qsdBy292LnZYHLjuSCDEldzbnowaZ94=
+	b=vnLx35MAUb3+RaSqCIPfaiqGwwBFTtAHP3mlSe2zbowBCHyCPFpvDkYM2lyvKNHRx
+	 kdefWOVH9m3zguAfzZunTOwLIuZ6yV5bgYvHIVsOUPoQMbJhuICSEuwHrIr9L5KP+h
+	 zyg29+j+Ed66dy5U572hlK9g4YBBtfYVENMJepUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391593AbfHBJfB (ORCPT
+        id S2391603AbfHBJfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:35:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35100 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:35:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391581AbfHBJez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:55 -0400
+        id S2391577AbfHBJfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:35:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EA46217D4;
-        Fri,  2 Aug 2019 09:34:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51E3C2182B;
+        Fri,  2 Aug 2019 09:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738494;
-        bh=NyiIAODgi67SoAGH9ft/V6UUhfzqoyu7bgemhXXdjTg=;
+        s=default; t=1564738499;
+        bh=1l0EAHHLvUwKDNyHuZOGsTVAkJXPM1btSYpS8ZVJubE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x80LHCYew8mks2oJi/OZrAMiLe+omdakI4eSNr0D6dnirdLpNbIAyon28ytlqjkw1
-         zcOAqhX3UAUTWR5cEs+Fo+/DJS+QRhv/QWQhaDhd51qj84VJPZqmANaRE1wN6xOMwG
-         imU9W11CW84IfjGZ/IhXHkQcgpXRiOZRan3WvUaM=
+        b=X9VyMKqO80/RL5UIAzAVhyQ98DRjoeFsbyfXFWLmx+bhWlEz7tWWL1olBoXTSkQiB
+         qPOEsi/l/LZWtEBLb1QPBhovcfo42vn66EtDRTpa7QbaYAV9sbI/nsdlCnd8hURWUL
+         /hjlo7a8VjW29CBuBwqPDVzmKoqfvoAP9Ykdf4/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 109/158] pinctrl: rockchip: fix leaked of_node references
-Date:   Fri,  2 Aug 2019 11:28:50 +0200
-Message-Id: <20190802092226.353596858@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai26@huawei.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 111/158] memstick: Fix error cleanup path of memstick_init
+Date:   Fri,  2 Aug 2019 11:28:52 +0200
+Message-Id: <20190802092226.685292116@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -61,40 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3c89c70634bb0b6f48512de873e7a45c7e1fbaa5 ]
+[ Upstream commit 65f1a0d39c289bb6fc85635528cd36c4b07f560e ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+If bus_register fails. On its error handling path, it has cleaned up
+what it has done. There is no need to call bus_unregister again.
+Otherwise, if bus_unregister is called, issues such as null-ptr-deref
+will arise.
 
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/pinctrl-rockchip.c:3221:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
-./drivers/pinctrl/pinctrl-rockchip.c:3223:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+Syzkaller report this:
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+kobject_add_internal failed for memstick (error: -12 parent: bus)
+BUG: KASAN: null-ptr-deref in sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
+Read of size 8 at addr 0000000000000078 by task syz-executor.0/4460
+
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xa9/0x10e lib/dump_stack.c:113
+ __kasan_report+0x171/0x18d mm/kasan/report.c:321
+ kasan_report+0xe/0x20 mm/kasan/common.c:614
+ sysfs_remove_file_ns+0x1b/0x40 fs/sysfs/file.c:467
+ sysfs_remove_file include/linux/sysfs.h:519 [inline]
+ bus_remove_file+0x6c/0x90 drivers/base/bus.c:145
+ remove_probe_files drivers/base/bus.c:599 [inline]
+ bus_unregister+0x6e/0x100 drivers/base/bus.c:916 ? 0xffffffffc1590000
+ memstick_init+0x7a/0x1000 [memstick]
+ do_one_initcall+0xb9/0x3b5 init/main.c:914
+ do_init_module+0xe0/0x330 kernel/module.c:3468
+ load_module+0x38eb/0x4270 kernel/module.c:3819
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
+ do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: baf8532a147d ("memstick: initial commit for Sony MemoryStick support")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai26@huawei.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-rockchip.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/memstick/core/memstick.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index a0651128e23a..616055b5e996 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -1837,6 +1837,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
- 						    base,
- 						    &rockchip_regmap_config);
- 		}
-+		of_node_put(node);
- 	}
+diff --git a/drivers/memstick/core/memstick.c b/drivers/memstick/core/memstick.c
+index 4d673a626db4..1041eb7a6167 100644
+--- a/drivers/memstick/core/memstick.c
++++ b/drivers/memstick/core/memstick.c
+@@ -629,13 +629,18 @@ static int __init memstick_init(void)
+ 		return -ENOMEM;
  
- 	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
+ 	rc = bus_register(&memstick_bus_type);
+-	if (!rc)
+-		rc = class_register(&memstick_host_class);
++	if (rc)
++		goto error_destroy_workqueue;
+ 
+-	if (!rc)
+-		return 0;
++	rc = class_register(&memstick_host_class);
++	if (rc)
++		goto error_bus_unregister;
++
++	return 0;
+ 
++error_bus_unregister:
+ 	bus_unregister(&memstick_bus_type);
++error_destroy_workqueue:
+ 	destroy_workqueue(workqueue);
+ 
+ 	return rc;
 -- 
 2.20.1
 
