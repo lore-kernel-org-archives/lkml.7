@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D313DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23B6C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7F6217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDB52182B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738392;
-	bh=cKjDSc7sORUc5XlPMyByySm1vLC6uJd48jwQGbWQIhk=;
+	s=default; t=1564738393;
+	bh=8oFr2pGxFy5R1TNkdFrY7zSsOkbxp6kNZdqrVvW7pl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F8OAynpQYO0YPKLWPOicQ70apOi48XbV9VLHZfU85T6TXn1Cah0fIXaxevAvJCMMe
-	 ZY4vyrqDwdl4y3QjrFQtpJYl9kYgJwujtXzuJ5z5CedoqI/qrcrKXjPPLf9zVRZKuy
-	 /R7ygcvoL50UWKnpjEaKi33jMhu/DxRlE3DPrk90=
+	b=i3+4plG9X30nTBJJhctAF157waLYGOF/o7GhBws3jlpNVW9siAXZxAAMVHutnAYpe
+	 DioCviUiLITq3iXbKABLu2Cq05mWXDauaWNbkjb1v75sCXCSDW4fDfefSu3PRbu06p
+	 troZBjAh10u1F/SozezpzNAwXxnSRKfbGhTCb99k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390425AbfHBJdK (ORCPT
+        id S2391304AbfHBJdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:33:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60406 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:33:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388771AbfHBJdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:33:05 -0400
+        id S2404775AbfHBJdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:33:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6167921773;
-        Fri,  2 Aug 2019 09:33:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9FC421773;
+        Fri,  2 Aug 2019 09:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738384;
-        bh=cKjDSc7sORUc5XlPMyByySm1vLC6uJd48jwQGbWQIhk=;
+        s=default; t=1564738387;
+        bh=8oFr2pGxFy5R1TNkdFrY7zSsOkbxp6kNZdqrVvW7pl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBKu7s3O9iyZ79EB+yIPW9UOqOow4nzEjccgdG1Mnh8ACG+xrsT7YoGyupGXKCb/y
-         BHpAiWJU2QN2tsgGjGEuNp5fze4ep2QjAatnps2DNVRNUrla6MK6XW2hHkusiWEufI
-         BHn1Llz9/dP68xa7AmPiu34DNR4J/8BLzvtlTZ+I=
+        b=Cumh16iRrLT01I4T8ep17/CoJJiJjIjkG+VYlNk0BDrb+3dJ4j0YlhBrbxuBgczqT
+         d/B0TCYRJ3OYW+OJ6l2e9tjpReoJLGfgjimncq7z9QXl8CdZCCcdKoyceQbzdNQ7Fw
+         vkX/MujcoCAv/Mi3Q2C/rkdCjzBKzWujiq7LwId8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Szymon Janc <szymon.janc@codecoup.pl>,
-        Maarten Fonville <maarten.fonville@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.4 083/158] Bluetooth: Add SMP workaround Microsoft Surface Precision Mouse bug
-Date:   Fri,  2 Aug 2019 11:28:24 +0200
-Message-Id: <20190802092221.138425434@linuxfoundation.org>
+        stable@vger.kernel.org, "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lee@vger.kernel.org
+Subject: [PATCH 4.4 084/158] usb: Handle USB3 remote wakeup for LPM enabled devices correctly
+Date:   Fri,  2 Aug 2019 11:28:25 +0200
+Message-Id: <20190802092221.358286099@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,67 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Szymon Janc <szymon.janc@codecoup.pl>
+From: Lee, Chiasheng <chiasheng.lee@intel.com>
 
-commit 1d87b88ba26eabd4745e158ecfd87c93a9b51dc2 upstream.
+commit e244c4699f859cf7149b0781b1894c7996a8a1df upstream.
 
-Microsoft Surface Precision Mouse provides bogus identity address when
-pairing. It connects with Static Random address but provides Public
-Address in SMP Identity Address Information PDU. Address has same
-value but type is different. Workaround this by dropping IRK if ID
-address discrepancy is detected.
+With Link Power Management (LPM) enabled USB3 links transition to low
+power U1/U2 link states from U0 state automatically.
 
-> HCI Event: LE Meta Event (0x3e) plen 19
-      LE Connection Complete (0x01)
-        Status: Success (0x00)
-        Handle: 75
-        Role: Master (0x00)
-        Peer address type: Random (0x01)
-        Peer address: E0:52:33:93:3B:21 (Static)
-        Connection interval: 50.00 msec (0x0028)
-        Connection latency: 0 (0x0000)
-        Supervision timeout: 420 msec (0x002a)
-        Master clock accuracy: 0x00
+Current hub code detects USB3 remote wakeups by checking if the software
+state still shows suspended, but the link has transitioned from suspended
+U3 to enabled U0 state.
 
-....
+As it takes some time before the hub thread reads the port link state
+after a USB3 wake notification, the link may have transitioned from U0
+to U1/U2, and wake is not detected by hub code.
 
-> ACL Data RX: Handle 75 flags 0x02 dlen 12
-      SMP: Identity Address Information (0x09) len 7
-        Address type: Public (0x00)
-        Address: E0:52:33:93:3B:21
+Fix this by handling U1/U2 states in the same way as U0 in USB3 wakeup
+handling
 
-Signed-off-by: Szymon Janc <szymon.janc@codecoup.pl>
-Tested-by: Maarten Fonville <maarten.fonville@gmail.com>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199461
-Cc: stable@vger.kernel.org
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+This patch should be added to stable kernels since 4.13 where LPM was
+kept enabled during suspend/resume
+
+Cc: <stable@vger.kernel.org> # v4.13+
+Signed-off-by: Lee, Chiasheng <chiasheng.lee@intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/smp.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/usb/core/hub.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/net/bluetooth/smp.c
-+++ b/net/bluetooth/smp.c
-@@ -2532,6 +2532,19 @@ static int smp_cmd_ident_addr_info(struc
- 		goto distribute;
- 	}
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3479,6 +3479,7 @@ static int hub_handle_remote_wakeup(stru
+ 	struct usb_device *hdev;
+ 	struct usb_device *udev;
+ 	int connect_change = 0;
++	u16 link_state;
+ 	int ret;
  
-+	/* Drop IRK if peer is using identity address during pairing but is
-+	 * providing different address as identity information.
-+	 *
-+	 * Microsoft Surface Precision Mouse is known to have this bug.
-+	 */
-+	if (hci_is_identity_address(&hcon->dst, hcon->dst_type) &&
-+	    (bacmp(&info->bdaddr, &hcon->dst) ||
-+	     info->addr_type != hcon->dst_type)) {
-+		bt_dev_err(hcon->hdev,
-+			   "ignoring IRK with invalid identity address");
-+		goto distribute;
-+	}
-+
- 	bacpy(&smp->id_addr, &info->bdaddr);
- 	smp->id_addr_type = info->addr_type;
+ 	hdev = hub->hdev;
+@@ -3488,9 +3489,11 @@ static int hub_handle_remote_wakeup(stru
+ 			return 0;
+ 		usb_clear_port_feature(hdev, port, USB_PORT_FEAT_C_SUSPEND);
+ 	} else {
++		link_state = portstatus & USB_PORT_STAT_LINK_STATE;
+ 		if (!udev || udev->state != USB_STATE_SUSPENDED ||
+-				 (portstatus & USB_PORT_STAT_LINK_STATE) !=
+-				 USB_SS_PORT_LS_U0)
++				(link_state != USB_SS_PORT_LS_U0 &&
++				 link_state != USB_SS_PORT_LS_U1 &&
++				 link_state != USB_SS_PORT_LS_U2))
+ 			return 0;
+ 	}
  
 
 
