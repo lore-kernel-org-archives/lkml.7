@@ -2,103 +2,121 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317E9C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B24DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0731A20665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:27:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XAkH79ZR"
+	by mail.kernel.org (Postfix) with ESMTP id 290DD20665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391983AbfHBK06 (ORCPT
+        id S2391990AbfHBK2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:26:58 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:23838 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391850AbfHBK06 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:26:58 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x72AQhkk008319
-        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 19:26:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x72AQhkk008319
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1564741604;
-        bh=NrHyJz9sbwjlQ1G/JXCwnU1HYur+bFR25j0mgCLdHEk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XAkH79ZRsQcJMD/IfPs8cHF9TExY8tCZuhHtBxu1eNrQ7BhVljYE0qdtpr00qqkiE
-         FKdR0eZ9myWvjiNJWJMnCNQl6m0tvfgess9l1k1Su5iN3XGan2b8SggTjb8aMkSX4V
-         2aA7aeIUDJAAI9oTB3Jd+i8DIutptJRYTYgeBeFOPd1w1m1pSRqt0egFKlWmmSB0gq
-         yhQssUI0DGjo7qbzr+pT1nbtFc+2NwLZNpdGF2biU458dXCrdtBAcGg7FVQSfZTlgr
-         7Wn2slnpQl/24OWopxnt+8UywR1xqhxSfCmYa/gD2LSEnttLOyrR997d4niZ7c8P5o
-         d12ACe4R2EVuw==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id 2so50925380vso.8
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 03:26:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAVaKjzPellRhdrwvhv3+A9TAYbYrVWIT0bd2b+ptOo3iJ5TRmCk
-        7Dk2rQ4GluLRA8B3cacMigaBR9OcwIaPvJMs10Y=
-X-Google-Smtp-Source: APXvYqzy5VHpvFY28VxdfeeBWD9xONAsmstaCpei2TFS+8LAVJMGqLNTaeMZ0VBW3s/Z7F7b6oSNIg7wctgjmc4u2V4=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr62206301vsd.215.1564741602694;
- Fri, 02 Aug 2019 03:26:42 -0700 (PDT)
+        Fri, 2 Aug 2019 06:28:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56750 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730941AbfHBK2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:28:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 55B5CAE03;
+        Fri,  2 Aug 2019 10:28:28 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 460861E3F4D; Fri,  2 Aug 2019 12:28:27 +0200 (CEST)
+Date:   Fri, 2 Aug 2019 12:28:27 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, Roald Strauss <mr_lou@dewfall.dk>,
+        "Steven J. Magnani" <steve.magnani@digidescorp.com>,
+        Jan Kara <jack@suse.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: UDF filesystem image with Write-Once UDF Access Type
+Message-ID: <20190802102827.GI25064@quack2.suse.cz>
+References: <20190712100224.s2chparxszlbnill@pali>
+ <20190801073530.GA25064@quack2.suse.cz>
+ <20190801083800.GC25064@quack2.suse.cz>
+ <20190801085755.amohgsxdcmzf2nzc@pali>
 MIME-Version: 1.0
-References: <9c4425f0-3428-214b-a4f2-237bbae2f495@broadcom.com>
-In-Reply-To: <9c4425f0-3428-214b-a4f2-237bbae2f495@broadcom.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 2 Aug 2019 19:26:06 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASiEGtqwAdiDkjnhZDMU3_byW1+hFAG-y0gU6twNaymRg@mail.gmail.com>
-Message-ID: <CAK7LNASiEGtqwAdiDkjnhZDMU3_byW1+hFAG-y0gU6twNaymRg@mail.gmail.com>
-Subject: Re: [BUILD REGRESSION] building single .ko not working in 5.3-rc1
-To:     Arend Van Spriel <arend.vanspriel@broadcom.com>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190801085755.amohgsxdcmzf2nzc@pali>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 6:26 PM Arend Van Spriel
-<arend.vanspriel@broadcom.com> wrote:
->
-> In previous kernel versions I could do:
->
-> make M=net/wireless cfg80211.ko
->
-> However, in 5.3-rc1 I now get:
->
-> $ make M=net/wireless cfg80211.ko
-> make[1]: *** No rule to make target `cfg80211.ko'.  Stop.
-> make: *** [sub-make] Error 2
->
-> The 'modules' target is working, but sometimes there are multiple
-> modules and I only want to build just one explicitly. Can this option be
-> restored?
+On Thu 01-08-19 10:57:55, Pali Rohár wrote:
+> On Thursday 01 August 2019 10:38:00 Jan Kara wrote:
+> > Hum, looks like a problem with mkudffs. Relevant debug messages look like:
+> > 
+> > UDF-fs: fs/udf/super.c:671:udf_check_vsd: Starting at sector 16 (2048 byte sectors)
+> > UDF-fs: fs/udf/super.c:824:udf_load_pvoldesc: recording time 2019/08/01 09:47 (1078)
+> > UDF-fs: fs/udf/super.c:836:udf_load_pvoldesc: volIdent[] = 'LinuxUDF'
+> > UDF-fs: fs/udf/super.c:844:udf_load_pvoldesc: volSetIdent[] = '1564645645200563LinuxUDF'
+> > UDF-fs: fs/udf/super.c:1462:udf_load_logicalvol: Partition (0:0) type 1 on volume 1
+> > UDF-fs: fs/udf/super.c:1462:udf_load_logicalvol: Partition (1:0) type 2 on volume 1
+> > UDF-fs: fs/udf/super.c:1471:udf_load_logicalvol: FileSet found in LogicalVolDesc at block=0, partition=1
+> > UDF-fs: fs/udf/super.c:1218:udf_load_partdesc: Searching map: (0 == 0)
+> > UDF-fs: fs/udf/super.c:1060:udf_fill_partdesc_info: Partition (0 type 1511) starts at physical 288, block length 524000
+> > UDF-fs: fs/udf/super.c:1060:udf_fill_partdesc_info: Partition (1 type 2012) starts at physical 288, block length 524000
+> > UDF-fs: fs/udf/misc.c:223:udf_read_tagged: location mismatch block 524287, tag 0 != 523999
+> > UDF-fs: error (device ubdb): udf_read_inode: (ino 524287) failed !bh
+> > 
+> > So the fact that location tag was 0 in block 524287 (which should contain
+> > VAT inode) suggests there's something fishy with how / where mkudffs
+> > creates the VAT inode. Can you have a look?
+> > 
+> > BTW, mkudffs messages look like:
+> > filename=/tmp/image
+> > label=LinuxUDF
+> > uuid=1564645645200563
+> > blocksize=2048
+> > blocks=524288
+> > udfrev=2.01
+> > vatblock=319
+> > start=0, blocks=16, type=RESERVED 
+> > start=16, blocks=4, type=VRS 
+> > start=20, blocks=76, type=USPACE 
+> > start=96, blocks=16, type=MVDS 
+> > start=112, blocks=16, type=USPACE 
+> > start=128, blocks=1, type=LVID 
+> > start=129, blocks=95, type=USPACE 
+> > start=224, blocks=16, type=RVDS 
+> > start=240, blocks=16, type=USPACE 
+> > start=256, blocks=1, type=ANCHOR 
+> > start=257, blocks=31, type=USPACE 
+> > start=288, blocks=524000, type=PSPACE 
+> > 
+> > which suggests that VAT was indeed allocated somewhere in the beginning of
+> > the partition.
+> 
+> For write-once media you are not able to modify size of UDF partition.
+> So if you are creating image for CD-R disc, you need to specify size of
+> UDF filesystem to match size of CD-R disc. VAT is always burned to the
+> last block of current track on CD-R.
+> 
+> Therefore if you had pre-allocated big image file for CD-R and then you
+> run mkudffs for cdr on it, you lost information what is the last used
+> block on that cdr image. Normally for optical drivers kernel use mmc
+> commands to retrieve last block of current session and based on it find
+> VAT. But image files loaded via /dev/loop are not optical drivers and
+> therefore do not have ability "hardware" ability to ask where is the
+> last used block. IIRC in this case kernel just fallback to the last
+> block of block device for VAT, which in this case is not correct.
+> 
+> What should help is to truncate image file to "correct" size after
+> running mkudffs with --media-type=cdr. Maybe mkudffs itself should do it
+> when was asked to create UDF filesystem for CD-R on existing image file.
 
-Please test this:
-https://patchwork.kernel.org/patch/11073103/
-
-
-BTW,
-'make M=net/wireless cfg80211.ko' still works,
-but if you  build a single module in the kernel tree,
-
-make net/wireless/cfg80211.ko
-
-is more correct.
-
-M= is used for external modules.
-
-
-
-
-> Regards,
-> Arend
-
-
-
+Ah, right. Thanks for explanation. I somehow assumed that mkudffs will be
+considering the last block of the "device file" the last block that it has
+to record but you're right that on second though that doesn't really make
+sense.
+								Honza
 -- 
-Best Regards
-Masahiro Yamada
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
