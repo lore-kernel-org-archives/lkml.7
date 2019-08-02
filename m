@@ -2,119 +2,230 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC551C19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D2CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDC62080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2762A206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbfHBBfv (ORCPT
+        id S1731300AbfHBBkJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 21:35:51 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:16015 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731011AbfHBBfu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 21:35:50 -0400
-X-UUID: 8caf567bc513476db8dcba29a9fa4f3c-20190802
-X-UUID: 8caf567bc513476db8dcba29a9fa4f3c-20190802
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 266494707; Fri, 02 Aug 2019 09:35:43 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 2 Aug 2019 09:35:44 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 2 Aug 2019 09:35:44 +0800
-Message-ID: <1564709744.8481.2.camel@mtkswgap22>
-Subject: Re: [PATCH v4 0/3] MediaTek Security random number generator support
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sean Wang <sean.wang@kernel.org>,
-        "Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?=" 
-        <Crystal.Guo@mediatek.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Neal Liu <neal.liu@mediatek.com>
-Date:   Fri, 2 Aug 2019 09:35:44 +0800
-In-Reply-To: <1563789042.14676.3.camel@mtkswgap22>
-References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
-         <1563789042.14676.3.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 1 Aug 2019 21:40:09 -0400
+Received: from mx1.mail.vl.ru ([80.92.161.250]:50990 "EHLO mx1.mail.vl.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731233AbfHBBkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 21:40:08 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mx1.mail.vl.ru (Postfix) with ESMTP id 84B721860D71;
+        Fri,  2 Aug 2019 01:40:04 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at mail.vl.ru
+Received: from mx1.mail.vl.ru ([127.0.0.1])
+        by localhost (smtp1.srv.loc [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jI4WmwLbDOxx; Fri,  2 Aug 2019 11:40:03 +1000 (+10)
+Received: from [10.125.1.12] (unknown [109.126.62.18])
+        (Authenticated sender: turchanov@vl.ru)
+        by mx1.mail.vl.ru (Postfix) with ESMTPSA id 016AB184BFDD;
+        Fri,  2 Aug 2019 11:40:02 +1000 (+10)
+Subject: Re: [BUG] lseek on /proc/meminfo is broken in 4.19.59 maybe due to
+ commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and
+ interface")
+To:     NeilBrown <neilb@suse.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <3bd775ab-9e31-c6b3-374e-7a9982a9a8cd@farpost.com>
+ <5c4c0648-2a96-4132-9d22-91c22e7c7d4d@huawei.com>
+ <eab812ef-ba79-11d6-0a4e-232872f0fcc4@farpost.com>
+ <877e7xl029.fsf@notabene.neil.brown.name>
+From:   Sergei Turchanov <turchanov@farpost.com>
+Organization: FarPost
+Message-ID: <2d54ca59-9c22-0b75-3087-3718b30b8d11@farpost.com>
+Date:   Fri, 2 Aug 2019 11:40:02 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <877e7xl029.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: ru-RU
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Matthias, Rob, Mark,
-	Just gentle ping.
-	Thanks
+Hello!
 
+Yes, your patch fixed this bug.
+Thank you very much!
 
-> On Mon, 2019-06-24 at 15:24 +0800, Neal Liu wrote:
-> > These patch series introduce a generic rng driver for Trustzone
-> > based kernel driver which would like to communicate with ATF
-> > SIP services.
-> > 
-> > Patch #1 initials SMC fid table for Mediatek SIP interfaces and
-> > adds HWRNG related SMC call.
-> > 
-> > Patch #2..3 adds mtk-sec-rng kernel driver for Trustzone based SoCs.
-> > For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
-> > entropy sources is not accessible from normal world (linux) and
-> > rather accessible from secure world (ATF/TEE) only. This driver aims
-> > to provide a generic interface to ATF rng service.
-> > 
-> > 
-> > changes since v1:
-> > - rename mt67xx-rng to mtk-sec-rng since all MediaTek ARMv8 SoCs
-> > can reuse this driver.
-> > - refine coding style and unnecessary check.
-> > 
-> > changes since v2:
-> > - remove unused comments.
-> > - remove redundant variable.
-> > 
-> > changes since v3:
-> > - add dt-bindings for MediaTek rng with TrustZone enabled
-> > - revise HWRNG SMC call fid
-> > 
-> > 
-> > Neal Liu (3):
-> >   soc: mediatek: add SMC fid table for SIP interface
-> >   dt-bindings: rng: add bindings for MediaTek ARMv8 SoCs
-> >   hwrng: add mtk-sec-rng driver
-> > 
-> >  .../devicetree/bindings/rng/mtk-sec-rng.txt   | 10 ++
-> >  drivers/char/hw_random/Kconfig                | 16 +++
-> >  drivers/char/hw_random/Makefile               |  1 +
-> >  drivers/char/hw_random/mtk-sec-rng.c          | 97 +++++++++++++++++++
-> >  include/linux/soc/mediatek/mtk_sip_svc.h      | 33 +++++++
-> >  5 files changed, 157 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> >  create mode 100644 drivers/char/hw_random/mtk-sec-rng.c
-> >  create mode 100644 include/linux/soc/mediatek/mtk_sip_svc.h
-> > 
-> 
+With best regards,
+Sergei.
+
+On 01.08.2019 19:14, NeilBrown wrote:
+> On Thu, Aug 01 2019, Sergei Turchanov wrote:
+>
+>> Hello!
+>>
+>> [
+>>    As suggested in previous discussion this behavior may be caused by your
+>>    commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
+>> ]
+> Yes.... I think I can see what happened.
+>   removing:
+> -               if (!m->count) {
+> -                       m->from = 0;
+> -                       m->index++;
+> -               }
+>
+> from seq_read meant that ->index didn't get updated in a case that it
+> needs to be.
+>
+> Please confirm that the following patch fixes the problem.
+> I think it is correct, but I need to look it over more carefully in the
+> morning, and see if I can explain why it is correct.
+>
+> Thanks for the report.
+> NeilBrown
+>
+> diff --git a/fs/seq_file.c b/fs/seq_file.c
+> index 04f09689cd6d..1600034a929b 100644
+> --- a/fs/seq_file.c
+> +++ b/fs/seq_file.c
+> @@ -119,6 +119,7 @@ static int traverse(struct seq_file *m, loff_t offset)
+>   		}
+>   		if (seq_has_overflowed(m))
+>   			goto Eoverflow;
+> +		p = m->op->next(m, p, &m->index);
+>   		if (pos + m->count > offset) {
+>   			m->from = offset - pos;
+>   			m->count -= m->from;
+> @@ -126,7 +127,6 @@ static int traverse(struct seq_file *m, loff_t offset)
+>   		}
+>   		pos += m->count;
+>   		m->count = 0;
+> -		p = m->op->next(m, p, &m->index);
+>   		if (pos == offset)
+>   			break;
+>   	}
+>
+>
+>> Original bug report:
+>>
+>> Seeking (to an offset within file size) in /proc/meminfo is broken in 4.19.59. It does seek to a desired position, but reading from that position returns the remainder of file and then a whole copy of file. This doesn't happen with /proc/vmstat or /proc/self/maps for example.
+>>
+>> Seeking did work correctly in kernel 4.14.47. So it seems something broke in the way.
+>>
+>> Background: this kind of access pattern (seeking to /proc/meminfo) is used by libvirt-lxc fuse driver for virtualized view of /proc/meminfo. So that /proc/meminfo is broken in guests when running kernel 4.19.x.
+>>
+>>   > On 01.08.2019 17:11, Gao Xiang wrote:
+>>> Hi,
+>>>
+>>> I just took a glance, maybe due to
+>>> commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
+>>>
+>>> I simply reverted it just now and it seems fine... but I haven't digged into this commit.
+>>>
+>>> Maybe you could Cc NeilBrown <neilb@suse.com> for some more advice and
+>>> I have no idea whether it's an expected behavior or not...
+>>>
+>>> Thanks,
+>>> Gao Xiang
+>>>
+>>> On 2019/8/1 14:16, Sergei Turchanov wrote:
+>>
+>> $ ./test /proc/meminfo 0        # Works as expected
+>>
+>> MemTotal:       394907728 kB
+>> MemFree:        173738328 kB
+>> ...
+>> DirectMap2M:    13062144 kB
+>> DirectMap1G:    390070272 kB
+>>
+>> -----------------------------------------------------------------------
+>>
+>> $ ./test /proc/meminfo 1024     # returns a copy of file after the remainder
+>>
+>> Will seek to 1024
+>>
+>>
+>> Data read at offset 1024
+>> gePages:         0 kB
+>> ShmemHugePages:        0 kB
+>> ShmemPmdMapped:        0 kB
+>> HugePages_Total:       0
+>> HugePages_Free:        0
+>> HugePages_Rsvd:        0
+>> HugePages_Surp:        0
+>> Hugepagesize:       2048 kB
+>> Hugetlb:               0 kB
+>> DirectMap4k:      245204 kB
+>> DirectMap2M:    13062144 kB
+>> DirectMap1G:    390070272 kB
+>> MemTotal:       394907728 kB
+>> MemFree:        173738328 kB
+>> MemAvailable:   379989680 kB
+>> Buffers:          355812 kB
+>> Cached:         207216224 kB
+>> ...
+>> DirectMap2M:    13062144 kB
+>> DirectMap1G:    390070272 kB
+>>
+>> As you see, after "DirectMap1G:" line, a whole copy of /proc/meminfo returned by "read".
+>>
+>> Test program:
+>>
+>> #include <sys/types.h>
+>> #include <sys/stat.h>
+>> #include <unistd.h>
+>> #include <fcntl.h>
+>> #include <stdio.h>
+>> #include <stdlib.h>
+>>
+>> #define SIZE 1024
+>> char buf[SIZE + 1];
+>>
+>> int main(int argc, char *argv[]) {
+>>       int     fd;
+>>       ssize_t rd;
+>>       off_t   ofs = 0;
+>>
+>>       if (argc < 2) {
+>>           printf("Usage: test <file> [<offset>]\n");
+>>           exit(1);
+>>       }
+>>
+>>       if (-1 == (fd = open(argv[1], O_RDONLY))) {
+>>           perror("open failed");
+>>           exit(1);
+>>       }
+>>
+>>       if (argc > 2) {
+>>           ofs = atol(argv[2]);
+>>       }
+>>       printf("Will seek to %ld\n", ofs);
+>>
+>>       if (-1 == (lseek(fd, ofs, SEEK_SET))) {
+>>           perror("lseek failed");
+>>           exit(1);
+>>       }
+>>
+>>       for (;; ofs += rd) {
+>>           printf("\n\nData read at offset %ld\n", ofs);
+>>           if (-1 == (rd = read(fd, buf, SIZE))) {
+>>               perror("read failed");
+>>               exit(1);
+>>           }
+>>           buf[rd] = '\0';
+>>           printf(buf);
+>>           if (rd < SIZE) {
+>>               break;
+>>           }
+>>       }
+>>
+>>       return 0;
+>> }
 
 
