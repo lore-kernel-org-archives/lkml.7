@@ -2,141 +2,199 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D563CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2974C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACEE920B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:19:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5R/SbOC"
+	by mail.kernel.org (Postfix) with ESMTP id 8353120B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436657AbfHBOTI (ORCPT
+        id S2392297AbfHBOV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:19:08 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44770 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727485AbfHBOTI (ORCPT
+        Fri, 2 Aug 2019 10:21:26 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:31347 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbfHBOVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:19:08 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so72487666edr.11;
-        Fri, 02 Aug 2019 07:19:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=S+20xmULIleEgfurI+8J/o6iN60n5mNoEMYMpzqwBn0=;
-        b=I5R/SbOCUyNpGi/j5ETYAUO8K7/Z+fCVItbSmqyN79qPhkMCfaoRZnqC1ZNRtL0/QP
-         YsF0FSkOb75Qgelvv0hD2fQF8hh2Y5lWRg4gYFtpcMZcBrNd6rstIxVNbqeiAfbn/PQy
-         PphA5CmAwCX+3uzCii5HPuO/3QOkqr9+bXOAhxQ4+PMEiSXCOJArrW+qyeD9DO1wf6Qu
-         CzuDPMCXEmere7MHNMEEH8eSfRUolI/g1X8vwtQnaGjvwBYglDxB/NLGtBHv45S28FNS
-         xTmxZt0A6Ff3CYcg9nIXeVQsz05JXDxS1SNbAfXN2owwZFFj/dlpsDRnLWaYSUlksYIR
-         JajA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S+20xmULIleEgfurI+8J/o6iN60n5mNoEMYMpzqwBn0=;
-        b=UMwOSXXc5Wguv+lGDvCJCFCcsO7jSMWp1+QQrm47E6BxTB339SrevkyyLJZJ71xxMc
-         brxdy1Wz6A1fSG6Ast25hFSmvKWUjV6ajuUq7EKaYdgcP+81mlwFVVNdIxrZIlkC964k
-         lYpHabS/Aa/0iCDACEMBJTf2arn7lPY1AEyxkETvkw2q/9RctkWT5dhYqvasgdUKQ0Eg
-         ZqpoGBD8pbbMzYMYCFWFO2K8q4DzWG/0X47QN48EC8S3j6qbQQQmBqfJCdWEEWVg2NmX
-         MGHazQdL+8EzaEOwDqqACklR+YpJTkwTtlQz0KgGEoz06Co6g1cyWtEPiCg6bSToUke5
-         Tc6Q==
-X-Gm-Message-State: APjAAAW8ID0yKPZnE9oOdfya/K26hGK2hEOHOfdEMZ6FZxS9WZh3PuzI
-        aaDEkzAQ1KEpH930kwqmYgI=
-X-Google-Smtp-Source: APXvYqy5YJPKTxgGPhjH5kwyrm9Ly98QXxCID8DOnXDCaD0/Lm5hWk8MsjiIsiPNPEhadgoxC319rg==
-X-Received: by 2002:a17:906:e2c2:: with SMTP id gr2mr105900563ejb.284.1564755546154;
-        Fri, 02 Aug 2019 07:19:06 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id k5sm13005950eja.41.2019.08.02.07.19.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 07:19:05 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 16:19:04 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 4.9 000/223] 4.9.187-stable review
-Message-ID: <20190802141904.GA11962@ulmo>
-References: <20190802092238.692035242@linuxfoundation.org>
+        Fri, 2 Aug 2019 10:21:25 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: GCbs4HhKendHnRbMGJAONbk3N3gVm+0wZSpYIe+2WLnfq3h+QPj0augdmikggvzmmaZ0rKXWjX
+ pq17vcenZQUHG0iUTqQpJ5au8EGXjKUlGrivcSiYeYzRAk/pvVdkovnv24IvokfRLNCWuchtM2
+ JBxBmI7JbAnI+J+AwZuXGbOvZInA+g6Pjq1PS0rQXzrwDYZPOMvUMgy76PKj518S4wadnBc9Vw
+ R61saa63eYH+/RwO18XCPu2Sx9h2vzRPUQeD2c78CpzRhP1dQMPbaF0Bs9CJyXrInjpmS1qp42
+ qhw=
+X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
+   d="scan'208";a="43769138"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Aug 2019 07:21:24 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 2 Aug 2019 07:21:16 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 2 Aug 2019 07:21:16 -0700
+Date:   Fri, 2 Aug 2019 16:21:16 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        <idosch@mellanox.com>, <andrew@lunn.ch>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <petrm@mellanox.com>,
+        <tglx@linutronix.de>, <fw@strlen.de>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+Subject: Re: [net-next,rfc] net: bridge: mdb: Extend with multicast LLADDR
+Message-ID: <20190802142115.ablwtxfpv2jmnuex@lx-anielsen.microsemi.net>
+References: <1564663840-27721-1-git-send-email-horatiu.vultur@microchip.com>
+ <f758fdbf-4e0a-57b3-f13d-23e893ba7458@cumulusnetworks.com>
+ <20190802140655.ngbok2ubprhivlhy@lx-anielsen.microsemi.net>
+ <fcb0e526-778f-5451-9934-e6c2421e4eb3@cumulusnetworks.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <fcb0e526-778f-5451-9934-e6c2421e4eb3@cumulusnetworks.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The 08/02/2019 17:16, Nikolay Aleksandrov wrote:
+> On 02/08/2019 17:07, Allan W. Nielsen wrote:
+> > The 08/01/2019 17:07, Nikolay Aleksandrov wrote:
+> >>> To create a group for two of the front ports the following entries can
+> >>> be added:
+> >>> bridge mdb add dev br0 port eth0 grp 01:00:00:00:00:04 permanent vid 1
+> >>> bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid 1
+> >>>
+> >>> Now the entries will be display as following:
+> >>> dev br0 port eth0 grp 01:00:00:00:00:04 permanent offload vid 1
+> >>> dev br0 port eth1 grp 01:00:00:00:00:04 permanent offload vid 1
+> >>>
+> >>> This requires changes to iproute2 as well, see the follogin patch for that.
+> >>>
+> >>> Now if frame with dmac '01:00:00:00:00:04' will arrive at one of the front
+> >>> ports. If we have HW offload support, then the frame will be forwarded by
+> >>> the switch, and need not to go to the CPU. In a pure SW world, the frame is
+> >>> forwarded by the SW bridge, which will flooded it only the ports which are
+> >>> part of the group.
+> >>>
+> >>> So far so good. This is an important part of the problem we wanted to solve.
+> >>>
+> >>> But, there is one drawback of this approach. If you want to add two of the
+> >>> front ports and br0 to receive the frame then I can't see a way of doing it
+> >>> with the bridge mdb command. To do that it requireds many more changes to
+> >>> the existing code.
+> >>>
+> >>> Example:
+> >>> bridge mdb add dev br0 port eth0 grp 01:00:00:00:00:04 permanent vid 1
+> >>> bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid 1
+> >>> bridge mdb add dev br0 port br0 grp 01:00:00:00:00:04 permanent vid 1 // This looks wrong.
+> >>>
+> >>> We believe we come a long way by re-using the facilities in MDB (thanks for
+> >>> convincing us in doing this), but we are still not completely happy with
+> >>> the result.
+> >> Just add self argument for the bridge mdb command, no need to specify it twice.
+> > Like this:
+> > bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid self
+> 
+> What ?! No, that is not what I meant.
+> bridge mdb add dev br0 grp 01:00:00:00:00:04 permanent vid self
+> bridge mdb del dev br0 grp 01:00:00:00:00:04 permanent vid self
+> 
+> Similar to fdb. You don't need no-self..
+> I don't mind a different approach, this was just a suggestion. But please
+> without "no-self" :)
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Good, then we are in sync on that one :-D
 
-On Fri, Aug 02, 2019 at 11:33:45AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.187 release.
-> There are 223 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Sun 04 Aug 2019 09:19:34 AM UTC.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.187=
--rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-4.9.y
-> and the diffstat can be found below.
->=20
-> thanks,
->=20
-> greg k-h
+> > 
+> > Then if I want to remove br0 rom the group, should I then have a no-self, and
+> > then it becomes even more strange what to write in the port.
+> > 
+> > bridge mdb add dev br0 port ?? grp 01:00:00:00:00:04 permanent vid no-self
+> >                             ^^
+> > And, what if it is a group with only br0 (the traffic should go to br0 and
+> > not any of the slave interfaces)?
+> > 
+> > Also, the 'self' keyword has different meanings in the 'bridge vlan' and the
+> > 'bridge fdb' commands where it refres to if the offload rule should be install
+> > in HW - or only in the SW bridge.
+> 
+> No, it shouldn't. Self means act on the device, in this case act on the bridge,
+> otherwise master is assumed.
+> 
+> > 
+> > The proposed does not look pretty bad, but at least it will be possible to
+> > configured the different scenarios:
+> > 
+> > bridge mdb add dev br0 port br0 grp 01:00:00:00:00:04 permanent vid 1
+> > bridge mdb del dev br0 port br0 grp 01:00:00:00:00:04 permanent vid 1
+> > 
+> 
+> That works too, but the "port" part is redundant.
+> 
+> > The more I look at the "bridge mdb { add | del } dev DEV port PORT" command, the
+> > less I understand why do we have both 'dev' and 'port'? The implementation will
+> > only allow this if 'port' has become enslaved to the switch represented by
+> > 'dev'. Anyway, what is done is done, and we need to stay backwards compatible,
+> > but we could make it optional, and then it looks a bit less strange to allow the
+> > port to specify a br0.
+> > 
+> > Like this:
+> > 
+> > bridge mdb { add | del } [dev DEV] port PORT grp GROUP [ permanent | temp ] [ vid VID ]
+> > 
+> > bridge mdb add port eth0 grp 01:00:00:00:00:04 permanent vid 1
+> > bridge mdb add port eth1 grp 01:00:00:00:00:04 permanent vid 1
+> > bridge mdb add port br0  grp 01:00:00:00:00:04 permanent vid 1 // Add br0 to the gruop
+> > bridge mdb del port br0  grp 01:00:00:00:00:04 permanent vid 1 // Delete it again
+> > 
+> 
+> br0 is not a port, thus the "self" or just dev or whatever you choose..
+Ahh, now I understand what you meant.
 
-All tests passing for Tegra...
+> > Alternative we could also make the port optional:
+> > 
+> > bridge mdb { add | del } dev DEV [port PORT] grp GROUP [ permanent | temp ] [ vid VID ]
+> > 
+> > bridge mdb add dev br0 port eth0 grp 01:00:00:00:00:04 permanent vid 1
+> > bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid 1
+> > bridge mdb add dev br0           grp 01:00:00:00:00:04 permanent vid 1 // Add br0 to the gruop
+> > bridge mdb del dev br0           grp 01:00:00:00:00:04 permanent vid 1 // Delete it again
+> > 
+> 
+> Right. I read this one later. :)
+> 
+> > Any preferences?
+> Not really, up to you. Any of the above seem fine to me.
+Perfect, I like this one the most:
 
-Test results for stable-v4.9:
-    8 builds:   8 pass, 0 fail
-    16 boots:   16 pass, 0 fail
-    24 tests:   24 pass, 0 fail
+bridge mdb { add | del } dev DEV [ port PORT ] grp GROUP [ permanent | temp ] [ vid VID ]
 
-Linux version:  4.9.187-rc1-g5380ded2525d
-Boards tested:  tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+bridge mdb add dev br0 port eth0 grp 01:00:00:00:00:04 permanent vid 1
+bridge mdb add dev br0 port eth1 grp 01:00:00:00:00:04 permanent vid 1
+bridge mdb add dev br0           grp 01:00:00:00:00:04 permanent vid 1 // Add br0 to the gruop
+bridge mdb del dev br0           grp 01:00:00:00:00:04 permanent vid 1 // Delete it again
 
-Thierry
-
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1ERlMACgkQ3SOs138+
-s6G5vhAAgZZWGODGGHY5R4k9PVj954QvJEyPIf8BK9D016s0YV9ki06E3d9unoMh
-JbOzHZrwCEWP4Af4s1J64DaxA5OVnAx9+6m+WcDjdZHYvNPodb3ILHzLcWGoV+PZ
-yJkTP9WTv+Mk91BOvQqYdRp0CDSSrpDFXNUcP2UPVzo495R61A0qfJAtg5XtmiA9
-FScV4ceQjWpoDA81sThSgNquUinZsGAeV4At7ovvM2XDIU++SIrIugVY0WxqtEc5
-exMwzhNvKNxGoR1rBNYC3k4DfaOtyBpVogK8JsNQoM6bIvrlTHjTucqaSdoCON6n
-Df8a5EiR0X81zIPyeQFROWfL2bcQQt+rK+tcCXjgGEk8ODSZWN7nnwjgfr3iw4ag
-8qSjJnD6jIsgpFvhC5a//c5qSLWy2ResoN5eD5G7pSbTrZmiNDGaW12kcJat9GVV
-sraa9gmIkMcSyHHI1G9r4fMA4ZEQcEaoLr8dHmHexUMI+0KhmCJQ7pXqwKP8txOh
-zWfocPBthLS2hes3JYhOsJDUhMFnxlWRYEBcLxf4kSmMN0G9x+0/7Bp2k24UeufN
-qKGC5b24qiu9Je9EOWOmvRGbVuzi+HXX0CJ5BB4Gj7qUQboIEtXmXIisw8EbYJFM
-9jySs4LwlQHnplX1pV3PymqNPwDxmcl4NqY7/ubrBhzUxDzmZX0=
-=fv1b
------END PGP SIGNATURE-----
-
---Dxnq1zWXvFF0Q93v--
+/Allan
