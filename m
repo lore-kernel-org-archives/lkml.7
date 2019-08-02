@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB78C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CF3C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6805C2064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715F22086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739831;
-	bh=Wx7HlgrI0sbVQMwiIIkXATehxq7dJ+6vkVkYHxyMk0E=;
+	s=default; t=1564739834;
+	bh=56LODa/vH88SLw3LuJ7bMvX5SWWkDx8jvff44dlAp8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HD+JpcmxpFJAWhSLcSwlwW66LeYBylcmy/hZ5TGr/0erIbWBrKr06ymgcRnW22GfP
-	 FnOrDI+9EeV8jn+BS8VPD4HW48HoGJ19gqjs5ijDyC3h+3rbqOv6J+LZZnpTaSNT34
-	 nDWL3kewfQ7P6F7pMeSTLGDWox0NLPi0W3NeGs6s=
+	b=ccfy0kUH0WtaLBxZC0dHwscJEZpr1m1KKTUDopcLNNSisRrwqV5anGTxJc4yAfztx
+	 Sw1md8TYH6T5OiwV0c6tA9sGRNG65zm1kldyA8NALK3depSGa6RcW8GckQwJyRd2/1
+	 Axk+dW5jBkZJYdOFAHh5XOdriqWudt9f2Sanw784=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406839AbfHBJ5K (ORCPT
+        id S2406533AbfHBJ5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35864 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:57:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406770AbfHBJ4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:56:51 -0400
+        id S2405495AbfHBJ5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:57:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2478C2067D;
-        Fri,  2 Aug 2019 09:56:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3A0D2064A;
+        Fri,  2 Aug 2019 09:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739810;
-        bh=Wx7HlgrI0sbVQMwiIIkXATehxq7dJ+6vkVkYHxyMk0E=;
+        s=default; t=1564739827;
+        bh=56LODa/vH88SLw3LuJ7bMvX5SWWkDx8jvff44dlAp8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ue6qRz00ifV25wWIpKDjeMiw353qEP9kqK72YpAkyREb3YEKOyxmwA3E8T5o+QEKu
-         4weXeZ+Cywa6GBr6bOnoEO1e2eyCSti694IbfITCM0kk0hPI4tXfkTRmj9xPyrq6Gw
-         8niE4xMwAplnKpw2cr/+t/MTjF6t/VdrOBRjL/vU=
+        b=uiGmqRiXtOJQOTwwM47vGAbTWf0HiOkJvmKqPJiVeHasnIgWUbagMJ3qNNLOSzppJ
+         mM0632X9LOp7B6jupASwsQFDY3+DEdAft+nlVbKclB/oByBzufM9NPAFWqj3GPllGX
+         xT4AomVqy4a43Mc209/fFMz4v/mIBgaR3jf+nEk0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Jankowski <shasta@toxcorp.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Izbyshev <izbyshev@ispras.ru>,
+        stable@vger.kernel.org,
+        syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com,
+        Vladis Dronov <vdronov@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        "Yu-Chen, Cho" <acho@suse.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 27/32] /proc/<pid>/cmdline: add back the setproctitle() special case
-Date:   Fri,  2 Aug 2019 11:40:01 +0200
-Message-Id: <20190802092110.418148404@linuxfoundation.org>
+Subject: [PATCH 4.19 19/32] Bluetooth: hci_uart: check for missing tty operations
+Date:   Fri,  2 Aug 2019 11:39:53 +0200
+Message-Id: <20190802092107.905678482@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -61,147 +63,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Vladis Dronov <vdronov@redhat.com>
 
-commit d26d0cd97c88eb1a5704b42e41ab443406807810 upstream.
+commit b36a1552d7319bbfd5cf7f08726c23c5c66d4f73 upstream.
 
-This makes the setproctitle() special case very explicit indeed, and
-handles it with a separate helper function entirely.  In the process, it
-re-instates the original semantics of simply stopping at the first NUL
-character when the original last NUL character is no longer there.
+Certain ttys operations (pty_unix98_ops) lack tiocmget() and tiocmset()
+functions which are called by the certain HCI UART protocols (hci_ath,
+hci_bcm, hci_intel, hci_mrvl, hci_qca) via hci_uart_set_flow_control()
+or directly. This leads to an execution at NULL and can be triggered by
+an unprivileged user. Fix this by adding a helper function and a check
+for the missing tty operations in the protocols code.
 
-[ The original semantics can still be seen in mm/util.c: get_cmdline()
-  that is limited to a fixed-size buffer ]
+This fixes CVE-2019-10207. The Fixes: lines list commits where calls to
+tiocm[gs]et() or hci_uart_set_flow_control() were added to the HCI UART
+protocols.
 
-This makes the logic about when we use the string lengths etc much more
-obvious, and makes it easier to see what we do and what the two very
-different cases are.
-
-Note that even when we allow walking past the end of the argument array
-(because the setproctitle() might have overwritten and overflowed the
-original argv[] strings), we only allow it when it overflows into the
-environment region if it is immediately adjacent.
-
-[ Fixed for missing 'count' checks noted by Alexey Izbyshev ]
-
-Link: https://lore.kernel.org/lkml/alpine.LNX.2.21.1904052326230.3249@kich.toxcorp.com/
-Fixes: 5ab827189965 ("fs/proc: simplify and clarify get_mm_cmdline() function")
-Cc: Jakub Jankowski <shasta@toxcorp.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Alexey Izbyshev <izbyshev@ispras.ru>
+Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org # v2.6.36+
+Fixes: b3190df62861 ("Bluetooth: Support for Atheros AR300x serial chip")
+Fixes: 118612fb9165 ("Bluetooth: hci_bcm: Add suspend/resume PM functions")
+Fixes: ff2895592f0f ("Bluetooth: hci_intel: Add Intel baudrate configuration support")
+Fixes: 162f812f23ba ("Bluetooth: hci_uart: Add Marvell support")
+Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Yu-Chen, Cho <acho@suse.com>
+Tested-by: Yu-Chen, Cho <acho@suse.com>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/proc/base.c |   81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 77 insertions(+), 4 deletions(-)
+ drivers/bluetooth/hci_ath.c   |    3 +++
+ drivers/bluetooth/hci_bcm.c   |    3 +++
+ drivers/bluetooth/hci_intel.c |    3 +++
+ drivers/bluetooth/hci_ldisc.c |   13 +++++++++++++
+ drivers/bluetooth/hci_mrvl.c  |    3 +++
+ drivers/bluetooth/hci_qca.c   |    3 +++
+ drivers/bluetooth/hci_uart.h  |    1 +
+ 7 files changed, 29 insertions(+)
 
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -205,12 +205,53 @@ static int proc_root_link(struct dentry
- 	return result;
+--- a/drivers/bluetooth/hci_ath.c
++++ b/drivers/bluetooth/hci_ath.c
+@@ -112,6 +112,9 @@ static int ath_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	ath = kzalloc(sizeof(*ath), GFP_KERNEL);
+ 	if (!ath)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -369,6 +369,9 @@ static int bcm_open(struct hci_uart *hu)
+ 
+ 	bt_dev_dbg(hu->hdev, "hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	bcm = kzalloc(sizeof(*bcm), GFP_KERNEL);
+ 	if (!bcm)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_intel.c
++++ b/drivers/bluetooth/hci_intel.c
+@@ -406,6 +406,9 @@ static int intel_open(struct hci_uart *h
+ 
+ 	BT_DBG("hu %p", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	intel = kzalloc(sizeof(*intel), GFP_KERNEL);
+ 	if (!intel)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -299,6 +299,19 @@ static int hci_uart_send_frame(struct hc
+ 	return 0;
  }
  
-+/*
-+ * If the user used setproctitle(), we just get the string from
-+ * user space at arg_start, and limit it to a maximum of one page.
-+ */
-+static ssize_t get_mm_proctitle(struct mm_struct *mm, char __user *buf,
-+				size_t count, unsigned long pos,
-+				unsigned long arg_start)
++/* Check the underlying device or tty has flow control support */
++bool hci_uart_has_flow_control(struct hci_uart *hu)
 +{
-+	char *page;
-+	int ret, got;
++	/* serdev nodes check if the needed operations are present */
++	if (hu->serdev)
++		return true;
 +
-+	if (pos >= PAGE_SIZE)
-+		return 0;
++	if (hu->tty->driver->ops->tiocmget && hu->tty->driver->ops->tiocmset)
++		return true;
 +
-+	page = (char *)__get_free_page(GFP_KERNEL);
-+	if (!page)
-+		return -ENOMEM;
-+
-+	ret = 0;
-+	got = access_remote_vm(mm, arg_start, page, PAGE_SIZE, FOLL_ANON);
-+	if (got > 0) {
-+		int len = strnlen(page, got);
-+
-+		/* Include the NUL character if it was found */
-+		if (len < got)
-+			len++;
-+
-+		if (len > pos) {
-+			len -= pos;
-+			if (len > count)
-+				len = count;
-+			len -= copy_to_user(buf, page+pos, len);
-+			if (!len)
-+				len = -EFAULT;
-+			ret = len;
-+		}
-+	}
-+	free_page((unsigned long)page);
-+	return ret;
++	return false;
 +}
 +
- static ssize_t get_mm_cmdline(struct mm_struct *mm, char __user *buf,
- 			      size_t count, loff_t *ppos)
+ /* Flow control or un-flow control the device */
+ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable)
  {
--	unsigned long arg_start, arg_end;
-+	unsigned long arg_start, arg_end, env_start, env_end;
- 	unsigned long pos, len;
--	char *page;
-+	char *page, c;
+--- a/drivers/bluetooth/hci_mrvl.c
++++ b/drivers/bluetooth/hci_mrvl.c
+@@ -66,6 +66,9 @@ static int mrvl_open(struct hci_uart *hu
  
- 	/* Check if process spawned far enough to have cmdline. */
- 	if (!mm->env_end)
-@@ -219,14 +260,46 @@ static ssize_t get_mm_cmdline(struct mm_
- 	spin_lock(&mm->arg_lock);
- 	arg_start = mm->arg_start;
- 	arg_end = mm->arg_end;
-+	env_start = mm->env_start;
-+	env_end = mm->env_end;
- 	spin_unlock(&mm->arg_lock);
+ 	BT_DBG("hu %p", hu);
  
- 	if (arg_start >= arg_end)
- 		return 0;
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
++
+ 	mrvl = kzalloc(sizeof(*mrvl), GFP_KERNEL);
+ 	if (!mrvl)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -450,6 +450,9 @@ static int qca_open(struct hci_uart *hu)
  
-+	/*
-+	 * We allow setproctitle() to overwrite the argument
-+	 * strings, and overflow past the original end. But
-+	 * only when it overflows into the environment area.
-+	 */
-+	if (env_start != arg_end || env_end < env_start)
-+		env_start = env_end = arg_end;
-+	len = env_end - arg_start;
+ 	BT_DBG("hu %p qca_open", hu);
+ 
++	if (!hci_uart_has_flow_control(hu))
++		return -EOPNOTSUPP;
 +
- 	/* We're not going to care if "*ppos" has high bits set */
--	/* .. but we do check the result is in the proper range */
--	pos = arg_start + *ppos;
-+	pos = *ppos;
-+	if (pos >= len)
-+		return 0;
-+	if (count > len - pos)
-+		count = len - pos;
-+	if (!count)
-+		return 0;
-+
-+	/*
-+	 * Magical special case: if the argv[] end byte is not
-+	 * zero, the user has overwritten it with setproctitle(3).
-+	 *
-+	 * Possible future enhancement: do this only once when
-+	 * pos is 0, and set a flag in the 'struct file'.
-+	 */
-+	if (access_remote_vm(mm, arg_end-1, &c, 1, FOLL_ANON) == 1 && c)
-+		return get_mm_proctitle(mm, buf, count, pos, arg_start);
-+
-+	/*
-+	 * For the non-setproctitle() case we limit things strictly
-+	 * to the [arg_start, arg_end[ range.
-+	 */
-+	pos += arg_start;
- 	if (pos < arg_start || pos >= arg_end)
- 		return 0;
- 	if (count > arg_end - pos)
+ 	qca = kzalloc(sizeof(struct qca_data), GFP_KERNEL);
+ 	if (!qca)
+ 		return -ENOMEM;
+--- a/drivers/bluetooth/hci_uart.h
++++ b/drivers/bluetooth/hci_uart.h
+@@ -118,6 +118,7 @@ int hci_uart_tx_wakeup(struct hci_uart *
+ int hci_uart_init_ready(struct hci_uart *hu);
+ void hci_uart_init_work(struct work_struct *work);
+ void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
++bool hci_uart_has_flow_control(struct hci_uart *hu);
+ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
+ void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
+ 			 unsigned int oper_speed);
 
 
