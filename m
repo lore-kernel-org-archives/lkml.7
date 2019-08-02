@@ -2,86 +2,181 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D54C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8523DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711732073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0C62073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:44:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+cIwG1C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AWtoJNTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387916AbfHBFmI (ORCPT
+        id S2387972AbfHBFoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 01:42:08 -0400
-Received: from mail-vs1-f53.google.com ([209.85.217.53]:45971 "EHLO
-        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732723AbfHBFmH (ORCPT
+        Fri, 2 Aug 2019 01:44:44 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41500 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387927AbfHBFoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 01:42:07 -0400
-Received: by mail-vs1-f53.google.com with SMTP id h28so50529478vsl.12
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 22:42:07 -0700 (PDT)
+        Fri, 2 Aug 2019 01:44:44 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m9so33073992pls.8
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 22:44:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=XJkMNylLamCwkuT6sROv1XDM0/n/3kNR/eOF3+/bQsY=;
-        b=U+cIwG1CTsIRcb3q5QxRmfJyxK/tKtqsNZa9/kvmfw0prsc2+yTix3jrewhrmsxJUj
-         orggiHfsAMhYs6nQncsBsFlu7lIWll4x3yFqrI4HCxQsB7HVuz/n3m1IS0WgnfGsWtkh
-         UMtFqYWtEzUKaf7dWkKJmNKu9djlHekyNEPgYv/8FJQlcsOow1nvotkmCVOGP5eCEQVm
-         n2Y7SCI9dNTSt8gJZsM8LbrAi7xtANu8IRIkEMxmqIqD4stKvfHxeBRUpAFgNoPe+BEO
-         Uhh2sqRypMgUqU7HcpvuBlIrW/ozrzgw7HOivTJ5ISyGw6aqVMObyKT5qlspPlsPfBvR
-         5b2g==
+        bh=IQiEltWXcaJ4ww5AxptfVEQnJ5UMr5Pimco/lTpuDRE=;
+        b=AWtoJNTQKLi0c8mDS75fkbk24KpEbX7Z3HpsQ5ZCk7Iowak2phz7Hma5th9nwG6rt4
+         5vhCMeeUidwGlPHoROnI+CbVRiNBRdz+8UgqyhDqZC6VSUhnylilIe2CkRhX4fpAj1pS
+         YYPuA6mZEmrhWfPpMVINnKvYF9s+RCU4crV9T0rHo88AMcxll6r6Zn8KdOUobLf3jAgq
+         d7WMo+P9jfqtF5hC4Nf3mzQYLI/P6SrxmrUuPRCy5rlBU9s0Ie9QLJkO72+XYz53sEKC
+         vFRlMGxwV5khY/ApjPR/A4aOn48+zhq7/bINnhSPZSuHjBPdivQtfcCKwLNAFAIyEaH1
+         JNLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=XJkMNylLamCwkuT6sROv1XDM0/n/3kNR/eOF3+/bQsY=;
-        b=hEcff4Hpt8GuqcnyM+2DCx3Ft3pyc5VG7JHaq94z3MZc7HPG5z6mbomouBO4KikZyl
-         d9+0okS0JaQvEZpJS8CulfsfOIA6cdV3hbp0adD5uXGtaXwDGNMz8lewpH/qfC26YzA3
-         +etg8FGYnhmK4QhOzfQ+WCvbrjk93AmJZ/dslR1HVm8XmmjkaejDnMwUGfExNEK4Biwh
-         ZOheQkHbs33JbJI0EdEXadJ4fdMUJ0oSYlj1qagfRBiWrayy9GWtGqCdJcn9oP5nOm4Z
-         UQMAQXZ/V42izD+QueEma802GEOyA6QNf6q9nJtLFM/0eYBbPB5X4Vj5xG1KHxH5GUgi
-         OksA==
-X-Gm-Message-State: APjAAAVcFX1T2iYOWtaxnM58BqHa/no3qIcJjrXPvYL8f6OQzwq1R/Nm
-        3XxcCYc3dvBlNiIdRzqMoi7f/EeuQ8GgtROZY4gOibPA
-X-Google-Smtp-Source: APXvYqy5VBzBYR781n7LumQX3+g8YPMHJH0zfc6OdicCCwEv7AunmOG80U0iAe0NLu18nnDROszkQZnzh7bc/93TbZ4=
-X-Received: by 2002:a67:bc15:: with SMTP id t21mr74454723vsn.99.1564724526292;
- Thu, 01 Aug 2019 22:42:06 -0700 (PDT)
+        bh=IQiEltWXcaJ4ww5AxptfVEQnJ5UMr5Pimco/lTpuDRE=;
+        b=RkS/NnBeQ5XS51fLOmdRDjGT6nyYmN9k/P0kJ+KwcLJKxE0OKCqgN5GixaCfqEykuJ
+         OEpb8h43oZT7mh8PqyAf1kw0P66S/D7xBzB13BdSGBYOSs3eHefN+3gpzwaQ4kjV6nE0
+         qM0XUHnsT3SEPDAQoiR4RH1wMA/dXyrhzKKuFatKQ1GaihkKSoKwbxnDd5/cwq26Os7o
+         j3aftfu/vBTIpSDsr/UsWIEY/qseYEC/t06SGBXQxrggMs+EoCiuwb3u47XcoiBoFChy
+         1RHu7M6CSzUXRRsRP2v1aMLyEL5mnOf4LZKb5ayX/9ZLTSAdiF2hwayywxLkWD+VgEnN
+         UsHw==
+X-Gm-Message-State: APjAAAUBYlTndKaPIfxanfZZ1XBa3XAv5RUagN03KaCDON2Mkjm971J+
+        M66NZZUynnCHxHOPVlS0riKxXg==
+X-Google-Smtp-Source: APXvYqxrNT4X9tZPfwrYCWlcv+1SVd6J5e28alQnoNDdpQ5Eu+SUVRljHw3+ZDcSqVw2+KCs40UTCQ==
+X-Received: by 2002:a17:902:bd06:: with SMTP id p6mr132909092pls.189.1564724683238;
+        Thu, 01 Aug 2019 22:44:43 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id g8sm83671355pgk.1.2019.08.01.22.44.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 22:44:41 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "v4 . 18+" <stable@vger.kernel.org>,
+        Doug Smythies <doug.smythies@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V3 1/2] cpufreq: schedutil: Don't skip freq update when limits change
+Date:   Fri,  2 Aug 2019 11:14:29 +0530
+Message-Id: <7dedb6bd157b8183c693bb578e25e313cf4f451d.1564724511.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
-From:   Fang Zhou <timchou.hit@gmail.com>
-Date:   Fri, 2 Aug 2019 01:41:55 -0400
-Message-ID: <CAJrp0nBcm-++zejsjuM-q4=0eKzXOOUMUNjnTzfmt6FgDiiy1Q@mail.gmail.com>
-Subject: Overhead of ring buffer in Ftrace
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+To avoid reducing the frequency of a CPU prematurely, we skip reducing
+the frequency if the CPU had been busy recently.
 
-I=E2=80=99m currently using Ftrace with tracepoints to trace several events=
- in
-kernel. But I found the tracing overhead is a little high.
+This should not be done when the limits of the policy are changed, for
+example due to thermal throttling. We should always get the frequency
+within the new limits as soon as possible.
 
-I found the major overhead comes from
-=E2=80=9Clocal_dec(&cpu_buffer->committing);=E2=80=9D in rb_end_commit() fu=
-nction.
-local_dec() will invoke atomic_long_dec(), which finally performs
-LOCK_PREFIX plus "DECQ" on this variable.
+Trying to fix this by using only one flag, i.e. need_freq_update, can
+lead to a race condition where the flag gets cleared without forcing us
+to change the frequency at least once. And so this patch introduces
+another flag to avoid that race condition.
 
-I'm a little confused. cpu_buffer is a per-cpu buffer. Therefore, I
-cannot come up with a scenario that two core runs INC or DEC on the
-same per-cpu value at the same time.
-So, why do we use such heavy-overhead operation here? Can we just
-simply use "DECQ" without LOCK_PREFIX?
+Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
+Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
+Reported-by: Doug Smythies <doug.smythies@gmail.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V2->V3:
+- Updated commit log.
 
-Thanks,
-Tim
+V1->V2:
+- Fixed the race condition using a different flag.
+
+@Doug: I haven't changed the code since you last tested these. Your
+Tested-by tag can be useful while applying the patches. Thanks.
+
+ kernel/sched/cpufreq_schedutil.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 636ca6f88c8e..2f382b0959e5 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -40,6 +40,7 @@ struct sugov_policy {
+ 	struct task_struct	*thread;
+ 	bool			work_in_progress;
+ 
++	bool			limits_changed;
+ 	bool			need_freq_update;
+ };
+ 
+@@ -89,8 +90,11 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
+ 	    !cpufreq_this_cpu_can_update(sg_policy->policy))
+ 		return false;
+ 
+-	if (unlikely(sg_policy->need_freq_update))
++	if (unlikely(sg_policy->limits_changed)) {
++		sg_policy->limits_changed = false;
++		sg_policy->need_freq_update = true;
+ 		return true;
++	}
+ 
+ 	delta_ns = time - sg_policy->last_freq_update_time;
+ 
+@@ -437,7 +441,7 @@ static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
+ static inline void ignore_dl_rate_limit(struct sugov_cpu *sg_cpu, struct sugov_policy *sg_policy)
+ {
+ 	if (cpu_bw_dl(cpu_rq(sg_cpu->cpu)) > sg_cpu->bw_dl)
+-		sg_policy->need_freq_update = true;
++		sg_policy->limits_changed = true;
+ }
+ 
+ static void sugov_update_single(struct update_util_data *hook, u64 time,
+@@ -447,7 +451,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+ 	struct sugov_policy *sg_policy = sg_cpu->sg_policy;
+ 	unsigned long util, max;
+ 	unsigned int next_f;
+-	bool busy;
++	bool busy = false;
+ 
+ 	sugov_iowait_boost(sg_cpu, time, flags);
+ 	sg_cpu->last_update = time;
+@@ -457,7 +461,9 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+ 	if (!sugov_should_update_freq(sg_policy, time))
+ 		return;
+ 
+-	busy = sugov_cpu_is_busy(sg_cpu);
++	/* Limits may have changed, don't skip frequency update */
++	if (!sg_policy->need_freq_update)
++		busy = sugov_cpu_is_busy(sg_cpu);
+ 
+ 	util = sugov_get_util(sg_cpu);
+ 	max = sg_cpu->max;
+@@ -831,6 +837,7 @@ static int sugov_start(struct cpufreq_policy *policy)
+ 	sg_policy->last_freq_update_time	= 0;
+ 	sg_policy->next_freq			= 0;
+ 	sg_policy->work_in_progress		= false;
++	sg_policy->limits_changed		= false;
+ 	sg_policy->need_freq_update		= false;
+ 	sg_policy->cached_raw_freq		= 0;
+ 
+@@ -879,7 +886,7 @@ static void sugov_limits(struct cpufreq_policy *policy)
+ 		mutex_unlock(&sg_policy->work_lock);
+ 	}
+ 
+-	sg_policy->need_freq_update = true;
++	sg_policy->limits_changed = true;
+ }
+ 
+ struct cpufreq_governor schedutil_gov = {
+-- 
+2.21.0.rc0.269.g1a574e7a288b
+
