@@ -2,171 +2,91 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38940C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C48C32754
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDFA20644
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747D220644
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:56:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/VQhvis"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391522AbfHBQyJ (ORCPT
+        id S2391559AbfHBQ4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:54:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49436 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728856AbfHBQyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:54:08 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 906D23082137;
-        Fri,  2 Aug 2019 16:54:07 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AD807608C2;
-        Fri,  2 Aug 2019 16:54:06 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 10:54:06 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, dima@arista.com,
-        tmurphy@arista.com, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, jacob.jun.pan@intel.com,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v4 12/15] iommu/vt-d: Cleanup get_valid_domain_for_dev()
-Message-ID: <20190802105406.53cd9977@x1.home>
-In-Reply-To: <5258f18f-101e-8a43-edea-3f4bb88ca58b@linux.intel.com>
-References: <20190525054136.27810-1-baolu.lu@linux.intel.com>
-        <20190525054136.27810-13-baolu.lu@linux.intel.com>
-        <20190717211226.5ffbf524@x1.home>
-        <9957afdd-4075-e7ee-e1e6-97acb870e17a@linux.intel.com>
-        <20190719092303.751659a0@x1.home>
-        <20190801193013.19444803@x1.home>
-        <5258f18f-101e-8a43-edea-3f4bb88ca58b@linux.intel.com>
-Organization: Red Hat
+        Fri, 2 Aug 2019 12:56:06 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38634 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728856AbfHBQ4G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:56:06 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r9so73489953ljg.5;
+        Fri, 02 Aug 2019 09:56:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EPPkokBEv9j1HeWKFcgfAyMgJ7iKf2u5vn4lVvJ2P+Q=;
+        b=Y/VQhvis6mV3rjwPKYuIWxYDYjDY9kb08o070K3IsGqAvM1Bb9ic+urEy0UKFxWGY7
+         mFGaHcNLmSePeZ4ykoXD8DzYw54n+iLBafp2/pG0WWh2clrA7yCS141OM/8SeyzHIuXz
+         Hx/FlalXnlwtbQCOaQIoY/o6MsARz4eECua+ycRPDmGONAiWsKw+uHtJ4M56jWq5wMY2
+         RHiq5VNAwoGsKzZJ9Z1OZenw8g2Z2Uk/dHHTnY5vOiwqvB4tIFtLO8pH9MSSBOD61479
+         MI4ngeiPKMVxhsZ6doTL/yiAJv1gahNDRwmwCU7wUUrvgTMGVelWl5qaOxlcHAJ88bIC
+         0lAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EPPkokBEv9j1HeWKFcgfAyMgJ7iKf2u5vn4lVvJ2P+Q=;
+        b=RQgWgmaLD3YN4yZhQf+lbWdZa9cuiCeu5vFyIn96sfpYUZ76S3Mo4vFoM7WSDZ4Ooy
+         RWZrlD9k440KJx9yQvBw2ojLZaowcXxhfnsKJKjVDZ0eBdZ2xX4xz2iRh13YvRfqI1n8
+         YD6Zce7MkiMsi4AQbYdRtnn0sE0SesWpsBfq39YWHAn78fw95mVhZuuEy0hJ134HCEjQ
+         tDiARGk+GBzZVm5QfB//xAElfQzVOoE6lA1MHa5/BSnoVFh82btWCqxPqKSumTn8C2z0
+         aSO7gI3U8iIB7qbeAzSdJccBNcIEv0R+Bi1BBBdQ8G0hrGjswLRIjOUrlv2TISUyuNhx
+         XeUA==
+X-Gm-Message-State: APjAAAXrY6viCnKIiX6EVesr9gbWWijiGM7cF2SO+DPEUAlVcpjSUEzz
+        XpzVZPURYCurCcyLL9leHfEbOi31GrMT5pAPLDxDlV4S
+X-Google-Smtp-Source: APXvYqw21KblkDjD8XIECXSFvc0LkhF9tGP/yaN81tFSY2dPWbejuy9VqzWKs0pdNdbYJwlV6sPNgEWGghtdMq3JfqE=
+X-Received: by 2002:a2e:9198:: with SMTP id f24mr73227810ljg.221.1564764964729;
+ Fri, 02 Aug 2019 09:56:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 02 Aug 2019 16:54:07 +0000 (UTC)
+References: <259986242.BvXPX32bHu@devpool35> <20190606185900.GA19937@kroah.com>
+ <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
+ <4007272.nJfEYfeqza@devpool35> <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
+ <20190802103346.GA14255@kroah.com> <CANiq72kcZZwp2MRVF5Ls+drXCzVbCfZ7wZ8Y+rU93oGohVAGsQ@mail.gmail.com>
+ <20190802112542.GA29534@kroah.com> <CANiq72mSLmP-EaOgY0m2qgTMVsAnyE6iuW5Kjdw5mSy1ZH0y-A@mail.gmail.com>
+ <20190802155627.GB28398@kroah.com>
+In-Reply-To: <20190802155627.GB28398@kroah.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 2 Aug 2019 18:55:53 +0200
+Message-ID: <CANiq72k-2Gtb8Q_f2Nhy6aud-QwuSiJ8oEJbwt-pjd+bs8qDVg@mail.gmail.com>
+Subject: =?UTF-8?Q?Re=3A_Linux_4=2E9=2E180_build_fails_with_gcc_9_and_=27cleanu?=
+        =?UTF-8?Q?p=5Fmodule=27_specifies_less_restrictive_attribute_than_its_targ?=
+        =?UTF-8?Q?et_=E2=80=A6?=
+To:     Greg KH <greg@kroah.com>
+Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2 Aug 2019 15:17:45 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On Fri, Aug 2, 2019 at 5:56 PM Greg KH <greg@kroah.com> wrote:
+>
+> I see a ton of warnings on those kernels today.  I'll look into it next
+> week after I apply your patches to see what's missing.
 
-> Hi Alex,
-> 
-> Thanks for reporting this. I will try to find a machine with a
-> pcie-to-pci bridge and get this issue fixed. I will update you
-> later.
+Yeah, the objtool ones -- I thought you were referring to the
+-Wmissing-attributes that Rolf asked about (I am not sure why Rolf has
+those as -Werror rather than warnings, though).
 
-Further debug below...
+I can take a look at the objtool ones and see if applying some of the
+patches helps, although I have never looked into how objtool works, so
+no promises :)
 
-> On 8/2/19 9:30 AM, Alex Williamson wrote:
-> > DMAR: No ATSR found
-> > DMAR: dmar0: Using Queued invalidation
-> > DMAR: dmar1: Using Queued invalidation
-> > pci 0000:00:00.0: DMAR: Software identity mapping
-> > pci 0000:00:01.0: DMAR: Software identity mapping
-> > pci 0000:00:02.0: DMAR: Software identity mapping
-> > pci 0000:00:16.0: DMAR: Software identity mapping
-> > pci 0000:00:1a.0: DMAR: Software identity mapping
-> > pci 0000:00:1b.0: DMAR: Software identity mapping
-> > pci 0000:00:1c.0: DMAR: Software identity mapping
-> > pci 0000:00:1c.5: DMAR: Software identity mapping
-> > pci 0000:00:1c.6: DMAR: Software identity mapping
-> > pci 0000:00:1c.7: DMAR: Software identity mapping
-> > pci 0000:00:1d.0: DMAR: Software identity mapping
-> > pci 0000:00:1f.0: DMAR: Software identity mapping
-> > pci 0000:00:1f.2: DMAR: Software identity mapping
-> > pci 0000:00:1f.3: DMAR: Software identity mapping
-> > pci 0000:01:00.0: DMAR: Software identity mapping
-> > pci 0000:01:00.1: DMAR: Software identity mapping
-> > pci 0000:03:00.0: DMAR: Software identity mapping
-> > pci 0000:04:00.0: DMAR: Software identity mapping
-> > DMAR: Setting RMRR:
-> > pci 0000:00:02.0: DMAR: Setting identity map [0xbf800000 - 0xcf9fffff]
-> > pci 0000:00:1a.0: DMAR: Setting identity map [0xbe8d1000 - 0xbe8dffff]
-> > pci 0000:00:1d.0: DMAR: Setting identity map [0xbe8d1000 - 0xbe8dffff]
-> > DMAR: Prepare 0-16MiB unity mapping for LPC
-> > pci 0000:00:1f.0: DMAR: Setting identity map [0x0 - 0xffffff]
-> > pci 0000:00:00.0: Adding to iommu group 0
-> > pci 0000:00:00.0: Using iommu direct mapping
-> > pci 0000:00:01.0: Adding to iommu group 1
-> > pci 0000:00:01.0: Using iommu direct mapping
-> > pci 0000:00:02.0: Adding to iommu group 2
-> > pci 0000:00:02.0: Using iommu direct mapping
-> > pci 0000:00:16.0: Adding to iommu group 3
-> > pci 0000:00:16.0: Using iommu direct mapping
-> > pci 0000:00:1a.0: Adding to iommu group 4
-> > pci 0000:00:1a.0: Using iommu direct mapping
-> > pci 0000:00:1b.0: Adding to iommu group 5
-> > pci 0000:00:1b.0: Using iommu direct mapping
-> > pci 0000:00:1c.0: Adding to iommu group 6
-> > pci 0000:00:1c.0: Using iommu direct mapping
-> > pci 0000:00:1c.5: Adding to iommu group 7
-> > pci 0000:00:1c.5: Using iommu direct mapping
-> > pci 0000:00:1c.6: Adding to iommu group 8
-> > pci 0000:00:1c.6: Using iommu direct mapping
-> > pci 0000:00:1c.7: Adding to iommu group 9
-
-Note that group 9 contains device 00:1c.7
-
-> > pci 0000:00:1c.7: Using iommu direct mapping
-
-I'm booted with iommu=pt, so the domain type is IOMMU_DOMAIN_PT
-
-> > pci 0000:00:1d.0: Adding to iommu group 10
-> > pci 0000:00:1d.0: Using iommu direct mapping
-> > pci 0000:00:1f.0: Adding to iommu group 11
-> > pci 0000:00:1f.0: Using iommu direct mapping
-> > pci 0000:00:1f.2: Adding to iommu group 11
-> > pci 0000:00:1f.3: Adding to iommu group 11
-> > pci 0000:01:00.0: Adding to iommu group 1
-> > pci 0000:01:00.1: Adding to iommu group 1
-> > pci 0000:03:00.0: Adding to iommu group 12
-> > pci 0000:03:00.0: Using iommu direct mapping
-> > pci 0000:04:00.0: Adding to iommu group 13
-> > pci 0000:04:00.0: Using iommu direct mapping
-> > pci 0000:05:00.0: Adding to iommu group 9
-
-05:00.0 is downstream of 00:1c.7 and in the same group.  As above, the
-domain is type IOMMU_DOMAIN_IDENTITY, so we take the following branch:
-
-        } else {
-                if (device_def_domain_type(dev) == IOMMU_DOMAIN_DMA) {
-
-Default domain type is IOMMU_DOMAIN_DMA because of the code block in
-device_def_domain_type() handling bridges to conventional PCI and
-conventional PCI endpoints.
-
-                        ret = iommu_request_dma_domain_for_dev(dev);
-
-This fails in request_default_domain_for_dev() because there's more
-than one device in the group.
-
-                        if (ret) {
-                                dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
-                                if (!get_private_domain_for_dev(dev)) {
-
-With this commit, this now returns NULL because find_domain() does find
-a domain, the same one we found before this code block.
-
-                                        dev_warn(dev,
-                                                 "Failed to get a private domain.\n");
-                                        return -ENOMEM;
-                                }
-
-So the key factors are that I'm booting with iommu=pt and I have a
-PCIe-to-PCI bridge grouped with its parent root port.  The bridge
-wants an IOMMU_DOMAIN_DMA, but the group domain is already of type
-IOMMU_DOMAIN_IDENTITY.  A temporary workaround is to not use
-passthrough mode, but this is a regression versus previous kernels.
-Thanks,
-
-Alex
+Cheers,
+Miguel
