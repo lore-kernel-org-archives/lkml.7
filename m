@@ -2,86 +2,211 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EB7C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1398C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4056820665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B698720665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="V3Hpl9Hr"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lh3WCwZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395209AbfHBVzJ (ORCPT
+        id S2395216AbfHBV4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 17:55:09 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44776 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732887AbfHBVzI (ORCPT
+        Fri, 2 Aug 2019 17:56:45 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:17642 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729262AbfHBV4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 17:55:08 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t14so34098635plr.11
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 14:55:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3v959y3cG5ZVzOws7Yf1+skokBCt8eVG73f/LVI45bE=;
-        b=V3Hpl9HrCUyugLTACvQdLDIAxuPF+z+eQixtnPJTDCaVCGqGU3IOij7fUVmLgwP7DC
-         kQsEQblIgYdkFfFqFq4v2ktFDIaHIH/kCq1OBFMuF8o7rptFY8SBTg8EoRTkXEjlTurv
-         KIZm3oKsVAnb4XyKjVGi+Hn+e5zG1vs7oLSePanBwPr0YzLP4aaBpuGQn8/fdTV7+6oe
-         xKS1Pv+c4Ete30omsGWcP5Z3WeeZsfWBVvUefvXezmibpeBQsoFH5/4YukI8C6jrhkef
-         Y+jacXlaIVVCM7PKXLNKr3dnRQPPNji4bTwvii5cKhoD05JsyLdacylOm5WB2LGGTOgI
-         k4OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3v959y3cG5ZVzOws7Yf1+skokBCt8eVG73f/LVI45bE=;
-        b=sSYM/RuM0/XDtNRQHT6BH8+rgYPhfiJtvTnusUEwxkzM42I2XVXJB3p9ZyAxlbJ6bN
-         s9D8rU4zWo1cDVU/jgcfuoRBs3RL1QRUpopo6/vq/beYrbSX6E9xGAyJ18zlGYcc7Pka
-         EWCfZEqsFslk4mIWAgJPooUTjx1tBylMqWMC6ddXl7Q+fUt2JneeesZx8fsRC5qXroVU
-         PVWZtIrtube6mA+92QrLJIxkiQb/YvnfIxu5WdwUOHk+uOSEocBYMjgu34YfMZ6x1UoR
-         YNzyerFS2yVXVcLMBD2yB28BRIi/qOVwwy62qQ9bv5YxBX1Vp3nwniaj6gshG0PQypWX
-         MpGw==
-X-Gm-Message-State: APjAAAUkgcb+6d15wLte57EwJMDmSZV1M4XW6Ah/YxOBOtsj7j/fNqVk
-        Yi9KFKOIbYRH+Ihom05IYcU=
-X-Google-Smtp-Source: APXvYqyQ65NF5GXQddSgKFl5futnv5t9QQ5mjPDSRTrAoLaT4aq/GyBekbHTh1tXi+6AxlMyrJ+RmQ==
-X-Received: by 2002:a17:902:100a:: with SMTP id b10mr91768385pla.338.1564782908080;
-        Fri, 02 Aug 2019 14:55:08 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id r188sm121634800pfr.16.2019.08.02.14.55.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 14:55:08 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 14:55:06 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
-Cc:     isdn@linux-pingi.de, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] isdn: hysdn: Fix error spaces around '*'
-Message-ID: <20190802145506.168b576b@hermes.lan>
-In-Reply-To: <20190802195602.28414-1-joseespiriki@gmail.com>
-References: <20190802195602.28414-1-joseespiriki@gmail.com>
+        Fri, 2 Aug 2019 17:56:44 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72LnGAh023283
+        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 14:56:43 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=pAXhtSSrymtvNQ1Vuj81KTyaBnvdKVU8ZFfefO5CZ60=;
+ b=lh3WCwZHtxkJs8ejmZ6GF+y7JvhVF6qh7sZp2R86f1Cj2G5g3BRy03nik/8VkknJB9+n
+ w4S2kksfydvy7nnf5oYBiSQmxjZ72BI1iQCEL2AlOCXbiUfleNjZVJiJ6O4yk7pG5826
+ hbVh9Iyme+0MFk5p3JholaF0QMIVWHn7D1o= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2u4qbvsebq-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 14:56:43 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 2 Aug 2019 14:56:39 -0700
+Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
+        id B6E6B189AC9D9; Fri,  2 Aug 2019 14:54:20 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Tao Ren <taoren@fb.com>
+Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <openbmc@lists.ozlabs.org>
+CC:     Tao Ren <taoren@fb.com>
+Smtp-Origin-Cluster: prn1c35
+Subject: [PATCH net-next v3] net: phy: broadcom: add 1000Base-X support for BCM54616S
+Date:   Fri, 2 Aug 2019 14:54:19 -0700
+Message-ID: <20190802215419.313512-1-taoren@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=587 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020230
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  2 Aug 2019 19:56:02 +0000
-Jose Carlos Cazarin Filho <joseespiriki@gmail.com> wrote:
+genphy_read_status() cannot report correct link speed when BCM54616S PHY
+is configured in RGMII->1000Base-KX mode (for example, on Facebook CMM
+BMC platform), and it is because speed-related fields in MII registers
+are assigned different meanings in 1000X register set. Actually there
+is no speed field in 1000X register set because link speed is always
+1000 Mb/s.
 
-> Fix checkpath error:
-> CHECK: spaces preferred around that '*' (ctx:WxV)
-> +extern hysdn_card *card_root;        /* pointer to first card */
-> 
-> Signed-off-by: Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
+The patch adds "probe" callback to detect PHY's operation mode based on
+INTERF_SEL[1:0] pins and 1000X/100FX selection bit in SerDES 100-FX
+Control register. Besides, link speed is manually set to 1000 Mb/s in
+"read_status" callback if PHY-switch link is 1000Base-X.
 
+Signed-off-by: Tao Ren <taoren@fb.com>
+---
+ Changes in v3:
+  - rename bcm5482_read_status to bcm54xx_read_status so the callback can
+    be shared by BCM5482 and BCM54616S.
+ Changes in v2:
+  - Auto-detect PHY operation mode instead of passing DT node.
+  - move PHY mode auto-detect logic from config_init to probe callback.
+  - only set speed (not including duplex) in read_status callback.
+  - update patch description with more background to avoid confusion.
+  - patch #1 in the series ("net: phy: broadcom: set features explicitly
+    for BCM54616") is dropped: the fix should go to get_features callback
+    which may potentially depend on this patch.
 
-Read the TODO, these drivers are scheduled for removal, so changes
-are not helpful at this time.
+ drivers/net/phy/broadcom.c | 41 +++++++++++++++++++++++++++++++++-----
+ include/linux/brcmphy.h    | 10 ++++++++--
+ 2 files changed, 44 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
+index 937d0059e8ac..ecad8a201a09 100644
+--- a/drivers/net/phy/broadcom.c
++++ b/drivers/net/phy/broadcom.c
+@@ -383,9 +383,9 @@ static int bcm5482_config_init(struct phy_device *phydev)
+ 		/*
+ 		 * Select 1000BASE-X register set (primary SerDes)
+ 		 */
+-		reg = bcm_phy_read_shadow(phydev, BCM5482_SHD_MODE);
+-		bcm_phy_write_shadow(phydev, BCM5482_SHD_MODE,
+-				     reg | BCM5482_SHD_MODE_1000BX);
++		reg = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
++		bcm_phy_write_shadow(phydev, BCM54XX_SHD_MODE,
++				     reg | BCM54XX_SHD_MODE_1000BX);
+ 
+ 		/*
+ 		 * LED1=ACTIVITYLED, LED3=LINKSPD[2]
+@@ -409,7 +409,7 @@ static int bcm5482_config_init(struct phy_device *phydev)
+ 	return err;
+ }
+ 
+-static int bcm5482_read_status(struct phy_device *phydev)
++static int bcm54xx_read_status(struct phy_device *phydev)
+ {
+ 	int err;
+ 
+@@ -464,6 +464,35 @@ static int bcm54616s_config_aneg(struct phy_device *phydev)
+ 	return ret;
+ }
+ 
++static int bcm54616s_probe(struct phy_device *phydev)
++{
++	int val, intf_sel;
++
++	val = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
++	if (val < 0)
++		return val;
++
++	/* The PHY is strapped in RGMII to fiber mode when INTERF_SEL[1:0]
++	 * is 01b.
++	 */
++	intf_sel = (val & BCM54XX_SHD_INTF_SEL_MASK) >> 1;
++	if (intf_sel == 1) {
++		val = bcm_phy_read_shadow(phydev, BCM54616S_SHD_100FX_CTRL);
++		if (val < 0)
++			return val;
++
++		/* Bit 0 of the SerDes 100-FX Control register, when set
++		 * to 1, sets the MII/RGMII -> 100BASE-FX configuration.
++		 * When this bit is set to 0, it sets the GMII/RGMII ->
++		 * 1000BASE-X configuration.
++		 */
++		if (!(val & BCM54616S_100FX_MODE))
++			phydev->dev_flags |= PHY_BCM_FLAGS_MODE_1000BX;
++	}
++
++	return 0;
++}
++
+ static int brcm_phy_setbits(struct phy_device *phydev, int reg, int set)
+ {
+ 	int val;
+@@ -655,6 +684,8 @@ static struct phy_driver broadcom_drivers[] = {
+ 	.config_aneg	= bcm54616s_config_aneg,
+ 	.ack_interrupt	= bcm_phy_ack_intr,
+ 	.config_intr	= bcm_phy_config_intr,
++	.read_status	= bcm54xx_read_status,
++	.probe		= bcm54616s_probe,
+ }, {
+ 	.phy_id		= PHY_ID_BCM5464,
+ 	.phy_id_mask	= 0xfffffff0,
+@@ -689,7 +720,7 @@ static struct phy_driver broadcom_drivers[] = {
+ 	.name		= "Broadcom BCM5482",
+ 	/* PHY_GBIT_FEATURES */
+ 	.config_init	= bcm5482_config_init,
+-	.read_status	= bcm5482_read_status,
++	.read_status	= bcm54xx_read_status,
+ 	.ack_interrupt	= bcm_phy_ack_intr,
+ 	.config_intr	= bcm_phy_config_intr,
+ }, {
+diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
+index 6db2d9a6e503..b475e7f20d28 100644
+--- a/include/linux/brcmphy.h
++++ b/include/linux/brcmphy.h
+@@ -200,9 +200,15 @@
+ #define BCM5482_SHD_SSD		0x14	/* 10100: Secondary SerDes control */
+ #define BCM5482_SHD_SSD_LEDM	0x0008	/* SSD LED Mode enable */
+ #define BCM5482_SHD_SSD_EN	0x0001	/* SSD enable */
+-#define BCM5482_SHD_MODE	0x1f	/* 11111: Mode Control Register */
+-#define BCM5482_SHD_MODE_1000BX	0x0001	/* Enable 1000BASE-X registers */
+ 
++/* 10011: SerDes 100-FX Control Register */
++#define BCM54616S_SHD_100FX_CTRL	0x13
++#define	BCM54616S_100FX_MODE		BIT(0)	/* 100-FX SerDes Enable */
++
++/* 11111: Mode Control Register */
++#define BCM54XX_SHD_MODE		0x1f
++#define BCM54XX_SHD_INTF_SEL_MASK	GENMASK(2, 1)	/* INTERF_SEL[1:0] */
++#define BCM54XX_SHD_MODE_1000BX		BIT(0)	/* Enable 1000-X registers */
+ 
+ /*
+  * EXPANSION SHADOW ACCESS REGISTERS.  (PHY REG 0x15, 0x16, and 0x17)
+-- 
+2.17.1
+
