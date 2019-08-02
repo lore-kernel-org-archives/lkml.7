@@ -2,94 +2,82 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6AEC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7FBC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9091F2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BFD2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:42:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aRUeVfro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389375AbfHBMlw (ORCPT
+        id S2389572AbfHBMmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:41:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35710 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728404AbfHBMlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:41:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 20E6FAF94;
-        Fri,  2 Aug 2019 12:41:48 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id F40A51E3F4D; Fri,  2 Aug 2019 14:41:46 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 14:41:46 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
-Message-ID: <20190802124146.GL25064@quack2.suse.cz>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802091244.GD6461@dhcp22.suse.cz>
+        Fri, 2 Aug 2019 08:42:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40568 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728404AbfHBMl7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:41:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NPQCPXvDjGrvv2bivXcGtX9P+vmLsG3oAEBjoCl8obE=; b=aRUeVfroazA+flrkU5ZsNgcCn
+        0wd7LYL96qL0vjRya4G83XlluAE2aAqJyRWxeMYddeaA2O8lVlPdDB07jFpUx+0Q9X69Ok9bp6qVS
+        26X7L38rv+o7FSwL5/o9bq/XGiCK7Gy6MpA9HqG/P9XGlhWYHQMCYb/FvoGhTsjPOWrWoUmcaLmQC
+        dup31zIl4u6D1BIBE6cbLUmNvk0u7KNmkSSIE3ZpDoSefxRSu2s5B6d6O3oheI06TNzcI/J8SMQHM
+        uXY7fsryBs/dNt4RM3blAmQMPLYEiDRQIMYjS/1b+FuOqTdVRowmYXDdyHiZBKoy8f2eATDGe1+kI
+        ysZrE3R/A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1htWsc-00056T-0E; Fri, 02 Aug 2019 12:41:54 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D0B11202953BA; Fri,  2 Aug 2019 14:41:51 +0200 (CEST)
+Date:   Fri, 2 Aug 2019 14:41:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 0/5] Fix FIFO-99 abuse
+Message-ID: <20190802124151.GG2332@hirez.programming.kicks-ass.net>
+References: <20190801111348.530242235@infradead.org>
+ <20190801131707.5rpyydznnhz474la@e107158-lin.cambridge.arm.com>
+ <20190802093244.GF2332@hirez.programming.kicks-ass.net>
+ <20190802102611.54sae3onftck5fye@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802091244.GD6461@dhcp22.suse.cz>
+In-Reply-To: <20190802102611.54sae3onftck5fye@e107158-lin.cambridge.arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 02-08-19 11:12:44, Michal Hocko wrote:
-> On Thu 01-08-19 19:19:31, john.hubbard@gmail.com wrote:
-> [...]
-> > 2) Convert all of the call sites for get_user_pages*(), to
-> > invoke put_user_page*(), instead of put_page(). This involves dozens of
-> > call sites, and will take some time.
-> 
-> How do we make sure this is the case and it will remain the case in the
-> future? There must be some automagic to enforce/check that. It is simply
-> not manageable to do it every now and then because then 3) will simply
-> be never safe.
-> 
-> Have you considered coccinele or some other scripted way to do the
-> transition? I have no idea how to deal with future changes that would
-> break the balance though.
+On Fri, Aug 02, 2019 at 11:26:12AM +0100, Qais Yousef wrote:
 
-Yeah, that's why I've been suggesting at LSF/MM that we may need to create
-a gup wrapper - say vaddr_pin_pages() - and track which sites dropping
-references got converted by using this wrapper instead of gup. The
-counterpart would then be more logically named as unpin_page() or whatever
-instead of put_user_page().  Sure this is not completely foolproof (you can
-create new callsite using vaddr_pin_pages() and then just drop refs using
-put_page()) but I suppose it would be a high enough barrier for missed
-conversions... Thoughts?
+> Yes a somewhat enforced default makes more sense to me. I assume you no longer
+> want to put the kthreads that just need to be above OTHER in FIFO-1?
 
-								Honza
+I'm not sure, maybe, there's not that many of them, but possibly we add
+another interface for them.
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> While at it, since we will cram all kthreads on the same priority, isn't
+> a SCHED_RR a better choice now? I think the probability of a clash is pretty
+> low, but when it happens, shouldn't we try to guarantee some fairness?
+
+It's never been a problem, and aside from these few straggler threads,
+everybody has effectively been there already for years, so if it were a
+problem someone would've complained by now.
+
+Also; like said before, the admin had better configure.
+
+Also also, RR-SMP is actually broken (and nobody has cared enough to
+bother fixing it).
