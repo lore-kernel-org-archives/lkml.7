@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E53C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2886CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022CC2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAADA21849
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752113;
-	bh=q9rs/7qq0AtCKj0n7LPcl7VPkSBWqcJCnchLvQih/Tw=;
+	s=default; t=1564752116;
+	bh=dOSPDrRD2QiTi8tCPk2vlAWhFFnuH0+UBqqhrlz598w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s7U4APVWwkIyLuUsOpT1AcajvEswQWmbaJTfSaJ074WGDpvPqufTUbY2b5a5QN9ez
-	 iWM6h+a6UAOqSxlak5dAfuiesCmx60XZ1LtI3b0NN/aybU77Afjk1QJXi6BPh8x26g
-	 1P3Rue1eSoBn3Ko2xNZRymLWLYoEjeV7HOe+Ya/k=
+	b=kvfhKgr9RIqKjgyQhsMJHZYQ0lCaCuLLWVBI3nVq0HVOPGr1RlCpbnt8eiFIw7lE0
+	 m3tHDPbgb7/gMzQJjeJsKEO1I2AUDBsblvZrtKbfz7d+qoCkEaarLv1oBNUsbtphxP
+	 2OIGss2+TlwiXiqJMrVa2zYscO8mHHErU35+6THY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393638AbfHBNVw (ORCPT
+        id S2393652AbfHBNVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:21:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60328 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:21:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393419AbfHBNVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:21:50 -0400
+        id S2393419AbfHBNVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:21:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3AF32173E;
-        Fri,  2 Aug 2019 13:21:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A45E62183F;
+        Fri,  2 Aug 2019 13:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752109;
-        bh=q9rs/7qq0AtCKj0n7LPcl7VPkSBWqcJCnchLvQih/Tw=;
+        s=default; t=1564752112;
+        bh=dOSPDrRD2QiTi8tCPk2vlAWhFFnuH0+UBqqhrlz598w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AJmXpU8eoGefE2b13zFqc1w9JPzVt9PWecBQ5bs8F1MxE3d4VC0lXMVlgkOdIMnDl
-         T7hK6ZYIvpgrXlQwpaoYmeM/i8T/EnZP6uHaK6ryRb6Os6kXPHGIsfR4TqZszYcDlI
-         hFuu9Mmolpycwzp8uurM7q0VSWv36MJeF7D50hX0=
+        b=ba6GD3gl8Nt52TLosgDeTaeUASfeUpPJmVhV7Hx5d+/lAdFSuxfKYlpb4qEIEvLTS
+         Y/t38HGdze6M63kY393WqAi+J2QlhZpNZg2MG2kzwEO2WNs4r9upDyXRp0Ww+u9wrM
+         0sgV8ZSDHVXKc+Q2jqdtGeIgQFDBdR2VS1gUJfTQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 45/76] arm64: dts: imx8mq: fix SAI compatible
-Date:   Fri,  2 Aug 2019 09:19:19 -0400
-Message-Id: <20190802131951.11600-45-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 47/76] s390/qdio: add sanity checks to the fast-requeue path
+Date:   Fri,  2 Aug 2019 09:19:21 -0400
+Message-Id: <20190802131951.11600-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -60,37 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 8d0148473dece51675d11dd59b8db5fe4b5d2e7e ]
+[ Upstream commit a6ec414a4dd529eeac5c3ea51c661daba3397108 ]
 
-The i.MX8M SAI block is not compatible with the i.MX6SX one, as the
-register layout has changed due to two version registers being added
-at the beginning of the address map. Remove the bogus compatible.
+If the device driver were to send out a full queue's worth of SBALs,
+current code would end up discovering the last of those SBALs as PRIMED
+and erroneously skip the SIGA-w. This immediately stalls the queue.
 
-Fixes: 8c61538dc945 ("arm64: dts: imx8mq: Add SAI2 node")
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Add a check to not attempt fast-requeue in this case. While at it also
+make sure that the state of the previous SBAL was successfully extracted
+before inspecting it.
+
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/s390/cio/qdio_main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 6d635ba0904c5..6632cbd88bed3 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -675,8 +675,7 @@
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index 730c4e68094ba..7f5adf02f0959 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -1558,13 +1558,13 @@ static int handle_outbound(struct qdio_q *q, unsigned int callflags,
+ 		rc = qdio_kick_outbound_q(q, phys_aob);
+ 	} else if (need_siga_sync(q)) {
+ 		rc = qdio_siga_sync_q(q);
++	} else if (count < QDIO_MAX_BUFFERS_PER_Q &&
++		   get_buf_state(q, prev_buf(bufnr), &state, 0) > 0 &&
++		   state == SLSB_CU_OUTPUT_PRIMED) {
++		/* The previous buffer is not processed yet, tack on. */
++		qperf_inc(q, fast_requeue);
+ 	} else {
+-		/* try to fast requeue buffers */
+-		get_buf_state(q, prev_buf(bufnr), &state, 0);
+-		if (state != SLSB_CU_OUTPUT_PRIMED)
+-			rc = qdio_kick_outbound_q(q, 0);
+-		else
+-			qperf_inc(q, fast_requeue);
++		rc = qdio_kick_outbound_q(q, 0);
+ 	}
  
- 			sai2: sai@308b0000 {
- 				#sound-dai-cells = <0>;
--				compatible = "fsl,imx8mq-sai",
--					     "fsl,imx6sx-sai";
-+				compatible = "fsl,imx8mq-sai";
- 				reg = <0x308b0000 0x10000>;
- 				interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MQ_CLK_SAI2_IPG>,
+ 	/* in case of SIGA errors we must process the error immediately */
 -- 
 2.20.1
 
