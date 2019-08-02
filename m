@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B09C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDCBC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D61020679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00875206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739468;
-	bh=IfKP9fPXVIDENSW5kVJ6Tbtk+1Ef//4tUYQRwZmXtss=;
+	s=default; t=1564739474;
+	bh=k7QKfa6LAB3aq55137f4pRDRtYGr0cL0lak7C6T98mM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K81YbUq1SY+NrVuIXX5uOAZfXjKZhqzXoWPmntZUccU3UF3jM7G4wpWzS5gcd8B+2
-	 eCQhfQLfJnoBsPTGINj6l0EpN4axO/pBkJEv51c8kos4QWNUr9qDZGFxtLDYVEfv3z
-	 0FrkuVKkIoeBd7ExmsvxqYnrm7DgqM0tlmmQ6Tj0=
+	b=acwgSyd0BrePtbJPY/2BIgB8XJg2mqbi129aqQWv6j8TXTOyPe1zO20m67uGUvZxm
+	 tL+0Z80d4wfWxGqdi9DDMTe13peLiTMPMegC8t8kXcckcqklZGEPOzzEX2gNUAQ3/k
+	 is1HnfhdPS3BMDRiqOyuxjX/zPi4SNbG/rhoM0HE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405362AbfHBJpF (ORCPT
+        id S2405327AbfHBJo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:45:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48600 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729459AbfHBJpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:45:02 -0400
+        id S2405311AbfHBJox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:44:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6915820B7C;
-        Fri,  2 Aug 2019 09:45:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E7BF20B7C;
+        Fri,  2 Aug 2019 09:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739100;
-        bh=IfKP9fPXVIDENSW5kVJ6Tbtk+1Ef//4tUYQRwZmXtss=;
+        s=default; t=1564739093;
+        bh=k7QKfa6LAB3aq55137f4pRDRtYGr0cL0lak7C6T98mM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gw8RwFbBsknM+JIhoE8iJb7tDBw40Be6j0TPcvBpJfnYlgoRlS6Pw82pc8gwTv3dP
-         RQ/BIQrpW259iDANxjlK6UudYa71sTQiIxFThyz1y/AwHSbiroBINzhUAM+0IdyK3N
-         bkT5XDQG6eq/h3Dg7LxIvx4rDB3OscUITJ//ZJ9Y=
+        b=DYx/41GA0pdepIRr6YdDVpocvMTgBvud8j4i/Br6be5252BVMS9kqO1c0lX2JdmZk
+         dUufi4D/qDng0Z11nffYaO3yzzSu5KzUm5IVehxm+oe7Uyp+q2EgEz6e64OrVww8yo
+         fob1rDpG0ajTCI8WkJvDyDbMAVL+ysBzmr7QsLw0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>
-Subject: [PATCH 4.9 099/223] 9p/virtio: Add cleanup path in p9_virtio_init
-Date:   Fri,  2 Aug 2019 11:35:24 +0200
-Message-Id: <20190802092245.590360320@linuxfoundation.org>
+        stable@vger.kernel.org, Cfir Cohen <cfir@google.com>,
+        Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 110/223] crypto: ccp - Validate the the error value used to index error messages
+Date:   Fri,  2 Aug 2019 11:35:35 +0200
+Message-Id: <20190802092246.372422602@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,89 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Hook, Gary <Gary.Hook@amd.com>
 
-commit d4548543fc4ece56c6f04b8586f435fb4fd84c20 upstream.
+commit 52393d617af7b554f03531e6756facf2ea687d2e upstream.
 
-KASAN report this:
+The error code read from the queue status register is only 6 bits wide,
+but we need to verify its value is within range before indexing the error
+messages.
 
-BUG: unable to handle kernel paging request at ffffffffa0097000
-PGD 3870067 P4D 3870067 PUD 3871063 PMD 2326e2067 PTE 0
-Oops: 0000 [#1
-CPU: 0 PID: 5340 Comm: modprobe Not tainted 5.1.0-rc7+ #25
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:__list_add_valid+0x10/0x70
-Code: c3 48 8b 06 55 48 89 e5 5d 48 39 07 0f 94 c0 0f b6 c0 c3 90 90 90 90 90 90 90 55 48 89 d0 48 8b 52 08 48 89 e5 48 39 f2 75 19 <48> 8b 32 48 39 f0 75 3a
-
-RSP: 0018:ffffc90000e23c68 EFLAGS: 00010246
-RAX: ffffffffa00ad000 RBX: ffffffffa009d000 RCX: 0000000000000000
-RDX: ffffffffa0097000 RSI: ffffffffa0097000 RDI: ffffffffa009d000
-RBP: ffffc90000e23c68 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa0097000
-R13: ffff888231797180 R14: 0000000000000000 R15: ffffc90000e23e78
-FS:  00007fb215285540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa0097000 CR3: 000000022f144000 CR4: 00000000000006f0
-Call Trace:
- v9fs_register_trans+0x2f/0x60 [9pnet
- ? 0xffffffffa0087000
- p9_virtio_init+0x25/0x1000 [9pnet_virtio
- do_one_initcall+0x6c/0x3cc
- ? kmem_cache_alloc_trace+0x248/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7fb214d8e839
-Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01
-
-RSP: 002b:00007ffc96554278 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000055e67eed2aa0 RCX: 00007fb214d8e839
-RDX: 0000000000000000 RSI: 000055e67ce95c2e RDI: 0000000000000003
-RBP: 000055e67ce95c2e R08: 0000000000000000 R09: 000055e67eed2aa0
-R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000000
-R13: 000055e67eeda500 R14: 0000000000040000 R15: 000055e67eed2aa0
-Modules linked in: 9pnet_virtio(+) 9pnet gre rfkill vmw_vsock_virtio_transport_common vsock [last unloaded: 9pnet_virtio
-CR2: ffffffffa0097000
----[ end trace 4a52bb13ff07b761
-
-If register_virtio_driver() fails in p9_virtio_init,
-we should call v9fs_unregister_trans() to do cleanup.
-
-Link: http://lkml.kernel.org/r/20190430115942.41840-1-yuehaibing@huawei.com
-Cc: stable@vger.kernel.org
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: b530cc794024 ("9p: add virtio transport")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Fixes: 81422badb3907 ("crypto: ccp - Make syslog errors human-readable")
+Cc: <stable@vger.kernel.org>
+Reported-by: Cfir Cohen <cfir@google.com>
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- net/9p/trans_virtio.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/net/9p/trans_virtio.c
-+++ b/net/9p/trans_virtio.c
-@@ -764,10 +764,16 @@ static struct p9_trans_module p9_virtio_
- /* The standard init function */
- static int __init p9_virtio_init(void)
- {
-+	int rc;
-+
- 	INIT_LIST_HEAD(&virtio_chan_list);
+---
+ drivers/crypto/ccp/ccp-dev.c |  102 ++++++++++++++++++++++---------------------
+ drivers/crypto/ccp/ccp-dev.h |    2 
+ 2 files changed, 55 insertions(+), 49 deletions(-)
+
+--- a/drivers/crypto/ccp/ccp-dev.c
++++ b/drivers/crypto/ccp/ccp-dev.c
+@@ -40,57 +40,63 @@ struct ccp_tasklet_data {
+ 	struct ccp_cmd *cmd;
+ };
  
- 	v9fs_register_trans(&p9_virtio_trans);
--	return register_virtio_driver(&p9_virtio_drv);
-+	rc = register_virtio_driver(&p9_virtio_drv);
-+	if (rc)
-+		v9fs_unregister_trans(&p9_virtio_trans);
+-/* Human-readable error strings */
+-char *ccp_error_codes[] = {
+-	"",
+-	"ERR 01: ILLEGAL_ENGINE",
+-	"ERR 02: ILLEGAL_KEY_ID",
+-	"ERR 03: ILLEGAL_FUNCTION_TYPE",
+-	"ERR 04: ILLEGAL_FUNCTION_MODE",
+-	"ERR 05: ILLEGAL_FUNCTION_ENCRYPT",
+-	"ERR 06: ILLEGAL_FUNCTION_SIZE",
+-	"ERR 07: Zlib_MISSING_INIT_EOM",
+-	"ERR 08: ILLEGAL_FUNCTION_RSVD",
+-	"ERR 09: ILLEGAL_BUFFER_LENGTH",
+-	"ERR 10: VLSB_FAULT",
+-	"ERR 11: ILLEGAL_MEM_ADDR",
+-	"ERR 12: ILLEGAL_MEM_SEL",
+-	"ERR 13: ILLEGAL_CONTEXT_ID",
+-	"ERR 14: ILLEGAL_KEY_ADDR",
+-	"ERR 15: 0xF Reserved",
+-	"ERR 16: Zlib_ILLEGAL_MULTI_QUEUE",
+-	"ERR 17: Zlib_ILLEGAL_JOBID_CHANGE",
+-	"ERR 18: CMD_TIMEOUT",
+-	"ERR 19: IDMA0_AXI_SLVERR",
+-	"ERR 20: IDMA0_AXI_DECERR",
+-	"ERR 21: 0x15 Reserved",
+-	"ERR 22: IDMA1_AXI_SLAVE_FAULT",
+-	"ERR 23: IDMA1_AIXI_DECERR",
+-	"ERR 24: 0x18 Reserved",
+-	"ERR 25: ZLIBVHB_AXI_SLVERR",
+-	"ERR 26: ZLIBVHB_AXI_DECERR",
+-	"ERR 27: 0x1B Reserved",
+-	"ERR 27: ZLIB_UNEXPECTED_EOM",
+-	"ERR 27: ZLIB_EXTRA_DATA",
+-	"ERR 30: ZLIB_BTYPE",
+-	"ERR 31: ZLIB_UNDEFINED_SYMBOL",
+-	"ERR 32: ZLIB_UNDEFINED_DISTANCE_S",
+-	"ERR 33: ZLIB_CODE_LENGTH_SYMBOL",
+-	"ERR 34: ZLIB _VHB_ILLEGAL_FETCH",
+-	"ERR 35: ZLIB_UNCOMPRESSED_LEN",
+-	"ERR 36: ZLIB_LIMIT_REACHED",
+-	"ERR 37: ZLIB_CHECKSUM_MISMATCH0",
+-	"ERR 38: ODMA0_AXI_SLVERR",
+-	"ERR 39: ODMA0_AXI_DECERR",
+-	"ERR 40: 0x28 Reserved",
+-	"ERR 41: ODMA1_AXI_SLVERR",
+-	"ERR 42: ODMA1_AXI_DECERR",
+-	"ERR 43: LSB_PARITY_ERR",
++ /* Human-readable error strings */
++#define CCP_MAX_ERROR_CODE	64
++ static char *ccp_error_codes[] = {
++ 	"",
++	"ILLEGAL_ENGINE",
++	"ILLEGAL_KEY_ID",
++	"ILLEGAL_FUNCTION_TYPE",
++	"ILLEGAL_FUNCTION_MODE",
++	"ILLEGAL_FUNCTION_ENCRYPT",
++	"ILLEGAL_FUNCTION_SIZE",
++	"Zlib_MISSING_INIT_EOM",
++	"ILLEGAL_FUNCTION_RSVD",
++	"ILLEGAL_BUFFER_LENGTH",
++	"VLSB_FAULT",
++	"ILLEGAL_MEM_ADDR",
++	"ILLEGAL_MEM_SEL",
++	"ILLEGAL_CONTEXT_ID",
++	"ILLEGAL_KEY_ADDR",
++	"0xF Reserved",
++	"Zlib_ILLEGAL_MULTI_QUEUE",
++	"Zlib_ILLEGAL_JOBID_CHANGE",
++	"CMD_TIMEOUT",
++	"IDMA0_AXI_SLVERR",
++	"IDMA0_AXI_DECERR",
++	"0x15 Reserved",
++	"IDMA1_AXI_SLAVE_FAULT",
++	"IDMA1_AIXI_DECERR",
++	"0x18 Reserved",
++	"ZLIBVHB_AXI_SLVERR",
++	"ZLIBVHB_AXI_DECERR",
++	"0x1B Reserved",
++	"ZLIB_UNEXPECTED_EOM",
++	"ZLIB_EXTRA_DATA",
++	"ZLIB_BTYPE",
++	"ZLIB_UNDEFINED_SYMBOL",
++	"ZLIB_UNDEFINED_DISTANCE_S",
++	"ZLIB_CODE_LENGTH_SYMBOL",
++	"ZLIB _VHB_ILLEGAL_FETCH",
++	"ZLIB_UNCOMPRESSED_LEN",
++	"ZLIB_LIMIT_REACHED",
++	"ZLIB_CHECKSUM_MISMATCH0",
++	"ODMA0_AXI_SLVERR",
++	"ODMA0_AXI_DECERR",
++	"0x28 Reserved",
++	"ODMA1_AXI_SLVERR",
++	"ODMA1_AXI_DECERR",
+ };
+ 
+-void ccp_log_error(struct ccp_device *d, int e)
++void ccp_log_error(struct ccp_device *d, unsigned int e)
+ {
+-	dev_err(d->dev, "CCP error: %s (0x%x)\n", ccp_error_codes[e], e);
++	if (WARN_ON(e >= CCP_MAX_ERROR_CODE))
++		return;
 +
-+	return rc;
++	if (e < ARRAY_SIZE(ccp_error_codes))
++		dev_err(d->dev, "CCP error %d: %s\n", e, ccp_error_codes[e]);
++	else
++		dev_err(d->dev, "CCP error %d: Unknown Error\n", e);
  }
  
- static void __exit p9_virtio_cleanup(void)
+ /* List of CCPs, CCP count, read-write access lock, and access functions
+--- a/drivers/crypto/ccp/ccp-dev.h
++++ b/drivers/crypto/ccp/ccp-dev.h
+@@ -607,7 +607,7 @@ void ccp_platform_exit(void);
+ void ccp_add_device(struct ccp_device *ccp);
+ void ccp_del_device(struct ccp_device *ccp);
+ 
+-extern void ccp_log_error(struct ccp_device *, int);
++extern void ccp_log_error(struct ccp_device *, unsigned int);
+ 
+ struct ccp_device *ccp_alloc_struct(struct device *dev);
+ bool ccp_queues_suspended(struct ccp_device *ccp);
 
 
