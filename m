@@ -2,51 +2,53 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAEFC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3914C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C337620880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C163120679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739495;
-	bh=JLeOArumhw3pHEpAq0cX2sLAqcrHiDyam2CGdvxGhxQ=;
+	s=default; t=1564739502;
+	bh=goHfdpkyjRkUxgqH3PRtuRUvEVTPWNxCNirmAlAXiTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3PoBah0d1hszFmLQNfglt5I1vc7xUvRJW23aYmuU3hhPEm5asb7SBw47qiZq6rIZ
-	 m8okHYmBgu5lTz2htJCiptC+YOsv+8ko1mj/ih8yvXfGX35h65ejdhqumAdy0JFYhy
-	 KWQdGM5m/uB0Bjxjhg+lhZ44KoRKswUILsMQUDVc=
+	b=NxskhXkuH6nC+v67U85EGIeaRhq0va70DnSMlCbnamYSnQPAz0irTewfRwddYZrWb
+	 6KRSzoXnmfDq3ffHbMGXyqrCEDTwKkYmQe8/bmFOTJ1ROsHepxD37e607slgNXRSkG
+	 En3OuK/UQK1/p95v4YJ0Pe9N3J9/duI7knl4umds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405869AbfHBJve (ORCPT
+        id S2405900AbfHBJvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:51:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48068 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:51:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391547AbfHBJoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:44:39 -0400
+        id S2405876AbfHBJvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:51:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9080C206A2;
-        Fri,  2 Aug 2019 09:44:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD8872064A;
+        Fri,  2 Aug 2019 09:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739078;
-        bh=JLeOArumhw3pHEpAq0cX2sLAqcrHiDyam2CGdvxGhxQ=;
+        s=default; t=1564739495;
+        bh=goHfdpkyjRkUxgqH3PRtuRUvEVTPWNxCNirmAlAXiTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aC4KywNzdMrEJ4bVo/ofCfFWIvI4cNKZTFtab3+H4yGSSTYbiuyt6bc/HBXdfQePi
-         2v67rjOkaEso70X9B/B1p0VV1at1kKKOU76cUQf5djfVe/RnCk2wLlILF/3RgXi9Zq
-         LxM20/RcChLoBKMfBVrZBjyZxk0/gzdXpGvQYJrU=
+        b=N+F5/N2xS17DE2+KW71cST1dRyNTwfdPsA/svXoYfIznhTmRFB3ox5P6YxhUua6P2
+         8YcpTcrWamBuODt3HZlpJuS9lKDRmERuI55lPmMhgh1myF0S1G+P481LBbw0UCv8Zq
+         S6w7SDfrUOxYHiii8kawOuLaHycytO8lsdsN9iSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 089/223] lib/scatterlist: Fix mapping iterator when sg->offset is greater than PAGE_SIZE
-Date:   Fri,  2 Aug 2019 11:35:14 +0200
-Message-Id: <20190802092244.851105063@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 162/223] pinctrl: rockchip: fix leaked of_node references
+Date:   Fri,  2 Aug 2019 11:36:27 +0200
+Message-Id: <20190802092248.664754116@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -59,57 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+[ Upstream commit 3c89c70634bb0b6f48512de873e7a45c7e1fbaa5 ]
 
-commit aeb87246537a83c2aff482f3f34a2e0991e02cbc upstream.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-All mapping iterator logic is based on the assumption that sg->offset
-is always lower than PAGE_SIZE.
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/pinctrl-rockchip.c:3221:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+./drivers/pinctrl/pinctrl-rockchip.c:3223:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
 
-But there are situations where sg->offset is such that the SG item
-is on the second page. In that case sg_copy_to_buffer() fails
-properly copying the data into the buffer. One of the reason is
-that the data will be outside the kmapped area used to access that
-data.
-
-This patch fixes the issue by adjusting the mapping iterator
-offset and pgoffset fields such that offset is always lower than
-PAGE_SIZE.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 4225fc8555a9 ("lib/scatterlist: use page iterator in the mapping iterator")
-Cc: stable@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/scatterlist.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/pinctrl/pinctrl-rockchip.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/lib/scatterlist.c
-+++ b/lib/scatterlist.c
-@@ -496,17 +496,18 @@ static bool sg_miter_get_next_page(struc
- {
- 	if (!miter->__remaining) {
- 		struct scatterlist *sg;
--		unsigned long pgoffset;
- 
- 		if (!__sg_page_iter_next(&miter->piter))
- 			return false;
- 
- 		sg = miter->piter.sg;
--		pgoffset = miter->piter.sg_pgoffset;
- 
--		miter->__offset = pgoffset ? 0 : sg->offset;
-+		miter->__offset = miter->piter.sg_pgoffset ? 0 : sg->offset;
-+		miter->piter.sg_pgoffset += miter->__offset >> PAGE_SHIFT;
-+		miter->__offset &= PAGE_SIZE - 1;
- 		miter->__remaining = sg->offset + sg->length -
--				(pgoffset << PAGE_SHIFT) - miter->__offset;
-+				     (miter->piter.sg_pgoffset << PAGE_SHIFT) -
-+				     miter->__offset;
- 		miter->__remaining = min_t(unsigned long, miter->__remaining,
- 					   PAGE_SIZE - miter->__offset);
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index f826793e972c..417cd3bd7e0c 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -2208,6 +2208,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
+ 						    base,
+ 						    &rockchip_regmap_config);
+ 		}
++		of_node_put(node);
  	}
+ 
+ 	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
+-- 
+2.20.1
+
 
 
