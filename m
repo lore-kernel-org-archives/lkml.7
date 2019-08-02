@@ -2,173 +2,162 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 004F6C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20601C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE03320679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OUgcLNqK"
+	by mail.kernel.org (Postfix) with ESMTP id E9D5720679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564739436;
+	bh=SEWFmYr3x+z3nRgyaUGMWfh3wd0O5TyLhAeLY2PKxhM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hO9xgIywJySv/GQ0wTGHKugTX5It+/wAz247546V/1YFpfmJqWCzlKfA3yNBDk+aY
+	 SkA6bPZU9vCCoE78Q9ay91FOyqp92QexuIL3xVvPcyIoh8cFcj1EZcPV9Te+ihLdnX
+	 +j+8iYb7rG2tpOteAm8fJ1YVnU19R4urBHITn9+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391945AbfHBJpc (ORCPT
+        id S2405447AbfHBJp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:45:32 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35226 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405432AbfHBJpZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:45:25 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j19so862476otq.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 02:45:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gwtot9TeklRqzA2mlAgP0qsNYR8mpKfqgQpyD7Xv9xQ=;
-        b=OUgcLNqK0s105ZDr95woraa74qxDrAheewlOE/XzMooHzoMBTbOARD5eNRHUSiMzcq
-         IhBwJjTC9G7fBq9w/3UeeyRGEAdquOmn9Os9vU6NAyAtgvlfkjPl5wARtAnfrlzi0Zzz
-         ZKHDCHSnQDuSytpcS279y89/7KWtlagEAyreQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gwtot9TeklRqzA2mlAgP0qsNYR8mpKfqgQpyD7Xv9xQ=;
-        b=jJxP6a+fLLXbliZeRO9yOJTbUDuFptmfZ/lMj6FEhSw50nmI0hFAM8621NEMgT75Oh
-         g6qH7o4utkgW0skDsZmr7N6EwteD4vmwzDGD7yiFDZNoRZw8ZzZ+CMYIcO7j8yfEppMS
-         5nNhaCVxrs4keFQuPIQVjnruWTnWbuk7VETbYpG+eEmAO4Ykakzj6OfpelkpKMGGA1fZ
-         mv+FUZoNkPZRgXBDKYqexxCK3jtTdPCdKeVQT2Ebo/o3MJN/VF8c/kZ+DQvnm04AJZz2
-         AD8dmcsVfWebMg1BVWphxwsVmcJSUwF/nNsr1IHQe3HhPAwg4+xlYDFrZH/0w7hGeiVq
-         rZEw==
-X-Gm-Message-State: APjAAAUdNEh2uB3YK/yb8I6tE9R080dFGMpx5pENMDlioo4dkqyxHUwR
-        6xLf1zsorwslrMluBDsLiwfRTPz/j4rwufULM/4=
-X-Google-Smtp-Source: APXvYqx6atiJUG/sjs4BaoFmi9Wh4Qwt4Vg1uYeBCLXFTQH2NdA5pxfrEzBWroGoy1Iiodaypgy51Sk3SvFRrEeldqM=
-X-Received: by 2002:a05:6830:ce:: with SMTP id x14mr84006580oto.188.1564739124649;
- Fri, 02 Aug 2019 02:45:24 -0700 (PDT)
+        Fri, 2 Aug 2019 05:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405429AbfHBJpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:45:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9978920880;
+        Fri,  2 Aug 2019 09:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564739124;
+        bh=SEWFmYr3x+z3nRgyaUGMWfh3wd0O5TyLhAeLY2PKxhM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iqXBLz9d7J3ut2CBH2xkjlaAKCW6KVQnPf834MHbPCgXm/KqRmq1lUQdobPyUXVd4
+         b7eT6LbdekAJZGa4NAqUAdbvPcBHefYnZmummVO8Az8RuyXzX4K3Bj4+6nIGNHUeND
+         Gqoo47dmXSn7MJz8471XvYCENt8IMA9IBK8xD2so=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Alessio Balsini <balsini@android.com>
+Subject: [PATCH 4.9 114/223] um: Allow building and running on older hosts
+Date:   Fri,  2 Aug 2019 11:35:39 +0200
+Message-Id: <20190802092246.611574930@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+References: <20190802092238.692035242@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1564571048-15029-1-git-send-email-lowry.li@arm.com>
- <1564571048-15029-3-git-send-email-lowry.li@arm.com> <20190731132002.dut5mdsqgh7b75iv@DESKTOP-E1NTVVP.localdomain>
- <20190802092920.4la5cwrltv2m6dke@DESKTOP-E1NTVVP.localdomain> <CAKMK7uEZaFEcs90+U3vzgH69+95BD58Dt=J=gT6=n6oah5Nbyg@mail.gmail.com>
-In-Reply-To: <CAKMK7uEZaFEcs90+U3vzgH69+95BD58Dt=J=gT6=n6oah5Nbyg@mail.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 2 Aug 2019 11:45:13 +0200
-Message-ID: <CAKMK7uH38rxyTyuYRGJ6NBejyUxQ6Qvr1CdjH2kpXiq+3-=t8Q@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] drm: Clear the fence pointer when writeback job signaled
-To:     Brian Starkey <Brian.Starkey@arm.com>
-Cc:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "eric@anholt.net" <eric@anholt.net>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 11:43 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Fri, Aug 2, 2019 at 11:29 AM Brian Starkey <Brian.Starkey@arm.com> wrote:
-> >
-> > Hi Lowry,
-> >
-> > On Thu, Aug 01, 2019 at 06:34:08AM +0000, Lowry Li (Arm Technology China) wrote:
-> > > Hi Brian,
-> > >
-> > > On Wed, Jul 31, 2019 at 09:20:04PM +0800, Brian Starkey wrote:
-> > > > Hi Lowry,
-> > > >
-> > > > Thanks for this cleanup.
-> > > >
-> > > > On Wed, Jul 31, 2019 at 11:04:45AM +0000, Lowry Li (Arm Technology China) wrote:
-> > > > > During it signals the completion of a writeback job, after releasing
-> > > > > the out_fence, we'd clear the pointer.
-> > > > >
-> > > > > Check if fence left over in drm_writeback_cleanup_job(), release it.
-> > > > >
-> > > > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> > > > > ---
-> > > > >  drivers/gpu/drm/drm_writeback.c | 23 +++++++++++++++--------
-> > > > >  1 file changed, 15 insertions(+), 8 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
-> > > > > index ff138b6..43d9e3b 100644
-> > > > > --- a/drivers/gpu/drm/drm_writeback.c
-> > > > > +++ b/drivers/gpu/drm/drm_writeback.c
-> > > > > @@ -324,6 +324,9 @@ void drm_writeback_cleanup_job(struct drm_writeback_job *job)
-> > > > >   if (job->fb)
-> > > > >           drm_framebuffer_put(job->fb);
-> > > > >
-> > > > > + if (job->out_fence)
-> > > >
-> > > > I'm thinking it might be a good idea to signal the fence with an error
-> > > > here, if it's not already signaled. Otherwise, if there's someone
-> > > > waiting (which there shouldn't be), they're going to be waiting a very
-> > > > long time :-)
-> > > >
-> > > > Thanks,
-> > > > -Brian
-> > > >
-> > > Here it happened at atomic_check failed and test only commit. For both
-> > > cases, the commit has been dropped and it's only a clean up. So here better
-> > > not be treated as an error case:)
-> >
-> > If anyone else has a reference on the fence, then IMO it absolutely is
-> > an error to reach this point without the fence being signaled -
-> > because it means that the fence will never be signaled.
-> >
-> > I don't think the API gives you a way to check if this is the last
-> > reference, so it's safest to just make sure the fence is signalled
-> > before dropping the reference.
-> >
-> > It just feels wrong to me to have the possibility of a dangling fence
-> > which is never going to get signalled; and it's an easy defensive step
-> > to make sure it can never happen.
-> >
-> > I know it _shouldn't_ happen, but we often put in handling for cases
-> > which shouldn't happen, because they frequently do happen :-)
->
-> We're not as paranoid with the vblank fences either, so not sure why
-> we need to be this paranoid with writeback fences. If your driver
-> grabs anything from the atomic state in ->atomic_check it's buggy
-> anyway.
->
-> If you want to fix this properly I think we need to move the call to
-> prepare_signalling() in between atomic_check and atomic_commit. Then I
-> think it makes sense to also force-complete the fence on error ...
->
-> > > Since for userspace, it should have been failed or a test only case, so
-> > > writebace fence should not be signaled.
-> >
-> > It's not only userspace that can wait on fences (and in fact this
-> > fence will never even reach userspace if the commit fails), the driver
-> > may have taken a copy to use for "something".
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-I forgot to add: you can check this by looking at the fence reference
-count. A WARN_ON if that's more than 1 on cleanup (but also for the
-out fences) could be a nice addition.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+commit 0a987645672ebde7844a9c0732a5a25f3d4bb6c6 upstream.
+
+Commit a78ff1112263 ("um: add extended processor state save/restore
+support") and b6024b21fec8 ("um: extend fpstate to _xstate to support
+YMM registers") forced the use of the x86 FP _xstate and
+PTRACE_GETREGSET/SETREGSET. On older hosts, we would neither be able to
+build UML nor run it anymore with these two commits applied because we
+don't have definitions for struct _xstate nor these two ptrace requests.
+
+We can determine at build time which fp context structure to check
+against, just like we can keep using the old i387 fp save/restore if
+PTRACE_GETRESET/SETREGSET are not defined.
+
+Fixes: a78ff1112263 ("um: add extended processor state save/restore support")
+Fixes: b6024b21fec8 ("um: extend fpstate to _xstate to support YMM registers")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Alessio Balsini <balsini@android.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/um/os-Linux/registers.c |   12 ++++++++----
+ arch/x86/um/user-offsets.c       |    4 ++++
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+--- a/arch/x86/um/os-Linux/registers.c
++++ b/arch/x86/um/os-Linux/registers.c
+@@ -26,6 +26,7 @@ int save_i387_registers(int pid, unsigne
+ 
+ int save_fp_registers(int pid, unsigned long *fp_regs)
+ {
++#ifdef PTRACE_GETREGSET
+ 	struct iovec iov;
+ 
+ 	if (have_xstate_support) {
+@@ -34,9 +35,9 @@ int save_fp_registers(int pid, unsigned
+ 		if (ptrace(PTRACE_GETREGSET, pid, NT_X86_XSTATE, &iov) < 0)
+ 			return -errno;
+ 		return 0;
+-	} else {
++	} else
++#endif
+ 		return save_i387_registers(pid, fp_regs);
+-	}
+ }
+ 
+ int restore_i387_registers(int pid, unsigned long *fp_regs)
+@@ -48,6 +49,7 @@ int restore_i387_registers(int pid, unsi
+ 
+ int restore_fp_registers(int pid, unsigned long *fp_regs)
+ {
++#ifdef PTRACE_SETREGSET
+ 	struct iovec iov;
+ 
+ 	if (have_xstate_support) {
+@@ -56,9 +58,9 @@ int restore_fp_registers(int pid, unsign
+ 		if (ptrace(PTRACE_SETREGSET, pid, NT_X86_XSTATE, &iov) < 0)
+ 			return -errno;
+ 		return 0;
+-	} else {
++	} else
++#endif
+ 		return restore_i387_registers(pid, fp_regs);
+-	}
+ }
+ 
+ #ifdef __i386__
+@@ -122,6 +124,7 @@ int put_fp_registers(int pid, unsigned l
+ 
+ void arch_init_registers(int pid)
+ {
++#ifdef PTRACE_GETREGSET
+ 	struct _xstate fp_regs;
+ 	struct iovec iov;
+ 
+@@ -129,6 +132,7 @@ void arch_init_registers(int pid)
+ 	iov.iov_len = sizeof(struct _xstate);
+ 	if (ptrace(PTRACE_GETREGSET, pid, NT_X86_XSTATE, &iov) == 0)
+ 		have_xstate_support = 1;
++#endif
+ }
+ #endif
+ 
+--- a/arch/x86/um/user-offsets.c
++++ b/arch/x86/um/user-offsets.c
+@@ -50,7 +50,11 @@ void foo(void)
+ 	DEFINE(HOST_GS, GS);
+ 	DEFINE(HOST_ORIG_AX, ORIG_EAX);
+ #else
++#if defined(PTRACE_GETREGSET) && defined(PTRACE_SETREGSET)
+ 	DEFINE(HOST_FP_SIZE, sizeof(struct _xstate) / sizeof(unsigned long));
++#else
++	DEFINE(HOST_FP_SIZE, sizeof(struct _fpstate) / sizeof(unsigned long));
++#endif
+ 	DEFINE_LONGS(HOST_BX, RBX);
+ 	DEFINE_LONGS(HOST_CX, RCX);
+ 	DEFINE_LONGS(HOST_DI, RDI);
+
+
