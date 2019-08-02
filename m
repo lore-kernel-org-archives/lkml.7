@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66FCC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0657C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21BF21873
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97BEC20644
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752343;
-	bh=2NQfbXr/2flf+VnmDxlQVHz2x3lgkRrjGYvopR5En44=;
+	s=default; t=1564752347;
+	bh=tgE9qEUA0xbKx/2XjegxyGqUS9aJV2GgF602hqiccm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IwlkGuBTVYcN/hwRoY02w+81l+NwBeqnIoCaZTsKlex+dDYDFJ4MtumgvrgRHAHcb
-	 rwaDSSsmf/cz5TExCXpM2xnwDBrFgb/OKCxL1Jz0RSkPEvUeyiAyD5SO89rnMwCWAv
-	 yJxrFwTp1YHtQ8uyUnyQDILJPxy12brTe1GYVklM=
+	b=fFaZkPdiujvQTykfccvSwxylvwuxmEdKh7ov7GQPYG4b6KjzphsddsfMUJOkxI06b
+	 rgktNsEuuBRohX3mNFccAw4PyqNsevmPC5xJK6zJsKPV561b86XZjwEKjeNQ3iR66x
+	 3PSzsMIT/gVxlzJQy8UYGyydOkVU15t4gBOE8lcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394405AbfHBNZl (ORCPT
+        id S2394419AbfHBNZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:25:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35988 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:25:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394337AbfHBNZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:25:14 -0400
+        id S2394406AbfHBNZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:25:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89BEA21851;
-        Fri,  2 Aug 2019 13:25:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B75721851;
+        Fri,  2 Aug 2019 13:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752313;
-        bh=2NQfbXr/2flf+VnmDxlQVHz2x3lgkRrjGYvopR5En44=;
+        s=default; t=1564752342;
+        bh=tgE9qEUA0xbKx/2XjegxyGqUS9aJV2GgF602hqiccm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCJTb/jsqG5nhjy309mXPZOB0leF0H+tWCMa/qDzZdupdUZ3+3UNZvZPD2oBOr3Bi
-         84VioGLn3wpmh74DHkUja7hep8P3tqR2Ode9ir9nCwMwRDVzLfDp6XuCgjnrz768o8
-         MwbnDqDH9yGOCES0lpzW1b+Cvb7ibBY2H5yyWodI=
+        b=RYBdn5V8JS/d3vtdbOTfWgd/j6gRYpkTI+ViMWnWdZqgzc+YpPj1HP2ReOEKFrU/L
+         dlxuGxiX9fuvbMl5apGhENJ4baw1wp40QLgrph7nI8ZsaZu715mmaxU14wGrOIJjjU
+         Sy9pbrjBPq9IergSKS2k+20uFCtndcClVVNP7Sn8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 23/30] ARM: davinci: fix sleep.S build error on ARMv4
-Date:   Fri,  2 Aug 2019 09:24:15 -0400
-Message-Id: <20190802132422.13963-23-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 29/30] tty/ldsem, locking/rwsem: Add missing ACQUIRE to read_failed sleep loop
+Date:   Fri,  2 Aug 2019 09:24:21 -0400
+Message-Id: <20190802132422.13963-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
 References: <20190802132422.13963-1-sashal@kernel.org>
@@ -59,40 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit d64b212ea960db4276a1d8372bd98cb861dfcbb0 ]
+[ Upstream commit 952041a8639a7a3a73a2b6573cb8aa8518bc39f8 ]
 
-When building a multiplatform kernel that includes armv4 support,
-the default target CPU does not support the blx instruction,
-which leads to a build failure:
+While reviewing rwsem down_slowpath, Will noticed ldsem had a copy of
+a bug we just found for rwsem.
 
-arch/arm/mach-davinci/sleep.S: Assembler messages:
-arch/arm/mach-davinci/sleep.S:56: Error: selected processor does not support `blx ip' in ARM mode
+  X = 0;
 
-Add a .arch statement in the sources to make this file build.
+  CPU0			CPU1
 
-Link: https://lore.kernel.org/r/20190722145211.1154785-1-arnd@arndb.de
-Acked-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+  rwsem_down_read()
+    for (;;) {
+      set_current_state(TASK_UNINTERRUPTIBLE);
+
+                        X = 1;
+                        rwsem_up_write();
+                          rwsem_mark_wake()
+                            atomic_long_add(adjustment, &sem->count);
+                            smp_store_release(&waiter->task, NULL);
+
+      if (!waiter.task)
+        break;
+
+      ...
+    }
+
+  r = X;
+
+Allows 'r == 0'.
+
+Reported-by: Will Deacon <will@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Will Deacon <will@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Hurley <peter@hurleysoftware.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 4898e640caf0 ("tty: Add timed, writer-prioritized rw semaphore")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-davinci/sleep.S | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/tty_ldsem.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
-index cd350dee4df37..efcd400b2abb3 100644
---- a/arch/arm/mach-davinci/sleep.S
-+++ b/arch/arm/mach-davinci/sleep.S
-@@ -37,6 +37,7 @@
- #define DEEPSLEEP_SLEEPENABLE_BIT	BIT(31)
+diff --git a/drivers/tty/tty_ldsem.c b/drivers/tty/tty_ldsem.c
+index 5c2cec298816b..c6ce34161281a 100644
+--- a/drivers/tty/tty_ldsem.c
++++ b/drivers/tty/tty_ldsem.c
+@@ -139,8 +139,7 @@ static void __ldsem_wake_readers(struct ld_semaphore *sem)
  
- 	.text
-+	.arch	armv5te
- /*
-  * Move DaVinci into deep sleep state
-  *
+ 	list_for_each_entry_safe(waiter, next, &sem->read_wait, list) {
+ 		tsk = waiter->task;
+-		smp_mb();
+-		waiter->task = NULL;
++		smp_store_release(&waiter->task, NULL);
+ 		wake_up_process(tsk);
+ 		put_task_struct(tsk);
+ 	}
+@@ -235,7 +234,7 @@ down_read_failed(struct ld_semaphore *sem, long count, long timeout)
+ 	for (;;) {
+ 		set_current_state(TASK_UNINTERRUPTIBLE);
+ 
+-		if (!waiter.task)
++		if (!smp_load_acquire(&waiter.task))
+ 			break;
+ 		if (!timeout)
+ 			break;
 -- 
 2.20.1
 
