@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F44AC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D08C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DDF920679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D732086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738992;
-	bh=7Sjwn/BvuzOw0aAC5wsuPz9Ie21q37ReYlCInuwN/tc=;
+	s=default; t=1564739001;
+	bh=BPj6Fqs5ZKIFZ+NOohujAGFUyRkC3VRVPwhMr31csK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=01UZYcNwvZEedmPYiPqDJII9diMjO1YMSwRjNjM/hQSptJFxrGqGOPplbf1dySIF9
-	 LNIFJel8AvSCjc2l4GKZRT23Xc/wEgguG7F/PuITigX4NOYYs7sExalhWHHFHghdFt
-	 N38IJESozL//H09QiQqgmpdtZcugq0e74I0opVWQ=
+	b=XyodVz1sPlz90NkoS1dmVK5ptOLnRb4GwYMdvyWeI3eW4yuVEBYJGIeghId5jutXC
+	 m0Jsah9glbG7b/0ifpSwxH1TDhv+c3mmde2xdsEKcWgSvXRXJKRx/2mMhzDl4nsYxp
+	 cwSn08ww6xu4Ow2awu4qss8YKrYSHNBx07+X8B5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405040AbfHBJnK (ORCPT
+        id S2405018AbfHBJnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:43:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45824 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:43:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405023AbfHBJnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:43:05 -0400
+        id S2404847AbfHBJnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:43:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 172E720679;
-        Fri,  2 Aug 2019 09:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A89720880;
+        Fri,  2 Aug 2019 09:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738984;
-        bh=7Sjwn/BvuzOw0aAC5wsuPz9Ie21q37ReYlCInuwN/tc=;
+        s=default; t=1564738979;
+        bh=BPj6Fqs5ZKIFZ+NOohujAGFUyRkC3VRVPwhMr31csK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=we/uxpU/fHPeeEUAz0fj1ctnZQE80SwbzhQeybYrrRW0mwX722XxSXK1L6FFjXQbw
-         NeI7H+Kvh4Oy8sKuTu3imKjMMrQHk46fSqjjTkbD3R0oF6y2CG5eBDgcNvc/lIezXS
-         8zadpBcn3RaNE7m4BpdrcEgNBVlwISOFSXbe7VAI=
+        b=KLOS+XIx9TEYvuBpD/cM0piV/Vw30KOfdZ8GmFDWMw/bDrAQMzllJxjP91Rhmuryj
+         oNXTo2m1mrRwKTy1JSN4U2SKm4n9J03XWySa1M8VyH9U0SEKWDejkG43OrvtTV1t59
+         f+lOift6QvVsTJHKRIpN2wog2sya0sa3uqS9WfRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 064/223] bcache: check c->gc_thread by IS_ERR_OR_NULL in cache_set_flush()
-Date:   Fri,  2 Aug 2019 11:34:49 +0200
-Message-Id: <20190802092242.984970855@linuxfoundation.org>
+        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 055/223] ath10k: fix PCIE device wake up failed
+Date:   Fri,  2 Aug 2019 11:34:40 +0200
+Message-Id: <20190802092242.450580701@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -59,126 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b387e9b58679c60f5b1e4313939bd4878204fc37 ]
+[ Upstream commit 011d4111c8c602ea829fa4917af1818eb0500a90 ]
 
-When system memory is in heavy pressure, bch_gc_thread_start() from
-run_cache_set() may fail due to out of memory. In such condition,
-c->gc_thread is assigned to -ENOMEM, not NULL pointer. Then in following
-failure code path bch_cache_set_error(), when cache_set_flush() gets
-called, the code piece to stop c->gc_thread is broken,
-         if (!IS_ERR_OR_NULL(c->gc_thread))
-                 kthread_stop(c->gc_thread);
+Observed PCIE device wake up failed after ~120 iterations of
+soft-reboot test. The error message is
+"ath10k_pci 0000:01:00.0: failed to wake up device : -110"
 
-And KASAN catches such NULL pointer deference problem, with the warning
-information:
+The call trace as below:
+ath10k_pci_probe -> ath10k_pci_force_wake -> ath10k_pci_wake_wait ->
+ath10k_pci_is_awake
 
-[  561.207881] ==================================================================
-[  561.207900] BUG: KASAN: null-ptr-deref in kthread_stop+0x3b/0x440
-[  561.207904] Write of size 4 at addr 000000000000001c by task kworker/15:1/313
+Once trigger the device to wake up, we will continuously check the RTC
+state until it returns RTC_STATE_V_ON or timeout.
 
-[  561.207913] CPU: 15 PID: 313 Comm: kworker/15:1 Tainted: G        W         5.0.0-vanilla+ #3
-[  561.207916] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE136T-2.10]- 03/22/2019
-[  561.207935] Workqueue: events cache_set_flush [bcache]
-[  561.207940] Call Trace:
-[  561.207948]  dump_stack+0x9a/0xeb
-[  561.207955]  ? kthread_stop+0x3b/0x440
-[  561.207960]  ? kthread_stop+0x3b/0x440
-[  561.207965]  kasan_report+0x176/0x192
-[  561.207973]  ? kthread_stop+0x3b/0x440
-[  561.207981]  kthread_stop+0x3b/0x440
-[  561.207995]  cache_set_flush+0xd4/0x6d0 [bcache]
-[  561.208008]  process_one_work+0x856/0x1620
-[  561.208015]  ? find_held_lock+0x39/0x1d0
-[  561.208028]  ? drain_workqueue+0x380/0x380
-[  561.208048]  worker_thread+0x87/0xb80
-[  561.208058]  ? __kthread_parkme+0xb6/0x180
-[  561.208067]  ? process_one_work+0x1620/0x1620
-[  561.208072]  kthread+0x326/0x3e0
-[  561.208079]  ? kthread_create_worker_on_cpu+0xc0/0xc0
-[  561.208090]  ret_from_fork+0x3a/0x50
-[  561.208110] ==================================================================
-[  561.208113] Disabling lock debugging due to kernel taint
-[  561.208115] irq event stamp: 11800231
-[  561.208126] hardirqs last  enabled at (11800231): [<ffffffff83008538>] do_syscall_64+0x18/0x410
-[  561.208127] BUG: unable to handle kernel NULL pointer dereference at 000000000000001c
-[  561.208129] #PF error: [WRITE]
-[  561.312253] hardirqs last disabled at (11800230): [<ffffffff830052ff>] trace_hardirqs_off_thunk+0x1a/0x1c
-[  561.312259] softirqs last  enabled at (11799832): [<ffffffff850005c7>] __do_softirq+0x5c7/0x8c3
-[  561.405975] PGD 0 P4D 0
-[  561.442494] softirqs last disabled at (11799821): [<ffffffff831add2c>] irq_exit+0x1ac/0x1e0
-[  561.791359] Oops: 0002 [#1] SMP KASAN NOPTI
-[  561.791362] CPU: 15 PID: 313 Comm: kworker/15:1 Tainted: G    B   W         5.0.0-vanilla+ #3
-[  561.791363] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE136T-2.10]- 03/22/2019
-[  561.791371] Workqueue: events cache_set_flush [bcache]
-[  561.791374] RIP: 0010:kthread_stop+0x3b/0x440
-[  561.791376] Code: 00 00 65 8b 05 26 d5 e0 7c 89 c0 48 0f a3 05 ec aa df 02 0f 82 dc 02 00 00 4c 8d 63 20 be 04 00 00 00 4c 89 e7 e8 65 c5 53 00 <f0> ff 43 20 48 8d 7b 24 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
-[  561.791377] RSP: 0018:ffff88872fc8fd10 EFLAGS: 00010286
-[  561.838895] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  561.838916] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  561.838934] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  561.838948] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  561.838966] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  561.838979] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  561.838996] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  563.067028] RAX: 0000000000000000 RBX: fffffffffffffffc RCX: ffffffff832dd314
-[  563.067030] RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000297
-[  563.067032] RBP: ffff88872fc8fe88 R08: fffffbfff0b8213d R09: fffffbfff0b8213d
-[  563.067034] R10: 0000000000000001 R11: fffffbfff0b8213c R12: 000000000000001c
-[  563.408618] R13: ffff88dc61cc0f68 R14: ffff888102b94900 R15: ffff88dc61cc0f68
-[  563.408620] FS:  0000000000000000(0000) GS:ffff888f7dc00000(0000) knlGS:0000000000000000
-[  563.408622] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  563.408623] CR2: 000000000000001c CR3: 0000000f48a1a004 CR4: 00000000007606e0
-[  563.408625] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  563.408627] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  563.904795] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  563.915796] PKRU: 55555554
-[  563.915797] Call Trace:
-[  563.915807]  cache_set_flush+0xd4/0x6d0 [bcache]
-[  563.915812]  process_one_work+0x856/0x1620
-[  564.001226] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  564.033563]  ? find_held_lock+0x39/0x1d0
-[  564.033567]  ? drain_workqueue+0x380/0x380
-[  564.033574]  worker_thread+0x87/0xb80
-[  564.062823] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  564.118042]  ? __kthread_parkme+0xb6/0x180
-[  564.118046]  ? process_one_work+0x1620/0x1620
-[  564.118048]  kthread+0x326/0x3e0
-[  564.118050]  ? kthread_create_worker_on_cpu+0xc0/0xc0
-[  564.167066] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  564.252441]  ret_from_fork+0x3a/0x50
-[  564.252447] Modules linked in: msr rpcrdma sunrpc rdma_ucm ib_iser ib_umad rdma_cm ib_ipoib i40iw configfs iw_cm ib_cm libiscsi scsi_transport_iscsi mlx4_ib ib_uverbs mlx4_en ib_core nls_iso8859_1 nls_cp437 vfat fat intel_rapl skx_edac x86_pkg_temp_thermal coretemp iTCO_wdt iTCO_vendor_support crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel ses raid0 aesni_intel cdc_ether enclosure usbnet ipmi_ssif joydev aes_x86_64 i40e scsi_transport_sas mii bcache md_mod crypto_simd mei_me ioatdma crc64 ptp cryptd pcspkr i2c_i801 mlx4_core glue_helper pps_core mei lpc_ich dca wmi ipmi_si ipmi_devintf nd_pmem dax_pmem nd_btt ipmi_msghandler device_dax pcc_cpufreq button hid_generic usbhid mgag200 i2c_algo_bit drm_kms_helper syscopyarea sysfillrect xhci_pci sysimgblt fb_sys_fops xhci_hcd ttm megaraid_sas drm usbcore nfit libnvdimm sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua efivarfs
-[  564.299390] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
-[  564.348360] CR2: 000000000000001c
-[  564.348362] ---[ end trace b7f0e5cc7b2103b0 ]---
+But for QCA99x0 chips, we use wrong value for RTC_STATE_V_ON.
+Occasionally, we get 0x7 on the fist read, we thought as a failure
+case, but actually is the right value, also verified with the spec.
+So fix the issue by changing RTC_STATE_V_ON from 0x5 to 0x7, passed
+~2000 iterations.
 
-Therefore, it is not enough to only check whether c->gc_thread is NULL,
-we should use IS_ERR_OR_NULL() to check both NULL pointer and error
-value.
+Tested HW: QCA9984
 
-This patch changes the above buggy code piece in this way,
-         if (!IS_ERR_OR_NULL(c->gc_thread))
-                 kthread_stop(c->gc_thread);
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 2 +-
+ drivers/net/wireless/ath/ath10k/hw.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 9f2588eaaf5f..c5bc3e5e921e 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1405,7 +1405,7 @@ static void cache_set_flush(struct closure *cl)
- 	kobject_put(&c->internal);
- 	kobject_del(&c->kobj);
+diff --git a/drivers/net/wireless/ath/ath10k/hw.c b/drivers/net/wireless/ath/ath10k/hw.c
+index 675e75d66db2..14dc6548701c 100644
+--- a/drivers/net/wireless/ath/ath10k/hw.c
++++ b/drivers/net/wireless/ath/ath10k/hw.c
+@@ -157,7 +157,7 @@ const struct ath10k_hw_values qca6174_values = {
+ };
  
--	if (c->gc_thread)
-+	if (!IS_ERR_OR_NULL(c->gc_thread))
- 		kthread_stop(c->gc_thread);
- 
- 	if (!IS_ERR_OR_NULL(c->root))
+ const struct ath10k_hw_values qca99x0_values = {
+-	.rtc_state_val_on		= 5,
++	.rtc_state_val_on		= 7,
+ 	.ce_count			= 12,
+ 	.msi_assign_ce_max		= 12,
+ 	.num_target_ce_config_wlan	= 10,
 -- 
 2.20.1
 
