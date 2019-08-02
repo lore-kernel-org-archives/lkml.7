@@ -2,386 +2,103 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA89C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F98C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F41F206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ADFD206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZoPUQ1RH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L0evPFMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391000AbfHBW15 (ORCPT
+        id S2391599AbfHBWba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:27:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38941 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729919AbfHBW15 (ORCPT
+        Fri, 2 Aug 2019 18:31:30 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37415 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729919AbfHBWb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:27:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f17so32706477pfn.6
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 15:27:56 -0700 (PDT)
+        Fri, 2 Aug 2019 18:31:29 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c9so53918002lfh.4
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 15:31:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=g7V5hQ6elfu1kz6NU7RYSeBU7IePPTkmL4DXTcpRTqM=;
-        b=ZoPUQ1RH+hvLiLmgazq42vDf1Nvp+bTU/AnK2F1nD+KujWzTjS58qfsuns2usept4I
-         9PqsX/jhebix9aKH/q0hdjGKtWhWELKWWqwhsq5R4S9zCA6vd32AsMW4WAJxlMVtbu1k
-         j37ns1UPoS9KSI12MvoiM4HFH7ElIAR5PBBIg=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8tQh191xW5z/uqwcXTQaR6iRlPu4dlS4JjUPIzXI1i0=;
+        b=L0evPFMisUlfcr0ejK8sxz3FR7curgkYcXNQl3aE8Ndyo6Zm2gmWpA/JzsTVoihGhw
+         5EWCzMH8dJbIdO1VXDSeK4S7EczFoV0sHOraDsX4ap9t9qaaHuD0ePuJc1eAHsLsr1YQ
+         93BJ8OPQo7AMtWpR1+drmfGGbZarfaW6MBebCodaismcPLqwfsmajV/wb30d7Gf9czUp
+         I+H4GL3RuxEU3PZjX2tgCZWhqug0csI/AbnfHt23mFD2x/rk8o2RROuPF/BesU+faH3L
+         UBBl/diHpYUBcbJvSpH6gin/E/MeAvwEW3Sp9OZoqR+PXIHTtSL7SpfS63Aehyic2Bu2
+         9gUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=g7V5hQ6elfu1kz6NU7RYSeBU7IePPTkmL4DXTcpRTqM=;
-        b=IkxGs3CMTqZGwmEeXWroiPdaW3IjZkn0c88NeZUEKHLwyC3eGWkUxiyM+fa/eQXU2c
-         DbwwQBuvQJETgTpNzsIST2AsV21ALNd40Hup5S8zUR+0Rzt+ULLDCTw+nDJ3w+6FzgGZ
-         zdki9z5WipLzmF2FJGW6hseUcT7hVMITIhLoVfB2tq/B5zdhH2GZFC+N3tQsHb3+Br6D
-         FyJ+NM6U8FR0AZER6nOJsu91iPq+ulwyMiDEqWZP1EfDhO3w2wJL676U3sV+5CL8UkYZ
-         zsZqJN+ZNYBSKwnT++VHo9jsUlx9nu4KYUFmzmFUkBAJCVyttjyIVxNg9oUaHc76dR5l
-         gt9g==
-X-Gm-Message-State: APjAAAW9MCGkL0pIN4cu6H3cctvfgJhta5YGIJTLhkqttccww+ZGQyXa
-        Scs33VXyjt3tXFgtZldw5E22UQ==
-X-Google-Smtp-Source: APXvYqxdpgiE33UyGB3vNOHgh/vL9esOvNoerfOowq5Mpjl/aDgzOfgZYqlqCL5YyR68jKorWtNj/Q==
-X-Received: by 2002:a17:90a:9bca:: with SMTP id b10mr6370821pjw.90.1564784876202;
-        Fri, 02 Aug 2019 15:27:56 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q24sm8761388pjp.14.2019.08.02.15.27.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 15:27:55 -0700 (PDT)
-Message-ID: <5d44b8eb.1c69fb81.6d1c1.7d80@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8tQh191xW5z/uqwcXTQaR6iRlPu4dlS4JjUPIzXI1i0=;
+        b=HvwbcJwPQ5DQtvL1rbIG3HauCxE7JqmUDUaIZPMZ3N2CAjjmJUT+gUScDDo3rALG0q
+         vDmYVGBUcVNJS8ESDUMBAI+2nQLrTIvHbzTQ8sHhvuC/CwDJjSQ1ZqFPcqC2AdOgeqBp
+         GMMuhnj1LBC12X9rMuncp0d1NjTStGbGPsL5nuC+fr9e6jdMRi4o4igxE4ydjbokdbqJ
+         uBWzK6rk5eYqLbEAcemw0J4hasmnivyFi8msRktEpZRBr9rMoha5AevKPm03kGR+EseP
+         km9ReoCSn4Y2R1gJBovSkhTl9ZW7/a3Yg9FeNx4hs+yAAQrOoH2bXuSQj2T/Xr3u6yGy
+         TlzA==
+X-Gm-Message-State: APjAAAX69cnMHqcSW1ufO7nA3YgYcFZpOp7QjYoicVok/v2gmJaQ6klS
+        KJhaZO+I6mO6X5MA0HHFCVfLNMM7srJvV5/HFUzvsg==
+X-Google-Smtp-Source: APXvYqwDIwDheD+gFq+O5TZV6dJSFLuMVgoQGjhj+lZ8eLAYET/6IhmSX9+fvFrFVscVAgKHzz0hjQPV7iYVurKwj74=
+X-Received: by 2002:a19:7616:: with SMTP id c22mr1677508lff.115.1564785087648;
+ Fri, 02 Aug 2019 15:31:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190802082035.79316-1-hungte@chromium.org>
-References: <20190802082035.79316-1-hungte@chromium.org>
-Subject: Re: [PATCH] firmware: google: update vpd_decode from upstream
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     hungte@chromium.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anton Vasilyev <vasilyev@ispras.ru>,
-        Colin Ian King <colin.king@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org
-To:     Hung-Te Lin <hungte@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 02 Aug 2019 15:27:54 -0700
+References: <20190716215618.29757-1-robh@kernel.org>
+In-Reply-To: <20190716215618.29757-1-robh@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 3 Aug 2019 00:31:16 +0200
+Message-ID: <CACRpkdYsYH_z55+OeHzAp9bjj+0WrnH8LoXcEahVcX=in6TTEQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: stm32: Fix missing 'clocks'
+ property in examples
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Hung-Te Lin (2019-08-02 01:20:31)
-> The VPD implementation from Chromium Vital Product Data project has been
-> updated so vpd_decode be easily shared by kernel, firmware and the user
-> space utility programs. Also improved value range checks to prevent
-> kernel crash due to bad VPD data.
+On Tue, Jul 16, 2019 at 11:56 PM Rob Herring <robh@kernel.org> wrote:
 
-Please add a Fixes: tag here to fix the commit that introduces the
-problem. It would also be nice to get a description of the problem that
-this patch is fixing. For example, explaining why the types change from
-signed to unsigned.
+> Now that examples are validated against the DT schema, an error with
+> required 'clocks' property missing is exposed:
+>
+> Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
+> pinctrl@40020000: gpio@0: 'clocks' is a required property
+> Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
+> pinctrl@50020000: gpio@1000: 'clocks' is a required property
+> Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.example.dt.yaml: \
+> pinctrl@50020000: gpio@2000: 'clocks' is a required property
+>
+> Add the missing 'clocks' properties to the examples to fix the errors.
+>
+> Fixes: 2c9239c125f0 ("dt-bindings: pinctrl: Convert stm32 pinctrl bindings to json-schema")
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
->=20
-> Signed-off-by: Hung-Te Lin <hungte@chromium.org>
-> ---
->  drivers/firmware/google/vpd.c        | 38 +++++++++------
->  drivers/firmware/google/vpd_decode.c | 69 +++++++++++++++-------------
->  drivers/firmware/google/vpd_decode.h | 17 ++++---
->  3 files changed, 71 insertions(+), 53 deletions(-)
->=20
-> diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/google/vpd.c
-> index 0739f3b70347..ecf217a7db39 100644
-> --- a/drivers/firmware/google/vpd.c
-> +++ b/drivers/firmware/google/vpd.c
-> @@ -73,7 +73,7 @@ static ssize_t vpd_attrib_read(struct file *filp, struc=
-t kobject *kobp,
->   * exporting them as sysfs attributes. These keys present in old firmwar=
-es are
->   * ignored.
->   *
-> - * Returns VPD_OK for a valid key name, VPD_FAIL otherwise.
-> + * Returns VPD_DECODE_OK for a valid key name, VPD_DECODE_FAIL otherwise.
+This seems to already be upstream, but I have no memory of applying it.
+Less work for me :)
 
-Maybe we should convert these things to use linux conventions instead of
-VPD error codes?
-
->   *
->   * @key: The key name to check
->   * @key_len: key name length
-> @@ -86,14 +86,14 @@ static int vpd_section_check_key_name(const u8 *key, =
-s32 key_len)
->                 c =3D *key++;
-> =20
->                 if (!isalnum(c) && c !=3D '_')
-> -                       return VPD_FAIL;
-> +                       return VPD_DECODE_FAIL;
->         }
-> =20
-> -       return VPD_OK;
-> +       return VPD_DECODE_OK;
-
-Can you split this rename out into it's own patch. That way we can
-confirm that there are no changes due to the rename of the enum.
-
->  }
-> =20
-> -static int vpd_section_attrib_add(const u8 *key, s32 key_len,
-> -                                 const u8 *value, s32 value_len,
-> +static int vpd_section_attrib_add(const u8 *key, u32 key_len,
-> +                                 const u8 *value, u32 value_len,
->                                   void *arg)
->  {
->         int ret;
-> @@ -246,7 +246,7 @@ static int vpd_section_destroy(struct vpd_section *se=
-c)
-> =20
->  static int vpd_sections_init(phys_addr_t physaddr)
->  {
-> -       struct vpd_cbmem *temp;
-> +       struct vpd_cbmem __iomem *temp;
->         struct vpd_cbmem header;
->         int ret =3D 0;
-> =20
-> @@ -254,7 +254,7 @@ static int vpd_sections_init(phys_addr_t physaddr)
->         if (!temp)
->                 return -ENOMEM;
-> =20
-> -       memcpy(&header, temp, sizeof(struct vpd_cbmem));
-> +       memcpy_fromio(&header, temp, sizeof(struct vpd_cbmem));
->         memunmap(temp);
-> =20
->         if (header.magic !=3D VPD_CBMEM_MAGIC)
-> @@ -316,7 +316,19 @@ static struct coreboot_driver vpd_driver =3D {
->         },
->         .tag =3D CB_TAG_VPD,
->  };
-> -module_coreboot_driver(vpd_driver);
-> +
-> +static int __init coreboot_vpd_init(void)
-> +{
-> +       return coreboot_driver_register(&vpd_driver);
-> +}
-> +
-> +static void __exit coreboot_vpd_exit(void)
-> +{
-> +       coreboot_driver_unregister(&vpd_driver);
-> +}
-> +
-> +module_init(coreboot_vpd_init);
-> +module_exit(coreboot_vpd_exit);
-> =20
->  MODULE_AUTHOR("Google, Inc.");
->  MODULE_LICENSE("GPL");
-
-The above three hunks should be dropped. They're undoing other patches
-that have gone upstream.
-
-> diff --git a/drivers/firmware/google/vpd_decode.c b/drivers/firmware/goog=
-le/vpd_decode.c
-> index 92e3258552fc..5531770e3d58 100644
-> --- a/drivers/firmware/google/vpd_decode.c
-> +++ b/drivers/firmware/google/vpd_decode.c
-> @@ -9,19 +9,19 @@
-> =20
->  #include "vpd_decode.h"
-> =20
-> -static int vpd_decode_len(const s32 max_len, const u8 *in,
-> -                         s32 *length, s32 *decoded_len)
-> +static int vpd_decode_len(const u32 max_len, const u8 *in, u32 *length,
-
-Is there a reason why max_len and length changes to be unsigned?
-Presumably to fix something.
-
-> +                         u32 *decoded_len)
->  {
->         u8 more;
->         int i =3D 0;
-> =20
->         if (!length || !decoded_len)
-> -               return VPD_FAIL;
-> +               return VPD_DECODE_FAIL;
-> =20
->         *length =3D 0;
->         do {
->                 if (i >=3D max_len)
-> -                       return VPD_FAIL;
-> +                       return VPD_DECODE_FAIL;
-> =20
->                 more =3D in[i] & 0x80;
->                 *length <<=3D 7;
-> @@ -30,24 +30,43 @@ static int vpd_decode_len(const s32 max_len, const u8=
- *in,
->         } while (more);
-> =20
->         *decoded_len =3D i;
-> +       return VPD_DECODE_OK;
-> +}
-> +
-> +static int vpd_decode_entry(const u32 max_len, const u8 *input_buf,
-> +                           u32 *consumed, const u8 **entry, u32 *entry_l=
-en)
-> +{
-> +       u32 decoded_len;
-> +
-> +       if (vpd_decode_len(max_len - *consumed, &input_buf[*consumed],
-
-Can you add a local variable for *consumed? So _consumed is passed in
-and then u32 consume =3D *_consumed.
-
-> +                          entry_len, &decoded_len) !=3D VPD_DECODE_OK)
-> +               return VPD_DECODE_FAIL;
-> +       if (max_len - *consumed < decoded_len)
-> +               return VPD_DECODE_FAIL;
-> =20
-> -       return VPD_OK;
-> +       *consumed +=3D decoded_len;
-> +       *entry =3D input_buf + *consumed;
-> +
-> +       /* entry_len is untrusted data and must be checked again. */
-> +       if (max_len - *consumed < *entry_len)
-> +               return VPD_DECODE_FAIL;
-
-Is consumed supposed to have move forward here on failure? Is entry
-supposed to point to something, or should it be pointing to NULL on a
-failure?
-
-> +
-> +       *consumed +=3D *entry_len;
-> +       return VPD_DECODE_OK;
->  }
-> =20
-> -int vpd_decode_string(const s32 max_len, const u8 *input_buf, s32 *consu=
-med,
-> +int vpd_decode_string(const u32 max_len, const u8 *input_buf, u32 *consu=
-med,
->                       vpd_decode_callback callback, void *callback_arg)
->  {
->         int type;
-> -       int res;
-> -       s32 key_len;
-> -       s32 value_len;
-> -       s32 decoded_len;
-> +       u32 key_len;
-> +       u32 value_len;
->         const u8 *key;
->         const u8 *value;
-> =20
->         /* type */
->         if (*consumed >=3D max_len)
-> -               return VPD_FAIL;
-> +               return VPD_DECODE_FAIL;
-> =20
->         type =3D input_buf[*consumed];
-> =20
-> @@ -56,25 +75,13 @@ int vpd_decode_string(const s32 max_len, const u8 *in=
-put_buf, s32 *consumed,
->         case VPD_TYPE_STRING:
->                 (*consumed)++;
-> =20
-> -               /* key */
-> -               res =3D vpd_decode_len(max_len - *consumed, &input_buf[*c=
-onsumed],
-> -                                    &key_len, &decoded_len);
-> -               if (res !=3D VPD_OK || *consumed + decoded_len >=3D max_l=
-en)
-> -                       return VPD_FAIL;
-> -
-> -               *consumed +=3D decoded_len;
-> -               key =3D &input_buf[*consumed];
-> -               *consumed +=3D key_len;
-> -
-> -               /* value */
-> -               res =3D vpd_decode_len(max_len - *consumed, &input_buf[*c=
-onsumed],
-> -                                    &value_len, &decoded_len);
-> -               if (res !=3D VPD_OK || *consumed + decoded_len > max_len)
-> -                       return VPD_FAIL;
-> +               if (vpd_decode_entry(max_len, input_buf, consumed, &key,
-> +                                    &key_len) !=3D VPD_DECODE_OK)
-> +                       return VPD_DECODE_FAIL;
-> =20
-> -               *consumed +=3D decoded_len;
-> -               value =3D &input_buf[*consumed];
-> -               *consumed +=3D value_len;
-> +               if (vpd_decode_entry(max_len, input_buf, consumed, &value,
-> +                                    &value_len) !=3D VPD_DECODE_OK)
-> +                       return VPD_DECODE_FAIL;
-> =20
->                 if (type =3D=3D VPD_TYPE_STRING)
->                         return callback(key, key_len, value, value_len,
-> @@ -82,8 +89,8 @@ int vpd_decode_string(const s32 max_len, const u8 *inpu=
-t_buf, s32 *consumed,
->                 break;
-> =20
->         default:
-> -               return VPD_FAIL;
-> +               return VPD_DECODE_FAIL;
->         }
-> =20
-> -       return VPD_OK;
-> +       return VPD_DECODE_OK;
->  }
-> diff --git a/drivers/firmware/google/vpd_decode.h b/drivers/firmware/goog=
-le/vpd_decode.h
-> index cf8c2ace155a..4113ac2f4a70 100644
-> --- a/drivers/firmware/google/vpd_decode.h
-> +++ b/drivers/firmware/google/vpd_decode.h
-> @@ -13,28 +13,27 @@
->  #include <linux/types.h>
-> =20
->  enum {
-> -       VPD_OK =3D 0,
-> -       VPD_FAIL,
-> +       VPD_DECODE_OK =3D 0,
-> +       VPD_DECODE_FAIL =3D 1,
-
-I wonder why this is an enum vs. just using the typical kernel error
-codes from errno.h.
-
->  };
-> =20
->  enum {
->         VPD_TYPE_TERMINATOR =3D 0,
->         VPD_TYPE_STRING,
-> -       VPD_TYPE_INFO                =3D 0xfe,
-> +       VPD_TYPE_INFO =3D 0xfe,
->         VPD_TYPE_IMPLICIT_TERMINATOR =3D 0xff,
->  };
-
-Please drop this change, it's just unaligning things.
-
-> =20
->  /* Callback for vpd_decode_string to invoke. */
-> -typedef int vpd_decode_callback(const u8 *key, s32 key_len,
-> -                               const u8 *value, s32 value_len,
-> -                               void *arg);
-> +typedef int vpd_decode_callback(const u8 *key, u32 key_len, const u8 *va=
-lue,
-> +                               u32 value_len, void *arg);
-> =20
->  /*
->   * vpd_decode_string
->   *
->   * Given the encoded string, this function invokes callback with extract=
-ed
-> - * (key, value). The *consumed will be plused the number of bytes consum=
-ed in
-> - * this function.
-> + * (key, value). The *consumed will be incremented by the number of bytes
-
-Use @consumed to refer to the argument. Split this out into a different
-patch as it's just updating the documentation to say the same thing.
-
-> + * consumed in this function.
->   *
->   * The input_buf points to the first byte of the input buffer.
->   *
+Yours,
+Linus Walleij
