@@ -2,198 +2,174 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F4AC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3A4C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63642067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="copLnrWu";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="gYGdpuUT"
+	by mail.kernel.org (Postfix) with ESMTP id DC70C2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 11:22:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564744928;
+	bh=OpomYkOOEgBmbGlc1tYQ4RaZofxZczQqoe2C3Rri7GM=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=l9V9P69HnFIY0Z4ZHElovQ1Gq0xp9Il6xNgK3ofhq/D7EVLEB2MEmO5dXBM8D7pVD
+	 59xQrUS3ZnQIByETxw5zQMGfmthx15eK5kTMmHSQpaJeFePrdFBP4MyzA/rEnso/3m
+	 a59/t3I4Oc8qjXBTM+Obzf4A5xK/4WLoJIl2FWq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392335AbfHBLVp (ORCPT
+        id S2392338AbfHBLWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 07:21:45 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:15764 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731327AbfHBLVp (ORCPT
+        Fri, 2 Aug 2019 07:22:07 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60996 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731327AbfHBLWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 07:21:45 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72BIp3K020028;
-        Fri, 2 Aug 2019 04:21:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=xIceUSo1Z6tqIOMoFigWZGYECzRz5X3zNzAIju9KkQ0=;
- b=copLnrWuym2GC3WRwXBZPjxc1f11Yers3dMDLijgmG5URFIIw4YNVoHTVqGphHN72gyW
- wGnMM4vujL8Itz/o9vyqAyO7eWAKdcFUCVSc4HBkNFHKcPo1LVMz7I20fNxIyHQaAu2C
- xA+xuoK70mvwlgPkFw6K1JDxmGbANQRUg/cSVSKjw2Q7HJA44/CaoQluGdm+ytQliads
- 0Xhgam1EcZA2ZACiPXK+isusdFJhmH1GFt7lzMkHdprmQH+h2FrIbYsQWxyayGq+yG3Q
- DOFJKRIVcpOMcTfuWbjC/CCbRsVQdo+OZmt7EtX8V6CGoVkSxnX4Dhs51LDYZepYepg4 VA== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=aniljoy@cadence.com
-Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2057.outbound.protection.outlook.com [104.47.32.57])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2u49awa6c0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 04:21:30 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AH2kW82gb2KJIwjikKDl3Jytos8S+bCvyEyLrofCUF/NvJKjNmLuoWFl+cemS9yLAUcy3mxLHfVR3/37wsfw5XbvEcA0BQx4yrZH8e+x0Su5z8g68SaBRLPz+PzWixR8DMjvZ184aUUVcWfGCgo8UntbQdPkKt4X9d/3ri1jA3bdMN9gHrfP0sNzrQ3iQNnmbc7m3c6nAJ/PYqfl2fJwiHXdgC67gmwSymz4B8fQ4N2fYZu8u8BRwRQkKY+GFiZHNL9RCWV5Wv9B+GiitAEc9vwPG8NmhIBub6N5/npeOkQR6YQrHZ9hvBcCPeHNQkimu6KGMa1n5Z8wfU+q0D9WoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xIceUSo1Z6tqIOMoFigWZGYECzRz5X3zNzAIju9KkQ0=;
- b=cdo0o3X5cGjrQwPVUpVWAFeASqaeuWHQEH8OfBqeP+q+fgiMQ4+8rgbBpLQd+d/TBabtQvud/8tnRuRS27AEWUyKjiqeTzhLPrrPFrlXas/UbYM8OONbZQp/cpTFF00Ckg/5gjYexWzvecMcnH+QejxviXJx6Nz7vcvhQdebUUlXQs16BN5JCXRtOs6DsQoLq0R/lmxJnKxB03ToK3/B77CrHBj5JoCRK9DkLQvt6G1YwobMpjeZZw6vXCfcVnRAN/eOznChcZc1yJ6IlPnOJ8Z3Px1kCeTO8bmXUbCj1l7Pu4OUIwKh2gdc2lzH4iPhN0FVqvJ4eIhX2Tjs64P1EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=softfail (sender ip is
- 158.140.1.28) smtp.rcpttodomain=synopsys.com
- smtp.mailfrom=cadence.com;dmarc=fail (p=none sp=none pct=100) action=none
- header.from=cadence.com;dkim=none (message not signed);arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xIceUSo1Z6tqIOMoFigWZGYECzRz5X3zNzAIju9KkQ0=;
- b=gYGdpuUTtcfEeR+zdtJZ9BXnBjaHFZUq9EvXkYFYtQnRWQ1GX4c/NvKmr3trBx561tlz/qlTiJXEaY7j4sqHaP1YEJxWAwpSTsLMrShu2Mzf0m3t7fL0HVVw+9/5UTqiS3WLpZy+7LAKY/0gQZ6xgr7bCYJIuUsMFkv5ZUVwuo8=
-Received: from BYAPR07CA0026.namprd07.prod.outlook.com (2603:10b6:a02:bc::39)
- by SN6PR07MB4351.namprd07.prod.outlook.com (2603:10b6:805:57::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.12; Fri, 2 Aug
- 2019 11:21:28 +0000
-Received: from CO1NAM05FT059.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e50::207) by BYAPR07CA0026.outlook.office365.com
- (2603:10b6:a02:bc::39) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2115.13 via Frontend
- Transport; Fri, 2 Aug 2019 11:21:27 +0000
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- cadence.com discourages use of 158.140.1.28 as permitted sender)
-Received: from sjmaillnx2.cadence.com (158.140.1.28) by
- CO1NAM05FT059.mail.protection.outlook.com (10.152.96.177) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.8 via Frontend Transport; Fri, 2 Aug 2019 11:21:27 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id x72BLNZQ016628
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 2 Aug 2019 04:21:24 -0700
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Fri, 2 Aug 2019 13:21:22 +0200
-Received: from lvlogina.cadence.com (10.165.176.102) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 2 Aug 2019 13:21:22 +0200
-Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x72BLMPI018989;
-        Fri, 2 Aug 2019 12:21:22 +0100
-Received: (from aniljoy@localhost)
-        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id x72BLHZV018821;
-        Fri, 2 Aug 2019 12:21:17 +0100
-From:   Anil Varughese <aniljoy@cadence.com>
-To:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
-        <pedrom.sousa@synopsys.com>
-CC:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>, <hare@suse.de>,
-        <aniljoy@cadence.com>, <rafalc@cadence.com>, <mparab@cadence.com>,
-        <jank@cadence.com>, <pawell@cadence.com>, <vigneshr@ti.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] scsi: ufs: Configure clock in .hce_enable_notify() in Cadence UFS
-Date:   Fri, 2 Aug 2019 12:21:12 +0100
-Message-ID: <20190802112112.18714-1-aniljoy@cadence.com>
-X-Mailer: git-send-email 2.15.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(346002)(376002)(2980300002)(189003)(199004)(36092001)(36756003)(186003)(6666004)(356004)(87636003)(478600001)(336012)(76130400001)(426003)(70586007)(70206006)(4326008)(476003)(47776003)(126002)(1076003)(26826003)(2201001)(7636002)(246002)(50466002)(316002)(42186006)(48376002)(2906002)(16586007)(26005)(2616005)(5660300002)(51416003)(50226002)(110136005)(54906003)(486006)(14444005)(8676002)(305945005)(86362001)(8936002)(142923001)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR07MB4351;H:sjmaillnx2.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.cadence.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 199927d7-7477-47e6-c7b6-08d7173b8fb0
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:SN6PR07MB4351;
-X-MS-TrafficTypeDiagnostic: SN6PR07MB4351:
-X-Microsoft-Antispam-PRVS: <SN6PR07MB435114B144CDC8BB4F958861A8D90@SN6PR07MB4351.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 011787B9DD
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: /pwLi9r3e7iv6228l6Ehv+ezqg87zdWULjkG5sOk66/LRCxyXLbjlYhEwSefgS5OLYDP6QgVTjVrVAb04cBWFqQnSuRkFb4atBnrlfk5Ck2sNNvsG7Z9iGAJPg3TpXKorpwInwrrE7rtSiLwsuT4dGcyJw/zhynyINaEnhrwmc9WvNhgrDF+Srfgqdzb5aeTE2rHAJMhBh1T9vP3BxntSskeRbPLlTeyOir4DWtF5+mmnqNiRR8i1JMXVzT35e2dRebE0Ppeq9O+BlTCXisoghMO8l3abtTQl3qludriOSf/wR8jsMqmFFZIEhGv7DN3C95ePAlia5PlhQZAwUycHXcLDfbw0qnYtNqH/f4IG8S9OVy0Dnf8rT1EuMqfO+CM7NY1Voq8zL2Euf2AXQiYkM8rlFXlDU0hggXY6u5i+A8=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2019 11:21:27.4518
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 199927d7-7477-47e6-c7b6-08d7173b8fb0
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR07MB4351
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020117
+        Fri, 2 Aug 2019 07:22:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=sRVpmEd1HwhUZ8tiZgc+M3rNKlICfbElVDkqumjeUyM=; b=MLthvNDnWde4
+        ZUJrt68QzVG0vt01iWG52pp6AkKt8d7506TeLQx49WhQBlx7uqDg7SMd3jUDgsU7TQX7ezYbaFGo8
+        YckuFSS95hIEtWnZdbGuRIvP/J11mLX+jCaZNeaWQkJ8755NHtVyM3TP/XrwUL6HDhqsnY8w/Kq3B
+        7GgSc=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1htVdM-0007Ru-9F; Fri, 02 Aug 2019 11:22:04 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 86E1A2742DA7; Fri,  2 Aug 2019 12:22:03 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: Remove dev_err() usage after platform_get_irq()" to the regulator tree
+In-Reply-To: <20190730181557.90391-38-swboyd@chromium.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20190802112203.86E1A2742DA7@ypsilon.sirena.org.uk>
+Date:   Fri,  2 Aug 2019 12:22:03 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Configure CDNS_UFS_REG_HCLKDIV in .hce_enable_notify() instead of
-.setup_clock() because if UFSHCD resets the controller ip because
-of phy or device related errors then CDNS_UFS_REG_HCLKDIV is
-reset to default value and .setup_clock() is not called later
-in the sequence whereas .hce_enable_notify will be called everytime
-controller is reenabled.
+The patch
 
-Signed-off-by: Anil Varughese <aniljoy@cadence.com>
+   regulator: Remove dev_err() usage after platform_get_irq()
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 47241933b43dec5b10d067e6e094f4d31a1cf3e7 Mon Sep 17 00:00:00 2001
+From: Stephen Boyd <swboyd@chromium.org>
+Date: Tue, 30 Jul 2019 11:15:37 -0700
+Subject: [PATCH] regulator: Remove dev_err() usage after platform_get_irq()
+
+We don't need dev_err() messages when platform_get_irq() fails now that
+platform_get_irq() prints an error message itself when something goes
+wrong. Let's remove these prints with a simple semantic patch.
+
+// <smpl>
+@@
+expression ret;
+struct platform_device *E;
+@@
+
+ret =
+(
+platform_get_irq(E, ...)
+|
+platform_get_irq_byname(E, ...)
+);
+
+if ( \( ret < 0 \| ret <= 0 \) )
+{
+(
+-if (ret != -EPROBE_DEFER)
+-{ ...
+-dev_err(...);
+-... }
+|
+...
+-dev_err(...);
+)
+...
+}
+// </smpl>
+
+While we're here, remove braces on if statements that only have one
+statement (manually).
+
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/20190730181557.90391-38-swboyd@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/scsi/ufs/cdns-pltfrm.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/regulator/da9062-regulator.c | 4 +---
+ drivers/regulator/da9063-regulator.c | 4 +---
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
-index 86dbb723f..993519080 100644
---- a/drivers/scsi/ufs/cdns-pltfrm.c
-+++ b/drivers/scsi/ufs/cdns-pltfrm.c
-@@ -62,17 +62,16 @@ static int cdns_ufs_set_hclkdiv(struct ufs_hba *hba)
- }
+diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
+index 2ffc64622451..56f3f72d7707 100644
+--- a/drivers/regulator/da9062-regulator.c
++++ b/drivers/regulator/da9062-regulator.c
+@@ -1032,10 +1032,8 @@ static int da9062_regulator_probe(struct platform_device *pdev)
  
- /**
-- * Sets clocks used by the controller
-+ * Called before and after HCE enable bit is set.
-  * @hba: host controller instance
-- * @on: if true, enable clocks, otherwise disable
-  * @status: notify stage (pre, post change)
-  *
-  * Return zero for success and non-zero for failure
-  */
--static int cdns_ufs_setup_clocks(struct ufs_hba *hba, bool on,
--				 enum ufs_notify_change_status status)
-+static int cdns_ufs_hce_enable_notify(struct ufs_hba *hba,
-+				      enum ufs_notify_change_status status)
- {
--	if ((!on) || (status == PRE_CHANGE))
-+	if (status != PRE_CHANGE)
- 		return 0;
+ 	/* LDOs overcurrent event support */
+ 	irq = platform_get_irq_byname(pdev, "LDO_LIM");
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "Failed to get IRQ.\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 	regulators->irq_ldo_lim = irq;
  
- 	return cdns_ufs_set_hclkdiv(hba);
-@@ -114,13 +113,13 @@ static int cdns_ufs_m31_16nm_phy_initialization(struct ufs_hba *hba)
+ 	ret = devm_request_threaded_irq(&pdev->dev, irq,
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 02f816318fba..28b1b20f45bd 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -863,10 +863,8 @@ static int da9063_regulator_probe(struct platform_device *pdev)
  
- static const struct ufs_hba_variant_ops cdns_ufs_pltfm_hba_vops = {
- 	.name = "cdns-ufs-pltfm",
--	.setup_clocks = cdns_ufs_setup_clocks,
-+	.hce_enable_notify = cdns_ufs_hce_enable_notify,
- };
+ 	/* LDOs overcurrent event support */
+ 	irq = platform_get_irq_byname(pdev, "LDO_LIM");
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "Failed to get IRQ.\n");
++	if (irq < 0)
+ 		return irq;
+-	}
  
- static const struct ufs_hba_variant_ops cdns_ufs_m31_16nm_pltfm_hba_vops = {
- 	.name = "cdns-ufs-pltfm",
- 	.init = cdns_ufs_init,
--	.setup_clocks = cdns_ufs_setup_clocks,
-+	.hce_enable_notify = cdns_ufs_hce_enable_notify,
- 	.phy_initialization = cdns_ufs_m31_16nm_phy_initialization,
- };
- 
+ 	ret = devm_request_threaded_irq(&pdev->dev, irq,
+ 				NULL, da9063_ldo_lim_event,
 -- 
-2.15.0
+2.20.1
 
