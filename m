@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFE4C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E31CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4100F2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECBF420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738897;
-	bh=qpd/yOb7hCGGWr5xjoaoJ/O2mcFbfXdzoQlG2AbF0zs=;
+	s=default; t=1564738901;
+	bh=npkufgNXGJkzCOIWa1qKYTS4hR1S1BZDZePc3IXX7no=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dvIcC84tvLGV3PnnGnlP1Xrnr0lHQRVK855ApARy0lTTq6e06tVUOgSerjh+4Exyy
-	 2A0XsSWX2OO/bJqRxUICgBS4G0A4icja1rJPlfPKTVa1ndYPh8bV7+SgupTMu2wS9i
-	 MQV0RbmCnCeDIrQYoGG29qXfY728xdDxQ2+aDkvw=
+	b=JrGqoee6cfUNedvlXloNCJPKQBL6p50Ex9+xRJ8RZyHnp1jbwXCtXV6lIxvrPVJQZ
+	 WU7NmcQmx0w1YjZl3zlamIKFDz2DqgW/p0prDjJwYY1OcGytD+QXmSzhAVXlBiJ42z
+	 AbDY5ZbflhNGi1mcBfLZYat8Evvt0dJv6tX8XjAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404655AbfHBJlf (ORCPT
+        id S2404767AbfHBJlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:41:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43186 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:41:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391012AbfHBJla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:41:30 -0400
+        id S2404638AbfHBJlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:41:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E844216C8;
-        Fri,  2 Aug 2019 09:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66E30216C8;
+        Fri,  2 Aug 2019 09:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738889;
-        bh=qpd/yOb7hCGGWr5xjoaoJ/O2mcFbfXdzoQlG2AbF0zs=;
+        s=default; t=1564738894;
+        bh=npkufgNXGJkzCOIWa1qKYTS4hR1S1BZDZePc3IXX7no=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DExCKmEW4rXlvUgOSJTXBxH23OV+itRb9mGMs21glDAzOlJv3clJB4SsNjzN3rAkQ
-         FTOe/bgYUsuRy9V67IIZP+ACCe5IX7+OpnQHtx8IphLTsajEwa8eWcsmAw3GcG3ChH
-         iVy28QW87PfzbBjHNvDWYb+eFes2wCPIzya4HjSA=
+        b=BHD+Z9KNNPFzmaIkJTRQ1VFhwf6hxLtjYi3saPCvnGMhrT5FWzJ+bCDrXKwYN6EMr
+         5UFkrTysmEv1nazK87f5lH0SYCuiyliozO98lX/3+P+fc2iwI0prf/endh9DdWSKvE
+         AGeJT/rvB+jNsVi3aZsks5Sp36IroBtzGJT96FaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 020/223] media: mc-device.c: dont memset __user pointer contents
-Date:   Fri,  2 Aug 2019 11:34:05 +0200
-Message-Id: <20190802092240.375444660@linuxfoundation.org>
+Subject: [PATCH 4.9 012/223] media: marvell-ccic: fix DMA s/g desc number calculation
+Date:   Fri,  2 Aug 2019 11:33:57 +0200
+Message-Id: <20190802092239.729278333@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,41 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 518fa4e0e0da97ea2e17c95ab57647ce748a96e2 ]
+[ Upstream commit 0c7aa32966dab0b8a7424e1b34c7f206817953ec ]
 
-You can't memset the contents of a __user pointer. Instead, call copy_to_user to
-copy links.reserved (which is zeroed) to the user memory.
+The commit d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
+left dma_desc_nent unset. It previously contained the number of DMA
+descriptors as returned from dma_map_sg().
 
-This fixes this sparse warning:
+We can now (since the commit referred to above) obtain the same value from
+the sg_table and drop dma_desc_nent altogether.
 
-SPARSE:drivers/media/mc/mc-device.c drivers/media/mc/mc-device.c:521:16:  warning: incorrect type in argument 1 (different address spaces)
+Tested on OLPC XO-1.75 machine. Doesn't affect the OLPC XO-1's Cafe
+driver, since that one doesn't do DMA.
 
-Fixes: f49308878d720 ("media: media_device_enum_links32: clean a reserved field")
+[mchehab+samsung@kernel.org: fix a checkpatch warning]
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Fixes: d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/media-device.c | 5 +++--
+ drivers/media/platform/marvell-ccic/mcam-core.c | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
-index 6062c0cfa632..73a2dba475d0 100644
---- a/drivers/media/media-device.c
-+++ b/drivers/media/media-device.c
-@@ -490,8 +490,9 @@ static long media_device_enum_links32(struct media_device *mdev,
- 	if (ret)
- 		return ret;
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
+index af59bf4dca2d..a74bfb9afc8d 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -209,7 +209,6 @@ struct mcam_vb_buffer {
+ 	struct list_head queue;
+ 	struct mcam_dma_desc *dma_desc;	/* Descriptor virtual address */
+ 	dma_addr_t dma_desc_pa;		/* Descriptor physical address */
+-	int dma_desc_nent;		/* Number of mapped descriptors */
+ };
  
--	memset(ulinks->reserved, 0, sizeof(ulinks->reserved));
--
-+	if (copy_to_user(ulinks->reserved, links.reserved,
-+			 sizeof(ulinks->reserved)))
-+		return -EFAULT;
- 	return 0;
- }
+ static inline struct mcam_vb_buffer *vb_to_mvb(struct vb2_v4l2_buffer *vb)
+@@ -616,9 +615,11 @@ static void mcam_dma_contig_done(struct mcam_camera *cam, int frame)
+ static void mcam_sg_next_buffer(struct mcam_camera *cam)
+ {
+ 	struct mcam_vb_buffer *buf;
++	struct sg_table *sg_table;
  
+ 	buf = list_first_entry(&cam->buffers, struct mcam_vb_buffer, queue);
+ 	list_del_init(&buf->queue);
++	sg_table = vb2_dma_sg_plane_desc(&buf->vb_buf.vb2_buf, 0);
+ 	/*
+ 	 * Very Bad Not Good Things happen if you don't clear
+ 	 * C1_DESC_ENA before making any descriptor changes.
+@@ -626,7 +627,7 @@ static void mcam_sg_next_buffer(struct mcam_camera *cam)
+ 	mcam_reg_clear_bit(cam, REG_CTRL1, C1_DESC_ENA);
+ 	mcam_reg_write(cam, REG_DMA_DESC_Y, buf->dma_desc_pa);
+ 	mcam_reg_write(cam, REG_DESC_LEN_Y,
+-			buf->dma_desc_nent*sizeof(struct mcam_dma_desc));
++			sg_table->nents * sizeof(struct mcam_dma_desc));
+ 	mcam_reg_write(cam, REG_DESC_LEN_U, 0);
+ 	mcam_reg_write(cam, REG_DESC_LEN_V, 0);
+ 	mcam_reg_set_bit(cam, REG_CTRL1, C1_DESC_ENA);
 -- 
 2.20.1
 
