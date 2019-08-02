@@ -2,95 +2,118 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9243C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99D6C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7772182B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752647;
-	bh=dZeEXrzP2FGVY/ahJCjiRXYGxTXCSuAChtIkspnQDrc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ft7kYtPAsUwmLnIKOR5fq/yoQQ76UQAIFhDVpCLm1p9XXpZXbgw520B2V1FWvL3x9
-	 ZcT7dKadgY+8pIxqFi7+aFQWyevX4GsjAYEK3G0uc1E+qdEejsfiiLD7/zwc/vyu7E
-	 HmNNz68378fAZLu8IB+ShtuAK1gRKmVN7XNT/AnE=
+	by mail.kernel.org (Postfix) with ESMTP id ABFFB2182B
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404257AbfHBNap (ORCPT
+        id S2404295AbfHBNat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35100 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:30:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41196 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394150AbfHBNYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:24:21 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2404243AbfHBNao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:30:44 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAF0320644;
-        Fri,  2 Aug 2019 13:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752261;
-        bh=dZeEXrzP2FGVY/ahJCjiRXYGxTXCSuAChtIkspnQDrc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KeEtWPhcRxc2NBKfoDV6iatO349wHPAp2ih1bpQDQm0jOGOEMAw68wYwfbDf0rtsi
-         ZjaMLqk2/hMqokDP/Tho9rxLFy4FRVKpmcxPWRpnDhrXGI5tBACanWJbTKvFsVKSN2
-         w82zzR48avbPVT1uCURZD85MwM39sRHX38b+qdfY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 42/42] s390/dma: provide proper ARCH_ZONE_DMA_BITS value
-Date:   Fri,  2 Aug 2019 09:23:02 -0400
-Message-Id: <20190802132302.13537-42-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
-References: <20190802132302.13537-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 43EB030833B0;
+        Fri,  2 Aug 2019 13:30:44 +0000 (UTC)
+Received: from krava (ovpn-204-20.brq.redhat.com [10.40.204.20])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D93985C22F;
+        Fri,  2 Aug 2019 13:30:40 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 15:30:39 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Keeping <john@metanate.com>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf unwind: fix libunwind when tid != pid
+Message-ID: <20190802133039.GE27223@krava>
+References: <20190729172430.14880-1-john@metanate.com>
+ <20190729172430.14880-2-john@metanate.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729172430.14880-2-john@metanate.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 02 Aug 2019 13:30:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Halil Pasic <pasic@linux.ibm.com>
+On Mon, Jul 29, 2019 at 06:24:30PM +0100, John Keeping wrote:
+> Commit e5adfc3e7e77 ("perf map: Synthesize maps only for thread group
+> leader") changed the recording side so that we no longer get mmap events
+> for threads other than the thread group leader.
+> 
+> When a file recorded after this change is loaded, the lack of mmap
+> records mean that unwinding is not set up for any other threads.
 
-[ Upstream commit 1a2dcff881059dedc14fafc8a442664c8dbd60f1 ]
+sry I dont' follow what's the problem here, could you please
+describe the scenrio where the current code is failing in
+more details
 
-On s390 ZONE_DMA is up to 2G, i.e. ARCH_ZONE_DMA_BITS should be 31 bits.
-The current value is 24 and makes __dma_direct_alloc_pages() take a
-wrong turn first (but __dma_direct_alloc_pages() recovers then).
+> 
+> Following the rationale in that commit, move the libunwind fields into
+> struct map_groups and update the libunwind functions to take this
+> instead of the struct thread.  This is only required for
+> unwind__finish_access which must now be called from map_groups__delete
+> and the others are changed for symmetry.
+> 
+> Note that unwind__get_entries keeps the thread argument since it is
+> required for symbol lookup and the libdw unwind provider uses the thread
+> ID.
 
-Let's correct ARCH_ZONE_DMA_BITS value and avoid wrong turns.
+SNIP
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Reported-by: Petr Tesarik <ptesarik@suse.cz>
-Fixes: c61e9637340e ("dma-direct: add support for allocation from ZONE_DMA and ZONE_DMA32")
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/include/asm/page.h | 2 ++
- 1 file changed, 2 insertions(+)
+> @@ -59,37 +59,31 @@ int unwind__prepare_access(struct thread *thread, struct map *map,
+>  		return 0;
+>  	}
+>  out_register:
+> -	unwind__register_ops(thread, ops);
+> +	unwind__register_ops(mg, ops);
+>  
+> -	err = thread->unwind_libunwind_ops->prepare_access(thread);
+> +	err = mg->unwind_libunwind_ops->prepare_access(mg);
+>  	if (initialized)
+>  		*initialized = err ? false : true;
+>  	return err;
+>  }
+>  
+> -void unwind__flush_access(struct thread *thread)
+> +void unwind__flush_access(struct map_groups *mg)
+>  {
+> -	if (!dwarf_callchain_users)
+> -		return;
 
-diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
-index 41e3908b397f8..0d753291c43c0 100644
---- a/arch/s390/include/asm/page.h
-+++ b/arch/s390/include/asm/page.h
-@@ -176,6 +176,8 @@ static inline int devmem_is_allowed(unsigned long pfn)
- #define VM_DATA_DEFAULT_FLAGS	(VM_READ | VM_WRITE | \
- 				 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
- 
-+#define ARCH_ZONE_DMA_BITS	31
-+
- #include <asm-generic/memory_model.h>
- #include <asm-generic/getorder.h>
- 
--- 
-2.20.1
+why did you remove this check?
 
+> -
+> -	if (thread->unwind_libunwind_ops)
+> -		thread->unwind_libunwind_ops->flush_access(thread);
+> +	if (mg->unwind_libunwind_ops)
+> +		mg->unwind_libunwind_ops->flush_access(mg);
+>  }
+>  
+> -void unwind__finish_access(struct thread *thread)
+> +void unwind__finish_access(struct map_groups *mg)
+>  {
+> -	if (!dwarf_callchain_users)
+> -		return;
+
+why did you remove this check?
+
+thanks,
+jirka
