@@ -2,123 +2,133 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7FFC32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4243CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78323206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E19206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 04:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OrECB1Qi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731807AbfHBEg5 (ORCPT
+        id S1731867AbfHBEjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 00:36:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45098 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728157AbfHBEg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 00:36:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 56E85AD2B;
-        Fri,  2 Aug 2019 04:36:53 +0000 (UTC)
-Subject: Re: [PATCH 20/34] xen: convert put_page() to put_user_page*()
-To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     devel@driverdev.osuosl.org, Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, x86@kernel.org,
-        linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, devel@lists.orangefs.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        rds-devel@oss.oracle.com,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, ceph-devel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802022005.5117-21-jhubbard@nvidia.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <4471e9dc-a315-42c1-0c3c-55ba4eeeb106@suse.com>
-Date:   Fri, 2 Aug 2019 06:36:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Fri, 2 Aug 2019 00:39:04 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:43500 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728157AbfHBEjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 00:39:03 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 460DvS6qFmz9vBfl;
+        Fri,  2 Aug 2019 06:39:00 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=OrECB1Qi; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id VmsG6ZbgH4qa; Fri,  2 Aug 2019 06:39:00 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 460DvS5jsZz9vBfh;
+        Fri,  2 Aug 2019 06:39:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1564720740; bh=q4ZMvCC9pF+bx4xNGwk+CVz7RuBSg1EdnJ2pgjPeQI8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=OrECB1QiT0LZ6vxWcdJhfnUKF4ps7URVPjA44CCjsevXP15OMtx9gDt9OxbJa6e0G
+         glOX9ChRVQVt0QfagwdFNriKpYrVMu7PCJBph3/SUepixBj/d75xTeoTwgzqYkDzWu
+         103672yojHYi0i9DGUq+onvK/LJGTNefcAYtlff8=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A33F28B795;
+        Fri,  2 Aug 2019 06:39:01 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id rZwoK36GmEMj; Fri,  2 Aug 2019 06:39:01 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 20BA28B74C;
+        Fri,  2 Aug 2019 06:39:01 +0200 (CEST)
+Subject: Re: [PATCH v2] powerpc: Support CMDLINE_EXTEND
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "malat@debian.org" <malat@debian.org>
+Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190801021206.26799-1-chris.packham@alliedtelesis.co.nz>
+ <0a47ab71-d968-5aaa-6b5f-bd255d2565dd@c-s.fr>
+ <1564698745.4914.14.camel@alliedtelesis.co.nz>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <51bbac81-e252-ee27-3b9c-d315f69951ad@c-s.fr>
+Date:   Fri, 2 Aug 2019 06:39:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190802022005.5117-21-jhubbard@nvidia.com>
+In-Reply-To: <1564698745.4914.14.camel@alliedtelesis.co.nz>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.08.19 04:19, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: xen-devel@lists.xenproject.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->   drivers/xen/gntdev.c  | 5 +----
->   drivers/xen/privcmd.c | 7 +------
->   2 files changed, 2 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-> index 4c339c7e66e5..2586b3df2bb6 100644
-> --- a/drivers/xen/gntdev.c
-> +++ b/drivers/xen/gntdev.c
-> @@ -864,10 +864,7 @@ static int gntdev_get_page(struct gntdev_copy_batch *batch, void __user *virt,
->   
->   static void gntdev_put_pages(struct gntdev_copy_batch *batch)
->   {
-> -	unsigned int i;
-> -
-> -	for (i = 0; i < batch->nr_pages; i++)
-> -		put_page(batch->pages[i]);
-> +	put_user_pages(batch->pages, batch->nr_pages);
->   	batch->nr_pages = 0;
->   }
->   
-> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-> index 2f5ce7230a43..29e461dbee2d 100644
-> --- a/drivers/xen/privcmd.c
-> +++ b/drivers/xen/privcmd.c
-> @@ -611,15 +611,10 @@ static int lock_pages(
->   
->   static void unlock_pages(struct page *pages[], unsigned int nr_pages)
->   {
-> -	unsigned int i;
-> -
->   	if (!pages)
->   		return;
->   
-> -	for (i = 0; i < nr_pages; i++) {
-> -		if (pages[i])
-> -			put_page(pages[i]);
-> -	}
-> +	put_user_pages(pages, nr_pages);
-
-You are not handling the case where pages[i] is NULL here. Or am I
-missing a pending patch to put_user_pages() here?
 
 
-Juergen
+Le 02/08/2019 à 00:32, Chris Packham a écrit :
+> On Thu, 2019-08-01 at 08:14 +0200, Christophe Leroy wrote:
+>>
+>> Le 01/08/2019 à 04:12, Chris Packham a écrit :
+>>>
+>>> Bring powerpc in line with other architectures that support
+>>> extending or
+>>> overriding the bootloader provided command line.
+>>>
+>>> The current behaviour is most like CMDLINE_FROM_BOOTLOADER where
+>>> the
+>>> bootloader command line is preferred but the kernel config can
+>>> provide a
+>>> fallback so CMDLINE_FROM_BOOTLOADER is the default. CMDLINE_EXTEND
+>>> can
+>>> be used to append the CMDLINE from the kernel config to the one
+>>> provided
+>>> by the bootloader.
+>>>
+>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>>> ---
+>>> While I'm at it does anyone think it's worth getting rid of the
+>>> default CMDLINE
+>>> value if CMDLINE_BOOL and maybe CMDLINE_BOOL? Every defconfig in
+>>> the kernel
+>>> that sets CMDLINE_BOOL=y also sets CMDLINE to something other than
+>>> "console=ttyS0,9600 console=tty0 root=/dev/sda2". Removing
+>>> CMDLINE_BOOL and
+>>> unconditionally setting the default value of CMDLINE to "" would
+>>> clean up the
+>>> Kconfig even more.
+>> Note
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co
+>> mmit/?id=cbe46bd4f5104552b612505b73d366f66efc2341
+>> which is already a step forward.
+>>
+>> I guess that default is for users selecting this option manually to
+>> get
+>> a first sensitive CMDLINE. But is it really worth it ?
+>>
+> 
+> I'm not even sure if it is working as intended right now. Even without
+> my changes if I use menuconfig and select CMDLINE_BOOL I end up with
+> CONFIG_CMDLINE="" in the resulting .config.
+
+I guess if the CONFIG_CMDLINE doesn't exist yet, it will get the default 
+value. But if it is already there allthough empty, it will remain empty.
+So yes I guess you could just drop it for this reason and the other 
+reasons you said.
+
+Christophe
+
