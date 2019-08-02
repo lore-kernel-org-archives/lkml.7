@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EA9C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F95C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3372064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6253C2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739773;
-	bh=TO/8nnFSSvjptpD6jOWFDtSTYx1GoMZAaSaBFpVcCNU=;
+	s=default; t=1564739778;
+	bh=iWFH8Skp/Cx1fKOEEqG1lkR2l7I8vs9n0RKutGL+isI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cm5ce0zmCbR44mHvNz2qM5qXOBak9h6CJZ66no3ytXwJXszH5de+QDo8A7+taY7I8
-	 8ECfdm7qXeUCU6mfYlqm+4JWRhxsTXOTCsCdjrWkcndnB2UeQ0rV+0qI/+V8+mPwFk
-	 yPgPr+AUVC51idIgoreDP8yIYPc7r/7irQMTaz4k=
+	b=Ojyowwn8jjcHH0qIyd9zbcRPAWA5J0FfoV4NbiVLI1st7ob5CDvBXy+qb7OIwPDXb
+	 Bi47LL81/9dGiumRFApk2rqNYnokMtUnJUFqG8e+x5VkAWuAwZdZvtsEqzDDzL6uee
+	 WXCfWUO/NPHnCc/GQ/N86r6IZjkF2Cfgo9M7uxeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406694AbfHBJ4M (ORCPT
+        id S2406227AbfHBJ4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:56:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34896 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:56:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406675AbfHBJ4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:56:07 -0400
+        id S2406691AbfHBJ4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:56:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 822652064A;
-        Fri,  2 Aug 2019 09:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 874A62064A;
+        Fri,  2 Aug 2019 09:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739766;
-        bh=TO/8nnFSSvjptpD6jOWFDtSTYx1GoMZAaSaBFpVcCNU=;
+        s=default; t=1564739771;
+        bh=iWFH8Skp/Cx1fKOEEqG1lkR2l7I8vs9n0RKutGL+isI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wTbDhJXIC3rs0GVEoV2afWeGRqNS1ikm8GC78GsnS5Bg6EYDmdaFF32kytPDgGZpE
-         Kuz4GVDsNgdYCOekkdXy43JORGbJcce7vbnj7MzM2tIBJaaNFFR5TsWx9vrm11hYo+
-         x/0VgpeSLhALYluj4Z7QaL4nFqhg8IDx3E0rWL04=
+        b=ygMQASrILUOWs/86W4YqxlaTNDqe8p01rLPROcUdXlvycKk0pSPncu4msEFCu+1Xl
+         q2QyUrQcSy+3T+ouOsI0z+97mCE1zHosg1jtdfBcCetppAwy5Dt/FWzJG7kxA3dI2o
+         54yeWFUGitetTnVrYejQmLXWmKVXfgpKzJ/gMFPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Qian Lu <luqia@amazon.com>
-Subject: [PATCH 4.19 05/32] NFSv4: Fix lookup revalidate of regular files
-Date:   Fri,  2 Aug 2019 11:39:39 +0200
-Message-Id: <20190802092103.334825109@linuxfoundation.org>
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Amit Pundir <amit.pundir@linaro.org>
+Subject: [PATCH 4.19 07/32] usb: dwc2: Fix disable all EPs on disconnect
+Date:   Fri,  2 Aug 2019 11:39:41 +0200
+Message-Id: <20190802092103.809416309@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -60,151 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Minas Harutyunyan <minas.harutyunyan@synopsys.com>
 
-commit c7944ebb9ce9461079659e9e6ec5baaf73724b3b upstream.
+commit 4fe4f9fecc36956fd53c8edf96dd0c691ef98ff9 upstream.
 
-If we're revalidating an existing dentry in order to open a file, we need
-to ensure that we check the directory has not changed before we optimise
-away the lookup.
+Disabling all EP's allow to reset EP's to initial state.
+Introduced new function dwc2_hsotg_ep_disable_lock() which
+before calling dwc2_hsotg_ep_disable() function acquire
+hsotg->lock and release on exiting.
+>From dwc2_hsotg_ep_disable() function removed acquiring
+hsotg->lock.
+In dwc2_hsotg_core_init_disconnected() function when USB
+reset interrupt asserted disabling all ep’s by
+dwc2_hsotg_ep_disable() function.
+This updates eliminating sparse imbalance warnings.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Qian Lu <luqia@amazon.com>
+Reverted changes in dwc2_hostg_disconnect() function.
+Introduced new function dwc2_hsotg_ep_disable_lock().
+Changed dwc2_hsotg_ep_ops. Now disable point to
+dwc2_hsotg_ep_disable_lock() function.
+In functions dwc2_hsotg_udc_stop() and dwc2_hsotg_suspend()
+dwc2_hsotg_ep_disable() function replaced by
+dwc2_hsotg_ep_disable_lock() function.
+In dwc2_hsotg_ep_disable() function removed acquiring
+of hsotg->lock.
+
+Fixes: dccf1bad4be7 ("usb: dwc2: Disable all EP's on disconnect")
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/dir.c |   79 +++++++++++++++++++++++++++++------------------------------
- 1 file changed, 39 insertions(+), 40 deletions(-)
+ drivers/usb/dwc2/gadget.c |   41 +++++++++++++++++++++++------------------
+ 1 file changed, 23 insertions(+), 18 deletions(-)
 
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -1231,7 +1231,8 @@ out_bad:
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -3107,8 +3107,6 @@ static void kill_all_requests(struct dwc
+ 		dwc2_hsotg_txfifo_flush(hsotg, ep->fifo_index);
  }
  
- static int
--nfs_lookup_revalidate(struct dentry *dentry, unsigned int flags)
-+__nfs_lookup_revalidate(struct dentry *dentry, unsigned int flags,
-+			int (*reval)(struct inode *, struct dentry *, unsigned int))
- {
- 	struct dentry *parent;
- 	struct inode *dir;
-@@ -1242,17 +1243,22 @@ nfs_lookup_revalidate(struct dentry *den
- 		dir = d_inode_rcu(parent);
- 		if (!dir)
- 			return -ECHILD;
--		ret = nfs_do_lookup_revalidate(dir, dentry, flags);
-+		ret = reval(dir, dentry, flags);
- 		if (parent != READ_ONCE(dentry->d_parent))
- 			return -ECHILD;
- 	} else {
- 		parent = dget_parent(dentry);
--		ret = nfs_do_lookup_revalidate(d_inode(parent), dentry, flags);
-+		ret = reval(d_inode(parent), dentry, flags);
- 		dput(parent);
- 	}
- 	return ret;
- }
- 
-+static int nfs_lookup_revalidate(struct dentry *dentry, unsigned int flags)
-+{
-+	return __nfs_lookup_revalidate(dentry, flags, nfs_do_lookup_revalidate);
-+}
-+
- /*
-  * A weaker form of d_revalidate for revalidating just the d_inode(dentry)
-  * when we don't really care about the dentry name. This is called when a
-@@ -1609,62 +1615,55 @@ no_open:
- }
- EXPORT_SYMBOL_GPL(nfs_atomic_open);
- 
--static int nfs4_lookup_revalidate(struct dentry *dentry, unsigned int flags)
-+static int
-+nfs4_do_lookup_revalidate(struct inode *dir, struct dentry *dentry,
-+			  unsigned int flags)
- {
- 	struct inode *inode;
--	int ret = 0;
- 
- 	if (!(flags & LOOKUP_OPEN) || (flags & LOOKUP_DIRECTORY))
--		goto no_open;
-+		goto full_reval;
- 	if (d_mountpoint(dentry))
--		goto no_open;
--	if (NFS_SB(dentry->d_sb)->caps & NFS_CAP_ATOMIC_OPEN_V1)
--		goto no_open;
-+		goto full_reval;
- 
- 	inode = d_inode(dentry);
- 
- 	/* We can't create new files in nfs_open_revalidate(), so we
- 	 * optimize away revalidation of negative dentries.
- 	 */
--	if (inode == NULL) {
--		struct dentry *parent;
--		struct inode *dir;
+-static int dwc2_hsotg_ep_disable(struct usb_ep *ep);
 -
--		if (flags & LOOKUP_RCU) {
--			parent = READ_ONCE(dentry->d_parent);
--			dir = d_inode_rcu(parent);
--			if (!dir)
--				return -ECHILD;
--		} else {
--			parent = dget_parent(dentry);
--			dir = d_inode(parent);
--		}
--		if (!nfs_neg_need_reval(dir, dentry, flags))
--			ret = 1;
--		else if (flags & LOOKUP_RCU)
--			ret = -ECHILD;
--		if (!(flags & LOOKUP_RCU))
--			dput(parent);
--		else if (parent != READ_ONCE(dentry->d_parent))
--			return -ECHILD;
--		goto out;
--	}
-+	if (inode == NULL)
-+		goto full_reval;
-+
-+	if (NFS_PROTO(dir)->have_delegation(inode, FMODE_READ))
-+		return nfs_lookup_revalidate_delegated(dir, dentry, inode);
+ /**
+  * dwc2_hsotg_disconnect - disconnect service
+  * @hsotg: The device state.
+@@ -3130,9 +3128,11 @@ void dwc2_hsotg_disconnect(struct dwc2_h
+ 	/* all endpoints should be shutdown */
+ 	for (ep = 0; ep < hsotg->num_of_eps; ep++) {
+ 		if (hsotg->eps_in[ep])
+-			dwc2_hsotg_ep_disable(&hsotg->eps_in[ep]->ep);
++			kill_all_requests(hsotg, hsotg->eps_in[ep],
++					  -ESHUTDOWN);
+ 		if (hsotg->eps_out[ep])
+-			dwc2_hsotg_ep_disable(&hsotg->eps_out[ep]->ep);
++			kill_all_requests(hsotg, hsotg->eps_out[ep],
++					  -ESHUTDOWN);
+ 	}
  
- 	/* NFS only supports OPEN on regular files */
- 	if (!S_ISREG(inode->i_mode))
--		goto no_open;
-+		goto full_reval;
-+
- 	/* We cannot do exclusive creation on a positive dentry */
--	if (flags & LOOKUP_EXCL)
--		goto no_open;
-+	if (flags & (LOOKUP_EXCL | LOOKUP_REVAL))
-+		goto reval_dentry;
-+
-+	/* Check if the directory changed */
-+	if (!nfs_check_verifier(dir, dentry, flags & LOOKUP_RCU))
-+		goto reval_dentry;
+ 	call_gadget(hsotg, disconnect);
+@@ -3176,6 +3176,7 @@ static void dwc2_hsotg_irq_fifoempty(str
+ 			GINTSTS_PTXFEMP |  \
+ 			GINTSTS_RXFLVL)
  
- 	/* Let f_op->open() actually open (and revalidate) the file */
--	ret = 1;
-+	return 1;
-+reval_dentry:
-+	if (flags & LOOKUP_RCU)
-+		return -ECHILD;
-+	return nfs_lookup_revalidate_dentry(dir, dentry, inode);;
++static int dwc2_hsotg_ep_disable(struct usb_ep *ep);
+ /**
+  * dwc2_hsotg_core_init - issue softreset to the core
+  * @hsotg: The device state
+@@ -4004,10 +4005,8 @@ static int dwc2_hsotg_ep_disable(struct
+ 	struct dwc2_hsotg *hsotg = hs_ep->parent;
+ 	int dir_in = hs_ep->dir_in;
+ 	int index = hs_ep->index;
+-	unsigned long flags;
+ 	u32 epctrl_reg;
+ 	u32 ctrl;
+-	int locked;
  
--out:
--	return ret;
-+full_reval:
-+	return nfs_do_lookup_revalidate(dir, dentry, flags);
-+}
+ 	dev_dbg(hsotg->dev, "%s(ep %p)\n", __func__, ep);
  
--no_open:
--	return nfs_lookup_revalidate(dentry, flags);
-+static int nfs4_lookup_revalidate(struct dentry *dentry, unsigned int flags)
-+{
-+	return __nfs_lookup_revalidate(dentry, flags,
-+			nfs4_do_lookup_revalidate);
+@@ -4023,10 +4022,6 @@ static int dwc2_hsotg_ep_disable(struct
+ 
+ 	epctrl_reg = dir_in ? DIEPCTL(index) : DOEPCTL(index);
+ 
+-	locked = spin_is_locked(&hsotg->lock);
+-	if (!locked)
+-		spin_lock_irqsave(&hsotg->lock, flags);
+-
+ 	ctrl = dwc2_readl(hsotg, epctrl_reg);
+ 
+ 	if (ctrl & DXEPCTL_EPENA)
+@@ -4049,12 +4044,22 @@ static int dwc2_hsotg_ep_disable(struct
+ 	hs_ep->fifo_index = 0;
+ 	hs_ep->fifo_size = 0;
+ 
+-	if (!locked)
+-		spin_unlock_irqrestore(&hsotg->lock, flags);
+-
+ 	return 0;
  }
  
- #endif /* CONFIG_NFSV4 */
++static int dwc2_hsotg_ep_disable_lock(struct usb_ep *ep)
++{
++	struct dwc2_hsotg_ep *hs_ep = our_ep(ep);
++	struct dwc2_hsotg *hsotg = hs_ep->parent;
++	unsigned long flags;
++	int ret;
++
++	spin_lock_irqsave(&hsotg->lock, flags);
++	ret = dwc2_hsotg_ep_disable(ep);
++	spin_unlock_irqrestore(&hsotg->lock, flags);
++	return ret;
++}
++
+ /**
+  * on_list - check request is on the given endpoint
+  * @ep: The endpoint to check.
+@@ -4202,7 +4207,7 @@ static int dwc2_hsotg_ep_sethalt_lock(st
+ 
+ static const struct usb_ep_ops dwc2_hsotg_ep_ops = {
+ 	.enable		= dwc2_hsotg_ep_enable,
+-	.disable	= dwc2_hsotg_ep_disable,
++	.disable	= dwc2_hsotg_ep_disable_lock,
+ 	.alloc_request	= dwc2_hsotg_ep_alloc_request,
+ 	.free_request	= dwc2_hsotg_ep_free_request,
+ 	.queue		= dwc2_hsotg_ep_queue_lock,
+@@ -4342,9 +4347,9 @@ static int dwc2_hsotg_udc_stop(struct us
+ 	/* all endpoints should be shutdown */
+ 	for (ep = 1; ep < hsotg->num_of_eps; ep++) {
+ 		if (hsotg->eps_in[ep])
+-			dwc2_hsotg_ep_disable(&hsotg->eps_in[ep]->ep);
++			dwc2_hsotg_ep_disable_lock(&hsotg->eps_in[ep]->ep);
+ 		if (hsotg->eps_out[ep])
+-			dwc2_hsotg_ep_disable(&hsotg->eps_out[ep]->ep);
++			dwc2_hsotg_ep_disable_lock(&hsotg->eps_out[ep]->ep);
+ 	}
+ 
+ 	spin_lock_irqsave(&hsotg->lock, flags);
+@@ -4792,9 +4797,9 @@ int dwc2_hsotg_suspend(struct dwc2_hsotg
+ 
+ 		for (ep = 0; ep < hsotg->num_of_eps; ep++) {
+ 			if (hsotg->eps_in[ep])
+-				dwc2_hsotg_ep_disable(&hsotg->eps_in[ep]->ep);
++				dwc2_hsotg_ep_disable_lock(&hsotg->eps_in[ep]->ep);
+ 			if (hsotg->eps_out[ep])
+-				dwc2_hsotg_ep_disable(&hsotg->eps_out[ep]->ep);
++				dwc2_hsotg_ep_disable_lock(&hsotg->eps_out[ep]->ep);
+ 		}
+ 	}
+ 
 
 
