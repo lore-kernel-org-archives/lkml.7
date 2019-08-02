@@ -2,92 +2,95 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7D1C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5EAC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D6220679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01DF20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564753685;
+	bh=4iyFp3nxxcgWx4F9Y7pzUkBtSH9YEP6qmfh9a+6HKW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Avu1QUQDeiDx7paKdaSJ9V/WD76a4tSv2mq0xAirCvyNzlU0ruzQvIcbraymyKmp0
+	 pYTg/pNGYnc6LIHbc726TBcNyvdCd4XWWqDrR0ecs7ZsgbstAFg4IoJuFFw2s9f9Xw
+	 /B6ydgz96fnCEqVphY/6a6pY2MONBo3odk/SOelY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394619AbfHBNrR (ORCPT
+        id S2394817AbfHBNsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:47:17 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35066 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731713AbfHBNrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:47:12 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D20C772E3A367252B563;
-        Fri,  2 Aug 2019 21:31:22 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 2 Aug 2019
- 21:31:15 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <lars.persson@axis.com>,
-        <jesper.nilsson@axis.com>, <davem@davemloft.net>,
-        <thomas.lendacky@amd.com>, <gary.hook@amd.com>, <krzk@kernel.org>,
-        <kgene@kernel.org>, <antoine.tenart@bootlin.com>,
-        <matthias.bgg@gmail.com>, <jamie@jamieiles.com>,
-        <agross@kernel.org>, <heiko@sntech.de>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <clabbe.montjoie@gmail.com>, <mripard@kernel.org>, <wens@csie.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-arm-kernel@axis.com>, <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 06/12] crypto: mediatek - use devm_platform_ioremap_resource() to simplify code
-Date:   Fri, 2 Aug 2019 21:28:03 +0800
-Message-ID: <20190802132809.8116-7-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190802132809.8116-1-yuehaibing@huawei.com>
-References: <20190802132809.8116-1-yuehaibing@huawei.com>
+        Fri, 2 Aug 2019 09:48:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730199AbfHBNsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:48:03 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DB5A21726;
+        Fri,  2 Aug 2019 13:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564753682;
+        bh=4iyFp3nxxcgWx4F9Y7pzUkBtSH9YEP6qmfh9a+6HKW4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G7AjOhrbuHUU3S7qTwJIDv+cj/TPwsihgyZx5wZiqBX7l4XR9h/N3nJqB+Fwct/sK
+         MbSg/HwLELKa+aWkKep5eWxtP9zRjTuYL3CF2WOSizGzhvtsE2BF6WCyA+VFNWT7NL
+         024wiyagXsobyy76ci31cOpFiGXqo3MjvWaxuoig=
+Date:   Fri, 2 Aug 2019 08:48:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] PCI: Mark expected switch fall-through
+Message-ID: <20190802134801.GK151852@google.com>
+References: <20190802012248.GA22622@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190802012248.GA22622@embeddedor>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Thu, Aug 01, 2019 at 08:22:48PM -0500, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warning (Building: allmodconfig i386):
+> 
+> drivers/pci/hotplug/ibmphp_res.c: In function ‘update_bridge_ranges’:
+> drivers/pci/hotplug/ibmphp_res.c:1943:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>        function = 0x8;
+>        ~~~~~~~~~^~~~~
+> drivers/pci/hotplug/ibmphp_res.c:1944:6: note: here
+>       case PCI_HEADER_TYPE_MULTIBRIDGE:
+>       ^~~~
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/crypto/mediatek/mtk-platform.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Applied with Kees' reviewed-by to pci/misc for v5.4, thanks, Gustavo!
 
-diff --git a/drivers/crypto/mediatek/mtk-platform.c b/drivers/crypto/mediatek/mtk-platform.c
-index 125318a..12462136 100644
---- a/drivers/crypto/mediatek/mtk-platform.c
-+++ b/drivers/crypto/mediatek/mtk-platform.c
-@@ -481,7 +481,6 @@ static int mtk_desc_ring_alloc(struct mtk_cryp *cryp)
- 
- static int mtk_crypto_probe(struct platform_device *pdev)
- {
--	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	struct mtk_cryp *cryp;
- 	int i, err;
- 
-@@ -489,7 +488,7 @@ static int mtk_crypto_probe(struct platform_device *pdev)
- 	if (!cryp)
- 		return -ENOMEM;
- 
--	cryp->base = devm_ioremap_resource(&pdev->dev, res);
-+	cryp->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(cryp->base))
- 		return PTR_ERR(cryp->base);
- 
--- 
-2.7.4
-
-
+> ---
+>  drivers/pci/hotplug/ibmphp_res.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/hotplug/ibmphp_res.c b/drivers/pci/hotplug/ibmphp_res.c
+> index 5e8caf7a4452..1e1ba66cfd1e 100644
+> --- a/drivers/pci/hotplug/ibmphp_res.c
+> +++ b/drivers/pci/hotplug/ibmphp_res.c
+> @@ -1941,6 +1941,7 @@ static int __init update_bridge_ranges(struct bus_node **bus)
+>  						break;
+>  					case PCI_HEADER_TYPE_BRIDGE:
+>  						function = 0x8;
+> +						/* Fall through */
+>  					case PCI_HEADER_TYPE_MULTIBRIDGE:
+>  						/* We assume here that only 1 bus behind the bridge
+>  						   TO DO: add functionality for several:
+> -- 
+> 2.22.0
+> 
