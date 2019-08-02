@@ -2,125 +2,142 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CC7C41514
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A394C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4E92087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:41:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMvXitfa"
+	by mail.kernel.org (Postfix) with ESMTP id 7A7842087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:41:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732476AbfHBQlH (ORCPT
+        id S1732864AbfHBQlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:41:07 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39991 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729353AbfHBQlH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:41:07 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so36337075pgj.7;
-        Fri, 02 Aug 2019 09:41:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CVpBs1wIkzRja/cCCJj5b8klNanFvn6r1661ZlbMMD4=;
-        b=rMvXitfas3tyO3EHUbn48F69eylMWeu3gclWOEszcGF1/mNTamg3kk+xjpa8p1dJUD
-         YIt2MRS7etmOkbLokPwD7sWbsrHaZQgxclyoG1emouMb3tjOKPO+dSnweHxBtZIHSwJf
-         le+8XREQK4y5ybVVXxvYJy2aOfJvg4hx/BJi1NyYpBsCuTxNlDodetsYx8L6Nh/K1hKP
-         sATibdKsPcMH7Rdkon82VReKAgmAmKYjL8YxrzrOolpfKfNsE3qYRyZUA75s1DtGIgl/
-         j6PeXMInbFZJHOxNbKGZRiwL6NOqICPy6NwD08qsoGTsaY/kVjThb91iXPfAvNsgd6XK
-         MTdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CVpBs1wIkzRja/cCCJj5b8klNanFvn6r1661ZlbMMD4=;
-        b=Uah4k1sbDTpiN8/1O9jQaXnIGVa0RYr1NdIXyjj5NxYxUxE6c+u0ZLyPyTrS0fKZPH
-         QA0g9sdU16LF8rZF6qqMRq90N2O8tUKJALtO167T5/AbLiVxMBJtZN36nOT8KKrc4uX7
-         ulpvB1n9AkQedzjE7akTg2PrZ534xi37xlY5r5y9MqNP8zEU/ce+KIgireEnaPsRLOVu
-         62isNSDlz5YySpE2cPfEfFEYO6j6CtAxvJciM8lUb0t+tFE4G1cnfy5y7djLnyCGxuD5
-         roTU5n8r35SbKcsx9gG6flpWDN15fUyHkdGdlqnhyMuMYoXJ8nKY9oZJaC7uE9Vrqs+B
-         Dmug==
-X-Gm-Message-State: APjAAAV+5x7m6HaAPGQPP5J3ks8EJFBos3mHwM2pDczGyo+XTZ1qVXew
-        4M5ZVSTlWeuqM9dYCndBGBk=
-X-Google-Smtp-Source: APXvYqw8+Fe+lWBPIIdgGBzLlZW3DfEmtxQ8VIQTrpvsnGrr3fEr53uXM0+LdsTEpy917EkKIxjywQ==
-X-Received: by 2002:a62:be02:: with SMTP id l2mr62038253pff.63.1564764065978;
-        Fri, 02 Aug 2019 09:41:05 -0700 (PDT)
-Received: from icarus ([2001:268:c147:64b2:f351:c489:c6c9:377a])
-        by smtp.gmail.com with ESMTPSA id r75sm98477830pfc.18.2019.08.02.09.41.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 02 Aug 2019 09:41:05 -0700 (PDT)
-Date:   Sat, 3 Aug 2019 01:40:45 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     David Lechner <david@lechnology.com>
-Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 2/4] counter: new TI eQEP driver
-Message-ID: <20190802163926.GA29963@icarus>
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190722154538.5314-3-david@lechnology.com>
- <20190802092727.GB30522@icarus>
- <680ed555-c5db-6640-8fd3-121422077eff@lechnology.com>
+        Fri, 2 Aug 2019 12:41:10 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52979 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729353AbfHBQlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:41:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 09:41:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,338,1559545200"; 
+   d="scan'208";a="175637656"
+Received: from vivekcha-mobl1.amr.corp.intel.com (HELO [10.251.131.115]) ([10.251.131.115])
+  by orsmga003.jf.intel.com with ESMTP; 02 Aug 2019 09:41:06 -0700
+Subject: Re: [RFC PATCH 15/40] soundwire: cadence_master: handle multiple
+ status reports per Slave
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190725234032.21152-1-pierre-louis.bossart@linux.intel.com>
+ <20190725234032.21152-16-pierre-louis.bossart@linux.intel.com>
+ <20190802122003.GQ12733@vkoul-mobl.Dlink>
+ <c4d31804-48af-30e3-4b4f-4b03dac6addd@linux.intel.com>
+ <20190802160115.GS12733@vkoul-mobl.Dlink>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <1326bf1d-8289-2838-e2bd-48dba78b4a6c@linux.intel.com>
+Date:   Fri, 2 Aug 2019 11:41:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <680ed555-c5db-6640-8fd3-121422077eff@lechnology.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190802160115.GS12733@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 11:17:11AM -0500, David Lechner wrote:
-> On 8/2/19 4:27 AM, William Breathitt Gray wrote:
-> >> +static const struct counter_ops ti_eqep_counter_ops = {
-> >> +	.count_read	= ti_eqep_count_read,
-> >> +	.count_write	= ti_eqep_count_write,
-> >> +	.function_get	= ti_eqep_function_get,
-> >> +	.function_set	= ti_eqep_function_set,
-> >> +};
-> > Are you able to provide a signal_read function, or are the Signals not
-> > exposed to the user by this device? Sometimes quadrature encoder devices
-> > provide an instanteous read of the signal lines to tell whether they are
-> > high or low, so I figured I'd ask.
+
+
+On 8/2/19 11:01 AM, Vinod Koul wrote:
+> On 02-08-19, 10:29, Pierre-Louis Bossart wrote:
+>> On 8/2/19 7:20 AM, Vinod Koul wrote:
+>>> On 25-07-19, 18:40, Pierre-Louis Bossart wrote:
 > 
-> No, it does not look like these signals can be read directly.
-
-All right, in that case you can ignore signal_read.
-
-> > 
-> > You should define an action_get function as well along with Synapses
-> > corresponding to each Signal. This will allow users to know whether the
-> > Synapse fires on a rising edge, falling edge, no edge, or both edges.
-> > 
-> > For example, consider the drivers/counter/104-quad-8.c file. Each count
-> > register has three associated signal lines: Quadrature A, Quadrature B,
-> > and Index.
-> > 
-> > Quadrature A and B are your typical quadrature encoder lines and
-> > depending on the function mode selected (quadrature x4, pulse-direction,
-> > etc.) could have a Synapse action mode of none, rising edge, falling
-> > edge, or both edges; see the quad8_synapse_actions_list array.
-> > 
-> > In contrast, the Index signal line only has two Synapse action modes:
-> > rising edge (in the case preset functionality is enabled) or none.
+>>>> +				status[i] = SDW_SLAVE_UNATTACHED;
+>>>> +				break;
+>>>> +			case 1:
+>>>> +				status[i] = SDW_SLAVE_ATTACHED;
+>>>> +				break;
+>>>> +			case 2:
+>>>> +				status[i] = SDW_SLAVE_ALERT;
+>>>> +				break;
+>>>> +			default:
+>>>> +				status[i] = SDW_SLAVE_RESERVED;
+>>>> +				break;
+>>>> +			}
+>>>
+>>> we have same logic in the code block preceding this, maybe good idea to
+>>> write a helper and use for both
+>>
+>> Yes, I am thinking about this. There are multiple cases where we want to
+>> re-check the status and clear some bits, so helpers would be good.
+>>
+>>>
+>>> Also IIRC we can have multiple status set right?
+>>
+>> Yes, the status bits are sticky and mirror all values reported in PING
+>> frames. I am still working on how to clear those bits, there are cases where
+>> we clear bits and end-up never hearing from that device ever again. classic
+>> edge/level issue I suppose.
 > 
-> The encoders I have don't use the index or strobe signals, so I was
-> thinking maybe I should omit those two signals from the driver for the
-> time being since I don't have a way of testing.
+> Then the case logic above doesn't work, it should be like the code block
+> preceding this..
 
-That should be fine for now. We can add them in a later patch down the
-road and keep this introduction patch simple.
+what I was referring to already is a problem even in single status mode.
 
-William Breathitt Gray
+Let's say for example that a device shows up as Device0, then we try to 
+enumerate it and program a non-zero device number. If that fails, we 
+currently clear the Attached status for Device0, so will never have an 
+interrupt ever again. The device is there, attached as Device0, but 
+we've lost the single opportunity to make it usable. The link is in most 
+cases going to be extremely reliable, but if we know of state machines 
+that lead to a terminal state then we should proactively have a recovery 
+mechanism to avoid complicated debug down the road for cases where the 
+hardware has transient issues.
+
+For the multiple status case, we will have to look at the details and 
+figure out which of the flags get cleared and which ones don't.
+
+One certainty is that we absolutely have to track IO errors in interrupt 
+context. They are recoverable in regular context but not quite in 
+interrupt context if we clear the status bits unconditionally.
+
+Maybe a tangent here but to be transparent there are really multiple 
+topics we are tracking at the moment:
+
+1. error handling in interrupts. I found a leak where if a device goes 
+in the weeds while we program its device number and resynchronizes then 
+we allocate a new device number instead of reusing the initial one. The 
+bit clearing is also to be checked as explained above.
+
+2. module dependencies: there is a race condition leading to a kernel 
+oops if the Slave probe is not complete before the .update_status is 
+invoked.
+
+3. jack detection. The jack detection routine is called as a result of 
+an imp-def Slave interrupt. We never documented the assumption that if 
+this jack detection takes time then it needs to be done offline, e.g. in 
+a work queue. Or if we still want it to be done in a the interrupt 
+thread then we need to re-enable interrupts earlier, otherwise one 
+device can stop interrupt handling for a fairly long duration.
+
+4. streaming stop on link errors. We've seen in tests that if you reset 
+the link or a Slave device with debugfs while audio is playing then 
+streaming continues. This condition could happen if a device loses sync, 
+and the spec says the Slave needs to reset its channel enable bits. At 
+the command level, we handle this situation and will recover, but there 
+is no notification to the ALSA layers to try and recover on the PCM side 
+of things (as if it were an underflow condition). We also try to disable 
+a stream but get all kinds of errors since it's lost state.
+
+All of those points are corner cases but they are important to solve for 
+actual products.
