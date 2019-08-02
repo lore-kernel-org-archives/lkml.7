@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1CDC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6E4C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC9C21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22FC221726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752988;
-	bh=rL23VPL5LiMMzW9WGs9qMwcc3Mu20T2X1ST1LCulyRM=;
+	s=default; t=1564752991;
+	bh=MyptE6f8k+92LRAEm6ghXCPrsdPU0qjbt9hN9P9BSic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2PcC+7wy0YbErHVRMKGpgf4KOaliJ1rtlkaCFFTkRZfw0TKn9iQGVdpeAm5tI8WBf
-	 P2I6NAl4cO+qrxqaiGOW+yYJ/4T0yw9Ea06b3e0/qc73fyz5CiEgAnz4KOLjeNaHRI
-	 qQt6Ijhl4SXYxFIkkNkTagaS7wHJisO9JR/aT/uo=
+	b=IEoIshQz/sMqzQ0NT62hPuw/NcQ4TWd52lNRqH7OrlcsOFNn9xZU7c0y58XwexqMc
+	 nuAhdH9d89pMn8/q3bnR6MTHzUY6TpU0I8XhkzUZQkRipQVSsvcemqRxhL6rFDtX3z
+	 d0C40Q1He+fUHucFMxHD3+lhwyl9rNzuyTrnOIg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393314AbfHBNUP (ORCPT
+        id S2406348AbfHBNg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:20:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58426 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:36:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393280AbfHBNUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:07 -0400
+        id S2393311AbfHBNUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 711662087C;
-        Fri,  2 Aug 2019 13:20:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68BE821849;
+        Fri,  2 Aug 2019 13:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752006;
-        bh=rL23VPL5LiMMzW9WGs9qMwcc3Mu20T2X1ST1LCulyRM=;
+        s=default; t=1564752014;
+        bh=MyptE6f8k+92LRAEm6ghXCPrsdPU0qjbt9hN9P9BSic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=07nHCnBRznje0SLb5zH9zB5lwXFnmx6LzHynYrYO6E75dO6Bs+VtXevx5jwjowNa4
-         OZd9cLkoJKZrOctxVPdQ8VLWEgkE8OZVhMHTBnxztxeVT0w2ZiRhM4rTMLqlirXBJS
-         ugUnSZsHqVUaihXCNJpf5uLzTjzgnxrNTLiUbiqU=
+        b=Zk2qVf0Y8IHNjJh3bXA9+FLNCZ0dvxweamFczIF0OQZK5J2ywrS2cOKdsgH5JmUyn
+         X2LTowJ+iCGmstPN8uUhPd8TFr6ExitEkgbKHBXPq4DpHtrBw5d2ia/JZrowmKaAQj
+         7Es1Vs+U3ENH+heuzkby/0uYlICrXKWOn7EEigSo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Oleg Nesterov <oleg@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 12/76] rq-qos: don't reset has_sleepers on spurious wakeups
-Date:   Fri,  2 Aug 2019 09:18:46 -0400
-Message-Id: <20190802131951.11600-12-sashal@kernel.org>
+Cc:     SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 18/76] drm/amd/display: Wait for backlight programming completion in set backlight level
+Date:   Fri,  2 Aug 2019 09:18:52 -0400
+Message-Id: <20190802131951.11600-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -59,39 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>
 
-[ Upstream commit 64e7ea875ef63b2801be7954cf7257d1bfccc266 ]
+[ Upstream commit c7990daebe71d11a9e360b5c3b0ecd1846a3a4bb ]
 
-If we raced with somebody else getting an inflight counter we could fail
-to get an inflight counter with no sleepers on the list, and thus need
-to go to sleep.  In this case has_sleepers should be true because we are
-now relying on the waker to get our inflight counter for us.  And in the
-case of spurious wakeups we'd still want this to be the case.  So set
-has_sleepers to true if we went to sleep to make sure we're woken up the
-proper way.
+[WHY]
+Currently we don't wait for blacklight programming completion in DMCU
+when setting backlight level. Some sequences such as PSR static screen
+event trigger reprogramming requires it to be complete.
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+[How]
+Add generic wait for dmcu command completion in set backlight level.
+
+Signed-off-by: SivapiriyanKumarasamy <sivapiriyan.kumarasamy@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-rq-qos.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dce/dce_abm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index 659ccb8b693fa..e5d75280b431e 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -260,7 +260,7 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
- 			break;
- 		}
- 		io_schedule();
--		has_sleeper = false;
-+		has_sleeper = true;
- 	} while (1);
- 	finish_wait(&rqw->wait, &data.wq);
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
+index 2959c3c9390b9..da30ae04e82bb 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
+@@ -234,6 +234,10 @@ static void dmcu_set_backlight_level(
+ 	s2 |= (backlight_8_bit << ATOM_S2_CURRENT_BL_LEVEL_SHIFT);
+ 
+ 	REG_WRITE(BIOS_SCRATCH_2, s2);
++
++	/* waitDMCUReadyForCmd */
++	REG_WAIT(MASTER_COMM_CNTL_REG, MASTER_COMM_INTERRUPT,
++			0, 1, 80000);
  }
+ 
+ static void dce_abm_init(struct abm *abm)
 -- 
 2.20.1
 
