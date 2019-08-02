@@ -2,117 +2,101 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B7AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFD1C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6362620679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739440;
-	bh=gRUh7r/2kagW87k821dT4UvIbhIkwAbcPWIlzXVFqa4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nHUwrGgS7ztsYz4vgeZY0ooD3oQsYkHDDIDtZH5SbhepyoWkXU7S//K+lEqR149QQ
-	 aU4vEbMG2+RU2LSmfVV4e/xlxuuNS19J4vddFXzh7Ox3mvnldI4FQTnkELUnl0VMM0
-	 KD4Enj318ui1fKwMBf7QCq8MQH+Dz6F7e8w8rca8=
+	by mail.kernel.org (Postfix) with ESMTP id EB8F620679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405701AbfHBJuj (ORCPT
+        id S2405875AbfHBJuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:50:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405439AbfHBJp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:45:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 307B420679;
-        Fri,  2 Aug 2019 09:45:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739126;
-        bh=gRUh7r/2kagW87k821dT4UvIbhIkwAbcPWIlzXVFqa4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D+fCngFYz/49lC13YeSkVHBbzSIwLtDzgtKrz0QsZLiKqCkf9nKNXGCMbpcEhHCnx
-         QK0m1q29M8Qa5jeMipAppzrXn9GhDs/R/ohLu7lv3Ma+EWWj6i/Sb+BIdUv7Zu4GJd
-         XDypqNwYij+6G4Mjx8NkvVpmNhbOj8p4L2veGDbA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Lee, Chiasheng" <chiasheng.lee@intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Lee@vger.kernel.org
-Subject: [PATCH 4.9 123/223] usb: Handle USB3 remote wakeup for LPM enabled devices correctly
-Date:   Fri,  2 Aug 2019 11:35:48 +0200
-Message-Id: <20190802092247.109782285@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
-References: <20190802092238.692035242@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 2 Aug 2019 05:50:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39175 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404933AbfHBJuf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:50:35 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1htUCg-0001sw-HD; Fri, 02 Aug 2019 11:50:26 +0200
+Date:   Fri, 2 Aug 2019 11:50:20 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Qais Yousef <qais.yousef@arm.com>, mingo@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 0/5] Fix FIFO-99 abuse
+In-Reply-To: <20190802093244.GF2332@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.DEB.2.21.1908021149110.3924@nanos.tec.linutronix.de>
+References: <20190801111348.530242235@infradead.org> <20190801131707.5rpyydznnhz474la@e107158-lin.cambridge.arm.com> <20190802093244.GF2332@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lee, Chiasheng <chiasheng.lee@intel.com>
+On Fri, 2 Aug 2019, Peter Zijlstra wrote:
+> On Thu, Aug 01, 2019 at 02:17:07PM +0100, Qais Yousef wrote:
+> > On 08/01/19 13:13, Peter Zijlstra wrote:
+> > > I noticed a bunch of kthreads defaulted to FIFO-99, fix them.
+> > > 
+> > > The generic default is FIFO-50, the admin will have to configure the system
+> > > anyway.
+> > > 
+> > > For some the purpose is to be above OTHER and then FIFO-1 really is sufficient.
+> > 
+> > I was looking in this area too and was thinking of a way to consolidate the
+> > creation of RT/DL tasks in the kernel and the way we set the priority.
+> > 
+> > Does it make sense to create a new header for RT priorities for kthreads
+> > created in the kernel so that we can easily track and rationale about the
+> > relative priorities of in-kernel RT tasks?
+> > 
+> > When working in the FW world such a header helped a lot in understanding what
+> > runs at each priority level and how to reason about what priority level makes
+> > sense for a new item. It could be a nice single point of reference; even for
+> > admins.
+> 
+> Well, SCHED_FIFO is a broken scheduler model; that is, it is
+> fundamentally incapable of resource management, which is the one thing
+> an OS really should be doing.
+> 
+> This is of course the reason it is limited to privileged users only.
+> 
+> Worse still; it is fundamentally impossible to compose static priority
+> workloads. You cannot take two correctly working static prio workloads
+> and smash them together and still expect them to work.
+> 
+> For this reason 'all' FIFO tasks the kernel creates are basically at:
+> 
+>   MAX_RT_PRIO / 2
+> 
+> The administrator _MUST_ configure the system, the kernel simply doesn't
+> know enough information to make a sensible choice.
+> 
+> Now, Geert suggested so make make a define for that, but how about we do
+> something like:
+> 
+> /*
+>  * ${the above explanation}
+>  */
+> int kernel_setscheduler_fifo(struct task_struct *p)
+> {
+> 	struct sched_param sp = { .sched_priority = MAX_RT_PRIO / 2 };
+> 	return sched_setscheduler_nocheck(p, SCHED_FIFO, &sp);
+> }
+> 
+> And then take away sched_setscheduler*().
 
-commit e244c4699f859cf7149b0781b1894c7996a8a1df upstream.
+Yes, please.
 
-With Link Power Management (LPM) enabled USB3 links transition to low
-power U1/U2 link states from U0 state automatically.
-
-Current hub code detects USB3 remote wakeups by checking if the software
-state still shows suspended, but the link has transitioned from suspended
-U3 to enabled U0 state.
-
-As it takes some time before the hub thread reads the port link state
-after a USB3 wake notification, the link may have transitioned from U0
-to U1/U2, and wake is not detected by hub code.
-
-Fix this by handling U1/U2 states in the same way as U0 in USB3 wakeup
-handling
-
-This patch should be added to stable kernels since 4.13 where LPM was
-kept enabled during suspend/resume
-
-Cc: <stable@vger.kernel.org> # v4.13+
-Signed-off-by: Lee, Chiasheng <chiasheng.lee@intel.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/usb/core/hub.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -3535,6 +3535,7 @@ static int hub_handle_remote_wakeup(stru
- 	struct usb_device *hdev;
- 	struct usb_device *udev;
- 	int connect_change = 0;
-+	u16 link_state;
- 	int ret;
- 
- 	hdev = hub->hdev;
-@@ -3544,9 +3545,11 @@ static int hub_handle_remote_wakeup(stru
- 			return 0;
- 		usb_clear_port_feature(hdev, port, USB_PORT_FEAT_C_SUSPEND);
- 	} else {
-+		link_state = portstatus & USB_PORT_STAT_LINK_STATE;
- 		if (!udev || udev->state != USB_STATE_SUSPENDED ||
--				 (portstatus & USB_PORT_STAT_LINK_STATE) !=
--				 USB_SS_PORT_LS_U0)
-+				(link_state != USB_SS_PORT_LS_U0 &&
-+				 link_state != USB_SS_PORT_LS_U1 &&
-+				 link_state != USB_SS_PORT_LS_U2))
- 			return 0;
- 	}
- 
-
+     tglx
 
