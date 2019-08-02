@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BDEC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B91C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D2321841
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1570216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564751996;
-	bh=kXFROHAYkXRIULUzuGLUVrpHYOTI4dMpB7Q5h8lnU3c=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Uuduy/fQTrrlLwYnXFJbVnBCbjiGnYGzZJz0QVerhRsj3Gp52og1N3+pvBqMVnEpP
-	 prz/Mg0wKNZcAr+iCLx8ENRGM1hZsk+poYmeq6k0ve6WWpLDWhCNV1c2Jf2I0yWevS
-	 VmPSNsVZAztW+2zCLeF5Ky6726y9tCXlIgc6wL2s=
+	s=default; t=1564751999;
+	bh=nUdfbhfIQrSghXscbJC5+DYXbBibO3UhUhJIbYLvPp0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IH2Igdy2L58CfzCLe6R/YyBp9XI7FBdM+fnTgDkUT1rH1DgB9I1mixeEnAsgbXZxT
+	 mRZ5UkoPqJvw3nu92yri6iCGs/d3Xyo/ynzUz2o0qzpl+gS8Lq6+LBOSuHFVKtpjRR
+	 35b4NPAQ/u7meqXUySS4wlm3/JrWieLLVONRiY0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393218AbfHBNTy (ORCPT
+        id S1732785AbfHBNT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:19:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58156 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:19:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731146AbfHBNTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:19:53 -0400
+        id S2393219AbfHBNTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:19:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AC9B2087C;
-        Fri,  2 Aug 2019 13:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8D6D2173E;
+        Fri,  2 Aug 2019 13:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564751993;
-        bh=kXFROHAYkXRIULUzuGLUVrpHYOTI4dMpB7Q5h8lnU3c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=h7YmwDd9mlv87T7+94X0HrK0Gz57lzDWJYqXJlFqId3Q+Sos/zLMk4TyeR3PtSVk9
-         5mhZBiLCBrQIe3ICyujYYS/GPK1mYkh1q/16l9Vv/Dua6r/TbU88gYffLb6sJZg71B
-         +ZQfN4YqZqmc94pcDrBjguwh2iX1QsNM5ByWDZi4=
+        s=default; t=1564751994;
+        bh=nUdfbhfIQrSghXscbJC5+DYXbBibO3UhUhJIbYLvPp0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Dr6P3OuRq961fC8OsY45tXvhfBE8NiYpURE9AsA8rg1xDQG+dkbKpPZ0yNZ+neQFP
+         vNqBKpMDSbKPpn5PiAPdwwI/iJW2wBYiWjn4hddWke5G+8fsPdrycWw3ucc9vc3zGY
+         IhyRsOXWJcrHiOU82c7Fd9aEhqAPx/Rz8EbdGsNc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Zorro Lang <zlang@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 01/76] powerpc: fix off by one in max_zone_pfn initialization for ZONE_DMA
-Date:   Fri,  2 Aug 2019 09:18:35 -0400
-Message-Id: <20190802131951.11600-1-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Thomas Jarosch <thomas.jarosch@intra2net.com>,
+        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 02/76] netfilter: nfnetlink: avoid deadlock due to synchronous request_module
+Date:   Fri,  2 Aug 2019 09:18:36 -0400
+Message-Id: <20190802131951.11600-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
+References: <20190802131951.11600-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,47 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 03800e0526ee25ed7c843ca1e57b69ac2a5af642 ]
+[ Upstream commit 1b0890cd60829bd51455dc5ad689ed58c4408227 ]
 
-25078dc1f74be16b858e914f52cc8f4d03c2271a first introduced an off by
-one error in the ZONE_DMA initialization of PPC_BOOK3E_64=y and since
-9739ab7eda459f0669ec9807e0d9be5020bab88c the off by one applies to
-PPC32=y too. This simply corrects the off by one and should resolve
-crashes like below:
+Thomas and Juliana report a deadlock when running:
 
-[   65.179101] page 0x7fff outside node 0 zone DMA [ 0x0 - 0x7fff ]
+(rmmod nf_conntrack_netlink/xfrm_user)
 
-Unfortunately in various MM places "max" means a non inclusive end of
-range. free_area_init_nodes max_zone_pfn parameter is one case and
-MAX_ORDER is another one (unrelated) that comes by memory.
+  conntrack -e NEW -E &
+  modprobe -v xfrm_user
 
-Reported-by: Zorro Lang <zlang@redhat.com>
-Fixes: 25078dc1f74b ("powerpc: use mm zones more sensibly")
-Fixes: 9739ab7eda45 ("powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac")
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190625141727.2883-1-aarcange@redhat.com
+They provided following analysis:
+
+conntrack -e NEW -E
+    netlink_bind()
+        netlink_lock_table() -> increases "nl_table_users"
+            nfnetlink_bind()
+            # does not unlock the table as it's locked by netlink_bind()
+                __request_module()
+                    call_usermodehelper_exec()
+
+This triggers "modprobe nf_conntrack_netlink" from kernel, netlink_bind()
+won't return until modprobe process is done.
+
+"modprobe xfrm_user":
+    xfrm_user_init()
+        register_pernet_subsys()
+            -> grab pernet_ops_rwsem
+                ..
+                netlink_table_grab()
+                    calls schedule() as "nl_table_users" is non-zero
+
+so modprobe is blocked because netlink_bind() increased
+nl_table_users while also holding pernet_ops_rwsem.
+
+"modprobe nf_conntrack_netlink" runs and inits nf_conntrack_netlink:
+    ctnetlink_init()
+        register_pernet_subsys()
+            -> blocks on "pernet_ops_rwsem" thanks to xfrm_user module
+
+both modprobe processes wait on one another -- neither can make
+progress.
+
+Switch netlink_bind() to "nowait" modprobe -- this releases the netlink
+table lock, which then allows both modprobe instances to complete.
+
+Reported-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
+Reported-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/mem.c | 2 +-
+ net/netfilter/nfnetlink.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 2540d3b2588c3..2eda1ec36f552 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -249,7 +249,7 @@ void __init paging_init(void)
- 
- #ifdef CONFIG_ZONE_DMA
- 	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
--			((1UL << ARCH_ZONE_DMA_BITS) - 1) >> PAGE_SHIFT);
-+				      1UL << (ARCH_ZONE_DMA_BITS - PAGE_SHIFT));
+diff --git a/net/netfilter/nfnetlink.c b/net/netfilter/nfnetlink.c
+index 92077d4591090..4abbb452cf6c6 100644
+--- a/net/netfilter/nfnetlink.c
++++ b/net/netfilter/nfnetlink.c
+@@ -578,7 +578,7 @@ static int nfnetlink_bind(struct net *net, int group)
+ 	ss = nfnetlink_get_subsys(type << 8);
+ 	rcu_read_unlock();
+ 	if (!ss)
+-		request_module("nfnetlink-subsys-%d", type);
++		request_module_nowait("nfnetlink-subsys-%d", type);
+ 	return 0;
+ }
  #endif
- 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
- #ifdef CONFIG_HIGHMEM
 -- 
 2.20.1
 
