@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DF6C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274D3C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85362087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBFF32073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740366;
-	bh=afSZnQ3e+AUamiEgLFFnL1uE0s6b2WzVdeZ2DDPQg98=;
+	s=default; t=1564740370;
+	bh=erNs80+xO89ji3FxGHqrr4RJNC78SHV0qgHFA/oqA5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F58FqXwp/GbbaXZuVjd1oJyRXINngARfoxbWrlBVqe/qTbANYvq+DLCPKwBg1B5Gp
-	 prOkaP2vmyjn0jdjPsOLsc9aA+coNwk8UMUlGRIFDN5MAZ0V4wd+kmQsyY0loD7+xu
-	 5EP9cCg0T4vO1IqpWICFwDCrWqTIYhVPHx9uPyGo=
+	b=yMNd2FhzPgmPQEZJPKLOSNb3iyhBaMM+nqJW7bhWmGyLqsdsaEt2TBV2MrQMBLz+3
+	 9PJhm2EEktnEcpyW9FWVBrPy9gg/nZOmFUOR6ScHifpJfOVOgKWv3k/By0Bzg6OVY1
+	 kNclO0+hKMeVuu5sdkzUXGQrj+v7j08eToiuyCQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404728AbfHBJbm (ORCPT
+        id S2404708AbfHBJbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:31:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57968 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404710AbfHBJbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:31:38 -0400
+        id S2404679AbfHBJbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:31:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E71E2182B;
-        Fri,  2 Aug 2019 09:31:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21F4721783;
+        Fri,  2 Aug 2019 09:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738297;
-        bh=afSZnQ3e+AUamiEgLFFnL1uE0s6b2WzVdeZ2DDPQg98=;
+        s=default; t=1564738292;
+        bh=erNs80+xO89ji3FxGHqrr4RJNC78SHV0qgHFA/oqA5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=td9g94QCfWFC2ilYw4+NwU7njZ8FOWAgfcBir0j2RoiUpQZY9vLLgH3SUNRsNLy2J
-         G08l2JFSxuKBdxTrU4iYaFdUL9mhebPKiNEqFqPEKgdVJwzyUVS0OUyZgJdF06d0Em
-         73Kyso+mk9ztEa1uVVnlAnQgo76Tpg7PaGZOgfMA=
+        b=RJUUxt8LdWfNOeZk0PUL0lC5D6Wk6i9vl5kvbhErQJRa5D5ZXEnoz1n/CO/496edz
+         2my0wUexYCPY7c68gMCQfRCuU4qC5R3kfrIcVCJvr+ZjlDR2WG8bOP9p0WA+O1/5//
+         fv9sZxzqVY0QlSCbMUwceaTvCil4bbKYITiLbPnA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org,
+        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 032/158] xfrm: fix sa selector validation
-Date:   Fri,  2 Aug 2019 11:27:33 +0200
-Message-Id: <20190802092210.275945645@linuxfoundation.org>
+Subject: [PATCH 4.4 047/158] rslib: Fix handling of of caller provided syndrome
+Date:   Fri,  2 Aug 2019 11:27:48 +0200
+Message-Id: <20190802092213.631567139@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -62,40 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b8d6d0079757cbd1b69724cfd1c08e2171c68cee ]
+[ Upstream commit ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9 ]
 
-After commit b38ff4075a80, the following command does not work anymore:
-$ ip xfrm state add src 10.125.0.2 dst 10.125.0.1 proto esp spi 34 reqid 1 \
-  mode tunnel enc 'cbc(aes)' 0xb0abdba8b782ad9d364ec81e3a7d82a1 auth-trunc \
-  'hmac(sha1)' 0xe26609ebd00acb6a4d51fca13e49ea78a72c73e6 96 flag align4
+Check if the syndrome provided by the caller is zero, and act
+accordingly.
 
-In fact, the selector is not mandatory, allow the user to provide an empty
-selector.
-
-Fixes: b38ff4075a80 ("xfrm: Fix xfrm sel prefix length validation")
-CC: Anirudh Gupta <anirudh.gupta@sophos.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190620141039.9874-6-ferdinand.blomqvist@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/reed_solomon/decode_rs.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index 10fda9a39cc2..8cc2a9df84fd 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -166,6 +166,9 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
- 	}
+diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
+index 8eed0f9ac495..a5d313381539 100644
+--- a/lib/reed_solomon/decode_rs.c
++++ b/lib/reed_solomon/decode_rs.c
+@@ -42,8 +42,18 @@
+ 	BUG_ON(pad < 0 || pad >= nn);
  
- 	switch (p->sel.family) {
-+	case AF_UNSPEC:
-+		break;
+ 	/* Does the caller provide the syndrome ? */
+-	if (s != NULL)
+-		goto decode;
++	if (s != NULL) {
++		for (i = 0; i < nroots; i++) {
++			/* The syndrome is in index form,
++			 * so nn represents zero
++			 */
++			if (s[i] != nn)
++				goto decode;
++		}
 +
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
++		/* syndrome is zero, no errors to correct  */
++		return 0;
++	}
+ 
+ 	/* form the syndromes; i.e., evaluate data(x) at roots of
+ 	 * g(x) */
 -- 
 2.20.1
 
