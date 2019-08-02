@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F34DC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917DAC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B7520665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6760020665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739982;
-	bh=QILDKNKUsCB7MGS6pvXRQMzrf1Z7JOKOwAAxfGEIO0w=;
+	s=default; t=1564739984;
+	bh=jzaIjRcyMhFj+mFSunOR1BI7mE4WlW8hxlcy5gPxZTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5QgFF+Vpzt6G2lVivi79TwBvI38fHUoNbgpawkAZWpWOXyRvizTFUZ8KR2bWh95/
-	 cRufA6V/Qe46YjFprcAMXAOT01RupzGzT6jCiDhFZDg2emG+JYBPs0MPQUMsK1SFup
-	 Q11nX0ti8yqZ/fT8fHUvz6egLD6NXHt1ZmYnHLKo=
+	b=k6TEZLtN7W0C2nHXG2NkSo4uefNCsvWIo15GToHgJ0xoFfrcyMk39ytnWmsqhfvkX
+	 Y+m02TXMY4utpGekiMXIbSEf7rRt6x88RbTzVQq7VUqbjHA5Wubc84R8IxCC2ZjKtj
+	 ZB8aODun7z8BcIhDcoS9ZU1SvDheYEjzGXTfqnh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406571AbfHBJze (ORCPT
+        id S2406559AbfHBJzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406557AbfHBJzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 2 Aug 2019 05:55:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406541AbfHBJz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:55:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C39C2064A;
-        Fri,  2 Aug 2019 09:55:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96A94206A2;
+        Fri,  2 Aug 2019 09:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739730;
-        bh=QILDKNKUsCB7MGS6pvXRQMzrf1Z7JOKOwAAxfGEIO0w=;
+        s=default; t=1564739728;
+        bh=jzaIjRcyMhFj+mFSunOR1BI7mE4WlW8hxlcy5gPxZTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nL10CsxDIdTQy9AwaFpPkXybWXTt7vlhVAv/uBJrHVCdTfne3yJ191gsAM1JYD/JR
-         fB8YgO/+crV85PqZTcX+YMPk56MaRLxuI1vuXQ1oGK7YHwdOS45FtrdeEj1o5ZKBfq
-         wI2ZqYBy5ZB+YpZEFVqTnlcoTGxDPmOrFM6Jjyrk=
+        b=cAWste8xI3aTnErdUwHRNqokPhnCRffFtk0SIcIaw0gI+h39X8hbrdCZ2zfMMtrmI
+         W0bqvJmKj+sFrfY9qlMIQMrvegnwX2pIql0tTr2s3dMjj9YiDBqZekwYCY+N6l2qJF
+         u6CRtD18AEHZR7AEMFve18kupZOsuYKUe8r6+PZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+357d86bcb4cca1a2f572@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 11/32] media: au0828: fix null dereference in error path
-Date:   Fri,  2 Aug 2019 11:39:45 +0200
-Message-Id: <20190802092105.201934828@linuxfoundation.org>
+        syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com,
+        Phong Tran <tranmanphong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 10/32] ISDN: hfcsusb: checking idx of ep configuration
+Date:   Fri,  2 Aug 2019 11:39:44 +0200
+Message-Id: <20190802092104.861247414@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092101.913646560@linuxfoundation.org>
 References: <20190802092101.913646560@linuxfoundation.org>
@@ -61,49 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Phong Tran <tranmanphong@gmail.com>
 
-commit 6d0d1ff9ff21fbb06b867c13a1d41ce8ddcd8230 upstream.
+commit f384e62a82ba5d85408405fdd6aeff89354deaa9 upstream.
 
-au0828_usb_disconnect() gets the au0828_dev struct via usb_get_intfdata,
-so it needs to set up for the error paths.
+The syzbot test with random endpoint address which made the idx is
+overflow in the table of endpoint configuations.
 
-Reported-by: syzbot+357d86bcb4cca1a2f572@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+this adds the checking for fixing the error report from
+syzbot
+
+KASAN: stack-out-of-bounds Read in hfcsusb_probe [1]
+The patch tested by syzbot [2]
+
+Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
+
+[1]:
+https://syzkaller.appspot.com/bug?id=30a04378dac680c5d521304a00a86156bb913522
+[2]:
+https://groups.google.com/d/msg/syzkaller-bugs/_6HBdge8F3E/OJn7wVNpBAAJ
+
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/au0828/au0828-core.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/isdn/hardware/mISDN/hfcsusb.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/media/usb/au0828/au0828-core.c
-+++ b/drivers/media/usb/au0828/au0828-core.c
-@@ -623,6 +623,12 @@ static int au0828_usb_probe(struct usb_i
- 	/* Setup */
- 	au0828_card_setup(dev);
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1967,6 +1967,9 @@ hfcsusb_probe(struct usb_interface *intf
  
-+	/*
-+	 * Store the pointer to the au0828_dev so it can be accessed in
-+	 * au0828_usb_disconnect
-+	 */
-+	usb_set_intfdata(interface, dev);
+ 				/* get endpoint base */
+ 				idx = ((ep_addr & 0x7f) - 1) * 2;
++				if (idx > 15)
++					return -EIO;
 +
- 	/* Analog TV */
- 	retval = au0828_analog_register(dev, interface);
- 	if (retval) {
-@@ -641,12 +647,6 @@ static int au0828_usb_probe(struct usb_i
- 	/* Remote controller */
- 	au0828_rc_register(dev);
- 
--	/*
--	 * Store the pointer to the au0828_dev so it can be accessed in
--	 * au0828_usb_disconnect
--	 */
--	usb_set_intfdata(interface, dev);
--
- 	pr_info("Registered device AU0828 [%s]\n",
- 		dev->board.name == NULL ? "Unset" : dev->board.name);
- 
+ 				if (ep_addr & 0x80)
+ 					idx++;
+ 				attr = ep->desc.bmAttributes;
 
 
