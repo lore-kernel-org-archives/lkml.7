@@ -2,198 +2,248 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB989C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21954C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0DF32087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3DC42087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:46:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrRlPsFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387852AbfHBQpH (ORCPT
+        id S2388146AbfHBQq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:45:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:37284 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfHBQpH (ORCPT
+        Fri, 2 Aug 2019 12:46:29 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35000 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbfHBQq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:45:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id v3so83765885ios.4
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 09:45:06 -0700 (PDT)
+        Fri, 2 Aug 2019 12:46:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n4so1068491pgv.2;
+        Fri, 02 Aug 2019 09:46:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1mqBdvsDc6s4db6x0U4o6eITdjucJjl81QWzhyRALs4=;
+        b=KrRlPsFQPaTHwv6ALy8LrIS3iw+CR3MEG2IJhcD27934RBG07SICtPtx3jENlAD57J
+         aA0Tw27Rk6znTYPYD7mOkTFb6FyBbcLQubJHRz44CgjTqadNlTkBvZg/AYj/xa1EPSqx
+         ertzTFw0MMxTwmOjC4VlyvEfTDlxwFz8yGFM5s7zh3LP/lFUumNOFtTl0UoODd9BqqRw
+         ytNj6zUjrZnNOUkBTIJxY0e7KIGLGeRHZf6O9+Eti4TqUmC+jNsn9/urE4je7YHv17HH
+         KlWnPnXNz+s4ve1VLSvs02iCtECOpxE/k+AmqUgijoNQXlM+RjQFsujYSyPm4lQDVWyA
+         lRIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=UA45qRYC5K8T4QSrCN5nW+v8qYL3F1Jg1eJKai+z9Uk=;
-        b=GFsaPnvG/czXsZsWQwT4EP/PfcyWbRJuNl2jvKlEEUiQoXaAQjNrZS6WDtY7JkoxAL
-         OAdAUgS50trN0K7BjJ6IRZgVMUdUyx1LGv5Qz1yagS6WGPmhnRqgd72QHsT5McLmr+PT
-         Wii/P0GvcfXO5ByBrvS1IokdPVyg40+0RwGYwGgQ2Gi4JfuNjKPqyS0K7dWPRkQ92VpJ
-         kulRflBXO2QF/aEZYYBYtVfbiuQoqTXczRxK1Of7D1nsl1asFiHlav9WcUDMQC6pdcjA
-         9eoCkqBKDQcYJEqJmq1fCpWMulbd7EVnZpeAM/cuUUpWetFCcTM3s0wl3ivU6HZLCYK6
-         iXLQ==
-X-Gm-Message-State: APjAAAVbp39a1jmvfsSF1tXAbfY6TtsorOG28BpINJCO1h/V+1E1jJmR
-        HIiZ0mibkJxM5UIHm0jzW4M+lm2WE9nE2s5jhk7EYHpQS2/E
-X-Google-Smtp-Source: APXvYqxiTbiTo9aYM5HaVlxqYEyQKJfZPhpQvK4Ko5Qyke8npJSk6xT5Phqo4afTc8Eg38skhIqM09IV89Mj0PZFy+Q0xqZmXqyK
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1mqBdvsDc6s4db6x0U4o6eITdjucJjl81QWzhyRALs4=;
+        b=CZjQoFRDz0HaeG32Yjodk6hXeMC2P/r14EyVI48CQqn86l5B5dRGNDBSxEYYmSUbqa
+         bu8OsFxB82F+/Bh3TTuXCzlEHU6jE0rnikKjSyBJToenSFeypkKrl4m+nfL3/l2vdKAQ
+         NUQBXzcN5PC/NzujI5d1f3MH3IsrczDOXCckCEdarDkW2jRDoX4wOi5TZphhOBOWbHfn
+         QKWEtOcdaCI+osUgUKHAUr3lPJ7beXyrYuXIm3JQloAZjMwCA4KuLH+UmnbbJEQnr0O1
+         PpHTE1hEw8Uq1wtz+j255lcIiw2GXKAVEbHyimvm4ceH4AB98RA8iJNswYkIokpcCOdg
+         uVeg==
+X-Gm-Message-State: APjAAAXmj7LepcpmQJs+QmOVr7UxOtmkiWZDqf0htcwOZu08CJIVdZ8n
+        ymrzDAOH4z596jr0wiqcoHE=
+X-Google-Smtp-Source: APXvYqzaCAWw06v6g7ecB9r6j15/9spv0X8qUkd3PoQZA+AeFEaKCBAdXSGQo/NyIy5xqPu+6j7vYA==
+X-Received: by 2002:a17:90a:c68c:: with SMTP id n12mr5193428pjt.33.1564764388125;
+        Fri, 02 Aug 2019 09:46:28 -0700 (PDT)
+Received: from localhost.localdomain ([125.142.23.13])
+        by smtp.gmail.com with ESMTPSA id x25sm106891927pfa.90.2019.08.02.09.46.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 09:46:27 -0700 (PDT)
+Date:   Sat, 3 Aug 2019 01:46:22 +0900
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     shuah <shuah@kernel.org>
+Cc:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] usbip: Implement SG support to vhci
+Message-ID: <20190802164622.GA16516@localhost.localdomain>
+References: <20190705164355.14025-1-suwan.kim027@gmail.com>
+ <20190705164355.14025-3-suwan.kim027@gmail.com>
+ <7c697904-53e3-b469-c907-25b8fb7859bc@kernel.org>
+ <20190729145241.GA4557@localhost.localdomain>
+ <787051b9-579d-6da5-9d04-3dd0ae3c770b@kernel.org>
+ <20190801063859.GA9587@localhost.localdomain>
+ <e581b566-65fb-c4d8-74fc-1c1b35b57b9f@kernel.org>
+ <20190802074136.GA19534@localhost.localdomain>
+ <a7a00097-64ce-703e-84f3-04f105e46c80@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:d008:: with SMTP id x8mr1372310ioa.129.1564764306330;
- Fri, 02 Aug 2019 09:45:06 -0700 (PDT)
-Date:   Fri, 02 Aug 2019 09:45:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a2db16058f2514fa@google.com>
-Subject: KASAN: use-after-free Read in blkdev_direct_IO
-From:   syzbot <syzbot+0a0e5f37746013dc7476@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a7a00097-64ce-703e-84f3-04f105e46c80@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Aug 02, 2019 at 07:33:59AM -0600, shuah wrote:
+> On 8/2/19 1:41 AM, Suwan Kim wrote:
+> > On Thu, Aug 01, 2019 at 08:03:59AM -0600, shuah wrote:
+> > > On 8/1/19 12:38 AM, Suwan Kim wrote:
+> > > > On Mon, Jul 29, 2019 at 10:32:31AM -0600, shuah wrote:
+> > > > > On 7/29/19 8:52 AM, Suwan Kim wrote:
+> > > > > > Hi Shuah,
+> > > > > > 
+> > > > > > On Tue, Jul 23, 2019 at 06:21:53PM -0600, shuah wrote:
+> > > > > > > Hi Suwan,
+> > > > > > > 
+> > > > > > > On 7/5/19 10:43 AM, Suwan Kim wrote:
+> > > > > > > > There are bugs on vhci with usb 3.0 storage device. Originally, vhci
+> > > > > > > > doesn't supported SG, so USB storage driver on vhci breaks SG list
+> > > > > > > > into multiple URBs and it causes error that a transfer got terminated
+> > > > > > > > too early because the transfer length for one of the URBs was not
+> > > > > > > > divisible by the maxpacket size.
+> > > > > > > > 
+> > > > > > > > In this patch, vhci basically support SG and it sends each SG list
+> > > > > > > > entry to the stub driver. Then, the stub driver sees the total length
+> > > > > > > > of the buffer and allocates SG table and pages according to the total
+> > > > > > > > buffer length calling sgl_alloc(). After the stub driver receives
+> > > > > > > > completed URB, it again sends each SG list entry to vhci.
+> > > > > > > > 
+> > > > > > > > If HCD of the server doesn't support SG, the stub driver breaks a
+> > > > > > > > single SG reqeust into several URBs and submit them to the server's
+> > > > > > > > HCD. When all the split URBs are completed, the stub driver
+> > > > > > > > reassembles the URBs into a single return command and sends it to
+> > > > > > > > vhci.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+> > > > > > > > ---
+> > > > > > > >      drivers/usb/usbip/stub.h         |   7 +-
+> > > > > > > >      drivers/usb/usbip/stub_main.c    |  52 +++++---
+> > > > > > > >      drivers/usb/usbip/stub_rx.c      | 207 ++++++++++++++++++++++---------
+> > > > > > > >      drivers/usb/usbip/stub_tx.c      | 108 +++++++++++-----
+> > > > > > > >      drivers/usb/usbip/usbip_common.c |  60 +++++++-- >   drivers/usb/usbip/vhci_hcd.c     |  10 +-
+> > > > > > > >      drivers/usb/usbip/vhci_tx.c      |  49 ++++++--
+> > > > > > > >      7 files changed, 372 insertions(+), 121 deletions(-)
+> > > > > > > 
+> > > > > > > While you are working on v3 to fix chekpatch and other issues
+> > > > > > > I pointed out, I have more for you.
+> > > > > > > 
+> > > > > > > What happens when you have mismatched server and client side?
+> > > > > > > i.e stub does and vhci doesn't and vice versa.
+> > > > > > > 
+> > > > > > > Make sure to run checkpatch. Also check spelling errors in
+> > > > > > > comments and your commit log.
+> > > > > > > 
+> > > > > > > I am not sure if your eeror paths are correct. Run usbip_test.sh
+> > > > > > > 
+> > > > > > > tools/testing/selftests/drivers/usb/usbip
+> > > > > > 
+> > > > > > I don't know what mismatch you mentioned. Are you saying
+> > > > > > "match busid table" at the end of usbip_test.sh?
+> > > > > > How does it relate to SG support of this patch?
+> > > > > > Could you tell me more about the problem situation?
+> > > > > > 
+> > > > > 
+> > > > > What happens when usbip_host is running a kernel without the sg
+> > > > > support and vhci_hcd does? Just make sure this works with the
+> > > > > checks for sg support status as a one of your tests for this
+> > > > > sg feature.
+> > > > 
+> > > > Now I understand. Thanks for the details!
+> > > > As a result of testing, in the situation where vhci supports SG,
+> > > > but stub does not, or vice versa, usbip works normally. Moreover,
+> > > > because there is no protocol modification, there is no problem in
+> > > > communication between server and client even if the one has a kernel
+> > > > without SG support.
+> > > > 
+> > > > In the case of vhci supports SG and stub doesn't, because vhci sends
+> > > > only the total length of the buffer to stub as it did before the
+> > > > patch applied, stub only needs to allocate the required length of
+> > > > buffers regardless of whether vhci supports SG or not.
+> > > > 
+> > > > If stub needs to send data buffer to vhci because of IN pipe, stub
+> > > > also sends only total length of buffer as metadata and then send real
+> > > > data as vhci does. Then vhci receive data from stub and store it to
+> > > > the corresponding buffer of SG list entry.
+> > > > 
+> > > > In the case of stub that supports SG, if SG buffer is requested by
+> > > > vhci, buffer is allocated by sgl_alloc(). However, stub that does
+> > > > not support SG allocates buffer using only kmalloc(). Therefore, if
+> > > > vhci supports SG and stub doesn't, stub has to allocate buffer with
+> > > > kmalloc() as much as the total length of SG buffer which is quite
+> > > > huge when vhci sends SG request, so it has big overhead in buffer
+> > > > allocation.
+> > > > 
+> > > > And for the case of stub supports SG and vhci doesn't, since the
+> > > > USB storage driver checks that vhci doesn't support SG and sends
+> > > > the request to stub by splitting the SG list into multiple URBs,
+> > > > stub allocates a buffer with kmalloc() as it did before this patch.
+> > > > 
+> > > > Therefore, everything works normally in a mismatch situation.
+> > > 
+> > > Looking for you add a test case for that. Please include this
+> > > in the commit log.
+> > 
+> > I'm confused about the test case. Do I add the test case for each
+> > SG support status of vhci_hcd and usbip_host in usbip_test.sh?
+> > Or, do I implement the test logic in vhci_hcd code that asks if
+> > usbip_host supports SG when attaching a remote device?
+> > I'm sorry but I don't know what exactly you want to add.
+> > 
+> 
+> What I am asking you do is:
+> 
+> 1. test with mismatched host and client.
 
-syzbot found the following crash on:
+I already tested this case with two different machines. One is the
+5.2-rc6 kernel with SG patch and the other is default fedora kernel
+version 5.1.20-200.fc29.x86_64. As I said, I run vhci_hcd with SG
+and usbip_host without SG and also vice versa.
 
-HEAD commit:    1e78030e Merge tag 'mmc-v5.3-rc1' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=172e72dc600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4c7b914a2680c9c6
-dashboard link: https://syzkaller.appspot.com/bug?extid=0a0e5f37746013dc7476
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11fa7830600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f31c8a600000
+I tested it with Sandisk USB 3.0 storage deivce and tested read and
+write operation which transfer files whose size is over 1G like movie
+file. All the opreations work well.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0a0e5f37746013dc7476@syzkaller.appspotmail.com
+> 2. run usbip_test.sh
 
-==================================================================
-BUG: KASAN: use-after-free in __blkdev_direct_IO fs/block_dev.c:468 [inline]
-BUG: KASAN: use-after-free in blkdev_direct_IO+0x13cd/0x1590  
-fs/block_dev.c:518
-Read of size 4 at addr ffff8880a3115f28 by task syz-executor964/10331
+One thing goes wrong. But others except the one worked as expected.
 
-CPU: 0 PID: 10331 Comm: syz-executor964 Not tainted 5.3.0-rc2+ #112
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
-  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
-  kasan_report+0x12/0x17 mm/kasan/common.c:612
-  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
-  __blkdev_direct_IO fs/block_dev.c:468 [inline]
-  blkdev_direct_IO+0x13cd/0x1590 fs/block_dev.c:518
-  generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3230
-  __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3413
-  blkdev_write_iter fs/block_dev.c:1993 [inline]
-  blkdev_write_iter+0x23a/0x440 fs/block_dev.c:1970
-  call_write_iter include/linux/fs.h:1870 [inline]
-  new_sync_write+0x4d3/0x770 fs/read_write.c:483
-  __vfs_write+0xe1/0x110 fs/read_write.c:496
-  vfs_write+0x268/0x5d0 fs/read_write.c:558
-  ksys_write+0x14f/0x290 fs/read_write.c:611
-  __do_sys_write fs/read_write.c:623 [inline]
-  __se_sys_write fs/read_write.c:620 [inline]
-  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x44d8f9
-Code: e8 7c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 3b c9 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f85ed575ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000006e0c98 RCX: 000000000044d8f9
-RDX: 0000000052698b21 RSI: 0000000020000000 RDI: 0000000000000006
-RBP: 00000000006e0c90 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e0c9c
-R13: 00007ffc4e9d0e7f R14: 00007f85ed5769c0 R15: 0000000000000016
+==============================================================
+List imported devices - expect to see imported devices
+Imported USB devices
+====================
+Port 08: <Port in Use> at Super Speed(5000Mbps)
+       SanDisk Corp. : Ultra Flair (0781:5591)
+       4-1 -> usbip://localhost:3240/2-6
+           -> remote bus/dev 002/003
+==============================================================
+Import devices from localhost - expect already imported messages
+usbip: error: Attach Request for 2-6 failed - Device busy (exported)
 
-Allocated by task 10331:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:460
-  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:495
-  slab_post_alloc_hook mm/slab.h:520 [inline]
-  slab_alloc mm/slab.c:3319 [inline]
-  kmem_cache_alloc+0x121/0x710 mm/slab.c:3483
-  mempool_alloc_slab+0x47/0x60 mm/mempool.c:513
-  mempool_alloc+0x169/0x380 mm/mempool.c:393
-  bio_alloc_bioset+0x3b9/0x680 block/bio.c:477
-  bio_alloc include/linux/bio.h:400 [inline]
-  __blkdev_direct_IO fs/block_dev.c:470 [inline]
-  blkdev_direct_IO+0x8b0/0x1590 fs/block_dev.c:518
-  generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3230
-  __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3413
-  blkdev_write_iter fs/block_dev.c:1993 [inline]
-  blkdev_write_iter+0x23a/0x440 fs/block_dev.c:1970
-  call_write_iter include/linux/fs.h:1870 [inline]
-  new_sync_write+0x4d3/0x770 fs/read_write.c:483
-  __vfs_write+0xe1/0x110 fs/read_write.c:496
-  vfs_write+0x268/0x5d0 fs/read_write.c:558
-  ksys_write+0x14f/0x290 fs/read_write.c:611
-  __do_sys_write fs/read_write.c:623 [inline]
-  __se_sys_write fs/read_write.c:620 [inline]
-  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+==============================================================
+Un-import devices
+usbip: info: Port 0 is already detached!
 
-Freed by task 9:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:449
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
-  __cache_free mm/slab.c:3425 [inline]
-  kmem_cache_free+0x86/0x320 mm/slab.c:3693
-  mempool_free_slab+0x1e/0x30 mm/mempool.c:520
-  mempool_free+0xeb/0x370 mm/mempool.c:502
-  bio_free+0x267/0x420 block/bio.c:255
-  bio_put+0xda/0x110 block/bio.c:549
-  blkdev_bio_end_io+0x338/0x4b0 fs/block_dev.c:333
-  bio_endio+0x611/0xaf0 block/bio.c:1830
-  req_bio_endio block/blk-core.c:239 [inline]
-  blk_update_request+0x32e/0xc10 block/blk-core.c:1424
-  blk_mq_end_request+0x5b/0x560 block/blk-mq.c:557
-  blk_flush_complete_seq+0x558/0x1030 block/blk-flush.c:196
-  flush_end_io+0x3d1/0x6d0 block/blk-flush.c:237
-  __blk_mq_end_request block/blk-mq.c:548 [inline]
-  blk_mq_end_request+0x32e/0x560 block/blk-mq.c:559
-  lo_complete_rq+0x210/0x2e0 drivers/block/loop.c:485
-  blk_done_softirq+0x2fe/0x4d0 block/blk-softirq.c:37
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
+usbip: info: Port 1 is already detached!
 
-The buggy address belongs to the object at ffff8880a3115f00
-  which belongs to the cache bio-0 of size 192
-The buggy address is located 40 bytes inside of
-  192-byte region [ffff8880a3115f00, ffff8880a3115fc0)
-The buggy address belongs to the page:
-page:ffffea00028c4540 refcount:1 mapcount:0 mapping:ffff88821b2978c0  
-index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea0002a16f08 ffff8880a7833a48 ffff88821b2978c0
-raw: 0000000000000000 ffff8880a3115000 0000000100000010 0000000000000000
-page dumped because: kasan: bad access detected
+==============================================================
+List imported devices - expect to see none
+Imported USB devices
+====================
+Port 08: <Port in Use> at Super Speed(5000Mbps)
+       SanDisk Corp. : Ultra Flair (0781:5591)
+       4-1 -> usbip://localhost:3240/2-6
+           -> remote bus/dev 002/003
+==============================================================
 
-Memory state around the buggy address:
-  ffff8880a3115e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880a3115e80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-> ffff8880a3115f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                   ^
-  ffff8880a3115f80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff8880a3116000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
+My SanDisk device is bound port 8 but the test script detachs only
+port 0 and 1. This error is not related with SG patch but we have to
+modifiy the test script to try to detach all the ports.
 
+> These two are separate tests. I am not asking you to add any tests.
+> If you want to add it, I am not going say no :)
+> 
+> How close are you sending the patch?
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+My work is done. I will send it now.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Regards
+Suwan Kim
