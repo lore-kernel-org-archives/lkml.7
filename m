@@ -2,155 +2,113 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65BBC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3905BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B072064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3F32064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:56:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OBpDVFZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392826AbfHBM4S (ORCPT
+        id S2390621AbfHBM4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 2 Aug 2019 08:56:21 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:56083 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390382AbfHBM4S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 2 Aug 2019 08:56:18 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48144 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392651AbfHBMy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:54:29 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A3B18A9E027EC2878745;
-        Fri,  2 Aug 2019 20:54:27 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
- 20:54:20 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        "Jaegeuk Kim" <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v6 10/24] erofs: update Kconfig and Makefile
-Date:   Fri, 2 Aug 2019 20:53:33 +0800
-Message-ID: <20190802125347.166018-11-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190802125347.166018-1-gaoxiang25@huawei.com>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Received: by mail-wm1-f66.google.com with SMTP id a15so67867512wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 05:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=yjEMe5wuk6zRJXQKT5fhkZ+36XC9uZHCWgmdHyE58XY=;
+        b=OBpDVFZIBBIkpNcqE4jGwaWXitaI6CuguZip4iFoAXWKm8LSDhYbAE2Tm8Nm5hOu6L
+         n6+Bj0rHVMZID2sbxyEjT06dzgqarhID7D5J4TgPbZnrR4nLHu85F3T6erUeUBYxWem8
+         KuR1vdqRSZL0Gcp5K/CRMXc08PUyBFewGyU2a6QjSrX4UN1wDbgskMuq9ZGCAJRO2OCb
+         7mG0uTSaTgH6rrMb8aEJFxBUZT44+m2tMxAjau92B2RwttZFGM2Hej5S6Ilb8QtoN2r4
+         XYr3ftU3MdtxrjNUnRv6bXNEddH/aH5QCL3D8x0DyiIaN+rbrwotL4yoHzK5FNpUZEj1
+         v+Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=yjEMe5wuk6zRJXQKT5fhkZ+36XC9uZHCWgmdHyE58XY=;
+        b=QzxfZe3JjluSIOXU1usct+ixYTLFeF5uitlk9IXTRuNhsVF0qNciHE6AS8gVEWCi9+
+         UhG6NunviSOO3qkDoqWiBYPyXa6PzIxKPudV4CrrMVRl2RsiUsr8WR2BbC93AT3VobjG
+         h1AGTq1O7dwgBiEXM6K1EqymHJCgMLyE0FfkfTA+aKtM02p4Zw4cDLnyXa5mvxniQKjJ
+         QjUJOH/mH+hzK3CxaHm1RaSOKcCSayiFpGMW3FwxDQMDMojNH+DNtc4YnmSQrOtcbaou
+         bA131ixGH0ogxkREqok6XRo82j/cMs4SdPKai6FyRupsp5CTsef4V8sPSJTwNxIZL56T
+         FCrA==
+X-Gm-Message-State: APjAAAWVTc/d25EfN3/I9sIj4HkX2cOAqh8mwp6sf9kt24ZYzBF0gOyb
+        gRk6P9YW3TUdpNd5LDDv4RZ8v/TO5wg=
+X-Google-Smtp-Source: APXvYqyxJYBXSeg7k/KW2FWFciZ8HrfRdGOIn8Juel+e3FPcNzJpzc0sn9K7d6Pj7Awoh+u+XFLLTQ==
+X-Received: by 2002:a1c:3:: with SMTP id 3mr4569287wma.6.1564750575947;
+        Fri, 02 Aug 2019 05:56:15 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:dfa:cc47:b267:2a71])
+        by smtp.gmail.com with ESMTPSA id i6sm69543930wrv.47.2019.08.02.05.56.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 02 Aug 2019 05:56:15 -0700 (PDT)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     pauld@redhat.com, valentin.schneider@arm.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH v3] sched/fair: use utilization to select misfit task
+Date:   Fri,  2 Aug 2019 14:56:12 +0200
+Message-Id: <1564750572-20251-1-git-send-email-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1564670424-26023-9-git-send-email-vincent.guittot@linaro.org>
+References: <1564670424-26023-9-git-send-email-vincent.guittot@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds Makefile and Kconfig for erofs, and
-updates Makefile and Kconfig files in the fs directory.
+utilization is used to detect a misfit task but the load is then used to
+select the task on the CPU which can lead to select a small task with
+high weight instead of the task that triggered the misfit migration.
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- fs/Kconfig        |  1 +
- fs/Makefile       |  1 +
- fs/erofs/Kconfig  | 36 ++++++++++++++++++++++++++++++++++++
- fs/erofs/Makefile |  9 +++++++++
- 4 files changed, 47 insertions(+)
- create mode 100644 fs/erofs/Kconfig
- create mode 100644 fs/erofs/Makefile
+Keep tracking load instead of utilization but check that 
+task doesn't fit CPU's capacity when selecting the task to detach as
+suggested by Valentin 
 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index bfb1c6095c7a..669d46550e6d 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -261,6 +261,7 @@ source "fs/romfs/Kconfig"
- source "fs/pstore/Kconfig"
- source "fs/sysv/Kconfig"
- source "fs/ufs/Kconfig"
-+source "fs/erofs/Kconfig"
+ kernel/sched/fair.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 53e64a7..8496118 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7487,15 +7487,9 @@ static int detach_tasks(struct lb_env *env)
+ 			break;
  
- endif # MISC_FILESYSTEMS
+ 		case migrate_misfit:
+-			load = task_h_load(p);
+-
+-			/*
+-			 * utilization of misfit task might decrease a bit
+-			 * since it has been recorded. Be conservative in the
+-			 * condition.
+-			 */
+-			if (load < env->imbalance)
+-				goto next;
++			/* This is not a misfit task */
++                       if (task_fits_capacity(p, capacity_of(env->src_cpu)))
++			       goto next;
  
-diff --git a/fs/Makefile b/fs/Makefile
-index d60089fd689b..b2e4973a0bea 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -130,3 +130,4 @@ obj-$(CONFIG_F2FS_FS)		+= f2fs/
- obj-$(CONFIG_CEPH_FS)		+= ceph/
- obj-$(CONFIG_PSTORE)		+= pstore/
- obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
-+obj-$(CONFIG_EROFS_FS)		+= erofs/
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-new file mode 100644
-index 000000000000..98f05043448a
---- /dev/null
-+++ b/fs/erofs/Kconfig
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+config EROFS_FS
-+	tristate "EROFS filesystem support"
-+	depends on BLOCK
-+	help
-+	  EROFS (Enhanced Read-Only File System) is a lightweight
-+	  read-only file system with modern designs (eg. page-sized
-+	  blocks, inline xattrs/data, etc.) for scenarios which need
-+	  high-performance read-only requirements, e.g. Android OS
-+	  for mobile phones and LIVECDs.
-+
-+	  It also provides fixed-sized output compression support,
-+	  which improves storage density, keeps relatively higher
-+	  compression ratios, which is more useful to achieve high
-+	  performance for embedded devices with limited memory.
-+
-+	  If unsure, say N.
-+
-+config EROFS_FS_DEBUG
-+	bool "EROFS debugging feature"
-+	depends on EROFS_FS
-+	help
-+	  Print debugging messages and enable more BUG_ONs which check
-+	  filesystem consistency and find potential issues aggressively,
-+	  which can be used for Android eng build, for example.
-+
-+	  For daily use, say N.
-+
-+config EROFS_FAULT_INJECTION
-+	bool "EROFS fault injection facility"
-+	depends on EROFS_FS
-+	help
-+	  Test EROFS to inject faults such as ENOMEM, EIO, and so on.
-+	  If unsure, say N.
-+
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-new file mode 100644
-index 000000000000..c3f4e549ef90
---- /dev/null
-+++ b/fs/erofs/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+EROFS_VERSION = "1.0"
-+
-+ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
-+
-+obj-$(CONFIG_EROFS_FS) += erofs.o
-+erofs-objs := super.o inode.o data.o namei.o dir.o
-+
+ 			env->imbalance = 0;
+ 			break;
 -- 
-2.17.1
+2.7.4
 
