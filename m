@@ -2,55 +2,52 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1107AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A01C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD992217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBF9217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738461;
-	bh=7m3ruUCgKo9KO242W+P8KIiIhfOU3zmmj6FT3Ptvf7k=;
+	s=default; t=1564738465;
+	bh=S4oTBVZuFHeiVq6QV8mYUwqzth8f1OOuRfK7opNRL30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HtXu+SAglJkY4kov7BK7dLXCaZ4jiU58n3GAFNJVsv4xBf72Y7CJ1Jhe7DX1LrubT
-	 xSUeq4a9uxRW8GYF4l/6FJpY/NFlGVoGq8IjQ33ZlqOitTZZKmdgi5f5rWJQQzqp45
-	 n5vfq6RQNdy5SW+T596nRmIaAy3bC2R0JHMSzfmY=
+	b=beZht5GaZaNrdA92MNN2nvgtJth2W1HUoNUup970YxhZfY6c6DPnE31QJZ3oCqdMo
+	 /jQErDPQMQyutY3+edrfnmicRDQboKlMvfpt+BQgqegEVMjSyQspj+x4toTtDgzh6j
+	 1wWRY53m+AkBUC20KANA8WFjS52HGVfKrmVqErvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390485AbfHBJeU (ORCPT
+        id S2391542AbfHBJeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:34:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34090 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729449AbfHBJeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:17 -0400
+        id S2391526AbfHBJeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6B5A2183F;
-        Fri,  2 Aug 2019 09:34:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6A5721773;
+        Fri,  2 Aug 2019 09:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738456;
-        bh=7m3ruUCgKo9KO242W+P8KIiIhfOU3zmmj6FT3Ptvf7k=;
+        s=default; t=1564738461;
+        bh=S4oTBVZuFHeiVq6QV8mYUwqzth8f1OOuRfK7opNRL30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sVSBKqqsDepKPjDGo8cqS73XuDKsOzuCn2xIsidVCigEAwVr+6tj/ucu1p7tajCHl
-         F26EG+IgTNdjjtB9UNksCbxS/vSI7f6dCgMZ8X2uIGMdMpKVTa1PMTErdZLxC1pYL7
-         4BQWH11o32yBXQyNdPAOwxfvkVLZmXyIP3FZUKfI=
+        b=eOAl1SpxwN/6Ku/pkXh9T7w2JbqRDOBMsqBZCPxMpB5kUhwVHp7c0eaQYLTQvNVxj
+         Ivw9ryuCFigpIKl0JplJiVRadOouoSbEU8TuOjCj8s7D4YCZ6ZnuwWNykgrUD+1e8X
+         PuqcYyCPfeA8uReeUyVnKNWeMG6EoZATIivUItJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 096/158] bonding: validate ip header before check IPPROTO_IGMP
-Date:   Fri,  2 Aug 2019 11:28:37 +0200
-Message-Id: <20190802092223.896649587@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 105/158] nfsd: Fix overflow causing non-working mounts on 1 TB machines
+Date:   Fri,  2 Aug 2019 11:28:46 +0200
+Message-Id: <20190802092225.752747458@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -63,85 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+[ Upstream commit 3b2d4dcf71c4a91b420f835e52ddea8192300a3b ]
 
-[ Upstream commit 9d1bc24b52fb8c5d859f9a47084bf1179470e04c ]
+Since commit 10a68cdf10 (nfsd: fix performance-limiting session
+calculation) (Linux 5.1-rc1 and 4.19.31), shares from NFS servers with
+1 TB of memory cannot be mounted anymore. The mount just hangs on the
+client.
 
-bond_xmit_roundrobin() checks for IGMP packets but it parses
-the IP header even before checking skb->protocol.
+The gist of commit 10a68cdf10 is the change below.
 
-We should validate the IP header with pskb_may_pull() before
-using iph->protocol.
+    -avail = clamp_t(int, avail, slotsize, avail/3);
+    +avail = clamp_t(int, avail, slotsize, total_avail/3);
 
-Reported-and-tested-by: syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
-Fixes: a2fd940f4cff ("bonding: fix broken multicast with round-robin mode")
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Cc: Veaceslav Falico <vfalico@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Here are the macros.
+
+    #define min_t(type, x, y)       __careful_cmp((type)(x), (type)(y), <)
+    #define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
+
+`total_avail` is 8,434,659,328 on the 1 TB machine. `clamp_t()` casts
+the values to `int`, which for 32-bit integers can only hold values
+−2,147,483,648 (−2^31) through 2,147,483,647 (2^31 − 1).
+
+`avail` (in the function signature) is just 65536, so that no overflow
+was happening. Before the commit the assignment would result in 21845,
+and `num = 4`.
+
+When using `total_avail`, it is causing the assignment to be
+18446744072226137429 (printed as %lu), and `num` is then 4164608182.
+
+My next guess is, that `nfsd_drc_mem_used` is then exceeded, and the
+server thinks there is no memory available any more for this client.
+
+Updating the arguments of `clamp_t()` and `min_t()` to `unsigned long`
+fixes the issue.
+
+Now, `avail = 65536` (before commit 10a68cdf10 `avail = 21845`), but
+`num = 4` remains the same.
+
+Fixes: c54f24e338ed (nfsd: fix performance-limiting session calculation)
+Cc: stable@vger.kernel.org
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c |   37 +++++++++++++++++++++++--------------
- 1 file changed, 23 insertions(+), 14 deletions(-)
+ fs/nfsd/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3714,8 +3714,8 @@ static u32 bond_rr_gen_slave_id(struct b
- static int bond_xmit_roundrobin(struct sk_buff *skb, struct net_device *bond_dev)
- {
- 	struct bonding *bond = netdev_priv(bond_dev);
--	struct iphdr *iph = ip_hdr(skb);
- 	struct slave *slave;
-+	int slave_cnt;
- 	u32 slave_id;
- 
- 	/* Start with the curr_active_slave that joined the bond as the
-@@ -3724,23 +3724,32 @@ static int bond_xmit_roundrobin(struct s
- 	 * send the join/membership reports.  The curr_active_slave found
- 	 * will send all of this type of traffic.
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 1e1abf1d5769..ea5cb1ba282f 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1400,7 +1400,7 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
+ 	 * Never use more than a third of the remaining memory,
+ 	 * unless it's the only way to give this client a slot:
  	 */
--	if (iph->protocol == IPPROTO_IGMP && skb->protocol == htons(ETH_P_IP)) {
--		slave = rcu_dereference(bond->curr_active_slave);
--		if (slave)
--			bond_dev_queue_xmit(bond, skb, slave->dev);
--		else
--			bond_xmit_slave_id(bond, skb, 0);
--	} else {
--		int slave_cnt = ACCESS_ONCE(bond->slave_cnt);
-+	if (skb->protocol == htons(ETH_P_IP)) {
-+		int noff = skb_network_offset(skb);
-+		struct iphdr *iph;
-+
-+		if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
-+			goto non_igmp;
- 
--		if (likely(slave_cnt)) {
--			slave_id = bond_rr_gen_slave_id(bond);
--			bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
--		} else {
--			bond_tx_drop(bond_dev, skb);
-+		iph = ip_hdr(skb);
-+		if (iph->protocol == IPPROTO_IGMP) {
-+			slave = rcu_dereference(bond->curr_active_slave);
-+			if (slave)
-+				bond_dev_queue_xmit(bond, skb, slave->dev);
-+			else
-+				bond_xmit_slave_id(bond, skb, 0);
-+			return NETDEV_TX_OK;
- 		}
- 	}
- 
-+non_igmp:
-+	slave_cnt = ACCESS_ONCE(bond->slave_cnt);
-+	if (likely(slave_cnt)) {
-+		slave_id = bond_rr_gen_slave_id(bond);
-+		bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
-+	} else {
-+		bond_tx_drop(bond_dev, skb);
-+	}
- 	return NETDEV_TX_OK;
- }
- 
+-	avail = clamp_t(int, avail, slotsize, total_avail/3);
++	avail = clamp_t(unsigned long, avail, slotsize, total_avail/3);
+ 	num = min_t(int, num, avail / slotsize);
+ 	nfsd_drc_mem_used += num * slotsize;
+ 	spin_unlock(&nfsd_drc_lock);
+-- 
+2.20.1
+
 
 
