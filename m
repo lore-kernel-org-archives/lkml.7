@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FC6C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE0BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BC52087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE492087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739549;
-	bh=F3xEu7dp5QQ6tel3JOLvaCiGrTfOh3hsxHZD8ZXf8Tc=;
+	s=default; t=1564739554;
+	bh=nmPTsWkP88e57Ys91exz3DHHrVrBrLe2/K84VB5KA5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jFTpfJy2bo7V4egPC18jGFLLujvYW0jh+Z/hbLLDBkyEmQko7wfG5gWxnfvgmOham
-	 wK06oRzYjF/4/mT4MVgOmQ0qhxrtvHF5o50OXPXcjLOf6A3gd4ugv4nifSVwFBH3rx
-	 nKOgSWnHljZigu4ejA0xh/CbjXUV1sb2sUOyoCHw=
+	b=wR8v3OP+5QcaJ8uWQJwXe6viuO+/syUQ+XGSS6B4YqHqw7EgP+ZgB+FPNJbiMpFsK
+	 cE+mApjtXf3Q/JBt5wdKDUScZ5MSjGC1xup7X7Qc4x30tME9Y0hnlxupJdok5IC/dj
+	 /2zcqx5m3E8vVG1u5VQkx0rlJ5nvpogPZSC7JB3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406007AbfHBJw2 (ORCPT
+        id S2406029AbfHBJwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:52:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57896 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405811AbfHBJwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:52:20 -0400
+        id S2405992AbfHBJwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:52:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40E72206A2;
-        Fri,  2 Aug 2019 09:52:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FAF720B7C;
+        Fri,  2 Aug 2019 09:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739538;
-        bh=F3xEu7dp5QQ6tel3JOLvaCiGrTfOh3hsxHZD8ZXf8Tc=;
+        s=default; t=1564739543;
+        bh=nmPTsWkP88e57Ys91exz3DHHrVrBrLe2/K84VB5KA5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OTAIqlqXwcKGL1RjiyyYInuTLJ17Mf1dEAl3fmkvVxLK77U+3AtKmDIMAmsqw1shI
-         AIkwPscTlP/5RBVPaxX7X1GyUbeekf2w0IJTF/t34BL/pNenQxz9QT0Yoe5hR+edPA
-         crbtwwwtnIMjO9dTBHzYA8ZJbrzY/VpHAyn/J4Ws=
+        b=o9ruawNFTPxLZ9Sce9DOmuJ+aSX7FSer3t9Gwco5sFYmqOqIR8geyB1NUbQ/HpdEv
+         3XYXgZuWqsqqIlcnObnwQYIu4pPtHhCDvhQ1SplFiCiYLRlny6Psm1kkGy09m1YZDo
+         X4LL/QTEomKdMm4x8qzmxmgsumQw23xt9DDzuV1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.9 204/223] x86/sysfb_efi: Add quirks for some devices with swapped width and height
-Date:   Fri,  2 Aug 2019 11:37:09 +0200
-Message-Id: <20190802092250.260939348@linuxfoundation.org>
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Zhang HongJun <zhanghongjun2@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.9 206/223] hpet: Fix division by zero in hpet_time_div()
+Date:   Fri,  2 Aug 2019 11:37:11 +0200
+Message-Id: <20190802092250.338058159@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -59,91 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-commit d02f1aa39189e0619c3525d5cd03254e61bf606a upstream.
+commit 0c7d37f4d9b8446956e97b7c5e61173cdb7c8522 upstream.
 
-Some Lenovo 2-in-1s with a detachable keyboard have a portrait screen but
-advertise a landscape resolution and pitch, resulting in a messed up
-display if the kernel tries to show anything on the efifb (because of the
-wrong pitch).
+The base value in do_div() called by hpet_time_div() is truncated from
+unsigned long to uint32_t, resulting in a divide-by-zero exception.
 
-Fix this by adding a new DMI match table for devices which need to have
-their width and height swapped.
+UBSAN: Undefined behaviour in ../drivers/char/hpet.c:572:2
+division by zero
+CPU: 1 PID: 23682 Comm: syz-executor.3 Not tainted 4.4.184.x86_64+ #4
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+ 0000000000000000 b573382df1853d00 ffff8800a3287b98 ffffffff81ad7561
+ ffff8800a3287c00 ffffffff838b35b0 ffffffff838b3860 ffff8800a3287c20
+ 0000000000000000 ffff8800a3287bb0 ffffffff81b8f25e ffffffff838b35a0
+Call Trace:
+ [<ffffffff81ad7561>] __dump_stack lib/dump_stack.c:15 [inline]
+ [<ffffffff81ad7561>] dump_stack+0xc1/0x120 lib/dump_stack.c:51
+ [<ffffffff81b8f25e>] ubsan_epilogue+0x12/0x8d lib/ubsan.c:166
+ [<ffffffff81b900cb>] __ubsan_handle_divrem_overflow+0x282/0x2c8 lib/ubsan.c:262
+ [<ffffffff823560dd>] hpet_time_div drivers/char/hpet.c:572 [inline]
+ [<ffffffff823560dd>] hpet_ioctl_common drivers/char/hpet.c:663 [inline]
+ [<ffffffff823560dd>] hpet_ioctl_common.cold+0xa8/0xad drivers/char/hpet.c:577
+ [<ffffffff81e63d56>] hpet_ioctl+0xc6/0x180 drivers/char/hpet.c:676
+ [<ffffffff81711590>] vfs_ioctl fs/ioctl.c:43 [inline]
+ [<ffffffff81711590>] file_ioctl fs/ioctl.c:470 [inline]
+ [<ffffffff81711590>] do_vfs_ioctl+0x6e0/0xf70 fs/ioctl.c:605
+ [<ffffffff81711eb4>] SYSC_ioctl fs/ioctl.c:622 [inline]
+ [<ffffffff81711eb4>] SyS_ioctl+0x94/0xc0 fs/ioctl.c:613
+ [<ffffffff82846003>] tracesys_phase2+0x90/0x95
 
-At first it was tried to use the existing table for overriding some of the
-efifb parameters, but some of the affected devices have variants with
-different LCD resolutions which will not work with hardcoded override
-values.
+The main C reproducer autogenerated by syzkaller,
 
-Reference: https://bugzilla.redhat.com/show_bug.cgi?id=1730783
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190721152418.11644-1-hdegoede@redhat.com
+  syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
+  memcpy((void*)0x20000100, "/dev/hpet\000", 10);
+  syscall(__NR_openat, 0xffffffffffffff9c, 0x20000100, 0, 0);
+  syscall(__NR_ioctl, r[0], 0x40086806, 0x40000000000000);
+
+Fix it by using div64_ul().
+
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Zhang HongJun <zhanghongjun2@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20190711132757.130092-1-wangkefeng.wang@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/sysfb_efi.c |   46 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ drivers/char/hpet.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/x86/kernel/sysfb_efi.c
-+++ b/arch/x86/kernel/sysfb_efi.c
-@@ -231,9 +231,55 @@ static const struct dmi_system_id efifb_
- 	{},
- };
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -569,8 +569,7 @@ static inline unsigned long hpet_time_di
+ 	unsigned long long m;
  
-+/*
-+ * Some devices have a portrait LCD but advertise a landscape resolution (and
-+ * pitch). We simply swap width and height for these devices so that we can
-+ * correctly deal with some of them coming with multiple resolutions.
-+ */
-+static const struct dmi_system_id efifb_dmi_swap_width_height[] __initconst = {
-+	{
-+		/*
-+		 * Lenovo MIIX310-10ICR, only some batches have the troublesome
-+		 * 800x1280 portrait screen. Luckily the portrait version has
-+		 * its own BIOS version, so we match on that.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION, "MIIX 310-10ICR"),
-+			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "1HCN44WW"),
-+		},
-+	},
-+	{
-+		/* Lenovo MIIX 320-10ICR with 800x1280 portrait screen */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION,
-+					"Lenovo MIIX 320-10ICR"),
-+		},
-+	},
-+	{
-+		/* Lenovo D330 with 800x1280 or 1200x1920 portrait screen */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION,
-+					"Lenovo ideapad D330-10IGM"),
-+		},
-+	},
-+	{},
-+};
-+
- __init void sysfb_apply_efi_quirks(void)
- {
- 	if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI ||
- 	    !(screen_info.capabilities & VIDEO_CAPABILITY_SKIP_QUIRKS))
- 		dmi_check_system(efifb_dmi_system_table);
-+
-+	if (screen_info.orig_video_isVGA == VIDEO_TYPE_EFI &&
-+	    dmi_check_system(efifb_dmi_swap_width_height)) {
-+		u16 temp = screen_info.lfb_width;
-+
-+		screen_info.lfb_width = screen_info.lfb_height;
-+		screen_info.lfb_height = temp;
-+		screen_info.lfb_linelength = 4 * screen_info.lfb_width;
-+	}
+ 	m = hpets->hp_tick_freq + (dis >> 1);
+-	do_div(m, dis);
+-	return (unsigned long)m;
++	return div64_ul(m, dis);
  }
+ 
+ static int
 
 
