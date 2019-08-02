@@ -5,48 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E18C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1570C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6050A20679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE7720679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738710;
-	bh=iZDMvbc6z2rlK3vOdYcs9qXfz+vJdv8lHvMlkM9TD5M=;
+	s=default; t=1564738724;
+	bh=dgyyw8WrSvL4+ce7P28orvVO79Zv55hbBeY3pBe39GY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CCfj7nqwaPmJwfXPu0xDKqiszKkXDMB/zRGzMCb3aXtIuUMW6nmnRPkIzU6IlUw8r
-	 gk63LPQoWYdJCKzDYbU09ZXWW1sfXF9SPXSlNqJPkZoDnx6AvoK9CLqsZM8CsQXxV3
-	 h6WlxC6GehB0bOHcSK/mO5rtxxX+a0/sYENuGnug=
+	b=blJA/KmkbeC7U90BX4gorRJTxEbsrFqOSzhgoXu5Dlwz9TApjQ1WRWOudFzleX7JP
+	 TjnBVslSAShsbOMgwjcAGZ+rnvw7GdM1DGX99q2A4bzQIp0xa/itw82WvnopZkvlCY
+	 uHZqq0n6w6GYDhDLxChgdv9e9WvE8jjASG1sIH08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387735AbfHBJi3 (ORCPT
+        id S2391596AbfHBJin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35170 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:38:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403786AbfHBJe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:58 -0400
+        id S1731165AbfHBJeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4824217F5;
-        Fri,  2 Aug 2019 09:34:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B47B21773;
+        Fri,  2 Aug 2019 09:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738497;
-        bh=iZDMvbc6z2rlK3vOdYcs9qXfz+vJdv8lHvMlkM9TD5M=;
+        s=default; t=1564738476;
+        bh=dgyyw8WrSvL4+ce7P28orvVO79Zv55hbBeY3pBe39GY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUDGccyzE1f7YXKslLjCrXPMqr98Z2nBS5kELykZuJuOekqiE7YlWb4QFny8NrcO/
-         rMVl3FlnZyiurxA44Ftm2T6cQH5kVtDi5Hpz0imGZ87nHxxwinjzhus32zU6AD8PDN
-         ZNmhNb3u0wIoKtj2xnfcI3dvILU+6XQo4mXJcRHI=
+        b=Gj5i+eDaV9fGJ98a+z/L1GnRcgSeW/6SwPSiFMmcDGNG6Pf1jT7vNfcpNR/R4FvJq
+         B46nmfOdVBmCw2JkiKUPwGzo6Z3hnGGfegFJaxmSZRo5sSwJ5xofc69qlt/mOltTut
+         MsBJAqoZjWWeejczXwd5hqVylFwnMj6CQWIUadpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 110/158] tty: serial: cpm_uart - fix init when SMC is relocated
-Date:   Fri,  2 Aug 2019 11:28:51 +0200
-Message-Id: <20190802092226.538915977@linuxfoundation.org>
+Subject: [PATCH 4.4 119/158] powerpc/pci/of: Fix OF flags parsing for 64bit BARs
+Date:   Fri,  2 Aug 2019 11:29:00 +0200
+Message-Id: <20190802092228.148352829@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -59,74 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 06aaa3d066db87e8478522d910285141d44b1e58 ]
+[ Upstream commit df5be5be8735ef2ae80d5ae1f2453cd81a035c4b ]
 
-SMC relocation can also be activated earlier by the bootloader,
-so the driver's behaviour cannot rely on selected kernel config.
+When the firmware does PCI BAR resource allocation, it passes the assigned
+addresses and flags (prefetch/64bit/...) via the "reg" property of
+a PCI device device tree node so the kernel does not need to do
+resource allocation.
 
-When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
+The flags are stored in resource::flags - the lower byte stores
+PCI_BASE_ADDRESS_SPACE/etc bits and the other bytes are IORESOURCE_IO/etc.
+Some flags from PCI_BASE_ADDRESS_xxx and IORESOURCE_xxx are duplicated,
+such as PCI_BASE_ADDRESS_MEM_PREFETCH/PCI_BASE_ADDRESS_MEM_TYPE_64/etc.
+When parsing the "reg" property, we copy the prefetch flag but we skip
+on PCI_BASE_ADDRESS_MEM_TYPE_64 which leaves the flags out of sync.
 
-But the only thing CPM_CR_INIT_TRX does is to clear the
-rstate and tstate registers, so this can be done manually,
-even when SMC is not relocated.
+The missing IORESOURCE_MEM_64 flag comes into play under 2 conditions:
+1. we remove PCI_PROBE_ONLY for pseries (by hacking pSeries_setup_arch()
+or by passing "/chosen/linux,pci-probe-only");
+2. we request resource alignment (by passing pci=resource_alignment=
+via the kernel cmd line to request PAGE_SIZE alignment or defining
+ppc_md.pcibios_default_alignment which returns anything but 0). Note that
+the alignment requests are ignored if PCI_PROBE_ONLY is enabled.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+With 1) and 2), the generic PCI code in the kernel unconditionally
+decides to:
+- reassign the BARs in pci_specified_resource_alignment() (works fine)
+- write new BARs to the device - this fails for 64bit BARs as the generic
+code looks at IORESOURCE_MEM_64 (not set) and writes only lower 32bits
+of the BAR and leaves the upper 32bit unmodified which breaks BAR mapping
+in the hypervisor.
+
+This fixes the issue by copying the flag. This is useful if we want to
+enforce certain BAR alignment per platform as handling subpage sized BARs
+is proven to cause problems with hotplug (SLOF already aligns BARs to 64k).
+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Shawn Anastasio <shawn@anastas.io>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/pci_of_scan.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-index 0040c29f651a..b9e137c03fe3 100644
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -421,7 +421,16 @@ static int cpm_uart_startup(struct uart_port *port)
- 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
- 		}
- 		cpm_uart_initbd(pinfo);
--		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		if (IS_SMC(pinfo)) {
-+			out_be32(&pinfo->smcup->smc_rstate, 0);
-+			out_be32(&pinfo->smcup->smc_tstate, 0);
-+			out_be16(&pinfo->smcup->smc_rbptr,
-+				 in_be16(&pinfo->smcup->smc_rbase));
-+			out_be16(&pinfo->smcup->smc_tbptr,
-+				 in_be16(&pinfo->smcup->smc_tbase));
-+		} else {
-+			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		}
- 	}
- 	/* Install interrupt handler. */
- 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
-@@ -875,16 +884,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
- 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
- 
- /*
-- *  In case SMC1 is being relocated...
-+ *  In case SMC is being relocated...
-  */
--#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
- 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
- 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
- 	out_be32(&up->smc_rstate, 0);
- 	out_be32(&up->smc_tstate, 0);
- 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
- 	out_be16(&up->smc_brkec, 0);
--#endif
- 
- 	/* Set up the uart parameters in the
- 	 * parameter ram.
-@@ -898,8 +905,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
- 	out_be16(&up->smc_brkec, 0);
- 	out_be16(&up->smc_brkcr, 1);
- 
--	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
--
- 	/* Set UART mode, 8 bit, no parity, one stop.
- 	 * Enable receive and transmit.
- 	 */
+diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
+index 2e710c15893f..a38d7293460d 100644
+--- a/arch/powerpc/kernel/pci_of_scan.c
++++ b/arch/powerpc/kernel/pci_of_scan.c
+@@ -45,6 +45,8 @@ static unsigned int pci_parse_of_flags(u32 addr0, int bridge)
+ 	if (addr0 & 0x02000000) {
+ 		flags = IORESOURCE_MEM | PCI_BASE_ADDRESS_SPACE_MEMORY;
+ 		flags |= (addr0 >> 22) & PCI_BASE_ADDRESS_MEM_TYPE_64;
++		if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
++			flags |= IORESOURCE_MEM_64;
+ 		flags |= (addr0 >> 28) & PCI_BASE_ADDRESS_MEM_TYPE_1M;
+ 		if (addr0 & 0x40000000)
+ 			flags |= IORESOURCE_PREFETCH
 -- 
 2.20.1
 
