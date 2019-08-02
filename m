@@ -2,200 +2,160 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B73C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD08C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA7E20449
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:00:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ByplI92x"
+	by mail.kernel.org (Postfix) with ESMTP id E226D20449
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390652AbfHBIA1 (ORCPT
+        id S2390662AbfHBIBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:00:27 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42168 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbfHBIA0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:00:26 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 36C14CC;
-        Fri,  2 Aug 2019 10:00:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1564732824;
-        bh=fHqUhHxv+dowCFnK+aKicU4wDKUIzOBIeuo7dm5vB4c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ByplI92xC0wpHm5YCI11P+eb6h5qb4wIW9Qa2sdGhh8DVpMeKRCCmToK9LYCrxMqH
-         DeTROF2bfKL3qiHRKLuxTdZU160cqtSOqWxn1p00W8L3Yio92VqXMLj0Nr8PiSXKtO
-         ksTIKB9MAbKL3K4fVcWbAogOppUFhyMG1uq1fEHQ=
-Date:   Fri, 2 Aug 2019 11:00:14 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH/RFC 03/12] dt-bindings: panel: lvds: Add dual-link LVDS
- display support
-Message-ID: <20190802080014.GD5008@pendragon.ideasonboard.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-4-git-send-email-fabrizio.castro@bp.renesas.com>
+        Fri, 2 Aug 2019 04:01:14 -0400
+Received: from mga05.intel.com ([192.55.52.43]:30835 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728268AbfHBIBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 04:01:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 01:01:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,337,1559545200"; 
+   d="scan'208";a="191806449"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 02 Aug 2019 01:01:09 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 02 Aug 2019 11:01:08 +0300
+Date:   Fri, 2 Aug 2019 11:01:08 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] usb: typec: tcpm: Ignore unsupported/unknown
+ alternate mode requests
+Message-ID: <20190802080108.GB11871@kuha.fi.intel.com>
+References: <1564029037-22929-1-git-send-email-linux@roeck-us.net>
+ <20190729140457.GC28600@kuha.fi.intel.com>
+ <20190729173104.GA32556@roeck-us.net>
+ <20190730120747.GL28600@kuha.fi.intel.com>
+ <a14d8a51-85f6-65d8-2e1e-19538a7bf3d3@roeck-us.net>
+ <20190731095555.GN28600@kuha.fi.intel.com>
+ <20190801160709.GA20933@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1564731249-22671-4-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190801160709.GA20933@kroah.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
-
-Thank you for the patch.
-
-On Fri, Aug 02, 2019 at 08:34:00AM +0100, Fabrizio Castro wrote:
-> Dual-link LVDS displays have two ports, therefore document this
-> with the bindings.
+On Thu, Aug 01, 2019 at 06:07:09PM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Jul 31, 2019 at 12:55:55PM +0300, Heikki Krogerus wrote:
+> > On Tue, Jul 30, 2019 at 06:28:52AM -0700, Guenter Roeck wrote:
+> > > On 7/30/19 5:07 AM, Heikki Krogerus wrote:
+> > > > On Mon, Jul 29, 2019 at 10:31:04AM -0700, Guenter Roeck wrote:
+> > > > > On Mon, Jul 29, 2019 at 05:04:57PM +0300, Heikki Krogerus wrote:
+> > > > > > Hi,
+> > > > > > 
+> > > > > > On Wed, Jul 24, 2019 at 09:30:37PM -0700, Guenter Roeck wrote:
+> > > > > > > TCPM may receive PD messages associated with unknown or unsupported
+> > > > > > > alternate modes. If that happens, calls to typec_match_altmode()
+> > > > > > > will return NULL. The tcpm code does not currently take this into
+> > > > > > > account. This results in crashes.
+> > > > > > > 
+> > > > > > > Unable to handle kernel NULL pointer dereference at virtual address 000001f0
+> > > > > > > pgd = 41dad9a1
+> > > > > > > [000001f0] *pgd=00000000
+> > > > > > > Internal error: Oops: 5 [#1] THUMB2
+> > > > > > > Modules linked in: tcpci tcpm
+> > > > > > > CPU: 0 PID: 2338 Comm: kworker/u2:0 Not tainted 5.1.18-sama5-armv7-r2 #6
+> > > > > > > Hardware name: Atmel SAMA5
+> > > > > > > Workqueue: 2-0050 tcpm_pd_rx_handler [tcpm]
+> > > > > > > PC is at typec_altmode_attention+0x0/0x14
+> > > > > > > LR is at tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm]
+> > > > > > > ...
+> > > > > > > [<c03fbee8>] (typec_altmode_attention) from [<bf8030fb>]
+> > > > > > > 				(tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm])
+> > > > > > > [<bf8030fb>] (tcpm_pd_rx_handler [tcpm]) from [<c012082b>]
+> > > > > > > 				(process_one_work+0x123/0x2a8)
+> > > > > > > [<c012082b>] (process_one_work) from [<c0120a6d>]
+> > > > > > > 				(worker_thread+0xbd/0x3b0)
+> > > > > > > [<c0120a6d>] (worker_thread) from [<c012431f>] (kthread+0xcf/0xf4)
+> > > > > > > [<c012431f>] (kthread) from [<c01010f9>] (ret_from_fork+0x11/0x38)
+> > > > > > > 
+> > > > > > > Ignore PD messages if the asociated alternate mode is not supported.
+> > > > > > > 
+> > > > > > > Reported-by: Douglas Gilbert <dgilbert@interlog.com>
+> > > > > > > Cc: Douglas Gilbert <dgilbert@interlog.com>
+> > > > > > > Fixes: e9576fe8e605c ("usb: typec: tcpm: Support for Alternate Modes")
+> > > > > > > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> > > > > > > ---
+> > > > > > > Taking a stab at the problem. I don't really know if this is the correct
+> > > > > > > fix, or even if my understanding of the problem is correct, thus marking
+> > > > > > > the patch as RFC.
+> > > > > > 
+> > > > > > My guess is that typec_match_altmode() is the real culprit. We can't
+> > > > > > rely on the partner mode index number when identifying the port alt
+> > > > > > mode.
+> > > > > > 
+> > > > > > Douglas, can you test the attached hack instead of this patch?
+> > > > > > 
+> > > > > > 
+> > > > > > thanks,
+> > > > > > 
+> > > > > > -- 
+> > > > > > heikki
+> > > > > 
+> > > > > > diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+> > > > > > index ec525811a9eb..033dc097ba83 100644
+> > > > > > --- a/drivers/usb/typec/tcpm/tcpm.c
+> > > > > > +++ b/drivers/usb/typec/tcpm/tcpm.c
+> > > > > > @@ -1067,12 +1067,11 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
+> > > > > >   	modep = &port->mode_data;
+> > > > > > -	adev = typec_match_altmode(port->port_altmode, ALTMODE_DISCOVERY_MAX,
+> > > > > > -				   PD_VDO_VID(p[0]), PD_VDO_OPOS(p[0]));
+> > > > > > -
+> > > > > >   	pdev = typec_match_altmode(port->partner_altmode, ALTMODE_DISCOVERY_MAX,
+> > > > > >   				   PD_VDO_VID(p[0]), PD_VDO_OPOS(p[0]));
+> > > > > > +	adev = (void *)typec_altmode_get_partner(pdev);
+> > > > > > +
+> > > > > 
+> > > > > I understand that typec_altmode_get_partner() returns a const *;
+> > > > > maybe adev should be declared as const struct typec_altmode *
+> > > > > instead of using a typecast.
+> > > > 
+> > > > Yes...
+> > > > 
+> > > > > Also, typec_altmode_get_partner() can return NULL as well if pdev is NULL.
+> > > > > Is it guaranteed that typec_match_altmode() never returns NULL for pdev ?
+> > > > 
+> > > > ...and probable no. But I don't think we can receive Attention to a
+> > > > mode that hasn't been entered.
+> > > > 
+> > > 
+> > > If I understand correctly, the Attention was generated by a test system.
+> > > What prevents badly implemented code in the connected system from sending
+> > > such an Attention message ?
+> > 
+> > Oh, if that is the case, then I don't think my change has any effect.
+> > I misunderstood the scenario. Sorry for that.
+> > 
+> > I think we should use your patch to fix this issue.
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  .../bindings/display/panel/panel-lvds.txt          | 91 ++++++++++++++++------
->  1 file changed, 67 insertions(+), 24 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> index 250850a..07795441 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> @@ -41,7 +41,8 @@ Required nodes:
->  
->  - panel-timing: See panel-common.txt.
->  - ports: See panel-common.txt. These bindings require a single port subnode
-> -  corresponding to the panel LVDS input.
-> +  (for a single link display) or two port subnodes (for a dual link display)
-> +  corresponding to the panel LVDS input(s).
+> So is this an "ack"?  I'm confused as to if this patch should be applied
+> or not...
 
-I think you should expand this a bit to explain what the ports
-correspond to in the dual link mode.
+I meant to ack it, sorry. Here:
 
->  LVDS data mappings are defined as follows.
-> @@ -92,30 +93,72 @@ CTL3: 0
->  Example
->  -------
->  
-> -panel {
-> -	compatible = "mitsubishi,aa121td01", "panel-lvds";
-> -
-> -	width-mm = <261>;
-> -	height-mm = <163>;
-> -
-> -	data-mapping = "jeida-24";
-> -
-> -	panel-timing {
-> -		/* 1280x800 @60Hz */
-> -		clock-frequency = <71000000>;
-> -		hactive = <1280>;
-> -		vactive = <800>;
-> -		hsync-len = <70>;
-> -		hfront-porch = <20>;
-> -		hback-porch = <70>;
-> -		vsync-len = <5>;
-> -		vfront-porch = <3>;
-> -		vback-porch = <15>;
-> +Single port:
-> +	panel {
-> +		compatible = "mitsubishi,aa121td01", "panel-lvds";
-> +
-> +		width-mm = <261>;
-> +		height-mm = <163>;
-> +
-> +		data-mapping = "jeida-24";
-> +
-> +		panel-timing {
-> +			/* 1280x800 @60Hz */
-> +			clock-frequency = <71000000>;
-> +			hactive = <1280>;
-> +			vactive = <800>;
-> +			hsync-len = <70>;
-> +			hfront-porch = <20>;
-> +			hback-porch = <70>;
-> +			vsync-len = <5>;
-> +			vfront-porch = <3>;
-> +			vback-porch = <15>;
-> +		};
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&lvds_encoder>;
-> +			};
-> +		};
->  	};
->  
-> -	port {
-> -		panel_in: endpoint {
-> -			remote-endpoint = <&lvds_encoder>;
-> +Two ports:
-> +	panel {
-> +		compatible = "advantech,idk-2121wr", "panel-lvds";
-> +
-> +		width-mm = <476>;
-> +		height-mm = <268>;
-> +
-> +		data-mapping = "vesa-24";
-> +
-> +		panel-timing {
-> +			clock-frequency = <148500000>;
-> +			hactive = <1920>;
-> +			vactive = <1080>;
-> +			hsync-len = <44>;
-> +			hfront-porch = <88>;
-> +			hback-porch = <148>;
-> +			vfront-porch = <4>;
-> +			vback-porch = <36>;
-> +			vsync-len = <5>;
-> +		};
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				lvds0_panel_in: endpoint {
-
-I would name the label panel_in0 and panel_in1 below to have a common
-prefix showing that both refer to the same panel.
-
-> +					remote-endpoint = <&lvds0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				lvds1_panel_in: endpoint {
-> +					remote-endpoint = <&lvds1_out>;
-> +				};
-> +			};
->  		};
->  	};
-> -};
+Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
 -- 
-Regards,
-
-Laurent Pinchart
+heikki
