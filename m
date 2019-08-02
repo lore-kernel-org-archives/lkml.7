@@ -2,122 +2,120 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E199C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA738C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753662067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740260;
-	bh=i/RkCux2/qSe+RvX0SoGsoZJJS7duwt+AOFDJsmwiyw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i1M9pdAnAx0e/NTs1JFMxL8G3uWNpAZ1syn+D7SLzb1yHQme95nf34y8sdGT2f7xk
-	 Zzvv1vliA2/N2YKkzeWZwHJ+GzqKtNnxSl1Vt9ofnQ8fCISQ1dWaY5N8IWb4jmA0mK
-	 n9lDKFIbxurm6DvfDYYQMEWGRjqoEpY0NhnxyLgU=
+	by mail.kernel.org (Postfix) with ESMTP id 902E92087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407192AbfHBKDV (ORCPT
+        id S2391926AbfHBKEV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:03:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404657AbfHBJli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:41:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 2 Aug 2019 06:04:21 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:60964 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391560AbfHBKES (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:04:18 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01F642171F;
-        Fri,  2 Aug 2019 09:41:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738897;
-        bh=i/RkCux2/qSe+RvX0SoGsoZJJS7duwt+AOFDJsmwiyw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nOebadgWoeXcPIwKPpYN2cCghnIc849L88mivf40130b3g6EJ2pLkHpxkFRM1TSqM
-         VZqMa80RAJT3MDh48mjevHnMMgtW6A1t3b1AZ5eVJETASjmhxk5mfFDO4+2rTo33Xl
-         9JmVMaPla1AmAm7sO11WrKmFkskJf0EPAKWXzPl4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 030/223] net: axienet: Fix race condition causing TX hang
-Date:   Fri,  2 Aug 2019 11:34:15 +0200
-Message-Id: <20190802092240.953467634@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
-References: <20190802092238.692035242@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 999FD67A8D8;
+        Fri,  2 Aug 2019 12:04:11 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 2 Aug 2019
+ 12:04:11 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Fri, 2 Aug 2019 12:04:11 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 4/4] serial: 8250: Don't check for mctrl_gpio_init()
+ returning -ENOSYS
+Thread-Topic: [PATCH v3 4/4] serial: 8250: Don't check for mctrl_gpio_init()
+ returning -ENOSYS
+Thread-Index: AQHVSRmhIxHe9MI46E6+p88Y1S0NjQ==
+Date:   Fri, 2 Aug 2019 10:04:11 +0000
+Message-ID: <20190802100349.8659-4-frieder.schrempf@kontron.de>
+References: <20190802100349.8659-1-frieder.schrempf@kontron.de>
+In-Reply-To: <20190802100349.8659-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 999FD67A8D8.A10A8
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: festevam@gmail.com, geert+renesas@glider.be,
+        gregkh@linuxfoundation.org, jslaby@suse.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7de44285c1f69ccfbe8be1d6a16fcd956681fee6 ]
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-It is possible that the interrupt handler fires and frees up space in
-the TX ring in between checking for sufficient TX ring space and
-stopping the TX queue in axienet_start_xmit. If this happens, the
-queue wake from the interrupt handler will occur before the queue is
-stopped, causing a lost wakeup and the adapter's transmit hanging.
+Now that the mctrl_gpio code returns NULL instead of ERR_PTR(-ENOSYS)
+if CONFIG_GPIOLIB is disabled, we can safely remove this check.
 
-To avoid this, after stopping the queue, check again whether there is
-sufficient space in the TX ring. If so, wake up the queue again.
-
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 ---
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 20 ++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+Changes in v3
+=============
+* Adjust the commit message and subject line
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index a8afc92cbfca..5f21ddff9e0f 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -612,6 +612,10 @@ static void axienet_start_xmit_done(struct net_device *ndev)
- 
- 	ndev->stats.tx_packets += packets;
- 	ndev->stats.tx_bytes += size;
-+
-+	/* Matches barrier in axienet_start_xmit */
-+	smp_mb();
-+
- 	netif_wake_queue(ndev);
- }
- 
-@@ -666,9 +670,19 @@ static int axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
- 
- 	if (axienet_check_tx_bd_space(lp, num_frag)) {
--		if (!netif_queue_stopped(ndev))
--			netif_stop_queue(ndev);
--		return NETDEV_TX_BUSY;
-+		if (netif_queue_stopped(ndev))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_stop_queue(ndev);
-+
-+		/* Matches barrier in axienet_start_xmit_done */
-+		smp_mb();
-+
-+		/* Space might have just been freed - check again */
-+		if (axienet_check_tx_bd_space(lp, num_frag))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_wake_queue(ndev);
- 	}
- 
- 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
+Changes in v2
+=============
+* Add a patch for the 8250 driver
+---
+ drivers/tty/serial/8250/8250_core.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index df3bcc0b2d74..e682390ce0de 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -1026,10 +1026,8 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+ 		if (!has_acpi_companion(uart->port.dev)) {
+ 			gpios = mctrl_gpio_init(&uart->port, 0);
+ 			if (IS_ERR(gpios)) {
+-				if (PTR_ERR(gpios) != -ENOSYS) {
+-					ret = PTR_ERR(gpios);
+-					goto out_unlock;
+-				}
++				ret = PTR_ERR(gpios);
++				goto out_unlock;
+ 			} else {
+ 				uart->gpios = gpios;
+ 			}
 -- 
-2.20.1
-
-
-
+2.17.1
