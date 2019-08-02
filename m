@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FD8C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1FFC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B70921773
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1180C217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738258;
-	bh=KOby21jNWtjYV11BYwzdfAM8TOz+hAB5dAOWIK5ipA4=;
+	s=default; t=1564738261;
+	bh=DBCAkzvffWAKJjgBm7QCyOwr1ldjmM1ESkZdFiDt+ts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QWk3kavcWbxIbDPPiSEC1S8j18cx/KSgVpA5Zvypz7HQFq8UY0FWQbfIxqG2legH3
-	 ShQU26GnnuIHtGFvNHExz0wT6kigVrazj2iROgQ/002gWMjv2G8YVyxRuLQuiBNvBe
-	 A/IhsX9A80tn0BDF4uNuOA8o81TQQJ3vlk3A9qgA=
+	b=uoAraoM2Xmr0a+jl//HtBdGE7nDtRt8eKSJ8ulTU2UC8nWx8nFNi3aZcL25yxL0LD
+	 bwdFfxQ8auQYe7GoEDD86t30DnNzaZVVF5KqGYFOseK0OFEz8cnQWdj9EAJ0jWYlfC
+	 KhhYqDIDhIwGGwU0MUelenspdk0XrwV6G7BzITBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390966AbfHBJa4 (ORCPT
+        id S2390980AbfHBJbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:30:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56556 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390943AbfHBJaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:30:52 -0400
+        id S2390967AbfHBJa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:30:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 362B721783;
-        Fri,  2 Aug 2019 09:30:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D0442184B;
+        Fri,  2 Aug 2019 09:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738251;
-        bh=KOby21jNWtjYV11BYwzdfAM8TOz+hAB5dAOWIK5ipA4=;
+        s=default; t=1564738256;
+        bh=DBCAkzvffWAKJjgBm7QCyOwr1ldjmM1ESkZdFiDt+ts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jYJVBulRd64SmnvLGptS4lImF4/Th1xV9QXwjsE1kvMuKkEWWiSsVb4CyLfbn5cj5
-         HPM4bB6X64HrWsTnDHh12cPhQBwAnxxrAQHS/nAtWbNbWOgg0Ej4rbdLzmrMM3Ngqu
-         Z8fNftoGEeXJQQjIefV91fPvbXYDx+KcNlnlW2Ls=
+        b=Wy8iWIh+RWUV4UPwAXAomaEUdjX5U9I2VE/tnt9NzvXK2XK6fwAEmpSa86nw1oqDu
+         WzAZfjiQcfH2gCZiQBIc9p7hV/Xvm339VO0nQg7iCorld5kE94Bm/oyNNImheRDvtn
+         wH/IbzoUw6H9Ioaj+BbegraMsiAzSSfJ6SxfpQS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Lezcano <daniel.lezcano@free.fr>,
-        Serge Hallyn <serge@hallyn.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 014/158] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
-Date:   Fri,  2 Aug 2019 11:27:15 +0200
-Message-Id: <20190802092206.364880393@linuxfoundation.org>
+Subject: [PATCH 4.4 016/158] xfrm: Fix xfrm sel prefix length validation
+Date:   Fri,  2 Aug 2019 11:27:17 +0200
+Message-Id: <20190802092206.761685549@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -62,48 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f9070dc94542093fd516ae4ccea17ef46a4362c5 ]
+[ Upstream commit b38ff4075a80b4da5cb2202d7965332ca0efb213 ]
 
-The locking in force_sig_info is not prepared to deal with a task that
-exits or execs (as sighand may change).  The is not a locking problem
-in force_sig as force_sig is only built to handle synchronous
-exceptions.
+Family of src/dst can be different from family of selector src/dst.
+Use xfrm selector family to validate address prefix length,
+while verifying new sa from userspace.
 
-Further the function force_sig_info changes the signal state if the
-signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
-delivery of the signal.  The signal SIGKILL can not be ignored and can
-not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
-delivered.
+Validated patch with this command:
+ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
+reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
+0x1111016400000000000000000000000044440001 128 \
+sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
 
-So using force_sig rather than send_sig for SIGKILL is confusing
-and pointless.
-
-Because it won't impact the sending of the signal and and because
-using force_sig is wrong, replace force_sig with send_sig.
-
-Cc: Daniel Lezcano <daniel.lezcano@free.fr>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: 07bf7908950a ("xfrm: Validate address prefix lengths in the xfrm selector.")
+Signed-off-by: Anirudh Gupta <anirudh.gupta@sophos.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/pid_namespace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/xfrm/xfrm_user.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index 567ecc826bc8..6353372801f2 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -325,7 +325,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
- 	}
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index b04c03043976..10fda9a39cc2 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -150,6 +150,22 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
  
- 	read_lock(&tasklist_lock);
--	force_sig(SIGKILL, pid_ns->child_reaper);
-+	send_sig(SIGKILL, pid_ns->child_reaper, 1);
- 	read_unlock(&tasklist_lock);
- 
- 	do_exit(0);
+ 	err = -EINVAL;
+ 	switch (p->family) {
++	case AF_INET:
++		break;
++
++	case AF_INET6:
++#if IS_ENABLED(CONFIG_IPV6)
++		break;
++#else
++		err = -EAFNOSUPPORT;
++		goto out;
++#endif
++
++	default:
++		goto out;
++	}
++
++	switch (p->sel.family) {
+ 	case AF_INET:
+ 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
+ 			goto out;
 -- 
 2.20.1
 
