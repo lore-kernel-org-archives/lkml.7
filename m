@@ -2,92 +2,105 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5323C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1014C0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A402087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c11DsE6x"
+	by mail.kernel.org (Postfix) with ESMTP id B7E2F206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564784550;
+	bh=TZAOdBkjZfMwv4fT9kCJuQsahj/V5oh+DLHfTohaZtc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=IIvSMO1+l159xX8V3ORXR6Jr/JKCpjYoHIu7co51AmAqRSyDpfic7hpTeD7JWncFe
+	 vHXPV6S3VmTXiA79UgbAEtwoJ/jwTmHTss88s5cKMKHKTPejzvG/NOv+8Bs7R9FiDt
+	 5+CCdpCnSVoZmltPVX1yaJY0ZSfjzvxhA05XTZbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388026AbfHBWUM (ORCPT
+        id S2388577AbfHBWW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 18:20:12 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45301 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732371AbfHBWUM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 18:20:12 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m23so74128619lje.12
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 15:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IZ48FMZQTs4uLcOa+ewd+uatrSZkDn8qdysdEWbOPPM=;
-        b=c11DsE6xhXFUkGZOKxS0st145dWqvewhcd3fQlz6reUM8JMeFAhgV6u4i+TozRJvOo
-         sKH5UKHncsWaB2Xjfz8zRmJm8YpIFS1WpghI8V66dbRbM/YCMrbRdoOOGFjkAw2VUDd4
-         XeMVfXUsMg2le9LZ2rOUIV+hapnOY1oM85zlQapDge4ELyVgXchMO4Mc74KZbF1gXQRw
-         CqbrPqC0Tx7XdvggiEfEoGga6UZEwaZsbj3bN4hJ7QMGjvdm5rhbcl77SyloCyw7b5BN
-         SODi1TlVZcC/IVLwZydxi5Vx7TJZ2gKURa+2D9HfIPnftiW4ftpjrvsCVhZinnnEtmf8
-         s7OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IZ48FMZQTs4uLcOa+ewd+uatrSZkDn8qdysdEWbOPPM=;
-        b=UFmZNw4kkyMmW7YnoiJNM9+mj+rEkrhnTCrt4pJlQlSGjn2/L9AOZTFDjxO55HM3bp
-         Yt1dy/evCHC4Xm2v2ab0yb+mlUWAVos2+uE8nFuFlwVRKh91AkNtaRoaN3lw8TIfMYdN
-         E//XMklhZAyUO1BJh5GX6H9rs78kk+qYcc/Gf/1WuFpjfuiFDeWmmjD7SdykA04s2o+E
-         0z0XJlOLmkGB0P0JOeTlYBWp+LVyU5vzr7ozPza27wNsh7s+l+TlSZppAJHkEXzgf0wQ
-         YGXfqzsemy1/E3+XnUQxdzdhIHJkw8rMkmI73XkC8t7sYBaFQ/pcZtN1u4WDppf8Ivve
-         g6ZA==
-X-Gm-Message-State: APjAAAWPUmEPvndfOSYjP84Dna23nbL3vYj8wSzk0H/DBBcNKN0lrzOJ
-        90yHbNrEaPxrB8aOP3Shso9J66c+tNa1MHeiWjA3Hg==
-X-Google-Smtp-Source: APXvYqzlGf0tKCzKwDLVMNReMvQcDY2AOLHnYQ7fYCG4kMKmoHKNejXmOFBQGqIQflfBg5mRKfTF8g1MtfHSnrhNYSs=
-X-Received: by 2002:a2e:8756:: with SMTP id q22mr73630699ljj.108.1564784410398;
- Fri, 02 Aug 2019 15:20:10 -0700 (PDT)
+        Fri, 2 Aug 2019 18:22:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730633AbfHBWW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 18:22:29 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB9D8206A3;
+        Fri,  2 Aug 2019 22:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564784548;
+        bh=TZAOdBkjZfMwv4fT9kCJuQsahj/V5oh+DLHfTohaZtc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CEl0npNLAOOAPOxBTLUGeVUCwd/PjIV088vkA0mkPukyGbv9yzgUd1TbrZ+p6FHQ2
+         G4Ag2mUVRhF9nYlCMrm82mWcr2NscJiqG803/wdEA//CfUkFo5FFFcRaegOqRLBN4n
+         pUKw6RqJ58ipZVhIzYJ3ZGYH9Aon5tLqhccIRbJw=
+Subject: Re: [PATCH v3 1/2] usbip: Skip DMA mapping and unmapping for urb at
+ vhci
+To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190802173651.22247-1-suwan.kim027@gmail.com>
+ <20190802173651.22247-2-suwan.kim027@gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <c23b3ac1-68d9-bc1e-610b-955988e11055@kernel.org>
+Date:   Fri, 2 Aug 2019 16:22:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190718094902.15562-1-hui.song_1@nxp.com> <20190718094902.15562-2-hui.song_1@nxp.com>
-In-Reply-To: <20190718094902.15562-2-hui.song_1@nxp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 3 Aug 2019 00:19:59 +0200
-Message-ID: <CACRpkdYRg8mMe5yxu=+tC1uz_usyNyVjn7NFobSUZi0rR5uGjw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: mpc8xxx: Add ls1028a device specify function.
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190802173651.22247-2-suwan.kim027@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 11:58 AM Hui Song <hui.song_1@nxp.com> wrote:
+On 8/2/19 11:36 AM, Suwan Kim wrote:
+> vhci doesn’t do DMA for remote device. Actually, the real DMA
+> operation is done by network card driver. vhci just passes virtual
+> address of the buffer to the network stack, so vhci doesn’t use and
+> need dma address of the buffer of the URB.
+> 
+> But HCD provides DMA mapping and unmapping function by default.
+> Moreover, it causes unnecessary DMA mapping and unmapping which
+> will be done again at the NIC driver and it wastes CPU cycles.
+> So, implement map_urb_for_dma and unmap_urb_for_dma function for
+> vhci in order to skip the DMA mapping and unmapping procedure.
+> 
+> When it comes to supporting SG for vhci, it is useful to use native
+> SG list (urb->num_sgs) instead of mapped SG list because DMA mapping
+> fnuction can adjust the number of SG list (urb->num_mapped_sgs).
+> And vhci_map_urb_for_dma() prevents isoc pipe from using SG as
+> hcd_map_urb_for_dma() does.
+> 
+> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+> ---
+>   drivers/usb/usbip/vhci_hcd.c | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+> index 000ab7225717..c62f7fa8118c 100644
+> --- a/drivers/usb/usbip/vhci_hcd.c
+> +++ b/drivers/usb/usbip/vhci_hcd.c
+> @@ -1288,6 +1288,22 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
+>   	return 0;
+>   }
+>   
+> +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
+> +		gfp_t mem_flags)
+> +{
+> +	if (usb_endpoint_xfer_isoc(&urb->ep->desc) && urb->num_sgs) {
+> +		WARN_ON(1);
 
-> From: Song Hui <hui.song_1@nxp.com>
->
-> There is a device specify register(named GPIO_IBE)
-> on ls1028a need to enable in initial stage.
->
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+Don't add WARN_ON. I cleaned them all up recently and don't want new
+ones added.
 
-Patch applied.
-
-As noted on patch 1/2, send a separate patch to add the
-device tree bindings in Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-
-Yours,
-Linus Walleij
+thanks,
+-- Shuah
