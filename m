@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353D7C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E485AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFDA20880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60F420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739178;
-	bh=b2e3dQre1kq7ZGKR8+Bik/aE8DFRVPedtU4sGRoL6BY=;
+	s=default; t=1564739180;
+	bh=q6j2Oy95N+QPY+zJoAuPKajBTnbLyEzpTRDwFMYELTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RcvyhjJ4hb50Q7Ck1gz8ovFeD1xKaGTnsaB06Qxcuxp3q3qafn4b/+qAyScC7RZ6c
-	 6BnP/yFsiDjAKpRQ3H3pe7PRet4jToKPCVo2cevRLkLRnYONH6YVntG0UJIi6A6l9J
-	 DmJbJOPZXADfCB5QHhv//g0ZiagZnWIySXFLi8KA=
+	b=2YBjrfiPtLYbSREDnXQtE7VzD29jRKJHX/USaGm/1g+upxYqoDhvMp3XWlYPG0f7Y
+	 29stAlP6gjRwhd2O8F7fswullrRv0dCBbm3bvb2+2prMrVyplsA/4I73xg3Cb6HQ9S
+	 8Ml3E3FLxU9y8Y71QTHWUvphdubCHLpGx+1dXkQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405525AbfHBJqR (ORCPT
+        id S2405538AbfHBJqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:46:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50350 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:46:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405507AbfHBJqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:46:14 -0400
+        id S2405507AbfHBJqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:46:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DDAD216C8;
-        Fri,  2 Aug 2019 09:46:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8505E206A2;
+        Fri,  2 Aug 2019 09:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739172;
-        bh=b2e3dQre1kq7ZGKR8+Bik/aE8DFRVPedtU4sGRoL6BY=;
+        s=default; t=1564739178;
+        bh=q6j2Oy95N+QPY+zJoAuPKajBTnbLyEzpTRDwFMYELTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GcreRPlRUK37vUFAmu1zCTet+SNnmtiAoOraWX/WNKYIlHbqMUJ0NUWhID7Tc5fZb
-         pJJUb2EW0Fvz+R6XgfXK8kLTlVjSo19KL6HJYZM5uk3qtGH1rsySGknnwoX2MWeIt2
-         xB7KZaUiN+usEPqkwIRtEoM5OsYxJrdFYwZRAR08=
+        b=NFn7sf5DpFtW8+YQKB+XXRrISsdw9z4xi0tXNBTPMHKV80dB3r3gI/RuLjdfWAx0P
+         jsSoLh+hUWOnj0yIb306lPKhAI60W02Fuw2kTSstxohjvgzbhFqof7i+GcU7zVZXaU
+         7uVPRbODcA4eFr/v/GqU3sYnw/aIh/lVzSc12T1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Kosyh <p.kosyh@gmail.com>,
-        David Ahern <dsa@cumulusnetworks.com>,
+        stable@vger.kernel.org, Andreas Steinmetz <ast@domdv.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 141/223] vrf: make sure skb->data contains ip header to make routing
-Date:   Fri,  2 Aug 2019 11:36:06 +0200
-Message-Id: <20190802092247.854168224@linuxfoundation.org>
+Subject: [PATCH 4.9 143/223] macsec: fix checksumming after decryption
+Date:   Fri,  2 Aug 2019 11:36:08 +0200
+Message-Id: <20190802092247.932551385@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,113 +59,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Kosyh <p.kosyh@gmail.com>
+From: Andreas Steinmetz <ast@domdv.de>
 
-[ Upstream commit 107e47cc80ec37cb332bd41b22b1c7779e22e018 ]
+[ Upstream commit 7d8b16b9facb0dd81d1469808dd9a575fa1d525a ]
 
-vrf_process_v4_outbound() and vrf_process_v6_outbound() do routing
-using ip/ipv6 addresses, but don't make sure the header is available
-in skb->data[] (skb_headlen() is less then header size).
+Fix checksumming after decryption.
 
-Case:
-
-1) igb driver from intel.
-2) Packet size is greater then 255.
-3) MPLS forwards to VRF device.
-
-So, patch adds pskb_may_pull() calls in vrf_process_v4/v6_outbound()
-functions.
-
-Signed-off-by: Peter Kosyh <p.kosyh@gmail.com>
-Reviewed-by: David Ahern <dsa@cumulusnetworks.com>
+Signed-off-by: Andreas Steinmetz <ast@domdv.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vrf.c |   58 ++++++++++++++++++++++++++++++++----------------------
- 1 file changed, 35 insertions(+), 23 deletions(-)
+ drivers/net/macsec.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -153,23 +153,29 @@ static int vrf_ip6_local_out(struct net
- static netdev_tx_t vrf_process_v6_outbound(struct sk_buff *skb,
- 					   struct net_device *dev)
- {
--	const struct ipv6hdr *iph = ipv6_hdr(skb);
-+	const struct ipv6hdr *iph;
- 	struct net *net = dev_net(skb->dev);
--	struct flowi6 fl6 = {
--		/* needed to match OIF rule */
--		.flowi6_oif = dev->ifindex,
--		.flowi6_iif = LOOPBACK_IFINDEX,
--		.daddr = iph->daddr,
--		.saddr = iph->saddr,
--		.flowlabel = ip6_flowinfo(iph),
--		.flowi6_mark = skb->mark,
--		.flowi6_proto = iph->nexthdr,
--		.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF,
--	};
-+	struct flowi6 fl6;
- 	int ret = NET_XMIT_DROP;
- 	struct dst_entry *dst;
- 	struct dst_entry *dst_null = &net->ipv6.ip6_null_entry->dst;
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -867,6 +867,7 @@ static void macsec_reset_skb(struct sk_b
  
-+	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct ipv6hdr)))
-+		goto err;
-+
-+	iph = ipv6_hdr(skb);
-+
-+	memset(&fl6, 0, sizeof(fl6));
-+	/* needed to match OIF rule */
-+	fl6.flowi6_oif = dev->ifindex;
-+	fl6.flowi6_iif = LOOPBACK_IFINDEX;
-+	fl6.daddr = iph->daddr;
-+	fl6.saddr = iph->saddr;
-+	fl6.flowlabel = ip6_flowinfo(iph);
-+	fl6.flowi6_mark = skb->mark;
-+	fl6.flowi6_proto = iph->nexthdr;
-+	fl6.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF;
-+
- 	dst = ip6_route_output(net, NULL, &fl6);
- 	if (dst == dst_null)
- 		goto err;
-@@ -257,21 +263,27 @@ static int vrf_ip_local_out(struct net *
- static netdev_tx_t vrf_process_v4_outbound(struct sk_buff *skb,
- 					   struct net_device *vrf_dev)
+ static void macsec_finalize_skb(struct sk_buff *skb, u8 icv_len, u8 hdr_len)
  {
--	struct iphdr *ip4h = ip_hdr(skb);
-+	struct iphdr *ip4h;
- 	int ret = NET_XMIT_DROP;
--	struct flowi4 fl4 = {
--		/* needed to match OIF rule */
--		.flowi4_oif = vrf_dev->ifindex,
--		.flowi4_iif = LOOPBACK_IFINDEX,
--		.flowi4_tos = RT_TOS(ip4h->tos),
--		.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF,
--		.flowi4_proto = ip4h->protocol,
--		.daddr = ip4h->daddr,
--		.saddr = ip4h->saddr,
--	};
-+	struct flowi4 fl4;
- 	struct net *net = dev_net(vrf_dev);
- 	struct rtable *rt;
- 
-+	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct iphdr)))
-+		goto err;
-+
-+	ip4h = ip_hdr(skb);
-+
-+	memset(&fl4, 0, sizeof(fl4));
-+	/* needed to match OIF rule */
-+	fl4.flowi4_oif = vrf_dev->ifindex;
-+	fl4.flowi4_iif = LOOPBACK_IFINDEX;
-+	fl4.flowi4_tos = RT_TOS(ip4h->tos);
-+	fl4.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF;
-+	fl4.flowi4_proto = ip4h->protocol;
-+	fl4.daddr = ip4h->daddr;
-+	fl4.saddr = ip4h->saddr;
-+
- 	rt = ip_route_output_flow(net, &fl4, NULL);
- 	if (IS_ERR(rt))
- 		goto err;
++	skb->ip_summed = CHECKSUM_NONE;
+ 	memmove(skb->data + hdr_len, skb->data, 2 * ETH_ALEN);
+ 	skb_pull(skb, hdr_len);
+ 	pskb_trim_unique(skb, skb->len - icv_len);
 
 
