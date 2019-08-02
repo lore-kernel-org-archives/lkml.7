@@ -4,153 +4,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64864C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47F1C19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5022080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954D0206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 00:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YjzdNqoP"
+	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="qwk2KhKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732033AbfHBAUb (ORCPT
+        id S1733284AbfHBAYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 20:20:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58317 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726340AbfHBAUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 20:20:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4607960P1Sz9sBF;
-        Fri,  2 Aug 2019 10:20:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564705226;
-        bh=+ve0AekgqeeerfEkv1cIPb21hnwgyPwKRGIXqIAzqJk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YjzdNqoPwyZUWcWwEkhgLFWielvXQDNt1oh/h/3f7OZHuhkvwAEnmS0NsS2aSWgx2
-         B2V300+TDrUdlC7OpBnVfPKCtyHspBYyVrIkzS2oKTUABP3kFuebLKXOxoWobTLpWa
-         uyp1LPoZKiFNdZfqftKot8ImxnEgY49kSfG4gIejZSVnSdHNAJI+OD6KU5ayeGi4SZ
-         ZQ5fjPNon1XBDUGhd/xAMdshCfRYN1u0zLF00rzcq6t+AaRto8nMHC3HX3UxSm3XyC
-         svZz2CrudgIRmQGzt7iCXoPxqo4vqvQbB04QRPB8Hx8WS8TAJMoIzMr45mqliclP3J
-         U7WmrRBAl+DRQ==
-Date:   Fri, 2 Aug 2019 10:20:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>
-Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
-Message-ID: <20190802102019.6a789c51@canb.auug.org.au>
-In-Reply-To: <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
-References: <20190731163915.3fdfcb14@canb.auug.org.au>
-        <20190731085819.GA3488@osiris>
-        <20190731110816.GA20753@gondor.apana.org.au>
-        <20190731111520.GC3488@osiris>
-        <20190731113216.GA21068@gondor.apana.org.au>
-        <20190731114453.GD3488@osiris>
-        <20190801122849.GB4163@osiris>
-        <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
+        Thu, 1 Aug 2019 20:24:08 -0400
+Received: from mail-eopbgr770049.outbound.protection.outlook.com ([40.107.77.49]:9699
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729359AbfHBAYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 20:24:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ofqiR0aH5P7bQwt+EWwqX35PQiOQnr/q0MpNdzBCOo8V944/C3WjzFXAbWiorKxIKCV8FzKVt1uvpfiHilyHyC1p7/X+WWStsqGTY/q6iZR0UpmYMAoKeEfVYCVZs29I8Di0peMiqoUpKWzoWeOezJcQEISrd1QWT1wDXlQaZaUaf4AWZCFIUFtMwgafdxD78vwbq2bzIHAPuq5gZTSQAsLWtiUFF2xaPUCsVdswDVVxL/H4otDiWZlvD69rL575ir/4CH5o1tRQqXC0Uc+kMODbaviK9BBGEJtz6Tykxa9IONEhxwkZtSFGSxtkhohYmvMw3AX8vJauNPWWy/wSKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5nwFhwPpZm/41poRA13bAhifEH9AncNH3+pNYzi3ED8=;
+ b=PCRtWXiTdLWpViPslv+scHwx4XCzTlcJ7GTLNQFdgZw4+KtUoXnlHWRu9Yc+C56B31042M5kddGY5scqgJx1/WYwFN41yGrcx/umnz++sB+kByroH9Ktf1yopFmorQ1/8McwXsQYAsbU0MjtQpQ2ib4+kgU1Lf6xRBk3Xm5uBDOPesCGQePonNZleut5h9yZnY8b22kGWE3iucYEMzuXQ2hNl7pEQL0Qn4RU/5/uP2LVFoqrUZw+eCmcos4edn/spki2UsMZJFeqpTWqiCp4VnGvKMwYbs6f46VKbDlSrfk/XbCmS0jREmN45uRDI2DE1PNy+7xgLznBqZxiRv1Taw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=verimatrix.com;dmarc=pass action=none
+ header.from=verimatrix.com;dkim=pass header.d=verimatrix.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5nwFhwPpZm/41poRA13bAhifEH9AncNH3+pNYzi3ED8=;
+ b=qwk2KhKzw573/Sgh2iMZy3c8BAnqgssbDKcyd0p2tvn86ZHkbiXXSvwdnLqBnpZR+mok/rhBYlRMfWLxvC3rm9eYDN656fpxO+n/sOmABenOPlF2xM0lLiOyNFHQBKWFjC8/QTwrjRbfv0dwgHN5vkeUbBIHmKaxqnNwrRn0tf4=
+Received: from MN2PR20MB2973.namprd20.prod.outlook.com (52.132.172.146) by
+ MN2PR20MB3120.namprd20.prod.outlook.com (52.132.174.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.17; Fri, 2 Aug 2019 00:24:04 +0000
+Received: from MN2PR20MB2973.namprd20.prod.outlook.com
+ ([fe80::d96f:39b2:19f4:c7c1]) by MN2PR20MB2973.namprd20.prod.outlook.com
+ ([fe80::d96f:39b2:19f4:c7c1%7]) with mapi id 15.20.2115.005; Fri, 2 Aug 2019
+ 00:24:04 +0000
+From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: Need help with failling gcm_base(ctr,ghash-generic) selftest
+Thread-Topic: Need help with failling gcm_base(ctr,ghash-generic) selftest
+Thread-Index: AQHVSKFY6oVMoifWy0S5Dl262GlQMabm/nnw
+Date:   Fri, 2 Aug 2019 00:24:04 +0000
+Message-ID: <MN2PR20MB297372F8FB158C59BF4F6F2FCAD90@MN2PR20MB2973.namprd20.prod.outlook.com>
+References: <20190801194249.GA18705@Red>
+In-Reply-To: <20190801194249.GA18705@Red>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pvanleeuwen@verimatrix.com; 
+x-originating-ip: [188.204.2.113]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4384dd67-989a-4ef9-dca2-08d716dfb981
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR20MB3120;
+x-ms-traffictypediagnostic: MN2PR20MB3120:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR20MB3120F5BDFA1C78B40D3C9925CAD90@MN2PR20MB3120.namprd20.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 011787B9DD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(346002)(366004)(136003)(376002)(13464003)(199004)(189003)(33656002)(68736007)(6436002)(476003)(2501003)(11346002)(446003)(9686003)(14454004)(486006)(55016002)(229853002)(478600001)(66066001)(2201001)(6116002)(71200400001)(71190400001)(2906002)(25786009)(3846002)(256004)(8676002)(7696005)(4326008)(86362001)(52536014)(15974865002)(316002)(66476007)(66946007)(66446008)(102836004)(5660300002)(6246003)(64756008)(186003)(81156014)(26005)(305945005)(66556008)(53936002)(7736002)(110136005)(81166006)(6506007)(99286004)(74316002)(53546011)(8936002)(76176011)(76116006)(41533002)(142933001)(18886075002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR20MB3120;H:MN2PR20MB2973.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: verimatrix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IB7EpWyN2rgLSCNMR3gFfaSCK/OfpXQ9JBK1YimKioHbIQga+8o+joZGQ0o78/Ts7vdt7uO6RNG7HBnCQlt65UQxrPtMlyF95qw1gzknMx3whDZmTdhn+Y5tAq5rut39wI0jj+xYoWEOm6vEC9ExsuMKreZX2blr/Q/3+01Sh/lguRdNEstsvQM1IvCQn+/4vy1I6zKPs/UQ903a/HhZbrBGyAYzbh7VVaXW/8ykOPalVape9SrJpD06vLjkAyiHNh9Aec20q2aUdR6PQ6qJkCEO6jSu41T1KcAzePKgKt8ZVHyGAn/vgZhp1LMCBsKJvEGYihE+oNtkLDR5v1hehhv3Si9vv82kNGRgUQ7KSwwnk0NK408wYxdUYwMDqK/SXzy0zekOe2LF4IB/tzACIsLhUrw0e9T8vJSarDSx2IA=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wVw44K.uM21QiDqGKSG=HiW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-OriginatorOrg: verimatrix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4384dd67-989a-4ef9-dca2-08d716dfb981
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 00:24:04.0908
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pvanleeuwen@verimatrix.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR20MB3120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wVw44K.uM21QiDqGKSG=HiW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Herbert,
-
-On Thu, 1 Aug 2019 20:28:56 +0300 Ard Biesheuvel <ard.biesheuvel@linaro.org=
-> wrote:
+> -----Original Message-----
+> From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.kernel.=
+org> On Behalf Of
+> Corentin Labbe
+> Sent: Thursday, August 1, 2019 9:43 PM
+> To: herbert@gondor.apana.org.au; linux-crypto@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Subject: Need help with failling gcm_base(ctr,ghash-generic) selftest
+>=20
+> Hello
+>=20
+> I am writing the Allwinner sun8i-ce driver and when running tcrypt I got
+> [   30.201739] alg: aead: gcm_base(ctr-aes-sun8i-ce,ghash-generic) decryp=
+tion failed on test
+> vector 3; expected_error=3D0, actual_error=3D-74, cfg=3D\"random: may_sle=
+ep use_digest
+> src_divs=3D[100.0%@+2614] dst_divs=3D[5.90%@alignmask+3015, 60.56%@+3996,=
+ 17.92%@+865,
+> 15.62%@+10]\"
+> or
 >
-> On Thu, 1 Aug 2019 at 15:28, Heiko Carstens <heiko.carstens@de.ibm.com> w=
-rote:
-> >
-> > On Wed, Jul 31, 2019 at 01:44:54PM +0200, Heiko Carstens wrote: =20
-> > > On Wed, Jul 31, 2019 at 09:32:16PM +1000, Herbert Xu wrote: =20
-> > > > On Wed, Jul 31, 2019 at 01:15:20PM +0200, Heiko Carstens wrote: =20
-> > > > >
-> > > > > However that doesn't fix the simd.h header file breakage with the
-> > > > > second patch :) =20
-> > > >
-> > > > That fix should be there now too. =20
-> > >
-> > > Yes, works now. Thank you! =20
-> >
-> > Still not... with linux-next as of today I get this (s390 defconfig):
-> >
-> > ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefi=
-ned!
-> > ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
-> > ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefi=
-ned!
-> > scripts/Makefile.modpost:105: recipe for target 'modules-modpost' failed
-> > =20
+The decryption reports only an -EBADMSG here, which means the decryption it=
+self went
+fine, but the authentication tag mismatched.
+
+
+> [  148.613537] alg: aead: gcm_base(ctr-aes-sun8i-ce,ghash-generic) encryp=
+tion test failed
+> (wrong result) on test vector 2, cfg=3D\"random: may_sleep use_final src_=
+divs=3D[100.0%@+0]
+> iv_offset=3D20\"
 >=20
-> Hello Heiko,
+Can't say for sure, but considering the decrypt error, this is most likely =
+just a
+mismatch on the appended authentication tag.
+
+> Since ctr-aes-sun8i-ce is passing the ctr(aes) selftest, I dont understan=
+d what could be
+> wrong.
 >=20
-> Apologies for the breakage. The first two fixes addressed obvious
-> shortcomings in my code, but with this issue, I'm a bit puzzled tbh.
-> The calls to these missing functions should be optimized away, since
-> have_simd never gets assigned if CONFIG_CRYPTO_AEGIS128_SIMD is not
-> defined, but for some reason, this isn't working. Which version of GCC
-> are you using?
->=20
-> Also, could you please try whether the patch below fixes the problem? Tha=
-nks
->=20
-> https://lore.kernel.org/linux-crypto/20190729074434.21064-1-ard.biesheuve=
-l@linaro.org/
+That is possible, as this appears to be a problem with the authentication p=
+art,
+not the encryption part. So possibly a problem with the way you setup the=20
+authentication key (which is actually derived from the encryption key, but =
+I don't
+know if your hardware does this autonomously, mine doesn't) and/or operatio=
+n?
 
-It might be time to revert all this series and try again.  The
-implementation seems to have not been well thought through from a kernel
-building point of view.  For a start the two commits
+> Thanks
+> Regards
 
-  7cdc0ddbf74a ("crypto: aegis128 - add support for SIMD acceleration")
-  ecc8bc81f2fb ("crypto: aegis128 - provide a SIMD implementation based on =
-NEON intrinsics")
 
-seem to be in the wrong order (function used in the first before being
-defined in the second).  There are a series of declarations of external
-functions in crypto/aegis128-core.c that should be in a header file.
-And there was the assumption that asm/simd.h was available everywhere.
-
-Also crypto_aegis128_decrypt_chunk_simd() is referenced in a structure
-initialisation (unprotected by any CONFIG_ variable - and so will be
-referenced even if it does not exist).  The compiler will have a hard
-time knowing that "have_simd" is effectively a constant zero (and
-crypto_simd_usable() is not constant).
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/wVw44K.uM21QiDqGKSG=HiW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1DgcMACgkQAVBC80lX
-0Gwx/Af/cVufoIrfiSSSl7Y9kjmf50nbufyfwr0bVq1E4/cox6s3YYwm5YjksyAv
-0Va0rY0BckXUkkFT6wi27uqVnX61synIjcUUDB4Gossa1LtK3+BlBqyWc2i8KYWk
-f04gN4Q8Y+CriSJPMkuXXy6mi0fp/kdxbfiJe4kag2Hs+5XCpVnDt3vwk4CP3Eci
-iasyqK5spS0ZcUBr8T6KmtiW8QmkO7wtdNnJOjeCFcioNihAu+KAK6yhaKtjAsIW
-/9uU761Bvzow2XqRp8uf71FXfWbiMKcJzJ+/ln5te2AS+4PFhU5vZtYeIYEZUN0w
-tuGhZn+FzLeLjMP1ZoPUVFCy4b0qFw==
-=WIXM
------END PGP SIGNATURE-----
-
---Sig_/wVw44K.uM21QiDqGKSG=HiW--
+Regards,
+Pascal van Leeuwen
+Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
+www.insidesecure.com
