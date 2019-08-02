@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CF9C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EC2C41514
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F02321841
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD7520880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752172;
-	bh=3LS0LuZEUGZyXLHS02o2dM7vNGPv1bCGiWlUbp3AVKM=;
+	s=default; t=1564752177;
+	bh=A8tPzKVZoQ3B5fe6QJTNAfk+W0Z4KRu0sKrKlp/NYQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gyDObxG4x6mZYy1ZW99cUii0oQEfxueql68VJm7+jwQ45cup/2Rg6pW9IY8XNRUD3
-	 RBNbe4+4E3ITIHllOaEM9taqjlW2hkwEpmLiEGkKHmauFRp5eNjLCLxsrOIpbuYYlh
-	 nwNw0k6m1cE02z0lpC4NawHD0DXRh7eMsEt8j4rU=
+	b=kG3oDHeO/BiF4NX+/EbrtYakxHAr9YRYftDjT5VHO7kkji+2lbkHSzetNCuGruH+a
+	 WYTXeNhfb04WafMqeipHwstZZDHn2/J84LUTp40Mmoahu8KRfnBGv7e0z9PZUsDZ/U
+	 neD3jtAJnf+i011RKMEBecV/pbum1/bl/Nvv67V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390888AbfHBNWv (ORCPT
+        id S2393890AbfHBNW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:22:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33200 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:22:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393845AbfHBNWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:22:47 -0400
+        id S2393864AbfHBNWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:22:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C4B021773;
-        Fri,  2 Aug 2019 13:22:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3587A2183F;
+        Fri,  2 Aug 2019 13:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752166;
-        bh=3LS0LuZEUGZyXLHS02o2dM7vNGPv1bCGiWlUbp3AVKM=;
+        s=default; t=1564752173;
+        bh=A8tPzKVZoQ3B5fe6QJTNAfk+W0Z4KRu0sKrKlp/NYQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TYHVMw04rhNnz9sKFBu2v5MeOm4AQZlzgP/C2lWooGsy6AS1fYLY39Ds5cT9UBLx0
-         +OgoXvwTfySWWNcEuFIfrDWz6ESgbAPUwOxUqSLjHsU3xBYARV3SaL5j1SHK0EpOhD
-         tZcUudG4dKMzle0Ac0J5ejdU03jyjc9YbiNhwDxM=
+        b=A+w4wdcuUQ3e/NF6CziBRXRrU5Qrd6Pb431/cJ6HTuBcbbyVJx8+s42v5gfBPegup
+         F+U8TJL2/RFjCUldqJMS+hPOuUdIHOfRWvFU31THUVbDKh24n2tY5HSayyKRfHVmhU
+         +Kg7mF+GNc1eTds0s1urbfGNatNkgEXu9FfJBQSA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunying Sun <yunying.sun@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, bp@alien8.de, hpa@zytor.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 72/76] perf/x86/intel: Fix invalid Bit 13 for Icelake MSR_OFFCORE_RSP_x register
-Date:   Fri,  2 Aug 2019 09:19:46 -0400
-Message-Id: <20190802131951.11600-72-sashal@kernel.org>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 75/76] s390/dma: provide proper ARCH_ZONE_DMA_BITS value
+Date:   Fri,  2 Aug 2019 09:19:49 -0400
+Message-Id: <20190802131951.11600-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -64,58 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunying Sun <yunying.sun@intel.com>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-[ Upstream commit 3b238a64c3009fed36eaea1af629d9377759d87d ]
+[ Upstream commit 1a2dcff881059dedc14fafc8a442664c8dbd60f1 ]
 
-The Intel SDM states that bit 13 of Icelake's MSR_OFFCORE_RSP_x
-register is valid, and used for counting hardware generated prefetches
-of L3 cache. Update the bitmask to allow bit 13.
+On s390 ZONE_DMA is up to 2G, i.e. ARCH_ZONE_DMA_BITS should be 31 bits.
+The current value is 24 and makes __dma_direct_alloc_pages() take a
+wrong turn first (but __dma_direct_alloc_pages() recovers then).
 
-Before:
-$ perf stat -e cpu/event=0xb7,umask=0x1,config1=0x1bfff/u sleep 3
- Performance counter stats for 'sleep 3':
-   <not supported>      cpu/event=0xb7,umask=0x1,config1=0x1bfff/u
+Let's correct ARCH_ZONE_DMA_BITS value and avoid wrong turns.
 
-After:
-$ perf stat -e cpu/event=0xb7,umask=0x1,config1=0x1bfff/u sleep 3
- Performance counter stats for 'sleep 3':
-             9,293      cpu/event=0xb7,umask=0x1,config1=0x1bfff/u
-
-Signed-off-by: Yunying Sun <yunying.sun@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: acme@kernel.org
-Cc: alexander.shishkin@linux.intel.com
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Cc: jolsa@redhat.com
-Cc: namhyung@kernel.org
-Link: https://lkml.kernel.org/r/20190724082932.12833-1-yunying.sun@intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Reported-by: Petr Tesarik <ptesarik@suse.cz>
+Fixes: c61e9637340e ("dma-direct: add support for allocation from ZONE_DMA and ZONE_DMA32")
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/include/asm/page.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 2889dd0235668..e9042e3f3052c 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -263,8 +263,8 @@ static struct event_constraint intel_icl_event_constraints[] = {
- };
+diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
+index a4d38092530ab..823578c6b9e2c 100644
+--- a/arch/s390/include/asm/page.h
++++ b/arch/s390/include/asm/page.h
+@@ -177,6 +177,8 @@ static inline int devmem_is_allowed(unsigned long pfn)
+ #define VM_DATA_DEFAULT_FLAGS	(VM_READ | VM_WRITE | \
+ 				 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
  
- static struct extra_reg intel_icl_extra_regs[] __read_mostly = {
--	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffff9fffull, RSP_0),
--	INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffff9fffull, RSP_1),
-+	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffffbfffull, RSP_0),
-+	INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffffbfffull, RSP_1),
- 	INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x01cd),
- 	INTEL_UEVENT_EXTRA_REG(0x01c6, MSR_PEBS_FRONTEND, 0x7fff17, FE),
- 	EVENT_EXTRA_END
++#define ARCH_ZONE_DMA_BITS	31
++
+ #include <asm-generic/memory_model.h>
+ #include <asm-generic/getorder.h>
+ 
 -- 
 2.20.1
 
