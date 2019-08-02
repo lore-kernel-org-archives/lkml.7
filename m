@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00762C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FE4C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BC9217D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E1E217D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752547;
-	bh=aP4YkkA12LSjL77kBRkwMh/nYjnQjzzntn/ViEge4B4=;
+	s=default; t=1564752553;
+	bh=1kYU66SD0okszWlT/NaU7uhUHCNG/ok6OZT3yPtPWAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eWn84jKI6YlWOSMUWQGXBJAswbu74KZd0wCTT/YdAJLXOHsNErlDehxVHH4yNPKJX
-	 hPWk0E6rIK4mIVM31dbJzzPSixJUmScsfMrqFX+hYYKMDyH4kCLUb8tusksTWXrkyi
-	 fg2MzXQvinlbcGRDY7oWdZoJiicM3bT+hGM9W5RE=
+	b=fwecOthoTlv7a0cHItp4SEZqeI9oRz41ZkHb1YaEBK2mTprOEdxNy8OU51oZhxkb8
+	 jraktuZz8YkX+U0bLn0rvNqo358LxT74RXrI7VnWISDNTzZ/i08huq4FOuxPI/lpwi
+	 SfMxe5jGRXTSFfK+ckzjVEWcZYXpiRPNz12UtPpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391820AbfHBN3G (ORCPT
+        id S2390234AbfHBNZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:29:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36432 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394409AbfHBNZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:25:44 -0400
+        id S2390030AbfHBNZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:25:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EB5C21852;
-        Fri,  2 Aug 2019 13:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6906A217D4;
+        Fri,  2 Aug 2019 13:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752344;
-        bh=aP4YkkA12LSjL77kBRkwMh/nYjnQjzzntn/ViEge4B4=;
+        s=default; t=1564752306;
+        bh=1kYU66SD0okszWlT/NaU7uhUHCNG/ok6OZT3yPtPWAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bpM1fNLyxFEFXEP3u/deUo42zxTFOy7NNt72cd6TS588/oYmCak2XB3cMjN55JsPB
-         XqREbQXxpjfaIljssYgHlmwAB+iYNTAflm0J1oOvrl3q6rRQZi05d+MsSDFGvIwjd7
-         C/OoZexG/fBtk77tnmQfcc8acZ456n+sBUb11DTU=
+        b=UhXjw9E3VaPWXNn1ieBemA1MNmWaiZVIOv7xThZImPzZVXcTM364txsREhyzsbe67
+         diTgEA00LcnrW4u9HPEFlzqkoucR4cizxv72wQ0kWWWbdipzbgjql9vfdk4IDbCVNr
+         GMzIsm62rEE0J5etES9Wx+14cAWktzBHY2KLU5fc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Frank Li <Frank.li@nxp.com>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 30/30] perf/core: Fix creating kernel counters for PMUs that override event->cpu
-Date:   Fri,  2 Aug 2019 09:24:22 -0400
-Message-Id: <20190802132422.13963-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 19/30] perf tools: Fix proper buffer size for feature processing
+Date:   Fri,  2 Aug 2019 09:24:11 -0400
+Message-Id: <20190802132422.13963-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
 References: <20190802132422.13963-1-sashal@kernel.org>
@@ -67,60 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit 4ce54af8b33d3e21ca935fc1b89b58cbba956051 ]
+[ Upstream commit 79b2fe5e756163897175a8f57d66b26cd9befd59 ]
 
-Some hardware PMU drivers will override perf_event.cpu inside their
-event_init callback. This causes a lockdep splat when initialized through
-the kernel API:
+After Song Liu's segfault fix for pipe mode, Arnaldo reported following
+error:
 
- WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
- pc : ctx_sched_out+0x78/0x208
- Call trace:
-  ctx_sched_out+0x78/0x208
-  __perf_install_in_context+0x160/0x248
-  remote_function+0x58/0x68
-  generic_exec_single+0x100/0x180
-  smp_call_function_single+0x174/0x1b8
-  perf_install_in_context+0x178/0x188
-  perf_event_create_kernel_counter+0x118/0x160
+  # perf record -o - | perf script
+  0x514 [0x1ac]: failed to process type: 80
 
-Fix this by calling perf_install_in_context with event->cpu, just like
-perf_event_open
+It's caused by wrong buffer size setup in feature processing, which
+makes cpu topology feature fail, because it's using buffer size to
+recognize its header version.
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/r/c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>
+Fixes: e9def1b2e74e ("perf tools: Add feature header record to pipe-mode")
+Link: http://lkml.kernel.org/r/20190715140426.32509-1-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 2 +-
+ tools/perf/util/header.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3d4eb6f840eba..ea4f3f7a0c6f3 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10474,7 +10474,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
- 		goto err_unlock;
- 	}
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 26437143c9406..c892a28e7b048 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3081,7 +3081,7 @@ int perf_event__process_feature(struct perf_tool *tool,
+ 		return 0;
  
--	perf_install_in_context(ctx, event, cpu);
-+	perf_install_in_context(ctx, event, event->cpu);
- 	perf_unpin_context(ctx);
- 	mutex_unlock(&ctx->mutex);
+ 	ff.buf  = (void *)fe->data;
+-	ff.size = event->header.size - sizeof(event->header);
++	ff.size = event->header.size - sizeof(*fe);
+ 	ff.ph = &session->header;
  
+ 	if (feat_ops[feat].process(&ff, NULL))
 -- 
 2.20.1
 
