@@ -2,116 +2,166 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F2AC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D17FC32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A380216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015AD2087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:21:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ueV7Spbz"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Rp25KIx3";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="cfHNTQPa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732603AbfHBFSf (ORCPT
+        id S1732666AbfHBFVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 01:18:35 -0400
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:39969 "EHLO
-        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfHBFSf (ORCPT
+        Fri, 2 Aug 2019 01:21:07 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:65134 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726626AbfHBFVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 01:18:35 -0400
-Received: by mail-wm1-f42.google.com with SMTP id v19so65103615wmj.5;
-        Thu, 01 Aug 2019 22:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eYTBzEX7GMOtIqjborVnFKsDkL4kSXgG4qFbaiySFOY=;
-        b=ueV7SpbzhRpnl8iQm2HfnxN2bO6BhCambLM5XdoTPJwI8TwdtCzlBzMVVEvtxsK+ck
-         aW/308wwjayjrlp1M2VqfdxUMCck2x5+fcuKwKRzVGgoM//S9RajWxDHbh3JMAZUK7kM
-         gQv71iMpx+2ry+vhYoxKW6qvtD6BJCN3U/GlhOiTPKN7h1xJo1336VAFskhJyik1mBU/
-         PaI7FWD3NPBHL65YaU6cLuK7NKAbJiJNmYcFX/YiNvqE7pSKve+12f+rNaGKhDNhLUyN
-         KPImUEcaoo5jP4wST9mBqm0uYC1l8jUr5GcFTIQLE5MeZscAPQiN5feUxJ+TDxAw7qSq
-         C1Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eYTBzEX7GMOtIqjborVnFKsDkL4kSXgG4qFbaiySFOY=;
-        b=ujrSr6d6LOd0yI+Q46G3HaP8x/iR+HdIsqXPViw+kGBG6kFoodA1jmRd+C3AEeUPao
-         oyDfGI9yrM3zMEGyN/rusucHNUEHZpHzfoZbG7b7uFCq81oMm+tAwmhLoEvrzcP234+5
-         VMyGJAEM+jp+7z9WgvVY5k9vJVZ9tO5mVMoE6aZVi4CGmaNZMimrLrScgppKkM4kaLuZ
-         OPM5SxX7ZkuGwYOYaM+M83+SYZ5t7ZU6DQZuXlwZvex9tSMh8RbDDfU/XnEr3Im8dv0U
-         E3sggGJcEEMblRv5s0pO6XTVfKT2vL5VZOCIWhb/wq5ZJAmFvL7f5AZVaZMZMwqpyy+f
-         wq6g==
-X-Gm-Message-State: APjAAAX2pbTzHyOL8mUZhvyq36AHpHKSqhhN2ZmT7MNJQpSelwHld6hm
-        Jv3x49Xj+1JNLRtRdguLr47mYtxT
-X-Google-Smtp-Source: APXvYqy5l5dC5ORyhEdYkw2aFAApDY3VJbNLp6XFp0/GmBZPXoekpUdgnDsxUUALy1Iwjmyux44qRQ==
-X-Received: by 2002:a1c:107:: with SMTP id 7mr2210361wmb.84.1564723112827;
-        Thu, 01 Aug 2019 22:18:32 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id c78sm102330630wmd.16.2019.08.01.22.18.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 22:18:32 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 07:18:30 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-Cc:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Need help with failling gcm_base(ctr,ghash-generic) selftest
-Message-ID: <20190802051830.GA13677@Red>
-References: <20190801194249.GA18705@Red>
- <MN2PR20MB297372F8FB158C59BF4F6F2FCAD90@MN2PR20MB2973.namprd20.prod.outlook.com>
+        Fri, 2 Aug 2019 01:21:07 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x725Hw3a004680;
+        Thu, 1 Aug 2019 22:20:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=7YRtrjjEZQx1hFHzZ7Rzbx68eQ50VUzRxqGu1B3Fwas=;
+ b=Rp25KIx3eqZQ12clgKPLWtVZZZfI5GUdIISB3Q9P2tmh2TWw+zQmCOVAYFGwZZQwdrXC
+ OwWBCYvmqCGViO+ZxlxzuWmPzL1nT/toldys7JxBhQAjEE4Ejvfa0nv6Sftq8x/tbxBg
+ Ur0UfGR/U+SwDwYioUT4OqX0KvKI5CpiIJo= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2u449gj30c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 01 Aug 2019 22:20:44 -0700
+Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
+ ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 1 Aug 2019 22:20:43 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 1 Aug 2019 22:20:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kx5KGRhjI75s7tqh4jELuvf6XniWcfbFsTA3DAgHs0QNd3xmNk8zAIcjXd+i2JZ+yKyVtHn+PkvX3AoR2WgtgNsFy5eHlol17DQJDFRpP2NRB215N5OLIO3uQzAZ7pCw5u8JTiD7izpgEVq5aHtM2N7JBRRksNK7ta2SHiVZn552+PLu2KgOC3qUkZPeGdvWVdYAR8fgkbgxrmmxyYlJzFvSQ3b+EMRDpsaBWdT6Q+k0C1OPne2aWPTuiFNs7xaWqCnEPGhED5XxqqaVT72HO3iYpVmgAMInaafuZSqhX8mQNglsBAn5sUOrji29+A2YhzBgybXt9YiE0vni4HaEFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7YRtrjjEZQx1hFHzZ7Rzbx68eQ50VUzRxqGu1B3Fwas=;
+ b=GanocCAop9em2dAxvKFvsDIex+Yo9xV0wMlSi2/wwb00qO2OhXyTAYH61v/NNPrMGo4mLkd/dX0B896fmRZCHKkxww3R3dVjcE3RXcks3wSyr7pw00/Mt58oRnCzJ8+ks6nJhwRAgACc/OrtvI9YKdb6eOZoK4mX41K6jxjayv8T48/C0PNiSLrSXUNvRVRZ5HNlFKdroUbfXHpMJb/EjlLLPYOeHeVv5Bm+1laYgZyEmt3HkFMNQyjMf0Dkg9SuCqj+5ErjZ+DcWEm8I28UyPMY7qkcCYl+HIE6XnV4jwgyPxnnkTT4gwI/3atdsO8WBfK03LktmHu+2RZPPYE+Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
+ header.d=fb.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7YRtrjjEZQx1hFHzZ7Rzbx68eQ50VUzRxqGu1B3Fwas=;
+ b=cfHNTQPaKy+iyCmP9MW3wppJcBOL97I0fTf8ovOJvHClIIudNgWk+RjpGwkdbKU5pc2SLTON+Tt539yvb1CFrlyqmDLA4LasdQU9SvwZO9pTLkv70sR2e0u33xd58lBKsz431vG2X26k8bG3EVj5H2sVY3Ow2gQZmWeWJKioyEw=
+Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
+ MWHPR15MB1197.namprd15.prod.outlook.com (10.175.7.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.16; Fri, 2 Aug 2019 05:20:42 +0000
+Received: from MWHPR15MB1216.namprd15.prod.outlook.com
+ ([fe80::c66:6d60:f6e5:773c]) by MWHPR15MB1216.namprd15.prod.outlook.com
+ ([fe80::c66:6d60:f6e5:773c%8]) with mapi id 15.20.2136.010; Fri, 2 Aug 2019
+ 05:20:42 +0000
+From:   Tao Ren <taoren@fb.com>
+To:     Joel Stanley <joel@jms.id.au>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge100 BMC
+Thread-Topic: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge100 BMC
+Thread-Index: AQHVSOg2lZoVHrZ29U2XlvDXnsufaKbnQZOA//+bUYA=
+Date:   Fri, 2 Aug 2019 05:20:41 +0000
+Message-ID: <606273F4-E021-4AAF-9F59-F363E4FFF92A@fb.com>
+References: <20190802041010.1234178-1-taoren@fb.com>
+ <CACPK8XcuwNE3aBrsgn-paTZt-EtF6pc6WwYBQef5xc7157bk2g@mail.gmail.com>
+In-Reply-To: <CACPK8XcuwNE3aBrsgn-paTZt-EtF6pc6WwYBQef5xc7157bk2g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/10.1a.0.190609
+x-originating-ip: [2620:10d:c090:180::1:94d1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7d9f0837-79c0-47a0-c8d2-08d7170929de
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1197;
+x-ms-traffictypediagnostic: MWHPR15MB1197:
+x-microsoft-antispam-prvs: <MWHPR15MB1197AD2CD9BE3D4676210120B2D90@MWHPR15MB1197.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 011787B9DD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(396003)(39860400002)(366004)(47680400002)(43544003)(199004)(189003)(6506007)(33656002)(5660300002)(76116006)(14454004)(66476007)(66556008)(64756008)(53936002)(66946007)(66446008)(478600001)(81166006)(486006)(68736007)(4326008)(36756003)(11346002)(476003)(446003)(46003)(81156014)(2616005)(71190400001)(6512007)(71200400001)(25786009)(8676002)(305945005)(316002)(186003)(54906003)(86362001)(8936002)(7736002)(6116002)(256004)(2906002)(229853002)(58126008)(6436002)(53546011)(76176011)(6486002)(6916009)(102836004)(6246003)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1197;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qu2vQKv/PweLZWEe/h/0DGEeIRhLt9jTD6F+1UM3YtYZjjw5pR/uC4cXF1HYbD9cODX8AnyA3S1cRc1fcXEL0ZYWIP1VLMb4GTRO3FtRm4LFOk7TxBONqteGug2wVN5HIvRA9MisWNgruWyPrp2QMhoyjaJinEiv5dcFLVcj6g4xnUvVj+YgOlYPVEQcy98KNOf8oJIuyiQRE8j5QaXrzKQ8sYuoY/txWjrJWweXJTCNRF2ymEthCy0Ah1rGNdnQbwk6ndsQs7mcSmSTYMEPkas9UAc1rprPYrxtJTVinp9B2Hpe5ZKKcJ3Mxxojnt/nMpdkJptvHUIgBrbb+AvOH5y94v+FNtZ/99P75YOkWhcdrDUE/FsbhKuL/I2QRAf7jGiiTgguLwKvcCkKj7acceJqw2zkYbByYZFdArFZcQs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FA155B7D2FF44B408295ED3794A270FC@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN2PR20MB297372F8FB158C59BF4F6F2FCAD90@MN2PR20MB2973.namprd20.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d9f0837-79c0-47a0-c8d2-08d7170929de
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 05:20:41.9574
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: taoren@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1197
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020056
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 12:24:04AM +0000, Pascal Van Leeuwen wrote:
-> > -----Original Message-----
-> > From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.kernel.org> On Behalf Of
-> > Corentin Labbe
-> > Sent: Thursday, August 1, 2019 9:43 PM
-> > To: herbert@gondor.apana.org.au; linux-crypto@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Subject: Need help with failling gcm_base(ctr,ghash-generic) selftest
-> > 
-> > Hello
-> > 
-> > I am writing the Allwinner sun8i-ce driver and when running tcrypt I got
-> > [   30.201739] alg: aead: gcm_base(ctr-aes-sun8i-ce,ghash-generic) decryption failed on test
-> > vector 3; expected_error=0, actual_error=-74, cfg=\"random: may_sleep use_digest
-> > src_divs=[100.0%@+2614] dst_divs=[5.90%@alignmask+3015, 60.56%@+3996, 17.92%@+865,
-> > 15.62%@+10]\"
-> > or
-> >
-> The decryption reports only an -EBADMSG here, which means the decryption itself went
-> fine, but the authentication tag mismatched.
-> 
-> 
-> > [  148.613537] alg: aead: gcm_base(ctr-aes-sun8i-ce,ghash-generic) encryption test failed
-> > (wrong result) on test vector 2, cfg=\"random: may_sleep use_final src_divs=[100.0%@+0]
-> > iv_offset=20\"
-> > 
-> Can't say for sure, but considering the decrypt error, this is most likely just a
-> mismatch on the appended authentication tag.
-> 
-> > Since ctr-aes-sun8i-ce is passing the ctr(aes) selftest, I dont understand what could be
-> > wrong.
-> > 
-> That is possible, as this appears to be a problem with the authentication part,
-> not the encryption part. So possibly a problem with the way you setup the 
-> authentication key (which is actually derived from the encryption key, but I don't
-> know if your hardware does this autonomously, mine doesn't) and/or operation?
-> 
-
-But since my driver is just a skcipher, I dont understand why I should care about any aead part, right ?
+T24gOC8xLzE5LCA5OjIxIFBNLCAiSm9lbCBTdGFubGV5IiA8am9lbEBqbXMuaWQuYXU+IHdyb3Rl
+Og0KDQo+ICBPbiBGcmksIDIgQXVnIDIwMTkgYXQgMDQ6MTAsIFRhbyBSZW4gPHRhb3JlbkBmYi5j
+b20+IHdyb3RlOg0KPj4NCj4+IEFkZCBpbml0aWFsIHZlcnNpb24gb2YgZGV2aWNlIHRyZWUgZm9y
+IEZhY2Vib29rIFdlZGdlMTAwIEFTVDI0MDAgQk1DDQo+PiBwbGF0Zm9ybS4NCj4+DQo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBUYW8gUmVuIDx0YW9yZW5AZmIuY29tPg0KPj4gUmV2aWV3ZWQtYnk6IEFuZHJl
+dyBKZWZmZXJ5IDxhbmRyZXdAYWouaWQuYXU+DQo+PiAtLS0NCj4+ICBDaGFuZ2VzIGluIHYyOg0K
+Pj4gIC0gcmVtb3ZlICJkZWJ1ZyIgZnJvbSBib290YXJncy4NCj4gICAgDQo+IFRoYW5rcy4gSSBh
+cHBsaWVkIHdlZGdlNDAgYW5kIHRoZW4gdGhpcyBvbmUgZmFpbHMgdG8gYXBwbHkgZHVlIHRvDQo+
+IGNvbmZsaWN0cyBpbiB0aGUgTWFrZWZpbGUuIE5leHQgdGltZSB5b3UgaGF2ZSB0d28gcGF0Y2hl
+cywgc2VuZCB0aGVtDQo+IGFzIGEgc2VyaWVzIHRoZXkgYXBwbHkgb25lIGF0b3AgdGhlIG90aGVy
+Lg0KDQpJIHRob3VnaHQgYWJvdXQgYXNraW5nIHlvdSBpZiBJIHNob3VsZCBzZW5kIHRoZW0gYXMg
+YSBzZXJpZXMgYWx0aG91Z2ggdGhleSBhcmUgbG9naWNhbGx5IGluZGVwZW5kZW50IHBhdGNoZXMu
+Lg0KU29ycnkgYWJvdXQgdGhhdCBhbmQgSSB3aWxsIGRvIHNvIGZvciBmdXR1cmUgcGF0Y2hlcy4N
+Cg0KPiAgVGhlIG5hbWluZyBvZiB0aGVzZSB0d28gZmlsZXMgc3VnZ2VzdHMgdGhleSBjb21lIGZy
+b20gYSBmYW1pbHkuIEkNCj4gIG5vdGljZWQgdGhlcmUncyB2ZXJ5IG1pbm9yIGRpZmZlcmVuY2Vz
+LCBhIHBjYTk1NDggc3dpdGNoIGFuZCB0aGUgdXNlDQo+ICBvZiBhIHdhdGNoZG9nLg0KPiAgDQo+
+ICBBcmUgdGhlc2UgZGV2aWNlIHRyZWVzIGNvbXBsZXRlPyBJZiB5ZXMsIGRvIHlvdSB0aGluayBp
+dCdzIHdvcnRod2hpbGUNCj4gIHRvIGhhdmUgYSBjb21tb24gd2VkZ2UgZGVzY3JpcHRpb24gaW4g
+ZWcuDQo+ICBhc3BlZWQtYm1jLWZhY2Vib29rLXdlZGdlLmR0c2ksIGFuZCBwdXQgdGhlIHVuaXF1
+ZSBkZXNjcmlwdGlvbiBpbg0KPiAgcmVzcGVjdGl2ZSBkdHMgYm9hcmQgZmlsZXM/DQo+ICAgDQo+
+ICBUaGUgdXBzaWRlIG9mIHRoaXMgaXMgcmVkdWNlZCBkdXBsaWNhdGlvbi4NCj4gIA0KPiAgSWYg
+eW91IGhhdmUgYSByZWFzb24gbm90IHRvLCB0aGVuIHRoYXQgaXMgb2theSBhbmQgd2UgY2FuIGxl
+YXZlIGl0IGFzDQo+ICB5b3Ugc3VibWl0dGVkIHRoZW0uDQoNClRoYW5rIHlvdSBmb3IgdGhlIHN1
+Z2dlc3Rpb24uIEknbSBhbHNvIGNvbnNpZGVyaW5nIG1vdmluZyBjb21tb24gc3R1ZmYgaW50byAi
+ZHRzaSIgZmlsZSwgYnV0IGxldCBtZSB0YWtlIGNhcmUgb2YgaXQgaW4gYSBzZXBhcmF0ZSBwYXRj
+aCwgbWFpbmx5IGJlY2F1c2U6DQogIDEpIEkgaGF2ZSBvbmUgbW9yZSBCTUMgcGxhdGZvcm0gKGdh
+bGF4eTEwMCkgd2hpY2ggaXMgYWxzbyBzaW1pbGFyIHRvIHdlZGdlLg0KICAgICAgSSBoYXZlbid0
+IHN0YXJ0ZWQgdGhlIHBsYXRmb3JtLCBidXQgb25jZSBJIGhhdmUgZ2FsYXh5MTAwIGRldmljZSB0
+cmVlIHJlYWR5LCBpdCB3b3VsZCBiZSBlYXNpZXIgZm9yIG1lIHRvIGV4dHJhY3QgY29tbW9uIHBh
+cnQuDQogIDIpIHRoZSBkZXZpY2UgdHJlZSBpcyBub3QgY29tcGxldGUgeWV0Lg0KICAgICAgRm9y
+IGV4YW1wbGUsIGFsbCB0aGUgaTJjIGRldmljZXMgYXJlIHN0aWxsIGNyZWF0ZWQgZnJvbSB1c2Vy
+c3BhY2UuDQogICAgICBJJ20gdHJ5aW5nIHRvIG1vdmUgdGhlIGxvZ2ljIGZyb20gdXNlcnNwYWNl
+IHRvIGRldmljZSB0cmVlIGJ1dCBJIGhhdmVuJ3QgZGVjaWRlZCB3aGF0IHRvIGRvIHdpdGggdGhv
+c2UgY3BsZC9mcGdhIGRldmljZXMuDQoNCg0KQ2hlZXJzLA0KDQpUYW8NCg0K
