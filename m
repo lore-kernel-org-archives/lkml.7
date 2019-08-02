@@ -8,64 +8,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB3CC19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FACCC19759
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72240206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F44206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:47:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kzsp8Lap"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpNcly7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388867AbfHBBrY (ORCPT
+        id S2388906AbfHBBrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 21:47:24 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38985 "EHLO
+        Thu, 1 Aug 2019 21:47:31 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33304 "EHLO
         mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728937AbfHBBrY (ORCPT
+        with ESMTP id S1727630AbfHBBra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 21:47:24 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so33021833pls.6
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:47:23 -0700 (PDT)
+        Thu, 1 Aug 2019 21:47:30 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c14so32903704plo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Aug 2019 18:47:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+vxHc5RDDwEK17Sr2QrAPRn0RxhaEPU9AZ0VMzC7/4Q=;
-        b=Kzsp8LaptraISsN7glqbkoD3sG8HXBmBzcgk0faMRd8we7GGrKKtNPsAIpSXCjW8I1
-         mfbVpQQ9+QrJV9HsZrF9T+loqXhtMP7C7Hu+n0vfJHCMBnMs+43c+qsYHfIrD3hwKmH3
-         GhsGGXmKW5V5YG0rwsmq/hO4qqHdGc/FvhQ/qA4WQnYa6aDr3cGeuBDkEvnMdKwAzhji
-         /x9f5gt5b4AzFlv9IqBK3j9uOtl7PWbVvRAgWq0ckzxYzGUYTGOsIwcWaI9PgFr10Zc2
-         j1cGjTz8py/7MijjdYXjqTP4JTfdtcZgL4hUrFAOcCyXldouPJp4BK+d6iAB5AT7WUCi
-         RYkA==
+        bh=lv/YL3fWYcrlgaCURXSs5Rp+POILoWLCMD+0ER71plA=;
+        b=cpNcly7dwYKojxb0/zRsMqN8tD12gUNrsf4a79e+cJmqtCUxlL+RTTP+at3X8UzzBD
+         tfsxe/GgZeLnUs+DRtoE2B+UWzkE8KL5/Sk1peURCN1D5cd7t752Io3YSx2p4DPH3R2k
+         zIl31oIxigIjwk5kRhodoSmHHKVGGltO0+I4dwaVcJIDAmZ8MB4FxM200YFlJarf7ClJ
+         nvdhYZctEp3drMM0UObGyzHtO1w/UTUuyuS361BDn+Ip7hx430ycy/49IXwp47wV+yxB
+         qWLUOGSY18ugMfLZE5C1TsWf2d9p06TksH+s1qt02X9r0GqlrY7Ry0f41obqQAzSkis2
+         81PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+vxHc5RDDwEK17Sr2QrAPRn0RxhaEPU9AZ0VMzC7/4Q=;
-        b=lqcewdrn8q7XuEqKlbgcK+BP6qCCPjUO+69ow0L60cU4e3BizBzs1Md6nHcha6k3/u
-         7jgSnW7yROcBupmENBf/oz/BUUmAb17cjFMkaemwoQK7pZf1ViWF6YHBzGPVs6r05pI4
-         AP4FKEpnaWD8DCrtNq9rod0HLEfb6ipfGkArDlrvlF03ZO9+WkHHBMgloUbjcrKikCr7
-         hublHuuR2kHvSesTgxydBMUnArrUTQJphEBs/3yfi5Imu05+RHzIW/pfR433A1F+M0/t
-         JFD6Fhq1qDfyYTQYVXoknorDd1sE8kmXmkZDbeFIDjilzkNhGOkjjW4WB+RkM2qIyKZ0
-         HBvg==
-X-Gm-Message-State: APjAAAUv8ZJK5pkpegalPgrxAhSpUur0d4WAu43rbRGjKOSJkV9Qe31i
-        kLdw3NPtvtBG/2QsDVO1FNNs6DVj59f51A==
-X-Google-Smtp-Source: APXvYqzXmJ1JTz0zsD4fDJwa7iMlziBCJl2DXub2B04VBdnTEAbHK5yxFt2bp6xYSgCQm2ziO7mFeA==
-X-Received: by 2002:a17:902:d715:: with SMTP id w21mr91477383ply.261.1564710443269;
-        Thu, 01 Aug 2019 18:47:23 -0700 (PDT)
+        bh=lv/YL3fWYcrlgaCURXSs5Rp+POILoWLCMD+0ER71plA=;
+        b=SDMz8OoiKbYMjLM2CbTkmBDbbtE6knj6E8Md2XSIPYrNm1H6sCvgdrT8LAtstmwqwA
+         7LPwdS9el2m5KxNfwqhqIVCEPkLodS2UBDROlCwC1biH9a3jQh8Yvsby5Do/GMSKjb4F
+         Nlo8d/cUA/1EKVPmRQssCpA+mmPQ7eWJROn/kzZQVHb1brZI0UOpEOWy7bRM6WCOS7oF
+         qRg3+7bjvyT1AwdP4+bkxBloY7M5ck2M3Xr76bgK89SmebDzVEzKmNX7Xxza1lpm0+h9
+         3UvectdmNSOPwzKlPO4aTZpRspsCK1zu2etgnaJR7S5yf6vG6h0k81VqMPbVqGFxE1wY
+         xcBQ==
+X-Gm-Message-State: APjAAAWyVwI5ejLhzUO1CqXbuh3mLaTD3GOoqzaBBA5Tt26nFs8jiLgP
+        AD+KIMQXOcLNw1Qn8XgDgwwPnc7YKffgAw==
+X-Google-Smtp-Source: APXvYqy65mZu/oEqtCbSNW19hXmgQfXHPmcjfjjY5L8qPbo/hTSNpmCyFzjH+Zt6izNm6H/W+5EjKw==
+X-Received: by 2002:a17:902:7d8b:: with SMTP id a11mr75073884plm.306.1564710449352;
+        Thu, 01 Aug 2019 18:47:29 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id q126sm78872796pfq.123.2019.08.01.18.47.20
+        by smtp.gmail.com with ESMTPSA id i124sm133657768pfe.61.2019.08.01.18.47.27
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 18:47:22 -0700 (PDT)
+        Thu, 01 Aug 2019 18:47:28 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2 06/10] printk: Replace strncmp with str_has_prefix
-Date:   Fri,  2 Aug 2019 09:47:18 +0800
-Message-Id: <20190802014718.8952-1-hslester96@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2 07/10] reboot: Replace strncmp with str_has_prefix
+Date:   Fri,  2 Aug 2019 09:47:25 +0800
+Message-Id: <20190802014725.9006-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -89,63 +86,34 @@ Changes in v2:
   - Utilize str_has_prefix's return value to
     eliminate some hard codes.
 
- kernel/printk/braille.c | 10 ++++++----
- kernel/printk/printk.c  | 14 ++++++++------
- 2 files changed, 14 insertions(+), 10 deletions(-)
+ kernel/reboot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/printk/braille.c b/kernel/printk/braille.c
-index 1d21ebacfdb8..e451b8b1d3d5 100644
---- a/kernel/printk/braille.c
-+++ b/kernel/printk/braille.c
-@@ -11,11 +11,13 @@
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index c4d472b7f1b4..addb52391177 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -520,6 +520,8 @@ EXPORT_SYMBOL_GPL(orderly_reboot);
  
- int _braille_console_setup(char **str, char **brl_options)
- {
--	if (!strncmp(*str, "brl,", 4)) {
-+	size_t len;
-+
-+	if ((len = str_has_prefix(*str, "brl,"))) {
- 		*brl_options = "";
--		*str += 4;
--	} else if (!strncmp(*str, "brl=", 4)) {
--		*brl_options = *str + 4;
-+		*str += len;
-+	} else if ((len = str_has_prefix(*str, "brl="))) {
-+		*brl_options = *str + len;
- 		*str = strchr(*brl_options, ',');
- 		if (!*str) {
- 			pr_err("need port name after brl=\n");
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 1888f6a3b694..21b28c7dd18f 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -118,18 +118,20 @@ static unsigned int __read_mostly devkmsg_log = DEVKMSG_LOG_MASK_DEFAULT;
- 
- static int __control_devkmsg(char *str)
+ static int __init reboot_setup(char *str)
  {
 +	size_t len;
 +
- 	if (!str)
- 		return -EINVAL;
+ 	for (;;) {
+ 		enum reboot_mode *mode;
  
--	if (!strncmp(str, "on", 2)) {
-+	if ((len = str_has_prefix(str, "on"))) {
- 		devkmsg_log = DEVKMSG_LOG_MASK_ON;
--		return 2;
--	} else if (!strncmp(str, "off", 3)) {
-+		return len;
-+	} else if ((len = str_has_prefix(str, "off"))) {
- 		devkmsg_log = DEVKMSG_LOG_MASK_OFF;
--		return 3;
--	} else if (!strncmp(str, "ratelimit", 9)) {
-+		return len;
-+	} else if ((len = str_has_prefix(str, "ratelimit"))) {
- 		devkmsg_log = DEVKMSG_LOG_MASK_DEFAULT;
--		return 9;
-+		return len;
- 	}
- 	return -EINVAL;
- }
+@@ -530,9 +532,9 @@ static int __init reboot_setup(char *str)
+ 		 */
+ 		reboot_default = 0;
+ 
+-		if (!strncmp(str, "panic_", 6)) {
++		if ((len = str_has_prefix(str, "panic_"))) {
+ 			mode = &panic_reboot_mode;
+-			str += 6;
++			str += len;
+ 		} else {
+ 			mode = &reboot_mode;
+ 		}
 -- 
 2.20.1
 
