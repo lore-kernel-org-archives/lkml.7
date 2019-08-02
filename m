@@ -2,106 +2,97 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9123FC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E612C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6939520665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83A920B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564752748;
+	bh=2NQfbXr/2flf+VnmDxlQVHz2x3lgkRrjGYvopR5En44=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mFGvcjQ1oYsYzhLK4EDPL6kx7ww6UtavKKez4l0sIpPY134wOHaMPPq04c34SOdQa
+	 puaFdN3Jzhh+aRr4QswT4IW2g8dBnbAq1jY7xRcGvGvCaeQ13KkhPKwGkWE/cNYoFw
+	 dJri7Hak0lAuVx3SfwWw+Q5EVP5mr7GJmzNJbgC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405125AbfHBNcY (ORCPT
+        id S2405082AbfHBNcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:32:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55568 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405016AbfHBNcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:32:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 25141B62C;
-        Fri,  2 Aug 2019 13:32:20 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id F0EE61E433B; Fri,  2 Aug 2019 15:31:54 +0200 (CEST)
-Date:   Fri, 2 Aug 2019 15:31:54 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.com>,
-        Theodore Tso <tytso@mit.edu>, Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Joel Becker <jlbec@evilplan.org>, linux-ext4@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [patch V2 6/7] fs/jbd2: Make state lock a spinlock
-Message-ID: <20190802133154.GM25064@quack2.suse.cz>
-References: <20190801010126.245731659@linutronix.de>
- <20190801010944.457499601@linutronix.de>
- <20190801112849.GB31381@hirez.programming.kicks-ass.net>
+        Fri, 2 Aug 2019 09:32:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389897AbfHBNYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:02 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6508E2182B;
+        Fri,  2 Aug 2019 13:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564752241;
+        bh=2NQfbXr/2flf+VnmDxlQVHz2x3lgkRrjGYvopR5En44=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jI8axtLi83/CIXPe3FGhlsHlgJ+frewfL4EsNLoAMtTsQ0Cm19+1GDnQa4eXQ9+s8
+         GW/1tvEQQn8EYpd7Ka/wY4w/RGmSlTKSLgqawwQZr3AwAX52i85xMvmT4pCt+RDL1i
+         4vJJDp4zg0dP2qpWdcUI5qciT1B9zni1xuze/SPE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 32/42] ARM: davinci: fix sleep.S build error on ARMv4
+Date:   Fri,  2 Aug 2019 09:22:52 -0400
+Message-Id: <20190802132302.13537-32-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
+References: <20190802132302.13537-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801112849.GB31381@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 01-08-19 13:28:49, Peter Zijlstra wrote:
-> On Thu, Aug 01, 2019 at 03:01:32AM +0200, Thomas Gleixner wrote:
-> 
-> > @@ -1931,7 +1932,7 @@ static void __jbd2_journal_temp_unlink_b
-> >  	transaction_t *transaction;
-> >  	struct buffer_head *bh = jh2bh(jh);
-> >  
-> > -	J_ASSERT_JH(jh, jbd_is_locked_bh_state(bh));
-> > +	assert_spin_locked(&jh->state_lock);
-> >  	transaction = jh->b_transaction;
-> >  	if (transaction)
-> >  		assert_spin_locked(&transaction->t_journal->j_list_lock);
-> 
-> > @@ -2415,7 +2416,7 @@ void __jbd2_journal_file_buffer(struct j
-> >  	int was_dirty = 0;
-> >  	struct buffer_head *bh = jh2bh(jh);
-> >  
-> > -	J_ASSERT_JH(jh, jbd_is_locked_bh_state(bh));
-> > +	assert_spin_locked(&jh->state_lock);
-> >  	assert_spin_locked(&transaction->t_journal->j_list_lock);
-> >  
-> >  	J_ASSERT_JH(jh, jh->b_jlist < BJ_Types);
-> 
-> > @@ -2500,7 +2501,7 @@ void __jbd2_journal_refile_buffer(struct
-> >  	int was_dirty, jlist;
-> >  	struct buffer_head *bh = jh2bh(jh);
-> >  
-> > -	J_ASSERT_JH(jh, jbd_is_locked_bh_state(bh));
-> > +	assert_spin_locked(&jh->state_lock);
-> >  	if (jh->b_transaction)
-> >  		assert_spin_locked(&jh->b_transaction->t_journal->j_list_lock);
-> >  
-> 
-> Do those want to be:
-> 
->   lockdep_assert_held(&jh->state_lock);
-> 
-> instead? The difference is of course that lockdep_assert_held() requires
-> the current context to hold the lock, where assert_*_locked() merely
-> checks _someone_ holds it.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Yeah, jbd2 doesn't play any weird locking tricks so lockdep_assert_held()
-is fine. I'll replace those when I'm updating the patch.
+[ Upstream commit d64b212ea960db4276a1d8372bd98cb861dfcbb0 ]
 
-								Honza
+When building a multiplatform kernel that includes armv4 support,
+the default target CPU does not support the blx instruction,
+which leads to a build failure:
 
+arch/arm/mach-davinci/sleep.S: Assembler messages:
+arch/arm/mach-davinci/sleep.S:56: Error: selected processor does not support `blx ip' in ARM mode
+
+Add a .arch statement in the sources to make this file build.
+
+Link: https://lore.kernel.org/r/20190722145211.1154785-1-arnd@arndb.de
+Acked-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/mach-davinci/sleep.S | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
+index cd350dee4df37..efcd400b2abb3 100644
+--- a/arch/arm/mach-davinci/sleep.S
++++ b/arch/arm/mach-davinci/sleep.S
+@@ -37,6 +37,7 @@
+ #define DEEPSLEEP_SLEEPENABLE_BIT	BIT(31)
+ 
+ 	.text
++	.arch	armv5te
+ /*
+  * Move DaVinci into deep sleep state
+  *
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1
+
