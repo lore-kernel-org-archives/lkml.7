@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09CCC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B09C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95DB420679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D61020679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739464;
-	bh=2ESkXxAvTvZIfncEBRc3XdXfkRgD3Iqvmv/FnfHq/ts=;
+	s=default; t=1564739468;
+	bh=IfKP9fPXVIDENSW5kVJ6Tbtk+1Ef//4tUYQRwZmXtss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2anZ17xYIrAg88Sg8YBGSDzEMxU0bNmm1ak4Z1JYyBaO8Fu4lHAsLIvBP7zp75Gf2
-	 gS3MfhUeo16u1kN/S2R+trZciXQw1wXT9UGMAiEgI94TgHwGM1FRT/g0fMowsOfdSQ
-	 EkVUpV+TZZgOVPb18ZbQNf1R1uhS6FfQzdtfCZRs=
+	b=K81YbUq1SY+NrVuIXX5uOAZfXjKZhqzXoWPmntZUccU3UF3jM7G4wpWzS5gcd8B+2
+	 eCQhfQLfJnoBsPTGINj6l0EpN4axO/pBkJEv51c8kos4QWNUr9qDZGFxtLDYVEfv3z
+	 0FrkuVKkIoeBd7ExmsvxqYnrm7DgqM0tlmmQ6Tj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392027AbfHBJvD (ORCPT
+        id S2405362AbfHBJpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48926 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:45:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729283AbfHBJpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:45:14 -0400
+        id S1729459AbfHBJpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:45:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 476A8206A2;
-        Fri,  2 Aug 2019 09:45:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6915820B7C;
+        Fri,  2 Aug 2019 09:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739113;
-        bh=2ESkXxAvTvZIfncEBRc3XdXfkRgD3Iqvmv/FnfHq/ts=;
+        s=default; t=1564739100;
+        bh=IfKP9fPXVIDENSW5kVJ6Tbtk+1Ef//4tUYQRwZmXtss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uzIpHuwkLRbmBIrwmT5legzDmMP3O4N1RFhrtUxzQ2vPcifJAXslJSSP2Q3iFE19R
-         pSJBiuu13a03a55A6U3HTiR671ncfciIX+SUWrh53u4lcxgZ/2/rfEHiJki5ryDMZM
-         cqzyaZVdG9UmhHfba01dxXFQw01JLHZJnYiUL1DE=
+        b=gw8RwFbBsknM+JIhoE8iJb7tDBw40Be6j0TPcvBpJfnYlgoRlS6Pw82pc8gwTv3dP
+         RQ/BIQrpW259iDANxjlK6UudYa71sTQiIxFThyz1y/AwHSbiroBINzhUAM+0IdyK3N
+         bkT5XDQG6eq/h3Dg7LxIvx4rDB3OscUITJ//ZJ9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@ispras.ru>,
-        Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 104/223] floppy: fix div-by-zero in setup_format_params
-Date:   Fri,  2 Aug 2019 11:35:29 +0200
-Message-Id: <20190802092245.963045786@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Dominique Martinet <dominique.martinet@cea.fr>
+Subject: [PATCH 4.9 099/223] 9p/virtio: Add cleanup path in p9_virtio_init
+Date:   Fri,  2 Aug 2019 11:35:24 +0200
+Message-Id: <20190802092245.590360320@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -61,57 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f3554aeb991214cbfafd17d55e2bfddb50282e32 ]
+From: YueHaibing <yuehaibing@huawei.com>
 
-This fixes a divide by zero error in the setup_format_params function of
-the floppy driver.
+commit d4548543fc4ece56c6f04b8586f435fb4fd84c20 upstream.
 
-Two consecutive ioctls can trigger the bug: The first one should set the
-drive geometry with such .sect and .rate values for the F_SECT_PER_TRACK
-to become zero.  Next, the floppy format operation should be called.
+KASAN report this:
 
-A floppy disk is not required to be inserted.  An unprivileged user
-could trigger the bug if the device is accessible.
+BUG: unable to handle kernel paging request at ffffffffa0097000
+PGD 3870067 P4D 3870067 PUD 3871063 PMD 2326e2067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 5340 Comm: modprobe Not tainted 5.1.0-rc7+ #25
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:__list_add_valid+0x10/0x70
+Code: c3 48 8b 06 55 48 89 e5 5d 48 39 07 0f 94 c0 0f b6 c0 c3 90 90 90 90 90 90 90 55 48 89 d0 48 8b 52 08 48 89 e5 48 39 f2 75 19 <48> 8b 32 48 39 f0 75 3a
 
-The patch checks F_SECT_PER_TRACK for a non-zero value in the
-set_geometry function.  The proper check should involve a reasonable
-upper limit for the .sect and .rate fields, but it could change the
-UAPI.
+RSP: 0018:ffffc90000e23c68 EFLAGS: 00010246
+RAX: ffffffffa00ad000 RBX: ffffffffa009d000 RCX: 0000000000000000
+RDX: ffffffffa0097000 RSI: ffffffffa0097000 RDI: ffffffffa009d000
+RBP: ffffc90000e23c68 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa0097000
+R13: ffff888231797180 R14: 0000000000000000 R15: ffffc90000e23e78
+FS:  00007fb215285540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa0097000 CR3: 000000022f144000 CR4: 00000000000006f0
+Call Trace:
+ v9fs_register_trans+0x2f/0x60 [9pnet
+ ? 0xffffffffa0087000
+ p9_virtio_init+0x25/0x1000 [9pnet_virtio
+ do_one_initcall+0x6c/0x3cc
+ ? kmem_cache_alloc_trace+0x248/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7fb214d8e839
+Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01
 
-The patch also checks F_SECT_PER_TRACK in the setup_format_params, and
-cancels the formatting operation in case of zero.
+RSP: 002b:00007ffc96554278 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000055e67eed2aa0 RCX: 00007fb214d8e839
+RDX: 0000000000000000 RSI: 000055e67ce95c2e RDI: 0000000000000003
+RBP: 000055e67ce95c2e R08: 0000000000000000 R09: 000055e67eed2aa0
+R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000000
+R13: 000055e67eeda500 R14: 0000000000040000 R15: 000055e67eed2aa0
+Modules linked in: 9pnet_virtio(+) 9pnet gre rfkill vmw_vsock_virtio_transport_common vsock [last unloaded: 9pnet_virtio
+CR2: ffffffffa0097000
+---[ end trace 4a52bb13ff07b761
 
-The bug was found by syzkaller.
+If register_virtio_driver() fails in p9_virtio_init,
+we should call v9fs_unregister_trans() to do cleanup.
 
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: http://lkml.kernel.org/r/20190430115942.41840-1-yuehaibing@huawei.com
+Cc: stable@vger.kernel.org
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: b530cc794024 ("9p: add virtio transport")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/block/floppy.c |    5 +++++
- 1 file changed, 5 insertions(+)
 
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -2114,6 +2114,9 @@ static void setup_format_params(int trac
- 	raw_cmd->kernel_data = floppy_track_buffer;
- 	raw_cmd->length = 4 * F_SECT_PER_TRACK;
- 
-+	if (!F_SECT_PER_TRACK)
-+		return;
+---
+ net/9p/trans_virtio.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+--- a/net/9p/trans_virtio.c
++++ b/net/9p/trans_virtio.c
+@@ -764,10 +764,16 @@ static struct p9_trans_module p9_virtio_
+ /* The standard init function */
+ static int __init p9_virtio_init(void)
+ {
++	int rc;
 +
- 	/* allow for about 30ms for data transport per track */
- 	head_shift = (F_SECT_PER_TRACK + 5) / 6;
+ 	INIT_LIST_HEAD(&virtio_chan_list);
  
-@@ -3236,6 +3239,8 @@ static int set_geometry(unsigned int cmd
- 	/* sanity checking for parameters. */
- 	if (g->sect <= 0 ||
- 	    g->head <= 0 ||
-+	    /* check for zero in F_SECT_PER_TRACK */
-+	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
- 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
- 	    /* check if reserved bits are set */
- 	    (g->stretch & ~(FD_STRETCH | FD_SWAPSIDES | FD_SECTBASEMASK)) != 0)
+ 	v9fs_register_trans(&p9_virtio_trans);
+-	return register_virtio_driver(&p9_virtio_drv);
++	rc = register_virtio_driver(&p9_virtio_drv);
++	if (rc)
++		v9fs_unregister_trans(&p9_virtio_trans);
++
++	return rc;
+ }
+ 
+ static void __exit p9_virtio_cleanup(void)
 
 
