@@ -2,89 +2,141 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F098C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5F4C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0BE20665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47CBC2087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564742291;
+	bh=IYNwTW73rLYyMyjD9BJMjODjl0NeiQXEjNWG7ynwQFE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2CXAlAVMJRJ60+AOuWEClkT9MFdBt463C76p9TcSnfPGVZ7l9hDKazQf/PmeOygxT
+	 Ffas4xse3J5fc6cybBNrEscVJ0f1yVSPtQr6M/kFKvb7irxqp6cXwmBjtxmRpSiS0F
+	 Tm9zJkIrwzAp1wX+Cr/nW3l+Z769OUQX17Ho+p5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405402AbfHBKe3 (ORCPT
+        id S1728719AbfHBKiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:34:29 -0400
-Received: from shell.v3.sk ([90.176.6.54]:47547 "EHLO shell.v3.sk"
+        Fri, 2 Aug 2019 06:38:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392127AbfHBKdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:33:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id F3B588053D;
-        Fri,  2 Aug 2019 12:33:50 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id iJJngSIQ_H3y; Fri,  2 Aug 2019 12:33:40 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id AAE34804BE;
-        Fri,  2 Aug 2019 12:33:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id DO9FlBCXBNN1; Fri,  2 Aug 2019 12:33:37 +0200 (CEST)
-Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 2B2C58053B;
-        Fri,  2 Aug 2019 12:33:36 +0200 (CEST)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 3/6] ARM: dts: mmp2: rename the USB PHY node
-Date:   Fri,  2 Aug 2019 12:33:23 +0200
-Message-Id: <20190802103326.531250-4-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190802103326.531250-1-lkundrak@v3.sk>
-References: <20190802103326.531250-1-lkundrak@v3.sk>
+        id S1726049AbfHBKiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 06:38:09 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D13942086A;
+        Fri,  2 Aug 2019 10:38:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564742288;
+        bh=IYNwTW73rLYyMyjD9BJMjODjl0NeiQXEjNWG7ynwQFE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qVCPNdH/6+F3JEUwjc5ECdeVvv2rxFW/YIsSdLtdhUSAecBHvE/aZD9g4yMo2gZSj
+         2yoBLIUP0QYtsd9bkMqXcwYzxDAGO2T7/GL9cxrLT0Ys0KRqsv6Oult274XWCLaght
+         wblNSh7hCme4l3pG2uJghbpPO6jnYgJmHgYdUE7s=
+Date:   Fri, 2 Aug 2019 11:38:03 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma-mapping: fix page attributes for dma_mmap_*
+Message-ID: <20190802103803.3qrbhqwxlasojsco@willie-the-truck>
+References: <20190801142118.21225-1-hch@lst.de>
+ <20190801142118.21225-2-hch@lst.de>
+ <20190801162305.3m32chycsdjmdejk@willie-the-truck>
+ <20190801163457.GB26588@lst.de>
+ <20190801164411.kmsl4japtfkgvzxe@willie-the-truck>
+ <20190802081441.GA9725@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802081441.GA9725@lst.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This device is not an OTG phy, it's a regular USB HS phy. Follow the
-generic node name recommendation, and rename it to "usb-phy".
+On Fri, Aug 02, 2019 at 10:14:41AM +0200, Christoph Hellwig wrote:
+> On Thu, Aug 01, 2019 at 05:44:12PM +0100, Will Deacon wrote:
+> > > > Although arch_dma_mmap_pgprot() is a bit of a misnomer now that it only
+> > > > gets involved in the non-coherent case.
+> > > 
+> > > A better name is welcome.
+> > 
+> > How about arch_dma_noncoherent_mmap_pgprot() ? Too long?
+> 
+> Sounds a little long yes.  And doesn't fix the additional problem that
+> we don't just it for mmap but also for the in-kernel remapping these
+> days.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- arch/arm/boot/dts/mmp2.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hmm. Maybe just arch_dma_noncoherent_pgprot() then.
 
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index e64639ce57a91..21432cb9143f7 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -117,7 +117,7 @@
- 				mrvl,intc-nr-irqs =3D <2>;
- 			};
-=20
--			usb_otg_phy0: usb-otg-phy@d4207000 {
-+			usb_phy0: usb-phy@d4207000 {
- 				compatible =3D "marvell,mmp2-usb-phy";
- 				reg =3D <0xd4207000 0x40>;
- 				#phy-cells =3D <0>;
-@@ -130,7 +130,7 @@
- 				interrupts =3D <44>;
- 				clocks =3D <&soc_clocks MMP2_CLK_USB>;
- 				clock-names =3D "USBCLK";
--				phys =3D <&usb_otg_phy0>;
-+				phys =3D <&usb_phy0>;
- 				phy-names =3D "usb";
- 				status =3D "disabled";
- 			};
---=20
-2.21.0
+> > > But my worry is how this interacts with architectures that have an
+> > > uncached segment (mips, nios2, microblaze, extensa) where we'd have
+> > > the kernel access DMA_ATTR_WRITE_COMBINE mappigns using the uncached
+> > > segment, and userspace mmaps using pgprot_writecombine, which could
+> > > lead to aliasing issues.  But then again mips already supports
+> > > DMA_ATTR_WRITE_COMBINE, so this must be ok somehow.  I guess I'll
+> > > need to field that question to the relevant parties.
+> > 
+> > Or it's always been busted and happens to work out in practice...
+> 
+> I've sent a ping to the mips folks.  While we'are at it:  arm64
+> and arm32 (optionally) map dma coherent allocations as write combine.
+> I suspect this hasn't always just been busted but intentional (of course!),
+> but is there any chance to get a quote from the arm architecture spec
+> on why this is fine as it looks rather confusion?
 
+So this boils down to a terminology mismatch. The Arm architecture doesn't have
+anything called "write combine", so in Linux we instead provide what the Arm
+architecture calls "Normal non-cacheable" memory for pgprot_writecombine().
+Amongst other things, this memory type permits speculation, unaligned accesses
+and merging of writes. I found something in the architecture spec about
+non-cachable memory, but it's written in Armglish[1].
+
+pgprot_noncached(), on the other hand, provides what the architecture calls
+Strongly Ordered or Device-nGnRnE memory. This is intended for mapping MMIO
+(i.e. PCI config space) and therefore forbids speculation, preserves access
+size, requires strict alignment and also forces write responses to come from
+the endpoint.
+
+I think the naming mismatch is historical, but on arm64 we wanted to use the
+same names as arm32 so that any drivers using these things directly would get
+the same behaviour.
+
+Will
+
+[1]
+
+B2.4.4 Implication of caches for the application programmer
+
+[...]
+
+Data coherency issues
+
+Software can ensure the data coherency of caches in the following ways:
+
+  * By not using the caches in situations where coherency issues can arise.
+    This can be achieved by:
+
+    - Using Non-cacheable or, in some cases, Write-Through Cacheable memory.
+
+    - Not enabling caches in the system.
+
+  * By using cache maintenance instructions to manage the coherency issues
+    in software.
+
+  * By using hardware coherency mechanisms to ensure the coherency of data
+    accesses to memory for cacheable locations by observers within the
+    different shareability domains.
