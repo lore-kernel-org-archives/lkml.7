@@ -2,140 +2,105 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1771AC41514
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333E9C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D482087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDCDnZr3"
+	by mail.kernel.org (Postfix) with ESMTP id 10B9A2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436590AbfHBOAQ (ORCPT
+        id S1731816AbfHBOD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:00:16 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34227 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729487AbfHBOAP (ORCPT
+        Fri, 2 Aug 2019 10:03:59 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44063 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730628AbfHBOD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:00:15 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s49so37667114edb.1;
-        Fri, 02 Aug 2019 07:00:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RvYJ60Wjr/M/zIOMvQjrXUZiwsQ2GTyWCMdHSjd4/Co=;
-        b=ZDCDnZr3NqupLmRHY8hsuhCdx2vKzIHSPy2mEKhISQ/USsf4pMcAqTetzvSCodpAX/
-         HCa5lv8TINyaNQnPLKhNMt7UUuLdACx2W8m9e6Led9Hxabm1Uv0hrL5OMAQNue5J85r6
-         cL8jjHHHNQrAZAI7gZjTjGIPbfyEQTPP86jQSZDn/8NmkuB9k+G8pxP/1WgH+3HyTURS
-         jhkPwWd/78mFksiTpu6QvcpG55hh9B0d6SBaeuSVZPFdzU8objncOTXYxe5+CfQBMWoN
-         Dir+hNV2N7r0iWo13jZe2DgBG9hvtUK3tXSkDup6ULEEWE05B3WwmQshSCicHevSJaw8
-         5bLQ==
+        Fri, 2 Aug 2019 10:03:58 -0400
+Received: by mail-qt1-f195.google.com with SMTP id 44so42933962qtg.11
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 07:03:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RvYJ60Wjr/M/zIOMvQjrXUZiwsQ2GTyWCMdHSjd4/Co=;
-        b=JdAr0uXZX2gSn7uPhZALkNFlXaPntYpMK4Iu1+TZfkrL/bKzyrZjSnXvboABPOjaPc
-         ehfvt05TRE2dT8NDXto0F2FyBD0VLVI8XquxCeyPiLtWprlD2LUtjxF0T4S9MS6jUEDd
-         jI3aSCyoKdwBgxeZeKdzAvBxf7W8w9FrS42vr9k3A19Uk0fneKB8w3fMSwm5tFGWFzAc
-         hu8GpPSZK6ILESieCk4maQ7BMye9sUBz+5yy5cVcpu4uGMuA54idcKHRL01s4+dbr9Mi
-         +odiUqMZOJwUXK+aIaqCnAfKKtdBns1JaW7oV5ZOPWTfZby3ReSmC9iCadflAhy+OoUZ
-         7+Ww==
-X-Gm-Message-State: APjAAAUXrf64P/t4DUDlzMVWsx405+bkrIujvjo9iQh62K9BxPOPY91A
-        AYlI4Zj0q3KXq2V1uuOu8q0=
-X-Google-Smtp-Source: APXvYqz+wpnaqXorxi0pTKdX4EBvqcUAOhW51NQpcVtuvViD0NsdAJAJplTXB8QOE1uEiMP5Je/1iw==
-X-Received: by 2002:a17:906:5042:: with SMTP id e2mr103088893ejk.220.1564754413937;
-        Fri, 02 Aug 2019 07:00:13 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id g7sm18018544eda.52.2019.08.02.07.00.12
+         :mime-version:content-disposition:in-reply-to;
+        bh=WV2Ae/gfauZPjPhFYOLLqagCyB4HyL2HjQauKn3bqsM=;
+        b=BN6ppvMHZ6rHkQNZt5Sm+ugGAhv8x9ZVCZArmAvG+lQ6Ah6y/+5lbsyAKPaDic66un
+         9IGSwNh3+5n45W57wA2nzzVrT3gdm8h3M1YfReFJMJLPfb/9+YtYOPSOzwDqMsMSKg6i
+         3h3Zo38BLrfNNSW5b9upZdllVhxVdKmhNO8vFOqMEkDzJnoUxNFVvM5+CtPPpFw4qPJ3
+         zLm2lrDiB5Lx9Nbmuo8G7Di4mNeoesU+UtXCOgCtG7O3ICXRKc1rUjoEQVOBCTEcGPqy
+         nrXo/w4rq9gprbZ+ewQsfZ9Qdx9/6cs604i4qXbSmcy0e6a5iL7Jsz/Pvad/LizLt9S+
+         mhPA==
+X-Gm-Message-State: APjAAAWOPEXrfvOIXylJeInfOpu3TljOtnD87lG1EL5ssTWSKw9d1nl9
+        uqv8hKmXMsk9/97phEZ+AjW8pg==
+X-Google-Smtp-Source: APXvYqxqWV5TMaysY1q7/YjNkaoGeUmT+T8Aja0Ppx3ngtfg+CGh7SDzsuYF2FJmZ32u93WwxfAAKw==
+X-Received: by 2002:ac8:2b49:: with SMTP id 9mr99459163qtv.343.1564754637929;
+        Fri, 02 Aug 2019 07:03:57 -0700 (PDT)
+Received: from redhat.com ([147.234.38.1])
+        by smtp.gmail.com with ESMTPSA id v4sm30651268qtq.15.2019.08.02.07.03.52
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 07:00:13 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 16:00:12 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 000/158] 4.4.187-stable review
-Message-ID: <20190802140012.GB10544@ulmo>
-References: <20190802092203.671944552@linuxfoundation.org>
+        Fri, 02 Aug 2019 07:03:56 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 10:03:49 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
+ with worker
+Message-ID: <20190802094331-mutt-send-email-mst@kernel.org>
+References: <20190731084655.7024-1-jasowang@redhat.com>
+ <20190731084655.7024-8-jasowang@redhat.com>
+ <20190731123935.GC3946@ziepe.ca>
+ <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
+ <20190731193057.GG3946@ziepe.ca>
+ <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
+ <20190801141512.GB23899@ziepe.ca>
+ <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qcHopEYAB45HaUaB"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 02, 2019 at 05:40:07PM +0800, Jason Wang wrote:
+> Btw, I come up another idea, that is to disable preemption when vhost thread
+> need to access the memory. Then register preempt notifier and if vhost
+> thread is preempted, we're sure no one will access the memory and can do the
+> cleanup.
 
---qcHopEYAB45HaUaB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Great, more notifiers :(
 
-On Fri, Aug 02, 2019 at 11:27:01AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.187 release.
-> There are 158 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Sun 04 Aug 2019 09:19:34 AM UTC.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.187=
--rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-4.4.y
-> and the diffstat can be found below.
->=20
-> thanks,
->=20
-> greg k-h
+Maybe can live with
+1- disable preemption while using the cached pointer
+2- teach vhost to recover from memory access failures,
+   by switching to regular from/to user path
 
-All tests passing for Tegra...
+So if you want to try that, fine since it's a step in
+the right direction.
 
-Test results for stable-v4.4:
-    6 builds:   6 pass, 0 fail
-    12 boots:   12 pass, 0 fail
-    19 tests:   19 pass, 0 fail
+But I think fundamentally it's not what we want to do long term.
 
-Linux version:  4.4.187-rc1-g26f755a0d3e0
-Boards tested:  tegra124-jetson-tk1, tegra20-ventana,
-                tegra30-cardhu-a04
+It's always been a fundamental problem with this patch series that only
+metadata is accessed through a direct pointer.
 
-Thierry
+The difference in ways you handle metadata and data is what is
+now coming and messing everything up.
 
---qcHopEYAB45HaUaB
-Content-Type: application/pgp-signature; name="signature.asc"
+So if continuing the direct map approach,
+what is needed is a cache of mapped VM memory, then on a cache miss
+we'd queue work along the lines of 1-2 above.
 
------BEGIN PGP SIGNATURE-----
+That's one direction to take. Another one is to give up on that and
+write our own version of uaccess macros.  Add a "high security" flag to
+the vhost module and if not active use these for userspace memory
+access.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1EQewACgkQ3SOs138+
-s6HGOg/8CFA12brGOEunkatCGl/ihWvKkX5GXS87AuuIO2Fmk1PlEjCeMdXSycy7
-JbJMbb41z3txzlTvYwclTeARiaU7zJHm/H4z9VvgZXC53LWit59P0nlCH9twR21I
-6O4MwZ4T/LpoeAZOKoMNDL6pDVjjmg6c/s1KJj7iVWKBI7KDYnAwZtJHfiOujqFx
-z0Tze8berBhWO10mHBIYWyzriQYp9EMI3iJHdpQpdiq7Ay37EgcYtwv7onuLF9dj
-wB62WFwEYHKngBsv0YragifoT44NKPdaESLWXds7MyIGZMGjhwJawHMqor7AsaH3
-N8/WF5VSiDWCZh/dxR3EAMWGsvezVxiUCpx6lGl70Q4mkOsQsKg0jx6dwoBvUOv2
-YFLUdWSVA+G3FiFv8W61PIMcyDy6wkaRWg8odhhQDWPHrupKH3OSvDeMp9KltMl2
-lQUMar1Eavtbp0wrjk9WThwohFlWFBDpUbnh2wzG1OlNN0RNY65BWVt//ppdW2t7
-0OW9J5eKTH6VG6QNZUpW67eK1NmueKrLAdvNWZ8mGqHv6PMZlkUhFC5WElBp3BLt
-V2mlyHvUje9YA0m2d4AIvp1xoahDbNlwtern01BmD+XdXFTYNCHPVKK6hVJyO+Ra
-ZAaE05/EVESN4tYCo1H7Rap/ALbdJUeP5jDSE1ZcWeuBwl/Ujxs=
-=cBRl
------END PGP SIGNATURE-----
 
---qcHopEYAB45HaUaB--
+-- 
+MST
