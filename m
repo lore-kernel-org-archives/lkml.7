@@ -2,143 +2,129 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C475AC32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698CBC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985C9216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319BB2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 19:26:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dj10JLqr"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="aobcd8eD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404389AbfHBTWz (ORCPT
+        id S2404729AbfHBT0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 15:22:55 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:28822 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2403874AbfHBTWy (ORCPT
+        Fri, 2 Aug 2019 15:26:32 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:46853 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404439AbfHBT0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 15:22:54 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72JJqFm022956
-        for <linux-kernel@vger.kernel.org>; Fri, 2 Aug 2019 12:22:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=19Ja20qRJPcfJ8p53GQiWI0ZYQb3kQ8wKj9C14D15zo=;
- b=dj10JLqr4TfBGwCeyDo/3BMpKggBGMOPO+uvDx1zGiGrxvKvORY5RcF/eebwabL4khdX
- KUGZg43cUkrqp0VajwiIkwPNtKUFyyRNgJ9kfnis1SdSSRq4mUVLf09M9lo8sKdw0CIB
- 019IhIbD7iDU9LacYmcloNto77/2U8Abrdo= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u4s2tgj9n-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 12:22:53 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Fri, 2 Aug 2019 12:22:51 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 6989B153186A0; Fri,  2 Aug 2019 12:22:47 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Hillf Danton <hdanton@sina.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2] mm: memcontrol: switch to rcu protection in drain_all_stock()
-Date:   Fri, 2 Aug 2019 12:22:41 -0700
-Message-ID: <20190802192241.3253165-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Fri, 2 Aug 2019 15:26:31 -0400
+Received: by mail-yb1-f194.google.com with SMTP id a5so27240345ybo.13
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 12:26:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oolSjnNy8o69qEXumrcNervgTiZ+0C/a0z2WrugF1/U=;
+        b=aobcd8eDORReviFPdWXwJ+owjz07tUDlmFTI8N2UVHjRvHreP3t+H60+aVprbNizpN
+         DVp9kUtL4tHn9qZ1XKPX2XWMn2+X7vva5tuYoKXNJIvUQE8qgVSBtEEc+9BLd77TgAle
+         9ugd4NRMK+0DTYvGMi8PGMKCXL62gEqNiCxYBbvWVGEvd85Bk1yR58GuU2AK+YI3/j4T
+         Ya7uA2+jqRuqLBOtDwGQj/oXyvmwAIsWbYU++bAVC7r1PUqCnQzZ+//dqKBBp/aGjoRN
+         R7AJmQDz+uVBx9kBwjBALruxa0mpEMTTGWoxf63Z/Czq9klDBcDv9sA+JKzqtWnKyicb
+         nJRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oolSjnNy8o69qEXumrcNervgTiZ+0C/a0z2WrugF1/U=;
+        b=Nt/Dpe3nn+Zllxu8pZAUrJRPVEvYfjTW2kNewMdKvABJ5LuNiICu9FSB4qcG9LXnQR
+         IRhC+PnmtPnA9B78XWpCP6v66HhaVb75m0DCe/dkxM9yc1H5rsFgrfdmPBc6lvIUYa9n
+         GSJmYiM1XmQwxtSzTDdB2O3deoSSrnlTQVswIuCbvvSezFay5lwpW1FHwpimxMjJh5Mr
+         fRWMzg6yS87jNSc16IMfynkHq4blQfanioaGd/eWCiiKKsn9Htq0NvOx46MOZ8GgMUMJ
+         1nxTv2AB4CgTaPx/4IevgqczghQE72CU+HZaC6DNFuXjkHzg9FULNxxZSRZLK9M6wB9D
+         Z1Lw==
+X-Gm-Message-State: APjAAAXTwi9VrSm0w3+B5N8zZd/uKbnmOQhtOO4Rm5xv9SY20//N1f/O
+        DNcmEfIQDK+CknrQHE8zDJrWqQ==
+X-Google-Smtp-Source: APXvYqyzp76n9T+wWTNjzFV6D8CqVkpC4vTtN8rYlshUPMNLk6fs5ugiybl1QqkrOcbaUwfiGlN7aQ==
+X-Received: by 2002:a25:9209:: with SMTP id b9mr74080808ybo.271.1564773990707;
+        Fri, 02 Aug 2019 12:26:30 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id p141sm17544110ywg.78.2019.08.02.12.26.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 12:26:30 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 15:26:29 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        seanpaul@chromium.org, linux-rockchip@lists.infradead.org,
+        mka@chromium.org, Sandy Huang <hjc@rock-chips.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] drm/rockchip: Suspend DP late
+Message-ID: <20190802192629.GX104440@art_vandelay>
+References: <20190802184616.44822-1-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=915 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020203
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802184616.44822-1-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 72f0184c8a00 ("mm, memcg: remove hotplug locking from try_charge")
-introduced css_tryget()/css_put() calls in drain_all_stock(),
-which are supposed to protect the target memory cgroup from being
-released during the mem_cgroup_is_descendant() call.
+On Fri, Aug 02, 2019 at 11:46:16AM -0700, Douglas Anderson wrote:
+> In commit fe64ba5c6323 ("drm/rockchip: Resume DP early") we moved
+> resume to be early but left suspend at its normal time.  This seems
+> like it could be OK, but casues problems if a suspend gets interrupted
+> partway through.  The OS only balances matching suspend/resume levels.
+> ...so if suspend was called then resume will be called.  If suspend
+> late was called then resume early will be called.  ...but if suspend
+> was called resume early might not get called.  This leads to an
+> unbalance in the clock enables / disables.
+> 
+> Lets take the simple fix and just move suspend to be late to match.
+> This makes the PM core take proper care in keeping things balanced.
+> 
+> Fixes: fe64ba5c6323 ("drm/rockchip: Resume DP early")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-However, it's not completely safe. In theory, memcg can go away
-between reading stock->cached pointer and calling css_tryget().
+Reviewed-by: Sean Paul <sean@poorly.run>
 
-This can happen if drain_all_stock() races with drain_local_stock()
-performed on the remote cpu as a result of a work, scheduled
-by the previous invocation of drain_all_stock().
+This should go in -misc-fixes and due to some... administrative reasons... I
+will leave it on the list until Maarten has a chance to ff to -rc4 on Monday.
+I'll apply it then so as to not require a backmerge.
 
-The race is a bit theoretical and there are few chances to trigger
-it, but the current code looks a bit confusing, so it makes sense
-to fix it anyway. The code looks like as if css_tryget() and
-css_put() are used to protect stocks drainage. It's not necessary
-because stocked pages are holding references to the cached cgroup.
-And it obviously won't work for works, scheduled on other cpus.
+Sean
 
-So, let's read the stock->cached pointer and evaluate the memory
-cgroup inside a rcu read section, and get rid of
-css_tryget()/css_put() calls.
+> ---
+> 
+>  drivers/gpu/drm/rockchip/analogix_dp-rockchip.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+> index 7d7cb57410fc..f38f5e113c6b 100644
+> --- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+> +++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+> @@ -436,7 +436,7 @@ static int rockchip_dp_resume(struct device *dev)
+>  
+>  static const struct dev_pm_ops rockchip_dp_pm_ops = {
+>  #ifdef CONFIG_PM_SLEEP
+> -	.suspend = rockchip_dp_suspend,
+> +	.suspend_late = rockchip_dp_suspend,
+>  	.resume_early = rockchip_dp_resume,
+>  #endif
+>  };
+> -- 
+> 2.22.0.770.g0f2c4a37fd-goog
+> 
 
-v2: added some explanations to the commit message, no code changes
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Hillf Danton <hdanton@sina.com>
----
- mm/memcontrol.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 5c7b9facb0eb..d856b64426b7 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2235,21 +2235,22 @@ static void drain_all_stock(struct mem_cgroup *root_memcg)
- 	for_each_online_cpu(cpu) {
- 		struct memcg_stock_pcp *stock = &per_cpu(memcg_stock, cpu);
- 		struct mem_cgroup *memcg;
-+		bool flush = false;
- 
-+		rcu_read_lock();
- 		memcg = stock->cached;
--		if (!memcg || !stock->nr_pages || !css_tryget(&memcg->css))
--			continue;
--		if (!mem_cgroup_is_descendant(memcg, root_memcg)) {
--			css_put(&memcg->css);
--			continue;
--		}
--		if (!test_and_set_bit(FLUSHING_CACHED_CHARGE, &stock->flags)) {
-+		if (memcg && stock->nr_pages &&
-+		    mem_cgroup_is_descendant(memcg, root_memcg))
-+			flush = true;
-+		rcu_read_unlock();
-+
-+		if (flush &&
-+		    !test_and_set_bit(FLUSHING_CACHED_CHARGE, &stock->flags)) {
- 			if (cpu == curcpu)
- 				drain_local_stock(&stock->work);
- 			else
- 				schedule_work_on(cpu, &stock->work);
- 		}
--		css_put(&memcg->css);
- 	}
- 	put_cpu();
- 	mutex_unlock(&percpu_charge_mutex);
 -- 
-2.21.0
-
+Sean Paul, Software Engineer, Google / Chromium OS
