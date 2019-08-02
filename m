@@ -2,80 +2,87 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BEBC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E5AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69C92087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C8B2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391365AbfHBQtu (ORCPT
+        id S2391418AbfHBQuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:49:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59910 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389229AbfHBQtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:49:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 836BCAEC3;
-        Fri,  2 Aug 2019 16:49:48 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 331ABDADC0; Fri,  2 Aug 2019 18:50:22 +0200 (CEST)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 5.3-rc3
-Date:   Fri,  2 Aug 2019 18:50:19 +0200
-Message-Id: <cover.1564757308.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.22.0
+        Fri, 2 Aug 2019 12:50:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39180 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391366AbfHBQuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:50:52 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D3C99B2DDB;
+        Fri,  2 Aug 2019 16:50:51 +0000 (UTC)
+Received: from dcbz.redhat.com (ovpn-116-74.ams2.redhat.com [10.36.116.74])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C72AD5D961;
+        Fri,  2 Aug 2019 16:50:46 +0000 (UTC)
+Date:   Fri, 2 Aug 2019 18:50:44 +0200
+From:   Adrian Reber <areber@redhat.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelianov <xemul@virtuozzo.com>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v2 1/2] fork: extend clone3() to support CLONE_SET_TID
+Message-ID: <20190802165044.GF18263@dcbz.redhat.com>
+References: <20190731161223.2928-1-areber@redhat.com>
+ <20190731174135.GA30225@redhat.com>
+ <20190802072511.GD18263@dcbz.redhat.com>
+ <20190802124738.GC20111@redhat.com>
+ <20190802132419.GD20111@redhat.com>
+ <20190802134611.GF20111@redhat.com>
+ <20190802135248.gbtkh5sgjzmbup5h@brauner.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802135248.gbtkh5sgjzmbup5h@brauner.io>
+X-Operating-System: Linux (5.1.19-300.fc30.x86_64)
+X-Load-Average: 1.75 1.91 1.91
+X-Unexpected: The Spanish Inquisition
+X-GnuPG-Key: gpg --recv-keys D3C4906A
+Organization: Red Hat
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 02 Aug 2019 16:50:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Aug 02, 2019 at 03:52:49PM +0200, Christian Brauner wrote:
+> On Fri, Aug 02, 2019 at 03:46:11PM +0200, Oleg Nesterov wrote:
+> > On 08/02, Oleg Nesterov wrote:
+> > >
+> > > So Adrian, sorry for confusion, I think your patch is fine.
 
-please pull the branch with the following fixes:
+Good to know.
 
-* tiny race window during 2 transactions aborting at the same time can
-  accidentally lead to a commit
+> > Yes... but do we really need the new CLONE_SET_TID ?
+> > 
+> > set_tid == 0 has no effect, can't we simply check kargs->set_tid != 0
+> > before ns_capable() ?
+> 
+> Yeah, I agree that sounds much better and aligns with exit_signal.
 
-* regression fix, possible deadlock during fiemap
+Let me remove CLONE_SET_TID from the patch and I will try out
+idr_is_empty().
 
-* fix for an old bug when incremental send can fail on a file that has
-  been deduplicated in a special way
+I will also address Dmitry's comment about accessing smaller parameter
+structs.
 
-Thanks.
-
-----------------------------------------------------------------
-The following changes since commit a3b46b86ca76d7f9d487e6a0b594fd1984e0796e:
-
-  btrfs: fix extent_state leak in btrfs_lock_and_flush_ordered_range (2019-07-26 12:21:22 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.3-rc2-tag
-
-for you to fetch changes up to a6d155d2e363f26290ffd50591169cb96c2a609e:
-
-  Btrfs: fix deadlock between fiemap and transaction commits (2019-07-30 18:25:12 +0200)
-
-----------------------------------------------------------------
-Filipe Manana (3):
-      Btrfs: fix incremental send failure after deduplication
-      Btrfs: fix race leading to fs corruption after transaction abort
-      Btrfs: fix deadlock between fiemap and transaction commits
-
- fs/btrfs/backref.c     |  2 +-
- fs/btrfs/send.c        | 77 ++++++++++----------------------------------------
- fs/btrfs/transaction.c | 32 ++++++++++++++++++---
- fs/btrfs/transaction.h |  3 ++
- 4 files changed, 47 insertions(+), 67 deletions(-)
+		Adrian
