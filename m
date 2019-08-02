@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2DEC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA9FC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3478B217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E41217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752467;
-	bh=y4c5od+dJqEwVbq9IGEgd2Dwt60GSOcwyBqfRkgs0QE=;
+	s=default; t=1564752469;
+	bh=hWwEHFuevGp1O7an+MVFFfzJVMbNQ41keR2NXr10SIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CwnyCaCJdPuq1FKwUwEhrKuYoFc4NYzf650Wgb/x3SpvzUHw5Giv6GdDHPXL4eIm1
-	 wM8Mb9nQqwMmW9h9X6bUhblDtK/sVBMeuBW3DnmfuXuztQqGNEPL8JKAUdQjwHnffQ
-	 l/Wgq5asqMoK6z3Z6hT/d4t9uzkLdnDxdIWAlVHw=
+	b=PfUze4I9QoiFqWNqKRvR/WRCybTczwsaTgevPWLCICfKiTHeLi5Hv5LGCDKUY+ae3
+	 WiieCCPbuepGVU5BA9Z2m+aBdBvufSbyOICLO0yi2jOoIzjsz21whZagM8YxDchxeV
+	 7sjadekCH1oZztkxfIg4Gk1sfx2cCIkgTepaVuR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394660AbfHBN0v (ORCPT
+        id S2394648AbfHBN0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37536 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:26:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391562AbfHBN0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:26:45 -0400
+        id S2391370AbfHBN0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DA10217D4;
-        Fri,  2 Aug 2019 13:26:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA29217D6;
+        Fri,  2 Aug 2019 13:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752404;
-        bh=y4c5od+dJqEwVbq9IGEgd2Dwt60GSOcwyBqfRkgs0QE=;
+        s=default; t=1564752405;
+        bh=hWwEHFuevGp1O7an+MVFFfzJVMbNQ41keR2NXr10SIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ADXZK9xAlYgW4ei5hTHW0+M2h6PXm+1tFfWtl6tCMF5YZebiBrQF2EZVv5SzeB8Wj
-         leOjLAV2JpKRPhVX4MVmmO/GI9dhaAYdkjHyxUjq+eMsFgRsAXjNmZMFcvs2xV7d8M
-         vKonQ98H1ooyBK8tGmsIPCVlHB89/Xkl0eKcajGQ=
+        b=c+QoTHzTbh5++AE5jbpS11QysDfenol8cqkBR0DhgAlcDR9ZveA/6Vgd4OL/yerOj
+         IVr04VnHAw6BjCyrnyaSz09zh52OAqJQ7JjWVpGpXDBrpKxtXvVVyUcyREdzHUN3fM
+         AjUVpnSuABsGnzyuMtSO6iJkwAAE785PzztW9mDM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Tai <thomas.tai@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 02/17] iscsi_ibft: make ISCSI_IBFT dependson ACPI instead of ISCSI_IBFT_FIND
-Date:   Fri,  2 Aug 2019 09:26:19 -0400
-Message-Id: <20190802132635.14885-2-sashal@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 03/17] mac80211: don't warn about CW params when not using them
+Date:   Fri,  2 Aug 2019 09:26:20 -0400
+Message-Id: <20190802132635.14885-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132635.14885-1-sashal@kernel.org>
 References: <20190802132635.14885-1-sashal@kernel.org>
@@ -59,70 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Tai <thomas.tai@oracle.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 94bccc34071094c165c79b515d21b63c78f7e968 ]
+[ Upstream commit d2b3fe42bc629c2d4002f652b3abdfb2e72991c7 ]
 
-iscsi_ibft can use ACPI to find the iBFT entry during bootup,
-currently, ISCSI_IBFT depends on ISCSI_IBFT_FIND which is
-a X86 legacy way to find the iBFT by searching through the
-low memory. This patch changes the dependency so that other
-arch like ARM64 can use ISCSI_IBFT as long as the arch supports
-ACPI.
+ieee80211_set_wmm_default() normally sets up the initial CW min/max for
+each queue, except that it skips doing this if the driver doesn't
+support ->conf_tx. We still end up calling drv_conf_tx() in some cases
+(e.g., ieee80211_reconfig()), which also still won't do anything
+useful...except it complains here about the invalid CW parameters.
 
-ibft_init() needs to use the global variable ibft_addr declared
-in iscsi_ibft_find.c. A #ifndef CONFIG_ISCSI_IBFT_FIND is needed
-to declare the variable if CONFIG_ISCSI_IBFT_FIND is not selected.
-Moving ibft_addr into the iscsi_ibft.c does not work because if
-ISCSI_IBFT is selected as a module, the arch/x86/kernel/setup.c won't
-be able to find the variable at compile time.
+Let's just skip the WARN if we weren't going to do anything useful with
+the parameters.
 
-Signed-off-by: Thomas Tai <thomas.tai@oracle.com>
-Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Link: https://lore.kernel.org/r/20190718015712.197499-1-briannorris@chromium.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/Kconfig      | 5 +++--
- drivers/firmware/iscsi_ibft.c | 4 ++++
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ net/mac80211/driver-ops.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index cf478fe6b335b..b0d42234fba0e 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -135,7 +135,7 @@ config DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+diff --git a/net/mac80211/driver-ops.c b/net/mac80211/driver-ops.c
+index c258f1041d330..df2e4e3112177 100644
+--- a/net/mac80211/driver-ops.c
++++ b/net/mac80211/driver-ops.c
+@@ -169,11 +169,16 @@ int drv_conf_tx(struct ieee80211_local *local,
+ 	if (!check_sdata_in_driver(sdata))
+ 		return -EIO;
  
- config ISCSI_IBFT_FIND
- 	bool "iSCSI Boot Firmware Table Attributes"
--	depends on X86 && ACPI
-+	depends on X86 && ISCSI_IBFT
- 	default n
- 	help
- 	  This option enables the kernel to find the region of memory
-@@ -146,7 +146,8 @@ config ISCSI_IBFT_FIND
- config ISCSI_IBFT
- 	tristate "iSCSI Boot Firmware Table Attributes module"
- 	select ISCSI_BOOT_SYSFS
--	depends on ISCSI_IBFT_FIND && SCSI && SCSI_LOWLEVEL
-+	select ISCSI_IBFT_FIND if X86
-+	depends on ACPI && SCSI && SCSI_LOWLEVEL
- 	default	n
- 	help
- 	  This option enables support for detection and exposing of iSCSI
-diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
-index 437c8ef90643b..30d67fbe00c73 100644
---- a/drivers/firmware/iscsi_ibft.c
-+++ b/drivers/firmware/iscsi_ibft.c
-@@ -93,6 +93,10 @@ MODULE_DESCRIPTION("sysfs interface to BIOS iBFT information");
- MODULE_LICENSE("GPL");
- MODULE_VERSION(IBFT_ISCSI_VERSION);
+-	if (WARN_ONCE(params->cw_min == 0 ||
+-		      params->cw_min > params->cw_max,
+-		      "%s: invalid CW_min/CW_max: %d/%d\n",
+-		      sdata->name, params->cw_min, params->cw_max))
++	if (params->cw_min == 0 || params->cw_min > params->cw_max) {
++		/*
++		 * If we can't configure hardware anyway, don't warn. We may
++		 * never have initialized the CW parameters.
++		 */
++		WARN_ONCE(local->ops->conf_tx,
++			  "%s: invalid CW_min/CW_max: %d/%d\n",
++			  sdata->name, params->cw_min, params->cw_max);
+ 		return -EINVAL;
++	}
  
-+#ifndef CONFIG_ISCSI_IBFT_FIND
-+struct acpi_table_ibft *ibft_addr;
-+#endif
-+
- struct ibft_hdr {
- 	u8 id;
- 	u8 version;
+ 	trace_drv_conf_tx(local, sdata, ac, params);
+ 	if (local->ops->conf_tx)
 -- 
 2.20.1
 
