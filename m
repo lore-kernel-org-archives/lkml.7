@@ -2,164 +2,232 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB74C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CED8C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA55220657
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564776416;
-	bh=He3bdCzqQoKlD0TpQPofzyJUftmHAq7stoumrRQiJ5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MX8Ztxv9dII9em4kqaNRXhe294Mr3JtdKJhhcwBgU1fWRpNvglV7wqvQX+5MTWL/o
-	 HzPKt6RgHnmFCKIr1ngoeEKbEb9wyvIWNtkHfwcrsQweTqWb1/SrxoiAFmExeLsuBI
-	 rt2KpThpzEIRXOOKZG7sOpFamSVeF1g99Fh2qcRI=
+	by mail.kernel.org (Postfix) with ESMTP id 16C49205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 20:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436511AbfHBUGy (ORCPT
+        id S2436874AbfHBULc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 16:06:54 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44758 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732050AbfHBUGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 16:06:54 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so36583524pgl.11
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 13:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0InaR80EjxBNmI3fwV/hvkwnwwTJdhOgE1ctQVb1Bpk=;
-        b=P+nLxp71Ax6nF6Brzs8hAeO3lW81Nfn2pWE1wtjIrOnu0vAApKb+Ac0BIGkxNNixgl
-         vvgSMEVd3hGcf+8pgQeCPPocX/qobEbmsb/raokvZUYpkUvWexGrDBLMoOpOzky+iQx1
-         yvdR0PwbAGkJYzI+w5LUPtBCOEVrmfCkuzewmWpZ30NXyiMIjXEK79AJmvri+yiRHlHR
-         3sVN/VDyt8xGfcC7j6k9VREgnun7p2yTzDHAj9ffoTRTS9skxG116Kd8RpKdBd1qdcnZ
-         TImFNjbcq81sZfvkgbGCUKe8k2UnozWLhF0Zpt1rAk0XvRvdEsaDhQ6cpMzP8RjPxpdQ
-         Jpww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0InaR80EjxBNmI3fwV/hvkwnwwTJdhOgE1ctQVb1Bpk=;
-        b=bra5wRQ8+W9cScaOSYwVY+qpjd4Ais/0C10bptYX40Ix7/xCf/jSciLYJEijyp9QUb
-         v2mS47CqtLoxe8MAzyYixUzGohD1/SzI6RFM5V4JVS5GrL5qieBEHMJ5X/IPdPJiLlHN
-         LvKRMAtHZvoOs48eZJNPe3aqN3PFJlRFuHlE+T2MfoXJ66Hx80SXCSx/UJUn5+yOPq5M
-         JmsK9yhfSNGlpiY2JaNF3LR0ej46zajHVrE66gcwErOXUlzOTILBdMnH4RS6xuSMLpLs
-         yCJ4e4KkBGI0HxDRmeW6ig7Mj/iDwyj6GRonCAizLhFzSGJ/rwTdJqEYPyNKvmT0xQ8T
-         y9SA==
-X-Gm-Message-State: APjAAAWmhuFcoG3lW0lKaUzOOF0XxlXgglGSr+Dz074Bvb7w16hDNJcD
-        KxN5d/Wpm48tqASlDifIMGA=
-X-Google-Smtp-Source: APXvYqwL/2NXpEk4DSAtI/faL3gFN8waWWvvjCoZ3AbSupWJxwUfwu+Rw/I3REplZCbRF7+KcU/kpw==
-X-Received: by 2002:a63:6206:: with SMTP id w6mr9781484pgb.428.1564776413328;
-        Fri, 02 Aug 2019 13:06:53 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id g92sm13788643pje.11.2019.08.02.13.06.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 13:06:51 -0700 (PDT)
-Date:   Sat, 3 Aug 2019 05:06:43 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     syzbot <syzbot+8e6326965378936537c3@syzkaller.appspotmail.com>
-Cc:     akpm@linux-foundation.org, chris@chrisdown.name, chris@zankel.net,
-        dancol@google.com, dave.hansen@intel.com, hannes@cmpxchg.org,
-        hdanton@sina.com, james.bottomley@hansenpartnership.com,
-        kirill.shutemov@linux.intel.com, ktkhai@virtuozzo.com,
-        laoar.shao@gmail.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mgorman@techsingularity.net, mhocko@kernel.org,
-        mhocko@suse.com, oleksandr@redhat.com, ralf@linux-mips.org,
-        rth@twiddle.net, sfr@canb.auug.org.au, shakeelb@google.com,
-        sonnyrao@google.com, surenb@google.com,
-        syzkaller-bugs@googlegroups.com, timmurray@google.com,
-        yang.shi@linux.alibaba.com
-Subject: Re: kernel BUG at mm/vmscan.c:LINE! (2)
-Message-ID: <20190802200643.GA181880@google.com>
-References: <000000000000a9694d058f261963@google.com>
+        Fri, 2 Aug 2019 16:11:32 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33477 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405161AbfHBULc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 16:11:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Aug 2019 13:11:29 -0700
+X-IronPort-AV: E=Sophos;i="5.64,339,1559545200"; 
+   d="scan'208";a="173320014"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.99]) ([10.24.14.99])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/AES256-SHA; 02 Aug 2019 13:11:28 -0700
+Subject: Re: [PATCH V2 01/10] x86/CPU: Expose if cache is inclusive of lower
+ level caches
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
+        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1564504901.git.reinette.chatre@intel.com>
+ <6c78593207224014d6a9d43698a3d1a0b3ccf2b6.1564504901.git.reinette.chatre@intel.com>
+ <20190802180352.GE30661@zn.tnic>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <e532ab90-196c-8b58-215a-f56f5e409512@intel.com>
+Date:   Fri, 2 Aug 2019 13:11:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000a9694d058f261963@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190802180352.GE30661@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 10:58:05AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    0d8b3265 Add linux-next specific files for 20190729
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1663c7d0600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ae96f3b8a7e885f7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8e6326965378936537c3
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133c437c600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15645854600000
-> 
-> The bug was bisected to:
-> 
-> commit 06a833a1167e9cbb43a9a4317ec24585c6ec85cb
-> Author: Minchan Kim <minchan@kernel.org>
-> Date:   Sat Jul 27 05:12:38 2019 +0000
-> 
->     mm: introduce MADV_PAGEOUT
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1545f764600000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1745f764600000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1345f764600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+8e6326965378936537c3@syzkaller.appspotmail.com
-> Fixes: 06a833a1167e ("mm: introduce MADV_PAGEOUT")
-> 
-> raw: 01fffc0000090025 dead000000000100 dead000000000122 ffff88809c49f741
-> raw: 0000000000020000 0000000000000000 00000002ffffffff ffff88821b6eaac0
-> page dumped because: VM_BUG_ON_PAGE(PageActive(page))
-> page->mem_cgroup:ffff88821b6eaac0
-> ------------[ cut here ]------------
-> kernel BUG at mm/vmscan.c:1156!
-> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 9846 Comm: syz-executor110 Not tainted 5.3.0-rc2-next-20190729
-> #54
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:shrink_page_list+0x2872/0x5430 mm/vmscan.c:1156
+Hi Borislav,
 
-My old version had PG_active flag clear but it seems to lose it with revising
-patchsets. Thanks, Sizbot!
+On 8/2/2019 11:03 AM, Borislav Petkov wrote:
+> On Tue, Jul 30, 2019 at 10:29:35AM -0700, Reinette Chatre wrote:
+>> +/*
+>> + * According to details about CPUID instruction documented in Intel SDM
+>> + * the third bit of the EDX register is used to indicate if complex
+>> + * cache indexing is in use.
+>> + * According to AMD specification (Open Source Register Reference For AMD
+>> + * Family 17h processors Models 00h-2Fh 56255 Rev 3.03 - July, 2018), only
+>> + * the first two bits are in use. Since HYGON is based on AMD the
+>> + * assumption is that it supports the same.
+>> + *
+>> + * There is no consumer for the complex indexing information so this bit is
+>> + * not added to the declaration of what processor can provide in EDX
+>> + * register. The declaration thus only considers bits supported by all
+>> + * architectures.
+>> + */
+> 
+> I don't think you need all that commenting in here since it'll become
+> stale as soon as the other vendors change their respective 0x8000001D
+> leafs. It is sufficient to say that the union below is going to contain
+> only the bits shared by all vendors.
 
-From 66d64988619ef7e86b0002b2fc20fdf5b84ad49c Mon Sep 17 00:00:00 2001
-From: Minchan Kim <minchan@kernel.org>
-Date: Sat, 3 Aug 2019 04:54:02 +0900
-Subject: [PATCH] mm: Clear PG_active on MADV_PAGEOUT
+Will do.
 
-shrink_page_list expects every pages as argument should be no active
-LRU pages so we need to clear PG_active.
+> 
+>> +union _cpuid4_leaf_edx {
+>> +	struct {
+>> +		unsigned int		wbinvd_no_guarantee:1;
+> 					^^^^^^^^^^^^^^^^^^^^^
+> 
+> That's unused so no need to name the bit. You only need "inclusive".
 
-Reported-by: syzbot+8e6326965378936537c3@syzkaller.appspotmail.com
-Fixes: 06a833a1167e ("mm: introduce MADV_PAGEOUT")
-Signed-off-by: Minchan Kim <minchan@kernel.org>
----
- mm/vmscan.c | 1 +
- 1 file changed, 1 insertion(+)
+Will do.
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 47aa2158cfac2..e2a8d3f5bbe48 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2181,6 +2181,7 @@ unsigned long reclaim_pages(struct list_head *page_list)
- 		}
- 
- 		if (nid == page_to_nid(page)) {
-+			ClearPageActive(page);
- 			list_move(&page->lru, &node_page_list);
- 			continue;
- 		}
--- 
-2.22.0.770.g0f2c4a37fd-goog
+> 
+>> +		unsigned int		inclusive:1;
+>> +	} split;
+>> +	u32 full;
+>> +};
+>> +
+>>  struct _cpuid4_info_regs {
+>>  	union _cpuid4_leaf_eax eax;
+>>  	union _cpuid4_leaf_ebx ebx;
+>>  	union _cpuid4_leaf_ecx ecx;
+>> +	union _cpuid4_leaf_edx edx;
+>>  	unsigned int id;
+>>  	unsigned long size;
+>>  	struct amd_northbridge *nb;
+>> @@ -595,21 +618,24 @@ cpuid4_cache_lookup_regs(int index, struct _cpuid4_info_regs *this_leaf)
+>>  	union _cpuid4_leaf_eax	eax;
+>>  	union _cpuid4_leaf_ebx	ebx;
+>>  	union _cpuid4_leaf_ecx	ecx;
+>> -	unsigned		edx;
+>> +	union _cpuid4_leaf_edx	edx;
+>> +
+>> +	edx.full = 0;
+> 
+> Yeah, the proper way to shut up gcc is to do this (diff ontop):
+> 
+> ---
+> diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
+> index 3b678f46be53..4ff4e95e22b4 100644
+> --- a/arch/x86/kernel/cpu/cacheinfo.c
+> +++ b/arch/x86/kernel/cpu/cacheinfo.c
+> @@ -252,7 +252,8 @@ static const enum cache_type cache_type_map[] = {
+>  static void
+>  amd_cpuid4(int leaf, union _cpuid4_leaf_eax *eax,
+>  		     union _cpuid4_leaf_ebx *ebx,
+> -		     union _cpuid4_leaf_ecx *ecx)
+> +		     union _cpuid4_leaf_ecx *ecx,
+> +		     union _cpuid4_leaf_edx *edx)
+>  {
+>  	unsigned dummy;
+>  	unsigned line_size, lines_per_tag, assoc, size_in_kb;
+> @@ -264,6 +265,7 @@ amd_cpuid4(int leaf, union _cpuid4_leaf_eax *eax,
+>  	eax->full = 0;
+>  	ebx->full = 0;
+>  	ecx->full = 0;
+> +	edx->full = 0;
+>  
+>  	cpuid(0x80000005, &dummy, &dummy, &l1d.val, &l1i.val);
+>  	cpuid(0x80000006, &dummy, &dummy, &l2.val, &l3.val);
+> @@ -620,14 +622,12 @@ cpuid4_cache_lookup_regs(int index, struct _cpuid4_info_regs *this_leaf)
+>  	union _cpuid4_leaf_ecx	ecx;
+>  	union _cpuid4_leaf_edx	edx;
+>  
+> -	edx.full = 0;
+> -
+>  	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD) {
+>  		if (boot_cpu_has(X86_FEATURE_TOPOEXT))
+>  			cpuid_count(0x8000001d, index, &eax.full,
+>  				    &ebx.full, &ecx.full, &edx.full);
+>  		else
+> -			amd_cpuid4(index, &eax, &ebx, &ecx);
+> +			amd_cpuid4(index, &eax, &ebx, &ecx, &edx);
+>  		amd_init_l3_cache(this_leaf, index);
+>  	} else if (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) {
+>  		cpuid_count(0x8000001d, index, &eax.full,
+> 
+
+Thank you very much. I'll fix this.
+
+>>  
+>>  	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD) {
+>>  		if (boot_cpu_has(X86_FEATURE_TOPOEXT))
+>>  			cpuid_count(0x8000001d, index, &eax.full,
+>> -				    &ebx.full, &ecx.full, &edx);
+>> +				    &ebx.full, &ecx.full, &edx.full);
+>>  		else
+>>  			amd_cpuid4(index, &eax, &ebx, &ecx);
+>>  		amd_init_l3_cache(this_leaf, index);
+>>  	} else if (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) {
+>>  		cpuid_count(0x8000001d, index, &eax.full,
+>> -			    &ebx.full, &ecx.full, &edx);
+>> +			    &ebx.full, &ecx.full, &edx.full);
+>>  		amd_init_l3_cache(this_leaf, index);
+>>  	} else {
+>> -		cpuid_count(4, index, &eax.full, &ebx.full, &ecx.full, &edx);
+>> +		cpuid_count(4, index, &eax.full, &ebx.full, &ecx.full,
+>> +			    &edx.full);
+> 
+> Let that line stick out and rename "index" to "idx" so that it fits the
+> 80 cols rule.
+
+Will do. Do you prefer a new prepare patch that does the renaming before
+this patch or will you be ok with the renaming done within this patch?
+
+> 
+>>  	}
+>>  
+>>  	if (eax.split.type == CTYPE_NULL)
+>> @@ -618,6 +644,7 @@ cpuid4_cache_lookup_regs(int index, struct _cpuid4_info_regs *this_leaf)
+>>  	this_leaf->eax = eax;
+>>  	this_leaf->ebx = ebx;
+>>  	this_leaf->ecx = ecx;
+>> +	this_leaf->edx = edx;
+>>  	this_leaf->size = (ecx.split.number_of_sets          + 1) *
+>>  			  (ebx.split.coherency_line_size     + 1) *
+>>  			  (ebx.split.physical_line_partition + 1) *
+>> @@ -982,6 +1009,13 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
+>>  	this_leaf->number_of_sets = base->ecx.split.number_of_sets + 1;
+>>  	this_leaf->physical_line_partition =
+>>  				base->ebx.split.physical_line_partition + 1;
+> 
+> <---- newline here.
+> 
+
+Will do.
+
+>> +	if ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD &&
+>> +	     boot_cpu_has(X86_FEATURE_TOPOEXT)) ||
+>> +	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ||
+>> +	    boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) {
+>> +		this_leaf->attributes |= CACHE_INCLUSIVE_SET;
+>> +		this_leaf->inclusive = base->edx.split.inclusive;
+> 
+> A whole int for a single bit?
+> 
+> Why don't you define the CACHE_INCLUSIVE_SET thing as CACHE_INCLUSIVE to
+> mean if set, the cache is inclusive, if not, it isn't or unknown?
+> 
+This patch only makes it possible to determine whether cache is
+inclusive for some x86 platforms while all platforms of all
+architectures are given visibility into this new "inclusive" cache
+information field within the global "struct cacheinfo". I did the above
+because I wanted it to be possible to distinguish between the "not
+inclusive" vs "unknown" case. With the above the "inclusive" field would
+only be considered valid if "CACHE_INCLUSIVE_SET" is set.
+
+You do seem to acknowledge this exact motivation though ... since you
+explicitly state "isn't or unknown". Do I understand correctly that you
+are ok with it not being possible to distinguish between "not inclusive"
+and "unknown"?
+
+Thank you very much for your valuable feedback.
+
+Reinette
+
