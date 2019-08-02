@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216B8C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1CDC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDEC420665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC9C21726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752981;
-	bh=ZTgKVv/+41uuwfvZ4owFkNllfRpb6iuJiPPKFq1ugq8=;
+	s=default; t=1564752988;
+	bh=rL23VPL5LiMMzW9WGs9qMwcc3Mu20T2X1ST1LCulyRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixcTjyqe9XLskiEMwGb+SL45L4JFDCZygNLPdy9XGnlN/zQv+QKsZCo2He7yHy2Hr
-	 ig626UWDVahbDOUt7iJ/Vf8TmrCUParCStWHWjtzB4cMnGKfScZxQPJ8njcblBHItb
-	 a7e37MgN4GEb/HKDkfLYFQg5GA0dpB+obO4iEjbI=
+	b=2PcC+7wy0YbErHVRMKGpgf4KOaliJ1rtlkaCFFTkRZfw0TKn9iQGVdpeAm5tI8WBf
+	 P2I6NAl4cO+qrxqaiGOW+yYJ/4T0yw9Ea06b3e0/qc73fyz5CiEgAnz4KOLjeNaHRI
+	 qQt6Ijhl4SXYxFIkkNkTagaS7wHJisO9JR/aT/uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406312AbfHBNgT (ORCPT
+        id S2393314AbfHBNUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:36:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58698 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393342AbfHBNUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:21 -0400
+        id S2393280AbfHBNUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:20:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7B822173E;
-        Fri,  2 Aug 2019 13:20:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 711662087C;
+        Fri,  2 Aug 2019 13:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752020;
-        bh=ZTgKVv/+41uuwfvZ4owFkNllfRpb6iuJiPPKFq1ugq8=;
+        s=default; t=1564752006;
+        bh=rL23VPL5LiMMzW9WGs9qMwcc3Mu20T2X1ST1LCulyRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c36RQZh90jt6qkcd0pFdz8mK9sux/ztKpSZdsQ2F8g8Kd4cvl5+Vi4M+eBf5c+qgp
-         TCKxWFTzswjLAMHJjSvqgv7GomTs1oWBGs7eeWq04VYkCR2B6X9NeOkYClZKko3Cid
-         O0e4oyuA51lrSBBDLaBMy79egx41eCI2UAywvghM=
+        b=07nHCnBRznje0SLb5zH9zB5lwXFnmx6LzHynYrYO6E75dO6Bs+VtXevx5jwjowNa4
+         OZd9cLkoJKZrOctxVPdQ8VLWEgkE8OZVhMHTBnxztxeVT0w2ZiRhM4rTMLqlirXBJS
+         ugUnSZsHqVUaihXCNJpf5uLzTjzgnxrNTLiUbiqU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Yang <Eric.Yang2@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, Tony Cheng <Tony.Cheng@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 21/76] drm/amd/display: put back front end initialization sequence
-Date:   Fri,  2 Aug 2019 09:18:55 -0400
-Message-Id: <20190802131951.11600-21-sashal@kernel.org>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Oleg Nesterov <oleg@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 12/76] rq-qos: don't reset has_sleepers on spurious wakeups
+Date:   Fri,  2 Aug 2019 09:18:46 -0400
+Message-Id: <20190802131951.11600-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -61,62 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Yang <Eric.Yang2@amd.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit feb7eb522e0a7a22c1e60d386bd3c3bfa1d5e4f7 ]
+[ Upstream commit 64e7ea875ef63b2801be7954cf7257d1bfccc266 ]
 
-[Why]
-Seamless boot optimization removed proper front end power off sequence.
-In driver disable enable case, this causes driver to power gate hubp
-and dpp while there is still memory fetching going on, this can cause
-invalid memory requests to be generated which will hang data fabric.
+If we raced with somebody else getting an inflight counter we could fail
+to get an inflight counter with no sleepers on the list, and thus need
+to go to sleep.  In this case has_sleepers should be true because we are
+now relying on the waker to get our inflight counter for us.  And in the
+case of spurious wakeups we'd still want this to be the case.  So set
+has_sleepers to true if we went to sleep to make sure we're woken up the
+proper way.
 
-[How]
-Put back proper front end power off sequence
-
-Signed-off-by: Eric Yang <Eric.Yang2@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Acked-by: Tony Cheng <Tony.Cheng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
+ block/blk-rq-qos.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index c7b4c3048b71d..5cc5dabf4d652 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1120,16 +1120,7 @@ static void dcn10_init_hw(struct dc *dc)
- 	 * everything down.
- 	 */
- 	if (dcb->funcs->is_accelerated_mode(dcb) || dc->config.power_down_display_on_boot) {
--		for (i = 0; i < dc->res_pool->pipe_count; i++) {
--			struct hubp *hubp = dc->res_pool->hubps[i];
--			struct dpp *dpp = dc->res_pool->dpps[i];
--
--			hubp->funcs->hubp_init(hubp);
--			dc->res_pool->opps[i]->mpc_tree_params.opp_id = dc->res_pool->opps[i]->inst;
--			plane_atomic_power_down(dc, dpp, hubp);
--		}
--
--		apply_DEGVIDCN10_253_wa(dc);
-+		dc->hwss.init_pipes(dc, dc->current_state);
- 	}
- 
- 	for (i = 0; i < dc->res_pool->audio_count; i++) {
-@@ -1298,10 +1289,6 @@ static bool dcn10_set_input_transfer_func(struct pipe_ctx *pipe_ctx,
- 	return result;
+diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
+index 659ccb8b693fa..e5d75280b431e 100644
+--- a/block/blk-rq-qos.c
++++ b/block/blk-rq-qos.c
+@@ -260,7 +260,7 @@ void rq_qos_wait(struct rq_wait *rqw, void *private_data,
+ 			break;
+ 		}
+ 		io_schedule();
+-		has_sleeper = false;
++		has_sleeper = true;
+ 	} while (1);
+ 	finish_wait(&rqw->wait, &data.wq);
  }
- 
--
--
--
--
- static bool
- dcn10_set_output_transfer_func(struct pipe_ctx *pipe_ctx,
- 			       const struct dc_stream_state *stream)
 -- 
 2.20.1
 
