@@ -2,151 +2,176 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9452BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908C9C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5017F206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233AB206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:12:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="fKaf9cXx"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="D0AIvI4S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732597AbfHBFLk (ORCPT
+        id S1732215AbfHBFM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 01:11:40 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47687 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbfHBFLj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 01:11:39 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 39DDE886BF;
-        Fri,  2 Aug 2019 17:11:36 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1564722696;
-        bh=tC4vIW4Ii5JkgwtqbHGlUUwX7EbA4mh0QRIQ43Vafq4=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=fKaf9cXxDgaQ0QIN/wqSmb/N28WoKrk1g8FJteMa1kN19HYshhpYj7xlQnPJlwyoD
-         HRyMCqjAvXqAKWzlpUh9BFfFm94amEVTysH42bUVyYzBCTnLMT2mdiYa1cUkIXyscX
-         iKG0lSWjODWXJXPzzraB+cAMZHZ+xSJa23PBFBXa+gKfgJFZT1WSHUMBfCYsg7ToO8
-         h7+fBkr25ncX538JB29bquq70T1JnoqeSvnXzoomm2Adk1RX/CzbmWMjmnbQHevEY4
-         SAWtqkguTw1rPdrnguTdXq0GYYaDCMb6SfLss3MzySlRrIZDAIV8aTH12RdXEmj+oI
-         JaPbU2ivfudiQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d43c6080000>; Fri, 02 Aug 2019 17:11:36 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Fri, 2 Aug 2019 17:11:30 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 2 Aug 2019 17:11:30 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "jon.maloy@ericsson.com" <jon.maloy@ericsson.com>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Slowness forming TIPC cluster with explicit node addresses
-Thread-Topic: Slowness forming TIPC cluster with explicit node addresses
-Thread-Index: AQHVQ0Hkw5M86TmlWkazctTgG4cJIabc5XqAgALa5YCABtFugA==
-Date:   Fri, 2 Aug 2019 05:11:29 +0000
-Message-ID: <1564722689.4914.27.camel@alliedtelesis.co.nz>
-References: <1564097836.11887.16.camel@alliedtelesis.co.nz>
-         <CH2PR15MB35754D65AB240A74AE488E719AC00@CH2PR15MB3575.namprd15.prod.outlook.com>
-         <1564347861.9737.25.camel@alliedtelesis.co.nz>
-In-Reply-To: <1564347861.9737.25.camel@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1F2E798B01063047A30B81CD42F549F0@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Fri, 2 Aug 2019 01:12:29 -0400
+Received: from mail-eopbgr770070.outbound.protection.outlook.com ([40.107.77.70]:60486
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728248AbfHBFM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 01:12:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l6cC7Cx5t3Yjx1JhhIYepv5kM6P4iarmgs/IRs5j4G3Z6nVfrDprTo1MQE+uJJRmWYrTTh6nyzB+yfzV8zM7aGjrY3B2YcaAqVliPDxp0xXmeeT93g9TkkjtG3JDWRsmaILK4kNArrTGM5CPo2l40iUlmIIQkJYnRkMHfk4oldg77essZpEJzrlavPjgi8YpnoTueh/JiA7bxC0A1foXHTJwbPoOPtu8oixNX4zP/o0bd82D6/KIRrBaojRmd/W0k3un76HplTWfEsCYpjbSoCXzemcaY89+cvbKHIv8RsZedZtH2guXAWe/GqVzNrQ8AVH5PCFGXORnqvgk0f46zg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Ao9XcZcu7u/pjBNiC4k+Js0RzR0XJSJvise8m6ZqM4=;
+ b=SGt7yobqLrb3J47avXdp3HNhbMRZ3JDvxQYL9NMB/al0gs0oWGPlKk449mXaSRYXo3wkWjDiSz8B42+idSgwMQ1WB9Vu9rBX1Hw6BpQuec+nuPopCEptF6F2wQKLvNgcEaVFRUHoMbX50k5T0dTrwN5hsetL0KTvagBTLwH4pVzUYOp+FaGZWQmUtlz8+xemW+/marbQy8JA8e6Dtfu17tp/TPVw7xTA6+w2nAp8BN6feFt8rhb9PFox92szk7B8mEzmAjk2FB3F5AInnQk8HurF96V1UG5CdSyoZeYrTOId19PVQPjqq2+RqzbNJ6P7gRR4Rm6iOIwFawgyr5QLLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=gmail.com
+ smtp.mailfrom=xilinx.com;dmarc=bestguesspass action=none
+ header.from=xilinx.com;dkim=none (message not signed);arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Ao9XcZcu7u/pjBNiC4k+Js0RzR0XJSJvise8m6ZqM4=;
+ b=D0AIvI4S6i8gAwzHRnikcnYPCvnGdeM4jT2qupgfOKZ3JhgLuzgsf68SBvrGviaKQCBU25Jk/+jDXRrt2IDZlzClyVpqw9jbBdOwo16mOCuIVH3n8AY6HW8a4atCRoJxpRwvTnEKAoJC9tIvEnDGSCniG9BALG3yk//vfJQ7b3U=
+Received: from MWHPR02CA0043.namprd02.prod.outlook.com (2603:10b6:301:60::32)
+ by DM5PR02MB2684.namprd02.prod.outlook.com (2603:10b6:3:106::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.17; Fri, 2 Aug
+ 2019 05:12:24 +0000
+Received: from CY1NAM02FT014.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::205) by MWHPR02CA0043.outlook.office365.com
+ (2603:10b6:301:60::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.17 via Frontend
+ Transport; Fri, 2 Aug 2019 05:12:23 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT014.mail.protection.outlook.com (10.152.75.142) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2136.14
+ via Frontend Transport; Fri, 2 Aug 2019 05:12:23 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1htPra-0001O0-So; Thu, 01 Aug 2019 22:12:22 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1htPrV-0007ky-Oi; Thu, 01 Aug 2019 22:12:17 -0700
+Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x725CAjT026871;
+        Thu, 1 Aug 2019 22:12:10 -0700
+Received: from [172.30.17.116]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1htPrN-0007jq-RG; Thu, 01 Aug 2019 22:12:10 -0700
+Subject: Re: [PATCH] mailbox: zynqmp-ipi-mailbox: Add of_node_put() before
+ goto
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        jassisinghbrar@gmail.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190709172841.13769-1-nishkadg.linux@gmail.com>
+ <eaf1fcbe-615e-0fec-d330-ae94e8f3c102@xilinx.com>
+ <6a5306bd-946d-383f-0b42-f17675c24218@gmail.com>
+ <c0be80c9-16ef-fe03-ae3b-a7d3d1a2ede8@xilinx.com>
+ <ab6db31d-ff16-5a32-f097-347daa6b98fc@gmail.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <51e9925b-507c-9d26-bd58-24b49bf652b1@xilinx.com>
+Date:   Fri, 2 Aug 2019 07:12:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <ab6db31d-ff16-5a32-f097-347daa6b98fc@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39850400004)(396003)(376002)(136003)(2980300002)(199004)(189003)(106002)(305945005)(110136005)(5660300002)(316002)(31686004)(65956001)(63266004)(50466002)(186003)(2486003)(64126003)(52146003)(47776003)(26005)(31696002)(53546011)(126002)(446003)(11346002)(336012)(8936002)(23676004)(2616005)(476003)(426003)(44832011)(70206006)(486006)(58126008)(70586007)(76176011)(81156014)(8676002)(81166006)(65806001)(14444005)(6246003)(36386004)(356004)(65826007)(36756003)(2870700001)(15650500001)(9786002)(229853002)(478600001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR02MB2684;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: be990ebe-5ebf-4d17-e114-08d7170800cb
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM5PR02MB2684;
+X-MS-TrafficTypeDiagnostic: DM5PR02MB2684:
+X-Microsoft-Antispam-PRVS: <DM5PR02MB26840776A96FE2F7854580DBC6D90@DM5PR02MB2684.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 011787B9DD
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: m5nbKnJ3qV0tpqfXyNNLIWqN4+REwUDKHs8WMNq9U0TzGjryXoug/+6muGu4iwGssib2ESv35CyUGjxJiLRSzwgmUyhKCaQggvcJ4TI+pPW8K47J7KIqeBHUOvAbyJXGFgOxqeEe92SAwYTUwNfOCp8Hb3XnMRs5NjoDp/J/dN4O8VC7gudROS1d3F6pW7A2BMygeEhHdT+AFKG8S/E9Y/TcNJLPcE2mkER5hvru+z1FdLo73v5glGwUC6EqhzkkHswcAXNVXxDfgLL3gbJlaGWJkl666NEONVpZTaeczcFOALOD89oLs2XaEjux4Q+OeXqHy/tCpXLUlW+5rybLjccHRu6h3g85q+6fhMBmJZmgKr5yWwdZcJkvVwuHMPG0FbP4mL7e2pT9PVL3kS/2kQM5qaEYsFS82RJP2P9TgME=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2019 05:12:23.4358
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: be990ebe-5ebf-4d17-e114-08d7170800cb
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB2684
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA3LTI5IGF0IDA5OjA0ICsxMjAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0K
-PiBPbiBGcmksIDIwMTktMDctMjYgYXQgMTM6MzEgKzAwMDAsIEpvbiBNYWxveSB3cm90ZToNCj4g
-PiANCj4gPiANCj4gPiA+IA0KPiA+ID4gDQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
-LQ0KPiA+ID4gRnJvbTogbmV0ZGV2LW93bmVyQHZnZXIua2VybmVsLm9yZyA8bmV0ZGV2LW93bmVy
-QHZnZXIua2VybmVsLm9yZz4NCj4gPiA+IE9uDQo+ID4gPiBCZWhhbGYgT2YgQ2hyaXMgUGFja2hh
-bQ0KPiA+ID4gU2VudDogMjUtSnVsLTE5IDE5OjM3DQo+ID4gPiBUbzogdGlwYy1kaXNjdXNzaW9u
-QGxpc3RzLnNvdXJjZWZvcmdlLm5ldA0KPiA+ID4gQ2M6IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IFN1YmplY3Q6IFNsb3duZXNzIGZv
-cm1pbmcgVElQQyBjbHVzdGVyIHdpdGggZXhwbGljaXQgbm9kZQ0KPiA+ID4gYWRkcmVzc2VzDQo+
-ID4gPiANCj4gPiA+IEhpLA0KPiA+ID4gDQo+ID4gPiBJJ20gaGF2aW5nIHByb2JsZW1zIGZvcm1p
-bmcgYSBUSVBDIGNsdXN0ZXIgYmV0d2VlbiAyIG5vZGVzLg0KPiA+ID4gDQo+ID4gPiBUaGlzIGlz
-IHRoZSBiYXNpYyBzdGVwcyBJJ20gZ29pbmcgdGhyb3VnaCBvbiBlYWNoIG5vZGUuDQo+ID4gPiAN
-Cj4gPiA+IG1vZHByb2JlIHRpcGMNCj4gPiA+IGlwIGxpbmsgc2V0IGV0aDIgdXANCj4gPiA+IHRp
-cGMgbm9kZSBzZXQgYWRkciAxLjEuNSAjIG9yIDEuMS42DQo+ID4gPiB0aXBjIGJlYXJlciBlbmFi
-bGUgbWVkaWEgZXRoIGRldiBldGgwDQo+ID4gZXRoMiwgSSBhc3N1bWUuLi4NCj4gPiANCj4gWWVz
-IHNvcnJ5IEkga2VlcCBzd2l0Y2hpbmcgYmV0d2VlbiBiZXR3ZWVuIEV0aGVybmV0IHBvcnRzIGZv
-ciB0ZXN0aW5nDQo+IHNvIEkgaGFuZCBlZGl0ZWQgdGhlIGVtYWlsLg0KPiANCj4gPiANCj4gPiA+
-IA0KPiA+ID4gDQo+ID4gPiANCj4gPiA+IFRoZW4gdG8gY29uZmlybSBpZiB0aGUgY2x1c3RlciBp
-cyBmb3JtZWQgSSB1c2XCoHRpcGMgbGluayBsaXN0DQo+ID4gPiANCj4gPiA+IFtyb290QG5vZGUt
-NSB+XSMgdGlwYyBsaW5rIGxpc3QNCj4gPiA+IGJyb2FkY2FzdC1saW5rOiB1cA0KPiA+ID4gLi4u
-DQo+ID4gPiANCj4gPiA+IExvb2tpbmcgYXQgdGNwZHVtcCB0aGUgdHdvIG5vZGVzIGFyZSBzZW5k
-aW5nIHBhY2tldHMNCj4gPiA+IA0KPiA+ID4gMjI6MzA6MDUuNzgyMzIwIFRJUEMgdjIuMCAxLjEu
-NSA+IDAuMC4wLCBoZWFkZXJsZW5ndGggNjAgYnl0ZXMsDQo+ID4gPiBNZXNzYWdlU2l6ZQ0KPiA+
-ID4gNzYgYnl0ZXMsIE5laWdoYm9yIERldGVjdGlvbiBQcm90b2NvbCBpbnRlcm5hbCwgbWVzc2Fn
-ZVR5cGUgTGluaw0KPiA+ID4gcmVxdWVzdA0KPiA+ID4gMjI6MzA6MDUuODYzNTU1IFRJUEMgdjIu
-MCAxLjEuNiA+IDAuMC4wLCBoZWFkZXJsZW5ndGggNjAgYnl0ZXMsDQo+ID4gPiBNZXNzYWdlU2l6
-ZQ0KPiA+ID4gNzYgYnl0ZXMsIE5laWdoYm9yIERldGVjdGlvbiBQcm90b2NvbCBpbnRlcm5hbCwg
-bWVzc2FnZVR5cGUgTGluaw0KPiA+ID4gcmVxdWVzdA0KPiA+ID4gDQo+ID4gPiBFdmVudHVhbGx5
-IChhZnRlciBhIGZldyBtaW51dGVzKSB0aGUgbGluayBkb2VzIGNvbWUgdXANCj4gPiA+IA0KPiA+
-ID4gW3Jvb3RAbm9kZS02wqB+XSMgdGlwYyBsaW5rIGxpc3QNCj4gPiA+IGJyb2FkY2FzdC1saW5r
-OiB1cA0KPiA+ID4gMTAwMTAwNjpldGgyLTEwMDEwMDU6ZXRoMjogdXANCj4gPiA+IA0KPiA+ID4g
-W3Jvb3RAbm9kZS01wqB+XSMgdGlwYyBsaW5rIGxpc3QNCj4gPiA+IGJyb2FkY2FzdC1saW5rOiB1
-cA0KPiA+ID4gMTAwMTAwNTpldGgyLTEwMDEwMDY6ZXRoMjogdXANCj4gPiA+IA0KPiA+ID4gV2hl
-biBJIHJlbW92ZSB0aGUgInRpcGMgbm9kZSBzZXQgYWRkciIgdGhpbmdzIHNlZW0gdG8ga2ljayBp
-bnRvDQo+ID4gPiBsaWZlIHN0cmFpZ2h0DQo+ID4gPiBhd2F5DQo+ID4gPiANCj4gPiA+IFtyb290
-QG5vZGUtNSB+XSMgdGlwYyBsaW5rIGxpc3QNCj4gPiA+IGJyb2FkY2FzdC1saW5rOiB1cA0KPiA+
-ID4gMDA1MGI2MWJkMmFhOmV0aDItMDA1MGI2MWU2ZGZhOmV0aDI6IHVwDQo+ID4gPiANCj4gPiA+
-IFNvIHRoZXJlIGFwcGVhcnMgdG8gYmUgc29tZSBkaWZmZXJlbmNlIGluIGJlaGF2aW91ciBiZXR3
-ZWVuDQo+ID4gPiBoYXZpbmcNCj4gPiA+IGFuDQo+ID4gPiBleHBsaWNpdCBub2RlIGFkZHJlc3Mg
-YW5kIHVzaW5nIHRoZSBkZWZhdWx0LiBVbmZvcnR1bmF0ZWx5IG91cg0KPiA+ID4gYXBwbGljYXRp
-b24NCj4gPiA+IHJlbGllcyBvbiBzZXR0aW5nIHRoZSBub2RlIGFkZHJlc3Nlcy4NCj4gPiBJIGRv
-IHRoaXMgbWFueSB0aW1lcyBhIGRheSwgd2l0aG91dCBhbnkgcHJvYmxlbXMuIElmIHRoZXJlIHdv
-dWxkIGJlDQo+ID4gYW55IHRpbWUgZGlmZmVyZW5jZSwgSSB3b3VsZCBleHBlY3QgdGhlICdhdXRv
-IGNvbmZpZ3VyYWJsZScgdmVyc2lvbg0KPiA+IHRvIGJlIHNsb3dlciwgYmVjYXVzZSBpdCBpbnZv
-bHZlcyBhIERBRCBzdGVwLg0KPiA+IEFyZSB5b3Ugc3VyZSB5b3UgZG9uJ3QgaGF2ZSBhbnkgb3Ro
-ZXIgbm9kZXMgcnVubmluZyBpbiB5b3VyIHN5c3RlbT8NCj4gPiANCj4gPiAvLy9qb24NCj4gPiAN
-Cj4gTm9wZSB0aGUgdHdvIG5vZGVzIGFyZSBjb25uZWN0ZWQgYmFjayB0byBiYWNrLiBEb2VzIHRo
-ZSBudW1iZXIgb2YNCj4gRXRoZXJuZXQgaW50ZXJmYWNlcyBtYWtlIGEgZGlmZmVyZW5jZT8gQXMg
-eW91IGNhbiBzZWUgSSd2ZSBnb3QgMyBvbg0KPiBlYWNoIG5vZGUuIE9uZSBpcyBjb21wbGV0ZWx5
-IGRpc2Nvbm5lY3RlZCwgb25lIGlzIGZvciBib290aW5nIG92ZXINCj4gVEZUUA0KPiDCoChvbmx5
-IHVzZWQgYnkgVS1ib290KSBhbmQgdGhlIG90aGVyIGlzIHRoZSBVU0IgRXRoZXJuZXQgSSdtIHVz
-aW5nDQo+IGZvcg0KPiB0ZXN0aW5nLg0KPiANCg0KU28gSSBjYW4gc3RpbGwgcmVwcm9kdWNlIHRo
-aXMgb24gbm9kZXMgdGhhdCBvbmx5IGhhdmUgb25lIG5ldHdvcmsNCmludGVyZmFjZSBhbmQgYXJl
-IHRoZSBvbmx5IHRoaW5ncyBjb25uZWN0ZWQuDQoNCkkgZGlkIGZpbmQgb25lIHRoaW5nIHRoYXQg
-aGVscHMNCg0KZGlmZiAtLWdpdCBhL25ldC90aXBjL2Rpc2NvdmVyLmMgYi9uZXQvdGlwYy9kaXNj
-b3Zlci5jDQppbmRleCBjMTM4ZDY4ZThhNjkuLjQ5OTIxZGFkNDA0YSAxMDA2NDQNCi0tLSBhL25l
-dC90aXBjL2Rpc2NvdmVyLmMNCisrKyBiL25ldC90aXBjL2Rpc2NvdmVyLmMNCkBAIC0zNTgsMTAg
-KzM1OCwxMCBAQCBpbnQgdGlwY19kaXNjX2NyZWF0ZShzdHJ1Y3QgbmV0ICpuZXQsIHN0cnVjdA0K
-dGlwY19iZWFyZXIgKmIsDQrCoMKgwqDCoMKgwqDCoMKgdGlwY19kaXNjX2luaXRfbXNnKG5ldCwg
-ZC0+c2tiLCBEU0NfUkVRX01TRywgYik7DQrCoA0KwqDCoMKgwqDCoMKgwqDCoC8qIERvIHdlIG5l
-ZWQgYW4gYWRkcmVzcyB0cmlhbCBwZXJpb2QgZmlyc3QgPyAqLw0KLcKgwqDCoMKgwqDCoMKgaWYg
-KCF0aXBjX293bl9hZGRyKG5ldCkpIHsNCisvL8KgwqDCoMKgwqBpZiAoIXRpcGNfb3duX2FkZHIo
-bmV0KSkgew0KwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0bi0+YWRkcl90cmlhbF9l
-bmQgPSBqaWZmaWVzICsgbXNlY3NfdG9famlmZmllcygxMDAwKTsNCsKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgbXNnX3NldF90eXBlKGJ1Zl9tc2coZC0+c2tiKSwgRFNDX1RSSUFMX01T
-Ryk7DQotwqDCoMKgwqDCoMKgwqB9DQorLy/CoMKgwqDCoMKgfQ0KwqDCoMKgwqDCoMKgwqDCoG1l
-bWNweSgmZC0+ZGVzdCwgZGVzdCwgc2l6ZW9mKCpkZXN0KSk7DQrCoMKgwqDCoMKgwqDCoMKgZC0+
-bmV0ID0gbmV0Ow0KwqDCoMKgwqDCoMKgwqDCoGQtPmJlYXJlcl9pZCA9IGItPmlkZW50aXR5Ow0K
-DQpJIHRoaW5rIGJlY2F1c2Ugd2l0aCBwcmUtY29uZmlndXJlZCBhZGRyZXNzZXMgdGhlIGR1cGxp
-Y2F0ZSBhZGRyZXNzDQpkZXRlY3Rpb24gaXMgc2tpcHBlZCB0aGUgc2hvcnRlciBpbml0IHBoYXNl
-IGlzIHNraXBwZWQuIFdvdWxkIGlzIG1ha2UNCnNlbnNlIHRvIHVuY29uZGl0aW9uYWxseSBkbyB0
-aGUgdHJpYWwgc3RlcD8gT3IgaXMgdGhlcmUgc29tZSBiZXR0ZXIgd2F5DQp0byBnZXQgdGhpbmdz
-IHRvIHRyYW5zaXRpb24gd2l0aCBwcmUtYXNzaWduZWQgYWRkcmVzc2VzLg==
+On 02. 08. 19 6:59, Nishka Dasgupta wrote:
+> On 31/07/19 7:51 PM, Michal Simek wrote:
+>> On 31. 07. 19 15:06, Nishka Dasgupta wrote:
+>>> On 31/07/19 2:01 PM, Michal Simek wrote:
+>>>> On 09. 07. 19 19:28, Nishka Dasgupta wrote:
+>>>>> Each iteration of for_each_available_child_of_node puts the previous
+>>>>> node, but in the case of a goto from the middle of the loop, there is
+>>>>> no put, thus causing a memory leak. Hence add an of_node_put before
+>>>>> the
+>>>>> goto.
+>>>>> Issue found with Coccinelle.
+>>>>>
+>>>>> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+>>>>> ---
+>>>>>    drivers/mailbox/zynqmp-ipi-mailbox.c | 1 +
+>>>>>    1 file changed, 1 insertion(+)
+>>>>>
+>>>>> diff --git a/drivers/mailbox/zynqmp-ipi-mailbox.c
+>>>>> b/drivers/mailbox/zynqmp-ipi-mailbox.c
+>>>>> index 86887c9a349a..bd80d4c10ec2 100644
+>>>>> --- a/drivers/mailbox/zynqmp-ipi-mailbox.c
+>>>>> +++ b/drivers/mailbox/zynqmp-ipi-mailbox.c
+>>>>> @@ -661,6 +661,7 @@ static int zynqmp_ipi_probe(struct
+>>>>> platform_device *pdev)
+>>>>>            if (ret) {
+>>>>>                dev_err(dev, "failed to probe subdev.\n");
+>>>>>                ret = -EINVAL;
+>>>>> +            of_node_put(nc);
+>>>>>                goto free_mbox_dev;
+>>>>>            }
+>>>>>            mbox++;
+>>>>>
+>>>>
+>>>> Patch is good but when you are saying that this was found by Coccinelle
+>>>> then it should be added as script to kernel to detect it.
+>>>
+>>> This particular patch was suggested by a script I did not write myself;
+>>> someone else wrote it and sent it to me. How should I proceed in this
+>>> case?
+>>
+>> You can ask him to submit it to kernel.
+>> Or you can take it, keep his authorship and send it to:
+> 
+> I have asked her to submit this script, thank you. Will I need to
+> resubmit this patch, however?
+
+I will let Jassi to decide.
+
+Thanks,
+Michal
