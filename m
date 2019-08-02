@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A73C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D6FC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E6120679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E6820679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564738737;
-	bh=2XwdYcvuR1Zdq936dhGMg0cuBMr5jLmnhKag/WIbxJQ=;
+	s=default; t=1564738739;
+	bh=won/3C//qnNMfS6DL9yndOAUy2B8vGvUBvsYexyleiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HWX0GYonM1tNywjWsnzjdpqRWcpStoRnpCGVn2rCRhzeoUpYLfLuiQg9cxW+aFUua
-	 KoNGQ9JznhE00suvCtntvaHvK7o0P8YpA7uVFhMZS9zvKCYCY13et/zt87dCSPmwJi
-	 mBGRvZNAfRkU6Pr0U35vHNVFK/4NHHagZL5Tfvu4=
+	b=d/MiCNrvE2xGi7ok9SY2EAnl3Z/JA9lrxchwz1JZSNAFkDkvSQwmvwwfFKO520NJC
+	 m9uwT3j4QIxXpP7q46pmop0Y1wHe5MCTDv/0iaZcbYhqUNZzeZU5ExDP0F5B8AgWuP
+	 Ie7Qpr3CFsIhXMLi9jjmkMN7sr6uj8p/IPpMr6uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390051AbfHBJeS (ORCPT
+        id S2390648AbfHBJeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34020 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:34:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391499AbfHBJeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:34:14 -0400
+        id S2391486AbfHBJeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:34:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B7A6217D4;
-        Fri,  2 Aug 2019 09:34:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B03A21773;
+        Fri,  2 Aug 2019 09:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738453;
-        bh=2XwdYcvuR1Zdq936dhGMg0cuBMr5jLmnhKag/WIbxJQ=;
+        s=default; t=1564738448;
+        bh=won/3C//qnNMfS6DL9yndOAUy2B8vGvUBvsYexyleiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H7Cu2A4/++buXgCnWRiTerMkFrt6igjRpL+LsIQd1m0WOsKVSYHu2BeJ3zi+fIEEE
-         G3B4JMwSY7KrDrlmXhpm/MSyMfx0y7wIPQ3vjTvm/Vm9JKb+YBSjZco0tczW/wLXjc
-         nLohQI6X27hKoWmvMI7V9WQo71NCL8onpmS+aoGU=
+        b=WQCXtxSHmhSOPiDDKx/vzdlIiXVfHQN+uorE5W2vg804FxlaTTMNwrz2Wx9LJSCv8
+         dpN/NHGBGKEuclei0xIX+M4LT4BkaqwEVQ54KxZAC7p+gh/Ud9pSCFj/QBss5q9XL8
+         Gzp8e2wVLzpitDtpDFtGOCacvPbHJGrqLus77yJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
+        stable@vger.kernel.org,
+        syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 095/158] tcp: Reset bytes_acked and bytes_received when disconnecting
-Date:   Fri,  2 Aug 2019 11:28:36 +0200
-Message-Id: <20190802092223.684416709@linuxfoundation.org>
+Subject: [PATCH 4.4 093/158] netrom: fix a memory leak in nr_rx_frame()
+Date:   Fri,  2 Aug 2019 11:28:34 +0200
+Message-Id: <20190802092223.339720533@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092203.671944552@linuxfoundation.org>
 References: <20190802092203.671944552@linuxfoundation.org>
@@ -60,35 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Paasch <cpaasch@apple.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit e858faf556d4e14c750ba1e8852783c6f9520a0e ]
+[ Upstream commit c8c8218ec5af5d2598381883acbefbf604e56b5e ]
 
-If an app is playing tricks to reuse a socket via tcp_disconnect(),
-bytes_acked/received needs to be reset to 0. Otherwise tcp_info will
-report the sum of the current and the old connection..
+When the skb is associated with a new sock, just assigning
+it to skb->sk is not sufficient, we have to set its destructor
+to free the sock properly too.
 
-Cc: Eric Dumazet <edumazet@google.com>
-Fixes: 0df48c26d841 ("tcp: add tcpi_bytes_acked to tcp_info")
-Fixes: bdd1f9edacb5 ("tcp: add tcpi_bytes_received to tcp_info")
-Signed-off-by: Christoph Paasch <cpaasch@apple.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/netrom/af_netrom.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2272,6 +2272,8 @@ int tcp_disconnect(struct sock *sk, int
- 	dst_release(sk->sk_rx_dst);
- 	sk->sk_rx_dst = NULL;
- 	tcp_saved_syn_free(tp);
-+	tp->bytes_acked = 0;
-+	tp->bytes_received = 0;
+--- a/net/netrom/af_netrom.c
++++ b/net/netrom/af_netrom.c
+@@ -870,7 +870,7 @@ int nr_rx_frame(struct sk_buff *skb, str
+ 	unsigned short frametype, flags, window, timeout;
+ 	int ret;
  
- 	WARN_ON(inet->inet_num && !icsk->icsk_bind_hash);
+-	skb->sk = NULL;		/* Initially we don't know who it's for */
++	skb_orphan(skb);
  
+ 	/*
+ 	 *	skb->data points to the netrom frame start
+@@ -969,6 +969,7 @@ int nr_rx_frame(struct sk_buff *skb, str
+ 	window = skb->data[20];
+ 
+ 	skb->sk             = make;
++	skb->destructor     = sock_efree;
+ 	make->sk_state	    = TCP_ESTABLISHED;
+ 
+ 	/* Fill in his circuit details */
 
 
