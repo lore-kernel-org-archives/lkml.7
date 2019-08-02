@@ -2,98 +2,114 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFF4C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80057C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5852620B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D3821726
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 14:09:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Z8BqG/0y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436609AbfHBOI7 (ORCPT
+        id S2436633AbfHBOJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 10:08:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:52540 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732817AbfHBOI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 10:08:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D66631570;
-        Fri,  2 Aug 2019 07:08:57 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (unknown [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15B183F575;
-        Fri,  2 Aug 2019 07:08:56 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 15:08:54 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 0/5] Fix FIFO-99 abuse
-Message-ID: <20190802140854.ixq4cmo5nsfdaj24@e107158-lin.cambridge.arm.com>
-References: <20190801111348.530242235@infradead.org>
- <20190801131707.5rpyydznnhz474la@e107158-lin.cambridge.arm.com>
- <20190802093244.GF2332@hirez.programming.kicks-ass.net>
- <20190802102611.54sae3onftck5fye@e107158-lin.cambridge.arm.com>
- <20190802124151.GG2332@hirez.programming.kicks-ass.net>
+        Fri, 2 Aug 2019 10:09:14 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:38968 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732817AbfHBOJN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 10:09:13 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72E6uLF014555;
+        Fri, 2 Aug 2019 16:09:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=V4Oy0E5gbwyi1cbiRiVoGW45+5zWyza++ydGz4D477E=;
+ b=Z8BqG/0ydEYKorRq6uN7BstyvNz9rvTzsNTLIiUk0O/KLzdXaVrhf3fKJhOL+XEeruk1
+ dGUUYZ4gXS3ohGtP7MiUizl4oLWZ+3EVWP2e5syGLv5FHVEzscdE5QRYsQOizAfJ3arT
+ If/qqA0CWJFToyr79Oo1fW+TyDtXUPqoCjCri19Zu2UKJOzafaDMbPx4oM+cc3YbTcgq
+ FdYxSHDdY1A1zlMjTW4MURJTjducO/Wg9zL1r6gc++okNND+3dMKEHtGkOU+dfm4N5OJ
+ vrzrvZf/IH6fEAqSaggQGi8n5GCeCFmQ5c9+eKAk8Q7L+qYSDlwvbGiC2Hggumm9od11 vQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2u0c2yvs6w-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 02 Aug 2019 16:09:00 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 537F634;
+        Fri,  2 Aug 2019 14:09:00 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3CEE72C4581;
+        Fri,  2 Aug 2019 16:09:00 +0200 (CEST)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
+ 16:09:00 +0200
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019 16:08:59
+ +0200
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH] ARM: dts: stm32: move ltdc pinctrl on stm32mp157a dk1 board
+Date:   Fri, 2 Aug 2019 16:08:51 +0200
+Message-ID: <1564754931-13861-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190802124151.GG2332@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/02/19 14:41, Peter Zijlstra wrote:
-> On Fri, Aug 02, 2019 at 11:26:12AM +0100, Qais Yousef wrote:
-> 
-> > Yes a somewhat enforced default makes more sense to me. I assume you no longer
-> > want to put the kthreads that just need to be above OTHER in FIFO-1?
-> 
-> I'm not sure, maybe, there's not that many of them, but possibly we add
-> another interface for them.
+The ltdc pinctrl must be in the display controller node and
+not in the peripheral node (hdmi bridge).
 
-By the way, did you see this one which is set to priority 16?
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+---
+ arch/arm/boot/dts/stm32mp157a-dk1.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-https://elixir.bootlin.com/linux/v5.3-rc2/source/drivers/gpu/drm/msm/msm_drv.c#L523
+diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+index f3f0e37..1285cfc 100644
+--- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
++++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+@@ -99,9 +99,6 @@
+ 		reset-gpios = <&gpioa 10 GPIO_ACTIVE_LOW>;
+ 		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
+ 		interrupt-parent = <&gpiog>;
+-		pinctrl-names = "default", "sleep";
+-		pinctrl-0 = <&ltdc_pins_a>;
+-		pinctrl-1 = <&ltdc_pins_sleep_a>;
+ 		status = "okay";
+ 
+ 		ports {
+@@ -276,6 +273,9 @@
+ };
+ 
+ &ltdc {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&ltdc_pins_a>;
++	pinctrl-1 = <&ltdc_pins_sleep_a>;
+ 	status = "okay";
+ 
+ 	port {
+-- 
+2.7.4
 
-> 
-> > While at it, since we will cram all kthreads on the same priority, isn't
-> > a SCHED_RR a better choice now? I think the probability of a clash is pretty
-> > low, but when it happens, shouldn't we try to guarantee some fairness?
-> 
-> It's never been a problem, and aside from these few straggler threads,
-> everybody has effectively been there already for years, so if it were a
-> problem someone would've complained by now.
-
-Usually they can run on enough CPUs so a real clash is definitely hard.
-
-I'm trying to collect data on that, if I find something interesting I'll share
-it.
-
-> 
-> Also; like said before, the admin had better configure.
-
-I agree. But I don't think an 'admin' is an easily defined entity for all
-systems. On mobile, is it the SoC vendor, Android framework, or the
-handset/platform vendor/integrator?
-
-In a *real* realtime system I think things are better defined. But usage of RT
-tasks on generic systems is the confusing part. There's no real ownership and
-things are more ad-hoc.
-
-> 
-> Also also, RR-SMP is actually broken (and nobody has cared enough to
-> bother fixing it).
-
-If you can give me enough pointers to understand the problem I might be able to
-bother with it :-)
-
-Thanks
-
---
-Qais Yousef
