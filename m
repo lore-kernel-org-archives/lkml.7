@@ -2,52 +2,53 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F36C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EDEC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8852721726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFAD320B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739005;
-	bh=d8J/eyduV+erwOk2PgEXLcSJfL3INtQfXul//p44UDE=;
+	s=default; t=1564739008;
+	bh=BNjn9YxPzNl3/wZkvHFhI70VUuK9qv3cMeiVmH51GzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZJNf03VrlMJ+vrWZsu7DJ1ACKB2wyha+Yl2HlcDw1OAipb7+IspEvKD3l1lRQIqU
-	 Rb+BWtH/0cwbTj+/v5l86jlwyh1rU7RkPnvjAL5CmFtX36SXFkTlh+5gW7WfaFZQYP
-	 p/29meQu9x6LfrrDhn+aCQ5qj/NpE5vuzsPX8CG0=
+	b=D7Dp3iQ22WUtkWzujVpdFq9PNZ91VqccSfJcZ/9rA4B3saeOD+lWRyzNv1sAxhW/A
+	 ZkX8CZr5oVJaJXbABlsAaNtyyU5tevlCshefd3bfcj4MX7ly3ULTQRbiH57/gFChWu
+	 57occCqZGBaL/q6jR4jBdoIvIukHgOFUYevW2YDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405045AbfHBJnY (ORCPT
+        id S2404468AbfHBJn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:43:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45878 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:43:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404042AbfHBJnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:43:08 -0400
+        id S2391954AbfHBJnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:43:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A835520679;
-        Fri,  2 Aug 2019 09:43:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D7BB20679;
+        Fri,  2 Aug 2019 09:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738987;
-        bh=d8J/eyduV+erwOk2PgEXLcSJfL3INtQfXul//p44UDE=;
+        s=default; t=1564738994;
+        bh=BNjn9YxPzNl3/wZkvHFhI70VUuK9qv3cMeiVmH51GzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nlN9Syh9mhaSofPKQY2zhq5JQ3OPxjydmkZ8Kcu3pYPTc0HcxKFI90UNvy5C/Wm+b
-         EtSXi70pdcJbCjN0pyFdm6eJsIzVyMLUdtvgSHupjZXV6raC3UakggOOdif83dcpSb
-         MQsbEUqFvOZJT6TJ6uQehc6GQrhOEGpsvlb+gAQc=
+        b=0pqyKB1DVj7qjNAL/+YtHdHnY0/0sXUy73SfPiYSXokzqspe41klEg7Cw2qcJRjLF
+         yujfK1zC/PWPanqqlUF9uqHxzs+RjOBFoMrOEx2eJRjED10dvjrWUBMfogFHleIi+c
+         eyGZ9YyAcQhryTL8mN/Q9IQjY/hw2/dlXCRhfDzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 073/223] gtp: fix use-after-free in gtp_newlink()
-Date:   Fri,  2 Aug 2019 11:34:58 +0200
-Message-Id: <20190802092243.571212596@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 076/223] scsi: NCR5380: Always re-enable reselection interrupt
+Date:   Fri,  2 Aug 2019 11:35:01 +0200
+Message-Id: <20190802092243.758580816@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,109 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a2bed90704c68d3763bf24decb1b781a45395de8 ]
+From: Finn Thain <fthain@telegraphics.com.au>
 
-Current gtp_newlink() could be called after unregister_pernet_subsys().
-gtp_newlink() uses gtp_net but it can be destroyed by
-unregister_pernet_subsys().
-So unregister_pernet_subsys() should be called after
-rtnl_link_unregister().
+commit 57f31326518e98ee4cabf9a04efe00ed57c54147 upstream.
 
-Test commands:
-   #SHELL 1
-   while :
-   do
-	   for i in {1..5}
-	   do
-		./gtp-link add gtp$i &
-	   done
-	   killall gtp-link
-   done
+The reselection interrupt gets disabled during selection and must be
+re-enabled when hostdata->connected becomes NULL. If it isn't re-enabled a
+disconnected command may time-out or the target may wedge the bus while
+trying to reselect the host. This can happen after a command is aborted.
 
-   #SHELL 2
-   while :
-   do
-	modprobe -rv gtp
-   done
+Fix this by enabling the reselection interrupt in NCR5380_main() after
+calls to NCR5380_select() and NCR5380_information_transfer() return.
 
-Splat looks like:
-[  753.176631] BUG: KASAN: use-after-free in gtp_newlink+0x9b4/0xa5c [gtp]
-[  753.177722] Read of size 8 at addr ffff8880d48f2458 by task gtp-link/7126
-[  753.179082] CPU: 0 PID: 7126 Comm: gtp-link Tainted: G        W         5.2.0-rc6+ #50
-[  753.185801] Call Trace:
-[  753.186264]  dump_stack+0x7c/0xbb
-[  753.186863]  ? gtp_newlink+0x9b4/0xa5c [gtp]
-[  753.187583]  print_address_description+0xc7/0x240
-[  753.188382]  ? gtp_newlink+0x9b4/0xa5c [gtp]
-[  753.189097]  ? gtp_newlink+0x9b4/0xa5c [gtp]
-[  753.189846]  __kasan_report+0x12a/0x16f
-[  753.190542]  ? gtp_newlink+0x9b4/0xa5c [gtp]
-[  753.191298]  kasan_report+0xe/0x20
-[  753.191893]  gtp_newlink+0x9b4/0xa5c [gtp]
-[  753.192580]  ? __netlink_ns_capable+0xc3/0xf0
-[  753.193370]  __rtnl_newlink+0xb9f/0x11b0
-[ ... ]
-[  753.241201] Allocated by task 7186:
-[  753.241844]  save_stack+0x19/0x80
-[  753.242399]  __kasan_kmalloc.constprop.3+0xa0/0xd0
-[  753.243192]  __kmalloc+0x13e/0x300
-[  753.243764]  ops_init+0xd6/0x350
-[  753.244314]  register_pernet_operations+0x249/0x6f0
-[ ... ]
-[  753.251770] Freed by task 7178:
-[  753.252288]  save_stack+0x19/0x80
-[  753.252833]  __kasan_slab_free+0x111/0x150
-[  753.253962]  kfree+0xc7/0x280
-[  753.254509]  ops_free_list.part.11+0x1c4/0x2d0
-[  753.255241]  unregister_pernet_operations+0x262/0x390
-[ ... ]
-[  753.285883] list_add corruption. next->prev should be prev (ffff8880d48f2458), but was ffff8880d497d878. (next.
-[  753.287241] ------------[ cut here ]------------
-[  753.287794] kernel BUG at lib/list_debug.c:25!
-[  753.288364] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-[  753.289099] CPU: 0 PID: 7126 Comm: gtp-link Tainted: G    B   W         5.2.0-rc6+ #50
-[  753.291036] RIP: 0010:__list_add_valid+0x74/0xd0
-[  753.291589] Code: 48 39 da 75 27 48 39 f5 74 36 48 39 dd 74 31 48 83 c4 08 b8 01 00 00 00 5b 5d c3 48 89 d9 48b
-[  753.293779] RSP: 0018:ffff8880cae8f398 EFLAGS: 00010286
-[  753.294401] RAX: 0000000000000075 RBX: ffff8880d497d878 RCX: 0000000000000000
-[  753.296260] RDX: 0000000000000075 RSI: 0000000000000008 RDI: ffffed10195d1e69
-[  753.297070] RBP: ffff8880cd250ae0 R08: ffffed101b4bff21 R09: ffffed101b4bff21
-[  753.297899] R10: 0000000000000001 R11: ffffed101b4bff20 R12: ffff8880d497d878
-[  753.298703] R13: 0000000000000000 R14: ffff8880cd250ae0 R15: ffff8880d48f2458
-[  753.299564] FS:  00007f5f79805740(0000) GS:ffff8880da400000(0000) knlGS:0000000000000000
-[  753.300533] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  753.301231] CR2: 00007fe8c7ef4f10 CR3: 00000000b71a6006 CR4: 00000000000606f0
-[  753.302183] Call Trace:
-[  753.302530]  gtp_newlink+0x5f6/0xa5c [gtp]
-[  753.303037]  ? __netlink_ns_capable+0xc3/0xf0
-[  753.303576]  __rtnl_newlink+0xb9f/0x11b0
-[  753.304092]  ? rtnl_link_unregister+0x230/0x230
+Cc: Michael Schmitz <schmitzmic@gmail.com>
+Cc: stable@vger.kernel.org # v4.9+
+Fixes: 8b00c3d5d40d ("ncr5380: Implement new eh_abort_handler")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/NCR5380.c |   12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 60df6e391ad2..7e1df403a37d 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -1358,9 +1358,9 @@ late_initcall(gtp_init);
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -813,6 +813,8 @@ static void NCR5380_main(struct work_str
+ 			NCR5380_information_transfer(instance);
+ 			done = 0;
+ 		}
++		if (!hostdata->connected)
++			NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+ 		spin_unlock_irq(&hostdata->lock);
+ 		if (!done)
+ 			cond_resched();
+@@ -1208,8 +1210,6 @@ static struct scsi_cmnd *NCR5380_select(
+ 		spin_lock_irq(&hostdata->lock);
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+ 		NCR5380_reselect(instance);
+-		if (!hostdata->connected)
+-			NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+ 		shost_printk(KERN_ERR, instance, "reselection after won arbitration?\n");
+ 		goto out;
+ 	}
+@@ -1217,7 +1217,6 @@ static struct scsi_cmnd *NCR5380_select(
+ 	if (err < 0) {
+ 		spin_lock_irq(&hostdata->lock);
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+-		NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
  
- static void __exit gtp_fini(void)
- {
--	unregister_pernet_subsys(&gtp_net_ops);
- 	genl_unregister_family(&gtp_genl_family);
- 	rtnl_link_unregister(&gtp_link_ops);
-+	unregister_pernet_subsys(&gtp_net_ops);
+ 		/* Can't touch cmd if it has been reclaimed by the scsi ML */
+ 		if (!hostdata->selecting)
+@@ -1255,7 +1254,6 @@ static struct scsi_cmnd *NCR5380_select(
+ 	if (err < 0) {
+ 		shost_printk(KERN_ERR, instance, "select: REQ timeout\n");
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+-		NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+ 		goto out;
+ 	}
+ 	if (!hostdata->selecting) {
+@@ -1906,9 +1904,6 @@ static void NCR5380_information_transfer
+ 					 */
+ 					NCR5380_write(TARGET_COMMAND_REG, 0);
  
- 	pr_info("GTP module unloaded\n");
- }
--- 
-2.20.1
-
+-					/* Enable reselect interrupts */
+-					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+-
+ 					maybe_release_dma_irq(instance);
+ 					return;
+ 				case MESSAGE_REJECT:
+@@ -1940,8 +1935,6 @@ static void NCR5380_information_transfer
+ 					 */
+ 					NCR5380_write(TARGET_COMMAND_REG, 0);
+ 
+-					/* Enable reselect interrupts */
+-					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+ #ifdef SUN3_SCSI_VME
+ 					dregs->csr |= CSR_DMA_ENABLE;
+ #endif
+@@ -2049,7 +2042,6 @@ static void NCR5380_information_transfer
+ 					cmd->result = DID_ERROR << 16;
+ 					complete_cmd(instance, cmd);
+ 					maybe_release_dma_irq(instance);
+-					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+ 					return;
+ 				}
+ 				msgout = NOP;
 
 
