@@ -2,113 +2,201 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0E8C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511E5C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36EF20880
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:15:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="PgP7focY"
+	by mail.kernel.org (Postfix) with ESMTP id 282AC2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 06:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564726724;
+	bh=S2K3wR2YDF5jGxl+ayK0HwksDCL5fZX4E5bkNRkkw6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Oty3RKTkPE8fHxH7bfIpggDxATyivKzRwvB4V+Rkfgj1XOjfqw9OlfiK9ZQ1T7l5P
+	 gzRQqSGcBaRT+8SsXqEP8/3DE+rU6L2khDWy8PLB7u49pyHS8fP7dRddQsYzd3Jdhq
+	 6pAhwmc27hG0f/N31Whyh1jRbXJ7smxAsn8NbBL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388594AbfHBGPO (ORCPT
+        id S1730931AbfHBGSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 02:15:14 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37879 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730060AbfHBGPN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 02:15:13 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y26so72823811qto.4;
-        Thu, 01 Aug 2019 23:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NJK0vgby3QC9u2a5qKlpfOibBVA+YhLUqRUYNCsX67s=;
-        b=PgP7focY6IphrJ0Ka6VBAFp34SGs4AFVlbQ8h+T5hEgGjrsGAtyfS5VtWYxuf1fB3m
-         G+G/whb1JuWvP8jS5gKDkp8csr8jyEVbEGfMgycCRW987rpX71qlDCuF5C+foPZpnr8s
-         eFjM9tysfTKhL3Cuoj+drO25SsCwBeC4Ja5tw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NJK0vgby3QC9u2a5qKlpfOibBVA+YhLUqRUYNCsX67s=;
-        b=ELgrDPtevRM/zBUmIavoRZo3FMuFTn4AjbwFMRWvgenUaZ15AL90b7IAYxqE8HLTVm
-         QU/RuuJ4aRkrMDwVWq4kDsnHtPEb9o7mk/bkzXjJ/qsqXrSpoL4CATCrw1kVRl7mCW7R
-         ffq4fC5jE7+faHGlANTdDdM+bELggSXmcwBERYHjHVJ92Rr/pWnramX9OCPXjn642sfq
-         eYQqpTmQW68T2mhOKa8e9srhZ4LvpRx6CXw3htt4paLB9nSmnBgZ+QlxcyvDp57EOQDG
-         kX4DQ/E2QB2Au5PVyZQ4QrB3B11j3Uut7acoSRqRZxmyBdBa6nB0oGVy1LlMuGdNMuzu
-         2URw==
-X-Gm-Message-State: APjAAAXru2bQlGvZndZTQIRM0iyHpURCJF4HPpLjTdXE8xCzJyu3NWC2
-        qvDUd7EoY9s4tOp+v0uEpONWn28pe1u56WKAcx0=
-X-Google-Smtp-Source: APXvYqxWVuZjhzsME6hUNKy4bA2amIPVfDbn9cMpQvV9ctZBzTD1Uxuckz0CHPM+oREl2o6o08TXkm81e59OxjE6k6I=
-X-Received: by 2002:ac8:1887:: with SMTP id s7mr94164225qtj.220.1564726512547;
- Thu, 01 Aug 2019 23:15:12 -0700 (PDT)
+        Fri, 2 Aug 2019 02:18:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726667AbfHBGSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 02:18:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B53C2206A3;
+        Fri,  2 Aug 2019 06:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564726721;
+        bh=S2K3wR2YDF5jGxl+ayK0HwksDCL5fZX4E5bkNRkkw6w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wt2hZUnBBuDeU0ylH1gYzOMkO4yaW+uABg2cFnjUn+tsd/HWksAiDtDVZ0+/EUIgy
+         JNYSiv1BEA8r9iewfHHSg3Z0lIBLnXlLOUVn9kFHtfthFrprIMCJEAnLgnw6TOeZ7j
+         AwG0fVWgtT6LV87aqZ4NHRslk6GvazxhCpnFG+CQ=
+Date:   Fri, 2 Aug 2019 08:18:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hridya Valsaraju <hridya@google.com>
+Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH] Add default binder devices through binderfs when
+ configured
+Message-ID: <20190802061838.GA10844@kroah.com>
+References: <20190801223556.209184-1-hridya@google.com>
 MIME-Version: 1.0
-References: <20190724081313.12934-1-andrew@aj.id.au> <CACRpkdapypySGPrLgSMSNy1fzkca2BfMUGzf3koFWQZ-M5VOvg@mail.gmail.com>
- <9d0f2b20-e6f6-419c-a866-c4a0dd92aa63@www.fastmail.com> <3691f6cb-2451-43f7-9f00-d5693071ba59@www.fastmail.com>
-In-Reply-To: <3691f6cb-2451-43f7-9f00-d5693071ba59@www.fastmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 2 Aug 2019 06:15:01 +0000
-Message-ID: <CACPK8XcWK9Gf=pW5ds=3muoXHAWnyYfHcVSVh+anaTigtMO8yA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] ARM: dts: aspeed: Deprecate g[45]-style compatibles
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801223556.209184-1-hridya@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 1 Aug 2019 at 05:45, Andrew Jeffery <andrew@aj.id.au> wrote:
->
->
->
-> On Tue, 30 Jul 2019, at 10:27, Andrew Jeffery wrote:
-> >
-> >
-> > On Tue, 30 Jul 2019, at 07:23, Linus Walleij wrote:
-> > > On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > >
-> > > > It's probably best if we push the three patches all through one tree rather
-> > > > than fragmenting. Is everyone happy if Joel applies them to the aspeed tree?
-> > >
-> > > If you are sure it will not collide with parallell work in the
-> > > pinctrl tree, yes.
-> > > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > >
-> > > (If it does collide I'd prefer to take the pinctrl patches and fix the
-> > > conflicts in my tree.)
-> >
-> > Fair enough, I don't know the answer so I'll poke around. I don't
-> > really mind
-> > where the series goes in, I just want to avoid landing only part of it
-> > if I split it up.
->
-> Okay, it currently conflicts with my cleanup-devicetree-warnings series.
->
-> Joel, do you mind if Linus takes this series through the pinctrl tree, given
-> the fix to the devicetrees is patch 1/3?
+On Thu, Aug 01, 2019 at 03:35:56PM -0700, Hridya Valsaraju wrote:
+> If CONFIG_ANDROID_BINDERFS is set, the default binder devices
+> specified by CONFIG_ANDROID_BINDER_DEVICES are created in each
+> binderfs instance instead of global devices being created by
+> the binder driver.
+> 
+> Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Signed-off-by: Hridya Valsaraju <hridya@google.com>
+> ---
+>  drivers/android/binder.c   |  3 ++-
+>  drivers/android/binderfs.c | 46 ++++++++++++++++++++++++++++++++++----
+>  2 files changed, 44 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index 466b6a7f8ab7..65a99ac26711 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -6279,7 +6279,8 @@ static int __init binder_init(void)
+>  				    &transaction_log_fops);
+>  	}
+>  
+> -	if (strcmp(binder_devices_param, "") != 0) {
+> +	if (!IS_ENABLED(CONFIG_ANDROID_BINDERFS) &&
+> +	    strcmp(binder_devices_param, "") != 0) {
+>  		/*
+>  		* Copy the module_parameter string, because we don't want to
+>  		* tokenize it in-place.
+> diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+> index e773f45d19d9..9f5ed50ffd70 100644
+> --- a/drivers/android/binderfs.c
+> +++ b/drivers/android/binderfs.c
+> @@ -48,6 +48,10 @@ static dev_t binderfs_dev;
+>  static DEFINE_MUTEX(binderfs_minors_mutex);
+>  static DEFINE_IDA(binderfs_minors);
+>  
+> +static char *binder_devices_param = CONFIG_ANDROID_BINDER_DEVICES;
+> +module_param_named(devices, binder_devices_param, charp, 0444);
+> +MODULE_PARM_DESC(devices, "Binder devices to be created by default");
+> +
 
-It depends if you plan more changes to that part of the device tree
-this merge window :)
+Why are you creating a module parameter?  That was not in your changelog
+:(
 
-Linus, perhaps the safer option is for me to take 1/3 through my tree
-and you can take the rest through yours?
 
-Cheers,
 
-Joel
+>  /**
+>   * binderfs_mount_opts - mount options for binderfs
+>   * @max: maximum number of allocatable binderfs binder devices
+> @@ -135,7 +139,6 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
+>  #else
+>  	bool use_reserve = true;
+>  #endif
+> -
+>  	/* Reserve new minor number for the new device. */
+>  	mutex_lock(&binderfs_minors_mutex);
+>  	if (++info->device_count <= info->mount_opts.max)
+> @@ -186,8 +189,7 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
+>  	req->major = MAJOR(binderfs_dev);
+>  	req->minor = minor;
+>  
+> -	ret = copy_to_user(userp, req, sizeof(*req));
+> -	if (ret) {
+> +	if (userp && copy_to_user(userp, req, sizeof(*req))) {
+>  		ret = -EFAULT;
+>  		goto err;
+>  	}
+> @@ -467,6 +469,9 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+>  	int ret;
+>  	struct binderfs_info *info;
+>  	struct inode *inode = NULL;
+> +	struct binderfs_device device_info = { 0 };
+> +	const char *name;
+> +	size_t len;
+>  
+>  	sb->s_blocksize = PAGE_SIZE;
+>  	sb->s_blocksize_bits = PAGE_SHIFT;
+> @@ -521,7 +526,28 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+>  	if (!sb->s_root)
+>  		return -ENOMEM;
+>  
+> -	return binderfs_binder_ctl_create(sb);
+> +	ret = binderfs_binder_ctl_create(sb);
+> +	if (ret)
+> +		return ret;
+> +
+> +	name = binder_devices_param;
+> +	for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
+> +		/*
+> +		 * init_binderfs() has already checked that the length of
+> +		 * device_name_entry->name is not greater than device_info.name.
+> +		 */
+> +		strscpy(device_info.name, name, len + 1);
+> +		ret = binderfs_binder_device_create(inode, NULL, &device_info);
+> +		if (ret)
+> +			return ret;
+> +		name += len;
+> +		if (*name == ',')
+> +			name++;
+> +
+> +	}
+> +
+> +	return 0;
+> +
+>  }
+>  
+>  static struct dentry *binderfs_mount(struct file_system_type *fs_type,
+> @@ -553,6 +579,18 @@ static struct file_system_type binder_fs_type = {
+>  int __init init_binderfs(void)
+>  {
+>  	int ret;
+> +	const char *name;
+> +	size_t len;
+> +
+> +	/* Verify that the default binderfs device names are valid. */
+> +	name = binder_devices_param;
+> +	for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
+> +		if (len > BINDERFS_MAX_NAME)
+> +			return -E2BIG;
+> +		name += len;
+> +		if (*name == ',')
+> +			name++;
+> +	}
+
+This verification should be a separate patch, right?
+
+But the real issue here is I have no idea _why_ you are wanting this
+patch.  The changelog text says _what_ you are doing only, which isn't
+ok.
+
+Please provide more information as to why this is needed, what problem
+it is solving, and break this up into a patch series and resend.
+
+thanks,
+
+greg k-h
