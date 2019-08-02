@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B19C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27680C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C600F2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63A921849
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752077;
-	bh=T2iFgkP0UDzAXbiI2k0wz3wf1VnOxEi+QvaaMJHeMfY=;
+	s=default; t=1564752081;
+	bh=1kTjorHKug1z3+zFnC5XiWcgikyUykEsK13olvWbKPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a9042xhajElr29ZA/Gkas2SfsW96UIrHRdJMs3MvJ6A7N9Cy0XL0X5rhZihl8X7Q3
-	 YneJDizVJJNu8jWBB1l/3r03UFFz3FWcSy8KkS6wj2lGUGfM6pNnDBaoVtQzbxhrbo
-	 pO0DNfE5cHyIxIgYK6CiuTt9dI1F3q0YtQtUArEk=
+	b=q5xru2Yx80+00PisrkoCR3NfmgaGdxNpAZOlAJBm+aqUiqe1DOBqxrvGa8BttpD6C
+	 9kUa+wyHdaTD9IA/B6Ht4Q19omkNS71WxTX8qATpugN7R8QFRAsuTCcp1HOyZnLKpA
+	 sKAibJYUm0Qs96HQVmYeLFE+7pwN/+knAKCPQvpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393546AbfHBNVQ (ORCPT
+        id S2393555AbfHBNVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59524 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:21:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393498AbfHBNU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:20:57 -0400
+        id S2393513AbfHBNVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:21:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B56B021849;
-        Fri,  2 Aug 2019 13:20:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D433B21841;
+        Fri,  2 Aug 2019 13:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752057;
-        bh=T2iFgkP0UDzAXbiI2k0wz3wf1VnOxEi+QvaaMJHeMfY=;
+        s=default; t=1564752072;
+        bh=1kTjorHKug1z3+zFnC5XiWcgikyUykEsK13olvWbKPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kF+BRTJZKkb5JLOblpAsbxxZg0n8Zvuc4nU16qfG0+LLsDH7jrEuIz9etLt/N86b
-         qRuWi0dmy095lQ8E112Dyg2G5ZHgaIs3tTy3KwUw5pHqoifdLGHsOFrKCMQgNUqM2Q
-         pKsb99G+cMJdFfUksXwsi9CHQikSKMsfOdOymcvM=
+        b=gQIBhHvuS02pT/aBbxjg/vZDDDhNwLFWzH3U0q9vxl9NMHHkeW7A9jgBqQt18FwC8
+         7tnhiNYNrqTpuNVxj0eN4NOZlGZc/CvcZ7zhWKesXyqUoc/9UJriZKsoKQcTk5NYM3
+         UAoLem/NZ4xMcJICoYiUPawPprs2VqLN0XHw/uWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.2 37/76] powerpc/papr_scm: Force a scm-unbind if initial scm-bind fails
-Date:   Fri,  2 Aug 2019 09:19:11 -0400
-Message-Id: <20190802131951.11600-37-sashal@kernel.org>
+Cc:     Dmitry Safonov <dima@arista.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 40/76] iommu/vt-d: Check if domain->pgd was allocated
+Date:   Fri,  2 Aug 2019 09:19:14 -0400
+Message-Id: <20190802131951.11600-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -60,73 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vaibhav Jain <vaibhav@linux.ibm.com>
+From: Dmitry Safonov <dima@arista.com>
 
-[ Upstream commit 3a855b7ac7d5021674aa3e1cc9d3bfd6b604e9c0 ]
+[ Upstream commit 3ee9eca760e7d0b68c55813243de66bbb499dc3b ]
 
-In some cases initial bind of scm memory for an lpar can fail if
-previously it wasn't released using a scm-unbind hcall. This situation
-can arise due to panic of the previous kernel or forced lpar
-fadump. In such cases the H_SCM_BIND_MEM return a H_OVERLAP error.
+There is a couple of places where on domain_init() failure domain_exit()
+is called. While currently domain_init() can fail only if
+alloc_pgtable_page() has failed.
 
-To mitigate such cases the patch updates papr_scm_probe() to force a
-call to drc_pmem_unbind() in case the initial bind of scm memory fails
-with EBUSY error. In case scm-bind operation again fails after the
-forced scm-unbind then we follow the existing error path. We also
-update drc_pmem_bind() to handle the H_OVERLAP error returned by phyp
-and indicate it as a EBUSY error back to the caller.
+Make domain_exit() check if domain->pgd present, before calling
+domain_unmap(), as it theoretically should crash on clearing pte entries
+in dma_pte_clear_level().
 
-Suggested-by: "Oliver O'Halloran" <oohall@gmail.com>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190629160610.23402-4-vaibhav@linux.ibm.com
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: iommu@lists.linux-foundation.org
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/papr_scm.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/iommu/intel-iommu.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-index 96c53b23e58f9..dad9825e40874 100644
---- a/arch/powerpc/platforms/pseries/papr_scm.c
-+++ b/arch/powerpc/platforms/pseries/papr_scm.c
-@@ -42,8 +42,9 @@ struct papr_scm_priv {
- static int drc_pmem_bind(struct papr_scm_priv *p)
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 2101601adf57d..1ad24367373f4 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -1900,7 +1900,6 @@ static int domain_init(struct dmar_domain *domain, struct intel_iommu *iommu,
+ 
+ static void domain_exit(struct dmar_domain *domain)
  {
- 	unsigned long ret[PLPAR_HCALL_BUFSIZE];
--	uint64_t rc, token;
- 	uint64_t saved = 0;
-+	uint64_t token;
-+	int64_t rc;
+-	struct page *freelist;
  
- 	/*
- 	 * When the hypervisor cannot map all the requested memory in a single
-@@ -63,6 +64,10 @@ static int drc_pmem_bind(struct papr_scm_priv *p)
- 	} while (rc == H_BUSY);
+ 	/* Remove associated devices and clear attached or cached domains */
+ 	rcu_read_lock();
+@@ -1910,9 +1909,12 @@ static void domain_exit(struct dmar_domain *domain)
+ 	/* destroy iovas */
+ 	put_iova_domain(&domain->iovad);
  
- 	if (rc) {
-+		/* H_OVERLAP needs a separate error path */
-+		if (rc == H_OVERLAP)
-+			return -EBUSY;
-+
- 		dev_err(&p->pdev->dev, "bind err: %lld\n", rc);
- 		return -ENXIO;
- 	}
-@@ -316,6 +321,14 @@ static int papr_scm_probe(struct platform_device *pdev)
+-	freelist = domain_unmap(domain, 0, DOMAIN_MAX_PFN(domain->gaw));
++	if (domain->pgd) {
++		struct page *freelist;
  
- 	/* request the hypervisor to bind this region to somewhere in memory */
- 	rc = drc_pmem_bind(p);
-+
-+	/* If phyp says drc memory still bound then force unbound and retry */
-+	if (rc == -EBUSY) {
-+		dev_warn(&pdev->dev, "Retrying bind after unbinding\n");
-+		drc_pmem_unbind(p);
-+		rc = drc_pmem_bind(p);
+-	dma_free_pagelist(freelist);
++		freelist = domain_unmap(domain, 0, DOMAIN_MAX_PFN(domain->gaw));
++		dma_free_pagelist(freelist);
 +	}
-+
- 	if (rc)
- 		goto err;
  
+ 	free_domain_mem(domain);
+ }
 -- 
 2.20.1
 
