@@ -2,114 +2,120 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBB4C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC60C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886842086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:39:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEJYr5Ht"
+	by mail.kernel.org (Postfix) with ESMTP id BA7F92086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbfHBKjw (ORCPT
+        id S1730010AbfHBKj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:39:52 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37833 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfHBKjw (ORCPT
+        Fri, 2 Aug 2019 06:39:59 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39911 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfHBKj7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:39:52 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c9so52553450lfh.4;
-        Fri, 02 Aug 2019 03:39:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5482PCZzUMFMKuxfVvg4Yev3g0GqmaJh0s8a2jYMhWU=;
-        b=oEJYr5HtY21v/R0yUWUqTDOGxQ4aV+3YBib4fTTbtJ9LAsigZlma6ZgGrFk429vtTs
-         8K6xXpykk661zyEbBcGOI1wahifn29OW21y14f8H6pZeB6Gglru5OLCBepG9BFgt28dN
-         sH77qA8B59Vc9ZAb/dpiey2lmJbDl2NTzgDXoqgANURBQVCQE9U8e3RAF4RUoRerrfzC
-         cGhHfrpE+e1Z43SpJanvXA2bWZr3wxJL+Bamm+fQ5dpH0H5swpLKyEcytkFSeViqktyO
-         vf9+p4q2aYpiP4mduNmGwwvR3HfcHP8jdAvz+kQFiomUaBYinbXPTULM5O/CdBFqWdqw
-         Bf7Q==
+        Fri, 2 Aug 2019 06:39:59 -0400
+Received: by mail-qt1-f195.google.com with SMTP id l9so73300248qtu.6;
+        Fri, 02 Aug 2019 03:39:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5482PCZzUMFMKuxfVvg4Yev3g0GqmaJh0s8a2jYMhWU=;
-        b=IFoZcMECrCZrrnSK3Cy2lJeN66WHLjlkpyHMq7XRuQteUYwhRxFjlKrUE01KUn2d+p
-         k0t0TRb3LLkR+AdmcLVAnqWwCXQGcnIowCTYBENfJz3QH/g4z5KmOfTfq6acMR4i2BvA
-         glPTjhKOm81cKfClDRrWHf90ZsyZLf9kZ26jQGdksmmOXxHdddSFuo23pl/Nhzvg0ytd
-         l5YWO3XJTcJLfjQbWEuK5E6PdzsgwRWSVCiew0wC/+O+YqqqSgO+5OXsDYOhDFtr2+n0
-         wI9+xiZuT+q0Wio+uuTjOf036dhv5KVvZHuBX97nf/liTVgA2w/NkEwiDZLYSHh1PlCB
-         kv6A==
-X-Gm-Message-State: APjAAAUA36OLefjcSR5riKYi7VzhQvhBvz6bFU58opgCuScgBXJWfGtA
-        RmL1VnCT3aHW4J7Pc9XPFH3RToOfJkT68BPm5sfeqm3+
-X-Google-Smtp-Source: APXvYqyfHp5ss+YMsd9FBA/CWTPi5XIqr0RtlJ6Z2s+wPVY7vdlWXexjaMPryPpA5eC6RJi2x9ByMFoEKtCGCYcd8Z8=
-X-Received: by 2002:a19:491d:: with SMTP id w29mr64758033lfa.149.1564742389620;
- Fri, 02 Aug 2019 03:39:49 -0700 (PDT)
+         :message-id:subject:to;
+        bh=rlJwQwKozaN0IUoAzhdQgNUAloq8MbsoeODQ5XHIhJY=;
+        b=smTgesqlEhm59X+NJGhyYz6n7wKcJv9UxN3KLCmauIYr1XwW+sqMBDZ2bmSMqJjT1F
+         IlyXl/6NV/KePa4flHdcX8Pl+CrZG70wG9TX9biGHtiDjB5Tf1Rxx7hT7X1g6Gqfp2Br
+         PdGYnL7108bhvqBS9Hc4E0Q/TvdETZ2JlSQDtKiS3SPKwt33L8+ZdxAu4yLcew9Xnxfw
+         Fi6cFyaEegGKajE8TOyAdbZGFPy3RMMbfEwTQGmL/+lwQqdgZDoQogsMxcshMG4Ptg1W
+         WnC1zs2DJ73zKG3flHxQFJZ59x4S7jMo2KEgVGSaZgAfoqbEEKfQmDsIXtUcbgFeUFDD
+         R6Qw==
+X-Gm-Message-State: APjAAAWgGek8WZ9jaMdupvLvPOw+COtDHwvKjvR5o56fok8gR3GgUmHf
+        pVo03OQhdmk5fwfcaey5WgivnkBblwcPdUUVD/KLZTC4WdE=
+X-Google-Smtp-Source: APXvYqxjI2APY3XKV/roWB/IOZhK6Qh9LDCyhPcXTsJGr54ySUA2d5+lcfIDZDxkRrdXwBZu1D17z1dmyaU77yOWmQs=
+X-Received: by 2002:ac8:f99:: with SMTP id b25mr86917918qtk.142.1564742398001;
+ Fri, 02 Aug 2019 03:39:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <259986242.BvXPX32bHu@devpool35> <20190606185900.GA19937@kroah.com>
- <CANiq72n2E4Ue0MU5mWitSbsscizPQKML0QQx_DBwJVni+eWMHQ@mail.gmail.com>
- <4007272.nJfEYfeqza@devpool35> <CANiq72=T8nH3HHkYvWF+vPMscgwXki1Ugiq6C9PhVHJUHAwDYw@mail.gmail.com>
- <20190802103346.GA14255@kroah.com>
-In-Reply-To: <20190802103346.GA14255@kroah.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 2 Aug 2019 12:39:38 +0200
-Message-ID: <CANiq72neLZLB5dKsqK8y=_JDNf=Ea07b_jYutBXJ8Y=kse1q8A@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_Linux_4=2E9=2E180_build_fails_with_gcc_9_and_=27cleanu?=
-        =?UTF-8?Q?p=5Fmodule=27_specifies_less_restrictive_attribute_than_its_targ?=
-        =?UTF-8?Q?et_=E2=80=A6?=
-To:     Greg KH <greg@kroah.com>
-Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190730014924.2193-1-deepa.kernel@gmail.com> <20190730014924.2193-10-deepa.kernel@gmail.com>
+ <20190731152609.GB7077@magnolia> <CABeXuvpiom9eQi0y7PAwAypUP1ezKKRfbh-Yqr8+Sbio=QtUJQ@mail.gmail.com>
+ <20190801224344.GC17372@mit.edu>
+In-Reply-To: <20190801224344.GC17372@mit.edu>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 2 Aug 2019 12:39:41 +0200
+Message-ID: <CAK8P3a3nqmWBXBiFL1kGmJ7yQ_=5S4Kok0YVB3VMFVBuYjFGOQ@mail.gmail.com>
+Subject: Re: [PATCH 09/20] ext4: Initialize timestamps limits
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 12:33 PM Greg KH <greg@kroah.com> wrote:
+On Fri, Aug 2, 2019 at 12:43 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
 >
-> On Fri, Aug 02, 2019 at 12:19:33PM +0200, Miguel Ojeda wrote:
-> > On Fri, Aug 2, 2019 at 10:17 AM Rolf Eike Beer <eb@emlix.com> wrote:
-> > >
-> > > Am Samstag, 8. Juni 2019, 14:00:34 CEST schrieb Miguel Ojeda:
-> > > > On Thu, Jun 6, 2019 at 8:59 PM Greg KH <greg@kroah.com> wrote:
-> > > > > "manually fixing it up" means "hacked it to pieces" to me, I have no
-> > > > > idea what the end result really was :)
-> > > > >
-> > > > > If someone wants to send me some patches I can actually apply, that
-> > > > > would be best...
-> > > >
-> > > > I will give it a go whenever I get some free time :)
-> > >
-> > > I fear this has never happened, did it?
+> On Thu, Aug 01, 2019 at 12:18:28PM -0700, Deepa Dinamani wrote:
+> > > Say you have a filesystem with s_inode_size > 128 where not all of the
+> > > ondisk inodes have been upgraded to i_extra_isize > 0 and therefore
+> > > don't support nanoseconds or times beyond 2038.  I think this happens on
+> > > ext3 filesystems that reserved extra space for inode attrs that are
+> > > subsequently converted to ext4?
 > >
-> > No. Between summer, holidays and a conference I didn't get to do it.
-> >
-> > Done the minimal approach here:
-> >
-> >   https://github.com/ojeda/linux/commits/compiler-attributes-backport
-> >
-> > Tested building a handful of drivers with gcc 4.6.4, 8.3.0 and 9.1.1.
-> >
-> > Greg, I could backport the entire compiler_attributes.h, but given
-> > this is stable, we are supposed to minimize changes, right?
-> >
-> > I tried to imitate what you do in other stable patches, please check
-> > the Cc:, Link: lines and the "commit ... upstream" just in case.
+> > I'm confused about ext3 being converted to ext4. If the converted
+> > inodes have extra space, then ext4_iget() will start using the extra
+> > space when it modifies the on disk inode, won't it?i
 >
-> If only those 2 patches are all that is needed, nice!  I'll gladly take
-> them, can you send them to me (and cc: the stable list) in email so I
-> can queue them up for the next round of releases after this one?
+> It is possible that you can have an ext3 file system with (for
+> example) 256 byte inodes, and all of the extra space was used for
+> extended attributes, then ext4 won't have the extra space available.
+> This is going toh be on an inode-by-inode basis, and if an extended
+> attribute is motdified or deleted, the space would become available,t
+> and then inode would start getting a higher resolution timestamp.
 
-Done! Please double check, since I am not used to send to stable.
+Is it correct to assume that this kind of file would have to be
+created using the ext3.ko file system implementation that was
+removed in linux-4.3, but not using ext2.ko or ext4.ko (which
+would always set the extended timestamps even in "-t ext2" or
+"-t ext3" mode)?
 
-Cheers,
-Miguel
+I tried to reproduce this on a modern kernel and with and
+moderately old debugfs (1.42.13) but failed.
+
+> I really don't think it's worth worrying about that, though.  It's
+> highly unlikely ext3 file systems will be still be in service by the
+> time it's needed in 2038.  And if so, it's highly unlikely they would
+> be converted to ext4.
+
+As the difference is easily visible even before y2038 by using
+utimensat(old_inode, future_date) on a file, we should at least
+decide what the sanest behavior is that we can easily implement,
+and then document what is expected to happen here.
+
+If we check for s_min_extra_isize instead of s_inode_size
+to determine s_time_gran/s_time_max, we would warn
+at mount time as well as and consistently truncate all
+timestamps to full 32-bit seconds, regardless of whether
+there is actually space or not.
+
+Alternatively, we could warn if s_min_extra_isize is
+too small, but use i_inode_size to determine
+s_time_gran/s_time_max anyway.
+
+From looking at e2fsprogs git history, I see that
+s_min_extra_isize has always been set by mkfs since
+2008, but I'm not sure if there would have been a
+case in which it remains set but the ext3.ko would
+ignore it and use that space anyway.
+
+       Arnd
