@@ -2,113 +2,77 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A47DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05656C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CAD20657
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB0320657
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="eVWg8TPm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QMntMBRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404415AbfHBIoF (ORCPT
+        id S2404434AbfHBIoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:44:05 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40277 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbfHBIoF (ORCPT
+        Fri, 2 Aug 2019 04:44:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56166 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730872AbfHBIoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 04:44:05 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r1so76271675wrl.7
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 01:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4fvZtEUHzSAKzVrV5AOyqmz39HB0VJQNW+QYwyaRSP8=;
-        b=eVWg8TPmTdTRpDNDCOsjC4/KOvtHtbA59TBmQpqBTpEAcbGe1sHWV9Ml4O0/GHWjIC
-         TIk0QMnDFaqET3emtRhSQaQHsG2RAbId4A2KPGGTXL7s29NqSW0K7GhCoMcmZ+KZ8dKI
-         PwC6FuSYrrbGPGJf7mkFuicfKeymU78FbY7saknYYNLWo+vqWdXIxb2vNEl+c/oSo1vJ
-         D72TyjVS2XCILOUSIqknYw+d+6Lri7hcad32mztop9cmXfd93VlHjoizzJNNbHW94HmX
-         c5BZ/dtEwOAoDlwI85Byw8UHZh49hT1dy6qXDhYaW/bYdZh16X7zSNGwUAWBPXZVo3k4
-         lV6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4fvZtEUHzSAKzVrV5AOyqmz39HB0VJQNW+QYwyaRSP8=;
-        b=fN1CKO0LT0zpLZLx+N9qIlZ1zXUf6RBS7yR8REUZQN1FXyQMj4hET7YzysIfnNaNkt
-         5pFsgg6rygZMaEoFSEUCw2aTS+uNvzQw2OfHThVp5gDXuj5rfSFudZvo26qerDbJdKwi
-         sO8R0OUBcrdlxnpDi833fRFpAmh63AvcmZOAKOrIR9D4D68OYVpcxCIry5enR24oR+tQ
-         ySV17t4fOcx61IbXNh50c5qB1PMpdC3gYZfoipZDXui/k4rtPliFSjmRr08ITV6VVbOn
-         iCtDlbbtqRLZp2pQ99OUv2Wz6YNVRBVExI9sCkVdqUd3sJTPH5rFOXT6tpqdHGQm6/x+
-         0RUg==
-X-Gm-Message-State: APjAAAU2V5+IgeYsJGW9JiLj2B8Dx3ZNEmN3NLDpzqxufF7X8Rc8c0jf
-        TT2cY652zng/NFo+oviDJ6JJSQatW+8q6zCfcRE=
-X-Google-Smtp-Source: APXvYqxas7y2Zc7v8qVSPU0beTBrHfoNVyfQR6SsOerqrYpig1rTc8AZXwSt8FqQnA9mXGGMe0nRqgvYh5el8Os44GI=
-X-Received: by 2002:adf:b1cb:: with SMTP id r11mr136837207wra.328.1564735442789;
- Fri, 02 Aug 2019 01:44:02 -0700 (PDT)
+        Fri, 2 Aug 2019 04:44:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=v00Ip7tFTxfOW7ci2f67H952n7pZPTilSNtqWzGu0Kc=; b=QMntMBRpF4JmUY3VNLhxAr9gu
+        9J7x8c1UZJylRbJCbHSbhFuOCugKaSW/zMuZ0MKqz3y9tQ7LCKVDIVgkb7mNgNgtBHuttyvui9yFC
+        10dYHUbbA2H8or9294FPrr9iobMHCelDY/LmJxnT7JH11SpB9uSMxJi7cpoOCbdHhzp1Dra+R9gfk
+        6BL2aH04Qh5ls+AZ1N9Xo5gxGTOBystLL95Khj4l99Qk1jH/VzMlPx1115zqRMBx5fHuDFXB6w263
+        T6BWWDcHTWE0XuYw6Lghmff+d9Kg6tDfMN0kHuGp/d1Uec+uQtYmgrAVOIf8FTEx+CwbvQmwEPr1C
+        v/TQhHBfQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1htTBF-0000mV-5w; Fri, 02 Aug 2019 08:44:53 +0000
+Date:   Fri, 2 Aug 2019 01:44:53 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH] riscv: kbuild: add virtual memory system selection
+Message-ID: <20190802084453.GA1410@infradead.org>
+References: <alpine.DEB.2.21.9999.1907261259420.26670@viisi.sifive.com>
 MIME-Version: 1.0
-References: <20190802074620.115029-1-anup.patel@wdc.com> <20190802074620.115029-9-anup.patel@wdc.com>
- <72d8efbf-ec62-ab1e-68bf-e0c5f0bc256e@redhat.com>
-In-Reply-To: <72d8efbf-ec62-ab1e-68bf-e0c5f0bc256e@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 2 Aug 2019 14:13:52 +0530
-Message-ID: <CAAhSdy2_ZsnT7gSKb624r9wzuJSx+1TnKxgW6srtqvXV1Ri9Aw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 08/19] RISC-V: KVM: Implement VCPU world-switch
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.9999.1907261259420.26670@viisi.sifive.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 2:00 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 02/08/19 09:47, Anup Patel wrote:
-> > +     /* Save Host SSTATUS, HSTATUS, SCRATCH and STVEC */
-> > +     csrr    t0, CSR_SSTATUS
-> > +     REG_S   t0, (KVM_ARCH_HOST_SSTATUS)(a0)
-> > +     csrr    t1, CSR_HSTATUS
-> > +     REG_S   t1, (KVM_ARCH_HOST_HSTATUS)(a0)
-> > +     csrr    t2, CSR_SSCRATCH
-> > +     REG_S   t2, (KVM_ARCH_HOST_SSCRATCH)(a0)
-> > +     csrr    t3, CSR_STVEC
-> > +     REG_S   t3, (KVM_ARCH_HOST_STVEC)(a0)
-> > +
->
-> A possible optimization: if these cannot change while Linux runs (I am
-> thinking especially of STVEC and HSTATUS, but perhaps SSCRATCH can be
-> saved on kvm_arch_vcpu_load too) you can avoid the csrr and store.
+On Fri, Jul 26, 2019 at 01:00:49PM -0700, Paul Walmsley wrote:
+> 
+> The RISC-V specifications currently define three virtual memory
+> translation systems: Sv32, Sv39, and Sv48.  Sv32 is currently specific
+> to 32-bit systems; Sv39 and Sv48 are currently specific to 64-bit
+> systems.  The current kernel only supports Sv32 and Sv39, but we'd
+> like to start preparing for Sv48.  As an initial step, allow the
+> virtual memory translation system to be selected via kbuild, and stop
+> the build if an option is selected that the kernel doen't currently
+> support.
+> 
+> This patch currently has no functional impact.
 
-Actual exception vector of Host Linux is different so we switch STVEC
-every time.
+It cause the user to be able to select a config which thus won't build.
+So it is not just useless, which already is a reason not to merge it,
+but actively harmful, which is even worse.
 
-HSTATUS.SPV is set whenever we come back from Guest world so
-while we are in in-kernel run loop with interrupts enabled we can get
-external interrupt and HSTATUS.SPV bit can affect SRET of interrupt
-handler. To handle this we switch HSTATUS every time.
-
-The world switch code uses SSCRATCH to save vcpu->arch pointer
-which is later used on return path. Now, I did not want to restrict Host
-Linux from using SSCRATCH for some other purpose hence we
-switch SSCRATCH every time.
-
-Regards,
-Anup
+Even if we assume we want to implement Sv48 eventually (which seems
+to be a bit off), we need to make this a runtime choice and not a
+compile time one to not balloon the number of configs that distributions
+(and kernel developers) need to support.
