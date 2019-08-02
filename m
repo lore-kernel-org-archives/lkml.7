@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D2DC19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899C2C41514
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 640E62173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6139F2080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 02:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDJzpDwE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nL5gA8Hk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390899AbfHBCUn (ORCPT
+        id S2390922AbfHBCUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 22:20:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33240 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390828AbfHBCUg (ORCPT
+        Thu, 1 Aug 2019 22:20:47 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36745 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390798AbfHBCUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 22:20:36 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so35158665pfq.0;
-        Thu, 01 Aug 2019 19:20:36 -0700 (PDT)
+        Thu, 1 Aug 2019 22:20:41 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k8so33033470plt.3;
+        Thu, 01 Aug 2019 19:20:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UPRfD7vyasD2XVfdl0NeBW26eHm6l3ABDQSSTKq1HX4=;
-        b=TDJzpDwE2oXFjm8cRNjQ8xrt4Ta2d3wf2Cpo0GoFM9thJ0XtvCvH4mP4rm1obsYrxe
-         XfcKcMWeGW7+jGqqsIeZqIQivf0rjt9KMIQPJwYrX9aXaeynZfYblNMyZkWwFJwZth79
-         e4fMCJd20kqdE18/wOh4Jbz0PSr2Nv8bt8KSNv7hBSUy22vg0EGXVDctxg6pWi24C6E/
-         aytHIR9O0Oe5Nfk4mH6Tawu8cduDw0xsgEveOl493+9jCWiudUUBNmztlAbrHUK6dK5c
-         cZre9/z25iL+oH1skqqYaquBXUxt6bEZ/OhP0nmn5k+Ox8GOIXBHEB9I8h3iWNYPWkz5
-         1iug==
+        bh=Zk7mJfsjIPJK9Qgsn0u5osZJajJrXebF0c1tZrgdgoI=;
+        b=nL5gA8HkBp1qUXL8uSk44yRPDpQM1GzztnKY+vjFkpLO4+ej8Ho3KCm6C4y+E5m8LE
+         h9Iaftsjh1UsJUr+Pb21bHX0tSSHXapiGzhmehbpJMXTX/8OVSokepo7ZYp/sAOufRJM
+         Dn+Q/LNbJL1I2nNGcQbJ8ZQUaKHbOXUsbWTmj876BCAWOoZWZ6NdZCYaUx//X8gLE1Fe
+         Ao4iR+EL7uUQrdQvqWcLAimsvB7jPrqJUl8VTCYTJSYJDpeTKlwz9tVoL0Kex6hlm0oH
+         POKBdW3YOuZavjeRiRdEl20H0UanKpKGw2d45prgvnfRqnKjFtcxDl+Dci+NMwFW+1GP
+         a0XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UPRfD7vyasD2XVfdl0NeBW26eHm6l3ABDQSSTKq1HX4=;
-        b=O/2on/4TleY8TsZaVSCoBciH1qwiLdHVE75yph/dULXGk3HO2dgFenWiiinp8zbzTN
-         mEB1HfkKBMs3rEl0FLSpHoKhxEUyYkgE8vYKTwXXXGEgEdT5+puJlUesrmTq0FgM58p7
-         09Zq8FCsq1AHRcWL7MqWjVTBi2RGsHO7SLhC9b54lWkjxYdZQVILr4o7E7H/X35Pp1FQ
-         dy5KY8Q9be4KVlIyqbHCskgtQPcIZon3UrVe4vVtRPzI2SvFCJkueVgXbagQ6ZFesoWH
-         oETs9J/cZx2Na9pZp0+ElNsbNA62NAqyCP29okc3zFyS3U6Xkq1x22TcEhiKmJp9i0UU
-         VDig==
-X-Gm-Message-State: APjAAAXmIZ27TjAwu2+6iFdPH1CztuOXrCWxWuyUiBN7XXEWP+8skThi
-        IbC9woUPiJAFONU6neV5WjRjVKJC51s=
-X-Google-Smtp-Source: APXvYqzQQn/4+/qhyIZ5gzUBopHqYfn0J/db4aXm+9arPe8eAWsGtJFKretZ1QBLJdXBLY5X+jbCWQ==
-X-Received: by 2002:a17:90a:7f85:: with SMTP id m5mr1901500pjl.78.1564712435904;
-        Thu, 01 Aug 2019 19:20:35 -0700 (PDT)
+        bh=Zk7mJfsjIPJK9Qgsn0u5osZJajJrXebF0c1tZrgdgoI=;
+        b=TqWGNxAa9xTzZ6eTxQtVeXu0BqbtE5RovYv1uXo2HtK9iBvecz6PZX/FBw9eAVpLMH
+         9B1tbz2k3ycmBKA/CZ2+tZlMZEEDUq+ytS9rJ2dS/PhAMA3vvK/fsKJ08lA6ZBbgb06x
+         RwhQ3NeSe8rnbQ2WQD2spuerX6VX5mY2XnOdNhy7AE3hozcafrXW4aJZ7nM0oNR5DsxJ
+         A5ZWo526LXllNbwpxrAH4SWvjOglFfBlI0y2j1DO28u5qTisAP1nnyp7T+TYsGHIQkxC
+         8Lp8UjWv2nxhxntPyAJuWT3438v6k6FEyCqqavjrjWPGJp7vDIw9UQlccp0eqgkl/o1S
+         6rSQ==
+X-Gm-Message-State: APjAAAWLCv6BlwngHn5AckS0e+Js3dH7M6wJNrx/ZbSwSK9PlvIJe9j5
+        SHKlpOKqUW4KkyhMoD6hm70=
+X-Google-Smtp-Source: APXvYqztsbUVpJnR1pWJXE324fW+SugJBxHHKLNQRZirN/VnD1v0OsiDr/qT4pG5Y0OOV3QlfOZRKQ==
+X-Received: by 2002:a17:902:830c:: with SMTP id bd12mr131600821plb.237.1564712440479;
+        Thu, 01 Aug 2019 19:20:40 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id u9sm38179744pgc.5.2019.08.01.19.20.34
+        by smtp.gmail.com with ESMTPSA id u9sm38179744pgc.5.2019.08.01.19.20.39
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 01 Aug 2019 19:20:35 -0700 (PDT)
+        Thu, 01 Aug 2019 19:20:40 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -80,17 +80,14 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         netdev@vger.kernel.org, rds-devel@oss.oracle.com,
         sparclinux@vger.kernel.org, x86@kernel.org,
         xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mihaela Muraru <mihaela.muraru21@gmail.com>,
-        Suniel Mahesh <sunil.m@techveda.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kees Cook <keescook@chromium.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        Sidong Yang <realwakka@gmail.com>,
-        Kishore KP <kishore.p@techveda.org>
-Subject: [PATCH 15/34] staging/vc04_services: convert put_page() to put_user_page*()
-Date:   Thu,  1 Aug 2019 19:19:46 -0700
-Message-Id: <20190802022005.5117-16-jhubbard@nvidia.com>
+        Bhumika Goyal <bhumirks@gmail.com>,
+        Arvind Yadav <arvind.yadav.cs@gmail.com>
+Subject: [PATCH 18/34] fbdev/pvr2fb: convert put_page() to put_user_page*()
+Date:   Thu,  1 Aug 2019 19:19:49 -0700
+Message-Id: <20190802022005.5117-19-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802022005.5117-1-jhubbard@nvidia.com>
 References: <20190802022005.5117-1-jhubbard@nvidia.com>
@@ -111,50 +108,32 @@ release_pages().
 This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
 ("mm: introduce put_user_page*(), placeholder versions").
 
-Cc: Eric Anholt <eric@anholt.net>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mihaela Muraru <mihaela.muraru21@gmail.com>
-Cc: Suniel Mahesh <sunil.m@techveda.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Kees Cook <keescook@chromium.org>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Sidong Yang <realwakka@gmail.com>
-Cc: Kishore KP <kishore.p@techveda.org>
-Cc: linux-rpi-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devel@driverdev.osuosl.org
+Cc: Bhumika Goyal <bhumirks@gmail.com>
+Cc: Arvind Yadav <arvind.yadav.cs@gmail.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- .../vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/video/fbdev/pvr2fb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-index 61c69f353cdb..ec92b4c50e95 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -336,10 +336,7 @@ cleanup_pagelistinfo(struct vchiq_pagelist_info *pagelistinfo)
- 	}
+diff --git a/drivers/video/fbdev/pvr2fb.c b/drivers/video/fbdev/pvr2fb.c
+index 7ff4b6b84282..0e4f9aa6444d 100644
+--- a/drivers/video/fbdev/pvr2fb.c
++++ b/drivers/video/fbdev/pvr2fb.c
+@@ -700,8 +700,7 @@ static ssize_t pvr2fb_write(struct fb_info *info, const char *buf,
+ 	ret = count;
  
- 	if (pagelistinfo->pages_need_release) {
--		unsigned int i;
--
--		for (i = 0; i < pagelistinfo->num_pages; i++)
--			put_page(pagelistinfo->pages[i]);
-+		put_user_pages(pagelistinfo->pages, pagelistinfo->num_pages);
- 	}
+ out_unmap:
+-	for (i = 0; i < nr_pages; i++)
+-		put_page(pages[i]);
++	put_user_pages(pages, nr_pages);
  
- 	dma_free_coherent(g_dev, pagelistinfo->pagelist_buffer_size,
-@@ -454,10 +451,7 @@ create_pagelist(char __user *buf, size_t count, unsigned short type)
- 				       __func__, actual_pages, num_pages);
+ 	kfree(pages);
  
- 			/* This is probably due to the process being killed */
--			while (actual_pages > 0) {
--				actual_pages--;
--				put_page(pages[actual_pages]);
--			}
-+			put_user_pages(pages, actual_pages);
- 			cleanup_pagelistinfo(pagelistinfo);
- 			return NULL;
- 		}
 -- 
 2.22.0
 
