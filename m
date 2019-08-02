@@ -2,110 +2,246 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9785C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A415C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D97920665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="n2uaUNmk"
+	by mail.kernel.org (Postfix) with ESMTP id 42CB9206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389973AbfHBHgj (ORCPT
+        id S2389983AbfHBHiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 03:36:39 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42021 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726601AbfHBHgj (ORCPT
+        Fri, 2 Aug 2019 03:38:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38634 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfHBHiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 03:36:39 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x727VJJx012518;
-        Fri, 2 Aug 2019 09:36:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
- : from : message-id : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=dNdFBpnmHr57yWOWaZOQqM6cLIxmm15yY5RHlO47mkw=;
- b=n2uaUNmkk6TmujMSGcFYd1PxMzfaQYxVJS1u7h+b2LKKp3xO1AKkBOnKdOlODirELbPq
- OStYdNHcG56tCBok3AwwXvVTcUv+fxLTl9y8h/nDTjGGDbwzMFX+OKWvtOTNRwBsUwHz
- PSDWOAU6DAZyTN12Xz70gYK1lqSnejizUWzCy3jjP/8v+7cUTyNXIBk5QP5iTMoEIbcd
- IXqmPht/XJSsjIIOjDGeRsRJrQ1HJVszrxXoHGYxg80yDFNp5nAYgyLgtOv4KDhP1/5G
- SRDAKqvTQLzs5PI48F7cexIDRrXt+Ftkf4aKeW2SrlqIE97nUKd2b8IUUPHAO2aqLYjo 2w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2u3vd05qye-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 02 Aug 2019 09:36:20 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1386F3A;
-        Fri,  2 Aug 2019 07:36:19 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 037D5206862;
-        Fri,  2 Aug 2019 09:36:19 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 2 Aug
- 2019 09:36:18 +0200
-Subject: Re: [PATCH] ARM: dts: stm32: add phy-dsi-supply property on
- stm32mp157c-ev1
-To:     =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-References: <1564410548-20436-1-git-send-email-yannick.fertre@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <346d04ad-17ed-40c8-f10a-b13a2ea79d92@st.com>
-Date:   Fri, 2 Aug 2019 09:36:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 03:38:15 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1htS8S-0005sF-R0; Fri, 02 Aug 2019 09:37:56 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Petr Mladek <pmladek@suse.com>, Jeff Dike <jdike@addtoit.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@google.com>,
+        David Rientjes <rientjes@google.com>,
+        kunit-dev@googlegroups.com,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>, wfg@linux.intel.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Timothy Bird <Tim.Bird@sony.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+References: <20190716175021.9CA412173C@mail.kernel.org>
+        <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
+        <20190718175024.C3EC421019@mail.kernel.org>
+        <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
+        <20190719000834.GA3228@google.com>
+        <20190722200347.261D3218C9@mail.kernel.org>
+        <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
+        <20190722235411.06C1320840@mail.kernel.org>
+        <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
+        <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
+        <20190726083148.d4gf57w2nt5k7t6n@pathway.suse.cz>
+        <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com>
+Date:   Fri, 02 Aug 2019 09:37:53 +0200
+In-Reply-To: <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com>
+        (Brendan Higgins's message of "Thu, 1 Aug 2019 11:55:20 -0700")
+Message-ID: <871ry4yq3y.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1564410548-20436-1-git-send-email-yannick.fertre@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_04:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yannick
+On 2019-08-01, Brendan Higgins <brendanhiggins@google.com> wrote:
+> On Fri, Jul 26, 2019 at 1:31 AM Petr Mladek <pmladek@suse.com> wrote:
+>> On Thu 2019-07-25 13:21:12, Brendan Higgins wrote:
+>>> On Wed, Jul 24, 2019 at 12:31 AM Petr Mladek <pmladek@suse.com> wrote:
+>>>> On Mon 2019-07-22 16:54:10, Stephen Boyd wrote:
+>>>>> Quoting Brendan Higgins (2019-07-22 15:30:49)
+>>>>>> On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>>>>>>> What's the calling context of the assertions and expectations? I
+>>>>>>> still don't like the fact that string stream needs to allocate
+>>>>>>> buffers and throw them into a list somewhere because the calling
+>>>>>>> context matters there.
+>>>>>>
+>>>>>> The calling context is the same as before, which is anywhere.
+>>>>>
+>>>>> Ok. That's concerning then.
+>>>>>
+>>>>>>> I'd prefer we just wrote directly to the console/log via printk
+>>>>>>> instead. That way things are simple because we use the existing
+>>>>>>> buffering path of printk, but maybe there's some benefit to the
+>>>>>>> string stream that I don't see? Right now it looks like it
+>>>>>>> builds a string and then dumps it to printk so I'm sort of lost
+>>>>>>> what the benefit is over just writing directly with printk.
+>>>>>>
+>>>>>> It's just buffering it so the whole string gets printed
+>>>>>> uninterrupted.  If we were to print out piecemeal to printk,
+>>>>>> couldn't we have another call to printk come in causing it to
+>>>>>> garble the KUnit message we are in the middle of printing?
+>>>>>
+>>>>> Yes, printing piecemeal by calling printk many times could lead to
+>>>>> interleaving of messages if something else comes in such as an
+>>>>> interrupt printing something. Printk has some support to hold
+>>>>> "records" but I'm not sure how that would work here because
+>>>>> KERN_CONT talks about only being used early on in boot code. I
+>>>>> haven't looked at printk in detail though so maybe I'm all wrong
+>>>>> and KERN_CONT just works?
+>>>>
+>>>> KERN_CONT does not guarantee that the message will get printed
+>>>> together. The pieces get interleaved with messages printed in
+>>>> parallel.
+>>>>
+>>>> Note that KERN_CONT was originally really meant to be used only
+>>>> during boot. It was later used more widely and ended in the best
+>>>> effort category.
+>>>>
+>>>> There were several attempts to make it more reliable. But it was
+>>>> always either too complicated or error prone or both.
+>>>>
+>>>> You need to use your own buffering if you rely want perfect output.
+>>>> The question is if it is really worth the complexity. Also note
+>>>> that any buffering reduces the chance that the messages will reach
+>>>> the console.
+>>>
+>>> Seems like that settles it then. Thanks!
+>>>
+>>>> BTW: There is a work in progress on a lockless printk ring buffer.
+>>>> It will make printk() more secure regarding deadlocks. But it might
+>>>> make transparent handling of continuous lines even more tricky.
+>>>>
+>>>> I guess that local buffering, before calling printk(), will be
+>>>> even more important then. Well, it might really force us to create
+>>>> an API for it.
+>>>
+>>> Cool! Can you CC me on that discussion?
+>>
+>> Adding John Oggness into CC.
+>>
+>> John, please CC Brendan Higgins on the patchsets eventually switching
+>> printk() into the lockless buffer. The test framework is going to
+>> do its own buffering to keep the related messages together.
+>>
+>> The lockless ringbuffer might make handling of related (partial)
+>> lines worse or better. It might justify KUnit's extra buffering
+>> or it might allow to get rid of it.
+>
+> Thanks for CC'ing me on the printk ringbuffer thread. It looks like it
+> actually probably won't affect my needs for KUnit logging. The biggest
+> reason I need some sort of buffering system is to be able to compose
+> messages piece meal into a single message that will be printed out to
+> the user as a single message with no messages from other printk
+> callers printed out in the middle of mine.
 
-On 7/29/19 4:29 PM, Yannick Fertré wrote:
-> The dsi physical layer is powered by the 1v8 power controller supply.
-> 
-> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
-> ---
->   arch/arm/boot/dts/stm32mp157c-ev1.dts | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> index feb8f77..19d69d0 100644
-> --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> @@ -101,6 +101,7 @@
->   &dsi {
->   	#address-cells = <1>;
->   	#size-cells = <0>;
-> +	phy-dsi-supply = <&reg18>;
->   	status = "okay";
->   
->   	ports {
-> 
+printk has this same requirement for its CONT messages. You can read
+about how I propose to implement that here[0], using a separate prb
+ringbuffer for buffered storage until all the pieces are available.
 
-Applied on stm32-next.
+It is not my goal that multiple subsystems start making use of the prb
+ringbuffer. However, its features can be attractive if you don't want to
+worry about multiple writers/readers or context (including NMI). Before
+writing "yet another ringbuffer" [1] it might be worth the effort to at
+least see if one of the existing implementations can work (or be
+extended to work) for you.
 
-Thanks.
-Alex
+John Ogness
+
+[0] https://lkml.kernel.org/r/87imt2bl0k.fsf@linutronix.de
+[1] https://lwn.net/Articles/789603/
+
+> The prb does look interesting; however, it appears that to get the
+> semantics that I need, I would have to put my entire message in a
+> single data block and would consequently need to know the size of my
+> message a priori, which is problematic. Consequently, it seems as
+> though I will probably need to compose my entire message using my own
+> buffering system.
+>
+>>>> Note that stroring the messages into the printk log is basically
+>>>> safe in any context. It uses temporary per-CPU buffers for
+>>>> recursive messages and in NMI. The only problem is panic() when
+>>>> some CPU gets stuck with the lock taken. This will get solved by
+>>>> the lockless ringbuffer. Also the temporary buffers will not be
+>>>> necessary any longer.
+>>>
+>>> Sure, I think Stephen's concern is all the supporting code that is
+>>> involved. Not printk specifically. It just means a lot more of KUnit
+>>> has to be IRQ safe.
+>>
+>> I see.
+>>
+>> BTW: I wonder if KUnit could reuse the existing seq_buf
+>> implementation for buffering messages.
+>>
+>> I am sorry if it has already been proposed and rejected for some
+>> reason. I might have missed it. Feel free to just point me to
+>> same older mail.
+>
+> Yeah, we discussed it briefly here:
+>
+> https://lkml.org/lkml/2019/5/17/497
+>
+> Looks like I forgot to include my reasoning in the commit text, sorry
+> about that.
+>
+>>>> Much bigger problems are with consoles. There are many of them. It
+>>>> means a lot of code and more locks involved, including scheduler
+>>>> locks. Note that console lock is a semaphore.
+>>>
+>>> That shouldn't affect us though, right? As long as we continue to
+>>> use the printk interface?
+>>
+>> I guess that it should not affect KUnit.
+>>
+>> The only problem might be if the testing framework calls printk()
+>> inside scheduler or console code. And only when the tested code
+>> uses the same locks that will be used by the called printk().
+>
+> Yeah, well printk will not be our only problem in those instances.
+>
+>> To be honest I do not fully understand KUnit design. I am not
+>> completely sure how the tested code is isolated from the running
+>> system. Namely, I do not know if the tested code shares
+>> the same locks with the system running the test.
+>
+> No worries, I don't expect printk to be the hang up in those cases. It
+> sounds like KUnit has a long way to evolve before printk is going to
+> be a limitation.
+>
+> Thanks!
