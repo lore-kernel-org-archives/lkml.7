@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1549C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEE3C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03AF2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90C2217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752095;
-	bh=Z3+DlEgPPOfyTqSMYWiDIsaMH7bYjj3YAxmRj4cC21E=;
+	s=default; t=1564752104;
+	bh=o3wy5nRhYLcAi7lP2oNchUBAb7gBx8iqR6nIER7hnXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f47+nhAj0Av/lPwx1AX6O3wij3Wq5QUFY+DuTKnTPKmOnPG52mrfPa2hLywjrcJM6
-	 jpoHoISlmcgSA9y6Kp3QSOtZSPRO2gy/c8ZdWw4PSHwUOfMAiCfPIrxqxZWktrJTTX
-	 ysLvj0oswEhKGzJ3uxhX979fOLdW/2FFuylUEphk=
+	b=VZA5OlS/O8BRakbBqLkQXS1Wp/ilTcv5QN8p5aDbLhXERHB23sNJh/rnYs6Xm5A4v
+	 L2laFUq+Yf2eHMoZ7ndVBJeszSfw2q2hKFmPVZ6ecA2De6cKivMaSmGJnvP6U+QwQO
+	 4MWyvVCsFpjkWPpZ8H/L4kfRXn6tzFboGFF0IuT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393600AbfHBNVe (ORCPT
+        id S2393612AbfHBNVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59810 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:21:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393556AbfHBNVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:21:20 -0400
+        id S1729866AbfHBNVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:21:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 001D02173E;
-        Fri,  2 Aug 2019 13:21:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D3862173E;
+        Fri,  2 Aug 2019 13:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752079;
-        bh=Z3+DlEgPPOfyTqSMYWiDIsaMH7bYjj3YAxmRj4cC21E=;
+        s=default; t=1564752101;
+        bh=o3wy5nRhYLcAi7lP2oNchUBAb7gBx8iqR6nIER7hnXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PeGbkyne4hjVzsD8BRlnd8sgaQMQeSbUTtq4sGfIRKyWWTcXCcooWt2I9XIk01dL2
-         UKNjoskG0KTJgQCIB+nJFYAQY9bX6j9TuZee5Bfpq7mOVXynToHkewL4BwT7xVhsRb
-         9yJ1TleS0L7/E4HScu5cs+Sb6mcMWJP2+AxOnwJg=
+        b=ENDeIjx/AufWvzT6xj39MfOZdYby+aRZiRU4Ap6elgBYkAtVIpuc/QpJSEpIt4enO
+         qvid6m7y6iRT8d4QKyS+rV9Cw7G8iugmNiHPwgm1ZWzUY9Uon8QAoohLkubfuAshtC
+         jtq55+iudaYCbqOvProZ2M5B7D+X9zle3jzlBzE8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shubhashree Dhar <dhar@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 41/76] drm/msm/dpu: Correct dpu encoder spinlock initialization
-Date:   Fri,  2 Aug 2019 09:19:15 -0400
-Message-Id: <20190802131951.11600-41-sashal@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 44/76] arm64: dts: imx8mm: Correct SAI3 RXC/TXFS pin's mux option #1
+Date:   Fri,  2 Aug 2019 09:19:18 -0400
+Message-Id: <20190802131951.11600-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -60,43 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhashree Dhar <dhar@codeaurora.org>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 2e7b801eadbf327bf61041c943e5c44a5de4b0e5 ]
+[ Upstream commit 52d09014bb104a9157c0f5530700291052d2955c ]
 
-dpu encoder spinlock should be initialized during dpu encoder
-init instead of dpu encoder setup which is part of modeset init.
+According to i.MX8MM reference manual Rev.1, 03/2019:
 
-Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
-[seanpaul resolved conflict in old init removal and revised the commit message]
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/1561357632-15361-1-git-send-email-dhar@codeaurora.org
+SAI3_RXC pin's mux option #1 should be GPT1_CLK, NOT GPT1_CAPTURE2;
+SAI3_TXFS pin's mux option #1 should be GPT1_CAPTURE2, NOT GPT1_CLK.
+
+Fixes: c1c9d41319c3 ("dt-bindings: imx: Add pinctrl binding doc for imx8mm")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 0ea1501966594..c62f7abcf509c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -2226,8 +2226,6 @@ int dpu_encoder_setup(struct drm_device *dev, struct drm_encoder *enc,
- 	if (ret)
- 		goto fail;
- 
--	spin_lock_init(&dpu_enc->enc_spinlock);
--
- 	atomic_set(&dpu_enc->frame_done_timeout_ms, 0);
- 	timer_setup(&dpu_enc->frame_done_timer,
- 			dpu_encoder_frame_done_timeout, 0);
-@@ -2281,6 +2279,7 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
- 
- 	drm_encoder_helper_add(&dpu_enc->base, &dpu_encoder_helper_funcs);
- 
-+	spin_lock_init(&dpu_enc->enc_spinlock);
- 	dpu_enc->enabled = false;
- 
- 	return &dpu_enc->base;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h b/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
+index e25f7fcd79975..cffa8991880d1 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
++++ b/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
+@@ -462,7 +462,7 @@
+ #define MX8MM_IOMUXC_SAI3_RXFS_GPIO4_IO28                                   0x1CC 0x434 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXFS_TPSMP_HTRANS0                                0x1CC 0x434 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_SAI3_RX_BCLK                                  0x1D0 0x438 0x000 0x0 0x0
+-#define MX8MM_IOMUXC_SAI3_RXC_GPT1_CAPTURE2                                 0x1D0 0x438 0x000 0x1 0x0
++#define MX8MM_IOMUXC_SAI3_RXC_GPT1_CLK                                      0x1D0 0x438 0x000 0x1 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_SAI5_RX_BCLK                                  0x1D0 0x438 0x4D0 0x2 0x2
+ #define MX8MM_IOMUXC_SAI3_RXC_GPIO4_IO29                                    0x1D0 0x438 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_TPSMP_HTRANS1                                 0x1D0 0x438 0x000 0x7 0x0
+@@ -472,7 +472,7 @@
+ #define MX8MM_IOMUXC_SAI3_RXD_GPIO4_IO30                                    0x1D4 0x43C 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXD_TPSMP_HDATA0                                  0x1D4 0x43C 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC                                 0x1D8 0x440 0x000 0x0 0x0
+-#define MX8MM_IOMUXC_SAI3_TXFS_GPT1_CLK                                     0x1D8 0x440 0x000 0x1 0x0
++#define MX8MM_IOMUXC_SAI3_TXFS_GPT1_CAPTURE2                                0x1D8 0x440 0x000 0x1 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_SAI5_RX_DATA1                                0x1D8 0x440 0x4D8 0x2 0x2
+ #define MX8MM_IOMUXC_SAI3_TXFS_GPIO4_IO31                                   0x1D8 0x440 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_TPSMP_HDATA1                                 0x1D8 0x440 0x000 0x7 0x0
 -- 
 2.20.1
 
