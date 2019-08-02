@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8A6C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8153C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC7D2064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924502087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739595;
-	bh=UopGAuB+MwMe7Kfos3DzGTgDnrX771ytZVnZuWACKvw=;
+	s=default; t=1564739598;
+	bh=oQL3dscuh6qX7Vre1LFBvA27cPXfWucIPTTDPm7CFkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PDl4LCWehi+g3AhK0WtDeqsg0wI2nqBiXfG2cDYqVPZUSge7eqPTF9TovbmgNaPIr
-	 3c5rGRMd8xRunQCJJsTIY+X6FOUHwiPn/UqtVgZlx38orvoIVrMbokPyS67Z9lvmo3
-	 RvPaTJ6zBYjBvn9dDVy7YMRp9BjTB5Ra12A7o9D4=
+	b=SJSIcXEVaAd/uSl78aPWffCaEG+NHQDqhiwE0TwUazNt/uY0V0pWWP+3pElEB6VHI
+	 bvry1OAGsacTy/fBZ1eX/N/AMkFNNmX0KTjX/0sTeEXeie8XisnT97fEbbv2gQGQHK
+	 tfyd/DS0keKVgikqi+a4nndtkSGh9V6Y6OEh31Ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406185AbfHBJxO (ORCPT
+        id S2405753AbfHBJxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 2 Aug 2019 05:53:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59198 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406170AbfHBJxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:53:13 -0400
+        id S2406161AbfHBJxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:53:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4016206A2;
-        Fri,  2 Aug 2019 09:53:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1484F20665;
+        Fri,  2 Aug 2019 09:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739593;
-        bh=UopGAuB+MwMe7Kfos3DzGTgDnrX771ytZVnZuWACKvw=;
+        s=default; t=1564739590;
+        bh=oQL3dscuh6qX7Vre1LFBvA27cPXfWucIPTTDPm7CFkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hcQMVXhLpuOIGbTqiwJDKWWpbUzrez0MVl5RzEgr/5FTfV0vfc1RRXfb/J1dd+Y6c
-         VRyrXdVNCxLtM6xXv9X9N/w1CjBqFoi+KBObbRSZB3jxdy4jni08E2aa1leAFiWxGS
-         aieQxcAyuMID9U93FqcH7KKvUQBLiLEtgx1J3WeA=
+        b=gIrF60FSu0yM17DWQnhHXV5Cbb60ys8OdpxEN5xJRj52HDWEtDFdh8xvW99+4S+m2
+         ORZYq5Epn9Quqn2r7d3PbRblUqLlbnK6hnUb2ugnvlmOIOzyS4ATxQD19PTjYkDAmm
+         Jm9fPaC10WWQi9B4MjV7d17E5fJoTM3dZZhtW6b0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 4.9 223/223] ceph: hold i_ceph_lock when removing caps for freeing inode
-Date:   Fri,  2 Aug 2019 11:37:28 +0200
-Message-Id: <20190802092250.987972725@linuxfoundation.org>
+        stable@vger.kernel.org, Miroslav Lichvar <mlichvar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rodolfo Giometti <giometti@enneenne.com>,
+        Greg KH <greg@kroah.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 222/223] drivers/pps/pps.c: clear offset flags in PPS_SETPARAMS ioctl
+Date:   Fri,  2 Aug 2019 11:37:27 +0200
+Message-Id: <20190802092250.950010784@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,49 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan, Zheng <zyan@redhat.com>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-commit d6e47819721ae2d9d090058ad5570a66f3c42e39 upstream.
+commit 5515e9a6273b8c02034466bcbd717ac9f53dab99 upstream.
 
-ceph_d_revalidate(, LOOKUP_RCU) may call __ceph_caps_issued_mask()
-on a freeing inode.
+The PPS assert/clear offset corrections are set by the PPS_SETPARAMS
+ioctl in the pps_ktime structs, which also contain flags.  The flags are
+not initialized by applications (using the timepps.h header) and they
+are not used by the kernel for anything except returning them back in
+the PPS_GETPARAMS ioctl.
 
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Set the flags to zero to make it clear they are unused and avoid leaking
+uninitialized data of the PPS_SETPARAMS caller to other applications
+that have a read access to the PPS device.
+
+Link: http://lkml.kernel.org/r/20190702092251.24303-1-mlichvar@redhat.com
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Rodolfo Giometti <giometti@enneenne.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/caps.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/pps/pps.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -1081,20 +1081,23 @@ static int send_cap_msg(struct ceph_mds_
- }
+--- a/drivers/pps/pps.c
++++ b/drivers/pps/pps.c
+@@ -129,6 +129,14 @@ static long pps_cdev_ioctl(struct file *
+ 			pps->params.mode |= PPS_CANWAIT;
+ 		pps->params.api_version = PPS_API_VERS;
  
- /*
-- * Queue cap releases when an inode is dropped from our cache.  Since
-- * inode is about to be destroyed, there is no need for i_ceph_lock.
-+ * Queue cap releases when an inode is dropped from our cache.
-  */
- void ceph_queue_caps_release(struct inode *inode)
- {
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct rb_node *p;
++		/*
++		 * Clear unused fields of pps_kparams to avoid leaking
++		 * uninitialized data of the PPS_SETPARAMS caller via
++		 * PPS_GETPARAMS
++		 */
++		pps->params.assert_off_tu.flags = 0;
++		pps->params.clear_off_tu.flags = 0;
++
+ 		spin_unlock_irq(&pps->lock);
  
-+	/* lock i_ceph_lock, because ceph_d_revalidate(..., LOOKUP_RCU)
-+	 * may call __ceph_caps_issued_mask() on a freeing inode. */
-+	spin_lock(&ci->i_ceph_lock);
- 	p = rb_first(&ci->i_caps);
- 	while (p) {
- 		struct ceph_cap *cap = rb_entry(p, struct ceph_cap, ci_node);
- 		p = rb_next(p);
- 		__ceph_remove_cap(cap, true);
- 	}
-+	spin_unlock(&ci->i_ceph_lock);
- }
- 
- /*
+ 		break;
 
 
