@@ -2,131 +2,121 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BA4C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE0CC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352B020665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="moNr7gZ0"
+	by mail.kernel.org (Postfix) with ESMTP id 2140120665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564740085;
+	bh=5rFg4wi4Wf+7WlkU5Qd2u3AW6e6MuHvRLSEIxRwV5Ac=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TarVbnn5sLuswZD1Eb3i2WKO4YoCPw93xJi4gD1yFmRxGblpcwais007YCZbttNhM
+	 dygV2TmZcCoLLFxLINRPKyLbNecSxA5VdpvHVL3JR4RsVyLVUBoi4hfWu445SFxTQ6
+	 LRvQaba8VBhw1+Wx+IFXJ6BVvLQoh4Sbh05T7edI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407105AbfHBKBR (ORCPT
+        id S2405218AbfHBJoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:01:17 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:59604 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407093AbfHBKBO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:01:14 -0400
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id B6E762E1531;
-        Fri,  2 Aug 2019 13:01:08 +0300 (MSK)
-Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
-        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id HOPkayq66P-18ZKcidf;
-        Fri, 02 Aug 2019 13:01:08 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1564740068; bh=7bbzX4NqS7tPlZl7gqOBotqgWDukNiS3yB34/LQpZj4=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=moNr7gZ0cw46pUWpD6Kc7KZit/7vWlq/+bm9aSLLfyTHajQxFIF6NO0eZbtRnQnlt
-         8/3f6xX2AE9lAZha1WwiDSi+7GkhRjLEfbfSQzeoRWg2vKQ12/g+secRmysS7PnKgh
-         txBLBlys7Azw5kyL63Cc1ZWr+j7i4olh1Dv57I8A=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:6454:ac35:2758:ad6a])
-        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id tiugwYi2cZ-18Q82FIR;
-        Fri, 02 Aug 2019 13:01:08 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC] mm/memcontrol: reclaim severe usage over high limit
- in get_user_pages loop
-To:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, Vladimir Davydov <vdavydov.dev@gmail.com>
-References: <156431697805.3170.6377599347542228221.stgit@buzz>
- <20190729154952.GC21958@cmpxchg.org> <20190729185509.GI9330@dhcp22.suse.cz>
- <20190802094028.GG6461@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <105a2f1f-de5c-7bac-3aa5-87bd1dbcaed9@yandex-team.ru>
-Date:   Fri, 2 Aug 2019 13:01:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 2 Aug 2019 05:44:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392027AbfHBJnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:43:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA37A206A2;
+        Fri,  2 Aug 2019 09:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564738997;
+        bh=5rFg4wi4Wf+7WlkU5Qd2u3AW6e6MuHvRLSEIxRwV5Ac=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fx8hrWo4sHfzcNpP0dppfGsaa0iXNaW2p8pOtdomeCmAqH3w400hsLAOSUShwM0Wc
+         7i2UpXBThDtOZRmRugIYoIDcC6I1Uh1EkDLN8BHiQDxphBCXb8wH03eozlUVYPIKuy
+         qEAFaYIm+Kms22Vtz0xyN9+s3Y2MOsU0mUVmDVSg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 077/223] scsi: mac_scsi: Increase PIO/PDMA transfer length threshold
+Date:   Fri,  2 Aug 2019 11:35:02 +0200
+Message-Id: <20190802092243.877465809@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
+References: <20190802092238.692035242@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190802094028.GG6461@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Finn Thain <fthain@telegraphics.com.au>
+
+commit 7398cee4c3e6aea1ba07a6449e5533ecd0b92cdd upstream.
+
+Some targets introduce delays when handshaking the response to certain
+commands. For example, a disk may send a 96-byte response to an INQUIRY
+command (or a 24-byte response to a MODE SENSE command) too slowly.
+
+Apparently the first 12 or 14 bytes are handshaked okay but then the system
+bus error timeout is reached while transferring the next word.
+
+Since the scsi bus phase hasn't changed, the driver then sets the target
+borken flag to prevent further PDMA transfers. The driver also logs the
+warning, "switching to slow handshake".
+
+Raise the PDMA threshold to 512 bytes so that PIO transfers will be used
+for these commands. This default is sufficiently low that PDMA will still
+be used for READ and WRITE commands.
+
+The existing threshold (16 bytes) was chosen more or less at random.
+However, best performance requires the threshold to be as low as possible.
+Those systems that don't need the PIO workaround at all may benefit from
+mac_scsi.setup_use_pdma=1
+
+Cc: Michael Schmitz <schmitzmic@gmail.com>
+Cc: stable@vger.kernel.org # v4.14+
+Fixes: 3a0f64bfa907 ("mac_scsi: Fix pseudo DMA implementation")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/scsi/mac_scsi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/scsi/mac_scsi.c
++++ b/drivers/scsi/mac_scsi.c
+@@ -54,7 +54,7 @@ static int setup_cmd_per_lun = -1;
+ module_param(setup_cmd_per_lun, int, 0);
+ static int setup_sg_tablesize = -1;
+ module_param(setup_sg_tablesize, int, 0);
+-static int setup_use_pdma = -1;
++static int setup_use_pdma = 512;
+ module_param(setup_use_pdma, int, 0);
+ static int setup_hostid = -1;
+ module_param(setup_hostid, int, 0);
+@@ -325,7 +325,7 @@ static int macscsi_dma_xfer_len(struct S
+ 	struct NCR5380_hostdata *hostdata = shost_priv(instance);
+ 
+ 	if (hostdata->flags & FLAG_NO_PSEUDO_DMA ||
+-	    cmd->SCp.this_residual < 16)
++	    cmd->SCp.this_residual < setup_use_pdma)
+ 		return 0;
+ 
+ 	return cmd->SCp.this_residual;
 
 
-On 02.08.2019 12:40, Michal Hocko wrote:
-> On Mon 29-07-19 20:55:09, Michal Hocko wrote:
->> On Mon 29-07-19 11:49:52, Johannes Weiner wrote:
->>> On Sun, Jul 28, 2019 at 03:29:38PM +0300, Konstantin Khlebnikov wrote:
->>>> --- a/mm/gup.c
->>>> +++ b/mm/gup.c
->>>> @@ -847,8 +847,11 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
->>>>   			ret = -ERESTARTSYS;
->>>>   			goto out;
->>>>   		}
->>>> -		cond_resched();
->>>>   
->>>> +		/* Reclaim memory over high limit before stocking too much */
->>>> +		mem_cgroup_handle_over_high(true);
->>>
->>> I'd rather this remained part of the try_charge() call. The code
->>> comment in try_charge says this:
->>>
->>> 	 * We can perform reclaim here if __GFP_RECLAIM but let's
->>> 	 * always punt for simplicity and so that GFP_KERNEL can
->>> 	 * consistently be used during reclaim.
->>>
->>> The simplicity argument doesn't hold true anymore once we have to add
->>> manual calls into allocation sites. We should instead fix try_charge()
->>> to do synchronous reclaim for __GFP_RECLAIM and only punt to userspace
->>> return when actually needed.
->>
->> Agreed. If we want to do direct reclaim on the high limit breach then it
->> should go into try_charge same way we do hard limit reclaim there. I am
->> not yet sure about how/whether to scale the excess. The only reason to
->> move reclaim to return-to-userspace path was GFP_NOWAIT charges. As you
->> say, maybe we should start by always performing the reclaim for
->> sleepable contexts first and only defer for non-sleeping requests.
-> 
-> In other words. Something like patch below (completely untested). Could
-> you give it a try Konstantin?
-
-This should work but also eliminate all benefits from deferred reclaim:
-bigger batching and running without of any locks.
-
-After that gap between high and max will work just as reserve for atomic allocations.
-
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index ba9138a4a1de..53a35c526e43 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -2429,8 +2429,12 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
->   				schedule_work(&memcg->high_work);
->   				break;
->   			}
-> -			current->memcg_nr_pages_over_high += batch;
-> -			set_notify_resume(current);
-> +			if (gfpflags_allow_blocking(gfp_mask)) {
-> +				reclaim_high(memcg, nr_pages, GFP_KERNEL);
-> +			} else {
-> +				current->memcg_nr_pages_over_high += batch;
-> +				set_notify_resume(current);
-> +			}
->   			break;
->   		}
->   	} while ((memcg = parent_mem_cgroup(memcg)));
-> 
