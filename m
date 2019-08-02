@@ -2,118 +2,102 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99D6C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36102C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABFFB2182B
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04CB521850
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:30:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564752657;
+	bh=J/c2lN83G3C0M26qnZBF3MO8yw9JzY3KeF7k6i+XeFE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=d9cPFuYoaYucAwg0RFFH9uZqPPoB68tFk6Msd3IHABU6G3K6OcwQOnKQ+YsDdoXVn
+	 CY41ijTvfUczrthmqDz+Hu6ppKcNddz2IfTEV14BG7J/xidFGclYOHJTqNIOVe+M12
+	 vEH8Qes1qYKQBAGsufeeU7OhI1Ii74/R3M3F0XNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404295AbfHBNat (ORCPT
+        id S2394138AbfHBNYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:30:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41196 "EHLO mx1.redhat.com"
+        Fri, 2 Aug 2019 09:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404243AbfHBNao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:30:44 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728363AbfHBNYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:24:03 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 43EB030833B0;
-        Fri,  2 Aug 2019 13:30:44 +0000 (UTC)
-Received: from krava (ovpn-204-20.brq.redhat.com [10.40.204.20])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D93985C22F;
-        Fri,  2 Aug 2019 13:30:40 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 15:30:39 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     John Keeping <john@metanate.com>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf unwind: fix libunwind when tid != pid
-Message-ID: <20190802133039.GE27223@krava>
-References: <20190729172430.14880-1-john@metanate.com>
- <20190729172430.14880-2-john@metanate.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EFE621773;
+        Fri,  2 Aug 2019 13:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564752242;
+        bh=J/c2lN83G3C0M26qnZBF3MO8yw9JzY3KeF7k6i+XeFE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QNTGYDLZ3dYWHvLTdFOBfDb64hRx9ROHhK+OJRXbLLpciwGKfbr4VtQ1Mj6SVSB7Y
+         S8+/fIwIVkjdulYsNQjktdtOdxazVO0sKDHSMt5D3KZP4A5d/4enAG96YSekyE1WW5
+         KDctmLYGFtRg5Fp4CjYSJAhvSio00B27k+A/b5uE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 33/42] ARM: dts: bcm: bcm47094: add missing #cells for mdio-bus-mux
+Date:   Fri,  2 Aug 2019 09:22:53 -0400
+Message-Id: <20190802132302.13537-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
+References: <20190802132302.13537-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729172430.14880-2-john@metanate.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 02 Aug 2019 13:30:44 +0000 (UTC)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 06:24:30PM +0100, John Keeping wrote:
-> Commit e5adfc3e7e77 ("perf map: Synthesize maps only for thread group
-> leader") changed the recording side so that we no longer get mmap events
-> for threads other than the thread group leader.
-> 
-> When a file recorded after this change is loaded, the lack of mmap
-> records mean that unwinding is not set up for any other threads.
+From: Arnd Bergmann <arnd@arndb.de>
 
-sry I dont' follow what's the problem here, could you please
-describe the scenrio where the current code is failing in
-more details
+[ Upstream commit 3a9d2569e45cb02769cda26fee4a02126867c934 ]
 
-> 
-> Following the rationale in that commit, move the libunwind fields into
-> struct map_groups and update the libunwind functions to take this
-> instead of the struct thread.  This is only required for
-> unwind__finish_access which must now be called from map_groups__delete
-> and the others are changed for symmetry.
-> 
-> Note that unwind__get_entries keeps the thread argument since it is
-> required for symbol lookup and the libdw unwind provider uses the thread
-> ID.
+The mdio-bus-mux has no #address-cells/#size-cells property,
+which causes a few dtc warnings:
 
-SNIP
+arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #address-cells value
+arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-cells value
 
-> @@ -59,37 +59,31 @@ int unwind__prepare_access(struct thread *thread, struct map *map,
->  		return 0;
->  	}
->  out_register:
-> -	unwind__register_ops(thread, ops);
-> +	unwind__register_ops(mg, ops);
->  
-> -	err = thread->unwind_libunwind_ops->prepare_access(thread);
-> +	err = mg->unwind_libunwind_ops->prepare_access(mg);
->  	if (initialized)
->  		*initialized = err ? false : true;
->  	return err;
->  }
->  
-> -void unwind__flush_access(struct thread *thread)
-> +void unwind__flush_access(struct map_groups *mg)
->  {
-> -	if (!dwarf_callchain_users)
-> -		return;
+Add the normal cell numbers.
 
-why did you remove this check?
+Link: https://lore.kernel.org/r/20190722145618.1155492-1-arnd@arndb.de
+Fixes: 2bebdfcdcd0f ("ARM: dts: BCM5301X: Add support for Linksys EA9500")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/bcm47094-linksys-panamera.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> -
-> -	if (thread->unwind_libunwind_ops)
-> -		thread->unwind_libunwind_ops->flush_access(thread);
-> +	if (mg->unwind_libunwind_ops)
-> +		mg->unwind_libunwind_ops->flush_access(mg);
->  }
->  
-> -void unwind__finish_access(struct thread *thread)
-> +void unwind__finish_access(struct map_groups *mg)
->  {
-> -	if (!dwarf_callchain_users)
-> -		return;
+diff --git a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
+index 36efe410dcd71..9e33c41f54112 100644
+--- a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
++++ b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
+@@ -125,6 +125,9 @@
+ 	};
+ 
+ 	mdio-bus-mux {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
+ 		/* BIT(9) = 1 => external mdio */
+ 		mdio_ext: mdio@200 {
+ 			reg = <0x200>;
+-- 
+2.20.1
 
-why did you remove this check?
-
-thanks,
-jirka
