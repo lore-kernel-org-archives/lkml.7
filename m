@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9E7C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06DCC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7756217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A6E217D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752491;
-	bh=2snpDFlT7WEewY87XvsL/di3w55qsQmUDicUIrYpF+0=;
+	s=default; t=1564752502;
+	bh=23B8luakk6bxCcsYaOoRRvGgRBG7IONl/QGkKxDbqvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mQNhCcS0aTRtSaSF+gxx0u/QcV/xpFs2D6nl02oqln7En7x8v+nQGIxmCiKYFq8R3
-	 O8u6JkjMiZOfo7WYuWVrTHwGwcy1LrY/ySahlOIXYqMz0qihj/7qPqoLXG/fofaZnm
-	 Dvi0+RlVJkpNCCVzzbvWv/S8Z1I7CvYhlJ4bWqtc=
+	b=zQcevCb77B126OatnUJs+3y8NIcSyX+XFl6WheiwmAoLPZVOPUXS1+o3W+S5opEvQ
+	 W8sytxOnu+OhDpkP8Jh99IJ8tfsrHwelExzTPnWTalHe8tYjMf47dNKvQXuYx3aObr
+	 RbdYb0VR6YSmtSw6Fxdp0DGH+nGeynycUsrCV9Cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394827AbfHBN2K (ORCPT
+        id S2394906AbfHBN2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37174 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391552AbfHBN0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:26:21 -0400
+        id S2394525AbfHBN0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD4BD217D4;
-        Fri,  2 Aug 2019 13:26:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 565EB21852;
+        Fri,  2 Aug 2019 13:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752380;
-        bh=2snpDFlT7WEewY87XvsL/di3w55qsQmUDicUIrYpF+0=;
+        s=default; t=1564752375;
+        bh=23B8luakk6bxCcsYaOoRRvGgRBG7IONl/QGkKxDbqvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RXQk4qMhUE0+lhJrnBN4kJmgqkj67mRn/MSyc3lLxSkV6gvEzAH1z6P/3yeOJqfjH
-         fCP5onouoKdBdatyRai94MmJKfboqAxm23tBE2LJ761EsgtXx5jYvzNjCErlmNM8x1
-         3dh9Uor66Y5bS5uCGhzueCW6uOwZmKC3oYQHTUMU=
+        b=q4k1GU1DH4aJNt5ax34tXvn2EuLMi+BVwVufL7iQ6vdNu6u3k86a/mM38oAlnvHho
+         F2T7capDVks/rgHeXHPUDxsYaCBq5exQCy0JteXpC+jvhTW+mMvp9UnFQNoCwca5Wb
+         tUgtmF2dDh6v0m6JWXPnCBPgb4rH0ztjW1+UhJuc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 19/22] scsi: ibmvfc: fix WARN_ON during event pool release
-Date:   Fri,  2 Aug 2019 09:25:43 -0400
-Message-Id: <20190802132547.14517-19-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 15/22] drbd: dynamically allocate shash descriptor
+Date:   Fri,  2 Aug 2019 09:25:39 -0400
+Message-Id: <20190802132547.14517-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132547.14517-1-sashal@kernel.org>
 References: <20190802132547.14517-1-sashal@kernel.org>
@@ -61,73 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 5578257ca0e21056821e6481bd534ba267b84e58 ]
+[ Upstream commit 77ce56e2bfaa64127ae5e23ef136c0168b818777 ]
 
-While removing an ibmvfc client adapter a WARN_ON like the following
-WARN_ON is seen in the kernel log:
+Building with clang and KASAN, we get a warning about an overly large
+stack frame on 32-bit architectures:
 
-WARNING: CPU: 6 PID: 5421 at ./include/linux/dma-mapping.h:541
-ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-CPU: 6 PID: 5421 Comm: rmmod Tainted: G            E     4.17.0-rc1-next-20180419-autotest #1
-NIP:  d00000000290328c LR: d00000000290325c CTR: c00000000036ee20
-REGS: c000000288d1b7e0 TRAP: 0700   Tainted: G            E      (4.17.0-rc1-next-20180419-autotest)
-MSR:  800000010282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44008828  XER: 20000000
-CFAR: c00000000036e408 SOFTE: 1
-GPR00: d00000000290325c c000000288d1ba60 d000000002917900 c000000289d75448
-GPR04: 0000000000000071 c0000000ff870000 0000000018040000 0000000000000001
-GPR08: 0000000000000000 c00000000156e838 0000000000000001 d00000000290c640
-GPR12: c00000000036ee20 c00000001ec4dc00 0000000000000000 0000000000000000
-GPR16: 0000000000000000 0000000000000000 00000100276901e0 0000000010020598
-GPR20: 0000000010020550 0000000010020538 0000000010020578 00000000100205b0
-GPR24: 0000000000000000 0000000000000000 0000000010020590 5deadbeef0000100
-GPR28: 5deadbeef0000200 d000000002910b00 0000000000000071 c0000002822f87d8
-NIP [d00000000290328c] ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-LR [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc]
-Call Trace:
-[c000000288d1ba60] [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc] (unreliable)
-[c000000288d1baf0] [d000000002909390] ibmvfc_abort_task_set+0x7b0/0x8b0 [ibmvfc]
-[c000000288d1bb70] [c0000000000d8c68] vio_bus_remove+0x68/0x100
-[c000000288d1bbb0] [c0000000007da7c4] device_release_driver_internal+0x1f4/0x2d0
-[c000000288d1bc00] [c0000000007da95c] driver_detach+0x7c/0x100
-[c000000288d1bc40] [c0000000007d8af4] bus_remove_driver+0x84/0x140
-[c000000288d1bcb0] [c0000000007db6ac] driver_unregister+0x4c/0xa0
-[c000000288d1bd20] [c0000000000d6e7c] vio_unregister_driver+0x2c/0x50
-[c000000288d1bd50] [d00000000290ba0c] cleanup_module+0x24/0x15e0 [ibmvfc]
-[c000000288d1bd70] [c0000000001dadb0] sys_delete_module+0x220/0x2d0
-[c000000288d1be30] [c00000000000b284] system_call+0x58/0x6c
-Instruction dump:
-e8410018 e87f0068 809f0078 e8bf0080 e8df0088 2fa30000 419e008c e9230200
-2fa90000 419e0080 894d098a 794a07e0 <0b0a0000> e9290008 2fa90000 419e0028
+drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
+      [-Werror,-Wframe-larger-than=]
 
-This is tripped as a result of irqs being disabled during the call to
-dma_free_coherent() by ibmvfc_free_event_pool(). At this point in the code path
-we have quiesced the adapter and its overly paranoid anyways to be holding the
-host lock.
+We already allocate other data dynamically in this function, so
+just do the same for the shash descriptor, which makes up most of
+this memory.
 
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ibmvscsi/ibmvfc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
-index 7e487c78279cb..54dea767dfde9 100644
---- a/drivers/scsi/ibmvscsi/ibmvfc.c
-+++ b/drivers/scsi/ibmvscsi/ibmvfc.c
-@@ -4883,8 +4883,8 @@ static int ibmvfc_remove(struct vio_dev *vdev)
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 83957a1e15ed7..8e8e4ccb128f3 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -5297,7 +5297,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	unsigned int key_len;
+ 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
+ 	unsigned int resp_size;
+-	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
++	struct shash_desc *desc;
+ 	struct packet_info pi;
+ 	struct net_conf *nc;
+ 	int err, rv;
+@@ -5310,6 +5310,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	memcpy(secret, nc->shared_secret, key_len);
+ 	rcu_read_unlock();
  
- 	spin_lock_irqsave(vhost->host->host_lock, flags);
- 	ibmvfc_purge_requests(vhost, DID_ERROR);
--	ibmvfc_free_event_pool(vhost);
- 	spin_unlock_irqrestore(vhost->host->host_lock, flags);
-+	ibmvfc_free_event_pool(vhost);
++	desc = kmalloc(sizeof(struct shash_desc) +
++		       crypto_shash_descsize(connection->cram_hmac_tfm),
++		       GFP_KERNEL);
++	if (!desc) {
++		rv = -1;
++		goto fail;
++	}
+ 	desc->tfm = connection->cram_hmac_tfm;
+ 	desc->flags = 0;
  
- 	ibmvfc_free_mem(vhost);
- 	spin_lock(&ibmvfc_driver_lock);
+@@ -5452,7 +5459,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	kfree(peers_ch);
+ 	kfree(response);
+ 	kfree(right_response);
+-	shash_desc_zero(desc);
++	if (desc) {
++		shash_desc_zero(desc);
++		kfree(desc);
++	}
+ 
+ 	return rv;
+ }
 -- 
 2.20.1
 
