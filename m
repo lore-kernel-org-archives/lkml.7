@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFCEC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6D0C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0652064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A094920880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564740072;
-	bh=OFxhJOi9sLznw4eEidnuhjd6ksLW7loPCO20MUwXS5g=;
+	s=default; t=1564740074;
+	bh=ANVUNEMAe1jn6TZ1TL+1KmUas0lezeRrXvXkB9h6ki8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SSZDyDmksvR/eXngvoxSQEkvafkJP9VuUNMhgA4jI6hoLEntGEXByfr8Y68EslHCO
-	 tGhT0UnFHfCYScq+X8ACM+NmGJvtYUdb7PnQSiw2T7Cvro+dYItvVTDJF9Htlnnu/p
-	 4d2Vf/t2WNX3RHqBD1si8l8fL48nNxF2YgHxRAB0=
+	b=pAs7USqLdUisNa/qb1MI1pdcWPWiG/Q/ecVzB/bbKNUL9mtifrliailNYH1sw5nue
+	 BYmqiXfTfZnudEHher8JGk1r33yDdNzcnsy5HmWPIzfPLqYbjUYVs9Avs0dtRVmBSZ
+	 lV0+IqzikeN/ojaewl5La8D0dqAQ0Bq4IpANdKW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404186AbfHBKBK (ORCPT
+        id S2407097AbfHBKBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47770 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 06:01:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405240AbfHBJoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:44:25 -0400
+        id S2405225AbfHBJoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:44:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9412F20880;
-        Fri,  2 Aug 2019 09:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CD49206A2;
+        Fri,  2 Aug 2019 09:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739065;
-        bh=OFxhJOi9sLznw4eEidnuhjd6ksLW7loPCO20MUwXS5g=;
+        s=default; t=1564739060;
+        bh=ANVUNEMAe1jn6TZ1TL+1KmUas0lezeRrXvXkB9h6ki8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5qtSmo+iyI6PuMsUyfgYfdyLiXDTPV3G9zj/tNMjt5qgdQTdgWS+YwT1wR3asUMW
-         Zt6uFAmc3CPNSgT5VFD96tyAQ+BmyaRquJgsh+qNJ2+jCKWln1DajAhxlxGl+WfDcL
-         l/f+0gtwEw5+//qk67lLicvHHX6etCzXM7K8m618=
+        b=JNl9bSuAKp8PzD2ZPn71l9XX76zY82cFpbfSANiunDsMbMuehK0cRgUQJfBOMETtu
+         CTodjy83u0Llq1vByh0dFKsS56WrJZu7OZwTBq4x5LgLhhGqdbzz0OuzZ3+z9GK/g7
+         yzXJm+F2gFz86GtbK4F3JbxTwY0HfqsDl8AqOgFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 084/223] regulator: s2mps11: Fix buck7 and buck8 wrong voltages
-Date:   Fri,  2 Aug 2019 11:35:09 +0200
-Message-Id: <20190802092244.425016977@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        linux-crypto@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 082/223] crypto: crypto4xx - fix a potential double free in ppc4xx_trng_probe
+Date:   Fri,  2 Aug 2019 11:35:07 +0200
+Message-Id: <20190802092244.274402583@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -59,42 +65,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-commit 16da0eb5ab6ef2dd1d33431199126e63db9997cc upstream.
+commit 95566aa75cd6b3b404502c06f66956b5481194b3 upstream.
 
-On S2MPS11 device, the buck7 and buck8 regulator voltages start at 750
-mV, not 600 mV.  Using wrong minimal value caused shifting of these
-regulator values by 150 mV (e.g. buck7 usually configured to v1.35 V was
-reported as 1.2 V).
+There is a possible double free issue in ppc4xx_trng_probe():
 
-On most of the boards these regulators are left in default state so this
-was only affecting reported voltage.  However if any driver wanted to
-change them, then effectively it would set voltage 150 mV higher than
-intended.
+85:	dev->trng_base = of_iomap(trng, 0);
+86:	of_node_put(trng);          ---> released here
+87:	if (!dev->trng_base)
+88:		goto err_out;
+...
+110:	ierr_out:
+111:		of_node_put(trng);  ---> double released here
+...
 
+This issue was detected by using the Coccinelle software.
+We fix it by removing the unnecessary of_node_put().
+
+Fixes: 5343e674f32f ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
 Cc: <stable@vger.kernel.org>
-Fixes: cb74685ecb39 ("regulator: s2mps11: Add samsung s2mps11 regulator driver")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Armijn Hemel <armijn@tjaldur.nl>
+Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/s2mps11.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/amcc/crypto4xx_trng.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -386,8 +386,8 @@ static const struct regulator_desc s2mps
- 	regulator_desc_s2mps11_buck1_4(4),
- 	regulator_desc_s2mps11_buck5,
- 	regulator_desc_s2mps11_buck67810(6, MIN_600_MV, STEP_6_25_MV),
--	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_12_5_MV),
--	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_12_5_MV),
-+	regulator_desc_s2mps11_buck67810(7, MIN_750_MV, STEP_12_5_MV),
-+	regulator_desc_s2mps11_buck67810(8, MIN_750_MV, STEP_12_5_MV),
- 	regulator_desc_s2mps11_buck9,
- 	regulator_desc_s2mps11_buck67810(10, MIN_750_MV, STEP_12_5_MV),
- };
+--- a/drivers/crypto/amcc/crypto4xx_trng.c
++++ b/drivers/crypto/amcc/crypto4xx_trng.c
+@@ -111,7 +111,6 @@ void ppc4xx_trng_probe(struct crypto4xx_
+ 	return;
+ 
+ err_out:
+-	of_node_put(trng);
+ 	iounmap(dev->trng_base);
+ 	kfree(rng);
+ 	dev->trng_base = NULL;
 
 
