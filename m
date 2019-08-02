@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FE4C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640EBC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E1E217D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BA16217D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752553;
-	bh=1kYU66SD0okszWlT/NaU7uhUHCNG/ok6OZT3yPtPWAg=;
+	s=default; t=1564752556;
+	bh=q4d4x2lkfsO0GUeJ0SOejnd4a/QA+DlwwvcJ+8ajbZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fwecOthoTlv7a0cHItp4SEZqeI9oRz41ZkHb1YaEBK2mTprOEdxNy8OU51oZhxkb8
-	 jraktuZz8YkX+U0bLn0rvNqo358LxT74RXrI7VnWISDNTzZ/i08huq4FOuxPI/lpwi
-	 SfMxe5jGRXTSFfK+ckzjVEWcZYXpiRPNz12UtPpw=
+	b=NPFnxb0hPj2LC7gYzDPE+Cf8IcSlZuuAPQdGTChIyov8h2KKY//7XmkNR7cIK8iJj
+	 O52UgPJl0+ESRs9ufXwCJ0drbyAIfO5sIwn/bCTL32gg90zV/CUSErQGfMh1wl/mNP
+	 AyZmyuGpDfmy9G1xFTnghpLgeaCsMFqlsLWmIsN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390234AbfHBNZM (ORCPT
+        id S2394900AbfHBN3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:25:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35816 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390030AbfHBNZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:25:07 -0400
+        id S2394329AbfHBNZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:25:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6906A217D4;
-        Fri,  2 Aug 2019 13:25:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 597AA21773;
+        Fri,  2 Aug 2019 13:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752306;
-        bh=1kYU66SD0okszWlT/NaU7uhUHCNG/ok6OZT3yPtPWAg=;
+        s=default; t=1564752310;
+        bh=q4d4x2lkfsO0GUeJ0SOejnd4a/QA+DlwwvcJ+8ajbZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UhXjw9E3VaPWXNn1ieBemA1MNmWaiZVIOv7xThZImPzZVXcTM364txsREhyzsbe67
-         diTgEA00LcnrW4u9HPEFlzqkoucR4cizxv72wQ0kWWWbdipzbgjql9vfdk4IDbCVNr
-         GMzIsm62rEE0J5etES9Wx+14cAWktzBHY2KLU5fc=
+        b=0yLsSAG6evG1eeV6BSuSQOikvJX2HZfOmJt0e8Qj3BOUtPAgRdGNXef4Z5MRfobDn
+         KRDUu1EcrUmS9Vs12paGZTQ0nfu13Mfc48LuH4jO7cMUACHfdCxDvsXHn/p46nGJrH
+         c/rOoomc1shDIAUDw6vwGwQdC/IlvIBLh1v+JRyE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Carrillo-Cisneros <davidcc@google.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 19/30] perf tools: Fix proper buffer size for feature processing
-Date:   Fri,  2 Aug 2019 09:24:11 -0400
-Message-Id: <20190802132422.13963-19-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 21/30] drbd: dynamically allocate shash descriptor
+Date:   Fri,  2 Aug 2019 09:24:13 -0400
+Message-Id: <20190802132422.13963-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132422.13963-1-sashal@kernel.org>
 References: <20190802132422.13963-1-sashal@kernel.org>
@@ -65,50 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 79b2fe5e756163897175a8f57d66b26cd9befd59 ]
+[ Upstream commit 77ce56e2bfaa64127ae5e23ef136c0168b818777 ]
 
-After Song Liu's segfault fix for pipe mode, Arnaldo reported following
-error:
+Building with clang and KASAN, we get a warning about an overly large
+stack frame on 32-bit architectures:
 
-  # perf record -o - | perf script
-  0x514 [0x1ac]: failed to process type: 80
+drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
+      [-Werror,-Wframe-larger-than=]
 
-It's caused by wrong buffer size setup in feature processing, which
-makes cpu topology feature fail, because it's using buffer size to
-recognize its header version.
+We already allocate other data dynamically in this function, so
+just do the same for the shash descriptor, which makes up most of
+this memory.
 
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Carrillo-Cisneros <davidcc@google.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Fixes: e9def1b2e74e ("perf tools: Add feature header record to pipe-mode")
-Link: http://lkml.kernel.org/r/20190715140426.32509-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 26437143c9406..c892a28e7b048 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3081,7 +3081,7 @@ int perf_event__process_feature(struct perf_tool *tool,
- 		return 0;
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 1aad373da50e2..8fbdfaacc2226 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -5237,7 +5237,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	unsigned int key_len;
+ 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
+ 	unsigned int resp_size;
+-	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
++	struct shash_desc *desc;
+ 	struct packet_info pi;
+ 	struct net_conf *nc;
+ 	int err, rv;
+@@ -5250,6 +5250,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	memcpy(secret, nc->shared_secret, key_len);
+ 	rcu_read_unlock();
  
- 	ff.buf  = (void *)fe->data;
--	ff.size = event->header.size - sizeof(event->header);
-+	ff.size = event->header.size - sizeof(*fe);
- 	ff.ph = &session->header;
++	desc = kmalloc(sizeof(struct shash_desc) +
++		       crypto_shash_descsize(connection->cram_hmac_tfm),
++		       GFP_KERNEL);
++	if (!desc) {
++		rv = -1;
++		goto fail;
++	}
+ 	desc->tfm = connection->cram_hmac_tfm;
+ 	desc->flags = 0;
  
- 	if (feat_ops[feat].process(&ff, NULL))
+@@ -5392,7 +5399,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	kfree(peers_ch);
+ 	kfree(response);
+ 	kfree(right_response);
+-	shash_desc_zero(desc);
++	if (desc) {
++		shash_desc_zero(desc);
++		kfree(desc);
++	}
+ 
+ 	return rv;
+ }
 -- 
 2.20.1
 
