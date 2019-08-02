@@ -2,186 +2,116 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F43C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87718C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D47205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE0D206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 07:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HudlbV72"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kJbslpfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389995AbfHBHlm (ORCPT
+        id S2390024AbfHBHmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 03:41:42 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44942 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726601AbfHBHll (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 03:41:41 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i18so35643404pgl.11;
-        Fri, 02 Aug 2019 00:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8Bu5B09gqik8ty3n7lRXyWL5jRpSFheUe4BaXX6kR88=;
-        b=HudlbV72c1Gey+g3bBwqwEVVs4x1lqg2LR9EPalQ4SZ5gFrC6j0xxl7qCBYKedapAz
-         43ryaJrLKtLRNsrWKkTvuHRQ+OXrABbw0+VXgE6WN0Ou2g46OCg+G1x4wPpMf8wozXZB
-         G8SknMGnszFXKJx6ItQ6fL+OsXQNkr5QL21kEqy1R2ZiJ6OOD8zoKH/uDJxcOwdBelkM
-         o2PU5yuUIr+seNy+RfLQ1469jmpN3T7vJT2lWrdyBJiGyNYTBoVuUGIolb9BSRatAPEp
-         3qoWuZWaQth7ubMHtRgKpACQgOTDHOmEaX93uqRLJSlAA+LT1dZxJQzwe8Q+35wBKNkU
-         xAuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Bu5B09gqik8ty3n7lRXyWL5jRpSFheUe4BaXX6kR88=;
-        b=BkPH456ORQxcHhbUKS98XlicgcTsVsr2Tu1UQ+Jk3PRqMVXtoa4ixOF/PmugGsm73Z
-         IDDPzuRrMTl66AjjwQCCHKRoB/Eaw/Tj41qV1RPXu1rmBn5ZY2bGhK8lFhR6PvStS0IO
-         zWKNOZ7pQhdXTA71KNE0GnXb3TUazVI654021/dcKsn9bdyCvh5WSfk1LquOPrMinNOO
-         N+gzrSUxAuOM7M8j9Mb5D5DBKGOma1eUwOQyKEVFavt42eMlX8PimSJhb0zguddXcOxB
-         KE0iTinGCq8yVXJ+jd5iZK0Sc6iWVXiT1mF+qRQGon7PEOuVaHMTfWeh0G8Mcvut6cR4
-         WKcg==
-X-Gm-Message-State: APjAAAWruHocLb6ZVPmEwa/UliykbFo1lnX4UdLIHhqJRF0iUedgBBuk
-        AB8DkKBImhX/dWoT+fQMpkdbzIYE
-X-Google-Smtp-Source: APXvYqxZS7gNBvSYXD8UCDRGi8CGSQYsynxcTeR3RF2QJOBArAKJlfgjIiTBQGhzjWPYQ/SdfonQdQ==
-X-Received: by 2002:a62:ac11:: with SMTP id v17mr58294776pfe.236.1564731701156;
-        Fri, 02 Aug 2019 00:41:41 -0700 (PDT)
-Received: from localhost.localdomain ([163.152.162.125])
-        by smtp.gmail.com with ESMTPSA id x7sm10070265pga.0.2019.08.02.00.41.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 02 Aug 2019 00:41:40 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 16:41:36 +0900
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     shuah <shuah@kernel.org>
-Cc:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] usbip: Implement SG support to vhci
-Message-ID: <20190802074136.GA19534@localhost.localdomain>
-References: <20190705164355.14025-1-suwan.kim027@gmail.com>
- <20190705164355.14025-3-suwan.kim027@gmail.com>
- <7c697904-53e3-b469-c907-25b8fb7859bc@kernel.org>
- <20190729145241.GA4557@localhost.localdomain>
- <787051b9-579d-6da5-9d04-3dd0ae3c770b@kernel.org>
- <20190801063859.GA9587@localhost.localdomain>
- <e581b566-65fb-c4d8-74fc-1c1b35b57b9f@kernel.org>
+        Fri, 2 Aug 2019 03:42:31 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:56340 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726601AbfHBHma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 03:42:30 -0400
+Received: from zn.tnic (p200300EC2F0D960039009D029409112E.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:9600:3900:9d02:9409:112e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B8DE51EC09A0;
+        Fri,  2 Aug 2019 09:42:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1564731748;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/UtwsoWOHyCwYxaqkD7pCcazSZC5S1yzYUzg69yEA1M=;
+        b=kJbslpfjdHMYQSL1PgYVoW9RNvZQcoKYiWySwmslTXv4oKxSVM4nbSEX/OeXx7flgn6z99
+        L3Oqw893Fi6HQxDRMxwo5S1tO54d5FBEwvngTqs6HUJnvPqHsJX2tMb2VNJ+UXDRyZECEn
+        ySI8xUgVoJYTEQ2Pxri5B8wmQST7vxI=
+Date:   Fri, 2 Aug 2019 09:42:24 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/7] EDAC/amd64: Recognize DRAM device type with
+ EDAC_CTL_CAP
+Message-ID: <20190802074224.GB30661@zn.tnic>
+References: <20190709215643.171078-1-Yazen.Ghannam@amd.com>
+ <20190709215643.171078-3-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e581b566-65fb-c4d8-74fc-1c1b35b57b9f@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190709215643.171078-3-Yazen.Ghannam@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 08:03:59AM -0600, shuah wrote:
-> On 8/1/19 12:38 AM, Suwan Kim wrote:
-> > On Mon, Jul 29, 2019 at 10:32:31AM -0600, shuah wrote:
-> > > On 7/29/19 8:52 AM, Suwan Kim wrote:
-> > > > Hi Shuah,
-> > > > 
-> > > > On Tue, Jul 23, 2019 at 06:21:53PM -0600, shuah wrote:
-> > > > > Hi Suwan,
-> > > > > 
-> > > > > On 7/5/19 10:43 AM, Suwan Kim wrote:
-> > > > > > There are bugs on vhci with usb 3.0 storage device. Originally, vhci
-> > > > > > doesn't supported SG, so USB storage driver on vhci breaks SG list
-> > > > > > into multiple URBs and it causes error that a transfer got terminated
-> > > > > > too early because the transfer length for one of the URBs was not
-> > > > > > divisible by the maxpacket size.
-> > > > > > 
-> > > > > > In this patch, vhci basically support SG and it sends each SG list
-> > > > > > entry to the stub driver. Then, the stub driver sees the total length
-> > > > > > of the buffer and allocates SG table and pages according to the total
-> > > > > > buffer length calling sgl_alloc(). After the stub driver receives
-> > > > > > completed URB, it again sends each SG list entry to vhci.
-> > > > > > 
-> > > > > > If HCD of the server doesn't support SG, the stub driver breaks a
-> > > > > > single SG reqeust into several URBs and submit them to the server's
-> > > > > > HCD. When all the split URBs are completed, the stub driver
-> > > > > > reassembles the URBs into a single return command and sends it to
-> > > > > > vhci.
-> > > > > > 
-> > > > > > Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-> > > > > > ---
-> > > > > >     drivers/usb/usbip/stub.h         |   7 +-
-> > > > > >     drivers/usb/usbip/stub_main.c    |  52 +++++---
-> > > > > >     drivers/usb/usbip/stub_rx.c      | 207 ++++++++++++++++++++++---------
-> > > > > >     drivers/usb/usbip/stub_tx.c      | 108 +++++++++++-----
-> > > > > >     drivers/usb/usbip/usbip_common.c |  60 +++++++-- >   drivers/usb/usbip/vhci_hcd.c     |  10 +-
-> > > > > >     drivers/usb/usbip/vhci_tx.c      |  49 ++++++--
-> > > > > >     7 files changed, 372 insertions(+), 121 deletions(-)
-> > > > > 
-> > > > > While you are working on v3 to fix chekpatch and other issues
-> > > > > I pointed out, I have more for you.
-> > > > > 
-> > > > > What happens when you have mismatched server and client side?
-> > > > > i.e stub does and vhci doesn't and vice versa.
-> > > > > 
-> > > > > Make sure to run checkpatch. Also check spelling errors in
-> > > > > comments and your commit log.
-> > > > > 
-> > > > > I am not sure if your eeror paths are correct. Run usbip_test.sh
-> > > > > 
-> > > > > tools/testing/selftests/drivers/usb/usbip
-> > > > 
-> > > > I don't know what mismatch you mentioned. Are you saying
-> > > > "match busid table" at the end of usbip_test.sh?
-> > > > How does it relate to SG support of this patch?
-> > > > Could you tell me more about the problem situation?
-> > > > 
-> > > 
-> > > What happens when usbip_host is running a kernel without the sg
-> > > support and vhci_hcd does? Just make sure this works with the
-> > > checks for sg support status as a one of your tests for this
-> > > sg feature.
-> > 
-> > Now I understand. Thanks for the details!
-> > As a result of testing, in the situation where vhci supports SG,
-> > but stub does not, or vice versa, usbip works normally. Moreover,
-> > because there is no protocol modification, there is no problem in
-> > communication between server and client even if the one has a kernel
-> > without SG support.
-> > 
-> > In the case of vhci supports SG and stub doesn't, because vhci sends
-> > only the total length of the buffer to stub as it did before the
-> > patch applied, stub only needs to allocate the required length of
-> > buffers regardless of whether vhci supports SG or not.
-> > 
-> > If stub needs to send data buffer to vhci because of IN pipe, stub
-> > also sends only total length of buffer as metadata and then send real
-> > data as vhci does. Then vhci receive data from stub and store it to
-> > the corresponding buffer of SG list entry.
-> > 
-> > In the case of stub that supports SG, if SG buffer is requested by
-> > vhci, buffer is allocated by sgl_alloc(). However, stub that does
-> > not support SG allocates buffer using only kmalloc(). Therefore, if
-> > vhci supports SG and stub doesn't, stub has to allocate buffer with
-> > kmalloc() as much as the total length of SG buffer which is quite
-> > huge when vhci sends SG request, so it has big overhead in buffer
-> > allocation.
-> > 
-> > And for the case of stub supports SG and vhci doesn't, since the
-> > USB storage driver checks that vhci doesn't support SG and sends
-> > the request to stub by splitting the SG list into multiple URBs,
-> > stub allocates a buffer with kmalloc() as it did before this patch.
-> > 
-> > Therefore, everything works normally in a mismatch situation.
+On Tue, Jul 09, 2019 at 09:56:55PM +0000, Ghannam, Yazen wrote:
+> From: Yazen Ghannam <yazen.ghannam@amd.com>
 > 
-> Looking for you add a test case for that. Please include this
-> in the commit log.
+> AMD Family 17h systems support x4 and x16 DRAM devices. However, the
+> device type is not checked when setting EDAC_CTL_CAP.
+> 
+> Set the appropriate EDAC_CTL_CAP flag based on the device type.
+> 
+> Fixes: 2d09d8f301f5 ("EDAC, amd64: Determine EDAC MC capabilities on Fam17h")
 
-I'm confused about the test case. Do I add the test case for each
-SG support status of vhci_hcd and usbip_host in usbip_test.sh?
-Or, do I implement the test logic in vhci_hcd code that asks if
-usbip_host supports SG when attaching a remote device?
-I'm sorry but I don't know what exactly you want to add.
+This is better: a patch which fixes a previous patch and is simple,
+small and clear. That you can tag with Fixes: just fine.
 
-Regards
-Suwan Kim
+> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> ---
+> Link:
+> https://lkml.kernel.org/r/20190531234501.32826-4-Yazen.Ghannam@amd.com
+> 
+> v1->v2:
+> * No change.
+> 
+>  drivers/edac/amd64_edac.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+> index dd60cf5a3d96..125d6e2a828e 100644
+> --- a/drivers/edac/amd64_edac.c
+> +++ b/drivers/edac/amd64_edac.c
+> @@ -3150,12 +3150,15 @@ static bool ecc_enabled(struct pci_dev *F3, u16 nid)
+>  static inline void
+>  f17h_determine_edac_ctl_cap(struct mem_ctl_info *mci, struct amd64_pvt *pvt)
+>  {
+> -	u8 i, ecc_en = 1, cpk_en = 1;
+> +	u8 i, ecc_en = 1, cpk_en = 1, dev_x4 = 1, dev_x16 = 1;
+>  
+>  	for_each_umc(i) {
+>  		if (pvt->umc[i].sdp_ctrl & UMC_SDP_INIT) {
+>  			ecc_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_ENABLED);
+>  			cpk_en &= !!(pvt->umc[i].umc_cap_hi & UMC_ECC_CHIPKILL_CAP);
+> +
+> +			dev_x4 &= !!(pvt->umc[i].dimm_cfg & BIT(6));
+> +			dev_x16 &= !!(pvt->umc[i].dimm_cfg & BIT(7));
+
+Are those bits mutually exclusive?
+
+I.e., so that you can do:
+
+	if (dev_x4)
+		mci->edac_ctl_cap |= EDAC_FLAG_S4ECD4ED;
+	else
+		mci->edac_ctl_cap |= EDAC_FLAG_S16ECD16ED;
+
+?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
