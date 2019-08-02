@@ -2,166 +2,133 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D17FC32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFB4C32754
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015AD2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62922173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Rp25KIx3";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="cfHNTQPa"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Bam9ZT8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732666AbfHBFVH (ORCPT
+        id S1732635AbfHBFSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 01:21:07 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:65134 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726626AbfHBFVH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 01:21:07 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x725Hw3a004680;
-        Thu, 1 Aug 2019 22:20:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=7YRtrjjEZQx1hFHzZ7Rzbx68eQ50VUzRxqGu1B3Fwas=;
- b=Rp25KIx3eqZQ12clgKPLWtVZZZfI5GUdIISB3Q9P2tmh2TWw+zQmCOVAYFGwZZQwdrXC
- OwWBCYvmqCGViO+ZxlxzuWmPzL1nT/toldys7JxBhQAjEE4Ejvfa0nv6Sftq8x/tbxBg
- Ur0UfGR/U+SwDwYioUT4OqX0KvKI5CpiIJo= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 2u449gj30c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 01 Aug 2019 22:20:44 -0700
-Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
- ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 1 Aug 2019 22:20:43 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 1 Aug 2019 22:20:43 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kx5KGRhjI75s7tqh4jELuvf6XniWcfbFsTA3DAgHs0QNd3xmNk8zAIcjXd+i2JZ+yKyVtHn+PkvX3AoR2WgtgNsFy5eHlol17DQJDFRpP2NRB215N5OLIO3uQzAZ7pCw5u8JTiD7izpgEVq5aHtM2N7JBRRksNK7ta2SHiVZn552+PLu2KgOC3qUkZPeGdvWVdYAR8fgkbgxrmmxyYlJzFvSQ3b+EMRDpsaBWdT6Q+k0C1OPne2aWPTuiFNs7xaWqCnEPGhED5XxqqaVT72HO3iYpVmgAMInaafuZSqhX8mQNglsBAn5sUOrji29+A2YhzBgybXt9YiE0vni4HaEFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7YRtrjjEZQx1hFHzZ7Rzbx68eQ50VUzRxqGu1B3Fwas=;
- b=GanocCAop9em2dAxvKFvsDIex+Yo9xV0wMlSi2/wwb00qO2OhXyTAYH61v/NNPrMGo4mLkd/dX0B896fmRZCHKkxww3R3dVjcE3RXcks3wSyr7pw00/Mt58oRnCzJ8+ks6nJhwRAgACc/OrtvI9YKdb6eOZoK4mX41K6jxjayv8T48/C0PNiSLrSXUNvRVRZ5HNlFKdroUbfXHpMJb/EjlLLPYOeHeVv5Bm+1laYgZyEmt3HkFMNQyjMf0Dkg9SuCqj+5ErjZ+DcWEm8I28UyPMY7qkcCYl+HIE6XnV4jwgyPxnnkTT4gwI/3atdsO8WBfK03LktmHu+2RZPPYE+Fw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
- header.d=fb.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7YRtrjjEZQx1hFHzZ7Rzbx68eQ50VUzRxqGu1B3Fwas=;
- b=cfHNTQPaKy+iyCmP9MW3wppJcBOL97I0fTf8ovOJvHClIIudNgWk+RjpGwkdbKU5pc2SLTON+Tt539yvb1CFrlyqmDLA4LasdQU9SvwZO9pTLkv70sR2e0u33xd58lBKsz431vG2X26k8bG3EVj5H2sVY3Ow2gQZmWeWJKioyEw=
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
- MWHPR15MB1197.namprd15.prod.outlook.com (10.175.7.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.16; Fri, 2 Aug 2019 05:20:42 +0000
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::c66:6d60:f6e5:773c]) by MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::c66:6d60:f6e5:773c%8]) with mapi id 15.20.2136.010; Fri, 2 Aug 2019
- 05:20:42 +0000
-From:   Tao Ren <taoren@fb.com>
-To:     Joel Stanley <joel@jms.id.au>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge100 BMC
-Thread-Topic: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge100 BMC
-Thread-Index: AQHVSOg2lZoVHrZ29U2XlvDXnsufaKbnQZOA//+bUYA=
-Date:   Fri, 2 Aug 2019 05:20:41 +0000
-Message-ID: <606273F4-E021-4AAF-9F59-F363E4FFF92A@fb.com>
-References: <20190802041010.1234178-1-taoren@fb.com>
- <CACPK8XcuwNE3aBrsgn-paTZt-EtF6pc6WwYBQef5xc7157bk2g@mail.gmail.com>
-In-Reply-To: <CACPK8XcuwNE3aBrsgn-paTZt-EtF6pc6WwYBQef5xc7157bk2g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/10.1a.0.190609
-x-originating-ip: [2620:10d:c090:180::1:94d1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7d9f0837-79c0-47a0-c8d2-08d7170929de
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1197;
-x-ms-traffictypediagnostic: MWHPR15MB1197:
-x-microsoft-antispam-prvs: <MWHPR15MB1197AD2CD9BE3D4676210120B2D90@MWHPR15MB1197.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 011787B9DD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(396003)(39860400002)(366004)(47680400002)(43544003)(199004)(189003)(6506007)(33656002)(5660300002)(76116006)(14454004)(66476007)(66556008)(64756008)(53936002)(66946007)(66446008)(478600001)(81166006)(486006)(68736007)(4326008)(36756003)(11346002)(476003)(446003)(46003)(81156014)(2616005)(71190400001)(6512007)(71200400001)(25786009)(8676002)(305945005)(316002)(186003)(54906003)(86362001)(8936002)(7736002)(6116002)(256004)(2906002)(229853002)(58126008)(6436002)(53546011)(76176011)(6486002)(6916009)(102836004)(6246003)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1197;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qu2vQKv/PweLZWEe/h/0DGEeIRhLt9jTD6F+1UM3YtYZjjw5pR/uC4cXF1HYbD9cODX8AnyA3S1cRc1fcXEL0ZYWIP1VLMb4GTRO3FtRm4LFOk7TxBONqteGug2wVN5HIvRA9MisWNgruWyPrp2QMhoyjaJinEiv5dcFLVcj6g4xnUvVj+YgOlYPVEQcy98KNOf8oJIuyiQRE8j5QaXrzKQ8sYuoY/txWjrJWweXJTCNRF2ymEthCy0Ah1rGNdnQbwk6ndsQs7mcSmSTYMEPkas9UAc1rprPYrxtJTVinp9B2Hpe5ZKKcJ3Mxxojnt/nMpdkJptvHUIgBrbb+AvOH5y94v+FNtZ/99P75YOkWhcdrDUE/FsbhKuL/I2QRAf7jGiiTgguLwKvcCkKj7acceJqw2zkYbByYZFdArFZcQs=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FA155B7D2FF44B408295ED3794A270FC@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 2 Aug 2019 01:18:51 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:31754 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbfHBFSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 01:18:50 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 460FnL5MkFz9vBfr;
+        Fri,  2 Aug 2019 07:18:46 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Bam9ZT8f; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id sdGXrrjyCDuQ; Fri,  2 Aug 2019 07:18:46 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 460FnL3Stcz9vBfp;
+        Fri,  2 Aug 2019 07:18:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1564723126; bh=dskM129Z+Pm2g90k1EaL/hR4S3jKQ/kszYbrKBxwKZM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Bam9ZT8fJlMSqeotbiCuQd3LWO9PpK+7w9pj2xMUyg6ZAYtLHCtDZ4pzOXQHI7kfe
+         uGh+XUsOrdEWkqJFeoXMMDvLB9QaQVw5STm2gmCOl2HmNvYrUGcHyiPRY/uJP5OmG4
+         j8CG7abnSTmsnnrTXnGYQ/q8V93FZO0n3ulXNTsM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6520A8B797;
+        Fri,  2 Aug 2019 07:18:47 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id OThNZB83Zkwe; Fri,  2 Aug 2019 07:18:47 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E45368B74C;
+        Fri,  2 Aug 2019 07:18:46 +0200 (CEST)
+Subject: Re: [PATCH] powerpc: Remove inaccessible CMDLINE default
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190802050232.22978-1-chris.packham@alliedtelesis.co.nz>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <43422528-c2fc-a2c8-49e6-0f6b2c791648@c-s.fr>
+Date:   Fri, 2 Aug 2019 07:18:46 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d9f0837-79c0-47a0-c8d2-08d7170929de
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 05:20:41.9574
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: taoren@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1197
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020056
-X-FB-Internal: deliver
+In-Reply-To: <20190802050232.22978-1-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOC8xLzE5LCA5OjIxIFBNLCAiSm9lbCBTdGFubGV5IiA8am9lbEBqbXMuaWQuYXU+IHdyb3Rl
-Og0KDQo+ICBPbiBGcmksIDIgQXVnIDIwMTkgYXQgMDQ6MTAsIFRhbyBSZW4gPHRhb3JlbkBmYi5j
-b20+IHdyb3RlOg0KPj4NCj4+IEFkZCBpbml0aWFsIHZlcnNpb24gb2YgZGV2aWNlIHRyZWUgZm9y
-IEZhY2Vib29rIFdlZGdlMTAwIEFTVDI0MDAgQk1DDQo+PiBwbGF0Zm9ybS4NCj4+DQo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBUYW8gUmVuIDx0YW9yZW5AZmIuY29tPg0KPj4gUmV2aWV3ZWQtYnk6IEFuZHJl
-dyBKZWZmZXJ5IDxhbmRyZXdAYWouaWQuYXU+DQo+PiAtLS0NCj4+ICBDaGFuZ2VzIGluIHYyOg0K
-Pj4gIC0gcmVtb3ZlICJkZWJ1ZyIgZnJvbSBib290YXJncy4NCj4gICAgDQo+IFRoYW5rcy4gSSBh
-cHBsaWVkIHdlZGdlNDAgYW5kIHRoZW4gdGhpcyBvbmUgZmFpbHMgdG8gYXBwbHkgZHVlIHRvDQo+
-IGNvbmZsaWN0cyBpbiB0aGUgTWFrZWZpbGUuIE5leHQgdGltZSB5b3UgaGF2ZSB0d28gcGF0Y2hl
-cywgc2VuZCB0aGVtDQo+IGFzIGEgc2VyaWVzIHRoZXkgYXBwbHkgb25lIGF0b3AgdGhlIG90aGVy
-Lg0KDQpJIHRob3VnaHQgYWJvdXQgYXNraW5nIHlvdSBpZiBJIHNob3VsZCBzZW5kIHRoZW0gYXMg
-YSBzZXJpZXMgYWx0aG91Z2ggdGhleSBhcmUgbG9naWNhbGx5IGluZGVwZW5kZW50IHBhdGNoZXMu
-Lg0KU29ycnkgYWJvdXQgdGhhdCBhbmQgSSB3aWxsIGRvIHNvIGZvciBmdXR1cmUgcGF0Y2hlcy4N
-Cg0KPiAgVGhlIG5hbWluZyBvZiB0aGVzZSB0d28gZmlsZXMgc3VnZ2VzdHMgdGhleSBjb21lIGZy
-b20gYSBmYW1pbHkuIEkNCj4gIG5vdGljZWQgdGhlcmUncyB2ZXJ5IG1pbm9yIGRpZmZlcmVuY2Vz
-LCBhIHBjYTk1NDggc3dpdGNoIGFuZCB0aGUgdXNlDQo+ICBvZiBhIHdhdGNoZG9nLg0KPiAgDQo+
-ICBBcmUgdGhlc2UgZGV2aWNlIHRyZWVzIGNvbXBsZXRlPyBJZiB5ZXMsIGRvIHlvdSB0aGluayBp
-dCdzIHdvcnRod2hpbGUNCj4gIHRvIGhhdmUgYSBjb21tb24gd2VkZ2UgZGVzY3JpcHRpb24gaW4g
-ZWcuDQo+ICBhc3BlZWQtYm1jLWZhY2Vib29rLXdlZGdlLmR0c2ksIGFuZCBwdXQgdGhlIHVuaXF1
-ZSBkZXNjcmlwdGlvbiBpbg0KPiAgcmVzcGVjdGl2ZSBkdHMgYm9hcmQgZmlsZXM/DQo+ICAgDQo+
-ICBUaGUgdXBzaWRlIG9mIHRoaXMgaXMgcmVkdWNlZCBkdXBsaWNhdGlvbi4NCj4gIA0KPiAgSWYg
-eW91IGhhdmUgYSByZWFzb24gbm90IHRvLCB0aGVuIHRoYXQgaXMgb2theSBhbmQgd2UgY2FuIGxl
-YXZlIGl0IGFzDQo+ICB5b3Ugc3VibWl0dGVkIHRoZW0uDQoNClRoYW5rIHlvdSBmb3IgdGhlIHN1
-Z2dlc3Rpb24uIEknbSBhbHNvIGNvbnNpZGVyaW5nIG1vdmluZyBjb21tb24gc3R1ZmYgaW50byAi
-ZHRzaSIgZmlsZSwgYnV0IGxldCBtZSB0YWtlIGNhcmUgb2YgaXQgaW4gYSBzZXBhcmF0ZSBwYXRj
-aCwgbWFpbmx5IGJlY2F1c2U6DQogIDEpIEkgaGF2ZSBvbmUgbW9yZSBCTUMgcGxhdGZvcm0gKGdh
-bGF4eTEwMCkgd2hpY2ggaXMgYWxzbyBzaW1pbGFyIHRvIHdlZGdlLg0KICAgICAgSSBoYXZlbid0
-IHN0YXJ0ZWQgdGhlIHBsYXRmb3JtLCBidXQgb25jZSBJIGhhdmUgZ2FsYXh5MTAwIGRldmljZSB0
-cmVlIHJlYWR5LCBpdCB3b3VsZCBiZSBlYXNpZXIgZm9yIG1lIHRvIGV4dHJhY3QgY29tbW9uIHBh
-cnQuDQogIDIpIHRoZSBkZXZpY2UgdHJlZSBpcyBub3QgY29tcGxldGUgeWV0Lg0KICAgICAgRm9y
-IGV4YW1wbGUsIGFsbCB0aGUgaTJjIGRldmljZXMgYXJlIHN0aWxsIGNyZWF0ZWQgZnJvbSB1c2Vy
-c3BhY2UuDQogICAgICBJJ20gdHJ5aW5nIHRvIG1vdmUgdGhlIGxvZ2ljIGZyb20gdXNlcnNwYWNl
-IHRvIGRldmljZSB0cmVlIGJ1dCBJIGhhdmVuJ3QgZGVjaWRlZCB3aGF0IHRvIGRvIHdpdGggdGhv
-c2UgY3BsZC9mcGdhIGRldmljZXMuDQoNCg0KQ2hlZXJzLA0KDQpUYW8NCg0K
+
+
+Le 02/08/2019 à 07:02, Chris Packham a écrit :
+> Since commit cbe46bd4f510 ("powerpc: remove CONFIG_CMDLINE #ifdef mess")
+> CONFIG_CMDLINE has always had a value regardless of CONNIG_CMDLINE_BOOL.
+
+s/CONNIG/CONFIG/
+
+> 
+> For example:
+> 
+>   $ make ARCH=powerpc defconfig
+>   $ cat .config
+>   # CONFIG_CMDLINE_BOOL is not set
+>   CONFIG_CMDLINE=""
+> 
+> When enabling CONNIG_CMDLINE_BOOL this value is kept making the 'default
+> "..." if CONNIG_CMDLINE_BOOL' ineffective.
+
+s/CONNIG/CONFIG/
+
+> 
+>   $ ./scripts/config --enable CONFIG_CMDLINE_BOOL
+>   $ cat .config
+>   CONFIG_CMDLINE_BOOL=y
+>   CONFIG_CMDLINE=""
+> 
+> Additionally all the in-tree powerpc defconfigs that set
+> CONFIG_CMDLINE_BOOL=y also set CONFIG_CMDLINE to something else. For
+> these reasons remove the inaccessible default.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
+> ---
+> This should be independent of http://patchwork.ozlabs.org/patch/1140811/ but
+> I've generated this patch on a stream that has it applied locally.
+> 
+>   arch/powerpc/Kconfig | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index d413fe1b4058..6fca6eba6aee 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -844,7 +844,6 @@ config CMDLINE_BOOL
+>   
+>   config CMDLINE
+>   	string "Initial kernel command string" if CMDLINE_BOOL
+> -	default "console=ttyS0,9600 console=tty0 root=/dev/sda2" if CMDLINE_BOOL
+>   	default ""
+>   	help
+>   	  On some platforms, there is currently no way for the boot loader to
+> 
+
+I think we could also get rid of CMDLINE_BOOL totally and use CMDLINE != 
+"" instead.
+
+Christophe
