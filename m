@@ -4,57 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0564CC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F210C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0116217D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B9D217D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752395;
-	bh=zB+Z+g3Ay1NKJokH8//VVXoCdVDmA4Yj9TH+lfLHBQQ=;
+	s=default; t=1564752400;
+	bh=6qK9OVy4Pzr/sOJfb0SO2JV/uW04oNG6W7YR1nTxNwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZX+e8kf60soTSI6CLfujkL6xvD+wmk7chNazIl+bCTzmmedledZgbvKBx7ICCCPiP
-	 RdHjd+jN5NC7j99pjArmtN2GHIkPxTXzornkbrB5plXoJ58GDMVnRydXLfMOPkSCL9
-	 anKj5eu8UuGbb9cmeonKbJrdlDm6g1DdFvvOOqK0=
+	b=HdddZ0gIG+J18Sw8ytr1xcCA2/HrtC9PknrtPWupPm0dZApEXG+rmfTme/WwDPW09
+	 IZCGxLaleczJxZxhZw0RhCuPKFbSWkq/5ufy8ri3Rg+9MperWd24VmXuYBnWUGsoLn
+	 P8k2+3nJ93aUApeUzA1kAitx4vlkKShNvRXHADz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394603AbfHBN0e (ORCPT
+        id S2394613AbfHBN0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:26:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37328 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:26:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394592AbfHBN0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:26:31 -0400
+        id S2394586AbfHBN0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:26:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D54921851;
-        Fri,  2 Aug 2019 13:26:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3420217D6;
+        Fri,  2 Aug 2019 13:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752390;
-        bh=zB+Z+g3Ay1NKJokH8//VVXoCdVDmA4Yj9TH+lfLHBQQ=;
+        s=default; t=1564752388;
+        bh=6qK9OVy4Pzr/sOJfb0SO2JV/uW04oNG6W7YR1nTxNwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TroKNuFTwGzcK377UsYpw43BPaCZapNTRhhSnZxqwmRshud1ishHl16Q2ZTLEesvH
-         crtaTkPZINBPGKTDBDTyegZpy+K9vOfbc5qpExioRaFiVQkDVZhCKzKpWHrA+S5cwf
-         wuYOqZt1SbNM6JyGZUd5khKpe8g+G9/yDa3yNeqU=
+        b=MJMBeLXwexeOC7KyVbIpXlK72YHXtys7Xa884vXQWJWLYsTNUmQIeOy9z/OovmxRU
+         LAZo3+Ia4sdpeNJR/mYzaxRALWNqDUIrWK5fU61rPghstgQYYcHXiVwTrFUE3GQW1Q
+         XendZVKZOyper99Mcr0IRVlB2vzQYyr7D3Hz+OzM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Frank Li <Frank.li@nxp.com>, Jiri Olsa <jolsa@redhat.com>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 22/22] perf/core: Fix creating kernel counters for PMUs that override event->cpu
-Date:   Fri,  2 Aug 2019 09:25:46 -0400
-Message-Id: <20190802132547.14517-22-sashal@kernel.org>
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 21/22] tty/ldsem, locking/rwsem: Add missing ACQUIRE to read_failed sleep loop
+Date:   Fri,  2 Aug 2019 09:25:45 -0400
+Message-Id: <20190802132547.14517-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132547.14517-1-sashal@kernel.org>
 References: <20190802132547.14517-1-sashal@kernel.org>
@@ -67,60 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 4ce54af8b33d3e21ca935fc1b89b58cbba956051 ]
+[ Upstream commit 952041a8639a7a3a73a2b6573cb8aa8518bc39f8 ]
 
-Some hardware PMU drivers will override perf_event.cpu inside their
-event_init callback. This causes a lockdep splat when initialized through
-the kernel API:
+While reviewing rwsem down_slowpath, Will noticed ldsem had a copy of
+a bug we just found for rwsem.
 
- WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
- pc : ctx_sched_out+0x78/0x208
- Call trace:
-  ctx_sched_out+0x78/0x208
-  __perf_install_in_context+0x160/0x248
-  remote_function+0x58/0x68
-  generic_exec_single+0x100/0x180
-  smp_call_function_single+0x174/0x1b8
-  perf_install_in_context+0x178/0x188
-  perf_event_create_kernel_counter+0x118/0x160
+  X = 0;
 
-Fix this by calling perf_install_in_context with event->cpu, just like
-perf_event_open
+  CPU0			CPU1
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+  rwsem_down_read()
+    for (;;) {
+      set_current_state(TASK_UNINTERRUPTIBLE);
+
+                        X = 1;
+                        rwsem_up_write();
+                          rwsem_mark_wake()
+                            atomic_long_add(adjustment, &sem->count);
+                            smp_store_release(&waiter->task, NULL);
+
+      if (!waiter.task)
+        break;
+
+      ...
+    }
+
+  r = X;
+
+Allows 'r == 0'.
+
+Reported-by: Will Deacon <will@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Acked-by: Will Deacon <will@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Hurley <peter@hurleysoftware.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/r/c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com
+Fixes: 4898e640caf0 ("tty: Add timed, writer-prioritized rw semaphore")
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/tty_ldsem.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 93d7333c64d89..5bbf7537a6121 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10130,7 +10130,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
- 		goto err_unlock;
+diff --git a/drivers/tty/tty_ldsem.c b/drivers/tty/tty_ldsem.c
+index dbd7ba32caac3..6c5eb99fcfcee 100644
+--- a/drivers/tty/tty_ldsem.c
++++ b/drivers/tty/tty_ldsem.c
+@@ -137,8 +137,7 @@ static void __ldsem_wake_readers(struct ld_semaphore *sem)
+ 
+ 	list_for_each_entry_safe(waiter, next, &sem->read_wait, list) {
+ 		tsk = waiter->task;
+-		smp_mb();
+-		waiter->task = NULL;
++		smp_store_release(&waiter->task, NULL);
+ 		wake_up_process(tsk);
+ 		put_task_struct(tsk);
  	}
+@@ -234,7 +233,7 @@ down_read_failed(struct ld_semaphore *sem, long count, long timeout)
+ 	for (;;) {
+ 		set_task_state(tsk, TASK_UNINTERRUPTIBLE);
  
--	perf_install_in_context(ctx, event, cpu);
-+	perf_install_in_context(ctx, event, event->cpu);
- 	perf_unpin_context(ctx);
- 	mutex_unlock(&ctx->mutex);
- 
+-		if (!waiter.task)
++		if (!smp_load_acquire(&waiter.task))
+ 			break;
+ 		if (!timeout)
+ 			break;
 -- 
 2.20.1
 
