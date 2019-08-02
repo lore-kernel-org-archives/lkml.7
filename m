@@ -2,477 +2,100 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63673C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E195AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152262087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:11:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLymMHOi"
+	by mail.kernel.org (Postfix) with ESMTP id B86392087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:11:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390123AbfHBQLE (ORCPT
+        id S2390213AbfHBQLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:11:04 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41022 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732543AbfHBQLE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:11:04 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p15so72803267eds.8
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 09:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc
-         :content-transfer-encoding;
-        bh=eASq+F52WIMgivHRKrZz5norLwTJlJKT69QV1wwpHXw=;
-        b=DLymMHOiVtvFP38XID1eN7fvsO4Tox93pFAJFEbtT0jTVrF3jZpirsZ2EQYFr3qSlo
-         UQZ6JXSG+8L2tXPYhdpsLl9LtkNe2LjuYar/0+2tKG7GG4b+n9jYgoqQW7qIN8dIU1uc
-         I+MTi6EPAXiAqyKLw2NCkbzYcZpqLv2F5ai46jry7UDtqfyM5RqqPKl10JALodzP2JkY
-         6ZLrJ+cIbVCPp51EpiMsiuDsxw4itE4k2zBW1Rwa6C4jSBhxU6bp2tCeYSDqM33OcnbH
-         QliSSyt5yZEwmY0GHKPjeWvFViH9ijqq/pbN7aHGHNAVQSr3SBDzsJGuYUeNSU6aUVm4
-         QqbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:cc:content-transfer-encoding;
-        bh=eASq+F52WIMgivHRKrZz5norLwTJlJKT69QV1wwpHXw=;
-        b=DyE1lgvrk3Ef9eXmEbQcPqDDxi6p0Oj/iYu98s9vczuZIt7L8xD1yKYNri54Jm+sxK
-         QfD6JNL0wxif/JuRlKp9+gtszhEGHEc9/LXhwR4z2BYAbc/SrlEeTaZYBKd5ovLHzR+4
-         DodAcpJlvl9np7Eo1Lq3nXkii7qbDhXcAF0C7Ibj0yk1rV/ybdgcvyrl3w2qPwx+BfDe
-         fDVEDZy+pB7kT9+mnto3t+4HmWXMNX6YWJOqkYZqBtSuCsuaSVtYeZelwMcc+PO2zEkm
-         uyQyD7NoM33aaBTaHzNIhIikbIxUhA5fxxAelVnUM07M5qCbeNkWGDaAaj7l1SI+cb/i
-         Vm2A==
-X-Gm-Message-State: APjAAAVx/GPhazShNe4pawjkVvRdHCq5cJ7a/tH8AG8oJ/hg6/pTky8v
-        WaxmmmKqCu0bIA3Cwq7VVSR4WQDnzMvamK/7cRw=
-X-Received: by 2002:a17:906:edd7:: with SMTP id sb23mt105216832ejb.309.1564762261766;
- Fri, 02 Aug 2019 09:11:01 -0700 (PDT)
+        Fri, 2 Aug 2019 12:11:12 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33111 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732543AbfHBQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:11:11 -0400
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id C1C8DC64785C6836DBC4;
+        Fri,  2 Aug 2019 17:11:09 +0100 (IST)
+Received: from [10.220.135.74] (10.220.135.74) by smtpsuk.huawei.com
+ (10.201.108.37) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 2 Aug
+ 2019 17:11:03 +0100
+Subject: Re: [PATCH v2] KEYS: trusted: allow module init if TPM is inactive or
+ deactivated
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Tyler Hicks <tyhicks@canonical.com>
+CC:     <jarkko.sakkinen@linux.intel.com>, <jejb@linux.ibm.com>,
+        <zohar@linux.ibm.com>, <jgg@ziepe.ca>,
+        <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <crazyt2019+lml@gmail.com>, <nayna@linux.vnet.ibm.com>,
+        <silviu.vlasceanu@huawei.com>
+References: <20190802150733.1972-1-roberto.sassu@huawei.com>
+ <20190802153030.GB26616@elm>
+ <3222714a-a280-0708-f4c0-5db6d342d8dc@huawei.com>
+Message-ID: <8baf1c39-ad04-5cd6-bc67-341e7411db16@huawei.com>
+Date:   Fri, 2 Aug 2019 18:11:09 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-References: <20190802121020.1181-1-hslester96@gmail.com>
-In-Reply-To: <20190802121020.1181-1-hslester96@gmail.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Sat, 3 Aug 2019 00:10:50 +0800
-Message-ID: <CANhBUQ1chO0Q6wHJwbKMvp6LkD7qLBRw57xwf1QkBAKaewHs5w@mail.gmail.com>
-Subject: Re: [PATCH] net/mlx4_core: Use refcount_t for refcount
-Cc:     Tariq Toukan <tariqt@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Netdev <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <3222714a-a280-0708-f4c0-5db6d342d8dc@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.220.135.74]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chuhong Yuan <hslester96@gmail.com> =E4=BA=8E2019=E5=B9=B48=E6=9C=882=E6=97=
-=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=888:10=E5=86=99=E9=81=93=EF=BC=9A
->
-> refcount_t is better for reference counters since its
-> implementation can prevent overflows.
-> So convert atomic_t ref counters to refcount_t.
->
-> Also convert refcount from 0-based to 1-based.
->
+On 8/2/2019 5:34 PM, Roberto Sassu wrote:
+> On 8/2/2019 5:30 PM, Tyler Hicks wrote:
+>> On 2019-08-02 17:07:33, Roberto Sassu wrote:
+>>> Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize 
+>>> w/o a
+>>> TPM") allows the trusted module to be loaded even a TPM is not found to
+>>                                                     ^ if
+>>
+>>> avoid module dependency problems.
+>>>
+>>> However, trusted module initialization can still fail if the TPM is
+>>> inactive or deactivated. This patch ignores tpm_get_random() errors in
+>>> init_digests() and returns -EFAULT in pcrlock() if the TPM didn't return
+>>> random data.
+>>>
+>>> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+>>
+>> The code changes look correct to me.
+>>
+>>    Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+>>
+>> For whoever takes this patch through their tree, I think that adding the
+>> following Fixes tag would be useful (as well as cc'ing stable):
+>>
+>>    Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip 
+>> structure...")
+>>
+>> I think it is also worth leaving a short note, in the commit message,
+>> for backporters that commit 782779b60faa ("tpm: Actually fail on TPM
+>> errors during "get random"") should be included with any backports of
+>> this patch.
+> 
+> Right, thanks. I wait for Jarkko's comments and I add both the Fixes tag
+> and the short note in the next version of the patch.
 
-It seems that directly converting refcount from 0-based
-to 1-based is infeasible.
-I am sorry for this mistake.
+Uhm, I was thinking that maybe it is not necessary to mention commit
+782779b60faa. This patch would still return 0 even if that commit is not
+backported (TPM_ERR_DISABLED < TPM_MAX_DIGEST_SIZE).
 
-Regards,
-Chuhong
+Roberto
 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  .../ethernet/mellanox/mlx4/resource_tracker.c | 90 +++++++++----------
->  1 file changed, 45 insertions(+), 45 deletions(-)
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c b/driv=
-ers/net/ethernet/mellanox/mlx4/resource_tracker.c
-> index 4356f3a58002..d7e26935fd76 100644
-> --- a/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
-> +++ b/drivers/net/ethernet/mellanox/mlx4/resource_tracker.c
-> @@ -114,7 +114,7 @@ struct res_qp {
->         struct list_head        mcg_list;
->         spinlock_t              mcg_spl;
->         int                     local_qpn;
-> -       atomic_t                ref_count;
-> +       refcount_t              ref_count;
->         u32                     qpc_flags;
->         /* saved qp params before VST enforcement in order to restore on =
-VGT */
->         u8                      sched_queue;
-> @@ -143,7 +143,7 @@ static inline const char *mtt_states_str(enum res_mtt=
-_states state)
->  struct res_mtt {
->         struct res_common       com;
->         int                     order;
-> -       atomic_t                ref_count;
-> +       refcount_t              ref_count;
->  };
->
->  enum res_mpt_states {
-> @@ -179,7 +179,7 @@ enum res_cq_states {
->  struct res_cq {
->         struct res_common       com;
->         struct res_mtt         *mtt;
-> -       atomic_t                ref_count;
-> +       refcount_t              ref_count;
->  };
->
->  enum res_srq_states {
-> @@ -192,7 +192,7 @@ struct res_srq {
->         struct res_common       com;
->         struct res_mtt         *mtt;
->         struct res_cq          *cq;
-> -       atomic_t                ref_count;
-> +       refcount_t              ref_count;
->  };
->
->  enum res_counter_states {
-> @@ -1050,7 +1050,7 @@ static struct res_common *alloc_qp_tr(int id)
->         ret->local_qpn =3D id;
->         INIT_LIST_HEAD(&ret->mcg_list);
->         spin_lock_init(&ret->mcg_spl);
-> -       atomic_set(&ret->ref_count, 0);
-> +       refcount_set(&ret->ref_count, 1);
->
->         return &ret->com;
->  }
-> @@ -1066,7 +1066,7 @@ static struct res_common *alloc_mtt_tr(int id, int =
-order)
->         ret->com.res_id =3D id;
->         ret->order =3D order;
->         ret->com.state =3D RES_MTT_ALLOCATED;
-> -       atomic_set(&ret->ref_count, 0);
-> +       refcount_set(&ret->ref_count, 1);
->
->         return &ret->com;
->  }
-> @@ -1110,7 +1110,7 @@ static struct res_common *alloc_cq_tr(int id)
->
->         ret->com.res_id =3D id;
->         ret->com.state =3D RES_CQ_ALLOCATED;
-> -       atomic_set(&ret->ref_count, 0);
-> +       refcount_set(&ret->ref_count, 1);
->
->         return &ret->com;
->  }
-> @@ -1125,7 +1125,7 @@ static struct res_common *alloc_srq_tr(int id)
->
->         ret->com.res_id =3D id;
->         ret->com.state =3D RES_SRQ_ALLOCATED;
-> -       atomic_set(&ret->ref_count, 0);
-> +       refcount_set(&ret->ref_count, 1);
->
->         return &ret->com;
->  }
-> @@ -1325,10 +1325,10 @@ static int add_res_range(struct mlx4_dev *dev, in=
-t slave, u64 base, int count,
->
->  static int remove_qp_ok(struct res_qp *res)
->  {
-> -       if (res->com.state =3D=3D RES_QP_BUSY || atomic_read(&res->ref_co=
-unt) ||
-> +       if (res->com.state =3D=3D RES_QP_BUSY || refcount_read(&res->ref_=
-count) !=3D 1 ||
->             !list_empty(&res->mcg_list)) {
->                 pr_err("resource tracker: fail to remove qp, state %d, re=
-f_count %d\n",
-> -                      res->com.state, atomic_read(&res->ref_count));
-> +                      res->com.state, refcount_read(&res->ref_count));
->                 return -EBUSY;
->         } else if (res->com.state !=3D RES_QP_RESERVED) {
->                 return -EPERM;
-> @@ -1340,11 +1340,11 @@ static int remove_qp_ok(struct res_qp *res)
->  static int remove_mtt_ok(struct res_mtt *res, int order)
->  {
->         if (res->com.state =3D=3D RES_MTT_BUSY ||
-> -           atomic_read(&res->ref_count)) {
-> +           refcount_read(&res->ref_count) !=3D 1) {
->                 pr_devel("%s-%d: state %s, ref_count %d\n",
->                          __func__, __LINE__,
->                          mtt_states_str(res->com.state),
-> -                        atomic_read(&res->ref_count));
-> +                        refcount_read(&res->ref_count));
->                 return -EBUSY;
->         } else if (res->com.state !=3D RES_MTT_ALLOCATED)
->                 return -EPERM;
-> @@ -1675,7 +1675,7 @@ static int cq_res_start_move_to(struct mlx4_dev *de=
-v, int slave, int cqn,
->         } else if (state =3D=3D RES_CQ_ALLOCATED) {
->                 if (r->com.state !=3D RES_CQ_HW)
->                         err =3D -EINVAL;
-> -               else if (atomic_read(&r->ref_count))
-> +               else if (refcount_read(&r->ref_count) !=3D 1)
->                         err =3D -EBUSY;
->                 else
->                         err =3D 0;
-> @@ -1715,7 +1715,7 @@ static int srq_res_start_move_to(struct mlx4_dev *d=
-ev, int slave, int index,
->         } else if (state =3D=3D RES_SRQ_ALLOCATED) {
->                 if (r->com.state !=3D RES_SRQ_HW)
->                         err =3D -EINVAL;
-> -               else if (atomic_read(&r->ref_count))
-> +               else if (refcount_read(&r->ref_count) !=3D 1)
->                         err =3D -EBUSY;
->         } else if (state !=3D RES_SRQ_HW || r->com.state !=3D RES_SRQ_ALL=
-OCATED) {
->                 err =3D -EINVAL;
-> @@ -2808,7 +2808,7 @@ int mlx4_SW2HW_MPT_wrapper(struct mlx4_dev *dev, in=
-t slave,
->                 goto ex_put;
->
->         if (!phys) {
-> -               atomic_inc(&mtt->ref_count);
-> +               refcount_inc(&mtt->ref_count);
->                 put_res(dev, slave, mtt->com.res_id, RES_MTT);
->         }
->
-> @@ -2845,7 +2845,7 @@ int mlx4_HW2SW_MPT_wrapper(struct mlx4_dev *dev, in=
-t slave,
->                 goto ex_abort;
->
->         if (mpt->mtt)
-> -               atomic_dec(&mpt->mtt->ref_count);
-> +               refcount_dec(&mpt->mtt->ref_count);
->
->         res_end_move(dev, slave, RES_MPT, id);
->         return 0;
-> @@ -3007,18 +3007,18 @@ int mlx4_RST2INIT_QP_wrapper(struct mlx4_dev *dev=
-, int slave,
->         err =3D mlx4_DMA_wrapper(dev, slave, vhcr, inbox, outbox, cmd);
->         if (err)
->                 goto ex_put_srq;
-> -       atomic_inc(&mtt->ref_count);
-> +       refcount_inc(&mtt->ref_count);
->         qp->mtt =3D mtt;
-> -       atomic_inc(&rcq->ref_count);
-> +       refcount_inc(&rcq->ref_count);
->         qp->rcq =3D rcq;
-> -       atomic_inc(&scq->ref_count);
-> +       refcount_inc(&scq->ref_count);
->         qp->scq =3D scq;
->
->         if (scqn !=3D rcqn)
->                 put_res(dev, slave, scqn, RES_CQ);
->
->         if (use_srq) {
-> -               atomic_inc(&srq->ref_count);
-> +               refcount_inc(&srq->ref_count);
->                 put_res(dev, slave, srqn, RES_SRQ);
->                 qp->srq =3D srq;
->         }
-> @@ -3113,7 +3113,7 @@ int mlx4_SW2HW_EQ_wrapper(struct mlx4_dev *dev, int=
- slave,
->         if (err)
->                 goto out_put;
->
-> -       atomic_inc(&mtt->ref_count);
-> +       refcount_inc(&mtt->ref_count);
->         eq->mtt =3D mtt;
->         put_res(dev, slave, mtt->com.res_id, RES_MTT);
->         res_end_move(dev, slave, RES_EQ, res_id);
-> @@ -3310,7 +3310,7 @@ int mlx4_HW2SW_EQ_wrapper(struct mlx4_dev *dev, int=
- slave,
->         if (err)
->                 goto ex_put;
->
-> -       atomic_dec(&eq->mtt->ref_count);
-> +       refcount_dec(&eq->mtt->ref_count);
->         put_res(dev, slave, eq->mtt->com.res_id, RES_MTT);
->         res_end_move(dev, slave, RES_EQ, res_id);
->         rem_res_range(dev, slave, res_id, 1, RES_EQ, 0);
-> @@ -3445,7 +3445,7 @@ int mlx4_SW2HW_CQ_wrapper(struct mlx4_dev *dev, int=
- slave,
->         err =3D mlx4_DMA_wrapper(dev, slave, vhcr, inbox, outbox, cmd);
->         if (err)
->                 goto out_put;
-> -       atomic_inc(&mtt->ref_count);
-> +       refcount_inc(&mtt->ref_count);
->         cq->mtt =3D mtt;
->         put_res(dev, slave, mtt->com.res_id, RES_MTT);
->         res_end_move(dev, slave, RES_CQ, cqn);
-> @@ -3474,7 +3474,7 @@ int mlx4_HW2SW_CQ_wrapper(struct mlx4_dev *dev, int=
- slave,
->         err =3D mlx4_DMA_wrapper(dev, slave, vhcr, inbox, outbox, cmd);
->         if (err)
->                 goto out_move;
-> -       atomic_dec(&cq->mtt->ref_count);
-> +       refcount_dec(&cq->mtt->ref_count);
->         res_end_move(dev, slave, RES_CQ, cqn);
->         return 0;
->
-> @@ -3539,9 +3539,9 @@ static int handle_resize(struct mlx4_dev *dev, int =
-slave,
->         err =3D mlx4_DMA_wrapper(dev, slave, vhcr, inbox, outbox, cmd);
->         if (err)
->                 goto ex_put1;
-> -       atomic_dec(&orig_mtt->ref_count);
-> +       refcount_dec(&orig_mtt->ref_count);
->         put_res(dev, slave, orig_mtt->com.res_id, RES_MTT);
-> -       atomic_inc(&mtt->ref_count);
-> +       refcount_inc(&mtt->ref_count);
->         cq->mtt =3D mtt;
->         put_res(dev, slave, mtt->com.res_id, RES_MTT);
->         return 0;
-> @@ -3627,7 +3627,7 @@ int mlx4_SW2HW_SRQ_wrapper(struct mlx4_dev *dev, in=
-t slave,
->         if (err)
->                 goto ex_put_mtt;
->
-> -       atomic_inc(&mtt->ref_count);
-> +       refcount_inc(&mtt->ref_count);
->         srq->mtt =3D mtt;
->         put_res(dev, slave, mtt->com.res_id, RES_MTT);
->         res_end_move(dev, slave, RES_SRQ, srqn);
-> @@ -3657,9 +3657,9 @@ int mlx4_HW2SW_SRQ_wrapper(struct mlx4_dev *dev, in=
-t slave,
->         err =3D mlx4_DMA_wrapper(dev, slave, vhcr, inbox, outbox, cmd);
->         if (err)
->                 goto ex_abort;
-> -       atomic_dec(&srq->mtt->ref_count);
-> +       refcount_dec(&srq->mtt->ref_count);
->         if (srq->cq)
-> -               atomic_dec(&srq->cq->ref_count);
-> +               refcount_dec(&srq->cq->ref_count);
->         res_end_move(dev, slave, RES_SRQ, srqn);
->
->         return 0;
-> @@ -3988,11 +3988,11 @@ int mlx4_2RST_QP_wrapper(struct mlx4_dev *dev, in=
-t slave,
->         if (err)
->                 goto ex_abort;
->
-> -       atomic_dec(&qp->mtt->ref_count);
-> -       atomic_dec(&qp->rcq->ref_count);
-> -       atomic_dec(&qp->scq->ref_count);
-> +       refcount_dec(&qp->mtt->ref_count);
-> +       refcount_dec(&qp->rcq->ref_count);
-> +       refcount_dec(&qp->scq->ref_count);
->         if (qp->srq)
-> -               atomic_dec(&qp->srq->ref_count);
-> +               refcount_dec(&qp->srq->ref_count);
->         res_end_move(dev, slave, RES_QP, qpn);
->         return 0;
->
-> @@ -4456,7 +4456,7 @@ int mlx4_QP_FLOW_STEERING_ATTACH_wrapper(struct mlx=
-4_dev *dev, int slave,
->         if (mlx4_is_bonded(dev))
->                 mlx4_do_mirror_rule(dev, rrule);
->
-> -       atomic_inc(&rqp->ref_count);
-> +       refcount_inc(&rqp->ref_count);
->
->  err_put_rule:
->         put_res(dev, slave, vhcr->out_param, RES_FS_RULE);
-> @@ -4540,7 +4540,7 @@ int mlx4_QP_FLOW_STEERING_DETACH_wrapper(struct mlx=
-4_dev *dev, int slave,
->                        MLX4_QP_FLOW_STEERING_DETACH, MLX4_CMD_TIME_CLASS_=
-A,
->                        MLX4_CMD_NATIVE);
->         if (!err)
-> -               atomic_dec(&rqp->ref_count);
-> +               refcount_dec(&rqp->ref_count);
->  out:
->         put_res(dev, slave, qpn, RES_QP);
->         return err;
-> @@ -4702,11 +4702,11 @@ static void rem_slave_qps(struct mlx4_dev *dev, i=
-nt slave)
->                                         if (err)
->                                                 mlx4_dbg(dev, "rem_slave_=
-qps: failed to move slave %d qpn %d to reset\n",
->                                                          slave, qp->local=
-_qpn);
-> -                                       atomic_dec(&qp->rcq->ref_count);
-> -                                       atomic_dec(&qp->scq->ref_count);
-> -                                       atomic_dec(&qp->mtt->ref_count);
-> +                                       refcount_dec(&qp->rcq->ref_count)=
-;
-> +                                       refcount_dec(&qp->scq->ref_count)=
-;
-> +                                       refcount_dec(&qp->mtt->ref_count)=
-;
->                                         if (qp->srq)
-> -                                               atomic_dec(&qp->srq->ref_=
-count);
-> +                                               refcount_dec(&qp->srq->re=
-f_count);
->                                         state =3D RES_QP_MAPPED;
->                                         break;
->                                 default:
-> @@ -4768,9 +4768,9 @@ static void rem_slave_srqs(struct mlx4_dev *dev, in=
-t slave)
->                                                 mlx4_dbg(dev, "rem_slave_=
-srqs: failed to move slave %d srq %d to SW ownership\n",
->                                                          slave, srqn);
->
-> -                                       atomic_dec(&srq->mtt->ref_count);
-> +                                       refcount_dec(&srq->mtt->ref_count=
-);
->                                         if (srq->cq)
-> -                                               atomic_dec(&srq->cq->ref_=
-count);
-> +                                               refcount_dec(&srq->cq->re=
-f_count);
->                                         state =3D RES_SRQ_ALLOCATED;
->                                         break;
->
-> @@ -4805,7 +4805,7 @@ static void rem_slave_cqs(struct mlx4_dev *dev, int=
- slave)
->         spin_lock_irq(mlx4_tlock(dev));
->         list_for_each_entry_safe(cq, tmp, cq_list, com.list) {
->                 spin_unlock_irq(mlx4_tlock(dev));
-> -               if (cq->com.owner =3D=3D slave && !atomic_read(&cq->ref_c=
-ount)) {
-> +               if (cq->com.owner =3D=3D slave && refcount_read(&cq->ref_=
-count) =3D=3D 1) {
->                         cqn =3D cq->com.res_id;
->                         state =3D cq->com.from_state;
->                         while (state !=3D 0) {
-> @@ -4832,7 +4832,7 @@ static void rem_slave_cqs(struct mlx4_dev *dev, int=
- slave)
->                                         if (err)
->                                                 mlx4_dbg(dev, "rem_slave_=
-cqs: failed to move slave %d cq %d to SW ownership\n",
->                                                          slave, cqn);
-> -                                       atomic_dec(&cq->mtt->ref_count);
-> +                                       refcount_dec(&cq->mtt->ref_count)=
-;
->                                         state =3D RES_CQ_ALLOCATED;
->                                         break;
->
-> @@ -4900,7 +4900,7 @@ static void rem_slave_mrs(struct mlx4_dev *dev, int=
- slave)
->                                                 mlx4_dbg(dev, "rem_slave_=
-mrs: failed to move slave %d mpt %d to SW ownership\n",
->                                                          slave, mptn);
->                                         if (mpt->mtt)
-> -                                               atomic_dec(&mpt->mtt->ref=
-_count);
-> +                                               refcount_dec(&mpt->mtt->r=
-ef_count);
->                                         state =3D RES_MPT_MAPPED;
->                                         break;
->                                 default:
-> @@ -5144,7 +5144,7 @@ static void rem_slave_eqs(struct mlx4_dev *dev, int=
- slave)
->                                         if (err)
->                                                 mlx4_dbg(dev, "rem_slave_=
-eqs: failed to move slave %d eqs %d to SW ownership\n",
->                                                          slave, eqn & 0x3=
-ff);
-> -                                       atomic_dec(&eq->mtt->ref_count);
-> +                                       refcount_dec(&eq->mtt->ref_count)=
-;
->                                         state =3D RES_EQ_RESERVED;
->                                         break;
->
-> --
-> 2.20.1
->
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Li Peng, Li Jian, Shi Yanli
