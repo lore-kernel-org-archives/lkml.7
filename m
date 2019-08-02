@@ -2,129 +2,161 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BCEC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED3BC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C0C20679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D614E20679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsZhqrgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436553AbfHBNs4 (ORCPT
+        id S2394878AbfHBNuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:48:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9876 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727856AbfHBNs4 (ORCPT
+        Fri, 2 Aug 2019 09:50:00 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33609 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727856AbfHBNuA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:48:56 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72DkZBt091280;
-        Fri, 2 Aug 2019 09:48:34 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4nrqsetm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 09:48:34 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x72Dl1Nc093221;
-        Fri, 2 Aug 2019 09:48:33 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4nrqsesp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 09:48:33 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x72DjUYS008189;
-        Fri, 2 Aug 2019 13:48:32 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma02wdc.us.ibm.com with ESMTP id 2u0e85wry3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Aug 2019 13:48:32 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72DmV0a55181734
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 2 Aug 2019 13:48:31 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BBF13112062;
-        Fri,  2 Aug 2019 13:48:31 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E307112061;
-        Fri,  2 Aug 2019 13:48:30 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.147])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  2 Aug 2019 13:48:29 +0000 (GMT)
-Message-ID: <324f76484616473f8842cf26678abc5bd68a258a.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] pseries/hotplug-memory.c: Change rc variable to bool
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     David Hildenbrand <david@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Date:   Fri, 02 Aug 2019 10:48:29 -0300
-In-Reply-To: <78612e21-de54-4bd2-c22f-1c67aed29b2e@redhat.com>
-References: <20190801231055.19603-1-leonardo@linux.ibm.com>
-         <69821502-a449-d1a8-c2e8-a1aa67cca02f@redhat.com>
-         <78612e21-de54-4bd2-c22f-1c67aed29b2e@redhat.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-2d0TCPWTvo5CtPychdE9"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 2 Aug 2019 09:50:00 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c14so33603431plo.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 06:50:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mQtLIJgj8qnmq16hHV2/Di60nqvabcpIT2vTK21437M=;
+        b=hsZhqrgEi6dAqzOpjWJOvXYoTzsshkLCAgAiTytNSLPy48j75sU3Wss+dGI1RCJ7Gu
+         0lB1sgp6Vtmaprc/rWNSSz0f9cFzB0p0iOH2MhvMCUAhQmPwELT+GtvkSe4gdSKkAiy6
+         McxrTVLN8dPBY5JwfAkmhVWIf1go91hSOOyb1uy5m6m8PUxj5TqTeitDugYcVDapPgYC
+         HvhD2XPmWoXmgfzBWAA4FhB9352AwaPB2c2NhMEYA2YC2lbrkK1RLNxYyDX1M8B40pOE
+         XHTQ9zP9em0SuRbmiG+4fgjfN2F5CPQxYNPbIDo3CcOp1DtVgcd1G4MK8kK+Co+eshUq
+         9+hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mQtLIJgj8qnmq16hHV2/Di60nqvabcpIT2vTK21437M=;
+        b=OWMUiqUY77no8Pnzk01HHx7g0PsEyIkrzI0z4aCC7hRh3B7U8eNHn30Mi29k0gicpx
+         W7NmRIeWHVtPdYKJ90owkV7HXBYIEGQMI2y4F3R0D2QyWhq6f/b7b4mFjys+RkJsZQTY
+         AYOE/Z8Gi99Dsh6OtM0PlkNeFB22oxMbG9DfpGcSnKJJq4CydvBFM6PHCzsexai0bQS3
+         XLW6yB5cnL0SfDmKTL6VhCW0nYPBkxXekQaYPIJdU88RpyfYoX78udRJ9RTNGQ0YVi9s
+         zPc3m7u9v0/RgBZxBgM5ruu324w93C/m5PLAreO+k12bwJnzZrdH3ltgeaixzC935wNE
+         Qmhg==
+X-Gm-Message-State: APjAAAXZfx/9OjfgcfQyjJLK7OpEaQviegexbBfcoRbfdDPce5DxLUXh
+        u2YX6Phlua88LInUZvJKAAI=
+X-Google-Smtp-Source: APXvYqwZBcDnDQYwRDu0HUM/22nE7jgEVt0d2AijMAExL0f5PjopObxqzpla+GgxHcYOLzcB2qAMqg==
+X-Received: by 2002:a17:902:d81:: with SMTP id 1mr136710123plv.323.1564753799488;
+        Fri, 02 Aug 2019 06:49:59 -0700 (PDT)
+Received: from localhost ([121.137.63.184])
+        by smtp.gmail.com with ESMTPSA id c98sm8955254pje.1.2019.08.02.06.49.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 02 Aug 2019 06:49:58 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Fri, 2 Aug 2019 22:49:55 +0900
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] i915: do not leak module ref counter
+Message-ID: <20190802134955.GA23032@tigerII.localdomain>
+References: <20190802123956.2450-1-sergey.senozhatsky@gmail.com>
+ <20190802123956.2450-2-sergey.senozhatsky@gmail.com>
+ <156475071634.6598.8668583907388398632@skylake-alporthouse-com>
+ <156475141863.6598.6809215010139776043@skylake-alporthouse-com>
+ <20190802131523.GB466@tigerII.localdomain>
+ <20190802133503.GA18318@tigerII.localdomain>
+ <156475327511.6598.417403815598052974@skylake-alporthouse-com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020142
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156475327511.6598.417403815598052974@skylake-alporthouse-com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (08/02/19 14:41), Chris Wilson wrote:
+[..]
+> struct vfsmount *kern_mount(struct file_system_type *type)
+> {
+>         struct vfsmount *mnt;
+>         mnt = vfs_kern_mount(type, SB_KERNMOUNT, type->name, NULL);
+>         if (!IS_ERR(mnt)) {
+>                 /*
+>                  * it is a longterm mount, don't release mnt until
+>                  * we unmount before file sys is unregistered
+>                 */
+>                 real_mount(mnt)->mnt_ns = MNT_NS_INTERNAL;
+>         }
+>         return mnt;
+> }
+> 
+> With the exception of fiddling with MNT_NS_INTERNAL, it seems
+> amenable for our needs.
 
---=-2d0TCPWTvo5CtPychdE9
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Sorry, not sure I understand. i915 use kern_mount() at the moment.
 
-On Fri, 2019-08-02 at 09:23 +0200, David Hildenbrand wrote:
->  subtle changes in a "Change rc variable to bool"
-> patch should be avoided.
+Since we still need to put_filesystem(), I'd probably add one more
+patch
+	- export put_filesystem()
 
-You are right.
-If it was a valid change, I should give it a patch for itself.
-I will keep that in mind next time.
+so then we can put_filesystem() in i915. Wonder what would happen
+if someone would do
+		modprobe i915
+		rmmod i916
+In a loop.
 
-Thanks for helping!
+So something like this (this is against current patch set).
 
---=-2d0TCPWTvo5CtPychdE9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+---
+ drivers/gpu/drm/i915/gem/i915_gemfs.c | 5 ++---
+ fs/filesystems.c                      | 2 +-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1EPy0ACgkQlQYWtz9S
-ttSG7hAA35fzoY8Uf6QlMYIzT5tFCJFMi9XDduN5Lkey2lS8rr3d+Ihmd+2AhMqG
-V20mXTUHUo3zKbpqLjYkuL5PnqI319j53Qj4FuS9hqlZTz0U+4mS0KXyywb41V1A
-i0tWj6A7beFoC0p+awdWPio/5X5iXWA4cCQii7p/d+NNJb/XqXELnN0dlDgKAmin
-QDbuyajt1dXAepISnzMQUmR5PJ8CHGTBRk0Oc9a/qP0O0QnkhfrL8nS8j1PsoNZY
-bV+XXQ/Y2gTnv0ByfwlsDkL3JcDBfggRkJuQRcVdoE4tSLShpE5nrjUrtTpTdq3P
-jKg92tQCrSA9YTkC/ddL7NQE9m1yERzCHlypjDNqwKnI8/slUtPfVgH+wgCY5ObS
-FJaeC6EYpQsAuxMNdKPZG7beL+8MNjH1uhgbZC2eWGO+wnJRyowZ+i4Xe5aYV/Aw
-qE6Ud5Tb/jKMyizOPBxeZ48IGfmKVKkwZvbluXqvhjSytKxjsn+RZCky3qY8jh8p
-Ppp1/VtshnAELCPmQ/R7+5N0f4i8k6L8YoAooR8ff6apXWl4QLvikpUtczkVl7hm
-X+h8K7qg1wYrAdT+nE5owqYzX5HmDi8z/ne9cCgooVq7MzY+ppBkYCC7OKW+49tB
-vzF2WsIB62UbNKONXCB/H1IpD32pPS6YPr8TCg6fmbEIKS4Z3VM=
-=ys0t
------END PGP SIGNATURE-----
-
---=-2d0TCPWTvo5CtPychdE9--
-
+diff --git a/drivers/gpu/drm/i915/gem/i915_gemfs.c b/drivers/gpu/drm/i915/gem/i915_gemfs.c
+index d437188d1736..4ea7a6f750f4 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gemfs.c
++++ b/drivers/gpu/drm/i915/gem/i915_gemfs.c
+@@ -24,10 +24,9 @@ int i915_gemfs_init(struct drm_i915_private *i915)
+ 		return -ENODEV;
+ 
+ 	gemfs = kern_mount(type);
+-	if (IS_ERR(gemfs)) {
+-		put_filesystem(type);
++	put_filesystem(type);
++	if (IS_ERR(gemfs))
+ 		return PTR_ERR(gemfs);
+-	}
+ 
+ 	/*
+ 	 * Enable huge-pages for objects that are at least HPAGE_PMD_SIZE, most
+diff --git a/fs/filesystems.c b/fs/filesystems.c
+index 9135646e41ac..4837eda748b5 100644
+--- a/fs/filesystems.c
++++ b/fs/filesystems.c
+@@ -45,6 +45,7 @@ void put_filesystem(struct file_system_type *fs)
+ {
+ 	module_put(fs->owner);
+ }
++EXPORT_SYMBOL(put_filesystem);
+ 
+ static struct file_system_type **find_filesystem(const char *name, unsigned len)
+ {
+@@ -280,5 +281,4 @@ struct file_system_type *get_fs_type(const char *name)
+ 	}
+ 	return fs;
+ }
+-
+ EXPORT_SYMBOL(get_fs_type);
