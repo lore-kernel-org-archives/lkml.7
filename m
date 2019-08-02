@@ -2,167 +2,196 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785CBC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4CFC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B5620665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDD020665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 10:04:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="YSlyciQT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407258AbfHBKEg (ORCPT
+        id S2407263AbfHBKEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 06:04:36 -0400
-Received: from smtprelay0124.hostedemail.com ([216.40.44.124]:48187 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407202AbfHBKEa (ORCPT
+        Fri, 2 Aug 2019 06:04:44 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:60628 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732050AbfHBKEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 06:04:30 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id B157A837F24D;
-        Fri,  2 Aug 2019 10:04:28 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: balls06_26e92d0181236
-X-Filterd-Recvd-Size: 5010
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  2 Aug 2019 10:04:27 +0000 (UTC)
-Message-ID: <9403fd1e250bb4dd8e1bcf0536e6d224be7c889c.camel@perches.com>
-Subject: Re: [PATCH 5.2 10/20] media: radio-raremono: change devm_k*alloc to
- k*alloc
-From:   Joe Perches <joe@perches.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org,
-        Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
-Date:   Fri, 02 Aug 2019 03:04:25 -0700
-In-Reply-To: <20190802092100.285432717@linuxfoundation.org>
-References: <20190802092055.131876977@linuxfoundation.org>
-         <20190802092100.285432717@linuxfoundation.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Fri, 2 Aug 2019 06:04:42 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72A2LAk010592;
+        Fri, 2 Aug 2019 06:04:00 -0400
+Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2050.outbound.protection.outlook.com [104.47.44.50])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2u4ddxrvsa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 02 Aug 2019 06:04:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Rb/OfeNA2Nq64143x2fad4CuV7Yq75Kzr8k2Wjw+g9RdbqwWFy+WIF9yQCirWiDPpcsuFQznPCbLMD/XKDecIzkX3XgDV57aIYAB2kBOXxfmk/AUr+riBLN0x1HZ676ll78D1co6OSZz8MKYvQrWp2sNB7KBPwWjTtxy3WYdy/AbJz9wtqQbdNDLCDsHFFvyIRML32XeMK9+JjxNL3B30+D98++7FOYcyi2Zx9my1MxoFIyDLsrBT8MpyRBJhPT0aUUDEnC+HorezwzPunTMEi195jqvy7aI7KA9EyGjkA8eopDNPiCH2MBJUjpJLIOVCc1fhVP6uxiQiwoyVzeRxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=utBhN++MhKQFax2kh7OMZcnoDF4bfN76p+WVFccSRH0=;
+ b=lDLw/ymq3hCQ5VvihtA05zvsMJu7cHI3H6SgtU3HYKPlrDY9H/KgAanDDuDiq805838HIPYns0mlgqIQsYtkegURRw6H/IytkAqZEvEA/KPsmJJArvmVLujgdKZ6jwnP4elbeVjL6Pzf+qDiEsHN9GB4JQB7zwd9RWrBwWGMW9pyeKI7i1ldZVtzxU0jUvv066cETHhbJ8Razhf24bzZl9mRijp4EJggNCaAsYHraJUW2rCMAyVXt1UlZXOvAP1PgSS6xwpEO6W6KPz2jEsw7gUOdE5U6ZzA8mxo467/N2wDxW+mBnvaRIBFwg+iJ+5BhrS8TDkMKg9/Xp5pLDkIBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=analog.com;dmarc=bestguesspass action=none
+ header.from=analog.com;dkim=none (message not signed);arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=utBhN++MhKQFax2kh7OMZcnoDF4bfN76p+WVFccSRH0=;
+ b=YSlyciQTQOQ1bvkg9gtSnu8uDmhJl8TjjwZH+NpwJKhQHjuokw/j4iq9rp9XG6rDShO8VKcwYvsDKV8UP3JkIIeoGPRjgzBWXk8YkpHVZ+cs4bhpA3AO7gn0zLZlppDmdHJG4z3zbT6eU6LBKZ71gKzc9vlkqokJfS/LohQ1ZBU=
+Received: from MWHPR03CA0007.namprd03.prod.outlook.com (2603:10b6:300:117::17)
+ by BLUPR03MB584.namprd03.prod.outlook.com (2a01:111:e400:887::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2094.16; Fri, 2 Aug
+ 2019 10:03:57 +0000
+Received: from BL2NAM02FT037.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::209) by MWHPR03CA0007.outlook.office365.com
+ (2603:10b6:300:117::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.13 via Frontend
+ Transport; Fri, 2 Aug 2019 10:03:57 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ BL2NAM02FT037.mail.protection.outlook.com (10.152.77.11) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2136.14
+ via Frontend Transport; Fri, 2 Aug 2019 10:03:56 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x72A3ujl025333
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 2 Aug 2019 03:03:56 -0700
+Received: from ben-Latitude-E6540.ad.analog.com (10.48.65.163) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 2 Aug 2019 06:03:55 -0400
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <paulmck@linux.ibm.com>,
+        <mchehab+samsung@kernel.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <biabeniamin@outlook.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH 4/4] dt-bindings: iio: adc: Add AD7606B ADC documentation
+Date:   Fri, 2 Aug 2019 13:03:04 +0300
+Message-ID: <20190802100304.15899-4-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190802100304.15899-1-beniamin.bia@analog.com>
+References: <20190802100304.15899-1-beniamin.bia@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(136003)(346002)(39860400002)(2980300002)(189003)(199004)(5660300002)(316002)(16586007)(966005)(478600001)(6916009)(47776003)(106002)(126002)(26005)(50466002)(7696005)(51416003)(86362001)(2906002)(1076003)(54906003)(6306002)(48376002)(426003)(486006)(246002)(50226002)(186003)(7416002)(76176011)(4326008)(44832011)(2616005)(476003)(36756003)(11346002)(446003)(7636002)(14444005)(107886003)(8676002)(70206006)(356004)(336012)(8936002)(6666004)(70586007)(305945005)(2351001);DIR:OUT;SFP:1101;SCL:1;SRVR:BLUPR03MB584;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d59deb3c-c6e1-45de-912e-08d71730bb89
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BLUPR03MB584;
+X-MS-TrafficTypeDiagnostic: BLUPR03MB584:
+X-MS-Exchange-PUrlCount: 3
+X-Microsoft-Antispam-PRVS: <BLUPR03MB584598DE3F92FF14B5FBE9BF0D90@BLUPR03MB584.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 011787B9DD
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: DyzTSCjEU2FXVSYpte4abospIdq6gmcxUjZ0bYf5i7/xxZhaD5pEiGPHk4vXSuTNzO5q1j3mcmqCbBdjC3GWVsbh9K93aRKNEjMadFNwcws2k6DASe4y5JvsgKSIRLcWuvHpR4ezhjex5ZA23AnDcjSSvVh8iqVVIzg+lMucV3jxast1QqDmlDxLFEO8EOrKt7njEa5yPiSDLhlljPdNHmCMAeeuSBG4y3QUIijM0bQKFs6rFEUqsoQO2VopDsNdOGflqpvPj2ypjyP7vaUOtKL9ePhtwUPMEQVx0uVJijYT44dWNTTTE6nz6yQ2FX5qx3tUU8YDo9j2shfh2RBQl5Xg1vODMNM3U5DhhaNWC8Z9TtcRa4+zeRLpIZrnx9Bhg4V/7HCJxIAxMQhTB0F4xQ+M4uAxoEv0lZ35EZhHAmk=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2019 10:03:56.7467
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d59deb3c-c6e1-45de-912e-08d71730bb89
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLUPR03MB584
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-02 at 11:40 +0200, Greg Kroah-Hartman wrote:
-> From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-> 
-> commit c666355e60ddb4748ead3bdd983e3f7f2224aaf0 upstream.
-> 
-> Change devm_k*alloc to k*alloc to manually allocate memory
-> 
-> The manual allocation and freeing of memory is necessary because when
-> the USB radio is disconnected, the memory associated with devm_k*alloc
-> is freed. Meaning if we still have unresolved references to the radio
-> device, then we get use-after-free errors.
-> 
-> This patch fixes this by manually allocating memory, and freeing it in
-> the v4l2.release callback that gets called when the last radio device
-> exits.
+Documentation for AD7606B Analog to Digital Converter and software
+mode was added.
 
-This really should be commented in the code
-and not just in the commit changelog as some
-unsuspecting person will likely undo this in
-the future without one.
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+---
+ Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt  | 8 ++++++++
+ Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 4 +++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-> Reported-and-tested-by: syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
-> 
-> Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> [hverkuil-cisco@xs4all.nl: cleaned up two small checkpatch.pl warnings]
-> [hverkuil-cisco@xs4all.nl: prefix subject with driver name]
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
->  drivers/media/radio/radio-raremono.c |   30 +++++++++++++++++++++++-------
->  1 file changed, 23 insertions(+), 7 deletions(-)
-> 
-> --- a/drivers/media/radio/radio-raremono.c
-> +++ b/drivers/media/radio/radio-raremono.c
-> @@ -271,6 +271,14 @@ static int vidioc_g_frequency(struct fil
->  	return 0;
->  }
->  
-> +static void raremono_device_release(struct v4l2_device *v4l2_dev)
-> +{
-> +	struct raremono_device *radio = to_raremono_dev(v4l2_dev);
-> +
-> +	kfree(radio->buffer);
-> +	kfree(radio);
-> +}
-> +
->  /* File system interface */
->  static const struct v4l2_file_operations usb_raremono_fops = {
->  	.owner		= THIS_MODULE,
-> @@ -295,12 +303,14 @@ static int usb_raremono_probe(struct usb
->  	struct raremono_device *radio;
->  	int retval = 0;
->  
-> -	radio = devm_kzalloc(&intf->dev, sizeof(struct raremono_device), GFP_KERNEL);
-> -	if (radio)
-> -		radio->buffer = devm_kmalloc(&intf->dev, BUFFER_LENGTH, GFP_KERNEL);
-> -
-> -	if (!radio || !radio->buffer)
-> +	radio = kzalloc(sizeof(*radio), GFP_KERNEL);
-> +	if (!radio)
-> +		return -ENOMEM;
-> +	radio->buffer = kmalloc(BUFFER_LENGTH, GFP_KERNEL);
-> +	if (!radio->buffer) {
-> +		kfree(radio);
->  		return -ENOMEM;
-> +	}
->  
->  	radio->usbdev = interface_to_usbdev(intf);
->  	radio->intf = intf;
-> @@ -324,7 +334,8 @@ static int usb_raremono_probe(struct usb
->  	if (retval != 3 ||
->  	    (get_unaligned_be16(&radio->buffer[1]) & 0xfff) == 0x0242) {
->  		dev_info(&intf->dev, "this is not Thanko's Raremono.\n");
-> -		return -ENODEV;
-> +		retval = -ENODEV;
-> +		goto free_mem;
->  	}
->  
->  	dev_info(&intf->dev, "Thanko's Raremono connected: (%04X:%04X)\n",
-> @@ -333,7 +344,7 @@ static int usb_raremono_probe(struct usb
->  	retval = v4l2_device_register(&intf->dev, &radio->v4l2_dev);
->  	if (retval < 0) {
->  		dev_err(&intf->dev, "couldn't register v4l2_device\n");
-> -		return retval;
-> +		goto free_mem;
->  	}
->  
->  	mutex_init(&radio->lock);
-> @@ -345,6 +356,7 @@ static int usb_raremono_probe(struct usb
->  	radio->vdev.ioctl_ops = &usb_raremono_ioctl_ops;
->  	radio->vdev.lock = &radio->lock;
->  	radio->vdev.release = video_device_release_empty;
-> +	radio->v4l2_dev.release = raremono_device_release;
->  
->  	usb_set_intfdata(intf, &radio->v4l2_dev);
->  
-> @@ -360,6 +372,10 @@ static int usb_raremono_probe(struct usb
->  	}
->  	dev_err(&intf->dev, "could not register video device\n");
->  	v4l2_device_unregister(&radio->v4l2_dev);
-> +
-> +free_mem:
-> +	kfree(radio->buffer);
-> +	kfree(radio);
->  	return retval;
->  }
->  
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+index d8652460198e..9cc7ea19eca6 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+@@ -7,6 +7,7 @@ Required properties for the AD7606:
+ 	* "adi,ad7606-8"
+ 	* "adi,ad7606-6"
+ 	* "adi,ad7606-4"
++	* "adi,ad7606b"
+ 	* "adi,ad7616"
+ - reg: SPI chip select number for the device
+ - spi-max-frequency: Max SPI frequency to use
+@@ -42,6 +43,12 @@ Optional properties:
+ - adi,oversampling-ratio-gpios: must be the device tree identifier of the over-sampling
+ 				mode pins. As the line is active high, it should be marked
+ 				GPIO_ACTIVE_HIGH.
++- adi,sw-mode: Boolean, software mode of operation, so far available only for ad7606b.
++	Software mode is enabled when all three oversampling mode pins are connected to
++	high level. The AD7606B is configured by the corresponding registers. If the
++	adi,oversampling-ratio-gpios property is defined, then the driver will set the
++	oversampling gpios to high. Otherwise, it is assumed that the pins are hardwired
++	to VDD.
+ 
+ Example:
+ 
+@@ -63,4 +70,5 @@ Example:
+ 						&gpio 23 GPIO_ACTIVE_HIGH
+ 						&gpio 26 GPIO_ACTIVE_HIGH>;
+ 		standby-gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
++		adi,sw-mode;
+ 	};
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+index 509dbe9c84d2..2afe31747a70 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+@@ -13,6 +13,7 @@ maintainers:
+ description: |
+   Analog Devices AD7606 Simultaneous Sampling ADC
+   https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606_7606-6_7606-4.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/AD7606B.pdf
+   https://www.analog.com/media/en/technical-documentation/data-sheets/AD7616.pdf
+ 
+ properties:
+@@ -22,6 +23,7 @@ properties:
+       - adi,ad7606-8
+       - adi,ad7606-6
+       - adi,ad7606-4
++      - adi,ad7606b
+       - adi,ad7616
+ 
+   reg:
+@@ -87,7 +89,7 @@ properties:
+ 
+   adi,sw-mode:
+     description:
+-      Software mode of operation, so far available only for ad7616.
++      Software mode of operation, so far available only for ad7616 and ad7606B.
+       It is enabled when all three oversampling mode pins are connected to
+       high level. The device is configured by the corresponding registers. If the
+       adi,oversampling-ratio-gpios property is defined, then the driver will set the
+-- 
+2.17.1
 
