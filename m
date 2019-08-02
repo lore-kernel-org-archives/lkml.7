@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF8BC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06ACDC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B2E21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61ED2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752084;
-	bh=gijZ38w2GHhnegH5FJ/NBBA0xopWh1T6sTAr9SKBQzI=;
+	s=default; t=1564752088;
+	bh=tfCEAaZ/7wP7IyWf1wpi3ulEwPG2rgB//jXsv3f5eC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TWp99zDH8B2ZbAp2G7xcuMjlwEKX3ThDEAENlNmiTeuluF9uiUsfjt7FoJSvfws5N
-	 41cKiiDBZFwIkk0GsSu1KlBYUAn/stglWoduVimPTcwIk8VgWDEXJ+z9lNIkhCQudp
-	 FnJgx/DsImTrLaYtX35x1wGiIcmDL+jyqBYI8L+o=
+	b=mmClA9phGMU7cHr3R6IwVsTC8WN543BcVkm0dQEymethD+Bi9/VxcacO+v80tYZZm
+	 aqcLdbmYeXsCGvLjay5PNv/W3kut3vcwKVyLHcrRtyXkZRHMMq36gtR4GYIW5MNDHY
+	 HnjbBG9a9G1DFsYrfoUvtNN0hpL/+C/csh91mESY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393566AbfHBNVX (ORCPT
+        id S2393589AbfHBNV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:21:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59702 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:21:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393531AbfHBNVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:21:12 -0400
+        id S2393531AbfHBNVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:21:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B5952173E;
-        Fri,  2 Aug 2019 13:21:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F4BE21849;
+        Fri,  2 Aug 2019 13:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752071;
-        bh=gijZ38w2GHhnegH5FJ/NBBA0xopWh1T6sTAr9SKBQzI=;
+        s=default; t=1564752082;
+        bh=tfCEAaZ/7wP7IyWf1wpi3ulEwPG2rgB//jXsv3f5eC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=alemIp2yrPVhqs0Jy7y+VV896RVcHemiwGPGfflSjgeMF4rxDPRHTYYV9KUQntETC
-         qYf7Kbf8BjMcGLMcwyFni4AEEFCU0mCuMuZQEThTJrDbZ7KxatszuMhyP6foAUGSYF
-         1AlA5RxOUOx8Cy0G5qr7KOrZXiYSq78RVebcaKYc=
+        b=OjjHyc4Xsh0LUSdZK2uXSM2L3Yz3mIpVS+KdJGYYDF7vcQNmDp/cFyzJuqoGhZ33k
+         qStkfywsxo65kn52ymy/MrfaxvapY4hJzEAtEuErYRUp/afCi/HuhHMU3XMm9AGgRK
+         VLhhUeLp8trzztoIptLXv9vkds7/PLEMeDR1a8nc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Morse <james.morse@arm.com>, Will Deacon <will@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 39/76] arm64: entry: SP Alignment Fault doesn't write to FAR_EL1
-Date:   Fri,  2 Aug 2019 09:19:13 -0400
-Message-Id: <20190802131951.11600-39-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 43/76] drm: silence variable 'conn' set but not used
+Date:   Fri,  2 Aug 2019 09:19:17 -0400
+Message-Id: <20190802131951.11600-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -58,103 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 40ca0ce56d4bb889dc43b455c55398468115569a ]
+[ Upstream commit bbb6fc43f131f77fcb7ae8081f6d7c51396a2120 ]
 
-Comparing the arm-arm's  pseudocode for AArch64.PCAlignmentFault() with
-AArch64.SPAlignmentFault() shows that SP faults don't copy the faulty-SP
-to FAR_EL1, but this is where we read from, and the address we provide
-to user-space with the BUS_ADRALN signal.
+The "struct drm_connector" iteration cursor from
+"for_each_new_connector_in_state" is never used in atomic_remove_fb()
+which generates a compilation warning,
 
-For user-space this value will be UNKNOWN due to the previous ERET to
-user-space. If the last value is preserved, on systems with KASLR or KPTI
-this will be the user-space link-register left in FAR_EL1 by tramp_exit().
-Fix this to retrieve the original sp_el0 value, and pass this to
-do_sp_pc_fault().
+drivers/gpu/drm/drm_framebuffer.c: In function 'atomic_remove_fb':
+drivers/gpu/drm/drm_framebuffer.c:838:24: warning: variable 'conn' set
+but not used [-Wunused-but-set-variable]
 
-SP alignment faults from EL1 will cause us to take the fault again when
-trying to store the pt_regs. This eventually takes us to the overflow
-stack. Remove the ESR_ELx_EC_SP_ALIGN check as we will never make it
-this far.
+Silence it by marking "conn" __maybe_unused.
 
-Fixes: 60ffc30d5652 ("arm64: Exception handling")
-Signed-off-by: James Morse <james.morse@arm.com>
-[will: change label name and fleshed out comment]
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/1563822886-13570-1-git-send-email-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/entry.S | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/drm_framebuffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 9cdc4592da3ef..320a30dbe35ef 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -586,10 +586,8 @@ el1_sync:
- 	b.eq	el1_ia
- 	cmp	x24, #ESR_ELx_EC_SYS64		// configurable trap
- 	b.eq	el1_undef
--	cmp	x24, #ESR_ELx_EC_SP_ALIGN	// stack alignment exception
--	b.eq	el1_sp_pc
- 	cmp	x24, #ESR_ELx_EC_PC_ALIGN	// pc alignment exception
--	b.eq	el1_sp_pc
-+	b.eq	el1_pc
- 	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL1
- 	b.eq	el1_undef
- 	cmp	x24, #ESR_ELx_EC_BREAKPT_CUR	// debug exception in EL1
-@@ -611,9 +609,11 @@ el1_da:
- 	bl	do_mem_abort
- 
- 	kernel_exit 1
--el1_sp_pc:
-+el1_pc:
- 	/*
--	 * Stack or PC alignment exception handling
-+	 * PC alignment exception handling. We don't handle SP alignment faults,
-+	 * since we will have hit a recursive exception when trying to push the
-+	 * initial pt_regs.
- 	 */
- 	mrs	x0, far_el1
- 	inherit_daif	pstate=x23, tmp=x2
-@@ -732,9 +732,9 @@ el0_sync:
- 	ccmp	x24, #ESR_ELx_EC_WFx, #4, ne
- 	b.eq	el0_sys
- 	cmp	x24, #ESR_ELx_EC_SP_ALIGN	// stack alignment exception
--	b.eq	el0_sp_pc
-+	b.eq	el0_sp
- 	cmp	x24, #ESR_ELx_EC_PC_ALIGN	// pc alignment exception
--	b.eq	el0_sp_pc
-+	b.eq	el0_pc
- 	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL0
- 	b.eq	el0_undef
- 	cmp	x24, #ESR_ELx_EC_BREAKPT_LOW	// debug exception in EL0
-@@ -758,7 +758,7 @@ el0_sync_compat:
- 	cmp	x24, #ESR_ELx_EC_FP_EXC32	// FP/ASIMD exception
- 	b.eq	el0_fpsimd_exc
- 	cmp	x24, #ESR_ELx_EC_PC_ALIGN	// pc alignment exception
--	b.eq	el0_sp_pc
-+	b.eq	el0_pc
- 	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL0
- 	b.eq	el0_undef
- 	cmp	x24, #ESR_ELx_EC_CP15_32	// CP15 MRC/MCR trap
-@@ -858,11 +858,15 @@ el0_fpsimd_exc:
- 	mov	x1, sp
- 	bl	do_fpsimd_exc
- 	b	ret_to_user
-+el0_sp:
-+	ldr	x26, [sp, #S_SP]
-+	b	el0_sp_pc
-+el0_pc:
-+	mrs	x26, far_el1
- el0_sp_pc:
- 	/*
- 	 * Stack or PC alignment exception handling
- 	 */
--	mrs	x26, far_el1
- 	gic_prio_kentry_setup tmp=x0
- 	enable_da_f
- #ifdef CONFIG_TRACE_IRQFLAGS
+diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
+index d8d75e25f6fb8..45f6f11a88a74 100644
+--- a/drivers/gpu/drm/drm_framebuffer.c
++++ b/drivers/gpu/drm/drm_framebuffer.c
+@@ -830,7 +830,7 @@ static int atomic_remove_fb(struct drm_framebuffer *fb)
+ 	struct drm_device *dev = fb->dev;
+ 	struct drm_atomic_state *state;
+ 	struct drm_plane *plane;
+-	struct drm_connector *conn;
++	struct drm_connector *conn __maybe_unused;
+ 	struct drm_connector_state *conn_state;
+ 	int i, ret;
+ 	unsigned plane_mask;
 -- 
 2.20.1
 
