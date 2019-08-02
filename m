@@ -4,24 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740A5C32754
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6750C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5751A2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E0420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 08:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403994AbfHBIQ6 (ORCPT
+        id S2404008AbfHBIRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 04:16:58 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50092 "EHLO huawei.com"
+        Fri, 2 Aug 2019 04:17:01 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53762 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2403974AbfHBIQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2403917AbfHBIQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 2 Aug 2019 04:16:57 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B701C3A14E74F41B24A7;
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8BA3F2BD5A830FA16EA4;
         Fri,  2 Aug 2019 16:16:55 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
@@ -31,14 +30,15 @@ To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
         <linux-crypto@vger.kernel.org>
 CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
         Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [PATCH v3 5/7] Documentation: Add debugfs doc for hisi_zip
-Date:   Fri, 2 Aug 2019 15:57:54 +0800
-Message-ID: <1564732676-35987-6-git-send-email-wangzhou1@hisilicon.com>
+Subject: [PATCH v3 7/7] MAINTAINERS: add maintainer for HiSilicon QM and ZIP controller driver
+Date:   Fri, 2 Aug 2019 15:57:56 +0800
+Message-ID: <1564732676-35987-8-git-send-email-wangzhou1@hisilicon.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1564732676-35987-1-git-send-email-wangzhou1@hisilicon.com>
 References: <1564732676-35987-1-git-send-email-wangzhou1@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.67.212.75]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,71 +46,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add debugfs descriptions for HiSilicon ZIP and QM driver.
+Add Zhou Wang as a maintainer for HiSilicon QM and ZIP controller driver.
 
 Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
 ---
- Documentation/ABI/testing/debugfs-hisi-zip | 50 ++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/ABI/testing/debugfs-hisi-zip
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/ABI/testing/debugfs-hisi-zip b/Documentation/ABI/testing/debugfs-hisi-zip
-new file mode 100644
-index 0000000..a7c63e6
---- /dev/null
-+++ b/Documentation/ABI/testing/debugfs-hisi-zip
-@@ -0,0 +1,50 @@
-+What:           /sys/kernel/debug/hisi_zip/<bdf>/comp_core[01]/regs
-+Date:           Nov 2018
-+Contact:        linux-crypto@vger.kernel.org
-+Description:    Dump of compression cores related debug registers.
-+		Only available for PF.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 783569e..667aac4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7307,6 +7307,17 @@ S:	Supported
+ F:	drivers/scsi/hisi_sas/
+ F:	Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+ 
++HISILICON QM AND ZIP Controller DRIVER
++M:	Zhou Wang <wangzhou1@hisilicon.com>
++L:	linux-crypto@vger.kernel.org
++S:	Maintained
++F:	drivers/crypto/hisilicon/qm.c
++F:	drivers/crypto/hisilicon/qm.h
++F:	drivers/crypto/hisilicon/sgl.c
++F:	drivers/crypto/hisilicon/sgl.h
++F:	drivers/crypto/hisilicon/zip/
++F:	Documentation/ABI/testing/debugfs-hisi-zip
 +
-+What:           /sys/kernel/debug/hisi_zip/<bdf>/decomp_core[0-5]/regs
-+Date:           Nov 2018
-+Contact:        linux-crypto@vger.kernel.org
-+Description:    Dump of decompression cores related debug registers.
-+		Only available for PF.
-+
-+What:           /sys/kernel/debug/hisi_zip/<bdf>/clear_enable
-+Date:           Nov 2018
-+Contact:        linux-crypto@vger.kernel.org
-+Description:    Compression/decompression core debug registers read clear
-+		control. 1 means enable register read clear, otherwise 0.
-+		Writing to this file has no functional effect, only enable or
-+		disable counters clear after reading of these registers.
-+		Only available for PF.
-+
-+What:           /sys/kernel/debug/hisi_zip/<bdf>/current_qm
-+Date:           Nov 2018
-+Contact:        linux-crypto@vger.kernel.org
-+Description:    One ZIP controller has one PF and multiple VFs, each function
-+		has a QM. Select the QM which below qm refers to.
-+		Only available for PF.
-+
-+What:           /sys/kernel/debug/hisi_zip/<bdf>/qm/qm_regs
-+Date:           Nov 2018
-+Contact:        linux-crypto@vger.kernel.org
-+Description:    Dump of QM related debug registers.
-+		Available for PF and VF in host. VF in guest currently only
-+		has one debug register.
-+
-+What:           /sys/kernel/debug/hisi_zip/<bdf>/qm/current_q
-+Date:           Nov 2018
-+Contact:        linux-crypto@vger.kernel.org
-+Description:    One QM may contain multiple queues. Select specific queue to
-+		show its debug registers in above qm_regs.
-+		Only available for PF.
-+
-+What:           /sys/kernel/debug/hisi_zip/<bdf>/qm/clear_enable
-+Date:           Nov 2018
-+Contact:        linux-crypto@vger.kernel.org
-+Description:    QM debug registers(qm_regs) read clear control. 1 means enable
-+		register read clear, otherwise 0.
-+		Writing to this file has no functional effect, only enable or
-+		disable counters clear after reading of these registers.
-+		Only available for PF.
+ HMM - Heterogeneous Memory Management
+ M:	Jérôme Glisse <jglisse@redhat.com>
+ L:	linux-mm@kvack.org
 -- 
 2.8.1
 
