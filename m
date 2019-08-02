@@ -2,97 +2,131 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA03FC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671CFC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4022173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:00:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="sYNMRs1y"
+	by mail.kernel.org (Postfix) with ESMTP id 4B6F82173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404545AbfHBJAb (ORCPT
+        id S1732546AbfHBJBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:00:31 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38555 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728232AbfHBJAa (ORCPT
+        Fri, 2 Aug 2019 05:01:45 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36621 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728559AbfHBJBp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:00:30 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h28so52356066lfj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 02:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nOfUZboLQBdefaSsqopalDUSAj0Q8TAgOh/2n7vo210=;
-        b=sYNMRs1y7jnjOKwG0zRNP1K8YIFbSlBhf6eFQJQoUFdLX2BI5y27Ds6WnWgi0qyGms
-         kNrqVNNfZM29KCHMMb7ui89lN5zztea5NUkgkwk6DpOgMxsswbMSDC1iaEmawklpDJRQ
-         J5mVq9ranM51uW2C98xjvZfbdslylo/OjsZ1priQHrMvB+ncLViqAIO7yStBmLICDlmt
-         4+8B9okpyqTizD66fvPN96bqek/5BSqiGsXfUoWdNcXst0HhQWnmNP/LrdxGupwY+9OX
-         pEcIVphYhHDlTvIfYQGWq0FScSduxzYtGFCmP2pR2qSI4MhHwx2JKUnDKmXGVNhZEL4I
-         1szA==
+        Fri, 2 Aug 2019 05:01:45 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g67so61488057wme.1;
+        Fri, 02 Aug 2019 02:01:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nOfUZboLQBdefaSsqopalDUSAj0Q8TAgOh/2n7vo210=;
-        b=H+8YooecogwH03wixyFm05VRX6XBFGlOvqipstyq6hhFxWWDx+sVKLceZLByQUdcTx
-         abf9buJG0bxpIiFnH4pVFBr1kwVuyvtZW8nov7Nc63XGPswsBRr9I4vMbCLVMzYsMWss
-         8aOoebdvgrPJHajPhJL93vNTyE/05mtM7ti/zwDgLEmr+ZfxSAPvnBGSJyCUj01FEK1o
-         NsBYuGandBVamk47E0e4Lkc2CyeWrnWfFb+4ip/ThIByydUet4N1pSSP3cOLaXIZjR9B
-         KoABBU4ZVPKApM3ym7XZUd7MKzqZ4h4xxy9HgWT/N+ekKlDrX1bg6YOoZeQh23gelJSx
-         iu9A==
-X-Gm-Message-State: APjAAAVyyS4kjX9PvZ5TyTZpLzAOoB8KrmwdI1SVN9g/9k+ISQ4M3cS4
-        MYi5CBfv1nnMPXLlr+Lf4xcqyQ==
-X-Google-Smtp-Source: APXvYqxGZgczC1eaVKSdfN3/+nRFqyz52eooZ0ry/5yt2smPrZMOndzeGHd89ilsrgEB4jlADqC5Dg==
-X-Received: by 2002:a19:7006:: with SMTP id h6mr62988032lfc.5.1564736428915;
-        Fri, 02 Aug 2019 02:00:28 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:461f:21d7:2c53:9256:aa0a:736? ([2a00:1fa0:461f:21d7:2c53:9256:aa0a:736])
-        by smtp.gmail.com with ESMTPSA id p27sm12695592lfo.16.2019.08.02.02.00.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 02:00:28 -0700 (PDT)
-Subject: Re: [PATCH net-next] net: can: Fix compiling warning
-To:     Mao Wenan <maowenan@huawei.com>, socketcan@hartkopp.net,
-        davem@davemloft.net, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190802033643.84243-1-maowenan@huawei.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <133b3357-e0a4-64c8-40b7-02d386e12cef@cogentembedded.com>
-Date:   Fri, 2 Aug 2019 11:59:45 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kvvlW+uIUrUdNjqlOT5P3qO2zeClOhr+R8v8gEKY+6Y=;
+        b=kkA0gcpG4rSlUkbE8JufAX7iiXuOmG6jE0U2BFuP4lAb34/eZ1cVaNNaLnNuXF0DsC
+         UVA1qqrpFrJquOGbiFfxL/Z9UKB6IwL/Iz1hFg9Nn5ygDKAGR6+LRlJyjJ3FVuAm3JwQ
+         VWh/ejODNC8Q94oNKmcbaaxW8bBKbJ7F/o1Vo4LedeQX+QUiES8VpxdCUKYrmGb8pdS+
+         cqiO1N8oyu/rbc+8AP3fC/E1sqmVMqtjfhJXRHP0N/vQs3h857cjBsGH0rAk2PKSBBmA
+         Ln3px4Rs8PHnLoAkzhhUBv9Far/eJLN5sAFqzr64E8khnECIKhAGcdbj8Hl20uF3qrhn
+         6/ig==
+X-Gm-Message-State: APjAAAUfocUqzyfjcmTPTUVuRgbjLktQqWwc4lZMjiRBfRoaz7x/nHVk
+        LHqDtn/cJHCd6LqfvnFryu2zLbOm36DMUbwuhVs=
+X-Google-Smtp-Source: APXvYqzlYNYU0pjvulT5Kn0ylbMvd7827Mu+1m9924pu/nWD4wXojl+caY4NoCY9bFexyT8l7fkwqjioGghgcgQKFeU=
+X-Received: by 2002:a1c:1f4e:: with SMTP id f75mr3363459wmf.137.1564736503038;
+ Fri, 02 Aug 2019 02:01:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190802033643.84243-1-maowenan@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-6-git-send-email-fabrizio.castro@bp.renesas.com> <20190802080613.GF5008@pendragon.ideasonboard.com>
+In-Reply-To: <20190802080613.GF5008@pendragon.ideasonboard.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 2 Aug 2019 11:01:30 +0200
+Message-ID: <CAMuHMdWw5SyP=jfwTpA=+qheTh1ckhiP_etn1J4PrRVdL4R1Pg@mail.gmail.com>
+Subject: Re: [PATCH/RFC 05/12] drm: rcar-du: lvds: Add data swap support
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi Laurent,
 
-On 02.08.2019 6:36, Mao Wenan wrote:
+On Fri, Aug 2, 2019 at 10:06 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Fri, Aug 02, 2019 at 08:34:02AM +0100, Fabrizio Castro wrote:
+> > When in vertical stripe mode of operation, there is the option
+> > of swapping even data and odd data on the two LVDS interfaces
+> > used to drive the video output.
+> > Add data swap support by exposing a new DT property named
+> > "renesas,swap-data".
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-> There are two warings in net/can, fix them by setting bcm_sock_no_ioctlcmd
+> > --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
+> > +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
 
-    Warnings. :-)
+> > @@ -439,12 +440,16 @@ static void rcar_lvds_enable(struct drm_bridge *bridge)
+> >       rcar_lvds_write(lvds, LVDCHCR, lvdhcr);
+> >
+> >       if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK) {
+> > -             /*
+> > -              * Configure vertical stripe based on the mode of operation of
+> > -              * the connected device.
+> > -              */
+> > -             rcar_lvds_write(lvds, LVDSTRIPE,
+> > -                             lvds->dual_link ? LVDSTRIPE_ST_ON : 0);
+> > +             u32 lvdstripe = 0;
+> > +
+> > +             if (lvds->dual_link)
+> > +                     /*
+> > +                      * Configure vertical stripe based on the mode of
+> > +                      * operation of the connected device.
+> > +                      */
+> > +                     lvdstripe = LVDSTRIPE_ST_ON | (lvds->stripe_swap_data ?
+> > +                                                    LVDSTRIPE_ST_SWAP : 0);
+>
+> Would the following be simpler ?
+>
+>                 lvdstripe = (lvds->dual_link ? LVDSTRIPE_ST_ON : 0)
+>                           | (lvds->stripe_swap_data ? LVDSTRIPE_ST_SWAP : 0);
 
-> and raw_sock_no_ioctlcmd as static.
-> 
-> net/can/bcm.c:1683:5: warning: symbol 'bcm_sock_no_ioctlcmd' was not declared. Should it be static?
-> net/can/raw.c:840:5: warning: symbol 'raw_sock_no_ioctlcmd' was not declared. Should it be static?
-> 
-> Fixes: 473d924d7d46 ("can: fix ioctl function removal")
-> 
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-[...]
+From the point of view of "wc -l": yes.
+From the point of view of readability, I'd go for:
 
-MBR, Sergei
+    if (lvds->dual_link)
+            lvdstripe |= LVDSTRIPE_ST_ON;
+    if (lvds->stripe_swap_data)
+            lvdstripe |= LVDSTRIPE_ST_SWAP;
+
+> > +             rcar_lvds_write(lvds, LVDSTRIPE, lvdstripe);
+> >       }
+> >
+> >       /*
+> > @@ -770,8 +775,12 @@ static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
