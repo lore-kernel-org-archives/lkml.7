@@ -2,188 +2,113 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F84AC32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DB4C32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D564221726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0B9216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6sX+Dwu"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GzpkhbUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388891AbfHBQDq (ORCPT
+        id S2388931AbfHBQE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:03:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37907 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728853AbfHBQDq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:03:46 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y15so36272241pfn.5;
-        Fri, 02 Aug 2019 09:03:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=w74jXhv7cVptNBuubv+E0L15wrqg95AlmaYa2Bd6Vzc=;
-        b=n6sX+Dwuq0vXWtL0awBliT2RTG9wIniMBTHmtZorHYR5prk9athV3qYQeyEo4TwZ4R
-         yTVYfcBD4Jhu3lTugoAK/P2DrPYbP5qOuYMFk7s77PGw9aOLGX+SOSgYvHdhH+A/h6rB
-         pF3h4RHQYGwR9LtLtP4u1Q30hDk0DCXKYortPB1vfTJbL04a5FmDPCtbBay9lMzLc/9p
-         NYsacTb0gJNhmo4kp0MCQfKCVXb/VdvgfKc/gJpwJJ8nHPKf2vrS+HiGH8e9rGmTh4TV
-         9ACrOtiahaXJNhaO9zBXmyOzVxzHVvzzdHeFgNXZk4YOeAnTT6L7e6YVsji3vNffdOMl
-         tuFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=w74jXhv7cVptNBuubv+E0L15wrqg95AlmaYa2Bd6Vzc=;
-        b=lLiWmEH5ok9JbjEjM/rBl+hfpHcCD7/e6mc5duUlTGehUvXnL0I9V2UU4rWZG59+Sr
-         T8uR+PFRQIyFkWgDAOpmpJRr9ItIk8Wtpzo1zxBzsXN/qWR8GaTm5HNXwIZxkd7h5NYi
-         XagnAeRb4gCBBVBLL5Mxec+FDaYYvWk3Ss4OUpRZYhqLnM3MCLPRrWuX9ZzMKHAWy8gM
-         hO2JD8Zm8AxT13sDkaS76HMUmbsgp0Cn2PTwHKhgalxfakZuMstOJ0Ap6zBmE6viboPX
-         t1kDORMS6lKieUILv3BGEd4o+nbeoQWEk1xw6jWDX1a1sI6GvSKoxOZ2MGfxOatbMMnW
-         WkxA==
-X-Gm-Message-State: APjAAAW/QLT3QcCq/YUhnv7p6Ytp4FGqcdQppeGXV/RvLKSjEs98KxYh
-        rXdxygHgkXty9/vj5S99G/8=
-X-Google-Smtp-Source: APXvYqzHMzSF/bzj/LXPFoJEXQoat8183wYi1WUNr8Xnj+YQby+qnunSzeUFOt9m+gRVEtqxehm5JA==
-X-Received: by 2002:a17:90b:949:: with SMTP id dw9mr5033485pjb.49.1564761825575;
-        Fri, 02 Aug 2019 09:03:45 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 195sm120671389pfu.75.2019.08.02.09.03.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 09:03:44 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Douglas Gilbert <dgilbert@interlog.com>
-Subject: [PATCH v2] usb: typec: tcpm: Ignore unsupported/unknown alternate mode requests
-Date:   Fri,  2 Aug 2019 09:03:42 -0700
-Message-Id: <1564761822-13984-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        Fri, 2 Aug 2019 12:04:59 -0400
+Received: from mout.gmx.net ([212.227.17.21]:40889 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728853AbfHBQE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 12:04:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1564761890;
+        bh=dLpsQ1iH69g0++ZhF0jGcUGdS+h3bQX95IXstzVutoM=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
+        b=GzpkhbUxg1vC5JeSMzaY/wgqvE+XGvr9jVK/afqgRzvGhW4sjp0InoJx3IEunKxxo
+         lrhXE14RbmzYrT/VYJs2YwaQMH2XTv5WLE7tleX2vrVlvQlFdz3YVT8XuzGvYCzEvH
+         1hHFn12dObQfXxTgxpJRWVmLrhjcR7+wCOZ1YzG0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.188.238]) by mail.gmx.com (mrgmx101
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0M7CRe-1iF4iK27eQ-00x2fp; Fri, 02
+ Aug 2019 18:04:50 +0200
+Date:   Fri, 2 Aug 2019 18:04:47 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>
+Cc:     Sven Schnelle <svens@stackframe.org>
+Subject: [GIT PULL] parisc architecture fixes for kernel v5.3-rc3
+Message-ID: <20190802160447.GA27285@ls3530.fritz.box>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Provags-ID: V03:K1:NB1uTSTwHfWwJlUWLyzzESzh6e9K69xslnFCLUkeWbjCLT6hZ8b
+ ofwyezaTmVIpyS06vM2+zbPmplCBsWGgUEl1COYMNPCcB537HtoMOp58T2iGPVlIf1wiQrb
+ piSUD+imU/8w9mAma5bpEg13QPcDZ9VOazyIpFYWMsWd/bD+VjVtgvoyALdEzJJb2J32PU5
+ 8Yt9X/j4MDCKhX+C5a/+Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:R7/G+fC8RfI=:Y4RMmrubRSrynP3tfGfns/
+ sxEEHsah0Q2NIIMv9YtoP17vwLPthxHwS8/YegQnnfj6I9KVofPdtINcexftc1kiEfAaHsoll
+ dFkLeLyA64ONepQiFjjZkbwqmtMVMOABNMEGAIwsZyiP1s9xt6XtZAt7oR51QukKg9l54DlEx
+ 7qcMUpLjZ5+FOCuPFuamPk1tOaIFhhXv+utF/SvVoEc+hivls2BvyI/FHIn+tZVo93sAFYPoc
+ MPI4lC/RgDcX1yeCmDTeua271HyYORNTyWbOoU6P1sptPENdXcKJv5uo6AAX9hcfJJ0OqPBt2
+ Xp55u/HZjZdplH7gE82DT70yQe2TomARXoCAc68DnHDLd+rWePSVJipEDYYykiake5EDAu+TA
+ sHAFre6xfqrP0eD6pJ0msOCnCSqLlsOjU8kAdru554NYAklg6SY6cUGKicemxUsuEdrhHy4GK
+ 0JUr7XAS/y4xt9bcQSp0/2/Hk355OZ84h2vhWGyOlxTGrzSQxyfh8m21MkvHc7aps71upjqIt
+ OCA1vB/3gjfJimaSfH7tJPwFYqPA5YNadg44iEX62roix9o3upErZKoWLHtpLPB8BZIhvPaSc
+ 8XU4McuwuOKKNm908vM16OhjNHXJWyQsC8ua6CXiYK0Y2OUyxeKzjp20eSQJ3IH9C1k5s8CR9
+ SGu4DhjLANB8I6Y0C/kDGF/LQ937xmGRSt8jLnnkMYLq0JMewC5pTxGJbQkuyVBfEvZlwp7Fi
+ s4nYjdp9WtTxjekXhop+uwPc6QcgYc6XfA3dNFeKi51C+lIbxPnZFOoGI3ZGbdx5imRR0XWHG
+ cWMVBwRDDO3o+1kMMRCrh03yLFm8Ju/Bi/iKE+3vcYPOJ0IRkkRjvNRieypodfFjBLzg+ZWVd
+ Pc5LvcbDWZf9ptatxEV8qTEB3F9LTQsAKEGMcGlh7lcwD/1p+xXMQ7CjEXo7YUv9NzTjAiE1Z
+ 3VRFtwpjvX59m66rhGx1lzEu9YkEqs9hKmFaqsM1Wa/GShnsmh46e687qtpX46TjhbZGHi3C3
+ sjeHKRmO3nAHIJrkMjKUW8A+dq9cOWyhmAq44T1ELfgA4fqW8Mg3Sbh6jZ2vIGG0tRXpMgYmn
+ FdLEZL4p4IVwLCpLP94qpzvic/LHJkie5bnSwlXpfXeusbJSMewklBTvA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TCPM may receive PD messages associated with unknown or unsupported
-alternate modes. If that happens, calls to typec_match_altmode()
-will return NULL. The tcpm code does not currently take this into
-account. This results in crashes.
+Hi Linus,
 
-Unable to handle kernel NULL pointer dereference at virtual address 000001f0
-pgd = 41dad9a1
-[000001f0] *pgd=00000000
-Internal error: Oops: 5 [#1] THUMB2
-Modules linked in: tcpci tcpm
-CPU: 0 PID: 2338 Comm: kworker/u2:0 Not tainted 5.1.18-sama5-armv7-r2 #6
-Hardware name: Atmel SAMA5
-Workqueue: 2-0050 tcpm_pd_rx_handler [tcpm]
-PC is at typec_altmode_attention+0x0/0x14
-LR is at tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm]
-...
-[<c03fbee8>] (typec_altmode_attention) from [<bf8030fb>]
-				(tcpm_pd_rx_handler+0xa3b/0xda0 [tcpm])
-[<bf8030fb>] (tcpm_pd_rx_handler [tcpm]) from [<c012082b>]
-				(process_one_work+0x123/0x2a8)
-[<c012082b>] (process_one_work) from [<c0120a6d>]
-				(worker_thread+0xbd/0x3b0)
-[<c0120a6d>] (worker_thread) from [<c012431f>] (kthread+0xcf/0xf4)
-[<c012431f>] (kthread) from [<c01010f9>] (ret_from_fork+0x11/0x38)
+please pull a few small fixes for the parisc architecture for kernel 5.3-rc3 from:
 
-Ignore PD messages if the associated alternate mode is not supported.
+  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.3-4
 
-Fixes: e9576fe8e605c ("usb: typec: tcpm: Support for Alternate Modes")
-Reported-by: Douglas Gilbert <dgilbert@interlog.com>
-Cc: Douglas Gilbert <dgilbert@interlog.com>
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Tested-by: Douglas Gilbert <dgilbert@interlog.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-v2: No functional change
-    Dropped RFC
-    Added Tested/by: / Acked-by: tags
+Changes:
+* Fix fall-through warnings in parisc math emu code
+* Fix vmlinuz linking failure with debug-enabled kernels
+* Fix a race condition in kernel live-patching code
+* Add missing archclean Makefile target & defconfig adjustments
 
- drivers/usb/typec/tcpm/tcpm.c | 38 ++++++++++++++++++++++++--------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+Thanks,
+Helge
 
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 77f71f602f73..1df2844469aa 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -1096,7 +1096,8 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
- 			break;
- 		case CMD_ATTENTION:
- 			/* Attention command does not have response */
--			typec_altmode_attention(adev, p[1]);
-+			if (adev)
-+				typec_altmode_attention(adev, p[1]);
- 			return 0;
- 		default:
- 			break;
-@@ -1148,20 +1149,26 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
- 			}
- 			break;
- 		case CMD_ENTER_MODE:
--			typec_altmode_update_active(pdev, true);
--
--			if (typec_altmode_vdm(adev, p[0], &p[1], cnt)) {
--				response[0] = VDO(adev->svid, 1, CMD_EXIT_MODE);
--				response[0] |= VDO_OPOS(adev->mode);
--				return 1;
-+			if (adev && pdev) {
-+				typec_altmode_update_active(pdev, true);
-+
-+				if (typec_altmode_vdm(adev, p[0], &p[1], cnt)) {
-+					response[0] = VDO(adev->svid, 1,
-+							  CMD_EXIT_MODE);
-+					response[0] |= VDO_OPOS(adev->mode);
-+					return 1;
-+				}
- 			}
- 			return 0;
- 		case CMD_EXIT_MODE:
--			typec_altmode_update_active(pdev, false);
-+			if (adev && pdev) {
-+				typec_altmode_update_active(pdev, false);
- 
--			/* Back to USB Operation */
--			WARN_ON(typec_altmode_notify(adev, TYPEC_STATE_USB,
--						     NULL));
-+				/* Back to USB Operation */
-+				WARN_ON(typec_altmode_notify(adev,
-+							     TYPEC_STATE_USB,
-+							     NULL));
-+			}
- 			break;
- 		default:
- 			break;
-@@ -1171,8 +1178,10 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
- 		switch (cmd) {
- 		case CMD_ENTER_MODE:
- 			/* Back to USB Operation */
--			WARN_ON(typec_altmode_notify(adev, TYPEC_STATE_USB,
--						     NULL));
-+			if (adev)
-+				WARN_ON(typec_altmode_notify(adev,
-+							     TYPEC_STATE_USB,
-+							     NULL));
- 			break;
- 		default:
- 			break;
-@@ -1183,7 +1192,8 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
- 	}
- 
- 	/* Informing the alternate mode drivers about everything */
--	typec_altmode_vdm(adev, p[0], &p[1], cnt);
-+	if (adev)
-+		typec_altmode_vdm(adev, p[0], &p[1], cnt);
- 
- 	return rlen;
- }
--- 
-2.7.4
+----------------------------------------------------------------
+Helge Deller (4):
+      parisc: Mark expected switch fall-throughs in fault.c
+      parisc: Fix fall-through warnings in fpudispatch.c
+      parisc: Fix build of compressed kernel even with debug enabled
+      parisc: Strip debug info from kernel before creating compressed vmlinuz
 
+James Bottomley (1):
+      parisc: Add archclean Makefile target
+
+Masahiro Yamada (1):
+      parisc: rename default_defconfig to defconfig
+
+Sven Schnelle (1):
+      parisc: fix race condition in patching code
+
+ arch/parisc/Makefile                                 | 5 +++--
+ arch/parisc/boot/compressed/Makefile                 | 4 +++-
+ arch/parisc/boot/compressed/vmlinux.lds.S            | 4 ++--
+ arch/parisc/configs/{default_defconfig => defconfig} | 0
+ arch/parisc/kernel/ftrace.c                          | 3 ++-
+ arch/parisc/math-emu/Makefile                        | 1 +
+ arch/parisc/mm/fault.c                               | 1 +
+ 7 files changed, 12 insertions(+), 6 deletions(-)
+ rename arch/parisc/configs/{default_defconfig => defconfig} (100%)
