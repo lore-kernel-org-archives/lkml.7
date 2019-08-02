@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB492C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353D7C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70672171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFDA20880
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739173;
-	bh=QqxshE2Taf0k0xIZzot/QuHMTD8P80Zaz6m6QpJn0Sk=;
+	s=default; t=1564739178;
+	bh=b2e3dQre1kq7ZGKR8+Bik/aE8DFRVPedtU4sGRoL6BY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YLOVBUaqVjNXj72qrdvR6QqDuFG5Fe45czV8zAc/QaRYnqyWQo7UpLTXWLXqXgINp
-	 WnzkahxX3MD6mm7eSXD4B0PDNwg8q7Vgf2MgaKnlnf1lD5ga58O8TglUJclvLCKaoZ
-	 Ml9BRyHcZIffGdF6yLquQgmx0DxqoX4Pj8N1E2FI=
+	b=RcvyhjJ4hb50Q7Ck1gz8ovFeD1xKaGTnsaB06Qxcuxp3q3qafn4b/+qAyScC7RZ6c
+	 6BnP/yFsiDjAKpRQ3H3pe7PRet4jToKPCVo2cevRLkLRnYONH6YVntG0UJIi6A6l9J
+	 DmJbJOPZXADfCB5QHhv//g0ZiagZnWIySXFLi8KA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405491AbfHBJqL (ORCPT
+        id S2405525AbfHBJqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:46:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50120 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:46:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405486AbfHBJqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:46:06 -0400
+        id S2405507AbfHBJqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:46:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0B122086A;
-        Fri,  2 Aug 2019 09:46:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DDAD216C8;
+        Fri,  2 Aug 2019 09:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739165;
-        bh=QqxshE2Taf0k0xIZzot/QuHMTD8P80Zaz6m6QpJn0Sk=;
+        s=default; t=1564739172;
+        bh=b2e3dQre1kq7ZGKR8+Bik/aE8DFRVPedtU4sGRoL6BY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fkkOJau1YfO38NLpoejlH/hs+zOlxzL1BNo4WGV+uKjry0XdXyash88drIaHXFQS8
-         IZrU4yXnRDS+p0yGFlJER2cPjytUFs2UiHUvg4m+59MTTU7Cd82hEol0XrHOCTD6Rl
-         06BDdSjM51rPrO1wpFAn9eyp0iG7FDqPawUKjhOg=
+        b=GcreRPlRUK37vUFAmu1zCTet+SNnmtiAoOraWX/WNKYIlHbqMUJ0NUWhID7Tc5fZb
+         pJJUb2EW0Fvz+R6XgfXK8kLTlVjSo19KL6HJYZM5uk3qtGH1rsySGknnwoX2MWeIt2
+         xB7KZaUiN+usEPqkwIRtEoM5OsYxJrdFYwZRAR08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Horia Geanta <horia.geanta@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 113/223] crypto: caam - limit output IV to CBC to work around CTR mode DMA issue
-Date:   Fri,  2 Aug 2019 11:35:38 +0200
-Message-Id: <20190802092246.560585727@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Kosyh <p.kosyh@gmail.com>,
+        David Ahern <dsa@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 141/223] vrf: make sure skb->data contains ip header to make routing
+Date:   Fri,  2 Aug 2019 11:36:06 +0200
+Message-Id: <20190802092247.854168224@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -62,94 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Peter Kosyh <p.kosyh@gmail.com>
 
-commit ed527b13d800dd515a9e6c582f0a73eca65b2e1b upstream.
+[ Upstream commit 107e47cc80ec37cb332bd41b22b1c7779e22e018 ]
 
-The CAAM driver currently violates an undocumented and slightly
-controversial requirement imposed by the crypto stack that a buffer
-referred to by the request structure via its virtual address may not
-be modified while any scatterlists passed via the same request
-structure are mapped for inbound DMA.
+vrf_process_v4_outbound() and vrf_process_v6_outbound() do routing
+using ip/ipv6 addresses, but don't make sure the header is available
+in skb->data[] (skb_headlen() is less then header size).
 
-This may result in errors like
+Case:
 
-  alg: aead: decryption failed on test 1 for gcm_base(ctr-aes-caam,ghash-generic): ret=74
-  alg: aead: Failed to load transform for gcm(aes): -2
+1) igb driver from intel.
+2) Packet size is greater then 255.
+3) MPLS forwards to VRF device.
 
-on non-cache coherent systems, due to the fact that the GCM driver
-passes an IV buffer by virtual address which shares a cacheline with
-the auth_tag buffer passed via a scatterlist, resulting in corruption
-of the auth_tag when the IV is updated while the DMA mapping is live.
+So, patch adds pskb_may_pull() calls in vrf_process_v4/v6_outbound()
+functions.
 
-Since the IV that is returned to the caller is only valid for CBC mode,
-and given that the in-kernel users of CBC (such as CTS) don't trigger the
-same issue as the GCM driver, let's just disable the output IV generation
-for all modes except CBC for the time being.
-
-Fixes: 854b06f76879 ("crypto: caam - properly set IV after {en,de}crypt")
-Cc: Horia Geanta <horia.geanta@nxp.com>
-Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-Reported-by: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-[ Horia: backported to 4.9 ]
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Peter Kosyh <p.kosyh@gmail.com>
+Reviewed-by: David Ahern <dsa@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/crypto/caam/caamalg.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/net/vrf.c |   58 ++++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 35 insertions(+), 23 deletions(-)
 
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -2015,6 +2015,7 @@ static void ablkcipher_encrypt_done(stru
- 	struct ablkcipher_request *req = context;
- 	struct ablkcipher_edesc *edesc;
- 	struct crypto_ablkcipher *ablkcipher = crypto_ablkcipher_reqtfm(req);
-+	struct caam_ctx *ctx = crypto_ablkcipher_ctx(ablkcipher);
- 	int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -153,23 +153,29 @@ static int vrf_ip6_local_out(struct net
+ static netdev_tx_t vrf_process_v6_outbound(struct sk_buff *skb,
+ 					   struct net_device *dev)
+ {
+-	const struct ipv6hdr *iph = ipv6_hdr(skb);
++	const struct ipv6hdr *iph;
+ 	struct net *net = dev_net(skb->dev);
+-	struct flowi6 fl6 = {
+-		/* needed to match OIF rule */
+-		.flowi6_oif = dev->ifindex,
+-		.flowi6_iif = LOOPBACK_IFINDEX,
+-		.daddr = iph->daddr,
+-		.saddr = iph->saddr,
+-		.flowlabel = ip6_flowinfo(iph),
+-		.flowi6_mark = skb->mark,
+-		.flowi6_proto = iph->nexthdr,
+-		.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF,
+-	};
++	struct flowi6 fl6;
+ 	int ret = NET_XMIT_DROP;
+ 	struct dst_entry *dst;
+ 	struct dst_entry *dst_null = &net->ipv6.ip6_null_entry->dst;
  
- #ifdef DEBUG
-@@ -2040,10 +2041,11 @@ static void ablkcipher_encrypt_done(stru
++	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct ipv6hdr)))
++		goto err;
++
++	iph = ipv6_hdr(skb);
++
++	memset(&fl6, 0, sizeof(fl6));
++	/* needed to match OIF rule */
++	fl6.flowi6_oif = dev->ifindex;
++	fl6.flowi6_iif = LOOPBACK_IFINDEX;
++	fl6.daddr = iph->daddr;
++	fl6.saddr = iph->saddr;
++	fl6.flowlabel = ip6_flowinfo(iph);
++	fl6.flowi6_mark = skb->mark;
++	fl6.flowi6_proto = iph->nexthdr;
++	fl6.flowi6_flags = FLOWI_FLAG_SKIP_NH_OIF;
++
+ 	dst = ip6_route_output(net, NULL, &fl6);
+ 	if (dst == dst_null)
+ 		goto err;
+@@ -257,21 +263,27 @@ static int vrf_ip_local_out(struct net *
+ static netdev_tx_t vrf_process_v4_outbound(struct sk_buff *skb,
+ 					   struct net_device *vrf_dev)
+ {
+-	struct iphdr *ip4h = ip_hdr(skb);
++	struct iphdr *ip4h;
+ 	int ret = NET_XMIT_DROP;
+-	struct flowi4 fl4 = {
+-		/* needed to match OIF rule */
+-		.flowi4_oif = vrf_dev->ifindex,
+-		.flowi4_iif = LOOPBACK_IFINDEX,
+-		.flowi4_tos = RT_TOS(ip4h->tos),
+-		.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF,
+-		.flowi4_proto = ip4h->protocol,
+-		.daddr = ip4h->daddr,
+-		.saddr = ip4h->saddr,
+-	};
++	struct flowi4 fl4;
+ 	struct net *net = dev_net(vrf_dev);
+ 	struct rtable *rt;
  
- 	/*
- 	 * The crypto API expects us to set the IV (req->info) to the last
--	 * ciphertext block. This is used e.g. by the CTS mode.
-+	 * ciphertext block when running in CBC mode.
- 	 */
--	scatterwalk_map_and_copy(req->info, req->dst, req->nbytes - ivsize,
--				 ivsize, 0);
-+	if ((ctx->class1_alg_type & OP_ALG_AAI_MASK) == OP_ALG_AAI_CBC)
-+		scatterwalk_map_and_copy(req->info, req->dst, req->nbytes -
-+					 ivsize, ivsize, 0);
- 
- 	kfree(edesc);
- 
-@@ -2056,6 +2058,7 @@ static void ablkcipher_decrypt_done(stru
- 	struct ablkcipher_request *req = context;
- 	struct ablkcipher_edesc *edesc;
- 	struct crypto_ablkcipher *ablkcipher = crypto_ablkcipher_reqtfm(req);
-+	struct caam_ctx *ctx = crypto_ablkcipher_ctx(ablkcipher);
- 	int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
- 
- #ifdef DEBUG
-@@ -2080,10 +2083,11 @@ static void ablkcipher_decrypt_done(stru
- 
- 	/*
- 	 * The crypto API expects us to set the IV (req->info) to the last
--	 * ciphertext block.
-+	 * ciphertext block when running in CBC mode.
- 	 */
--	scatterwalk_map_and_copy(req->info, req->src, req->nbytes - ivsize,
--				 ivsize, 0);
-+	if ((ctx->class1_alg_type & OP_ALG_AAI_MASK) == OP_ALG_AAI_CBC)
-+		scatterwalk_map_and_copy(req->info, req->src, req->nbytes -
-+					 ivsize, ivsize, 0);
- 
- 	kfree(edesc);
- 
++	if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct iphdr)))
++		goto err;
++
++	ip4h = ip_hdr(skb);
++
++	memset(&fl4, 0, sizeof(fl4));
++	/* needed to match OIF rule */
++	fl4.flowi4_oif = vrf_dev->ifindex;
++	fl4.flowi4_iif = LOOPBACK_IFINDEX;
++	fl4.flowi4_tos = RT_TOS(ip4h->tos);
++	fl4.flowi4_flags = FLOWI_FLAG_ANYSRC | FLOWI_FLAG_SKIP_NH_OIF;
++	fl4.flowi4_proto = ip4h->protocol;
++	fl4.daddr = ip4h->daddr;
++	fl4.saddr = ip4h->saddr;
++
+ 	rt = ip_route_output_flow(net, &fl4, NULL);
+ 	if (IS_ERR(rt))
+ 		goto err;
 
 
