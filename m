@@ -2,231 +2,203 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14551C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D34C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B9B206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 21:57:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JS5WCbbg"
+	by mail.kernel.org (Postfix) with ESMTP id 2B441206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 22:04:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395224AbfHBV5o (ORCPT
+        id S2392300AbfHBWE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 17:57:44 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40955 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730163AbfHBV5o (ORCPT
+        Fri, 2 Aug 2019 18:04:27 -0400
+Received: from savella.carfax.org.uk ([85.119.84.138]:43758 "EHLO
+        savella.carfax.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729311AbfHBWE0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 17:57:44 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w196so36571942oie.7
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 14:57:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rGuW4tG7YREvM0Tkwd56d78mTsuSaz2wZqP3WJdbo78=;
-        b=JS5WCbbgJ3urA3aE1jNreeG23PyNNrBu5EuDNauGNuCJrtFegQgUqeLFkSkbsKGOYH
-         pvh9Sen+L9CA7iU0/uPc80Y2VrIGgThDoLA9CWPkMmK9zdDHBUyTKJUE2udzdFxpGdzH
-         q3yX2kbeXOppHH36whi5FbxLvQsF1RvceEhIOZIbxjrOQ1IdStcU8n5Kj+1kPfNncxGO
-         C5k7qxldqyCJ3InOq1iLhKCfwEXH7CTG4aw77tgJCBPFmd7GzaEVD17Myl5tX60I/1II
-         pIfFxOYWJWxXH7fg2UtPQ6Ix2nYObRj08Gu1jFUel6COnkLdKzCuj+KtRHmWA/P3QRXp
-         ZChA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rGuW4tG7YREvM0Tkwd56d78mTsuSaz2wZqP3WJdbo78=;
-        b=kgRN0op7fFOEjb4QA2AbDhFXJMKpsz+tWM58Dt5Jo/2lFL8jRtYGgMxd8tn4O6BQmF
-         jeNwRXate7v0tyO/vSJkKfmauVIo7qsJiWUvOBDNXheKNqFOYkwy8zYQOVwtPozEy4FF
-         HT//lvUe5hPVF6J4Gd+tn/N0wLIL5uV0r8L4xlPAIKwYwYqQFVOXrn4TS8PsI/8untbK
-         TpFVHJtD23Ojv+ZftMheWqwE+mTuZx0UdkdRhGB/4kGTZSFlM5V+JvjA32JEmsrQmIG0
-         X/R9bBPLkaJmvaveO5he3DOlYotzzIjtnpkV+YUMQZrY1Qz7P5NAsemJBnb+CGhFbKOm
-         gH+g==
-X-Gm-Message-State: APjAAAWHwOXhr5IbNFTmKiMaaszS7o2Y7HgaG+ryfKBApVvdzdjPShPr
-        CVVw/vr2zSvl1ETCamfibOkbSkhIxZiM/+NKLE420w==
-X-Google-Smtp-Source: APXvYqxPvIExhTr5+5hX20/Em3/RlwrgRTSjNvdYPqA76CZtPvAqwwYH4WeX6OYha37L5xo4AcV22x1g5iGUwq+ifGA=
-X-Received: by 2002:a54:4f95:: with SMTP id g21mr4070854oiy.23.1564783062470;
- Fri, 02 Aug 2019 14:57:42 -0700 (PDT)
+        Fri, 2 Aug 2019 18:04:26 -0400
+X-Greylist: delayed 2044 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Aug 2019 18:04:24 EDT
+Received: from hrm by savella.carfax.org.uk with local (Exim 4.92)
+        (envelope-from <hrm@savella.carfax.org.uk>)
+        id 1htf80-0001E4-0w; Fri, 02 Aug 2019 22:30:20 +0100
+Date:   Fri, 2 Aug 2019 22:30:19 +0100
+From:   Hugo Mills <hugo@carfax.org.uk>
+To:     linux@highpoint-tech.com, linux-kernel@vger.kernel.org
+Subject: Highpoint RocketRAID 3720A not detected (4.19.63)
+Message-ID: <20190802213019.GA24125@savella.carfax.org.uk>
+Mail-Followup-To: Hugo Mills <hugo@carfax.org.uk>, linux@highpoint-tech.com,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-References: <20190801223556.209184-1-hridya@google.com> <20190802061838.GA10844@kroah.com>
- <20190802150612.eff7t42256pvxuja@brauner.io>
-In-Reply-To: <20190802150612.eff7t42256pvxuja@brauner.io>
-From:   Hridya Valsaraju <hridya@google.com>
-Date:   Fri, 2 Aug 2019 14:57:06 -0700
-Message-ID: <CA+wgaPPfRiz1RYRyMxX2udhicQGrwNZipPWzbJ--MPWtEXka-w@mail.gmail.com>
-Subject: Re: [PATCH] Add default binder devices through binderfs when configured
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-GPG-Fingerprint: DD84 D558 9D81 DDEE 930D  2054 585E 1475 E2AB 1DE4
+X-GPG-Key: E2AB1DE4
+X-Parrot: It is no more. It has joined the choir invisible.
+X-IRC-Nicks: darksatanic darkersatanic darkling darkthing
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 8:06 AM Christian Brauner <christian@brauner.io> wrote:
->
-> On Fri, Aug 02, 2019 at 08:18:38AM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, Aug 01, 2019 at 03:35:56PM -0700, Hridya Valsaraju wrote:
-> > > If CONFIG_ANDROID_BINDERFS is set, the default binder devices
-> > > specified by CONFIG_ANDROID_BINDER_DEVICES are created in each
-> > > binderfs instance instead of global devices being created by
-> > > the binder driver.
-> > >
-> > > Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > Signed-off-by: Hridya Valsaraju <hridya@google.com>
-> > > ---
-> > >  drivers/android/binder.c   |  3 ++-
-> > >  drivers/android/binderfs.c | 46 ++++++++++++++++++++++++++++++++++----
-> > >  2 files changed, 44 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> > > index 466b6a7f8ab7..65a99ac26711 100644
-> > > --- a/drivers/android/binder.c
-> > > +++ b/drivers/android/binder.c
-> > > @@ -6279,7 +6279,8 @@ static int __init binder_init(void)
-> > >                                 &transaction_log_fops);
-> > >     }
-> > >
-> > > -   if (strcmp(binder_devices_param, "") != 0) {
-> > > +   if (!IS_ENABLED(CONFIG_ANDROID_BINDERFS) &&
-> > > +       strcmp(binder_devices_param, "") != 0) {
-> > >             /*
-> > >             * Copy the module_parameter string, because we don't want to
-> > >             * tokenize it in-place.
-> > > diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-> > > index e773f45d19d9..9f5ed50ffd70 100644
-> > > --- a/drivers/android/binderfs.c
-> > > +++ b/drivers/android/binderfs.c
-> > > @@ -48,6 +48,10 @@ static dev_t binderfs_dev;
-> > >  static DEFINE_MUTEX(binderfs_minors_mutex);
-> > >  static DEFINE_IDA(binderfs_minors);
-> > >
-> > > +static char *binder_devices_param = CONFIG_ANDROID_BINDER_DEVICES;
-> > > +module_param_named(devices, binder_devices_param, charp, 0444);
-> > > +MODULE_PARM_DESC(devices, "Binder devices to be created by default");
-> > > +
-> >
-> > Why are you creating a module parameter?  That was not in your changelog
-> > :(
->
-> Yeah, you don't need an additional module parameter. You can just move
->
-> static char *binder_devices_param = CONFIG_ANDROID_BINDER_DEVICES;
-> module_param_named(devices, binder_devices_param, charp, 0444);
->
-> from binder.c to binder_internal.h and expose it to binder.c and
-> binderfs.c this way. This will work just fine since binderfs.c doesn't
-> modify the parameter and binder.c makes a copy of it before doing so.
->
-> >
-> >
-> >
-> > >  /**
-> > >   * binderfs_mount_opts - mount options for binderfs
-> > >   * @max: maximum number of allocatable binderfs binder devices
-> > > @@ -135,7 +139,6 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
-> > >  #else
-> > >     bool use_reserve = true;
-> > >  #endif
-> > > -
-> > >     /* Reserve new minor number for the new device. */
-> > >     mutex_lock(&binderfs_minors_mutex);
-> > >     if (++info->device_count <= info->mount_opts.max)
-> > > @@ -186,8 +189,7 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
-> > >     req->major = MAJOR(binderfs_dev);
-> > >     req->minor = minor;
-> > >
-> > > -   ret = copy_to_user(userp, req, sizeof(*req));
-> > > -   if (ret) {
-> > > +   if (userp && copy_to_user(userp, req, sizeof(*req))) {
-> > >             ret = -EFAULT;
-> > >             goto err;
-> > >     }
-> > > @@ -467,6 +469,9 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
-> > >     int ret;
-> > >     struct binderfs_info *info;
-> > >     struct inode *inode = NULL;
-> > > +   struct binderfs_device device_info = { 0 };
-> > > +   const char *name;
-> > > +   size_t len;
-> > >
-> > >     sb->s_blocksize = PAGE_SIZE;
-> > >     sb->s_blocksize_bits = PAGE_SHIFT;
-> > > @@ -521,7 +526,28 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
-> > >     if (!sb->s_root)
-> > >             return -ENOMEM;
-> > >
-> > > -   return binderfs_binder_ctl_create(sb);
-> > > +   ret = binderfs_binder_ctl_create(sb);
-> > > +   if (ret)
-> > > +           return ret;
-> > > +
-> > > +   name = binder_devices_param;
-> > > +   for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
-> > > +           /*
-> > > +            * init_binderfs() has already checked that the length of
-> > > +            * device_name_entry->name is not greater than device_info.name.
-> > > +            */
-> > > +           strscpy(device_info.name, name, len + 1);
-> > > +           ret = binderfs_binder_device_create(inode, NULL, &device_info);
-> > > +           if (ret)
-> > > +                   return ret;
-> > > +           name += len;
-> > > +           if (*name == ',')
-> > > +                   name++;
-> > > +
-> > > +   }
-> > > +
-> > > +   return 0;
-> > > +
-> > >  }
-> > >
-> > >  static struct dentry *binderfs_mount(struct file_system_type *fs_type,
-> > > @@ -553,6 +579,18 @@ static struct file_system_type binder_fs_type = {
-> > >  int __init init_binderfs(void)
-> > >  {
-> > >     int ret;
-> > > +   const char *name;
-> > > +   size_t len;
-> > > +
-> > > +   /* Verify that the default binderfs device names are valid. */
-> > > +   name = binder_devices_param;
-> > > +   for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
-> > > +           if (len > BINDERFS_MAX_NAME)
-> > > +                   return -E2BIG;
-> > > +           name += len;
-> > > +           if (*name == ',')
-> > > +                   name++;
-> > > +   }
-> >
-> > This verification should be a separate patch, right?
-> >
-> > But the real issue here is I have no idea _why_ you are wanting this
-> > patch.  The changelog text says _what_ you are doing only, which isn't
-> > ok.
-> >
-> > Please provide more information as to why this is needed, what problem
-> > it is solving, and break this up into a patch series and resend.
+   I've just bought a Highpoint RocketRAID 3720A, and I can't seem to
+persuade it to show me any disks. I've built a vanilla 4.19.63 kernel
+for this, and I'm not seeing any of the six (SATA) disks I've attached
+to it.
 
-Thank you Greg and Christian, I will address all issues in v2 and resend.
+   I've tried modprobing the hptiop module manually, and still
+nothing. I've even, in desperation, tried installing Highpoint's own
+driver, but that's also not having any effect.
 
-> >
-> > thanks,
-> >
-> > greg k-h
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
->
+   I've probably missed something really obvious, but this is my first
+time with both SAS and this hardware. However, I note that the PCI ID
+(1103:3720) doesn't appear to be in include/linux/pci_ids.h, at which
+point I've more or less exhausted my knowledge of kernel internals...
+
+   What do I need to do to get this thing to work? I'm only after JBOD
+-- I don't actually need the hardware RAID capabilities.
+
+   Thanks,
+   Hugo.
+
+hrm@amelia:~ $ sudo lspci
+00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD/ATI] RD9x0/RX980 Host Bridge (rev 02)
+00:02.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI] RD890/RD9x0/RX980 PCI to PCI bridge (PCI Express GFX port 0)
+00:04.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI] RD890/RD9x0/RX980 PCI to PCI bridge (PCI Express GPP Port 0)
+00:06.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI] RD890/RD9x0/RX980 PCI to PCI bridge (PCI Express GPP Port 2)
+00:09.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI] RD890/RD9x0/RX980 PCI to PCI bridge (PCI Express GPP Port 4)
+00:11.0 SATA controller: Advanced Micro Devices, Inc. [AMD/ATI] SB7x0/SB8x0/SB9x0 SATA Controller [AHCI mode] (rev 40)
+00:12.0 USB controller: Advanced Micro Devices, Inc. [AMD/ATI] SB7x0/SB8x0/SB9x0 USB OHCI0 Controller
+00:12.2 USB controller: Advanced Micro Devices, Inc. [AMD/ATI] SB7x0/SB8x0/SB9x0 USB EHCI Controller
+00:13.0 USB controller: Advanced Micro Devices, Inc. [AMD/ATI] SB7x0/SB8x0/SB9x0 USB OHCI0 Controller
+00:13.2 USB controller: Advanced Micro Devices, Inc. [AMD/ATI] SB7x0/SB8x0/SB9x0 USB EHCI Controller
+00:14.0 SMBus: Advanced Micro Devices, Inc. [AMD/ATI] SBx00 SMBus Controller (rev 42)
+00:14.2 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] SBx00 Azalia (Intel HDA) (rev 40)
+00:14.3 ISA bridge: Advanced Micro Devices, Inc. [AMD/ATI] SB7x0/SB8x0/SB9x0 LPC host controller (rev 40)
+00:14.4 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI] SBx00 PCI to PCI Bridge (rev 40)
+00:14.5 USB controller: Advanced Micro Devices, Inc. [AMD/ATI] SB7x0/SB8x0/SB9x0 USB OHCI2 Controller
+00:15.0 PCI bridge: Advanced Micro Devices, Inc. [AMD/ATI] SB700/SB800/SB900 PCI to PCI bridge (PCIE port 0)
+00:16.0 USB controller: Advanced Micro Devices, Inc. [AMD/ATI] SB7x0/SB8x0/SB9x0 USB OHCI0 Controller
+00:16.2 USB controller: Advanced Micro Devices, Inc. [AMD/ATI] SB7x0/SB8x0/SB9x0 USB EHCI Controller
+00:18.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h Processor Function 0
+00:18.1 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h Processor Function 1
+00:18.2 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h Processor Function 2
+00:18.3 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h Processor Function 3
+00:18.4 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h Processor Function 4
+00:18.5 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 15h Processor Function 5
+01:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Cedar [Radeon HD 5000/6000/7350/8350 Series]
+01:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Cedar HDMI Audio [Radeon HD 5400/6300/7300 Series]
+02:00.0 USB controller: VIA Technologies, Inc. VL805 USB 3.0 Host Controller (rev 01)
+03:00.0 SATA controller: Silicon Image, Inc. SiI 3132 Serial ATA Raid II Controller (rev 01)
+04:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 0c)
+06:00.0 RAID bus controller: HighPoint Technologies, Inc. Device 3720 (rev a1)
+
+hrm@amelia:~ $ sudo lspci -n
+00:00.0 0600: 1002:5a14 (rev 02)
+00:02.0 0604: 1002:5a16
+00:04.0 0604: 1002:5a18
+00:06.0 0604: 1002:5a1a
+00:09.0 0604: 1002:5a1c
+00:11.0 0106: 1002:4391 (rev 40)
+00:12.0 0c03: 1002:4397
+00:12.2 0c03: 1002:4396
+00:13.0 0c03: 1002:4397
+00:13.2 0c03: 1002:4396
+00:14.0 0c05: 1002:4385 (rev 42)
+00:14.2 0403: 1002:4383 (rev 40)
+00:14.3 0601: 1002:439d (rev 40)
+00:14.4 0604: 1002:4384 (rev 40)
+00:14.5 0c03: 1002:4399
+00:15.0 0604: 1002:43a0
+00:16.0 0c03: 1002:4397
+00:16.2 0c03: 1002:4396
+00:18.0 0600: 1022:1600
+00:18.1 0600: 1022:1601
+00:18.2 0600: 1022:1602
+00:18.3 0600: 1022:1603
+00:18.4 0600: 1022:1604
+00:18.5 0600: 1022:1605
+01:00.0 0300: 1002:68f9
+01:00.1 0403: 1002:aa68
+02:00.0 0c03: 1106:3483 (rev 01)
+03:00.0 0106: 1095:3132 (rev 01)
+04:00.0 0200: 10ec:8168 (rev 0c)
+06:00.0 0104: 1103:3720 (rev a1)
+
+hrm@amelia:~ $ lsmod
+Module                  Size  Used by
+hptiop                 20480  0
+rr3740a               573440  0
+tun                    40960  0
+nfsd                  290816  13
+auth_rpcgss            57344  2 nfsd
+oid_registry           16384  1 auth_rpcgss
+nfs_acl                16384  1 nfsd
+nfs                   233472  0
+lockd                  77824  2 nfsd,nfs
+grace                  16384  2 nfsd,lockd
+sunrpc                311296  21 nfsd,auth_rpcgss,lockd,nfs_acl,nfs
+nfnetlink              16384  0
+bridge                143360  0
+stp                    16384  1 bridge
+llc                    16384  2 bridge,stp
+it87                   57344  0
+hwmon_vid              16384  1 it87
+dm_crypt               36864  0
+dm_mod                118784  1 dm_crypt
+dax                    20480  1 dm_mod
+amd64_edac_mod         28672  0
+edac_mce_amd           28672  1 amd64_edac_mod
+kvm_amd                73728  0
+kvm                   593920  1 kvm_amd
+irqbypass              16384  1 kvm
+k10temp                16384  0
+sr_mod                 20480  0
+cdrom                  36864  1 sr_mod
+sg                     32768  0
+rtc_cmos               20480  1
+r8169                  69632  0
+realtek                20480  0
+acpi_cpufreq           16384  0
+button                 16384  0
+raid1                  36864  0
+md_mod                126976  1 raid1
+crc32c_intel           24576  0
+sata_sil24             20480  0
+
+hrm@amelia:~ $ sudo lshw
+[...]
+        *-pci:5
+             description: PCI bridge
+             product: SB700/SB800/SB900 PCI to PCI bridge (PCIE port 0)
+             vendor: Advanced Micro Devices, Inc. [AMD/ATI]
+             physical id: 15
+             bus info: pci@0000:00:15.0
+             version: 00
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pm pciexpress msi ht normal_decode bus_master cap_list
+             configuration: driver=pcieport
+             resources: irq:16 memory:fe600000-fe6fffff ioport:d0000000(size=2097152)
+           *-raid UNCLAIMED
+                description: RAID bus controller
+                product: HighPoint Technologies, Inc.
+                vendor: HighPoint Technologies, Inc.
+                physical id: 0
+                bus info: pci@0000:06:00.0
+                version: a1
+                width: 64 bits
+                clock: 33MHz
+                capabilities: raid pm msi msix pciexpress bus_master cap_list
+                configuration: latency=0
+                resources: memory:d0000000-d00fffff memory:d0100000-d013ffff memory:fe600000-fe61ffff
+[...]
+
+-- 
+Hugo Mills             | Mushrooms on toast: the breakfast of champignons
+hugo@... carfax.org.uk |
+http://carfax.org.uk/  |
+PGP: E2AB1DE4          |
