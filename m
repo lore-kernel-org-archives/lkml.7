@@ -2,53 +2,54 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C58C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66260C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C3C20665
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3484920665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752890;
-	bh=bzUI1CGt06M2B3ynUGZQxcbu7EQG4vNXUTOYUdThYu8=;
+	s=default; t=1564752894;
+	bh=UCB85eOHxfzA+lw/aPmFvyb66eypBbWSWN7z8i1UXZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qmpnk6RC40JmlZtoQ/rxO3KIQ8LlDCHWikoHFdBlOkfnxZ1xJXWYECcqaZTq/FseZ
-	 5dht7lvTuofVvVdEjmIXcsbPwil1BbQ/SSP7qXCMF0bqVnZONUuPvP2aXFU1Hx4yxK
-	 klWGIOcr8hAomwgG7laxQ8KO1ji35BBV86n0Q97Y=
+	b=of69MKYpUizcYjayYCXfetAZiffzuI6eeq+q+ItwAVRLG6TJNfLV9fD7uyjf+7H+U
+	 MVqdDqjgw6q6o/Zd8q8Gucd2YzCtukmp/LlX+QIpO37cz1cvHS1AdYlYYA20tz6ov1
+	 B6cgBS3NE0GHqqQVvK7jc1BZc96AeFdStF2RYegE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405913AbfHBNet (ORCPT
+        id S2393743AbfHBNWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:34:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:22:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393755AbfHBNWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:22:25 -0400
+        id S2393723AbfHBNWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:22:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7584921841;
-        Fri,  2 Aug 2019 13:22:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A64F3217D4;
+        Fri,  2 Aug 2019 13:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752144;
-        bh=bzUI1CGt06M2B3ynUGZQxcbu7EQG4vNXUTOYUdThYu8=;
+        s=default; t=1564752137;
+        bh=UCB85eOHxfzA+lw/aPmFvyb66eypBbWSWN7z8i1UXZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uem8n2R+OYeCBO6CZ+vLCrFk2q4ADLyC+ne/z8dZkYL01STGGttgfWjNQW0rewVMY
-         FMLlWrufzTEgLnE2L1PNB14ya6MQ12UuliWGHajC7iHqj0WjoZgppZmwv8al4xWsyJ
-         /36KlqUvhx7TMi7C3fxcIsIYe882sC7yIB2ph3lY=
+        b=wRdhLNmzqonKjExJ8L9PUGpkDD6QR6VBO9FmnC5JbSTksZ6/KJuCCCi0lPKyt3jMb
+         SLn34fG2snBQum27G2mk+wvUO4U2abRh47BjxeAoBRCw9pYpqfzpU6//Am8V8ZRMzF
+         bOztqDyxlZLWcfM2uN3rY7KwXWvPj+6zWDgxMpNw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marta Rybczynska <mrybczyn@kalray.eu>,
-        Marta Rybczynska <marta.rybczynska@kalray.eu>,
-        Jean-Baptiste Riaux <jbriaux@kalray.eu>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 61/76] nvme: fix multipath crash when ANA is deactivated
-Date:   Fri,  2 Aug 2019 09:19:35 -0400
-Message-Id: <20190802131951.11600-61-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 56/76] perf probe: Avoid calling freeing routine multiple times for same pointer
+Date:   Fri,  2 Aug 2019 09:19:30 -0400
+Message-Id: <20190802131951.11600-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
@@ -61,125 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marta Rybczynska <mrybczyn@kalray.eu>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 66b20ac0a1a10769d059d6903202f53494e3d902 ]
+[ Upstream commit d95daf5accf4a72005daa13fbb1d1bd8709f2861 ]
 
-Fix a crash with multipath activated. It happends when ANA log
-page is larger than MDTS and because of that ANA is disabled.
-The driver then tries to access unallocated buffer when connecting
-to a nvme target. The signature is as follows:
+When perf_add_probe_events() we call cleanup_perf_probe_events() for the
+pev pointer it receives, then, as part of handling this failure the main
+'perf probe' goes on and calls cleanup_params() and that will again call
+cleanup_perf_probe_events()for the same pointer, so just set nevents to
+zero when handling the failure of perf_add_probe_events() to avoid the
+double free.
 
-[  300.433586] nvme nvme0: ANA log page size (8208) larger than MDTS (8192).
-[  300.435387] nvme nvme0: disabling ANA support.
-[  300.437835] nvme nvme0: creating 4 I/O queues.
-[  300.459132] nvme nvme0: new ctrl: NQN "nqn.0.0.0", addr 10.91.0.1:8009
-[  300.464609] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-[  300.466342] #PF error: [normal kernel read fault]
-[  300.467385] PGD 0 P4D 0
-[  300.467987] Oops: 0000 [#1] SMP PTI
-[  300.468787] CPU: 3 PID: 50 Comm: kworker/u8:1 Not tainted 5.0.20kalray+ #4
-[  300.470264] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[  300.471532] Workqueue: nvme-wq nvme_scan_work [nvme_core]
-[  300.472724] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
-[  300.474038] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
-[  300.477374] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
-[  300.478334] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
-[  300.479784] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
-[  300.481488] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
-[  300.483203] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
-[  300.484928] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
-[  300.486626] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
-[  300.488538] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  300.489907] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
-[  300.491612] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  300.493303] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  300.494991] Call Trace:
-[  300.495645]  nvme_mpath_add_disk+0x5c/0xb0 [nvme_core]
-[  300.496880]  nvme_validate_ns+0x2ef/0x550 [nvme_core]
-[  300.498105]  ? nvme_identify_ctrl.isra.45+0x6a/0xb0 [nvme_core]
-[  300.499539]  nvme_scan_work+0x2b4/0x370 [nvme_core]
-[  300.500717]  ? __switch_to_asm+0x35/0x70
-[  300.501663]  process_one_work+0x171/0x380
-[  300.502340]  worker_thread+0x49/0x3f0
-[  300.503079]  kthread+0xf8/0x130
-[  300.503795]  ? max_active_store+0x80/0x80
-[  300.504690]  ? kthread_bind+0x10/0x10
-[  300.505502]  ret_from_fork+0x35/0x40
-[  300.506280] Modules linked in: nvme_tcp nvme_rdma rdma_cm iw_cm ib_cm ib_core nvme_fabrics nvme_core xt_physdev ip6table_raw ip6table_mangle ip6table_filter ip6_tables xt_comment iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xt_CHECKSUM iptable_mangle iptable_filter veth ebtable_filter ebtable_nat ebtables iptable_raw vxlan ip6_udp_tunnel udp_tunnel sunrpc joydev pcspkr virtio_balloon br_netfilter bridge stp llc ip_tables xfs libcrc32c ata_generic pata_acpi virtio_net virtio_console net_failover virtio_blk failover ata_piix serio_raw libata virtio_pci virtio_ring virtio
-[  300.514984] CR2: 0000000000000008
-[  300.515569] ---[ end trace faa2eefad7e7f218 ]---
-[  300.516354] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
-[  300.517330] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
-[  300.520353] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
-[  300.521229] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
-[  300.522399] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
-[  300.523560] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
-[  300.524734] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
-[  300.525915] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
-[  300.527084] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
-[  300.528396] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  300.529440] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
-[  300.530739] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  300.531989] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  300.533264] Kernel panic - not syncing: Fatal exception
-[  300.534338] Kernel Offset: 0x17c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[  300.536227] ---[ end Kernel panic - not syncing: Fatal exception ]---
-
-Condition check refactoring from Christoph Hellwig.
-
-Signed-off-by: Marta Rybczynska <marta.rybczynska@kalray.eu>
-Tested-by: Jean-Baptiste Riaux <jbriaux@kalray.eu>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-x8qgma4g813z96dvtw9w219q@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 8 ++------
- drivers/nvme/host/nvme.h      | 6 +++++-
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/builtin-probe.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 499acf07d61a7..e942b3e840687 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -12,11 +12,6 @@ module_param(multipath, bool, 0444);
- MODULE_PARM_DESC(multipath,
- 	"turn on native support for multiple controllers per subsystem");
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 8bb124e55c6d2..2c376f5b21200 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -698,6 +698,16 @@ __cmd_probe(int argc, const char **argv)
  
--inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
--{
--	return multipath && ctrl->subsys && (ctrl->subsys->cmic & (1 << 3));
--}
--
- /*
-  * If multipathing is enabled we need to always use the subsystem instance
-  * number for numbering our devices to avoid conflicts between subsystems that
-@@ -614,7 +609,8 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- {
- 	int error;
- 
--	if (!nvme_ctrl_use_ana(ctrl))
-+	/* check if multipath is enabled and we have the capability */
-+	if (!multipath || !ctrl->subsys || !(ctrl->subsys->cmic & (1 << 3)))
- 		return 0;
- 
- 	ctrl->anacap = id->anacap;
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 55553d293a98a..7391cd0a7739e 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -472,7 +472,11 @@ extern const struct attribute_group *nvme_ns_id_attr_groups[];
- extern const struct block_device_operations nvme_ns_head_ops;
- 
- #ifdef CONFIG_NVME_MULTIPATH
--bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl);
-+static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
-+{
-+	return ctrl->ana_log_buf != NULL;
-+}
+ 		ret = perf_add_probe_events(params.events, params.nevents);
+ 		if (ret < 0) {
 +
- void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
- 			struct nvme_ctrl *ctrl, int *flags);
- void nvme_failover_req(struct request *req);
++			/*
++			 * When perf_add_probe_events() fails it calls
++			 * cleanup_perf_probe_events(pevs, npevs), i.e.
++			 * cleanup_perf_probe_events(params.events, params.nevents), which
++			 * will call clear_perf_probe_event(), so set nevents to zero
++			 * to avoid cleanup_params() to call clear_perf_probe_event() again
++			 * on the same pevs.
++			 */
++			params.nevents = 0;
+ 			pr_err_with_code("  Error: Failed to add events.", ret);
+ 			return ret;
+ 		}
 -- 
 2.20.1
 
