@@ -2,92 +2,125 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0F2C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CC7C41514
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FFF2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4E92087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 16:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l/jo0wtW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMvXitfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbfHBQjC (ORCPT
+        id S1732476AbfHBQlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 12:39:02 -0400
-Received: from mail-io1-f53.google.com ([209.85.166.53]:32832 "EHLO
-        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729353AbfHBQjC (ORCPT
+        Fri, 2 Aug 2019 12:41:07 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39991 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729353AbfHBQlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 12:39:02 -0400
-Received: by mail-io1-f53.google.com with SMTP id z3so12370755iog.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 09:39:01 -0700 (PDT)
+        Fri, 2 Aug 2019 12:41:07 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so36337075pgj.7;
+        Fri, 02 Aug 2019 09:41:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=BG6pD3ylPrqGYChsYLSsxBPUz1G1ZRk1VbjazqRF+2s=;
-        b=l/jo0wtWA0AY+2SQTOgHtkTU0Kua0NVFYDkdtEZe616wtEJoD2UD1ninnTSmhzDTr1
-         oVaLCG1ldA+eeOZMpo6OsTzamiWSaNSppqBaqCc0su2ISzGRKORs5fse5RURU/cRPT2a
-         44SdzQthyN8cIjwIPWb+7VEZnilVc5MfQeBuVIlp4JHoLrVKnwP7TR7rtTL/DctzSzEv
-         3wAY8TjP/bFkh6wak6EZnGG2HqoXQQvQlOzoEAGAhKHUga8fEUIFN9Vflel2vlmfTm45
-         Ml14IpvOpAI8WU1unyA96X+I3qh8sDwimPdPOktz6GzeoEZ8bkihfj0XlzRcuwzdN1Ll
-         SQFg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CVpBs1wIkzRja/cCCJj5b8klNanFvn6r1661ZlbMMD4=;
+        b=rMvXitfas3tyO3EHUbn48F69eylMWeu3gclWOEszcGF1/mNTamg3kk+xjpa8p1dJUD
+         YIt2MRS7etmOkbLokPwD7sWbsrHaZQgxclyoG1emouMb3tjOKPO+dSnweHxBtZIHSwJf
+         le+8XREQK4y5ybVVXxvYJy2aOfJvg4hx/BJi1NyYpBsCuTxNlDodetsYx8L6Nh/K1hKP
+         sATibdKsPcMH7Rdkon82VReKAgmAmKYjL8YxrzrOolpfKfNsE3qYRyZUA75s1DtGIgl/
+         j6PeXMInbFZJHOxNbKGZRiwL6NOqICPy6NwD08qsoGTsaY/kVjThb91iXPfAvNsgd6XK
+         MTdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=BG6pD3ylPrqGYChsYLSsxBPUz1G1ZRk1VbjazqRF+2s=;
-        b=HHugMSm8dKffi7KP7q7ijZ45B4oCiS9/9DCdc+uX7/pqjBAL2XQOl7sVwWpAsjs+hu
-         2usdsUjLXIfzQ+PAAX4oTzgueUEtdb6pPY9ezZNd5TF0zX86Ufu3UJxUUusjoiOxnD4o
-         eHMeVCJ+sjRGJYVrTW0XgzRmY/YLd7ZUe4mtm7yvfJnQAbSuiTOD49SNfKZy/zdqKAcl
-         zZEXcTjHzXcgrROupTsy8grQ8lOxoEj/896YEQBubu3Laqwy2abdyTGQKi9+JvQWcDFM
-         3fM1iEy6UwLBLTSRmZxmIHSARz8gY+ZHQgTaPn7laKKvWUruC88HDJv97ete3wgdjPwW
-         fv/g==
-X-Gm-Message-State: APjAAAWLEZFk+O1D1QQz7OhW4nhiLB1yDHPAgOdCL9+nhw+WxmzzUwS6
-        +eFT/Qbd7ehxEGDQr1+YkFOsPSiBp3Qbgv8Cawjg/VdgM7bVkw==
-X-Google-Smtp-Source: APXvYqxttYbruAnCsrIrNhYVinmIrq1x/si7xGcfeyFEmfDOOYJGSDove0lS6wfsnWzTcuewYuAXh2sL7xS/goFY3q8=
-X-Received: by 2002:a6b:d008:: with SMTP id x8mr1345796ioa.129.1564763940947;
- Fri, 02 Aug 2019 09:39:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CVpBs1wIkzRja/cCCJj5b8klNanFvn6r1661ZlbMMD4=;
+        b=Uah4k1sbDTpiN8/1O9jQaXnIGVa0RYr1NdIXyjj5NxYxUxE6c+u0ZLyPyTrS0fKZPH
+         QA0g9sdU16LF8rZF6qqMRq90N2O8tUKJALtO167T5/AbLiVxMBJtZN36nOT8KKrc4uX7
+         ulpvB1n9AkQedzjE7akTg2PrZ534xi37xlY5r5y9MqNP8zEU/ce+KIgireEnaPsRLOVu
+         62isNSDlz5YySpE2cPfEfFEYO6j6CtAxvJciM8lUb0t+tFE4G1cnfy5y7djLnyCGxuD5
+         roTU5n8r35SbKcsx9gG6flpWDN15fUyHkdGdlqnhyMuMYoXJ8nKY9oZJaC7uE9Vrqs+B
+         Dmug==
+X-Gm-Message-State: APjAAAV+5x7m6HaAPGQPP5J3ks8EJFBos3mHwM2pDczGyo+XTZ1qVXew
+        4M5ZVSTlWeuqM9dYCndBGBk=
+X-Google-Smtp-Source: APXvYqw8+Fe+lWBPIIdgGBzLlZW3DfEmtxQ8VIQTrpvsnGrr3fEr53uXM0+LdsTEpy917EkKIxjywQ==
+X-Received: by 2002:a62:be02:: with SMTP id l2mr62038253pff.63.1564764065978;
+        Fri, 02 Aug 2019 09:41:05 -0700 (PDT)
+Received: from icarus ([2001:268:c147:64b2:f351:c489:c6c9:377a])
+        by smtp.gmail.com with ESMTPSA id r75sm98477830pfc.18.2019.08.02.09.41.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 02 Aug 2019 09:41:05 -0700 (PDT)
+Date:   Sat, 3 Aug 2019 01:40:45 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     David Lechner <david@lechnology.com>
+Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 2/4] counter: new TI eQEP driver
+Message-ID: <20190802163926.GA29963@icarus>
+References: <20190722154538.5314-1-david@lechnology.com>
+ <20190722154538.5314-3-david@lechnology.com>
+ <20190802092727.GB30522@icarus>
+ <680ed555-c5db-6640-8fd3-121422077eff@lechnology.com>
 MIME-Version: 1.0
-From:   Stephane Eranian <eranian@google.com>
-Date:   Fri, 2 Aug 2019 09:38:49 -0700
-Message-ID: <CABPqkBQtnYM6E2F3JiZ2A5z8iR+MvxM5DH4L6KyAeSaBfnGEPw@mail.gmail.com>
-Subject: [BUG] perf report: segfault with --no-group in pipe mode
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <680ed555-c5db-6640-8fd3-121422077eff@lechnology.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Aug 02, 2019 at 11:17:11AM -0500, David Lechner wrote:
+> On 8/2/19 4:27 AM, William Breathitt Gray wrote:
+> >> +static const struct counter_ops ti_eqep_counter_ops = {
+> >> +	.count_read	= ti_eqep_count_read,
+> >> +	.count_write	= ti_eqep_count_write,
+> >> +	.function_get	= ti_eqep_function_get,
+> >> +	.function_set	= ti_eqep_function_set,
+> >> +};
+> > Are you able to provide a signal_read function, or are the Signals not
+> > exposed to the user by this device? Sometimes quadrature encoder devices
+> > provide an instanteous read of the signal lines to tell whether they are
+> > high or low, so I figured I'd ask.
+> 
+> No, it does not look like these signals can be read directly.
 
-When trying the following command line with perf from tip,git, I got:
+All right, in that case you can ignore signal_read.
 
-$ perf record --group -c 100000 -e '{branch-misses,branches}' -a -o -
-sleep 1| perf report --no-group -F sample,cpu,period -i -
-# To display the perf.data header info, please use
---header/--header-only options.
-#
-Segmentation fault (core dumped)
+> > 
+> > You should define an action_get function as well along with Synapses
+> > corresponding to each Signal. This will allow users to know whether the
+> > Synapse fires on a rising edge, falling edge, no edge, or both edges.
+> > 
+> > For example, consider the drivers/counter/104-quad-8.c file. Each count
+> > register has three associated signal lines: Quadrature A, Quadrature B,
+> > and Index.
+> > 
+> > Quadrature A and B are your typical quadrature encoder lines and
+> > depending on the function mode selected (quadrature x4, pulse-direction,
+> > etc.) could have a Synapse action mode of none, rising edge, falling
+> > edge, or both edges; see the quad8_synapse_actions_list array.
+> > 
+> > In contrast, the Index signal line only has two Synapse action modes:
+> > rising edge (in the case preset functionality is enabled) or none.
+> 
+> The encoders I have don't use the index or strobe signals, so I was
+> thinking maybe I should omit those two signals from the driver for the
+> time being since I don't have a way of testing.
 
-(gdb) r report --no-group -F sample,cpu,period -i - < tt
-Starting program: /export/hda3/perftest/perf.tip report --no-group -F
-sample,cpu,period -i - < tt
-# To display the perf.data header info, please use
---header/--header-only options.
-#
+That should be fine for now. We can add them in a later patch down the
+road and keep this introduction patch simple.
 
-Program received signal SIGSEGV, Segmentation fault.
-hlist_add_head (h=0xeb9ed8, n=0xebdfd0) at
-/usr/local/google/home/eranian/G/bnw.tip/tools/include/linux/list.h:644
-644 /usr/local/google/home/eranian/G/bnw.tip/tools/include/linux/list.h:
-No such file or directory.
-(gdb)
-
-Can you reproduce this?
-Thanks.
+William Breathitt Gray
