@@ -4,54 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA608C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4D9C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A130A21726
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B437120665
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752833;
-	bh=7WIf34cST46uvpdgsEeIiMoiWhc4fBAvjeuIenOGkxg=;
+	s=default; t=1564752852;
+	bh=cHHC/6BH3hEEaUaPDgk9Foc2zUvFdzdsqjlgF27ogsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iROmf7oivrdxaKGlcLDiVPcWx1wNArj+cjjAl4LwDlHo9fVT9okwchc2QkAwAdYCa
-	 iQbLfnnbD45kK9hIaCgULVrhtRydempQAWiFSx4qmYU8aQAC9arDOQIkwY4BFBT5FM
-	 oCDwHT0ChHo3Ci65AkZM1UvS8xoHKUzUIJDX8lcY=
+	b=XvTgrcCZjlVsBWNx8OLk+eLxhL7kuWdG4WD1URHB7ZuCl91MBIAuNFyj2mRo2iz6e
+	 xf6vj6Otl+Jsn0e3eVzkOa+G4KpLABlzqx5fVBti/2ZgNCikZ2rs56XMW9W0PKPu/l
+	 03nnezw7cGRmkHwp7upQseq8C4BEfn89nf3R6QLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405639AbfHBNdw (ORCPT
+        id S2405736AbfHBNeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:33:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33678 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:34:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393902AbfHBNXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:23:07 -0400
+        id S2393853AbfHBNWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:22:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F3D621841;
-        Fri,  2 Aug 2019 13:23:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D6852186A;
+        Fri,  2 Aug 2019 13:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752187;
-        bh=7WIf34cST46uvpdgsEeIiMoiWhc4fBAvjeuIenOGkxg=;
+        s=default; t=1564752168;
+        bh=cHHC/6BH3hEEaUaPDgk9Foc2zUvFdzdsqjlgF27ogsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MAYaRKE6EQ9CTjSxiDSzXyXWgc8RAZANqERWEifuOOj41LPQ5O6/RtQOEUkeQ8pVr
-         yW52jpNUT0qFXCRaDzYsM1p8eK4NpQCVO0GzRnEuL3j6S3E4/id3pvBIVpqOxoTvnU
-         Dan95/5rW9QFjjBm8v+s5I/WPICQk9F36xXnvDfc=
+        b=a3KPZIm/BSgeqDMibegzfxOkDWu+PSbBj7JelTJ0sfJRlQg2znxWPPwHEeftXkmkW
+         HGJw0TvAJrzW4kk2lA2BD28algk4ROe4r0wlmcbHvOdNnP1AtAywlH2oe0I7626gKi
+         z19vFz1JhDfH1WnNnwEB/xovydzLhlyxVyDyaAZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miaohe Lin <linmiaohe@huawei.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/42] netfilter: Fix rpfilter dropping vrf packets by mistake
-Date:   Fri,  2 Aug 2019 09:22:23 -0400
-Message-Id: <20190802132302.13537-3-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Borislav Petkov <bp@alien8.de>, Jiri Olsa <jolsa@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 73/76] perf/x86: Apply more accurate check on hypervisor platform
+Date:   Fri,  2 Aug 2019 09:19:47 -0400
+Message-Id: <20190802131951.11600-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
-References: <20190802132302.13537-1-sashal@kernel.org>
+In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
+References: <20190802131951.11600-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,64 +67,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 
-[ Upstream commit b575b24b8eee37f10484e951b62ce2a31c579775 ]
+[ Upstream commit 5ea3f6fb37b79da33ac9211df336fd2b9f47c39f ]
 
-When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
-ipv4/ipv6 packets will be dropped. Vrf device will pass
-through netfilter hook twice. One with enslaved device
-and another one with l3 master device. So in device may
-dismatch witch out device because out device is always
-enslaved device.So failed with the check of the rpfilter
-and drop the packets by mistake.
+check_msr is used to fix a bug report in guest where KVM doesn't support
+LBR MSR and cause #GP.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+The msr check is bypassed on real HW to workaround a false failure,
+see commit d0e1a507bdc7 ("perf/x86/intel: Disable check_msr for real HW")
+
+When running a guest with CONFIG_HYPERVISOR_GUEST not set or "nopv"
+enabled, current check isn't enough and #GP could trigger.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1564022366-18293-1-git-send-email-zhenzhong.duan@oracle.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/netfilter/ipt_rpfilter.c  | 1 +
- net/ipv6/netfilter/ip6t_rpfilter.c | 8 ++++++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/ipv4/netfilter/ipt_rpfilter.c b/net/ipv4/netfilter/ipt_rpfilter.c
-index 12843c9ef1421..74b19a5c572e9 100644
---- a/net/ipv4/netfilter/ipt_rpfilter.c
-+++ b/net/ipv4/netfilter/ipt_rpfilter.c
-@@ -96,6 +96,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
- 	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
- 	flow.flowi4_tos = RT_TOS(iph->tos);
- 	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
-+	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index e9042e3f3052c..6179be624f357 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -20,7 +20,6 @@
+ #include <asm/intel-family.h>
+ #include <asm/apic.h>
+ #include <asm/cpu_device_id.h>
+-#include <asm/hypervisor.h>
  
- 	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par), info->flags) ^ invert;
- }
-diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
-index c3c6b09acdc4f..0f3407f2851ed 100644
---- a/net/ipv6/netfilter/ip6t_rpfilter.c
-+++ b/net/ipv6/netfilter/ip6t_rpfilter.c
-@@ -58,7 +58,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
- 	if (rpfilter_addr_linklocal(&iph->saddr)) {
- 		lookup_flags |= RT6_LOOKUP_F_IFACE;
- 		fl6.flowi6_oif = dev->ifindex;
--	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
-+	/* Set flowi6_oif for vrf devices to lookup route in l3mdev domain. */
-+	} else if (netif_is_l3_master(dev) || netif_is_l3_slave(dev) ||
-+		  (flags & XT_RPFILTER_LOOSE) == 0)
- 		fl6.flowi6_oif = dev->ifindex;
+ #include "../perf_event.h"
  
- 	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags);
-@@ -73,7 +75,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
- 		goto out;
- 	}
+@@ -4057,7 +4056,7 @@ static bool check_msr(unsigned long msr, u64 mask)
+ 	 * Disable the check for real HW, so we don't
+ 	 * mess with potentionaly enabled registers:
+ 	 */
+-	if (hypervisor_is_type(X86_HYPER_NATIVE))
++	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
+ 		return true;
  
--	if (rt->rt6i_idev->dev == dev || (flags & XT_RPFILTER_LOOSE))
-+	if (rt->rt6i_idev->dev == dev ||
-+	    l3mdev_master_ifindex_rcu(rt->rt6i_idev->dev) == dev->ifindex ||
-+	    (flags & XT_RPFILTER_LOOSE))
- 		ret = true;
-  out:
- 	ip6_rt_put(rt);
+ 	/*
 -- 
 2.20.1
 
