@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB87C32753
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E36CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E0A20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F325B2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739054;
-	bh=3b2N+zxazR7CX2RTeYYADRRfU7VrY1Byjv3Lv5J3Oyg=;
+	s=default; t=1564739056;
+	bh=SOHZCKy37fs3IqoZ36GSFFZphzMehdE9/WH9M3jnfJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kut9P9dx1LYqcTHayl3s7jDQ1t6WzdrXYUITs+parL3Aoy/cVIZeOSXf+Cd+LCnJI
-	 gCK1HujwIzT2GBDEPxIzYCAqnMybhwCNVO3SOlwT3wjeVXTozPGb6jhn8Ksigfw6uJ
-	 YZQUMkzoSg+PXSb9zirvSb7ibwSLZXkghNB2tE8M=
+	b=b80MUFYRH+sgfMccg1dGA3wl30Vu/RaxWKzd5QKkI2GHyksalWrWL7fAyEqJU4LPY
+	 oaVRz9NfdTwL0q2lzlIzsMFcabZ2gjerpxigH7U229soPlVZK7g1kj63sd8RXv7V81
+	 L9/w9l7W4uuywdAgb5qyVgb9gKsv9xiI3afeg9o0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391951AbfHBJnO (ORCPT
+        id S2405198AbfHBJoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:43:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45950 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:44:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405037AbfHBJnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:43:10 -0400
+        id S2405186AbfHBJoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:44:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41A4F2087E;
-        Fri,  2 Aug 2019 09:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD5CB20880;
+        Fri,  2 Aug 2019 09:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564738989;
-        bh=3b2N+zxazR7CX2RTeYYADRRfU7VrY1Byjv3Lv5J3Oyg=;
+        s=default; t=1564739052;
+        bh=SOHZCKy37fs3IqoZ36GSFFZphzMehdE9/WH9M3jnfJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YaaDNkZ6gZEWZB8YxlIDavOPAfXIKXCLLIJntA91I3hy5oEUXlAKJsB5pta5hhlAF
-         ZSZLhgaU9Cn5dEZhd1ikYqTkPkgAhMEtUpSi/jt1cRxhr7FLN1v6RHU7g4qAm3Yxxm
-         EUTkGoLfiJHksL6NbmnpNvfIYBL2WhVdOXQyVuuk=
+        b=pCrWPODHB5LE7zr7+eV6RDR3s0tPCX7AWIU8RXF3LCoGq+vrFWqU6AKnZCKoALKaH
+         gjTRcMXvjsbad5bGh5Osx+TWfPK899GfGs5D8PMjfrysKiBgMGO5DCUGzonFerD6mN
+         DbYDoiYpVArIqwe5ojyIdQE30WK0fkLVKavdpxBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>
-Subject: [PATCH 4.9 074/223] xen: let alloc_xenballooned_pages() fail if not enough memory free
-Date:   Fri,  2 Aug 2019 11:34:59 +0200
-Message-Id: <20190802092243.634454390@linuxfoundation.org>
+        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.9 094/223] KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+Date:   Fri,  2 Aug 2019 11:35:19 +0200
+Message-Id: <20190802092245.269572642@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -58,70 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Like Xu <like.xu@linux.intel.com>
 
-commit a1078e821b605813b63bf6bca414a85f804d5c66 upstream.
+commit 6fc3977ccc5d3c22e851f2dce2d3ce2a0a843842 upstream.
 
-Instead of trying to allocate pages with GFP_USER in
-add_ballooned_pages() check the available free memory via
-si_mem_available(). GFP_USER is far less limiting memory exhaustion
-than the test via si_mem_available().
+If a perf_event creation fails due to any reason of the host perf
+subsystem, it has no chance to log the corresponding event for guest
+which may cause abnormal sampling data in guest result. In debug mode,
+this message helps to understand the state of vPMC and we may not
+limit the number of occurrences but not in a spamming style.
 
-This will avoid dom0 running out of memory due to excessive foreign
-page mappings especially on ARM and on x86 in PVH mode, as those don't
-have a pre-ballooned area which can be used for foreign mappings.
-
-As the normal ballooning suffers from the same problem don't balloon
-down more than si_mem_available() pages in one iteration. At the same
-time limit the default maximum number of retries.
-
-This is part of XSA-300.
-
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/balloon.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/x86/kvm/pmu.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -591,8 +591,15 @@ static void balloon_process(struct work_
- 				state = reserve_additional_memory();
- 		}
- 
--		if (credit < 0)
--			state = decrease_reservation(-credit, GFP_BALLOON);
-+		if (credit < 0) {
-+			long n_pages;
-+
-+			n_pages = min(-credit, si_mem_available());
-+			state = decrease_reservation(n_pages, GFP_BALLOON);
-+			if (state == BP_DONE && n_pages != -credit &&
-+			    n_pages < totalreserve_pages)
-+				state = BP_EAGAIN;
-+		}
- 
- 		state = update_schedule(state);
- 
-@@ -631,6 +638,9 @@ static int add_ballooned_pages(int nr_pa
- 		}
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -124,8 +124,8 @@ static void pmc_reprogram_counter(struct
+ 						 intr ? kvm_perf_overflow_intr :
+ 						 kvm_perf_overflow, pmc);
+ 	if (IS_ERR(event)) {
+-		printk_once("kvm_pmu: event creation failed %ld\n",
+-			    PTR_ERR(event));
++		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
++			    PTR_ERR(event), pmc->idx);
+ 		return;
  	}
  
-+	if (si_mem_available() < nr_pages)
-+		return -ENOMEM;
-+
- 	st = decrease_reservation(nr_pages, GFP_USER);
- 	if (st != BP_DONE)
- 		return -ENOMEM;
-@@ -754,7 +764,7 @@ static int __init balloon_init(void)
- 	balloon_stats.schedule_delay = 1;
- 	balloon_stats.max_schedule_delay = 32;
- 	balloon_stats.retry_count = 1;
--	balloon_stats.max_retry_count = RETRY_UNLIMITED;
-+	balloon_stats.max_retry_count = 4;
- 
- #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
- 	set_online_page_callback(&xen_online_page);
 
 
