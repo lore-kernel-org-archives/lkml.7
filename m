@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6A3C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB46C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0BE20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C388120B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564752777;
-	bh=bYD0X8shc65cQyWWgd2mplLd3b7elQqoBA9LQVHfwyE=;
+	s=default; t=1564752782;
+	bh=RCTO222v17HqwPnQWRTuT5GQsu5fdnXXUfoG/R+0S14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cR51Rwuk9J7zDqT/ZGv4YJLx14mLMpZnxdmZveDNkxDL9JEO3mWTr82LpzQlP9wOe
-	 UKY2bOX43x6RdTnSWl27mu8+4JbwA7F0OAXnysIRIW2ByDSOB4mgsHW01OxPazJ3mu
-	 BjOaRSbSnyfGi6UTkwjtTectr1mm0cDlgole+Ck0=
+	b=z7vjWyPZR2xWc8b1dDow7k8MvJ9I+Xgt4IrRjcSjVNMj/K+yGy8EpHwgIrxAg9zOs
+	 3MX9fzoum9CJLlG9ElzIGqwXfFpOylhU9I7bqQ3SmPZVFFgIcCE44ZkKP8zkO0ett/
+	 hLyZxkCKp7EMuZ+2KiqSQWBc0WqK+QFvvYlyhuZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387927AbfHBNXt (ORCPT
+        id S2405354AbfHBNdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:23:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34194 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 09:33:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394003AbfHBNXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:23:40 -0400
+        id S2394038AbfHBNXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:23:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BEF22186A;
-        Fri,  2 Aug 2019 13:23:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1BF221773;
+        Fri,  2 Aug 2019 13:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564752219;
-        bh=bYD0X8shc65cQyWWgd2mplLd3b7elQqoBA9LQVHfwyE=;
+        s=default; t=1564752226;
+        bh=RCTO222v17HqwPnQWRTuT5GQsu5fdnXXUfoG/R+0S14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/9c0V5KcwbHHu/Eg0IBlgNCmJ6IqAc/h5wCcBPXKf/Sg4RH3NE1kBQai179tmg12
-         ta7RjoIfPjnLXQ/w94L0yL6l8xaisUv9mmonjCzbTwwib4bfYfZrS1HbdZDOxEXo/I
-         EojxzhAyg3tc4wZZ7im/pZL9m+2WB1WOOyKsUiSw=
+        b=I00o/D5o1YAB+MxC4ccbZp0sDP4tbPLoJw8OUACA8zzKBR5c18v87QdtotuJ7YU3o
+         6pZcNlqhNV2Nei34cd4tq6KthzyktCTSoW2qOFci7fhsIHXMo4vNMWpA3dr++A8tYA
+         lgKs+tYUFLwwVL7JpvxX+oa7QahWlJt/yxRgO/Oo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/42] allocate_flower_entry: should check for null deref
-Date:   Fri,  2 Aug 2019 09:22:35 -0400
-Message-Id: <20190802132302.13537-15-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/42] cpufreq/pasemi: fix use-after-free in pas_cpufreq_cpu_init()
+Date:   Fri,  2 Aug 2019 09:22:41 -0400
+Message-Id: <20190802132302.13537-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 References: <20190802132302.13537-1-sashal@kernel.org>
@@ -59,35 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit bb1320834b8a80c6ac2697ab418d066981ea08ba ]
+[ Upstream commit e0a12445d1cb186d875410d093a00d215bec6a89 ]
 
-allocate_flower_entry does not check for allocation success, but tries
-to deref the result. I only moved the spin_lock under null check, because
- the caller is checking allocation's status at line 652.
+The cpu variable is still being used in the of_get_property() call
+after the of_node_put() call, which may result in use-after-free.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a9acc26b75f6 ("cpufreq/pasemi: fix possible object reference leak")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/cpufreq/pasemi-cpufreq.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
-index f2aba5b160c2d..d45c435a599d6 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
-@@ -67,7 +67,8 @@ static struct ch_tc_pedit_fields pedits[] = {
- static struct ch_tc_flower_entry *allocate_flower_entry(void)
- {
- 	struct ch_tc_flower_entry *new = kzalloc(sizeof(*new), GFP_KERNEL);
--	spin_lock_init(&new->lock);
-+	if (new)
-+		spin_lock_init(&new->lock);
- 	return new;
- }
+diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+index c7710c149de85..a0620c9ec0649 100644
+--- a/drivers/cpufreq/pasemi-cpufreq.c
++++ b/drivers/cpufreq/pasemi-cpufreq.c
+@@ -145,10 +145,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	int err = -ENODEV;
  
+ 	cpu = of_get_cpu_node(policy->cpu, NULL);
++	if (!cpu)
++		goto out;
+ 
++	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+ 	of_node_put(cpu);
+-	if (!cpu)
++	if (!max_freqp) {
++		err = -EINVAL;
+ 		goto out;
++	}
++
++	/* we need the freq in kHz */
++	max_freq = *max_freqp / 1000;
+ 
+ 	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
+ 	if (!dn)
+@@ -185,16 +193,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	}
+ 
+ 	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
+-
+-	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+-	if (!max_freqp) {
+-		err = -EINVAL;
+-		goto out_unmap_sdcpwr;
+-	}
+-
+-	/* we need the freq in kHz */
+-	max_freq = *max_freqp / 1000;
+-
+ 	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
+ 	pr_debug("initializing frequency table\n");
+ 
+@@ -212,9 +210,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 
+ 	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
+ 
+-out_unmap_sdcpwr:
+-	iounmap(sdcpwr_mapbase);
+-
+ out_unmap_sdcasr:
+ 	iounmap(sdcasr_mapbase);
+ out:
 -- 
 2.20.1
 
