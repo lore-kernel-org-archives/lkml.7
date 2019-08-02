@@ -2,52 +2,51 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B15C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C265C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E457A2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D098F206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 09:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564739142;
-	bh=Lu4+E5cSdMAjT4XNg3HizGNr19L7uNOmMKkvlhBpEAo=;
+	s=default; t=1564739144;
+	bh=fvbVwOvPnMItuKfAZI9ZewAdRTnCigIWmZdyjp6tOTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=clpiFO3A22v1NGFXuUEVZuzE5QajhdPSk+Xziorrn1CSYswt7ctiHehNZOwwNW8YG
-	 KHymlPGIjpCv1sZcD/HV7rNNszykX5L9K1e4PVDeiO72+0wlyDWI7tXzhq/pvlRedd
-	 EVKAQXlU54R70H3i5axVs8gBoTz6Xq55sJ7vev5Y=
+	b=Y747zW9oye6woeVi3LuL1sS/MSTjaGCZNP9grpvEeu3v2SLNli6uXgczJ739ZBvMK
+	 9gheRZ50xDI8o3vHen19wj27zLwXvoniyXQRx358eEzLyldsuPlFMAcNY4d9FmKggJ
+	 zW017SrErxoyqig8ya++lSsaF55bxrsuOv6lwW+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391992AbfHBJpk (ORCPT
+        id S2392003AbfHBJpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 05:45:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49358 "EHLO mail.kernel.org"
+        Fri, 2 Aug 2019 05:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391971AbfHBJpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 05:45:35 -0400
+        id S2391986AbfHBJpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 05:45:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDED520880;
-        Fri,  2 Aug 2019 09:45:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17C142086A;
+        Fri,  2 Aug 2019 09:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564739134;
-        bh=Lu4+E5cSdMAjT4XNg3HizGNr19L7uNOmMKkvlhBpEAo=;
+        s=default; t=1564739139;
+        bh=fvbVwOvPnMItuKfAZI9ZewAdRTnCigIWmZdyjp6tOTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SbPyl03/nS2zb1oA4fttmwxEdMVsekfOCzZQnBThcZ7LtFvHZ7Zd1kb92uEgQs/Qw
-         IO5mpmjBvfFCT/J8q+dUTgFvdUFuIZXGKFKCxz6l3/8bIeDYtC+NyvXWHc2lsZs6TN
-         XklErC5CmSpmGqmQDCcNp14J0um8RihJ9dRvpe6o=
+        b=t3xHole10klCMX7LHzbzWKP3ELENPd/ypgE676beMUvah1kD3ZAoyOQ++wdA6YIGI
+         Jlfcw+Xpoaw4RyT5OTCFnJYKqqK9VnlllHMwssqnVwIAJ4z9HzVRTbGVx4SviY3nOu
+         u8ojgpPBYOxkhWCip7Fz8QNuvJHy5o8t+0M+d4e8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 126/223] compiler.h: Add read_word_at_a_time() function.
-Date:   Fri,  2 Aug 2019 11:35:51 +0200
-Message-Id: <20190802092247.238287886@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 4.9 128/223] ext4: allow directory holes
+Date:   Fri,  2 Aug 2019 11:35:53 +0200
+Message-Id: <20190802092247.322359033@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190802092238.692035242@linuxfoundation.org>
 References: <20190802092238.692035242@linuxfoundation.org>
@@ -60,51 +59,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7f1e541fc8d57a143dd5df1d0a1276046e08c083 ]
+From: Theodore Ts'o <tytso@mit.edu>
 
-Sometimes we know that it's safe to do potentially out-of-bounds access
-because we know it won't cross a page boundary.  Still, KASAN will
-report this as a bug.
+commit 4e19d6b65fb4fc42e352ce9883649e049da14743 upstream.
 
-Add read_word_at_a_time() function which is supposed to be used in such
-cases.  In read_word_at_a_time() KASAN performs relaxed check - only the
-first byte of access is validated.
+The largedir feature was intended to allow ext4 directories to have
+unmapped directory blocks (e.g., directory holes).  And so the
+released e2fsprogs no longer enforces this for largedir file systems;
+however, the corresponding change to the kernel-side code was not made.
 
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This commit fixes this oversight.
+
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/compiler.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/ext4/dir.c   |   19 +++++++++----------
+ fs/ext4/namei.c |   45 +++++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 46 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index ced454c03819..3050de0dac96 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -302,6 +302,7 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
-  * with an explicit memory barrier or atomic instruction that provides the
-  * required ordering.
-  */
-+#include <linux/kasan-checks.h>
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -106,7 +106,6 @@ static int ext4_readdir(struct file *fil
+ 	struct inode *inode = file_inode(file);
+ 	struct super_block *sb = inode->i_sb;
+ 	struct buffer_head *bh = NULL;
+-	int dir_has_error = 0;
+ 	struct fscrypt_str fstr = FSTR_INIT(NULL, 0);
  
- #define __READ_ONCE(x, check)						\
- ({									\
-@@ -320,6 +321,13 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
-  */
- #define READ_ONCE_NOCHECK(x) __READ_ONCE(x, 0)
+ 	if (ext4_encrypted_inode(inode)) {
+@@ -142,8 +141,6 @@ static int ext4_readdir(struct file *fil
+ 			return err;
+ 	}
  
-+static __no_kasan_or_inline
-+unsigned long read_word_at_a_time(const void *addr)
-+{
-+	kasan_check_read(addr, 1);
-+	return *(unsigned long *)addr;
-+}
-+
- #define WRITE_ONCE(x, val) \
- ({							\
- 	union { typeof(x) __val; char __c[1]; } __u =	\
--- 
-2.20.1
-
+-	offset = ctx->pos & (sb->s_blocksize - 1);
+-
+ 	while (ctx->pos < inode->i_size) {
+ 		struct ext4_map_blocks map;
+ 
+@@ -152,9 +149,18 @@ static int ext4_readdir(struct file *fil
+ 			goto errout;
+ 		}
+ 		cond_resched();
++		offset = ctx->pos & (sb->s_blocksize - 1);
+ 		map.m_lblk = ctx->pos >> EXT4_BLOCK_SIZE_BITS(sb);
+ 		map.m_len = 1;
+ 		err = ext4_map_blocks(NULL, inode, &map, 0);
++		if (err == 0) {
++			/* m_len should never be zero but let's avoid
++			 * an infinite loop if it somehow is */
++			if (map.m_len == 0)
++				map.m_len = 1;
++			ctx->pos += map.m_len * sb->s_blocksize;
++			continue;
++		}
+ 		if (err > 0) {
+ 			pgoff_t index = map.m_pblk >>
+ 					(PAGE_SHIFT - inode->i_blkbits);
+@@ -173,13 +179,6 @@ static int ext4_readdir(struct file *fil
+ 		}
+ 
+ 		if (!bh) {
+-			if (!dir_has_error) {
+-				EXT4_ERROR_FILE(file, 0,
+-						"directory contains a "
+-						"hole at offset %llu",
+-					   (unsigned long long) ctx->pos);
+-				dir_has_error = 1;
+-			}
+ 			/* corrupt size?  Maybe no more blocks to read */
+ 			if (ctx->pos > inode->i_blocks << 9)
+ 				break;
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -79,8 +79,18 @@ static struct buffer_head *ext4_append(h
+ static int ext4_dx_csum_verify(struct inode *inode,
+ 			       struct ext4_dir_entry *dirent);
+ 
++/*
++ * Hints to ext4_read_dirblock regarding whether we expect a directory
++ * block being read to be an index block, or a block containing
++ * directory entries (and if the latter, whether it was found via a
++ * logical block in an htree index block).  This is used to control
++ * what sort of sanity checkinig ext4_read_dirblock() will do on the
++ * directory block read from the storage device.  EITHER will means
++ * the caller doesn't know what kind of directory block will be read,
++ * so no specific verification will be done.
++ */
+ typedef enum {
+-	EITHER, INDEX, DIRENT
++	EITHER, INDEX, DIRENT, DIRENT_HTREE
+ } dirblock_type_t;
+ 
+ #define ext4_read_dirblock(inode, block, type) \
+@@ -106,11 +116,14 @@ static struct buffer_head *__ext4_read_d
+ 
+ 		return bh;
+ 	}
+-	if (!bh) {
++	if (!bh && (type == INDEX || type == DIRENT_HTREE)) {
+ 		ext4_error_inode(inode, func, line, block,
+-				 "Directory hole found");
++				 "Directory hole found for htree %s block",
++				 (type == INDEX) ? "index" : "leaf");
+ 		return ERR_PTR(-EFSCORRUPTED);
+ 	}
++	if (!bh)
++		return NULL;
+ 	dirent = (struct ext4_dir_entry *) bh->b_data;
+ 	/* Determine whether or not we have an index block */
+ 	if (is_dx(inode)) {
+@@ -960,7 +973,7 @@ static int htree_dirblock_to_tree(struct
+ 
+ 	dxtrace(printk(KERN_INFO "In htree dirblock_to_tree: block %lu\n",
+ 							(unsigned long)block));
+-	bh = ext4_read_dirblock(dir, block, DIRENT);
++	bh = ext4_read_dirblock(dir, block, DIRENT_HTREE);
+ 	if (IS_ERR(bh))
+ 		return PTR_ERR(bh);
+ 
+@@ -1537,7 +1550,7 @@ static struct buffer_head * ext4_dx_find
+ 		return (struct buffer_head *) frame;
+ 	do {
+ 		block = dx_get_block(frame->at);
+-		bh = ext4_read_dirblock(dir, block, DIRENT);
++		bh = ext4_read_dirblock(dir, block, DIRENT_HTREE);
+ 		if (IS_ERR(bh))
+ 			goto errout;
+ 
+@@ -2142,6 +2155,11 @@ static int ext4_add_entry(handle_t *hand
+ 	blocks = dir->i_size >> sb->s_blocksize_bits;
+ 	for (block = 0; block < blocks; block++) {
+ 		bh = ext4_read_dirblock(dir, block, DIRENT);
++		if (bh == NULL) {
++			bh = ext4_bread(handle, dir, block,
++					EXT4_GET_BLOCKS_CREATE);
++			goto add_to_new_block;
++		}
+ 		if (IS_ERR(bh)) {
+ 			retval = PTR_ERR(bh);
+ 			bh = NULL;
+@@ -2162,6 +2180,7 @@ static int ext4_add_entry(handle_t *hand
+ 		brelse(bh);
+ 	}
+ 	bh = ext4_append(handle, dir, &block);
++add_to_new_block:
+ 	if (IS_ERR(bh)) {
+ 		retval = PTR_ERR(bh);
+ 		bh = NULL;
+@@ -2203,7 +2222,7 @@ static int ext4_dx_add_entry(handle_t *h
+ 		return PTR_ERR(frame);
+ 	entries = frame->entries;
+ 	at = frame->at;
+-	bh = ext4_read_dirblock(dir, dx_get_block(frame->at), DIRENT);
++	bh = ext4_read_dirblock(dir, dx_get_block(frame->at), DIRENT_HTREE);
+ 	if (IS_ERR(bh)) {
+ 		err = PTR_ERR(bh);
+ 		bh = NULL;
+@@ -2719,7 +2738,10 @@ bool ext4_empty_dir(struct inode *inode)
+ 		EXT4_ERROR_INODE(inode, "invalid size");
+ 		return true;
+ 	}
+-	bh = ext4_read_dirblock(inode, 0, EITHER);
++	/* The first directory block must not be a hole,
++	 * so treat it as DIRENT_HTREE
++	 */
++	bh = ext4_read_dirblock(inode, 0, DIRENT_HTREE);
+ 	if (IS_ERR(bh))
+ 		return true;
+ 
+@@ -2741,6 +2763,10 @@ bool ext4_empty_dir(struct inode *inode)
+ 			brelse(bh);
+ 			lblock = offset >> EXT4_BLOCK_SIZE_BITS(sb);
+ 			bh = ext4_read_dirblock(inode, lblock, EITHER);
++			if (bh == NULL) {
++				offset += sb->s_blocksize;
++				continue;
++			}
+ 			if (IS_ERR(bh))
+ 				return true;
+ 			de = (struct ext4_dir_entry_2 *) bh->b_data;
+@@ -3302,7 +3328,10 @@ static struct buffer_head *ext4_get_firs
+ 	struct buffer_head *bh;
+ 
+ 	if (!ext4_has_inline_data(inode)) {
+-		bh = ext4_read_dirblock(inode, 0, EITHER);
++		/* The first directory block must not be a hole, so
++		 * treat it as DIRENT_HTREE
++		 */
++		bh = ext4_read_dirblock(inode, 0, DIRENT_HTREE);
+ 		if (IS_ERR(bh)) {
+ 			*retval = PTR_ERR(bh);
+ 			return NULL;
 
 
