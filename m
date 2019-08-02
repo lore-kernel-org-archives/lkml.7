@@ -2,110 +2,128 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE44C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A96C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993A720679
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193F420679
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 13:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406593AbfHBNnk (ORCPT
+        id S2406601AbfHBNpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 09:43:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41342 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405207AbfHBNnk (ORCPT
+        Fri, 2 Aug 2019 09:45:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3576 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726340AbfHBNph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 09:43:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so74009677wrm.8
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Aug 2019 06:43:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3i+v6PWLAFY4pLYnR68bLFCR3VGy3PuSRw0b9/MCRls=;
-        b=W5WddeVeyFomvegKGutR3Hhll6KFmGf6LHS71UM9KJRksnw5lFnzC6i12zrr1HkCrh
-         c2g/VTg6d84BLTBk+76pAu9SzIUB+e6tojpDfgNuUWZuslePvU/LNi1DW6VtnBS85B54
-         3yxL3hL219TquhV6s8KpUdmtKhuw5uu50M6VCfbq4rH4vfHK76W35k+z1T0ctKTeo/K9
-         V0rJ1a+t92l3Eb/Wd8wACFDm4wkmsDx0Bk3Ke/vIWNveHyCT3m979gAzzsx6S7btHxAB
-         GniI29dD0YoNx6sSJrTHSor+RUY6jA+Qj4TzmlEw7tsj3cucCvi1LKCpDxFlwdbPbSV4
-         tbuw==
-X-Gm-Message-State: APjAAAWFsBMrnHetcf2dBc7VwNnYl1zvb2Sk1yd8rBG6gF+zlXeSZZVu
-        Caee0BhySelG3DTfoeC9uP50bw==
-X-Google-Smtp-Source: APXvYqwlWPI9epVJFEWNOTqzS7ZJ4IYVa0FZTw8meKi5eAb8tedQqtVhMZGqG3X7gTxs2cm6xqIjrA==
-X-Received: by 2002:adf:df8b:: with SMTP id z11mr89917522wrl.62.1564753418003;
-        Fri, 02 Aug 2019 06:43:38 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:4013:e920:9388:c3ff? ([2001:b07:6468:f312:4013:e920:9388:c3ff])
-        by smtp.gmail.com with ESMTPSA id r123sm70327253wme.7.2019.08.02.06.43.37
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 02 Aug 2019 06:43:37 -0700 (PDT)
-Subject: Re: [PATCH v3 0/3] KVM: selftests: Enable ucall and dirty_log_test on
- s390x
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
-Cc:     Janosch Frank <frankja@linux.ibm.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Peter Xu <peterx@redhat.com>, Andrew Jones <drjones@redhat.com>
-References: <20190731151525.17156-1-thuth@redhat.com>
- <551b42ae-78a1-e55a-e4b8-bb5cc3a8eb8b@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <9684b15d-39a4-2c1b-3269-466ceb37ef90@redhat.com>
-Date:   Fri, 2 Aug 2019 15:43:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 2 Aug 2019 09:45:37 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x72Dgu0H069103;
+        Fri, 2 Aug 2019 09:45:02 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4p3r8kdh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 02 Aug 2019 09:45:01 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x72Dh5uF069804;
+        Fri, 2 Aug 2019 09:44:54 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u4p3r8kc0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 02 Aug 2019 09:44:54 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x72De7aZ024476;
+        Fri, 2 Aug 2019 13:44:53 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01wdc.us.ibm.com with ESMTP id 2u0e874dkw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 02 Aug 2019 13:44:52 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x72DiqSw60096922
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 2 Aug 2019 13:44:52 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2290DBE051;
+        Fri,  2 Aug 2019 13:44:52 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A41CBE053;
+        Fri,  2 Aug 2019 13:44:49 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.147])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri,  2 Aug 2019 13:44:49 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/1] powerpc/pseries/hotplug-memory.c: Change rc variable to bool
+Date:   Fri,  2 Aug 2019 10:39:15 -0300
+Message-Id: <20190802133914.30413-1-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <551b42ae-78a1-e55a-e4b8-bb5cc3a8eb8b@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=945 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/08/19 15:39, Christian Borntraeger wrote:
-> On 31.07.19 17:15, Thomas Huth wrote:
->> Implement the ucall() interface on s390x to be able to use the
->> dirty_log_test KVM selftest on s390x, too.
->>
->> v3:
->>  - Fix compilation issue on aarch64 (thanks to Andrew for testing it!)
->>  - Added Reviewed-bys
->>
->> v2:
->>  - Split up ucall.c into architecture specific files
->>  - Removed some #ifdef __s390x__  in the dirty_log patch
->>
->> Thomas Huth (3):
->>   KVM: selftests: Split ucall.c into architecture specific files
->>   KVM: selftests: Implement ucall() for s390x
->>   KVM: selftests: Enable dirty_log_test on s390x
->>
->>  tools/testing/selftests/kvm/Makefile          |   9 +-
->>  tools/testing/selftests/kvm/dirty_log_test.c  |  61 ++++++-
->>  .../testing/selftests/kvm/include/kvm_util.h  |   8 +-
->>  .../testing/selftests/kvm/lib/aarch64/ucall.c | 112 +++++++++++++
->>  tools/testing/selftests/kvm/lib/s390x/ucall.c |  56 +++++++
->>  tools/testing/selftests/kvm/lib/ucall.c       | 157 ------------------
->>  .../testing/selftests/kvm/lib/x86_64/ucall.c  |  56 +++++++
->>  .../selftests/kvm/s390x/sync_regs_test.c      |   6 +-
->>  8 files changed, 287 insertions(+), 178 deletions(-)
->>  create mode 100644 tools/testing/selftests/kvm/lib/aarch64/ucall.c
->>  create mode 100644 tools/testing/selftests/kvm/lib/s390x/ucall.c
->>  delete mode 100644 tools/testing/selftests/kvm/lib/ucall.c
->>  create mode 100644 tools/testing/selftests/kvm/lib/x86_64/ucall.c
->>
-> 
-> Paolo, I guess you do not mind if I carry patch 1 also via the s390x tree?
+Changes the return variable to bool (as the return value) and
+avoids doing a ternary operation before returning.
 
-Sure,
+Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+---
+Changes in v2:
+  - Restore previous and-ing logic on rc.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+ arch/powerpc/platforms/pseries/hotplug-memory.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Paolo
+diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+index 8e700390f3d6..c126b94d1943 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -338,7 +338,7 @@ static int pseries_remove_mem_node(struct device_node *np)
+ static bool lmb_is_removable(struct drmem_lmb *lmb)
+ {
+ 	int i, scns_per_block;
+-	int rc = 1;
++	bool rc = true;
+ 	unsigned long pfn, block_sz;
+ 	u64 phys_addr;
+ 
+@@ -363,11 +363,11 @@ static bool lmb_is_removable(struct drmem_lmb *lmb)
+ 		if (!pfn_present(pfn))
+ 			continue;
+ 
+-		rc &= is_mem_section_removable(pfn, PAGES_PER_SECTION);
++		rc = rc && is_mem_section_removable(pfn, PAGES_PER_SECTION);
+ 		phys_addr += MIN_MEMORY_BLOCK_SIZE;
+ 	}
+ 
+-	return rc ? true : false;
++	return rc;
+ }
+ 
+ static int dlpar_add_lmb(struct drmem_lmb *);
+-- 
+2.20.1
+
