@@ -2,251 +2,174 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68556C19759
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959F2C32753
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B542080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620992080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 01:32:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="d7bhAf09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbfHBBaR (ORCPT
+        id S1731153AbfHBBch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 1 Aug 2019 21:30:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35008 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731048AbfHBBaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 1 Aug 2019 21:30:15 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 401D5F5707;
-        Fri,  2 Aug 2019 01:30:15 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BBBB5D713;
-        Fri,  2 Aug 2019 01:30:14 +0000 (UTC)
-Date:   Thu, 1 Aug 2019 19:30:13 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, dima@arista.com,
-        tmurphy@arista.com, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, jacob.jun.pan@intel.com,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v4 12/15] iommu/vt-d: Cleanup get_valid_domain_for_dev()
-Message-ID: <20190801193013.19444803@x1.home>
-In-Reply-To: <20190719092303.751659a0@x1.home>
-References: <20190525054136.27810-1-baolu.lu@linux.intel.com>
-        <20190525054136.27810-13-baolu.lu@linux.intel.com>
-        <20190717211226.5ffbf524@x1.home>
-        <9957afdd-4075-e7ee-e1e6-97acb870e17a@linux.intel.com>
-        <20190719092303.751659a0@x1.home>
-Organization: Red Hat
+        Thu, 1 Aug 2019 21:32:37 -0400
+Received: from mail-eopbgr1310134.outbound.protection.outlook.com ([40.107.131.134]:34112
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731008AbfHBBcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 1 Aug 2019 21:32:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mt2rc7uqXCTjh4C9MORwqBoBK25jKZAhEgFP7i4ihXstKr5KUk8FFPt0hIVjD6JtUaEQRP1h+EczzpBXiSUdnwAoD1hMaUrvyXjVSjC2iumXDMYLf/g5zq61KObHMJXeBbvXSKISiq8AmnkkpyjoGJrRNxw5WEpzR4brtVUNlqrYDtWNEadR/nhyvdi2B+AZhelzxY8Mh5/u+20kzefXhT/2omlesSchdMUn/5/l+r0TP1fSc6PqUsL82UkR87w/09x6HDp2lWHdHUitPedw5YjDqqkXKhm64ZRcAhfK3rvGnXeI9NXJFevP493NWGOqjo4w3H2UinZwmzf4xSBhmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oPBA9C55bMwDHnO7zcQNahnKxdu0Y+IJtHzyJlBwUEo=;
+ b=jGf5oALuEQpXnpEuOBU+frid54iKc/J3DJTI12oNPGRNERlfx3UANKownmyDxLmfD/szrrKO35Y2Kkc24igieW9Z3oBSfc+SbKp/rbsKtuEbT0o6cSJoTOSycT9BmdB0WbRXmEPDzPTtxh6r+sFk0bmmC3pQDBcBR9E23InEjyMYTuGVnrwugK4o4Q/A6GCGcyHWCWiFxt/3PwJl6jxqVQG6UQOazgor4A/fuU7cUYpST87fqk1r1si9Kp35NluAxgBjhtXGCU/56fXJB4f3hrm30WP9KRRKaRXXpO7nl/2v9+fBW8Wjp2W54kfEHqg1k0/e737WxbuvZkwPlKOxow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oPBA9C55bMwDHnO7zcQNahnKxdu0Y+IJtHzyJlBwUEo=;
+ b=d7bhAf09xYMTxEY85CqGNSBRIoQ301qGtzvvHvUP3asB8ak5WgCEvSTQKyMFUzmfNa+qL+x2Y4ZHrPsY/U1V5WM+6K1iz2qTS5lyqi9Iv32phcXrGLvYuBjay9sl8LXJ1vXJWqhUSFAnNchMxqt3pAVq6gvoz+xdRiXa+5aXjWM=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0155.APCP153.PROD.OUTLOOK.COM (10.170.189.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.2; Fri, 2 Aug 2019 01:32:29 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Fri, 2 Aug 2019
+ 01:32:29 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] PCI: hv: Fix panic by calling hv_pci_remove_slots() earlier
+Thread-Topic: [PATCH] PCI: hv: Fix panic by calling hv_pci_remove_slots()
+ earlier
+Thread-Index: AdVI0ZE8ZG/OuLUpRiCFkuQ9gvUCcw==
+Date:   Fri, 2 Aug 2019 01:32:28 +0000
+Message-ID: <PU1P153MB0169DBCFEE7257F5BB93580ABFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-02T01:32:25.5889428Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=154bf01c-1130-41a4-800e-1005f6745547;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:9:e996:753d:33cc:42bb]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 23e0c25c-7e4c-42e0-c97e-08d716e94842
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0155;
+x-ms-traffictypediagnostic: PU1P153MB0155:|PU1P153MB0155:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB01552CE7D55C0F17AB257AC5BFD90@PU1P153MB0155.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:107;
+x-forefront-prvs: 011787B9DD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(189003)(199004)(66446008)(54906003)(110136005)(10290500003)(316002)(107886003)(478600001)(25786009)(2501003)(52536014)(66946007)(10090500001)(305945005)(46003)(55016002)(2906002)(6116002)(74316002)(5660300002)(2201001)(8990500004)(6436002)(64756008)(9686003)(66476007)(66556008)(71200400001)(76116006)(476003)(71190400001)(4326008)(53936002)(33656002)(14444005)(22452003)(8936002)(186003)(68736007)(102836004)(7736002)(7696005)(99286004)(86362001)(7416002)(6636002)(81166006)(1511001)(6506007)(81156014)(486006)(14454004)(8676002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0155;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hiEDoMTSr5+kYgO7AKVwSbcy08XLQAhnA6pcs7jeazzGNBPI8FaaC4KKlXsv3TFyNB9rofSeSvDS8dbo4ICdT8ZhdbqMHJY3sMFTs0a7ZCv4RdfepsUj7JTUwqGa7P2fQXG2CAL6lgEU9TtpwhPDYUgcCJbGybuAk3hI1QJ0uvFKZ7MR3E/yz8vqweH7J2ZwSagZwNtDPR6sSCM54RdyX5xw5LQgea6r9Ti3WSzCabjHXmFMpS99u3Af3sbG+YSJL4DkG/DwOMuTdxON5UZSaBDp7jwkWGBBFtMX+MbiqRxKt+TGISR9v/67usiWl7TvNUgyON9wQSbIujcNjU/mXNP5IveGJYiUOglt4P3K4nfU3GirISZ00L0xc86BGiL4b98H3cf7CZ9y/l40cPhlp4DH96eqQ9FQOsulQGcMJnk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 02 Aug 2019 01:30:15 +0000 (UTC)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23e0c25c-7e4c-42e0-c97e-08d716e94842
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2019 01:32:28.7694
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: t+UWZ7oF4k4by04T0oHW4jev95Vc4ewUyJkVCu9GZ02+7If+kQQS6dC8sDIgjsejM6AkFUq7o6ofWJZZYpENmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Jul 2019 09:23:03 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
 
-> On Fri, 19 Jul 2019 17:04:26 +0800
-> Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> 
-> > Hi Alex,
-> > 
-> > On 7/18/19 11:12 AM, Alex Williamson wrote:  
-> > > On Sat, 25 May 2019 13:41:33 +0800
-> > > Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> > >     
-> > >> Previously, get_valid_domain_for_dev() is used to retrieve the
-> > >> DMA domain which has been attached to the device or allocate one
-> > >> if no domain has been attached yet. As we have delegated the DMA
-> > >> domain management to upper layer, this function is used purely to
-> > >> allocate a private DMA domain if the default domain doesn't work
-> > >> for ths device. Cleanup the code for readability.
-> > >>
-> > >> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > >> ---
-> > >>   drivers/iommu/intel-iommu.c | 18 ++++++++----------
-> > >>   include/linux/intel-iommu.h |  1 -
-> > >>   2 files changed, 8 insertions(+), 11 deletions(-)    
-> > > 
-> > > System fails to boot bisected to this commit:    
-> > 
-> > Is this the same issue as this https://lkml.org/lkml/2019/7/18/840?  
-> 
-> Yes, the above link is after bisecting with all the bugs and fixes
-> squashed together to avoid landing in local bugs.  Thanks,
+When a slot is removed, the pci_dev must still exist.
 
-Well, it turns out this patch is still broken too.  I was excited that
-the system booted again with reverting the commit in the link above and
-didn't notice that VT-d failed and de-initialized itself:
+pci_remove_root_bus() removes and free all the pci_devs, so
+hv_pci_remove_slots() must be called before pci_remove_root_bus(),
+otherwise a general protection fault can happen, if the kernel is built
+with the memory debugging options.
 
-DMAR: No ATSR found
-DMAR: dmar0: Using Queued invalidation
-DMAR: dmar1: Using Queued invalidation
-pci 0000:00:00.0: DMAR: Software identity mapping
-pci 0000:00:01.0: DMAR: Software identity mapping
-pci 0000:00:02.0: DMAR: Software identity mapping
-pci 0000:00:16.0: DMAR: Software identity mapping
-pci 0000:00:1a.0: DMAR: Software identity mapping
-pci 0000:00:1b.0: DMAR: Software identity mapping
-pci 0000:00:1c.0: DMAR: Software identity mapping
-pci 0000:00:1c.5: DMAR: Software identity mapping
-pci 0000:00:1c.6: DMAR: Software identity mapping
-pci 0000:00:1c.7: DMAR: Software identity mapping
-pci 0000:00:1d.0: DMAR: Software identity mapping
-pci 0000:00:1f.0: DMAR: Software identity mapping
-pci 0000:00:1f.2: DMAR: Software identity mapping
-pci 0000:00:1f.3: DMAR: Software identity mapping
-pci 0000:01:00.0: DMAR: Software identity mapping
-pci 0000:01:00.1: DMAR: Software identity mapping
-pci 0000:03:00.0: DMAR: Software identity mapping
-pci 0000:04:00.0: DMAR: Software identity mapping
-DMAR: Setting RMRR:
-pci 0000:00:02.0: DMAR: Setting identity map [0xbf800000 - 0xcf9fffff]
-pci 0000:00:1a.0: DMAR: Setting identity map [0xbe8d1000 - 0xbe8dffff]
-pci 0000:00:1d.0: DMAR: Setting identity map [0xbe8d1000 - 0xbe8dffff]
-DMAR: Prepare 0-16MiB unity mapping for LPC
-pci 0000:00:1f.0: DMAR: Setting identity map [0x0 - 0xffffff]
-pci 0000:00:00.0: Adding to iommu group 0
-pci 0000:00:00.0: Using iommu direct mapping
-pci 0000:00:01.0: Adding to iommu group 1
-pci 0000:00:01.0: Using iommu direct mapping
-pci 0000:00:02.0: Adding to iommu group 2
-pci 0000:00:02.0: Using iommu direct mapping
-pci 0000:00:16.0: Adding to iommu group 3
-pci 0000:00:16.0: Using iommu direct mapping
-pci 0000:00:1a.0: Adding to iommu group 4
-pci 0000:00:1a.0: Using iommu direct mapping
-pci 0000:00:1b.0: Adding to iommu group 5
-pci 0000:00:1b.0: Using iommu direct mapping
-pci 0000:00:1c.0: Adding to iommu group 6
-pci 0000:00:1c.0: Using iommu direct mapping
-pci 0000:00:1c.5: Adding to iommu group 7
-pci 0000:00:1c.5: Using iommu direct mapping
-pci 0000:00:1c.6: Adding to iommu group 8
-pci 0000:00:1c.6: Using iommu direct mapping
-pci 0000:00:1c.7: Adding to iommu group 9
-pci 0000:00:1c.7: Using iommu direct mapping
-pci 0000:00:1d.0: Adding to iommu group 10
-pci 0000:00:1d.0: Using iommu direct mapping
-pci 0000:00:1f.0: Adding to iommu group 11
-pci 0000:00:1f.0: Using iommu direct mapping
-pci 0000:00:1f.2: Adding to iommu group 11
-pci 0000:00:1f.3: Adding to iommu group 11
-pci 0000:01:00.0: Adding to iommu group 1
-pci 0000:01:00.1: Adding to iommu group 1
-pci 0000:03:00.0: Adding to iommu group 12
-pci 0000:03:00.0: Using iommu direct mapping
-pci 0000:04:00.0: Adding to iommu group 13
-pci 0000:04:00.0: Using iommu direct mapping
-pci 0000:05:00.0: Adding to iommu group 9
-pci 0000:05:00.0: DMAR: Failed to get a private domain.
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-pci 0000:00:00.0: Removing from iommu group 0
-pci 0000:00:01.0: Removing from iommu group 1
-pci 0000:00:02.0: Removing from iommu group 2
-pci 0000:00:16.0: Removing from iommu group 3
-pci 0000:00:1a.0: Removing from iommu group 4
-pci 0000:00:1b.0: Removing from iommu group 5
-pci 0000:00:1c.0: Removing from iommu group 6
-pci 0000:00:1c.5: Removing from iommu group 7
-pci 0000:00:1c.6: Removing from iommu group 8
-pci 0000:00:1c.7: Removing from iommu group 9
-pci 0000:00:1d.0: Removing from iommu group 10
-pci 0000:00:1f.0: Removing from iommu group 11
-pci 0000:00:1f.2: Removing from iommu group 11
-pci 0000:00:1f.3: Removing from iommu group 11
-pci 0000:01:00.0: Removing from iommu group 1
-pci 0000:01:00.1: Removing from iommu group 1
-pci 0000:03:00.0: Removing from iommu group 12
-pci 0000:04:00.0: Removing from iommu group 13
-pci 0000:05:00.0: Removing from iommu group 9
-DMAR: Intel(R) Virtualization Technology for Directed I/O
+Fixes: 15becc2b56c6 ("PCI: hv: Add hv_pci_remove_slots() when we unload the=
+ driver")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Cc: stable@vger.kernel.org
 
--[0000:00]-+-00.0  Intel Corporation Xeon E3-1200 v2/Ivy Bridge DRAM Controller
-           +-01.0-[01]--+-00.0  NVIDIA Corporation GK208 [GeForce GT 635]
-           |            \-00.1  NVIDIA Corporation GK208 HDMI/DP Audio Controller
-           +-02.0  Intel Corporation Xeon E3-1200 v2/3rd Gen Core processor Graphics Controller
-           +-16.0  Intel Corporation 6 Series/C200 Series Chipset Family MEI Controller #1
-           +-1a.0  Intel Corporation 6 Series/C200 Series Chipset Family USB Enhanced Host Controller #2
-           +-1b.0  Intel Corporation 6 Series/C200 Series Chipset Family High Definition Audio Controller
-           +-1c.0-[02]--
-           +-1c.5-[03]----00.0  ASMedia Technology Inc. ASM1042 SuperSpeed USB Host Controller
-           +-1c.6-[04]----00.0  Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller
-           +-1c.7-[05-06]----00.0-[06]--
-           +-1d.0  Intel Corporation 6 Series/C200 Series Chipset Family USB Enhanced Host Controller #1
-           +-1f.0  Intel Corporation H67 Express Chipset LPC Controller
-           +-1f.2  Intel Corporation 6 Series/C200 Series Chipset Family 6 port Desktop SATA AHCI Controller
-           \-1f.3  Intel Corporation 6 Series/C200 Series Chipset Family SMBus Controller
+---
 
-05:00.0 PCI bridge: ASMedia Technology Inc. ASM1083/1085 PCIe to PCI Bridge (rev 01) (prog-if 01 [Subtractive decode])
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 32 bytes
-	Interrupt: pin A routed to IRQ 5
-	Bus: primary=05, secondary=06, subordinate=06, sec-latency=64
-	I/O behind bridge: None
-	Memory behind bridge: None
-	Prefetchable memory behind bridge: None
-	Secondary status: 66MHz+ FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ <SERR- <PERR-
-	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
-		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-	Capabilities: [c0] Subsystem: ASUSTeK Computer Inc. Device 8489
+When pci-hyperv is unloaded, this panic can happen:
 
+ general protection fault:
+ CPU: 2 PID: 1091 Comm: rmmod Not tainted 5.2.0+
+ RIP: 0010:pci_slot_release+0x30/0xd0
+ Call Trace:
+  kobject_release+0x65/0x190
+  pci_destroy_slot+0x25/0x60
+  hv_pci_remove+0xec/0x110 [pci_hyperv]
+  vmbus_remove+0x20/0x30 [hv_vmbus]
+  device_release_driver_internal+0xd5/0x1b0
+  driver_detach+0x44/0x7c
+  bus_remove_driver+0x75/0xc7
+  vmbus_driver_unregister+0x50/0xbd [hv_vmbus]
+  __x64_sys_delete_module+0x136/0x200
+  do_syscall_64+0x5e/0x220
 
-With commit 4ec066c7b1476e0ca66a7acdb575627a5d1a1ee6 reverted on
-v5.3-rc2:
+ drivers/pci/controller/pci-hyperv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-DMAR: No ATSR found
-DMAR: dmar0: Using Queued invalidation
-DMAR: dmar1: Using Queued invalidation
-pci 0000:00:00.0: Adding to iommu group 0
-pci 0000:00:00.0: Using iommu direct mapping
-pci 0000:00:01.0: Adding to iommu group 1
-pci 0000:00:01.0: Using iommu direct mapping
-pci 0000:00:02.0: Adding to iommu group 2
-pci 0000:00:02.0: Using iommu direct mapping
-pci 0000:00:16.0: Adding to iommu group 3
-pci 0000:00:16.0: Using iommu direct mapping
-pci 0000:00:1a.0: Adding to iommu group 4
-pci 0000:00:1a.0: Using iommu direct mapping
-pci 0000:00:1b.0: Adding to iommu group 5
-pci 0000:00:1b.0: Using iommu direct mapping
-pci 0000:00:1c.0: Adding to iommu group 6
-pci 0000:00:1c.0: Using iommu direct mapping
-pci 0000:00:1c.5: Adding to iommu group 7
-pci 0000:00:1c.5: Using iommu direct mapping
-pci 0000:00:1c.6: Adding to iommu group 8
-pci 0000:00:1c.6: Using iommu direct mapping
-pci 0000:00:1c.7: Adding to iommu group 9
-pci 0000:00:1c.7: Using iommu direct mapping
-pci 0000:00:1d.0: Adding to iommu group 10
-pci 0000:00:1d.0: Using iommu direct mapping
-pci 0000:00:1f.0: Adding to iommu group 11
-pci 0000:00:1f.0: Using iommu direct mapping
-pci 0000:00:1f.2: Adding to iommu group 11
-pci 0000:00:1f.3: Adding to iommu group 11
-pci 0000:01:00.0: Adding to iommu group 1
-pci 0000:01:00.1: Adding to iommu group 1
-pci 0000:03:00.0: Adding to iommu group 12
-pci 0000:03:00.0: Using iommu direct mapping
-pci 0000:04:00.0: Adding to iommu group 13
-pci 0000:04:00.0: Using iommu direct mapping
-pci 0000:05:00.0: Adding to iommu group 9
-pci 0000:05:00.0: DMAR: Device uses a private dma domain.
-DMAR: Intel(R) Virtualization Technology for Directed I/O
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
+ci-hyperv.c
+index 6b9cc6e60a..68c611d 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2757,8 +2757,8 @@ static int hv_pci_remove(struct hv_device *hdev)
+ 		/* Remove the bus from PCI's point of view. */
+ 		pci_lock_rescan_remove();
+ 		pci_stop_root_bus(hbus->pci_bus);
+-		pci_remove_root_bus(hbus->pci_bus);
+ 		hv_pci_remove_slots(hbus);
++		pci_remove_root_bus(hbus->pci_bus);
+ 		pci_unlock_rescan_remove();
+ 		hbus->state =3D hv_pcibus_removed;
+ 	}
+--=20
+1.8.3.1
 
-I'm guessing this series was maybe never tested on and doesn't account
-for PCIe-to-PCI bridges.  Please fix.  Thanks,
-
-Alex
