@@ -2,162 +2,197 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF70BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02589C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB58421841
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF75C21841
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLPiUEkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392612AbfHBMc2 (ORCPT
+        id S2392629AbfHBMcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:32:28 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:52936 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbfHBMc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:32:28 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x72CTOZN001782
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Fri, 2 Aug 2019 05:29:35 -0700
-Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Fri, 2 Aug
- 2019 05:29:13 -0700
-Subject: Re: memory leak in tipc_group_create_member
-To:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+f95d90c454864b3b5bc9@syzkaller.appspotmail.com>
-CC:     <davem@davemloft.net>, <jon.maloy@ericsson.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>,
-        <tipc-discussion@lists.sourceforge.net>
-References: <000000000000879057058f193fb5@google.com>
-From:   Ying Xue <ying.xue@windriver.com>
-Message-ID: <bbc84761-29aa-b8cc-e50d-dbd6a026f469@windriver.com>
-Date:   Fri, 2 Aug 2019 20:18:08 +0800
+        Fri, 2 Aug 2019 08:32:51 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40051 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729267AbfHBMcu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:32:50 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so66208820wmj.5;
+        Fri, 02 Aug 2019 05:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dzUcg2Ik/ydWHD1gpTTQN7qp0Cm5aZCNkk/EL3Y9f5c=;
+        b=XLPiUEkdK+L1GOgSoWoodritZzMqc6objb05zrI7kxLKR5Yo/Sk+ozcuT3AHiyU7kj
+         uYsel7QcWKRq9nZkUfIJZatqTr9Hk04fv0q69bGZ+JbYvWeXRC8tjzTMs+q1WZMoyTKC
+         Apy2EhMzkzZCb6DaAtQeguYQ4iT8yRB2JWHu8Hw9Ajkf7i9KeDMQANul9yr5COaEnKIq
+         awqb7xFcWjUUNe4vJLQOWHV+nP1wccPVu7Q+eRUBpl8kmd4KzOFS6x0XUygqpaG6JJ2V
+         68snS4X0erl2oiPZjeFSiPuSbV+lk4uqOxifPxczp5OwFaXIIaJQEqPllWp6Pe2IeTjV
+         +eQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dzUcg2Ik/ydWHD1gpTTQN7qp0Cm5aZCNkk/EL3Y9f5c=;
+        b=mmTiFTzWtWs7th+t9Y3PKVSCui2QBF1gCBvzTjuUpzV8dnRst4uLpNKR2dVkewlGsz
+         77lJrcz5PhbPpglDJzRQ1EjqoZZ1EF2gyBe+DjI33DoRmHsQd3Xm73w1s9A8i1sWIqNM
+         JsiWaXFhZwGos13UbYkgsnFjM7wjEiaJJBZYketCy43xL7+4b1wLU8psHLlGh8YTOP34
+         xNW6bw08Hw+9LpwdRaBfvCyzcFd8qeVPV+Z+OeMvh00CFKgYJUIiCiPm58JZIq6DEj5/
+         5WeQMJz2qSzUYkhJihrfuk+Jqb1BZGG2aRTOOg17avH/CycS40wKsdpCFcfx5wbu5TKl
+         0PCg==
+X-Gm-Message-State: APjAAAVluMFJ3RXTktVLiVJ8vDpTjtSmwCoK9JDB6onrtpV3VMrWC8ko
+        dp2NF8HZpn5iuVuUxuE2DAFrGh3V
+X-Google-Smtp-Source: APXvYqwrgmzSD203TM2VN0jdQRS3Rn1In9qn9CrUX+kYZPL1PXIqdO+pKDuXMbeQzsH//HjSvTkp7g==
+X-Received: by 2002:a1c:2d8b:: with SMTP id t133mr4401017wmt.57.1564749166741;
+        Fri, 02 Aug 2019 05:32:46 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id v12sm64652341wrr.87.2019.08.02.05.32.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 02 Aug 2019 05:32:45 -0700 (PDT)
+Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
+ support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <c703b4fc-9ebb-0fd4-11de-80974b5c3842@gmail.com>
+Date:   Fri, 2 Aug 2019 15:32:43 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <000000000000879057058f193fb5@google.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [128.224.155.90]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/2/19 3:44 PM, Hillf Danton wrote:
+31.07.2019 3:20, Sowjanya Komatineni пишет:
+> This patch implements save and restore context for peripheral fixed
+> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
+> peripheral clock ops.
 > 
-> On Thu, 01 Aug 2019 19:38:06 -0700
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    a9815a4f Merge branch 'x86-urgent-for-linus' of git://git...
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=12a6dbf0600000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=37c48fb52e3789e6
->> dashboard link: https://syzkaller.appspot.com/bug?extid=f95d90c454864b3b5bc9
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13be3ecc600000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c992b4600000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+f95d90c454864b3b5bc9@syzkaller.appspotmail.com
->>
->> executing program
->> BUG: memory leak
->> unreferenced object 0xffff888122bca200 (size 128):
->>    comm "syz-executor232", pid 7065, jiffies 4294943817 (age 8.880s)
->>    hex dump (first 32 bytes):
->>      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->>      00 00 00 00 00 00 00 00 18 a2 bc 22 81 88 ff ff  ..........."....
->>    backtrace:
->>      [<000000005bada299>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
->>      [<000000005bada299>] slab_post_alloc_hook mm/slab.h:522 [inline]
->>      [<000000005bada299>] slab_alloc mm/slab.c:3319 [inline]
->>      [<000000005bada299>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
->>      [<00000000e7bcdc9f>] kmalloc include/linux/slab.h:552 [inline]
->>      [<00000000e7bcdc9f>] kzalloc include/linux/slab.h:748 [inline]
->>      [<00000000e7bcdc9f>] tipc_group_create_member+0x3c/0x190  net/tipc/group.c:306
->>      [<0000000005f56f40>] tipc_group_add_member+0x34/0x40  net/tipc/group.c:327
->>      [<0000000044406683>] tipc_nametbl_build_group+0x9b/0xf0  net/tipc/name_table.c:600
->>      [<000000009f71e803>] tipc_sk_join net/tipc/socket.c:2901 [inline]
->>      [<000000009f71e803>] tipc_setsockopt+0x170/0x490 net/tipc/socket.c:3006
->>      [<000000007f61cbc2>] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
->>      [<00000000cc630372>] __do_sys_setsockopt net/socket.c:2100 [inline]
->>      [<00000000cc630372>] __se_sys_setsockopt net/socket.c:2097 [inline]
->>      [<00000000cc630372>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2097
->>      [<00000000ec30be33>] do_syscall_64+0x76/0x1a0  arch/x86/entry/common.c:296
->>      [<00000000271be3e6>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
-
-Acked-by: Ying Xue <ying.xue@windriver.com>
-
->  
-> --- a/net/tipc/group.c
-> +++ b/net/tipc/group.c
-> @@ -273,7 +273,7 @@ static struct tipc_member *tipc_group_fi
->  	return NULL;
+> During system suspend, core power goes off and looses the settings
+> of the Tegra CAR controller registers.
+> 
+> So during suspend entry clock and reset state of peripherals is saved
+> and on resume they are restored to have clocks back to same rate and
+> state as before suspend.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-periph-fixed.c | 33 ++++++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk-periph-gate.c  | 34 +++++++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk-periph.c       | 37 ++++++++++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk-sdmmc-mux.c    | 28 +++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk.h              |  6 ++++++
+>  5 files changed, 138 insertions(+)
+> 
+> diff --git a/drivers/clk/tegra/clk-periph-fixed.c b/drivers/clk/tegra/clk-periph-fixed.c
+> index c088e7a280df..21b24530fa00 100644
+> --- a/drivers/clk/tegra/clk-periph-fixed.c
+> +++ b/drivers/clk/tegra/clk-periph-fixed.c
+> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct clk_hw *hw,
+>  	return (unsigned long)rate;
 >  }
 >  
-> -static void tipc_group_add_to_tree(struct tipc_group *grp,
-> +static struct tipc_member *tipc_group_add_to_tree(struct tipc_group *grp,
->  				   struct tipc_member *m)
->  {
->  	u64 nkey, key = (u64)m->node << 32 | m->port;
-> @@ -282,7 +282,6 @@ static void tipc_group_add_to_tree(struc
->  
->  	n = &grp->members.rb_node;
->  	while (*n) {
-> -		tmp = container_of(*n, struct tipc_member, tree_node);
->  		parent = *n;
->  		tmp = container_of(parent, struct tipc_member, tree_node);
->  		nkey = (u64)tmp->node << 32 | tmp->port;
-> @@ -291,17 +290,18 @@ static void tipc_group_add_to_tree(struc
->  		else if (key > nkey)
->  			n = &(*n)->rb_right;
->  		else
-> -			return;
-> +			return tmp;
->  	}
->  	rb_link_node(&m->tree_node, parent, n);
->  	rb_insert_color(&m->tree_node, &grp->members);
-> +	return m;
->  }
->  
->  static struct tipc_member *tipc_group_create_member(struct tipc_group *grp,
->  						    u32 node, u32 port,
->  						    u32 instance, int state)
->  {
-> -	struct tipc_member *m;
-> +	struct tipc_member *m, *n;
->  
->  	m = kzalloc(sizeof(*m), GFP_ATOMIC);
->  	if (!m)
-> @@ -315,10 +315,14 @@ static struct tipc_member *tipc_group_cr
->  	m->instance = instance;
->  	m->bc_acked = grp->bc_snd_nxt - 1;
->  	grp->member_cnt++;
-> -	tipc_group_add_to_tree(grp, m);
-> -	tipc_nlist_add(&grp->dests, m->node);
-> -	m->state = state;
-> -	return m;
-> +	n = tipc_group_add_to_tree(grp, m);
-> +	if (n == m) {
-> +		tipc_nlist_add(&grp->dests, m->node);
-> +		m->state = state;
-> +	} else {
-> +		kfree(m);
+> +static int tegra_clk_periph_fixed_save_context(struct clk_hw *hw)
+> +{
+> +	struct tegra_clk_periph_fixed *fixed = to_tegra_clk_periph_fixed(hw);
+> +	u32 mask = 1 << (fixed->num % 32);
+
+This could be BIT(fixed->num % 32).
+
+> +	fixed->enb_ctx = readl_relaxed(fixed->base + fixed->regs->enb_reg) &
+> +			 mask;
+> +	fixed->rst_ctx = readl_relaxed(fixed->base + fixed->regs->rst_reg) &
+> +			 mask;
+
+The enb_ctx/rst_ctx are booleans, while you assigning an integer value
+here. You're getting away here because bool is an 32bit unsigned int,
+but you shouldn't rely on it and always explicitly convert to a bool.
+
+> +	return 0;
+> +}
+> +
+> +static void tegra_clk_periph_fixed_restore_context(struct clk_hw *hw)
+> +{
+> +	struct tegra_clk_periph_fixed *fixed = to_tegra_clk_periph_fixed(hw);
+> +	u32 mask = 1 << (fixed->num % 32);
+> +
+> +	if (fixed->enb_ctx)
+> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_set_reg);
+> +	else
+> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_clr_reg);
+> +
+> +	udelay(2);
+
+Will be better to read out and compare the hardware's state with the
+restored one, then bail out if the state is unchanged.
+
+Shouldn't it be fence_udelay()?
+
+> +	if (!fixed->rst_ctx) {
+> +		udelay(5); /* reset propogation delay */
+
+Why delaying is done before the writing to the reset register?
+
+> +		writel_relaxed(mask, fixed->base + fixed->regs->rst_reg);
+
+I'm not quite sure what's going on here, this looks wrong.
+
+1. rst_reg points to RST_DEVICES_x
+2. Each bit of RST_DEVICES_x represents the reset-assertion state of
+each individual device
+3. By writing to rst_reg, all (!) devices are deasserted, except the one
+device which corresponds to the mask
+4. The reset is asserted for a single device, while !fixed->rst_ctx
+means that it actually should be deasserted (?)
+
+Apparently you should use rst_set_reg / rst_clr_reg.
+
 > +	}
-> +	return n;
->  }
+
+What about the case where rst_ctx=true?
+
+> +}
+
+> @@ -517,6 +517,8 @@ struct tegra_clk_periph_gate {
+>  	int			clk_num;
+>  	int			*enable_refcnt;
+>  	const struct tegra_clk_periph_regs *regs;
+> +	bool			clk_state_ctx;
+> +	bool			rst_state_ctx;
+>  };
 >  
->  void tipc_group_add_member(struct tipc_group *grp, u32 node,
-> --
-> 
-> 
+>  #define to_clk_periph_gate(_hw)					\
+> @@ -543,6 +545,8 @@ struct tegra_clk_periph_fixed {
+>  	unsigned int mul;
+>  	unsigned int div;
+>  	unsigned int num;
+> +	bool enb_ctx;
+> +	bool rst_ctx;
+>  };
+
+I'd expect these to be bool:1.
