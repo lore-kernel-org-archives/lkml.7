@@ -2,136 +2,325 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818B7C32750
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0972AC32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600F4216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D5C2087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 12:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390337AbfHBMzd (ORCPT
+        id S2404814AbfHBMyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 08:55:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40050 "EHLO mx1.suse.de"
+        Fri, 2 Aug 2019 08:54:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48002 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404801AbfHBMz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 08:55:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C4AA9AD85;
-        Fri,  2 Aug 2019 12:55:27 +0000 (UTC)
-Date:   Fri, 2 Aug 2019 14:55:26 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Linux I2C <linux-i2c@vger.kernel.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
-        Andrew Cooks <acooks@rationali.st>, linux-acpi@vger.kernel.org,
-        platypus-sw@opengear.com, "Tobin C . Harding" <me@tobin.cc>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Will Wagner <willw@carallon.com>
-Subject: [PATCH v5 3/3] i2c: piix4: Add ACPI support
-Message-ID: <20190802145526.6edba0a6@endymion>
-In-Reply-To: <20190802145109.38dd4045@endymion>
-References: <20190802145109.38dd4045@endymion>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        id S2392661AbfHBMyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 08:54:36 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8EE78A7AF00FA5006F89;
+        Fri,  2 Aug 2019 20:54:27 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 2 Aug 2019
+ 20:54:17 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>, "Pavel Machek" <pavel@denx.de>,
+        David Sterba <dsterba@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v6 08/24] erofs: add namei functions
+Date:   Fri, 2 Aug 2019 20:53:31 +0800
+Message-ID: <20190802125347.166018-9-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190802125347.166018-1-gaoxiang25@huawei.com>
+References: <20190802125347.166018-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the i2c-piix4 SMBus controller driver to enumerate I2C slave
-devices using ACPI. It builds on the related I2C mux device work
-in commit 8eb5c87a92c0 ("i2c: add ACPI support for I2C mux ports")
+This commit adds functions that transfer names to inodes.
 
-In the i2c-piix4 driver the adapters are enumerated as:
- Main SMBus adapter Port 0, Port 2, ..., aux port (i.e., ASF adapter)
-
-However, in the AMD BKDG documentation[1], the implied order of ports is:
- Main SMBus adapter Port 0, ASF adapter, Port 2, Port 3, ...
-
-This ordering difference is unfortunate. We assume that ACPI
-developers will use the AMD documentation ordering, so we have to
-pass an extra parameter to piix4_add_adapter().
-
-[1] 52740 BIOS and Kernel Developer's Guide (BKDG) for AMD Family 16h
-Models 30h-3Fh Processors
-
-Based on earlier work by Andrew Cooks.
-
-Reported-by: Andrew Cooks <andrew.cooks@opengear.com>
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
-Changes since v4:
- * Fix code alignment (reported by Tobin C. Harding)
- * Adjust to changes in previous patch
- * Use the SMBus numbering documented by AMD
+ fs/erofs/namei.c | 247 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 247 insertions(+)
+ create mode 100644 fs/erofs/namei.c
 
- drivers/i2c/busses/i2c-piix4.c |   18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
---- linux-5.2.orig/drivers/i2c/busses/i2c-piix4.c	2019-08-02 14:26:02.197346075 +0200
-+++ linux-5.2/drivers/i2c/busses/i2c-piix4.c	2019-08-02 14:40:40.990505068 +0200
-@@ -811,7 +811,8 @@ static int piix4_adapter_count;
- 
- static int piix4_add_adapter(struct pci_dev *dev, unsigned short smba,
- 			     bool sb800_main, u8 port, bool notify_imc,
--			     const char *name, struct i2c_adapter **padap)
-+			     u8 hw_port_nr, const char *name,
-+			     struct i2c_adapter **padap)
- {
- 	struct i2c_adapter *adap;
- 	struct i2c_piix4_adapdata *adapdata;
-@@ -843,6 +844,12 @@ static int piix4_add_adapter(struct pci_
- 	/* set up the sysfs linkage to our parent device */
- 	adap->dev.parent = &dev->dev;
- 
-+	if (has_acpi_companion(&dev->dev)) {
-+		acpi_preset_companion(&adap->dev,
-+				      ACPI_COMPANION(&dev->dev),
-+				      hw_port_nr);
+diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
+new file mode 100644
+index 000000000000..73bf61637907
+--- /dev/null
++++ b/fs/erofs/namei.c
+@@ -0,0 +1,247 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * linux/fs/erofs/namei.c
++ *
++ * Copyright (C) 2017-2018 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ */
++#include "internal.h"
++
++#include <trace/events/erofs.h>
++
++struct erofs_qstr {
++	const unsigned char *name;
++	const unsigned char *end;
++};
++
++/* based on the end of qn is accurate and it must have the trailing '\0' */
++static inline int dirnamecmp(const struct erofs_qstr *qn,
++			     const struct erofs_qstr *qd,
++			     unsigned int *matched)
++{
++	unsigned int i = *matched;
++
++	/*
++	 * on-disk error, let's only BUG_ON in the debugging mode.
++	 * otherwise, it will return 1 to just skip the invalid name
++	 * and go on (in consideration of the lookup performance).
++	 */
++	DBG_BUGON(qd->name > qd->end);
++
++	/* qd could not have trailing '\0' */
++	/* However it is absolutely safe if < qd->end */
++	while (qd->name + i < qd->end && qd->name[i] != '\0') {
++		if (qn->name[i] != qd->name[i]) {
++			*matched = i;
++			return qn->name[i] > qd->name[i] ? 1 : -1;
++		}
++		++i;
++	}
++	*matched = i;
++	/* See comments in __d_alloc on the terminating NUL character */
++	return qn->name[i] == '\0' ? 0 : 1;
++}
++
++#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
++
++static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
++					       u8 *data,
++					       unsigned int dirblksize,
++					       const int ndirents)
++{
++	int head, back;
++	unsigned int startprfx, endprfx;
++	struct erofs_dirent *const de = (struct erofs_dirent *)data;
++
++	/* since the 1st dirent has been evaluated previously */
++	head = 1;
++	back = ndirents - 1;
++	startprfx = endprfx = 0;
++
++	while (head <= back) {
++		const int mid = head + (back - head) / 2;
++		const int nameoff = nameoff_from_disk(de[mid].nameoff,
++						      dirblksize);
++		unsigned int matched = min(startprfx, endprfx);
++		struct erofs_qstr dname = {
++			.name = data + nameoff,
++			.end = unlikely(mid >= ndirents - 1) ?
++				data + dirblksize :
++				data + nameoff_from_disk(de[mid + 1].nameoff,
++							 dirblksize)
++		};
++
++		/* string comparison without already matched prefix */
++		int ret = dirnamecmp(name, &dname, &matched);
++
++		if (unlikely(!ret)) {
++			return de + mid;
++		} else if (ret > 0) {
++			head = mid + 1;
++			startprfx = matched;
++		} else {
++			back = mid - 1;
++			endprfx = matched;
++		}
 +	}
 +
- 	snprintf(adap->name, sizeof(adap->name),
- 		"SMBus PIIX4 adapter%s at %04x", name, smba);
- 
-@@ -876,7 +883,10 @@ static int piix4_add_adapters_sb800(stru
- 	}
- 
- 	for (port = 0; port < piix4_adapter_count; port++) {
-+		u8 hw_port_nr = port == 0 ? 0 : port + 1;
++	return ERR_PTR(-ENOENT);
++}
 +
- 		retval = piix4_add_adapter(dev, smba, true, port, notify_imc,
-+					   hw_port_nr,
- 					   piix4_main_port_names_sb800[port],
- 					   &piix4_main_adapters[port]);
- 		if (retval < 0)
-@@ -947,8 +957,8 @@ static int piix4_probe(struct pci_dev *d
- 			return retval;
- 
- 		/* Try to register main SMBus adapter, give up if we can't */
--		retval = piix4_add_adapter(dev, retval, false, 0, false, "",
--					   &piix4_main_adapters[0]);
-+		retval = piix4_add_adapter(dev, retval, false, 0, false, 0,
-+					   "", &piix4_main_adapters[0]);
- 		if (retval < 0)
- 			return retval;
- 	}
-@@ -974,7 +984,7 @@ static int piix4_probe(struct pci_dev *d
- 	if (retval > 0) {
- 		/* Try to add the aux adapter if it exists,
- 		 * piix4_add_adapter will clean up if this fails */
--		piix4_add_adapter(dev, retval, false, 0, false,
-+		piix4_add_adapter(dev, retval, false, 0, false, 1,
- 				  is_sb800 ? piix4_aux_port_name_sb800 : "",
- 				  &piix4_aux_adapter);
- 	}
-
++static struct page *find_target_block_classic(struct inode *dir,
++					      struct erofs_qstr *name,
++					      int *_ndirents)
++{
++	unsigned int startprfx, endprfx;
++	int head, back;
++	struct address_space *const mapping = dir->i_mapping;
++	struct page *candidate = ERR_PTR(-ENOENT);
++
++	startprfx = endprfx = 0;
++	head = 0;
++	back = inode_datablocks(dir) - 1;
++
++	while (head <= back) {
++		const int mid = head + (back - head) / 2;
++		struct page *page = read_mapping_page(mapping, mid, NULL);
++
++		if (!IS_ERR(page)) {
++			struct erofs_dirent *de = kmap_atomic(page);
++			const int nameoff = nameoff_from_disk(de->nameoff,
++							      EROFS_BLKSIZ);
++			const int ndirents = nameoff / sizeof(*de);
++			int diff;
++			unsigned int matched;
++			struct erofs_qstr dname;
++
++			if (unlikely(!ndirents)) {
++				DBG_BUGON(1);
++				kunmap_atomic(de);
++				put_page(page);
++				page = ERR_PTR(-EIO);
++				goto out;
++			}
++
++			matched = min(startprfx, endprfx);
++
++			dname.name = (u8 *)de + nameoff;
++			if (ndirents == 1)
++				dname.end = (u8 *)de + EROFS_BLKSIZ;
++			else
++				dname.end = (u8 *)de +
++					nameoff_from_disk(de[1].nameoff,
++							  EROFS_BLKSIZ);
++
++			/* string comparison without already matched prefix */
++			diff = dirnamecmp(name, &dname, &matched);
++			kunmap_atomic(de);
++
++			if (unlikely(!diff)) {
++				*_ndirents = 0;
++				goto out;
++			} else if (diff > 0) {
++				head = mid + 1;
++				startprfx = matched;
++
++				if (!IS_ERR(candidate))
++					put_page(candidate);
++				candidate = page;
++				*_ndirents = ndirents;
++			} else {
++				put_page(page);
++
++				back = mid - 1;
++				endprfx = matched;
++			}
++			continue;
++		}
++out:		/* free if the candidate is valid */
++		if (!IS_ERR(candidate))
++			put_page(candidate);
++		return page;
++	}
++	return candidate;
++}
++
++int erofs_namei(struct inode *dir,
++		struct qstr *name,
++		erofs_nid_t *nid, unsigned int *d_type)
++{
++	int ndirents;
++	struct page *page;
++	void *data;
++	struct erofs_dirent *de;
++	struct erofs_qstr qn;
++
++	if (unlikely(!dir->i_size))
++		return -ENOENT;
++
++	qn.name = name->name;
++	qn.end = name->name + name->len;
++
++	ndirents = 0;
++	page = find_target_block_classic(dir, &qn, &ndirents);
++
++	if (IS_ERR(page))
++		return PTR_ERR(page);
++
++	data = kmap_atomic(page);
++	/* the target page has been mapped */
++	if (ndirents)
++		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
++	else
++		de = (struct erofs_dirent *)data;
++
++	if (!IS_ERR(de)) {
++		*nid = le64_to_cpu(de->nid);
++		*d_type = de->file_type;
++	}
++
++	kunmap_atomic(data);
++	put_page(page);
++
++	return PTR_ERR_OR_ZERO(de);
++}
++
++/* NOTE: i_mutex is already held by vfs */
++static struct dentry *erofs_lookup(struct inode *dir,
++				   struct dentry *dentry,
++				   unsigned int flags)
++{
++	int err;
++	erofs_nid_t nid;
++	unsigned int d_type;
++	struct inode *inode;
++
++	DBG_BUGON(!d_really_is_negative(dentry));
++	/* dentry must be unhashed in lookup, no need to worry about */
++	DBG_BUGON(!d_unhashed(dentry));
++
++	trace_erofs_lookup(dir, dentry, flags);
++
++	/* file name exceeds fs limit */
++	if (unlikely(dentry->d_name.len > EROFS_NAME_LEN))
++		return ERR_PTR(-ENAMETOOLONG);
++
++	/* false uninitialized warnings on gcc 4.8.x */
++	err = erofs_namei(dir, &dentry->d_name, &nid, &d_type);
++
++	if (err == -ENOENT) {
++		/* negative dentry */
++		inode = NULL;
++	} else if (unlikely(err)) {
++		inode = ERR_PTR(err);
++	} else {
++		debugln("%s, %s (nid %llu) found, d_type %u", __func__,
++			dentry->d_name.name, nid, d_type);
++		inode = erofs_iget(dir->i_sb, nid, d_type == EROFS_FT_DIR);
++	}
++	return d_splice_alias(inode, dentry);
++}
++
++const struct inode_operations erofs_dir_iops = {
++	.lookup = erofs_lookup,
++	.getattr = erofs_getattr,
++};
++
 -- 
-Jean Delvare
-SUSE L3 Support
+2.17.1
+
