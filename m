@@ -2,133 +2,119 @@ Return-Path: <SRS0=qq9d=V6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFB4C32754
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9F2C32750
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C62922173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:21:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Bam9ZT8f"
+	by mail.kernel.org (Postfix) with ESMTP id 27B35206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  2 Aug 2019 05:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732635AbfHBFSv (ORCPT
+        id S1732691AbfHBFWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 2 Aug 2019 01:18:51 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31754 "EHLO pegase1.c-s.fr"
+        Fri, 2 Aug 2019 01:22:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34624 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfHBFSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 2 Aug 2019 01:18:50 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 460FnL5MkFz9vBfr;
-        Fri,  2 Aug 2019 07:18:46 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Bam9ZT8f; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id sdGXrrjyCDuQ; Fri,  2 Aug 2019 07:18:46 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 460FnL3Stcz9vBfp;
-        Fri,  2 Aug 2019 07:18:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1564723126; bh=dskM129Z+Pm2g90k1EaL/hR4S3jKQ/kszYbrKBxwKZM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Bam9ZT8fJlMSqeotbiCuQd3LWO9PpK+7w9pj2xMUyg6ZAYtLHCtDZ4pzOXQHI7kfe
-         uGh+XUsOrdEWkqJFeoXMMDvLB9QaQVw5STm2gmCOl2HmNvYrUGcHyiPRY/uJP5OmG4
-         j8CG7abnSTmsnnrTXnGYQ/q8V93FZO0n3ulXNTsM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6520A8B797;
-        Fri,  2 Aug 2019 07:18:47 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id OThNZB83Zkwe; Fri,  2 Aug 2019 07:18:47 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E45368B74C;
-        Fri,  2 Aug 2019 07:18:46 +0200 (CEST)
-Subject: Re: [PATCH] powerpc: Remove inaccessible CMDLINE default
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190802050232.22978-1-chris.packham@alliedtelesis.co.nz>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <43422528-c2fc-a2c8-49e6-0f6b2c791648@c-s.fr>
-Date:   Fri, 2 Aug 2019 07:18:46 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726626AbfHBFWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 2 Aug 2019 01:22:51 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 79FF619CF26;
+        Fri,  2 Aug 2019 05:22:51 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-81.ams2.redhat.com [10.36.116.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A22C85D9CD;
+        Fri,  2 Aug 2019 05:22:48 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id D31C017474; Fri,  2 Aug 2019 07:22:47 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     ckoenig.leichtzumerken@gmail.com, thomas@shipmail.org,
+        tzimmermann@suse.de, daniel@ffwll.ch, bskeggs@redhat.com,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 01/17] drm/ttm: add gem base object
+Date:   Fri,  2 Aug 2019 07:22:31 +0200
+Message-Id: <20190802052247.18427-2-kraxel@redhat.com>
+In-Reply-To: <20190802052247.18427-1-kraxel@redhat.com>
+References: <20190802052247.18427-1-kraxel@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190802050232.22978-1-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 02 Aug 2019 05:22:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add drm_gem_object struct to ttm_buffer_object, so ttm objects are a gdm
+object superclass.  Add a function to check whenever a given bo actually
+uses the embedded drm_gem_object.
 
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+---
+ include/drm/ttm/ttm_bo_api.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-Le 02/08/2019 à 07:02, Chris Packham a écrit :
-> Since commit cbe46bd4f510 ("powerpc: remove CONFIG_CMDLINE #ifdef mess")
-> CONFIG_CMDLINE has always had a value regardless of CONNIG_CMDLINE_BOOL.
+diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
+index 49d9cdfc58f2..082550cac92c 100644
+--- a/include/drm/ttm/ttm_bo_api.h
++++ b/include/drm/ttm/ttm_bo_api.h
+@@ -31,6 +31,7 @@
+ #ifndef _TTM_BO_API_H_
+ #define _TTM_BO_API_H_
+ 
++#include <drm/drm_gem.h>
+ #include <drm/drm_hashtab.h>
+ #include <drm/drm_vma_manager.h>
+ #include <linux/kref.h>
+@@ -127,6 +128,7 @@ struct ttm_tt;
+ /**
+  * struct ttm_buffer_object
+  *
++ * @base: drm_gem_object superclass data.
+  * @bdev: Pointer to the buffer object device structure.
+  * @type: The bo type.
+  * @destroy: Destruction function. If NULL, kfree is used.
+@@ -169,6 +171,8 @@ struct ttm_tt;
+  */
+ 
+ struct ttm_buffer_object {
++	struct drm_gem_object base;
++
+ 	/**
+ 	 * Members constant at init.
+ 	 */
+@@ -768,4 +772,23 @@ int ttm_bo_swapout(struct ttm_bo_global *glob,
+ 			struct ttm_operation_ctx *ctx);
+ void ttm_bo_swapout_all(struct ttm_bo_device *bdev);
+ int ttm_bo_wait_unreserved(struct ttm_buffer_object *bo);
++
++/**
++ * ttm_bo_uses_embedded_gem_object - check if the given bo uses the
++ * embedded drm_gem_object.
++ *
++ * Most ttm drivers are using gem too, so the embedded
++ * ttm_buffer_object.base will be initialized by the driver (before
++ * calling ttm_bo_init).  It is also possible to use ttm without gem
++ * though (vmwgfx does that).
++ *
++ * This helper will figure whenever a given ttm bo is a gem object too
++ * or not.
++ *
++ * @bo: The bo to check.
++ */
++static inline bool ttm_bo_uses_embedded_gem_object(struct ttm_buffer_object *bo)
++{
++	return bo->base.dev != NULL;
++}
+ #endif
+-- 
+2.18.1
 
-s/CONNIG/CONFIG/
-
-> 
-> For example:
-> 
->   $ make ARCH=powerpc defconfig
->   $ cat .config
->   # CONFIG_CMDLINE_BOOL is not set
->   CONFIG_CMDLINE=""
-> 
-> When enabling CONNIG_CMDLINE_BOOL this value is kept making the 'default
-> "..." if CONNIG_CMDLINE_BOOL' ineffective.
-
-s/CONNIG/CONFIG/
-
-> 
->   $ ./scripts/config --enable CONFIG_CMDLINE_BOOL
->   $ cat .config
->   CONFIG_CMDLINE_BOOL=y
->   CONFIG_CMDLINE=""
-> 
-> Additionally all the in-tree powerpc defconfigs that set
-> CONFIG_CMDLINE_BOOL=y also set CONFIG_CMDLINE to something else. For
-> these reasons remove the inaccessible default.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
-> ---
-> This should be independent of http://patchwork.ozlabs.org/patch/1140811/ but
-> I've generated this patch on a stream that has it applied locally.
-> 
->   arch/powerpc/Kconfig | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index d413fe1b4058..6fca6eba6aee 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -844,7 +844,6 @@ config CMDLINE_BOOL
->   
->   config CMDLINE
->   	string "Initial kernel command string" if CMDLINE_BOOL
-> -	default "console=ttyS0,9600 console=tty0 root=/dev/sda2" if CMDLINE_BOOL
->   	default ""
->   	help
->   	  On some platforms, there is currently no way for the boot loader to
-> 
-
-I think we could also get rid of CMDLINE_BOOL totally and use CMDLINE != 
-"" instead.
-
-Christophe
